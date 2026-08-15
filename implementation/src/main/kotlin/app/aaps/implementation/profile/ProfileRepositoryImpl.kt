@@ -1,5 +1,6 @@
 package app.aaps.implementation.profile
 
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.data.Block
@@ -580,8 +581,7 @@ class ProfileRepositoryImpl @Inject constructor(
                 } else {
                     notificationManager.post(
                         NotificationId.INVALID_PROFILE_NOT_ACCEPTED,
-                        R.string.invalid_profile_not_accepted, p.toString()
-                    )
+                        TextRef.AndroidRes(R.string.invalid_profile_not_accepted, listOf(p.toString())))
                 }
             }
             if (newProfiles.isNotEmpty()) {

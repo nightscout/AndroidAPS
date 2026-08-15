@@ -471,7 +471,7 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
         if (config.isDev() && preferences.get(StringKey.MaintenanceIdentification).isBlank())
             notificationManager.post(
                 id = NotificationId.IDENTIFICATION_NOT_SET,
-                R.string.identification_not_set,
+                TextRef.AndroidRes(R.string.identification_not_set),
                 level = NotificationLevel.INFO,
                 actions = listOf(NotificationAction(TextRef.AndroidRes(R.string.set)) {}),
                 validityCheck = { config.isDev() && preferences.get(StringKey.MaintenanceIdentification).isBlank() }
@@ -480,7 +480,7 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
         if (preferences.get(StringKey.ProtectionMasterPassword) == "")
             notificationManager.post(
                 id = NotificationId.MASTER_PASSWORD_NOT_SET,
-                app.aaps.core.ui.R.string.master_password_not_set,
+                TextRef.AndroidRes(app.aaps.core.ui.R.string.master_password_not_set),
                 level = NotificationLevel.NORMAL,
                 actions = listOf(NotificationAction(TextRef.AndroidRes(R.string.set)) {}),
                 validityCheck = { preferences.get(StringKey.ProtectionMasterPassword) == "" }
@@ -489,7 +489,7 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
         if (preferences.getIfExists(StringKey.AapsDirectoryUri).isNullOrEmpty())
             notificationManager.post(
                 id = NotificationId.AAPS_DIR_NOT_SELECTED,
-                app.aaps.core.ui.R.string.aaps_directory_not_selected,
+                TextRef.AndroidRes(app.aaps.core.ui.R.string.aaps_directory_not_selected),
                 level = NotificationLevel.LOW,
                 actions = listOf(NotificationAction(TextRef.AndroidRes(R.string.select)) {}),
                 validityCheck = { preferences.getIfExists(StringKey.AapsDirectoryUri).isNullOrEmpty() }

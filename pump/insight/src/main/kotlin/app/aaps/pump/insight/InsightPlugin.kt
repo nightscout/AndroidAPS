@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import android.os.SystemClock
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginType
@@ -351,7 +352,7 @@ class InsightPlugin @Inject constructor(
                 val setDateTimeMessage = SetDateTimeMessage()
                 setDateTimeMessage.pumpTime = pumpTime
                 connectionService?.requestMessage(setDateTimeMessage)?.await()
-                notificationManager.post(NotificationId.INSIGHT_DATE_TIME_UPDATED, app.aaps.core.ui.R.string.pump_time_updated, validMinutes = 60)
+                notificationManager.post(NotificationId.INSIGHT_DATE_TIME_UPDATED, TextRef.AndroidRes(app.aaps.core.ui.R.string.pump_time_updated), validMinutes = 60)
             }
         }
     }
@@ -1578,7 +1579,7 @@ class InsightPlugin @Inject constructor(
     }
 
     override fun onTimeoutDuringHandshake() {
-        notificationManager.post(NotificationId.INSIGHT_TIMEOUT_DURING_HANDSHAKE, R.string.timeout_during_handshake, level = NotificationLevel.IMPORTANT)
+        notificationManager.post(NotificationId.INSIGHT_TIMEOUT_DURING_HANDSHAKE, TextRef.AndroidRes(R.string.timeout_during_handshake), level = NotificationLevel.IMPORTANT)
     }
 
     override fun canHandleDST(): Boolean {

@@ -1,5 +1,6 @@
 package app.aaps.plugins.configuration.configBuilder
 
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.SceneLifecycle
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.configuration.Config
@@ -175,7 +176,7 @@ class RunningConfigurationImpl @Inject constructor(
         configuration.version?.let {
             nsClientRepository.addLog("◄ VERSION", "Received AAPS version $it")
             if (config.VERSION_NAME.startsWith(it).not())
-                notificationManager.post(NotificationId.NSCLIENT_VERSION_DOES_NOT_MATCH, R.string.nsclient_version_does_not_match)
+                notificationManager.post(NotificationId.NSCLIENT_VERSION_DOES_NOT_MATCH, TextRef.AndroidRes(R.string.nsclient_version_does_not_match))
         }
         // APS/Sensitivity/Smoothing/Calibration selection is adopted via the synced ActivePlugin* keys
         // (applied below in syncedPrefs → ConfigBuilder's key observer performs the switch).

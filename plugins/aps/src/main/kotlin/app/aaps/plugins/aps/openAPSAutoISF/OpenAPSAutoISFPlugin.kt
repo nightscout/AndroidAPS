@@ -2,6 +2,7 @@ package app.aaps.plugins.aps.openAPSAutoISF
 
 import androidx.collection.LongSparseArray
 import androidx.collection.forEach
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
@@ -169,8 +170,10 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         if (sensitivity.second == null && caller == "OpenAPSSMBPlugin")
             notificationManager.post(
                 NotificationId.DYN_ISF_FALLBACK,
-                R.string.fallback_to_isf_no_tdd, sensitivity.first, level = NotificationLevel.INFO, date = start, validTo = dateUtil.now() + T.mins(1).msecs()
-            )
+                TextRef.AndroidRes(R.string.fallback_to_isf_no_tdd, listOf(sensitivity.first)),
+                level = NotificationLevel.INFO,
+                date = start,
+                validTo = dateUtil.now() + T.mins(1).msecs())
         else
             notificationManager.dismiss(NotificationId.DYN_ISF_FALLBACK)
         profiler.log(LTag.APS, String.format(Locale.getDefault(), "getIsfMgdl() %s %f %s %s", sensitivity.first, sensitivity.second, dateUtil.dateAndTimeAndSecondsString(start), caller), start)

@@ -1,5 +1,6 @@
 package app.aaps.pump.medtronic.util
 
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -98,7 +99,11 @@ class MedtronicUtil @Inject constructor(
     // }
 
     fun sendNotification(notificationType: MedtronicNotificationType, vararg parameters: Any?) {
-        notificationManager.post(notificationType.notificationId, notificationType.resourceId, *parameters, level = notificationType.notificationLevel)
+        notificationManager.post(
+            notificationType.notificationId,
+            TextRef.AndroidRes(notificationType.resourceId, parameters.filterNotNull()),
+            level = notificationType.notificationLevel
+        )
     }
 
     fun dismissNotification(notificationType: MedtronicNotificationType) {

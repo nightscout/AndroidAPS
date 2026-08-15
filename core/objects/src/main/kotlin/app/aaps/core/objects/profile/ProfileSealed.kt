@@ -1,5 +1,6 @@
 package app.aaps.core.objects.profile
 
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.time.systemUtcOffsetAt
 import app.aaps.core.data.format.NumberFormat
@@ -260,7 +261,7 @@ sealed class ProfileSealed(
                 val duration: Long = basal.duration
                 if (duration % 3600000 != 0L) {
                     if (sendNotifications && config.APS) {
-                        notificationManager.post(NotificationId.BASAL_PROFILE_NOT_ALIGNED_TO_HOURS, R.string.basalprofilenotaligned, from)
+                        notificationManager.post(NotificationId.BASAL_PROFILE_NOT_ALIGNED_TO_HOURS, TextRef.AndroidRes(R.string.basalprofilenotaligned, listOf(from)))
                     }
                     validityCheck.isValid = false
                     validityCheck.reasons.add(
@@ -286,11 +287,11 @@ sealed class ProfileSealed(
     }
 
     protected open fun sendBelowMinimumNotification(from: String, notificationManager: NotificationManager, rh: ResourceHelper) {
-        notificationManager.post(NotificationId.MINIMAL_BASAL_VALUE_REPLACED, R.string.minimalbasalvaluereplaced, from)
+        notificationManager.post(NotificationId.MINIMAL_BASAL_VALUE_REPLACED, TextRef.AndroidRes(R.string.minimalbasalvaluereplaced, listOf(from)))
     }
 
     protected open fun sendAboveMaximumNotification(from: String, notificationManager: NotificationManager, rh: ResourceHelper) {
-        notificationManager.post(NotificationId.MAXIMUM_BASAL_VALUE_REPLACED, R.string.maximumbasalvaluereplaced, from)
+        notificationManager.post(NotificationId.MAXIMUM_BASAL_VALUE_REPLACED, TextRef.AndroidRes(R.string.maximumbasalvaluereplaced, listOf(from)))
     }
 
     override val units: GlucoseUnit

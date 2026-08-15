@@ -204,8 +204,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             if (!podStateManager.isPodRunning) {
                 notificationManager.post(
                     NotificationId.OMNIPOD_POD_NOT_ATTACHED,
-                    app.aaps.pump.omnipod.common.R.string.omnipod_common_pod_status_no_active_pod
-                )
+                    TextRef.AndroidRes(app.aaps.pump.omnipod.common.R.string.omnipod_common_pod_status_no_active_pod))
             } else {
                 notificationManager.dismiss(NotificationId.OMNIPOD_POD_NOT_ATTACHED)
                 if (podStateManager.isSuspended) {
@@ -219,9 +218,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     if (!podStateManager.sameTimeZone) {
                         notificationManager.post(
                             NotificationId.OMNIPOD_TIME_OUT_OF_SYNC,
-                            R.string.timezone_on_pod_is_different_from_the_timezone,
-                            level = NotificationLevel.NORMAL
-                        )
+                            TextRef.AndroidRes(R.string.timezone_on_pod_is_different_from_the_timezone),
+                            level = NotificationLevel.NORMAL)
                     }
                 }
             }

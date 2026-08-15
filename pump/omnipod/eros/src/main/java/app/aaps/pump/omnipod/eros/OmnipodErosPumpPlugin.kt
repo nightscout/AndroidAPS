@@ -9,6 +9,7 @@ import android.os.HandlerThread
 import android.os.IBinder
 import android.os.SystemClock
 import android.text.TextUtils
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
@@ -353,7 +354,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
             } else {
                 // Not sure what's going on. Notify the user
                 aapsLogger.error(LTag.PUMP, "Unknown TBR in both Pod state and AAPS")
-                notificationManager.post(NotificationId.OMNIPOD_UNKNOWN_TBR, R.string.omnipod_eros_error_tbr_running_but_aaps_not_aware, sound = AlarmSound.BOLUS_ERROR)
+                notificationManager.post(NotificationId.OMNIPOD_UNKNOWN_TBR, TextRef.AndroidRes(R.string.omnipod_eros_error_tbr_running_but_aaps_not_aware), sound = AlarmSound.BOLUS_ERROR)
             }
         } else if (!podStateManager.isTempBasalRunning && tempBasal != null) {
             aapsLogger.warn(LTag.PUMP, "Removing AAPS TBR that actually hadn't succeeded")
@@ -408,17 +409,17 @@ class OmnipodErosPumpPlugin @Inject constructor(
     private fun updatePodWarningNotifications() {
         if (System.currentTimeMillis() > this.nextPodWarningCheck) {
             if (!podStateManager.isPodRunning) {
-                notificationManager.post(NotificationId.OMNIPOD_POD_NOT_ATTACHED, app.aaps.pump.omnipod.common.R.string.omnipod_common_error_pod_not_attached)
+                notificationManager.post(NotificationId.OMNIPOD_POD_NOT_ATTACHED, TextRef.AndroidRes(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_pod_not_attached))
             } else {
                 notificationManager.dismiss(NotificationId.OMNIPOD_POD_NOT_ATTACHED)
 
                 if (podStateManager.isSuspended) {
-                    notificationManager.post(NotificationId.OMNIPOD_POD_SUSPENDED, app.aaps.pump.omnipod.common.R.string.omnipod_common_error_pod_suspended)
+                    notificationManager.post(NotificationId.OMNIPOD_POD_SUSPENDED, TextRef.AndroidRes(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_pod_suspended))
                 } else {
                     notificationManager.dismiss(NotificationId.OMNIPOD_POD_SUSPENDED)
 
                     if (podStateManager.timeDeviatesMoreThan(OmnipodConstants.TIME_DEVIATION_THRESHOLD)) {
-                        notificationManager.post(NotificationId.OMNIPOD_TIME_OUT_OF_SYNC, app.aaps.pump.omnipod.common.R.string.omnipod_common_error_time_out_of_sync)
+                        notificationManager.post(NotificationId.OMNIPOD_TIME_OUT_OF_SYNC, TextRef.AndroidRes(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_time_out_of_sync))
                     } else {
                         notificationManager.dismiss(NotificationId.OMNIPOD_TIME_OUT_OF_SYNC)
                     }
@@ -672,9 +673,8 @@ class OmnipodErosPumpPlugin @Inject constructor(
 
             notificationManager.post(
                 NotificationId.OMNIPOD_POD_ALERTS_UPDATED,
-                app.aaps.pump.omnipod.common.R.string.omnipod_common_confirmation_expiration_alerts_updated,
-                validMinutes = 60
-            )
+                TextRef.AndroidRes(app.aaps.pump.omnipod.common.R.string.omnipod_common_confirmation_expiration_alerts_updated),
+                validMinutes = 60)
         } else {
             aapsLogger.warn(LTag.PUMP, "Failed to configure alerts in Pod")
         }
@@ -700,9 +700,8 @@ class OmnipodErosPumpPlugin @Inject constructor(
             if (!requestedByUser && aapsOmnipodErosManager.isTimeChangeEventEnabled) {
                 notificationManager.post(
                     NotificationId.TIME_OR_TIMEZONE_CHANGE,
-                    app.aaps.pump.omnipod.common.R.string.omnipod_common_confirmation_time_on_pod_updated,
-                    validMinutes = 60
-                )
+                    TextRef.AndroidRes(app.aaps.pump.omnipod.common.R.string.omnipod_common_confirmation_time_on_pod_updated),
+                    validMinutes = 60)
             }
         } else {
             if (!requestedByUser) {
@@ -712,9 +711,8 @@ class OmnipodErosPumpPlugin @Inject constructor(
                     if (aapsOmnipodErosManager.isTimeChangeEventEnabled) {
                         notificationManager.post(
                             NotificationId.TIME_OR_TIMEZONE_CHANGE,
-                            R.string.omnipod_eros_error_automatic_time_or_timezone_change_failed,
-                            validMinutes = 60
-                        )
+                            TextRef.AndroidRes(R.string.omnipod_eros_error_automatic_time_or_timezone_change_failed),
+                            validMinutes = 60)
                     }
                     this.hasTimeDateOrTimeZoneChanged = false
                     timeChangeRetries = 0
@@ -823,7 +821,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
             }
             if (!success) {
                 aapsLogger.warn(LTag.PUMP, "Failed to retrieve Pod status on startup")
-                notificationManager.post(NotificationId.OMNIPOD_STARTUP_STATUS_REFRESH_FAILED, app.aaps.pump.omnipod.common.R.string.omnipod_common_error_failed_to_refresh_status_on_startup)
+                notificationManager.post(NotificationId.OMNIPOD_STARTUP_STATUS_REFRESH_FAILED, TextRef.AndroidRes(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_failed_to_refresh_status_on_startup))
             }
         } else {
             aapsLogger.debug(LTag.PUMP, "Not retrieving Pod status on startup: no Pod running")

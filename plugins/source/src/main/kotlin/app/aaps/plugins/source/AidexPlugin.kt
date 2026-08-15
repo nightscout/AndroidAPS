@@ -6,6 +6,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
@@ -158,7 +159,7 @@ class AidexPlugin @Inject constructor(
                 sensorExpiredNotified = true
                 notificationManager.post(
                     id = NotificationId.AIDEX_SENSOR_EXPIRED,
-                    textRes = R.string.aidex_sensor_expired,
+                    textRef = TextRef.AndroidRes(R.string.aidex_sensor_expired),
                     level = NotificationLevel.IMPORTANT,
                     validMinutes = 60
                 )
@@ -174,7 +175,7 @@ class AidexPlugin @Inject constructor(
                 replaceSensorNotified = true
                 notificationManager.post(
                     id = NotificationId.AIDEX_REPLACE_SENSOR,
-                    textRes = R.string.aidex_sensor_replace,
+                    textRef = TextRef.AndroidRes(R.string.aidex_sensor_replace),
                     level = NotificationLevel.NORMAL,
                     validMinutes = 120
                 )
@@ -190,7 +191,7 @@ class AidexPlugin @Inject constructor(
                 sensorErrorNotified = true
                 notificationManager.post(
                     id = NotificationId.AIDEX_SENSOR_ERROR,
-                    textRes = R.string.aidex_sensor_error,
+                    textRef = TextRef.AndroidRes(R.string.aidex_sensor_error),
                     level = NotificationLevel.IMPORTANT,
                     validMinutes = 60
                 )
@@ -206,7 +207,7 @@ class AidexPlugin @Inject constructor(
                 sensorStablingNotified = true
                 notificationManager.post(
                     id = NotificationId.AIDEX_SENSOR_STABILIZING,
-                    textRes = R.string.aidex_sensor_stabilizing,
+                    textRef = TextRef.AndroidRes(R.string.aidex_sensor_stabilizing),
                     level = NotificationLevel.NORMAL,
                     validMinutes = 60
                 )
@@ -222,7 +223,7 @@ class AidexPlugin @Inject constructor(
                 signalLostNotified = true
                 notificationManager.post(
                     id = NotificationId.AIDEX_SIGNAL_LOST,
-                    textRes = R.string.aidex_signal_lost,
+                    textRef = TextRef.AndroidRes(R.string.aidex_signal_lost),
                     level = NotificationLevel.NORMAL,
                     validMinutes = 30
                 )

@@ -70,7 +70,7 @@ class SafetyPlugin @Inject constructor(
     override suspend fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         if (!config.isEngineeringModeOrRelease()) {
             if (value.value()) {
-                notificationManager.post(NotificationId.TOAST_ALARM, R.string.closed_loop_disabled_on_dev_branch, level = NotificationLevel.NORMAL)
+                notificationManager.post(NotificationId.TOAST_ALARM, TextRef.AndroidRes(R.string.closed_loop_disabled_on_dev_branch), level = NotificationLevel.NORMAL)
             }
             value.set(false, rh.gs(R.string.closed_loop_disabled_on_dev_branch), this)
         }

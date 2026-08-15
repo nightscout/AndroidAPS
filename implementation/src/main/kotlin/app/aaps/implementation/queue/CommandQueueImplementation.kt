@@ -5,6 +5,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.EPS
@@ -218,7 +219,7 @@ class CommandQueueImplementation @Inject constructor(
         }
         notificationManager.dismiss(NotificationId.FAILED_UPDATE_PROFILE)
         if (result.enacted && !silent)
-            notificationManager.post(NotificationId.PROFILE_SET_OK, rh.gs(app.aaps.core.ui.R.string.profile_set_ok), validMinutes = 60)
+            notificationManager.post(NotificationId.PROFILE_SET_OK, TextRef.AndroidRes(app.aaps.core.ui.R.string.profile_set_ok), validMinutes = 60)
         return true
     }
 
@@ -440,7 +441,7 @@ class CommandQueueImplementation @Inject constructor(
                 aapsLogger.error(LTag.PUMPQUEUE, "Failed to store carbs after bolus", e)
                 // The bolus succeeded but the carbs weren't persisted, so COB/IOB would be wrong and the
                 // loss was previously silent (log-only). Alert the user so they can re-enter the carbs.
-                notificationManager.post(NotificationId.CARBS_STORE_FAILED, rh.gs(app.aaps.core.ui.R.string.carbs_not_saved_after_bolus))
+                notificationManager.post(NotificationId.CARBS_STORE_FAILED, TextRef.AndroidRes(app.aaps.core.ui.R.string.carbs_not_saved_after_bolus))
             }
         }
         return result
@@ -588,7 +589,7 @@ class CommandQueueImplementation @Inject constructor(
         val basalValues = profile.getBasalValues()
         for (basalValue in basalValues) {
             if (basalValue.value < activePlugin.activePump.pumpDescription.basalMinimumRate) {
-                notificationManager.post(NotificationId.BASAL_VALUE_BELOW_MINIMUM, R.string.basal_value_below_minimum)
+                notificationManager.post(NotificationId.BASAL_VALUE_BELOW_MINIMUM, TextRef.AndroidRes(R.string.basal_value_below_minimum))
                 return pumpEnactResultProvider.get().success(false).enacted(false).comment(R.string.basal_value_below_minimum)
             }
         }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.HandlerThread
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.PluginConstraints
@@ -105,7 +106,7 @@ class SignatureVerifierPlugin @Inject constructor(
     }
 
     private fun showNotification() {
-        notificationManager.post(NotificationId.INVALID_VERSION, R.string.running_invalid_version)
+        notificationManager.post(NotificationId.INVALID_VERSION, TextRef.AndroidRes(R.string.running_invalid_version))
     }
 
     private fun hasIllegalSignature(): Boolean {

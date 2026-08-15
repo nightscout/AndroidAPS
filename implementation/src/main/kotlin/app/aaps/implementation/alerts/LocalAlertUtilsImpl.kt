@@ -1,5 +1,6 @@
 package app.aaps.implementation.alerts
 
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
@@ -68,7 +69,7 @@ class LocalAlertUtilsImpl @Inject constructor(
             if (preferences.get(BooleanKey.AlertPumpUnreachable)) {
                 aapsLogger.debug(LTag.CORE, "Generating pump unreachable alarm. lastConnection: " + dateUtil.dateAndTimeString(lastConnection) + " isStatusOutdated: true")
                 preferences.put(LocalAlertLongKey.NextPumpDisconnectedAlarm, dateUtil.now() + pumpUnreachableThreshold())
-                notificationManager.post(NotificationId.PUMP_UNREACHABLE, R.string.pump_unreachable, sound = AlarmSound.ALARM)
+                notificationManager.post(NotificationId.PUMP_UNREACHABLE, TextRef.AndroidRes(R.string.pump_unreachable), sound = AlarmSound.ALARM)
                 if (preferences.get(BooleanKey.NsClientCreateAnnouncementsFromErrors) && config.APS)
                     appScope.launch {
                         persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
@@ -135,7 +136,7 @@ class LocalAlertUtilsImpl @Inject constructor(
             && preferences.get(LocalAlertLongKey.NextMissedReadingsAlarm) < dateUtil.now()
         ) {
             preferences.put(LocalAlertLongKey.NextMissedReadingsAlarm, dateUtil.now() + missedReadingsThreshold())
-            notificationManager.post(NotificationId.BG_READINGS_MISSED, R.string.missed_bg_readings, sound = AlarmSound.ALARM)
+            notificationManager.post(NotificationId.BG_READINGS_MISSED, TextRef.AndroidRes(R.string.missed_bg_readings), sound = AlarmSound.ALARM)
             if (preferences.get(BooleanKey.NsClientCreateAnnouncementsFromErrors) && config.APS) {
                 appScope.launch {
                     persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(

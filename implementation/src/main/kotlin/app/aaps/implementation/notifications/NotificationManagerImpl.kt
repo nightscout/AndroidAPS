@@ -10,6 +10,7 @@ import android.content.IntentFilter
 import android.media.AudioManager
 import android.media.RingtoneManager
 import android.os.Build
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.notifications.AlarmSound
 import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
@@ -207,8 +208,7 @@ class NotificationManagerImpl @Inject constructor(
     @Synchronized
     override fun post(
         id: NotificationId,
-        @StringRes textRes: Int,
-        vararg formatArgs: Any?,
+        textRef: TextRef,
         level: NotificationLevel,
         validMinutes: Int,
         date: Long,
@@ -217,7 +217,7 @@ class NotificationManagerImpl @Inject constructor(
         actions: List<NotificationAction>,
         validityCheck: (() -> Boolean)?
     ): NotificationHandle {
-        val text = if (formatArgs.isEmpty()) rh.gs(textRes) else rh.gs(textRes, *formatArgs)
+        val text = rh.gs(textRef)
         val effectiveValidTo = if (validMinutes > 0) date + validMinutes.toLong().minutes.inWholeMilliseconds else validTo
         return postInternal(
             id = id, text = text, level = level,

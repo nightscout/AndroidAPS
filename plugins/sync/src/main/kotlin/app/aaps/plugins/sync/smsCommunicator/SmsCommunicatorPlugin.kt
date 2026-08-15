@@ -1067,10 +1067,10 @@ class SmsCommunicatorPlugin @Inject constructor(
             messages.add(sms)
         } catch (e: IllegalArgumentException) {
             return if (e.message == "Invalid message body") {
-                notificationManager.post(NotificationId.INVALID_MESSAGE_BODY, R.string.smscommunicator_message_body)
+                notificationManager.post(NotificationId.INVALID_MESSAGE_BODY, TextRef.AndroidRes(R.string.smscommunicator_message_body))
                 false
             } else {
-                notificationManager.post(NotificationId.INVALID_PHONE_NUMBER, R.string.smscommunicator_invalid_phone_number)
+                notificationManager.post(NotificationId.INVALID_PHONE_NUMBER, TextRef.AndroidRes(R.string.smscommunicator_invalid_phone_number))
                 false
             }
         } catch (_: SecurityException) {

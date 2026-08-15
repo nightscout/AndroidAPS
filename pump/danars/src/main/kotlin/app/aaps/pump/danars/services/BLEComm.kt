@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Base64
 import androidx.core.app.ActivityCompat
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -447,7 +448,7 @@ class BLEComm @Inject constructor(
 
         val deviceName = connectDeviceName
         if (deviceName == null || deviceName == "") {
-            notificationManager.post(NotificationId.DEVICE_NOT_PAIRED, R.string.pairfirst)
+            notificationManager.post(NotificationId.DEVICE_NOT_PAIRED, TextRef.AndroidRes(R.string.pairfirst))
             return
         }
 
@@ -523,7 +524,7 @@ class BLEComm @Inject constructor(
             mSendQueue.clear()
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, rh.gs(R.string.pumperror)))
             runBlocking { pumpSync.insertAnnouncement(rh.gs(R.string.pumperror), null, danaPump.pumpType(), danaPump.serialNumber) }
-            notificationManager.post(NotificationId.PUMP_ERROR, R.string.pumperror)
+            notificationManager.post(NotificationId.PUMP_ERROR, TextRef.AndroidRes(R.string.pumperror))
             // response BUSY: error status
         } else if (decryptedBuffer.size == 6 && decryptedBuffer[2] == 'B'.code.toByte() && decryptedBuffer[3] == 'U'.code.toByte() && decryptedBuffer[4] == 'S'.code.toByte() && decryptedBuffer[5] == 'Y'.code.toByte()) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK (BUSY)" + " " + DanaRSPacket.toHexString(decryptedBuffer))
@@ -537,7 +538,7 @@ class BLEComm @Inject constructor(
             mSendQueue.clear()
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, rh.gs(app.aaps.core.ui.R.string.connection_error)))
             danaRSPlugin.clearPairing()
-            notificationManager.post(NotificationId.WRONG_SERIAL_NUMBER, app.aaps.core.ui.R.string.password_cleared)
+            notificationManager.post(NotificationId.WRONG_SERIAL_NUMBER, TextRef.AndroidRes(app.aaps.core.ui.R.string.password_cleared))
         }
     }
 
@@ -629,7 +630,7 @@ class BLEComm @Inject constructor(
             aapsLogger.debug(LTag.PUMPBTCOMM, "Pump user password: " + danaPump.rsPassword)
             if (!danaPump.isRSPasswordOK) {
                 aapsLogger.error(LTag.PUMPBTCOMM, "Wrong pump password")
-                notificationManager.post(NotificationId.WRONG_PUMP_PASSWORD, R.string.wrongpumppassword)
+                notificationManager.post(NotificationId.WRONG_PUMP_PASSWORD, TextRef.AndroidRes(R.string.wrongpumppassword))
                 bleTransport.updatePairingState(PairingState(step = PairingStep.WAITING_FOR_PASSWORD))
                 disconnect("WrongPassword")
             } else {

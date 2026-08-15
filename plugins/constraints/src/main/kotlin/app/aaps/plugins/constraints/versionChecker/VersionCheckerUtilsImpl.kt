@@ -1,6 +1,7 @@
 package app.aaps.plugins.constraints.versionChecker
 
 import android.os.Build
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -116,7 +117,7 @@ class VersionCheckerUtilsImpl @Inject constructor(
         val now = dateUtil.now()
         if (dateUtil.isAfterNoon() && now > preferences.get(VersionCheckerLongKey.LastVersionCheckWarning) + warnEvery(0)) {
             aapsLogger.debug(LTag.CORE, "Version $currentVersion outdated. Found $newVersion")
-            notificationManager.post(NotificationId.NEW_VERSION_DETECTED, R.string.versionavailable, newVersion.toString(), level = NotificationLevel.LOW)
+            notificationManager.post(NotificationId.NEW_VERSION_DETECTED, TextRef.AndroidRes(R.string.versionavailable, listOf(newVersion.toString())), level = NotificationLevel.LOW)
             preferences.put(VersionCheckerLongKey.LastVersionCheckWarning, now)
         }
         return true
@@ -128,10 +129,10 @@ class VersionCheckerUtilsImpl @Inject constructor(
             // store last notification time
             preferences.put(VersionCheckerLongKey.LastVersionCheckWarning, now)
             //notify
-            notificationManager.post(NotificationId.VERSION_EXPIRE, R.string.application_expired)
+            notificationManager.post(NotificationId.VERSION_EXPIRE, TextRef.AndroidRes(R.string.application_expired))
         } else if (dateUtil.isAfterNoon() && now > preferences.get(VersionCheckerLongKey.LastVersionCheckWarning) + warnEvery(endDate)) {
             aapsLogger.debug(LTag.CORE, rh.gs(R.string.version_expire, currentVersion, dateUtil.dateString(endDate)))
-            notificationManager.post(NotificationId.VERSION_EXPIRE, R.string.version_expire, currentVersion, dateUtil.dateString(endDate), level = NotificationLevel.LOW)
+            notificationManager.post(NotificationId.VERSION_EXPIRE, TextRef.AndroidRes(R.string.version_expire, listOf(currentVersion,dateUtil.dateString(endDate))), level = NotificationLevel.LOW)
             preferences.put(VersionCheckerLongKey.LastExpiredWarning, now)
         }
     }

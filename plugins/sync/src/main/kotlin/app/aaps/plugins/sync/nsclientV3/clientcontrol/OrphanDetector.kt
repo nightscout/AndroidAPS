@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.nsclientV3.clientcontrol
 
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -109,7 +110,7 @@ class OrphanDetector @Inject constructor(
         }
         _authorized.value = false
         aapsLogger.warn(LTag.NSCLIENT, "ClientControl: clientId=${pairing.clientId} not in master's authorizedClients — orphan")
-        notificationManager.post(NotificationId.NSCLIENT_PAIRING_ORPHAN, rh.gs(R.string.clientcontrol_orphan_notification))
+        notificationManager.post(NotificationId.NSCLIENT_PAIRING_ORPHAN, TextRef.AndroidRes(R.string.clientcontrol_orphan_notification))
     }
 
     companion object {

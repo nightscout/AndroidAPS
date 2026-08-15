@@ -3,6 +3,7 @@ package app.aaps.implementation.queue
 import android.content.Context
 import android.os.PowerManager
 import androidx.compose.ui.text.font.FontWeight
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.BS
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.configuration.Config
@@ -227,8 +228,8 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
 
         // The user is alerted (URGENT) that the carbs were lost — not silently dropped.
         verify(notificationManager).post(
-            eq(NotificationId.CARBS_STORE_FAILED), eq("Carbs could not be saved"), any<NotificationLevel>(),
-            any<Int>(), anyOrNull(), any<List<NotificationAction>>(), anyOrNull()
+            eq(NotificationId.CARBS_STORE_FAILED), eq(TextRef.AndroidRes(app.aaps.core.ui.R.string.carbs_not_saved_after_bolus)),
+            any<NotificationLevel>(), any<Int>(), any<Long>(), any<Long>(), anyOrNull(), any<List<NotificationAction>>(), anyOrNull()
         )
     }
 
@@ -264,9 +265,12 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     }
 
     // Both helpers match the String post() overload (id, text, level, validMinutes, sound, actions, validityCheck).
-    private fun verifyOkPosted(text: String) =
+    // PROFILE_SET_OK now passes the TextRef and lets the notification resolve it, so this matches the
+    // TextRef overload (id, textRef, level, validMinutes, date, validTo, sound, actions, validityCheck).
+    private fun verifyOkPosted() =
         verify(notificationManager).post(
-            eq(NotificationId.PROFILE_SET_OK), eq(text), any<NotificationLevel>(), any<Int>(),
+            eq(NotificationId.PROFILE_SET_OK), eq(TextRef.AndroidRes(app.aaps.core.ui.R.string.profile_set_ok)),
+            any<NotificationLevel>(), any<Int>(), any<Long>(), any<Long>(),
             anyOrNull(), any<List<NotificationAction>>(), anyOrNull()
         )
 
@@ -288,7 +292,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
 
         assertThat(persisted).isTrue()
         verify(notificationManager).dismiss(NotificationId.FAILED_UPDATE_PROFILE)
-        verifyOkPosted("Basal profile in pump updated")
+        verifyOkPosted()
     }
 
     @Test

@@ -1,5 +1,6 @@
 package app.aaps.pump.danars.comm
 
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
@@ -42,7 +43,7 @@ class DanaRSPacketBasalGetBasalRate @Inject constructor(
             aapsLogger.debug(LTag.PUMPCOMM, "Basal " + String.format(Locale.ENGLISH, "%02d", index) + "h: " + danaPump.pumpProfiles!![danaPump.activeProfile][index])
         if (danaPump.basalStep != 0.01) {
             failed = true
-            notificationManager.post(NotificationId.WRONG_BASAL_STEP, app.aaps.pump.dana.R.string.danar_setbasalstep001)
+            notificationManager.post(NotificationId.WRONG_BASAL_STEP, TextRef.AndroidRes(app.aaps.pump.dana.R.string.danar_setbasalstep001))
         } else {
             notificationManager.dismiss(NotificationId.WRONG_BASAL_STEP)
         }

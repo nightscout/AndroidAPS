@@ -151,8 +151,7 @@ class MedtrumService : DaggerService(), MedtrumBleCallback {
             if (medtrumPlugin.isInitialized() && !r.success) {
                 notificationManager.post(
                     NotificationId.PUMP_SETTINGS_FAILED,
-                    R.string.pump_setting_failed,
-                )
+                    TextRef.AndroidRes(R.string.pump_setting_failed))
             }
         }
         preferences.observe(MedtrumBooleanKey.MedtrumPatchExpiration).drop(1).collectResilient(scope, aapsLogger, LTag.PUMP) {
@@ -161,8 +160,7 @@ class MedtrumService : DaggerService(), MedtrumBleCallback {
             if (medtrumPlugin.isInitialized() && !r.success) {
                 notificationManager.post(
                     NotificationId.PUMP_SETTINGS_FAILED,
-                    R.string.pump_setting_failed,
-                )
+                    TextRef.AndroidRes(R.string.pump_setting_failed))
             }
         }
         preferences.observe(MedtrumIntKey.MedtrumHourlyMaxInsulin).drop(1).collectResilient(scope, aapsLogger, LTag.PUMP) {
@@ -171,8 +169,7 @@ class MedtrumService : DaggerService(), MedtrumBleCallback {
             if (medtrumPlugin.isInitialized() && !r.success) {
                 notificationManager.post(
                     NotificationId.PUMP_SETTINGS_FAILED,
-                    R.string.pump_setting_failed,
-                )
+                    TextRef.AndroidRes(R.string.pump_setting_failed))
             }
         }
         preferences.observe(MedtrumIntKey.MedtrumDailyMaxInsulin).drop(1).collectResilient(scope, aapsLogger, LTag.PUMP) {
@@ -181,8 +178,7 @@ class MedtrumService : DaggerService(), MedtrumBleCallback {
             if (medtrumPlugin.isInitialized() && !r.success) {
                 notificationManager.post(
                     NotificationId.PUMP_SETTINGS_FAILED,
-                    R.string.pump_setting_failed,
-                )
+                    TextRef.AndroidRes(R.string.pump_setting_failed))
             }
         }
         medtrumPump.pumpStateFlow.collectResilient(scope, aapsLogger, LTag.PUMP) { pumpState ->
@@ -310,9 +306,8 @@ class MedtrumService : DaggerService(), MedtrumBleCallback {
             aapsLogger.error(LTag.PUMPCOMM, "Failed to update pump time")
             notificationManager.post(
                 NotificationId.PUMP_TIMEZONE_UPDATE_FAILED,
-                R.string.pump_time_update_failed,
-                level = NotificationLevel.IMPORTANT,
-            )
+                TextRef.AndroidRes(R.string.pump_time_update_failed),
+                level = NotificationLevel.IMPORTANT)
         }
     }
 
@@ -610,10 +605,9 @@ class MedtrumService : DaggerService(), MedtrumBleCallback {
                         // Show notification to alert user of failure
                         notificationManager.post(
                             NotificationId.PUMP_SYNC_ERROR,
-                            R.string.pump_sync_error,
+                            TextRef.AndroidRes(R.string.pump_sync_error),
                             level = NotificationLevel.URGENT,
-                            sound = AlarmSound.ALARM
-                        )
+                            sound = AlarmSound.ALARM)
                     } else if (failureCount >= 2) {
                         break
                     }
@@ -668,9 +662,8 @@ class MedtrumService : DaggerService(), MedtrumBleCallback {
                 notificationManager.dismiss(NotificationId.PUMP_SUSPENDED)
                 notificationManager.post(
                     NotificationId.PATCH_NOT_ACTIVE,
-                    R.string.patch_not_active,
-                    level = NotificationLevel.IMPORTANT,
-                )
+                    TextRef.AndroidRes(R.string.patch_not_active),
+                    level = NotificationLevel.IMPORTANT)
                 medtrumPump.setFakeTBRIfNotSet()
                 medtrumPump.clearAlarmState()
 
@@ -698,10 +691,9 @@ class MedtrumService : DaggerService(), MedtrumBleCallback {
 
                     notificationManager.post(
                         NotificationId.PUMP_ERROR,
-                        R.string.patch_reset_after_primed_error,
+                        TextRef.AndroidRes(R.string.patch_reset_after_primed_error),
                         level = NotificationLevel.URGENT,
-                        sound = AlarmSound.ALARM
-                    )
+                        sound = AlarmSound.ALARM)
                 }
             }
 
@@ -729,8 +721,7 @@ class MedtrumService : DaggerService(), MedtrumBleCallback {
             MedtrumPumpState.PAUSED               -> {
                 notificationManager.post(
                     NotificationId.PUMP_SUSPENDED,
-                    R.string.pump_is_suspended,
-                )
+                    TextRef.AndroidRes(R.string.pump_is_suspended))
                 // Pump will report proper TBR for this from loadEvents()
                 scope.launch { commandQueue.loadEvents() }
             }
@@ -738,10 +729,9 @@ class MedtrumService : DaggerService(), MedtrumBleCallback {
             MedtrumPumpState.HOURLY_MAX_SUSPENDED -> {
                 notificationManager.post(
                     NotificationId.PUMP_SUSPENDED,
-                    R.string.pump_is_suspended_hour_max,
+                    TextRef.AndroidRes(R.string.pump_is_suspended_hour_max),
                     level = NotificationLevel.URGENT,
-                    sound = AlarmSound.ALARM
-                )
+                    sound = AlarmSound.ALARM)
                 // Pump will report proper TBR for this from loadEvents()
                 scope.launch { commandQueue.loadEvents() }
             }
@@ -749,10 +739,9 @@ class MedtrumService : DaggerService(), MedtrumBleCallback {
             MedtrumPumpState.DAILY_MAX_SUSPENDED  -> {
                 notificationManager.post(
                     NotificationId.PUMP_SUSPENDED,
-                    R.string.pump_is_suspended_day_max,
+                    TextRef.AndroidRes(R.string.pump_is_suspended_day_max),
                     level = NotificationLevel.URGENT,
-                    sound = AlarmSound.ALARM
-                )
+                    sound = AlarmSound.ALARM)
                 // Pump will report proper TBR for this from loadEvents()
                 scope.launch { commandQueue.loadEvents() }
             }
@@ -770,9 +759,8 @@ class MedtrumService : DaggerService(), MedtrumBleCallback {
                 // Pump suspended due to error, show error!
                 notificationManager.post(
                     NotificationId.PUMP_ERROR,
-                    R.string.pump_error, alarmState?.let { medtrumPump.alarmStateToString(it) },
-                    sound = AlarmSound.ALARM
-                )
+                    TextRef.AndroidRes(R.string.pump_error, listOf(alarmState?.let { medtrumPump.alarmStateToString(it) }.toString())),
+                    sound = AlarmSound.ALARM)
                 // Get pump status, use readStatus here as for loadEvents() we cannot be sure callback is executed
                 scope.launch {
                     commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.device_changed))
@@ -799,9 +787,8 @@ class MedtrumService : DaggerService(), MedtrumBleCallback {
         if (medtrumPump.desiredPumpWarning && alarmState != AlarmState.NONE) {
             notificationManager.post(
                 NotificationId.PUMP_WARNING,
-                R.string.pump_warning, medtrumPump.alarmStateToString(alarmState),
-                level = NotificationLevel.ANNOUNCEMENT,
-            )
+                TextRef.AndroidRes(R.string.pump_warning, listOf(medtrumPump.alarmStateToString(alarmState))),
+                level = NotificationLevel.ANNOUNCEMENT)
             runBlocking {
                 pumpSync.insertAnnouncement(
                     medtrumPump.alarmStateToString(alarmState),
@@ -819,9 +806,8 @@ class MedtrumService : DaggerService(), MedtrumBleCallback {
             if (dateUtil.now() >= warningAt && dateUtil.now() <= warningAt + CHECK_EXPIRY_WARNING_TIME_MS) {
                 notificationManager.post(
                     NotificationId.PUMP_WARNING,
-                    R.string.alarm_pump_expires_soon,
-                    level = NotificationLevel.ANNOUNCEMENT,
-                )
+                    TextRef.AndroidRes(R.string.alarm_pump_expires_soon),
+                    level = NotificationLevel.ANNOUNCEMENT)
                 runBlocking {
                     pumpSync.insertAnnouncement(
                         rh.gs(R.string.alarm_pump_expires_soon),

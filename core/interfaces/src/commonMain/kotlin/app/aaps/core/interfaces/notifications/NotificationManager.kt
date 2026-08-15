@@ -1,6 +1,6 @@
 package app.aaps.core.interfaces.notifications
 
-import androidx.annotation.StringRes
+import app.aaps.core.keys.interfaces.TextRef
 import kotlinx.coroutines.flow.StateFlow
 import kotlin.time.Clock
 
@@ -32,10 +32,16 @@ interface NotificationManager {
         validityCheck: (() -> Boolean)? = null
     ): NotificationHandle
 
+    /**
+     * Posts a notification whose text is resolved when it is shown.
+     *
+     * Android callers keep writing `post(id, R.string.x, arg)`: that goes through the extension in
+     * `NotificationManagerAndroid`, which wraps the id in a [TextRef.AndroidRes]. Keeping the id out of
+     * this declaration is what lets the interface be platform neutral.
+     */
     fun post(
         id: NotificationId,
-        @StringRes textRes: Int,
-        vararg formatArgs: Any?,
+        textRef: TextRef,
         level: NotificationLevel = id.defaultLevel,
         validMinutes: Int = 0,
         date: Long = Clock.System.now().toEpochMilliseconds(),

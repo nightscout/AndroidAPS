@@ -2,6 +2,7 @@ package app.aaps.plugins.constraints.storage
 
 import android.os.Environment
 import android.os.StatFs
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.plugin.PluginType
@@ -38,7 +39,7 @@ class StorageConstraintPlugin @Inject constructor(
         if (diskFree < Constants.MINIMUM_FREE_SPACE) {
             aapsLogger.debug(LTag.CONSTRAINTS, "Closed loop disabled. Internal storage free (Mb):$diskFree")
             value.set(false, rh.gs(R.string.disk_full, Constants.MINIMUM_FREE_SPACE), this)
-            notificationManager.post(NotificationId.DISK_FULL, R.string.disk_full, Constants.MINIMUM_FREE_SPACE)
+            notificationManager.post(NotificationId.DISK_FULL, TextRef.AndroidRes(R.string.disk_full, listOf(Constants.MINIMUM_FREE_SPACE)))
         }
         return value
     }

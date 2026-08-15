@@ -2,6 +2,7 @@ package app.aaps.plugins.aps.openAPSSMB
 
 import androidx.collection.LongSparseArray
 import androidx.collection.forEach
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.plugin.PluginType
@@ -149,8 +150,10 @@ open class OpenAPSSMBPlugin @Inject constructor(
         if (sensitivity.second == null)
             notificationManager.post(
                 NotificationId.DYN_ISF_FALLBACK,
-                R.string.fallback_to_isf_no_tdd, sensitivity.first, level = NotificationLevel.INFO, date = start, validTo = dateUtil.now() + T.mins(1).msecs()
-            )
+                TextRef.AndroidRes(R.string.fallback_to_isf_no_tdd, listOf(sensitivity.first)),
+                level = NotificationLevel.INFO,
+                date = start,
+                validTo = dateUtil.now() + T.mins(1).msecs())
         else
             notificationManager.dismiss(NotificationId.DYN_ISF_FALLBACK)
         profiler.log(LTag.APS, "getIsfMgdl() multiplier=${multiplier} reason=${sensitivity.first} sensitivity=${sensitivity.second} caller=$caller", start)
@@ -359,8 +362,9 @@ open class OpenAPSSMBPlugin @Inject constructor(
         if (dynIsfMode && !dynIsfResult.tddPartsCalculated()) {
             notificationManager.post(
                 NotificationId.SMB_FALLBACK,
-                R.string.fallback_smb_no_tdd, level = NotificationLevel.INFO, validTo = dateUtil.now() + T.mins(1).msecs()
-            )
+                TextRef.AndroidRes(R.string.fallback_smb_no_tdd),
+                level = NotificationLevel.INFO,
+                validTo = dateUtil.now() + T.mins(1).msecs())
             inputConstraints.copyReasons(
                 ConstraintObject(false, aapsLogger).also {
                     it.set(false, rh.gs(R.string.fallback_smb_no_tdd), this)

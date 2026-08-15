@@ -61,11 +61,10 @@ class DstHelperPlugin @Inject constructor(
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
                 notificationManager.post(
                     NotificationId.DST_IN_24H,
-                    R.string.dst_in_24h_warning,
+                    TextRef.AndroidRes(R.string.dst_in_24h_warning),
                     actions = listOf(NotificationAction(TextRef.AndroidRes(app.aaps.core.ui.R.string.snooze)) {
                         preferences.put(DstHelperLongKey.SnoozeDstIn24h, System.currentTimeMillis() + T.hours(24).msecs())
-                    })
-                )
+                    }))
             }
         }
         if (wasDST(cal)) {
@@ -81,11 +80,10 @@ class DstHelperPlugin @Inject constructor(
                 if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
                     notificationManager.post(
                         NotificationId.DST_LOOP_DISABLED,
-                        R.string.dst_loop_disabled_warning,
+                        TextRef.AndroidRes(R.string.dst_loop_disabled_warning),
                         actions = listOf(NotificationAction(TextRef.AndroidRes(app.aaps.core.ui.R.string.snooze)) {
                             preferences.put(DstHelperLongKey.SnoozeLoopDisabled, System.currentTimeMillis() + T.hours(24).msecs())
-                        })
-                    )
+                        }))
                 }
             } else {
                 aapsLogger.debug(LTag.CONSTRAINTS, "Loop already suspended")
