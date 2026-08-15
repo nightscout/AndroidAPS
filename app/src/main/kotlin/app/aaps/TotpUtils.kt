@@ -10,7 +10,7 @@ object TotpUtils {
     private const val DEFAULT_SECRET_SIZE = 16
     private const val DEFAULT_CODE_DIGITS = 8
     private const val DEFAULT_TIME_STEP = 30L
-    private const val DEFAULT_TOLERANCE = 1
+    private const val DEFAULT_TOLERANCE = 5  // W527: 容差±5窗口(码~5.5分钟有效),患者手动输入友好;面板无需改动
     // Base58 邀请码字符集: 去易混淆 0/O/1/I/l (与面板 local_proxy._totp_code 保持一致)
     private val BASE58_CHARS = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
     private val HEX_CHARS = "0123456789abcdef".toCharArray()
