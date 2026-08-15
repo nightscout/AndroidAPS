@@ -755,6 +755,12 @@ class CustomWatchface : BaseWatchFace() {
                     binding.freetext2.text = ""
                     binding.freetext3.text = ""
                     binding.freetext4.text = ""
+                    // A different zip means the dial now looks like something else, and the system
+                    // has no way to know: what it caches its preview from is the style schema, which
+                    // says nothing about which CWF is loaded. Asked for here, inside the block that
+                    // only runs when the json or the resources actually changed, rather than on
+                    // every refresh tick - the system is documented to rate limit these requests.
+                    requestPreviewImageUpdate()
                 }
                 if (checkPref()) {
                     DynProvider.init(this, json)

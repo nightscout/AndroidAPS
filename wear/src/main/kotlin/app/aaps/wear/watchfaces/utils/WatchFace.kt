@@ -232,6 +232,26 @@ abstract class WatchFace : WatchFaceService() {
     // Renderer instance
     private var renderer: WatchFaceRenderer? = null
 
+    /**
+     * Asks the system to re-render the preview image it caches for this watch face - the thumbnail
+     * shown by the long-press "Customize" flow and the watch face picker.
+     *
+     * The system renders and caches that thumbnail itself, and only knows to redo it when the style
+     * schema changes. A watch face whose appearance comes from somewhere else - a loaded template,
+     * a chosen background - has to say so, which is exactly what this call is for
+     * (`Renderer.sendPreviewImageNeedsUpdateRequest`, whose own doc names "a watchface with a
+     * selectable background" as the case). See `_docs/Complication_Libraries.md`, "The system's
+     * cached preview image".
+     *
+     * Only worth calling when the appearance really changed: the library documents that the system
+     * may rate limit these requests, and it decides when to re-render. Safe to call at any time
+     * though - before the renderer exists the request is queued by the library and sent once it
+     * does, and a request made while nothing is listening is replayed to the next listener.
+     */
+    protected fun requestPreviewImageUpdate() {
+        renderer?.sendPreviewImageNeedsUpdateRequest()
+    }
+
     override suspend fun createWatchFace(
         surfaceHolder: SurfaceHolder,
         watchState: WatchState,
