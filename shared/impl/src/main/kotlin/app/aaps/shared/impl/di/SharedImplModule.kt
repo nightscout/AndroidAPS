@@ -42,7 +42,7 @@ open class SharedImplModule {
 
     @Provides
     @Singleton
-    fun provideRxBus(aapsSchedulers: AapsSchedulers, aapsLogger: AAPSLogger): RxBus = RxBusImpl(aapsSchedulers, aapsLogger)
+    fun provideRxBus(aapsLogger: AAPSLogger): RxBus = RxBusImpl(aapsLogger)
 
     @Provides
     @Singleton

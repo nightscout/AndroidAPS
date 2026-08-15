@@ -1,7 +1,6 @@
 package app.aaps.core.interfaces.rx.bus
 
 import app.aaps.core.interfaces.rx.events.Event
-import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -17,16 +16,11 @@ interface RxBus {
     fun send(event: Event)
 
     /**
-     * Subscribes to events of a specific type via RxJava Observable.
+     * Subscribes to events of a specific type.
      *
-     * @param eventType The class of the event to listen for.
-     * @return An [Observable] that emits events of the specified type.
-     */
-    fun <T : Any> toObservable(eventType: Class<T>): Observable<T>
-
-    /**
-     * Subscribes to events of a specific type via coroutines Flow.
-     * Use this in Compose/coroutine code instead of [toObservable].
+     * The bus has no replay, so a collector only sees what is sent after it starts. Collect with
+     * `app.aaps.core.interfaces.rx.collectResilient` and `CoroutineStart.UNDISPATCHED` when the
+     * subscription is made from a constructor or `onStart`, so nothing sent right after it is lost.
      *
      * @param eventType The class of the event to listen for.
      * @return A [Flow] that emits events of the specified type.

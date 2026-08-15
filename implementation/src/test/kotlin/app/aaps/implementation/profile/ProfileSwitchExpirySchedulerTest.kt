@@ -9,8 +9,11 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.shared.tests.TestBase
-import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -41,14 +44,18 @@ class ProfileSwitchExpirySchedulerTest : TestBase() {
     private val now = 1_700_000_000_000L
 
     private var eventCount = 0
-    private lateinit var disposable: Disposable
+    private lateinit var collector: Job
 
     @BeforeEach
     fun prepare() {
         whenever(dateUtil.now()).thenReturn(now)
         whenever(config.AAPSCLIENT).thenReturn(false)
         whenever(persistenceLayer.observeChanges(anyOrNull<Class<*>>())).thenReturn(emptyFlow())
-        disposable = rxBus.toObservable(EventProfileChangeRequested::class.java).subscribe { eventCount++ }
+        // UNDISPATCHED so the collector is subscribed before the scheduler under test sends anything;
+        // RxBus has no replay, so a scheduled collector would miss those events.
+        collector = CoroutineScope(Dispatchers.Unconfined).launch(start = CoroutineStart.UNDISPATCHED) {
+            rxBus.toFlow(EventProfileChangeRequested::class.java).collect { eventCount++ }
+        }
         scheduler = ProfileSwitchExpiryScheduler(
             persistenceLayer = persistenceLayer,
             rxBus = rxBus,
@@ -61,7 +68,7 @@ class ProfileSwitchExpirySchedulerTest : TestBase() {
 
     @AfterEach
     fun tearDown() {
-        disposable.dispose()
+        collector.cancel()
     }
 
     @Test

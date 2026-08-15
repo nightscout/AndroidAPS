@@ -27,7 +27,7 @@ open class TestBase {
         MockitoAnnotations.openMocks(this)
         Locale.setDefault(Locale.ENGLISH)
         System.setProperty("disableFirebase", "true")
-        rxBus = RxBusImpl(aapsSchedulers, aapsLogger)
+        rxBus = RxBusImpl(aapsLogger)
     }
 
     @AfterEach

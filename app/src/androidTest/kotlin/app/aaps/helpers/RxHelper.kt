@@ -3,13 +3,15 @@ package app.aaps.helpers
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.Event
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelChildren
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
@@ -21,15 +23,15 @@ import javax.inject.Inject
  */
 class RxHelper @Inject constructor(
     private val rxBus: RxBus,
-    private val aapsSchedulers: AapsSchedulers,
-    private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
     private val aapsLogger: AAPSLogger
 ) {
 
     private val hashMap = HashMap<Class<out Event>, AtomicBoolean>()
     private val eventHashMap = HashMap<Class<out Event>, Event>()
-    private val disposable = CompositeDisposable()
+
+    // Lives as long as the helper; clear() cancels its collectors, like clearing the CompositeDisposable.
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     /**
      * Register class for listening
@@ -40,15 +42,14 @@ class RxHelper @Inject constructor(
     fun listen(clazz: Class<out Event>): AtomicBoolean =
         hashMap[clazz] ?: AtomicBoolean(false).also { ab ->
             hashMap[clazz] = ab
-            // Setup RxBus tracking
-            disposable += rxBus
-                .toObservable(clazz)
-                .observeOn(aapsSchedulers.io)
-                .subscribe({
-                               aapsLogger.info(LTag.EVENTS, "==>> ${clazz.simpleName} registered")
-                               ab.set(true)
-                               eventHashMap[clazz] = it
-                           }, fabricPrivacy::logException)
+            // Setup RxBus tracking. UNDISPATCHED because RxBus has no replay: a test that sends an
+            // event right after listen() returns must not race the collector starting.
+            rxBus.toFlow(clazz)
+                .collectResilient(scope, aapsLogger, LTag.EVENTS, start = CoroutineStart.UNDISPATCHED) {
+                    aapsLogger.info(LTag.EVENTS, "==>> ${clazz.simpleName} registered")
+                    ab.set(true)
+                    eventHashMap[clazz] = it
+                }
         }
 
     /**
@@ -105,6 +106,8 @@ class RxHelper @Inject constructor(
     }
 
     fun clear() {
-        disposable.clear()
+        // Cancels the running collectors but keeps the scope usable, the way CompositeDisposable.clear()
+        // left its container usable. A plain scope.cancel() would make every later listen() do nothing.
+        scope.coroutineContext.cancelChildren()
     }
 }

@@ -15,6 +15,10 @@ import app.aaps.wear.data.ComplicationDataRepository
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeoutOrNull
 import org.junit.jupiter.api.BeforeEach
@@ -43,7 +47,7 @@ internal class DataHandlerWearTest : WearTestBase() {
     @BeforeEach
     fun setupHandler() {
         whenever(aapsSchedulers.io).thenReturn(Schedulers.trampoline())
-        rxBus = RxBusImpl(aapsSchedulers, logger)
+        rxBus = RxBusImpl(logger)
         sut = DataHandlerWear(context, rxBus, sp, preferences, logger, complicationDataRepository)
     }
 
@@ -67,8 +71,11 @@ internal class DataHandlerWearTest : WearTestBase() {
     @Test
     fun `a ping is answered with a pong to the mobile`() {
         val pong = CompletableDeferred<EventData.ActionPong>()
-        rxBus.toObservable(EventWearToMobile::class.java).subscribe { evt ->
-            (evt.payload as? EventData.ActionPong)?.let { pong.complete(it) }
+        // UNDISPATCHED so the collector is subscribed before the ping is sent; RxBus has no replay.
+        val collector = CoroutineScope(Dispatchers.Unconfined).launch(start = CoroutineStart.UNDISPATCHED) {
+            rxBus.toFlow(EventWearToMobile::class.java).collect { evt ->
+                (evt.payload as? EventData.ActionPong)?.let { pong.complete(it) }
+            }
         }
 
         rxBus.send(EventData.ActionPing(1_000L))
@@ -76,6 +83,7 @@ internal class DataHandlerWearTest : WearTestBase() {
         // Answered from the handler's IO dispatcher, so wait for it rather than reading a field.
         val answer = runBlocking { withTimeoutOrNull(HANDLER_TIMEOUT_MS) { pong.await() } }
         assertThat(answer).isNotNull()
+        collector.cancel()
     }
 
     companion object {

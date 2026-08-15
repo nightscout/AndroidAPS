@@ -12,7 +12,6 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalPreferences
-import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -74,8 +73,6 @@ class GlobalSnackbarHostTest {
             check(events.tryEmit(event)) { "event buffer overflow" }
         }
 
-        override fun <T : Any> toObservable(eventType: Class<T>): Observable<T> =
-            throw UnsupportedOperationException("not needed in tests")
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : Event> toFlow(eventType: Class<T>): Flow<T> =

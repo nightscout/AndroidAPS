@@ -11,7 +11,6 @@ import app.aaps.core.interfaces.rx.events.Event
 import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.ui.R
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.filter
@@ -142,8 +141,6 @@ class GlobalDialogHostTest {
             check(events.tryEmit(event)) { "event buffer overflow" }
         }
 
-        override fun <T : Any> toObservable(eventType: Class<T>): Observable<T> =
-            throw UnsupportedOperationException("not needed in tests")
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : Event> toFlow(eventType: Class<T>): Flow<T> =
