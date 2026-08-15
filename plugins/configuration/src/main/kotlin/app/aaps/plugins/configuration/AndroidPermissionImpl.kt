@@ -152,24 +152,18 @@ class AndroidPermissionImpl @Inject constructor(
 
     @Synchronized override fun notifyForLocationPermissions(activity: FragmentActivity) {
         if (permissionNotGranted(activity, Manifest.permission.ACCESS_FINE_LOCATION) ||
-            permissionNotGranted(activity, Manifest.permission.ACCESS_COARSE_LOCATION)
+            permissionNotGranted(activity, Manifest.permission.ACCESS_COARSE_LOCATION) ||
+            permissionNotGranted(activity, Manifest.permission.ACCESS_BACKGROUND_LOCATION)
         ) {
             uiInteraction.addNotification(
                 id = Notification.PERMISSION_LOCATION,
                 text = rh.gs(R.string.need_location_permission),
                 level = Notification.URGENT,
                 actionButtonId = R.string.request,
-                action = { askForPermission(activity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)) },
-                validityCheck = { permissionNotGranted(activity, Manifest.permission.ACCESS_FINE_LOCATION) || permissionNotGranted(activity, Manifest.permission.ACCESS_COARSE_LOCATION) }
-            )
-        } else if (permissionNotGranted(activity, Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
-            uiInteraction.addNotification(
-                id = Notification.PERMISSION_LOCATION,
-                text = rh.gs(R.string.need_background_location_permission),
-                level = Notification.URGENT,
-                actionButtonId = R.string.request,
-                action = { askForPermission(activity, arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION)) },
-                validityCheck = { permissionNotGranted(activity, Manifest.permission.ACCESS_BACKGROUND_LOCATION) }
+                // W527:一次请求前台+后台定位,Android 11 对话框出现「始终允许」选项
+                // (分步请求时前台已授予后再请求后台会被系统静默拒绝,永远拿不到始终允许)
+                action = { askForPermission(activity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION)) },
+                validityCheck = { permissionNotGranted(activity, Manifest.permission.ACCESS_FINE_LOCATION) || permissionNotGranted(activity, Manifest.permission.ACCESS_COARSE_LOCATION) || permissionNotGranted(activity, Manifest.permission.ACCESS_BACKGROUND_LOCATION) }
             )
         } else uiInteraction.dismissNotification(Notification.PERMISSION_LOCATION)
     }
