@@ -53,6 +53,7 @@ import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.rx.events.EventWearUpdateGui
@@ -99,6 +100,10 @@ import app.aaps.core.ui.compose.LightGeneralColors
 import app.aaps.plugins.sync.R
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.rx3.rxCompletable
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -160,6 +165,11 @@ class DataHandlerMobile @Inject constructor(
     @Inject lateinit var sceneActions: SceneActions
     private val disposable = CompositeDisposable()
 
+    // App lifetime, matching the disposable above: this is a @Singleton that subscribes in init and
+    // never tears down. Dispatchers.IO because that is what aapsSchedulers.io gave these handlers, and
+    // they do database and broadcast work - the Default pool would be the wrong one.
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+
     /**
      * Registers a serialized suspend [handler] for one [EventData] subtype arriving from Wear.
      *
@@ -168,18 +178,18 @@ class DataHandlerMobile @Inject constructor(
      * are logged and swallowed so a single failing event can't tear the subscription down.
      */
     private inline fun <reified T : EventData> onEvent(crossinline handler: suspend (T) -> Unit) {
-        disposable += rxBus
-            .toObservable(T::class.java)
-            .observeOn(aapsSchedulers.io)
-            .concatMapCompletable { event ->
-                rxCompletable {
-                    aapsLogger.debug(LTag.WEAR, "${T::class.java.simpleName} received from ${event.sourceNodeId}")
-                    handler(event)
-                }
-                    .doOnError(fabricPrivacy::logException)
-                    .onErrorComplete()
+        // concatMapCompletable serialized same-type events; a Flow collector is sequential by
+        // construction, so that ordering survives without an operator, and one collector per type keeps
+        // different types independent as before. collectResilient logs and continues, which is what
+        // doOnError + onErrorComplete did.
+        //
+        // UNDISPATCHED is required, not cosmetic: these subscribe from init on a replay-0 bus, so a
+        // scheduled collector would drop anything sent before it started.
+        rxBus.toFlow(T::class.java)
+            .collectResilient(scope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { event ->
+                aapsLogger.debug(LTag.WEAR, "${T::class.java.simpleName} received from ${event.sourceNodeId}")
+                handler(event)
             }
-            .subscribe()
     }
 
     /**
@@ -191,13 +201,11 @@ class DataHandlerMobile @Inject constructor(
         crossinline detail: (T) -> String = { "" },
         crossinline handler: (T) -> Unit
     ) {
-        disposable += rxBus
-            .toObservable(T::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           aapsLogger.debug(LTag.WEAR, "${T::class.java.simpleName} received from ${it.sourceNodeId}${detail(it)}")
-                           handler(it)
-                       }, fabricPrivacy::logException)
+        rxBus.toFlow(T::class.java)
+            .collectResilient(scope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) {
+                aapsLogger.debug(LTag.WEAR, "${T::class.java.simpleName} received from ${it.sourceNodeId}${detail(it)}")
+                handler(it)
+            }
     }
 
     init {

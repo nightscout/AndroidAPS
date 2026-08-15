@@ -495,10 +495,15 @@ class DataHandlerMobileWearBolusTest : TestBaseWithProfile() {
     // wired (a dropped subscription is a mechanical refactor error the compiler can't catch).
 
     @Test fun `onEventSync dispatches a posted SnoozeAlert to its handler`() {
-        // onEventSync subscribes directly; the trampoline io scheduler runs it inline.
+        // Was a bare verify: the test's trampoline io scheduler ran the Rx subscription inline on the
+        // posting thread. onEventSync collects a Flow on Dispatchers.IO now, so the handler runs off
+        // the posting thread and this needs the timeout verify its onEvent siblings already use.
+        // Production behaviour is unchanged - observeOn(aapsSchedulers.io) was never inline there.
+        // Delivery itself is not racy: the collector subscribes UNDISPATCHED, so it is registered
+        // before send() is reached.
         rxBus.send(EventData.SnoozeAlert(0L))
 
-        verify(uiInteraction).stopAlarm("Muted from wear")
+        verify(uiInteraction, timeout(2000)).stopAlarm("Muted from wear")
     }
 
     @Test fun `onEvent dispatches a posted ActionBolusPreCheck to the suspend handler`() {
