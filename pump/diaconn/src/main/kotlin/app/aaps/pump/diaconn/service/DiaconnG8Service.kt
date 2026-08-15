@@ -24,15 +24,14 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.diaconn.DiaconnG8Plugin
@@ -77,8 +76,7 @@ import app.aaps.pump.diaconn.packet.TimeSettingPacket
 import app.aaps.pump.diaconn.pumplog.PumpLogUtil
 import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -110,10 +108,8 @@ class DiaconnG8Service : DaggerService() {
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var bleCommonService: BLECommonService
-    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var diaconnLogUploader: DiaconnLogUploader
     @Inject lateinit var diaconnHistoryRecordDao: DiaconnHistoryRecordDao
     @Inject lateinit var uiInteraction: UiInteraction
@@ -122,7 +118,6 @@ class DiaconnG8Service : DaggerService() {
     @Inject lateinit var ch: ConcentrationHelper
     @Inject lateinit var bolusProgressData: BolusProgressData
 
-    private val disposable = CompositeDisposable()
     private var scope: CoroutineScope? = null
     private val mBinder: IBinder = LocalBinder()
     private var lastApproachingDailyLimit: Long = 0
@@ -133,10 +128,11 @@ class DiaconnG8Service : DaggerService() {
         super.onCreate()
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
-        disposable += rxBus
-            .toObservable(EventAppExit::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ stopSelf() }, fabricPrivacy::logException)
+        // Same scope as the preference observer below: IO, like the io scheduler used before, and
+        // cancelled in onDestroy like the CompositeDisposable was cleared. UNDISPATCHED because
+        // RxBus has no replay, so a scheduled collector could miss an exit sent before it starts.
+        rxBus.toFlow(EventAppExit::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { stopSelf() }
         preferences.observe(DiaconnIntKey.BolusSpeed).drop(1).onEach {
             diaconnG8Pump.bolusSpeed = preferences.get(DiaconnIntKey.BolusSpeed)
             diaconnG8Pump.speed = preferences.get(DiaconnIntKey.BolusSpeed)
@@ -161,7 +157,6 @@ class DiaconnG8Service : DaggerService() {
     override fun onDestroy() {
         scope?.cancel()
         scope = null
-        disposable.clear()
         super.onDestroy()
     }
 

@@ -86,8 +86,8 @@ internal class DiaconnOverviewViewModelTest {
         // rx wiring touched at construction (PumpCommunicationStatus + init subscriptions)
         whenever(rxBus.toFlow(EventPumpStatusChanged::class.java)).thenReturn(emptyFlow())
         whenever(rxBus.toFlow(EventQueueChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toObservable(EventDiaconnG8NewStatus::class.java)).thenReturn(Observable.empty())
-        whenever(rxBus.toObservable(EventInitializationChanged::class.java)).thenReturn(Observable.empty())
+        whenever(rxBus.toFlow(EventDiaconnG8NewStatus::class.java)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventInitializationChanged::class.java)).thenReturn(emptyFlow())
         whenever(aapsSchedulers.io).thenReturn(Schedulers.trampoline())
         whenever(persistenceLayer.observeChanges(EB::class.java)).thenReturn(emptyFlow())
         whenever(persistenceLayer.observeChanges(TB::class.java)).thenReturn(emptyFlow())
@@ -128,7 +128,7 @@ internal class DiaconnOverviewViewModelTest {
     }
 
     private fun createViewModel() = DiaconnOverviewViewModel(
-        aapsLogger, rh, rxBus, aapsSchedulers, commandQueue, dateUtil, diaconnG8Pump,
+        aapsLogger, rh, rxBus, commandQueue, dateUtil, diaconnG8Pump,
         activePlugin, persistenceLayer, uel, preferences, ch, context
     )
 

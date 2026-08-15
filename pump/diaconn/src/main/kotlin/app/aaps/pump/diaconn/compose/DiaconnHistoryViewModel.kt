@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -25,6 +26,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -63,12 +65,13 @@ class DiaconnHistoryViewModel @Inject constructor(
 
         _uiState.value = PumpHistoryUiState(availableTypes = types, selectedType = types.firstOrNull())
 
-        disposable += rxBus
-            .toObservable(EventPumpStatusChanged::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ event ->
-                           _uiState.update { it.copy(statusMessage = rh.gs(event.getStatus())) }
-                       }, { aapsLogger.error(LTag.PUMP, "Error", it) })
+        // viewModelScope is Main, like observeOn(aapsSchedulers.main), and dies with the view model
+        // like the CompositeDisposable did. UNDISPATCHED because RxBus has no replay, so a scheduled
+        // collector could miss a status sent before it starts.
+        rxBus.toFlow(EventPumpStatusChanged::class.java)
+            .collectResilient(viewModelScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { event ->
+                _uiState.update { it.copy(statusMessage = rh.gs(event.getStatus())) }
+            }
 
         types.firstOrNull()?.let { loadRecords(it.type) }
     }

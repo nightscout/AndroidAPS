@@ -34,14 +34,13 @@ import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.pump.mapState
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.icons.IcPluginDiaconn
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -54,8 +53,11 @@ import app.aaps.pump.diaconn.keys.DiaconnIntNonKey
 import app.aaps.pump.diaconn.keys.DiaconnIntentKey
 import app.aaps.pump.diaconn.keys.DiaconnStringNonKey
 import app.aaps.pump.diaconn.service.DiaconnG8Service
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -76,9 +78,7 @@ class DiaconnG8Plugin @Inject constructor(
     private val pumpSync: PumpSync,
     private val detailedBolusInfoStorage: DetailedBolusInfoStorage,
     private val temporaryBasalStorage: TemporaryBasalStorage,
-    private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
-    private val aapsSchedulers: AapsSchedulers,
     private val diaconnHistoryDatabase: DiaconnHistoryDatabase,
     private val pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val bolusProgressData: BolusProgressData,
@@ -102,7 +102,7 @@ class DiaconnG8Plugin @Inject constructor(
     aapsLogger, rh, preferences, commandQueue
 ), Pump, Diaconn, PumpPluginConstraints, OwnDatabasePlugin {
 
-    private val disposable = CompositeDisposable()
+    private var scope: CoroutineScope? = null
     private var diaconnG8Service: DiaconnG8Service? = null
     private var mDeviceAddress = ""
     var mDeviceName = ""
@@ -112,28 +112,27 @@ class DiaconnG8Plugin @Inject constructor(
         super.onStart()
         val intent = Intent(context, DiaconnG8Service::class.java)
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
-        disposable += rxBus
-            .toObservable(EventAppExit::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ context.unbindService(mConnection) }) { fabricPrivacy.logException(it) }
-
-        disposable += rxBus
-            .toObservable(EventConfigBuilderChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe { diaconnG8Pump.reset() }
-        disposable += rxBus
-            .toObservable(EventDiaconnG8DeviceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           pumpSync.connectNewPump()
-                           changePump()
-                       }) { fabricPrivacy.logException(it) }
+        // Own scope on IO, like the io scheduler used before, cancelled in onStop like the
+        // CompositeDisposable was cleared. UNDISPATCHED because RxBus has no replay, so a scheduled
+        // collector could miss an event sent before it starts.
+        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = newScope
+        rxBus.toFlow(EventAppExit::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { context.unbindService(mConnection) }
+        rxBus.toFlow(EventConfigBuilderChange::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { diaconnG8Pump.reset() }
+        rxBus.toFlow(EventDiaconnG8DeviceChange::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) {
+                pumpSync.connectNewPump()
+                changePump()
+            }
         changePump() // load device name on app start
     }
 
     override suspend fun onStop() {
+        scope?.cancel()
+        scope = null
         context.unbindService(mConnection)
-        disposable.clear()
         super.onStop()
     }
 
