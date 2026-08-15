@@ -85,8 +85,8 @@ import app.aaps.plugins.automation.triggers.TriggerTime
 import app.aaps.plugins.automation.triggers.TriggerTimeRange
 import app.aaps.plugins.automation.triggers.TriggerWifiSsid
 import dagger.android.HasAndroidInjector
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import app.aaps.core.interfaces.rx.collectResilient
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -159,15 +159,13 @@ class AutomationRuntime @Inject constructor(
         AutomationComposeContent(
             plugin = this,
             rxBus = rxBus,
-            aapsSchedulers = aapsSchedulers,
-            fabricPrivacy = fabricPrivacy,
+            aapsLogger = aapsLogger,
             injector = injector,
             uel = uel,
             profileRepository = profileRepository,
             sceneApi = sceneApi
         )
 
-    private var disposable: CompositeDisposable = CompositeDisposable()
     private var scope: CoroutineScope? = null
     private val deferredStart = DeferredForegroundStart()
 
@@ -355,28 +353,29 @@ class AutomationRuntime @Inject constructor(
             updateLocationService()
         }.launchIn(newScope)
 
-        disposable += rxBus
-            .toObservable(EventLocationChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           aapsLogger.debug(LTag.AUTOMATION, "Grabbed location: ${it.location.latitude} ${it.location.longitude} Provider: ${it.location.provider}")
-                           scope?.launch { processActions() }
-                       }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventBTChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           aapsLogger.debug(LTag.AUTOMATION, "Grabbed new BT event: $it")
-                           btConnects.add(it)
-                           scope?.launch { processActions() }
-                       }, fabricPrivacy::logException)
+        // processActions() stays launched rather than called inline. A Flow collector is sequential, so
+        // calling it directly would serialize rule processing, which the Rx version did not do - it
+        // fired scope.launch and returned. That may well be an improvement, but changing when
+        // automation rules can run concurrently is not something to do as a side effect of swapping
+        // the subscription mechanism.
+        rxBus.toFlow(EventLocationChange::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.AUTOMATION, start = CoroutineStart.UNDISPATCHED) {
+                aapsLogger.debug(LTag.AUTOMATION, "Grabbed location: ${it.location.latitude} ${it.location.longitude} Provider: ${it.location.provider}")
+                scope?.launch { processActions() }
+            }
+        rxBus.toFlow(EventBTChange::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.AUTOMATION, start = CoroutineStart.UNDISPATCHED) {
+                aapsLogger.debug(LTag.AUTOMATION, "Grabbed new BT event: $it")
+                btConnects.add(it)
+                scope?.launch { processActions() }
+            }
     }
 
     /** Tear down the runtime. Not called in production (always-on singleton); used by tests. */
     fun stop() {
         scope?.cancel()
         scope = null
-        disposable.clear()
+
         deferredStart.cancel()
         if (locationServiceRunning) {
             locationServiceHelper.stopService(context)

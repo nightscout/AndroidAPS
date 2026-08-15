@@ -1,8 +1,8 @@
 package app.aaps.plugins.automation.compose
 
-import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.compose.icons.IcUserOptions
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.plugins.automation.AutomationEventObject
@@ -12,8 +12,8 @@ import app.aaps.plugins.automation.events.EventAutomationUpdateGui
 import app.aaps.plugins.automation.triggers.TriggerConnector
 import app.aaps.plugins.automation.triggers.TriggerLocation
 import dagger.android.HasAndroidInjector
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import app.aaps.core.interfaces.rx.collectResilient
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -28,8 +28,7 @@ import kotlinx.coroutines.flow.onEach
 class AutomationStateHolder(
     private val plugin: AutomationRuntime,
     private val rxBus: RxBus,
-    private val aapsSchedulers: AapsSchedulers,
-    private val fabricPrivacy: FabricPrivacy,
+    private val aapsLogger: AAPSLogger,
     private val injector: HasAndroidInjector
 ) {
 
@@ -42,7 +41,6 @@ class AutomationStateHolder(
     private val _editState = MutableStateFlow(AutomationEditUiState())
     val editState: StateFlow<AutomationEditUiState> = _editState.asStateFlow()
 
-    private var disposable: CompositeDisposable? = null
     private var scope: CoroutineScope? = null
 
     // Working copy for edit
@@ -50,15 +48,7 @@ class AutomationStateHolder(
     private var workingPosition: Int = -1
 
     fun start() {
-        if (disposable != null) return
-        val d = CompositeDisposable()
-        d += rxBus.toObservable(EventAutomationUpdateGui::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({
-                           refresh()
-                           refreshEditState()
-                       }, fabricPrivacy::logException)
-        disposable = d
+        if (scope != null) return
         // drop(1) skips the seed empty snapshot the plugin emits before loadFromSP runs — the
         // refresh() below covers the cold start, and the plugin's first real emission after load
         // re-triggers it. EventWearUpdateTiles is now broadcast from the plugin's own scope so it
@@ -66,13 +56,18 @@ class AutomationStateHolder(
         // gated on this holder being alive.
         val newScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
         scope = newScope
+        // This one observed on aapsSchedulers.main and the scope is already Main, so the dispatcher
+        // matches without any extra step - it touches Compose state.
+        rxBus.toFlow(EventAutomationUpdateGui::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.AUTOMATION, start = CoroutineStart.UNDISPATCHED) {
+                refresh()
+                refreshEditState()
+            }
         plugin.events.drop(1).onEach { refresh() }.launchIn(newScope)
         refresh()
     }
 
     fun stop() {
-        disposable?.clear()
-        disposable = null
         scope?.cancel()
         scope = null
     }

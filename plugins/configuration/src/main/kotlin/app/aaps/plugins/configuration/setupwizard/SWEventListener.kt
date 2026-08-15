@@ -3,6 +3,7 @@ package app.aaps.plugins.configuration.setupwizard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
@@ -15,7 +16,6 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.plugins.configuration.setupwizard.elements.SWItem
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
 class SWEventListener @Inject constructor(
@@ -61,14 +61,12 @@ class SWEventListener @Inject constructor(
         // the Composable. That keeps the resolving out of the Rx callback, which had to reach for a
         // Context purely to read a string.
         val statusState = remember { mutableStateOf<TextRef>(TextRef.Literal(status)) }
-        DisposableEffect(clazz) {
-            val disposable = rxBus
-                .toObservable(clazz)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { event ->
-                    statusState.value = event.getStatus()
-                }
-            onDispose { disposable.dispose() }
+        LaunchedEffect(clazz) {
+            // Composition scope is Main, matching observeOn(mainThread()), and it is cancelled when
+            // this leaves the composition - what onDispose did.
+            rxBus.toFlow(clazz).collect { event ->
+                statusState.value = event.getStatus()
+            }
         }
         val labelText = textLabel?.let { stringResource(it) } ?: ""
         Text(text = "$labelText ${stringResource(statusState.value)}".trim())

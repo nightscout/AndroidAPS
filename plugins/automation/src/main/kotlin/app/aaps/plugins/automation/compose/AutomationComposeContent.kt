@@ -32,10 +32,9 @@ import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileRepository
-import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.objects.extensions.profileNames
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
@@ -54,8 +53,7 @@ import kotlin.reflect.full.primaryConstructor
 class AutomationComposeContent(
     private val plugin: AutomationRuntime,
     private val rxBus: RxBus,
-    private val aapsSchedulers: AapsSchedulers,
-    private val fabricPrivacy: FabricPrivacy,
+    private val aapsLogger: AAPSLogger,
     private val injector: HasAndroidInjector,
     private val uel: UserEntryLogger,
     private val profileRepository: ProfileRepository,
@@ -69,7 +67,7 @@ class AutomationComposeContent(
         onSettings: (() -> Unit)?
     ) {
         val holder = remember {
-            AutomationStateHolder(plugin, rxBus, aapsSchedulers, fabricPrivacy, injector)
+            AutomationStateHolder(plugin, rxBus, aapsLogger, injector)
         }
         DisposableEffect(holder) {
             holder.start()

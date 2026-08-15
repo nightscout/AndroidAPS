@@ -45,9 +45,9 @@ import app.aaps.plugins.configuration.setupwizard.elements.SWPairingStatus
 import app.aaps.plugins.configuration.setupwizard.elements.SWPermissions
 import app.aaps.plugins.configuration.setupwizard.elements.SWPlugin
 import app.aaps.plugins.configuration.setupwizard.elements.SWRadioButton
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -102,7 +102,6 @@ class SWDefinition @Inject constructor(
     var onRequestPermission: ((PermissionGroup) -> Unit)? = null
     var permissionItems: (() -> List<Pair<PermissionGroup, Boolean>>)? = null
     var isDirectoryAccessGranted: (() -> Boolean)? = null
-    private val disposable = CompositeDisposable()
     private val screens: MutableList<SWScreen> = ArrayList()
 
     private fun pluginOption(pType: PluginType, @androidx.annotation.StringRes description: Int): SWPlugin =
@@ -118,10 +117,13 @@ class SWDefinition @Inject constructor(
                 config.PUMPCONTROL -> swDefinitionPumpControl()
                 config.AAPSCLIENT -> swDefinitionNSClient()
             }
-            disposable += rxBus
-                .toObservable(EventConfigBuilderChange::class.java)
-                .observeOn(aapsSchedulers.main)
-                .subscribe { rxBus.send(EventSWUpdate(true)) }
+            // appScope rather than a new one: the CompositeDisposable this replaces was never cleared,
+            // so this subscription was already app-lifetime. Plain onEach/launchIn rather than
+            // collectResilient because there is no logger here and the body is a bus send that cannot
+            // meaningfully fail - the Rx version had no error handler either.
+            rxBus.toFlow(EventConfigBuilderChange::class.java)
+                .onEach { rxBus.send(EventSWUpdate(true)) }
+                .launchIn(appScope)
         }
         return screens
     }

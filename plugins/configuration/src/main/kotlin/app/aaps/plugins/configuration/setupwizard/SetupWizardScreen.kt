@@ -18,6 +18,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import kotlinx.coroutines.flow.merge
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -39,9 +41,6 @@ import app.aaps.core.ui.compose.pump.StepProgressIndicator
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.plugins.configuration.R
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -108,21 +107,16 @@ fun SetupWizardScreen(
 
     // Trigger recomposition on RxBus events
     var updateTick by remember { mutableIntStateOf(0) }
-    DisposableEffect(Unit) {
-        val disposable = CompositeDisposable()
-        disposable += rxBus.toObservable(EventSWUpdate::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { updateTick++ }
-        disposable += rxBus.toObservable(EventPumpStatusChanged::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { updateTick++ }
-        disposable += rxBus.toObservable(EventSWRLStatus::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { updateTick++ }
-        disposable += rxBus.toObservable(EventSWSyncStatus::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { updateTick++ }
-        onDispose { disposable.clear() }
+    // LaunchedEffect rather than DisposableEffect + CompositeDisposable: it runs in the composition's
+    // scope on Main, which is what observeOn(mainThread()) gave these, and it is cancelled when the
+    // screen leaves - the same thing onDispose was doing.
+    LaunchedEffect(Unit) {
+        merge(
+            rxBus.toFlow(EventSWUpdate::class.java),
+            rxBus.toFlow(EventPumpStatusChanged::class.java),
+            rxBus.toFlow(EventSWRLStatus::class.java),
+            rxBus.toFlow(EventSWSyncStatus::class.java)
+        ).collect { updateTick++ }
     }
 
     // Read updateTick to subscribe to recomposition

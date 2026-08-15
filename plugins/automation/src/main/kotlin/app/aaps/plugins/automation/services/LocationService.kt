@@ -14,7 +14,6 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationHolder
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
@@ -24,8 +23,12 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.automation.events.EventLocationChange
 import com.google.android.gms.location.LocationServices
 import dagger.android.DaggerService
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import app.aaps.core.interfaces.rx.collectResilient
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import javax.inject.Inject
 
 class LocationService : DaggerService() {
@@ -33,12 +36,12 @@ class LocationService : DaggerService() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var preferences: Preferences
-    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var notificationHolder: NotificationHolder
     @Inject lateinit var lastLocationDataContainer: LastLocationDataContainer
 
-    private val disposable = CompositeDisposable()
+    // Replaces the CompositeDisposable: same lifetime, cancelled in onDestroy below.
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var locationManager: LocationManager? = null
     private var locationListener: LocationListener? = null
 
@@ -148,17 +151,16 @@ class LocationService : DaggerService() {
             rxBus.send(EventShowSnackbar(getString(app.aaps.core.ui.R.string.location_permission_not_granted), EventShowSnackbar.Type.Error))
         }
 
-        disposable += rxBus
-            .toObservable(EventAppExit::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           aapsLogger.debug(LTag.LOCATION, "EventAppExit received")
-                           stopSelf()
-                       }, fabricPrivacy::logException)
+        rxBus.toFlow(EventAppExit::class.java)
+            .collectResilient(scope, aapsLogger, LTag.LOCATION, start = CoroutineStart.UNDISPATCHED) {
+                aapsLogger.debug(LTag.LOCATION, "EventAppExit received")
+                stopSelf()
+            }
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        scope.cancel()
         try {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return
@@ -167,7 +169,6 @@ class LocationService : DaggerService() {
         } catch (ex: Exception) {
             aapsLogger.error(LTag.LOCATION, "fail to remove location listener, ignore", ex)
         }
-        disposable.clear()
     }
 
     private fun initializeLocationManager() {
