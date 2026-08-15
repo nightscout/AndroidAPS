@@ -71,5 +71,6 @@ enum class JsonKeys(val key: String) {
     RINGWIDTH("ringWidth"),         // Complication slots only: ring width in percentage of bounds Width/Height)
     RINGPRIMARYCOLOR("ringPrimaryColor"), // Complication slots only: ring color
     RINGSECONDARYCOLOR("ringSecondaryColor"), // Complication slots only: ring color// )
+    IMAGEFIT("imageFit"),           // Complication slots only: how a SMALL_IMAGE/PHOTO_IMAGE fills the slot (see JsonKeyValues FIT_CENTER/CENTER_CROP/FIT_XY)
     DEFAULT("default")
 }

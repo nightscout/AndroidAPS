@@ -1,21 +1,29 @@
 package app.aaps.wear.watchfaces.utils
 
 import android.content.Context
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Path
 import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.Typeface
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.Icon
 import android.support.wearable.complications.ComplicationData as WireComplicationData
 import androidx.annotation.StringRes
 import androidx.wear.watchface.CanvasComplication
 import androidx.wear.watchface.CanvasComplicationFactory
 import androidx.wear.watchface.ComplicationSlot
 import androidx.wear.watchface.ComplicationSlotsManager
+import androidx.wear.watchface.DrawMode
+import androidx.wear.watchface.RenderParameters
 import androidx.wear.watchface.WatchState
 import androidx.wear.watchface.complications.ComplicationSlotBounds
 import androidx.wear.watchface.complications.DefaultComplicationDataSourcePolicy
 import androidx.wear.watchface.complications.data.ComplicationData
 import androidx.wear.watchface.complications.data.ComplicationType
+import androidx.wear.watchface.complications.data.PhotoImageComplicationData
+import androidx.wear.watchface.complications.data.SmallImageComplicationData
 import androidx.wear.watchface.complications.data.toApiComplicationData
 import androidx.wear.watchface.complications.rendering.CanvasComplicationDrawable
 import androidx.wear.watchface.complications.rendering.ComplicationDrawable
@@ -27,6 +35,9 @@ import androidx.wear.watchface.style.UserStyleSetting.ComplicationSlotsUserStyle
 import androidx.wear.watchface.style.UserStyleSetting.ComplicationSlotsUserStyleSetting.ComplicationSlotOverlay
 import androidx.wear.watchface.style.UserStyleSetting.ComplicationSlotsUserStyleSetting.ComplicationSlotsOption
 import androidx.wear.watchface.style.WatchFaceLayer
+import java.time.ZonedDateTime
+import kotlin.math.max
+import kotlin.math.min
 
 /*
  * Everything a watch face needs in order to host androidx complication slots, with no knowledge of
@@ -93,9 +104,44 @@ internal sealed interface ComplicationRender {
 }
 
 /**
- * Renderer for a complication slot, existing to work around two androidx bugs. Neither is specific
- * to any watch face, so every watch face hosting slots should use this rather than
- * [CanvasComplicationDrawable] directly.
+ * How an image-only complication (`SMALL_IMAGE`, `PHOTO_IMAGE`) fills its slot.
+ *
+ * Values mean what `android.widget.ImageView.ScaleType` means, and are computed from the image's own
+ * intrinsic size - which is only possible because this file draws those images itself. The library
+ * cannot express any of them: `SmallImageLayoutHelper`/`LargeImageLayoutHelper` hand the image the
+ * slot's central square (`LayoutUtils.getCentralSquare`, unconditional) and `RoundedDrawable`
+ * centre-crops the image into it, so a wide image loses its sides and a wide slot goes half empty.
+ */
+internal enum class ComplicationImageFit {
+
+    /** Whole image, aspect kept, centred - letterboxed if the slot is a different shape. Default. */
+    FIT_CENTER,
+
+    /** Aspect kept, scaled until the slot is covered, overflow cropped. */
+    CENTER_CROP,
+
+    /** Stretched to the slot's width and height. The only value that does not keep aspect ratio. */
+    FIT_XY;
+
+    /** Where an [imageWidth] x [imageHeight] image goes inside [bounds] under this fit. */
+    fun destination(imageWidth: Int, imageHeight: Int, bounds: Rect): Rect {
+        if (imageWidth <= 0 || imageHeight <= 0) return bounds
+        if (this == FIT_XY) return bounds
+        val scaleX = bounds.width().toFloat() / imageWidth
+        val scaleY = bounds.height().toFloat() / imageHeight
+        val scale = if (this == CENTER_CROP) max(scaleX, scaleY) else min(scaleX, scaleY)
+        val width = (imageWidth * scale).toInt()
+        val height = (imageHeight * scale).toInt()
+        val left = bounds.centerX() - width / 2
+        val top = bounds.centerY() - height / 2
+        return Rect(left, top, left + width, top + height)
+    }
+}
+
+/**
+ * Renderer for a complication slot, existing to work around two androidx bugs and to add the image
+ * fit the library has no setting for. Nothing here is specific to any watch face, so every watch face
+ * hosting slots should use this rather than [CanvasComplicationDrawable] directly.
  *
  * **1. It forces the *synchronous* branch of `ComplicationDrawable.setComplicationData`.** With
  * `loadDrawablesAsync = true` (what the framework passes) the library does not put the new data into
@@ -110,11 +156,18 @@ internal sealed interface ComplicationRender {
  * decoding two or three small complication icons on the calling thread instead of off it.
  *
  * **2. It drops a redundant small image** - see [withoutRedundantSmallImage].
+ *
+ * **3. It applies [ComplicationImageFit]** - see [render].
+ *
+ * @param imageFit read per frame rather than passed once, so a watch face can change it whenever its
+ *   configuration changes without rebuilding the slot.
  */
 internal class SyncLoadingCanvasComplication(
+    private val context: Context,
     drawable: ComplicationDrawable,
     watchState: WatchState,
-    invalidateCallback: CanvasComplication.InvalidateCallback
+    invalidateCallback: CanvasComplication.InvalidateCallback,
+    private val imageFit: () -> ComplicationImageFit = { ComplicationImageFit.FIT_CENTER }
 ) : CanvasComplicationDrawable(drawable, watchState, invalidateCallback) {
 
     /**
@@ -125,6 +178,68 @@ internal class SyncLoadingCanvasComplication(
     override fun loadData(complicationData: ComplicationData, loadDrawablesAsynchronous: Boolean) {
         super.loadData(withoutRedundantSmallImage(complicationData), false)
     }
+
+    /**
+     * Draws the complication, taking over the image itself for the two image-only types so that
+     * [ComplicationImageFit] can mean what it says.
+     *
+     * **Why the image cannot be left to the library.** `SmallImageLayoutHelper` gives it the slot's
+     * central square and `RoundedDrawable.drawableToBitmap` centre-crops the image into that square,
+     * both unconditionally. The crop happens *before* anything a caller can influence, so no bounds
+     * trick and no canvas transform can recover the lost sides: measured on a 300x115 px slot with a
+     * 450x225 provider image, the library shows the middle half of the image at 0.51 scale, and
+     * scaling that square back out to the slot magnifies it to 1.33x horizontally against 0.51
+     * vertically - a wide image comes out cropped *and* distorted. Drawing it here instead uses the
+     * image's real intrinsic size, so all three fits are exact.
+     *
+     * Everything else still comes from `ComplicationDrawable`: this only replaces the image, and only
+     * for `SMALL_IMAGE`/`PHOTO_IMAGE`, which carry no text fields. Any other type keeps the library's
+     * layout untouched - it places text, and reshaping it would ruin that.
+     *
+     * Background and rounded corners are drawn here to match, from the same [ComplicationStyle] the
+     * library would have used, so `borderRadius` still shapes the slot and clips the image.
+     */
+    override fun render(canvas: Canvas, bounds: Rect, zonedDateTime: ZonedDateTime, renderParameters: RenderParameters, slotId: Int) {
+        val ambient = renderParameters.drawMode == DrawMode.AMBIENT
+        val image = imageOf(getData(), ambient)
+        if (image == null || bounds.isEmpty) {
+            super.render(canvas, bounds, zonedDateTime, renderParameters, slotId)
+            return
+        }
+        val style = if (ambient) drawable.ambientStyle else drawable.activeStyle
+        // Clamped the way ComplicationRenderer clamps it, so the shape matches a library-drawn slot.
+        val radius = min(style.borderRadius.toFloat(), min(bounds.width(), bounds.height()) / 2f)
+        canvas.save()
+        canvas.clipPath(Path().apply { addRoundRect(RectF(bounds), radius, radius, Path.Direction.CW) })
+        if (style.backgroundColor != Color.TRANSPARENT) canvas.drawColor(style.backgroundColor)
+        image.bounds = imageFit().destination(image.intrinsicWidth, image.intrinsicHeight, bounds)
+        image.draw(canvas)
+        canvas.restore()
+    }
+
+    /**
+     * The image this complication carries, or null when it carries none - which is every type this
+     * class leaves to the library.
+     *
+     * Loading an [Icon] allocates and decodes, so the result is kept until the icon itself changes.
+     * Identity comparison is right here: data is only reloaded when the system sends new data, so the
+     * same payload keeps the same `Icon` instance.
+     */
+    private fun imageOf(data: ComplicationData, ambient: Boolean): Drawable? {
+        val icon = when (data) {
+            is SmallImageComplicationData -> data.smallImage.ambientImage.takeIf { ambient } ?: data.smallImage.image
+            is PhotoImageComplicationData -> data.photoImage
+            else                          -> null
+        } ?: return null
+        if (icon !== loadedIcon) {
+            loadedIcon = icon
+            loadedImage = icon.loadDrawable(context)
+        }
+        return loadedImage
+    }
+
+    private var loadedIcon: Icon? = null
+    private var loadedImage: Drawable? = null
 
     /**
      * Works around an androidx layout bug that drops **both** images when a ranged-value-family
@@ -293,6 +408,12 @@ internal class ComplicationSlotState(val slotId: Int) {
 
     var style: ComplicationStyleValues = ComplicationStyleValues.LIBRARY_DEFAULTS
 
+    /**
+     * How an image-only complication fills this slot. Read on the render thread every frame, so no
+     * push into the drawable is needed - unlike [style], nothing in `ComplicationDrawable` holds it.
+     */
+    @Volatile var imageFit: ComplicationImageFit = ComplicationImageFit.FIT_CENTER
+
     /** Pushes [style] into the drawable, or does nothing until one exists. */
     fun applyStyle() = drawable?.let { style.applyTo(it) }
 }
@@ -402,7 +523,7 @@ internal class WatchFaceComplications(
             val drawable = ComplicationDrawable(context)
             state.drawable = drawable
             state.applyStyle()
-            SyncLoadingCanvasComplication(drawable, watchState, invalidateCallback)
+            SyncLoadingCanvasComplication(context, drawable, watchState, invalidateCallback) { state.imageFit }
         }
         return ComplicationSlot.createRoundRectComplicationSlotBuilder(
             id = state.slotId,

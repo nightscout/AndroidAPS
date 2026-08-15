@@ -59,6 +59,7 @@ import app.aaps.shared.impl.weardata.toTypeface
 import app.aaps.wear.R
 import app.aaps.wear.databinding.ActivityCustomBinding
 import app.aaps.wear.watchfaces.utils.BaseWatchFace
+import app.aaps.wear.watchfaces.utils.ComplicationImageFit
 import app.aaps.wear.watchfaces.utils.ComplicationRender
 import app.aaps.wear.watchfaces.utils.ComplicationSlotInfo
 import app.aaps.wear.watchfaces.utils.ComplicationStyleValues
@@ -549,6 +550,10 @@ class CustomWatchface : BaseWatchFace() {
 
         val ringSecondaryColor: Int
             get() = cwf.getColor(json?.optString(JsonKeys.RINGSECONDARYCOLOR.key) ?: "", ComplicationStyleValues.RING_SECONDARY_COLOR_DEFAULT)
+
+        /** Ends at the library's own behaviour, so a CWF that says nothing looks exactly as before. */
+        val imageFit: ComplicationImageFit
+            get() = ImageFitMap.fit(json?.optString(JsonKeys.IMAGEFIT.key), ComplicationImageFit.FIT_CENTER)
     }
 
     private fun bgColor(dataSet: Int): Int = when (singleBg[dataSet].sgvLevel) {
@@ -1396,6 +1401,10 @@ class CustomWatchface : BaseWatchFace() {
                 ringSecondaryColor = ringSecondaryColor
             )
             state.applyStyle()
+            // Not part of the style values: nothing in ComplicationDrawable holds it, the renderer
+            // reads it per frame instead. Same cascade as everything above - this slot, then the
+            // CWF-wide block, then the library's own behaviour.
+            state.imageFit = ImageFitMap.fit(viewJson?.optString(JsonKeys.IMAGEFIT.key), global.imageFit)
         }
 
         fun customizeTextView(view: TextView, cwf: CustomWatchface) {
@@ -1542,6 +1551,23 @@ class CustomWatchface : BaseWatchFace() {
 
             fun font(key: String) = customFonts[key.lowercase()] ?: DEFAULT.font
             fun key() = DEFAULT.key
+        }
+    }
+
+    /**
+     * The CWF json vocabulary for [ComplicationImageFit] - the `imageFit` key of a complication block
+     * or of the CWF-wide `complicationStyle` block.
+     */
+    private enum class ImageFitMap(val key: String, val fit: ComplicationImageFit) {
+        FIT_CENTER(JsonKeyValues.FIT_CENTER.key, ComplicationImageFit.FIT_CENTER),
+        CENTER_CROP(JsonKeyValues.CENTER_CROP.key, ComplicationImageFit.CENTER_CROP),
+        FIT_XY(JsonKeyValues.FIT_XY.key, ComplicationImageFit.FIT_XY);
+
+        companion object {
+
+            /** [default] for an absent, empty or unknown value, so a typo never changes the layout. */
+            fun fit(key: String?, default: ComplicationImageFit) =
+                key?.takeIf { it.isNotEmpty() }?.let { value -> entries.firstOrNull { it.key == value }?.fit } ?: default
         }
     }
 
