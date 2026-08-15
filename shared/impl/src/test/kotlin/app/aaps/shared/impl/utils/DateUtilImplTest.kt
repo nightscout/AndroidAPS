@@ -3,9 +3,7 @@ package app.aaps.shared.impl.utils
 import android.content.Context
 import android.content.res.AssetFileDescriptor
 import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.text.format.DateFormat
-import android.util.DisplayMetrics
 import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
 import org.joda.time.DateTimeZone
@@ -1529,15 +1527,8 @@ class DateUtilImplTest {
         override fun gq(id: Int, quantity: Int, vararg args: Any?): String = ""
         override fun gsNotLocalised(id: Int, vararg args: Any?): String = ""
         override fun gc(id: Int): Int = 0
-        override fun gd(id: Int): Drawable? = null
-        override fun gb(id: Int): Boolean = false
-        override fun gcs(id: Int): String = ""
-        override fun gsa(id: Int): Array<String> = emptyArray()
         override fun openRawResourceFd(id: Int): AssetFileDescriptor? = null
         override fun decodeResource(id: Int): Bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
-        override fun getDisplayMetrics(): DisplayMetrics = DisplayMetrics()
-        override fun dpToPx(dp: Int): Int = dp
-        override fun dpToPx(dp: Float): Int = dp.toInt()
         override fun shortTextMode(): Boolean = true
     }
 }
