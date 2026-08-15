@@ -920,6 +920,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             val basal = Regex("\\d+\\.?\\d*").find(overviewData.temporaryBasalText())
                 ?.value?.toDoubleOrNull() ?: 0.0
             val intent = Intent("app.aaps.watchface.BG").apply {
+                setPackage("com.dana.glance")  // 显式广播: Android 8+ 静态 receiver 只收显式广播
                 putExtra("bg_display", profileUtil.fromMgdlToStringInUnits(lastBg?.recalculated))
                 putExtra("bg", lastBg?.recalculated ?: 0.0)
                 putExtra("trend", trendArrow?.ordinal ?: 5)
