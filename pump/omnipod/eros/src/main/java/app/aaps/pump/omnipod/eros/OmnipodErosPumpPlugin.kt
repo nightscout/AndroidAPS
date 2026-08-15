@@ -42,7 +42,6 @@ import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppExit
@@ -99,9 +98,8 @@ import app.aaps.pump.omnipod.eros.rileylink.service.RileyLinkOmnipodService
 import app.aaps.pump.omnipod.eros.ui.compose.OmnipodErosComposeContent
 import app.aaps.pump.omnipod.eros.util.AapsOmnipodUtil
 import app.aaps.pump.omnipod.eros.util.OmnipodAlertUtil
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
@@ -132,7 +130,6 @@ class OmnipodErosPumpPlugin @Inject constructor(
     rh: ResourceHelper,
     preferences: Preferences,
     commandQueue: CommandQueue,
-    private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
     private val context: Context,
     private val podStateManager: ErosPodStateManager,
@@ -167,7 +164,6 @@ class OmnipodErosPumpPlugin @Inject constructor(
     aapsLogger, rh, preferences, commandQueue
 ), Pump, RileyLinkPumpDevice, OmnipodEros, OwnDatabasePlugin {
 
-    private val disposable = CompositeDisposable()
     private var scope: CoroutineScope? = null
     private val displayConnectionMessages = false
     private val statusChecker: Runnable
@@ -257,33 +253,26 @@ class OmnipodErosPumpPlugin @Inject constructor(
         val intent = Intent(context, RileyLinkOmnipodService::class.java)
         serviceConnection?.let { context.bindService(intent, it, Context.BIND_AUTO_CREATE) }
 
-        disposable += rxBus
-            .toObservable(EventAppExit::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ serviceConnection?.let { context.unbindService(it) } }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventOmnipodErosTbrChanged::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ handleCancelledTbr() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventOmnipodErosUncertainTbrRecovered::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ handleUncertainTbrRecovery() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventOmnipodErosActiveAlertsChanged::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ handleActivePodAlerts() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventOmnipodErosFaultEventChanged::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ handlePodFaultEvent() }, fabricPrivacy::logException)
-        // Pass only to setup wizard
-        disposable += rxBus
-            .toObservable(EventRileyLinkDeviceStatusChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event -> rxBus.send(EventSWRLStatus(rh.gs(event.getStatus()))) }, fabricPrivacy::logException)
+        // Same scope as the preference observers below: IO, like the io scheduler used before, and
+        // cancelled in onStop like the CompositeDisposable was cleared. UNDISPATCHED because RxBus
+        // has no replay, so a scheduled collector could miss an event sent before it starts.
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
+        rxBus.toFlow(EventAppExit::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { serviceConnection?.let { context.unbindService(it) } }
+        rxBus.toFlow(EventOmnipodErosTbrChanged::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { handleCancelledTbr() }
+        rxBus.toFlow(EventOmnipodErosUncertainTbrRecovered::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { handleUncertainTbrRecovery() }
+        rxBus.toFlow(EventOmnipodErosActiveAlertsChanged::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { handleActivePodAlerts() }
+        rxBus.toFlow(EventOmnipodErosFaultEventChanged::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { handlePodFaultEvent() }
+        // Pass only to setup wizard
+        rxBus.toFlow(EventRileyLinkDeviceStatusChange::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { event ->
+                rxBus.send(EventSWRLStatus(rh.gs(event.getStatus())))
+            }
         merge(
             preferences.observe(OmnipodBooleanPreferenceKey.BasalBeepsEnabled).drop(1).map {},
             preferences.observe(OmnipodBooleanPreferenceKey.BolusBeepsEnabled).drop(1).map {},
@@ -310,25 +299,23 @@ class OmnipodErosPumpPlugin @Inject constructor(
                 commandQueue.customCommand(CommandUpdateAlertConfiguration())
             }
         }
-        disposable += rxBus
-            .toObservable(EventAppInitialized::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           // See if a bolus was active before the app previously exited
-                           // If so, add it to history
-                           // Needs to be done after EventAppInitialized because otherwise, TreatmentsPlugin.onStart() hasn't been called yet
-                           // so it didn't initialize a TreatmentService yet, resulting in a NullPointerException
-                           if (preferences.getIfExists(ErosStringNonPreferenceKey.ActiveBolus) != null) {
-                               val activeBolusString = preferences.get(ErosStringNonPreferenceKey.ActiveBolus)
-                               aapsLogger.warn(LTag.PUMP, "Found active bolus in preferences: {}. Adding Treatment.", activeBolusString)
-                               try {
-                                   aapsOmnipodErosManager.addBolusToHistory(DetailedBolusInfo().fromJsonString(activeBolusString))
-                               } catch (ex: Exception) {
-                                   aapsLogger.error(LTag.PUMP, "Failed to add active bolus to history", ex)
-                               }
-                               preferences.remove(ErosStringNonPreferenceKey.ActiveBolus)
-                           }
-                       }, fabricPrivacy::logException)
+        rxBus.toFlow(EventAppInitialized::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) {
+                // See if a bolus was active before the app previously exited
+                // If so, add it to history
+                // Needs to be done after EventAppInitialized because otherwise, TreatmentsPlugin.onStart() hasn't been called yet
+                // so it didn't initialize a TreatmentService yet, resulting in a NullPointerException
+                if (preferences.getIfExists(ErosStringNonPreferenceKey.ActiveBolus) != null) {
+                    val activeBolusString = preferences.get(ErosStringNonPreferenceKey.ActiveBolus)
+                    aapsLogger.warn(LTag.PUMP, "Found active bolus in preferences: {}. Adding Treatment.", activeBolusString)
+                    try {
+                        aapsOmnipodErosManager.addBolusToHistory(DetailedBolusInfo().fromJsonString(activeBolusString))
+                    } catch (ex: Exception) {
+                        aapsLogger.error(LTag.PUMP, "Failed to add active bolus to history", ex)
+                    }
+                    preferences.remove(ErosStringNonPreferenceKey.ActiveBolus)
+                }
+            }
     }
 
     override fun isRileyLinkReady(): Boolean = rileyLinkServiceData.rileyLinkServiceState.isReady()
@@ -409,7 +396,6 @@ class OmnipodErosPumpPlugin @Inject constructor(
         handler = null
         serviceConnection?.let { context.unbindService(it) }
         serviceConnection = null
-        disposable.clear()
     }
 
     private fun queueAcknowledgeAlertsCommand() {
