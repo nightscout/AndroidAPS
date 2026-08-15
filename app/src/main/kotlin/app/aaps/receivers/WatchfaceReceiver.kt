@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import dagger.android.DaggerBroadcastReceiver
 import javax.inject.Inject
@@ -23,7 +24,7 @@ class WatchfaceReceiver : DaggerBroadcastReceiver() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
-    @Inject lateinit var activePlugin: ActivePlugin
+    @Inject lateinit var overviewData: OverviewData
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var fabricPrivacy: FabricPrivacy
 
@@ -33,7 +34,6 @@ class WatchfaceReceiver : DaggerBroadcastReceiver() {
         try {
             val lastBg = iobCobCalculator.ads.lastBg() ?: return
             val glucoseStatus = glucoseStatusProvider.getGlucoseStatusData(true)
-            val overviewData = activePlugin.activeOverview.overviewData
             val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
             val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
             val history = iobCobCalculator.ads.getBucketedDataTableCopy()
