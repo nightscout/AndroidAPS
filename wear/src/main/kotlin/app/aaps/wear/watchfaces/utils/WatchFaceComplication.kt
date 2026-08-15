@@ -54,6 +54,9 @@ internal interface ComplicationSlotInfo {
 
     /** The key of the settings row that opens this slot's data source picker. */
     @get:StringRes val preferenceKey: Int
+
+    /** The label of that row. */
+    @get:StringRes val preferenceTitle: Int
 }
 
 /**

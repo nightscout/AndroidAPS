@@ -18,18 +18,27 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.wear.R
 import app.aaps.wear.complications.BgGraphComplication
+import app.aaps.wear.data.ComplicationDataRepository
 import app.aaps.wear.preference.WearPreferenceActivity
 import app.aaps.wear.watchfaces.utils.WatchfaceViewAdapter.Companion.SelectedWatchFace
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
-class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
+class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferences.OnSharedPreferenceChangeListener, CustomWatchfaceSettingsHost {
 
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var complicationDataRepository: ComplicationDataRepository
+
+    // See the same override in ConfigurationActivity for why this blocks.
+    override fun storedWatchfaceConfiguration(): String? = runBlocking { complicationDataRepository.getCustomWatchface()?.json }
 
     @Suppress("PrivatePropertyName")
     private val PHYSICAL_ACTIVITY = 1
 
     private var preferenceFile: Int = 0
+
+    // Both set before super.onCreate(), which is what creates the fragment - see createPreferenceFragment().
+    private var showsCustomWatchface = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Inject dependencies first
@@ -39,6 +48,8 @@ class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferenc
         val requestedWatchFace = intent.getIntExtra(getString(R.string.key_selected_watchface), -1)
             .takeIf { it >= 0 }
             ?.let { SelectedWatchFace.fromId(it) }
+
+        showsCustomWatchface = requestedWatchFace == SelectedWatchFace.CUSTOM
 
         preferenceFile = requestedWatchFace
             ?.let { WatchFaceCatalog.preferenceXmlFor(it) }
@@ -80,9 +91,12 @@ class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferenc
         contentView?.setPadding(0, 50, 0, 50)
     }
 
-    override fun createPreferenceFragment(): PreferenceFragmentCompat {
-        return WatchfaceConfigurationFragment.newInstance(preferenceFile)
-    }
+    // CustomWatchface's screen is built in code by the watch face's own fragment, so it takes no xml
+    // - see CustomWatchfaceConfigurationFragment. Every other screen this activity shows (the other
+    // two watch faces, and the app-wide display/graph/interface/others screens) still comes from one.
+    override fun createPreferenceFragment(): PreferenceFragmentCompat =
+        if (showsCustomWatchface) CustomWatchfaceConfigurationFragment()
+        else WatchfaceConfigurationFragment.newInstance(preferenceFile)
 
     private fun removeBackgroundRecursively(parent: View) {
         if (parent is ViewGroup)
@@ -134,13 +148,12 @@ class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferenc
     }
 
     /**
-     * Fragment for loading watchface configuration preferences
+     * Fragment for loading preferences from a settings xml.
+     *
+     * Nothing here deals with complications: the only screen that has any is CustomWatchface's, and
+     * that one is built by its own fragment.
      */
     class WatchfaceConfigurationFragment : PreferenceFragmentCompat() {
-
-        // ActivityResultContract registration must happen unconditionally, before STARTED - hence
-        // a property initializer here rather than inside onCreatePreferences().
-        private val complicationPickerSupport = ComplicationPickerSupport(this)
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             val resXmlId = arguments?.getInt(ARG_XML_RES_ID) ?: 0
@@ -149,28 +162,6 @@ class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferenc
                 // Apply multiline layout to all preferences to prevent text truncation
                 applyMultilineLayoutToAllPreferences(preferenceScreen)
             }
-        }
-
-        override fun onPreferenceTreeClick(preference: Preference): Boolean =
-            complicationPickerSupport.handlePreferenceClick(preference) || super.onPreferenceTreeClick(preference)
-
-        /**
-         * Shows the assigned data source under each "Complication N" entry, from the copy
-         * [ConfigurationActivity] cached while it had a live editing session. This screen has no
-         * session and the system refuses the lookup without one, so a cache is the only way it can
-         * show anything at all - see `ComplicationPickerSupport.cacheAssignedDataSourceNames`.
-         *
-         * In `onResume` rather than `onViewCreated` so it also refreshes on return from the system
-         * editor, where the assignment may just have changed. Slots that have never been seen keep
-         * no summary instead of being labelled unassigned.
-         */
-        override fun onResume() {
-            super.onResume()
-            if (!ComplicationPickerSupport.hasComplicationPreferences(this)) return
-            ComplicationPickerSupport.applyComplicationSummaries(
-                this,
-                ComplicationPickerSupport.cachedAssignedDataSourceNames(requireContext())
-            )
         }
 
         /**

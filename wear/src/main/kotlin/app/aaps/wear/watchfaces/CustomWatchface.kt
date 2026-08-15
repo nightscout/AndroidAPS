@@ -64,8 +64,11 @@ import app.aaps.wear.watchfaces.utils.ComplicationSlotInfo
 import app.aaps.wear.watchfaces.utils.ComplicationStyleValues
 import app.aaps.wear.watchfaces.utils.WatchFaceComplicationSlots
 import app.aaps.wear.watchfaces.utils.WatchFaceComplications
+import app.aaps.wear.watchfaces.utils.WatchFaceSettingRow
+import app.aaps.wear.watchfaces.utils.WatchFaceSettings
 import app.aaps.wear.watchfaces.utils.WatchfaceViewAdapter.Companion.SelectedWatchFace
 import kotlinx.coroutines.runBlocking
+import org.json.JSONException
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.time.LocalDateTime
@@ -176,7 +179,7 @@ class CustomWatchface : BaseWatchFace() {
 
     // internal, not public: [complicationSlots] hands out an internal type, and nothing outside this
     // module has any business with this watch face's internals anyway.
-    internal companion object : WatchFaceComplicationSlots {
+    internal companion object : WatchFaceComplicationSlots, WatchFaceSettings {
 
         /**
          * This watch face's half of the [WatchFaceComplicationSlots] contract: what the settings
@@ -186,6 +189,104 @@ class CustomWatchface : BaseWatchFace() {
          * neither the picker nor [WatchFaceComplications] ever sees [ViewMap] or the CWF json.
          */
         override val complicationSlots: List<ComplicationSlotInfo> = ComplicationMap.entries
+
+        /**
+         * This watch face's settings screen, built from the enums that already define its behaviour
+         * instead of from a settings xml that has to be kept in step with them by hand - the kind of
+         * hand-syncing that let two `CwfMetadataKey` entries carry the same json key unnoticed.
+         *
+         * A `get()` rather than a stored list because it will soon depend on the loaded CWF: deciding
+         * that a row is irrelevant to the current watch face is this class's job, not the settings
+         * screen's, since only this class may read the CWF json.
+         *
+         * Rows that are not about what the dial *shows* are listed literally: "include external
+         * views" and "simplify UI" drive what the template contains and how data is presented, so
+         * they are not tied to a [PrefMap]/[ViewMap] pair the way the toggles above them are.
+         */
+        override fun settingRows(storedConfiguration: String?): List<WatchFaceSettingRow> {
+            val json = storedConfiguration?.let {
+                try {
+                    JSONObject(it)
+                } catch (_: JSONException) {
+                    null
+                }
+            }
+            return buildList {
+                // Rows about what the dial shows: kept only while the loaded CWF has something for
+                // them to act on.
+                listOf(PrefMap.SHOW_SECOND, PrefMap.SHOW_WEEK_NUMBER, PrefMap.PREF_DARK, PrefMap.PREF_MATCH_DIVIDER, PrefMap.SHOW_DATE)
+                    .filter { it.isUsedBy(json) }
+                    .forEach { pref -> pref.toggle()?.let { add(it) } }
+                // Which of two patients' data an external view shows - meaningless unless the CWF
+                // draws external views at all. Keyed on the views themselves rather than on a
+                // PrefMap: no single preference gates them, they are marked by [ViewMap.external].
+                if (json == null || ViewMap.entries.any { it.external > 0 && it.isShownBy(json) })
+                    add(WatchFaceSettingRow.Toggle(R.string.key_switch_external, R.string.pref_switch_external, false))
+                // Each slot the CWF actually draws contributes its pair: the toggle that shows it,
+                // then the picker that chooses what it shows, greyed while the toggle is off. A zip
+                // with no complication block contributes nothing, which is the common case.
+                ComplicationMap.entries.filter { it.showPref.isUsedBy(json) }.forEach { slot ->
+                    slot.showPref.toggle()?.let { add(it) }
+                    add(WatchFaceSettingRow.Action(slot.preferenceKey, slot.preferenceTitle, dependencyKey = slot.showPref.prefKey))
+                }
+                // Last, and never filtered: these two are not about what this dial shows. One decides
+                // how data is presented, the other what a template exported from here contains - so
+                // no CWF can make either irrelevant, and both stay reachable whatever is loaded.
+                add(
+                    WatchFaceSettingRow.Choice(
+                        key = R.string.key_simplify_ui,
+                        title = R.string.pref_simplify_ui,
+                        entries = R.array.watchface_simplify_ui_name,
+                        entryValues = R.array.watchface_simplify_ui_values,
+                        // The same literal SimpleUi.isEnabled() defaults to when the key is unset.
+                        defaultValue = "off"
+                    )
+                )
+                add(WatchFaceSettingRow.Toggle(R.string.key_include_external, R.string.pref_include_external, false))
+            }
+        }
+
+        /**
+         * This preference as an on/off row, so its key, default and label are declared once - null
+         * for a preference with no label, which is one with no row at all (see [PrefMap.title]).
+         */
+        private fun PrefMap.toggle(): WatchFaceSettingRow.Toggle? =
+            title?.let { WatchFaceSettingRow.Toggle(prefKey, it, defaultValue as Boolean) }
+
+        /**
+         * Whether the loaded CWF gives this preference anything to act on: a view it gates that the
+         * zip asks to show, or a `dynPref` block keyed on it.
+         *
+         * The second arm matters as much as the first. A CWF commonly drives colours from a
+         * preference no view names at all - `key_dark` switching every `color1`/`fontColor1` through
+         * one dynPref block is the usual way a watch face follows the dark/light setting - and
+         * looking only at views would hide exactly the preference such a zip depends on most.
+         *
+         * No json - nothing loaded, or it could not be parsed - keeps every row: a setting missing
+         * because a read failed is worse than one row too many.
+         */
+        private fun PrefMap.isUsedBy(json: JSONObject?): Boolean {
+            json ?: return true
+            return ViewMap.entries.any { it.visibilityPref == this && it.isShownBy(json) } ||
+                json.optJSONObject(JsonKeys.DYNPREF.key).keysOn(key)
+        }
+
+        /**
+         * Whether the CWF declares this view and asks for it to be shown.
+         *
+         * Deliberately reads the json alone, never [ViewMap.prefVisibility]: the preference decides
+         * whether the view is drawn, and a row that vanished as soon as the user switched it off
+         * could never be switched back on.
+         */
+        private fun ViewMap.isShownBy(json: JSONObject): Boolean =
+            json.optJSONObject(key)?.optString(JsonKeys.VISIBILITY.key, JsonKeyValues.GONE.key) == JsonKeyValues.VISIBLE.key
+
+        /** Whether this json, or any object nested in it, is a `dynPref` block keyed on [prefKey]. */
+        private fun JSONObject?.keysOn(prefKey: String): Boolean {
+            val json = this ?: return false
+            if (json.optString(JsonKeys.PREFKEY.key) == prefKey) return true
+            return json.keys().asSequence().any { json.optJSONObject(it).keysOn(prefKey) }
+        }
 
         /**
          * The fixed coordinate space every CWF json declares its geometry in. A format constant
@@ -718,7 +819,7 @@ class CustomWatchface : BaseWatchFace() {
         cwfAuthorization?.let { authorization ->
             if (authorization) {
                 PrefMap.entries.forEach { pref ->
-                    metadata[CwfMetadataKey.fromKey(pref.key)]?.toBooleanStrictOrNull()?.let { sp.putBoolean(pref.prefKey, it) }
+                    metadata[pref.metadataKey]?.toBooleanStrictOrNull()?.let { sp.putBoolean(pref.prefKey, it) }
                 }
             }
         }
@@ -918,13 +1019,19 @@ class CustomWatchface : BaseWatchFace() {
      * while the watch face editor runs a second, headless CustomWatchface concurrently, and the two
      * would share one drawable. That state stays in `ComplicationSlotState`, one per engine.
      */
-    private enum class ComplicationMap(override val id: Int, @StringRes override val preferenceKey: Int) : ComplicationSlotInfo {
+    private enum class ComplicationMap(
+        override val id: Int,
+        @StringRes override val preferenceKey: Int,
+        @StringRes override val preferenceTitle: Int,
+        /** The "Show Complication N" toggle that decides whether this slot is drawn at all. */
+        val showPref: PrefMap
+    ) : ComplicationSlotInfo {
 
-        COMPLICATION1(101, R.string.key_complication_1),
-        COMPLICATION2(102, R.string.key_complication_2),
-        COMPLICATION3(103, R.string.key_complication_3),
-        COMPLICATION4(104, R.string.key_complication_4),
-        COMPLICATION5(105, R.string.key_complication_5)
+        COMPLICATION1(101, R.string.key_complication_1, R.string.pref_complication_1, PrefMap.SHOW_COMPLICATION_1),
+        COMPLICATION2(102, R.string.key_complication_2, R.string.pref_complication_2, PrefMap.SHOW_COMPLICATION_2),
+        COMPLICATION3(103, R.string.key_complication_3, R.string.pref_complication_3, PrefMap.SHOW_COMPLICATION_3),
+        COMPLICATION4(104, R.string.key_complication_4, R.string.pref_complication_4, PrefMap.SHOW_COMPLICATION_4),
+        COMPLICATION5(105, R.string.key_complication_5, R.string.pref_complication_5, PrefMap.SHOW_COMPLICATION_5)
     }
 
     private enum class ViewMap(
@@ -967,11 +1074,11 @@ class CustomWatchface : BaseWatchFace() {
         // The json key, the placeholder view id, the visibility preference and the slot this entry
         // draws for all meet here; the slot's own identity (id + settings row) lives in
         // [ComplicationMap].
-        COMPLICATION1(ViewKeys.COMPLICATION1.key, R.id.complication1, PrefMap.SHOW_COMPLICATION_1, complication = ComplicationMap.COMPLICATION1),
-        COMPLICATION2(ViewKeys.COMPLICATION2.key, R.id.complication2, PrefMap.SHOW_COMPLICATION_2, complication = ComplicationMap.COMPLICATION2),
-        COMPLICATION3(ViewKeys.COMPLICATION3.key, R.id.complication3, PrefMap.SHOW_COMPLICATION_3, complication = ComplicationMap.COMPLICATION3),
-        COMPLICATION4(ViewKeys.COMPLICATION4.key, R.id.complication4, PrefMap.SHOW_COMPLICATION_4, complication = ComplicationMap.COMPLICATION4),
-        COMPLICATION5(ViewKeys.COMPLICATION5.key, R.id.complication5, PrefMap.SHOW_COMPLICATION_5, complication = ComplicationMap.COMPLICATION5),
+        COMPLICATION1(ViewKeys.COMPLICATION1.key, R.id.complication1, complication = ComplicationMap.COMPLICATION1),
+        COMPLICATION2(ViewKeys.COMPLICATION2.key, R.id.complication2, complication = ComplicationMap.COMPLICATION2),
+        COMPLICATION3(ViewKeys.COMPLICATION3.key, R.id.complication3, complication = ComplicationMap.COMPLICATION3),
+        COMPLICATION4(ViewKeys.COMPLICATION4.key, R.id.complication4, complication = ComplicationMap.COMPLICATION4),
+        COMPLICATION5(ViewKeys.COMPLICATION5.key, R.id.complication5, complication = ComplicationMap.COMPLICATION5),
         CHART(ViewKeys.CHART.key, R.id.chart),
         COVER_CHART(
             key = ViewKeys.COVER_CHART.key,
@@ -1164,7 +1271,14 @@ class CustomWatchface : BaseWatchFace() {
         var twinView: ViewMap? = null
             get() = field ?: viewJson?.let { viewJson -> ViewMap.fromKey(viewJson.optString(JsonKeys.TWINVIEW.key)).also { twinView = it } }
 
-        fun prefVisibility(cwf: CustomWatchface): Boolean = this.pref?.let { cwf.sp.getBoolean(it.prefKey, it.defaultValue as Boolean) } != false
+        /**
+         * The preference that gates this view: its own [pref], or - for a complication placeholder -
+         * the one its slot carries, so the slot's id and its "Show Complication N" toggle stay
+         * declared together in [ComplicationMap] instead of half here and half there.
+         */
+        val visibilityPref: PrefMap? get() = pref ?: complication?.showPref
+
+        fun prefVisibility(cwf: CustomWatchface): Boolean = visibilityPref?.let { cwf.sp.getBoolean(it.prefKey, it.defaultValue as Boolean) } != false
 
         fun textDrawable(cwf: CustomWatchface): Drawable? = textDrawable
             ?: cwf.resDataMap[viewJson?.optString(JsonKeys.BACKGROUND.key)]?.toDrawable(cwf.resources, width, height)?.also { textDrawable = it }
@@ -1441,14 +1555,25 @@ class CustomWatchface : BaseWatchFace() {
     // This class contains mapping between keys used within JSON of Custom Watchface and preferences
     // Note defaultValue should be identical to default value in XML file,
     // defaultValue Type set to Any for future updates (Boolean or String) (key_digital_style_frame_style, key_digital_style_frame_color are strings...)
-    private enum class PrefMap(val key: String, @StringRes val prefKey: Int, val defaultValue: Any, val typeBool: Boolean) {
+    private enum class PrefMap(
+        val key: String,
+        @StringRes val prefKey: Int,
+        val defaultValue: Any,
+        val typeBool: Boolean,
+        /**
+         * Row label for the few preferences [CwfMetadataKey] does not name - see [title], which is
+         * where every other one gets its label from. Null also means "no row at all": [PREF_UNITS]
+         * is pushed from the phone, never chosen on the watch.
+         */
+        @StringRes private val localTitle: Int? = null
+    ) {
 
         SHOW_IOB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_IOB.key, R.string.key_show_iob, true, true),
-        SHOW_COMPLICATION_1(CwfMetadataKey.CWF_PREF_WATCH_SHOW_COMPLICATION1.key, R.string.key_show_complication_1, true, true),
-        SHOW_COMPLICATION_2(CwfMetadataKey.CWF_PREF_WATCH_SHOW_COMPLICATION2.key, R.string.key_show_complication_2, true, true),
-        SHOW_COMPLICATION_3(CwfMetadataKey.CWF_PREF_WATCH_SHOW_COMPLICATION3.key, R.string.key_show_complication_3, true, true),
-        SHOW_COMPLICATION_4(CwfMetadataKey.CWF_PREF_WATCH_SHOW_COMPLICATION4.key, R.string.key_show_complication_4, true, true),
-        SHOW_COMPLICATION_5(CwfMetadataKey.CWF_PREF_WATCH_SHOW_COMPLICATION5.key, R.string.key_show_complication_5, true, true),
+        SHOW_COMPLICATION_1(CwfMetadataKey.CWF_PREF_WATCH_SHOW_COMPLICATION1.key, R.string.key_show_complication_1, false, true),
+        SHOW_COMPLICATION_2(CwfMetadataKey.CWF_PREF_WATCH_SHOW_COMPLICATION2.key, R.string.key_show_complication_2, false, true),
+        SHOW_COMPLICATION_3(CwfMetadataKey.CWF_PREF_WATCH_SHOW_COMPLICATION3.key, R.string.key_show_complication_3, false, true),
+        SHOW_COMPLICATION_4(CwfMetadataKey.CWF_PREF_WATCH_SHOW_COMPLICATION4.key, R.string.key_show_complication_4, false, true),
+        SHOW_COMPLICATION_5(CwfMetadataKey.CWF_PREF_WATCH_SHOW_COMPLICATION5.key, R.string.key_show_complication_5, false, true),
         SHOW_DETAILED_IOB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DETAILED_IOB.key, R.string.key_show_detailed_iob, false, true),
         SHOW_COB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_COB.key, R.string.key_show_cob, true, true),
         SHOW_DELTA(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DELTA.key, R.string.key_show_delta, true, true),
@@ -1468,8 +1593,25 @@ class CustomWatchface : BaseWatchFace() {
         SHOW_DATE(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DATE.key, R.string.key_show_date, false, true),
         SHOW_SECOND(CwfMetadataKey.CWF_PREF_WATCH_SHOW_SECONDS.key, R.string.key_show_seconds, true, true),
         PREF_UNITS(JsonKeyValues.PREF_UNITS.key, R.string.key_units_mgdl, true, true),
-        PREF_DARK(JsonKeyValues.PREF_DARK.key, R.string.key_dark, true, true),
-        PREF_MATCH_DIVIDER(JsonKeyValues.PREF_MATCH_DIVIDER.key, R.string.key_match_divider, false, true);
+        PREF_DARK(JsonKeyValues.PREF_DARK.key, R.string.key_dark, true, true, R.string.pref_dark),
+        PREF_MATCH_DIVIDER(JsonKeyValues.PREF_MATCH_DIVIDER.key, R.string.key_match_divider, false, true, R.string.pref_matching_divider);
+
+        /**
+         * The CWF metadata entry that names this preference, or null for the few watch preferences a
+         * zip cannot carry in its metadata - those are named by [JsonKeyValues] instead.
+         */
+        val metadataKey: CwfMetadataKey? get() = CwfMetadataKey.fromKey(key)
+
+        /**
+         * The label of this preference's row on the watch face's settings screen, or null when it has
+         * no row.
+         *
+         * Taken from [metadataKey] wherever there is one, so a preference is labelled by the very
+         * string the phone shows for it, rather than by a second copy of that text in this module.
+         * Declared here rather than in a settings xml so the row and the preference cannot drift
+         * apart - the screen is built from these entries, see `CustomWatchfaceConfigurationFragment`.
+         */
+        @get:StringRes val title: Int? get() = metadataKey?.label ?: localTitle
 
         var value: String = ""
 

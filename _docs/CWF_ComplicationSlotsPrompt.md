@@ -214,7 +214,31 @@ complications API (`android.support.wearable.complications.*`, manual `Complicat
   API. Lesson: for this codebase, always verify the actual base-class API before writing
   framework-integration code — don't infer it from an older sibling implementation.
 
-**2. Dagger injection race in `createComplicationSlotsManager()`.** This method can run before
+**Subject 1 — Step 2, Phase 2: filter preferences by view visibility** — *device-confirmed*
+- [x] `settingRows` takes the stored CWF (opaque text, fetched by the host activity, parsed only
+  inside `CustomWatchface`) and leaves out rows the loaded zip gives nothing to act on.
+- [x] **Two arms, both needed.** A preference is kept when some `ViewMap` entry it gates is declared
+  *visible* in the json, **or** when any `dynPref` block keys on it. The second arm is not an edge
+  case: the AAPS V2 zip drives every colour from `key_dark` through one dynPref block that no view
+  names, so a view-only rule would hide the very preference that CWF depends on most.
+- [x] Visibility is read from the json alone, never from the preference itself — a row that vanished
+  the moment the user switched it off could never be switched back on.
+- [x] No json (nothing stored, or unparseable) keeps every row: a setting missing because a read
+  failed is worse than one row too many.
+- [ ] Device-confirm with AAPS V2: expect `Show seconds` and `Show Week number` to disappear (both
+  `gone` in that zip), `Dark` and `Matching divider` to stay (dynPref), `Show Date` to stay
+  (day/month visible), and all 5 complication pairs to disappear (no complication block).
+
+**Subject 1 — Step 2, Phase 2 (original scoping notes)**
+- [ ] Design and implement: a per-view `PrefMap` entry's row is shown only when at least one
+  `ViewMap` entry using it is currently visible in the loaded CWF json — derived from
+  `ViewMap.entries.filter { it.pref == … }` plus the same visibility state already computed
+  for rendering, never by the preference screen parsing json itself (hard rule).
+- [ ] **Constraint to respect throughout**: the preference-managing Activity/Fragment is *shared*
+  with Digital/Circle — only the xml resource differs. Any filtering logic must be scoped so
+  it only ever activates for CustomWatchface's screen.
+
+- **2. Dagger injection race in `createComplicationSlotsManager()`.** This method can run before
 `BaseWatchFace.onCreate()`'s `AndroidInjection.inject(this)` has completed, under an engine
 (re)creation path unrelated to normal app startup — it threw
 `UninitializedPropertyAccessException` on `complicationDataRepository`, silently caught by

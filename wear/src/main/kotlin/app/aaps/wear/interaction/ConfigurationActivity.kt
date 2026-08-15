@@ -6,24 +6,33 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceGroup
 import androidx.wear.watchface.editor.EditorSession
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.wear.R
+import app.aaps.wear.data.ComplicationDataRepository
 import app.aaps.wear.preference.WearPreferenceActivity
+import app.aaps.wear.watchfaces.CircleWatchface
+import app.aaps.wear.watchfaces.CustomWatchface
+import app.aaps.wear.watchfaces.DigitalStyleWatchface
 import dagger.android.AndroidInjection
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
-class ConfigurationActivity : WearPreferenceActivity() {
+class ConfigurationActivity : WearPreferenceActivity(), CustomWatchfaceSettingsHost {
 
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var complicationDataRepository: ComplicationDataRepository
+
+    // Blocking, like every other read of this store on a screen that cannot draw without it (see
+    // CustomWatchface.createComplicationSlotsManager): the preference screen is built synchronously
+    // in onCreate, and it is a local read.
+    override fun storedWatchfaceConfiguration(): String? = runBlocking { complicationDataRepository.getCustomWatchface()?.json }
 
     private var watchfaceComponentName: ComponentName? = null
 
@@ -133,12 +142,19 @@ class ConfigurationActivity : WearPreferenceActivity() {
     override fun createPreferenceFragment(): PreferenceFragmentCompat {
         val configFileName = intent.action
 
+        // CustomWatchface has its own screen: it is built in code from what that watch face declares,
+        // so it needs no xml here - see CustomWatchfaceConfigurationFragment.
+        if (watchfaceComponentName?.className == CustomWatchface::class.java.name) {
+            aapsLogger.debug(LTag.WEAR, "ConfigurationActivity::createPreferenceFragment --->> CustomWatchface screen")
+            return CustomWatchfaceConfigurationFragment()
+        }
+
         // Determine which preference XML to load based on the watchface component
         val resXmlId = when (watchfaceComponentName?.className) {
-            "app.aaps.wear.watchfaces.CustomWatchface" -> R.xml.watch_face_configuration_custom
-            "app.aaps.wear.watchfaces.CircleWatchface" -> R.xml.watch_face_configuration_circle
-            "app.aaps.wear.watchfaces.DigitalStyleWatchface" -> R.xml.watch_face_configuration_digitalstyle
-            else -> {
+            CircleWatchface::class.java.name       -> R.xml.watch_face_configuration_circle
+            DigitalStyleWatchface::class.java.name -> R.xml.watch_face_configuration_digitalstyle
+
+            else                                   -> {
                 // Fallback: try to use the old method with action
                 @Suppress("DiscouragedApi")
                 resources.getIdentifier(configFileName, "xml", applicationContext.packageName)
@@ -160,7 +176,10 @@ class ConfigurationActivity : WearPreferenceActivity() {
     }
 
     /**
-     * Fragment for loading watchface configuration preferences
+     * Fragment for loading watchface configuration preferences from a settings xml.
+     *
+     * Only Circle and DigitalStyle reach this now - CustomWatchface has its own fragment - so nothing
+     * here deals with complications: no other watch face has any.
      */
     class ConfigurationFragment : PreferenceFragmentCompat() {
 
@@ -172,45 +191,6 @@ class ConfigurationActivity : WearPreferenceActivity() {
                 // Apply multiline layout to all preferences to prevent text truncation
                 applyMultilineLayoutToAllPreferences(preferenceScreen)
             }
-        }
-
-        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-            super.onViewCreated(view, savedInstanceState)
-            observeComplicationProviderSummaries()
-        }
-
-        /**
-         * Shows each "Complication N" preference's currently assigned data source name as its
-         * summary, e.g. "Heart Rate". [EditorSession.complicationsDataSourceInfo] is a StateFlow
-         * that the library itself populates asynchronously once per slot right after the session
-         * is created, and updates again for one slot after a successful pick via
-         * [ConfigurationActivity.requestComplicationPicker] - collecting it here covers both the
-         * initial display and the post-pick refresh with a single subscription, no separate
-         * refresh call needed after the picker returns.
-         */
-        private fun observeComplicationProviderSummaries() {
-            // Not CustomWatchface's preference screen (e.g. Circle/DigitalStyle) - nothing to do.
-            if (!ComplicationPickerSupport.hasComplicationPreferences(this)) return
-
-            viewLifecycleOwner.lifecycleScope.launch {
-                val session = (requireActivity() as ConfigurationActivity).awaitEditorSession()
-                session.complicationsDataSourceInfo.collect { infoBySlot ->
-                    val namesBySlot = infoBySlot.mapValues { (_, info) -> info?.name }
-                    ComplicationPickerSupport.applyComplicationSummaries(this@ConfigurationFragment, namesBySlot)
-                    // This screen is the only place assignments can change, so it is also the only
-                    // place that can keep the AAPS Settings menu's copy honest.
-                    ComplicationPickerSupport.cacheAssignedDataSourceNames(requireContext(), namesBySlot)
-                }
-            }
-        }
-
-        // Already running as ConfigurationActivity (the only activity with a valid intent shape
-        // for EditorSession), so handle the tap directly - no need to relaunch via
-        // ComplicationPickerSupport the way WatchfaceConfigurationFragment does.
-        override fun onPreferenceTreeClick(preference: Preference): Boolean {
-            val slotId = ComplicationPickerSupport.slotIdFor(requireContext(), preference) ?: return super.onPreferenceTreeClick(preference)
-            (requireActivity() as ConfigurationActivity).requestComplicationPicker(slotId)
-            return true
         }
 
         /**

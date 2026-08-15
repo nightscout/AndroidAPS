@@ -51,12 +51,6 @@ internal class ComplicationPickerSupport(private val fragment: Fragment) {
         private fun keyForSlot(context: Context, slotId: Int): String? =
             slots.firstOrNull { it.id == slotId }?.let { context.getString(it.preferenceKey) }
 
-        /** True if [fragment] is showing the screen that carries these complication rows. */
-        fun hasComplicationPreferences(fragment: PreferenceFragmentCompat): Boolean {
-            val context = fragment.context ?: return false
-            return slots.any { fragment.findPreference<Preference>(context.getString(it.preferenceKey)) != null }
-        }
-
         /**
          * Shows the assigned data source name under each "Complication N" entry.
          *
