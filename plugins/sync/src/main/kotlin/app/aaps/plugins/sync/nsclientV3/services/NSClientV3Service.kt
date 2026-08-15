@@ -42,7 +42,6 @@ import app.aaps.plugins.sync.nsclientV3.extensions.toRunningConfiguration
 import app.aaps.plugins.sync.nsclientV3.json.JsonBridge.toKotlinxJson
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import dagger.android.DaggerService
-import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.socket.client.Ack
 import io.socket.client.IO
 import io.socket.client.Socket
@@ -72,7 +71,6 @@ class NSClientV3Service : DaggerService() {
     @Inject lateinit var orphanDetector: OrphanDetector
     @Inject @ApplicationScope lateinit var appScope: CoroutineScope
 
-    private val disposable = CompositeDisposable()
 
     private var wakeLock: PowerManager.WakeLock? = null
     private val binder: IBinder = LocalBinder(this)
@@ -88,7 +86,6 @@ class NSClientV3Service : DaggerService() {
     override fun onDestroy() {
         super.onDestroy()
         shutdownWebsockets()
-        disposable.clear()
         if (wakeLock?.isHeld == true) wakeLock?.release()
     }
 

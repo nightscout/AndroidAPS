@@ -40,7 +40,6 @@ dependencies {
     api(libs.androidx.lifecycle.runtime.compose)
 
     implementation(libs.com.google.dagger.hilt.android)
-    implementation(libs.io.reactivex.rxjava3.rxandroid)
 
     ksp(libs.com.google.dagger.compiler)
     ksp(libs.com.google.dagger.hilt.compiler)
