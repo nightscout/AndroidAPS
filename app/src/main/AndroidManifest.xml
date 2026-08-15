@@ -137,6 +137,16 @@
             </intent-filter>
         </receiver>
 
+        <!-- W527 糖表盘数据请求(表盘 App 定时请求血糖广播) -->
+        <receiver
+            android:name="app.aaps.receivers.WatchfaceReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="app.aaps.watchface.REQUEST" />
+            </intent-filter>
+        </receiver>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
