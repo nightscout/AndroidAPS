@@ -7,8 +7,8 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
@@ -19,8 +19,7 @@ import app.aaps.core.objects.wizard.QuickWizardMode
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.ui.events.EventQuickWizardChange
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -46,7 +45,6 @@ import javax.inject.Inject
 class QuickWizardManagementViewModel @Inject constructor(
     private val quickWizard: QuickWizard,
     private val rxBus: RxBus,
-    private val aapsSchedulers: AapsSchedulers,
     private val constraintChecker: ConstraintsChecker,
     private val preferences: Preferences,
     val rh: ResourceHelper,
@@ -54,7 +52,6 @@ class QuickWizardManagementViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger
 ) : ViewModel() {
 
-    private val disposable = CompositeDisposable()
 
     private val _uiState = MutableStateFlow(QuickWizardManagementUiState())
     val uiState: StateFlow<QuickWizardManagementUiState> = _uiState.asStateFlow()
@@ -84,11 +81,6 @@ class QuickWizardManagementViewModel @Inject constructor(
         loadData()
         observeQuickWizardChanges()
         observeQuickWizardPrefChanges()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        disposable.clear()
     }
 
     /**
@@ -130,14 +122,11 @@ class QuickWizardManagementViewModel @Inject constructor(
      * Observe QuickWizard changes from RxBus
      */
     private fun observeQuickWizardChanges() {
-        disposable += rxBus
-            .toObservable(EventQuickWizardChange::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({
-                           loadData()
-                       }, { throwable ->
-                           aapsLogger.error(LTag.UI, "Error observing QuickWizard changes", throwable)
-                       })
+        // viewModelScope is Main, like observeOn(aapsSchedulers.main), and dies with the view model
+        // like the CompositeDisposable did. UNDISPATCHED because RxBus has no replay: a scheduled
+        // collector could miss a change sent before it starts.
+        rxBus.toFlow(EventQuickWizardChange::class.java)
+            .collectResilient(viewModelScope, aapsLogger, LTag.UI, start = CoroutineStart.UNDISPATCHED) { loadData() }
     }
 
     /**

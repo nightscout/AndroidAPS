@@ -93,7 +93,7 @@ class DataHandlerMobileWearBolusTest : TestBaseWithProfile() {
 
     @BeforeEach fun prepare() {
         sut = DataHandlerMobile(
-            aapsSchedulers, context, rxBus, aapsLogger, rh, preferences, config,
+            context, rxBus, aapsLogger, rh, preferences, config,
             iobCobCalculator, processedTbrEbData, smbGlucoseStatusProvider, profileFunction, profileUtil,
             loop, processedDeviceStatusData, receiverStatusStore, quickWizard, trendCalculator, dateUtil,
             constraintsChecker, activePlugin, commandQueue, fabricPrivacy, uiInteraction,

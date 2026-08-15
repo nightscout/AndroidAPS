@@ -3,7 +3,6 @@ package app.aaps.ui.compose.quickWizard.viewmodels
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
@@ -13,11 +12,10 @@ import app.aaps.core.objects.wizard.QuickWizardMode
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.ui.events.EventQuickWizardChange
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -41,7 +39,6 @@ internal class QuickWizardManagementViewModelTest {
 
     @Mock private lateinit var quickWizard: QuickWizard
     @Mock private lateinit var rxBus: RxBus
-    @Mock private lateinit var aapsSchedulers: AapsSchedulers
     @Mock private lateinit var constraintChecker: ConstraintsChecker
     @Mock private lateinit var preferences: Preferences
     @Mock private lateinit var rh: ResourceHelper
@@ -58,10 +55,9 @@ internal class QuickWizardManagementViewModelTest {
         Dispatchers.setMain(StandardTestDispatcher())
         // Synchronous init wiring that must return non-null flows/streams to avoid construction NPEs.
         whenever(quickWizard.changes).thenReturn(MutableStateFlow(0))
-        whenever(rxBus.toObservable(EventQuickWizardChange::class.java)).thenReturn(Observable.empty())
-        whenever(aapsSchedulers.main).thenReturn(Schedulers.trampoline())
+        whenever(rxBus.toFlow(EventQuickWizardChange::class.java)).thenReturn(emptyFlow())
         sut = QuickWizardManagementViewModel(
-            quickWizard, rxBus, aapsSchedulers, constraintChecker, preferences, rh, dateUtil, aapsLogger
+            quickWizard, rxBus, constraintChecker, preferences, rh, dateUtil, aapsLogger
         )
     }
 

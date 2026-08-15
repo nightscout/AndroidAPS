@@ -10,7 +10,6 @@ import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.fromGv
 import app.aaps.shared.tests.TestBase
@@ -27,7 +26,6 @@ class BgQualityCheckPluginTest : TestBase() {
 
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var iobCobCalculator: IobCobCalculator
-    @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var autosensDataStore: AutosensDataStore
 
@@ -39,7 +37,7 @@ class BgQualityCheckPluginTest : TestBase() {
     @BeforeEach
     fun mock() {
         plugin =
-            BgQualityCheckPlugin(aapsLogger, rh, rxBus, iobCobCalculator, aapsSchedulers, fabricPrivacy, dateUtil)
+            BgQualityCheckPlugin(aapsLogger, rh, rxBus, iobCobCalculator, dateUtil)
         whenever(iobCobCalculator.ads).thenReturn(autosensDataStore)
         whenever(rh.gs(anyInt())).thenReturn("")
         whenever(rh.gs(anyInt(), any(), any())).thenReturn("")

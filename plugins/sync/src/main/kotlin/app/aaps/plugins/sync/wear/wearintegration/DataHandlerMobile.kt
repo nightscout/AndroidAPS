@@ -51,8 +51,8 @@ import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.chunkedOnQuietPeriod
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
@@ -98,19 +98,15 @@ import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.core.ui.compose.DarkGeneralColors
 import app.aaps.core.ui.compose.LightGeneralColors
 import app.aaps.plugins.sync.R
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.rx3.rxCompletable
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.LinkedList
 import java.util.Locale
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
@@ -122,7 +118,6 @@ private const val HEALTH_EVENT_QUIET_PERIOD_MS = 500L
 
 @Singleton
 class DataHandlerMobile @Inject constructor(
-    private val aapsSchedulers: AapsSchedulers,
     private val context: Context,
     private val rxBus: RxBus,
     private val aapsLogger: AAPSLogger,
@@ -163,10 +158,9 @@ class DataHandlerMobile @Inject constructor(
     @Inject lateinit var automation: Automation
     @Inject lateinit var scenes: SceneAutomationApi
     @Inject lateinit var sceneActions: SceneActions
-    private val disposable = CompositeDisposable()
 
-    // App lifetime, matching the disposable above: this is a @Singleton that subscribes in init and
-    // never tears down. Dispatchers.IO because that is what aapsSchedulers.io gave these handlers, and
+    // App lifetime: this is a @Singleton that subscribes in init and
+    // never tears down. Dispatchers.IO because that is what the io scheduler gave these handlers, and
     // they do database and broadcast work - the Default pool would be the wrong one.
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
@@ -343,27 +337,16 @@ class DataHandlerMobile @Inject constructor(
         onEventSync<EventData.SnoozeAlert> { uiInteraction.stopAlarm("Muted from wear") }
         onEventSync<EventData.WearException> { fabricPrivacy.logWearException(it) }
         // Coalesce Wear reconnect-flush bursts (Data Layer replays queued events back-to-back).
-        // publish/debounce keeps the timer idle when no events arrive, unlike fixed-window buffer().
-        disposable += rxBus
-            .toObservable(EventData.ActionHeartRate::class.java)
-            .publish { shared -> shared.buffer(shared.debounce(HEALTH_EVENT_QUIET_PERIOD_MS, TimeUnit.MILLISECONDS, aapsSchedulers.io)) }
-            .observeOn(aapsSchedulers.io)
-            .concatMapCompletable {
-                rxCompletable { handleHeartRateBatch(it) }
-                    .doOnError(fabricPrivacy::logException)
-                    .onErrorComplete()
-            }
-            .subscribe()
-        disposable += rxBus
-            .toObservable(EventData.ActionStepsRate::class.java)
-            .publish { shared -> shared.buffer(shared.debounce(HEALTH_EVENT_QUIET_PERIOD_MS, TimeUnit.MILLISECONDS, aapsSchedulers.io)) }
-            .observeOn(aapsSchedulers.io)
-            .concatMapCompletable {
-                rxCompletable { handleStepsCountBatch(it) }
-                    .doOnError(fabricPrivacy::logException)
-                    .onErrorComplete()
-            }
-            .subscribe()
+        // chunkedOnQuietPeriod keeps the timer idle when no events arrive, unlike a fixed window.
+        // The collector is sequential, so batches are still handled one after another the way
+        // concatMapCompletable did, and collectResilient logs and continues like doOnError +
+        // onErrorComplete.
+        rxBus.toFlow(EventData.ActionHeartRate::class.java)
+            .chunkedOnQuietPeriod(HEALTH_EVENT_QUIET_PERIOD_MS)
+            .collectResilient(scope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { handleHeartRateBatch(it) }
+        rxBus.toFlow(EventData.ActionStepsRate::class.java)
+            .chunkedOnQuietPeriod(HEALTH_EVENT_QUIET_PERIOD_MS)
+            .collectResilient(scope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { handleStepsCountBatch(it) }
         onEventSync<EventData.ActionGetCustomWatchface>(detail = { " watchface=${it.customWatchface}" }) { handleGetCustomWatchface(it) }
     }
 
