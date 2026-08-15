@@ -9,14 +9,12 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventSWSyncStatus
 import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.interfaces.sync.Tidepool
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -35,8 +33,6 @@ import app.aaps.plugins.sync.tidepool.keys.TidepoolBooleanKey
 import app.aaps.plugins.sync.tidepool.keys.TidepoolLongNonKey
 import app.aaps.plugins.sync.tidepool.keys.TidepoolStringNonKey
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -51,9 +47,7 @@ class TidepoolPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     preferences: Preferences,
-    private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
-    private val fabricPrivacy: FabricPrivacy,
     private val tidepoolUploader: TidepoolUploader,
     private val uploadChunk: UploadChunk,
     private val rateLimit: RateLimit,
@@ -87,7 +81,6 @@ class TidepoolPlugin @Inject constructor(
     aapsLogger, rh, preferences
 ) {
 
-    private var disposable: CompositeDisposable = CompositeDisposable()
     private var scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     private val isAllowed get() = receiverDelegate.allowed
@@ -102,19 +95,16 @@ class TidepoolPlugin @Inject constructor(
                 tidepoolUploader.resetInstance()
                 if (isAllowed) doUpload("CONNECTIVITY")
             }
-        disposable += rxBus
-            .toObservable(EventTidepoolDoUpload::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ doUpload(EventTidepoolDoUpload::class.simpleName) }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventTidepoolStatus::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event ->
-                           tidepoolRepository.addLog(event.status)
-                           tidepoolRepository.updateConnectionStatus(authFlowOut.connectionStatus)
-                           // Pass to setup wizard
-                           rxBus.send(EventSWSyncStatus(event.status))
-                       }, fabricPrivacy::logException)
+        // scope is Dispatchers.IO, matching the scheduler these subscriptions used before.
+        rxBus.toFlow(EventTidepoolDoUpload::class.java)
+            .collectResilient(scope, aapsLogger, LTag.TIDEPOOL) { doUpload(EventTidepoolDoUpload::class.simpleName) }
+        rxBus.toFlow(EventTidepoolStatus::class.java)
+            .collectResilient(scope, aapsLogger, LTag.TIDEPOOL) { event ->
+                tidepoolRepository.addLog(event.status)
+                tidepoolRepository.updateConnectionStatus(authFlowOut.connectionStatus)
+                // Pass to setup wizard
+                rxBus.send(EventSWSyncStatus(event.status))
+            }
         persistenceLayer.observeChanges(GV::class.java)
             .collectResilient(scope, aapsLogger, LTag.TIDEPOOL) { gvList ->
                 gvList.maxByOrNull { it.timestamp }?.let { gv ->
@@ -133,7 +123,6 @@ class TidepoolPlugin @Inject constructor(
 
     override suspend fun onStop() {
         scope.cancel()
-        disposable.clear()
         super.onStop()
     }
 

@@ -23,14 +23,12 @@ import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.receivers.Intents
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.Event
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.durationInMinutes
@@ -39,8 +37,6 @@ import app.aaps.core.objects.extensions.toStringFull
 import app.aaps.core.ui.compose.icons.IcPluginTizen
 import app.aaps.plugins.sync.R
 import app.aaps.shared.impl.extensions.safeQueryBroadcastReceivers
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -53,10 +49,8 @@ import javax.inject.Singleton
 class TizenPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
-    private val aapsSchedulers: AapsSchedulers,
     private val context: Context,
     private val dateUtil: DateUtil,
-    private val fabricPrivacy: FabricPrivacy,
     private val rxBus: RxBus,
     private val iobCobCalculator: IobCobCalculator,
     private val processedTbrEbData: ProcessedTbrEbData,
@@ -80,21 +74,17 @@ class TizenPlugin @Inject constructor(
     aapsLogger, rh
 ) {
 
-    private val disposable = CompositeDisposable()
     private var scope: CoroutineScope? = null
 
     override suspend fun onStart() {
         super.onStart()
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
-        disposable += rxBus
-            .toObservable(EventLoopUpdateGui::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ sendData(it) }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventAutosensCalculationFinished::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ sendData(it) }, fabricPrivacy::logException)
+        // newScope is Dispatchers.IO, matching the scheduler these subscriptions used before.
+        rxBus.toFlow(EventLoopUpdateGui::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.CORE) { sendData(it) }
+        rxBus.toFlow(EventAutosensCalculationFinished::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.CORE) { sendData(it) }
         bolusProgressData.state
             .collectResilient(newScope, aapsLogger, LTag.CORE) { state ->
                 if (state != null && !state.isSMB) {
@@ -104,7 +94,6 @@ class TizenPlugin @Inject constructor(
     }
 
     override suspend fun onStop() {
-        disposable.clear()
         scope?.cancel()
         scope = null
         super.onStop()

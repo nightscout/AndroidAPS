@@ -47,7 +47,7 @@ class TidepoolPluginTest : TestBaseWithProfile() {
         whenever(receiverDelegate.connectivityStatusFlow).thenReturn(connectivityFlow)
         whenever(persistenceLayer.observeChanges(anyOrNull<Class<*>>())).thenReturn(emptyFlow())
         tidepoolPlugin = TidepoolPlugin(
-            aapsLogger, rh, preferences, aapsSchedulers, rxBus, fabricPrivacy, tidepoolUploader, uploadChunk, rateLimit, receiverDelegate, authFlowOut, tidepoolRepository, dateUtil, persistenceLayer
+            aapsLogger, rh, preferences, rxBus, tidepoolUploader, uploadChunk, rateLimit, receiverDelegate, authFlowOut, tidepoolRepository, dateUtil, persistenceLayer
         )
     }
 
@@ -92,8 +92,8 @@ class TidepoolPluginTest : TestBaseWithProfile() {
             dateUtil, receiverDelegate, config, l, authFlowOut, rateLimit
         )
         val plugin = TidepoolPlugin(
-            aapsLogger, rh, preferences, aapsSchedulers, rxBus,
-            fabricPrivacy, realUploader, uploadChunk, rateLimit,
+            aapsLogger, rh, preferences, rxBus,
+            realUploader, uploadChunk, rateLimit,
             receiverDelegate, authFlowOut, tidepoolRepository, dateUtil, persistenceLayer
         )
         runBlocking { plugin.onStart() }
@@ -116,8 +116,8 @@ class TidepoolPluginTest : TestBaseWithProfile() {
             dateUtil, receiverDelegate, config, l, authFlowOut, rateLimit
         )
         val plugin = TidepoolPlugin(
-            aapsLogger, rh, preferences, aapsSchedulers, rxBus,
-            fabricPrivacy, realUploader, uploadChunk, rateLimit,
+            aapsLogger, rh, preferences, rxBus,
+            realUploader, uploadChunk, rateLimit,
             receiverDelegate, authFlowOut, tidepoolRepository, dateUtil, persistenceLayer
         )
         runBlocking { plugin.onStart() }

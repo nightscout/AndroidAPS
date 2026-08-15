@@ -47,7 +47,7 @@ internal class TizenPluginTest : TestBaseWithProfile() {
     @BeforeEach
     fun setUp() {
         sut = TizenPlugin(
-            aapsLogger, rh, aapsSchedulers, context, dateUtil, fabricPrivacy, rxBus, iobCobCalculator, processedTbrEbData, profileFunction, preferences, processedDeviceStatusData,
+            aapsLogger, rh, context, dateUtil, rxBus, iobCobCalculator, processedTbrEbData, profileFunction, preferences, processedDeviceStatusData,
             loop, activePlugin, receiverStatusStore, config, glucoseStatusProvider, pumpStatusProvider, bolusProgressData
         )
         // gs(TextRef) is a DEFAULT interface method, so a mock answers null unless it is stubbed.
