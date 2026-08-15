@@ -23,14 +23,12 @@ import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.medtrum.MedtrumPlugin
@@ -69,10 +67,9 @@ import app.aaps.pump.medtrum.keys.MedtrumStringNonKey
 import app.aaps.pump.medtrum.util.MedtrumSnUtil
 import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
@@ -86,7 +83,6 @@ class MedtrumService : DaggerService(), MedtrumBleCallback {
 
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var rh: ResourceHelper
@@ -98,7 +94,6 @@ class MedtrumService : DaggerService(), MedtrumBleCallback {
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var notificationManager: NotificationManager
     @Inject lateinit var bleTransport: MedtrumBleTransport
-    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Inject lateinit var dateUtil: DateUtil
@@ -116,7 +111,6 @@ class MedtrumService : DaggerService(), MedtrumBleCallback {
         private const val CHECK_EXPIRY_WARNING_TIME_MS = 5 * 60 * 1000L
     }
 
-    private val disposable = CompositeDisposable()
     private val mBinder: IBinder = LocalBinder()
 
     private var currentState: State = IdleState()
@@ -132,10 +126,11 @@ class MedtrumService : DaggerService(), MedtrumBleCallback {
     override fun onCreate() {
         super.onCreate()
         bleTransport.setMedtrumCallback(this)
-        disposable += rxBus
-            .toObservable(EventAppExit::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ stopSelf() }, fabricPrivacy::logException)
+        // Same service scope as the preference observers below, which is IO like the io scheduler
+        // used before. UNDISPATCHED because RxBus has no replay, so a scheduled collector could miss
+        // an exit sent before it starts.
+        rxBus.toFlow(EventAppExit::class.java)
+            .collectResilient(scope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { stopSelf() }
         preferences.observe(MedtrumStringNonKey.SnInput).drop(1).collectResilient(scope, aapsLogger, LTag.PUMP) {
             aapsLogger.debug(LTag.PUMPCOMM, "Serial number changed, reporting new pump!")
             medtrumPump.loadUserSettingsFromSP()
@@ -217,7 +212,6 @@ class MedtrumService : DaggerService(), MedtrumBleCallback {
 
     override fun onDestroy() {
         super.onDestroy()
-        disposable.clear()
         scope.cancel()
     }
 

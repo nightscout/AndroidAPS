@@ -165,12 +165,12 @@ class InsightPlugin @Inject constructor(
         .composeContent { plugin ->
             InsightComposeContent(
                 insightPlugin = plugin as InsightPlugin,
+                aapsLogger = aapsLogger,
                 rh = rh,
                 rxBus = rxBus,
                 dateUtil = dateUtil,
                 commandQueue = commandQueue,
                 context = context,
-                aapsSchedulers = aapsSchedulers,
                 pumpSync = pumpSync,
                 blePreCheck = blePreCheck,
                 ch = ch,

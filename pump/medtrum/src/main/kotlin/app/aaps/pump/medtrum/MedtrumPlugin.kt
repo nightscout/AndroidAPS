@@ -30,13 +30,11 @@ import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.pump.mapState
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
@@ -54,14 +52,13 @@ import app.aaps.pump.medtrum.keys.MedtrumLongNonKey
 import app.aaps.pump.medtrum.keys.MedtrumStringKey
 import app.aaps.pump.medtrum.keys.MedtrumStringNonKey
 import app.aaps.pump.medtrum.services.MedtrumService
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
 import kotlin.math.abs
 import kotlin.math.min
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
@@ -74,10 +71,8 @@ class MedtrumPlugin @Inject constructor(
     rh: ResourceHelper,
     preferences: Preferences,
     commandQueue: CommandQueue,
-    private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
     private val context: Context,
-    private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
     private val medtrumPump: MedtrumPump,
     private val temporaryBasalStorage: TemporaryBasalStorage,
@@ -103,7 +98,6 @@ class MedtrumPlugin @Inject constructor(
     aapsLogger, rh, preferences, commandQueue
 ), Pump, Medtrum {
 
-    private val disposable = CompositeDisposable()
     private var scope: CoroutineScope? = null
     private var medtrumService: MedtrumService? = null
 
@@ -113,12 +107,13 @@ class MedtrumPlugin @Inject constructor(
         medtrumPump.loadVarsFromSP()
         val intent = Intent(context, MedtrumService::class.java)
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
-        disposable += rxBus
-            .toObservable(EventAppExit::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ context.unbindService(mConnection) }, fabricPrivacy::logException)
+        // Same scope as the preference observer below: IO, like the io scheduler used before, and
+        // cancelled in onStop like the CompositeDisposable was cleared. UNDISPATCHED because RxBus
+        // has no replay, so a scheduled collector could miss an exit sent before it starts.
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
+        rxBus.toFlow(EventAppExit::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { context.unbindService(mConnection) }
         preferences.observe(MedtrumStringNonKey.SnInput).drop(1).collectResilient(newScope, aapsLogger, LTag.PUMP) {
             updateMaxInsulinLimitsForPumpType()
         }
@@ -132,7 +127,6 @@ class MedtrumPlugin @Inject constructor(
         scope?.cancel()
         scope = null
         context.unbindService(mConnection)
-        disposable.clear()
         super.onStop()
     }
 

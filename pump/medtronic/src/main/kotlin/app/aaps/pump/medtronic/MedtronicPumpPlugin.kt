@@ -29,15 +29,14 @@ import app.aaps.core.interfaces.pump.PumpSync.TemporaryBasalType
 import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventRefreshButtonState
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.rx.events.EventSWRLStatus
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.icons.IcPluginMedtronic
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -93,6 +92,7 @@ import app.aaps.pump.medtronic.service.RileyLinkMedtronicService
 import app.aaps.pump.medtronic.util.MedtronicUtil
 import app.aaps.pump.medtronic.util.MedtronicUtil.Companion.isSame
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
@@ -123,7 +123,6 @@ class MedtronicPumpPlugin @Inject constructor(
     commandQueue: CommandQueue,
     rxBus: RxBus,
     context: Context,
-    fabricPrivacy: FabricPrivacy,
     private val medtronicUtil: MedtronicUtil,
     private val medtronicPumpStatus: MedtronicPumpStatus,
     private val medtronicHistoryData: MedtronicHistoryData,
@@ -132,7 +131,6 @@ class MedtronicPumpPlugin @Inject constructor(
     private val uiInteraction: UiInteraction,
     private val notificationManager: NotificationManager,
     dateUtil: DateUtil,
-    aapsSchedulers: AapsSchedulers,
     pumpSync: PumpSync,
     pumpSyncStorage: PumpSyncStorage,
     decimalFormatter: DecimalFormatter,
@@ -165,9 +163,7 @@ class MedtronicPumpPlugin @Inject constructor(
     rxBus = rxBus,
     //activePlugin = activePlugin,
     context = context,
-    fabricPrivacy = fabricPrivacy,
     dateUtil = dateUtil,
-    aapsSchedulers = aapsSchedulers,
     pumpSync = pumpSync,
     pumpSyncStorage = pumpSyncStorage,
     decimalFormatter = decimalFormatter,
@@ -210,15 +206,16 @@ class MedtronicPumpPlugin @Inject constructor(
                 }.start()
             }
         }
-        // Pass only to setup wizard
-        disposable.add(
-            rxBus
-                .toObservable(EventRileyLinkDeviceStatusChange::class.java)
-                .observeOn(aapsSchedulers.io)
-                .subscribe({ event: EventRileyLinkDeviceStatusChange -> rxBus.send(EventSWRLStatus(rh.gs(event.getStatus()))) }, fabricPrivacy::logException)
-        )
+        // Same scope as the preference observer below: IO, like the io scheduler used before, and
+        // cancelled in onStop. UNDISPATCHED because RxBus has no replay, so a scheduled collector
+        // could miss a status sent before it starts.
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
+        // Pass only to setup wizard
+        rxBus.toFlow(EventRileyLinkDeviceStatusChange::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { event ->
+                rxBus.send(EventSWRLStatus(rh.gs(event.getStatus())))
+            }
         preferences.observe(MedtronicStringPreferenceKey.Serial).drop(1).onEach {
             aapsLogger.debug(LTag.PUMP, "Medtronic serial number changed, reporting new pump")
             medtronicPumpStatus.serialNumber = preferences.getIfExists(MedtronicStringPreferenceKey.Serial) ?: ""
