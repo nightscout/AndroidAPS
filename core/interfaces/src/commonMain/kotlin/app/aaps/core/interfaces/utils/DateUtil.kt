@@ -1,6 +1,6 @@
 package app.aaps.core.interfaces.utils
 
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 
 /**
  * The Class DateUtil. A modern utility class for handling dates, times, and durations using the `java.time` API.
@@ -73,7 +73,7 @@ interface DateUtil {
      * @param rh A resource helper to get localized strings like "Today".
      * @return The relative date string.
      */
-    fun dateStringRelative(mills: Long, rh: ResourceHelper): String
+    fun dateStringRelative(mills: Long, rh: TextResolver): String
 
     /**
      * Formats a timestamp into a short date string (e.g., "10/27" or "27/10") based on the user's 12/24 hour preference.
@@ -254,7 +254,7 @@ interface DateUtil {
      * @param time The timestamp in milliseconds. Can be null.
      * @return The relative time string.
      */
-    fun minAgo(rh: ResourceHelper, time: Long?): String
+    fun minAgo(rh: TextResolver, time: Long?): String
 
     /**
      * Returns a string describing how many minutes or seconds ago a timestamp was.
@@ -263,7 +263,7 @@ interface DateUtil {
      * @param time The timestamp in milliseconds. Can be null.
      * @return The relative time string (e.g., "30 sec ago" or "3 min ago").
      */
-    fun minOrSecAgo(rh: ResourceHelper, time: Long?): String
+    fun minOrSecAgo(rh: TextResolver, time: Long?): String
 
     /**
      * Formats a duration into a short bracketed string with a leading '+', using seconds under
@@ -272,7 +272,7 @@ interface DateUtil {
      * @param durationMs The duration in milliseconds. Negative values return an empty string.
      * @return The formatted duration string, or empty if negative.
      */
-    fun minOrSec(rh: ResourceHelper, durationMs: Long): String
+    fun minOrSec(rh: TextResolver, durationMs: Long): String
 
     /**
      * Returns a short string showing the difference in minutes between now and a given time, with a sign.
@@ -288,7 +288,7 @@ interface DateUtil {
      * @param time The timestamp in milliseconds. Can be null.
      * @return The verbose relative time string.
      */
-    fun minAgoLong(rh: ResourceHelper, time: Long?): String
+    fun minAgoLong(rh: TextResolver, time: Long?): String
 
     /**
      * Returns a string describing how many hours ago a timestamp was.
@@ -296,7 +296,7 @@ interface DateUtil {
      * @param rh Resource helper for localized strings.
      * @return The relative hours string.
      */
-    fun hourAgo(time: Long, rh: ResourceHelper): String
+    fun hourAgo(time: Long, rh: TextResolver): String
 
     /**
      * Returns a string describing how many days ago (or in how many days) a timestamp is.
@@ -305,7 +305,7 @@ interface DateUtil {
      * @param round If true, rounds to the nearest whole day. Otherwise uses fractional days.
      * @return The relative days string.
      */
-    fun dayAgo(time: Long, rh: ResourceHelper, round: Boolean = false): String
+    fun dayAgo(time: Long, rh: TextResolver, round: Boolean = false): String
 
     /**
      * Calculates the timestamp for the beginning of the day (midnight) for a given timestamp.
@@ -328,7 +328,7 @@ interface DateUtil {
      * @param withParentheses Whether to wrap the result in parentheses (e.g. "(30')" vs "30'"). Defaults to true.
      * @return A formatted duration string like "(1h 30')".
      */
-    fun timeFrameString(timeInMillis: Long, rh: ResourceHelper, withParentheses: Boolean = true): String
+    fun timeFrameString(timeInMillis: Long, rh: TextResolver, withParentheses: Boolean = true): String
 
     /**
      * Calculates the elapsed time since a given timestamp and formats it as a duration.
@@ -336,7 +336,7 @@ interface DateUtil {
      * @param rh Resource helper.
      * @return A formatted duration string of the elapsed time.
      */
-    fun sinceString(timestamp: Long, rh: ResourceHelper): String
+    fun sinceString(timestamp: Long, rh: TextResolver): String
 
     /**
      * Calculates the time remaining until a future timestamp and formats it as a duration.
@@ -345,7 +345,7 @@ interface DateUtil {
      * @param withParentheses Whether to wrap the result in parentheses (e.g. "(30')" vs "30'"). Defaults to true.
      * @return A formatted duration string of the remaining time.
      */
-    fun untilString(timestamp: Long, rh: ResourceHelper, withParentheses: Boolean = true): String
+    fun untilString(timestamp: Long, rh: TextResolver, withParentheses: Boolean = true): String
 
     /**
      * Formats a remaining duration as a localized "time remaining" string.
@@ -356,7 +356,7 @@ interface DateUtil {
      * @param rh Resource helper for the localized format string.
      * @return The formatted "time remaining" string.
      */
-    fun timeRemainingString(timeInMillis: Long, rh: ResourceHelper): String
+    fun timeRemainingString(timeInMillis: Long, rh: TextResolver): String
 
     /**
      * Gets the current system time in milliseconds.
@@ -438,8 +438,7 @@ interface DateUtil {
      * @param rh Resource helper to get localized unit strings.
      * @return The formatted age string.
      */
-    fun age(milliseconds: Long, useShortText: Boolean, rh: ResourceHelper): String
-    fun timeAgoFullString(milliseconds: Long, rh: ResourceHelper): String
+    fun age(milliseconds: Long, useShortText: Boolean, rh: TextResolver): String
 
 
     /**
@@ -449,7 +448,7 @@ interface DateUtil {
      * @param rh Resource helper to get localized unit strings (e.g., "second", "seconds").
      * @return The formatted string with a single unit (e.g., "5 days").
      */
-    fun niceTimeScalar(time: Long, rh: ResourceHelper): String
+    fun niceTimeScalar(time: Long, rh: TextResolver): String
     /**
      * A thread-safe, locale-agnostic utility to format a double into a string with a specific number of decimal digits.
      * It is optimized to use a cached formatter on the UI thread.

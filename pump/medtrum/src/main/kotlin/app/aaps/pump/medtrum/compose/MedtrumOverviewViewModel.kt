@@ -23,6 +23,7 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.timeAgoFullString
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.pump.ActionCategory
@@ -279,7 +280,7 @@ class MedtrumOverviewViewModel @Inject constructor(
             // Patch age
             if (medtrumPump.patchStartTime != 0L) {
                 val age = System.currentTimeMillis() - medtrumPump.patchStartTime
-                val agoString = dateUtil.timeAgoFullString(age, rh)
+                val agoString = timeAgoFullString(age, rh)
                 val ageString = dateUtil.dateAndTimeString(medtrumPump.patchStartTime) + "\n" + agoString
                 add(PumpInfoRow(label = rh.gs(R.string.patch_activation_time_label), value = ageString))
             }

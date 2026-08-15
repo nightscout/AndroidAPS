@@ -2,6 +2,7 @@ package app.aaps.shared.impl.utils
 
 import android.content.Context
 import app.aaps.core.data.time.T
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.R
 import app.aaps.core.interfaces.resources.ResourceHelper
 import com.google.common.truth.Truth
@@ -90,7 +91,7 @@ class DateUtilImplOldTest() {
     }
     */
     @Test fun timeFrameStringTest() {
-        whenever(rh.gs(R.string.shorthour)).thenReturn("h")
+        whenever(rh.gs(TextRef.AndroidRes(R.string.shorthour))).thenReturn("h")
         Truth.assertThat(DateUtilImpl(context).timeFrameString(T.Companion.hours(1).msecs() + T.Companion.mins(1).msecs(), rh)).isEqualTo("(1h 1')")
     }
 }
