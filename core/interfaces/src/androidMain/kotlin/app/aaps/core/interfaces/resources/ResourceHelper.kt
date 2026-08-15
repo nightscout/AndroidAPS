@@ -7,7 +7,7 @@ import app.aaps.core.keys.KeysStringIds
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
 
-interface ResourceHelper {
+interface ResourceHelper : TextResolver {
 
     fun gs(@StringRes id: Int): String
     fun gs(@StringRes id: Int, vararg args: Any?): String
@@ -24,7 +24,7 @@ interface ResourceHelper {
      * [TextRef.Named] still ends up in `Resources` on Android - the name is turned into an id first -
      * so locale matching behaves exactly as it does for [TextRef.AndroidRes].
      */
-    fun gs(ref: TextRef): String = when (ref) {
+    override fun gs(ref: TextRef): String = when (ref) {
         is TextRef.Literal    -> ref.text
         is TextRef.AndroidRes ->
             if (ref.args.isEmpty()) gs(ref.id)
@@ -41,10 +41,10 @@ interface ResourceHelper {
     }
 
     /** Same, with format arguments - mirrors `gs(id, vararg)`. */
-    fun gs(ref: TextRef, vararg args: Any): String = gs(ref.withArgs(*args))
+    override fun gs(ref: TextRef, vararg args: Any): String = gs(ref.withArgs(*args))
 
     /** Same, but always in English - used to build the search index. */
-    fun gsNotLocalised(ref: TextRef): String = when (ref) {
+    override fun gsNotLocalised(ref: TextRef): String = when (ref) {
         is TextRef.Literal    -> ref.text
         is TextRef.AndroidRes -> gsNotLocalised(ref.id, *ref.args.toTypedArray())
         is TextRef.Named      -> keysIdOf(ref)
@@ -53,7 +53,7 @@ interface ResourceHelper {
     }
 
 
-    fun shortTextMode(): Boolean
+    override fun shortTextMode(): Boolean
 }
 
 /**
