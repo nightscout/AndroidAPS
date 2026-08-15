@@ -15,7 +15,6 @@ import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
@@ -31,7 +30,6 @@ import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danars.DanaRSPlugin
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -63,7 +61,6 @@ internal class DanaRSOverviewViewModelTest {
     @Mock private lateinit var aapsLogger: AAPSLogger
     @Mock private lateinit var rh: ResourceHelper
     @Mock private lateinit var rxBus: RxBus
-    @Mock private lateinit var aapsSchedulers: AapsSchedulers
     @Mock private lateinit var commandQueue: CommandQueue
     @Mock private lateinit var dateUtil: DateUtil
     @Mock private lateinit var activePlugin: ActivePlugin
@@ -96,7 +93,6 @@ internal class DanaRSOverviewViewModelTest {
         whenever(rxBus.toFlow(EventQueueChanged::class.java)).thenReturn(emptyFlow())
         whenever(rxBus.toFlow(EventDanaRNewStatus::class.java)).thenReturn(emptyFlow())
         whenever(rxBus.toFlow(EventInitializationChanged::class.java)).thenReturn(emptyFlow())
-        whenever(aapsSchedulers.io).thenReturn(Schedulers.trampoline())
         whenever(persistenceLayer.observeChanges(EB::class.java)).thenReturn(emptyFlow())
         whenever(persistenceLayer.observeChanges(TB::class.java)).thenReturn(emptyFlow())
 

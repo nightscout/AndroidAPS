@@ -1,6 +1,5 @@
 package app.aaps.wear.comm
 
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
@@ -13,7 +12,6 @@ import app.aaps.wear.R
 import app.aaps.wear.WearTestBase
 import app.aaps.wear.data.ComplicationDataRepository
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
@@ -29,8 +27,8 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 /**
- * Drives [DataHandlerWear]'s message handlers through a REAL [RxBusImpl] (trampoline scheduler, so
- * delivery is synchronous). The `Preferences` handler writes to sp/preferences unconditionally — only
+ * Drives [DataHandlerWear]'s message handlers through a REAL [RxBusImpl]. Handlers run on the
+ * collector's IO dispatcher, so the assertions wait. The `Preferences` handler writes to sp/preferences unconditionally — only
  * the tile-refresh side runs when `wearControl` changes, so sending it with an unchanged wearControl
  * keeps the handler Android-free and assertable. Construction touches no Android, so no Robolectric.
  */
@@ -38,7 +36,6 @@ internal class DataHandlerWearTest : WearTestBase() {
 
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var complicationDataRepository: ComplicationDataRepository
-    @Mock lateinit var aapsSchedulers: AapsSchedulers
 
     private val logger = AAPSLoggerTest()
     private lateinit var rxBus: RxBus
@@ -46,7 +43,6 @@ internal class DataHandlerWearTest : WearTestBase() {
 
     @BeforeEach
     fun setupHandler() {
-        whenever(aapsSchedulers.io).thenReturn(Schedulers.trampoline())
         rxBus = RxBusImpl(logger)
         sut = DataHandlerWear(context, rxBus, sp, preferences, logger, complicationDataRepository)
     }
