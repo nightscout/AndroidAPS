@@ -37,6 +37,7 @@ import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -905,7 +906,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     /** W527 糖表盘广播(app.aaps.watchface.BG): 血糖+趋势+IOB+基础率+3h历史, 独立表盘 App 监听 */
     private fun sendWatchfaceBroadcast(
-        lastBg: GlucoseValue?,
+        lastBg: InMemoryGlucoseValue?,
         glucoseStatus: GlucoseStatus?,
         trendArrow: TrendArrow?
     ) {
