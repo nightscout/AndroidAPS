@@ -29,7 +29,6 @@ class XdripPluginTest : TestBaseWithProfile() {
             preferences,
             profileFunction,
             profileUtil,
-            aapsSchedulers,
             context,
             fabricPrivacy,
             loop,
