@@ -7,12 +7,16 @@ import android.os.IBinder
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationHolder
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import dagger.android.DaggerService
-import io.reactivex.rxjava3.disposables.CompositeDisposable
+import app.aaps.core.interfaces.rx.collectResilient
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import javax.inject.Inject
 
 /**
@@ -20,13 +24,14 @@ import javax.inject.Inject
  */
 class DummyService : DaggerService() {
 
-    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var notificationHolder: NotificationHolder
 
-    private val disposable = CompositeDisposable()
+    // App exit is the only thing this listens for, and the service dies with it - so an IO scope
+    // cancelled in onDestroy, matching what the CompositeDisposable did.
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     inner class LocalBinder : Binder() {
 
@@ -44,20 +49,16 @@ class DummyService : DaggerService() {
         } catch (e: Exception) {
             startForeground(4711, Notification())
         }
-        disposable.add(
-            rxBus
-                .toObservable(EventAppExit::class.java)
-                .observeOn(aapsSchedulers.io)
-                .subscribe({
-                               aapsLogger.debug(LTag.CORE, "EventAppExit received")
-                               stopSelf()
-                           }, fabricPrivacy::logException)
-        )
+        rxBus.toFlow(EventAppExit::class.java)
+            .collectResilient(scope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) {
+                aapsLogger.debug(LTag.CORE, "EventAppExit received")
+                stopSelf()
+            }
     }
 
     override fun onDestroy() {
         aapsLogger.debug(LTag.CORE, "onDestroy")
-        disposable.clear()
+        scope.cancel()
         super.onDestroy()
         stopForeground(STOP_FOREGROUND_REMOVE)
     }

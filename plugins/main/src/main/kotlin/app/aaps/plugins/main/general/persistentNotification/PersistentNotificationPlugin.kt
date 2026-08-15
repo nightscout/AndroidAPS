@@ -17,6 +17,7 @@ import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -25,7 +26,6 @@ import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
@@ -41,11 +41,17 @@ import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.extensions.toStringShort
 import app.aaps.core.utils.DeferredForegroundStart
 import app.aaps.plugins.main.R
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import app.aaps.core.interfaces.rx.collectResilient
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.runBlocking
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -54,7 +60,6 @@ import javax.inject.Singleton
 class PersistentNotificationPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
-    private val aapsSchedulers: AapsSchedulers,
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
     private val fabricPrivacy: FabricPrivacy,
@@ -95,39 +100,40 @@ class PersistentNotificationPlugin @Inject constructor(
     private val EXTRA_VOICE_REPLY = "extra_voice_reply"
     // End Android auto
 
-    private val disposable = CompositeDisposable()
+    private var scope: CoroutineScope? = null
     private val deferredStart = DeferredForegroundStart()
     private var lastAutoNotificationContent: String = ""
 
+    @OptIn(FlowPreview::class)
     override suspend fun onStart() {
         super.onStart()
         notificationHolder.createNotificationChannel()
-        disposable += rxBus
-            .toObservable(EventRefreshOverview::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventInitializationChanged::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventAutosensCalculationFinished::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException)
+        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = newScope
+        rxBus.toFlow(EventRefreshOverview::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) { triggerNotificationUpdate() }
+        rxBus.toFlow(EventInitializationChanged::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) { triggerNotificationUpdate() }
+        rxBus.toFlow(EventAutosensCalculationFinished::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) { triggerNotificationUpdate() }
         /// Android Auto - debounced to prevent rapid pop-ups
-        disposable += Observable.merge(
-            rxBus.toObservable(EventRefreshOverview::class.java).map { },
-            rxBus.toObservable(EventInitializationChanged::class.java).map { },
-            rxBus.toObservable(EventAutosensCalculationFinished::class.java).map { }
+        // Flow's debounce means the same thing as Rx's: emit once the source has been quiet for the
+        // period. UNDISPATCHED is not claimed here - merge subscribes to its sources in child
+        // coroutines that are dispatched, so the window survives it. Harmless for this one: the worst
+        // case is a notification refresh that a later event triggers anyway.
+        merge(
+            rxBus.toFlow(EventRefreshOverview::class.java).map { },
+            rxBus.toFlow(EventInitializationChanged::class.java).map { },
+            rxBus.toFlow(EventAutosensCalculationFinished::class.java).map { }
         )
-            .debounce(10, TimeUnit.SECONDS)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ triggerNotificationUpdate(includeAuto = true) }, fabricPrivacy::logException)
+            .debounce(10_000L)
+            .collectResilient(newScope, aapsLogger, LTag.CORE) { triggerNotificationUpdate(includeAuto = true) }
         /// End Android Auto
     }
 
     override suspend fun onStop() {
-        disposable.clear()
+        scope?.cancel()
+        scope = null
         deferredStart.cancel()
         dummyServiceHelper.stopService(context)
         super.onStop()

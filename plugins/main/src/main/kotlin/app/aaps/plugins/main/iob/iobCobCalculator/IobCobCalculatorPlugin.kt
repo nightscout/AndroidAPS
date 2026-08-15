@@ -32,7 +32,6 @@ import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppInitialized
 import app.aaps.core.interfaces.rx.events.EventCalibrationChanged
@@ -40,7 +39,6 @@ import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.MidnightTime
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.keys.DoubleKey
@@ -54,8 +52,8 @@ import app.aaps.core.objects.extensions.plus
 import app.aaps.core.objects.extensions.round
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.iob.iobCobCalculator.data.AutosensDataStoreObject
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import app.aaps.core.interfaces.rx.collectResilient
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -79,13 +77,11 @@ import kotlin.math.min
 @Singleton
 class IobCobCalculatorPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
     private val preferences: Preferences,
     rh: ResourceHelper,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
-    private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
     private val persistenceLayer: PersistenceLayer,
     private val overviewData: OverviewData,
@@ -106,7 +102,6 @@ class IobCobCalculatorPlugin @Inject constructor(
     aapsLogger, rh
 ), IobCobCalculator {
 
-    private val disposable = CompositeDisposable()
     private var scope: CoroutineScope? = null
 
     private var iobTable = LongSparseArray<IobTotal>() // oldest at index 0
@@ -121,23 +116,16 @@ class IobCobCalculatorPlugin @Inject constructor(
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
         // EventConfigBuilderChange
-        disposable += rxBus
-            .toObservable(EventConfigBuilderChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ resetDataAndRunCalculation("onEventConfigBuilderChange") }, fabricPrivacy::logException)
+        rxBus.toFlow(EventConfigBuilderChange::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.AUTOSENS, start = CoroutineStart.UNDISPATCHED) { resetDataAndRunCalculation("onEventConfigBuilderChange") }
         // EventCalibrationChanged → the fit changed, so bucketed data needs to be re-smoothed
         // with the new calibration applied. scheduleHistoryDataChange has its own 5s debounce
         // so bursts (delete-many, bulk-add) collapse into one workflow run.
-        disposable += rxBus
-            .toObservable(EventCalibrationChanged::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe(
-                {
-                    val invalidateFrom = System.currentTimeMillis() - T.hours(24).msecs()
-                    scheduleHistoryDataChange(invalidateFrom, reloadBgData = true, triggeredByNewBG = false)
-                },
-                fabricPrivacy::logException
-            )
+        rxBus.toFlow(EventCalibrationChanged::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.AUTOSENS, start = CoroutineStart.UNDISPATCHED) {
+                val invalidateFrom = System.currentTimeMillis() - T.hours(24).msecs()
+                scheduleHistoryDataChange(invalidateFrom, reloadBgData = true, triggeredByNewBG = false)
+            }
         // EffectiveProfileSwitch changes
         persistenceLayer.observeChanges(EPS::class.java)
             .onEach { epsList ->
@@ -184,32 +172,28 @@ class IobCobCalculatorPlugin @Inject constructor(
             .onEach {
                 scheduleHistoryDataChange(0, reloadBgData = true)
             }.launchIn(newScope)
-        disposable += rxBus
-            .toObservable(EventAppInitialized::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe(
-                {
-                    calculationWorkflow.runCalculation(
-                        CalculationWorkflow.MAIN_CALCULATION,
-                        this,
-                        overviewData,
-                        cache.get(),
-                        signals,
-                        "onEventAppInitialized",
-                        System.currentTimeMillis(),
-                        bgDataReload = true,
-                        triggeredByNewBG = false
-                    )
-                },
-                fabricPrivacy::logException
-            )
+        // EventAppInitialized fires once, early. UNDISPATCHED matters most here of the three: a
+        // scheduled collector could miss it outright and the main calculation would never be kicked off.
+        rxBus.toFlow(EventAppInitialized::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.AUTOSENS, start = CoroutineStart.UNDISPATCHED) {
+                calculationWorkflow.runCalculation(
+                    CalculationWorkflow.MAIN_CALCULATION,
+                    this,
+                    overviewData,
+                    cache.get(),
+                    signals,
+                    "onEventAppInitialized",
+                    System.currentTimeMillis(),
+                    bgDataReload = true,
+                    triggeredByNewBG = false
+                )
+            }
         historyWorker = Executors.newSingleThreadScheduledExecutor()
     }
 
     override suspend fun onStop() {
         scope?.cancel()
         scope = null
-        disposable.clear()
         historyWorker?.shutdown()
         historyWorker = null
         super.onStop()
