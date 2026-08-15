@@ -34,6 +34,7 @@ import app.aaps.plugins.sync.tidepool.keys.TidepoolLongNonKey
 import app.aaps.plugins.sync.tidepool.keys.TidepoolStringNonKey
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
@@ -97,9 +98,9 @@ class TidepoolPlugin @Inject constructor(
             }
         // scope is Dispatchers.IO, matching the scheduler these subscriptions used before.
         rxBus.toFlow(EventTidepoolDoUpload::class.java)
-            .collectResilient(scope, aapsLogger, LTag.TIDEPOOL) { doUpload(EventTidepoolDoUpload::class.simpleName) }
+            .collectResilient(scope, aapsLogger, LTag.TIDEPOOL, start = CoroutineStart.UNDISPATCHED) { doUpload(EventTidepoolDoUpload::class.simpleName) }
         rxBus.toFlow(EventTidepoolStatus::class.java)
-            .collectResilient(scope, aapsLogger, LTag.TIDEPOOL) { event ->
+            .collectResilient(scope, aapsLogger, LTag.TIDEPOOL, start = CoroutineStart.UNDISPATCHED) { event ->
                 tidepoolRepository.addLog(event.status)
                 tidepoolRepository.updateConnectionStatus(authFlowOut.connectionStatus)
                 // Pass to setup wizard

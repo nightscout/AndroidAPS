@@ -4,12 +4,14 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.retryWhen
+import kotlinx.coroutines.launch
 
 /**
  * Collects a long-lived [Flow] resiliently in [scope], logging under [tag].
@@ -30,12 +32,30 @@ import kotlinx.coroutines.flow.retryWhen
  * NOTE: this only addresses *exceptions*. Collection is sequential, so a [block] that never returns
  * (e.g. an awaited callback that is lost) still blocks all subsequent emissions without throwing —
  * bound such calls with a timeout (`withTimeoutOrNull`) at the call site.
+ *
+ * ### [start], and when you need it
+ *
+ * By default the collecting coroutine is *scheduled*, so it has not subscribed yet when this function
+ * returns. On a source that replays (a `StateFlow`, a DB observer) that is harmless - a late
+ * subscriber still gets the current value.
+ *
+ * On a source with **no replay** it is not harmless. `RxBus` publishes through a `MutableSharedFlow`
+ * with `replay = 0`, so anything emitted between this call and the collector actually starting is
+ * dropped, silently and without a trace. RxJava's `subscribe()` registered synchronously and had no
+ * such window, so a subscription converted from Rx acquires this gap unless it asks not to.
+ *
+ * Pass [CoroutineStart.UNDISPATCHED] there: the coroutine then runs on the calling thread up to its
+ * first suspension, which for a bare `collect` is exactly the subscribe, and resumes on [scope]'s
+ * dispatcher afterwards. Note this also means that if the source *does* emit during subscribe (a
+ * `StateFlow`'s current value), that first [block] runs on the caller's thread - which is why this is
+ * opt-in rather than the default.
  */
 fun <T> Flow<T>.collectResilient(
     scope: CoroutineScope,
     aapsLogger: AAPSLogger,
     tag: LTag,
     restartDelayMs: Long = 1000L,
+    start: CoroutineStart = CoroutineStart.DEFAULT,
     block: suspend (T) -> Unit
 ): Job =
     onEach { item ->
@@ -56,4 +76,4 @@ fun <T> Flow<T>.collectResilient(
                 true
             }
         }
-        .launchIn(scope)
+        .let { flow -> scope.launch(start = start) { flow.collect() } }

@@ -38,6 +38,7 @@ import app.aaps.core.ui.compose.icons.IcPluginTizen
 import app.aaps.plugins.sync.R
 import app.aaps.shared.impl.extensions.safeQueryBroadcastReceivers
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
@@ -82,9 +83,9 @@ class TizenPlugin @Inject constructor(
         scope = newScope
         // newScope is Dispatchers.IO, matching the scheduler these subscriptions used before.
         rxBus.toFlow(EventLoopUpdateGui::class.java)
-            .collectResilient(newScope, aapsLogger, LTag.CORE) { sendData(it) }
+            .collectResilient(newScope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) { sendData(it) }
         rxBus.toFlow(EventAutosensCalculationFinished::class.java)
-            .collectResilient(newScope, aapsLogger, LTag.CORE) { sendData(it) }
+            .collectResilient(newScope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) { sendData(it) }
         bolusProgressData.state
             .collectResilient(newScope, aapsLogger, LTag.CORE) { state ->
                 if (state != null && !state.isSMB) {

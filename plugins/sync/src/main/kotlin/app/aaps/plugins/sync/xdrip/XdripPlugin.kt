@@ -59,6 +59,7 @@ import app.aaps.plugins.sync.xdrip.keys.XdripLongKey
 import app.aaps.plugins.sync.xdrip.workers.XdripDataSyncWorker
 import app.aaps.shared.impl.extensions.safeQueryBroadcastReceivers
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelChildren
@@ -128,7 +129,7 @@ class XdripPlugin @Inject constructor(
         handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
         // scope is Dispatchers.IO, which is what observeOn(aapsSchedulers.io) gave these before.
         rxBus.toFlow(EventAppExit::class.java)
-            .collectResilient(scope, aapsLogger, LTag.XDRIP) { WorkManager.getInstance(context).cancelUniqueWork(XDRIP_JOB_NAME) }
+            .collectResilient(scope, aapsLogger, LTag.XDRIP, start = CoroutineStart.UNDISPATCHED) { WorkManager.getInstance(context).cancelUniqueWork(XDRIP_JOB_NAME) }
         persistenceLayer.observeAnyChange()
             // HR/SC writes come from the watch; this plugin doesn't broadcast them — skip to avoid reconnect-flush storm.
             .filter { types -> types.any { it != HR::class && it != SC::class } }
@@ -137,9 +138,9 @@ class XdripPlugin @Inject constructor(
                 delayAndScheduleExecution("DB_CHANGED(${types.joinToString { it.simpleName ?: "?" }})")
             }
         rxBus.toFlow(EventAutosensCalculationFinished::class.java)
-            .collectResilient(scope, aapsLogger, LTag.XDRIP) { sendStatusLine() }
+            .collectResilient(scope, aapsLogger, LTag.XDRIP, start = CoroutineStart.UNDISPATCHED) { sendStatusLine() }
         rxBus.toFlow(EventAppInitialized::class.java)
-            .collectResilient(scope, aapsLogger, LTag.XDRIP) { sendStatusLine() }
+            .collectResilient(scope, aapsLogger, LTag.XDRIP, start = CoroutineStart.UNDISPATCHED) { sendStatusLine() }
         eventWorker = Executors.newSingleThreadScheduledExecutor()
     }
 
