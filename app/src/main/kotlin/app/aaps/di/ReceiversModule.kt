@@ -7,6 +7,7 @@ import app.aaps.receivers.DataReceiver
 import app.aaps.receivers.KeepAliveWorker
 import app.aaps.receivers.SmsReceiver
 import app.aaps.receivers.TimeDateOrTZChangeReceiver
+import app.aaps.receivers.WatchfaceReceiver
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
