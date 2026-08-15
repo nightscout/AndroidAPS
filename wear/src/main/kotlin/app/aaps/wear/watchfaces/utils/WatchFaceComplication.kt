@@ -333,10 +333,9 @@ internal class WatchFaceComplications(
     // render thread in syncGeometry() - hence @Volatile.
     @Volatile private var slotsSetting: ComplicationSlotsUserStyleSetting? = null
     @Volatile private var userStyleRepository: CurrentUserStyleRepository? = null
+    @Volatile private var slotsManager: ComplicationSlotsManager? = null
 
-    // What syncGeometry() last pushed, so it only pushes on a real change, and the counter that keeps
-    // every pushed option's id distinct (see that method for why that matters).
-    private var pushedGeometrySignature: String? = null
+    // Keeps every pushed option's id distinct - see syncGeometry() for why that matters.
     private var geometryRevision = 0
 
     /** The live state for [slotId], for a watch face to write its decoded style into. */
@@ -386,10 +385,11 @@ internal class WatchFaceComplications(
         currentUserStyleRepository: CurrentUserStyleRepository,
         initialBoundsFor: (slotId: Int) -> ComplicationSlotBounds
     ): ComplicationSlotsManager {
-        // Kept so syncGeometry() can push slot geometry changes back through it.
+        // Both kept so syncGeometry() can push slot geometry changes back through the repository, and
+        // read back what the slots actually ended up with.
         userStyleRepository = currentUserStyleRepository
         val slots = slotStates.values.map { state -> buildSlot(state, initialBoundsFor(state.slotId)) }
-        return ComplicationSlotsManager(slots, currentUserStyleRepository)
+        return ComplicationSlotsManager(slots, currentUserStyleRepository).also { slotsManager = it }
     }
 
     private fun buildSlot(state: ComplicationSlotState, bounds: ComplicationSlotBounds): ComplicationSlot {
@@ -445,28 +445,41 @@ internal class WatchFaceComplications(
      *   the schema and that the option's class matches it; it deliberately does *not* require the
      *   option to be one the schema enumerated, which is what makes runtime-computed bounds legal.
      *
-     * Safe to call once per frame: it only pushes when the geometry actually changed.
+     * Safe to call once per frame: it pushes only when a slot is not already where it should be.
+     *
+     * **It compares against the slots themselves, not against what was last pushed**, and that is
+     * deliberate. `applyComplicationSlotsStyleCategoryOption`
+     * (`ComplicationSlotsManager.kt:225-239`) restores a slot's *initial* bounds and enabled flag
+     * whenever an applied option carries no overlay for it - and the schema's own default option
+     * carries none. So a style change from anywhere else silently resets slots this class is
+     * responsible for. Comparing intent to intent would then never notice: the wanted geometry has
+     * not changed, only the slot has, and the watch face would keep drawing complications correctly
+     * at coordinates the tap filter no longer knows about - visible only as taps that do nothing.
      */
     @Suppress("RestrictedApi")
     fun syncGeometry(visibleBoundsFor: (slotId: Int) -> RectF?) {
         val setting = slotsSetting ?: return
         val repository = userStyleRepository ?: return
+        val manager = slotsManager ?: return
 
         val overlays = mutableListOf<ComplicationSlotOverlay>()
-        val signature = StringBuilder()
+        var slotOutOfDate = false
         for (state in slotStates.values) {
             val bounds = visibleBoundsFor(state.slotId)
+            val enabled = bounds != null
+            val wanted = ComplicationSlotBounds(bounds ?: RectF())
             // Builder rather than the constructor: the overlay's 4-argument secondary constructor is
             // deprecated, and named arguments resolve to it rather than to the primary one.
             overlays += ComplicationSlotOverlay.Builder(state.slotId)
-                .setEnabled(bounds != null)
-                .setComplicationSlotBounds(ComplicationSlotBounds(bounds ?: RectF()))
+                .setEnabled(enabled)
+                .setComplicationSlotBounds(wanted)
                 .build()
-            signature.append(state.slotId).append(bounds).append('|')
+            val slot = manager[state.slotId]
+            if (slot == null || slot.enabled != enabled || slot.complicationSlotBounds.perComplicationTypeBounds != wanted.perComplicationTypeBounds)
+                slotOutOfDate = true
         }
 
-        if (signature.toString() == pushedGeometrySignature) return
-        pushedGeometrySignature = signature.toString()
+        if (!slotOutOfDate) return
 
         val option = ComplicationSlotsOption(
             UserStyleSetting.Option.Id("$SLOT_STYLE_OPTION_ID_PREFIX${++geometryRevision}"),
