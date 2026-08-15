@@ -852,6 +852,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val trendDescription = trendCalculator.getTrendDescription(iobCobCalculator.ads)
         val trendArrow = trendCalculator.getTrendArrow(iobCobCalculator.ads)
         val lastBgDescription = lastBgData.lastBgDescription()
+        // W527 糖表盘广播: 每次血糖刷新推一次(独立表盘 App 监听)
+        sendWatchfaceBroadcast(lastBg, glucoseStatus, trendArrow)
         runOnUiThread {
             _binding ?: return@runOnUiThread
             binding.infoLayout.bg.text = profileUtil.fromMgdlToStringInUnits(lastBg?.recalculated)
@@ -898,6 +900,35 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 binding.infoLayout.bgQuality.visibility = View.GONE
             }
             binding.infoLayout.simpleMode.visibility = preferences.simpleMode.toVisibility()
+        }
+    }
+
+    /** W527 糖表盘广播(app.aaps.watchface.BG): 血糖+趋势+IOB+基础率+3h历史, 独立表盘 App 监听 */
+    private fun sendWatchfaceBroadcast(
+        lastBg: GlucoseValue?,
+        glucoseStatus: GlucoseStatus?,
+        trendArrow: TrendArrow?
+    ) {
+        try {
+            val history = iobCobCalculator.ads.getBucketedDataTableCopy()
+                ?.takeLast(36)?.map { it.recalculated }?.toDoubleArray() ?: DoubleArray(0)
+            val iob = bolusIob().iob +
+                iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round().iob
+            val basal = Regex("\\d+\\.?\\d*").find(overviewData.temporaryBasalText())
+                ?.value?.toDoubleOrNull() ?: 0.0
+            val intent = Intent("app.aaps.watchface.BG").apply {
+                putExtra("bg_display", profileUtil.fromMgdlToStringInUnits(lastBg?.recalculated))
+                putExtra("bg", lastBg?.recalculated ?: 0.0)
+                putExtra("trend", trendArrow?.ordinal ?: 5)
+                putExtra("delta", glucoseStatus?.delta ?: 0.0)
+                putExtra("iob", iob)
+                putExtra("basal", basal)
+                putExtra("ts", lastBg?.timestamp ?: System.currentTimeMillis())
+                putExtra("history", history)
+            }
+            context?.sendBroadcast(intent)
+        } catch (e: Exception) {
+            aapsLogger.debug(LTag.CORE, "watchface broadcast err: ${e.message}")
         }
     }
 
