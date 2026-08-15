@@ -12,6 +12,8 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import kotlinx.coroutines.CoroutineStart
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventWearDataToMobile
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
@@ -36,6 +38,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
@@ -72,22 +75,19 @@ class DataLayerListenerServiceWear : WearableListenerService() {
         super.onCreate()
         startForegroundService()
         handler.post { updateTranscriptionCapability() }
-        disposable += rxBus
-            .toObservable(EventWearToMobile::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe {
-                sendMessage(rxPath, it.payload.serialize())
+        // scope is Main.immediate, which is the right lifetime. The two sends observed on io and talk
+        // to the Data Layer, so those bodies go back to IO; the preference one observed on main and
+        // touches the listeners, so it stays where the collector is.
+        rxBus.toFlow(EventWearToMobile::class.java)
+            .collectResilient(scope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) {
+                withContext(Dispatchers.IO) { sendMessage(rxPath, it.payload.serialize()) }
             }
-        disposable += rxBus
-            .toObservable(EventWearDataToMobile::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe {
-                sendMessage(rxDataPath, it.payload.serializeByte())
+        rxBus.toFlow(EventWearDataToMobile::class.java)
+            .collectResilient(scope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) {
+                withContext(Dispatchers.IO) { sendMessage(rxDataPath, it.payload.serializeByte()) }
             }
-        disposable += rxBus
-            .toObservable(EventWearPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe { event: EventWearPreferenceChange ->
+        rxBus.toFlow(EventWearPreferenceChange::class.java)
+            .collectResilient(scope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { event ->
                 if (event.changedKey == getString(R.string.key_heart_rate_sampling)) updateHeartRateListener()
                 if (event.changedKey == getString(R.string.key_steps_sampling)) updateStepsCountListener()
             }

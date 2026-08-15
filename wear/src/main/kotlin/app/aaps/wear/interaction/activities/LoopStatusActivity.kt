@@ -47,7 +47,11 @@ import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Text
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.CancellationException
 import app.aaps.core.interfaces.rx.bus.RxBus
+import kotlinx.coroutines.CoroutineStart
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.rx.weardata.LoopStatusData
@@ -71,8 +75,6 @@ import app.aaps.wear.interaction.actions.WearSecondaryText
 import app.aaps.wear.interaction.actions.WearSummaryCardBg
 import app.aaps.wear.interaction.actions.formatDurationMinutes
 import dagger.android.AndroidInjection
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.Date
 import javax.inject.Inject
 import kotlin.math.abs
@@ -119,7 +121,6 @@ class LoopStatusActivity : AppCompatActivity() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var dateUtil: DateUtil
 
-    private val disposable = CompositeDisposable()
     private var uiState by mutableStateOf<LoopStatusUiState>(LoopStatusUiState.Loading)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -136,15 +137,21 @@ class LoopStatusActivity : AppCompatActivity() {
             }
         }
 
-        disposable += rxBus
-            .toObservable(EventData.LoopStatusResponse::class.java)
-            .subscribe({ event ->
-                aapsLogger.debug(LTag.WEAR, "Received loop status response")
-                runOnUiThread { uiState = LoopStatusUiState.Success(event.data) }
-            }, { error ->
-                aapsLogger.error(LTag.WEAR, "Error receiving loop status", error)
-                runOnUiThread { uiState = LoopStatusUiState.Error(getString(R.string.loop_status_error)) }
-            })
+        // lifecycleScope is Main and dies with the activity, so runOnUiThread is no longer needed.
+        // The Rx onError put the screen into an error state rather than only logging, so that is kept
+        // explicitly - collectResilient on its own would log and carry on with the UI still spinning.
+        rxBus.toFlow(EventData.LoopStatusResponse::class.java)
+            .collectResilient(lifecycleScope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { event ->
+                try {
+                    aapsLogger.debug(LTag.WEAR, "Received loop status response")
+                    uiState = LoopStatusUiState.Success(event.data)
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Throwable) {
+                    aapsLogger.error(LTag.WEAR, "Error receiving loop status", e)
+                    uiState = LoopStatusUiState.Error(getString(R.string.loop_status_error))
+                }
+            }
     }
 
     override fun onResume() {
@@ -154,7 +161,6 @@ class LoopStatusActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        disposable.clear()
     }
 
     private fun requestLoopStatus() {

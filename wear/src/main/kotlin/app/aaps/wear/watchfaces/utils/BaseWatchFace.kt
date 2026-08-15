@@ -16,8 +16,9 @@ import android.view.WindowManager
 import androidx.viewbinding.ViewBinding
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import kotlinx.coroutines.CoroutineStart
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData.ActionResendData
 import app.aaps.core.interfaces.sharedPreferences.SP
@@ -32,8 +33,6 @@ import app.aaps.wear.data.statusDataArray
 import app.aaps.wear.events.EventWearPreferenceChange
 import app.aaps.wear.interaction.menus.MainMenuActivity
 import dagger.android.AndroidInjection
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -50,12 +49,10 @@ abstract class BaseWatchFace : WatchFace() {
     @Inject lateinit var complicationDataRepository: ComplicationDataRepository
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var sp: SP
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var simpleUi: SimpleUi
 
-    private var disposable = CompositeDisposable()
     private val watchfaceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     // DataStore as single source of truth - using EventData models directly
@@ -178,10 +175,9 @@ abstract class BaseWatchFace : WatchFace() {
         displayHeight = bounds.height()
         specW = View.MeasureSpec.makeMeasureSpec(displayWidth, View.MeasureSpec.EXACTLY)
         specH = if (forceSquareCanvas) specW else View.MeasureSpec.makeMeasureSpec(displayHeight, View.MeasureSpec.EXACTLY)
-        disposable += rxBus
-            .toObservable(EventWearPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe { _: EventWearPreferenceChange ->
+        // watchfaceScope is Main.immediate, matching observeOn(aapsSchedulers.main).
+        rxBus.toFlow(EventWearPreferenceChange::class.java)
+            .collectResilient(watchfaceScope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) {
                 simpleUi.updatePreferences()
                 if (::binding.isInitialized && layoutSet) setDataFields()
                 invalidate()
@@ -321,7 +317,6 @@ abstract class BaseWatchFace : WatchFace() {
     }
 
     override fun onDestroy() {
-        disposable.clear()
         watchfaceScope.cancel()
         simpleUi.onDestroy()
         super.onDestroy()

@@ -36,14 +36,16 @@ import androidx.wear.compose.material3.Icon
 import androidx.wear.compose.material3.ListHeader
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Text
-import app.aaps.core.interfaces.rx.AapsSchedulers
+import androidx.lifecycle.lifecycleScope
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
+import kotlinx.coroutines.CoroutineStart
 import app.aaps.core.interfaces.rx.events.EventUpdateSelectedWatchface
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.keys.interfaces.Preferences
 import dagger.android.support.DaggerAppCompatActivity
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 
 abstract class MenuListActivity : DaggerAppCompatActivity() {
@@ -51,10 +53,9 @@ abstract class MenuListActivity : DaggerAppCompatActivity() {
     @Inject lateinit var sp: SP
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var aapsLogger: AAPSLogger
 
     private var elements by mutableStateOf<List<MenuItem>>(emptyList())
-    private val disposable = CompositeDisposable()
 
     protected abstract fun provideElements(): List<MenuItem>
     protected abstract fun doAction(position: String)
@@ -67,10 +68,10 @@ abstract class MenuListActivity : DaggerAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        disposable += rxBus
-            .toObservable(EventUpdateSelectedWatchface::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe { _: EventUpdateSelectedWatchface -> elements = provideElements() }
+        // lifecycleScope is Main, which is what observeOn(aapsSchedulers.main) supplied, and it dies
+        // with the activity like the CompositeDisposable did.
+        rxBus.toFlow(EventUpdateSelectedWatchface::class.java)
+            .collectResilient(lifecycleScope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { elements = provideElements() }
         elements = provideElements()
         val menuTitle = title.toString()
         val titleIcon = provideTitleIcon()
@@ -87,7 +88,6 @@ abstract class MenuListActivity : DaggerAppCompatActivity() {
     }
 
     override fun onDestroy() {
-        disposable.clear()
         super.onDestroy()
     }
 

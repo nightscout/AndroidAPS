@@ -14,8 +14,9 @@ import android.view.WindowManager
 import android.widget.TextView
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import kotlinx.coroutines.CoroutineStart
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventUpdateSelectedWatchface
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
@@ -30,8 +31,6 @@ import app.aaps.wear.watchfaces.utils.WatchFace
 import app.aaps.wear.watchfaces.utils.WatchFaceTime
 import app.aaps.wear.watchfaces.utils.WatchfaceViewAdapter.Companion.SelectedWatchFace
 import dagger.android.AndroidInjection
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -47,12 +46,10 @@ import kotlin.math.max
 class CircleWatchface : WatchFace() {
 
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
     @Inject lateinit var complicationDataRepository: app.aaps.wear.data.ComplicationDataRepository
 
-    private var disposable = CompositeDisposable()
     private val watchfaceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     // DataStore as single source of truth - using EventData models directly
@@ -126,10 +123,9 @@ class CircleWatchface : WatchFace() {
             }
         }
 
-        disposable += rxBus
-            .toObservable(EventData.Preferences::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe {
+        // watchfaceScope is Main.immediate, matching observeOn(aapsSchedulers.main).
+        rxBus.toFlow(EventData.Preferences::class.java)
+            .collectResilient(watchfaceScope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) {
                 if (myLayout != null) {  // Only update if layout initialized
                     prepareDrawTime()
                     prepareLayout()
@@ -142,7 +138,6 @@ class CircleWatchface : WatchFace() {
     }
 
     override fun onDestroy() {
-        disposable.clear()
         watchfaceScope.cancel()
         super.onDestroy()
     }

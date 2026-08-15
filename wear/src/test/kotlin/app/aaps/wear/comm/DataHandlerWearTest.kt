@@ -14,9 +14,13 @@ import app.aaps.wear.WearTestBase
 import app.aaps.wear.data.ComplicationDataRepository
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeoutOrNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
+import org.mockito.Mockito.timeout
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -40,7 +44,7 @@ internal class DataHandlerWearTest : WearTestBase() {
     fun setupHandler() {
         whenever(aapsSchedulers.io).thenReturn(Schedulers.trampoline())
         rxBus = RxBusImpl(aapsSchedulers, logger)
-        sut = DataHandlerWear(context, rxBus, aapsSchedulers, sp, preferences, logger, complicationDataRepository)
+        sut = DataHandlerWear(context, rxBus, sp, preferences, logger, complicationDataRepository)
     }
 
     @Test
@@ -48,25 +52,35 @@ internal class DataHandlerWearTest : WearTestBase() {
         // wearControl (false) equals the mock preferences default, so the tile-refresh branch is skipped.
         rxBus.send(EventData.Preferences(0L, false, true, 50, 80, 25.0, 0.5, 1.0, 5, 10))
 
-        verify(sp).putBoolean(R.string.key_units_mgdl, true)
-        verify(sp).putInt(R.string.key_bolus_wizard_percentage, 50)
-        verify(sp).putInt(R.string.key_treatments_safety_max_carbs, 80)
-        verify(sp).putDouble(R.string.key_treatments_safety_max_bolus, 25.0)
-        verify(preferences).put(DoubleKey.OverviewInsulinButtonIncrement1, 0.5)
-        verify(preferences).put(DoubleKey.OverviewInsulinButtonIncrement2, 1.0)
-        verify(preferences).put(IntKey.OverviewCarbsButtonIncrement1, 5)
-        verify(preferences).put(IntKey.OverviewCarbsButtonIncrement2, 10)
+        // The handler now runs on the collector's IO dispatcher, so the writes land shortly after
+        // send() returns instead of on the caller thread. verify(timeout) waits for them.
+        verify(sp, timeout(HANDLER_TIMEOUT_MS)).putBoolean(R.string.key_units_mgdl, true)
+        verify(sp, timeout(HANDLER_TIMEOUT_MS)).putInt(R.string.key_bolus_wizard_percentage, 50)
+        verify(sp, timeout(HANDLER_TIMEOUT_MS)).putInt(R.string.key_treatments_safety_max_carbs, 80)
+        verify(sp, timeout(HANDLER_TIMEOUT_MS)).putDouble(R.string.key_treatments_safety_max_bolus, 25.0)
+        verify(preferences, timeout(HANDLER_TIMEOUT_MS)).put(DoubleKey.OverviewInsulinButtonIncrement1, 0.5)
+        verify(preferences, timeout(HANDLER_TIMEOUT_MS)).put(DoubleKey.OverviewInsulinButtonIncrement2, 1.0)
+        verify(preferences, timeout(HANDLER_TIMEOUT_MS)).put(IntKey.OverviewCarbsButtonIncrement1, 5)
+        verify(preferences, timeout(HANDLER_TIMEOUT_MS)).put(IntKey.OverviewCarbsButtonIncrement2, 10)
     }
 
     @Test
     fun `a ping is answered with a pong to the mobile`() {
-        var pong: EventData.ActionPong? = null
+        val pong = CompletableDeferred<EventData.ActionPong>()
         rxBus.toObservable(EventWearToMobile::class.java).subscribe { evt ->
-            (evt.payload as? EventData.ActionPong)?.let { pong = it }
+            (evt.payload as? EventData.ActionPong)?.let { pong.complete(it) }
         }
 
         rxBus.send(EventData.ActionPing(1_000L))
 
-        assertThat(pong).isNotNull()
+        // Answered from the handler's IO dispatcher, so wait for it rather than reading a field.
+        val answer = runBlocking { withTimeoutOrNull(HANDLER_TIMEOUT_MS) { pong.await() } }
+        assertThat(answer).isNotNull()
+    }
+
+    companion object {
+
+        /** Generous upper bound — the handler normally answers in well under a millisecond. */
+        private const val HANDLER_TIMEOUT_MS = 2_000L
     }
 }
