@@ -23,7 +23,26 @@ data class BgGraphColors(
     val low: Int,
     val inRange: Int,
     val high: Int
-)
+) {
+
+    companion object {
+
+        /**
+         * The colors a widget draws BG in. They are the same values as the `widget_low`,
+         * `widget_inrange` and `widget_high` resources, which have no `values-night` variant, so
+         * reading them through resources could only ever return these constants.
+         *
+         * They are deliberately not the [app.aaps.core.ui.compose.AapsTheme] BG colors: a widget sits
+         * on the launcher over unknown wallpaper, not inside the app, so it keeps one high-contrast
+         * set instead of following the app's light and dark themes.
+         */
+        val WIDGET = BgGraphColors(
+            low = 0xFFFF0000.toInt(),
+            inRange = 0xFF00FF00.toInt(),
+            high = 0xFFFFFF00.toInt()
+        )
+    }
+}
 
 /**
  * Minimal Canvas BG-graph renderer producing a transparent bitmap.

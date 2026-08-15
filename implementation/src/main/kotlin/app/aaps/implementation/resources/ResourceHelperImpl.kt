@@ -1,14 +1,9 @@
 package app.aaps.implementation.resources
 
 import android.content.Context
-import android.content.res.AssetFileDescriptor
 import android.content.res.Configuration
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import androidx.annotation.ColorRes
 import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
-import androidx.core.content.ContextCompat
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
@@ -81,14 +76,6 @@ class ResourceHelperImpl @Inject constructor(var context: Context, private val f
             setLocale(Locale.ENGLISH)
             context.createConfigurationContext(this).getString(id, *args)
         }
-
-    override fun gc(@ColorRes id: Int): Int = ContextCompat.getColor(context, id)
-
-    override fun openRawResourceFd(id: Int): AssetFileDescriptor =
-        context.resources.openRawResourceFd(id)
-
-    override fun decodeResource(id: Int): Bitmap =
-        BitmapFactory.decodeResource(context.resources, id)
 
     // Reads the bool resource directly. It used to go through gb(), which was dropped from the
     // interface because this was its only caller.

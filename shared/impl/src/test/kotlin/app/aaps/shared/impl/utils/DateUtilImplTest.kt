@@ -1,8 +1,6 @@
 package app.aaps.shared.impl.utils
 
 import android.content.Context
-import android.content.res.AssetFileDescriptor
-import android.graphics.Bitmap
 import android.text.format.DateFormat
 import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
@@ -1526,9 +1524,6 @@ class DateUtilImplTest {
         // --- Dummy implementations for the rest of the interface ---
         override fun gq(id: Int, quantity: Int, vararg args: Any?): String = ""
         override fun gsNotLocalised(id: Int, vararg args: Any?): String = ""
-        override fun gc(id: Int): Int = 0
-        override fun openRawResourceFd(id: Int): AssetFileDescriptor? = null
-        override fun decodeResource(id: Int): Bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
         override fun shortTextMode(): Boolean = true
     }
 }

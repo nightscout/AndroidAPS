@@ -7,6 +7,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.media.AudioAttributes
 import android.net.Uri
 import android.os.SystemClock
@@ -363,7 +364,7 @@ class AlarmNotificationManager @Inject constructor(
     ) {
         val builder = NotificationCompat.Builder(context, CHANNEL_FULL_SCREEN_SILENT)
             .setSmallIcon(iconsProvider.getNotificationIcon())
-            .setLargeIcon(rh.decodeResource(iconsProvider.getIcon()))
+            .setLargeIcon(BitmapFactory.decodeResource(context.resources, iconsProvider.getIcon()))
             .setContentTitle(title)
             .setContentText(body)
             .setStyle(NotificationCompat.BigTextStyle().bigText(body))

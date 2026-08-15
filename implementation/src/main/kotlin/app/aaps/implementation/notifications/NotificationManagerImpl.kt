@@ -41,6 +41,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.time.Duration.Companion.minutes
 import android.app.NotificationManager as AndroidNotificationManager
+import android.graphics.BitmapFactory
 
 @Singleton
 class NotificationManagerImpl @Inject constructor(
@@ -340,7 +341,7 @@ class NotificationManagerImpl @Inject constructor(
 
     private fun raiseSystemNotification(n: AapsNotification) {
         val mgr = context.getSystemService(Context.NOTIFICATION_SERVICE) as AndroidNotificationManager
-        val largeIcon = rh.decodeResource(iconsProvider.getIcon())
+        val largeIcon = BitmapFactory.decodeResource(context.resources, iconsProvider.getIcon())
         val smallIcon = iconsProvider.getNotificationIcon()
         val sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
         val notificationBuilder = NotificationCompat.Builder(context, NotificationManager.CHANNEL_ID)

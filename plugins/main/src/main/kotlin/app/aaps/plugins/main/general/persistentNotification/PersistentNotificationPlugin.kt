@@ -4,6 +4,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import androidx.core.app.NotificationCompat
 import androidx.core.app.RemoteInput
 import app.aaps.core.data.model.GlucoseUnit
@@ -253,7 +254,7 @@ class PersistentNotificationPlugin @Inject constructor(
         if (includeAuto && unreadConversationBuilder != null) {
             builder.extend(
                 NotificationCompat.CarExtender()
-                    .setLargeIcon(rh.decodeResource(iconsProvider.getIcon()))
+                    .setLargeIcon(BitmapFactory.decodeResource(context.resources, iconsProvider.getIcon()))
                     .setUnreadConversation(unreadConversationBuilder.build())
             )
         }

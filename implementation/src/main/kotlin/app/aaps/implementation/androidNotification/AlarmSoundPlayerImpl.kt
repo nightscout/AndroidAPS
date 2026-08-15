@@ -118,7 +118,7 @@ class AlarmSoundPlayerImpl @Inject constructor(
                 MediaPlayer()
             }
             mp.setAudioAttributes(audioAttrs)
-            val afd = rh.openRawResourceFd(soundRes) ?: run {
+            val afd = context.resources.openRawResourceFd(soundRes) ?: run {
                 aapsLogger.error(LTag.CORE, "AlarmSoundPlayer: unable to open raw resource $soundRes")
                 mp.release()
                 return

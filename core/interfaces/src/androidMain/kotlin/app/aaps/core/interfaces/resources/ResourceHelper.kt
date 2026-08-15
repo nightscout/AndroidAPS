@@ -1,11 +1,6 @@
 package app.aaps.core.interfaces.resources
 
-import android.content.res.AssetFileDescriptor
-import android.graphics.Bitmap
-import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
 import androidx.annotation.PluralsRes
-import androidx.annotation.RawRes
 import androidx.annotation.StringRes
 import app.aaps.core.interfaces.InterfacesStringIds
 import app.aaps.core.keys.KeysStringIds
@@ -57,10 +52,7 @@ interface ResourceHelper {
             ?: ref.name
     }
 
-    @ColorInt fun gc(@ColorRes id: Int): Int
-    fun openRawResourceFd(@RawRes id: Int): AssetFileDescriptor?
 
-    fun decodeResource(id: Int): Bitmap
     fun shortTextMode(): Boolean
 }
 

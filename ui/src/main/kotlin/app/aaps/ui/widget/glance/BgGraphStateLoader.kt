@@ -78,11 +78,7 @@ class BgGraphStateLoader @Inject constructor(
             yMaxUserUnits = yMax
         )
 
-        val colors = BgGraphColors(
-            low = rh.gc(app.aaps.core.ui.R.color.widget_low),
-            inRange = rh.gc(app.aaps.core.ui.R.color.widget_inrange),
-            high = rh.gc(app.aaps.core.ui.R.color.widget_high)
-        )
+        val colors = BgGraphColors.WIDGET
 
         // Current BG + trend (same logic as WidgetStateLoader)
         val lastBg = lastBgData.lastBg()

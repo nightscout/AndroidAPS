@@ -63,9 +63,9 @@ class WidgetStateLoader @Inject constructor(
         val bgText = lastBg?.let { profileUtil.fromMgdlToStringInUnits(it.recalculated) }
             ?: rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
         val bgColor = when {
-            lastBgData.isLow()  -> rh.gc(app.aaps.core.ui.R.color.widget_low)
-            lastBgData.isHigh() -> rh.gc(app.aaps.core.ui.R.color.widget_high)
-            else                -> rh.gc(app.aaps.core.ui.R.color.widget_inrange)
+            lastBgData.isLow()  -> BgGraphColors.WIDGET.low
+            lastBgData.isHigh() -> BgGraphColors.WIDGET.high
+            else                -> BgGraphColors.WIDGET.inRange
         }
         val strikeThrough = !lastBgData.isActualBg()
 
