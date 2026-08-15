@@ -32,14 +32,13 @@ import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.pump.mapState
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.icons.IcPluginDanaI
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -54,8 +53,11 @@ import app.aaps.pump.dana.keys.DanaStringComposedKey
 import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danars.compose.DanaRSComposeContent
 import app.aaps.pump.danars.services.DanaRSService
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -70,13 +72,11 @@ class DanaRSPlugin @Inject constructor(
     rh: ResourceHelper,
     preferences: Preferences,
     commandQueue: CommandQueue,
-    private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
     private val context: Context,
     private val danaPump: DanaPump,
     private val detailedBolusInfoStorage: DetailedBolusInfoStorage,
     private val temporaryBasalStorage: TemporaryBasalStorage,
-    private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
     private val danaHistoryDatabase: DanaHistoryDatabase,
     private val decimalFormatter: DecimalFormatter,
@@ -103,7 +103,6 @@ class DanaRSPlugin @Inject constructor(
     aapsLogger, rh, preferences, commandQueue
 ), Pump, Dana, PumpPluginConstraints, OwnDatabasePlugin {
 
-    private val disposable = CompositeDisposable()
     private var danaRSService: DanaRSService? = null
     private var mDeviceAddress = ""
     var mDeviceName = ""
@@ -115,6 +114,8 @@ class DanaRSPlugin @Inject constructor(
     override val lastBolusAmount: StateFlow<PumpInsulin?> = danaPump.lastBolusAmountFlow.mapState { it?.let(::PumpInsulin) }
     override val reservoirLevel: StateFlow<PumpInsulin> = danaPump.reservoirRemainingUnitsFlow.mapState(::PumpInsulin)
 
+    private var scope: CoroutineScope? = null
+
     override val pumpDescription
         get() = PumpDescription().fillFor(danaPump.pumpType())
 
@@ -122,20 +123,22 @@ class DanaRSPlugin @Inject constructor(
         super.onStart()
         val intent = Intent(context, DanaRSService::class.java)
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
-        disposable += rxBus
-            .toObservable(EventAppExit::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ context.unbindService(mConnection) }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventConfigBuilderChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe { danaPump.reset() }
+        // Own scope on IO, like the io scheduler used before, cancelled in onStop like the
+        // CompositeDisposable was cleared. UNDISPATCHED because RxBus has no replay, so a scheduled
+        // collector could miss an event sent before it starts.
+        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = newScope
+        rxBus.toFlow(EventAppExit::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { context.unbindService(mConnection) }
+        rxBus.toFlow(EventConfigBuilderChange::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { danaPump.reset() }
         changePump() // load device name
     }
 
     override suspend fun onStop() {
+        scope?.cancel()
+        scope = null
         context.unbindService(mConnection)
-        disposable.clear()
         super.onStop()
     }
 

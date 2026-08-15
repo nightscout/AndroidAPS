@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.pump.ble.PairingState
 import app.aaps.core.interfaces.pump.ble.PairingStep
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
@@ -40,7 +39,6 @@ class DanaRSOverviewViewModel @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     rxBus: RxBus,
-    aapsSchedulers: AapsSchedulers,
     commandQueue: CommandQueue,
     dateUtil: DateUtil,
     private val danaPump: DanaPump,
@@ -56,7 +54,6 @@ class DanaRSOverviewViewModel @Inject constructor(
     aapsLogger = aapsLogger,
     rh = rh,
     rxBus = rxBus,
-    aapsSchedulers = aapsSchedulers,
     commandQueue = commandQueue,
     dateUtil = dateUtil,
     danaPump = danaPump,

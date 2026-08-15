@@ -42,9 +42,7 @@ class DanaRv2ExecutionServiceTest : TestBaseWithProfile() {
         danaRv2ExecutionService.context = context
         danaRv2ExecutionService.rh = rh
         danaRv2ExecutionService.danaPump = danaPump
-        danaRv2ExecutionService.fabricPrivacy = fabricPrivacy
         danaRv2ExecutionService.dateUtil = dateUtil
-        danaRv2ExecutionService.aapsSchedulers = aapsSchedulers
         danaRv2ExecutionService.pumpSync = pumpSync
         danaRv2ExecutionService.activePlugin = activePlugin
         danaRv2ExecutionService.uiInteraction = uiInteraction

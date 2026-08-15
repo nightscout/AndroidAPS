@@ -52,7 +52,6 @@ class DanaRSServiceTest : TestBaseWithProfile() {
     fun setup() {
         danaRSService = DanaRSService()
         danaRSService.aapsLogger = aapsLogger
-        danaRSService.aapsSchedulers = aapsSchedulers
         danaRSService.rxBus = rxBus
         danaRSService.preferences = preferences
         danaRSService.rh = rh
@@ -64,7 +63,6 @@ class DanaRSServiceTest : TestBaseWithProfile() {
         danaRSService.activePlugin = activePlugin
         danaRSService.uiInteraction = uiInteraction
         danaRSService.bleComm = bleComm
-        danaRSService.fabricPrivacy = fabricPrivacy
         danaRSService.pumpSync = pumpSync
         danaRSService.dateUtil = dateUtil
         danaRSService.bolusProgressData = BolusProgressData(ch, CoroutineScope(Dispatchers.Unconfined))

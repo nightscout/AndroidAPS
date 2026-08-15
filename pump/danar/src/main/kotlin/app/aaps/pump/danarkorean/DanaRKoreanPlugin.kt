@@ -20,13 +20,12 @@ import app.aaps.core.interfaces.pump.PumpSync.TemporaryBasalType
 import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -35,8 +34,8 @@ import app.aaps.pump.dana.database.DanaHistoryDatabase
 import app.aaps.pump.dana.keys.DanaBooleanKey
 import app.aaps.pump.danar.AbstractDanaRPlugin
 import app.aaps.pump.danarkorean.services.DanaRKoreanExecutionService
-import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
@@ -52,7 +51,6 @@ import kotlin.math.max
 @Singleton
 class DanaRKoreanPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    aapsSchedulers: AapsSchedulers,
     rxBus: RxBus,
     private val context: Context,
     rh: ResourceHelper,
@@ -60,7 +58,6 @@ class DanaRKoreanPlugin @Inject constructor(
     commandQueue: CommandQueue,
     danaPump: DanaPump,
     dateUtil: DateUtil,
-    private val fabricPrivacy: FabricPrivacy,
     pumpSync: PumpSync,
     preferences: Preferences,
     config: Config,
@@ -76,7 +73,6 @@ class DanaRKoreanPlugin @Inject constructor(
     preferences,
     config,
     commandQueue,
-    aapsSchedulers,
     rxBus,
     activePlugin,
     dateUtil,
@@ -103,10 +99,11 @@ class DanaRKoreanPlugin @Inject constructor(
                 executionService?.extendedBolusStop()
             }
         }.launchIn(newScope)
-        disposable += rxBus
-            .toObservable(EventAppExit::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ context.unbindService(mConnection) }, fabricPrivacy::logException)
+        // Same scope as the preference observer above: IO, like the io scheduler used before, and
+        // cancelled in onStop like the CompositeDisposable was cleared. UNDISPATCHED because RxBus
+        // has no replay, so a scheduled collector could miss an exit sent before it starts.
+        rxBus.toFlow(EventAppExit::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { context.unbindService(mConnection) }
         super.onStart()
     }
 
@@ -114,7 +111,6 @@ class DanaRKoreanPlugin @Inject constructor(
         scope?.cancel()
         scope = null
         context.unbindService(mConnection)
-        disposable.clear()
         super.onStop()
     }
 

@@ -23,15 +23,14 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.dana.DanaPump
@@ -82,9 +81,11 @@ import app.aaps.pump.danars.comm.DanaRSPacketOptionSetPumpTime
 import app.aaps.pump.danars.comm.DanaRSPacketOptionSetPumpUTCAndTimeZone
 import app.aaps.pump.danars.comm.DanaRSPacketOptionSetUserOption
 import dagger.android.DaggerService
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
@@ -97,7 +98,6 @@ import kotlin.time.Duration.Companion.milliseconds
 class DanaRSService : DaggerService() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var rh: ResourceHelper
@@ -109,7 +109,6 @@ class DanaRSService : DaggerService() {
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var notificationManager: NotificationManager
     @Inject lateinit var bleComm: BLEComm
-    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var bolusProgressData: BolusProgressData
@@ -155,20 +154,22 @@ class DanaRSService : DaggerService() {
     @Inject lateinit var danaRSPacketHistoryRefill: Provider<DanaRSPacketHistoryRefill>
     @Inject lateinit var danaRSPacketHistorySuspend: Provider<DanaRSPacketHistorySuspend>
 
-    private val disposable = CompositeDisposable()
+    // Service lifetime. appScope above is the application scope and must not be cancelled here.
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val mBinder: IBinder = LocalBinder()
     private var lastApproachingDailyLimit: Long = 0
 
     override fun onCreate() {
         super.onCreate()
-        disposable += rxBus
-            .toObservable(EventAppExit::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ stopSelf() }, fabricPrivacy::logException)
+        // IO like the io scheduler used before, cancelled in onDestroy like the CompositeDisposable
+        // was cleared. UNDISPATCHED because RxBus has no replay, so a scheduled collector could miss
+        // an exit sent before it starts.
+        rxBus.toFlow(EventAppExit::class.java)
+            .collectResilient(scope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { stopSelf() }
     }
 
     override fun onDestroy() {
-        disposable.clear()
+        scope.cancel()
         super.onDestroy()
     }
 

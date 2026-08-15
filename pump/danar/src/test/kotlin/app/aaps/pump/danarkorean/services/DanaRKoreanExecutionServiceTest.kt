@@ -40,9 +40,7 @@ class DanaRKoreanExecutionServiceTest : TestBaseWithProfile() {
         danaRKoreanExecutionService.context = context
         danaRKoreanExecutionService.rh = rh
         danaRKoreanExecutionService.danaPump = danaPump
-        danaRKoreanExecutionService.fabricPrivacy = fabricPrivacy
         danaRKoreanExecutionService.dateUtil = dateUtil
-        danaRKoreanExecutionService.aapsSchedulers = aapsSchedulers
         danaRKoreanExecutionService.pumpSync = pumpSync
         danaRKoreanExecutionService.activePlugin = activePlugin
         danaRKoreanExecutionService.notificationManager = notificationManager

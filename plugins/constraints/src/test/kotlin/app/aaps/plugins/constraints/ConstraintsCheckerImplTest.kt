@@ -162,14 +162,14 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         objectivesPlugin = ObjectivesPlugin(aapsLogger, rh, preferences, config, objectives)
         runBlocking { objectivesPlugin.onStart() }
         danaRPlugin = DanaRPlugin(
-            aapsLogger, rh, preferences, config, commandQueue, aapsSchedulers, rxBus, context, activePlugin, danaPump, dateUtil, fabricPrivacy, pumpSync,
+            aapsLogger, rh, preferences, config, commandQueue, rxBus, context, activePlugin, danaPump, dateUtil, pumpSync,
             notificationManager, danaHistoryDatabase, decimalFormatter, bolusProgressData, pumpEnactResultProvider
         )
         danaRSPlugin =
             DanaRSPlugin(
-                aapsLogger, rh, preferences, commandQueue, aapsSchedulers, rxBus, context,
+                aapsLogger, rh, preferences, commandQueue, rxBus, context,
                 danaPump, detailedBolusInfoStorage, temporaryBasalStorage,
-                fabricPrivacy, dateUtil, danaHistoryDatabase, decimalFormatter, pumpEnactResultProvider, blePreCheck, bolusProgressData
+                dateUtil, danaHistoryDatabase, decimalFormatter, pumpEnactResultProvider, blePreCheck, bolusProgressData
             )
         insightPlugin = InsightPlugin(
             aapsLogger, rh, preferences, commandQueue, rxBus,

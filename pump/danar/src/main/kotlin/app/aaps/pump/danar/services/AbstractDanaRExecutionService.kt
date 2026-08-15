@@ -19,14 +19,13 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.rfcomm.RfcommSocket
 import app.aaps.core.interfaces.pump.rfcomm.RfcommTransport
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventBTChange
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.R
@@ -49,9 +48,11 @@ import app.aaps.pump.danar.comm.MsgPCCommStart
 import app.aaps.pump.danar.comm.MsgPCCommStop
 import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.Dispatchers
 import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Provider
@@ -70,9 +71,7 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
     @Inject lateinit var context: Context
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var danaPump: DanaPump
-    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var notificationManager: NotificationManager
@@ -81,7 +80,8 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
     @Inject lateinit var bolusProgressData: BolusProgressData
     @Inject @ApplicationScope lateinit var appScope: CoroutineScope
 
-    private val disposable = CompositeDisposable()
+    // Service lifetime. appScope above is the application scope and must not be cancelled here.
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     // These are read/written across the connect() worker thread, the reader thread, the BT/app-exit
     // observers (io scheduler), disconnect(), and the command methods - @Volatile for visibility.
     @Volatile protected var mRfcommSocket: RfcommSocket? = null
@@ -107,30 +107,29 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
 
     override fun onCreate() {
         super.onCreate()
-        disposable += rxBus
-            .toObservable(EventBTChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event: EventBTChange ->
-                           if (event.state === EventBTChange.Change.DISCONNECT) {
-                               aapsLogger.debug(LTag.PUMP, "Device was disconnected " + event.deviceName) //Device was disconnected
-                               if (preferences.get(DanaStringNonKey.RName) == event.deviceName) {
-                                   mSerialIOThread?.disconnect("BT disconnection broadcast")
-                                   rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
-                               }
-                           }
-                       }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventAppExit::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           aapsLogger.debug(LTag.PUMP, "EventAppExit received")
-                           mSerialIOThread?.disconnect("Application exit")
-                           stopSelf()
-                       }, fabricPrivacy::logException)
+        // Service lifetime scope on IO, like the io scheduler used before, cancelled in onDestroy
+        // like the CompositeDisposable was cleared. UNDISPATCHED because RxBus has no replay, so a
+        // scheduled collector could miss an event sent before it starts.
+        rxBus.toFlow(EventBTChange::class.java)
+            .collectResilient(scope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { event ->
+                if (event.state === EventBTChange.Change.DISCONNECT) {
+                    aapsLogger.debug(LTag.PUMP, "Device was disconnected " + event.deviceName) //Device was disconnected
+                    if (preferences.get(DanaStringNonKey.RName) == event.deviceName) {
+                        mSerialIOThread?.disconnect("BT disconnection broadcast")
+                        rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
+                    }
+                }
+            }
+        rxBus.toFlow(EventAppExit::class.java)
+            .collectResilient(scope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) {
+                aapsLogger.debug(LTag.PUMP, "EventAppExit received")
+                mSerialIOThread?.disconnect("Application exit")
+                stopSelf()
+            }
     }
 
     override fun onDestroy() {
-        disposable.clear()
+        scope.cancel()
         super.onDestroy()
     }
 

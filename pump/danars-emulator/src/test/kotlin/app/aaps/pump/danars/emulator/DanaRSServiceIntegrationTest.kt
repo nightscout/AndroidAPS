@@ -202,7 +202,6 @@ class DanaRSServiceIntegrationTest : TestBase() {
         // Create service and wire all dependencies
         danaRSService = DanaRSService()
         danaRSService.aapsLogger = aapsLogger
-        danaRSService.aapsSchedulers = aapsSchedulers
         danaRSService.rxBus = rxBus
         danaRSService.preferences = preferences
         danaRSService.rh = rh
@@ -213,7 +212,6 @@ class DanaRSServiceIntegrationTest : TestBase() {
         danaRSService.activePlugin = activePlugin
         danaRSService.uiInteraction = uiInteraction
         danaRSService.bleComm = bleComm
-        danaRSService.fabricPrivacy = fabricPrivacy
         danaRSService.pumpSync = pumpSync
         danaRSService.dateUtil = dateUtil
         danaRSService.bolusProgressData = bolusProgressData

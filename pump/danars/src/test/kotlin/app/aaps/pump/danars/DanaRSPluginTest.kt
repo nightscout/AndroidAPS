@@ -282,8 +282,8 @@ class DanaRSPluginTest : DanaRSTestBase() {
 
         danaRSPlugin =
             DanaRSPlugin(
-                aapsLogger, rh, preferences, commandQueue, aapsSchedulers, rxBus, context, danaPump, detailedBolusInfoStorage, temporaryBasalStorage,
-                fabricPrivacy, dateUtil, danaHistoryDatabase, decimalFormatter, pumpEnactResultProvider, blePreCheck, bolusProgressData
+                aapsLogger, rh, preferences, commandQueue, rxBus, context, danaPump, detailedBolusInfoStorage, temporaryBasalStorage,
+                dateUtil, danaHistoryDatabase, decimalFormatter, pumpEnactResultProvider, blePreCheck, bolusProgressData
             )
     }
 

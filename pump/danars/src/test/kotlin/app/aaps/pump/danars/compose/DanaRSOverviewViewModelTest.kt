@@ -94,8 +94,8 @@ internal class DanaRSOverviewViewModelTest {
         // rx / persistence wiring touched at construction
         whenever(rxBus.toFlow(EventPumpStatusChanged::class.java)).thenReturn(emptyFlow())
         whenever(rxBus.toFlow(EventQueueChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toObservable(EventDanaRNewStatus::class.java)).thenReturn(Observable.empty())
-        whenever(rxBus.toObservable(EventInitializationChanged::class.java)).thenReturn(Observable.empty())
+        whenever(rxBus.toFlow(EventDanaRNewStatus::class.java)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventInitializationChanged::class.java)).thenReturn(emptyFlow())
         whenever(aapsSchedulers.io).thenReturn(Schedulers.trampoline())
         whenever(persistenceLayer.observeChanges(EB::class.java)).thenReturn(emptyFlow())
         whenever(persistenceLayer.observeChanges(TB::class.java)).thenReturn(emptyFlow())
@@ -127,7 +127,7 @@ internal class DanaRSOverviewViewModelTest {
     }
 
     private fun createViewModel() = DanaRSOverviewViewModel(
-        aapsLogger, rh, rxBus, aapsSchedulers, commandQueue, dateUtil, danaPump,
+        aapsLogger, rh, rxBus, commandQueue, dateUtil, danaPump,
         activePlugin, ch, persistenceLayer, danaRSPlugin, uel, preferences, bleTransport, context
     )
 

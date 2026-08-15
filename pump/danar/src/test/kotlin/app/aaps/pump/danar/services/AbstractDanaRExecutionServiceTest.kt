@@ -75,9 +75,7 @@ class AbstractDanaRExecutionServiceTest : TestBaseWithProfile() {
         testService.context = context
         testService.rh = rh
         testService.danaPump = danaPump
-        testService.fabricPrivacy = fabricPrivacy
         testService.dateUtil = dateUtil
-        testService.aapsSchedulers = aapsSchedulers
         testService.pumpSync = pumpSync
         testService.activePlugin = activePlugin
         testService.notificationManager = notificationManager
