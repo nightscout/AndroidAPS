@@ -38,6 +38,8 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.data.iob.InMemoryGlucoseValue
+import app.aaps.core.data.model.TrendArrow
+import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
