@@ -8,6 +8,7 @@ import app.aaps.receivers.KeepAliveWorker
 import app.aaps.receivers.SmsReceiver
 import app.aaps.receivers.TimeDateOrTZChangeReceiver
 import app.aaps.receivers.WatchfaceReceiver
+import app.aaps.providers.WatchfaceProvider
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -20,6 +21,7 @@ abstract class ReceiversModule {
     @ContributesAndroidInjector abstract fun contributesChargingStateReceiver(): ChargingStateReceiver
     @ContributesAndroidInjector abstract fun contributesDataReceiver(): DataReceiver
     @ContributesAndroidInjector abstract fun contributesWatchfaceReceiver(): WatchfaceReceiver
+    @ContributesAndroidInjector abstract fun contributesWatchfaceProvider(): WatchfaceProvider
     @ContributesAndroidInjector abstract fun contributesKeepAliveWorker(): KeepAliveWorker
     @ContributesAndroidInjector abstract fun contributesSmsReceiver(): SmsReceiver
     @ContributesAndroidInjector abstract fun contributesTimeDateOrTZChangeReceiver(): TimeDateOrTZChangeReceiver

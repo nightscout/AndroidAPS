@@ -161,6 +161,11 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
 
+        <provider
+            android:name="app.aaps.providers.WatchfaceProvider"
+            android:authorities="info.nightscout.androidaps.watchface"
+            android:exported="true" />
+
     </application>
 
 </manifest>
