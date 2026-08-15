@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.receivers.Intents
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
@@ -30,7 +29,6 @@ import app.aaps.core.interfaces.rx.weardata.CwfData
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
@@ -44,9 +42,8 @@ import app.aaps.plugins.sync.wear.receivers.WearDataReceiver
 import app.aaps.plugins.sync.wear.wearintegration.DataHandlerMobile
 import app.aaps.plugins.sync.wear.wearintegration.DataLayerListenerServiceMobileHelper
 import app.aaps.shared.impl.extensions.safeQueryBroadcastReceivers
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.SupervisorJob
@@ -58,7 +55,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
-import kotlinx.coroutines.rx3.rxCompletable
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -66,9 +63,7 @@ import javax.inject.Singleton
 class WearPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
-    private val aapsSchedulers: AapsSchedulers,
     preferences: Preferences,
-    private val fabricPrivacy: FabricPrivacy,
     private val rxBus: RxBus,
     private val context: Context,
     private val dataHandlerMobile: DataHandlerMobile,
@@ -88,7 +83,6 @@ class WearPlugin @Inject constructor(
     aapsLogger = aapsLogger, rh = rh, preferences = preferences
 ) {
 
-    private val disposable = CompositeDisposable()
     private var scope: CoroutineScope? = null
     private val deferredStart = DeferredForegroundStart()
 
@@ -152,37 +146,16 @@ class WearPlugin @Inject constructor(
             dataHandlerMobile.resendData("PreferenceChange")
             checkCustomWatchfacePreferences()
         }
-        disposable += rxBus
-            .toObservable(EventAutosensCalculationFinished::class.java)
-            .observeOn(aapsSchedulers.io)
-            .concatMapCompletable {
-                rxCompletable { dataHandlerMobile.resendData("EventAutosensCalculationFinished") }
-                    .doOnError(fabricPrivacy::logException)
-                    .onErrorComplete()
-            }
-            .subscribe()
-        disposable += rxBus
-            .toObservable(EventLoopUpdateGui::class.java)
-            .observeOn(aapsSchedulers.io)
-            .concatMapCompletable {
-                rxCompletable { dataHandlerMobile.resendData("EventLoopUpdateGui") }
-                    .doOnError(fabricPrivacy::logException)
-                    .onErrorComplete()
-            }
-            .subscribe()
+        rxBus.toFlow(EventAutosensCalculationFinished::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { dataHandlerMobile.resendData("EventAutosensCalculationFinished") }
+        rxBus.toFlow(EventLoopUpdateGui::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { dataHandlerMobile.resendData("EventLoopUpdateGui") }
         // AAPSCLIENT: fresh predictions arrive via NS devicestatus, not a local loop run — without this the
         // watch graph trails the phone by one loop cycle (the BG-triggered autosens resend fires BEFORE the
         // master's new devicestatus lands). Event is only sent on AAPSCLIENT; processedDeviceStatusData is
         // updated synchronously before it fires, so the resend reads the new predictions.
-        disposable += rxBus
-            .toObservable(EventNsClientStatusUpdated::class.java)
-            .observeOn(aapsSchedulers.io)
-            .concatMapCompletable {
-                rxCompletable { dataHandlerMobile.resendData("EventNsClientStatusUpdated") }
-                    .doOnError(fabricPrivacy::logException)
-                    .onErrorComplete()
-            }
-            .subscribe()
+        rxBus.toFlow(EventNsClientStatusUpdated::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { dataHandlerMobile.resendData("EventNsClientStatusUpdated") }
         // Push status to watch quickly when a TT changes, without waiting for the loop's 10s debounce
         persistenceLayer.observeChanges<TT>()
             .drop(1) // Skip initial emission on collection start
@@ -195,30 +168,24 @@ class WearPlugin @Inject constructor(
         // Push active-scene flag to wear so the tile can swap between scene list and STOP button
         scenes.activeFlow
             .collectResilient(newScope, aapsLogger, LTag.WEAR) { dataHandlerMobile.sendActiveSceneState(it) }
-        disposable += rxBus
-            .toObservable(EventWearUpdateTiles::class.java)
-            .observeOn(aapsSchedulers.io)
-            .concatMapCompletable {
-                rxCompletable { dataHandlerMobile.sendUserActions() }
-                    .doOnError(fabricPrivacy::logException)
-                    .onErrorComplete()
+        rxBus.toFlow(EventWearUpdateTiles::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { dataHandlerMobile.sendUserActions() }
+        rxBus.toFlow(EventWearUpdateGui::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { event ->
+                // This one observed on aapsSchedulers.main, not io: it writes the watchface StateFlow the
+                // UI reads and then walks preferences. newScope is IO, so the body is put back on main
+                // rather than the collector being moved - the other subscriptions here want IO.
+                withContext(Dispatchers.Main) {
+                    event.customWatchfaceData?.let { cwf ->
+                        if (!event.exportFile) {
+                            _savedCustomWatchface.value = cwf
+                            checkCustomWatchfacePreferences()
+                        }
+                    }
+                }
             }
-            .subscribe({})
-        disposable += rxBus
-            .toObservable(EventWearUpdateGui::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({
-                           it.customWatchfaceData?.let { cwf ->
-                               if (!it.exportFile) {
-                                   _savedCustomWatchface.value = cwf
-                                   checkCustomWatchfacePreferences()
-                               }
-                           }
-                       }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventMobileToWear::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe {
+        rxBus.toFlow(EventMobileToWear::class.java)
+            .collectResilient(newScope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) {
                 // If there is a broadcast selected (ie.
                 //  AAPSClient want pass data to AAPS
                 //  AAPSClient2 want pass data to AAPS or AAPSClient 1
@@ -253,7 +220,6 @@ class WearPlugin @Inject constructor(
     override suspend fun onStop() {
         scope?.cancel()
         scope = null
-        disposable.clear()
         deferredStart.cancel()
         super.onStop()
         dataLayerListenerServiceMobileHelper.stopService(context)

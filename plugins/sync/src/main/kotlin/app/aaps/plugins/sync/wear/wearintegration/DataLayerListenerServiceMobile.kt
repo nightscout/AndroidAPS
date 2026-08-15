@@ -8,8 +8,8 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.events.EventMobileToWearWatchface
 import app.aaps.core.interfaces.rx.events.EventWearUpdateGui
@@ -27,15 +27,15 @@ import com.google.android.gms.wearable.PutDataMapRequest
 import com.google.android.gms.wearable.Wearable
 import com.google.android.gms.wearable.WearableListenerService
 import dagger.android.AndroidInjection
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
 import javax.inject.Inject
 
@@ -48,7 +48,6 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
     @Inject lateinit var wearPlugin: WearPlugin
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     inner class LocalBinder : Binder() {
 
@@ -63,7 +62,6 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
-    private val disposable = CompositeDisposable()
 
     private val rxPath get() = getString(app.aaps.core.interfaces.R.string.path_rx_bridge)
     private val rxWatchfacePath get() = getString(app.aaps.core.interfaces.R.string.path_rx_data_bridge)
@@ -73,14 +71,17 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
         super.onCreate()
         aapsLogger.debug(LTag.WEAR, "onCreate")
         handler.post { updateTranscriptionCapability() }
-        disposable += rxBus
-            .toObservable(EventMobileToWear::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe { sendMessage(rxPath, it.payload.serialize()) }
-        disposable += rxBus
-            .toObservable(EventMobileToWearWatchface::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe { sendMessage(rxWatchfacePath, it.payload) }
+        // scope is Main.immediate and onDestroy cancels it, so it is the right lifetime - but these two
+        // observed on aapsSchedulers.io, and sendMessage talks to the Wear Data Layer. So the collector
+        // lives on the service's scope and the send goes back to IO.
+        rxBus.toFlow(EventMobileToWear::class.java)
+            .collectResilient(scope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) {
+                withContext(Dispatchers.IO) { sendMessage(rxPath, it.payload.serialize()) }
+            }
+        rxBus.toFlow(EventMobileToWearWatchface::class.java)
+            .collectResilient(scope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) {
+                withContext(Dispatchers.IO) { sendMessage(rxWatchfacePath, it.payload) }
+            }
     }
 
     override fun onCapabilityChanged(p0: CapabilityInfo) {
@@ -91,7 +92,6 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
 
     override fun onDestroy() {
         super.onDestroy()
-        disposable.clear()
         handler.removeCallbacksAndMessages(null)
         handler.looper.quitSafely()
         scope.cancel()
