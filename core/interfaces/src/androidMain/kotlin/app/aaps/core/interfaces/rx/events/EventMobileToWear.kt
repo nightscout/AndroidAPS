@@ -8,4 +8,4 @@ import app.aaps.core.interfaces.rx.weardata.EventData
  *
  * @param payload The data to send.
  */
-class EventMobileToWear(val payload: EventData) : Event()
+data class EventMobileToWear(val payload: EventData) : Event()

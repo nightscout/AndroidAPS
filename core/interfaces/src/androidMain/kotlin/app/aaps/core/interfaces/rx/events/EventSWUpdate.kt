@@ -5,4 +5,4 @@ package app.aaps.core.interfaces.rx.events
  *
  * @param redraw If true, forces a redraw of the wizard.
  */
-class EventSWUpdate(var redraw: Boolean) : Event()
+data class EventSWUpdate(var redraw: Boolean) : Event()

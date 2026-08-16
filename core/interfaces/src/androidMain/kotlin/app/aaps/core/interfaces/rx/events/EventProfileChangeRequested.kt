@@ -9,4 +9,4 @@ package app.aaps.core.interfaces.rx.events
  *   own ProfileSwitch on end — an internal, automatic write the user shouldn't have to acknowledge
  *   (issue #4959). Defaults to false so every existing sender keeps its current behavior.
  */
-class EventProfileChangeRequested(val silent: Boolean = false) : Event()
+data class EventProfileChangeRequested(val silent: Boolean = false) : Event()

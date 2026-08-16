@@ -5,4 +5,4 @@ import app.aaps.core.interfaces.rx.events.EventUpdateGui
 /**
  * Created by mike on 05.08.2016.
  */
-class EventLoopSetLastRunGui(val text: String) : EventUpdateGui()
+data class EventLoopSetLastRunGui(val text: String) : EventUpdateGui()

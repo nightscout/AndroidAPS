@@ -13,7 +13,7 @@ package app.aaps.core.interfaces.rx.events
  * @param key     Optional dedup key. If set, rapid duplicates with the same
  *                key collapse so retry loops don't flood the host.
  */
-class EventShowSnackbar(
+data class EventShowSnackbar(
     val message: String,
     val type: Type = Type.Info,
     val key: String? = null

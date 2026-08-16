@@ -7,7 +7,7 @@ import app.aaps.core.keys.interfaces.TextRef
  *
  * @param status The sync status message.
  */
-class EventSWSyncStatus(val status: String) : EventStatus() {
+data class EventSWSyncStatus(val status: String) : EventStatus() {
 
     override fun getStatus(): TextRef = TextRef.Literal(status)
 }

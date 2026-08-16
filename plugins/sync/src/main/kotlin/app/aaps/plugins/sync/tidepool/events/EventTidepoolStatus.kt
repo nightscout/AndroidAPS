@@ -4,7 +4,7 @@ import app.aaps.core.interfaces.rx.events.Event
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class EventTidepoolStatus(val status: String) : Event() {
+data class EventTidepoolStatus(val status: String) : Event() {
 
     var date: Long = System.currentTimeMillis()
 

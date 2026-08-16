@@ -7,7 +7,7 @@ package app.aaps.core.interfaces.rx.events
  * @param deviceName The name of the device, or null if not available.
  * @param deviceAddress The address of the device, or null if not available.
  */
-class EventBTChange(val state: Change, val deviceName: String?, @Suppress("unused") val deviceAddress: String? = null) : Event() {
+data class EventBTChange(val state: Change, val deviceName: String?, @Suppress("unused") val deviceAddress: String? = null) : Event() {
 
     /**
      * Represents the connection state of a Bluetooth device.

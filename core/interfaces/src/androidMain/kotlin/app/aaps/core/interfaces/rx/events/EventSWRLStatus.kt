@@ -7,7 +7,7 @@ import app.aaps.core.keys.interfaces.TextRef
  *
  * @param status The RileyLink status message.
  */
-class EventSWRLStatus(val status: String) : EventStatus() {
+data class EventSWRLStatus(val status: String) : EventStatus() {
 
     override fun getStatus(): TextRef = TextRef.Literal(status)
 }
