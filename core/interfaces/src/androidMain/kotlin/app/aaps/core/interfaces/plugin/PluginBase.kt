@@ -10,7 +10,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import org.jetbrains.annotations.TestOnly
 
 /**
  * Created by mike on 09.06.2016.
@@ -37,7 +36,10 @@ abstract class PluginBase(
      * the class simple name — matching the legacy `RunningConfiguration` encoding, so dual-write stays
      * consistent. Override to decouple from the class name (survive rename / R8) when a durable id is needed.
      */
-    open val pluginId: String get() = javaClass.simpleName
+    // this::class.simpleName rather than javaClass.simpleName, so this file is not tied to the JVM. It
+    // gives the same string: a plugin is always a named class. simpleName is only null for an anonymous
+    // one, which would be a bug worth failing on rather than syncing an empty id.
+    open val pluginId: String get() = this::class.simpleName!!
 
     //only if translation exists
     // use long name as fallback
@@ -118,7 +120,6 @@ abstract class PluginBase(
      * Version of setPluginEnabled used for testing only.
      * OnStart/OnStop is called directly.
      */
-    @TestOnly
     fun setPluginEnabledBlocking(type: PluginType, newState: Boolean) {
         if (type == pluginDescription.mainType) {
             if (newState) { // enabling plugin
