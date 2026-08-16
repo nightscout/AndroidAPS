@@ -5,14 +5,18 @@ import app.aaps.shared.impl.R
 
 enum class ViewKeys(val key: String, @StringRes val comment: Int) {
 
+    // Declared in the order the watch face paints them, background first and the hands last, because
+    // that is the order they are listed in to the user. Complications are painted straight after the
+    // background and before everything in mainLayout - see CustomWatchface.ViewMap, which follows the
+    // same order.
     BACKGROUND("background", R.string.cwf_comment_background),
-    CHART("chart", R.string.cwf_comment_chart),
-    COVER_CHART("cover_chart", R.string.cwf_comment_cover_chart),
     COMPLICATION1("complication1", R.string.cwf_comment_complication),
     COMPLICATION2("complication2", R.string.cwf_comment_complication),
     COMPLICATION3("complication3", R.string.cwf_comment_complication),
     COMPLICATION4("complication4", R.string.cwf_comment_complication),
     COMPLICATION5("complication5", R.string.cwf_comment_complication),
+    CHART("chart", R.string.cwf_comment_chart),
+    COVER_CHART("cover_chart", R.string.cwf_comment_cover_chart),
     FREETEXT1("freetext1", R.string.cwf_comment_freetext1),
     FREETEXT2("freetext2", R.string.cwf_comment_freetext2),
     FREETEXT3("freetext3", R.string.cwf_comment_freetext3),
