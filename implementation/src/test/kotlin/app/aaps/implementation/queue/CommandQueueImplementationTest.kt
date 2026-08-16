@@ -3,6 +3,7 @@ package app.aaps.implementation.queue
 import android.content.Context
 import android.os.PowerManager
 import androidx.compose.ui.text.font.FontWeight
+import kotlin.reflect.KClass
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.BS
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
@@ -110,7 +111,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     @BeforeEach
     fun prepare() {
         runTest {
-            whenever(persistenceLayer.observeChanges(anyOrNull<Class<*>>())).thenReturn(emptyFlow())
+            whenever(persistenceLayer.observeChanges(anyOrNull<KClass<*>>())).thenReturn(emptyFlow())
             commandQueue = CommandQueueMocked(
                 aapsLogger,
                 rxBus,

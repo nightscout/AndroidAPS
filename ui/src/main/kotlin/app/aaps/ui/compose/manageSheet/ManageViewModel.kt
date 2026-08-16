@@ -96,9 +96,9 @@ class ManageViewModel @Inject constructor(
     private fun setupEventListeners() {
         rxBus.toFlow(EventInitializationChanged::class)
             .onEach { refreshState() }.launchIn(viewModelScope)
-        persistenceLayer.observeChanges(EB::class.java)
+        persistenceLayer.observeChanges(EB::class)
             .onEach { refreshState() }.launchIn(viewModelScope)
-        persistenceLayer.observeChanges(TB::class.java)
+        persistenceLayer.observeChanges(TB::class)
             .onEach { refreshState() }.launchIn(viewModelScope)
         rxBus.toFlow(EventCustomActionsChanged::class)
             .onEach { refreshState() }.launchIn(viewModelScope)

@@ -88,7 +88,7 @@ interface PersistenceLayer {
      * @param T The domain type to observe (BS, CA, EB, TB, TT, TE, PS, EPS, etc.)
      * @return Flow that emits list of changed entities of type T
      */
-    fun <T : Any> observeChanges(type: Class<T>): Flow<List<T>>
+    fun <T : Any> observeChanges(type: KClass<T>): Flow<List<T>>
 
     /**
      * Observe all database changes, emitting the set of domain types that changed in each transaction
@@ -1649,4 +1649,4 @@ interface PersistenceLayer {
  * ```
  */
 inline fun <reified T : Any> PersistenceLayer.observeChanges(): Flow<List<T>> =
-    observeChanges(T::class.java)
+    observeChanges(T::class)

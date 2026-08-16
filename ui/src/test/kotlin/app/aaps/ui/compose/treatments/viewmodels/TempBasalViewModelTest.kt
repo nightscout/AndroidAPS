@@ -44,7 +44,7 @@ internal class TempBasalViewModelTest {
     fun setUp() {
         MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(UnconfinedTestDispatcher())
-        whenever(persistenceLayer.observeChanges(TB::class.java)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(TB::class)).thenReturn(emptyFlow())
         sut = TempBasalViewModel(persistenceLayer, profileFunction, activePlugin, rh, dateUtil, decimalFormatter, aapsLogger, rxBus)
     }
 

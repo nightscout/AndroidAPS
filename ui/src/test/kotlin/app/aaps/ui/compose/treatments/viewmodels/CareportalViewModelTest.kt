@@ -39,7 +39,7 @@ internal class CareportalViewModelTest {
     fun setUp() {
         MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(UnconfinedTestDispatcher())
-        whenever(persistenceLayer.observeChanges(TE::class.java)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(TE::class)).thenReturn(emptyFlow())
         sut = CareportalViewModel(persistenceLayer, rh, translator, dateUtil, aapsLogger, rxBus)
     }
 

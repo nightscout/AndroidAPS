@@ -1,5 +1,6 @@
 package app.aaps.helpers
 
+import kotlin.reflect.KClass
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -38,8 +39,8 @@ class IntegrationWaits @Inject constructor(
      * On timeout this fails with a message naming [what] instead of an opaque coroutine timeout.
      */
     suspend fun <T : Any> awaitDbChange(
-        type: Class<T>,
-        what: String = type.simpleName,
+        type: KClass<T>,
+        what: String = type.simpleName ?: "?",
         timeoutMs: Long = 40_000,
         action: suspend () -> Unit
     ): List<T> = coroutineScope {

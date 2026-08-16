@@ -1,5 +1,6 @@
 package app.aaps.implementation.profile
 
+import kotlin.reflect.KClass
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.PS
@@ -50,7 +51,7 @@ class ProfileSwitchExpirySchedulerTest : TestBase() {
     fun prepare() {
         whenever(dateUtil.now()).thenReturn(now)
         whenever(config.AAPSCLIENT).thenReturn(false)
-        whenever(persistenceLayer.observeChanges(anyOrNull<Class<*>>())).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(anyOrNull<KClass<*>>())).thenReturn(emptyFlow())
         // UNDISPATCHED so the collector is subscribed before the scheduler under test sends anything;
         // RxBus has no replay, so a scheduled collector would miss those events.
         collector = CoroutineScope(Dispatchers.Unconfined).launch(start = CoroutineStart.UNDISPATCHED) {
@@ -140,7 +141,7 @@ class ProfileSwitchExpirySchedulerTest : TestBase() {
     @Test
     fun `a PS change cancels the previous timer before it fires`() = runTest(testDispatcher) {
         val flow = MutableSharedFlow<List<PS>>(replay = 0)
-        whenever(persistenceLayer.observeChanges(eq(PS::class.java))).thenReturn(flow)
+        whenever(persistenceLayer.observeChanges(eq(PS::class))).thenReturn(flow)
         whenever(persistenceLayer.getProfileSwitchActiveAt(anyLong())).thenReturn(tempPs(now, T.mins(30).msecs()))
 
         scheduler.start()

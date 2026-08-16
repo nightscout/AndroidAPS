@@ -1,5 +1,6 @@
 package app.aaps.implementation.insulin
 
+import kotlin.reflect.KClass
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -71,7 +72,7 @@ class InsulinImplMigrationTest : TestBase() {
 
     @BeforeEach
     fun setup() {
-        whenever(persistenceLayer.observeChanges(any<Class<*>>())).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(any<KClass<*>>())).thenReturn(emptyFlow())
         // getProfile() is suspend & returns a nullable type → an unstubbed mock already returns null,
         // which is the "no active profile" case (iCfg then falls back to insulins[0]).
         // Deterministic, unique string per resource id — avoids depending on real translations while

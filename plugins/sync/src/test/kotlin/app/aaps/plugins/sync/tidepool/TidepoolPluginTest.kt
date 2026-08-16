@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.tidepool
 
+import kotlin.reflect.KClass
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -45,7 +46,7 @@ class TidepoolPluginTest : TestBaseWithProfile() {
     @BeforeEach fun prepare() {
         rateLimit = RateLimit(dateUtil)
         whenever(receiverDelegate.connectivityStatusFlow).thenReturn(connectivityFlow)
-        whenever(persistenceLayer.observeChanges(anyOrNull<Class<*>>())).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(anyOrNull<KClass<*>>())).thenReturn(emptyFlow())
         tidepoolPlugin = TidepoolPlugin(
             aapsLogger, rh, preferences, rxBus, tidepoolUploader, uploadChunk, rateLimit, receiverDelegate, authFlowOut, tidepoolRepository, dateUtil, persistenceLayer
         )

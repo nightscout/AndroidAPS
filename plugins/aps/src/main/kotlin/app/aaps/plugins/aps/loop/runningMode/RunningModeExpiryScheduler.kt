@@ -48,7 +48,7 @@ class RunningModeExpiryScheduler @Inject constructor(
         }
         appScope.launch {
             rescheduleFromCurrentMode()
-            persistenceLayer.observeChanges(RM::class.java).collect { _ ->
+            persistenceLayer.observeChanges(RM::class).collect { _ ->
                 rescheduleFromCurrentMode()
             }
         }

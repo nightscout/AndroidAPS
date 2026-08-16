@@ -89,8 +89,8 @@ internal class DiaconnOverviewViewModelTest {
         whenever(rxBus.toFlow(EventDiaconnG8NewStatus::class)).thenReturn(emptyFlow())
         whenever(rxBus.toFlow(EventInitializationChanged::class)).thenReturn(emptyFlow())
         whenever(aapsSchedulers.io).thenReturn(Schedulers.trampoline())
-        whenever(persistenceLayer.observeChanges(EB::class.java)).thenReturn(emptyFlow())
-        whenever(persistenceLayer.observeChanges(TB::class.java)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(EB::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(TB::class)).thenReturn(emptyFlow())
 
         // formatting collaborators (called during buildUiState before the isConfigured branch)
         whenever(ch.fromPump(any(), any())).thenReturn(0.0)

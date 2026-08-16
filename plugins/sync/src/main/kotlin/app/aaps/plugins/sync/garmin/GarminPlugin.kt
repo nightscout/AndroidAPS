@@ -137,7 +137,7 @@ class GarminPlugin @Inject constructor(
         preferences.observe(GarminStringKey.RequestKey)
             .drop(1)
             .collectResilient(scope, aapsLogger, LTag.GARMIN) { sendPhoneAppMessage() }
-        persistenceLayer.observeChanges(GV::class.java)
+        persistenceLayer.observeChanges(GV::class)
             .collectResilient(scope, aapsLogger, LTag.GARMIN, block = ::onNewBloodGlucose)
         setupHttpServer()
         if (garminAapsKey.isNotEmpty())

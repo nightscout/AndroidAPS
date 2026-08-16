@@ -297,7 +297,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
 
             // Observe GlucoseValue changes
             scope.launch {
-                persistenceLayer.observeChanges(GV::class.java)
+                persistenceLayer.observeChanges(GV::class)
                     .compensateForClockSkew(config, dateUtil)
                     .collect { glucoseValues ->
                         aapsLogger.debug(LTag.UI, "GV change detected, updating BgInfo (${glucoseValues.size} values)")
@@ -345,7 +345,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
 
             // Observe treatment-related DB changes
             for (type in listOf(
-                BS::class.java, CA::class.java, EB::class.java, TE::class.java
+                BS::class, CA::class, EB::class, TE::class
             )) {
                 scope.launch {
                     persistenceLayer.observeChanges(type)
@@ -356,7 +356,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
             }
             // Observe HR changes for treatment graph + heart rate graph
             scope.launch {
-                persistenceLayer.observeChanges(HR::class.java)
+                persistenceLayer.observeChanges(HR::class)
                     .compensateForClockSkew(config, dateUtil)
                     .debounce(300)
                     .collect {
@@ -366,7 +366,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
             }
             // Observe SC changes for treatment graph + steps graph
             scope.launch {
-                persistenceLayer.observeChanges(SC::class.java)
+                persistenceLayer.observeChanges(SC::class)
                     .compensateForClockSkew(config, dateUtil)
                     .debounce(300)
                     .collect {
@@ -376,7 +376,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
             }
             // Observe running mode changes for graph + chip
             scope.launch {
-                persistenceLayer.observeChanges(RM::class.java)
+                persistenceLayer.observeChanges(RM::class)
                     .compensateForClockSkew(config, dateUtil)
                     .debounce(300)
                     .collect {
@@ -387,7 +387,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
 
             // Observe TT changes for target line graph + chip
             scope.launch {
-                persistenceLayer.observeChanges(TT::class.java)
+                persistenceLayer.observeChanges(TT::class)
                     .compensateForClockSkew(config, dateUtil)
                     .debounce(300)
                     .collect {
@@ -418,7 +418,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
             }
             // EPS changes affect EPS graph, profile chip, TT chip, target line, and basal
             scope.launch {
-                persistenceLayer.observeChanges(EPS::class.java)
+                persistenceLayer.observeChanges(EPS::class)
                     .compensateForClockSkew(config, dateUtil)
                     .debounce(300)
                     .collect {
@@ -433,7 +433,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
 
             // Observe basal-related DB changes
             scope.launch {
-                persistenceLayer.observeChanges(TB::class.java)
+                persistenceLayer.observeChanges(TB::class)
                     .compensateForClockSkew(config, dateUtil)
                     .debounce(300)
                     .collect {
@@ -442,7 +442,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
                     }
             }
             scope.launch {
-                persistenceLayer.observeChanges(EB::class.java)
+                persistenceLayer.observeChanges(EB::class)
                     .compensateForClockSkew(config, dateUtil)
                     .debounce(300)
                     .collect { rebuildBasalGraph() }

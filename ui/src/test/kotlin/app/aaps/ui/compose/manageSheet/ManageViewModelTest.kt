@@ -74,8 +74,8 @@ internal class ManageViewModelTest {
         // so the uiState stays at ManageUiState defaults and we test the synchronous methods.
         Dispatchers.setMain(StandardTestDispatcher())
         // setupEventListeners() builds cold flow chains synchronously in init — every source must be non-null.
-        whenever(persistenceLayer.observeChanges(EB::class.java)).thenReturn(emptyFlow())
-        whenever(persistenceLayer.observeChanges(TB::class.java)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(EB::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(TB::class)).thenReturn(emptyFlow())
         whenever(rxBus.toFlow(EventInitializationChanged::class)).thenReturn(emptyFlow())
         whenever(rxBus.toFlow(EventCustomActionsChanged::class)).thenReturn(emptyFlow())
         whenever(nsClient.masterOrPairedClientFlow).thenReturn(MutableStateFlow(false))

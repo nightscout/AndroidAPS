@@ -138,7 +138,7 @@ class CommandQueueImplementation @Inject constructor(
         // consumes the one-shot ProfileSwitchSilentGate flag the scene set just before inserting its PS.
         merge(
             rxBus.toFlow(EventProfileChangeRequested::class).map { it.silent },
-            persistenceLayer.observeChanges(PS::class.java).map { profileSwitchSilentGate.consumeSilent() }
+            persistenceLayer.observeChanges(PS::class).map { profileSwitchSilentGate.consumeSilent() }
         ).collectResilient(appScope, aapsLogger, LTag.PROFILE) { silent -> onProfileChanged(silent) }
     }
 

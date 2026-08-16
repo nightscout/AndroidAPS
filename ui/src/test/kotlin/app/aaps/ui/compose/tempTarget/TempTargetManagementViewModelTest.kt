@@ -64,7 +64,7 @@ internal class TempTargetManagementViewModelTest {
         MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(StandardTestDispatcher())
         // init observers must be built (their launchIn is deferred); loadData() launch is deferred too.
-        whenever(persistenceLayer.observeChanges(TT::class.java)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(TT::class)).thenReturn(emptyFlow())
         whenever(preferences.observe(StringNonKey.TempTargetPresets)).thenReturn(MutableStateFlow("[]"))
         sut = TempTargetManagementViewModel(
             persistenceLayer, profileFunction, profileUtil, preferences, rh, dateUtil, aapsLogger,

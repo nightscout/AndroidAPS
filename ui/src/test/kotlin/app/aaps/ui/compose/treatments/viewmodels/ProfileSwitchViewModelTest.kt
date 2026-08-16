@@ -44,8 +44,8 @@ internal class ProfileSwitchViewModelTest {
     fun setUp() {
         MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(UnconfinedTestDispatcher())
-        whenever(persistenceLayer.observeChanges(PS::class.java)).thenReturn(emptyFlow())
-        whenever(persistenceLayer.observeChanges(EPS::class.java)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(PS::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
         sut = ProfileSwitchViewModel(persistenceLayer, profileRepository, rh, dateUtil, aapsLogger, rxBus)
     }
 

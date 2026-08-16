@@ -166,7 +166,7 @@ class ProfileManagementViewModel @Inject constructor(
      */
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun observeActiveProfileForAutoNavigation() {
-        persistenceLayer.observeChanges(EPS::class.java)
+        persistenceLayer.observeChanges(EPS::class)
             .compensateForClockSkew(config, dateUtil)
             .onStart { emit(emptyList()) }
             .mapLatest {
@@ -188,7 +188,7 @@ class ProfileManagementViewModel @Inject constructor(
     val uiState: StateFlow<ProfileManagementUiState> = combine(
         profileRepository.profiles,
         _selectedIndex,
-        persistenceLayer.observeChanges(EPS::class.java).compensateForClockSkew(config, dateUtil).onStart { emit(emptyList()) },
+        persistenceLayer.observeChanges(EPS::class).compensateForClockSkew(config, dateUtil).onStart { emit(emptyList()) },
         _screenMode,
         // An input, not a snapshot: pairing/unpairing or the master going away while this screen is
         // open has to move it between editable and read-only right away.

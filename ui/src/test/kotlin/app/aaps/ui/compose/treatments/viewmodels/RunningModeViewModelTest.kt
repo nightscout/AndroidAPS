@@ -37,7 +37,7 @@ internal class RunningModeViewModelTest {
     fun setUp() {
         MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(UnconfinedTestDispatcher())
-        whenever(persistenceLayer.observeChanges(RM::class.java)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(RM::class)).thenReturn(emptyFlow())
         sut = RunningModeViewModel(persistenceLayer, rh, dateUtil, aapsLogger, rxBus)
     }
 

@@ -75,7 +75,7 @@ class SiteRotationManagementViewModel @Inject constructor(
     }
 
     private fun setupEventListeners() {
-        persistenceLayer.observeChanges(TE::class.java)
+        persistenceLayer.observeChanges(TE::class)
             .onEach { loadEntries() }
             .launchIn(viewModelScope)
         // The settings bottom sheet writes the body-type pref directly (generic preference renderer), so observe it

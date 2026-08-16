@@ -46,8 +46,8 @@ internal class CalibrationViewModelTest {
         MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(UnconfinedTestDispatcher())
         // Stub every collaborator the init recompute touches when no session exists.
-        whenever(persistenceLayer.observeChanges(CAL::class.java)).thenReturn(emptyFlow())
-        whenever(persistenceLayer.observeChanges(TE::class.java)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(CAL::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(TE::class)).thenReturn(emptyFlow())
         whenever(dateUtil.now()).thenReturn(0L)
         whenever(profileUtil.units).thenReturn(GlucoseUnit.MGDL)
     }

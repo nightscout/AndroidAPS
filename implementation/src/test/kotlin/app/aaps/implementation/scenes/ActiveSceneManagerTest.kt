@@ -31,10 +31,10 @@ class ActiveSceneManagerTest : TestBase() {
 
     private fun manager(): ActiveSceneManager {
         whenever(preferences.get(StringNonKey.ActiveScene)).thenReturn("")
-        whenever(persistenceLayer.observeChanges(TT::class.java)).thenReturn(emptyFlow())
-        whenever(persistenceLayer.observeChanges(PS::class.java)).thenReturn(emptyFlow())
-        whenever(persistenceLayer.observeChanges(RM::class.java)).thenReturn(emptyFlow())
-        whenever(persistenceLayer.observeChanges(TE::class.java)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(TT::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(PS::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(RM::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(TE::class)).thenReturn(emptyFlow())
         return ActiveSceneManager(preferences, sceneRepository, persistenceLayer, aapsLogger)
     }
 

@@ -37,7 +37,7 @@ internal class ExtendedBolusViewModelTest {
     fun setUp() {
         MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(UnconfinedTestDispatcher())
-        whenever(persistenceLayer.observeChanges(EB::class.java)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(EB::class)).thenReturn(emptyFlow())
         sut = ExtendedBolusViewModel(persistenceLayer, rh, dateUtil, aapsLogger, rxBus)
     }
 

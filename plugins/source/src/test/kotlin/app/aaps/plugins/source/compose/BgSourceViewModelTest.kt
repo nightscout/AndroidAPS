@@ -45,7 +45,7 @@ internal class BgSourceViewModelTest {
         // observeBgChanges() collects this in init; an empty flow completes immediately and never
         // re-triggers loadData(). The initial loadData()'s background IO launch is intentionally left
         // unstubbed: it never mutates the structural fields asserted below.
-        whenever(persistenceLayer.observeChanges(GV::class.java)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(GV::class)).thenReturn(emptyFlow())
         sut = BgSourceViewModel(persistenceLayer, rh, dateUtil, profileUtil, aapsLogger, rxBus)
     }
 

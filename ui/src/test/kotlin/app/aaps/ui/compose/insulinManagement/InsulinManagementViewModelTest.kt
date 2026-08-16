@@ -71,7 +71,7 @@ internal class InsulinManagementViewModelTest {
         whenever(preferences.get(StringNonKey.InsulinConfiguration)).thenReturn("")
         // Cold flow chains built synchronously in observeProfileChanges()/observeConfigChanges().
         whenever(profileRepository.profiles).thenReturn(MutableStateFlow(emptyList<SingleProfile>()))
-        whenever(persistenceLayer.observeChanges(EPS::class.java)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
         whenever(preferences.observe(StringNonKey.InsulinConfiguration)).thenReturn(configFlow)
         sut = InsulinManagementViewModel(
             insulinManager, preferences, profileFunction, dateUtil, hardLimits, uel,

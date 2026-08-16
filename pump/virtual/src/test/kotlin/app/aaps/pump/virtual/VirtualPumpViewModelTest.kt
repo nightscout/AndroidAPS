@@ -52,9 +52,9 @@ internal class VirtualPumpViewModelTest {
         whenever(rxBus.toFlow(EventPumpStatusChanged::class)).thenReturn(pumpStatusFlow)
         whenever(rxBus.toFlow(EventQueueChanged::class)).thenReturn(queueChangedFlow)
         // DB change flows merged into dbChanged (evaluated eagerly in the constructor)
-        whenever(persistenceLayer.observeChanges(TB::class.java)).thenReturn(emptyFlow())
-        whenever(persistenceLayer.observeChanges(EB::class.java)).thenReturn(emptyFlow())
-        whenever(persistenceLayer.observeChanges(EPS::class.java)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(TB::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(EB::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
         // plugin StateFlows used as combine() sources
         whenever(virtualPumpPlugin.pumpTypeFlow).thenReturn(MutableStateFlow<PumpType?>(null))
         whenever(virtualPumpPlugin.batteryPercentFlow).thenReturn(MutableStateFlow(50))

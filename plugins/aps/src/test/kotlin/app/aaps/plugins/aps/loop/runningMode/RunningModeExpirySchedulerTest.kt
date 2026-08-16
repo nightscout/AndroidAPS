@@ -3,6 +3,7 @@ package app.aaps.plugins.aps.loop.runningMode
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
+import kotlin.reflect.KClass
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
@@ -40,7 +41,7 @@ class RunningModeExpirySchedulerTest : TestBase() {
     fun prepare() {
         whenever(dateUtil.now()).thenReturn(now)
         whenever(config.APS).thenReturn(true)
-        whenever(persistenceLayer.observeChanges(anyOrNull<Class<*>>())).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(anyOrNull<KClass<*>>())).thenReturn(emptyFlow())
         scheduler = RunningModeExpiryScheduler(
             persistenceLayer = persistenceLayer,
             workManager = workManager,
@@ -99,7 +100,7 @@ class RunningModeExpirySchedulerTest : TestBase() {
         val duration = T.mins(30).msecs()
         val disconnect = temporary(RM.Mode.DISCONNECTED_PUMP, timestamp = now, durationMs = duration)
         val flow = MutableSharedFlow<List<RM>>(replay = 0)
-        whenever(persistenceLayer.observeChanges(eq(RM::class.java))).thenReturn(flow)
+        whenever(persistenceLayer.observeChanges(eq(RM::class))).thenReturn(flow)
         whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(workingMode)
 
         scheduler.start()
@@ -121,7 +122,7 @@ class RunningModeExpirySchedulerTest : TestBase() {
         val disconnect = temporary(RM.Mode.DISCONNECTED_PUMP, timestamp = now, durationMs = duration)
         val working = permanent(RM.Mode.CLOSED_LOOP)
         val flow = MutableSharedFlow<List<RM>>(replay = 0)
-        whenever(persistenceLayer.observeChanges(eq(RM::class.java))).thenReturn(flow)
+        whenever(persistenceLayer.observeChanges(eq(RM::class))).thenReturn(flow)
         whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(disconnect)
 
         scheduler.start()

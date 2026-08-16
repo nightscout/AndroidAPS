@@ -56,7 +56,7 @@ internal class StatusViewModelTest {
         whenever(rxBus.toFlow(EventInitializationChanged::class)).thenReturn(emptyFlow())
         whenever(rxBus.toFlow(EventPumpStatusChanged::class)).thenReturn(emptyFlow())
         whenever(rxBus.toFlow(EventNsClientStatusUpdated::class)).thenReturn(emptyFlow())
-        whenever(persistenceLayer.observeChanges(TE::class.java)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(TE::class)).thenReturn(emptyFlow())
         whenever(persistenceLayer.databaseClearedFlow).thenReturn(emptyFlow())
         sut = StatusViewModel(
             rh, activePlugin, profileFunction, config, persistenceLayer, dateUtil, rxBus, preferences,

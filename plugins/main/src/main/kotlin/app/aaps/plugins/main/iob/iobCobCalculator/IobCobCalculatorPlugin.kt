@@ -127,7 +127,7 @@ class IobCobCalculatorPlugin @Inject constructor(
                 scheduleHistoryDataChange(invalidateFrom, reloadBgData = true, triggeredByNewBG = false)
             }
         // EffectiveProfileSwitch changes
-        persistenceLayer.observeChanges(EPS::class.java)
+        persistenceLayer.observeChanges(EPS::class)
             .onEach { epsList ->
                 epsList.minOfOrNull { it.timestamp }?.let { timestamp ->
                     newHistoryData(timestamp, bgDataReload = false, triggeredByNewBG = false)
@@ -145,26 +145,26 @@ class IobCobCalculatorPlugin @Inject constructor(
             preferences.observe(DoubleKey.AutosensMin).drop(1).map {},
         ).onEach { resetDataAndRunCalculation("onPreferenceChange") }.launchIn(newScope)
         // GlucoseValue changes → reload BG data + trigger loop
-        persistenceLayer.observeChanges(GV::class.java)
+        persistenceLayer.observeChanges(GV::class)
             .onEach { gvList ->
                 gvList.minOfOrNull { it.timestamp }?.let { timestamp ->
                     scheduleHistoryDataChange(timestamp, reloadBgData = true, triggeredByNewBG = true)
                 }
             }.launchIn(newScope)
         // Treatment changes → invalidate caches
-        persistenceLayer.observeChanges(CA::class.java)
+        persistenceLayer.observeChanges(CA::class)
             .onEach { list -> list.minOfOrNull { it.timestamp }?.let { scheduleHistoryDataChange(it, reloadBgData = false) } }
             .launchIn(newScope)
-        persistenceLayer.observeChanges(BS::class.java)
+        persistenceLayer.observeChanges(BS::class)
             .onEach { list -> list.minOfOrNull { it.timestamp }?.let { scheduleHistoryDataChange(it, reloadBgData = false) } }
             .launchIn(newScope)
-        persistenceLayer.observeChanges(BCR::class.java)
+        persistenceLayer.observeChanges(BCR::class)
             .onEach { list -> list.minOfOrNull { it.timestamp }?.let { scheduleHistoryDataChange(it, reloadBgData = false) } }
             .launchIn(newScope)
-        persistenceLayer.observeChanges(TB::class.java)
+        persistenceLayer.observeChanges(TB::class)
             .onEach { list -> list.minOfOrNull { it.timestamp }?.let { scheduleHistoryDataChange(it, reloadBgData = false) } }
             .launchIn(newScope)
-        persistenceLayer.observeChanges(EB::class.java)
+        persistenceLayer.observeChanges(EB::class)
             .onEach { list -> list.minOfOrNull { it.timestamp }?.let { scheduleHistoryDataChange(it, reloadBgData = false) } }
             .launchIn(newScope)
         // Units change

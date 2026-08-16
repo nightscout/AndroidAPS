@@ -74,7 +74,7 @@ class ProfileFunctionImpl @Inject constructor(
     init {
         // Populate the mirror off the main thread so the synchronous readers never block on the DB.
         appScope.launch { _runningICfg.value = getProfile()?.iCfg?.takeIf { it.isUsable } }
-        persistenceLayer.observeChanges(EPS::class.java)
+        persistenceLayer.observeChanges(EPS::class)
             .collectResilient(appScope, aapsLogger, LTag.PROFILE) { epsList ->
                 epsList.minOfOrNull { it.timestamp }?.let { timestamp ->
                     // Cache keys are rounded down to the second (see getProfile), so compare against

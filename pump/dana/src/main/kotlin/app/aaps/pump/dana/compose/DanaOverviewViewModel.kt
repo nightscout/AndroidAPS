@@ -102,10 +102,10 @@ open class DanaOverviewViewModel @Inject constructor(
             .collectResilient(viewModelScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { rxTrigger.value = System.currentTimeMillis() }
 
         // Observe EB/TB database changes for immediate UI updates
-        persistenceLayer.observeChanges(EB::class.java)
+        persistenceLayer.observeChanges(EB::class)
             .onEach { rxTrigger.value = System.currentTimeMillis() }
             .launchIn(viewModelScope)
-        persistenceLayer.observeChanges(TB::class.java)
+        persistenceLayer.observeChanges(TB::class)
             .onEach { rxTrigger.value = System.currentTimeMillis() }
             .launchIn(viewModelScope)
     }

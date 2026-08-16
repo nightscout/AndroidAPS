@@ -242,7 +242,7 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
         scope = newScope
 
         // Subscribe to therapy events and load initial sensor state.
-        persistenceLayer.observeChanges(TE::class.java)
+        persistenceLayer.observeChanges(TE::class)
             .onEach {
                 checkForSensorChange()
             }

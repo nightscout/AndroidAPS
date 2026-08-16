@@ -106,7 +106,7 @@ class TidepoolPlugin @Inject constructor(
                 // Pass to setup wizard
                 rxBus.send(EventSWSyncStatus(event.status))
             }
-        persistenceLayer.observeChanges(GV::class.java)
+        persistenceLayer.observeChanges(GV::class)
             .collectResilient(scope, aapsLogger, LTag.TIDEPOOL) { gvList ->
                 gvList.maxByOrNull { it.timestamp }?.let { gv ->
                     if (gv.timestamp < uploadChunk.getLastEnd())

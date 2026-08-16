@@ -1,5 +1,6 @@
 package app.aaps.plugins.aps.loop.runningMode
 
+import kotlin.reflect.KClass
 import app.aaps.core.data.model.EB
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TB
@@ -41,7 +42,7 @@ class RunningModeReconcilerTest : TestBaseWithProfile() {
     @BeforeEach
     fun prepare() {
         whenever(config.APS).thenReturn(true)
-        whenever(persistenceLayer.observeChanges(anyOrNull<Class<*>>())).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(anyOrNull<KClass<*>>())).thenReturn(emptyFlow())
         runBlocking {
             whenever(commandQueue.cancelTempBasal(anyBoolean(), anyBoolean())).thenReturn(pumpEnactResultProvider.get().success(true))
             whenever(commandQueue.tempBasalAbsolute(anyDouble(), anyInt(), anyBoolean(), anyOrNull(), anyOrNull())).thenReturn(pumpEnactResultProvider.get().success(true))
@@ -168,7 +169,7 @@ class RunningModeReconcilerTest : TestBaseWithProfile() {
         val workingModeRm = workingMode(RM.Mode.CLOSED_LOOP)
         val disconnect = temporaryMode(RM.Mode.DISCONNECTED_PUMP, timestamp = nowValue, durationMs = T.mins(30).msecs())
         val flow = MutableSharedFlow<List<RM>>(replay = 0)
-        whenever(persistenceLayer.observeChanges(eq(RM::class.java))).thenReturn(flow)
+        whenever(persistenceLayer.observeChanges(eq(RM::class))).thenReturn(flow)
         whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(workingModeRm)
         whenever(processedTbrEbData.getTempBasalIncludingConvertedExtended(anyLong())).thenReturn(null)
         whenever(persistenceLayer.getExtendedBolusActiveAt(anyLong())).thenReturn(null)
@@ -196,7 +197,7 @@ class RunningModeReconcilerTest : TestBaseWithProfile() {
             isAbsolute = true, rate = 0.0, duration = T.mins(60).msecs()
         )
         val flow = MutableSharedFlow<List<RM>>(replay = 0)
-        whenever(persistenceLayer.observeChanges(eq(RM::class.java))).thenReturn(flow)
+        whenever(persistenceLayer.observeChanges(eq(RM::class))).thenReturn(flow)
         whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(activeDisc)
         whenever(processedTbrEbData.getTempBasalIncludingConvertedExtended(anyLong())).thenReturn(zeroTbr)
         whenever(persistenceLayer.getExtendedBolusActiveAt(anyLong())).thenReturn(null)
@@ -221,7 +222,7 @@ class RunningModeReconcilerTest : TestBaseWithProfile() {
             isAbsolute = true, rate = 1.5, duration = T.mins(30).msecs()
         )
         val flow = MutableSharedFlow<List<RM>>(replay = 0)
-        whenever(persistenceLayer.observeChanges(eq(RM::class.java))).thenReturn(flow)
+        whenever(persistenceLayer.observeChanges(eq(RM::class))).thenReturn(flow)
         whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(workingModeRm)
         whenever(processedTbrEbData.getTempBasalIncludingConvertedExtended(anyLong())).thenReturn(null)
 
@@ -252,7 +253,7 @@ class RunningModeReconcilerTest : TestBaseWithProfile() {
             isEmulatingTempBasal = false
         )
         val flow = MutableSharedFlow<List<RM>>(replay = 0)
-        whenever(persistenceLayer.observeChanges(eq(RM::class.java))).thenReturn(flow)
+        whenever(persistenceLayer.observeChanges(eq(RM::class))).thenReturn(flow)
         whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(workingModeRm)
         whenever(processedTbrEbData.getTempBasalIncludingConvertedExtended(anyLong())).thenReturn(null)
         whenever(persistenceLayer.getExtendedBolusActiveAt(anyLong())).thenReturn(null)

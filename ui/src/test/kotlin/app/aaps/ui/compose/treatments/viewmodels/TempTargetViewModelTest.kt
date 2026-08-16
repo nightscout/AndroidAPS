@@ -39,7 +39,7 @@ internal class TempTargetViewModelTest {
     fun setUp() {
         MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(UnconfinedTestDispatcher())
-        whenever(persistenceLayer.observeChanges(TT::class.java)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(TT::class)).thenReturn(emptyFlow())
         sut = TempTargetViewModel(persistenceLayer, profileUtil, rh, dateUtil, aapsLogger, rxBus)
     }
 

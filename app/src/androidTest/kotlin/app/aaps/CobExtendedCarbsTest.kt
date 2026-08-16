@@ -123,7 +123,7 @@ class CobExtendedCarbsTest : HiltInstrumentedTest() {
 
         // Create the profile switch and wait for the resulting EffectiveProfileSwitch (written by the
         // command queue once the pump push succeeds). Replaces old EventEffectiveProfileSwitchChanged.
-        val epsList = waits.awaitDbChange(EPS::class.java, what = "EffectiveProfileSwitch after createProfileSwitch") {
+        val epsList = waits.awaitDbChange(EPS::class, what = "EffectiveProfileSwitch after createProfileSwitch") {
             val result = profileFunction.createProfileSwitch(
                 profileStore = store,
                 profileName = profileName,
@@ -188,7 +188,7 @@ class CobExtendedCarbsTest : HiltInstrumentedTest() {
         rxHelper.resetState(EventAutosensCalculationFinished::class)
 
         // Insert BG and wait for the GV flow emission (replaces old EventNewBG)
-        val gvList = waits.awaitDbChange(GV::class.java, what = "GlucoseValue after BG insert") {
+        val gvList = waits.awaitDbChange(GV::class, what = "GlucoseValue after BG insert") {
             insertFlatBgData(now, 60, 100.0)
         }
         aapsLogger.info(LTag.CORE, "GV flow emitted ${gvList.size} entries")
@@ -401,7 +401,7 @@ class CobExtendedCarbsTest : HiltInstrumentedTest() {
         val now = dateUtil.now()
 
         rxHelper.resetState(EventAutosensCalculationFinished::class)
-        waits.awaitDbChange(GV::class.java, what = "GlucoseValue after BG insert") {
+        waits.awaitDbChange(GV::class, what = "GlucoseValue after BG insert") {
             insertFlatBgData(now, 240, 100.0)
         }
         insertCarbs(now - 4 * 60 * 60_000L, 10.0, 15 * 60_000L)
@@ -418,7 +418,7 @@ class CobExtendedCarbsTest : HiltInstrumentedTest() {
         val now = dateUtil.now()
 
         rxHelper.resetState(EventAutosensCalculationFinished::class)
-        waits.awaitDbChange(GV::class.java, what = "GlucoseValue after BG insert") {
+        waits.awaitDbChange(GV::class, what = "GlucoseValue after BG insert") {
             insertFlatBgData(now, 240, 100.0)
         }
         insertCarbs(now - 4 * 60 * 60_000L, 10.0, 0)
@@ -437,7 +437,7 @@ class CobExtendedCarbsTest : HiltInstrumentedTest() {
         val now = dateUtil.now()
 
         rxHelper.resetState(EventAutosensCalculationFinished::class)
-        waits.awaitDbChange(GV::class.java, what = "GlucoseValue after BG insert") {
+        waits.awaitDbChange(GV::class, what = "GlucoseValue after BG insert") {
             insertBgData(now, 60, { minutesAgo -> 200.0 - minutesAgo * (100.0 / 60.0) }, TrendArrow.FORTY_FIVE_UP)
         }
         insertCarbs(now - 30 * 60_000L, 35.0, 2 * 60 * 60_000L)
@@ -453,7 +453,7 @@ class CobExtendedCarbsTest : HiltInstrumentedTest() {
         val now = dateUtil.now()
 
         rxHelper.resetState(EventAutosensCalculationFinished::class)
-        waits.awaitDbChange(GV::class.java, what = "GlucoseValue after BG insert") {
+        waits.awaitDbChange(GV::class, what = "GlucoseValue after BG insert") {
             insertBgData(now, 60, { minutesAgo -> 180.0 - minutesAgo * (100.0 / 60.0) }, TrendArrow.FORTY_FIVE_UP)
         }
         insertCarbs(now - 20 * 60_000L, 20.0, 0)
@@ -469,7 +469,7 @@ class CobExtendedCarbsTest : HiltInstrumentedTest() {
         val now = dateUtil.now()
 
         rxHelper.resetState(EventAutosensCalculationFinished::class)
-        waits.awaitDbChange(GV::class.java, what = "GlucoseValue after BG insert") {
+        waits.awaitDbChange(GV::class, what = "GlucoseValue after BG insert") {
             insertBgData(now, 240, { minutesAgo -> 250.0 - minutesAgo * (170.0 / 240.0) }, TrendArrow.FORTY_FIVE_UP)
         }
         insertCarbs(now - 4 * 60 * 60_000L, 10.0, 15 * 60_000L)

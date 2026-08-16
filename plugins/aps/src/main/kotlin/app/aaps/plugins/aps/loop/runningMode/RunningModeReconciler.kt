@@ -72,7 +72,7 @@ class RunningModeReconciler @Inject constructor(
         }
         observerJob = appScope.launch {
             reconcileStartup()
-            persistenceLayer.observeChanges(RM::class.java).collect { _ ->
+            persistenceLayer.observeChanges(RM::class).collect { _ ->
                 onAnyChange()
             }
         }

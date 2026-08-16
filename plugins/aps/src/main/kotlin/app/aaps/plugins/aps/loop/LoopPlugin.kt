@@ -174,7 +174,7 @@ class LoopPlugin @Inject constructor(
         super.onStart()
         handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
         // TempTarget changes
-        persistenceLayer.observeChanges(TT::class.java)
+        persistenceLayer.observeChanges(TT::class)
             // Skip db change of ending previous TT
             .debounce(10_000L)
             // try/catch keeps this app-lifetime subscription alive: an uncaught throw in onEach would

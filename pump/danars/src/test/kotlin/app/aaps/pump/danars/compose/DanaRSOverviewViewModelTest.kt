@@ -93,8 +93,8 @@ internal class DanaRSOverviewViewModelTest {
         whenever(rxBus.toFlow(EventQueueChanged::class)).thenReturn(emptyFlow())
         whenever(rxBus.toFlow(EventDanaRNewStatus::class)).thenReturn(emptyFlow())
         whenever(rxBus.toFlow(EventInitializationChanged::class)).thenReturn(emptyFlow())
-        whenever(persistenceLayer.observeChanges(EB::class.java)).thenReturn(emptyFlow())
-        whenever(persistenceLayer.observeChanges(TB::class.java)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(EB::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(TB::class)).thenReturn(emptyFlow())
 
         // formatting collaborators (called during buildUiState before the isConfigured branch)
         whenever(ch.basalRateString(any(), any(), any())).thenReturn("0.00 U/h")

@@ -93,7 +93,7 @@ internal class ProfileManagementViewModelTest {
         //    and in the uiState combine.
         Dispatchers.setMain(StandardTestDispatcher())
         whenever(profileRepository.profiles).thenReturn(profilesFlow)
-        whenever(persistenceLayer.observeChanges(EPS::class.java)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
         // Pairing and reachability are inputs of uiState, so the combine needs real flows here.
         whenever(nsClient.masterOrPairedClientFlow).thenReturn(MutableStateFlow(true))
         whenever(nsClient.masterReachable).thenReturn(MutableStateFlow(true))
