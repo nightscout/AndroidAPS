@@ -272,31 +272,6 @@ class EquilOverviewViewModel @Inject constructor(
         }
     }
 
-    private fun readableDuration(duration: Duration): String {
-        val hours = duration.toHours().toInt()
-        val minutes = duration.toMinutes().toInt()
-        val seconds = duration.seconds
-        return when {
-            seconds < 10           -> rh.gs(R.string.equil_common_moments_ago)
-            seconds < 60           -> rh.gs(R.string.equil_common_less_than_a_minute_ago)
-            seconds < 60 * 60      -> rh.gs(R.string.equil_common_time_ago, rh.gq(R.plurals.equil_common_minutes, minutes, minutes))
-
-            seconds < 24 * 60 * 60 -> {
-                val minutesLeft = minutes % 60
-                if (minutesLeft > 0)
-                    rh.gs(R.string.equil_common_time_ago, rh.gs(R.string.equil_common_composite_time, rh.gq(R.plurals.equil_common_hours, hours, hours), rh.gq(R.plurals.equil_common_minutes, minutesLeft, minutesLeft)))
-                else rh.gs(R.string.equil_common_time_ago, rh.gq(R.plurals.equil_common_hours, hours, hours))
-            }
-
-            else                   -> {
-                val days = hours / 24
-                val hoursLeft = hours % 24
-                if (hoursLeft > 0)
-                    rh.gs(R.string.equil_common_time_ago, rh.gs(R.string.equil_common_composite_time, rh.gq(R.plurals.equil_common_days, days, days), rh.gq(R.plurals.equil_common_hours, hoursLeft, hoursLeft)))
-                else rh.gs(R.string.equil_common_time_ago, rh.gq(R.plurals.equil_common_days, days, days))
-            }
-        }
-    }
 
     // viewModelScope cancels all coroutines automatically on onCleared()
 }

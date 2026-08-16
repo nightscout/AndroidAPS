@@ -13,6 +13,8 @@ import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.interfaces.utils.readableDuration
+import app.aaps.pump.omnipod.common.OMNIPOD_DURATION_LABELS
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -522,33 +524,8 @@ class DashOverviewViewModel @Inject constructor(
         return rh.gs(id)
     }
 
-    private fun readableDuration(duration: Duration): String {
-        val hours = duration.toHours().toInt()
-        val minutes = duration.toMinutes().toInt()
-        val seconds = duration.seconds
-        return when {
-            seconds < 10           -> rh.gs(CommonR.string.omnipod_common_moments_ago)
-            seconds < 60           -> rh.gs(CommonR.string.omnipod_common_less_than_a_minute_ago)
-            seconds < 60 * 60      -> rh.gs(CommonR.string.omnipod_common_time_ago, rh.gq(CommonR.plurals.omnipod_common_minutes, minutes, minutes))
-
-            seconds < 24 * 60 * 60 -> {
-                val minutesLeft = minutes % 60
-                if (minutesLeft > 0)
-                    rh.gs(CommonR.string.omnipod_common_time_ago, rh.gs(CommonR.string.omnipod_common_composite_time, rh.gq(CommonR.plurals.omnipod_common_hours, hours, hours), rh.gq(CommonR.plurals.omnipod_common_minutes, minutesLeft, minutesLeft)))
-                else
-                    rh.gs(CommonR.string.omnipod_common_time_ago, rh.gq(CommonR.plurals.omnipod_common_hours, hours, hours))
-            }
-
-            else                   -> {
-                val days = hours / 24
-                val hoursLeft = hours % 24
-                if (hoursLeft > 0)
-                    rh.gs(CommonR.string.omnipod_common_time_ago, rh.gs(CommonR.string.omnipod_common_composite_time, rh.gq(CommonR.plurals.omnipod_common_days, days, days), rh.gq(CommonR.plurals.omnipod_common_hours, hoursLeft, hoursLeft)))
-                else
-                    rh.gs(CommonR.string.omnipod_common_time_ago, rh.gq(CommonR.plurals.omnipod_common_days, days, days))
-            }
-        }
-    }
+    private fun readableDuration(duration: Duration): String =
+        rh.readableDuration(duration.toMillis(), OMNIPOD_DURATION_LABELS)
 
     private fun isQueueEmpty(): Boolean = commandQueue.size() == 0 && commandQueue.performing() == null
 
