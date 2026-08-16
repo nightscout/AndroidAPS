@@ -11,6 +11,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import androidx.annotation.VisibleForTesting
 import androidx.core.app.NotificationCompat
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.DS
@@ -144,10 +145,10 @@ class LoopPlugin @Inject constructor(
             )
         }
         .icon(IcLoopClosed)
-        .pluginName(app.aaps.core.ui.R.string.loop)
-        .shortName(R.string.loop_shortname)
+        .pluginName(TextRef.AndroidRes(app.aaps.core.ui.R.string.loop))
+        .shortName(TextRef.AndroidRes(R.string.loop_shortname))
         .alwaysEnabled(config.APS)
-        .description(R.string.description_loop),
+        .description(TextRef.AndroidRes(R.string.description_loop)),
     aapsLogger, rh
 ), Loop, PluginConstraints {
 

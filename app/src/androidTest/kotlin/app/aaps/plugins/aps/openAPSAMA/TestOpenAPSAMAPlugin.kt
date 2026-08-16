@@ -1,5 +1,6 @@
 package app.aaps.plugins.aps.openAPSAMA
 
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.APSResult
@@ -75,10 +76,10 @@ class TestOpenAPSAMAPlugin @Inject constructor(
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.APS)
-        .pluginName(R.string.openapsama)
-        .shortName(R.string.oaps_shortname)
+        .pluginName(TextRef.AndroidRes(R.string.openapsama))
+        .shortName(TextRef.AndroidRes(R.string.oaps_shortname))
         .preferencesVisibleInSimpleMode(false)
-        .description(R.string.description_ama),
+        .description(TextRef.AndroidRes(R.string.description_ama)),
     aapsLogger, rh
 ), APS, PluginConstraints {
 

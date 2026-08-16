@@ -83,9 +83,9 @@ class MedtrumPlugin @Inject constructor(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
         .icon(IcPluginMedtrum)
-        .pluginName(R.string.medtrum)
-        .shortName(R.string.medtrum_pump_shortname)
-        .description(R.string.medtrum_pump_description)
+        .pluginName(TextRef.AndroidRes(R.string.medtrum))
+        .shortName(TextRef.AndroidRes(R.string.medtrum_pump_shortname))
+        .description(TextRef.AndroidRes(R.string.medtrum_pump_description))
         .composeContent { _ ->
             MedtrumComposeContent(
                 pluginName = rh.gs(R.string.medtrum),

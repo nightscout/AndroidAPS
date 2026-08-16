@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import androidx.annotation.VisibleForTesting
 import androidx.core.net.toUri
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
@@ -52,10 +53,10 @@ class GlunovoPlugin @Inject constructor(
             )
         }
         .icon(IcPluginGlunovo)
-        .pluginName(R.string.glunovo)
-        .shortName(R.string.glunovo)
+        .pluginName(TextRef.AndroidRes(R.string.glunovo))
+        .shortName(TextRef.AndroidRes(R.string.glunovo))
         .preferencesVisibleInSimpleMode(false)
-        .description(R.string.description_source_glunovo),
+        .description(TextRef.AndroidRes(R.string.description_source_glunovo)),
     ownPreferences = GlunovoLongKey.entries,
     aapsLogger, resourceHelper, preferences, config
 ), BgSource {

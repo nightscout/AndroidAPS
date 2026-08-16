@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Watch
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
@@ -76,9 +77,9 @@ class WearPlugin @Inject constructor(
     pluginDescription = PluginDescription()
         .mainType(PluginType.SYNC)
         .icon(Icons.Default.Watch)
-        .pluginName(app.aaps.core.ui.R.string.wear)
-        .shortName(R.string.wear_shortname)
-        .description(R.string.description_wear)
+        .pluginName(TextRef.AndroidRes(app.aaps.core.ui.R.string.wear))
+        .shortName(TextRef.AndroidRes(R.string.wear_shortname))
+        .description(TextRef.AndroidRes(R.string.description_wear))
         .composeContent { WearComposeContent() },
     aapsLogger = aapsLogger, rh = rh, preferences = preferences
 ) {

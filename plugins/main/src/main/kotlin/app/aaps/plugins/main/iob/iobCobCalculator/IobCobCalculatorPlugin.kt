@@ -1,6 +1,7 @@
 package app.aaps.plugins.main.iob.iobCobCalculator
 
 import androidx.collection.LongSparseArray
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.aps.BasalData
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.iob.CobInfo
@@ -96,7 +97,7 @@ class IobCobCalculatorPlugin @Inject constructor(
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
-        .pluginName(R.string.iob_cob_calculator)
+        .pluginName(TextRef.AndroidRes(R.string.iob_cob_calculator))
         .showInList { false }
         .alwaysEnabled(true),
     aapsLogger, rh

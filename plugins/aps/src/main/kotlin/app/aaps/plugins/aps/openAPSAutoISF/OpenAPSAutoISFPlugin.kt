@@ -108,11 +108,11 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
             )
         }
         .icon(IcPluginOpenAPS)
-        .pluginName(R.string.openaps_auto_isf)
-        .shortName(R.string.autoisf_shortname)
+        .pluginName(TextRef.AndroidRes(R.string.openaps_auto_isf))
+        .shortName(TextRef.AndroidRes(R.string.autoisf_shortname))
         .preferencesVisibleInSimpleMode(false)
         .showInList { (config.APS || config.AAPSCLIENT) && config.isEngineeringMode() && config.isDev() }   // AAPSCLIENT: visible so a client can select the master's APS (still eng+dev only)
-        .description(R.string.description_auto_isf),
+        .description(TextRef.AndroidRes(R.string.description_auto_isf)),
     ownPreferences = ApsIntentKey.entries,
     aapsLogger, rh, preferences
 ), APS, PluginConstraints {

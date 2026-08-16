@@ -139,9 +139,9 @@ class ComboV2Plugin @Inject constructor(
                 )
             }
             .icon(IcPluginCombo)
-            .pluginName(R.string.combov2_plugin_name)
-            .shortName(R.string.combov2_plugin_shortname)
-            .description(R.string.combov2_plugin_description),
+            .pluginName(TextRef.AndroidRes(R.string.combov2_plugin_name))
+            .shortName(TextRef.AndroidRes(R.string.combov2_plugin_shortname))
+            .description(TextRef.AndroidRes(R.string.combov2_plugin_description)),
         ownPreferences = ComboIntKey.entries + ComboBooleanKey.entries + ComboStringNonKey.entries + ComboIntNonKey.entries + ComboLongNonKey.entries,
         aapsLogger, rh, preferences, commandQueue
     ), Pump, PluginConstraints {

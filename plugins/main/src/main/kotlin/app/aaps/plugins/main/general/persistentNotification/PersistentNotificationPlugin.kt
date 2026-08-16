@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import androidx.core.app.NotificationCompat
 import androidx.core.app.RemoteInput
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.plugin.PluginType
@@ -84,11 +85,11 @@ class PersistentNotificationPlugin @Inject constructor(
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
-        .pluginName(R.string.ongoingnotificaction)
+        .pluginName(TextRef.AndroidRes(R.string.ongoingnotificaction))
         .enableByDefault(true)
         .alwaysEnabled(true)
         .showInList { false }
-        .description(R.string.description_persistent_notification),
+        .description(TextRef.AndroidRes(R.string.description_persistent_notification)),
     aapsLogger, rh
 ) {
 

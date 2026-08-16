@@ -54,7 +54,7 @@ class SafetyPlugin @Inject constructor(
         .mainType(PluginType.CONSTRAINTS)
         .alwaysEnabled(true)
         .showInList { false }
-        .pluginName(R.string.safety)
+        .pluginName(TextRef.AndroidRes(R.string.safety))
         .icon(Icons.Default.Shield),
     aapsLogger, rh
 ), PluginConstraints, Safety {

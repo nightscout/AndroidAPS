@@ -1,6 +1,7 @@
 package app.aaps.plugins.sensitivity
 
 import androidx.collection.LongSparseArray
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.PS
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginType
@@ -38,9 +39,9 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.SENSITIVITY)
         .icon(IcAs)
-        .pluginName(R.string.sensitivity_weighted_average)
-        .shortName(R.string.sensitivity_plugin_shortname)
-        .description(R.string.description_sensitivity_weighted_average),
+        .pluginName(TextRef.AndroidRes(R.string.sensitivity_weighted_average))
+        .shortName(TextRef.AndroidRes(R.string.sensitivity_plugin_shortname))
+        .description(TextRef.AndroidRes(R.string.description_sensitivity_weighted_average)),
     aapsLogger, rh, preferences
 ) {
 

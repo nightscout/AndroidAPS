@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T.Companion.mins
 import app.aaps.core.interfaces.configuration.Config
@@ -105,7 +106,7 @@ class DanaRv2Plugin @Inject constructor(
     private var scope: CoroutineScope? = null
 
     init {
-        pluginDescription.description(R.string.description_pump_dana_r_v2)
+        pluginDescription.description(TextRef.AndroidRes(R.string.description_pump_dana_r_v2))
         pumpDescription.fillFor(PumpType.DANA_RV2)
     }
 

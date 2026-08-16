@@ -35,9 +35,9 @@ class NotificationReaderPlugin @Inject constructor(
             )
         }
         .icon(IcPluginByoda)
-        .pluginName(R.string.notification_reader)
+        .pluginName(TextRef.AndroidRes(R.string.notification_reader))
         .preferencesVisibleInSimpleMode(false)
-        .description(R.string.description_source_notification_reader),
+        .description(TextRef.AndroidRes(R.string.description_source_notification_reader)),
     ownPreferences = emptyList(),
     aapsLogger, rh, preferences, config
 ), BgSource {

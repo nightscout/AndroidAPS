@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.tidepool
 
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
@@ -60,8 +61,8 @@ class TidepoolPlugin @Inject constructor(
 ) : Sync, Tidepool, PluginBaseWithPreferences(
     PluginDescription()
         .mainType(PluginType.SYNC)
-        .pluginName(R.string.tidepool)
-        .shortName(R.string.tidepool_shortname)
+        .pluginName(TextRef.AndroidRes(R.string.tidepool))
+        .shortName(TextRef.AndroidRes(R.string.tidepool_shortname))
         .icon(IcPluginTidepool)
         .composeContent {
             TidepoolComposeContent(
@@ -77,7 +78,7 @@ class TidepoolPlugin @Inject constructor(
                 onClearLog = { tidepoolRepository.clearLog() }
             )
         }
-        .description(R.string.description_tidepool),
+        .description(TextRef.AndroidRes(R.string.description_tidepool)),
     ownPreferences = TidepoolBooleanKey.entries + TidepoolLongNonKey.entries + TidepoolStringNonKey.entries,
     aapsLogger, rh, preferences
 ) {

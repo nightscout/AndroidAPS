@@ -111,8 +111,8 @@ sealed class SearchableItem {
     ) : SearchableItem() {
 
         override val key: String = pluginRef.javaClass.simpleName
-        override val title: TextRef = TextRef.AndroidRes(pluginRef.pluginDescription.pluginName)
-        override val summary: TextRef? = pluginRef.pluginDescription.description.takeIf { it != -1 }?.let { TextRef.AndroidRes(it) }
+        override val title: TextRef = pluginRef.pluginDescription.pluginName ?: TextRef.Literal(pluginRef.pluginId)
+        override val summary: TextRef? = pluginRef.pluginDescription.description
         override val plugin: PluginBase = pluginRef
     }
 

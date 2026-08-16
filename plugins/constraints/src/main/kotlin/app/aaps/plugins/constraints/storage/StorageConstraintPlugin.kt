@@ -30,7 +30,7 @@ class StorageConstraintPlugin @Inject constructor(
         .mainType(PluginType.CONSTRAINTS)
         .alwaysEnabled(true)
         .showInList { false }
-        .pluginName(R.string.storage),
+        .pluginName(TextRef.AndroidRes(R.string.storage)),
     aapsLogger, rh
 ), PluginConstraints {
 

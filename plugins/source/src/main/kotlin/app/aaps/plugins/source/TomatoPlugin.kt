@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
@@ -42,10 +43,10 @@ class TomatoPlugin @Inject constructor(
             )
         }
         .icon(IcPluginTomato)
-        .pluginName(R.string.tomato)
-        .shortName(R.string.tomato_short)
+        .pluginName(TextRef.AndroidRes(R.string.tomato))
+        .shortName(TextRef.AndroidRes(R.string.tomato_short))
         .preferencesVisibleInSimpleMode(false)
-        .description(R.string.description_source_tomato),
+        .description(TextRef.AndroidRes(R.string.description_source_tomato)),
     ownPreferences = emptyList(),
     aapsLogger, rh, preferences, config
 ), BgSource {

@@ -20,7 +20,8 @@ abstract class AbstractBgSourceWithSensorInsertLogPlugin(
 
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
         key = "bg_source_with_sensor_settings",
-        titleResId = pluginDescription.pluginName,
+        // a BG source plugin always names itself
+        title = pluginDescription.pluginName!!,
         items = listOf(
             BooleanKey.BgSourceUploadToNs,
             BooleanKey.BgSourceCreateSensorChange

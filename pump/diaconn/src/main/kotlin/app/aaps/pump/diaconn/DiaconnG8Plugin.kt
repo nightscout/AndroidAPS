@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -94,9 +95,9 @@ class DiaconnG8Plugin @Inject constructor(
             )
         }
         .icon(IcPluginDiaconn)
-        .pluginName(R.string.diaconn_g8_pump)
-        .shortName(R.string.diaconn_g8_pump_shortname)
-        .description(R.string.description_pump_diaconn_g8),
+        .pluginName(TextRef.AndroidRes(R.string.diaconn_g8_pump))
+        .shortName(TextRef.AndroidRes(R.string.diaconn_g8_pump_shortname))
+        .description(TextRef.AndroidRes(R.string.description_pump_diaconn_g8)),
     ownPreferences = DiaconnIntentKey.entries + DiaconnIntKey.entries + DiaconnBooleanKey.entries + DiaconnStringNonKey.entries +
         DiaconnIntNonKey.entries,
     aapsLogger, rh, preferences, commandQueue

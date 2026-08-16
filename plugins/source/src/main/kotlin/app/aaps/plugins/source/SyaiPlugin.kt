@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
@@ -45,9 +46,9 @@ class SyaiPlugin @Inject constructor(
             )
         }
         .icon(IcPluginSyai)
-        .pluginName(R.string.syai_tag_app)
+        .pluginName(TextRef.AndroidRes(R.string.syai_tag_app))
         .preferencesVisibleInSimpleMode(false)
-        .description(R.string.description_source_patched_syai_tag_app),
+        .description(TextRef.AndroidRes(R.string.description_source_patched_syai_tag_app)),
     ownPreferences = emptyList(),
     aapsLogger, rh, preferences, config
 ), BgSource {

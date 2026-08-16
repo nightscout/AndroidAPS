@@ -51,7 +51,7 @@ class SignatureVerifierPlugin @Inject constructor(
         .mainType(PluginType.CONSTRAINTS)
         .alwaysEnabled(true)
         .showInList { false }
-        .pluginName(R.string.signature_verifier),
+        .pluginName(TextRef.AndroidRes(R.string.signature_verifier)),
     ownPreferences = SignatureVerifierLongKey.entries,
     aapsLogger, rh, preferences
 ), PluginConstraints {

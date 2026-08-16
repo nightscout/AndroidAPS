@@ -110,11 +110,11 @@ open class OpenAPSSMBPlugin @Inject constructor(
             )
         }
         .icon(IcPluginOpenAPS)
-        .pluginName(R.string.openapssmb)
-        .shortName(app.aaps.core.ui.R.string.smb_shortname)
+        .pluginName(TextRef.AndroidRes(R.string.openapssmb))
+        .shortName(TextRef.AndroidRes(app.aaps.core.ui.R.string.smb_shortname))
         .preferencesVisibleInSimpleMode(false)
         .showInList { config.APS || config.AAPSCLIENT }   // AAPSCLIENT: visible so a client can select the master's APS
-        .description(R.string.description_smb)
+        .description(TextRef.AndroidRes(R.string.description_smb))
         .setDefault(),
     ownPreferences = ApsIntentKey.entries,
     aapsLogger, rh, preferences

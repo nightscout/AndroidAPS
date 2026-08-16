@@ -52,9 +52,9 @@ class LinearCalibrationPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.CALIBRATION)
         .icon(IcCalibration)
-        .pluginName(R.string.linear_calibration_name)
-        .shortName(R.string.calibration_shortname)
-        .description(R.string.description_linear_calibration)
+        .pluginName(TextRef.AndroidRes(R.string.linear_calibration_name))
+        .shortName(TextRef.AndroidRes(R.string.calibration_shortname))
+        .description(TextRef.AndroidRes(R.string.description_linear_calibration))
         .composeContent { CalibrationComposeContent() },
     aapsLogger, rh
 ), Calibration {

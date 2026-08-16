@@ -2,6 +2,7 @@ package app.aaps.plugins.aps.loop
 
 import android.app.NotificationManager
 import android.content.Context
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.DS
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.plugin.PluginType
@@ -79,8 +80,8 @@ class LoopPluginTest : TestBaseWithProfile() {
 
     @Test
     fun testPluginInterface() {
-        whenever(rh.gs(app.aaps.core.ui.R.string.loop)).thenReturn("Loop")
-        whenever(rh.gs(app.aaps.plugins.aps.R.string.loop_shortname)).thenReturn("LOOP")
+        whenever(rh.gs(TextRef.AndroidRes(app.aaps.core.ui.R.string.loop))).thenReturn("Loop")
+        whenever(rh.gs(TextRef.AndroidRes(app.aaps.plugins.aps.R.string.loop_shortname))).thenReturn("LOOP")
 //        whenever(preferences.get(StringKey.LoopApsMode)).thenReturn(ApsMode.CLOSED.name)
         val pumpDescription = PumpDescription()
         whenever(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)

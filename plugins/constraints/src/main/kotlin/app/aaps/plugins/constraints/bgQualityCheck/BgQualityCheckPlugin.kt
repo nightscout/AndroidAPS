@@ -1,5 +1,6 @@
 package app.aaps.plugins.constraints.bgQualityCheck
 
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
@@ -42,7 +43,7 @@ class BgQualityCheckPlugin @Inject constructor(
         .mainType(PluginType.CONSTRAINTS)
         .alwaysEnabled(true)
         .showInList { false }
-        .pluginName(R.string.bg_quality),
+        .pluginName(TextRef.AndroidRes(R.string.bg_quality)),
     aapsLogger, rh
 ), PluginConstraints, BgQualityCheck {
 

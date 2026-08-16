@@ -40,7 +40,7 @@ class DstHelperPlugin @Inject constructor(
         .mainType(PluginType.GENERAL)
         .alwaysEnabled(true)
         .showInList { false }
-        .pluginName(R.string.dst_plugin_name),
+        .pluginName(TextRef.AndroidRes(R.string.dst_plugin_name)),
     ownPreferences = DstHelperLongKey.entries,
     aapsLogger, rh, preferences
 ), DstHelper {

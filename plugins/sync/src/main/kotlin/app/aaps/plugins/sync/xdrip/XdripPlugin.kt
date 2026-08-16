@@ -9,6 +9,7 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.HR
 import app.aaps.core.data.model.SC
@@ -106,9 +107,9 @@ class XdripPlugin @Inject constructor(
             )
         }
         .icon(IcXDrip)
-        .pluginName(R.string.xdrip)
-        .shortName(R.string.xdrip_shortname)
-        .description(R.string.description_xdrip),
+        .pluginName(TextRef.AndroidRes(R.string.xdrip))
+        .shortName(TextRef.AndroidRes(R.string.xdrip_shortname))
+        .description(TextRef.AndroidRes(R.string.description_xdrip)),
     ownPreferences = XdripLongKey.entries + XdripIntentKey.entries,
     aapsLogger, rh, preferences
 ) {

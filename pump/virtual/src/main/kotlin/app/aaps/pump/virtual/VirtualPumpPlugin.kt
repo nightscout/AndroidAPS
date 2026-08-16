@@ -91,9 +91,9 @@ open class VirtualPumpPlugin @Inject constructor(
             )
         }
         .icon(IcPluginVirtualPump)
-        .pluginName(app.aaps.core.ui.R.string.virtual_pump)
-        .shortName(R.string.virtual_pump_shortname)
-        .description(R.string.description_pump_virtual)
+        .pluginName(TextRef.AndroidRes(app.aaps.core.ui.R.string.virtual_pump))
+        .shortName(TextRef.AndroidRes(R.string.virtual_pump_shortname))
+        .description(TextRef.AndroidRes(R.string.description_pump_virtual))
         .setDefault()
         .showInList { !config.AAPSCLIENT },
     ownPreferences = VirtualBooleanNonPreferenceKey.entries,

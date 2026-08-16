@@ -133,9 +133,9 @@ class OmnipodDashPumpPlugin @Inject constructor(
             )
         }
         .icon(IcPluginOmnipod)
-        .pluginName(R.string.omnipod_dash_name)
-        .shortName(R.string.omnipod_dash_name_short)
-        .description(R.string.omnipod_dash_pump_description),
+        .pluginName(TextRef.AndroidRes(R.string.omnipod_dash_name))
+        .shortName(TextRef.AndroidRes(R.string.omnipod_dash_name_short))
+        .description(TextRef.AndroidRes(R.string.omnipod_dash_pump_description)),
     ownPreferences = OmnipodBooleanPreferenceKey.entries + OmnipodIntPreferenceKey.entries + DashBooleanPreferenceKey.entries +
         DashStringNonPreferenceKey.entries,
     aapsLogger, rh, preferences, commandQueue

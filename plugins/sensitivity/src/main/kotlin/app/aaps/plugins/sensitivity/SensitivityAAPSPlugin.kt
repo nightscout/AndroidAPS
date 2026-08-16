@@ -1,5 +1,6 @@
 package app.aaps.plugins.sensitivity
 
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.PS
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginType
@@ -38,9 +39,9 @@ class SensitivityAAPSPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.SENSITIVITY)
         .icon(IcAs)
-        .pluginName(R.string.sensitivity_aaps)
-        .shortName(R.string.sensitivity_plugin_shortname)
-        .description(R.string.description_sensitivity_aaps),
+        .pluginName(TextRef.AndroidRes(R.string.sensitivity_aaps))
+        .shortName(TextRef.AndroidRes(R.string.sensitivity_plugin_shortname))
+        .description(TextRef.AndroidRes(R.string.description_sensitivity_aaps)),
     aapsLogger, rh, preferences
 ) {
 

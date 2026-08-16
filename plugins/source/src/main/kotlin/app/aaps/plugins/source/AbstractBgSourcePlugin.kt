@@ -22,7 +22,8 @@ abstract class AbstractBgSourcePlugin(
 
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
         key = "bg_source_settings",
-        titleResId = pluginDescription.pluginName,
+        // a BG source plugin always names itself
+        title = pluginDescription.pluginName!!,
         items = listOf(
             BooleanKey.BgSourceUploadToNs
 

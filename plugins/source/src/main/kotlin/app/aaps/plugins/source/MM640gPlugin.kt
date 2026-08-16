@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
@@ -46,9 +47,9 @@ class MM640gPlugin @Inject constructor(
             )
         }
         .icon(IcPluginMM640G)
-        .pluginName(R.string.mm640g)
+        .pluginName(TextRef.AndroidRes(R.string.mm640g))
         .preferencesVisibleInSimpleMode(false)
-        .description(R.string.description_source_mm640g),
+        .description(TextRef.AndroidRes(R.string.description_source_mm640g)),
     ownPreferences = emptyList(),
     aapsLogger, rh, preferences, config
 ), BgSource {

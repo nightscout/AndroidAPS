@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import androidx.annotation.VisibleForTesting
 import androidx.core.net.toUri
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
@@ -52,10 +53,10 @@ class IntelligoPlugin @Inject constructor(
             )
         }
         .icon(IcPluginIntelligo)
-        .pluginName(R.string.intelligo)
-        .shortName(R.string.intelligo)
+        .pluginName(TextRef.AndroidRes(R.string.intelligo))
+        .shortName(TextRef.AndroidRes(R.string.intelligo))
         .preferencesVisibleInSimpleMode(false)
-        .description(R.string.description_source_intelligo),
+        .description(TextRef.AndroidRes(R.string.description_source_intelligo)),
     ownPreferences = IntelligoLongKey.entries,
     aapsLogger, resourceHelper, preferences, config
 ), BgSource {

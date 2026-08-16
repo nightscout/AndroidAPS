@@ -29,7 +29,7 @@ abstract class PluginBase(
     private var state = State.NOT_INITIALIZED
 
     open val name: String
-        get() = if (pluginDescription.pluginName == -1) "UNKNOWN" else rh.gs(pluginDescription.pluginName)
+        get() = pluginDescription.pluginName?.let { rh.gs(it) } ?: "UNKNOWN"
 
     /**
      * Stable identity for syncing the active-plugin selection (see the `ActivePlugin*` keys). Defaults to
@@ -45,14 +45,14 @@ abstract class PluginBase(
     // use long name as fallback
     val nameShort: String
         get() {
-            if (pluginDescription.shortName == -1) return name
-            val translatedName = rh.gs(pluginDescription.shortName)
+            val shortNameRef = pluginDescription.shortName ?: return name
+            val translatedName = rh.gs(shortNameRef)
             return if (translatedName.trim { it <= ' ' }.isNotEmpty()) translatedName else name
             // use long name as fallback
         }
 
     val description: String?
-        get() = if (pluginDescription.description == -1) null else rh.gs(pluginDescription.description)
+        get() = pluginDescription.description?.let { rh.gs(it) }
 
     fun getType(): PluginType = pluginDescription.mainType
 

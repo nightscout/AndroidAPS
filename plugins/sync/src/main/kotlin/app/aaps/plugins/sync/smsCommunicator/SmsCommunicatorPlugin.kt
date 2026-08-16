@@ -144,9 +144,9 @@ class SmsCommunicatorPlugin @Inject constructor(
         .mainType(PluginType.SYNC)
         .composeContent { SmsCommunicatorComposeContent() }
         .icon(IcPluginSms)
-        .pluginName(R.string.smscommunicator)
-        .shortName(R.string.smscommunicator_shortname)
-        .description(R.string.description_sms_communicator),
+        .pluginName(TextRef.AndroidRes(R.string.smscommunicator))
+        .shortName(TextRef.AndroidRes(R.string.smscommunicator_shortname))
+        .description(TextRef.AndroidRes(R.string.description_sms_communicator)),
     ownPreferences = SmsIntentKey.entries,
     aapsLogger, rh, preferences
 ), SmsCommunicator {

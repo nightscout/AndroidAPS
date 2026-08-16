@@ -53,10 +53,10 @@ class AidexPlugin @Inject constructor(
             )
         }
         .icon(IcGenericCgm)
-        .pluginName(R.string.aidex)
-        .shortName(R.string.aidex_short)
+        .pluginName(TextRef.AndroidRes(R.string.aidex))
+        .shortName(TextRef.AndroidRes(R.string.aidex_short))
         .preferencesVisibleInSimpleMode(false)
-        .description(R.string.description_source_aidex),
+        .description(TextRef.AndroidRes(R.string.description_source_aidex)),
     ownPreferences = emptyList(),
     aapsLogger, rh, preferences, config
 ), BgSource {

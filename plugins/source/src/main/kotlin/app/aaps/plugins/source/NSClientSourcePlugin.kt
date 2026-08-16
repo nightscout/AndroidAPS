@@ -1,5 +1,6 @@
 package app.aaps.plugins.source
 
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -27,9 +28,9 @@ class NSClientSourcePlugin @Inject constructor(
             )
         }
         .icon(IcPluginNsClientBg)
-        .pluginName(R.string.ns_client_bg)
-        .shortName(R.string.ns_client_bg_short)
-        .description(R.string.description_source_ns_client)
+        .pluginName(TextRef.AndroidRes(R.string.ns_client_bg))
+        .shortName(TextRef.AndroidRes(R.string.ns_client_bg_short))
+        .description(TextRef.AndroidRes(R.string.description_source_ns_client))
         .alwaysEnabled(config.AAPSCLIENT)
         .setDefault(config.AAPSCLIENT),
     aapsLogger, rh

@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -86,7 +87,7 @@ class DanaRKoreanPlugin @Inject constructor(
     private var scope: CoroutineScope? = null
 
     init {
-        pluginDescription.description(app.aaps.pump.dana.R.string.description_pump_dana_r_korean)
+        pluginDescription.description(TextRef.AndroidRes(app.aaps.pump.dana.R.string.description_pump_dana_r_korean))
         pumpDescription.fillFor(PumpType.DANA_R_KOREAN)
     }
 

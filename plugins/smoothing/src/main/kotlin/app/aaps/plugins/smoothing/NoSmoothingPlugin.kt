@@ -2,6 +2,7 @@ package app.aaps.plugins.smoothing
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Timeline
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -21,9 +22,9 @@ class NoSmoothingPlugin @Inject constructor(
         .mainType(PluginType.SMOOTHING)
         .icon(Icons.Default.Timeline)
         .setDefault(true)
-        .pluginName(R.string.no_smoothing_name)
-        .shortName(R.string.smoothing_shortname)
-        .description(R.string.description_no_smoothing),
+        .pluginName(TextRef.AndroidRes(R.string.no_smoothing_name))
+        .shortName(TextRef.AndroidRes(R.string.smoothing_shortname))
+        .description(TextRef.AndroidRes(R.string.description_no_smoothing)),
     aapsLogger, rh
 ), Smoothing {
 

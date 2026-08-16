@@ -221,8 +221,8 @@ class ConfigBuilderImpl @Inject constructor(
             uel.log(
                 action = Action.HW_PUMP_ALLOWED,
                 source = Sources.ConfigBuilder,
-                note = rh.gs(plugin.pluginDescription.pluginName),
-                value = ValueWithUnit.SimpleString(rh.gsNotLocalised(plugin.pluginDescription.pluginName))
+                note = plugin.name,
+                value = ValueWithUnit.SimpleString(plugin.pluginDescription.pluginName?.let { rh.gsNotLocalised(it) } ?: plugin.pluginId)
             )
         }
         aapsLogger.debug(LTag.PUMP, "First time HW pump allowed!")
@@ -234,14 +234,14 @@ class ConfigBuilderImpl @Inject constructor(
                 scope.launch {
                     uel.log(
                         Action.PLUGIN_ENABLED, Sources.ConfigBuilder, null,
-                        ValueWithUnit.SimpleString(rh.gsNotLocalised(changedPlugin.pluginDescription.pluginName))
+                        ValueWithUnit.SimpleString(changedPlugin.pluginDescription.pluginName?.let { rh.gsNotLocalised(it) } ?: changedPlugin.pluginId)
                     )
                 }
             } else if (!enabled) {
                 scope.launch {
                     uel.log(
                         Action.PLUGIN_DISABLED, Sources.ConfigBuilder, null,
-                        ValueWithUnit.SimpleString(rh.gsNotLocalised(changedPlugin.pluginDescription.pluginName))
+                        ValueWithUnit.SimpleString(changedPlugin.pluginDescription.pluginName?.let { rh.gsNotLocalised(it) } ?: changedPlugin.pluginId)
                     )
                 }
             }

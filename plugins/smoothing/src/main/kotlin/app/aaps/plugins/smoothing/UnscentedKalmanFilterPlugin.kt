@@ -2,6 +2,7 @@ package app.aaps.plugins.smoothing
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Timeline
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TrendArrow
@@ -68,9 +69,9 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
     pluginDescription = PluginDescription()
         .mainType(PluginType.SMOOTHING)
         .icon(Icons.Default.Timeline)
-        .pluginName(R.string.UKF_name)
-        .shortName(R.string.smoothing_shortname)
-        .description(R.string.description_UKF),
+        .pluginName(TextRef.AndroidRes(R.string.UKF_name))
+        .shortName(TextRef.AndroidRes(R.string.smoothing_shortname))
+        .description(TextRef.AndroidRes(R.string.description_UKF)),
     ownPreferences = UkfLongNonKey.entries + UkfIntNonKey.entries + UkfDoubleNonKey.entries,
     aapsLogger, rh, preferences
 ), Smoothing {

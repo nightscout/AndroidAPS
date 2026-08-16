@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
@@ -54,9 +55,9 @@ class InstaraPlugin @Inject constructor(
             )
         }
         .icon(IcGenericCgm)
-        .pluginName(app.aaps.plugins.source.R.string.instara_app)
+        .pluginName(TextRef.AndroidRes(app.aaps.plugins.source.R.string.instara_app))
         .preferencesVisibleInSimpleMode(false)
-        .description(app.aaps.plugins.source.R.string.description_source_instara_app),
+        .description(TextRef.AndroidRes(app.aaps.plugins.source.R.string.description_source_instara_app)),
     // Register Instara plugin-local preference/non-preference key enums
     ownPreferences = InstaraBooleanKey.entries + InstaraStringKey.entries,
     aapsLogger, rh, preferences, config
@@ -67,7 +68,8 @@ class InstaraPlugin @Inject constructor(
     // Instara-specific setting in the current compose-based preference screen system
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
         key = "bg_source_settings",
-        titleResId = pluginDescription.pluginName,
+        // a BG source plugin always names itself
+        title = pluginDescription.pluginName!!,
         items = listOf(
             BooleanKey.BgSourceUploadToNs,
             InstaraBooleanKey.HistoryRequestEnabled

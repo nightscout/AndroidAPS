@@ -1,5 +1,6 @@
 package app.aaps.core.objects.interfaces.pump.defs
 
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.plugin.PluginDescription
 import com.google.common.truth.Truth.assertThat
@@ -28,13 +29,13 @@ class PluginDescriptionTest {
     }
 
     @Test fun pluginName() {
-        val pluginDescription = PluginDescription().pluginName(10)
-        assertThat(pluginDescription.pluginName.toLong()).isEqualTo(10)
+        val ref = TextRef.AndroidRes(10)
+        assertThat(PluginDescription().pluginName(ref).pluginName).isEqualTo(ref)
     }
 
     @Test fun shortNameTest() {
-        val pluginDescription = PluginDescription().shortName(10)
-        assertThat(pluginDescription.shortName.toLong()).isEqualTo(10)
+        val ref = TextRef.AndroidRes(10)
+        assertThat(PluginDescription().shortName(ref).shortName).isEqualTo(ref)
     }
 
     @Test fun enableByDefault() {

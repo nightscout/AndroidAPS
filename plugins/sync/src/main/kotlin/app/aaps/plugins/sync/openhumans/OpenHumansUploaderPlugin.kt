@@ -79,9 +79,9 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .icon(IcPluginOpenHumans)
-        .pluginName(R.string.open_humans)
-        .shortName(R.string.open_humans_short)
-        .description(R.string.open_humans_description)
+        .pluginName(TextRef.AndroidRes(R.string.open_humans))
+        .shortName(TextRef.AndroidRes(R.string.open_humans_short))
+        .description(TextRef.AndroidRes(R.string.open_humans_description))
         .composeContent { plugin ->
             OHComposeContent(
                 plugin = plugin as OpenHumansUploaderPlugin,

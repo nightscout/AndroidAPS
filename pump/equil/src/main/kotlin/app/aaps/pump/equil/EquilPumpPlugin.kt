@@ -2,6 +2,7 @@ package app.aaps.pump.equil
 
 import android.content.Context
 import android.os.SystemClock
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -105,9 +106,9 @@ class EquilPumpPlugin @Inject constructor(
             )
         }
         .icon(IcPluginEquil)
-        .pluginName(R.string.equil_name)
-        .shortName(R.string.equil_name_short)
-        .description(R.string.equil_pump_description),
+        .pluginName(TextRef.AndroidRes(R.string.equil_name))
+        .shortName(TextRef.AndroidRes(R.string.equil_name_short))
+        .description(TextRef.AndroidRes(R.string.equil_pump_description)),
     ownPreferences = EquilBooleanKey.entries + EquilBooleanPreferenceKey.entries + EquilIntPreferenceKey.entries + EquilStringKey.entries,
     aapsLogger, rh, preferences, commandQueue
 ), Pump {

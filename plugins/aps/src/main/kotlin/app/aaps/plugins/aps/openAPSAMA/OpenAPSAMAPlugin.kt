@@ -1,5 +1,6 @@
 package app.aaps.plugins.aps.openAPSAMA
 
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.plugin.PluginType
@@ -89,11 +90,11 @@ class OpenAPSAMAPlugin @Inject constructor(
             )
         }
         .icon(IcPluginOpenAPS)
-        .pluginName(R.string.openapsama)
-        .shortName(R.string.oaps_shortname)
+        .pluginName(TextRef.AndroidRes(R.string.openapsama))
+        .shortName(TextRef.AndroidRes(R.string.oaps_shortname))
         .preferencesVisibleInSimpleMode(false)
         .showInList { config.APS || config.AAPSCLIENT }   // AAPSCLIENT: visible so a client can select the master's APS
-        .description(R.string.description_ama),
+        .description(TextRef.AndroidRes(R.string.description_ama)),
     ownPreferences = ApsIntentKey.entries,
     aapsLogger, rh, preferences
 ), APS, PluginConstraints {

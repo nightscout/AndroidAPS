@@ -1,6 +1,7 @@
 package app.aaps.plugins.aps.openAPSSMB
 
 import android.content.Context
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.APS
@@ -72,10 +73,10 @@ open class TestOpenAPSSMBPlugin @Inject constructor(
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.APS)
-        .pluginName(R.string.openapssmb)
-        .shortName(app.aaps.core.ui.R.string.smb_shortname)
+        .pluginName(TextRef.AndroidRes(R.string.openapssmb))
+        .shortName(TextRef.AndroidRes(app.aaps.core.ui.R.string.smb_shortname))
         .preferencesVisibleInSimpleMode(false)
-        .description(R.string.description_smb)
+        .description(TextRef.AndroidRes(R.string.description_smb))
         .setDefault(),
     aapsLogger, rh
 ), APS, PluginConstraints {

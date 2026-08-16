@@ -104,9 +104,9 @@ class EopatchPumpPlugin @Inject constructor(
             )
         }
         .icon(IcPluginEopatch)
-        .pluginName(R.string.eopatch)
-        .shortName(R.string.eopatch_shortname)
-        .description(R.string.eopatch_pump_description),
+        .pluginName(TextRef.AndroidRes(R.string.eopatch))
+        .shortName(TextRef.AndroidRes(R.string.eopatch_shortname))
+        .description(TextRef.AndroidRes(R.string.eopatch_pump_description)),
     ownPreferences = EopatchIntKey.entries + EopatchBooleanKey.entries + EopatchStringNonKey.entries,
     aapsLogger, rh, preferences, commandQueue
 ), Pump {

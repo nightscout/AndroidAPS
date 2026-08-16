@@ -159,10 +159,10 @@ class InsightPlugin @Inject constructor(
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .icon(IcPluginInsight)
-        .pluginName(R.string.insight_local)
-        .shortName(R.string.insightpump_shortname)
+        .pluginName(TextRef.AndroidRes(R.string.insight_local))
+        .shortName(TextRef.AndroidRes(R.string.insightpump_shortname))
         .mainType(PluginType.PUMP)
-        .description(R.string.description_pump_insight_local)
+        .description(TextRef.AndroidRes(R.string.description_pump_insight_local))
         .composeContent { plugin ->
             InsightComposeContent(
                 insightPlugin = plugin as InsightPlugin,

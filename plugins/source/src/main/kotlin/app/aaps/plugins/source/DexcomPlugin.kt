@@ -61,10 +61,10 @@ class DexcomPlugin @Inject constructor(
             )
         }
         .icon(IcPluginByoda)
-        .pluginName(R.string.dexcom_app_patched)
-        .shortName(R.string.dexcom_short)
+        .pluginName(TextRef.AndroidRes(R.string.dexcom_app_patched))
+        .shortName(TextRef.AndroidRes(R.string.dexcom_short))
         .preferencesVisibleInSimpleMode(false)
-        .description(R.string.description_source_dexcom),
+        .description(TextRef.AndroidRes(R.string.description_source_dexcom)),
     aapsLogger = aapsLogger,
     rh = rh,
     preferences = preferences

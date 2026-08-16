@@ -2,6 +2,7 @@ package app.aaps.core.interfaces.plugin
 
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.keys.interfaces.TextRef
 
 open class PluginDescription {
 
@@ -20,9 +21,9 @@ open class PluginDescription {
     var neverVisible = false
     var alwaysEnabled = false
     var showInList = { true }
-    var pluginName = -1
-    var shortName = -1
-    var description = -1
+    var pluginName: TextRef? = null
+    var shortName: TextRef? = null
+    var description: TextRef? = null
     var enableByDefault = false
     var defaultPlugin = false
 
@@ -35,10 +36,10 @@ open class PluginDescription {
     fun showInList(showInList: () -> Boolean): PluginDescription = this.also { it.showInList = showInList }
 
     fun icon(icon: ImageVector): PluginDescription = this.also { it.icon = icon }
-    fun pluginName(pluginName: Int): PluginDescription = this.also { it.pluginName = pluginName }
-    fun shortName(shortName: Int): PluginDescription = this.also { it.shortName = shortName }
+    fun pluginName(pluginName: TextRef): PluginDescription = this.also { it.pluginName = pluginName }
+    fun shortName(shortName: TextRef): PluginDescription = this.also { it.shortName = shortName }
     fun enableByDefault(enableByDefault: Boolean): PluginDescription = this.also { it.enableByDefault = enableByDefault }
-    fun description(description: Int): PluginDescription = this.also { it.description = description }
+    fun description(description: TextRef): PluginDescription = this.also { it.description = description }
     fun setDefault(value: Boolean = true): PluginDescription = this.also { it.defaultPlugin = value }
     fun preferencesVisibleInSimpleMode(value: Boolean): PluginDescription = this.also { it.preferencesVisibleInSimpleMode = value }
     fun composeContent(provider: (PluginBase) -> Any): PluginDescription = this.also { it.composeContentProvider = provider }

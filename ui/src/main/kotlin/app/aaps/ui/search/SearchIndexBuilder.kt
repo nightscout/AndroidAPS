@@ -167,7 +167,7 @@ class SearchIndexBuilder @Inject constructor(
      * row drops out of search.
      */
     private fun PluginBase.isListVisible(): Boolean =
-        categoryAvailable() && showInList(pluginDescription.mainType) && pluginDescription.pluginName != -1
+        categoryAvailable() && showInList(pluginDescription.mainType) && pluginDescription.pluginName != null
 
     /**
      * A plugin's settings (screen/category and individual preference keys) are searchable when the
@@ -177,7 +177,7 @@ class SearchIndexBuilder @Inject constructor(
      * so its settings stay out of search — the values come from the master and aren't editable locally.
      */
     private fun PluginBase.hasSearchableSettings(): Boolean =
-        categoryAvailable() && (showInList(pluginDescription.mainType) || pluginDescription.alwaysEnabled) && pluginDescription.pluginName != -1
+        categoryAvailable() && (showInList(pluginDescription.mainType) || pluginDescription.alwaysEnabled) && pluginDescription.pluginName != null
 
     private fun collectPlugins(entries: MutableList<SearchIndexEntry>, seenKeys: MutableSet<String>) {
         activePlugin.getPluginsList()

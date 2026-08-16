@@ -1,5 +1,6 @@
 package app.aaps.plugins.constraints.objectives
 
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
@@ -40,10 +41,10 @@ class ObjectivesPlugin @Inject constructor(
         .mainType(PluginType.CONSTRAINTS)
         .composeContent { ObjectivesComposeContent() }
         .icon(IcPluginObjectives)
-        .pluginName(app.aaps.core.ui.R.string.objectives)
-        .shortName(R.string.objectives_shortname)
+        .pluginName(TextRef.AndroidRes(app.aaps.core.ui.R.string.objectives))
+        .shortName(TextRef.AndroidRes(R.string.objectives_shortname))
         .enableByDefault(config.APS)
-        .description(R.string.description_objectives),
+        .description(TextRef.AndroidRes(R.string.description_objectives)),
     ownPreferences = ObjectivesBooleanComposedKey.entries + ObjectivesLongComposedKey.entries,
     aapsLogger, rh, preferences
 ), PluginConstraints, Objectives {

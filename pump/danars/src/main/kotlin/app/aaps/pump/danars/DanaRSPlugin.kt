@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -95,9 +96,9 @@ class DanaRSPlugin @Inject constructor(
             )
         }
         .icon(IcPluginDanaI)
-        .pluginName(app.aaps.pump.dana.R.string.danarspump)
-        .shortName(app.aaps.pump.dana.R.string.danarspump_shortname)
-        .description(app.aaps.pump.dana.R.string.description_pump_dana_rs),
+        .pluginName(TextRef.AndroidRes(app.aaps.pump.dana.R.string.danarspump))
+        .shortName(TextRef.AndroidRes(app.aaps.pump.dana.R.string.danarspump_shortname))
+        .description(TextRef.AndroidRes(app.aaps.pump.dana.R.string.description_pump_dana_rs)),
     ownPreferences = DanaStringNonKey.entries + DanaIntKey.entries + DanaBooleanKey.entries + DanaIntentKey.entries + DanaStringComposedKey.entries +
         DanaLongKey.entries,
     aapsLogger, rh, preferences, commandQueue

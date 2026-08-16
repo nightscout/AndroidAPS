@@ -1,5 +1,6 @@
 package app.aaps.plugins.sensitivity
 
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.PS
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginType
@@ -36,10 +37,10 @@ class SensitivityOref1Plugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.SENSITIVITY)
         .icon(IcAs)
-        .pluginName(R.string.sensitivity_oref1)
-        .shortName(R.string.sensitivity_plugin_shortname)
+        .pluginName(TextRef.AndroidRes(R.string.sensitivity_oref1))
+        .shortName(TextRef.AndroidRes(R.string.sensitivity_plugin_shortname))
         .enableByDefault(true)
-        .description(R.string.description_sensitivity_oref1)
+        .description(TextRef.AndroidRes(R.string.description_sensitivity_oref1))
         .setDefault(),
     aapsLogger, rh, preferences
 ), PluginConstraints {

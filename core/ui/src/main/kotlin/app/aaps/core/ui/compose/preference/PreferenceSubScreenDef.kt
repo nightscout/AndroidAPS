@@ -23,17 +23,22 @@ import app.aaps.core.keys.interfaces.TextRef
  */
 data class PreferenceSubScreenDef(
     val key: String,
-    val titleResId: Int,
+    /** Screen title, in the same form as [PreferenceKey.title]. */
+    val title: TextRef,
     val items: List<PreferenceItem> = emptyList(),
-    val summaryResId: Int? = null,
+    /** Optional summary, in the same form as [PreferenceKey.summary]. */
+    val summary: TextRef? = null,
     val icon: ImageVector? = null
 ) : PreferenceItem {
 
-    /** Screen title, in the same form as [PreferenceKey.title]. */
-    val title: TextRef = TextRef.AndroidRes(titleResId)
-
-    /** Optional summary, in the same form as [PreferenceKey.summary]. */
-    val summary: TextRef? = summaryResId?.let { TextRef.AndroidRes(it) }
+    /** Resource id form, for the many call sites that still name their strings with R.string. */
+    constructor(
+        key: String,
+        titleResId: Int,
+        items: List<PreferenceItem> = emptyList(),
+        summaryResId: Int? = null,
+        icon: ImageVector? = null
+    ) : this(key, TextRef.AndroidRes(titleResId), items, summaryResId?.let { TextRef.AndroidRes(it) }, icon)
 
     /** Titles of the contained items, used to build the summary line in the parent list. */
     fun effectiveSummaryItems(): List<TextRef> =

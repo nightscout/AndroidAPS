@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.ui.compose.AapsTheme
@@ -142,7 +143,7 @@ fun MainNavigationBar(
 
         // Pump setup (visible only when pump not initialized and has compose content)
         if (pumpSetupPlugin != null) {
-            val label = stringResource(pumpSetupPlugin.pluginDescription.pluginName)
+            val label = pumpSetupPlugin.pluginDescription.pluginName?.let { stringResource(it) } ?: pumpSetupPlugin.name
             NavigationBarItem(
                 selected = false,
                 onClick = { onNavigate(NavigationRequest.Plugin(pumpSetupPlugin.javaClass.simpleName)) },
@@ -165,7 +166,7 @@ fun MainNavigationBar(
         // BG source shortcut (visible when BG quality check reports FLAT or DOUBLED)
         val bgIcon = bgSetupPlugin?.pluginDescription?.icon
         if (bgSetupPlugin != null && bgIcon != null) {
-            val label = stringResource(bgSetupPlugin.pluginDescription.pluginName)
+            val label = bgSetupPlugin.pluginDescription.pluginName?.let { stringResource(it) } ?: bgSetupPlugin.name
             NavigationBarItem(
                 selected = false,
                 onClick = { onNavigate(NavigationRequest.Plugin(bgSetupPlugin.javaClass.simpleName)) },
@@ -201,7 +202,7 @@ fun MainNavigationBar(
         // Objectives progress (visible while any objective is not yet accomplished)
         val objectivesIcon = objectivesSetupPlugin?.pluginDescription?.icon
         if (objectivesSetupPlugin != null && objectivesIcon != null) {
-            val label = stringResource(objectivesSetupPlugin.pluginDescription.pluginName)
+            val label = objectivesSetupPlugin.pluginDescription.pluginName?.let { stringResource(it) } ?: objectivesSetupPlugin.name
             NavigationBarItem(
                 selected = false,
                 onClick = { onNavigate(NavigationRequest.Plugin(objectivesSetupPlugin.javaClass.simpleName)) },

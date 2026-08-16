@@ -1,5 +1,6 @@
 package app.aaps.plugins.calibration
 
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.calibration.AddEntryResult
@@ -22,9 +23,9 @@ class NoCalibrationPlugin @Inject constructor(
         .mainType(PluginType.CALIBRATION)
         .icon(IcCalibration)
         .setDefault(true)
-        .pluginName(R.string.no_calibration_name)
-        .shortName(R.string.calibration_shortname)
-        .description(R.string.description_no_calibration),
+        .pluginName(TextRef.AndroidRes(R.string.no_calibration_name))
+        .shortName(TextRef.AndroidRes(R.string.calibration_shortname))
+        .description(TextRef.AndroidRes(R.string.description_no_calibration)),
     aapsLogger, rh
 ), Calibration {
 

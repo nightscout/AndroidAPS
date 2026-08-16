@@ -13,6 +13,7 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.HR
 import app.aaps.core.data.model.HasIDs
 import app.aaps.core.data.model.SC
@@ -155,9 +156,9 @@ class NSClientV3Plugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .icon(IcPluginNsClient)
-        .pluginName(R.string.ns_client_v3_title)
-        .shortName(R.string.ns_client_v3_short_name)
-        .description(R.string.description_ns_client_v3)
+        .pluginName(TextRef.AndroidRes(R.string.ns_client_v3_title))
+        .shortName(TextRef.AndroidRes(R.string.ns_client_v3_short_name))
+        .description(TextRef.AndroidRes(R.string.description_ns_client_v3))
         .composeContent { plugin ->
             NSClientComposeContent(
                 dateUtil = dateUtil,

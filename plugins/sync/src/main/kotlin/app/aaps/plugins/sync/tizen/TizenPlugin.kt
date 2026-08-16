@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ResolveInfo
 import android.os.Bundle
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
@@ -69,9 +70,9 @@ class TizenPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .icon(IcPluginTizen)
-        .pluginName(R.string.tizen)
-        .shortName(R.string.tizen_short)
-        .description(R.string.tizen_description),
+        .pluginName(TextRef.AndroidRes(R.string.tizen))
+        .shortName(TextRef.AndroidRes(R.string.tizen_short))
+        .description(TextRef.AndroidRes(R.string.tizen_description)),
     aapsLogger, rh
 ) {
 

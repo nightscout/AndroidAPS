@@ -1,5 +1,6 @@
 package app.aaps.plugins.constraints.versionChecker
 
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
@@ -30,7 +31,7 @@ class VersionCheckerPlugin @Inject constructor(
         .mainType(PluginType.CONSTRAINTS)
         .alwaysEnabled(true)
         .showInList { false }
-        .pluginName(R.string.version_checker),
+        .pluginName(TextRef.AndroidRes(R.string.version_checker)),
     ownPreferences = VersionCheckerLongKey.entries,
     aapsLogger, rh, preferences
 ), PluginConstraints {

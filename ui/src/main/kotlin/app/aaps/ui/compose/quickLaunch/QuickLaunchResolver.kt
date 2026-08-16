@@ -131,7 +131,7 @@ class QuickLaunchResolver @Inject constructor(
 
         is QuickLaunchAction.ProfileAction     -> buildProfileLabel(action)
         is QuickLaunchAction.SceneAction       -> sceneRepository.getScene(action.sceneId)?.name ?: "?"
-        is QuickLaunchAction.PluginAction      -> findPlugin(action.className)?.let { rh.gs(it.pluginDescription.pluginName) } ?: "?"
+        is QuickLaunchAction.PluginAction      -> findPlugin(action.className)?.name ?: "?"
 
         else                                   -> {
             val label = action.elementType?.label()
@@ -178,7 +178,7 @@ class QuickLaunchResolver @Inject constructor(
         }
 
         is QuickLaunchAction.PluginAction      -> findPlugin(action.className)
-            ?.pluginDescription?.description?.takeIf { it != -1 }?.let { rh.gs(it) }
+            ?.pluginDescription?.description?.let { rh.gs(it) }
 
         else                                   -> {
             val desc = action.elementType?.description()
@@ -189,8 +189,8 @@ class QuickLaunchResolver @Inject constructor(
     fun resolvePluginItem(plugin: PluginBase): ResolvedQuickLaunchItem {
         val action = QuickLaunchAction.PluginAction(plugin.javaClass.simpleName)
         val icon = plugin.pluginDescription.icon ?: Icons.Default.Extension
-        val label = rh.gs(plugin.pluginDescription.pluginName)
-        val desc = plugin.pluginDescription.description.takeIf { it != -1 }?.let { rh.gs(it) }
+        val label = plugin.name
+        val desc = plugin.pluginDescription.description?.let { rh.gs(it) }
         return ResolvedQuickLaunchItem(
             action = action,
             label = label,

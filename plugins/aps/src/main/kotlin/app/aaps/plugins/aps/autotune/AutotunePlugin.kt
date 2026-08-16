@@ -3,6 +3,7 @@
 package app.aaps.plugins.aps.autotune
 
 import android.view.View
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
@@ -81,8 +82,8 @@ class AutotunePlugin @Inject constructor(
     pluginDescription = PluginDescription()
         .mainType(PluginType.GENERAL)
         .icon(IcPluginAutotune)
-        .pluginName(app.aaps.core.ui.R.string.autotune)
-        .shortName(R.string.autotune_shortname)
+        .pluginName(TextRef.AndroidRes(app.aaps.core.ui.R.string.autotune))
+        .shortName(TextRef.AndroidRes(R.string.autotune_shortname))
         .composeContent { plugin ->
             AutotuneComposeContent(
                 autotunePlugin = plugin as AutotunePlugin,
@@ -101,7 +102,7 @@ class AutotunePlugin @Inject constructor(
             )
         }
         .showInList { config.isEngineeringMode() && config.isDev() || config.isEnabled(ExternalOptions.ENABLE_AUTOTUNE) }
-        .description(R.string.autotune_description),
+        .description(TextRef.AndroidRes(R.string.autotune_description)),
     ownPreferences = AutotuneStringKey.entries,
     aapsLogger, rh, preferences
 ), Autotune {

@@ -82,9 +82,9 @@ class TestOpenAPSSMBDynamicISFPlugin @Inject constructor(
 
     init {
         pluginDescription
-            .pluginName(R.string.openaps_smb_dynamic_isf)
-            .description(R.string.description_smb_dynamic_isf)
-            .shortName(R.string.dynisf_shortname)
+            .pluginName(TextRef.AndroidRes(R.string.openaps_smb_dynamic_isf))
+            .description(TextRef.AndroidRes(R.string.description_smb_dynamic_isf))
+            .shortName(TextRef.AndroidRes(R.string.dynisf_shortname))
             .preferencesVisibleInSimpleMode(true)
             .setDefault(false)
     }
