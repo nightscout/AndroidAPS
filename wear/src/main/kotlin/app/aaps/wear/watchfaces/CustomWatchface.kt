@@ -554,6 +554,16 @@ class CustomWatchface : BaseWatchFace() {
         /** Ends at the library's own behaviour, so a CWF that says nothing looks exactly as before. */
         val imageFit: ComplicationImageFit
             get() = ImageFitMap.fit(json?.optString(JsonKeys.IMAGEFIT.key), ComplicationImageFit.FIT_CENTER)
+
+        /**
+         * Whether the CWF-wide block names an icon colour at all - not which one.
+         *
+         * Separate from [iconColor] because "no colour asked for" and "this colour asked for" lead to
+         * different rendering, not just a different value: only an explicit request justifies dropping
+         * a provider's own small image so the tintable icon can be used instead.
+         */
+        val iconColorRequested: Boolean
+            get() = json?.optString(JsonKeys.ICONCOLOR.key)?.isNotEmpty() == true
     }
 
     private fun bgColor(dataSet: Int): Int = when (singleBg[dataSet].sgvLevel) {
@@ -1405,6 +1415,11 @@ class CustomWatchface : BaseWatchFace() {
             // reads it per frame instead. Same cascade as everything above - this slot, then the
             // CWF-wide block, then the library's own behaviour.
             state.imageFit = ImageFitMap.fit(viewJson?.optString(JsonKeys.IMAGEFIT.key), global.imageFit)
+            // Only an ICONCOLOR actually written by the CWF counts, here or CWF-wide - deliberately
+            // not the FONTCOLOR that [iconColor] falls back to. Asking for an icon colour is what
+            // allows a provider's untintable small image to be dropped for the tintable icon, and a
+            // CWF that only set a text colour never asked for that.
+            state.iconColorRequested = viewJson?.optString(JsonKeys.ICONCOLOR.key)?.isNotEmpty() == true || global.iconColorRequested
         }
 
         fun customizeTextView(view: TextView, cwf: CustomWatchface) {

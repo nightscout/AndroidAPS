@@ -167,8 +167,12 @@ internal class SyncLoadingCanvasComplication(
     drawable: ComplicationDrawable,
     watchState: WatchState,
     invalidateCallback: CanvasComplication.InvalidateCallback,
-    private val imageFit: () -> ComplicationImageFit = { ComplicationImageFit.FIT_CENTER }
+    private val imageFit: () -> ComplicationImageFit = { ComplicationImageFit.FIT_CENTER },
+    private val iconColorRequested: () -> Boolean = { false }
 ) : CanvasComplicationDrawable(drawable, watchState, invalidateCallback) {
+
+    /** The data as the system sent it, so [reapplyIconColorRequest] can start over from it. */
+    private var receivedData: ComplicationData? = null
 
     /**
      * Ignores [loadDrawablesAsynchronous] and always loads synchronously - do not "simplify" this by
@@ -176,8 +180,23 @@ internal class SyncLoadingCanvasComplication(
      * doc for the full mechanism.
      */
     override fun loadData(complicationData: ComplicationData, loadDrawablesAsynchronous: Boolean) {
-        super.loadData(withoutRedundantSmallImage(complicationData), false)
+        receivedData = complicationData
+        super.loadData(prepared(complicationData), false)
     }
+
+    /**
+     * Re-runs [prepared] on the data already received, for when the watch face's answer to
+     * [iconColorRequested] changes - a new configuration is loaded, say.
+     *
+     * Needed because the decision is taken in [loadData], which the system only calls when *it* has
+     * new data. Starting again from [receivedData] rather than from the loaded data is what makes the
+     * change reversible: a dropped small image would otherwise be gone for good.
+     */
+    fun reapplyIconColorRequest() {
+        receivedData?.let { super.loadData(prepared(it), false) }
+    }
+
+    private fun prepared(data: ComplicationData) = withoutRedundantSmallImage(data)
 
     /**
      * Draws the complication, taking over the image itself for the two image-only types so that
@@ -254,9 +273,19 @@ internal class SyncLoadingCanvasComplication(
      * `_docs/Complication_Libraries.md`.
      *
      * Dropping the small image makes `hasSmallImage()` false, so the monochromatic image renders
-     * normally. Only touched when there is a monochromatic image to fall back on, and only for the
-     * types routed through `RangedValueLayoutHelper` - SHORT_TEXT and friends render small images
-     * correctly and are passed through untouched.
+     * normally. Only touched when there is a monochromatic image to fall back on.
+     *
+     * **The same edit also serves a second, deliberate purpose: honouring a requested icon colour.**
+     * `iconColor` reaches only `drawIcon`, i.e. only a `MonochromaticImage`
+     * (`ComplicationRenderer.PaintSet` builds `mIconColorFilter` from `style.iconColor` and `drawIcon`
+     * applies it with no null branch). Every layout helper prefers a small image when the provider
+     * sends both - `ShortTextLayoutHelper.getIconBounds` empties the icon rect on `hasSmallImage()` -
+     * and `drawSmallImage` explicitly clears the colour filter for `IMAGE_STYLE_ICON`. So a provider
+     * sending both images renders an untintable one, and no style value can change it: Samsung's heart
+     * rate icon stays red whatever `iconColor` says. Dropping the small image when - and only when -
+     * the watch face actually asked for an icon colour puts the tintable image back in play, for any
+     * complication type. Ask for nothing and the provider's own colours are kept, which is the better
+     * default and what the library does on its own.
      *
      * The wire round-trip is used rather than `RangedValueComplicationData.Builder` because the builder
      * exposes no setters for `dataSource`, `persistencePolicy`, `displayPolicy` or `extras`, so
@@ -273,7 +302,9 @@ internal class SyncLoadingCanvasComplication(
             wire.type == WireComplicationData.TYPE_RANGED_VALUE ||
                 wire.type == WireComplicationData.TYPE_GOAL_PROGRESS ||
                 wire.type == WireComplicationData.TYPE_WEIGHTED_ELEMENTS
-        if (!routedThroughRangedValueLayout || !wire.hasSmallImage() || !wire.hasIcon()) return complicationData
+        // Nothing to fall back on, or nothing to gain: leave the payload exactly as it arrived.
+        if (!wire.hasSmallImage() || !wire.hasIcon()) return complicationData
+        if (!routedThroughRangedValueLayout && !iconColorRequested()) return complicationData
         return WireComplicationData.Builder(wire)
             .setSmallImage(null)
             .setBurnInProtectionSmallImage(null)
@@ -414,6 +445,24 @@ internal class ComplicationSlotState(val slotId: Int) {
      */
     @Volatile var imageFit: ComplicationImageFit = ComplicationImageFit.FIT_CENTER
 
+    /** Set by [WatchFaceComplications] when the slot's renderer is created. */
+    internal var renderer: SyncLoadingCanvasComplication? = null
+
+    /**
+     * Whether the watch face asked for a specific icon colour on this slot, which decides whether a
+     * provider's own small image may be dropped in favour of the tintable monochromatic one - see
+     * `SyncLoadingCanvasComplication.withoutRedundantSmallImage`.
+     *
+     * Setting it re-runs that decision on the data already received, because the system only calls
+     * `loadData` when *it* has something new, and a configuration change is not that.
+     */
+    @Volatile var iconColorRequested: Boolean = false
+        set(value) {
+            if (field == value) return
+            field = value
+            renderer?.reapplyIconColorRequest()
+        }
+
     /** Pushes [style] into the drawable, or does nothing until one exists. */
     fun applyStyle() = drawable?.let { style.applyTo(it) }
 }
@@ -523,7 +572,14 @@ internal class WatchFaceComplications(
             val drawable = ComplicationDrawable(context)
             state.drawable = drawable
             state.applyStyle()
-            SyncLoadingCanvasComplication(context, drawable, watchState, invalidateCallback) { state.imageFit }
+            SyncLoadingCanvasComplication(
+                context = context,
+                drawable = drawable,
+                watchState = watchState,
+                invalidateCallback = invalidateCallback,
+                imageFit = { state.imageFit },
+                iconColorRequested = { state.iconColorRequested }
+            ).also { state.renderer = it }
         }
         return ComplicationSlot.createRoundRectComplicationSlotBuilder(
             id = state.slotId,
