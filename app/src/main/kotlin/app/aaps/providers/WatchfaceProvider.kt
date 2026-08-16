@@ -7,11 +7,13 @@ import android.database.MatrixCursor
 import android.net.Uri
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.overview.LastBgData
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.data.model.RM
 import app.aaps.core.objects.extensions.round
 import dagger.android.AndroidInjection
 import dagger.android.DaggerContentProvider
@@ -30,6 +32,7 @@ class WatchfaceProvider : DaggerContentProvider() {
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Inject lateinit var overviewData: OverviewData
     @Inject lateinit var profileUtil: ProfileUtil
+    @Inject lateinit var loop: Loop
 
     private var injected = false
 
@@ -63,7 +66,7 @@ class WatchfaceProvider : DaggerContentProvider() {
                 ?.value?.toDoubleOrNull() ?: 0.0
 
             val c = MatrixCursor(
-                arrayOf("bg", "bg_display", "delta", "iob", "basal", "ts", "history")
+                arrayOf("bg", "bg_display", "delta", "iob", "basal", "ts", "history", "loop")
             )
             c.addRow(
                 arrayOf(
@@ -73,7 +76,8 @@ class WatchfaceProvider : DaggerContentProvider() {
                     bolusIob.iob + basalIob.iob,
                     basal,
                     lastBg.timestamp,
-                    history.joinToString(",")  // Cursor 不支持数组, 逗号分隔字符串
+                    history.joinToString(","),  // Cursor 不支持数组, 逗号分隔字符串
+                    if (loop.runningMode.isClosedLoopOrLgs()) 1 else 0  // 闭环状态实时跟随
                 )
             )
             c
