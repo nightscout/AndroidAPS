@@ -74,8 +74,8 @@ internal class DanaRPairWizardViewModelTest {
         // init -> reset() -> refreshBondedDevices() reads the transport synchronously.
         whenever(rfcommTransport.getBondedDevices()).thenReturn(emptyList())
         // init collects these two streams on viewModelScope (Main = the test dispatcher below).
-        whenever(rxBus.toFlow(EventDanaRNewStatus::class.java)).thenReturn(statusFlow)
-        whenever(rxBus.toFlow(EventInitializationChanged::class.java)).thenReturn(initFlow)
+        whenever(rxBus.toFlow(EventDanaRNewStatus::class)).thenReturn(statusFlow)
+        whenever(rxBus.toFlow(EventInitializationChanged::class)).thenReturn(initFlow)
         whenever(rh.gs(anyInt())).thenReturn("device changed")
 
         sut = buildViewModel()

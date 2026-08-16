@@ -128,9 +128,9 @@ class DanaRSPlugin @Inject constructor(
         // collector could miss an event sent before it starts.
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
-        rxBus.toFlow(EventAppExit::class.java)
+        rxBus.toFlow(EventAppExit::class)
             .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { context.unbindService(mConnection) }
-        rxBus.toFlow(EventConfigBuilderChange::class.java)
+        rxBus.toFlow(EventConfigBuilderChange::class)
             .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { danaPump.reset() }
         changePump() // load device name
     }

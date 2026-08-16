@@ -85,8 +85,8 @@ internal class MedtrumOverviewViewModelTest {
         whenever(medtrumPump.activeAlarms).thenReturn(EnumSet.noneOf(AlarmState::class.java))
 
         // PumpCommunicationStatus init subscribes to these two flows at construction
-        whenever(rxBus.toFlow(EventPumpStatusChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventQueueChanged::class.java)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventPumpStatusChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventQueueChanged::class)).thenReturn(emptyFlow())
 
         // Formatting collaborator (base basal rate row is always built)
         whenever(ch.basalRateString(any(), any(), any())).thenReturn("0.00 U/h")

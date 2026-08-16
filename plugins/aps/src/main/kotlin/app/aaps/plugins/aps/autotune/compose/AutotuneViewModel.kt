@@ -182,7 +182,7 @@ class AutotuneViewModel(
         if (autotunePlugin.lastNbDays.isEmpty())
             autotunePlugin.lastNbDays = preferences.get(IntKey.AutotuneDefaultTuneDays).toString()
 
-        rxBus.toFlow(EventAutotuneUpdateGui::class.java)
+        rxBus.toFlow(EventAutotuneUpdateGui::class)
             .onEach { refreshState() }
             .launchIn(scope)
 

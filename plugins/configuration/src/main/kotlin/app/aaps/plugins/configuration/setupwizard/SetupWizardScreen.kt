@@ -112,10 +112,10 @@ fun SetupWizardScreen(
     // screen leaves - the same thing onDispose was doing.
     LaunchedEffect(Unit) {
         merge(
-            rxBus.toFlow(EventSWUpdate::class.java),
-            rxBus.toFlow(EventPumpStatusChanged::class.java),
-            rxBus.toFlow(EventSWRLStatus::class.java),
-            rxBus.toFlow(EventSWSyncStatus::class.java)
+            rxBus.toFlow(EventSWUpdate::class),
+            rxBus.toFlow(EventPumpStatusChanged::class),
+            rxBus.toFlow(EventSWRLStatus::class),
+            rxBus.toFlow(EventSWSyncStatus::class)
         ).collect { updateTick++ }
     }
 

@@ -67,7 +67,7 @@ class RileyLinkStatusViewModel @Inject constructor(
     init {
         refresh()
         viewModelScope.launch {
-            rxBus.toFlow(EventRileyLinkDeviceStatusChange::class.java)
+            rxBus.toFlow(EventRileyLinkDeviceStatusChange::class)
                 .collect { refresh() }
         }
     }

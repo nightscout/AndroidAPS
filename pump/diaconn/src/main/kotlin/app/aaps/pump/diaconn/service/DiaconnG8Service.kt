@@ -131,7 +131,7 @@ class DiaconnG8Service : DaggerService() {
         // Same scope as the preference observer below: IO, like the io scheduler used before, and
         // cancelled in onDestroy like the CompositeDisposable was cleared. UNDISPATCHED because
         // RxBus has no replay, so a scheduled collector could miss an exit sent before it starts.
-        rxBus.toFlow(EventAppExit::class.java)
+        rxBus.toFlow(EventAppExit::class)
             .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { stopSelf() }
         preferences.observe(DiaconnIntKey.BolusSpeed).drop(1).onEach {
             diaconnG8Pump.bolusSpeed = preferences.get(DiaconnIntKey.BolusSpeed)

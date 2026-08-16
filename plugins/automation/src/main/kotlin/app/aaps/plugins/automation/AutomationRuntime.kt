@@ -358,12 +358,12 @@ class AutomationRuntime @Inject constructor(
         // fired scope.launch and returned. That may well be an improvement, but changing when
         // automation rules can run concurrently is not something to do as a side effect of swapping
         // the subscription mechanism.
-        rxBus.toFlow(EventLocationChange::class.java)
+        rxBus.toFlow(EventLocationChange::class)
             .collectResilient(newScope, aapsLogger, LTag.AUTOMATION, start = CoroutineStart.UNDISPATCHED) {
                 aapsLogger.debug(LTag.AUTOMATION, "Grabbed location: ${it.location.latitude} ${it.location.longitude} Provider: ${it.location.provider}")
                 scope?.launch { processActions() }
             }
-        rxBus.toFlow(EventBTChange::class.java)
+        rxBus.toFlow(EventBTChange::class)
             .collectResilient(newScope, aapsLogger, LTag.AUTOMATION, start = CoroutineStart.UNDISPATCHED) {
                 aapsLogger.debug(LTag.AUTOMATION, "Grabbed new BT event: $it")
                 btConnects.add(it)

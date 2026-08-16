@@ -179,7 +179,7 @@ class DataHandlerMobile @Inject constructor(
         //
         // UNDISPATCHED is required, not cosmetic: these subscribe from init on a replay-0 bus, so a
         // scheduled collector would drop anything sent before it started.
-        rxBus.toFlow(T::class.java)
+        rxBus.toFlow(T::class)
             .collectResilient(scope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { event ->
                 aapsLogger.debug(LTag.WEAR, "${T::class.java.simpleName} received from ${event.sourceNodeId}")
                 handler(event)
@@ -195,7 +195,7 @@ class DataHandlerMobile @Inject constructor(
         crossinline detail: (T) -> String = { "" },
         crossinline handler: (T) -> Unit
     ) {
-        rxBus.toFlow(T::class.java)
+        rxBus.toFlow(T::class)
             .collectResilient(scope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) {
                 aapsLogger.debug(LTag.WEAR, "${T::class.java.simpleName} received from ${it.sourceNodeId}${detail(it)}")
                 handler(it)
@@ -341,10 +341,10 @@ class DataHandlerMobile @Inject constructor(
         // The collector is sequential, so batches are still handled one after another the way
         // concatMapCompletable did, and collectResilient logs and continues like doOnError +
         // onErrorComplete.
-        rxBus.toFlow(EventData.ActionHeartRate::class.java)
+        rxBus.toFlow(EventData.ActionHeartRate::class)
             .chunkedOnQuietPeriod(HEALTH_EVENT_QUIET_PERIOD_MS)
             .collectResilient(scope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { handleHeartRateBatch(it) }
-        rxBus.toFlow(EventData.ActionStepsRate::class.java)
+        rxBus.toFlow(EventData.ActionStepsRate::class)
             .chunkedOnQuietPeriod(HEALTH_EVENT_QUIET_PERIOD_MS)
             .collectResilient(scope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { handleStepsCountBatch(it) }
         onEventSync<EventData.ActionGetCustomWatchface>(detail = { " watchface=${it.customWatchface}" }) { handleGetCustomWatchface(it) }

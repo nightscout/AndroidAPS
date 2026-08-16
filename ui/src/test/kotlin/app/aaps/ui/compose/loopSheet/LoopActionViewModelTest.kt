@@ -40,10 +40,10 @@ internal class LoopActionViewModelTest {
         // The init observer launchIns + the refreshState() coroutine are deferred by StandardTestDispatcher;
         // the observed rxBus flows are still built synchronously in init, so they must be non-null.
         Dispatchers.setMain(StandardTestDispatcher())
-        whenever(rxBus.toFlow(EventLoopUpdateGui::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventNewOpenLoopNotification::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventRefreshOverview::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventAcceptOpenLoopChange::class.java)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventLoopUpdateGui::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventNewOpenLoopNotification::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventRefreshOverview::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventAcceptOpenLoopChange::class)).thenReturn(emptyFlow())
         sut = LoopActionViewModel(loop, activePlugin, profileFunction, rh, rxBus)
     }
 

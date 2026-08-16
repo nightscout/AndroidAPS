@@ -44,7 +44,7 @@ fun GlobalDialogHost(rxBus: RxBus) {
 
     LaunchedEffect(rxBus, lifecycleOwner) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            rxBus.toFlow(EventShowDialog::class.java).collect { event ->
+            rxBus.toFlow(EventShowDialog::class).collect { event ->
                 val choice = CompletableDeferred<Boolean?>()
                 try {
                     current = event to choice

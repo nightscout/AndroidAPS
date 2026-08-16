@@ -91,8 +91,8 @@ internal class EopatchOverviewViewModelTest {
         whenever(patchManagerExecutor.observePatchConnectionState()).thenReturn(Observable.empty())
 
         // PumpCommunicationStatus field-initializer subscribes to these rx flows at construction.
-        whenever(rxBus.toFlow(EventPumpStatusChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventQueueChanged::class.java)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventPumpStatusChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventQueueChanged::class)).thenReturn(emptyFlow())
 
         // buildUiState computes insulinText unconditionally (before the isActivated guard).
         whenever(ch.insulinAmountString(any())).thenReturn("0 U")

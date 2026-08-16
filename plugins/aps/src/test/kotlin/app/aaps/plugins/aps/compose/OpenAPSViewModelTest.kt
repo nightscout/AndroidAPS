@@ -30,8 +30,8 @@ internal class OpenAPSViewModelTest {
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        whenever(rxBus.toFlow(EventOpenAPSUpdateGui::class.java)).thenReturn(updateGuiFlow)
-        whenever(rxBus.toFlow(EventResetOpenAPSGui::class.java)).thenReturn(resetGuiFlow)
+        whenever(rxBus.toFlow(EventOpenAPSUpdateGui::class)).thenReturn(updateGuiFlow)
+        whenever(rxBus.toFlow(EventResetOpenAPSGui::class)).thenReturn(resetGuiFlow)
     }
 
     // Dispatchers.Unconfined runs the VM's launched coroutines (init updateState + onRefresh's

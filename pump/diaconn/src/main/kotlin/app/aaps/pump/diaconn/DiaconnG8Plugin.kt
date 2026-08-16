@@ -117,11 +117,11 @@ class DiaconnG8Plugin @Inject constructor(
         // collector could miss an event sent before it starts.
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
-        rxBus.toFlow(EventAppExit::class.java)
+        rxBus.toFlow(EventAppExit::class)
             .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { context.unbindService(mConnection) }
-        rxBus.toFlow(EventConfigBuilderChange::class.java)
+        rxBus.toFlow(EventConfigBuilderChange::class)
             .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { diaconnG8Pump.reset() }
-        rxBus.toFlow(EventDiaconnG8DeviceChange::class.java)
+        rxBus.toFlow(EventDiaconnG8DeviceChange::class)
             .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) {
                 pumpSync.connectNewPump()
                 changePump()

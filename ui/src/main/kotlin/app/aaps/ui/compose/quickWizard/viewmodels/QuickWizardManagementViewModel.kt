@@ -125,7 +125,7 @@ class QuickWizardManagementViewModel @Inject constructor(
         // viewModelScope is Main, like observeOn(aapsSchedulers.main), and dies with the view model
         // like the CompositeDisposable did. UNDISPATCHED because RxBus has no replay: a scheduled
         // collector could miss a change sent before it starts.
-        rxBus.toFlow(EventQuickWizardChange::class.java)
+        rxBus.toFlow(EventQuickWizardChange::class)
             .collectResilient(viewModelScope, aapsLogger, LTag.UI, start = CoroutineStart.UNDISPATCHED) { loadData() }
     }
 

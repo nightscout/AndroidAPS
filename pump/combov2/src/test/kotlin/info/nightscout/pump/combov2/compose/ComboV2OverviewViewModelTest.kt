@@ -65,8 +65,8 @@ internal class ComboV2OverviewViewModelTest {
         Dispatchers.setMain(testDispatcher)
 
         // rx wiring launched by the PumpCommunicationStatus field at construction.
-        whenever(rxBus.toFlow(EventPumpStatusChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventQueueChanged::class.java)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventPumpStatusChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventQueueChanged::class)).thenReturn(emptyFlow())
 
         // The snapshotFlow / displayFrame field-initializers read every *UIFlow getter at
         // construction, so each must return a real StateFlow or construction NPEs. Defaults model an

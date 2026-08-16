@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.ui.R
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.Flow
+import kotlin.reflect.KClass
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.filter
 import org.junit.Before
@@ -143,7 +144,7 @@ class GlobalDialogHostTest {
 
 
         @Suppress("UNCHECKED_CAST")
-        override fun <T : Event> toFlow(eventType: Class<T>): Flow<T> =
+        override fun <T : Event> toFlow(eventType: KClass<T>): Flow<T> =
             events.filter { eventType.isInstance(it) } as Flow<T>
     }
 }

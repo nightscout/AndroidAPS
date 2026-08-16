@@ -58,11 +58,11 @@ class OpenAPSViewModel(
     val uiState: StateFlow<OpenAPSUiState> = _uiState.asStateFlow()
 
     init {
-        rxBus.toFlow(EventOpenAPSUpdateGui::class.java)
+        rxBus.toFlow(EventOpenAPSUpdateGui::class)
             .onEach { updateState() }
             .launchIn(scope)
 
-        rxBus.toFlow(EventResetOpenAPSGui::class.java)
+        rxBus.toFlow(EventResetOpenAPSGui::class)
             .onEach { event -> resetState(event.text) }
             .launchIn(scope)
 

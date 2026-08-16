@@ -85,9 +85,9 @@ class DanaRPairWizardViewModel @Inject constructor(
         // viewModelScope is Main, like observeOn(aapsSchedulers.main), and dies with the view model
         // like the CompositeDisposable did. UNDISPATCHED because RxBus has no replay, so a scheduled
         // collector could miss a status sent before it starts.
-        rxBus.toFlow(EventDanaRNewStatus::class.java)
+        rxBus.toFlow(EventDanaRNewStatus::class)
             .collectResilient(viewModelScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { onPumpStatusUpdate() }
-        rxBus.toFlow(EventInitializationChanged::class.java)
+        rxBus.toFlow(EventInitializationChanged::class)
             .collectResilient(viewModelScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { onPumpStatusUpdate() }
     }
 

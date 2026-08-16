@@ -57,7 +57,7 @@ internal class DiaconnHistoryViewModelTest {
         // init runs synchronously (not in a launch): builds the type list, subscribes to status events,
         // and loads records for the first type — every collaborator it touches must be stubbed.
         whenever(rh.gs(anyInt())).thenReturn("")
-        whenever(rxBus.toFlow(EventPumpStatusChanged::class.java)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventPumpStatusChanged::class)).thenReturn(emptyFlow())
         whenever(aapsSchedulers.main).thenReturn(Schedulers.trampoline())
         whenever(aapsSchedulers.io).thenReturn(Schedulers.trampoline())
         whenever(dateUtil.now()).thenReturn(0L)

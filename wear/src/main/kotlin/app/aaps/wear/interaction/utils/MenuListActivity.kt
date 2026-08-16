@@ -70,7 +70,7 @@ abstract class MenuListActivity : DaggerAppCompatActivity() {
         super.onCreate(savedInstanceState)
         // lifecycleScope is Main, which is what observeOn(aapsSchedulers.main) supplied, and it dies
         // with the activity like the CompositeDisposable did.
-        rxBus.toFlow(EventUpdateSelectedWatchface::class.java)
+        rxBus.toFlow(EventUpdateSelectedWatchface::class)
             .collectResilient(lifecycleScope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { elements = provideElements() }
         elements = provideElements()
         val menuTitle = title.toString()

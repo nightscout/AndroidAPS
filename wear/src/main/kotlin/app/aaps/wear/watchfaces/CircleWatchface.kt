@@ -124,7 +124,7 @@ class CircleWatchface : WatchFace() {
         }
 
         // watchfaceScope is Main.immediate, matching observeOn(aapsSchedulers.main).
-        rxBus.toFlow(EventData.Preferences::class.java)
+        rxBus.toFlow(EventData.Preferences::class)
             .collectResilient(watchfaceScope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) {
                 if (myLayout != null) {  // Only update if layout initialized
                     prepareDrawTime()

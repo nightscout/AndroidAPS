@@ -40,8 +40,8 @@ class LoopComposeContentTest {
     fun render_showsNotAvailable_whenNoLastRun() {
         val loop = mock<Loop> { whenever(it.lastRun).thenReturn(null) }
         val rxBus = mock<RxBus> {
-            whenever(it.toFlow(EventLoopUpdateGui::class.java)).thenReturn(emptyFlow())
-            whenever(it.toFlow(EventLoopSetLastRunGui::class.java)).thenReturn(emptyFlow())
+            whenever(it.toFlow(EventLoopUpdateGui::class)).thenReturn(emptyFlow())
+            whenever(it.toFlow(EventLoopSetLastRunGui::class)).thenReturn(emptyFlow())
         }
         val rh = mock<ResourceHelper> { whenever(it.gs(R.string.not_available_full)).thenReturn("N/A") }
         val content = LoopComposeContent(

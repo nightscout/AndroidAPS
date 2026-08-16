@@ -131,11 +131,11 @@ class ErosOverviewViewModel @Inject constructor(
 
     private val omnipodRefresh = MutableStateFlow(0L).also { flow ->
         scope.launch {
-            rxBus.toFlow(EventOmnipodErosPumpValuesChanged::class.java)
+            rxBus.toFlow(EventOmnipodErosPumpValuesChanged::class)
                 .collect { flow.value = System.currentTimeMillis() }
         }
         scope.launch {
-            rxBus.toFlow(EventRileyLinkDeviceStatusChange::class.java)
+            rxBus.toFlow(EventRileyLinkDeviceStatusChange::class)
                 .collect { flow.value = System.currentTimeMillis() }
         }
     }

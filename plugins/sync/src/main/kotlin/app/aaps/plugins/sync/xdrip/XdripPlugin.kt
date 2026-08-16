@@ -128,7 +128,7 @@ class XdripPlugin @Inject constructor(
         super.onStart()
         handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
         // scope is Dispatchers.IO, which is what observeOn(aapsSchedulers.io) gave these before.
-        rxBus.toFlow(EventAppExit::class.java)
+        rxBus.toFlow(EventAppExit::class)
             .collectResilient(scope, aapsLogger, LTag.XDRIP, start = CoroutineStart.UNDISPATCHED) { WorkManager.getInstance(context).cancelUniqueWork(XDRIP_JOB_NAME) }
         persistenceLayer.observeAnyChange()
             // HR/SC writes come from the watch; this plugin doesn't broadcast them — skip to avoid reconnect-flush storm.
@@ -137,9 +137,9 @@ class XdripPlugin @Inject constructor(
                 sendStatusLine()
                 delayAndScheduleExecution("DB_CHANGED(${types.joinToString { it.simpleName ?: "?" }})")
             }
-        rxBus.toFlow(EventAutosensCalculationFinished::class.java)
+        rxBus.toFlow(EventAutosensCalculationFinished::class)
             .collectResilient(scope, aapsLogger, LTag.XDRIP, start = CoroutineStart.UNDISPATCHED) { sendStatusLine() }
-        rxBus.toFlow(EventAppInitialized::class.java)
+        rxBus.toFlow(EventAppInitialized::class)
             .collectResilient(scope, aapsLogger, LTag.XDRIP, start = CoroutineStart.UNDISPATCHED) { sendStatusLine() }
         eventWorker = Executors.newSingleThreadScheduledExecutor()
     }

@@ -70,7 +70,7 @@ class ObjectivesViewModel @Inject constructor(
     }
 
     init {
-        rxBus.toFlow(EventObjectivesUpdateGui::class.java)
+        rxBus.toFlow(EventObjectivesUpdateGui::class)
             .onEach { updateState() }
             .launchIn(scope)
 

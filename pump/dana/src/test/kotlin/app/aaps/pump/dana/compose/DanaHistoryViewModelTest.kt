@@ -78,7 +78,7 @@ internal class DanaHistoryViewModelTest {
         whenever(rh.gs(anyInt())).thenReturn("")
 
         // rx wiring touched at construction
-        whenever(rxBus.toFlow(EventDanaRSyncStatus::class.java)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventDanaRSyncStatus::class)).thenReturn(emptyFlow())
         whenever(aapsSchedulers.main).thenReturn(Schedulers.trampoline())
         whenever(aapsSchedulers.io).thenReturn(Schedulers.trampoline())
 

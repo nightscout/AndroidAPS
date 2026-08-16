@@ -69,7 +69,7 @@ internal class DataHandlerWearTest : WearTestBase() {
         val pong = CompletableDeferred<EventData.ActionPong>()
         // UNDISPATCHED so the collector is subscribed before the ping is sent; RxBus has no replay.
         val collector = CoroutineScope(Dispatchers.Unconfined).launch(start = CoroutineStart.UNDISPATCHED) {
-            rxBus.toFlow(EventWearToMobile::class.java).collect { evt ->
+            rxBus.toFlow(EventWearToMobile::class).collect { evt ->
                 (evt.payload as? EventData.ActionPong)?.let { pong.complete(it) }
             }
         }

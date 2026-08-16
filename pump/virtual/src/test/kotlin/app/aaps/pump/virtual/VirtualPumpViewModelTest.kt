@@ -49,8 +49,8 @@ internal class VirtualPumpViewModelTest {
     fun setUp() {
         MockitoAnnotations.openMocks(this)
         // rxBus flows consumed by PumpCommunicationStatus init
-        whenever(rxBus.toFlow(EventPumpStatusChanged::class.java)).thenReturn(pumpStatusFlow)
-        whenever(rxBus.toFlow(EventQueueChanged::class.java)).thenReturn(queueChangedFlow)
+        whenever(rxBus.toFlow(EventPumpStatusChanged::class)).thenReturn(pumpStatusFlow)
+        whenever(rxBus.toFlow(EventQueueChanged::class)).thenReturn(queueChangedFlow)
         // DB change flows merged into dbChanged (evaluated eagerly in the constructor)
         whenever(persistenceLayer.observeChanges(TB::class.java)).thenReturn(emptyFlow())
         whenever(persistenceLayer.observeChanges(EB::class.java)).thenReturn(emptyFlow())

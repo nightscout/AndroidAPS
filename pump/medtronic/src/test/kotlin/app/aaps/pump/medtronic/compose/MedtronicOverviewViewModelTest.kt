@@ -82,11 +82,11 @@ internal class MedtronicOverviewViewModelTest {
 
         // rx wiring touched at construction: PumpCommunicationStatus init + the three medtronicRefresh
         // collectors launched in viewModelScope (UnconfinedTestDispatcher runs them eagerly).
-        whenever(rxBus.toFlow(EventPumpStatusChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventQueueChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventMedtronicPumpValuesChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventRileyLinkDeviceStatusChange::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventMedtronicPumpConfigurationChanged::class.java)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventPumpStatusChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventQueueChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventMedtronicPumpValuesChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventRileyLinkDeviceStatusChange::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventMedtronicPumpConfigurationChanged::class)).thenReturn(emptyFlow())
 
         // Pump state read by buildUiState() -> buildInfoRows() (kept minimal to skip optional branches).
         whenever(rileyLinkServiceData.rileyLinkServiceState).thenReturn(RileyLinkServiceState.NotStarted)

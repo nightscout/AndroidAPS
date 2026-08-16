@@ -94,13 +94,13 @@ class ManageViewModel @Inject constructor(
     }
 
     private fun setupEventListeners() {
-        rxBus.toFlow(EventInitializationChanged::class.java)
+        rxBus.toFlow(EventInitializationChanged::class)
             .onEach { refreshState() }.launchIn(viewModelScope)
         persistenceLayer.observeChanges(EB::class.java)
             .onEach { refreshState() }.launchIn(viewModelScope)
         persistenceLayer.observeChanges(TB::class.java)
             .onEach { refreshState() }.launchIn(viewModelScope)
-        rxBus.toFlow(EventCustomActionsChanged::class.java)
+        rxBus.toFlow(EventCustomActionsChanged::class)
             .onEach { refreshState() }.launchIn(viewModelScope)
         // Re-evaluate showMutatingActions when the client pairs/unpairs (stable signal, flips rarely).
         nsClient.masterOrPairedClientFlow

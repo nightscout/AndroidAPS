@@ -13,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelChildren
 import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.reflect.KClass
 import javax.inject.Inject
 
 /**
@@ -27,8 +28,8 @@ class RxHelper @Inject constructor(
     private val aapsLogger: AAPSLogger
 ) {
 
-    private val hashMap = HashMap<Class<out Event>, AtomicBoolean>()
-    private val eventHashMap = HashMap<Class<out Event>, Event>()
+    private val hashMap = HashMap<KClass<out Event>, AtomicBoolean>()
+    private val eventHashMap = HashMap<KClass<out Event>, Event>()
 
     // Lives as long as the helper; clear() cancels its collectors, like clearing the CompositeDisposable.
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
@@ -39,7 +40,7 @@ class RxHelper @Inject constructor(
      * @param clazz Class to observe
      * @return AtomicBoolean trigger
      */
-    fun listen(clazz: Class<out Event>): AtomicBoolean =
+    fun listen(clazz: KClass<out Event>): AtomicBoolean =
         hashMap[clazz] ?: AtomicBoolean(false).also { ab ->
             hashMap[clazz] = ab
             // Setup RxBus tracking. UNDISPATCHED because RxBus has no replay: a test that sends an
@@ -58,7 +59,7 @@ class RxHelper @Inject constructor(
      * @param clazz Class to observe
      * @param maxSeconds max waiting time in seconds
      */
-    fun waitFor(clazz: Class<out Event>, maxSeconds: Long = 40, comment: String = ""): Pair<Boolean, Event?> {
+    fun waitFor(clazz: KClass<out Event>, maxSeconds: Long = 40, comment: String = ""): Pair<Boolean, Event?> {
         val watcher = hashMap[clazz] ?: error("Class not registered ${clazz.simpleName}")
         val start = dateUtil.now()
         while (!watcher.get()) {
@@ -79,7 +80,7 @@ class RxHelper @Inject constructor(
      *
      * @param clazz Class
      */
-    fun resetState(clazz: Class<out Event>) {
+    fun resetState(clazz: KClass<out Event>) {
         hashMap[clazz]?.set(false)
         eventHashMap.remove(clazz)
     }

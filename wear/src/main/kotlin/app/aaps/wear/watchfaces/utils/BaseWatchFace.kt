@@ -176,7 +176,7 @@ abstract class BaseWatchFace : WatchFace() {
         specW = View.MeasureSpec.makeMeasureSpec(displayWidth, View.MeasureSpec.EXACTLY)
         specH = if (forceSquareCanvas) specW else View.MeasureSpec.makeMeasureSpec(displayHeight, View.MeasureSpec.EXACTLY)
         // watchfaceScope is Main.immediate, matching observeOn(aapsSchedulers.main).
-        rxBus.toFlow(EventWearPreferenceChange::class.java)
+        rxBus.toFlow(EventWearPreferenceChange::class)
             .collectResilient(watchfaceScope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) {
                 simpleUi.updatePreferences()
                 if (::binding.isInitialized && layoutSet) setDataFields()

@@ -82,9 +82,9 @@ class TizenPlugin @Inject constructor(
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
         // newScope is Dispatchers.IO, matching the scheduler these subscriptions used before.
-        rxBus.toFlow(EventLoopUpdateGui::class.java)
+        rxBus.toFlow(EventLoopUpdateGui::class)
             .collectResilient(newScope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) { sendData(it) }
-        rxBus.toFlow(EventAutosensCalculationFinished::class.java)
+        rxBus.toFlow(EventAutosensCalculationFinished::class)
             .collectResilient(newScope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) { sendData(it) }
         bolusProgressData.state
             .collectResilient(newScope, aapsLogger, LTag.CORE) { state ->

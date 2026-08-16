@@ -13,6 +13,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalPreferences
 import kotlinx.coroutines.flow.Flow
+import kotlin.reflect.KClass
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filter
@@ -75,7 +76,7 @@ class GlobalSnackbarHostTest {
 
 
         @Suppress("UNCHECKED_CAST")
-        override fun <T : Event> toFlow(eventType: Class<T>): Flow<T> =
+        override fun <T : Event> toFlow(eventType: KClass<T>): Flow<T> =
             events.filter { eventType.isInstance(it) } as Flow<T>
     }
 }

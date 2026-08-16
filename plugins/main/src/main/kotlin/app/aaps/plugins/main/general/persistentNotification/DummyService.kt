@@ -49,7 +49,7 @@ class DummyService : DaggerService() {
         } catch (e: Exception) {
             startForeground(4711, Notification())
         }
-        rxBus.toFlow(EventAppExit::class.java)
+        rxBus.toFlow(EventAppExit::class)
             .collectResilient(scope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) {
                 aapsLogger.debug(LTag.CORE, "EventAppExit received")
                 stopSelf()

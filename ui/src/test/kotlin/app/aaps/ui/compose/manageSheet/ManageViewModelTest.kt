@@ -76,8 +76,8 @@ internal class ManageViewModelTest {
         // setupEventListeners() builds cold flow chains synchronously in init — every source must be non-null.
         whenever(persistenceLayer.observeChanges(EB::class.java)).thenReturn(emptyFlow())
         whenever(persistenceLayer.observeChanges(TB::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventInitializationChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventCustomActionsChanged::class.java)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventInitializationChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventCustomActionsChanged::class)).thenReturn(emptyFlow())
         whenever(nsClient.masterOrPairedClientFlow).thenReturn(MutableStateFlow(false))
         // Field init casts activePumpInternal (a Pump) to PluginBase — the fake satisfies both.
         pumpPlugin = mock()

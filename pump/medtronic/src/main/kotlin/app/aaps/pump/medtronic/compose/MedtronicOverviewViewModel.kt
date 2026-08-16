@@ -99,15 +99,15 @@ class MedtronicOverviewViewModel @Inject constructor(
 
     private val medtronicRefresh = MutableStateFlow(0L).also { flow ->
         viewModelScope.launch {
-            rxBus.toFlow(EventMedtronicPumpValuesChanged::class.java)
+            rxBus.toFlow(EventMedtronicPumpValuesChanged::class)
                 .collect { flow.value = System.currentTimeMillis() }
         }
         viewModelScope.launch {
-            rxBus.toFlow(EventRileyLinkDeviceStatusChange::class.java)
+            rxBus.toFlow(EventRileyLinkDeviceStatusChange::class)
                 .collect { flow.value = System.currentTimeMillis() }
         }
         viewModelScope.launch {
-            rxBus.toFlow(EventMedtronicPumpConfigurationChanged::class.java)
+            rxBus.toFlow(EventMedtronicPumpConfigurationChanged::class)
                 .collect {
                     aapsLogger.debug(LTag.PUMP, "EventMedtronicPumpConfigurationChanged triggered")
                     medtronicPumpPlugin.rileyLinkService?.verifyConfiguration()

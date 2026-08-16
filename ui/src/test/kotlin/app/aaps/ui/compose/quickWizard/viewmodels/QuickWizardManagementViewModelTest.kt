@@ -55,7 +55,7 @@ internal class QuickWizardManagementViewModelTest {
         Dispatchers.setMain(StandardTestDispatcher())
         // Synchronous init wiring that must return non-null flows/streams to avoid construction NPEs.
         whenever(quickWizard.changes).thenReturn(MutableStateFlow(0))
-        whenever(rxBus.toFlow(EventQuickWizardChange::class.java)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventQuickWizardChange::class)).thenReturn(emptyFlow())
         sut = QuickWizardManagementViewModel(
             quickWizard, rxBus, constraintChecker, preferences, rh, dateUtil, aapsLogger
         )

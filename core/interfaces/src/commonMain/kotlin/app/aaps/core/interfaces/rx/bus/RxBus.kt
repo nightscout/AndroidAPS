@@ -2,6 +2,7 @@ package app.aaps.core.interfaces.rx.bus
 
 import app.aaps.core.interfaces.rx.events.Event
 import kotlinx.coroutines.flow.Flow
+import kotlin.reflect.KClass
 
 /**
  * A simple event bus for communication between different parts of the application.
@@ -25,5 +26,5 @@ interface RxBus {
      * @param eventType The class of the event to listen for.
      * @return A [Flow] that emits events of the specified type.
      */
-    fun <T : Event> toFlow(eventType: Class<T>): Flow<T>
+    fun <T : Event> toFlow(eventType: KClass<T>): Flow<T>
 }

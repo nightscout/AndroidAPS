@@ -115,7 +115,7 @@ class DashOverviewViewModel @Inject constructor(
     // Trigger flow from RxBus omnipod events
     private val omnipodRefresh = MutableStateFlow(0L).also { flow ->
         scope.launch {
-            rxBus.toFlow(EventOmnipodDashPumpValuesChanged::class.java)
+            rxBus.toFlow(EventOmnipodDashPumpValuesChanged::class)
                 .collect { flow.value = System.currentTimeMillis() }
         }
     }

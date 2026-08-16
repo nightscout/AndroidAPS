@@ -59,7 +59,7 @@ internal class WearViewModelTest {
         Dispatchers.setMain(UnconfinedTestDispatcher())
         whenever(wearPlugin.connectedDevice).thenReturn(connectedDeviceFlow)
         whenever(wearPlugin.savedCustomWatchface).thenReturn(savedCustomWatchfaceFlow)
-        whenever(rxBus.toFlow(EventWearUpdateGui::class.java)).thenReturn(eventWearUpdateGuiFlow)
+        whenever(rxBus.toFlow(EventWearUpdateGui::class)).thenReturn(eventWearUpdateGuiFlow)
         whenever(rh.gs(R.string.no_watch_connected)).thenReturn("No watch connected")
         sut = WearViewModel(wearPlugin, rxBus, rh, dateUtil, preferences, versionCheckerUtils, fileListProvider, aapsLogger)
     }

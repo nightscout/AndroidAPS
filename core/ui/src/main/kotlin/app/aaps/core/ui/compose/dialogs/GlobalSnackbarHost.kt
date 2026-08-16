@@ -66,7 +66,7 @@ fun GlobalSnackbarHost(
     // transition, double-surfacing messages.
     LaunchedEffect(rxBus, lifecycleOwner) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            rxBus.toFlow(EventShowSnackbar::class.java).collect { event ->
+            rxBus.toFlow(EventShowSnackbar::class).collect { event ->
                 hostState.showSnackbar(
                     BusSnackbarVisuals(message = event.message, type = event.type)
                 )

@@ -68,7 +68,7 @@ class DiaconnHistoryViewModel @Inject constructor(
         // viewModelScope is Main, like observeOn(aapsSchedulers.main), and dies with the view model
         // like the CompositeDisposable did. UNDISPATCHED because RxBus has no replay, so a scheduled
         // collector could miss a status sent before it starts.
-        rxBus.toFlow(EventPumpStatusChanged::class.java)
+        rxBus.toFlow(EventPumpStatusChanged::class)
             .collectResilient(viewModelScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { event ->
                 _uiState.update { it.copy(statusMessage = rh.gs(event.getStatus())) }
             }

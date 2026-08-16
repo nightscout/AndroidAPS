@@ -111,7 +111,7 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
         // Service lifetime scope on IO, like the io scheduler used before, cancelled in onDestroy
         // like the CompositeDisposable was cleared. UNDISPATCHED because RxBus has no replay, so a
         // scheduled collector could miss an event sent before it starts.
-        rxBus.toFlow(EventBTChange::class.java)
+        rxBus.toFlow(EventBTChange::class)
             .collectResilient(scope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { event ->
                 if (event.state === EventBTChange.Change.DISCONNECT) {
                     aapsLogger.debug(LTag.PUMP, "Device was disconnected " + event.deviceName) //Device was disconnected
@@ -121,7 +121,7 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
                     }
                 }
             }
-        rxBus.toFlow(EventAppExit::class.java)
+        rxBus.toFlow(EventAppExit::class)
             .collectResilient(scope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) {
                 aapsLogger.debug(LTag.PUMP, "EventAppExit received")
                 mSerialIOThread?.disconnect("Application exit")

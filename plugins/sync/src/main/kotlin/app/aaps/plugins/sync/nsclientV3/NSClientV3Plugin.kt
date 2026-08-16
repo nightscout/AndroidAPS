@@ -300,7 +300,7 @@ class NSClientV3Plugin @Inject constructor(
                 wsConnectedFlow.collect { connected -> if (connected) requestMasterProbe() }
             }
         }
-        rxBus.toFlow(EventAppExit::class.java)
+        rxBus.toFlow(EventAppExit::class)
             .collectResilient(scope, aapsLogger, LTag.NSCLIENT) {
                 stopService()
                 WorkManager.getInstance(context).cancelUniqueWork(JOB_NAME)

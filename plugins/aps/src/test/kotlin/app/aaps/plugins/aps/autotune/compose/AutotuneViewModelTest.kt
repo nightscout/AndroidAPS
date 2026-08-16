@@ -85,7 +85,7 @@ internal class AutotuneViewModelTest {
         whenever(autotunePlugin.lastNbDays).thenReturn("5")   // non-empty -> skips the default-days assignment
         whenever(autotunePlugin.result).thenReturn("")        // .isEmpty() in checkNewDay()
         whenever(autotunePlugin.lastRun).thenReturn(Long.MAX_VALUE) // forces runToday true -> resetParam(false), off the days path
-        whenever(rxBus.toFlow(EventAutotuneUpdateGui::class.java)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventAutotuneUpdateGui::class)).thenReturn(emptyFlow())
 
         // StandardTestDispatcher-backed scope: scope.launch { refreshState() } and the rxBus flow
         // collection stay queued (never advanced), so the default uiState is what we assert against.

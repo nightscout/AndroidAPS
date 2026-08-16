@@ -121,7 +121,7 @@ class SWDefinition @Inject constructor(
             // so this subscription was already app-lifetime. Plain onEach/launchIn rather than
             // collectResilient because there is no logger here and the body is a bus send that cannot
             // meaningfully fail - the Rx version had no error handler either.
-            rxBus.toFlow(EventConfigBuilderChange::class.java)
+            rxBus.toFlow(EventConfigBuilderChange::class)
                 .onEach { rxBus.send(EventSWUpdate(true)) }
                 .launchIn(appScope)
         }
@@ -205,7 +205,7 @@ class SWDefinition @Inject constructor(
             .add(swBreakProvider.get())
             .add(swInfoTextProvider.get().label(R.string.syncinfotext))
             .add(swBreakProvider.get())
-            .add(swEventListenerProvider.get().with(EventSWSyncStatus::class.java).label(R.string.status_label).initialStatus(nsClient.status))
+            .add(swEventListenerProvider.get().with(EventSWSyncStatus::class).label(R.string.status_label).initialStatus(nsClient.status))
             .validator { nsClient.connected && nsClient.hasWritePermission }
 
     // Master side: explain the paired client-control channel, open the pairing (Authorized clients) screen,
@@ -335,7 +335,7 @@ class SWDefinition @Inject constructor(
                     .visibility { activePlugin.activePumpInternal.let { it is OmnipodEros && !it.isRileyLinkReady() } }
             )
             .add( // Omnipod Eros only
-                swEventListenerProvider.get().with(EventSWRLStatus::class.java)
+                swEventListenerProvider.get().with(EventSWRLStatus::class)
                     .label(R.string.setupwizard_pump_riley_link_status)
                     .visibility { activePlugin.activePumpInternal is OmnipodEros })
             .add(
@@ -348,7 +348,7 @@ class SWDefinition @Inject constructor(
                         activePlugin.activePump !is OmnipodEros && activePlugin.activePump !is OmnipodDash && activePlugin.activePump !is Medtrum
                     })
             .add(
-                swEventListenerProvider.get().with(EventPumpStatusChanged::class.java)
+                swEventListenerProvider.get().with(EventPumpStatusChanged::class)
                     .visibility { activePlugin.activePumpInternal !is OmnipodEros && activePlugin.activePumpInternal !is OmnipodDash && activePlugin.activePumpInternal !is Medtrum })
             .validator { isPumpInitialized() }
 

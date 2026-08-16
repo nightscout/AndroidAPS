@@ -310,7 +310,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
 
             // Refresh trend arrow after bucketed data is created (bucketed data is ready after this event)
             scope.launch {
-                rxBus.toFlow(EventBucketedDataCreated::class.java).collect {
+                rxBus.toFlow(EventBucketedDataCreated::class).collect {
                     aapsLogger.debug(LTag.UI, "Bucketed data created, refreshing BgInfo for trend arrow")
                     updateBgInfoFromDatabase()
                 }
@@ -399,8 +399,8 @@ class OverviewDataCacheImpl @AssistedInject constructor(
             // loop.lastRun.constraintsProcessed.targetBG) is reflected in the ADJUSTED state.
             scope.launch {
                 merge(
-                    rxBus.toFlow(EventLoopUpdateGui::class.java),
-                    rxBus.toFlow(EventNewOpenLoopNotification::class.java)
+                    rxBus.toFlow(EventLoopUpdateGui::class),
+                    rxBus.toFlow(EventNewOpenLoopNotification::class)
                 ).collect { updateTempTargetFromDatabase() }
             }
             // AAPSCLIENT counterpart: the ADJUSTED text comes from
@@ -411,7 +411,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
             // APS result no longer matches the just-expired TT.
             if (config.AAPSCLIENT) {
                 scope.launch {
-                    rxBus.toFlow(EventNsClientStatusUpdated::class.java)
+                    rxBus.toFlow(EventNsClientStatusUpdated::class)
                         .debounce(300)
                         .collect { updateTempTargetFromDatabase() }
                 }
@@ -477,7 +477,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
                             if (!hasSubscribers) return@collectLatest
                             rebuildNsClientStatus()
                             launch {
-                                rxBus.toFlow(EventNsClientStatusUpdated::class.java).collect {
+                                rxBus.toFlow(EventNsClientStatusUpdated::class).collect {
                                     rebuildNsClientStatus()
                                 }
                             }

@@ -16,6 +16,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.plugins.configuration.setupwizard.elements.SWItem
+import kotlin.reflect.KClass
 import javax.inject.Inject
 
 class SWEventListener @Inject constructor(
@@ -30,9 +31,9 @@ class SWEventListener @Inject constructor(
     private var status = ""
     private var visibilityValidator: (() -> Boolean)? = null
 
-    lateinit var clazz: Class<out EventStatus>
+    lateinit var clazz: KClass<out EventStatus>
 
-    fun with(clazz: Class<out EventStatus>): SWEventListener {
+    fun with(clazz: KClass<out EventStatus>): SWEventListener {
         this.clazz = clazz
         return this
     }

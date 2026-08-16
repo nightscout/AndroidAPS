@@ -164,7 +164,7 @@ class DanaRSService : DaggerService() {
         // IO like the io scheduler used before, cancelled in onDestroy like the CompositeDisposable
         // was cleared. UNDISPATCHED because RxBus has no replay, so a scheduled collector could miss
         // an exit sent before it starts.
-        rxBus.toFlow(EventAppExit::class.java)
+        rxBus.toFlow(EventAppExit::class)
             .collectResilient(scope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { stopSelf() }
     }
 

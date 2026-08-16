@@ -146,15 +146,15 @@ class WearPlugin @Inject constructor(
             dataHandlerMobile.resendData("PreferenceChange")
             checkCustomWatchfacePreferences()
         }
-        rxBus.toFlow(EventAutosensCalculationFinished::class.java)
+        rxBus.toFlow(EventAutosensCalculationFinished::class)
             .collectResilient(newScope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { dataHandlerMobile.resendData("EventAutosensCalculationFinished") }
-        rxBus.toFlow(EventLoopUpdateGui::class.java)
+        rxBus.toFlow(EventLoopUpdateGui::class)
             .collectResilient(newScope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { dataHandlerMobile.resendData("EventLoopUpdateGui") }
         // AAPSCLIENT: fresh predictions arrive via NS devicestatus, not a local loop run — without this the
         // watch graph trails the phone by one loop cycle (the BG-triggered autosens resend fires BEFORE the
         // master's new devicestatus lands). Event is only sent on AAPSCLIENT; processedDeviceStatusData is
         // updated synchronously before it fires, so the resend reads the new predictions.
-        rxBus.toFlow(EventNsClientStatusUpdated::class.java)
+        rxBus.toFlow(EventNsClientStatusUpdated::class)
             .collectResilient(newScope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { dataHandlerMobile.resendData("EventNsClientStatusUpdated") }
         // Push status to watch quickly when a TT changes, without waiting for the loop's 10s debounce
         persistenceLayer.observeChanges<TT>()
@@ -168,9 +168,9 @@ class WearPlugin @Inject constructor(
         // Push active-scene flag to wear so the tile can swap between scene list and STOP button
         scenes.activeFlow
             .collectResilient(newScope, aapsLogger, LTag.WEAR) { dataHandlerMobile.sendActiveSceneState(it) }
-        rxBus.toFlow(EventWearUpdateTiles::class.java)
+        rxBus.toFlow(EventWearUpdateTiles::class)
             .collectResilient(newScope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { dataHandlerMobile.sendUserActions() }
-        rxBus.toFlow(EventWearUpdateGui::class.java)
+        rxBus.toFlow(EventWearUpdateGui::class)
             .collectResilient(newScope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { event ->
                 // This one observed on aapsSchedulers.main, not io: it writes the watchface StateFlow the
                 // UI reads and then walks preferences. newScope is IO, so the body is put back on main
@@ -184,7 +184,7 @@ class WearPlugin @Inject constructor(
                     }
                 }
             }
-        rxBus.toFlow(EventMobileToWear::class.java)
+        rxBus.toFlow(EventMobileToWear::class)
             .collectResilient(newScope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) {
                 // If there is a broadcast selected (ie.
                 //  AAPSClient want pass data to AAPS

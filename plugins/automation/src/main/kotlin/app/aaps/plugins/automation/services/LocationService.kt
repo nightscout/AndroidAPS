@@ -151,7 +151,7 @@ class LocationService : DaggerService() {
             rxBus.send(EventShowSnackbar(getString(app.aaps.core.ui.R.string.location_permission_not_granted), EventShowSnackbar.Type.Error))
         }
 
-        rxBus.toFlow(EventAppExit::class.java)
+        rxBus.toFlow(EventAppExit::class)
             .collectResilient(scope, aapsLogger, LTag.LOCATION, start = CoroutineStart.UNDISPATCHED) {
                 aapsLogger.debug(LTag.LOCATION, "EventAppExit received")
                 stopSelf()

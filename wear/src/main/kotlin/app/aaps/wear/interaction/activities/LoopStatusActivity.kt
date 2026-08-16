@@ -140,7 +140,7 @@ class LoopStatusActivity : AppCompatActivity() {
         // lifecycleScope is Main and dies with the activity, so runOnUiThread is no longer needed.
         // The Rx onError put the screen into an error state rather than only logging, so that is kept
         // explicitly - collectResilient on its own would log and carry on with the UI still spinning.
-        rxBus.toFlow(EventData.LoopStatusResponse::class.java)
+        rxBus.toFlow(EventData.LoopStatusResponse::class)
             .collectResilient(lifecycleScope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { event ->
                 try {
                     aapsLogger.debug(LTag.WEAR, "Received loop status response")

@@ -278,7 +278,7 @@ internal class InsightOverviewState(
         // sent before it starts.
         val newScope = CoroutineScope(Dispatchers.Main.immediate + SupervisorJob())
         scope = newScope
-        rxBus.toFlow(EventLocalInsightUpdateGUI::class.java)
+        rxBus.toFlow(EventLocalInsightUpdateGUI::class)
             .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { refresh() }
         refresh()
     }

@@ -74,11 +74,11 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
         // scope is Main.immediate and onDestroy cancels it, so it is the right lifetime - but these two
         // observed on aapsSchedulers.io, and sendMessage talks to the Wear Data Layer. So the collector
         // lives on the service's scope and the send goes back to IO.
-        rxBus.toFlow(EventMobileToWear::class.java)
+        rxBus.toFlow(EventMobileToWear::class)
             .collectResilient(scope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) {
                 withContext(Dispatchers.IO) { sendMessage(rxPath, it.payload.serialize()) }
             }
-        rxBus.toFlow(EventMobileToWearWatchface::class.java)
+        rxBus.toFlow(EventMobileToWearWatchface::class)
             .collectResilient(scope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) {
                 withContext(Dispatchers.IO) { sendMessage(rxWatchfacePath, it.payload) }
             }

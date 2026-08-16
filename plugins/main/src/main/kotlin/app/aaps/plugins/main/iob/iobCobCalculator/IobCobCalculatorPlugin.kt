@@ -116,12 +116,12 @@ class IobCobCalculatorPlugin @Inject constructor(
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
         // EventConfigBuilderChange
-        rxBus.toFlow(EventConfigBuilderChange::class.java)
+        rxBus.toFlow(EventConfigBuilderChange::class)
             .collectResilient(newScope, aapsLogger, LTag.AUTOSENS, start = CoroutineStart.UNDISPATCHED) { resetDataAndRunCalculation("onEventConfigBuilderChange") }
         // EventCalibrationChanged → the fit changed, so bucketed data needs to be re-smoothed
         // with the new calibration applied. scheduleHistoryDataChange has its own 5s debounce
         // so bursts (delete-many, bulk-add) collapse into one workflow run.
-        rxBus.toFlow(EventCalibrationChanged::class.java)
+        rxBus.toFlow(EventCalibrationChanged::class)
             .collectResilient(newScope, aapsLogger, LTag.AUTOSENS, start = CoroutineStart.UNDISPATCHED) {
                 val invalidateFrom = System.currentTimeMillis() - T.hours(24).msecs()
                 scheduleHistoryDataChange(invalidateFrom, reloadBgData = true, triggeredByNewBG = false)
@@ -174,7 +174,7 @@ class IobCobCalculatorPlugin @Inject constructor(
             }.launchIn(newScope)
         // EventAppInitialized fires once, early. UNDISPATCHED matters most here of the three: a
         // scheduled collector could miss it outright and the main calculation would never be kicked off.
-        rxBus.toFlow(EventAppInitialized::class.java)
+        rxBus.toFlow(EventAppInitialized::class)
             .collectResilient(newScope, aapsLogger, LTag.AUTOSENS, start = CoroutineStart.UNDISPATCHED) {
                 calculationWorkflow.runCalculation(
                     CalculationWorkflow.MAIN_CALCULATION,

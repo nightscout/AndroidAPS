@@ -125,13 +125,13 @@ class SceneListViewModel @Inject constructor(
             }
         }
         // Refresh activationReasons on relevant runtime-state events.
-        rxBus.toFlow(EventPumpStatusChanged::class.java)
+        rxBus.toFlow(EventPumpStatusChanged::class)
             .onEach { activationTick.update { it + 1 } }.launchIn(viewModelScope)
-        rxBus.toFlow(EventLoopUpdateGui::class.java)
+        rxBus.toFlow(EventLoopUpdateGui::class)
             .onEach { activationTick.update { it + 1 } }.launchIn(viewModelScope)
-        rxBus.toFlow(EventInitializationChanged::class.java)
+        rxBus.toFlow(EventInitializationChanged::class)
             .onEach { activationTick.update { it + 1 } }.launchIn(viewModelScope)
-        rxBus.toFlow(EventRefreshOverview::class.java)
+        rxBus.toFlow(EventRefreshOverview::class)
             .onEach { activationTick.update { it + 1 } }.launchIn(viewModelScope)
     }
 

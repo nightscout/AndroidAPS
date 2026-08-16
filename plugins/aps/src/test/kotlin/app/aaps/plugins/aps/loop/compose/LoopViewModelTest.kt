@@ -36,8 +36,8 @@ internal class LoopViewModelTest {
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        whenever(rxBus.toFlow(EventLoopUpdateGui::class.java)).thenReturn(updateGuiFlow)
-        whenever(rxBus.toFlow(EventLoopSetLastRunGui::class.java)).thenReturn(lastRunGuiFlow)
+        whenever(rxBus.toFlow(EventLoopUpdateGui::class)).thenReturn(updateGuiFlow)
+        whenever(rxBus.toFlow(EventLoopSetLastRunGui::class)).thenReturn(lastRunGuiFlow)
     }
 
     // Dispatchers.Unconfined runs the VM's launched coroutines (init's updateState) eagerly and

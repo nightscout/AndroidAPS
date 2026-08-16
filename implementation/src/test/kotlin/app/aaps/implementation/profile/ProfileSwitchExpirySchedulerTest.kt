@@ -54,7 +54,7 @@ class ProfileSwitchExpirySchedulerTest : TestBase() {
         // UNDISPATCHED so the collector is subscribed before the scheduler under test sends anything;
         // RxBus has no replay, so a scheduled collector would miss those events.
         collector = CoroutineScope(Dispatchers.Unconfined).launch(start = CoroutineStart.UNDISPATCHED) {
-            rxBus.toFlow(EventProfileChangeRequested::class.java).collect { eventCount++ }
+            rxBus.toFlow(EventProfileChangeRequested::class).collect { eventCount++ }
         }
         scheduler = ProfileSwitchExpiryScheduler(
             persistenceLayer = persistenceLayer,

@@ -89,10 +89,10 @@ internal class DanaRSOverviewViewModelTest {
         whenever(danaPump.temporaryBasalToString()).thenReturn("")
 
         // rx / persistence wiring touched at construction
-        whenever(rxBus.toFlow(EventPumpStatusChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventQueueChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventDanaRNewStatus::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventInitializationChanged::class.java)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventPumpStatusChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventQueueChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventDanaRNewStatus::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventInitializationChanged::class)).thenReturn(emptyFlow())
         whenever(persistenceLayer.observeChanges(EB::class.java)).thenReturn(emptyFlow())
         whenever(persistenceLayer.observeChanges(TB::class.java)).thenReturn(emptyFlow())
 

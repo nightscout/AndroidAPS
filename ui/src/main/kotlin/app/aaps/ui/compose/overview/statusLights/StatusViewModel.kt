@@ -67,15 +67,15 @@ class StatusViewModel @Inject constructor(
     }
 
     private fun setupEventListeners() {
-        rxBus.toFlow(EventInitializationChanged::class.java)
+        rxBus.toFlow(EventInitializationChanged::class)
             .onEach { refreshState() }.launchIn(viewModelScope)
         persistenceLayer.observeChanges(TE::class.java)
             .onEach { refreshState() }.launchIn(viewModelScope)
         persistenceLayer.databaseClearedFlow
             .onEach { refreshState() }.launchIn(viewModelScope)
-        rxBus.toFlow(EventPumpStatusChanged::class.java)
+        rxBus.toFlow(EventPumpStatusChanged::class)
             .onEach { refreshState() }.launchIn(viewModelScope)
-        rxBus.toFlow(EventNsClientStatusUpdated::class.java)
+        rxBus.toFlow(EventNsClientStatusUpdated::class)
             .onEach { refreshState() }.launchIn(viewModelScope)
         tickerFlow(60_000L)
             .onEach { refreshState() }.launchIn(viewModelScope)

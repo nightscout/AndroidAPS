@@ -84,10 +84,10 @@ class EquilOverviewViewModel @Inject constructor(
     private val _refreshTrigger = MutableStateFlow(0L)
 
     init {
-        rxBus.toFlow(EventEquilDataChanged::class.java)
+        rxBus.toFlow(EventEquilDataChanged::class)
             .onEach { _refreshTrigger.value = System.currentTimeMillis() }
             .launchIn(viewModelScope)
-        rxBus.toFlow(EventEquilModeChanged::class.java)
+        rxBus.toFlow(EventEquilModeChanged::class)
             .onEach { _refreshTrigger.value = System.currentTimeMillis() }
             .launchIn(viewModelScope)
     }

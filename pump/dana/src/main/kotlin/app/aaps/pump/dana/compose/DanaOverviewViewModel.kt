@@ -96,9 +96,9 @@ open class DanaOverviewViewModel @Inject constructor(
         // viewModelScope dies with the view model like the CompositeDisposable did. The bodies only
         // write a timestamp, so the dispatcher does not matter. UNDISPATCHED because RxBus has no
         // replay, so a scheduled collector could miss an event sent before it starts.
-        rxBus.toFlow(EventDanaRNewStatus::class.java)
+        rxBus.toFlow(EventDanaRNewStatus::class)
             .collectResilient(viewModelScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { rxTrigger.value = System.currentTimeMillis() }
-        rxBus.toFlow(EventInitializationChanged::class.java)
+        rxBus.toFlow(EventInitializationChanged::class)
             .collectResilient(viewModelScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { rxTrigger.value = System.currentTimeMillis() }
 
         // Observe EB/TB database changes for immediate UI updates

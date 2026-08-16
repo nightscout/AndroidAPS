@@ -78,15 +78,15 @@ class DataLayerListenerServiceWear : WearableListenerService() {
         // scope is Main.immediate, which is the right lifetime. The two sends observed on io and talk
         // to the Data Layer, so those bodies go back to IO; the preference one observed on main and
         // touches the listeners, so it stays where the collector is.
-        rxBus.toFlow(EventWearToMobile::class.java)
+        rxBus.toFlow(EventWearToMobile::class)
             .collectResilient(scope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) {
                 withContext(Dispatchers.IO) { sendMessage(rxPath, it.payload.serialize()) }
             }
-        rxBus.toFlow(EventWearDataToMobile::class.java)
+        rxBus.toFlow(EventWearDataToMobile::class)
             .collectResilient(scope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) {
                 withContext(Dispatchers.IO) { sendMessage(rxDataPath, it.payload.serializeByte()) }
             }
-        rxBus.toFlow(EventWearPreferenceChange::class.java)
+        rxBus.toFlow(EventWearPreferenceChange::class)
             .collectResilient(scope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { event ->
                 if (event.changedKey == getString(R.string.key_heart_rate_sampling)) updateHeartRateListener()
                 if (event.changedKey == getString(R.string.key_steps_sampling)) updateStepsCountListener()

@@ -46,13 +46,13 @@ class LoopActionViewModel @Inject constructor(
     val uiState: StateFlow<LoopActionUiState> = _uiState.asStateFlow()
 
     init {
-        rxBus.toFlow(EventLoopUpdateGui::class.java)
+        rxBus.toFlow(EventLoopUpdateGui::class)
             .onEach { refreshState() }.launchIn(viewModelScope)
-        rxBus.toFlow(EventNewOpenLoopNotification::class.java)
+        rxBus.toFlow(EventNewOpenLoopNotification::class)
             .onEach { refreshState() }.launchIn(viewModelScope)
-        rxBus.toFlow(EventRefreshOverview::class.java)
+        rxBus.toFlow(EventRefreshOverview::class)
             .onEach { refreshState() }.launchIn(viewModelScope)
-        rxBus.toFlow(EventAcceptOpenLoopChange::class.java)
+        rxBus.toFlow(EventAcceptOpenLoopChange::class)
             .onEach { refreshState() }.launchIn(viewModelScope)
         refreshState()
     }

@@ -54,7 +54,7 @@ class BgQualityCheckPlugin @Inject constructor(
         // CompositeDisposable was cleared. UNDISPATCHED because RxBus has no replay: a scheduled
         // collector could miss data created before it starts.
         val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO).also { this.scope = it }
-        rxBus.toFlow(EventBucketedDataCreated::class.java)
+        rxBus.toFlow(EventBucketedDataCreated::class)
             .collectResilient(scope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) { processBgData() }
     }
 

@@ -197,7 +197,7 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
         // Visible activities host their own GlobalSnackbarHost that also
         // subscribes; those win while UI is present.
         appScope.launch {
-            rxBus.toFlow(EventShowSnackbar::class.java).collect { event ->
+            rxBus.toFlow(EventShowSnackbar::class).collect { event ->
                 val uiVisible = ProcessLifecycleOwner.get().lifecycle.currentState
                     .isAtLeast(Lifecycle.State.STARTED)
                 if (!uiVisible) {

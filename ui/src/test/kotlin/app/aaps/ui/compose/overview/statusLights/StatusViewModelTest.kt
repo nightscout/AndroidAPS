@@ -53,9 +53,9 @@ internal class StatusViewModelTest {
         // so construction stays clean and we test the default uiState. The event-listener flows are still
         // built synchronously in init, so they must be non-null.
         Dispatchers.setMain(StandardTestDispatcher())
-        whenever(rxBus.toFlow(EventInitializationChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventPumpStatusChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventNsClientStatusUpdated::class.java)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventInitializationChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventPumpStatusChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventNsClientStatusUpdated::class)).thenReturn(emptyFlow())
         whenever(persistenceLayer.observeChanges(TE::class.java)).thenReturn(emptyFlow())
         whenever(persistenceLayer.databaseClearedFlow).thenReturn(emptyFlow())
         sut = StatusViewModel(

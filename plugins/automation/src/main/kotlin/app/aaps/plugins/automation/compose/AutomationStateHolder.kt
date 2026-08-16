@@ -58,7 +58,7 @@ class AutomationStateHolder(
         scope = newScope
         // This one observed on aapsSchedulers.main and the scope is already Main, so the dispatcher
         // matches without any extra step - it touches Compose state.
-        rxBus.toFlow(EventAutomationUpdateGui::class.java)
+        rxBus.toFlow(EventAutomationUpdateGui::class)
             .collectResilient(newScope, aapsLogger, LTag.AUTOMATION, start = CoroutineStart.UNDISPATCHED) {
                 refresh()
                 refreshEditState()

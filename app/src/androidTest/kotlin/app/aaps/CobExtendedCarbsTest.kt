@@ -88,7 +88,7 @@ class CobExtendedCarbsTest : HiltInstrumentedTest() {
     // ==================== Helpers ====================
 
     private fun setupEnvironment() = runTest {
-        rxHelper.listen(EventAutosensCalculationFinished::class.java)
+        rxHelper.listen(EventAutosensCalculationFinished::class)
         l.findByName(LTag.EVENTS.name).enabled = true
         assertThat(config.APS).isTrue()
 
@@ -185,7 +185,7 @@ class CobExtendedCarbsTest : HiltInstrumentedTest() {
      * 2. Autosens calculation to complete (replaces old EventNewHistoryData + EventAutosensCalculationFinished)
      */
     private suspend fun insertBgAndWait(now: Long) {
-        rxHelper.resetState(EventAutosensCalculationFinished::class.java)
+        rxHelper.resetState(EventAutosensCalculationFinished::class)
 
         // Insert BG and wait for the GV flow emission (replaces old EventNewBG)
         val gvList = waits.awaitDbChange(GV::class.java, what = "GlucoseValue after BG insert") {
@@ -195,7 +195,7 @@ class CobExtendedCarbsTest : HiltInstrumentedTest() {
         assertThat(gvList).isNotEmpty()
 
         // Wait for autosens calculation triggered by BG insertion, then for the calc to fully settle
-        assertThat(rxHelper.waitFor(EventAutosensCalculationFinished::class.java, maxSeconds = 60, comment = "initial calc").first).isTrue()
+        assertThat(rxHelper.waitFor(EventAutosensCalculationFinished::class, maxSeconds = 60, comment = "initial calc").first).isTrue()
         waits.awaitCalculationFinished("initial calc settle")
     }
 
@@ -203,7 +203,7 @@ class CobExtendedCarbsTest : HiltInstrumentedTest() {
      * Trigger recalculation by inserting a new BG and wait for autosens to complete.
      */
     private suspend fun triggerCalculationAndWait(now: Long) {
-        rxHelper.resetState(EventAutosensCalculationFinished::class.java)
+        rxHelper.resetState(EventAutosensCalculationFinished::class)
 
         val newBg = listOf(
             GV(
@@ -216,7 +216,7 @@ class CobExtendedCarbsTest : HiltInstrumentedTest() {
             )
         )
         persistenceLayer.insertCgmSourceData(Sources.Random, newBg, emptyList(), null)
-        assertThat(rxHelper.waitFor(EventAutosensCalculationFinished::class.java, maxSeconds = 60, comment = "autosens").first).isTrue()
+        assertThat(rxHelper.waitFor(EventAutosensCalculationFinished::class, maxSeconds = 60, comment = "autosens").first).isTrue()
         waits.awaitCalculationFinished("autosens settle")
     }
 
@@ -400,12 +400,12 @@ class CobExtendedCarbsTest : HiltInstrumentedTest() {
         setupEnvironment()
         val now = dateUtil.now()
 
-        rxHelper.resetState(EventAutosensCalculationFinished::class.java)
+        rxHelper.resetState(EventAutosensCalculationFinished::class)
         waits.awaitDbChange(GV::class.java, what = "GlucoseValue after BG insert") {
             insertFlatBgData(now, 240, 100.0)
         }
         insertCarbs(now - 4 * 60 * 60_000L, 10.0, 15 * 60_000L)
-        assertThat(rxHelper.waitFor(EventAutosensCalculationFinished::class.java, maxSeconds = 60, comment = "autosens").first).isTrue()
+        assertThat(rxHelper.waitFor(EventAutosensCalculationFinished::class, maxSeconds = 60, comment = "autosens").first).isTrue()
         waits.awaitCalculationFinished("absorption settle")
 
         assertCobBounded(10.0)
@@ -417,12 +417,12 @@ class CobExtendedCarbsTest : HiltInstrumentedTest() {
         setupEnvironment()
         val now = dateUtil.now()
 
-        rxHelper.resetState(EventAutosensCalculationFinished::class.java)
+        rxHelper.resetState(EventAutosensCalculationFinished::class)
         waits.awaitDbChange(GV::class.java, what = "GlucoseValue after BG insert") {
             insertFlatBgData(now, 240, 100.0)
         }
         insertCarbs(now - 4 * 60 * 60_000L, 10.0, 0)
-        assertThat(rxHelper.waitFor(EventAutosensCalculationFinished::class.java, maxSeconds = 60, comment = "autosens").first).isTrue()
+        assertThat(rxHelper.waitFor(EventAutosensCalculationFinished::class, maxSeconds = 60, comment = "autosens").first).isTrue()
         waits.awaitCalculationFinished("absorption settle")
 
         assertCobBounded(10.0)
@@ -436,7 +436,7 @@ class CobExtendedCarbsTest : HiltInstrumentedTest() {
         setupEnvironment()
         val now = dateUtil.now()
 
-        rxHelper.resetState(EventAutosensCalculationFinished::class.java)
+        rxHelper.resetState(EventAutosensCalculationFinished::class)
         waits.awaitDbChange(GV::class.java, what = "GlucoseValue after BG insert") {
             insertBgData(now, 60, { minutesAgo -> 200.0 - minutesAgo * (100.0 / 60.0) }, TrendArrow.FORTY_FIVE_UP)
         }
@@ -452,7 +452,7 @@ class CobExtendedCarbsTest : HiltInstrumentedTest() {
         setupEnvironment()
         val now = dateUtil.now()
 
-        rxHelper.resetState(EventAutosensCalculationFinished::class.java)
+        rxHelper.resetState(EventAutosensCalculationFinished::class)
         waits.awaitDbChange(GV::class.java, what = "GlucoseValue after BG insert") {
             insertBgData(now, 60, { minutesAgo -> 180.0 - minutesAgo * (100.0 / 60.0) }, TrendArrow.FORTY_FIVE_UP)
         }
@@ -468,12 +468,12 @@ class CobExtendedCarbsTest : HiltInstrumentedTest() {
         setupEnvironment()
         val now = dateUtil.now()
 
-        rxHelper.resetState(EventAutosensCalculationFinished::class.java)
+        rxHelper.resetState(EventAutosensCalculationFinished::class)
         waits.awaitDbChange(GV::class.java, what = "GlucoseValue after BG insert") {
             insertBgData(now, 240, { minutesAgo -> 250.0 - minutesAgo * (170.0 / 240.0) }, TrendArrow.FORTY_FIVE_UP)
         }
         insertCarbs(now - 4 * 60 * 60_000L, 10.0, 15 * 60_000L)
-        assertThat(rxHelper.waitFor(EventAutosensCalculationFinished::class.java, maxSeconds = 60, comment = "autosens").first).isTrue()
+        assertThat(rxHelper.waitFor(EventAutosensCalculationFinished::class, maxSeconds = 60, comment = "autosens").first).isTrue()
         waits.awaitCalculationFinished("absorption settle")
 
         assertCobBounded(10.0)

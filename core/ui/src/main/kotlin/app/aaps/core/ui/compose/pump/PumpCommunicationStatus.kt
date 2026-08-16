@@ -38,7 +38,7 @@ class PumpCommunicationStatus(
     val refreshTrigger: MutableStateFlow<Long> = MutableStateFlow(0L)
 
     init {
-        rxBus.toFlow(EventPumpStatusChanged::class.java)
+        rxBus.toFlow(EventPumpStatusChanged::class)
             .onEach { event ->
                 val text = rh.gs(event.getStatus())
                 _statusBanner.value = if (text.isEmpty()) null else StatusBanner(text = text, level = StatusLevel.UNSPECIFIED)
@@ -46,7 +46,7 @@ class PumpCommunicationStatus(
             }
             .launchIn(scope)
 
-        rxBus.toFlow(EventQueueChanged::class.java)
+        rxBus.toFlow(EventQueueChanged::class)
             .onEach {
                 _queueStatus.value = commandQueue.statusAsAnnotated().takeIf { it.isNotEmpty() }
                 refreshTrigger.value = System.currentTimeMillis()

@@ -125,10 +125,10 @@ class EquilPumpPlugin @Inject constructor(
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
 
-        rxBus.toFlow(EventEquilDataChanged::class.java)
+        rxBus.toFlow(EventEquilDataChanged::class)
             .collectResilient(newScope, aapsLogger, LTag.PUMP) { playAlarm() }
 
-        rxBus.toFlow(EventEquilAlarm::class.java)
+        rxBus.toFlow(EventEquilAlarm::class)
             .collectResilient(newScope, aapsLogger, LTag.PUMP) { eventEquilError ->
                 aapsLogger.info(LTag.PUMPCOMM, "eventEquilError.tips====${eventEquilError.tips}")
                 // Always surface the pump alarm - it is no longer gated on a bolus being in progress

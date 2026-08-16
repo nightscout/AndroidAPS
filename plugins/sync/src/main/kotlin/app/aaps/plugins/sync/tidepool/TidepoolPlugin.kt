@@ -97,9 +97,9 @@ class TidepoolPlugin @Inject constructor(
                 if (isAllowed) doUpload("CONNECTIVITY")
             }
         // scope is Dispatchers.IO, matching the scheduler these subscriptions used before.
-        rxBus.toFlow(EventTidepoolDoUpload::class.java)
+        rxBus.toFlow(EventTidepoolDoUpload::class)
             .collectResilient(scope, aapsLogger, LTag.TIDEPOOL, start = CoroutineStart.UNDISPATCHED) { doUpload(EventTidepoolDoUpload::class.simpleName) }
-        rxBus.toFlow(EventTidepoolStatus::class.java)
+        rxBus.toFlow(EventTidepoolStatus::class)
             .collectResilient(scope, aapsLogger, LTag.TIDEPOOL, start = CoroutineStart.UNDISPATCHED) { event ->
                 tidepoolRepository.addLog(event.status)
                 tidepoolRepository.updateConnectionStatus(authFlowOut.connectionStatus)

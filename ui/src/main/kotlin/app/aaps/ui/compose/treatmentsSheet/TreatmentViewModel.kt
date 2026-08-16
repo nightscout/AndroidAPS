@@ -81,7 +81,7 @@ class TreatmentViewModel @Inject constructor(
             // QuickWizard entries changed (local edit or synced from the main phone).
             quickWizard.changes.drop(1).map {},
         ).onEach { refreshState() }.launchIn(viewModelScope)
-        rxBus.toFlow(EventRefreshOverview::class.java)
+        rxBus.toFlow(EventRefreshOverview::class)
             .onEach { refreshState() }.launchIn(viewModelScope)
     }
 

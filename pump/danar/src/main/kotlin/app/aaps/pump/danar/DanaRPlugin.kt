@@ -117,7 +117,7 @@ class DanaRPlugin @Inject constructor(
         // Same scope as the preference observer above: IO, like the io scheduler used before, and
         // cancelled in onStop like the CompositeDisposable was cleared. UNDISPATCHED because RxBus
         // has no replay, so a scheduled collector could miss an exit sent before it starts.
-        rxBus.toFlow(EventAppExit::class.java)
+        rxBus.toFlow(EventAppExit::class)
             .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { context.unbindService(mConnection) }
         super.onStart()
     }

@@ -111,11 +111,11 @@ class PersistentNotificationPlugin @Inject constructor(
         notificationHolder.createNotificationChannel()
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
-        rxBus.toFlow(EventRefreshOverview::class.java)
+        rxBus.toFlow(EventRefreshOverview::class)
             .collectResilient(newScope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) { triggerNotificationUpdate() }
-        rxBus.toFlow(EventInitializationChanged::class.java)
+        rxBus.toFlow(EventInitializationChanged::class)
             .collectResilient(newScope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) { triggerNotificationUpdate() }
-        rxBus.toFlow(EventAutosensCalculationFinished::class.java)
+        rxBus.toFlow(EventAutosensCalculationFinished::class)
             .collectResilient(newScope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) { triggerNotificationUpdate() }
         /// Android Auto - debounced to prevent rapid pop-ups
         // Flow's debounce means the same thing as Rx's: emit once the source has been quiet for the
@@ -123,9 +123,9 @@ class PersistentNotificationPlugin @Inject constructor(
         // coroutines that are dispatched, so the window survives it. Harmless for this one: the worst
         // case is a notification refresh that a later event triggers anyway.
         merge(
-            rxBus.toFlow(EventRefreshOverview::class.java).map { },
-            rxBus.toFlow(EventInitializationChanged::class.java).map { },
-            rxBus.toFlow(EventAutosensCalculationFinished::class.java).map { }
+            rxBus.toFlow(EventRefreshOverview::class).map { },
+            rxBus.toFlow(EventInitializationChanged::class).map { },
+            rxBus.toFlow(EventAutosensCalculationFinished::class).map { }
         )
             .debounce(10_000L)
             .collectResilient(newScope, aapsLogger, LTag.CORE) { triggerNotificationUpdate(includeAuto = true) }

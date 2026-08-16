@@ -135,7 +135,7 @@ class WearViewModel @Inject constructor(
             }
         }
         viewModelScope.launch {
-            rxBus.toFlow(EventWearUpdateGui::class.java).collect { event ->
+            rxBus.toFlow(EventWearUpdateGui::class).collect { event ->
                 if (event.exportFile) {
                     _toastEvent.emit(rh.gs(R.string.wear_new_custom_watchface_exported))
                 } else {

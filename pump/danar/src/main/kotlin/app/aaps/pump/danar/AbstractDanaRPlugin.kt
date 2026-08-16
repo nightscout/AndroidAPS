@@ -103,7 +103,7 @@ abstract class AbstractDanaRPlugin protected constructor(
         // Same scope as the preference observer below: IO, like the io scheduler used before, and
         // cancelled in onStop like the CompositeDisposable was cleared. UNDISPATCHED because RxBus
         // has no replay, so a scheduled collector could miss a change sent before it starts.
-        rxBus.toFlow(EventConfigBuilderChange::class.java)
+        rxBus.toFlow(EventConfigBuilderChange::class)
             .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { danaPump.reset() }
 
         preferences.observe(DanaStringNonKey.RName).drop(1).onEach {

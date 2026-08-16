@@ -37,8 +37,8 @@ class OpenAPSComposeContentTest {
     fun render_showsNotAvailable_whenNoApsResult() {
         val apsPlugin = mock<APS> { whenever(it.lastAPSResult).thenReturn(null) }
         val rxBus = mock<RxBus> {
-            whenever(it.toFlow(EventOpenAPSUpdateGui::class.java)).thenReturn(emptyFlow())
-            whenever(it.toFlow(EventResetOpenAPSGui::class.java)).thenReturn(emptyFlow())
+            whenever(it.toFlow(EventOpenAPSUpdateGui::class)).thenReturn(emptyFlow())
+            whenever(it.toFlow(EventResetOpenAPSGui::class)).thenReturn(emptyFlow())
         }
         val rh = mock<ResourceHelper> { whenever(it.gs(R.string.not_available_full)).thenReturn("N/A") }
         val content = OpenAPSComposeContent(apsPlugin, rxBus, rh, mock<DateUtil>())

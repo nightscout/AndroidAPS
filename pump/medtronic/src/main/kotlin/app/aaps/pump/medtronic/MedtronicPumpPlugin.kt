@@ -213,7 +213,7 @@ class MedtronicPumpPlugin @Inject constructor(
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
         // Pass only to setup wizard
-        rxBus.toFlow(EventRileyLinkDeviceStatusChange::class.java)
+        rxBus.toFlow(EventRileyLinkDeviceStatusChange::class)
             .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { event ->
                 rxBus.send(EventSWRLStatus(rh.gs(event.getStatus())))
             }

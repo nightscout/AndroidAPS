@@ -114,7 +114,7 @@ class DataHandlerMobileWearBolusTest : TestBaseWithProfile() {
      */
     private fun collectMobileToWear(onPayload: (EventData) -> Unit): Job =
         CoroutineScope(Dispatchers.Unconfined).launch(start = CoroutineStart.UNDISPATCHED) {
-            rxBus.toFlow(EventMobileToWear::class.java).collect { onPayload(it.payload) }
+            rxBus.toFlow(EventMobileToWear::class).collect { onPayload(it.payload) }
         }
     /** Capture the single [ConfirmAction] the handler ships to the watch via [EventMobileToWear]. */
     private inline fun capturedConfirm(block: () -> Unit): EventData.ConfirmAction {

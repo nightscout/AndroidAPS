@@ -53,11 +53,11 @@ class LoopViewModel(
     val uiState: StateFlow<LoopUiState> = _uiState.asStateFlow()
 
     init {
-        rxBus.toFlow(EventLoopUpdateGui::class.java)
+        rxBus.toFlow(EventLoopUpdateGui::class)
             .onEach { updateState() }
             .launchIn(scope)
 
-        rxBus.toFlow(EventLoopSetLastRunGui::class.java)
+        rxBus.toFlow(EventLoopSetLastRunGui::class)
             .onEach { event ->
                 _uiState.value = LoopUiState(statusMessage = event.text)
             }

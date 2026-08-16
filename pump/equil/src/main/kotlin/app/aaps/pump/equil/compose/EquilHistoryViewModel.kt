@@ -68,7 +68,7 @@ class EquilHistoryViewModel @Inject constructor(
 
     init {
         loadData()
-        rxBus.toFlow(EventEquilDataChanged::class.java)
+        rxBus.toFlow(EventEquilDataChanged::class)
             .onEach { loadData() }
             .launchIn(viewModelScope)
     }

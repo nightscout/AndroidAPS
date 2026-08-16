@@ -114,7 +114,7 @@ class RunningConfigurationPublisher @Inject constructor(
                 }
             }
 
-            val switchTrigger: Flow<Unit> = rxBus.toFlow(EventConfigBuilderChange::class.java).map { }
+            val switchTrigger: Flow<Unit> = rxBus.toFlow(EventConfigBuilderChange::class).map { }
             // Authorized-clients changes (pair / unpair / revoke / markActive) republish so paired
             // clients can read the current roster and detect when they've been orphaned.
             val authorizedClientsTrigger: Flow<Unit> = authorizedRepository.observe().map { }

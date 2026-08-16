@@ -193,7 +193,7 @@ class LoopPlugin @Inject constructor(
         // exactly when isSuspended() may have flipped. runningModePreCheck() is idempotent (writes only when
         // isSuspended() and the RM mode disagree, APS-gated) and emits only EventRefreshOverview — never
         // EventPumpStatusChanged — so there is no feedback loop. The debounce collapses connection chatter.
-        rxBus.toFlow(EventPumpStatusChanged::class.java)
+        rxBus.toFlow(EventPumpStatusChanged::class)
             .debounce(1000L)
             .onEach {
                 try {

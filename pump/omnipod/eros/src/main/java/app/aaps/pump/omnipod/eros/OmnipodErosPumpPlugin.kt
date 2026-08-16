@@ -259,18 +259,18 @@ class OmnipodErosPumpPlugin @Inject constructor(
         // has no replay, so a scheduled collector could miss an event sent before it starts.
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
-        rxBus.toFlow(EventAppExit::class.java)
+        rxBus.toFlow(EventAppExit::class)
             .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { serviceConnection?.let { context.unbindService(it) } }
-        rxBus.toFlow(EventOmnipodErosTbrChanged::class.java)
+        rxBus.toFlow(EventOmnipodErosTbrChanged::class)
             .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { handleCancelledTbr() }
-        rxBus.toFlow(EventOmnipodErosUncertainTbrRecovered::class.java)
+        rxBus.toFlow(EventOmnipodErosUncertainTbrRecovered::class)
             .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { handleUncertainTbrRecovery() }
-        rxBus.toFlow(EventOmnipodErosActiveAlertsChanged::class.java)
+        rxBus.toFlow(EventOmnipodErosActiveAlertsChanged::class)
             .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { handleActivePodAlerts() }
-        rxBus.toFlow(EventOmnipodErosFaultEventChanged::class.java)
+        rxBus.toFlow(EventOmnipodErosFaultEventChanged::class)
             .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { handlePodFaultEvent() }
         // Pass only to setup wizard
-        rxBus.toFlow(EventRileyLinkDeviceStatusChange::class.java)
+        rxBus.toFlow(EventRileyLinkDeviceStatusChange::class)
             .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { event ->
                 rxBus.send(EventSWRLStatus(rh.gs(event.getStatus())))
             }
@@ -300,7 +300,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
                 commandQueue.customCommand(CommandUpdateAlertConfiguration())
             }
         }
-        rxBus.toFlow(EventAppInitialized::class.java)
+        rxBus.toFlow(EventAppInitialized::class)
             .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) {
                 // See if a bolus was active before the app previously exited
                 // If so, add it to history

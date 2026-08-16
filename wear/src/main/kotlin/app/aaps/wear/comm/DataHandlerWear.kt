@@ -103,7 +103,7 @@ class DataHandlerWear @Inject constructor(
         // dataStoreScope is Dispatchers.IO, matching observeOn(aapsSchedulers.io). UNDISPATCHED because
         // these subscribe from setupBus() on a replay-0 bus: a scheduled collector could miss anything
         // sent before it started.
-        rxBus.toFlow(T::class.java)
+        rxBus.toFlow(T::class)
             .collectResilient(dataStoreScope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { event ->
                 aapsLogger.debug(LTag.WEAR, "${T::class.java.simpleName} received from ${event.sourceNodeId}${detail(event)}")
                 handler(event)

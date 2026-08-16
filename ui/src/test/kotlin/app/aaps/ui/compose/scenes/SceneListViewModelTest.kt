@@ -64,10 +64,10 @@ internal class SceneListViewModelTest {
         whenever(activeSceneManager.activeSceneState).thenReturn(MutableStateFlow<ActiveSceneState?>(null))
         whenever(nsClient.masterReachable).thenReturn(MutableStateFlow(false))
         // init references these event flows synchronously (onEach before the deferred launchIn):
-        whenever(rxBus.toFlow(EventPumpStatusChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventLoopUpdateGui::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventInitializationChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventRefreshOverview::class.java)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventPumpStatusChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventLoopUpdateGui::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventInitializationChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventRefreshOverview::class)).thenReturn(emptyFlow())
         sut = SceneListViewModel(
             sceneRepository, activeSceneManager, persistenceLayer, profileRepository, rh, rxBus,
             dateUtil, config, sceneActions, sceneChainTargetResolver, nsClient

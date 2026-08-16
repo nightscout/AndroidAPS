@@ -129,7 +129,7 @@ class MedtrumService : DaggerService(), MedtrumBleCallback {
         // Same service scope as the preference observers below, which is IO like the io scheduler
         // used before. UNDISPATCHED because RxBus has no replay, so a scheduled collector could miss
         // an exit sent before it starts.
-        rxBus.toFlow(EventAppExit::class.java)
+        rxBus.toFlow(EventAppExit::class)
             .collectResilient(scope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { stopSelf() }
         preferences.observe(MedtrumStringNonKey.SnInput).drop(1).collectResilient(scope, aapsLogger, LTag.PUMP) {
             aapsLogger.debug(LTag.PUMPCOMM, "Serial number changed, reporting new pump!")

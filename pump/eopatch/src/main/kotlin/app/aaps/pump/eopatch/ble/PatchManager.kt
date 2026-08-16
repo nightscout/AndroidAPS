@@ -112,7 +112,7 @@ class PatchManager @Inject constructor(
         // App lifetime scope, matching the CompositeDisposable here which is never cleared. IO, like
         // observeOn(aapsSchedulers.io). UNDISPATCHED because RxBus has no replay, so a scheduled
         // collector could miss an alert sent before it starts.
-        rxBus.toFlow(EventPatchActivationNotComplete::class.java)
+        rxBus.toFlow(EventPatchActivationNotComplete::class)
             .collectResilient(scope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) {
                 notificationManager.post(
                     id = NotificationId.EOFLOW_PATCH_ALERT,
