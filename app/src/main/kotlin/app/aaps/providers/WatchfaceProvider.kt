@@ -7,8 +7,8 @@ import android.database.MatrixCursor
 import android.net.Uri
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.iob.BgDataInterface
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
+import app.aaps.core.interfaces.overview.LastBgData
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -25,7 +25,7 @@ class WatchfaceProvider : DaggerContentProvider() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var iobCobCalculator: IobCobCalculator
-    @Inject lateinit var lastBgData: BgDataInterface
+    @Inject lateinit var lastBgData: LastBgData
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Inject lateinit var overviewData: OverviewData
     @Inject lateinit var profileUtil: ProfileUtil
