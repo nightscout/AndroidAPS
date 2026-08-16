@@ -174,7 +174,7 @@ class WearViewModel @Inject constructor(
         val authorVersion = metadata[CwfMetadataKey.CWF_AUTHOR_VERSION]
         val title = if (authorVersion != null) "$titleName ($authorVersion)" else titleName
 
-        val fileName = metadata[CwfMetadataKey.CWF_FILENAME]?.let { "$it${ZipWatchfaceFormat.CWF_EXTENSION}" } ?: ""
+        val fileName = metadata[CwfMetadataKey.CWF_FILENAME]?.let { "$it.${ZipWatchfaceFormat.CWF_EXTENSION}" } ?: ""
 
         val prefItems = metadata
             .filter { it.key.isPref && (it.value.lowercase() == "true" || it.value.lowercase() == "false") }

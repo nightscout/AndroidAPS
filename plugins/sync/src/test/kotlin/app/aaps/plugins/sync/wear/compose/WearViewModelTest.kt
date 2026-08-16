@@ -165,6 +165,33 @@ internal class WearViewModelTest {
     }
 
     @Test
+    fun `showCwfInfos lists visible complication views and hides the others`() {
+        val json = """
+            {
+              "background": { "width": 400, "visibility": "visible" },
+              "complication1": { "width": 106, "height": 106, "visibility": "visible" },
+              "complication2": { "width": 106, "height": 106, "visibility": "gone" },
+              "complication4": { "width": 267, "height": 102, "visibility": "visible" }
+            }
+        """.trimIndent()
+        savedCustomWatchfaceFlow.value = CwfData(
+            json = json,
+            metadata = mutableMapOf(CwfMetadataKey.CWF_NAME to "TestWatch"),
+            resData = mutableMapOf()
+        )
+        whenever(rh.gs(any<Int>(), any())).thenReturn("mocked")
+        whenever(rh.gs(any<Int>())).thenReturn("comment")
+        whenever(versionCheckerUtils.versionDigits(any())).thenReturn(intArrayOf(1, 0, 0))
+
+        sut.showCwfInfos()
+
+        val keys = sut.uiState.value.cwfInfosState?.viewElements?.map { it.key }
+        assertThat(keys).contains("\"complication1\":")
+        assertThat(keys).contains("\"complication4\":")
+        assertThat(keys).doesNotContain("\"complication2\":")
+    }
+
+    @Test
     fun `showCwfInfos and hideCwfInfos toggle showInfos`() {
         // Without cwfData, showCwfInfos should be a no-op
         sut.showCwfInfos()
