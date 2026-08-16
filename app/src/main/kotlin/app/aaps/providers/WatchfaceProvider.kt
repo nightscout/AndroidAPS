@@ -68,6 +68,17 @@ class WatchfaceProvider : DaggerContentProvider() {
             val c = MatrixCursor(
                 arrayOf("bg", "bg_display", "delta", "iob", "basal", "ts", "history", "loop")
             )
+            // 运行状态完整映射(表盘直接显示)
+            val loopState = when (loop.runningMode) {
+                RM.Mode.CLOSED_LOOP -> "闭环"
+                RM.Mode.CLOSED_LOOP_LGS -> "低血糖维持"
+                RM.Mode.OPEN_LOOP -> "开环"
+                RM.Mode.DISABLED_LOOP -> "禁用"
+                RM.Mode.DISCONNECTED_PUMP -> "断泵"
+                RM.Mode.SUPER_BOLUS -> "大剂量"
+                RM.Mode.SUSPENDED_BY_PUMP, RM.Mode.SUSPENDED_BY_USER, RM.Mode.SUSPENDED_BY_DST -> "暂停"
+                else -> "开环"
+            }
             c.addRow(
                 arrayOf(
                     lastBg.recalculated,
@@ -77,7 +88,7 @@ class WatchfaceProvider : DaggerContentProvider() {
                     basal,
                     lastBg.timestamp,
                     history.joinToString(","),  // Cursor 不支持数组, 逗号分隔字符串
-                    if (loop.runningMode.isClosedLoopOrLgs()) 1 else 0  // 闭环状态实时跟随
+                    loopState  // 实时跟随 AAPS runningMode
                 )
             )
             c
