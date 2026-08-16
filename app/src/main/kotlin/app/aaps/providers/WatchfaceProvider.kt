@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.objects.extensions.round
+import dagger.android.AndroidInjection
 import dagger.android.DaggerContentProvider
 import javax.inject.Inject
 
@@ -30,12 +31,23 @@ class WatchfaceProvider : DaggerContentProvider() {
     @Inject lateinit var overviewData: OverviewData
     @Inject lateinit var profileUtil: ProfileUtil
 
+    private var injected = false
+
     override fun onCreate(): Boolean = true
 
     override fun query(
         uri: Uri, projection: Array<String>?, selection: String?,
         selectionArgs: Array<String>?, sortOrder: String?
     ): Cursor? {
+        // provider.onCreate 早于 Application 初始化, Dagger 注入在此补做
+        if (!injected) {
+            try {
+                AndroidInjection.inject(this)
+            } catch (e: Exception) {
+                aapsLogger.debug(LTag.CORE, "glance provider inject err: ${e.message}")
+            }
+            injected = true
+        }
         val lastBg = lastBgData.lastBg()
         if (lastBg == null) {
             aapsLogger.debug(LTag.CORE, "glance provider: lastBg null")
