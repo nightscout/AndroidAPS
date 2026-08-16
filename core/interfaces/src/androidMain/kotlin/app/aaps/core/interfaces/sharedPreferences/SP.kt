@@ -17,19 +17,13 @@ interface SP {
 
         fun clear()
 
-        fun remove(@StringRes resourceID: Int)
         fun remove(key: String)
 
         fun putBoolean(key: String, value: Boolean)
-        fun putBoolean(@StringRes resourceID: Int, value: Boolean)
         fun putDouble(key: String, value: Double)
-        fun putDouble(@StringRes resourceID: Int, value: Double)
         fun putLong(key: String, value: Long)
-        fun putLong(@StringRes resourceID: Int, value: Long)
         fun putInt(key: String, value: Int)
-        fun putInt(@StringRes resourceID: Int, value: Int)
         fun putString(key: String, value: String)
-        fun putString(@StringRes resourceID: Int, value: String)
     }
 
     /**
