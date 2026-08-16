@@ -5,6 +5,8 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.database.MatrixCursor
 import android.net.Uri
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.iob.BgDataInterface
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
@@ -21,6 +23,7 @@ import javax.inject.Inject
  */
 class WatchfaceProvider : DaggerContentProvider() {
 
+    @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var lastBgData: BgDataInterface
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
@@ -33,7 +36,11 @@ class WatchfaceProvider : DaggerContentProvider() {
         uri: Uri, projection: Array<String>?, selection: String?,
         selectionArgs: Array<String>?, sortOrder: String?
     ): Cursor? {
-        val lastBg = lastBgData.lastBg() ?: return null
+        val lastBg = lastBgData.lastBg()
+        if (lastBg == null) {
+            aapsLogger.debug(LTag.CORE, "glance provider: lastBg null")
+            return null
+        }
         return try {
             val glucoseStatus = glucoseStatusProvider.getGlucoseStatusData(true)
             val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
@@ -59,6 +66,7 @@ class WatchfaceProvider : DaggerContentProvider() {
             )
             c
         } catch (e: Exception) {
+            aapsLogger.debug(LTag.CORE, "glance provider err: ${e.message}")
             null
         }
     }
