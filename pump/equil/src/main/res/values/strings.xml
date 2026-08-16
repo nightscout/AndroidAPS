@@ -132,24 +132,8 @@
 
     <string name="equil_common_overview_button_suspend_delivery">Suspend</string>
     <string name="equil_common_overview_button_resume_delivery">Resume delivery</string>
-    <string name="equil_common_moments_ago">Moments ago</string>
-    <string name="equil_common_less_than_a_minute_ago">Less than a minute ago</string>
-    <string name="equil_common_time_ago">%1$s ago</string>
-    <string name="equil_common_composite_time">%1$s and %2$s</string>
     <string name="equil_common_wizard_exit_confirmation_text">You haven\'t completed all steps yet. Are you sure you want to exit?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Exit</string>
-    <plurals name="equil_common_minutes">
-        <item quantity="one">%1$d minute</item>
-        <item quantity="other">%1$d minutes</item>
-    </plurals>
-    <plurals name="equil_common_hours">
-        <item quantity="one">%1$d hour</item>
-        <item quantity="other">%1$d hours</item>
-    </plurals>
-    <plurals name="equil_common_days">
-        <item quantity="one">%1$d day</item>
-        <item quantity="other">%1$d days</item>
-    </plurals>
     <string name="equil_support_error">Firmware version too low. Not supported</string>
     <string name="equil_password_tips">Optionally set a password for pairing with the Equil v5.3 pump. This password will also be used for unpairing in the future, so please be sure to remember it. Password rule: It must be 4 characters long, chosen from ABCDEF0123456789.</string>
     <string name="equil_set_pair_password">Set pair password</string>

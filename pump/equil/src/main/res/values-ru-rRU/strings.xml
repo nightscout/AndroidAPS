@@ -104,30 +104,8 @@
     <string name="equil_history_item18">Аномалия инфузии остановлена</string>
     <string name="equil_common_overview_button_suspend_delivery">Останов</string>
     <string name="equil_common_overview_button_resume_delivery">Возобновить ввод</string>
-    <string name="equil_common_moments_ago">Только что</string>
-    <string name="equil_common_less_than_a_minute_ago">Менее минуты назад</string>
-    <string name="equil_common_time_ago">%1$s назад</string>
-    <string name="equil_common_composite_time">%1$s и %2$s</string>
     <string name="equil_common_wizard_exit_confirmation_text">Еще Не выполнены все шаги. Действительно хотите выйти?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Выйти</string>
-    <plurals name="equil_common_minutes">
-        <item quantity="one">%1$d минута</item>
-        <item quantity="few">%1$d минуты</item>
-        <item quantity="many">%1$d минут</item>
-        <item quantity="other">%1$d мин</item>
-    </plurals>
-    <plurals name="equil_common_hours">
-        <item quantity="one">%1$d час</item>
-        <item quantity="few">%1$d часа</item>
-        <item quantity="many">%1$d часов</item>
-        <item quantity="other">%1$d час</item>
-    </plurals>
-    <plurals name="equil_common_days">
-        <item quantity="one">%1$d день</item>
-        <item quantity="few">%1$d дня</item>
-        <item quantity="many">%1$d дней</item>
-        <item quantity="other">%1$d дн</item>
-    </plurals>
     <string name="equil_support_error">Версия прошивки слишком мала. Не поддерживается</string>
     <string name="equil_set_pair_password">Установите пароль сопряжения</string>
     <string name="equil_hint1">После установки помпы на платформу выберите, следует ли выдуть воздух из иглы.</string>

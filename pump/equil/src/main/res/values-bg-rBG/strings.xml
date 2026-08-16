@@ -114,24 +114,8 @@
     <string name="equil_history_item18">Неправилна инфузия е спряна</string>
     <string name="equil_common_overview_button_suspend_delivery">Спиране</string>
     <string name="equil_common_overview_button_resume_delivery">Възобновяване доставянето на инсулин</string>
-    <string name="equil_common_moments_ago">Преди малко</string>
-    <string name="equil_common_less_than_a_minute_ago">Преди по-малко от минута</string>
-    <string name="equil_common_time_ago">преди %1$sсек</string>
-    <string name="equil_common_composite_time">%1$s и %2$s</string>
     <string name="equil_common_wizard_exit_confirmation_text">Не сте завършили стъпките. Сигурни ли сте?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Изход</string>
-    <plurals name="equil_common_minutes">
-        <item quantity="one">%1$d минутa</item>
-        <item quantity="other">%1$d минутa</item>
-    </plurals>
-    <plurals name="equil_common_hours">
-        <item quantity="one">%1$d час</item>
-        <item quantity="other">%1$d часа</item>
-    </plurals>
-    <plurals name="equil_common_days">
-        <item quantity="one">%1$d дeн</item>
-        <item quantity="other">%1$d days</item>
-    </plurals>
     <string name="equil_support_error">Версията на фърмуера е твърде ниска и не се поддържа</string>
     <string name="equil_password_tips">Парола за връзка с  Equil v5.3 помпа. Tя ще се използва и за разкачане, ЗАПОМНЕТЕ Я. Праволото е: 4 символа, между ABCDEF0123456789.</string>
     <string name="equil_set_pair_password">Парола</string>

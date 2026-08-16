@@ -114,21 +114,8 @@
     <string name="equil_history_item18">異常輸液停止</string>
     <string name="equil_common_overview_button_suspend_delivery">暫停</string>
     <string name="equil_common_overview_button_resume_delivery">恢復輸送</string>
-    <string name="equil_common_moments_ago">片刻前</string>
-    <string name="equil_common_less_than_a_minute_ago">不到一分鐘前</string>
-    <string name="equil_common_time_ago">%1$s前</string>
-    <string name="equil_common_composite_time">%1$s和%2$s</string>
     <string name="equil_common_wizard_exit_confirmation_text">您尚未完成所有步驟。您確定要退出嗎？</string>
     <string name="equil_common_wizard_exit_confirmation_title">退出</string>
-    <plurals name="equil_common_minutes">
-        <item quantity="other">%1$d 分鐘</item>
-    </plurals>
-    <plurals name="equil_common_hours">
-        <item quantity="other">%1$d 小時</item>
-    </plurals>
-    <plurals name="equil_common_days">
-        <item quantity="other">%1$d 天</item>
-    </plurals>
     <string name="equil_support_error">韌體版本過低。不支援</string>
     <string name="equil_password_tips">可選擇為與 Equil v5.3 幫浦配對設定密碼。此密碼未來也將用於取消配對，請務必記住。密碼規則：必須為 4 個字元，且只能從 ABCDEF0123456789 中選擇。</string>
     <string name="equil_set_pair_password">設定配對密碼</string>
