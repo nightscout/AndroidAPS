@@ -2,7 +2,7 @@ package app.aaps.core.interfaces.insulin
 
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.interfaces.InterfacesStrings
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.interfaces.TextRef
 
 enum class InsulinType(val value: Int, val insulinEndTime: Long, val insulinPeakTime: Long, val label: TextRef, val comment: TextRef) {
@@ -19,7 +19,7 @@ enum class InsulinType(val value: Int, val insulinEndTime: Long, val insulinPeak
         get() = ICfg(this.name, insulinEndTime, insulinPeakTime, 1.0)
 
     /** Provide iCfg with a default friendly name on insulin creation from template */
-    fun getICfg(rh: ResourceHelper): ICfg = ICfg(rh.gs(this.label), insulinEndTime, insulinPeakTime, 1.0)
+    fun getICfg(rh: TextResolver): ICfg = ICfg(rh.gs(this.label), insulinEndTime, insulinPeakTime, 1.0)
 
     companion object {
 

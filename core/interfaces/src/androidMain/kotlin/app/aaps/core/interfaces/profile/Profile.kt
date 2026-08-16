@@ -6,7 +6,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.pump.Pump
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.Round
@@ -24,7 +24,7 @@ interface Profile {
     /**
      * Check validity of profile
      */
-    fun isValid(from: String, pump: Pump, config: Config, rh: ResourceHelper, notificationManager: NotificationManager, hardLimits: HardLimits, sendNotifications: Boolean): ValidityCheck
+    fun isValid(from: String, pump: Pump, config: Config, rh: TextResolver, notificationManager: NotificationManager, hardLimits: HardLimits, sendNotifications: Boolean): ValidityCheck
 
     /**
      * Units used for ISF & target
@@ -127,10 +127,10 @@ interface Profile {
      */
     fun getTargetHighMgdlTimeFromMidnight(timeAsSeconds: Int): Double
 
-    fun getIcList(rh: ResourceHelper, dateUtil: DateUtil): String
-    fun getIsfList(rh: ResourceHelper, dateUtil: DateUtil): String
-    fun getBasalList(rh: ResourceHelper, dateUtil: DateUtil): String
-    fun getTargetList(rh: ResourceHelper, dateUtil: DateUtil): String
+    fun getIcList(rh: TextResolver, dateUtil: DateUtil): String
+    fun getIsfList(rh: TextResolver, dateUtil: DateUtil): String
+    fun getBasalList(rh: TextResolver, dateUtil: DateUtil): String
+    fun getTargetList(rh: TextResolver, dateUtil: DateUtil): String
 
     fun convertToNonCustomizedProfile(dateUtil: DateUtil): PureProfile
     fun toPureNsJson(dateUtil: DateUtil): JsonObject

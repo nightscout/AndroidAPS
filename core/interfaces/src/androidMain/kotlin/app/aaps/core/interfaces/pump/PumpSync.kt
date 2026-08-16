@@ -1,5 +1,6 @@
 package app.aaps.core.interfaces.pump
 
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TB
@@ -9,7 +10,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.R
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import kotlin.math.max
 import kotlin.math.min
@@ -99,14 +100,14 @@ interface PumpSync {
                 if (isAbsolute) rate
                 else profile.getBasal(time) * rate / 100
 
-            fun toStringFull(dateUtil: DateUtil, rh: ResourceHelper): String {
+            fun toStringFull(dateUtil: DateUtil, rh: TextResolver): String {
                 return when {
                     isAbsolute -> {
-                        rh.gs(R.string.temp_basal_absolute_rate, rate, dateUtil.timeString(timestamp), getPassedDurationToTimeInMinutes(dateUtil.now()), durationInMinutes)
+                        rh.gs(TextRef.AndroidRes(R.string.temp_basal_absolute_rate), rate, dateUtil.timeString(timestamp), getPassedDurationToTimeInMinutes(dateUtil.now()), durationInMinutes)
                     }
 
                     else       -> { // percent
-                        rh.gs(R.string.temp_basal_percent_rate, rate, dateUtil.timeString(timestamp), getPassedDurationToTimeInMinutes(dateUtil.now()), durationInMinutes)
+                        rh.gs(TextRef.AndroidRes(R.string.temp_basal_percent_rate), rate, dateUtil.timeString(timestamp), getPassedDurationToTimeInMinutes(dateUtil.now()), durationInMinutes)
                     }
                 }
             }
@@ -138,8 +139,8 @@ interface PumpSync {
             private fun getPassedDurationToTimeInMinutes(time: Long): Int =
                 ((min(time, end) - timestamp) / 60.0 / 1000).roundToInt()
 
-            fun toStringFull(dateUtil: DateUtil, rh: ResourceHelper): String =
-                rh.gs(R.string.temp_basal_extended_bolus, rate, dateUtil.timeString(timestamp), getPassedDurationToTimeInMinutes(dateUtil.now()), T.msecs(duration).mins())
+            fun toStringFull(dateUtil: DateUtil, rh: TextResolver): String =
+                rh.gs(TextRef.AndroidRes(R.string.temp_basal_extended_bolus), rate, dateUtil.timeString(timestamp), getPassedDurationToTimeInMinutes(dateUtil.now()), T.msecs(duration).mins())
 
         }
 

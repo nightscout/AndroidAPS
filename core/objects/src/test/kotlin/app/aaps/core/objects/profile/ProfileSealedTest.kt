@@ -1,6 +1,7 @@
 package app.aaps.core.objects.profile
 
 import android.content.Context
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -64,10 +65,10 @@ class ProfileSealedTest : TestBase() {
         dateUtil = DateUtilImpl(context)
         hardLimits = HardLimitsMock(preferences, rh)
         whenever(activePlugin.activePump).thenReturn(testPumpPlugin)
-        whenever(rh.gs(app.aaps.core.ui.R.string.profile_isf_units_mgdl)).thenReturn("mg/dL/U")
-        whenever(rh.gs(app.aaps.core.ui.R.string.profile_isf_units_mmol)).thenReturn("mmol/L/U")
-        whenever(rh.gs(app.aaps.core.ui.R.string.profile_carbs_per_unit)).thenReturn("g/U")
-        whenever(rh.gs(app.aaps.core.ui.R.string.profile_ins_units_per_hour)).thenReturn("U/h")
+        whenever(rh.gs(TextRef.AndroidRes(app.aaps.core.ui.R.string.profile_isf_units_mgdl))).thenReturn("mg/dL/U")
+        whenever(rh.gs(TextRef.AndroidRes(app.aaps.core.ui.R.string.profile_isf_units_mmol))).thenReturn("mmol/L/U")
+        whenever(rh.gs(TextRef.AndroidRes(app.aaps.core.ui.R.string.profile_carbs_per_unit))).thenReturn("g/U")
+        whenever(rh.gs(TextRef.AndroidRes(app.aaps.core.ui.R.string.profile_ins_units_per_hour))).thenReturn("U/h")
         whenever(rh.gs(anyInt(), anyString())).thenReturn("")
         whenever(activePlugin.activeAPS).thenReturn(aps)
     }

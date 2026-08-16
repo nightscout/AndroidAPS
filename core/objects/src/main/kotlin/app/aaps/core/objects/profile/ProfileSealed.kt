@@ -22,7 +22,7 @@ import app.aaps.core.interfaces.profile.Profile.ProfileValue
 import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpProfile
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.objects.extensions.blockValueBySeconds
@@ -163,7 +163,7 @@ sealed class ProfileSealed(
         override val iCfg = null
     }
 
-    override fun isValid(from: String, pump: Pump, config: Config, rh: ResourceHelper, notificationManager: NotificationManager, hardLimits: HardLimits, sendNotifications: Boolean): Profile.ValidityCheck {
+    override fun isValid(from: String, pump: Pump, config: Config, rh: TextResolver, notificationManager: NotificationManager, hardLimits: HardLimits, sendNotifications: Boolean): Profile.ValidityCheck {
         // Full validity = semantic (pump-independent) AND pump compatibility. Activating a profile
         // on the pump requires both; editing, local storage and Nightscout sync only require
         // [validateSemantic] (a profile that's merely incompatible with the *current* pump is still
@@ -181,13 +181,13 @@ sealed class ProfileSealed(
      * the gate for editing, local storage and Nightscout sync — independent of the active pump, so
      * switching pumps never silently blocks profile sync.
      */
-    fun validateSemantic(rh: ResourceHelper, hardLimits: HardLimits): Profile.ValidityCheck {
+    fun validateSemantic(rh: TextResolver, hardLimits: HardLimits): Profile.ValidityCheck {
         val validityCheck = Profile.ValidityCheck()
         for (basal in basalBlocks) {
             val basalAmount = basal.amount * percentage / 100.0
             if (basalAmount !in 0.01..hardLimits.maxBasal()) {
                 validityCheck.isValid = false
-                validityCheck.reasons.add(rh.gs(R.string.value_out_of_hard_limits, rh.gs(R.string.basal_value), basalAmount))
+                validityCheck.reasons.add(rh.gs(TextRef.AndroidRes(R.string.value_out_of_hard_limits), rh.gs(TextRef.AndroidRes(R.string.basal_value)), basalAmount))
                 break
             }
         }
@@ -195,7 +195,7 @@ sealed class ProfileSealed(
             // Todo, add check for peak and concentration, (or delegate iCfg validity check to insulinPlugin which will have this function)
             if (it.dia !in hardLimits.diaRange()) {
                 validityCheck.isValid = false
-                validityCheck.reasons.add(rh.gs(R.string.value_out_of_hard_limits, rh.gs(R.string.profile_dia), it.dia))
+                validityCheck.reasons.add(rh.gs(TextRef.AndroidRes(R.string.value_out_of_hard_limits), rh.gs(TextRef.AndroidRes(R.string.profile_dia)), it.dia))
             }
         }
         for (ic in icBlocks)
@@ -203,8 +203,8 @@ sealed class ProfileSealed(
                 validityCheck.isValid = false
                 validityCheck.reasons.add(
                     rh.gs(
-                        R.string.value_out_of_hard_limits,
-                        rh.gs(R.string.profile_carbs_ratio_value),
+                        TextRef.AndroidRes(R.string.value_out_of_hard_limits),
+                        rh.gs(TextRef.AndroidRes(R.string.profile_carbs_ratio_value)),
                         ic.amount * 100.0 / percentage
                     )
                 )
@@ -215,8 +215,8 @@ sealed class ProfileSealed(
                 validityCheck.isValid = false
                 validityCheck.reasons.add(
                     rh.gs(
-                        R.string.value_out_of_hard_limits,
-                        rh.gs(R.string.profile_sensitivity_value),
+                        TextRef.AndroidRes(R.string.value_out_of_hard_limits),
+                        rh.gs(TextRef.AndroidRes(R.string.profile_sensitivity_value)),
                         isf.amount * 100.0 / percentage
                     )
                 )
@@ -225,12 +225,12 @@ sealed class ProfileSealed(
         for (target in targetBlocks) {
             if (toMgdl(target.lowTarget, units) !in HardLimits.LIMIT_MIN_BG) {
                 validityCheck.isValid = false
-                validityCheck.reasons.add(rh.gs(R.string.value_out_of_hard_limits, rh.gs(R.string.profile_low_target), target.lowTarget))
+                validityCheck.reasons.add(rh.gs(TextRef.AndroidRes(R.string.value_out_of_hard_limits), rh.gs(TextRef.AndroidRes(R.string.profile_low_target)), target.lowTarget))
                 break
             }
             if (toMgdl(target.highTarget, units) !in HardLimits.LIMIT_MAX_BG) {
                 validityCheck.isValid = false
-                validityCheck.reasons.add(rh.gs(R.string.value_out_of_hard_limits, rh.gs(R.string.profile_high_target), target.highTarget))
+                validityCheck.reasons.add(rh.gs(TextRef.AndroidRes(R.string.value_out_of_hard_limits), rh.gs(TextRef.AndroidRes(R.string.profile_high_target)), target.highTarget))
                 break
             }
         }
@@ -251,7 +251,7 @@ sealed class ProfileSealed(
      * consistently corrected profile anyway. Removing it is what let [app.aaps.core.data.model.data.Block]
      * become immutable.
      */
-    fun validatePump(from: String, pump: Pump, config: Config, rh: ResourceHelper, notificationManager: NotificationManager, sendNotifications: Boolean): Profile.ValidityCheck {
+    fun validatePump(from: String, pump: Pump, config: Config, rh: TextResolver, notificationManager: NotificationManager, sendNotifications: Boolean): Profile.ValidityCheck {
         val validityCheck = Profile.ValidityCheck()
         val description = pump.pumpDescription
         for (basal in basalBlocks) {
@@ -265,7 +265,7 @@ sealed class ProfileSealed(
                     }
                     validityCheck.isValid = false
                     validityCheck.reasons.add(
-                        rh.gs(R.string.basalprofilenotaligned, from)
+                        rh.gs(TextRef.AndroidRes(R.string.basalprofilenotaligned), from)
                     )
                     break
                 }
@@ -274,23 +274,23 @@ sealed class ProfileSealed(
             if (basalAmount < description.basalMinimumRate) {
                 if (sendNotifications) sendBelowMinimumNotification(from, notificationManager, rh)
                 validityCheck.isValid = false
-                validityCheck.reasons.add(rh.gs(R.string.minimalbasalvaluereplaced, from))
+                validityCheck.reasons.add(rh.gs(TextRef.AndroidRes(R.string.minimalbasalvaluereplaced), from))
                 break
             } else if (basalAmount > description.basalMaximumRate) {
                 if (sendNotifications) sendAboveMaximumNotification(from, notificationManager, rh)
                 validityCheck.isValid = false
-                validityCheck.reasons.add(rh.gs(R.string.maximumbasalvaluereplaced, from))
+                validityCheck.reasons.add(rh.gs(TextRef.AndroidRes(R.string.maximumbasalvaluereplaced), from))
                 break
             }
         }
         return validityCheck
     }
 
-    protected open fun sendBelowMinimumNotification(from: String, notificationManager: NotificationManager, rh: ResourceHelper) {
+    protected open fun sendBelowMinimumNotification(from: String, notificationManager: NotificationManager, rh: TextResolver) {
         notificationManager.post(NotificationId.MINIMAL_BASAL_VALUE_REPLACED, TextRef.AndroidRes(R.string.minimalbasalvaluereplaced, listOf(from)))
     }
 
-    protected open fun sendAboveMaximumNotification(from: String, notificationManager: NotificationManager, rh: ResourceHelper) {
+    protected open fun sendAboveMaximumNotification(from: String, notificationManager: NotificationManager, rh: TextResolver) {
         notificationManager.post(NotificationId.MAXIMUM_BASAL_VALUE_REPLACED, TextRef.AndroidRes(R.string.maximumbasalvaluereplaced, listOf(from)))
     }
 
@@ -367,16 +367,16 @@ sealed class ProfileSealed(
     private fun getTargetHighTimeFromMidnight(timeAsSeconds: Int): Double = targetBlocks.highTargetBlockValueBySeconds(timeAsSeconds, timeshift)
     override fun getTargetHighMgdlTimeFromMidnight(timeAsSeconds: Int): Double = toMgdl(targetBlocks.highTargetBlockValueBySeconds(timeAsSeconds, timeshift), units)
 
-    override fun getIcList(rh: ResourceHelper, dateUtil: DateUtil): String =
-        getValuesList(icBlocks, 100.0 / percentage, NumberFormat.DECIMAL_1, rh.gs(R.string.profile_carbs_per_unit), dateUtil)
+    override fun getIcList(rh: TextResolver, dateUtil: DateUtil): String =
+        getValuesList(icBlocks, 100.0 / percentage, NumberFormat.DECIMAL_1, rh.gs(TextRef.AndroidRes(R.string.profile_carbs_per_unit)), dateUtil)
 
-    override fun getIsfList(rh: ResourceHelper, dateUtil: DateUtil): String =
-        getValuesList(isfBlocks, 100.0 / percentage, NumberFormat.DECIMAL_1, rh.gs(if (units == GlucoseUnit.MGDL) R.string.profile_isf_units_mgdl else R.string.profile_isf_units_mmol), dateUtil)
+    override fun getIsfList(rh: TextResolver, dateUtil: DateUtil): String =
+        getValuesList(isfBlocks, 100.0 / percentage, NumberFormat.DECIMAL_1, rh.gs(TextRef.AndroidRes(if (units == GlucoseUnit.MGDL) R.string.profile_isf_units_mgdl else R.string.profile_isf_units_mmol)), dateUtil)
 
-    override fun getBasalList(rh: ResourceHelper, dateUtil: DateUtil): String =
-        getValuesList(basalBlocks, percentage / 100.0, NumberFormat.DECIMAL_2, rh.gs(R.string.profile_ins_units_per_hour), dateUtil)
+    override fun getBasalList(rh: TextResolver, dateUtil: DateUtil): String =
+        getValuesList(basalBlocks, percentage / 100.0, NumberFormat.DECIMAL_2, rh.gs(TextRef.AndroidRes(R.string.profile_ins_units_per_hour)), dateUtil)
 
-    override fun getTargetList(rh: ResourceHelper, dateUtil: DateUtil): String = getTargetValuesList(targetBlocks, NumberFormat.DECIMAL_1, units.displayLabel, dateUtil)
+    override fun getTargetList(rh: TextResolver, dateUtil: DateUtil): String = getTargetValuesList(targetBlocks, NumberFormat.DECIMAL_1, units.displayLabel, dateUtil)
 
     override fun convertToNonCustomizedProfile(dateUtil: DateUtil): PureProfile =
         PureProfile(
