@@ -9,7 +9,9 @@ object Versions {
     const val versionCode = 1500
 
     const val compileSdk = 36
-    const val minSdk = 31
+    // minSdk 参数化:默认 31(手机/主流);W527 手表版(Android 11)构建加 -Daaps.minSdk=30
+    // 勿改回 const;构建命令示例:./gradlew -Daaps.minSdk=30 assembleRelease
+    val minSdk: Int = System.getProperty("aaps.minSdk")?.toIntOrNull() ?: 31
     const val targetSdk = 32
     const val wearMinSdk = 30
     const val wearTargetSdk = 30

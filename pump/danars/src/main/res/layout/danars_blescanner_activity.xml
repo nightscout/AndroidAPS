@@ -9,7 +9,8 @@
     <ListView
         android:id="@+id/ble_scanner_listview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
     <TextView
         android:id="@+id/ble_scanner_no_device"
@@ -19,5 +20,15 @@
         android:gravity="center"
         android:text="@string/danars_no_device_available"
         android:textColor="#FF7F8288" />
+
+    <!-- 清除配对挪到最底部, 避免误触 -->
+    <Button
+        android:id="@+id/ble_scanner_clear_pairing"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="清除配对（重新配对前使用）"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#D9534F" />
 
 </LinearLayout>

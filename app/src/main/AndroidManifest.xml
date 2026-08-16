@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- 微泰动态/Linx 广播签名权限(官方已注册 action,补权限声明) -->
+    <uses-permission android:name="com.microtechmd.cgms.aidex.permissions.RECEIVE_BG_ESTIMATE" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -64,6 +66,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="app.aaps.ActivateActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTop" />
         <activity
             android:name="app.aaps.activities.PreferencesActivity"
             android:exported="false"
@@ -130,6 +137,16 @@
             </intent-filter>
         </receiver>
 
+        <!-- W527 糖表盘数据请求(表盘 App 定时请求血糖广播) -->
+        <receiver
+            android:name="app.aaps.receivers.WatchfaceReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="app.aaps.watchface.REQUEST" />
+            </intent-filter>
+        </receiver>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -143,6 +160,11 @@
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
+
+        <provider
+            android:name="app.aaps.providers.WatchfaceProvider"
+            android:authorities="info.nightscout.androidaps.watchface"
+            android:exported="true" />
 
     </application>
 

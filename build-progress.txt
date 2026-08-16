@@ -1,0 +1,14 @@
+watch started 17:22:34
+[0分] 已完成任务: 0 | 速率: 0 任务/分 | 当前:  17:22:34
+[0分] 已完成任务: 0 | 速率: 0 任务/分 | 当前:  17:22:49
+[0分] 已完成任务: 0 | 速率: 0 任务/分 | 当前:  17:23:04
+[0分] 已完成任务: 13 | 速率: 0 任务/分 | 当前: :buildSrc:jar UP-TO-DATE 17:23:19
+[1分] 已完成任务: 13 | 速率: 13.0 任务/分 | 当前: :buildSrc:jar UP-TO-DATE 17:23:34
+[1分] 已完成任务: 13 | 速率: 13.0 任务/分 | 当前: :buildSrc:jar UP-TO-DATE 17:23:49
+[1分] 已完成任务: 13 | 速率: 13.0 任务/分 | 当前: :buildSrc:jar UP-TO-DATE 17:24:04
+[1分] 已完成任务: 610 | 速率: 610.0 任务/分 | 当前: :app:injectCrashlyticsMappingFileIdFullRelease UP-TO-DATE 17:24:19
+[2分] 已完成任务: 613 | 速率: 306.5 任务/分 | 当前: :app:processFullReleaseGoogleServices UP-TO-DATE 17:24:34
+[2分] 已完成任务: 894 | 速率: 447.0 任务/分 | 当前: :plugins:automation:mergeFullReleaseAssets UP-TO-DATE 17:24:49
+[2分] 已完成任务: 1051 | 速率: 525.5 任务/分 | 当前: :plugins:configuration:bundleLibRuntimeToDirFullRelease 17:25:04
+[2分] 已完成任务: 1052 | 速率: 526.0 任务/分 | 当前: :plugins:configuration:bundleLibCompileToJarFullRelease 17:25:19
+DONE_FAIL 17:25:34

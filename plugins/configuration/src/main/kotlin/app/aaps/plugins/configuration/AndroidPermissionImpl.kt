@@ -159,17 +159,9 @@ class AndroidPermissionImpl @Inject constructor(
                 text = rh.gs(R.string.need_location_permission),
                 level = Notification.URGENT,
                 actionButtonId = R.string.request,
+                // W527:仅请求前台定位(含BACKGROUND时华强北ROM整个请求静默拒,且后台定位对闭环无用)
                 action = { askForPermission(activity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)) },
                 validityCheck = { permissionNotGranted(activity, Manifest.permission.ACCESS_FINE_LOCATION) || permissionNotGranted(activity, Manifest.permission.ACCESS_COARSE_LOCATION) }
-            )
-        } else if (permissionNotGranted(activity, Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
-            uiInteraction.addNotification(
-                id = Notification.PERMISSION_LOCATION,
-                text = rh.gs(R.string.need_background_location_permission),
-                level = Notification.URGENT,
-                actionButtonId = R.string.request,
-                action = { askForPermission(activity, arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION)) },
-                validityCheck = { permissionNotGranted(activity, Manifest.permission.ACCESS_BACKGROUND_LOCATION) }
             )
         } else uiInteraction.dismissNotification(Notification.PERMISSION_LOCATION)
     }

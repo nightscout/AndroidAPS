@@ -240,18 +240,13 @@ class SWDefinition @Inject constructor(
             .add(
                 swButtonProvider.get()
                      .text(R.string.askforpermission)
+                    // W527:请求前台定位(含BACKGROUND时华强北ROM整个请求静默拒,不弹对话框)
                     .visibility { androidPermission.permissionNotGranted(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) }
-                    .action { androidPermission.askForPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) })
+                    .action { androidPermission.askForPermission(requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)) })
             .add(swBreakProvider.get())
-            .add(swInfoTextProvider.get().label(rh.gs(R.string.need_background_location_permission)))
-            .add(swBreakProvider.get())
-            .add(
-                swButtonProvider.get()
-                     .text(R.string.askforpermission)
-                    .visibility { androidPermission.permissionNotGranted(requireActivity(), Manifest.permission.ACCESS_BACKGROUND_LOCATION) }
-                    .action { androidPermission.askForPermission(requireActivity(), Manifest.permission.ACCESS_BACKGROUND_LOCATION) })
-            .visibility { androidPermission.permissionNotGranted(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) || androidPermission.permissionNotGranted(requireActivity(), Manifest.permission.ACCESS_BACKGROUND_LOCATION) }
-            .validator { !androidPermission.permissionNotGranted(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) && !androidPermission.permissionNotGranted(requireActivity(), Manifest.permission.ACCESS_BACKGROUND_LOCATION) }
+            .visibility { androidPermission.permissionNotGranted(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) }
+            // W527:仅要求前台定位(Android 11+ 后台定位在华强北ROM不可授予,且闭环用不到)
+            .validator { !androidPermission.permissionNotGranted(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) }
 
     private val screenImport
         get() = swScreenProvider.get().with(R.string.import_setting)

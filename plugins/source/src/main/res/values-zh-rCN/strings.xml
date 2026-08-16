@@ -1,20 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Source -->
-    <string name="description_source_ns_client">从 Nightscout 下载 血糖数据</string>
-    <string name="dexcom_app_patched">BYODA德康补丁版(构建你自己的德康应用Build Your Own Dexcom App)</string>
-    <string name="dexcom_short">BYODA</string>
-    <string name="description_source_dexcom">从德康补丁版接收血糖数据(Build Your Own Dexcom App)。</string>
-    <string name="description_source_glimp">从 Glimp 接收血糖值。</string>
-    <string name="description_source_mm640g">从美敦力600Series 的AndroidUploader 接收血糖值。</string>
-    <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">从 Poctech app 接收血糖值。</string>
-    <string name="glunovo">Glunovo</string>
-    <string name="description_source_glunovo">从Glunovo应用接收血糖数据。</string>
-    <string name="tomato">番茄（喵喵）</string>
-    <string name="tomato_short">番茄</string>
-    <string name="description_source_tomato">从番茄app(喵喵设备) 接收血糖值</string>
-    <!-- Patched Syai Tag App -->
-    <!-- Patched SI App -->
-    <!-- Patched Sino App -->
-</resources>
+        <!-- Source -->
+        <string name="description_source_ns_client">从 Nightscout 下载 血糖数据</string>
+        <string name="dexcom_app_patched">BYODA德康补丁版(构建你自己的德康应用Build Your Own Dexcom App)</string>
+        <string name="dexcom_short">BYODA</string>
+        <string name="description_source_dexcom">从德康补丁版接收血糖数据(Build Your Own Dexcom App)。</string>
+        <string name="description_source_glimp">从 Glimp 接收血糖值。</string>
+        <string name="description_source_mm640g">从美敦力600Series 的AndroidUploader 接收血糖值。</string>
+        <string name="poctech">Poctech</string>
+        <string name="description_source_poctech">从 Poctech app 接收血糖值。</string>
+        <string name="glunovo">Glunovo</string>
+        <string name="description_source_glunovo">从Glunovo应用接收血糖数据。</string>
+        <string name="tomato">番茄（喵喵）</string>
+        <string name="tomato_short">番茄</string>
+        <string name="description_source_tomato">从番茄app(喵喵设备) 接收血糖值</string>
+        <string name="microtech_aidex">微泰动态</string>
+        <string name="description_source_microtech_aidex">从微泰动态App(动态/Linx) 接收血糖值</string>
+        <string name="bgsource_upload">血糖上传设置</string>
+        <!-- Patched OT App -->
+        <string name="patched_ottai_app">欧态-小欧生态</string>
+        <string name="description_source_patched_ottai_app">从欧态易测APP接收血糖值。</string>
+        <!-- Patched SI App -->
+        <string name="patched_si_app">X基补丁版</string>
+        <string name="description_source_patched_si_app">从X基补丁版App接收血糖值。</string>
+        <!-- Patched Sino App -->
+        <string name="patched_sino_app">爱看补丁版</string>
+        <string name="description_source_patched_sino_app">从爱看补丁版App接收血糖值。</string>
+    </resources>

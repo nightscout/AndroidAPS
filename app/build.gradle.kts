@@ -15,7 +15,7 @@ plugins {
 
 repositories {
     mavenCentral()
-    google()
+    maven("https://dl.google.com/dl/android/maven2/")
 }
 
 fun generateGitBuild(): String {
@@ -106,7 +106,7 @@ android {
             applicationId = "info.nightscout.androidaps"
             dimension = "standard"
             resValue("string", "app_name", "AAPS")
-            versionName = Versions.appVersion
+            versionName = Versions.appVersion + "-dana"
             manifestPlaceholders["appIcon"] = "@mipmap/ic_launcher"
             manifestPlaceholders["appIconRound"] = "@mipmap/ic_launcher_round"
         }
@@ -180,22 +180,12 @@ dependencies {
     implementation(project(":implementation"))
     implementation(project(":database:impl"))
     implementation(project(":database:persistence"))
-    implementation(project(":pump:combov2"))
     implementation(project(":pump:dana"))
     implementation(project(":pump:danars"))
     implementation(project(":pump:danar"))
-    implementation(project(":pump:diaconn"))
-    implementation(project(":pump:eopatch"))
-    implementation(project(":pump:medtrum"))
     implementation(project(":pump:equil"))
-    implementation(project(":pump:insight"))
-    implementation(project(":pump:medtronic"))
-    implementation(project(":pump:common"))
-    implementation(project(":pump:omnipod:common"))
-    implementation(project(":pump:omnipod:eros"))
-    implementation(project(":pump:omnipod:dash"))
-    implementation(project(":pump:rileylink"))
     implementation(project(":pump:virtual"))
+    implementation(project(":pump:common"))
     implementation(project(":workflow"))
 
     testImplementation(project(":shared:tests"))

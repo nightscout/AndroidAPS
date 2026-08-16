@@ -2,10 +2,12 @@ package app.aaps
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Rect
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.PersistableBundle
 import android.text.SpannableString
 import android.text.method.LinkMovementMethod
@@ -18,11 +20,10 @@ import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
@@ -102,13 +103,22 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var configBuilder: ConfigBuilder
 
-    private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
+    private var actionBarDrawerToggle: ActionBarDrawerToggle? = null
     private var pluginPreferencesMenuItem: MenuItem? = null
     private var menu: Menu? = null
     private var menuOpen = false
     private var isProtectionCheckActive = false
     private lateinit var binding: ActivityMainBinding
     private var mainMenuProvider: MenuProvider? = null
+
+    // 激活页结果: RESULT_OK=验证成功进入主界面; 取消/退出=关闭应用
+    private val activateLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK) {
+            Handler(Looper.getMainLooper()).postDelayed({ start() }, 200)
+        } else {
+            finish()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -120,12 +130,69 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)
+
+        initAllComponents(savedInstanceState)
+
+        val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
+        val verified = prefs.getBoolean("password_verified", false)
+        val hasTotpSecret = prefs.getString("totp_secret", null) != null
+        val lastVerifyTs = prefs.getLong("last_verify_time", 0L)
+        val nowTs = System.currentTimeMillis()
+        val isExpired = lastVerifyTs > 0 && (nowTs - lastVerifyTs >= TotpUtils.EXPIRE_MS)
+
+        // 修复脏数据
+        if (!hasTotpSecret && verified) {
+            prefs.edit()
+                .putBoolean("password_verified", false)
+                .remove("last_verify_time")
+                .apply()
+        }
+
+        // 未验证 或 365天过期 → 全屏激活页(唯一验证入口, 验证成功回 RESULT_OK)
+        if (!verified || isExpired) {
+            activateLauncher.launch(Intent(this, ActivateActivity::class.java))
+            return
+        }
+
+        // 验证有效，启动APP主页+设置向导
+        Handler(Looper.getMainLooper()).postDelayed({
+                                                        start()
+                                                    }, 200)
+    }
+
+
+
+    private fun resetTotpSecret() {
+        val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
+        prefs.edit()
+            .remove("totp_secret")
+            .remove("password_verified")
+            .remove("last_verify_time")
+            .apply()
+        activateLauncher.launch(Intent(this, ActivateActivity::class.java))
+    }
+
+    /**
+     * 授权状态文本:尚未验证 / 剩余X天 / 已过期X天
+     */
+    private fun authStatusText(): String {
+        val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
+        val verified = prefs.getBoolean("password_verified", false)
+        val lastTs = prefs.getLong("last_verify_time", 0L)
+        if (!verified || lastTs == 0L) return "授权状态：尚未验证"
+        val remainMs = TotpUtils.EXPIRE_MS - (System.currentTimeMillis() - lastTs)
+        val days = remainMs / (24 * 60 * 60 * 1000)
+        return if (remainMs > 0) "授权状态：已验证，剩余 $days 天"
+        else "授权状态：已过期 ${-days} 天，请重新验证"
+    }
+
+
+    private fun initAllComponents(savedInstanceState: Bundle?) {
         actionBarDrawerToggle = ActionBarDrawerToggle(this, binding.mainDrawerLayout, R.string.open_navigation, R.string.close_navigation).also {
             binding.mainDrawerLayout.addDrawerListener(it)
             it.syncState()
         }
 
-        // initialize screen wake lock
         processPreferenceChange(EventPreferenceChange(BooleanKey.OverviewKeepScreenOn.key))
 
         disposable += rxBus
@@ -144,11 +211,25 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             .toObservable(EventAppInitialized::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                           // 1st run of app
-                           start()
+                           // 授权锁:未验证/过期不启动主页与向导,避免覆盖授权弹窗
+                           val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
+                           val verified = prefs.getBoolean("password_verified", false)
+                           val lastTs = prefs.getLong("last_verify_time", 0)
+                           val expired = lastTs > 0 && (System.currentTimeMillis() - lastTs >= TotpUtils.EXPIRE_MS)
+                           if (verified && !expired) start()
                        }, fabricPrivacy::logException)
+
+        // 返回键加固：未验证/过期直接退出，无法绕过弹窗
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+                val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
+                val verified = prefs.getBoolean("password_verified", false)
+                val lastTs = prefs.getLong("last_verify_time",0)
+                val expired = lastTs>0 && (System.currentTimeMillis()-lastTs >= TotpUtils.EXPIRE_MS)
+                if (!verified || expired) {
+                    finish()
+                    return
+                }
                 if (binding.mainDrawerLayout.isDrawerOpen(GravityCompat.START))
                     binding.mainDrawerLayout.closeDrawers()
                 else if (menuOpen)
@@ -158,6 +239,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                 else finish()
             }
         })
+
         mainMenuProvider = object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 MenuCompat.setGroupDividerEnabled(menu, true)
@@ -168,55 +250,52 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
                 when (menuItem.itemId) {
-                    R.id.nav_preferences        -> {
+                    R.id.nav_preferences -> {
                         protectionCheck.queryProtection(this@MainActivity, ProtectionCheck.Protection.PREFERENCES, {
-                            startActivity(
-                                Intent(this@MainActivity, PreferencesActivity::class.java)
-                                    .setAction("info.nightscout.androidaps.MainActivity")
-                            )
+                            startActivity(Intent(this@MainActivity, PreferencesActivity::class.java).setAction("info.nightscout.androidaps.MainActivity"))
                         })
                         true
                     }
-
-                    R.id.nav_historybrowser     -> {
+                    R.id.nav_historybrowser -> {
                         startActivity(Intent(this@MainActivity, HistoryBrowseActivity::class.java).setAction("info.nightscout.androidaps.MainActivity"))
                         true
                     }
-
-                    R.id.nav_treatments         -> {
+                    R.id.nav_treatments -> {
                         startActivity(Intent(this@MainActivity, TreatmentsActivity::class.java).setAction("info.nightscout.androidaps.MainActivity"))
                         true
                     }
-
-                    R.id.nav_setupwizard        -> {
+                    R.id.nav_setupwizard -> {
                         protectionCheck.queryProtection(this@MainActivity, ProtectionCheck.Protection.PREFERENCES, {
                             startActivity(Intent(this@MainActivity, SetupWizardActivity::class.java).setAction("info.nightscout.androidaps.MainActivity"))
                         })
                         true
                     }
-
-                    R.id.nav_about              -> {
+                    R.id.nav_about -> {
                         var message = "Build: ${config.BUILD_VERSION}\n"
                         message += "Flavor: ${BuildConfig.FLAVOR}${BuildConfig.BUILD_TYPE}\n"
                         message += "${rh.gs(app.aaps.plugins.configuration.R.string.configbuilder_nightscoutversion_label)} ${activePlugin.activeNsClient?.detectedNsVersion() ?: rh.gs(app.aaps.plugins.main.R.string.not_available_full)}"
                         if (config.isEngineeringMode()) message += "\n${rh.gs(app.aaps.plugins.configuration.R.string.engineering_mode_enabled)}"
                         if (config.isUnfinishedMode()) message += "\nUnfinished mode enabled"
                         if (!fabricPrivacy.fabricEnabled()) message += "\n${rh.gs(app.aaps.core.ui.R.string.fabric_upload_disabled)}"
+                        message += "\n" + authStatusText()
                         message += rh.gs(app.aaps.core.ui.R.string.about_link_urls)
                         val messageSpanned = SpannableString(message)
                         Linkify.addLinks(messageSpanned, Linkify.WEB_URLS)
-                        MaterialAlertDialogBuilder(this@MainActivity, app.aaps.core.ui.R.style.DialogTheme)
+                        MaterialAlertDialogBuilder(this@MainActivity)
                             .setTitle(rh.gs(R.string.app_name) + " " + config.VERSION)
                             .setIcon(iconsProvider.getIcon())
                             .setMessage(messageSpanned)
                             .setPositiveButton(rh.gs(app.aaps.core.ui.R.string.ok), null)
                             .setNeutralButton(rh.gs(app.aaps.core.ui.R.string.cta_dont_kill_my_app_info)) { _, _ ->
-                                startActivity(
-                                    Intent(
-                                        Intent.ACTION_VIEW,
-                                        Uri.parse("https://dontkillmyapp.com/" + Build.MANUFACTURER.lowercase().replace(" ", "-"))
-                                    )
-                                )
+                                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://dontkillmyapp.com/" + Build.MANUFACTURER.lowercase().replace(" ", "-"))))
+                            }
+                            .setNegativeButton("重置授权码") { _, _ ->
+                                MaterialAlertDialogBuilder(this@MainActivity)
+                                    .setTitle("确认重置")
+                                    .setMessage("重置后清除当前授权码，需要重新设置，是否继续？")
+                                    .setPositiveButton("确认") { _, _ -> resetTotpSecret() }
+                                    .setNegativeButton("取消", null)
+                                    .show()
                             }
                             .create().apply {
                                 show()
@@ -224,47 +303,30 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                             }
                         true
                     }
-
-                    R.id.nav_exit               -> {
+                    R.id.nav_exit -> {
                         finish()
                         configBuilder.exitApp("Menu", Sources.Aaps, false)
                         true
                     }
-
                     R.id.nav_plugin_preferences -> {
                         val plugin = (binding.mainPager.adapter as TabPageAdapter).getPluginAt(binding.mainPager.currentItem)
                         protectionCheck.queryProtection(this@MainActivity, ProtectionCheck.Protection.PREFERENCES, {
-                            startActivity(
-                                Intent(this@MainActivity, PreferencesActivity::class.java)
-                                    .setAction("info.nightscout.androidaps.MainActivity")
-                                    .putExtra(UiInteraction.PLUGIN_NAME, plugin.javaClass.simpleName)
-                            )
+                            startActivity(Intent(this@MainActivity, PreferencesActivity::class.java).setAction("info.nightscout.androidaps.MainActivity").putExtra(UiInteraction.PLUGIN_NAME, plugin.javaClass.simpleName))
                         })
                         true
                     }
-                    /*
-                                R.id.nav_survey             -> {
-                                    startActivity(Intent(this, SurveyActivity::class.java))
-                                    return true
-                                }
-                    */
-                    R.id.nav_defaultprofile     -> {
+                    R.id.nav_defaultprofile -> {
                         startActivity(Intent(this@MainActivity, ProfileHelperActivity::class.java).setAction("info.nightscout.androidaps.MainActivity"))
                         true
                     }
-
-                    R.id.nav_stats              -> {
+                    R.id.nav_stats -> {
                         startActivity(Intent(this@MainActivity, StatsActivity::class.java).setAction("info.nightscout.androidaps.MainActivity"))
                         true
                     }
-
-                    else                        ->
-                        actionBarDrawerToggle.onOptionsItemSelected(menuItem)
+                    else -> actionBarDrawerToggle?.onOptionsItemSelected(menuItem)!!
                 }
         }
         mainMenuProvider?.let { addMenuProvider(it) }
-        // Setup views on 2nd and next activity start
-        // On 1st start app is still initializing, start() is delayed and run from EventAppInitialized
         if (config.appInitialized) setupViews()
     }
 
@@ -282,15 +344,13 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         androidPermission.notifyForBatteryOptimizationPermission(this)
         if (!config.AAPSCLIENT) androidPermission.notifyForLocationPermissions(this)
         if (config.PUMPDRIVERS) {
-            if (smsCommunicator.isEnabled())
-                androidPermission.notifyForSMSPermissions(this)
+            if (smsCommunicator.isEnabled()) androidPermission.notifyForSMSPermissions(this)
             androidPermission.notifyForSystemWindowPermissions(this)
             androidPermission.notifyForBtConnectPermission(this)
         }
         passwordResetCheck(this)
         exportPasswordResetCheck(this)
 
-        // check if identification is set
         if (config.isDev() && preferences.get(StringKey.MaintenanceIdentification).isBlank())
             uiInteraction.addNotificationWithAction(
                 id = Notification.IDENTIFICATION_NOT_SET,
@@ -299,11 +359,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                 buttonText = R.string.set,
                 action = Runnable {
                     preferences.put(BooleanKey.GeneralSimpleMode, false)
-                    startActivity(
-                        Intent(this@MainActivity, PreferencesActivity::class.java)
-                            .setAction("info.nightscout.androidaps.MainActivity")
-                            .putExtra(UiInteraction.PLUGIN_NAME, MaintenancePlugin::class.java.simpleName)
-                    )
+                    startActivity(Intent(this@MainActivity, PreferencesActivity::class.java).setAction("info.nightscout.androidaps.MainActivity").putExtra(UiInteraction.PLUGIN_NAME, MaintenancePlugin::class.java.simpleName))
                 },
                 validityCheck = { config.isDev() && preferences.get(StringKey.MaintenanceIdentification).isBlank() }
             )
@@ -328,26 +384,29 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             )
     }
 
-    private fun startWizard(): Boolean =
-        !preferences.get(BooleanKey.GeneralSetupWizardProcessed)
+    private fun startWizard(): Boolean = !preferences.get(BooleanKey.GeneralSetupWizardProcessed)
 
     override fun onPostCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onPostCreate(savedInstanceState, persistentState)
-        actionBarDrawerToggle.syncState()
+        actionBarDrawerToggle?.syncState()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         binding.mainPager.adapter = null
-        binding.mainDrawerLayout.removeDrawerListener(actionBarDrawerToggle)
+        binding.mainDrawerLayout.removeDrawerListener(actionBarDrawerToggle!!)
         mainMenuProvider?.let { removeMenuProvider(it) }
         disposable.clear()
     }
 
     override fun onResume() {
         super.onResume()
-        if (config.appInitialized) binding.splash.visibility = View.GONE
-        if (!isProtectionCheckActive) {
+        val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
+        val verified = prefs.getBoolean("password_verified", false)
+        val lastTs = prefs.getLong("last_verify_time",0)
+        val expired = lastTs>0 && (System.currentTimeMillis()-lastTs >= TotpUtils.EXPIRE_MS)
+        if (config.appInitialized && verified && !expired) binding.splash.visibility = View.GONE
+        if (!isProtectionCheckActive && verified && !expired) {
             isProtectionCheckActive = true
             protectionCheck.queryProtection(this, ProtectionCheck.Protection.APPLICATION, UIRunnable { isProtectionCheckActive = false },
                                             UIRunnable { OKDialog.show(this, "", rh.gs(R.string.authorizationfailed), true) { isProtectionCheckActive = false; finish() } },
@@ -367,41 +426,27 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     }
 
     private fun setupViews() {
-        // Menu
         val pageAdapter = TabPageAdapter(this)
         binding.mainNavigationView.setNavigationItemSelectedListener { true }
         val menu = binding.mainNavigationView.menu.also { it.clear() }
         for (p in activePlugin.getPluginsList())
             if (p.isEnabled() && p.hasFragment() && p.showInList(p.getType())) {
-                // Add to tabs if visible
-                if (
-                    preferences.simpleMode && p.pluginDescription.simpleModePosition == PluginDescription.Position.TAB ||
-                    !preferences.simpleMode && p.isFragmentVisible()
-                ) pageAdapter.registerNewFragment(p)
-                // Add to menu if not visible
-                if (
-                    preferences.simpleMode && !p.pluginDescription.neverVisible && p.pluginDescription.simpleModePosition == PluginDescription.Position.MENU ||
-                    !preferences.simpleMode && !p.pluginDescription.neverVisible && !p.isFragmentVisible()
-                ) {
+                if ((preferences.simpleMode && p.pluginDescription.simpleModePosition == PluginDescription.Position.TAB) || (!preferences.simpleMode && p.isFragmentVisible()))
+                    pageAdapter.registerNewFragment(p)
+                if ((preferences.simpleMode && !p.pluginDescription.neverVisible && p.pluginDescription.simpleModePosition == PluginDescription.Position.MENU) || (!preferences.simpleMode && !p.pluginDescription.neverVisible && !p.isFragmentVisible())) {
                     val menuItem = menu.add(p.name)
                     menuItem.isCheckable = true
-                    if (p.menuIcon != -1) menuItem.setIcon(p.menuIcon)
-                    else menuItem.setIcon(app.aaps.core.ui.R.drawable.ic_settings)
+                    if (p.menuIcon != -1) menuItem.setIcon(p.menuIcon) else menuItem.setIcon(app.aaps.core.ui.R.drawable.ic_settings)
                     menuItem.setOnMenuItemClickListener {
-                        startActivity(
-                            Intent(this, SingleFragmentActivity::class.java)
-                                .setAction(this::class.simpleName)
-                                .putExtra("plugin", activePlugin.getPluginsList().indexOf(p))
-                        )
+                        startActivity(Intent(this, SingleFragmentActivity::class.java).setAction(this::class.simpleName).putExtra("plugin", activePlugin.getPluginsList().indexOf(p)))
                         binding.mainDrawerLayout.closeDrawers()
                         true
                     }
                 }
             }
         binding.mainPager.adapter = pageAdapter
-        binding.mainPager.offscreenPageLimit = 8 // This may cause more memory consumption
+        binding.mainPager.offscreenPageLimit = 8
 
-        // Tabs
         if (preferences.get(BooleanKey.OverviewShortTabTitles)) {
             binding.tabsNormal.visibility = View.GONE
             binding.tabsCompact.visibility = View.VISIBLE
@@ -426,26 +471,12 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        if (event.action == MotionEvent.ACTION_DOWN) {
-            val v = currentFocus
-            if (v is EditText) {
-                val outRect = Rect()
-                v.getGlobalVisibleRect(outRect)
-                if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
-                    v.clearFocus()
-                    val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.hideSoftInputFromWindow(v.windowToken, 0)
-                }
-            }
-        }
         return super.dispatchTouchEvent(event)
     }
 
     override fun onMenuOpened(featureId: Int, menu: Menu): Boolean {
         menuOpen = true
-        if (binding.mainDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            binding.mainDrawerLayout.closeDrawers()
-        }
+        if (binding.mainDrawerLayout.isDrawerOpen(GravityCompat.START)) binding.mainDrawerLayout.closeDrawers()
         val result = super.onMenuOpened(featureId, menu)
         menu.findItem(R.id.nav_treatments)?.isEnabled = profileFunction.getProfile() != null
         if (binding.mainPager.currentItem >= 0) {
@@ -466,70 +497,47 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         super.onPanelClosed(featureId, menu)
     }
 
-    // Correct place for calling setUserStats() would be probably MainApp
-    // but we need to have it called at least once a day. Thus this location
-
     private fun setUserStats() {
         if (!fabricPrivacy.fabricEnabled()) return
         val closedLoopEnabled = if (constraintChecker.isClosedLoopAllowed().value()) "CLOSED_LOOP_ENABLED" else "CLOSED_LOOP_DISABLED"
-        // Size is limited to 36 chars
-        val remote = config.REMOTE.lowercase(Locale.getDefault())
-            .replace("https://", "")
-            .replace("http://", "")
-            .replace(".git", "")
-            .replace(".com/", ":")
-            .replace(".org/", ":")
-            .replace(".net/", ":")
+        val remote = config.REMOTE.lowercase(Locale.getDefault()).replace("https://", "").replace("http://", "").replace(".git", "").replace(".com/", ":").replace(".org/", ":").replace(".net/", ":")
         fabricPrivacy.setUserProperty("Mode", config.APPLICATION_ID + "-" + closedLoopEnabled)
         fabricPrivacy.setUserProperty("Language", preferences.getIfExists(StringKey.GeneralLanguage) ?: Locale.getDefault().language)
         fabricPrivacy.setUserProperty("Version", config.VERSION_NAME)
         fabricPrivacy.setUserProperty("HEAD", BuildConfig.HEAD)
         fabricPrivacy.setUserProperty("Remote", remote)
-        val hashes: List<String> = signatureVerifierPlugin.shortHashes()
+        val hashes = signatureVerifierPlugin.shortHashes()
         if (hashes.isNotEmpty()) fabricPrivacy.setUserProperty("Hash", hashes[0])
         activePlugin.activePump.let { fabricPrivacy.setUserProperty("Pump", it::class.java.simpleName) }
-        if (!config.AAPSCLIENT && !config.PUMPCONTROL)
-            activePlugin.activeAPS.let { fabricPrivacy.setUserProperty("Aps", it::class.java.simpleName) }
+        if (!config.AAPSCLIENT && !config.PUMPCONTROL) activePlugin.activeAPS.let { fabricPrivacy.setUserProperty("Aps", it::class.java.simpleName) }
         activePlugin.activeBgSource.let { fabricPrivacy.setUserProperty("BgSource", it::class.java.simpleName) }
         fabricPrivacy.setUserProperty("Profile", activePlugin.activeProfileSource.javaClass.simpleName)
         activePlugin.activeSensitivity.let { fabricPrivacy.setUserProperty("Sensitivity", it::class.java.simpleName) }
         activePlugin.activeInsulin.let { fabricPrivacy.setUserProperty("Insulin", it::class.java.simpleName) }
-        // Add to crash log too
+
         FirebaseCrashlytics.getInstance().setCustomKey("HEAD", BuildConfig.HEAD)
         FirebaseCrashlytics.getInstance().setCustomKey("Version", config.VERSION_NAME)
         FirebaseCrashlytics.getInstance().setCustomKey("BuildType", config.BUILD_TYPE)
         FirebaseCrashlytics.getInstance().setCustomKey("BuildFlavor", config.FLAVOR)
         FirebaseCrashlytics.getInstance().setCustomKey("Remote", remote)
         FirebaseCrashlytics.getInstance().setCustomKey("Committed", config.COMMITTED)
-        FirebaseCrashlytics.getInstance().setCustomKey("Hash", hashes[0])
+        if (hashes.isNotEmpty()) FirebaseCrashlytics.getInstance().setCustomKey("Hash", hashes[0])
         FirebaseCrashlytics.getInstance().setCustomKey("Email", preferences.get(StringKey.MaintenanceIdentification))
     }
 
-    /**
-     * Check for existing PasswordReset file and
-     * reset password to SN of active pump if file exists
-     */
     private fun passwordResetCheck(context: Context) {
         val fh = fileListProvider.ensureExtraDirExists()?.findFile("PasswordReset")
         if (fh?.exists() == true) {
             Thread {
-                // Wait for virtual pump. SN is not available immediately
-                while (activePlugin.activePump.serialNumber().isEmpty()) {
-                    Thread.sleep(100)
-                }
+                while (activePlugin.activePump.serialNumber().isEmpty()) Thread.sleep(100)
                 preferences.put(StringKey.ProtectionMasterPassword, cryptoUtil.hashPassword(activePlugin.activePump.serialNumber()))
                 fh.delete()
-                // Also clear any stored password
                 exportPasswordDataStore.clearPasswordDataStore(context)
-                ToastUtils.okToast(context, context.getString(app.aaps.core.ui.R.string.password_set), isShort = false)
+                ToastUtils.okToast(context, context.getString(app.aaps.core.ui.R.string.password_set))
             }.start()
         }
     }
 
-    /**
-     * Check for existing ExportPasswordReset file and
-     * clear password stored in datastore if file exists
-     */
     private fun exportPasswordResetCheck(context: Context) {
         val fh = fileListProvider.ensureExtraDirExists()?.findFile("ExportPasswordReset")
         if (fh?.exists() == true) {
@@ -538,5 +546,4 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             ToastUtils.okToast(context, context.getString(app.aaps.core.ui.R.string.datastore_password_cleared))
         }
     }
-
 }

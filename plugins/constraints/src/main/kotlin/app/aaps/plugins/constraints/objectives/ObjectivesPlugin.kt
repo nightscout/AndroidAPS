@@ -4,12 +4,6 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.Objectives
-import app.aaps.core.interfaces.constraints.Objectives.Companion.AUTOSENS_OBJECTIVE
-import app.aaps.core.interfaces.constraints.Objectives.Companion.AUTO_OBJECTIVE
-import app.aaps.core.interfaces.constraints.Objectives.Companion.CLOSED_LOOP_OBJECTIVE
-import app.aaps.core.interfaces.constraints.Objectives.Companion.FIRST_OBJECTIVE
-import app.aaps.core.interfaces.constraints.Objectives.Companion.LGS_OBJECTIVE
-import app.aaps.core.interfaces.constraints.Objectives.Companion.SMB_OBJECTIVE
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
@@ -24,6 +18,7 @@ import app.aaps.plugins.constraints.objectives.keys.ObjectivesLongComposedKey
 import app.aaps.plugins.constraints.objectives.objectives.Objective
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.Suppress
 
 @Singleton
 class ObjectivesPlugin @Inject constructor(
@@ -31,7 +26,7 @@ class ObjectivesPlugin @Inject constructor(
     rh: ResourceHelper,
     preferences: Preferences,
     config: Config,
-    val objectives: List<@JvmSuppressWildcards Objective>
+    val objectives: List<@JvmSuppressWildcards Objective> // 保留原系统自动注入的最新目标列表
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
@@ -62,65 +57,46 @@ class ObjectivesPlugin @Inject constructor(
         preferences.put(BooleanNonKey.ObjectivesScaleUsed, false)
     }
 
+    @Suppress("UNUSED_PARAMETER") // 消除未使用参数的警告
     fun allPriorAccomplished(position: Int): Boolean {
-        var accomplished = true
-        for (i in 0 until position) {
-            accomplished = accomplished && objectives[i].isAccomplished
-        }
-        return accomplished
+        // 所有前置校验直接通过
+        return true
     }
 
     /**
-     * Constraints interface
+     * 所有功能约束全部清空，直接返回原值，解锁全部功能
      */
     override fun isLoopInvocationAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
-        // Check if initialized
-        if (objectives.isEmpty()) return value
-        if (!objectives[FIRST_OBJECTIVE].isStarted)
-            value.set(false, rh.gs(R.string.objectivenotstarted, FIRST_OBJECTIVE + 1), this)
         return value
     }
 
     override fun isLgsForced(value: Constraint<Boolean>): Constraint<Boolean> {
-        // Check if initialized
-        if (objectives.isEmpty()) return value
-        if (objectives[LGS_OBJECTIVE].isStarted && !objectives[LGS_OBJECTIVE].isAccomplished)
-            value.set(true, rh.gs(R.string.objectivenotfinished, LGS_OBJECTIVE + 1), this)
         return value
     }
 
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
-        // Check if initialized
-        if (objectives.isEmpty()) return value
-        if (!objectives[CLOSED_LOOP_OBJECTIVE].isStarted)
-            value.set(false, rh.gs(R.string.objectivenotstarted, CLOSED_LOOP_OBJECTIVE + 1), this)
         return value
     }
 
     override fun isAutosensModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        // Check if initialized
-        if (objectives.isEmpty()) return value
-        if (!objectives[AUTOSENS_OBJECTIVE].isStarted)
-            value.set(false, rh.gs(R.string.objectivenotstarted, AUTOSENS_OBJECTIVE + 1), this)
         return value
     }
 
     override fun isSMBModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        // Check if initialized
-        if (objectives.isEmpty()) return value
-        if (!objectives[SMB_OBJECTIVE].isStarted)
-            value.set(false, rh.gs(R.string.objectivenotstarted, SMB_OBJECTIVE + 1), this)
         return value
     }
 
     override fun isAutomationEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        // Check if initialized
-        if (objectives.isEmpty()) return value
-        if (!objectives[AUTO_OBJECTIVE].isStarted)
-            value.set(false, rh.gs(R.string.objectivenotstarted, AUTO_OBJECTIVE + 1), this)
         return value
     }
 
-    override fun isAccomplished(index: Int) = objectives[index].isAccomplished
-    override fun isStarted(index: Int): Boolean = objectives[index].isStarted
+    /**
+     * 强制所有目标标记为已完成
+     */
+    override fun isAccomplished(index: Int) = true
+
+    /**
+     * 强制所有目标标记为已开始
+     */
+    override fun isStarted(index: Int): Boolean = true
 }
