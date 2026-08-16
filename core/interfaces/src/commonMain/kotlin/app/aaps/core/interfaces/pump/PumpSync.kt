@@ -8,7 +8,7 @@ import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.interfaces.R
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
@@ -103,11 +103,11 @@ interface PumpSync {
             fun toStringFull(dateUtil: DateUtil, rh: TextResolver): String {
                 return when {
                     isAbsolute -> {
-                        rh.gs(TextRef.AndroidRes(R.string.temp_basal_absolute_rate), rate, dateUtil.timeString(timestamp), getPassedDurationToTimeInMinutes(dateUtil.now()), durationInMinutes)
+                        rh.gs(InterfacesStrings.temp_basal_absolute_rate, rate, dateUtil.timeString(timestamp), getPassedDurationToTimeInMinutes(dateUtil.now()), durationInMinutes)
                     }
 
                     else       -> { // percent
-                        rh.gs(TextRef.AndroidRes(R.string.temp_basal_percent_rate), rate, dateUtil.timeString(timestamp), getPassedDurationToTimeInMinutes(dateUtil.now()), durationInMinutes)
+                        rh.gs(InterfacesStrings.temp_basal_percent_rate, rate, dateUtil.timeString(timestamp), getPassedDurationToTimeInMinutes(dateUtil.now()), durationInMinutes)
                     }
                 }
             }
@@ -140,7 +140,7 @@ interface PumpSync {
                 ((min(time, end) - timestamp) / 60.0 / 1000).roundToInt()
 
             fun toStringFull(dateUtil: DateUtil, rh: TextResolver): String =
-                rh.gs(TextRef.AndroidRes(R.string.temp_basal_extended_bolus), rate, dateUtil.timeString(timestamp), getPassedDurationToTimeInMinutes(dateUtil.now()), T.msecs(duration).mins())
+                rh.gs(InterfacesStrings.temp_basal_extended_bolus, rate, dateUtil.timeString(timestamp), getPassedDurationToTimeInMinutes(dateUtil.now()), T.msecs(duration).mins())
 
         }
 
