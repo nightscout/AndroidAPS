@@ -1,20 +1,20 @@
 package app.aaps.plugins.sync.nfcCommands
 
-import app.aaps.shared.tests.SharedPreferencesMock
+import app.aaps.core.keys.StringNonKey
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class NfcTagStoreTest {
-    private lateinit var prefs: SharedPreferencesMock
+    private lateinit var testPreferences: TestNfcPreferences
     private lateinit var store: NfcTagStore
     private val now = 1_700_000_000_000L
     private val tagUid = "aabbccdd"
 
     @BeforeEach
     fun setup() {
-        prefs = SharedPreferencesMock()
-        store = NfcTagStore(TestSp(prefs))
+        testPreferences = TestNfcPreferences()
+        store = NfcTagStore(testPreferences.preferences)
     }
 
     private fun makeTag(
@@ -96,10 +96,8 @@ class NfcTagStoreTest {
 
     @Test
     fun `lastScannedAtMillis is null when loaded from JSON without the field`() {
-        prefs.edit().putString(
-            "nfccommunicator_created_tags_v1",
-            """[{"tagUid":"abc","name":"x","commands":["{\"code\":\"LOOP_STOP\"}"],"createdAtMillis":1000}]""",
-        ).apply()
+        testPreferences.stored[StringNonKey.NfcCreatedTags.key] =
+            """[{"tagUid":"abc","name":"x","commands":["{\"code\":\"LOOP_STOP\"}"],"createdAtMillis":1000}]"""
 
         val tag = store.loadCreatedTags().first()
         assertThat(tag.lastScannedAtMillis).isNull()
@@ -166,7 +164,7 @@ class NfcTagStoreTest {
 
     @Test
     fun `loadCreatedTags ignores entries without commands array`() {
-        prefs.edit().putString("nfccommunicator_created_tags_v1", """[{"tagUid":"abc","name":"x","createdAtMillis":0}]""").apply()
+        testPreferences.stored[StringNonKey.NfcCreatedTags.key] = """[{"tagUid":"abc","name":"x","createdAtMillis":0}]"""
 
         val tags = store.loadCreatedTags()
 
@@ -175,7 +173,8 @@ class NfcTagStoreTest {
 
     @Test
     fun `loadCreatedTags ignores entries with blank tagUid`() {
-        prefs.edit().putString("nfccommunicator_created_tags_v1", """[{"tagUid":"","name":"x","commands":["{\"code\":\"LOOP_STOP\"}"],"createdAtMillis":0}]""").apply()
+        testPreferences.stored[StringNonKey.NfcCreatedTags.key] =
+            """[{"tagUid":"","name":"x","commands":["{\"code\":\"LOOP_STOP\"}"],"createdAtMillis":0}]"""
 
         val tags = store.loadCreatedTags()
 
@@ -184,7 +183,7 @@ class NfcTagStoreTest {
 
     @Test
     fun `loadCreatedTags returns empty list for malformed json`() {
-        prefs.edit().putString("nfccommunicator_created_tags_v1", "{not-valid-json").apply()
+        testPreferences.stored[StringNonKey.NfcCreatedTags.key] = "{not-valid-json"
 
         val tags = store.loadCreatedTags()
 
@@ -265,7 +264,7 @@ class NfcTagStoreTest {
 
     @Test
     fun `loadLog handles malformed JSON gracefully`() {
-        prefs.edit().putString("nfccommunicator_log_v1", "not-valid-json").apply()
+        testPreferences.stored[StringNonKey.NfcLog.key] = "not-valid-json"
 
         val loaded = store.loadLog()
         assertThat(loaded).isEmpty()

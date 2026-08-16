@@ -1,6 +1,7 @@
 package app.aaps.plugins.sync.nfcCommands
 
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.Preferences
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.json.JSONArray
@@ -25,12 +26,10 @@ data class NfcLogEntry(
 )
 
 @Singleton
-class NfcTagStore @Inject constructor(private val sp: SP) {
+class NfcTagStore @Inject constructor(private val preferences: Preferences) {
 
     companion object {
         const val MIME_TYPE: String = "application/vnd.app.aaps.command"
-        private const val PREFS_TAGS = "nfccommunicator_created_tags_v1"
-        private const val PREFS_LOG = "nfccommunicator_log_v1"
         private const val LOG_MAX_ENTRIES = 100
 
         fun buildCommand(
@@ -69,7 +68,7 @@ class NfcTagStore @Inject constructor(private val sp: SP) {
         loadCreatedTags().find { it.tagUid.equals(uid, ignoreCase = true) }
 
     fun loadCreatedTags(): List<NfcCreatedTag> {
-        val raw = sp.getString(PREFS_TAGS, "[]")
+        val raw = preferences.get(StringNonKey.NfcCreatedTags)
         val tags = mutableListOf<NfcCreatedTag>()
         val array = runCatching { JSONArray(raw) }.getOrElse { JSONArray() }
         for (index in 0 until array.length()) {
@@ -125,7 +124,7 @@ class NfcTagStore @Inject constructor(private val sp: SP) {
             current.lastScannedAtMillis?.let { obj.put("lastScannedAtMillis", it) }
             array.put(obj)
         }
-        sp.edit { putString(PREFS_TAGS, array.toString()) }
+        preferences.put(StringNonKey.NfcCreatedTags, array.toString())
     }
 
     fun appendLogEntry(entry: NfcLogEntry) {
@@ -143,13 +142,13 @@ class NfcTagStore @Inject constructor(private val sp: SP) {
                     .put("message", e.message),
             )
         }
-        sp.edit { putString(PREFS_LOG, array.toString()) }
+        preferences.put(StringNonKey.NfcLog, array.toString())
         _logUpdates.tryEmit(Unit)
     }
 
     fun loadLog(): List<NfcLogEntry> =
         try {
-            val array = JSONArray(sp.getString(PREFS_LOG, "[]"))
+            val array = JSONArray(preferences.get(StringNonKey.NfcLog))
             List(array.length()) { i ->
                 val o = array.getJSONObject(i)
                 NfcLogEntry(
@@ -165,7 +164,7 @@ class NfcTagStore @Inject constructor(private val sp: SP) {
         }
 
     fun clearLog() {
-        sp.edit { remove(PREFS_LOG) }
+        preferences.remove(StringNonKey.NfcLog)
         _logUpdates.tryEmit(Unit)
     }
 
