@@ -5,6 +5,7 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.database.MatrixCursor
 import android.net.Uri
+import app.aaps.core.interfaces.iob.BgDataInterface
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.overview.OverviewData
@@ -21,6 +22,7 @@ import javax.inject.Inject
 class WatchfaceProvider : DaggerContentProvider() {
 
     @Inject lateinit var iobCobCalculator: IobCobCalculator
+    @Inject lateinit var lastBgData: BgDataInterface
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Inject lateinit var overviewData: OverviewData
     @Inject lateinit var profileUtil: ProfileUtil
@@ -31,7 +33,7 @@ class WatchfaceProvider : DaggerContentProvider() {
         uri: Uri, projection: Array<String>?, selection: String?,
         selectionArgs: Array<String>?, sortOrder: String?
     ): Cursor? {
-        val lastBg = iobCobCalculator.ads.lastBg() ?: return null
+        val lastBg = lastBgData.lastBg() ?: return null
         return try {
             val glucoseStatus = glucoseStatusProvider.getGlucoseStatusData(true)
             val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
