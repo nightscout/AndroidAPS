@@ -5,8 +5,6 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Pre-check helper for UI / sync / automation entry points that call CommandQueue.
@@ -19,8 +17,7 @@ import javax.inject.Singleton
  * Entry points use this guard to decline the action quietly (snackbar, SMS reply, watch
  * response) before ever touching CommandQueue.
  */
-@Singleton
-class RunningModeGuard @Inject constructor(
+class RunningModeGuard(
     private val loop: Loop,
     private val rh: ResourceHelper,
     private val rxBus: RxBus

@@ -24,8 +24,6 @@ import app.aaps.core.utils.MidnightUtils
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.UUID
-import javax.inject.Inject
-import javax.inject.Provider
 
 enum class QuickWizardMode(val value: Int) {
     WIZARD(0),
@@ -38,7 +36,7 @@ enum class QuickWizardMode(val value: Int) {
     }
 }
 
-class QuickWizardEntry @Inject constructor(
+class QuickWizardEntry(
     aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val profileFunction: ProfileFunction,
@@ -47,8 +45,9 @@ class QuickWizardEntry @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil,
     private val glucoseStatusProvider: GlucoseStatusProvider,
-    private val bolusWizardProvider: Provider<BolusWizard>,
-    private val quickWizardProvider: Provider<QuickWizard>
+    // Plain factories rather than javax.inject.Provider - see QuickWizard for why.
+    private val bolusWizardProvider: () -> BolusWizard,
+    private val quickWizardProvider: () -> QuickWizard
 ) {
 
     // for mock
@@ -172,7 +171,7 @@ class QuickWizardEntry @Inject constructor(
             trend = true
         }
         val percentage = if (usePercentage() == DEFAULT) preferences.get(IntKey.OverviewBolusPercentage) else percentage()
-        return bolusWizardProvider.get().doCalc(
+        return bolusWizardProvider().doCalc(
             profile,
             profileName,
             tempTarget,
@@ -248,6 +247,6 @@ class QuickWizardEntry @Inject constructor(
 
     fun markAsUsed() {
         storage.put("lastUsed", dateUtil.now())
-        quickWizardProvider.get().save()
+        quickWizardProvider().save()
     }
 }

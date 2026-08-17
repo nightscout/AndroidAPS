@@ -14,12 +14,9 @@ import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.PBEKeySpec
 import javax.crypto.spec.SecretKeySpec
-import javax.inject.Inject
-import javax.inject.Singleton
 
 @Suppress("SpellCheckingInspection")
-@Singleton
-class CryptoUtil @Inject constructor(
+class CryptoUtil(
     val aapsLogger: AAPSLogger
 ) {
 

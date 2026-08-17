@@ -15,14 +15,12 @@ import kotlinx.coroutines.flow.update
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.UUID
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
 
-@Singleton
-class QuickWizard @Inject constructor(
+class QuickWizard(
     private val preferences: Preferences,
-    private val quickWizardEntryProvider: Provider<QuickWizardEntry>
+    // A plain factory, not a javax.inject.Provider: that type is JVM only and would pin this class
+    // to one platform. Dagger still supplies it, as a method reference, from the Android side.
+    private val quickWizardEntryProvider: () -> QuickWizardEntry
 ) {
 
     @Volatile private var storage = JSONArray()
@@ -57,7 +55,7 @@ class QuickWizard @Inject constructor(
     private fun setGuidsForOldEntries() {
         // for migration purposes; guid is a new required property
         for (i in 0 until storage.length()) {
-            val entry = quickWizardEntryProvider.get().from(storage.get(i) as JSONObject, i)
+            val entry = quickWizardEntryProvider().from(storage.get(i) as JSONObject, i)
             if (entry.guid() == "") {
                 val guid = UUID.randomUUID().toString()
                 entry.storage.put("guid", guid)
@@ -67,7 +65,7 @@ class QuickWizard @Inject constructor(
 
     fun getActive(): QuickWizardEntry? {
         for (i in 0 until storage.length()) {
-            val entry = quickWizardEntryProvider.get().from(storage.get(i) as JSONObject, i)
+            val entry = quickWizardEntryProvider().from(storage.get(i) as JSONObject, i)
             if (entry.isActive()) return entry
         }
         return null
@@ -84,7 +82,7 @@ class QuickWizard @Inject constructor(
     fun size(): Int = storage.length()
 
     operator fun get(position: Int): QuickWizardEntry =
-        quickWizardEntryProvider.get().from(storage.get(position) as JSONObject, position)
+        quickWizardEntryProvider().from(storage.get(position) as JSONObject, position)
 
     fun list(): ArrayList<QuickWizardEntry> =
         ArrayList<QuickWizardEntry>().also {
@@ -93,7 +91,7 @@ class QuickWizard @Inject constructor(
 
     fun get(guid: String): QuickWizardEntry? {
         for (i in 0 until storage.length()) {
-            val entry = quickWizardEntryProvider.get().from(storage.get(i) as JSONObject, i)
+            val entry = quickWizardEntryProvider().from(storage.get(i) as JSONObject, i)
             if (entry.guid() == guid) {
                 return entry
             }
@@ -129,7 +127,7 @@ class QuickWizard @Inject constructor(
     }
 
     fun newEmptyItem(): QuickWizardEntry {
-        return quickWizardEntryProvider.get()
+        return quickWizardEntryProvider()
     }
 
     fun addOrUpdate(newItem: QuickWizardEntry) {

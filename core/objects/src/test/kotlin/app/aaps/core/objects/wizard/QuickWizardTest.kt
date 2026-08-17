@@ -24,8 +24,8 @@ class QuickWizardTest : TestBaseWithProfile() {
     @Mock lateinit var loop: Loop
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var glucoseStatusProvider: GlucoseStatusProvider
-    @Mock lateinit var bolusWizardProvider: Provider<BolusWizard>
-    @Mock lateinit var quickWizardProvider: Provider<QuickWizard>
+    @Mock lateinit var bolusWizard: BolusWizard
+    @Mock lateinit var quickWizardMock: QuickWizard
 
     private val data1 = "{\"buttonText\":\"Meal\",\"carbs\":36,\"validFrom\":0,\"validTo\":18000," +
         "\"useBG\":0,\"useCOB\":0,\"useBolusIOB\":0,\"useBasalIOB\":0,\"useTrend\":0,\"useSuperBolus\":0,\"useTemptarget\":0}"
@@ -45,10 +45,9 @@ class QuickWizardTest : TestBaseWithProfile() {
     fun setup() {
         whenever(preferences.get(StringNonKey.QuickWizard)).thenReturn("[]")
         whenever(preferences.observe(StringNonKey.QuickWizard)).thenReturn(MutableStateFlow("[]"))
-        val quickWizardEntry = QuickWizardEntry(aapsLogger, preferences, profileFunction, loop, iobCobCalculator, persistenceLayer, dateUtil, glucoseStatusProvider, bolusWizardProvider, quickWizardProvider)
+        val quickWizardEntry = QuickWizardEntry(aapsLogger, preferences, profileFunction, loop, iobCobCalculator, persistenceLayer, dateUtil, glucoseStatusProvider, { bolusWizard }, { quickWizardMock })
         quickWizardEntry.time = mockedTime
-        val quickWizardEntryProvider = Provider { quickWizardEntry }
-        quickWizard = QuickWizard(preferences, quickWizardEntryProvider)
+        quickWizard = QuickWizard(preferences) { quickWizardEntry }
     }
 
     @Test
