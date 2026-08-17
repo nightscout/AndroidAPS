@@ -2,7 +2,6 @@ package app.aaps.core.ui.compose
 
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.UiStrings
-import androidx.annotation.StringRes
 import app.aaps.core.data.plugin.PluginType
 
 /**

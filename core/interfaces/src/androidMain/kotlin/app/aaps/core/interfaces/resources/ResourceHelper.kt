@@ -59,17 +59,15 @@ interface ResourceHelper : TextResolver {
 /**
  * Resolves a [TextRef.Named] that this module can see.
  *
- * Two owners are resolvable here: `keys`, via the `:core:keys` dependency, and `interfaces`, whose
- * map is generated into this module. A name owned by another module falls back to showing the raw
- * name - visibly wrong rather than silently blank.
+ * Two owners are resolvable directly: `keys`, via the `:core:keys` dependency, and `interfaces`,
+ * whose map is generated into this module.
  *
- * That is not a gap in practice today: the `ui`-owned names are used from Composables, and
- * `app.aaps.core.ui.compose.stringResource` sits in `:core:ui`, which can see all three maps. If a
- * non-Compose caller ever needs a `ui` name, this is the place that has to learn about it - at that
- * point a registry is probably better than a third branch.
+ * Anything else is asked of [TextRefIdRegistry], which is how a module further up - `:core:ui` and
+ * its `ui` names - makes itself resolvable here. Only when nobody has claimed the owner does this
+ * fall back to showing the raw name, which is visibly wrong rather than silently blank.
  */
 private fun keysIdOf(ref: TextRef.Named): Int? = when (ref.owner) {
     "keys"       -> KeysStringIds.idOf(ref.name)
     "interfaces" -> InterfacesStringIds.idOf(ref.name)
-    else         -> null
+    else         -> TextRefIdRegistry.idOf(ref)
 }

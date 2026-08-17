@@ -1,6 +1,7 @@
 package app.aaps.core.ui.compose.pump
 
-import androidx.activity.compose.BackHandler
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -46,6 +47,7 @@ import app.aaps.core.ui.compose.dialogs.OkCancelDialog
  * @param setToolbarConfig Callback to configure the parent toolbar (hides back arrow)
  * @param stepContent Composable content for the current step
  */
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun <S> WizardScreen(
     currentStep: S?,

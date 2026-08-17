@@ -1,6 +1,7 @@
 package app.aaps.pump.medtrum.compose
 
 import android.content.Context
+import app.aaps.core.ui.UiStrings
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -94,11 +95,15 @@ internal class MedtrumOverviewViewModelTest {
         // Every info-row / action / banner label the build path touches (unstubbed rh.gs -> null -> NPE in PumpInfoRow)
         // Common rows (core:ui builder)
         whenever(rh.gs(CoreUiR.string.tempbasal_label)).thenReturn("Temp basal")
+        whenever(rh.gs(UiStrings.tempbasal_label)).thenReturn("Temp basal")
         whenever(rh.gs(CoreUiR.string.extended_bolus_label)).thenReturn("Extended bolus")
+        whenever(rh.gs(UiStrings.extended_bolus_label)).thenReturn("Extended bolus")
         whenever(rh.gs(CoreUiR.string.serial_number)).thenReturn("Serial number")
+        whenever(rh.gs(UiStrings.serial_number)).thenReturn("Serial number")
         // Medtrum-specific rows
         whenever(rh.gs(R.string.pump_state_label)).thenReturn("Pump state")
         whenever(rh.gs(CoreUiR.string.base_basal_rate_label)).thenReturn("Base basal")
+        whenever(rh.gs(UiStrings.base_basal_rate_label)).thenReturn("Base basal")
         whenever(rh.gs(R.string.pump_type_label)).thenReturn("Pump type")
         whenever(rh.gs(R.string.patch_no_label)).thenReturn("Patch no")
         whenever(rh.gs(R.string.expiry_not_enabled)).thenReturn("")   // empty -> expiry row skipped
@@ -109,9 +114,11 @@ internal class MedtrumOverviewViewModelTest {
         whenever(rh.gs(R.string.patch_not_active)).thenReturn("Patch not activated")
         // Actions
         whenever(rh.gs(CoreUiR.string.refresh)).thenReturn("Refresh")
+        whenever(rh.gs(UiStrings.refresh)).thenReturn("Refresh")
         whenever(rh.gs(R.string.reset_alarms_label)).thenReturn("Reset alarms")
         whenever(rh.gs(R.string.change_patch_label)).thenReturn("Change patch")
         whenever(rh.gs(CoreUiR.string.pump_unpair)).thenReturn("Unpair")
+        whenever(rh.gs(UiStrings.pump_unpair)).thenReturn("Unpair")
     }
 
     private fun createViewModel() = MedtrumOverviewViewModel(

@@ -1,9 +1,9 @@
 package app.aaps.core.ui.extensions
 
 import app.aaps.core.data.iob.CobInfo
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.ui.R
+import app.aaps.core.ui.UiStrings
 
 /**
  * Text for a [CobInfo] on screen.
@@ -22,9 +22,9 @@ fun CobInfo.generateCOBString(decimalFormatter: DecimalFormatter): String {
     return cobStringResult
 }
 
-fun CobInfo.displayText(rh: ResourceHelper, decimalFormatter: DecimalFormatter): String? =
+fun CobInfo.displayText(rh: TextResolver, decimalFormatter: DecimalFormatter): String? =
     displayCob?.let { displayCob ->
-        var cobText = rh.gs(R.string.format_carbs, displayCob.toInt())
+        var cobText = rh.gs(UiStrings.format_carbs, displayCob.toInt())
         if (futureCarbs > 0) cobText += "(" + decimalFormatter.to0Decimal(futureCarbs) + ")"
         cobText
     }

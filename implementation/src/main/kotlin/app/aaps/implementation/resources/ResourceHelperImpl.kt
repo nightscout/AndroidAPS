@@ -5,6 +5,8 @@ import android.content.res.Configuration
 import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextRefIdRegistry
+import app.aaps.core.ui.UiStringIds
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -31,6 +33,13 @@ class ResourceHelperImpl @Inject constructor(var context: Context, private val f
     private var localizedContext: Context = buildLocalizedContext()
 
     init {
+        // Teach ResourceHelper the names :core:ui owns. It cannot see UiStringIds itself - :core:ui
+        // depends on :core:interfaces, not the other way round - so without this a `ui` name read
+        // outside a Composable renders as the raw name ("format_carbs" instead of "12 g").
+        // Here rather than in :core:ui, because this class is downstream of every module that owns
+        // strings and is built before anything can ask it for text.
+        TextRefIdRegistry.register("ui") { name -> UiStringIds.idOf(name) }
+
         // GeneralLanguage changes trigger Activity.recreate() which rebuilds the context
         // via attachBaseContext/LocaleHelper.wrap — no need to rebuild here and race on Main.
         preferences.observe(BooleanKey.GeneralSimpleMode).drop(1).onEach {

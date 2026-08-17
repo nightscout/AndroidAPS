@@ -27,7 +27,8 @@ package app.aaps.core.data.format
 class NumberFormat(
     val minIntegerDigits: Int = 1,
     val minFractionDigits: Int = 0,
-    val maxFractionDigits: Int = minFractionDigits
+    val maxFractionDigits: Int = minFractionDigits,
+    val rounding: NumberRounding = NumberRounding.HALF_EVEN
 ) {
 
     init {
@@ -55,11 +56,12 @@ class NumberFormat(
         other is NumberFormat &&
             minIntegerDigits == other.minIntegerDigits &&
             minFractionDigits == other.minFractionDigits &&
-            maxFractionDigits == other.maxFractionDigits
+            maxFractionDigits == other.maxFractionDigits &&
+            rounding == other.rounding
 
-    override fun hashCode(): Int = (minIntegerDigits * 31 + minFractionDigits) * 31 + maxFractionDigits
+    override fun hashCode(): Int = ((minIntegerDigits * 31 + minFractionDigits) * 31 + maxFractionDigits) * 31 + rounding.ordinal
 
-    override fun toString(): String = "NumberFormat($minIntegerDigits, $minFractionDigits, $maxFractionDigits)"
+    override fun toString(): String = "NumberFormat($minIntegerDigits, $minFractionDigits, $maxFractionDigits, $rounding)"
 
     companion object {
 
@@ -95,6 +97,15 @@ class NumberFormat(
 
         /** Three decimals, plus a fourth one when it is not zero. Old pattern `"0.000#"`. */
         val DECIMAL_3_UP_TO_4 = NumberFormat(minFractionDigits = 3, maxFractionDigits = 4)
+
+        /**
+         * Fixed decimals, ties away from zero.
+         *
+         * For a single value on screen, where the reader expects .5 to go up rather than to the
+         * even neighbour. See [NumberRounding].
+         */
+        fun withDecimalsHalfUp(decimals: Int): NumberFormat =
+            NumberFormat(minFractionDigits = decimals, rounding = NumberRounding.HALF_UP)
 
         /** Format with the given number of fixed decimals. */
         fun withDecimals(decimals: Int): NumberFormat = when (decimals) {

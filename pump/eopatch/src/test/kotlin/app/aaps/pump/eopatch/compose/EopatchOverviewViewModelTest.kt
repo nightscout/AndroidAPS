@@ -1,6 +1,7 @@
 package app.aaps.pump.eopatch.compose
 
 import android.content.Context
+import app.aaps.core.ui.UiStrings
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpSync
@@ -102,11 +103,17 @@ internal class EopatchOverviewViewModelTest {
 
         // Info-row / action / banner labels touched by buildUiState (unstubbed -> null -> NPE).
         whenever(rh.gs(CoreUiR.string.tempbasal_label)).thenReturn("Temp basal")
+        whenever(rh.gs(UiStrings.tempbasal_label)).thenReturn("Temp basal")
         whenever(rh.gs(CoreUiR.string.extended_bolus_label)).thenReturn("Extended bolus")
+        whenever(rh.gs(UiStrings.extended_bolus_label)).thenReturn("Extended bolus")
         whenever(rh.gs(CoreUiR.string.status)).thenReturn("Status")
+        whenever(rh.gs(UiStrings.status)).thenReturn("Status")
         whenever(rh.gs(CoreUiR.string.reservoir_label)).thenReturn("Reservoir")
+        whenever(rh.gs(UiStrings.reservoir_label)).thenReturn("Reservoir")
         whenever(rh.gs(CoreUiR.string.pump_suspend)).thenReturn("Suspend")
+        whenever(rh.gs(UiStrings.pump_suspend)).thenReturn("Suspend")
         whenever(rh.gs(CoreUiR.string.pump_resume)).thenReturn("Resume")
+        whenever(rh.gs(UiStrings.pump_resume)).thenReturn("Resume")
         whenever(rh.gs(R.string.eopatch_not_activated)).thenReturn("Not activated")
         whenever(rh.gs(R.string.string_activate_patch)).thenReturn("Activate Patch")
         whenever(rh.gs(R.string.string_running)).thenReturn("Running")

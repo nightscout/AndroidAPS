@@ -2,7 +2,6 @@ package app.aaps.core.ui.clientcontrol
 
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.UiStrings
-import androidx.annotation.StringRes
 import app.aaps.core.interfaces.clientcontrol.FailureReason
 
 /**

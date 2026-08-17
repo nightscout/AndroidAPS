@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.data.format.NumberFormatPlatform
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
 import app.aaps.core.keys.interfaces.VisibilityContext
@@ -18,8 +19,6 @@ import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.compose.stringResourceOrNull
-import java.math.BigDecimal
-import java.math.RoundingMode
 import kotlin.math.abs
 import app.aaps.core.ui.R as UiR
 
@@ -96,7 +95,7 @@ fun AdaptiveUnitDoublePreferenceItem(
             onValueChange = { newValue ->
                 if (visibility.enabled) {
                     // Format with appropriate precision and update state
-                    val formatted = BigDecimal(newValue).setScale(decimalPlaces, RoundingMode.HALF_UP).toPlainString()
+                    val formatted = NumberFormat.withDecimalsHalfUp(decimalPlaces).format(newValue, NumberFormatPlatform.SEPARATOR_DOT)
                     state.updateDisplayValue(formatted)
                 }
             },

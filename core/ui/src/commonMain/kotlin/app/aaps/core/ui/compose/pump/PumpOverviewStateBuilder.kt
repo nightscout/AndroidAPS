@@ -1,8 +1,7 @@
 package app.aaps.core.ui.compose.pump
 
 import app.aaps.core.ui.UiStrings
-import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.ui.R
+import app.aaps.core.interfaces.resources.TextResolver
 
 /**
  * Builds the common [PumpInfoRow] items that every pump shares.
@@ -13,7 +12,7 @@ import app.aaps.core.ui.R
  * visibility logic.
  */
 class PumpOverviewStateBuilder(
-    private val rh: ResourceHelper
+    private val rh: TextResolver
 ) {
 
     /**
@@ -42,7 +41,7 @@ class PumpOverviewStateBuilder(
         if (lastConnection.isNotEmpty()) {
             add(
                 PumpInfoRow(
-                    label = rh.gs(R.string.last_connection_label),
+                    label = rh.gs(UiStrings.last_connection_label),
                     value = lastConnection
                 )
             )
@@ -52,7 +51,7 @@ class PumpOverviewStateBuilder(
         lastBolus?.let {
             add(
                 PumpInfoRow(
-                    label = rh.gs(R.string.last_bolus_label),
+                    label = rh.gs(UiStrings.last_bolus_label),
                     value = it
                 )
             )
@@ -62,7 +61,7 @@ class PumpOverviewStateBuilder(
         baseBasalRate?.let {
             add(
                 PumpInfoRow(
-                    label = rh.gs(R.string.base_basal_rate_label),
+                    label = rh.gs(UiStrings.base_basal_rate_label),
                     value = it
                 )
             )
@@ -71,7 +70,7 @@ class PumpOverviewStateBuilder(
         // Temp basal
         add(
             PumpInfoRow(
-                label = rh.gs(R.string.tempbasal_label),
+                label = rh.gs(UiStrings.tempbasal_label),
                 value = tempBasalText,
                 visible = tempBasalText.isNotEmpty()
             )
@@ -80,7 +79,7 @@ class PumpOverviewStateBuilder(
         // Extended bolus
         add(
             PumpInfoRow(
-                label = rh.gs(R.string.extended_bolus_label),
+                label = rh.gs(UiStrings.extended_bolus_label),
                 value = extendedBolusText,
                 visible = extendedBolusText.isNotEmpty()
             )
@@ -90,7 +89,7 @@ class PumpOverviewStateBuilder(
         battery?.let {
             add(
                 PumpInfoRow(
-                    label = rh.gs(R.string.battery_label),
+                    label = rh.gs(UiStrings.battery_label),
                     value = it
                 )
             )
@@ -100,7 +99,7 @@ class PumpOverviewStateBuilder(
         reservoir?.let {
             add(
                 PumpInfoRow(
-                    label = rh.gs(R.string.reservoir_label),
+                    label = rh.gs(UiStrings.reservoir_label),
                     value = it
                 )
             )
@@ -110,7 +109,7 @@ class PumpOverviewStateBuilder(
         serialNumber?.takeIf { it.isNotEmpty() }?.let {
             add(
                 PumpInfoRow(
-                    label = rh.gs(R.string.serial_number),
+                    label = rh.gs(UiStrings.serial_number),
                     value = it
                 )
             )

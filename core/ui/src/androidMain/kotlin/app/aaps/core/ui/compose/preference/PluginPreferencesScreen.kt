@@ -2,7 +2,8 @@ package app.aaps.core.ui.compose.preference
 
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.UiStrings
-import androidx.activity.compose.BackHandler
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -42,6 +43,9 @@ import kotlinx.coroutines.launch
  * @param visibilityContext Context for evaluating visibility conditions
  * @param onBackClick Callback when back button is clicked
  */
+// BackHandler is still marked experimental in Compose Multiplatform. The Android behaviour is
+// unchanged - it is the same predictive-back plumbing androidx.activity.compose.BackHandler used.
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun PluginPreferencesScreen(
     plugin: PluginBase,

@@ -3,9 +3,8 @@ package app.aaps.core.ui.compose
 import app.aaps.core.ui.UiStrings
 import androidx.compose.runtime.Composable
 import app.aaps.core.data.format.NumberFormat
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.R
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
@@ -29,18 +28,18 @@ fun formatMinutesAsDuration(minutes: Int): String {
 
 /**
  * Formats minutes as duration string: "X h Y min" when >= 60 (omits minutes if zero), "X min" otherwise.
- * Non-composable version using ResourceHelper.
+ * Non-composable version using TextResolver.
  */
-fun formatMinutesAsDuration(minutes: Int, rh: ResourceHelper): String {
+fun formatMinutesAsDuration(minutes: Int, rh: TextResolver): String {
     val abs = abs(minutes)
     val sign = if (minutes < 0) "-" else ""
     return if (abs >= 60) {
         val hours = abs / 60
         val mins = abs % 60
-        sign + if (mins == 0) rh.gs(R.string.format_hours_only, hours)
-        else rh.gs(R.string.format_hour_minute, hours, mins)
+        sign + if (mins == 0) rh.gs(UiStrings.format_hours_only, hours)
+        else rh.gs(UiStrings.format_hour_minute, hours, mins)
     } else {
-        rh.gs(R.string.format_mins, minutes)
+        rh.gs(UiStrings.format_mins, minutes)
     }
 }
 

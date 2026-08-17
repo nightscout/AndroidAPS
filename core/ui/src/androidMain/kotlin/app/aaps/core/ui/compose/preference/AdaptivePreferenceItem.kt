@@ -5,12 +5,12 @@
 
 package app.aaps.core.ui.compose.preference
 
-import androidx.compose.ui.res.stringResource
 import app.aaps.core.ui.UiStrings
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import app.aaps.core.keys.PreferenceType
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.DoublePreferenceKey
@@ -179,7 +179,7 @@ fun AdaptivePreferenceItem(
             val resolvedClick = key.onClick ?: onIntentClick
             val resolvedCompose = key.composeScreen as? ComposeScreenContent
             val onNavigateToCompose = LocalNavigateToCompose.current
-            val resolvedUrl = key.runtimeUrl ?: intentUrl ?: key.urlResId?.let { stringResource(it) }
+            val resolvedUrl = key.runtimeUrl ?: intentUrl ?: key.urlResId?.let { stringResource(TextRef.AndroidRes(it)) }
 
             when {
                 resolvedClick != null                                  -> {

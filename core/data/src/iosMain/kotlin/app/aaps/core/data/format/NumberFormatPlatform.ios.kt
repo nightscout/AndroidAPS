@@ -5,6 +5,7 @@ import platform.Foundation.NSNumber
 import platform.Foundation.NSNumberFormatter
 import platform.Foundation.NSNumberFormatterDecimalStyle
 import platform.Foundation.NSNumberFormatterRoundHalfEven
+import platform.Foundation.NSNumberFormatterRoundHalfUp
 import platform.Foundation.currentLocale
 
 /**
@@ -36,7 +37,12 @@ actual object NumberFormatPlatform {
             setMaximumFractionDigits(format.maxFractionDigits.toULong())
             // Old patterns like "0.00" never grouped, and NSNumberFormatter groups by default.
             setUsesGroupingSeparator(false)
-            setRoundingMode(NSNumberFormatterRoundHalfEven)
+            setRoundingMode(
+                when (format.rounding) {
+                    NumberRounding.HALF_EVEN -> NSNumberFormatterRoundHalfEven
+                    NumberRounding.HALF_UP   -> NSNumberFormatterRoundHalfUp
+                }
+            )
             setDecimalSeparator(separator.toString())
         }.stringFromNumber(NSNumber(double = value)) ?: ""
 

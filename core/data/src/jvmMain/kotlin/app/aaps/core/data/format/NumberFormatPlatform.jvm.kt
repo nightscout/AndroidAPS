@@ -38,8 +38,11 @@ actual object NumberFormatPlatform {
                 maximumFractionDigits = key.format.maxFractionDigits
                 // Old patterns like "0.00" never grouped. DecimalFormat() does by default.
                 isGroupingUsed = false
-                // Same as the default of DecimalFormat, set here so it cannot drift.
-                roundingMode = RoundingMode.HALF_EVEN
+                // HALF_EVEN is the DecimalFormat default, set here so it cannot drift.
+                roundingMode = when (key.format.rounding) {
+                    NumberRounding.HALF_EVEN -> RoundingMode.HALF_EVEN
+                    NumberRounding.HALF_UP   -> RoundingMode.HALF_UP
+                }
                 decimalFormatSymbols = DecimalFormatSymbols.getInstance(key.locale).apply { decimalSeparator = key.separator }
             }
         }

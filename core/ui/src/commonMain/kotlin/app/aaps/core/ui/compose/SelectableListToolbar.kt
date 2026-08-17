@@ -21,8 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.ui.R
+import app.aaps.core.interfaces.resources.TextResolver
 
 /**
  * Reusable toolbar builder for screens with selectable list items.
@@ -50,7 +49,7 @@ fun SelectableListToolbar(
     onExitRemovingMode: () -> Unit,
     onNavigateBack: () -> Unit,
     onDelete: () -> Unit,
-    rh: ResourceHelper,
+    rh: TextResolver,
     title: String = "",
     showInvalidated: Boolean? = null,
     onToggleInvalidated: (() -> Unit)? = null,
@@ -62,12 +61,12 @@ fun SelectableListToolbar(
     return if (isRemovingMode) {
         // Selection mode: show count, close icon, and delete action
         ToolbarConfig(
-            title = rh.gs(R.string.count_selected, selectedCount),
+            title = rh.gs(UiStrings.count_selected, selectedCount),
             navigationIcon = {
                 IconButton(onClick = onExitRemovingMode) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = rh.gs(R.string.close)
+                        contentDescription = rh.gs(UiStrings.close)
                     )
                 }
             },
@@ -76,7 +75,7 @@ fun SelectableListToolbar(
                 IconButton(onClick = onDelete) {
                     Icon(
                         imageVector = Icons.Default.Delete,
-                        contentDescription = rh.gs(R.string.delete),
+                        contentDescription = rh.gs(UiStrings.delete),
                         tint = MaterialTheme.colorScheme.error
                     )
                 }
@@ -90,7 +89,7 @@ fun SelectableListToolbar(
                 IconButton(onClick = onNavigateBack) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = rh.gs(R.string.back)
+                        contentDescription = rh.gs(UiStrings.back)
                     )
                 }
             },
@@ -101,9 +100,9 @@ fun SelectableListToolbar(
                         Icon(
                             imageVector = if (showInvalidated) Icons.Default.VisibilityOff else Icons.Default.Visibility,
                             contentDescription = if (showInvalidated)
-                                rh.gs(R.string.hide_invalidated)
+                                rh.gs(UiStrings.hide_invalidated)
                             else
-                                rh.gs(R.string.show_invalidated)
+                                rh.gs(UiStrings.show_invalidated)
                         )
                     }
                 }
@@ -113,7 +112,7 @@ fun SelectableListToolbar(
                     IconButton(onClick = onToggleLoop) {
                         Icon(
                             imageVector = if (showLoop) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                            contentDescription = rh.gs(R.string.show_hide_records)
+                            contentDescription = rh.gs(UiStrings.show_hide_records)
                         )
                     }
                 }
@@ -128,7 +127,7 @@ fun SelectableListToolbar(
                     IconButton(onClick = onSettings) {
                         Icon(
                             imageVector = Icons.Default.Settings,
-                            contentDescription = rh.gs(R.string.nav_plugin_preferences)
+                            contentDescription = rh.gs(UiStrings.nav_plugin_preferences)
                         )
                     }
                 }
@@ -143,7 +142,7 @@ fun SelectableListToolbar(
 @Composable
 private fun MenuDropdown(
     menuItems: List<MenuItemData>,
-    rh: ResourceHelper
+    rh: TextResolver
 ) {
     var showMenu by remember { mutableStateOf(false) }
 
@@ -151,7 +150,7 @@ private fun MenuDropdown(
         IconButton(onClick = { showMenu = true }) {
             Icon(
                 imageVector = Icons.Default.MoreVert,
-                contentDescription = rh.gs(R.string.more_options)
+                contentDescription = rh.gs(UiStrings.more_options)
             )
         }
         DropdownMenu(

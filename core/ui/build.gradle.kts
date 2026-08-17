@@ -83,6 +83,9 @@ kotlin {
                 api(libs.cmp.runtime)
                 api(libs.cmp.foundation)
                 api(libs.cmp.ui)
+                // Separate CMP artifact - androidx compose-ui has no backhandler package, so a BOM bump would
+                // not have helped. This one ships an Android variant of its own.
+                api(libs.cmp.ui.backhandler)
                 api(libs.cmp.material3)
                 api(libs.cmp.material.icons.extended)
                 implementation(compose.components.uiToolingPreview)

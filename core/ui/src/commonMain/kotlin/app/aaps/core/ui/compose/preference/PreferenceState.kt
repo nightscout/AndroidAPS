@@ -12,6 +12,8 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateMap
+import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.data.format.NumberFormatPlatform
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.keys.interfaces.BooleanNonPreferenceKey
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
@@ -33,8 +35,6 @@ import app.aaps.core.ui.compose.LocalProfileUtil
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
-import java.math.BigDecimal
-import java.math.RoundingMode
 
 /**
  * Data class holding visibility and enabled state for a preference
@@ -556,7 +556,8 @@ fun rememberUnitDoublePreferenceState(
         val displayValue = profileUtil.valueInCurrentUnitsDetect(storedValue)
         val isMgdl = displayValue == storedValue || (storedValue > 0 && displayValue / storedValue > 0.9)
         val precision = if (isMgdl) 0 else 1
-        return BigDecimal(displayValue).setScale(precision, RoundingMode.HALF_UP).toPlainString()
+        // SEPARATOR_DOT, not the locale separator: this string is parsed back as a number when edited.
+        return NumberFormat.withDecimalsHalfUp(precision).format(displayValue, NumberFormatPlatform.SEPARATOR_DOT)
     }
 
     // Back the display value with the shared state map so it's reactive
