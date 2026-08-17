@@ -72,4 +72,32 @@
     <!-- Permission rationales (used by PumpPluginBase) -->
     <!-- Insulin -->
     <!-- Concentration -->
+    <string name="formatsignedinsulinunits">%1$+.2f Ü</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="carbs">Karbonhidrat</string>
+    <string name="alarminxmin">Alarmı %1$d dakika içinde çalıştır</string>
+    <string name="pumpsuspended">Pompa Durduruldu</string>
+    <string name="loopsuspended">Döngü duraklatıldı</string>
+    <string name="pump_disconnected">Pompa bağlantısı kesildi</string>
+    <string name="basalprofilenotaligned">Bazal değerler saatlerle uyumlu değil: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Desteklenen minimum değerle değiştirilen bazal değer: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Bazal değeri maksimum desteklenen değerle değiştirilir: %1$s</string>
+    <string name="profile_ins_units_per_hour">Ü/s</string>
+    <string name="profile_carbs_per_unit">g/Ü</string>
+    <string name="mins">%1$d dak</string>
+    <string name="record">Kayıt</string>
+    <string name="bolus">Bolus</string>
+    <string name="uel_extended_carbs">YAYMA KARBONHİDRAT</string>
+    <string name="profile_low_target">Düşük hedef profili</string>
+    <string name="profile_high_target">Yüksek hedef profili</string>
+    <string name="profile_dia">Profil DIA değeri</string>
+    <string name="profile_sensitivity_value">Profil duyarlılık değeri</string>
+    <string name="profile_carbs_ratio_value">Profil karbonhidrat oranı değeri</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f sınırların dışında</string>
+    <string name="basal_value">Bazal değer</string>
+    <string name="cobvsiob">AKRB vs AİNS</string>
+    <string name="bolus_constraint_applied_warn">Bolus kısıtlaması uygulandı: %1$.2f Ü ile %2$.2f Ü</string>
+    <string name="bolus_recorded_only">Bolus yalnızca kaydedilecektir (pompa ile iletilmez)</string>
+    <string name="advisoralarm">Yemek zamanı alarmı çalıştır</string>
+    <string name="format_insulin_units">%1$.2f Ü</string>
 </resources>

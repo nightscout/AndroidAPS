@@ -35,6 +35,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.core.interfaces.R as InterfacesR
 
 @HiltViewModel
 @Stable
@@ -135,7 +136,7 @@ class CalibrationDialogViewModel @Inject constructor(
         val bgText = profileUtil.stringInCurrentUnitsDetect(state.bg)
         val bgWithUnit = rh.gs(CoreUiR.string.value_with_unit, bgText, state.unitLabel)
         return confirmationLines {
-            line(ConfirmationRole.PRIMARY, rh.gs(CoreUiR.string.confirmation_line, rh.gs(CoreUiR.string.bg_label), bgWithUnit))
+            line(ConfirmationRole.PRIMARY, rh.gs(InterfacesR.string.confirmation_line, rh.gs(CoreUiR.string.bg_label), bgWithUnit))
         }
     }
 

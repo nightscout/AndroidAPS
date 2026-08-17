@@ -25,6 +25,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.extensions.displayText
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.ui.R
+import app.aaps.core.interfaces.R as InterfacesR
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -100,7 +101,7 @@ class ChipsViewModel @AssistedInject constructor(
         val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
         val total = bolusIob.iob + basalIob.basaliob
         IobUiState(
-            text = rh.gs(R.string.format_insulin_units, total),
+            text = rh.gs(InterfacesR.string.format_insulin_units, total),
             iobTotal = total
         )
     }.stateIn(
@@ -222,9 +223,9 @@ class ChipsViewModel @AssistedInject constructor(
             val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
             val total = bolusIob.iob + basalIob.basaliob
             val message =
-                rh.gs(R.string.bolus_iob_label) + ": " + rh.gs(R.string.format_insulin_units, bolusIob.iob) + "\n" +
-                    rh.gs(R.string.treatments_wizard_basaliob_label) + ": " + rh.gs(R.string.format_insulin_units, basalIob.basaliob) + "\n" +
-                    rh.gs(R.string.iob) + ": " + rh.gs(R.string.format_insulin_units, total)
+                rh.gs(R.string.bolus_iob_label) + ": " + rh.gs(InterfacesR.string.format_insulin_units, bolusIob.iob) + "\n" +
+                    rh.gs(R.string.treatments_wizard_basaliob_label) + ": " + rh.gs(InterfacesR.string.format_insulin_units, basalIob.basaliob) + "\n" +
+                    rh.gs(R.string.iob) + ": " + rh.gs(InterfacesR.string.format_insulin_units, total)
             rxBus.send(
                 EventShowDialog.Ok(
                     title = rh.gs(R.string.iob),

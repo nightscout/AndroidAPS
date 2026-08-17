@@ -144,7 +144,7 @@ class QuickLaunchResolver @Inject constructor(
             when (entry.mode()) {
                 QuickWizardMode.INSULIN -> {
                     val insulin = entry.insulin()
-                    if (insulin > 0.0) rh.gs(app.aaps.core.ui.R.string.format_insulin_units, insulin) else null
+                    if (insulin > 0.0) rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, insulin) else null
                 }
 
                 QuickWizardMode.CARBS   -> {

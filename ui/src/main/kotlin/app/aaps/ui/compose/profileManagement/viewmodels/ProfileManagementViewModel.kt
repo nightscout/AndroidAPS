@@ -42,6 +42,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.toPureProfile
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
+import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.icons.IcProfile
@@ -530,7 +531,7 @@ class ProfileManagementViewModel @Inject constructor(
     fun getIsfList(profile: Profile): String = profile.getIsfList(rh, dateUtil)
     fun getBasalList(profile: Profile): String = profile.getBasalList(rh, dateUtil)
     fun getTargetList(profile: Profile): String = profile.getTargetList(rh, dateUtil)
-    fun formatBasalSum(basalSum: Double): String = rh.gs(R.string.format_insulin_units, basalSum)
+    fun formatBasalSum(basalSum: Double): String = rh.gs(InterfacesR.string.format_insulin_units, basalSum)
 
     /**
      * Get reuse values from current active profile if it has custom percentage/timeshift

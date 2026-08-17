@@ -23,4 +23,6 @@
     <!-- Permission rationales (used by PumpPluginBase) -->
     <!-- Insulin -->
     <!-- Concentration -->
+    <string name="carbs">Uglj. hidrati</string>
+    <string name="bolus">Bolus</string>
 </resources>

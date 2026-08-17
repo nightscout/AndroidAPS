@@ -24,6 +24,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.ui.R
+import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.compose.icons.IcAaps
 import app.aaps.core.ui.compose.icons.IcAction
 import app.aaps.core.ui.compose.icons.IcActivity
@@ -316,7 +317,7 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         csvString(if (profileUtil.units == GlucoseUnit.MGDL) R.string.mgdl else R.string.mmol),
         csvString(R.string.shortgram),
         csvString(R.string.insulin_unit_shortname),
-        csvString(R.string.profile_ins_units_per_hour),
+        csvString(InterfacesR.string.profile_ins_units_per_hour),
         csvString(R.string.shortpercent),
         csvString(app.aaps.core.interfaces.R.string.shorthour),
         csvString(app.aaps.core.interfaces.R.string.shortminute),

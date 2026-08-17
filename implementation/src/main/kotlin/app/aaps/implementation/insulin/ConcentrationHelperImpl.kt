@@ -67,7 +67,7 @@ override fun basalTbrString(rate: PumpRate, startTime: Long, durationInMin: Int,
         val bolusStep = activePlugin.activePump.pumpDescription.bolusStep
         if (isU100())
             return decimalFormatter.toPumpSupportedBolusWithUnits(amount.cU, bolusStep)
-        else { // app.aaps.core.ui.R.string.format_insulin_units
+        else { // app.aaps.core.interfaces.R.string.format_insulin_units
             val iUString = decimalFormatter.toPumpSupportedBolusWithUnits(amount.iU(concentration), bolusStep)
             val cUString = decimalFormatter.toPumpSupportedBolusWithUnits(amount, bolusStep / concentration)
             return rh.gs(R.string.concentration_format, iUString, cUString)

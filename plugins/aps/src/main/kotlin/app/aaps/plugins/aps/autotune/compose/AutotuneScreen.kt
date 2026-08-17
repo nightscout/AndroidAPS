@@ -307,7 +307,7 @@ fun AutotuneScreen(
                             getIsfList = { it.getIsfList(rh, dateUtil) },
                             getBasalList = { it.getBasalList(rh, dateUtil) },
                             getTargetList = { it.getTargetList(rh, dateUtil) },
-                            formatBasalSum = { rh.gs(app.aaps.core.ui.R.string.format_insulin_units, it) }
+                            formatBasalSum = { rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, it) }
                         )
                     },
                     profileCompareContent = { profile1, profile2 ->
@@ -315,11 +315,11 @@ fun AutotuneScreen(
                             profile1 = profile1,
                             profile2 = profile2,
                             icsRows = buildIcRows(profile1, profile2, dateUtil),
-                            icUnits = rh.gs(app.aaps.core.ui.R.string.profile_carbs_per_unit),
+                            icUnits = rh.gs(app.aaps.core.interfaces.R.string.profile_carbs_per_unit),
                             isfsRows = buildIsfRows(profile1, profile2, profileUtil, dateUtil),
-                            isfUnits = rh.gs(if (profileFunction.getUnits() == GlucoseUnit.MGDL) app.aaps.core.ui.R.string.profile_isf_units_mgdl else app.aaps.core.ui.R.string.profile_isf_units_mmol),
+                            isfUnits = rh.gs(if (profileFunction.getUnits() == GlucoseUnit.MGDL) app.aaps.core.interfaces.R.string.profile_isf_units_mgdl else app.aaps.core.interfaces.R.string.profile_isf_units_mmol),
                             basalsRows = buildBasalRows(profile1, profile2, dateUtil),
-                            basalUnits = rh.gs(app.aaps.core.ui.R.string.profile_ins_units_per_hour),
+                            basalUnits = rh.gs(app.aaps.core.interfaces.R.string.profile_ins_units_per_hour),
                             targetsRows = buildTargetRows(profile1, profile2, dateUtil, profileUtil),
                             targetUnits = profileFunction.getUnits().displayLabel,
                             profileName1 = dialog.data.profileName ?: "",

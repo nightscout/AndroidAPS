@@ -38,8 +38,6 @@
     <string name="event_type">Event type</string>
     <string name="mgdl">mg/dL</string>
     <string name="mmol">mmol/L</string>
-    <string name="profile_isf_units_mgdl">mg/dL/U</string>
-    <string name="profile_isf_units_mmol">mmol/L/U</string>
     <string name="bg_mgdl">%1$d mg/dL</string>
     <string name="bg_mmol">%1$.1f mmol/L</string>
     <string name="save">Save</string>
@@ -105,18 +103,14 @@
     <string name="goingtodeliver">Going to deliver %1$.2f U</string>
     <string name="carbs_not_saved_after_bolus">Bolus delivered, but the carbs could not be saved. Please enter the carbs again.</string>
     <string name="androidaps_start">AAPS started</string>
-    <string name="formatsignedinsulinunits">%1$+.2f U</string>
-    <string name="format_carbs">%1$d g</string>
     <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d g</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
-    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
     <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
     <string name="objectives">Objectives</string>
     <string name="please_wait">Please wait…</string>
     <string name="stop">Stop</string>
     <string name="stop_pressed">STOP PRESSED</string>
-    <string name="carbs">Carbs</string>
     <string name="invalid_profile">Invalid profile!</string>
     <string name="no_profile_set">NO PROFILE SET</string>
     <string name="profile_switch_no_insulin">Cannot switch profile: no insulin is in use, and none was selected.</string>
@@ -172,15 +166,12 @@
     <string name="bg_label">BG</string>
     <string name="calibration">Calibration</string>
     <string name="cgm">CGM</string>
-    <string name="alarminxmin">Run alarm in %1$d min</string>
     <string name="treatmentdeliveryerror">Bolus reported an error. Manually check real delivered insulin and carb amount</string>
     <string name="bolus_reminder">Remind for bolus when BG recovers</string>
     <string name="duration_label">Duration</string>
     <string name="shortgramm">g</string>
-    <string name="pumpsuspended">Pump suspended</string>
     <string name="pump_running">Pump running</string>
     <string name="notconfigured">Not configured</string>
-    <string name="loopsuspended">Loop suspended</string>
     <string name="loop_suspended_by_dst">Loop suspended by DST</string>
     <string name="required">req</string>
     <string name="a11y_arrow_double_down">falling rapidly</string>
@@ -231,7 +222,6 @@
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
     <string name="lowglucosesuspend">Low Glucose Suspend</string>
-    <string name="pump_disconnected">Pump disconnected</string>
     <string name="pump_suspended">Pump suspended</string>
     <string name="pump_suspend">Suspend pump</string>
     <string name="pump_resume">Resume pump</string>
@@ -269,11 +259,6 @@
     <string name="pin_dont_match">PINs don\'t match</string>
 
     <!--    Profile-->
-    <string name="basalprofilenotaligned">Basal values not aligned to hours: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Basal value replaced by minimum supported value: %1$s</string>
-    <string name="maximumbasalvaluereplaced">Basal value replaced by maximum supported value: %1$s</string>
-    <string name="profile_ins_units_per_hour">U/h</string>
-    <string name="profile_carbs_per_unit">g/U</string>
 
     <!--    ProfileFunction-->
     <string name="startprofile">Start profile %1$d%% for %2$d min</string>
@@ -317,7 +302,6 @@
     <!--    ProfileSwitch-->
 
     <!--    Temptarget-->
-    <string name="mins">%1$d min</string>
 
     <!--    Translator-->
     <string name="careportal">Careportal</string>
@@ -504,7 +488,6 @@
     <string name="revert_to_defaults">Revert to defaults</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
-    <string name="record">Record</string>
     <string name="location_front_right_upper_chest">Right Chest</string>
     <string name="location_front_left_upper_chest">Left Chest</string>
     <string name="location_side_right_upper_arm">Upper Right Outer Arm</string>
@@ -559,7 +542,6 @@
     <string name="carbsreq">%1$d g additional carbs required within %2$d minutes</string>
 
     <string name="basalrate">Basal</string>
-    <string name="bolus">Bolus</string>
     <string name="tdd_short">TDD</string>
     <string name="tdd">Total Daily Dose</string>
 
@@ -573,7 +555,6 @@
     <string name="uel_extended_bolus">EXTENDED BOLUS</string>
     <string name="uel_superbolus_tbr">SUPERBOLUS TBR</string>
     <string name="uel_carbs">CARBS</string>
-    <string name="uel_extended_carbs">EXTENDED CARBS</string>
     <string name="uel_temp_basal">TEMP BASAL</string>
     <string name="uel_tt">TEMP TARGET</string>
     <string name="uel_new_profile">NEW PROFILE</string>
@@ -676,22 +657,15 @@
     <string name="uel_remote_config_changed">REMOTE CONFIG CHANGED</string>
 
     <!-- HardLimits -->
-    <string name="profile_low_target">Profile low target</string>
-    <string name="profile_high_target">Profile high target</string>
     <string name="temp_target_low_target">Temporary target bottom value</string>
     <string name="temp_target_high_target">Temporary target top value</string>
     <string name="temp_target_value">Temporary target value</string>
-    <string name="profile_dia">Profile DIA value</string>
     <string name="insulin_dia">Insulin DIA value</string>
     <string name="insulin_peak">Insulin Peak value</string>
-    <string name="profile_sensitivity_value">Profile sensitivity value</string>
     <string name="profile_max_daily_basal_value">Maximal profile basal value</string>
     <string name="current_basal_value">Current basal value</string>
-    <string name="profile_carbs_ratio_value">Profile carbs ratio value</string>
     <string name="valuelimitedto">%1$.2f limited to %2$.2f</string>
     <string name="valueoutofrange">»%1$s« is out of hard limits</string>
-    <string name="value_out_of_hard_limits">»%1$s« %2$.2f is out of hard limits</string>
-    <string name="basal_value">Basal value</string>
 
     <!-- Profile validation -->
     <string name="no_profile_selected">No profile selected</string>
@@ -755,18 +729,12 @@
     <string name="bolus_advisor">Bolus advisor</string>
     <string name="bolus_advisor_message">You have high glycemia. Instead of eating now it\'s recommended to wait for better glycemia. Do you want to do a correction bolus now and remind you when it\'s time to eat? In this case no carbs will be recorded and you must use wizard again when we remind you.</string>
 
-    <string name="cobvsiob">COB vs IOB</string>
-    <string name="slowabsorptiondetected_plain">!!!!! Slow carbs absorption detected: %1$d%% of time. Double check your calculation. COB can be overestimated thus more insulin could be given !!!!!</string>
-    <string name="bolus_constraint_applied_warn">Bolus constraint applied: %1$.2f U to %2$.2f U</string>
-    <string name="bolus_recorded_only">Bolus will be recorded only (not delivered by pump)</string>
-    <string name="advisoralarm">Run alarm when is time to eat</string>
     <string name="wizard_bg_label">BG</string>
     <string name="wizard_correction">Correction</string>
     <string name="wizard_subtotal">Subtotal</string>
     <string name="carbs_type_bread">Bread, savory pastries, yogurt, fruit (apple, banana, pear), potatoes, rice, buckwheat, oatmeal, slow and low carb foods, vegetables</string>
     <string name="carbs_type_cake">Dumplings, pasta, Asian cuisine rich in carbs and fats, sweet and yeast pastries, cereals, grain porridge, honey, jam</string>
     <string name="carbs_type_pizza">Lasagna, pizza, hamburgers, fries, baked potatoes, chips and similar snacks</string>
-    <string name="wizard_ecarbs">eCarbs %1$dg / %2$dh (+%3$dmin)</string>
     <string name="wizard_total">Total</string>
     <string name="wizard_carb_time">Carb time</string>
     <string name="carb_time_now">Now</string>
@@ -1042,7 +1010,6 @@
 
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
-    <string name="format_insulin_units">%1$.2f U</string>
     <string name="format_insulin_units_signed">%1$+.2f U</string>
     <string name="percent_rate_duration">Rate: %1$.2f%% (%2$.2f U/h) Duration: %3$d min</string>
     <string name="rate_percent_duration">Rate: %1$.2f U/h (%2$.2f%%) Duration: %3$d min</string>

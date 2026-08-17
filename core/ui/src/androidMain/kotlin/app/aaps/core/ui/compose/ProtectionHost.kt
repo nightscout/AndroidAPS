@@ -1,7 +1,6 @@
 package app.aaps.core.ui.compose
 
 import androidx.compose.ui.res.stringResource
-import app.aaps.core.ui.UiStrings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue

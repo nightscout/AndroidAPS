@@ -61,4 +61,29 @@
     <!-- Permission rationales (used by PumpPluginBase) -->
     <!-- Insulin -->
     <!-- Concentration -->
+    <string name="formatsignedinsulinunits">%1$+.2f U</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="carbs">Hidratos</string>
+    <string name="alarminxmin">Executar alarme em %1$d min</string>
+    <string name="pumpsuspended">Bomba suspensa</string>
+    <string name="loopsuspended">Loop suspenso</string>
+    <string name="basalprofilenotaligned">Valores das basais não definidos por horas: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Valor da basal alterado para o valor mínimo suportado: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Valor da basal alterado para o valor máximo suportado: %1$s</string>
+    <string name="profile_ins_units_per_hour">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <string name="mins">%1$d min</string>
+    <string name="record">Registo</string>
+    <string name="bolus">Bólus</string>
+    <string name="uel_extended_carbs">HC LENTOS</string>
+    <string name="profile_low_target">Valor mínimo alvo do perfil</string>
+    <string name="profile_high_target">Valor máximo alvo do perfil</string>
+    <string name="profile_dia">Valor Perfil DIA</string>
+    <string name="profile_sensitivity_value">Valor Perfil Sensibilidade</string>
+    <string name="profile_carbs_ratio_value">Valor Perfil Rácio Hidratos</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f está fora dos limites permitidos</string>
+    <string name="basal_value">Valor da Basal</string>
+    <string name="cobvsiob">HCA vs IA</string>
+    <string name="advisoralarm">Executar alarme quando for tempo de comer</string>
+    <string name="format_insulin_units">%1$.2f U</string>
 </resources>

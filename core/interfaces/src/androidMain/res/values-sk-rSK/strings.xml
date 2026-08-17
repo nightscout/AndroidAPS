@@ -121,4 +121,37 @@
     <string name="u200">U200</string>
     <string name="u300">U300</string>
     <string name="u500">U500</string>
+    <string name="profile_isf_units_mgdl">mg/dL/U</string>
+    <string name="profile_isf_units_mmol">mmol/L/U</string>
+    <string name="formatsignedinsulinunits">%1$+.2f U</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
+    <string name="carbs">Sacharidy</string>
+    <string name="alarminxmin">Spustiť výstrahu za %1$d min</string>
+    <string name="pumpsuspended">Pumpa pozastavená</string>
+    <string name="loopsuspended">Uzavretý okruh pozastavený</string>
+    <string name="pump_disconnected">Pumpa odpojená</string>
+    <string name="basalprofilenotaligned">Bazálne hodnoty nie sú zarovnané na celé hodiny: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Hodnota bazálu nahradená minimálnou možnou: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Hodnota bazálu nahradená maximálnou možnou: %1$s</string>
+    <string name="profile_ins_units_per_hour">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <string name="mins">%1$d min.</string>
+    <string name="record">Záznam</string>
+    <string name="bolus">Bolus</string>
+    <string name="uel_extended_carbs">ROZLOŽENÉ SACHARIDY</string>
+    <string name="profile_low_target">Dolný cieľ profilu</string>
+    <string name="profile_high_target">Horný cieľ profilu</string>
+    <string name="profile_dia">Profilová hodnota DIA</string>
+    <string name="profile_sensitivity_value">Profilová hodnota citlivosti</string>
+    <string name="profile_carbs_ratio_value">Profilový inzulino-sacharidový pomer</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f je mimo pevne nastavených limitov</string>
+    <string name="basal_value">Hodnota bazálu</string>
+    <string name="cobvsiob">COB vs. IOB</string>
+    <string name="slowabsorptiondetected_plain">!!!!! Detekovaná pomalá absorbcia sacharidov: %1$d%% času. Radšej dvakrát skontrolujte kalkuláciu. COB môže byť úplne iné, môže byť podaného viac inzulínu!!!!!</string>
+    <string name="bolus_constraint_applied_warn">Použité obmedzenie bolusu: %1$.2f U na %2$.2f U</string>
+    <string name="bolus_recorded_only">Bolus bude iba zaznamenaný (nie pumpou vydaný)</string>
+    <string name="advisoralarm">Spustiť výstrahu, keď je čas na jedlo</string>
+    <string name="wizard_ecarbs">eSacharidy %1$dg / %2$dh (+%3$dmin)</string>
+    <string name="format_insulin_units">%1$.2f U</string>
 </resources>

@@ -120,13 +120,13 @@ class DanaHistoryViewModel @Inject constructor(
     }
 
     fun formatDailyTotal(record: DanaHistoryRecord): String =
-        rh.gs(app.aaps.core.ui.R.string.format_insulin_units, record.dailyBolus + record.dailyBasal)
+        rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, record.dailyBolus + record.dailyBasal)
 
     fun formatDailyBolus(record: DanaHistoryRecord): String =
-        rh.gs(app.aaps.core.ui.R.string.format_insulin_units, record.dailyBolus)
+        rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, record.dailyBolus)
 
     fun formatDailyBasal(record: DanaHistoryRecord): String =
-        rh.gs(app.aaps.core.ui.R.string.format_insulin_units, record.dailyBasal)
+        rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, record.dailyBasal)
 
     override fun onCleared() {
         super.onCleared()

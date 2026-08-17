@@ -41,13 +41,10 @@
     <string name="paused">En pausa</string>
     <string name="tdd_total">TDD Total</string>
     <string name="goingtodeliver">A punt de lliurar %1$.2f U</string>
-    <string name="formatsignedinsulinunits">%1$+.2f U</string>
-    <string name="format_carbs">%1$d g</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="objectives">Objectius</string>
     <string name="please_wait">Espereu si us plau…</string>
     <string name="stop">Stop</string>
-    <string name="carbs">Carbs</string>
     <string name="active"><![CDATA[<Actiu>]]></string>
     <string name="date">Data</string>
     <string name="units_label">Unitats</string>
@@ -82,12 +79,9 @@
     <string name="wrong_pump_data">Dades procedents d\'una altra bomba. Canvieu el driver de la bomba per restablir el seu estat.</string>
     <string name="bg_label">Glucèmia</string>
     <string name="calibration">Calibració</string>
-    <string name="alarminxmin">Executar alarma en %1$d min</string>
     <string name="duration_label">Durada</string>
     <string name="shortgramm">g</string>
-    <string name="pumpsuspended">Bomba aturada</string>
     <string name="notconfigured">No configurat</string>
-    <string name="loopsuspended">Llaç aturat</string>
     <string name="required">req</string>
     <string name="a11y_arrow_none">cap</string>
     <string name="a11y_arrow_unknown">desconegut</string>
@@ -114,10 +108,6 @@
     <string name="wrongpassword">Contrasenya incorrecta</string>
     <string name="passwords_dont_match">Les contrasenyes no coincideixen</string>
     <!--    Profile-->
-    <string name="basalprofilenotaligned">Valors basals no alineats amb les hores: %1$s</string>
-    <string name="maximumbasalvaluereplaced">Valor basal reemplaçat pel màxim valor acceptat: %1$s</string>
-    <string name="profile_ins_units_per_hour">U/h</string>
-    <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Iniciar perfil %1$d%% durant %2$d min</string>
     <!--    APSResult-->
@@ -131,7 +121,6 @@
     <string name="average">Mitja</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
-    <string name="mins">%1$d min</string>
     <!--    Translator-->
     <string name="careportal">Portal de cures</string>
     <string name="careportal_bgcheck">Control glucèmia</string>
@@ -170,7 +159,6 @@
     <string name="custom">Personalitzat</string>
     <string name="loop">Llaç</string>
     <string name="ns">NS</string>
-    <string name="record">Registre</string>
     <!--    Command-->
     <string name="connectiontimedout">Temps de connexió esgotat</string>
     <!--    PumpEnactResult-->
@@ -182,7 +170,6 @@
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="basalrate">Basal</string>
-    <string name="bolus">Bolus</string>
     <!--    Ntp-->
     <string name="timedetection">Detecció de temps</string>
     <!-- User Entry -->
@@ -192,7 +179,6 @@
     <string name="uel_extended_bolus">BOLUS ESTÈS</string>
     <string name="uel_superbolus_tbr">SUPERBOLUS TBR</string>
     <string name="uel_carbs">CARBS</string>
-    <string name="uel_extended_carbs">CARBS ESTESOS</string>
     <string name="uel_temp_basal">BASAL TEMP</string>
     <string name="uel_tt">OBJECTIU TEMP</string>
     <string name="uel_new_profile">NOU PERFIL</string>
@@ -274,20 +260,13 @@
     <string name="uel_loop_change">LLAÇ MODIFICAT</string>
     <string name="uel_loop_removed">LLAÇ ELIMINAT</string>
     <!-- HardLimits -->
-    <string name="profile_low_target">Objectiu baix del perfil</string>
-    <string name="profile_high_target">Objectiu alt del perfil</string>
     <string name="temp_target_low_target">Valor mínim d\'objectiu temporal</string>
     <string name="temp_target_high_target">Valor màxim d\'objectiu temporal</string>
     <string name="temp_target_value">Valor objectiu temporal</string>
-    <string name="profile_dia">Valor DIA del perfil</string>
-    <string name="profile_sensitivity_value">Valor sensibilitat del perfil</string>
     <string name="profile_max_daily_basal_value">Valor basal màxima del perfil</string>
     <string name="current_basal_value">Valor basal actual</string>
-    <string name="profile_carbs_ratio_value">Valor ràtio de carbohidrats del perfil</string>
     <string name="valuelimitedto">%1$.2f limitat a %2$.2f</string>
     <string name="valueoutofrange">»%1$s« supera els límits</string>
-    <string name="value_out_of_hard_limits">»%1$s« %2$.2f està fora dels límits estrictes</string>
-    <string name="basal_value">Valor basal</string>
     <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f U</string>
@@ -307,8 +286,6 @@
     <string name="urgent_alarm">Alarma urgent</string>
     <string name="info">INFO</string>
     <!-- BolusWizard -->
-    <string name="cobvsiob">COB vs IOB</string>
-    <string name="advisoralarm">Executar alarma quan sigui hora de menjar</string>
     <string name="no_action_selected">Cap acció sel·leccionada, no passarà res</string>
     <!--    Preferences-->
     <string name="teenage">Adolescent</string>

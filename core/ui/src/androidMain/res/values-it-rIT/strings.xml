@@ -38,8 +38,6 @@
     <string name="event_type">Tipo evento</string>
     <string name="mgdl">mg/dL</string>
     <string name="mmol">mmol/L</string>
-    <string name="profile_isf_units_mgdl">mg/dL/U</string>
-    <string name="profile_isf_units_mmol">mmol/L/U</string>
     <string name="bg_mgdl">%1$d mg/dL</string>
     <string name="bg_mmol">%1$.1f mmol/L</string>
     <string name="save">Salva</string>
@@ -103,18 +101,14 @@
     <string name="tdd_old_data">Dati vecchi</string>
     <string name="goingtodeliver">Sto per erogare %1$.2f U</string>
     <string name="androidaps_start">AAPS avviato</string>
-    <string name="formatsignedinsulinunits">%1$+.2f U</string>
-    <string name="format_carbs">%1$d g</string>
     <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d g</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
-    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
     <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
     <string name="objectives">Obiettivi</string>
     <string name="please_wait">Attendi…</string>
     <string name="stop">Stop</string>
     <string name="stop_pressed">STOP PREMUTO</string>
-    <string name="carbs">CHO</string>
     <string name="invalid_profile">Profilo non valido!</string>
     <string name="no_profile_set">NESSUN PROFILO IMPOSTATO</string>
     <string name="active"><![CDATA[<Active>]]></string>
@@ -164,15 +158,12 @@
     <string name="bg_label">BG</string>
     <string name="calibration">Calibrazione</string>
     <string name="cgm">CGM</string>
-    <string name="alarminxmin">Esegui allarme in %1$d min</string>
     <string name="treatmentdeliveryerror">Segnalato errore sul bolo. Controlla manualmente la reale quantità erogata</string>
     <string name="bolus_reminder">Ricorda il bolo quando la glicemia recupera</string>
     <string name="duration_label">Durata</string>
     <string name="shortgramm">g</string>
-    <string name="pumpsuspended">Micro sospeso</string>
     <string name="pump_running">Micro in esecuzione</string>
     <string name="notconfigured">Non configurato</string>
-    <string name="loopsuspended">Loop sospeso</string>
     <string name="loop_suspended_by_dst">Loop sospeso da DST</string>
     <string name="required">ric</string>
     <string name="a11y_arrow_double_down">discesa rapida</string>
@@ -222,7 +213,6 @@
     <string name="closedloop">Loop chiuso</string>
     <string name="openloop">Loop aperto</string>
     <string name="lowglucosesuspend">Sospensione a glicemia bassa (LGS)</string>
-    <string name="pump_disconnected">Micro disconnesso</string>
     <string name="pump_suspended">Micro sospeso</string>
     <string name="pump_suspend">Sospendi micro</string>
     <string name="pump_resume">Riprendi micro</string>
@@ -258,11 +248,6 @@
     <string name="passwords_dont_match">Le password non coincidono</string>
     <string name="pin_dont_match">I PIN non coincidono</string>
     <!--    Profile-->
-    <string name="basalprofilenotaligned">Valori basali non allineati alle ore: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Valore basale sostituito dal minimo valore supportato: %1$s</string>
-    <string name="maximumbasalvaluereplaced">Valore basale sostituito dal massimo valore supportato: %1$s</string>
-    <string name="profile_ins_units_per_hour">U/h</string>
-    <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Avvia profilo %1$d%% per %2$d min</string>
     <!--    APSResult-->
@@ -300,7 +285,6 @@
     <string name="thirty_days_short">30gg</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
-    <string name="mins">%1$d min</string>
     <!--    Translator-->
     <string name="careportal">Portale</string>
     <string name="careportal_bgcheck">Controllo BG</string>
@@ -484,7 +468,6 @@
     <string name="revert_to_defaults">Ripristino delle impostazioni predefinite</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
-    <string name="record">Record</string>
     <string name="location_front_right_upper_chest">Fianco destro</string>
     <string name="location_front_left_upper_chest">Fianco sinistro</string>
     <string name="location_side_right_upper_arm">Braccio Esterno Superiore Destro</string>
@@ -534,7 +517,6 @@
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g di CHO aggiuntivi richiesti entro %2$d minuti</string>
     <string name="basalrate">Basale</string>
-    <string name="bolus">Bolo</string>
     <string name="tdd_short">TDD</string>
     <string name="tdd">Dose totale giornaliera</string>
     <!--    Ntp-->
@@ -546,7 +528,6 @@
     <string name="uel_extended_bolus">BOLO ESTESO</string>
     <string name="uel_superbolus_tbr">TBR SUPERBOLO</string>
     <string name="uel_carbs">CHO</string>
-    <string name="uel_extended_carbs">CHO ESTESI</string>
     <string name="uel_temp_basal">BASALE TEMPORANEA</string>
     <string name="uel_tt">TARGET TEMPORANEO</string>
     <string name="uel_new_profile">NUOVO PROFILO</string>
@@ -647,22 +628,15 @@
     <string name="uel_scene_deactivated">SCENA DISATTIVATA</string>
     <string name="uel_remote_config_changed">CONFIG REMOTA MODIFICATA</string>
     <!-- HardLimits -->
-    <string name="profile_low_target">Target basso (profilo)</string>
-    <string name="profile_high_target">Target alto (profilo)</string>
     <string name="temp_target_low_target">Valore inferiore target temporaneo</string>
     <string name="temp_target_high_target">Valore superiore target temporaneo</string>
     <string name="temp_target_value">Valore target temporaneo</string>
-    <string name="profile_dia">Valore DIA (profilo)</string>
     <string name="insulin_dia">Valore del DIA dell’insulina</string>
     <string name="insulin_peak">Valore di picco dell\'insulina</string>
-    <string name="profile_sensitivity_value">Valore sensibilità (profilo)</string>
     <string name="profile_max_daily_basal_value">Valore max basale (profilo)</string>
     <string name="current_basal_value">Valore basale corrente</string>
-    <string name="profile_carbs_ratio_value">Valore rapporto CHO (profilo)</string>
     <string name="valuelimitedto">%1$.2f limitato a %2$.2f</string>
     <string name="valueoutofrange">»%1$s« è fuori dai limiti consentiti</string>
-    <string name="value_out_of_hard_limits">»%1$s« %2$.2f è fuori dai limiti consentiti</string>
-    <string name="basal_value">Valore basale</string>
     <!-- Profile validation -->
     <string name="no_profile_selected">Nessun profilo selezionato</string>
     <string name="missing_profile_name">Nome profilo mancante</string>
@@ -719,18 +693,12 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Consiglio bolo</string>
     <string name="bolus_advisor_message">Hai una glicemia alta. Invece di mangiare ora, si consiglia di attendere una glicemia migliore. Vuoi fare adesso un bolo di correzione ed ricevere un promemoria quando è il momento di mangiare? In questo caso non verranno registrati carboidrati e dovrai usare di nuovo il calcolatore quando ti verrà mostrato il promemoria.</string>
-    <string name="cobvsiob">COB vs IOB</string>
-    <string name="slowabsorptiondetected_plain">!!!!! Rilevato assorbimento lento dei carboidrati: %1$d%% del tempo. Ricontrolla il tuo calcolo. I COB potrebbero essere sovrastimati e potrebbe essere somministrata più insulina !!!!!</string>
-    <string name="bolus_constraint_applied_warn">Vincolo bolo applicato: %1$.2f U a %2$.2f U</string>
-    <string name="bolus_recorded_only">Il bolo sarà solo registrato (non erogato dal micro)</string>
-    <string name="advisoralarm">Esegui allarme quando è tempo di mangiare</string>
     <string name="wizard_bg_label">BG</string>
     <string name="wizard_correction">Correzione</string>
     <string name="wizard_subtotal">Subtotale</string>
     <string name="carbs_type_bread">Pane, pasticcini salati, yogurt, frutta (mela, banana, pera), patate, riso, grano saraceno, farina d\'avena, alimenti lenti e a basso contenuto di carboidrati, verdure</string>
     <string name="carbs_type_cake">Ravioli, pasta, cucina asiatica ricca di carboidrati e grassi, dolci dolci e lieviti, cereali, porridge di grano, miele, marmellata</string>
     <string name="carbs_type_pizza">Lasagna, pizza, hamburger, patatine fritte, patate, chips e snack simili</string>
-    <string name="wizard_ecarbs">eCarbs %1$dg / %2$dh (+%3$dmin)</string>
     <string name="wizard_total">Totale</string>
     <string name="wizard_carb_time">Tempo Carbo</string>
     <string name="carb_time_now">Adesso</string>
@@ -969,7 +937,6 @@
     <string name="weekday_monday_short">Lun</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
-    <string name="format_insulin_units">%1$.2f U</string>
     <string name="format_insulin_units_signed">%1$+.2f U</string>
     <string name="percent_rate_duration">Velocità: %1$.2f%% (%2$.2f U/h) Durata: %3$d min</string>
     <string name="rate_percent_duration">Velocità: %1$.2f U/h (%2$.2f%%) Durata: %3$d min</string>

@@ -61,6 +61,7 @@ import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.core.interfaces.R as InterfacesR
 
 sealed class EopatchOverviewEvent {
     data class StartPatchWorkflow(
@@ -286,7 +287,7 @@ class EopatchOverviewViewModel @Inject constructor(
                     val remainTimeMillis = max(finishTimeMillis - System.currentTimeMillis(), 0L)
                     val h = remainTimeMillis.milliseconds.inWholeHours
                     val m = (remainTimeMillis - h.hours.inWholeMilliseconds).milliseconds.inWholeMinutes
-                    "${rh.gs(CoreUiR.string.pumpsuspended)}\n${rh.gs(R.string.string_temp_basal_remained_hhmm, h.toString(), m.toString())}"
+                    "${rh.gs(InterfacesR.string.pumpsuspended)}\n${rh.gs(R.string.string_temp_basal_remained_hhmm, h.toString(), m.toString())}"
                 } else {
                     rh.gs(R.string.string_running)
                 }
@@ -376,7 +377,7 @@ class EopatchOverviewViewModel @Inject constructor(
 
     private fun buildStatusBanner(connState: BleConnectionState, isActivated: Boolean, isPaused: Boolean): StatusBanner? = when {
         !isActivated -> StatusBanner(text = rh.gs(R.string.eopatch_not_activated), level = StatusLevel.WARNING)
-        isPaused -> StatusBanner(text = rh.gs(CoreUiR.string.pumpsuspended), level = StatusLevel.WARNING)
+        isPaused -> StatusBanner(text = rh.gs(InterfacesR.string.pumpsuspended), level = StatusLevel.WARNING)
         connState == BleConnectionState.DISCONNECTED -> StatusBanner(text = rh.gs(CoreUiR.string.disconnected), level = StatusLevel.CRITICAL)
         connState != BleConnectionState.CONNECTED -> StatusBanner(text = rh.gs(CoreUiR.string.connecting), level = StatusLevel.UNSPECIFIED)
         else -> null // Connected, activated, running — no banner needed

@@ -115,4 +115,37 @@
     <string name="u200">U200</string>
     <string name="u300">U300</string>
     <string name="u500">U500</string>
+    <string name="profile_isf_units_mgdl">мг/дл/E</string>
+    <string name="profile_isf_units_mmol">ммол/л/E</string>
+    <string name="formatsignedinsulinunits">%1$+.2fЕ</string>
+    <string name="format_carbs">%1$d гр</string>
+    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
+    <string name="carbs">въглехидрати</string>
+    <string name="alarminxmin">Аларма след %1$d мин</string>
+    <string name="pumpsuspended">Помпата е спряна</string>
+    <string name="loopsuspended">Loop изключен</string>
+    <string name="pump_disconnected">Няма връзка с помпата</string>
+    <string name="basalprofilenotaligned">Базалните стойности не са за кръгли часове: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Базалната стойност е заместена от минимално поддържаната стойност: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Базалната стойност е заместена от максимално поддържаната стойност %1$s</string>
+    <string name="profile_ins_units_per_hour">Е/ч</string>
+    <string name="profile_carbs_per_unit">гр/Е</string>
+    <string name="mins">%1$d мин</string>
+    <string name="record">Запиши</string>
+    <string name="bolus">Болус</string>
+    <string name="uel_extended_carbs">УДЪЛЖЕН БОЛУС</string>
+    <string name="profile_low_target">Профил ниска цел</string>
+    <string name="profile_high_target">Профил висока цел</string>
+    <string name="profile_dia">Профил време на действие на инсулин</string>
+    <string name="profile_sensitivity_value">Профил чувствителност</string>
+    <string name="profile_carbs_ratio_value">Профил въглехидратно число</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f е извън ограниченията</string>
+    <string name="basal_value">Базална стойност</string>
+    <string name="cobvsiob">COB срещу IOB</string>
+    <string name="slowabsorptiondetected_plain">!!!!! Засечено бавно усвояване на въглехидрати: %1$d%% от времето. Проверете калкулацията. Въглехидратите може би са прекалено много и това ще доведе до много инсулин !!!!!</string>
+    <string name="bolus_constraint_applied_warn">Приложено болус ограничение: %1$.2f Е към %2$.2f Е</string>
+    <string name="bolus_recorded_only">Само запиши (без да да го стартираш в помпата)</string>
+    <string name="advisoralarm">Аларма, когато е време за хранене</string>
+    <string name="wizard_ecarbs">Уд въглехидрати %1$dгр / %2$dч (+%3$dмин)</string>
+    <string name="format_insulin_units">%1$.2fЕ</string>
 </resources>

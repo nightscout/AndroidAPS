@@ -40,4 +40,27 @@
     <!-- Permission rationales (used by PumpPluginBase) -->
     <!-- Insulin -->
     <!-- Concentration -->
+    <string name="formatsignedinsulinunits">%1$+.2f U</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="carbs">Carbs</string>
+    <string name="alarminxmin">Executar alarma en %1$d min</string>
+    <string name="pumpsuspended">Bomba aturada</string>
+    <string name="loopsuspended">Llaç aturat</string>
+    <string name="basalprofilenotaligned">Valors basals no alineats amb les hores: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Valor basal reemplaçat pel màxim valor acceptat: %1$s</string>
+    <string name="profile_ins_units_per_hour">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <string name="mins">%1$d min</string>
+    <string name="record">Registre</string>
+    <string name="bolus">Bolus</string>
+    <string name="uel_extended_carbs">CARBS ESTESOS</string>
+    <string name="profile_low_target">Objectiu baix del perfil</string>
+    <string name="profile_high_target">Objectiu alt del perfil</string>
+    <string name="profile_dia">Valor DIA del perfil</string>
+    <string name="profile_sensitivity_value">Valor sensibilitat del perfil</string>
+    <string name="profile_carbs_ratio_value">Valor ràtio de carbohidrats del perfil</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f està fora dels límits estrictes</string>
+    <string name="basal_value">Valor basal</string>
+    <string name="cobvsiob">COB vs IOB</string>
+    <string name="advisoralarm">Executar alarma quan sigui hora de menjar</string>
 </resources>

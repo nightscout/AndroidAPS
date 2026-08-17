@@ -2,7 +2,6 @@ package app.aaps.core.ui.compose.dialogs
 
 import app.aaps.core.ui.compose.stringResourceOrNull
 import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.ui.UiStrings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.AnnotatedString
 import app.aaps.core.data.ui.ConfirmationLine

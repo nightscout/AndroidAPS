@@ -30,7 +30,7 @@ class ExtendedSetAction(
         val result = commandQueue.extendedBolus(insulin, durationMinutes)
         if (result.success) {
             var replyText = rh.gs(R.string.smscommunicator_extended_set, insulin, durationMinutes)
-            if (config.APS) replyText += "\n" + rh.gs(app.aaps.core.ui.R.string.loopsuspended)
+            if (config.APS) replyText += "\n" + rh.gs(app.aaps.core.interfaces.R.string.loopsuspended)
             replyText += "\n" + shortStatusBlocking()
             sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
             if (config.APS)
@@ -41,11 +41,11 @@ class ExtendedSetAction(
                         R.string.smscommunicator_extended_set,
                         insulin,
                         durationMinutes
-                    ) + " / " + rh.gs(app.aaps.core.ui.R.string.loopsuspended),
+                    ) + " / " + rh.gs(app.aaps.core.interfaces.R.string.loopsuspended),
                     listValues = listOf(
                         ValueWithUnit.Insulin(insulin),
                         ValueWithUnit.Minute(durationMinutes),
-                        ValueWithUnit.SimpleString(rh.gsNotLocalised(app.aaps.core.ui.R.string.loopsuspended))
+                        ValueWithUnit.SimpleString(rh.gsNotLocalised(app.aaps.core.interfaces.R.string.loopsuspended))
                     )
                 )
             else

@@ -86,6 +86,7 @@ import app.aaps.core.objects.extensions.fromGv
 import app.aaps.core.objects.extensions.target
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
+import app.aaps.core.interfaces.R as InterfacesR
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineScope
@@ -785,7 +786,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
                     timestamp = ca.timestamp,
                     amount = ca.amount,
                     isValid = ca.isValid && ca.amount > 0,
-                    label = rh.gs(R.string.format_carbs, ca.amount.toInt())
+                    label = rh.gs(InterfacesR.string.format_carbs, ca.amount.toInt())
                 )
             }
 

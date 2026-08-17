@@ -44,13 +44,10 @@
     <string name="tdd_old_data">Oude gegevens</string>
     <string name="goingtodeliver">%1$.2f E toedienen</string>
     <string name="androidaps_start">AAPS gestart</string>
-    <string name="formatsignedinsulinunits">%1$+.2f E</string>
-    <string name="format_carbs">%1$d g</string>
     <string name="format_hours">%1$.2f u</string>
     <string name="objectives">Doelen</string>
     <string name="please_wait">Even geduld a.u.b.…</string>
     <string name="stop">Stop</string>
-    <string name="carbs">Koolhydraten</string>
     <string name="invalid_profile">Ongeldig profiel!</string>
     <string name="no_profile_set">GEEN PROFIEL INGESTELD</string>
     <string name="active"><![CDATA[<Huidig>]]></string>
@@ -94,14 +91,11 @@
     <string name="wrong_pump_data">Data komt van een andere pomp. Wijzig de pomp driver om de pomp status te resetten.</string>
     <string name="bg_label">BG</string>
     <string name="calibration">Kalibratie</string>
-    <string name="alarminxmin">Start alarm over %1$d min</string>
     <string name="treatmentdeliveryerror">Bolus fout geconstateerd. Controleer handmatig de werkelijk toegediende hoeveelheid insuline en koolhydraten</string>
     <string name="duration_label">Tijdsduur</string>
     <string name="shortgramm">g</string>
-    <string name="pumpsuspended">Pomp onderbreken</string>
     <string name="pump_running">Pomp is actief</string>
     <string name="notconfigured">Niet ingesteld</string>
-    <string name="loopsuspended">Loop pauzeren</string>
     <string name="loop_suspended_by_dst">Loop onderbroken voor zomer/wintertijd (DST)</string>
     <string name="required">nodig</string>
     <string name="a11y_arrow_double_down">snel dalend</string>
@@ -134,7 +128,6 @@
     <string name="closedloop">Closed loop</string>
     <string name="openloop">Open loop</string>
     <string name="lowglucosesuspend">Stop bij laag</string>
-    <string name="pump_disconnected">Pomp niet verbonden</string>
     <string name="pump_suspended">Pomp is onderbroken</string>
     <string name="mode_reverted">Modus teruggezet</string>
     <string name="dia">DIA</string>
@@ -160,11 +153,6 @@
     <string name="passwords_dont_match">Wachtwoorden komen niet overeen</string>
     <string name="pin_dont_match">PIN-codes komen niet overeen</string>
     <!--    Profile-->
-    <string name="basalprofilenotaligned">Basaalstanden niet ingesteld in hele uren: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Minimum basaalwaarde is vervangen door minimaal ondersteunde waarde: %1$s</string>
-    <string name="maximumbasalvaluereplaced">Basale waarde vervangen door maximale ondersteunde waarde: %1$s</string>
-    <string name="profile_ins_units_per_hour">E/u</string>
-    <string name="profile_carbs_per_unit">g/E</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Start profiel %1$d%% voor %2$d min</string>
     <!--    APSResult-->
@@ -179,7 +167,6 @@
     <string name="average">Gemiddelde</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
-    <string name="mins">%1$d min</string>
     <!--    Translator-->
     <string name="careportal">Zorgportaal</string>
     <string name="careportal_bgcheck">BG Controle</string>
@@ -227,7 +214,6 @@
     <string name="custom">Aangepast</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
-    <string name="record">Opnemen</string>
     <string name="location_front_right_upper_chest">Borst rechts</string>
     <string name="location_front_left_upper_chest">Borst links</string>
     <string name="location_side_right_upper_arm">Rechter bovenarm</string>
@@ -273,7 +259,6 @@
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g extra koolhydraten nodig binnen %2$d minuten</string>
     <string name="basalrate">Basaal</string>
-    <string name="bolus">Bolus</string>
     <!--    Ntp-->
     <string name="timedetection">Tijd detectie</string>
     <!-- User Entry -->
@@ -283,7 +268,6 @@
     <string name="uel_extended_bolus">VERLENGDE BOLUS</string>
     <string name="uel_superbolus_tbr">SUPERBOLUS TBR</string>
     <string name="uel_carbs">KOOLHYDRATEN</string>
-    <string name="uel_extended_carbs">VERLENGDE KOOLHYDRATEN</string>
     <string name="uel_temp_basal">TIJDELIJK BASAAL</string>
     <string name="uel_tt">TIJDELIJK DOEL</string>
     <string name="uel_new_profile">NIEUW PROFIEL</string>
@@ -375,20 +359,13 @@
     <string name="uel_running_mode_removed">BEDRIJFSMODE VERWIJDERD</string>
     <string name="uel_running_mode_updarted">BEDRIJFSMODE GEWIJZIGD</string>
     <!-- HardLimits -->
-    <string name="profile_low_target">Profiel laag doel</string>
-    <string name="profile_high_target">Profiel hoog doel</string>
     <string name="temp_target_low_target">Tijdelijk streefdoel ondergrens</string>
     <string name="temp_target_high_target">Tijdelijk streefdoel bovengrens</string>
     <string name="temp_target_value">Tijdelijk streefdoel waarde</string>
-    <string name="profile_dia">Profiel DIA waarde</string>
-    <string name="profile_sensitivity_value">Profiel gevoeligheidswaarde</string>
     <string name="profile_max_daily_basal_value">Maximale basaal waarde van het profiel</string>
     <string name="current_basal_value">Huidige basaal waarde</string>
-    <string name="profile_carbs_ratio_value">Profiel koolhydraten ratio waarde</string>
     <string name="valuelimitedto">%1$.2f gelimiteerd tot %2$.2f</string>
     <string name="valueoutofrange">»%1$s« is buiten de harde limiet</string>
-    <string name="value_out_of_hard_limits">»%1$s« %2$.2f is buiten de harde limiet</string>
-    <string name="basal_value">Basaal waarde</string>
     <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f E</string>
@@ -426,10 +403,6 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Bolusadviseur</string>
     <string name="bolus_advisor_message">Je hebt een hoge bloedglucose. In plaats van te eten, is het nu aan te raden om te wachten op een betere bloedglucose. Wil je nu een correctiebolus uitvoeren en je laten weten wanneer het tijd is om te eten? In dit geval worden er geen koolhydraten opgenomen en moet je de wizard opnieuw gebruiken wanneer we je er aan herinneren.</string>
-    <string name="cobvsiob">COB vs IOB</string>
-    <string name="bolus_constraint_applied_warn">Bolusbeperking toegepast: %1$.2f E naar %2$.2f E</string>
-    <string name="bolus_recorded_only">Bolus wordt alleen geregistreerd (niet toegediend door pomp)</string>
-    <string name="advisoralarm">Start alarm wanneer het tijd is om te eten</string>
     <string name="no_action_selected">Geen actie geselecteerd, er zal niets uitgevoerd worden</string>
     <string name="wizard_no_actual_bg">Geen recente BG om de berekening op te baseren!</string>
     <string name="wizard_no_active_profile">Geen actief profiel ingesteld!</string>
@@ -553,7 +526,6 @@
     <string name="weekday_monday_short">Ma</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f E</string>
-    <string name="format_insulin_units">%1$.2f E</string>
     <string name="percent_rate_duration">Basaal: %1$.2f%% (%2$.2f E/h) Duur: %3$d min</string>
     <string name="rate_percent_duration">Basaal: %1$.2f E/h (%2$.2f%%) Duur: %3$d min</string>
     <string name="percent_rate_duration_formatted"><![CDATA[<b>Basaal</b>: %1$.2f%% (%2$.2f E/h)<br><b>Duur</b>: %3$d min<br>]]></string>

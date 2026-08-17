@@ -501,7 +501,7 @@ class AutomationRuntime @Inject constructor(
         val runningMode = loop.runningMode()
         if (runningMode.pausesLoopExecution() || !runningMode.isLoopRunning()) {
             aapsLogger.debug(LTag.AUTOMATION, "Loop suspended")
-            executionLog.add(AnnotatedString(rh.gs(app.aaps.core.ui.R.string.loopsuspended)))
+            executionLog.add(AnnotatedString(rh.gs(app.aaps.core.interfaces.R.string.loopsuspended)))
             rxBus.send(EventAutomationUpdateGui())
             commonEventsEnabled = false
         }

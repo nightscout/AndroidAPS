@@ -44,13 +44,10 @@
     <string name="tdd_old_data">Seni duomenys</string>
     <string name="goingtodeliver">Bus suleista %1$.2f vv</string>
     <string name="androidaps_start">AAPS paleista</string>
-    <string name="formatsignedinsulinunits">%1$+.2f vv</string>
-    <string name="format_carbs">%1$dg</string>
     <string name="format_hours">%1$.2f val.</string>
     <string name="objectives">Tikslai</string>
     <string name="please_wait">Palaukite…</string>
     <string name="stop">Stop</string>
-    <string name="carbs">Angliavandeniai</string>
     <string name="invalid_profile">Netinkamas profilis!</string>
     <string name="no_profile_set">Nenustatytas profilis</string>
     <string name="active"><![CDATA[<Active>]]></string>
@@ -92,13 +89,10 @@
     <string name="wrong_pump_data">Duomenys gaunami iš kitos pompos. Pakeiskite pompos valdiklį.</string>
     <string name="bg_label">Glikemija</string>
     <string name="calibration">Kalibravimas</string>
-    <string name="alarminxmin">Pranešti po %1$d min</string>
     <string name="treatmentdeliveryerror">Boluso suleidimo klaida. Patikrinkite faktiškai suleistą insulino kiekį ir įvestą angliavandenių skaičių</string>
     <string name="duration_label">Trukmė</string>
     <string name="shortgramm">g</string>
-    <string name="pumpsuspended">Pompa sustabdyta</string>
     <string name="notconfigured">Nesukonfigūruota</string>
-    <string name="loopsuspended">Ciklas sustabdytas</string>
     <string name="required">reikal.</string>
     <string name="a11y_arrow_double_down">greitai mažėja</string>
     <string name="a11y_arrow_single_down">mažėja</string>
@@ -151,11 +145,6 @@
     <string name="passwords_dont_match">Slaptažodžiai nesutampa</string>
     <string name="pin_dont_match">PIN kodai nesutampa</string>
     <!--    Profile-->
-    <string name="basalprofilenotaligned">Bazės reikšmės nesuderintos su valandomis: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Nustatyta mažiausia galima valandinės bazės vertė: %1$s</string>
-    <string name="maximumbasalvaluereplaced">Nustatyta didžiausia galima valandinės bazės vertė: %1$s</string>
-    <string name="profile_ins_units_per_hour">v/val</string>
-    <string name="profile_carbs_per_unit">g/v</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Pradėti profilį %1$d%% %2$d min</string>
     <!--    APSResult-->
@@ -170,7 +159,6 @@
     <string name="average">Vidurkis</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
-    <string name="mins">%1$d min.</string>
     <!--    Translator-->
     <string name="careportal">Priežiūra</string>
     <string name="careportal_bgcheck">Gliukomatis</string>
@@ -215,7 +203,6 @@
     <string name="custom">Pasirinktinis</string>
     <string name="loop">Ciklas</string>
     <string name="ns">NS</string>
-    <string name="record">Įrašas</string>
     <!--    Command-->
     <string name="connectiontimedout">Prijungimo laikas baigėsi</string>
     <!--    PumpEnactResult-->
@@ -228,7 +215,6 @@
     <!--    CarbsReq-->
     <string name="carbsreq">Būtina suvartoti %1$d g papildomų AV per %2$d min</string>
     <string name="basalrate">Valandinė bazė</string>
-    <string name="bolus">Bolusas</string>
     <!--    Ntp-->
     <string name="timedetection">Laiko nustatymas</string>
     <!-- User Entry -->
@@ -238,7 +224,6 @@
     <string name="uel_extended_bolus">IŠTĘSTAS BOLUSAS</string>
     <string name="uel_superbolus_tbr">SUPERBOLUSO LB</string>
     <string name="uel_carbs">AV</string>
-    <string name="uel_extended_carbs">IŠTĘSTI AV</string>
     <string name="uel_temp_basal">LAIKINA BAZĖ</string>
     <string name="uel_tt">LAIKINAS TIKSLAS</string>
     <string name="uel_new_profile">NAUJAS PROFILIS</string>
@@ -323,20 +308,13 @@
     <string name="uel_loop_change">CIKLAS PAKEISTAS</string>
     <string name="uel_loop_removed">CIKLAS PAŠALINTAS</string>
     <!-- HardLimits -->
-    <string name="profile_low_target">Profilio tikslo žemoji riba</string>
-    <string name="profile_high_target">Profilio tikslo aukštoji riba</string>
     <string name="temp_target_low_target">Laikino tikslo žemoji riba</string>
     <string name="temp_target_high_target">Laikino tikslo viršutinė riba</string>
     <string name="temp_target_value">Laikino tikslo reikšmė</string>
-    <string name="profile_dia">Profilio IVT reikšmė</string>
-    <string name="profile_sensitivity_value">Profilio JIF reikšmė</string>
     <string name="profile_max_daily_basal_value">Maksimali profilio VB reikšmė</string>
     <string name="current_basal_value">Dabartinė bazė</string>
-    <string name="profile_carbs_ratio_value">Profilio IA reikšmė</string>
     <string name="valuelimitedto">%1$.2f apribota iki %2$.2f</string>
     <string name="valueoutofrange">»%1$s« viršija griežtą limitą</string>
-    <string name="value_out_of_hard_limits">»%1$s« %2$.2f viršija griežtą limitą</string>
-    <string name="basal_value">Valandinė bazė</string>
     <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUSAS %1$.2f vv</string>
@@ -374,10 +352,6 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Boluso patarėjas</string>
     <string name="bolus_advisor_message">Jūsų glikemija yra aukšta. Užuot valgę dabar, turėtumėte palaukti, kol sumažės glikemija. Ar norite dabar susileisti korekcinį bolusą ir nustatyti priminimą, kada ateis laikas valgyti? Tokiu atveju angliavandeniai nebus įrašyti, o po priminimo turėsite vėl naudoti boluso skaičiuoklę.</string>
-    <string name="cobvsiob">AAO prieš AIO</string>
-    <string name="bolus_constraint_applied_warn">Pritaikytas boluso apribojimas: %1$.2f v iki %2$.2f v</string>
-    <string name="bolus_recorded_only">Bolusas bus tik įrašytas (nebus suleistas)</string>
-    <string name="advisoralarm">Pranešti apie laiką valgyti</string>
     <string name="no_action_selected">Veiksmas nepasirinktas, nieko neįvyks</string>
     <string name="wizard_no_actual_bg">Nėra naujausių cukraus duomenų, kuriais būtų galima pagrįsti skaičiavimus!</string>
     <string name="wizard_no_active_profile">Neparinktas aktyvus profilis!</string>
@@ -507,7 +481,6 @@
     <string name="weekday_monday_short">P</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f V</string>
-    <string name="format_insulin_units">%1$.2f V</string>
     <string name="percent_rate_duration">Dydis: %1$.2f%% (%2$.2f vv/val) Trukmė: %3$d min</string>
     <string name="rate_percent_duration">Dydis: %1$.2f vv/val. (%2$.2f%%) Trukmė: %3$d min</string>
     <string name="percent_rate_duration_formatted"><![CDATA[<b>Dydis</b>: %1$.2f%% (%2$.2f vv/val.)<br><b>Trukmė</b>: %3$d min<br>]]></string>

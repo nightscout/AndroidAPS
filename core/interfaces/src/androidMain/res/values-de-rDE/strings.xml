@@ -64,4 +64,31 @@
     <!-- Permission rationales (used by PumpPluginBase) -->
     <!-- Insulin -->
     <!-- Concentration -->
+    <string name="formatsignedinsulinunits">%1$+.2f IE</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="carbs">Kohlenhydrate</string>
+    <string name="alarminxmin">Alarm in %1$d Min.</string>
+    <string name="pumpsuspended">Pumpe pausiert</string>
+    <string name="loopsuspended">Loop pausiert</string>
+    <string name="basalprofilenotaligned">Basalraten beginnen nicht zur vollen Stunde: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Basal-Wert wurde durch den kleinst möglichen Wert ersetzt: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Basal-Wert wurde durch größt möglichen Wert ersetzt: %1$s</string>
+    <string name="profile_ins_units_per_hour">IE/h</string>
+    <string name="profile_carbs_per_unit">g/IE</string>
+    <string name="mins">%1$d min.</string>
+    <string name="record">Eintrag</string>
+    <string name="bolus">Bolus</string>
+    <string name="uel_extended_carbs">VERLÄNGERTE KOHLENHYDRATE</string>
+    <string name="profile_low_target">Profil unteres Ziel</string>
+    <string name="profile_high_target">Profil oberes Ziel</string>
+    <string name="profile_dia">Profil Insulinwirkdauer</string>
+    <string name="profile_sensitivity_value">Profil Sensitivitätswert</string>
+    <string name="profile_carbs_ratio_value">Profil KH-Faktor</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f ist außerhalb der fest programmierten Grenzen</string>
+    <string name="basal_value">Basal-Wert</string>
+    <string name="cobvsiob">COB vs IOB</string>
+    <string name="bolus_constraint_applied_warn">Bolus Einschränkung angewendet: %1$.2f U bis %2$.2f U</string>
+    <string name="bolus_recorded_only">Bolus wird nur aufgezeichnet (Die Pumpe gibt kein Insulin ab!)</string>
+    <string name="advisoralarm">Alarmiere mich, wenn es Zeit zum Essen ist. </string>
+    <string name="format_insulin_units">%1$.2f IE</string>
 </resources>

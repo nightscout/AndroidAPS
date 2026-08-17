@@ -103,13 +103,13 @@ class DiaconnHistoryViewModel @Inject constructor(
     }
 
     fun formatDailyTotal(record: DiaconnHistoryRecord): String =
-        rh.gs(app.aaps.core.ui.R.string.format_insulin_units, record.dailyBolus + record.dailyBasal)
+        rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, record.dailyBolus + record.dailyBasal)
 
     fun formatDailyBolus(record: DiaconnHistoryRecord): String =
-        rh.gs(app.aaps.core.ui.R.string.format_insulin_units, record.dailyBolus)
+        rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, record.dailyBolus)
 
     fun formatDailyBasal(record: DiaconnHistoryRecord): String =
-        rh.gs(app.aaps.core.ui.R.string.format_insulin_units, record.dailyBasal)
+        rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, record.dailyBasal)
 
     override fun onCleared() {
         super.onCleared()

@@ -223,7 +223,7 @@ class BuiltInSearchables @Inject constructor(
      */
     val carbsButtons = PreferenceSubScreenDef(
         key = "carbs_button_settings",
-        titleResId = app.aaps.core.ui.R.string.carbs,
+        titleResId = app.aaps.core.interfaces.R.string.carbs,
         items = listOf(
             IntKey.OverviewCarbsButtonIncrement1,
             IntKey.OverviewCarbsButtonIncrement2,

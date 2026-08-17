@@ -52,6 +52,7 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.core.interfaces.R as InterfacesR
 
 @HiltViewModel
 class InsulinManagementViewModel @Inject constructor(
@@ -422,11 +423,11 @@ class InsulinManagementViewModel @Inject constructor(
 
         // Validation
         if (editedICfg.dia !in hardLimits.diaRange()) {
-            showSnackbar(rh.gs(CoreUiR.string.value_out_of_hard_limits, rh.gs(CoreUiR.string.insulin_dia), editedICfg.dia))
+            showSnackbar(rh.gs(InterfacesR.string.value_out_of_hard_limits, rh.gs(CoreUiR.string.insulin_dia), editedICfg.dia))
             return false
         }
         if (editedICfg.peak !in hardLimits.peakRange()) {
-            showSnackbar(rh.gs(CoreUiR.string.value_out_of_hard_limits, rh.gs(CoreUiR.string.insulin_peak), editedICfg.peak.toDouble()))
+            showSnackbar(rh.gs(InterfacesR.string.value_out_of_hard_limits, rh.gs(CoreUiR.string.insulin_peak), editedICfg.peak.toDouble()))
             return false
         }
 

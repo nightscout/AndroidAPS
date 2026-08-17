@@ -42,7 +42,7 @@ class PumpStatusProviderImpl @Inject constructor(
         if (!pump.isInitialized())
             lines += rh.gs(R.string.short_status_not_initialized)
         else if (pump.isSuspended())
-            lines += rh.gs(app.aaps.core.ui.R.string.pumpsuspended)
+            lines += rh.gs(app.aaps.core.interfaces.R.string.pumpsuspended)
         else {
             if (pump.lastDataTime.value != 0L) {
                 val agoMillis: Long = System.currentTimeMillis() - pump.lastDataTime.value

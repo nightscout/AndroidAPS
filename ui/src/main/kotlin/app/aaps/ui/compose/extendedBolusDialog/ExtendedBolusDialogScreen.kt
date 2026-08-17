@@ -50,6 +50,7 @@ import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.navigation.label
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.core.interfaces.R as InterfacesR
 
 @Composable
 fun ExtendedBolusDialogScreen(
@@ -163,7 +164,7 @@ internal fun ExtendedBolusDialogContent(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 if (uiState.insulin > 0.0) {
-                    Text(stringResource(CoreUiR.string.format_insulin_units, uiState.insulin))
+                    Text(stringResource(InterfacesR.string.format_insulin_units, uiState.insulin))
                 } else {
                     Text(stringResource(CoreUiR.string.ok))
                 }

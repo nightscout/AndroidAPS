@@ -130,14 +130,14 @@ class TreatmentDialogViewModel @Inject constructor(
                 _sideEffect.tryEmit(SideEffect.ShowNoActionDialog)
                 return@launch
             }
-            when (val prepared = batchExecutor.prepare(actions, Sources.TreatmentDialog, rh.gs(app.aaps.core.ui.R.string.bolus))) {
+            when (val prepared = batchExecutor.prepare(actions, Sources.TreatmentDialog, rh.gs(app.aaps.core.interfaces.R.string.bolus))) {
                 is ActionProgress.Prepared -> _sideEffect.tryEmit(SideEffect.ShowConfirmation(prepared.id, prepared.lines))
                 is ActionProgress.Rejected -> when (prepared.reason) {
-                    FailureReason.NotReachable, FailureReason.ControlDisabled -> rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.ui.R.string.bolus), message = rh.gs(prepared.reason.failText())))
+                    FailureReason.NotReachable, FailureReason.ControlDisabled -> rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.interfaces.R.string.bolus), message = rh.gs(prepared.reason.failText())))
                     // No-op after caps (e.g. the bolus was constraint-capped to 0): neutral message, NOT the bolus-error alarm.
                     FailureReason.NoAction                                    -> _sideEffect.tryEmit(SideEffect.ShowNoActionDialog)
                     else                                                      -> prepared.detail?.let { detail ->
-                        if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.ui.R.string.bolus), message = detail))
+                        if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.interfaces.R.string.bolus), message = detail))
                         else _sideEffect.tryEmit(SideEffect.ShowDeliveryError(detail))
                     }
                 }
@@ -150,14 +150,14 @@ class TreatmentDialogViewModel @Inject constructor(
     /** Confirm the master's prepared treatment: deliver/record the parked bundle exactly once. */
     fun commit(bolusId: Long) {
         appScope.launch {
-            val result = batchExecutor.commit(bolusId, Sources.TreatmentDialog, rh.gs(app.aaps.core.ui.R.string.bolus))
+            val result = batchExecutor.commit(bolusId, Sources.TreatmentDialog, rh.gs(app.aaps.core.interfaces.R.string.bolus))
             // Surface a failed commit. NotReachable → the offline message; any other Rejected (ExecutionFailed,
             // NoPendingBolus, …) → the master's detail. Unconfirmed (state unknown) rides the round-trip's app-level modal.
             if (result is ActionProgress.Rejected) {
                 if (result.reason == FailureReason.NotReachable || result.reason == FailureReason.ControlDisabled)
-                    rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.ui.R.string.bolus), message = rh.gs(result.reason.failText())))
+                    rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.interfaces.R.string.bolus), message = rh.gs(result.reason.failText())))
                 else result.detail?.let { detail ->
-                    if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.ui.R.string.bolus), message = detail))
+                    if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.interfaces.R.string.bolus), message = detail))
                     else _sideEffect.tryEmit(SideEffect.ShowDeliveryError(detail))
                 }
             }

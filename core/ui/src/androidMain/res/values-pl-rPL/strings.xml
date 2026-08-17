@@ -44,13 +44,10 @@
     <string name="tdd_old_data">Stare dane</string>
     <string name="goingtodeliver">Zamierzam podać %1$.2f U</string>
     <string name="androidaps_start">AAPS uruchomiony</string>
-    <string name="formatsignedinsulinunits">%1$+.2f U</string>
-    <string name="format_carbs">%1$d g</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="objectives">Zadania</string>
     <string name="please_wait">Proszę czekać…</string>
     <string name="stop">Stop</string>
-    <string name="carbs">Węglowodany</string>
     <string name="invalid_profile">Nieprawidłowy profil!</string>
     <string name="no_profile_set">NIE USTAWIONO PROFILU</string>
     <string name="active"><![CDATA[<Aktywny>]]></string>
@@ -94,14 +91,11 @@
     <string name="wrong_pump_data">Dane pochodzą z innej pompy. Zmień sterownik pompy, aby zresetować stan pompy.</string>
     <string name="bg_label">BG</string>
     <string name="calibration">Kalibracja</string>
-    <string name="alarminxmin">Uruchom alarm za %1$d min</string>
     <string name="treatmentdeliveryerror">Błąd podczas podawania bolusa. Sprawdź ręcznie ile faktycznie podano insuliny i ilość węglowodanów</string>
     <string name="duration_label">Czas trwania</string>
     <string name="shortgramm">g</string>
-    <string name="pumpsuspended">Pompa wstrzymana</string>
     <string name="pump_running">Pompa uruchomiona</string>
     <string name="notconfigured">Nie skonfigurowano</string>
-    <string name="loopsuspended">Pętla wstrzymana</string>
     <string name="loop_suspended_by_dst">Pętla zawieszona przez zmianę czasu (na letni lub zimowy)</string>
     <string name="required">wym</string>
     <string name="a11y_arrow_double_down">szybko spada</string>
@@ -134,7 +128,6 @@
     <string name="closedloop">Zamknięta pętla</string>
     <string name="openloop">Otwarta pętla</string>
     <string name="lowglucosesuspend">Zawieszenie przy niskiej glikemii</string>
-    <string name="pump_disconnected">Pompa odłączona</string>
     <string name="pump_suspended">Pompa wstrzymana</string>
     <string name="mode_reverted">Tryb przywrócony</string>
     <string name="dia">DIA</string>
@@ -160,11 +153,6 @@
     <string name="passwords_dont_match">Hasła się nie zgadzają</string>
     <string name="pin_dont_match">Kody PIN nie pasują do siebie</string>
     <!--    Profile-->
-    <string name="basalprofilenotaligned">Wartości bazy nie są ustawione w pełnych godzinach: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Wartość bazy zastąpiona minimalną obsługiwaną wartością: %1$s</string>
-    <string name="maximumbasalvaluereplaced">Wartość bazy zastąpiona maksymalną obsługiwaną wartością: %1$s</string>
-    <string name="profile_ins_units_per_hour">U/h</string>
-    <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Uruchom profil %1$d%% na %2$d min</string>
     <!--    APSResult-->
@@ -179,7 +167,6 @@
     <string name="average">Średnio</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
-    <string name="mins">%1$d min</string>
     <!--    Translator-->
     <string name="careportal">PortalOpieki</string>
     <string name="careportal_bgcheck">Sprawdź BG</string>
@@ -227,7 +214,6 @@
     <string name="custom">Niestandardowe</string>
     <string name="loop">Pętla</string>
     <string name="ns">NS</string>
-    <string name="record">Wpis</string>
     <string name="location_front_right_upper_chest">Prawa strona klatki</string>
     <string name="location_front_left_upper_chest">Lewa strona klatki</string>
     <string name="location_side_right_upper_arm">Górny bok prawego ramienia</string>
@@ -273,7 +259,6 @@
     <!--    CarbsReq-->
     <string name="carbsreq">Zalecane podanie %1$d g węglowodanów w przeciągu %2$d minut</string>
     <string name="basalrate">Baza</string>
-    <string name="bolus">Bolus</string>
     <!--    Ntp-->
     <string name="timedetection">Wykrywanie czasu</string>
     <!-- User Entry -->
@@ -283,7 +268,6 @@
     <string name="uel_extended_bolus">BOLUS PRZEDŁUŻONY</string>
     <string name="uel_superbolus_tbr">SUPERBOLUS TBR</string>
     <string name="uel_carbs">WĘGLOWODANY</string>
-    <string name="uel_extended_carbs">PRZEDŁUŻONE WĘGLOWODANY</string>
     <string name="uel_temp_basal">BAZA TYMCZASOWA</string>
     <string name="uel_tt">CEL TYMCZASOWY</string>
     <string name="uel_new_profile">NOWY PROFIL</string>
@@ -375,20 +359,13 @@
     <string name="uel_running_mode_removed">USUNIĘTO TRYB DZIAŁANIA</string>
     <string name="uel_running_mode_updarted">ZAKTUALIZOWANO TRYB DZIAŁANIA</string>
     <!-- HardLimits -->
-    <string name="profile_low_target">Dolna granica celu profilu</string>
-    <string name="profile_high_target">Górna granica celu profilu</string>
     <string name="temp_target_low_target">Dolna wartość celu tymczasowego</string>
     <string name="temp_target_high_target">Górna wartość celu tymczasowego</string>
     <string name="temp_target_value">Wartość celu tymczasowego</string>
-    <string name="profile_dia">Wartość DIA profilu</string>
-    <string name="profile_sensitivity_value">Wartość wrażliwości profilu</string>
     <string name="profile_max_daily_basal_value">Maksymalna wartość bazowa profilu</string>
     <string name="current_basal_value">Bieżąca wartość bazowa</string>
-    <string name="profile_carbs_ratio_value">Stosunek węglowodanów profilu</string>
     <string name="valuelimitedto">%1$.2f ograniczone do %2$.2f</string>
     <string name="valueoutofrange">Wartość »%1$s« jest poza dopuszczalną granicą</string>
-    <string name="value_out_of_hard_limits">Wartość »%1$s« %2$.2f jest poza dopuszczalną granicą</string>
-    <string name="basal_value">Wartość bazy</string>
     <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f U</string>
@@ -426,10 +403,6 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Doradca bolusa</string>
     <string name="bolus_advisor_message">Masz wysoką glikemię. Zamiast jeść teraz, zaleca się poczekać na wyrównanie poziomu cukru. Czy chcesz wykonać teraz bolus korekcyjny i otrzymać przypomnienie, kiedy nadejdzie czas na posiłek? W tym przypadku żadne węglowodany nie zostaną zarejestrowane i należy ponownie użyć kalkulatora, po otrzymaniu przypomnienia o posiłku.</string>
-    <string name="cobvsiob">COB vs IOB</string>
-    <string name="bolus_constraint_applied_warn">Zastosowano ograniczenie bolusa: %1$.2f U do %2$.2f U</string>
-    <string name="bolus_recorded_only">Bolus zostanie jedynie odnotowany (nie będzie podany przez pompę)</string>
-    <string name="advisoralarm">Uruchom alarm kiedy będzie czas na jedzenie</string>
     <string name="no_action_selected">Nie wybrano żadnej akcji, zdarzenie nie będzie wprowadzone</string>
     <string name="wizard_no_actual_bg">Brak niezbędnego do obliczeń bieżącego pomiaru glikemi!</string>
     <string name="wizard_no_active_profile">Nie ustawiono aktywnego profilu!</string>
@@ -559,7 +532,6 @@
     <string name="weekday_monday_short">Pon</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
-    <string name="format_insulin_units">%1$.2f U</string>
     <string name="percent_rate_duration">Dawka: %1$.2f%% (%2$.2f U/h) Czas: %3$d min</string>
     <string name="rate_percent_duration">Dawka: %1$.2f U/h (%2$.2f%%) Czas: %3$d min</string>
     <string name="percent_rate_duration_formatted"><![CDATA[<b>Dawka</b>: %1$.2f%% (%2$.2f U/h)<br><b>Czas</b>: %3$d min<br>]]></string>

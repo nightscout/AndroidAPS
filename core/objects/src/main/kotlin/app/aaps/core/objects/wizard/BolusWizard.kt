@@ -382,24 +382,24 @@ class BolusWizard @Inject constructor(
                 line(
                     ConfirmationRole.BOLUS,
                     rh.gs(
-                        app.aaps.core.ui.R.string.confirmation_line,
-                        rh.gs(app.aaps.core.ui.R.string.bolus),
-                        rh.gs(app.aaps.core.ui.R.string.format_insulin_units, insulinAfterConstraints) + pct
+                        app.aaps.core.interfaces.R.string.confirmation_line,
+                        rh.gs(app.aaps.core.interfaces.R.string.bolus),
+                        rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, insulinAfterConstraints) + pct
                     )
                 )
             }
             if (carbs > 0 && !advisor) {
                 val timeShift = when {
-                    carbTime > 0 -> " (+" + rh.gs(app.aaps.core.ui.R.string.mins, carbTime) + ")"
-                    carbTime < 0 -> " (" + rh.gs(app.aaps.core.ui.R.string.mins, carbTime) + ")"
+                    carbTime > 0 -> " (+" + rh.gs(app.aaps.core.interfaces.R.string.mins, carbTime) + ")"
+                    carbTime < 0 -> " (" + rh.gs(app.aaps.core.interfaces.R.string.mins, carbTime) + ")"
                     else         -> ""
                 }
                 line(
                     ConfirmationRole.CARBS,
                     rh.gs(
-                        app.aaps.core.ui.R.string.confirmation_line,
-                        rh.gs(app.aaps.core.ui.R.string.carbs),
-                        rh.gs(app.aaps.core.ui.R.string.format_carbs, carbs) + timeShift
+                        app.aaps.core.interfaces.R.string.confirmation_line,
+                        rh.gs(app.aaps.core.interfaces.R.string.carbs),
+                        rh.gs(app.aaps.core.interfaces.R.string.format_carbs, carbs) + timeShift
                     )
                 )
             }
@@ -407,30 +407,30 @@ class BolusWizard @Inject constructor(
                 line(
                     ConfirmationRole.COB,
                     rh.gs(
-                        app.aaps.core.ui.R.string.confirmation_line,
-                        rh.gs(app.aaps.core.ui.R.string.cobvsiob),
+                        app.aaps.core.interfaces.R.string.confirmation_line,
+                        rh.gs(app.aaps.core.interfaces.R.string.cobvsiob),
                         rh.gs(
-                            app.aaps.core.ui.R.string.formatsignedinsulinunits,
+                            app.aaps.core.interfaces.R.string.formatsignedinsulinunits,
                             -insulinFromBolusIOB - insulinFromBasalIOB + insulinFromCOB + insulinFromBG
                         )
                     )
                 )
                 val absorptionRate = iobCobCalculator.ads.slowAbsorptionPercentage(60)
                 if (absorptionRate > .25) {
-                    line(ConfirmationRole.COB, rh.gs(app.aaps.core.ui.R.string.slowabsorptiondetected_plain, (absorptionRate * 100).toInt()))
+                    line(ConfirmationRole.COB, rh.gs(app.aaps.core.interfaces.R.string.slowabsorptiondetected_plain, (absorptionRate * 100).toInt()))
                 }
             }
             if (abs(insulinAfterConstraints - calculatedTotalInsulin) > ch.bolusStep(insulinAfterConstraints)) {
-                line(ConfirmationRole.WARNING, rh.gs(app.aaps.core.ui.R.string.bolus_constraint_applied_warn, calculatedTotalInsulin, insulinAfterConstraints))
+                line(ConfirmationRole.WARNING, rh.gs(app.aaps.core.interfaces.R.string.bolus_constraint_applied_warn, calculatedTotalInsulin, insulinAfterConstraints))
             }
             if ((config.AAPSCLIENT || forcedRecordOnly) && insulinAfterConstraints > 0) {
-                line(ConfirmationRole.WARNING, rh.gs(app.aaps.core.ui.R.string.bolus_recorded_only))
+                line(ConfirmationRole.WARNING, rh.gs(app.aaps.core.interfaces.R.string.bolus_recorded_only))
             }
             if (useAlarm && !advisor && carbs > 0 && carbTime > 0) {
-                line(ConfirmationRole.INFO, rh.gs(app.aaps.core.ui.R.string.alarminxmin, carbTime))
+                line(ConfirmationRole.INFO, rh.gs(app.aaps.core.interfaces.R.string.alarminxmin, carbTime))
             }
             if (advisor) {
-                line(ConfirmationRole.INFO, rh.gs(app.aaps.core.ui.R.string.advisoralarm))
+                line(ConfirmationRole.INFO, rh.gs(app.aaps.core.interfaces.R.string.advisoralarm))
             }
 
             if (quickWizardEntry != null) {
@@ -440,13 +440,13 @@ class BolusWizard @Inject constructor(
                     val duration = JsonHelper.safeGetInt(quickWizardEntry.storage, "duration", 0)
                     val carbs2 = JsonHelper.safeGetInt(quickWizardEntry.storage, "carbs2", 0)
                     if (carbs2 > 0) {
-                        val ecarbsMessage = rh.gs(app.aaps.core.ui.R.string.format_carbs, carbs2) + "/" + duration + "h (+" + timeOffset + "min)"
-                        line(ConfirmationRole.INFO, rh.gs(app.aaps.core.ui.R.string.confirmation_line, rh.gs(app.aaps.core.ui.R.string.uel_extended_carbs), ecarbsMessage))
+                        val ecarbsMessage = rh.gs(app.aaps.core.interfaces.R.string.format_carbs, carbs2) + "/" + duration + "h (+" + timeOffset + "min)"
+                        line(ConfirmationRole.INFO, rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, rh.gs(app.aaps.core.interfaces.R.string.uel_extended_carbs), ecarbsMessage))
                     }
                 }
             }
             if (eCarbsGrams > 0) {
-                line(ConfirmationRole.INFO, rh.gs(app.aaps.core.ui.R.string.wizard_ecarbs, eCarbsGrams, eCarbsDurationHours, eCarbsDelayMinutes))
+                line(ConfirmationRole.INFO, rh.gs(app.aaps.core.interfaces.R.string.wizard_ecarbs, eCarbsGrams, eCarbsDurationHours, eCarbsDelayMinutes))
             }
         }
 
@@ -587,7 +587,7 @@ class BolusWizard @Inject constructor(
                         bolus = detailedBolusInfo.createBolus(recordIcfg),
                         action = action,
                         source = source,
-                        note = rh.gs(app.aaps.core.ui.R.string.record) + if (notes.isNotEmpty()) ": $notes" else ""
+                        note = rh.gs(app.aaps.core.interfaces.R.string.record) + if (notes.isNotEmpty()) ": $notes" else ""
                     )
                 }
                 if (carbs > 0) {
@@ -595,7 +595,7 @@ class BolusWizard @Inject constructor(
                         carbs = detailedBolusInfo.createCarbs(),
                         action = action,
                         source = source,
-                        note = notes.ifEmpty { rh.gs(app.aaps.core.ui.R.string.record) }
+                        note = notes.ifEmpty { rh.gs(app.aaps.core.interfaces.R.string.record) }
                     )
                 }
                 persistenceLayer.insertOrUpdateBolusCalculatorResult(bolusCalculatorResult)
@@ -656,7 +656,7 @@ class BolusWizard @Inject constructor(
                     carbs = detailedBolusInfo.createCarbs(),
                     action = Action.EXTENDED_CARBS,
                     source = Sources.WizardDialog,
-                    note = notes.ifEmpty { rh.gs(app.aaps.core.ui.R.string.record) }
+                    note = notes.ifEmpty { rh.gs(app.aaps.core.interfaces.R.string.record) }
                 )
             }
         } else {

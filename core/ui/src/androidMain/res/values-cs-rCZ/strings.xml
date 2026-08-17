@@ -38,8 +38,6 @@
     <string name="event_type">Typ události</string>
     <string name="mgdl">mg/dL</string>
     <string name="mmol">mmol/L</string>
-    <string name="profile_isf_units_mgdl">mg/dL/U</string>
-    <string name="profile_isf_units_mmol">mmol/L/U</string>
     <string name="bg_mgdl">%1$d mg/dL</string>
     <string name="bg_mmol">%1$.1f mmol/L</string>
     <string name="save">Uložit</string>
@@ -103,18 +101,14 @@
     <string name="tdd_old_data">Stará data</string>
     <string name="goingtodeliver">Podávání %1$.2f U inzulínu</string>
     <string name="androidaps_start">AAPS spuštěno</string>
-    <string name="formatsignedinsulinunits">%1$+.2f U</string>
-    <string name="format_carbs">%1$d g</string>
     <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$dg</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
-    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
     <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
     <string name="objectives">Cíle</string>
     <string name="please_wait">Počkejte prosím…</string>
     <string name="stop">Stop</string>
     <string name="stop_pressed">STISKNUTO STOP</string>
-    <string name="carbs">Sacharidy</string>
     <string name="invalid_profile">Neplatný profil!</string>
     <string name="no_profile_set">ŽÁDNÝ PROFIL NENASTAVEN</string>
     <string name="active"><![CDATA[<Aktivní>]]></string>
@@ -164,15 +158,12 @@
     <string name="bg_label">Gly</string>
     <string name="calibration">Kalibrace</string>
     <string name="cgm">CGM</string>
-    <string name="alarminxmin">Spustit alarm za %1$d min</string>
     <string name="treatmentdeliveryerror">Podání bolusu skončilo chybou. Ručně zkontrolujte, kolik inzulinu a sacharidů se skutečně vydalo</string>
     <string name="bolus_reminder">Připomenout bolus při obnovení glykémie</string>
     <string name="duration_label">Trvání</string>
     <string name="shortgramm">g</string>
-    <string name="pumpsuspended">Pumpa pozastavena</string>
     <string name="pump_running">Pumpa běží</string>
     <string name="notconfigured">Není nakonfigurováno</string>
-    <string name="loopsuspended">Smyčka pozastavena</string>
     <string name="loop_suspended_by_dst">Smyčka pozastavena kvůli změně času</string>
     <string name="required">pož</string>
     <string name="a11y_arrow_double_down">rychle klesající</string>
@@ -222,7 +213,6 @@
     <string name="closedloop">Uzavřená smyčka</string>
     <string name="openloop">Otevřená smyčka</string>
     <string name="lowglucosesuspend">Ochrana před nízkou glykémií</string>
-    <string name="pump_disconnected">Pumpa odpojena</string>
     <string name="pump_suspended">Pumpa pozastavena</string>
     <string name="pump_suspend">Pozastavit pumpu</string>
     <string name="pump_resume">Obnovit pumpu</string>
@@ -258,11 +248,6 @@
     <string name="passwords_dont_match">Hesla se neshodují</string>
     <string name="pin_dont_match">PIN kódy se neshodují</string>
     <!--    Profile-->
-    <string name="basalprofilenotaligned">Hodnoty bazálů nejsou zarovnané na celé hodiny: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Hodnota bazálu byla nahrazena minimální možnou: %1$s</string>
-    <string name="maximumbasalvaluereplaced">Hodnota bazálu nahrazena maximální možnou: %1$s</string>
-    <string name="profile_ins_units_per_hour">U/h</string>
-    <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Spustit profil %1$d%% na %2$d min</string>
     <!--    APSResult-->
@@ -300,7 +285,6 @@
     <string name="thirty_days_short">30d</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
-    <string name="mins">%1$d min</string>
     <!--    Translator-->
     <string name="careportal">Péče</string>
     <string name="careportal_bgcheck">Kontrola glykémie</string>
@@ -484,7 +468,6 @@
     <string name="revert_to_defaults">Vrátit na výchozí</string>
     <string name="loop">Smyčka</string>
     <string name="ns">NS</string>
-    <string name="record">Záznam</string>
     <string name="location_front_right_upper_chest">Hruď vpravo</string>
     <string name="location_front_left_upper_chest">Hruď vlevo</string>
     <string name="location_side_right_upper_arm">Vnější strana pravé paže nahoře</string>
@@ -534,7 +517,6 @@
     <!--    CarbsReq-->
     <string name="carbsreq">Požadováno dalších %1$d g sacharidů během %2$d minut</string>
     <string name="basalrate">Bazál</string>
-    <string name="bolus">Bolus</string>
     <string name="tdd_short">CDD</string>
     <string name="tdd">Celková denní dávka</string>
     <!--    Ntp-->
@@ -546,7 +528,6 @@
     <string name="uel_extended_bolus">PRODLOUŽENÝ BOLUS</string>
     <string name="uel_superbolus_tbr">SUPERBOLUS TBR</string>
     <string name="uel_carbs">SACHARIDY</string>
-    <string name="uel_extended_carbs">ROZLOŽENÉ SACHARIDY</string>
     <string name="uel_temp_basal">DOČASNÝ BAZÁL</string>
     <string name="uel_tt">DOČASNÝ CÍL</string>
     <string name="uel_new_profile">NOVÝ PROFIL</string>
@@ -647,22 +628,15 @@
     <string name="uel_scene_deactivated">SCÉNA DEAKTIVOVÁNA</string>
     <string name="uel_remote_config_changed">VZDÁLENÁ KONFIGURACE ZMĚNĚNA</string>
     <!-- HardLimits -->
-    <string name="profile_low_target">Dolní cíl profilu</string>
-    <string name="profile_high_target">Horní cíl profilu</string>
     <string name="temp_target_low_target">Dolní hodnota dočasného cíle</string>
     <string name="temp_target_high_target">Horní hodnota dočasného cíle</string>
     <string name="temp_target_value">Hodnota dočasného cíle</string>
-    <string name="profile_dia">Hodnota DIA profilu</string>
     <string name="insulin_dia">Hodnota DIA inzulínu</string>
     <string name="insulin_peak">Hodnota vrcholu inzulínu</string>
-    <string name="profile_sensitivity_value">Hodnota citlivosti profilu</string>
     <string name="profile_max_daily_basal_value">Maximální hodnota profilu bazálu</string>
     <string name="current_basal_value">Aktuální hodnota bazálu</string>
-    <string name="profile_carbs_ratio_value">Inzulino-sacharidový poměr profilu</string>
     <string name="valuelimitedto">%1$.2f omezeno na %2$.2f</string>
     <string name="valueoutofrange">»%1$s« je mimo pevně nastavené limity</string>
-    <string name="value_out_of_hard_limits">»%1$s« %2$.2f je mimo pevně nastavené limity</string>
-    <string name="basal_value">Hodnota bazálu</string>
     <!-- Profile validation -->
     <string name="no_profile_selected">Nebyl vybrán žádný profil</string>
     <string name="missing_profile_name">Chybí název profilu</string>
@@ -719,18 +693,12 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Poradce pro bolus</string>
     <string name="bolus_advisor_message">Máte vysokou glykémii. Namísto jídla doporučujeme vyčkat na lepší glykémii a připomenout, až bude čas na jídlo. Přejete si poslat korekční bolus a připomenout, až bude čas k jídlu? V tomto případě nebudou zapsané žádné sacharidy, a později opět musíte spustit kalkulátor, jakmile vám to připomeneme.</string>
-    <string name="cobvsiob">COB vs. IOB</string>
-    <string name="slowabsorptiondetected_plain">!!!!! Byla zjištěna pomalá absorpce sacharidů: %1$d%% času. Zkontrolujte svůj výpočet. COB může být nadhodnoceno, takže by mohlo být podáno více inzulínu !!!!!</string>
-    <string name="bolus_constraint_applied_warn">Použito omezení bolusu: %1$.2f U na %2$.2f U</string>
-    <string name="bolus_recorded_only">Bolus nebude pumpou vydán, pouze zaznamenán</string>
-    <string name="advisoralarm">Spustit alarm, když je čas na jídlo</string>
     <string name="wizard_bg_label">Gly</string>
     <string name="wizard_correction">Korekce</string>
     <string name="wizard_subtotal">Mezisoučet</string>
     <string name="carbs_type_bread">Chléb, slané pečivo, jogurt, ovoce (jablko, banán, hruška), brambory, rýže, pohanka, ovesné vločky, pomalé a nízkosacharidové potraviny, zelenina</string>
     <string name="carbs_type_cake">Knedlíky, těstoviny, asijská kuchyně bohatá na sacharidy a tuky, sladké a kynuté pečivo, cereálie, obilné kaše, med, marmeláda</string>
     <string name="carbs_type_pizza">Lasagne, pizza, hamburgery, hranolky, pečené brambory, chipsy a podobné svačiny</string>
-    <string name="wizard_ecarbs">eSach %1$dg / %2$dh (+%3$dmin)</string>
     <string name="wizard_total">Celkem</string>
     <string name="wizard_carb_time">Čas sacharidů</string>
     <string name="carb_time_now">Nyní</string>
@@ -975,7 +943,6 @@
     <string name="weekday_monday_short">Po</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
-    <string name="format_insulin_units">%1$.2f U</string>
     <string name="format_insulin_units_signed">%1$+.2fU</string>
     <string name="percent_rate_duration">Hodnota: %1$.2f%% (%2$.2f U/h) Trvání: %3$d min</string>
     <string name="rate_percent_duration">Hodnota: %1$.2f U/h (%2$.2f%%) Trvání: %3$d min</string>

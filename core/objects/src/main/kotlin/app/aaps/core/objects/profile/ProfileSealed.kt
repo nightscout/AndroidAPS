@@ -32,7 +32,7 @@ import app.aaps.core.objects.extensions.shiftBlock
 import app.aaps.core.objects.extensions.shiftTargetBlock
 import app.aaps.core.objects.extensions.targetBlockValueBySeconds
 import app.aaps.core.objects.extensions.toJsonObject
-import app.aaps.core.ui.R
+import app.aaps.core.interfaces.R
 import app.aaps.core.utils.MidnightUtils
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject

@@ -1,5 +1,6 @@
 package app.aaps.core.ui.compose.navigation
 
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.UiStrings
 import androidx.compose.material.icons.Icons
@@ -200,7 +201,7 @@ fun ElementCategory.label(): TextRef? = when (this) {
 
 fun ElementType.label(): TextRef? = when (this) {
     ElementType.INSULIN                 -> UiStrings.overview_insulin_label
-    ElementType.CARBS                   -> UiStrings.carbs
+    ElementType.CARBS                   -> InterfacesStrings.carbs
     ElementType.BOLUS_WIZARD            -> UiStrings.boluswizard
     ElementType.QUICK_WIZARD            -> null // dynamic label
     ElementType.QUICK_WIZARD_MANAGEMENT -> UiStrings.quickwizard_managemnt

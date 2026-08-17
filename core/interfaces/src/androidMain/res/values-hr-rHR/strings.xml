@@ -31,4 +31,20 @@
     <!-- Permission rationales (used by PumpPluginBase) -->
     <!-- Insulin -->
     <!-- Concentration -->
+    <string name="formatsignedinsulinunits">%1$+.2f U</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="carbs">UH</string>
+    <string name="alarminxmin">Uključi alarm za %1$d min</string>
+    <string name="loopsuspended">Petlja suspendirana</string>
+    <string name="basalprofilenotaligned">Bazalne vrijednosti nisu usklađene sa satima: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Bazalna vrijednost zamijenjena minimalnom podržanom vrijednošću: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Bazalna vrijednost zamijenjena maksimalnom podržanom vrijednošću: %1$s</string>
+    <string name="profile_ins_units_per_hour">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <string name="bolus">Bolus</string>
+    <string name="profile_low_target">Profil niski cilj</string>
+    <string name="profile_high_target">Profil visoki cilj</string>
+    <string name="profile_dia">Profil DIA vrijednost</string>
+    <string name="profile_sensitivity_value">Vrijednost osjetljivosti profila</string>
+    <string name="profile_carbs_ratio_value">Vrijednost omjera ugljikohidrata profila</string>
 </resources>

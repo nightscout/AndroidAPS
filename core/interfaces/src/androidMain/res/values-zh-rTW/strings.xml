@@ -124,4 +124,37 @@ Other
     <string name="u200">U200</string>
     <string name="u300">U300</string>
     <string name="u500">U500</string>
+    <string name="profile_isf_units_mgdl">mg/dL/U</string>
+    <string name="profile_isf_units_mmol">mmol/L/U</string>
+    <string name="formatsignedinsulinunits">%1$+.2f U</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
+    <string name="carbs">碳水化合物</string>
+    <string name="alarminxmin">在 %1$d 分鐘內運行警報</string>
+    <string name="pumpsuspended">幫浦已暫停</string>
+    <string name="loopsuspended">循環已暫停</string>
+    <string name="pump_disconnected">幫浦已中斷連線</string>
+    <string name="basalprofilenotaligned">基礎率值未對齊小時：%1$s</string>
+    <string name="minimalbasalvaluereplaced">基礎率值已被最低支援值取代：%1$s</string>
+    <string name="maximumbasalvaluereplaced">基礎率值已被最高支援值取代：%1$s</string>
+    <string name="profile_ins_units_per_hour">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <string name="mins">%1$d 分鐘</string>
+    <string name="record">紀錄</string>
+    <string name="bolus">注射</string>
+    <string name="uel_extended_carbs">延長碳水化合物</string>
+    <string name="profile_low_target">設定檔低目標</string>
+    <string name="profile_high_target">設定檔高目標</string>
+    <string name="profile_dia">設定檔 DIA 值</string>
+    <string name="profile_sensitivity_value">設定檔敏感度值</string>
+    <string name="profile_carbs_ratio_value">設定檔碳水化合物比率值</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f 超出硬限制範圍</string>
+    <string name="basal_value">基礎率值</string>
+    <string name="cobvsiob">COB 對 IOB</string>
+    <string name="slowabsorptiondetected_plain">!!!!! 偵測到碳水吸收偏慢：%1$d%% 的時間。請再次檢查你的計算。活性碳水化合物可能被高估，因此可能會注射過多胰島素 !!!!!</string>
+    <string name="bolus_constraint_applied_warn">注射限制已套用：%1$.2f U 至 %2$.2f U</string>
+    <string name="bolus_recorded_only">僅紀錄注射（不由幫浦傳送）</string>
+    <string name="advisoralarm">當到達用餐時間時提醒我</string>
+    <string name="wizard_ecarbs">eCarbs %1$dg / %2$dh (+%3$dmin)</string>
+    <string name="format_insulin_units">%1$.2f U</string>
 </resources>

@@ -112,4 +112,37 @@
     <string name="u200">U200</string>
     <string name="u300">U300</string>
     <string name="u500">U500</string>
+    <string name="profile_isf_units_mgdl">mg/dL/U</string>
+    <string name="profile_isf_units_mmol">mmol/L/U</string>
+    <string name="formatsignedinsulinunits">%1$+.2f U</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
+    <string name="carbs">Carbs</string>
+    <string name="alarminxmin">Báo động sau %1$d phút</string>
+    <string name="pumpsuspended">Bơm đã tạm dừng</string>
+    <string name="loopsuspended">Vòng lặp đã tạm dừng</string>
+    <string name="pump_disconnected">Bơm đã ngắt kết nối</string>
+    <string name="basalprofilenotaligned">Giá trị liều nền không khớp với giờ: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Giá trị liều nền đã được thay bằng giá trị tối thiểu được hỗ trợ: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Giá trị liều nền đã được thay bằng giá trị tối đa được hỗ trợ: %1$s</string>
+    <string name="profile_ins_units_per_hour">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <string name="mins">%1$d phút</string>
+    <string name="record">Record</string>
+    <string name="bolus">Bolus</string>
+    <string name="uel_extended_carbs">CARBS MỞ RỘNG</string>
+    <string name="profile_low_target">Cấu hình mục tiêu thấp</string>
+    <string name="profile_high_target">Cấu hình mục tiêu cao</string>
+    <string name="profile_dia">Cấu hình giá trị DIA</string>
+    <string name="profile_sensitivity_value">Cấu hình giá trị độ nhạy</string>
+    <string name="profile_carbs_ratio_value">Cấu hình tỷ lệ Carb</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f nằm ngoài giới hạn an toàn</string>
+    <string name="basal_value">Giá trị liều liều nền</string>
+    <string name="cobvsiob">COB với IOB</string>
+    <string name="slowabsorptiondetected_plain">!!!!! Phát hiện hấp thu carb chậm trong %1$d%% thời gian. Hãy kiểm tra lại phép tính của bạn. COB có thể bị ước tính cao, do đó có thể dẫn đến việc cung cấp nhiều insulin hơn !!!!!</string>
+    <string name="bolus_constraint_applied_warn">Giới hạn bolus đã áp dụng: %1$.2f U đến %2$.2f U</string>
+    <string name="bolus_recorded_only">Liều Bolus chỉ được ghi lại (không tiêm qua Bơm)</string>
+    <string name="advisoralarm">Chạy báo thức khi đến giờ ăn</string>
+    <string name="wizard_ecarbs">eCarbs %1$dg / %2$dh (+%3$dmin)</string>
+    <string name="format_insulin_units">%1$.2f U</string>
 </resources>

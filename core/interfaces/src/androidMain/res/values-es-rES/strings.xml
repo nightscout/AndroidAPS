@@ -115,4 +115,37 @@
     <string name="u200">U200</string>
     <string name="u300">U300</string>
     <string name="u500">U500</string>
+    <string name="profile_isf_units_mgdl">mg/dL/U</string>
+    <string name="profile_isf_units_mmol">mmol/L/U</string>
+    <string name="formatsignedinsulinunits">%1$+.2f U</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
+    <string name="carbs">Carbohidratos</string>
+    <string name="alarminxmin">Ejecutar alarma en %1$d min</string>
+    <string name="pumpsuspended">Bomba suspendida</string>
+    <string name="loopsuspended">Lazo suspendido</string>
+    <string name="pump_disconnected">Bomba desconectada</string>
+    <string name="basalprofilenotaligned">Valores basales no alineados a las horas: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Valor basal cambiado al valor mínimo soportado: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Valor basal reemplazado por el valor máximo soportado: %1$s</string>
+    <string name="profile_ins_units_per_hour">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <string name="mins">%1$d min</string>
+    <string name="record">Registro</string>
+    <string name="bolus">Bolo</string>
+    <string name="uel_extended_carbs">CARBOHIDRATOS EXTENDIDOS</string>
+    <string name="profile_low_target">Perfil de objetivo bajo</string>
+    <string name="profile_high_target">Perfil de objetivo alto</string>
+    <string name="profile_dia">Valor DIA del perfil</string>
+    <string name="profile_sensitivity_value">Valor de sensibilidad del perfil</string>
+    <string name="profile_carbs_ratio_value">Valor del ratio de carbohidratos del perfil</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f está fuera de los límites estrictos</string>
+    <string name="basal_value">Valor basal</string>
+    <string name="cobvsiob">COB vs IOB</string>
+    <string name="slowabsorptiondetected_plain">¡¡¡Absorción lenta de hidratos detectada: %1$d%% del tiempo. Revisa tus cálculos. Los COB pueden estar sobreestimados y el sistema podría darte demasiada insulina!!!</string>
+    <string name="bolus_constraint_applied_warn">Restricción de bolo aplicada: %1$.2f U a %2$.2f U</string>
+    <string name="bolus_recorded_only">El bolo sólo se anotará (no será entregado por la bomba)</string>
+    <string name="advisoralarm">Ejecutar alarma cuando sea hora de comer</string>
+    <string name="wizard_ecarbs">eCarbs %1$dg / %2$dh (+%3$dmin)</string>
+    <string name="format_insulin_units">%1$.2f U</string>
 </resources>

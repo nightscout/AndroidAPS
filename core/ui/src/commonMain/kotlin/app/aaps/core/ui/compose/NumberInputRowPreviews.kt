@@ -1,5 +1,6 @@
 package app.aaps.core.ui.compose
 
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.ui.UiStrings
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -10,7 +11,7 @@ import app.aaps.core.keys.interfaces.TextRef
 @Composable
 internal fun NumberInputRowBasicPreview() {
     MaterialTheme {
-        NumberInputRow(labelRef = UiStrings.carbs, value = 20.0, onValueChange = {}, valueRange = 0.0..100.0, step = 1.0)
+        NumberInputRow(labelRef = InterfacesStrings.carbs, value = 20.0, onValueChange = {}, valueRange = 0.0..100.0, step = 1.0)
     }
 }
 

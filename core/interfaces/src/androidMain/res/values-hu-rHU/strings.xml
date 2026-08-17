@@ -57,4 +57,9 @@
     <!-- Permission rationales (used by PumpPluginBase) -->
     <!-- Insulin -->
     <!-- Concentration -->
+    <string name="formatsignedinsulinunits">%1$+.2f E</string>
+    <string name="profile_ins_units_per_hour">E/ó</string>
+    <string name="profile_carbs_per_unit">g/E</string>
+    <string name="bolus">Bólus</string>
+    <string name="format_insulin_units">%1$.2f E</string>
 </resources>

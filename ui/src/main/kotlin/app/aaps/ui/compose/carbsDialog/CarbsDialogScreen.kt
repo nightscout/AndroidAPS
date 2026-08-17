@@ -273,7 +273,7 @@ internal fun CarbsDialogContent(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 if (uiState.carbs > 0) {
-                    Text(stringResource(CoreUiR.string.format_carbs, uiState.carbs))
+                    Text(stringResource(InterfacesR.string.format_carbs, uiState.carbs))
                 } else {
                     Text(stringResource(CoreUiR.string.ok))
                 }
@@ -324,7 +324,7 @@ internal fun CarbsDialogContent(
                     // Carbs + Quick add
                     Column(modifier = itemModifier) {
                         NumberInputRow(
-                            labelResId = CoreUiR.string.carbs,
+                            labelResId = InterfacesR.string.carbs,
                             value = uiState.carbs.toDouble(),
                             onValueChange = onCarbsChange,
                             // Lower bound = -COB (can't remove more than is on board); at COB 0 the minimum is 0.

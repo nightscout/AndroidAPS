@@ -236,16 +236,16 @@ class InsulinDialogViewModel @Inject constructor(
                 _sideEffect.tryEmit(SideEffect.ShowNoActionDialog)
                 return@launch
             }
-            when (val prepared = batchExecutor.prepare(actions, Sources.InsulinDialog, rh.gs(app.aaps.core.ui.R.string.bolus))) {
+            when (val prepared = batchExecutor.prepare(actions, Sources.InsulinDialog, rh.gs(app.aaps.core.interfaces.R.string.bolus))) {
                 is ActionProgress.Prepared -> _sideEffect.tryEmit(SideEffect.ShowConfirmation(prepared.id, prepared.lines))
                 // Offline block (and a master-local failure) surface here; a client round-trip failure already showed
                 // on the app-level modal, so only re-surface NotReachable or a master-side detail message.
                 is ActionProgress.Rejected -> when (prepared.reason) {
-                    FailureReason.NotReachable, FailureReason.ControlDisabled -> rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.ui.R.string.bolus), message = rh.gs(prepared.reason.failText())))
+                    FailureReason.NotReachable, FailureReason.ControlDisabled -> rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.interfaces.R.string.bolus), message = rh.gs(prepared.reason.failText())))
                     // No-op after caps (e.g. the bolus was constraint-capped to 0): neutral message, NOT the bolus-error alarm.
                     FailureReason.NoAction                                    -> _sideEffect.tryEmit(SideEffect.ShowNoActionDialog)
                     else                                                      -> prepared.detail?.let { detail ->
-                        if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.ui.R.string.bolus), message = detail))
+                        if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.interfaces.R.string.bolus), message = detail))
                         else _sideEffect.tryEmit(SideEffect.ShowDeliveryError(detail))
                     }
                 }
@@ -259,7 +259,7 @@ class InsulinDialogViewModel @Inject constructor(
     fun commit(bolusId: Long) {
         appScope.launch {
             val state = confirmedState
-            val result = batchExecutor.commit(bolusId, Sources.InsulinDialog, rh.gs(app.aaps.core.ui.R.string.bolus))
+            val result = batchExecutor.commit(bolusId, Sources.InsulinDialog, rh.gs(app.aaps.core.interfaces.R.string.bolus))
             // Non-record: remove the bolus reminder on success. Record-only: only when not back/forward-dated.
             if (result is ActionProgress.Applied && (state == null || !state.recordOnlyChecked || state.timeOffsetMinutes == 0))
                 automation.removeAutomationEventBolusReminder()
@@ -267,9 +267,9 @@ class InsulinDialogViewModel @Inject constructor(
             // NoPendingBolus, …) → the master's detail. Unconfirmed (state unknown) rides the round-trip's app-level modal.
             if (result is ActionProgress.Rejected) {
                 if (result.reason == FailureReason.NotReachable || result.reason == FailureReason.ControlDisabled)
-                    rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.ui.R.string.bolus), message = rh.gs(result.reason.failText())))
+                    rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.interfaces.R.string.bolus), message = rh.gs(result.reason.failText())))
                 else result.detail?.let { detail ->
-                    if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.ui.R.string.bolus), message = detail))
+                    if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.interfaces.R.string.bolus), message = detail))
                     else _sideEffect.tryEmit(SideEffect.ShowDeliveryError(detail))
                 }
             }

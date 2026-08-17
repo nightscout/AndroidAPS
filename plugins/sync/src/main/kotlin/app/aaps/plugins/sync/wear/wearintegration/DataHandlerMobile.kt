@@ -707,7 +707,7 @@ class DataHandlerMobile @Inject constructor(
                     recordOnly = false, notes = entry.buttonText(), timestamp = 0L, iCfg = null,
                     quickWizardGuid = command.guid // the MASTER marks the entry used on commit (SOT) — no local pref write
                 ),
-                label = rh.gs(app.aaps.core.ui.R.string.bolus)
+                label = rh.gs(app.aaps.core.interfaces.R.string.bolus)
             ) { bolusId -> EventData.ActionBolusConfirmed(bolusId) }
 
             QuickWizardMode.CARBS   -> {
@@ -721,7 +721,7 @@ class DataHandlerMobile @Inject constructor(
                         eCarbsDurationHours = if (hasEcarbs) entry.duration() else 0,
                         quickWizardGuid = command.guid // the MASTER marks the entry used on commit (SOT) — no local pref write
                     ),
-                    label = rh.gs(app.aaps.core.ui.R.string.carbs)
+                    label = rh.gs(app.aaps.core.interfaces.R.string.carbs)
                 ) { bolusId -> EventData.ActionBolusConfirmed(bolusId) }
             }
 
@@ -1458,11 +1458,11 @@ class DataHandlerMobile @Inject constructor(
         val out = mutableListOf(ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(app.aaps.core.ui.R.string.loopstatus_targets)))
         persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())?.let { tt ->
             // Show the full low–high range (was passing lowTarget twice — a range TT only showed its low bound).
-            out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(app.aaps.core.ui.R.string.confirmation_line, rh.gs(R.string.temp_target), profileUtil.toTargetRangeString(tt.lowTarget, tt.highTarget, GlucoseUnit.MGDL)))
-            out += ConfirmationLine(ConfirmationRole.INFO, rh.gs(app.aaps.core.ui.R.string.confirmation_line, rh.gs(R.string.until), dateUtil.timeString(tt.end)))
+            out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, rh.gs(R.string.temp_target), profileUtil.toTargetRangeString(tt.lowTarget, tt.highTarget, GlucoseUnit.MGDL)))
+            out += ConfirmationLine(ConfirmationRole.INFO, rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, rh.gs(R.string.until), dateUtil.timeString(tt.end)))
         }
-        out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(app.aaps.core.ui.R.string.confirmation_line, rh.gs(R.string.default_range), profileUtil.toTargetRangeString(profile.getTargetLowMgdl(), profile.getTargetHighMgdl(), GlucoseUnit.MGDL)))
-        out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(app.aaps.core.ui.R.string.confirmation_line, rh.gs(R.string.target), profileUtil.fromMgdlToStringInUnits(profile.getTargetMgdl())))
+        out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, rh.gs(R.string.default_range), profileUtil.toTargetRangeString(profile.getTargetLowMgdl(), profile.getTargetHighMgdl(), GlucoseUnit.MGDL)))
+        out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, rh.gs(R.string.target), profileUtil.fromMgdlToStringInUnits(profile.getTargetMgdl())))
         return out
     }
 
@@ -1477,7 +1477,7 @@ class DataHandlerMobile @Inject constructor(
             result.rate == 0.0 && result.duration == 0 -> ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(app.aaps.core.ui.R.string.cancel_temp))
             else                                       -> ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(R.string.rate_duration, result.rate, result.rate / ch.fromPump(activePlugin.activePump.baseBasalRate) * 100, result.duration))
         }
-        out += ConfirmationLine(ConfirmationRole.INFO, rh.gs(app.aaps.core.ui.R.string.confirmation_line, rh.gs(app.aaps.core.ui.R.string.reason), result.reason))
+        out += ConfirmationLine(ConfirmationRole.INFO, rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, rh.gs(app.aaps.core.ui.R.string.reason), result.reason))
         return out
     }
 
@@ -1496,10 +1496,10 @@ class DataHandlerMobile @Inject constructor(
             }
         }
         if (rm.isLoopRunning()) {
-            out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(app.aaps.core.ui.R.string.confirmation_line, rh.gs(R.string.aps), (activePlugin.activeAPS as? PluginBase)?.name ?: ""))
+            out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, rh.gs(R.string.aps), (activePlugin.activeAPS as? PluginBase)?.name ?: ""))
             loop.lastRun?.let { lastRun ->
-                out += ConfirmationLine(ConfirmationRole.INFO, rh.gs(app.aaps.core.ui.R.string.confirmation_line, rh.gs(R.string.last_run), dateUtil.timeString(lastRun.lastAPSRun)))
-                if (lastRun.lastTBREnact != 0L) out += ConfirmationLine(ConfirmationRole.INFO, rh.gs(app.aaps.core.ui.R.string.confirmation_line, rh.gs(R.string.last_enact), dateUtil.timeString(lastRun.lastTBREnact)))
+                out += ConfirmationLine(ConfirmationRole.INFO, rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, rh.gs(R.string.last_run), dateUtil.timeString(lastRun.lastAPSRun)))
+                if (lastRun.lastTBREnact != 0L) out += ConfirmationLine(ConfirmationRole.INFO, rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, rh.gs(R.string.last_enact), dateUtil.timeString(lastRun.lastTBREnact)))
             }
         }
         return out

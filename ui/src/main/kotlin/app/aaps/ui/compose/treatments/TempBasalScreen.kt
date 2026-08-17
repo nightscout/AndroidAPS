@@ -220,7 +220,7 @@ private fun TempBasalItem(
                             )
                         ) {
                             append("(")
-                            append(stringResource(app.aaps.core.ui.R.string.format_insulin_units, iob.basaliob))
+                            append(stringResource(app.aaps.core.interfaces.R.string.format_insulin_units, iob.basaliob))
                             append(")")
                         }
                     }

@@ -63,4 +63,31 @@
     <!-- Permission rationales (used by PumpPluginBase) -->
     <!-- Insulin -->
     <!-- Concentration -->
+    <string name="formatsignedinsulinunits">%1$+.2f U</string>
+    <string name="format_carbs">%1$dg</string>
+    <string name="carbs">Kolhydrater</string>
+    <string name="alarminxmin">Larma om %1$d min</string>
+    <string name="pumpsuspended">Pump pausad</string>
+    <string name="loopsuspended">Loop pausad</string>
+    <string name="basalprofilenotaligned">Profilens basaler är inte satta på hel timme: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Basalvärdet ersatt med det lägsta tillåtna: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Basalvärdet ersatt med det högsta tillåtna: %1$s</string>
+    <string name="profile_ins_units_per_hour">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <string name="mins">%1$d min</string>
+    <string name="record">Post</string>
+    <string name="bolus">Bolus</string>
+    <string name="uel_extended_carbs">FÖRLÄNGDA KH</string>
+    <string name="profile_low_target">Nedre målvärde för profilen</string>
+    <string name="profile_high_target">Övre målvärde för profilen</string>
+    <string name="profile_dia">Profilens DIA</string>
+    <string name="profile_sensitivity_value">Profilens insulinkänslighetsvärde</string>
+    <string name="profile_carbs_ratio_value">Profilens KH-kvot</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f är utanför hårda gränser</string>
+    <string name="basal_value">Basaldos</string>
+    <string name="cobvsiob">COB kontra IOB</string>
+    <string name="bolus_constraint_applied_warn">Bolusbegränsning tillämpad: %1$.2f U till %2$.2f U</string>
+    <string name="bolus_recorded_only">Bolus kommer bara att loggas (inte levereras av pumpen)</string>
+    <string name="advisoralarm">Larma när det är dags att äta</string>
+    <string name="format_insulin_units">%1$.2fU</string>
 </resources>

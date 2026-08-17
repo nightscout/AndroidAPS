@@ -43,13 +43,10 @@
     <string name="tdd_total">TID Total</string>
     <string name="goingtodeliver">A ser administrado %1$.2f U</string>
     <string name="androidaps_start">AAPS iniciada</string>
-    <string name="formatsignedinsulinunits">%1$+.2f U</string>
-    <string name="format_carbs">%1$d g</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="objectives">Objectivos</string>
     <string name="please_wait">Por favor aguarde…</string>
     <string name="stop">Parar</string>
-    <string name="carbs">Hidratos</string>
     <string name="invalid_profile">Perfil inválido!</string>
     <string name="no_profile_set">SEM PERFIL DEFINIDO</string>
     <string name="active"><![CDATA[<Activo>]]></string>
@@ -90,12 +87,9 @@
     <string name="wrong_pump_data">Os dados vêm de uma bomba diferente. Altera o driver da bomba para redefinir o seu estado.</string>
     <string name="bg_label">GLIC</string>
     <string name="calibration">Calibração</string>
-    <string name="alarminxmin">Executar alarme em %1$d min</string>
     <string name="duration_label">Duração</string>
     <string name="shortgramm">g</string>
-    <string name="pumpsuspended">Bomba suspensa</string>
     <string name="notconfigured">Não configurado</string>
-    <string name="loopsuspended">Loop suspenso</string>
     <string name="required">req</string>
     <string name="a11y_arrow_double_down">a descer rapidamente</string>
     <string name="a11y_arrow_single_down">a descer</string>
@@ -138,11 +132,6 @@
     <string name="passwords_dont_match">Palavras-passe não correspondem</string>
     <string name="pin_dont_match">Os PINs não correspondem</string>
     <!--    Profile-->
-    <string name="basalprofilenotaligned">Valores das basais não definidos por horas: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Valor da basal alterado para o valor mínimo suportado: %1$s</string>
-    <string name="maximumbasalvaluereplaced">Valor da basal alterado para o valor máximo suportado: %1$s</string>
-    <string name="profile_ins_units_per_hour">U/h</string>
-    <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Iniciar perfil %1$d%% para %2$d min</string>
     <!--    APSResult-->
@@ -157,7 +146,6 @@
     <string name="average">Média</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
-    <string name="mins">%1$d min</string>
     <!--    Translator-->
     <string name="careportal">Careportal</string>
     <string name="careportal_bgcheck">Verificar Glicose</string>
@@ -200,7 +188,6 @@
     <string name="custom">Personalizado</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
-    <string name="record">Registo</string>
     <!--    Command-->
     <string name="connectiontimedout">Ligação expirou</string>
     <!--    PumpEnactResult-->
@@ -213,7 +200,6 @@
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g Hidratos Adicionais Necessários Dentro de %2$d Minutos</string>
     <string name="basalrate">Basal</string>
-    <string name="bolus">Bólus</string>
     <!--    Ntp-->
     <string name="timedetection">Detecção de tempo</string>
     <!-- User Entry -->
@@ -223,7 +209,6 @@
     <string name="uel_extended_bolus">BÓLUS PROLONGADO</string>
     <string name="uel_superbolus_tbr">DBT SUPERBÓLUS</string>
     <string name="uel_carbs">HC</string>
-    <string name="uel_extended_carbs">HC LENTOS</string>
     <string name="uel_temp_basal">BASAL TEMPORÁRIA</string>
     <string name="uel_tt">ALVO TEMPORÁRIO</string>
     <string name="uel_new_profile">NOVO PERFIL</string>
@@ -306,20 +291,13 @@
     <string name="uel_loop_change">LOOP ALTERADO</string>
     <string name="uel_loop_removed">LOOP REMOVIDO</string>
     <!-- HardLimits -->
-    <string name="profile_low_target">Valor mínimo alvo do perfil</string>
-    <string name="profile_high_target">Valor máximo alvo do perfil</string>
     <string name="temp_target_low_target">Valor inferior do alvo temporário</string>
     <string name="temp_target_high_target">Valor superior do alvo temporário</string>
     <string name="temp_target_value">Valor Alvo Temporário</string>
-    <string name="profile_dia">Valor Perfil DIA</string>
-    <string name="profile_sensitivity_value">Valor Perfil Sensibilidade</string>
     <string name="profile_max_daily_basal_value">Valor Perfil Basal Máxima</string>
     <string name="current_basal_value">Valor Actual Basal</string>
-    <string name="profile_carbs_ratio_value">Valor Perfil Rácio Hidratos</string>
     <string name="valuelimitedto">%1$.2f limitado a %2$.2f</string>
     <string name="valueoutofrange">»%1$s« está fora dos limites máximos</string>
-    <string name="value_out_of_hard_limits">»%1$s« %2$.2f está fora dos limites permitidos</string>
-    <string name="basal_value">Valor da Basal</string>
     <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f U</string>
@@ -344,8 +322,6 @@
     <string name="urgent_alarm">Alarme Urgente</string>
     <string name="info">INFO</string>
     <!-- BolusWizard -->
-    <string name="cobvsiob">HCA vs IA</string>
-    <string name="advisoralarm">Executar alarme quando for tempo de comer</string>
     <string name="no_action_selected">Nenhuma ação seleccionada, nada irá acontecer</string>
     <!--    Preferences-->
     <string name="teenage">Adolescente</string>
@@ -437,7 +413,6 @@
     <string name="weekday_monday_short">Seg</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
-    <string name="format_insulin_units">%1$.2f U</string>
     <!--    Playback-->
     <!-- ProfileEditor -->
     <!--    Search-->

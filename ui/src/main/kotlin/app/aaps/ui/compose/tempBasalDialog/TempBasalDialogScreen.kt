@@ -49,6 +49,7 @@ import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
 import app.aaps.core.ui.compose.navigation.label
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.core.interfaces.R as InterfacesR
 
 @Composable
 fun TempBasalDialogScreen(
@@ -158,7 +159,7 @@ internal fun TempBasalDialogContent(
                 if (uiState.isPercentPump && uiState.basalPercent != 100.0) {
                     Text("${NumberFormat.INTEGER.format(uiState.basalPercent)}%")
                 } else if (!uiState.isPercentPump && uiState.basalAbsolute > 0.0) {
-                    Text("${NumberFormat.DECIMAL_2.format(uiState.basalAbsolute)} ${stringResource(CoreUiR.string.profile_ins_units_per_hour)}")
+                    Text("${NumberFormat.DECIMAL_2.format(uiState.basalAbsolute)} ${stringResource(InterfacesR.string.profile_ins_units_per_hour)}")
                 } else {
                     Text(stringResource(CoreUiR.string.ok))
                 }
@@ -205,7 +206,7 @@ internal fun TempBasalDialogContent(
                             valueRange = 0.0..uiState.maxTempAbsolute,
                             step = uiState.tempAbsoluteStep,
                             valueFormat = NumberFormat.DECIMAL_2,
-                            unitLabel = TextRef.AndroidRes(CoreUiR.string.profile_ins_units_per_hour),
+                            unitLabel = TextRef.AndroidRes(InterfacesR.string.profile_ins_units_per_hour),
                             modifier = itemModifier
                         )
                     }

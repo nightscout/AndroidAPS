@@ -273,7 +273,7 @@ private fun MealLinkItem(
                             val bolusText = if (iob.iobContrib > 0.01) {
                                 buildAnnotatedString {
                                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                        append(stringResource(app.aaps.core.ui.R.string.format_insulin_units, bolus.amount))
+                                        append(stringResource(app.aaps.core.interfaces.R.string.format_insulin_units, bolus.amount))
                                         append(" ")
                                     }
                                     withStyle(
@@ -283,14 +283,14 @@ private fun MealLinkItem(
                                         )
                                     ) {
                                         append("(")
-                                        append(stringResource(app.aaps.core.ui.R.string.format_insulin_units, iob.iobContrib))
+                                        append(stringResource(app.aaps.core.interfaces.R.string.format_insulin_units, iob.iobContrib))
                                         append(")")
                                     }
                                 }
                             } else {
                                 buildAnnotatedString {
                                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                        append(stringResource(app.aaps.core.ui.R.string.format_insulin_units, bolus.amount))
+                                        append(stringResource(app.aaps.core.interfaces.R.string.format_insulin_units, bolus.amount))
                                     }
                                 }
                             }
@@ -302,7 +302,7 @@ private fun MealLinkItem(
                             )
                         } ?: run {
                             Text(
-                                text = stringResource(app.aaps.core.ui.R.string.format_insulin_units, bolus.amount),
+                                text = stringResource(app.aaps.core.interfaces.R.string.format_insulin_units, bolus.amount),
                                 modifier = Modifier.padding(start = 10.dp),
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold
@@ -393,13 +393,13 @@ private fun MealLinkItem(
                         )
 
                         Text(
-                            text = rh.gs(app.aaps.core.ui.R.string.carbs) + ":",
+                            text = rh.gs(app.aaps.core.interfaces.R.string.carbs) + ":",
                             modifier = Modifier.padding(start = 8.dp, end = 4.dp),
                             fontSize = 14.sp
                         )
 
                         Text(
-                            text = rh.gs(app.aaps.core.ui.R.string.format_carbs, carbs.amount.toInt()),
+                            text = rh.gs(app.aaps.core.interfaces.R.string.format_carbs, carbs.amount.toInt()),
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold
                         )

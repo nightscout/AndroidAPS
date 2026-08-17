@@ -162,47 +162,47 @@ class HardLimitsImplTest : TestBase() {
 
     @Test
     fun `verifyHardLimits with a range clamps the same way as with two bounds`() {
-        assertThat(hardLimits.verifyHardLimits(5.0, app.aaps.core.ui.R.string.bolus, 0.0..10.0)).isEqualTo(5.0)
-        assertThat(hardLimits.verifyHardLimits(-5.0, app.aaps.core.ui.R.string.bolus, 0.0..10.0)).isEqualTo(0.0)
-        assertThat(hardLimits.verifyHardLimits(15.0, app.aaps.core.ui.R.string.bolus, 0.0..10.0)).isEqualTo(10.0)
+        assertThat(hardLimits.verifyHardLimits(5.0, app.aaps.core.interfaces.R.string.bolus, 0.0..10.0)).isEqualTo(5.0)
+        assertThat(hardLimits.verifyHardLimits(-5.0, app.aaps.core.interfaces.R.string.bolus, 0.0..10.0)).isEqualTo(0.0)
+        assertThat(hardLimits.verifyHardLimits(15.0, app.aaps.core.interfaces.R.string.bolus, 0.0..10.0)).isEqualTo(10.0)
     }
 
     @Test
     fun `checkHardLimits returns true when value is within limits`() {
-        assertThat(hardLimits.checkHardLimits(5.0, app.aaps.core.ui.R.string.bolus, 0.0, 10.0)).isTrue()
+        assertThat(hardLimits.checkHardLimits(5.0, app.aaps.core.interfaces.R.string.bolus, 0.0, 10.0)).isTrue()
     }
 
     @Test
     fun `checkHardLimits returns false when value is below limit`() {
-        assertThat(hardLimits.checkHardLimits(-1.0, app.aaps.core.ui.R.string.bolus, 0.0, 10.0)).isFalse()
+        assertThat(hardLimits.checkHardLimits(-1.0, app.aaps.core.interfaces.R.string.bolus, 0.0, 10.0)).isFalse()
     }
 
     @Test
     fun `checkHardLimits returns false when value is above limit`() {
-        assertThat(hardLimits.checkHardLimits(11.0, app.aaps.core.ui.R.string.bolus, 0.0, 10.0)).isFalse()
+        assertThat(hardLimits.checkHardLimits(11.0, app.aaps.core.interfaces.R.string.bolus, 0.0, 10.0)).isFalse()
     }
 
     @Test
     fun `verifyHardLimits returns original value when within limits`() {
-        val result = hardLimits.verifyHardLimits(5.0, app.aaps.core.ui.R.string.bolus, 0.0, 10.0)
+        val result = hardLimits.verifyHardLimits(5.0, app.aaps.core.interfaces.R.string.bolus, 0.0, 10.0)
         assertThat(result).isEqualTo(5.0)
     }
 
     @Test
     fun `verifyHardLimits clamps value to low limit when below`() {
-        val result = hardLimits.verifyHardLimits(-5.0, app.aaps.core.ui.R.string.bolus, 0.0, 10.0)
+        val result = hardLimits.verifyHardLimits(-5.0, app.aaps.core.interfaces.R.string.bolus, 0.0, 10.0)
         assertThat(result).isEqualTo(0.0)
     }
 
     @Test
     fun `verifyHardLimits clamps value to high limit when above`() {
-        val result = hardLimits.verifyHardLimits(15.0, app.aaps.core.ui.R.string.bolus, 0.0, 10.0)
+        val result = hardLimits.verifyHardLimits(15.0, app.aaps.core.interfaces.R.string.bolus, 0.0, 10.0)
         assertThat(result).isEqualTo(10.0)
     }
 
     @Test
     fun `verifyHardLimits logs error and shows notification when value is out of range`() {
-        hardLimits.verifyHardLimits(15.0, app.aaps.core.ui.R.string.bolus, 0.0, 10.0)
+        hardLimits.verifyHardLimits(15.0, app.aaps.core.interfaces.R.string.bolus, 0.0, 10.0)
 
         verify(notificationManager).post(any<NotificationId>(), any<String>(), any<NotificationLevel>(), any<Int>(), anyOrNull(), any<List<NotificationAction>>(), anyOrNull())
         runTest {
@@ -235,31 +235,31 @@ class HardLimitsImplTest : TestBase() {
 
     @Test
     fun `verifyHardLimits handles edge case at exact low limit`() {
-        val result = hardLimits.verifyHardLimits(0.0, app.aaps.core.ui.R.string.bolus, 0.0, 10.0)
+        val result = hardLimits.verifyHardLimits(0.0, app.aaps.core.interfaces.R.string.bolus, 0.0, 10.0)
         assertThat(result).isEqualTo(0.0)
     }
 
     @Test
     fun `verifyHardLimits handles edge case at exact high limit`() {
-        val result = hardLimits.verifyHardLimits(10.0, app.aaps.core.ui.R.string.bolus, 0.0, 10.0)
+        val result = hardLimits.verifyHardLimits(10.0, app.aaps.core.interfaces.R.string.bolus, 0.0, 10.0)
         assertThat(result).isEqualTo(10.0)
     }
 
     @Test
     fun `verifyHardLimits handles negative limits correctly`() {
-        val result = hardLimits.verifyHardLimits(-15.0, app.aaps.core.ui.R.string.bolus, -10.0, 10.0)
+        val result = hardLimits.verifyHardLimits(-15.0, app.aaps.core.interfaces.R.string.bolus, -10.0, 10.0)
         assertThat(result).isEqualTo(-10.0)
     }
 
     @Test
     fun `verifyHardLimits handles very large values`() {
-        val result = hardLimits.verifyHardLimits(1000000.0, app.aaps.core.ui.R.string.bolus, 0.0, 10.0)
+        val result = hardLimits.verifyHardLimits(1000000.0, app.aaps.core.interfaces.R.string.bolus, 0.0, 10.0)
         assertThat(result).isEqualTo(10.0)
     }
 
     @Test
     fun `verifyHardLimits handles very small values`() {
-        val result = hardLimits.verifyHardLimits(-1000000.0, app.aaps.core.ui.R.string.bolus, 0.0, 10.0)
+        val result = hardLimits.verifyHardLimits(-1000000.0, app.aaps.core.interfaces.R.string.bolus, 0.0, 10.0)
         assertThat(result).isEqualTo(0.0)
     }
 }

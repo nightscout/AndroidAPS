@@ -145,13 +145,13 @@ class TestOpenAPSAMAPlugin @Inject constructor(
         var minBg =
             hardLimits.verifyHardLimits(
                 Round.roundTo(profile.getTargetLowMgdl(), 0.1),
-                app.aaps.core.ui.R.string.profile_low_target,
+                app.aaps.core.interfaces.R.string.profile_low_target,
                 HardLimits.LIMIT_MIN_BG
             )
         var maxBg =
             hardLimits.verifyHardLimits(
                 Round.roundTo(profile.getTargetHighMgdl(), 0.1),
-                app.aaps.core.ui.R.string.profile_high_target,
+                app.aaps.core.interfaces.R.string.profile_high_target,
                 HardLimits.LIMIT_MAX_BG
             )
         var targetBg =
@@ -179,14 +179,14 @@ class TestOpenAPSAMAPlugin @Inject constructor(
                     HardLimits.LIMIT_TEMP_TARGET_BG
                 )
         }
-        if (!hardLimits.checkHardLimits(profile.iCfg.dia, app.aaps.core.ui.R.string.profile_dia, hardLimits.diaRange())) return
+        if (!hardLimits.checkHardLimits(profile.iCfg.dia, app.aaps.core.interfaces.R.string.profile_dia, hardLimits.diaRange())) return
         if (!hardLimits.checkHardLimits(
                 profile.getIcTimeFromMidnight(MidnightUtils.secondsFromMidnight()),
-                app.aaps.core.ui.R.string.profile_carbs_ratio_value,
+                app.aaps.core.interfaces.R.string.profile_carbs_ratio_value,
                 hardLimits.icRange()
             )
         ) return
-        if (!hardLimits.checkHardLimits(profile.getIsfMgdl("test"), app.aaps.core.ui.R.string.profile_sensitivity_value, HardLimits.LIMIT_ISF)) return
+        if (!hardLimits.checkHardLimits(profile.getIsfMgdl("test"), app.aaps.core.interfaces.R.string.profile_sensitivity_value, HardLimits.LIMIT_ISF)) return
         if (!hardLimits.checkHardLimits(profile.getMaxDailyBasal(), app.aaps.core.ui.R.string.profile_max_daily_basal_value, 0.02, hardLimits.maxBasal())) return
         if (!hardLimits.checkHardLimits(ch.fromPump(pump.baseBasalRate), app.aaps.core.ui.R.string.current_basal_value, 0.01, hardLimits.maxBasal())) return
         startPart = System.currentTimeMillis()

@@ -44,13 +44,10 @@
     <string name="tdd_old_data">Старые данные</string>
     <string name="goingtodeliver">Будет подано %1$.2f ед инс</string>
     <string name="androidaps_start">AAPS запущен</string>
-    <string name="formatsignedinsulinunits">%1$+.2f ед</string>
-    <string name="format_carbs">%1$d гр</string>
     <string name="format_hours">%1$.2f ч</string>
     <string name="objectives">Цели</string>
     <string name="please_wait">Подождите…</string>
     <string name="stop">Стоп</string>
-    <string name="carbs">Углеводы</string>
     <string name="invalid_profile">Недопустимый профиль!</string>
     <string name="no_profile_set">ПРОФИЛЬ НЕ ЗАДАН</string>
     <string name="active"><![CDATA[Активен]]></string>
@@ -94,14 +91,11 @@
     <string name="wrong_pump_data">Данные поступают с другой помпы. Измените драйвер помпы, чтобы сбросить ее состояние.</string>
     <string name="bg_label">ГК</string>
     <string name="calibration">калибровка</string>
-    <string name="alarminxmin">Напомнить через %1$d мин</string>
     <string name="treatmentdeliveryerror">Возможная ошибка подачи болюса. Проверьте количество реально поданного инсулина и углеводов</string>
     <string name="duration_label">Длительность действия</string>
     <string name="shortgramm">грамм</string>
-    <string name="pumpsuspended">Работа помпы остановлена</string>
     <string name="pump_running">Помпа работает</string>
     <string name="notconfigured">Не настроено</string>
-    <string name="loopsuspended">ЗЦ остановлен</string>
     <string name="loop_suspended_by_dst">Помпа остановлена при переходе времени</string>
     <string name="required">надо</string>
     <string name="a11y_arrow_double_down">быстрое падение</string>
@@ -134,7 +128,6 @@
     <string name="closedloop">Замкнутый цикл</string>
     <string name="openloop">Открытый цикл</string>
     <string name="lowglucosesuspend">Приостановка помпы на низкой ГК</string>
-    <string name="pump_disconnected">Помпа отключена</string>
     <string name="pump_suspended">Работа помпы приостановлена</string>
     <string name="mode_reverted">Режим возвращен к предыдущему состоянию</string>
     <string name="dia">Время действия инсулина DIA</string>
@@ -160,11 +153,6 @@
     <string name="passwords_dont_match">Пароли не совпадают</string>
     <string name="pin_dont_match">PIN-коды не совпадают</string>
     <!--    Profile-->
-    <string name="basalprofilenotaligned">Базальные значения не выровнены по часам: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Значение базала заменено минимальной поддерживаемой величиной: %1$s</string>
-    <string name="maximumbasalvaluereplaced">Значение базала заменено максимальной поддерживаемой величиной: %1$s</string>
-    <string name="profile_ins_units_per_hour">ед/ч</string>
-    <string name="profile_carbs_per_unit">г/ед</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Начать профиль %1$d%% на %2$d мин</string>
     <!--    APSResult-->
@@ -179,7 +167,6 @@
     <string name="average">Средний</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
-    <string name="mins">%1$d мин.</string>
     <!--    Translator-->
     <string name="careportal">Портал терапии</string>
     <string name="careportal_bgcheck">Проверка ГК</string>
@@ -227,7 +214,6 @@
     <string name="custom">Пользовательский</string>
     <string name="loop">Замкнутый цикл</string>
     <string name="ns">NS</string>
-    <string name="record">Запись</string>
     <string name="location_front_right_upper_chest">Правая сторона груди</string>
     <string name="location_front_left_upper_chest">Левая сторона груди</string>
     <string name="location_side_right_upper_arm">Верхняя внешняя часть правого плеча</string>
@@ -273,7 +259,6 @@
     <!--    CarbsReq-->
     <string name="carbsreq">Необходимо дополнительно %1$d г углеводов в течение %2$d минут</string>
     <string name="basalrate">базал</string>
-    <string name="bolus">Болюс</string>
     <!--    Ntp-->
     <string name="timedetection">Определение времени</string>
     <!-- User Entry -->
@@ -283,7 +268,6 @@
     <string name="uel_extended_bolus">ПРОЛОНГИРОВАННЫЙ БОЛЮС</string>
     <string name="uel_superbolus_tbr">СУПЕРБОЛЮС ВБС/TBR</string>
     <string name="uel_carbs">УГЛЕВОДЫ</string>
-    <string name="uel_extended_carbs">ПРОЛОНГИРОВАННЫЕ УГЛЕВОДЫ</string>
     <string name="uel_temp_basal">ВРЕМЕННЫЙ БАЗАЛ</string>
     <string name="uel_tt">ВРЕМ ЦЕЛЬ</string>
     <string name="uel_new_profile">НОВЫЙ ПРОФИЛЬ</string>
@@ -375,20 +359,13 @@
     <string name="uel_running_mode_removed">РАБОЧИЙ РЕЖИМ УДАЛЕН</string>
     <string name="uel_running_mode_updarted">РАБОЧИЙ РЕЖИМ ОБНОВЛЕН</string>
     <!-- HardLimits -->
-    <string name="profile_low_target">Нижнее целевое значение профиля</string>
-    <string name="profile_high_target">Верхнее целевое значение профиля</string>
     <string name="temp_target_low_target">Нижнее значение временного целевого уровня</string>
     <string name="temp_target_high_target">Верхнее значение временного целевого уровня</string>
     <string name="temp_target_value">Временное целевое значение</string>
-    <string name="profile_dia">Значение длительности действия инсулина DIA в профиле</string>
-    <string name="profile_sensitivity_value">Значение чувствительности в профиле</string>
     <string name="profile_max_daily_basal_value">Максимальное значение базала в профиле</string>
     <string name="current_basal_value">Текущее значение базала</string>
-    <string name="profile_carbs_ratio_value">Значение Углеводного коэффициента IC в профиле</string>
     <string name="valuelimitedto">%1$.2f ограничено до %2$.2f</string>
     <string name="valueoutofrange">»%1$s« за пределами жестких ограничений</string>
-    <string name="value_out_of_hard_limits">»%1$s« %2$.2f за пределами жестких ограничений</string>
-    <string name="basal_value">Величина базала</string>
     <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">БОЛЮС %1$.2f ЕД</string>
@@ -426,10 +403,6 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Помощник болюса</string>
     <string name="bolus_advisor_message">У вас высокая гликемия. Лучше подождать, чем есть сейчас. Хотите сделать болюс на коррекцию и установить напоминание о приеме пищи? В этом случае углеводы не будут записаны и после напоминания надо будет снова воспользоваться помощником.</string>
-    <string name="cobvsiob">угл COB к инс IOB</string>
-    <string name="bolus_constraint_applied_warn">Применено ограничение болюса: %1$.2f ед. до %2$.2f ед.</string>
-    <string name="bolus_recorded_only">Болюс будет только записан (без подачи помпой)</string>
-    <string name="advisoralarm">Напомнить о еде</string>
     <string name="no_action_selected">Действие не выбрано, ничего не произойдет</string>
     <string name="wizard_no_actual_bg">Нет данных ГК для основы расчета!</string>
     <string name="wizard_no_active_profile">Активный профиль не установлен!</string>
@@ -559,7 +532,6 @@
     <string name="weekday_monday_short">Пн</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1fед</string>
-    <string name="format_insulin_units">%1$.2f ед</string>
     <string name="percent_rate_duration">Скорость: %1$.2f%% (%2$.2f U/h) Продолжительность: %3$d мин</string>
     <string name="rate_percent_duration">Скорость: %1$.2fед/ч (%2$.2f%%) Продолжительность %3$d мин</string>
     <string name="percent_rate_duration_formatted"><![CDATA[<b>Скорость</b>:%1$.2f %% (%2$.2f ед/ч)<br><b> Продолжительность</b> %3$d мин<br>]]></string>

@@ -39,6 +39,7 @@ import app.aaps.core.ui.compose.icons.IcQuickwizard
 import app.aaps.ui.R
 import app.aaps.ui.compose.quickWizard.viewmodels.TrendOption
 import app.aaps.core.ui.R as CoreR
+import app.aaps.core.interfaces.R as InterfacesR
 
 /**
  * Editor for QuickWizard entry with all configurable fields.
@@ -207,7 +208,7 @@ fun QuickWizardEditor(
         // Carbs (WIZARD and CARBS modes)
         if (mode != QuickWizardMode.INSULIN) {
             NumberInputRow(
-                labelResId = CoreR.string.carbs,
+                labelResId = InterfacesR.string.carbs,
                 value = carbs.toDouble(),
                 onValueChange = { onCarbsChange(it.toInt()) },
                 valueRange = 0.0..maxCarbs,

@@ -43,13 +43,10 @@
     <string name="tdd_total">TDD totalt</string>
     <string name="goingtodeliver">Kommer att leverera %1$.2f enheter</string>
     <string name="androidaps_start">AAPS startad</string>
-    <string name="formatsignedinsulinunits">%1$+.2f U</string>
-    <string name="format_carbs">%1$dg</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="objectives">Mål</string>
     <string name="please_wait">Var god vänta…</string>
     <string name="stop">Stopp</string>
-    <string name="carbs">Kolhydrater</string>
     <string name="invalid_profile">Ogiltig profil!</string>
     <string name="no_profile_set">INGEN PROFIL VALD</string>
     <string name="active"><![CDATA[<Aktiv>]]></string>
@@ -90,12 +87,9 @@
     <string name="wrong_pump_data">Data kommer från en annan pump. Byt pumpdrivrutin för att återställa.</string>
     <string name="bg_label">BG</string>
     <string name="calibration">Kalibrering</string>
-    <string name="alarminxmin">Larma om %1$d min</string>
     <string name="duration_label">Duration</string>
     <string name="shortgramm">g</string>
-    <string name="pumpsuspended">Pump pausad</string>
     <string name="notconfigured">Inte konfigurerad</string>
-    <string name="loopsuspended">Loop pausad</string>
     <string name="required">beh</string>
     <string name="a11y_arrow_double_down">sjunker snabbt</string>
     <string name="a11y_arrow_single_down">sjunker</string>
@@ -138,11 +132,6 @@
     <string name="passwords_dont_match">Lösenorden stämmer inte överens</string>
     <string name="pin_dont_match">PIN-koderna överensstämmer inte</string>
     <!--    Profile-->
-    <string name="basalprofilenotaligned">Profilens basaler är inte satta på hel timme: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Basalvärdet ersatt med det lägsta tillåtna: %1$s</string>
-    <string name="maximumbasalvaluereplaced">Basalvärdet ersatt med det högsta tillåtna: %1$s</string>
-    <string name="profile_ins_units_per_hour">U/h</string>
-    <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Byt till profil %1$d%% i %2$d min</string>
     <!--    APSResult-->
@@ -157,7 +146,6 @@
     <string name="average">Medel</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
-    <string name="mins">%1$d min</string>
     <!--    Translator-->
     <string name="careportal">Careportal</string>
     <string name="careportal_bgcheck">BG-kontroll</string>
@@ -200,7 +188,6 @@
     <string name="custom">Anpassad</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
-    <string name="record">Post</string>
     <!--    Command-->
     <string name="connectiontimedout">Anslutningen tog för lång tid</string>
     <!--    PumpEnactResult-->
@@ -213,7 +200,6 @@
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g kolhydrater behövs inom %2$d minuter</string>
     <string name="basalrate">Basal</string>
-    <string name="bolus">Bolus</string>
     <!--    Ntp-->
     <string name="timedetection">Tidsdetektering</string>
     <!-- User Entry -->
@@ -223,7 +209,6 @@
     <string name="uel_extended_bolus">FÖRLÄNGD BOLUS</string>
     <string name="uel_superbolus_tbr">SUPERBOLUS TEMPBASAL</string>
     <string name="uel_carbs">KH</string>
-    <string name="uel_extended_carbs">FÖRLÄNGDA KH</string>
     <string name="uel_temp_basal">TEMP BASAL</string>
     <string name="uel_tt">TEMP MÅL</string>
     <string name="uel_new_profile">NY PROFIL</string>
@@ -306,20 +291,13 @@
     <string name="uel_loop_change">LOOP ÄNDRAD</string>
     <string name="uel_loop_removed">LOOP BORTTAGEN</string>
     <!-- HardLimits -->
-    <string name="profile_low_target">Nedre målvärde för profilen</string>
-    <string name="profile_high_target">Övre målvärde för profilen</string>
     <string name="temp_target_low_target">Nedre värde för temp mål</string>
     <string name="temp_target_high_target">Övre värde för temp mål</string>
     <string name="temp_target_value">Temp målvärde</string>
-    <string name="profile_dia">Profilens DIA</string>
-    <string name="profile_sensitivity_value">Profilens insulinkänslighetsvärde</string>
     <string name="profile_max_daily_basal_value">Maximal basaldos för profil</string>
     <string name="current_basal_value">Nuvarande basaldos</string>
-    <string name="profile_carbs_ratio_value">Profilens KH-kvot</string>
     <string name="valuelimitedto">%1$.2f begränsat till %2$.2f</string>
     <string name="valueoutofrange">»%1$s« är utanför de hårda gränserna</string>
-    <string name="value_out_of_hard_limits">»%1$s« %2$.2f är utanför hårda gränser</string>
-    <string name="basal_value">Basaldos</string>
     <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f U</string>
@@ -354,10 +332,6 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Bolusguide</string>
     <string name="bolus_advisor_message">Ditt blodsocker är högt. Istället för att äta är det rekommenderat att vänta tills det sjunker. Vill du göra en korrigeringsbolus nu och få en påminnelse när det är dags att äta? I det här fallet kommer inga kolhydrater att registreras nu, utan du måste ange måltiden på nytt i kalkylatorn.</string>
-    <string name="cobvsiob">COB kontra IOB</string>
-    <string name="bolus_constraint_applied_warn">Bolusbegränsning tillämpad: %1$.2f U till %2$.2f U</string>
-    <string name="bolus_recorded_only">Bolus kommer bara att loggas (inte levereras av pumpen)</string>
-    <string name="advisoralarm">Larma när det är dags att äta</string>
     <string name="no_action_selected">Ingen åtgärd vald. Inget ändras.</string>
     <string name="wizard_no_actual_bg">Inget nytt BG-värde att basera beräkning på!</string>
     <string name="wizard_no_active_profile">Ingen aktiv profil vald!</string>
@@ -461,7 +435,6 @@
     <string name="cleared_entries">Rensade poster</string>
     <!--    Weekday-->
     <!--    DecimalFormatterImpl -->
-    <string name="format_insulin_units">%1$.2fU</string>
     <!--    Playback-->
     <!-- ProfileEditor -->
     <!--    Search-->

@@ -8,6 +8,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.ui.R
+import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.formatMinutesAsDuration
 import app.aaps.core.ui.compose.pump.WizardButton
@@ -49,7 +50,7 @@ internal fun DurationStep(
             onValueChange = { onSetDuration(it.toInt()) },
             valueRange = Constants.SCENE_DURATION,
             step = 5.0,
-            valueFormatRef = TextRef.AndroidRes(R.string.mins),
+            valueFormatRef = TextRef.AndroidRes(InterfacesR.string.mins),
             formatAsInt = true,
             displayValue = when {
                 state.durationMinutes == 0 -> stringResource(R.string.scene_duration_indefinite)

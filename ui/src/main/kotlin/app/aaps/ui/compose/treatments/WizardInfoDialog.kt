@@ -21,6 +21,7 @@ import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.LocalProfileUtil
 import kotlin.math.abs
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.core.interfaces.R as InterfacesR
 
 /**
  * Compose dialog showing the calculation breakdown of a Bolus Calculator Result.
@@ -78,7 +79,7 @@ internal fun WizardInfoDialogContent(
         if (bcr.wasGlucoseUsed) {
             CalcRow(
                 label = stringResource(CoreUiR.string.wizard_bg_label) + " $bgString (ISF: ${decimalFormatter.to1Decimal(isfInUnits)})",
-                value = stringResource(CoreUiR.string.format_insulin_units, bcr.glucoseInsulin)
+                value = stringResource(InterfacesR.string.format_insulin_units, bcr.glucoseInsulin)
             )
             if (bcr.wasTempTargetUsed) {
                 CalcRow(
@@ -92,7 +93,7 @@ internal fun WizardInfoDialogContent(
         if (bcr.wasTrendUsed) {
             CalcRow(
                 label = stringResource(CoreUiR.string.wizard_bg_label) + " \u039415m: $trendString",
-                value = stringResource(CoreUiR.string.format_insulin_units, bcr.trendInsulin)
+                value = stringResource(InterfacesR.string.format_insulin_units, bcr.trendInsulin)
             )
         }
 
@@ -100,15 +101,15 @@ internal fun WizardInfoDialogContent(
         if (bcr.wasCOBUsed) {
             CalcRow(
                 label = stringResource(CoreUiR.string.cob) + " ${decimalFormatter.to1Decimal(bcr.cob)}g (IC: ${decimalFormatter.to1Decimal(bcr.ic)})",
-                value = stringResource(CoreUiR.string.format_insulin_units, bcr.cobInsulin)
+                value = stringResource(InterfacesR.string.format_insulin_units, bcr.cobInsulin)
             )
         }
 
         // Carbs with IC
         if (bcr.wereCarbsUsed) {
             CalcRow(
-                label = stringResource(CoreUiR.string.carbs) + " ${decimalFormatter.to0Decimal(bcr.carbs)}g (IC: ${decimalFormatter.to1Decimal(bcr.ic)})",
-                value = stringResource(CoreUiR.string.format_insulin_units, bcr.carbsInsulin)
+                label = stringResource(InterfacesR.string.carbs) + " ${decimalFormatter.to0Decimal(bcr.carbs)}g (IC: ${decimalFormatter.to1Decimal(bcr.ic)})",
+                value = stringResource(InterfacesR.string.format_insulin_units, bcr.carbsInsulin)
             )
         }
 
@@ -118,12 +119,12 @@ internal fun WizardInfoDialogContent(
             val scaledSubtotal = bcr.glucoseInsulin + bcr.trendInsulin + bcr.cobInsulin + bcr.carbsInsulin
             CalcRow(
                 label = stringResource(CoreUiR.string.wizard_subtotal),
-                value = stringResource(CoreUiR.string.format_insulin_units, scaledSubtotal)
+                value = stringResource(InterfacesR.string.format_insulin_units, scaledSubtotal)
             )
             val afterPercentage = scaledSubtotal * bcr.percentageCorrection / 100.0
             CalcRow(
                 label = stringResource(CoreUiR.string.format_percent, bcr.percentageCorrection),
-                value = stringResource(CoreUiR.string.format_insulin_units, afterPercentage)
+                value = stringResource(InterfacesR.string.format_insulin_units, afterPercentage)
             )
         }
 
@@ -134,7 +135,7 @@ internal fun WizardInfoDialogContent(
         if (bcr.wasBolusIOBUsed) {
             CalcRow(
                 label = stringResource(CoreUiR.string.bolus_iob_label),
-                value = stringResource(CoreUiR.string.format_insulin_units, -bcr.bolusIOB)
+                value = stringResource(InterfacesR.string.format_insulin_units, -bcr.bolusIOB)
             )
         }
 
@@ -142,7 +143,7 @@ internal fun WizardInfoDialogContent(
         if (bcr.wasBasalIOBUsed) {
             CalcRow(
                 label = stringResource(CoreUiR.string.treatments_wizard_basaliob_label),
-                value = stringResource(CoreUiR.string.format_insulin_units, -bcr.basalIOB)
+                value = stringResource(InterfacesR.string.format_insulin_units, -bcr.basalIOB)
             )
         }
 
@@ -150,7 +151,7 @@ internal fun WizardInfoDialogContent(
         if (abs(bcr.otherCorrection) > 0.005) {
             CalcRow(
                 label = stringResource(CoreUiR.string.wizard_correction),
-                value = stringResource(CoreUiR.string.format_insulin_units, bcr.otherCorrection)
+                value = stringResource(InterfacesR.string.format_insulin_units, bcr.otherCorrection)
             )
         }
 
@@ -158,7 +159,7 @@ internal fun WizardInfoDialogContent(
         if (bcr.wasSuperbolusUsed) {
             CalcRow(
                 label = stringResource(CoreUiR.string.superbolus),
-                value = stringResource(CoreUiR.string.format_insulin_units, bcr.superbolusInsulin)
+                value = stringResource(InterfacesR.string.format_insulin_units, bcr.superbolusInsulin)
             )
         }
 
@@ -166,7 +167,7 @@ internal fun WizardInfoDialogContent(
         HorizontalDivider(modifier = Modifier.padding(vertical = AapsSpacing.small))
         CalcRow(
             label = stringResource(CoreUiR.string.wizard_total),
-            value = stringResource(CoreUiR.string.format_insulin_units, bcr.totalInsulin)
+            value = stringResource(InterfacesR.string.format_insulin_units, bcr.totalInsulin)
         )
 
         // === Footer ===

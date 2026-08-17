@@ -73,6 +73,7 @@ import app.aaps.ui.compose.overview.chips.IobUiState
 import app.aaps.ui.compose.overview.graphs.BgInfoUiState
 import kotlinx.coroutines.flow.StateFlow
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.core.interfaces.R as InterfacesR
 
 @Composable
 fun InsulinDialogScreen(
@@ -267,7 +268,7 @@ internal fun InsulinDialogContent(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 if (uiState.insulin > 0.0) {
-                    Text(stringResource(CoreUiR.string.format_insulin_units, uiState.insulin))
+                    Text(stringResource(InterfacesR.string.format_insulin_units, uiState.insulin))
                 } else {
                     Text(stringResource(CoreUiR.string.ok))
                 }
@@ -329,7 +330,7 @@ internal fun InsulinDialogContent(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = stringResource(CoreUiR.string.bolus_recorded_only),
+                            text = stringResource(InterfacesR.string.bolus_recorded_only),
                             style = MaterialTheme.typography.bodyLarge,
                             color = if (uiState.forcedRecordOnly) MaterialTheme.colorScheme.error
                             else MaterialTheme.colorScheme.onSurface,

@@ -44,13 +44,10 @@
     <string name="tdd_old_data">Veraltete Daten</string>
     <string name="goingtodeliver">Werde %1$.2f IE abgeben</string>
     <string name="androidaps_start">AAPS gestartet</string>
-    <string name="formatsignedinsulinunits">%1$+.2f IE</string>
-    <string name="format_carbs">%1$d g</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="objectives">Objectives (Ziele)</string>
     <string name="please_wait">Bitte warten…</string>
     <string name="stop">Stopp</string>
-    <string name="carbs">Kohlenhydrate</string>
     <string name="invalid_profile">Ungültiges Profil!</string>
     <string name="no_profile_set">KEIN PROFIL GESETZT</string>
     <string name="active"><![CDATA[<Aktiv>]]></string>
@@ -91,12 +88,9 @@
     <string name="wrong_pump_data">Daten kommen von einer anderen Pumpe. Wechsle den Pumpentreiber.</string>
     <string name="bg_label">BZ</string>
     <string name="calibration">Kalibrierung</string>
-    <string name="alarminxmin">Alarm in %1$d Min.</string>
     <string name="duration_label">Dauer</string>
     <string name="shortgramm">g</string>
-    <string name="pumpsuspended">Pumpe pausiert</string>
     <string name="notconfigured">Nicht konfiguriert</string>
-    <string name="loopsuspended">Loop pausiert</string>
     <string name="required">angef.</string>
     <string name="a11y_arrow_double_down">schnell fallend</string>
     <string name="a11y_arrow_single_down">fallend</string>
@@ -141,11 +135,6 @@
     <string name="passwords_dont_match">Die Passwörter stimmen nicht überein.</string>
     <string name="pin_dont_match">PINs stimmen nicht überein</string>
     <!--    Profile-->
-    <string name="basalprofilenotaligned">Basalraten beginnen nicht zur vollen Stunde: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Basal-Wert wurde durch den kleinst möglichen Wert ersetzt: %1$s</string>
-    <string name="maximumbasalvaluereplaced">Basal-Wert wurde durch größt möglichen Wert ersetzt: %1$s</string>
-    <string name="profile_ins_units_per_hour">IE/h</string>
-    <string name="profile_carbs_per_unit">g/IE</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Profil %1$d%% für %2$d Min. starten</string>
     <!--    APSResult-->
@@ -160,7 +149,6 @@
     <string name="average">Durchschnitt</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
-    <string name="mins">%1$d min.</string>
     <!--    Translator-->
     <string name="careportal">Careportal</string>
     <string name="careportal_bgcheck">BZ-Test</string>
@@ -203,7 +191,6 @@
     <string name="custom">Benutzerdefiniert</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
-    <string name="record">Eintrag</string>
     <!--    Command-->
     <string name="connectiontimedout">Zeitüberschreitung bei Verbindung</string>
     <!--    PumpEnactResult-->
@@ -216,7 +203,6 @@
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g zusätzliche Kohlenhydrate innerhalb von %2$d Minuten erforderlich</string>
     <string name="basalrate">Basal</string>
-    <string name="bolus">Bolus</string>
     <!--    Ntp-->
     <string name="timedetection">Zeiterkennung</string>
     <!-- User Entry -->
@@ -226,7 +212,6 @@
     <string name="uel_extended_bolus">VERLÄNGERTER BOLUS</string>
     <string name="uel_superbolus_tbr">SUPERBOLUS TBR</string>
     <string name="uel_carbs">KOHLENHYDRATE</string>
-    <string name="uel_extended_carbs">VERLÄNGERTE KOHLENHYDRATE</string>
     <string name="uel_temp_basal">TEMP BASAL</string>
     <string name="uel_tt">TEMP. ZIEL</string>
     <string name="uel_new_profile">NEUES PROFIL</string>
@@ -309,20 +294,13 @@
     <string name="uel_loop_change">LOOP GEÄNDERT</string>
     <string name="uel_loop_removed">LOOP ENTFERNT</string>
     <!-- HardLimits -->
-    <string name="profile_low_target">Profil unteres Ziel</string>
-    <string name="profile_high_target">Profil oberes Ziel</string>
     <string name="temp_target_low_target">Temp. Ziel unterer Wert</string>
     <string name="temp_target_high_target">Temp. Ziel oberer Wert</string>
     <string name="temp_target_value">Temp. Ziel Wert</string>
-    <string name="profile_dia">Profil Insulinwirkdauer</string>
-    <string name="profile_sensitivity_value">Profil Sensitivitätswert</string>
     <string name="profile_max_daily_basal_value">Profil max. Basalwert</string>
     <string name="current_basal_value">Aktueller Basalwert</string>
-    <string name="profile_carbs_ratio_value">Profil KH-Faktor</string>
     <string name="valuelimitedto">%1$.2f limitiert auf %2$.2f</string>
     <string name="valueoutofrange">»%1$s« ist außerhalb der fest programmierten Grenzen</string>
-    <string name="value_out_of_hard_limits">»%1$s« %2$.2f ist außerhalb der fest programmierten Grenzen</string>
-    <string name="basal_value">Basal-Wert</string>
     <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f IE</string>
@@ -357,10 +335,6 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Bolus-Rechner</string>
     <string name="bolus_advisor_message">Deine BZ-Werte sind hoch. Statt jetzt zu essen solltest Du abwarten, bis die Werte gesunken sind. Willst du jetzt einen Korrekturbolus abgeben und erinnert werden, wenn es Zeit zum Essen ist? In diesem Fall werden die Kohlenhydrate nicht übernommen und Du musst nach der Erinnerung den Bolus-Rechner erneut verwenden.</string>
-    <string name="cobvsiob">COB vs IOB</string>
-    <string name="bolus_constraint_applied_warn">Bolus Einschränkung angewendet: %1$.2f U bis %2$.2f U</string>
-    <string name="bolus_recorded_only">Bolus wird nur aufgezeichnet (Die Pumpe gibt kein Insulin ab!)</string>
-    <string name="advisoralarm">Alarmiere mich, wenn es Zeit zum Essen ist. </string>
     <string name="no_action_selected">Keine Aktion ausgewählt, nichts wird geschehen.</string>
     <string name="wizard_no_actual_bg">Kein aktueller BG liegt als Basis zur Berechnung vor!</string>
     <string name="wizard_no_active_profile">Kein aktives Profil gesetzt!</string>
@@ -473,7 +447,6 @@
     <string name="weekday_monday_short">Mo</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f IE</string>
-    <string name="format_insulin_units">%1$.2f IE</string>
     <!--    Playback-->
     <!-- ProfileEditor -->
     <!--    Search-->

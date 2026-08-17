@@ -163,7 +163,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             whenever(rh.gs(app.aaps.core.ui.R.string.connectiontimedout)).thenReturn("Connection timed out")
             whenever(rh.gs(app.aaps.implementation.R.string.executing_right_now)).thenReturn("Executing right now")
             whenever(rh.gs(app.aaps.core.ui.R.string.command_replaced)).thenReturn("Replaced by newer command")
-            whenever(rh.gs(eq(app.aaps.core.ui.R.string.format_insulin_units), anyOrNull())).thenReturn("%1\$.2f U")
+            whenever(rh.gs(eq(app.aaps.core.interfaces.R.string.format_insulin_units), anyOrNull())).thenReturn("%1\$.2f U")
             whenever(rh.gs(app.aaps.core.ui.R.string.goingtodeliver)).thenReturn("Going to deliver %1\$.2f U")
         }
     }
@@ -910,8 +910,8 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             app.aaps.core.data.model.RM(timestamp = 0, mode = mode, duration = 0L)
         )
         // Resource strings used by the gate's rejection comment.
-        whenever(rh.gs(app.aaps.core.ui.R.string.pump_disconnected)).thenReturn("pump disconnected")
-        whenever(rh.gs(app.aaps.core.ui.R.string.loopsuspended)).thenReturn("loop suspended")
-        whenever(rh.gs(app.aaps.core.ui.R.string.pumpsuspended)).thenReturn("pump suspended")
+        whenever(rh.gs(app.aaps.core.interfaces.R.string.pump_disconnected)).thenReturn("pump disconnected")
+        whenever(rh.gs(app.aaps.core.interfaces.R.string.loopsuspended)).thenReturn("loop suspended")
+        whenever(rh.gs(app.aaps.core.interfaces.R.string.pumpsuspended)).thenReturn("pump suspended")
     }
 }

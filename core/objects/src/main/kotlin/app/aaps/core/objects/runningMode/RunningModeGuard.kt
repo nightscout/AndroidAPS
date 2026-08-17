@@ -4,7 +4,7 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
-import app.aaps.core.ui.R
+import app.aaps.core.interfaces.R
 import javax.inject.Inject
 import javax.inject.Singleton
 

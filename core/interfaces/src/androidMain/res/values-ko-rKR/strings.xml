@@ -64,4 +64,31 @@
     <!-- Permission rationales (used by PumpPluginBase) -->
     <!-- Insulin -->
     <!-- Concentration -->
+    <string name="formatsignedinsulinunits">%1$+.2f U</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="carbs">탄수화물</string>
+    <string name="alarminxmin">%1$d분 뒤 알람 울림</string>
+    <string name="pumpsuspended">펌프 일시중지됨</string>
+    <string name="loopsuspended">Loop 일시중지</string>
+    <string name="basalprofilenotaligned">Basal값이 시간단위로 설정되지 않았습니다: %1$s</string>
+    <string name="minimalbasalvaluereplaced">지원되는 최대 값으로 Basal 값이 대체되었습니다: %1$s</string>
+    <string name="maximumbasalvaluereplaced">지원되는 최대값으로 Basal값이 대체되었습니다:%1$s</string>
+    <string name="profile_ins_units_per_hour">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <string name="mins">%1$d 분</string>
+    <string name="record">기록</string>
+    <string name="bolus">Bolus</string>
+    <string name="uel_extended_carbs">확장 탄수화물</string>
+    <string name="profile_low_target">프로파일 저혈당 목표</string>
+    <string name="profile_high_target">프로파일 고혈당 목표</string>
+    <string name="profile_dia">프로파일 DIA 값</string>
+    <string name="profile_sensitivity_value">프로파일 민감도 값</string>
+    <string name="profile_carbs_ratio_value">프로파일의 탄수화물 비율 값</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f이 \'고정된 한계값\'을 벗어났습니다.</string>
+    <string name="basal_value">Basal 값</string>
+    <string name="cobvsiob">COB vs IOB</string>
+    <string name="bolus_constraint_applied_warn">적용된 Bolus 제약 조건: %1$.2f U 에서 %2$.2f U</string>
+    <string name="bolus_recorded_only">Bolus는 이 경우(펌프를 통해 공급되지 않음) 에만 기록됩니다</string>
+    <string name="advisoralarm">식사 시간이 되면 알람을 울리기</string>
+    <string name="format_insulin_units">%1$.2f U</string>
 </resources>

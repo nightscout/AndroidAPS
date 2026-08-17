@@ -38,8 +38,6 @@
     <string name="event_type">事件类型</string>
     <string name="mgdl">mg/dL</string>
     <string name="mmol">mmol/L</string>
-    <string name="profile_isf_units_mgdl">mg/dL/U</string>
-    <string name="profile_isf_units_mmol">mmol/L/U</string>
     <string name="bg_mgdl">%1$d mg/dL</string>
     <string name="bg_mmol">%1$.1f mmol/L</string>
     <string name="save">保存</string>
@@ -105,18 +103,14 @@
     <string name="tdd_old_data">旧的数据</string>
     <string name="goingtodeliver">将要输注 %1$.2f U</string>
     <string name="androidaps_start">AAPS 已启动</string>
-    <string name="formatsignedinsulinunits">%1$+.2f U</string>
-    <string name="format_carbs">%1$d 克</string>
     <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d g</string>
     <string name="format_hours">%1$.2f 小时</string>
     <string name="format_mins">%1$d min</string>
-    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
     <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
     <string name="objectives">目标</string>
     <string name="please_wait">请稍等...</string>
     <string name="stop">停止</string>
     <string name="stop_pressed">已按下停止</string>
-    <string name="carbs">碳水化合物</string>
     <string name="invalid_profile">无效的配置文件</string>
     <string name="no_profile_set">没有配置文件</string>
     <string name="profile_switch_no_insulin">无法切换配置文件：没有正在使用的胰岛素，也未选择任何胰岛素。</string>
@@ -172,15 +166,12 @@
     <string name="bg_label">血糖</string>
     <string name="calibration">校准</string>
     <string name="cgm">CGM</string>
-    <string name="alarminxmin">在 %1$d 分钟内运行提醒</string>
     <string name="treatmentdeliveryerror">大剂量输注报告了一个错误。请手动检查实际输送的胰岛素和碳水化合物量</string>
     <string name="bolus_reminder">当血糖恢复时提醒推注</string>
     <string name="duration_label">持续时间</string>
     <string name="shortgramm">克</string>
-    <string name="pumpsuspended">泵暂停了</string>
     <string name="pump_running">泵运行中</string>
     <string name="notconfigured">未配置</string>
-    <string name="loopsuspended">闭环暂停了</string>
     <string name="loop_suspended_by_dst">循环因夏令时DST而暂停</string>
     <string name="required">要</string>
     <string name="a11y_arrow_double_down">迅速下降</string>
@@ -230,7 +221,6 @@
     <string name="closedloop">闭环</string>
     <string name="openloop">开环</string>
     <string name="lowglucosesuspend">低血糖维持模式</string>
-    <string name="pump_disconnected">泵已断开</string>
     <string name="pump_suspended">泵已暂停</string>
     <string name="pump_suspend">暂停泵</string>
     <string name="pump_resume">恢复泵</string>
@@ -266,11 +256,6 @@
     <string name="passwords_dont_match">密码不匹配</string>
     <string name="pin_dont_match">PIN 码不匹配。</string>
     <!--    Profile-->
-    <string name="basalprofilenotaligned">基础率值与小时数不一致:%1$s</string>
-    <string name="minimalbasalvaluereplaced">基础率已设为支持的最小值：%1$s</string>
-    <string name="maximumbasalvaluereplaced">基础率值被泵支持的最大值:%1$s 替换了</string>
-    <string name="profile_ins_units_per_hour">U/h</string>
-    <string name="profile_carbs_per_unit">克/U</string>
     <!--    ProfileFunction-->
     <string name="startprofile">启动配置文件 %1$d%%在 %2$d 分钟</string>
     <!--    APSResult-->
@@ -308,7 +293,6 @@
     <string name="thirty_days_short">30天</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
-    <string name="mins">%1$d 分钟</string>
     <!--    Translator-->
     <string name="careportal">护理记录</string>
     <string name="careportal_bgcheck">指血检查</string>
@@ -492,7 +476,6 @@
     <string name="revert_to_defaults">恢复为默认值</string>
     <string name="loop">闭环</string>
     <string name="ns">NS</string>
-    <string name="record">记录</string>
     <string name="location_front_right_upper_chest">右胸</string>
     <string name="location_front_left_upper_chest">左胸</string>
     <string name="location_side_right_upper_arm">右上臂外侧</string>
@@ -542,7 +525,6 @@
     <!--    CarbsReq-->
     <string name="carbsreq">%2$d 分钟内需要额外摄入 %1$d 克碳水化合物</string>
     <string name="basalrate">基础率</string>
-    <string name="bolus">大剂量</string>
     <string name="tdd_short">TDD</string>
     <string name="tdd">每日总剂量</string>
     <!--    Ntp-->
@@ -554,7 +536,6 @@
     <string name="uel_extended_bolus">扩展大剂量</string>
     <string name="uel_superbolus_tbr">超级大剂量TBR</string>
     <string name="uel_carbs">碳水</string>
-    <string name="uel_extended_carbs">扩展碳水</string>
     <string name="uel_temp_basal">临时基础率</string>
     <string name="uel_tt">临时目标</string>
     <string name="uel_new_profile">新配置文件</string>
@@ -655,22 +636,15 @@
     <string name="uel_scene_deactivated">情景已停用</string>
     <string name="uel_remote_config_changed">远程配置已更改</string>
     <!-- HardLimits -->
-    <string name="profile_low_target">个人配置低目标</string>
-    <string name="profile_high_target">个人配置高目标</string>
     <string name="temp_target_low_target">临时目标值下限值</string>
     <string name="temp_target_high_target">临时目标值上限值</string>
     <string name="temp_target_value">临时目标值</string>
-    <string name="profile_dia">配置文件DIA值</string>
     <string name="insulin_dia">胰岛素作用时间</string>
     <string name="insulin_peak">胰岛素峰值时间</string>
-    <string name="profile_sensitivity_value">配置文件敏感系数值</string>
     <string name="profile_max_daily_basal_value">配置文件最大基础率值</string>
     <string name="current_basal_value">当前基础率值</string>
-    <string name="profile_carbs_ratio_value">配置文件碳水系数值</string>
     <string name="valuelimitedto">%1$.2f 超过 %2$.2f的限制</string>
     <string name="valueoutofrange">»%1$s« 超出了硬限制</string>
-    <string name="value_out_of_hard_limits">»%1$s« %2$.2f 超出了硬限制</string>
-    <string name="basal_value">基础率值</string>
     <!-- Profile validation -->
     <string name="no_profile_selected">未选择配置文件</string>
     <string name="missing_profile_name">缺少配置文件名称</string>
@@ -727,18 +701,12 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">大剂量向导</string>
     <string name="bolus_advisor_message">您当前血糖偏高。建议暂时不要进食，等待血糖降至正常。是否现在进行校正推注，并在适宜进食时提醒您？此操作将不会记录碳水化合物，收到提醒后您必须再次使用向导。</string>
-    <string name="cobvsiob">活性碳水vs活性胰岛素</string>
-    <string name="slowabsorptiondetected_plain">!!!!!检测到碳水化合物吸收缓慢：%1$d%%的时间。仔细检查你的计算。COB可能被高估，因此可能注射过多的胰岛素！！！！！</string>
-    <string name="bolus_constraint_applied_warn">已应用推注限制： %1$.2f U 到 %2$.2f U</string>
-    <string name="bolus_recorded_only">仅记录大剂量数值(泵不会输注)</string>
-    <string name="advisoralarm">在应当吃饭时提醒</string>
     <string name="wizard_bg_label">血糖</string>
     <string name="wizard_correction">修正</string>
     <string name="wizard_subtotal">小计</string>
     <string name="carbs_type_bread">面包、咸味糕点、酸奶、水果（苹果、香蕉、梨）、土豆、大米、荞麦、燕麦片、低碳水化合物食物、蔬菜</string>
     <string name="carbs_type_cake">饺子、意大利面、富含碳水化合物和脂肪的亚洲美食、甜食和酵母糕点、谷物、谷物粥、蜂蜜、果酱</string>
     <string name="carbs_type_pizza">烤宽面条、披萨、汉堡、薯条、烤土豆、薯片和类似小吃</string>
-    <string name="wizard_ecarbs">eCarbs %1$dg / %2$dh (+%3$dmin)</string>
     <string name="wizard_total">总计</string>
     <string name="wizard_carb_time">碳水时间</string>
     <string name="carb_time_now">现在</string>
@@ -980,7 +948,6 @@
     <string name="weekday_monday_short">星期一</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
-    <string name="format_insulin_units">%1$.2f U</string>
     <string name="format_insulin_units_signed">%1$+.2f U</string>
     <string name="percent_rate_duration">速率：%1$.2f%% (%2$.2f U/h) 持续时间：%3$d 分钟</string>
     <string name="rate_percent_duration">速率：%1$.2f U/h (%2$.2f%%) 持续时间：%3$d 分钟</string>

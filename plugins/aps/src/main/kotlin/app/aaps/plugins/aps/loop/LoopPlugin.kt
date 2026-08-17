@@ -364,7 +364,7 @@ class LoopPlugin @Inject constructor(
                 suspendLoop(
                     mode = RM.Mode.SUSPENDED_BY_PUMP,
                     autoForced = true,
-                    reasons = rh.gs(app.aaps.core.ui.R.string.pumpsuspended),
+                    reasons = rh.gs(app.aaps.core.interfaces.R.string.pumpsuspended),
                     durationInMinutes = Int.MAX_VALUE,
                     action = Action.SUSPEND,
                     source = Sources.Loop
@@ -561,8 +561,8 @@ class LoopPlugin @Inject constructor(
                 scheduleBuildAndStoreDeviceStatus("APS result")
 
                 if (runningMode().pausesLoopExecution()) {
-                    aapsLogger.debug(LTag.APS, rh.gs(app.aaps.core.ui.R.string.loopsuspended))
-                    rxBus.send(EventLoopSetLastRunGui(rh.gs(app.aaps.core.ui.R.string.loopsuspended)))
+                    aapsLogger.debug(LTag.APS, rh.gs(app.aaps.core.interfaces.R.string.loopsuspended))
+                    rxBus.send(EventLoopSetLastRunGui(rh.gs(app.aaps.core.interfaces.R.string.loopsuspended)))
                     return@withContext
                 }
                 // Store reasons
@@ -791,8 +791,8 @@ class LoopPlugin @Inject constructor(
             return pumpEnactResultProvider.get().comment(R.string.pump_not_initialized).enacted(false).success(false)
         }
         if (pump.isSuspended()) {
-            aapsLogger.debug(LTag.APS, "applyAPSRequest: " + rh.gs(app.aaps.core.ui.R.string.pumpsuspended))
-            return pumpEnactResultProvider.get().comment(app.aaps.core.ui.R.string.pumpsuspended).enacted(false).success(false)
+            aapsLogger.debug(LTag.APS, "applyAPSRequest: " + rh.gs(app.aaps.core.interfaces.R.string.pumpsuspended))
+            return pumpEnactResultProvider.get().comment(app.aaps.core.interfaces.R.string.pumpsuspended).enacted(false).success(false)
         }
         aapsLogger.debug(LTag.APS, "applyAPSRequest: $request")
         val now = System.currentTimeMillis()
@@ -875,8 +875,8 @@ class LoopPlugin @Inject constructor(
             return pumpEnactResultProvider.get().comment(R.string.pump_not_initialized).enacted(false).success(false)
         }
         if (runningMode().pausesLoopExecution()) {
-            aapsLogger.debug(LTag.APS, "applySMBRequest: " + rh.gs(app.aaps.core.ui.R.string.pumpsuspended))
-            return pumpEnactResultProvider.get().comment(app.aaps.core.ui.R.string.pumpsuspended).enacted(false).success(false)
+            aapsLogger.debug(LTag.APS, "applySMBRequest: " + rh.gs(app.aaps.core.interfaces.R.string.pumpsuspended))
+            return pumpEnactResultProvider.get().comment(app.aaps.core.interfaces.R.string.pumpsuspended).enacted(false).success(false)
         }
         aapsLogger.debug(LTag.APS, "applySMBRequest: $request")
 

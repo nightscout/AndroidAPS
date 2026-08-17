@@ -9,6 +9,7 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.ui.R
+import app.aaps.core.interfaces.R as InterfacesR
 import dagger.Reusable
 import javax.inject.Inject
 
@@ -26,7 +27,7 @@ class TranslatorImpl @Inject internal constructor(
         Action.EXTENDED_BOLUS                  -> rh.gs(R.string.uel_extended_bolus)
         Action.SUPERBOLUS_TBR                  -> rh.gs(R.string.uel_superbolus_tbr)
         Action.CARBS                           -> rh.gs(R.string.uel_carbs)
-        Action.EXTENDED_CARBS                  -> rh.gs(R.string.uel_extended_carbs)
+        Action.EXTENDED_CARBS                  -> rh.gs(InterfacesR.string.uel_extended_carbs)
         Action.TEMP_BASAL                      -> rh.gs(R.string.uel_temp_basal)
         Action.TT                              -> rh.gs(R.string.uel_tt)
         Action.NEW_PROFILE                     -> rh.gs(R.string.uel_new_profile)
@@ -131,7 +132,7 @@ class TranslatorImpl @Inject internal constructor(
         is ValueWithUnit.Minute      -> rh.gs(app.aaps.core.interfaces.R.string.shortminute)
         is ValueWithUnit.Mmoll       -> rh.gs(R.string.mmol)
         is ValueWithUnit.Percent     -> rh.gs(R.string.shortpercent)
-        is ValueWithUnit.UnitPerHour -> rh.gs(R.string.profile_ins_units_per_hour)
+        is ValueWithUnit.UnitPerHour -> rh.gs(InterfacesR.string.profile_ins_units_per_hour)
         else                         -> ""
     }
 
@@ -246,9 +247,9 @@ class TranslatorImpl @Inject internal constructor(
         RM.Mode.CLOSED_LOOP       -> rh.gs(R.string.closedloop)
         RM.Mode.CLOSED_LOOP_LGS   -> rh.gs(R.string.lowglucosesuspend)
         RM.Mode.SUPER_BOLUS       -> rh.gs(R.string.superbolus)
-        RM.Mode.DISCONNECTED_PUMP -> rh.gs(R.string.pump_disconnected)
+        RM.Mode.DISCONNECTED_PUMP -> rh.gs(InterfacesR.string.pump_disconnected)
         RM.Mode.SUSPENDED_BY_PUMP -> rh.gs(R.string.pump_suspended)
-        RM.Mode.SUSPENDED_BY_USER -> rh.gs(R.string.loopsuspended)
+        RM.Mode.SUSPENDED_BY_USER -> rh.gs(InterfacesR.string.loopsuspended)
         RM.Mode.SUSPENDED_BY_DST  -> rh.gs(R.string.loop_suspended_by_dst)
         RM.Mode.RESUME            -> rh.gs(R.string.resumeloop)
         null                      -> ""

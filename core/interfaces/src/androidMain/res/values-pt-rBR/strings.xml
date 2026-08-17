@@ -61,4 +61,30 @@
     <!-- Permission rationales (used by PumpPluginBase) -->
     <!-- Insulin -->
     <!-- Concentration -->
+    <string name="formatsignedinsulinunits">%1$+.2f U</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="carbs">Carbos</string>
+    <string name="alarminxmin">Disparar alarme em %1$d min</string>
+    <string name="pumpsuspended">Bomba suspensa</string>
+    <string name="loopsuspended">Loop suspenso</string>
+    <string name="basalprofilenotaligned">Valores das basais não definidos por horas: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Valor da basal alterado para o valor mínimo suportado: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Valor da basal alterado para o valor máximo suportado: %1$s</string>
+    <string name="profile_ins_units_per_hour">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <string name="mins">%1$d min</string>
+    <string name="record">Gravar</string>
+    <string name="bolus">Bólus</string>
+    <string name="uel_extended_carbs">CARBOIDRATOS ESTENDIDOS</string>
+    <string name="profile_low_target">Alvo de perfil de hipoglicemia</string>
+    <string name="profile_high_target">Alvo de perfil de hiperglicemia</string>
+    <string name="profile_dia">Valor do perfil da DAI</string>
+    <string name="profile_sensitivity_value">Valor do perfil de sensibilidade</string>
+    <string name="profile_carbs_ratio_value">Valor do perfil da taxa de carboidratos</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f está fora dos limites estabelecidos</string>
+    <string name="basal_value">Valor basal</string>
+    <string name="cobvsiob">CA vs IA</string>
+    <string name="bolus_constraint_applied_warn">Restrição de bólus aplicada: %1$.2f U para %2$.2f U</string>
+    <string name="bolus_recorded_only">Bolus será apenas registrado (não administrado pela bomba)</string>
+    <string name="advisoralarm">Disparar alarme quando for a hora de comer</string>
 </resources>

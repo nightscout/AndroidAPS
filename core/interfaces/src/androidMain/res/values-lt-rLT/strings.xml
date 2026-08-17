@@ -72,4 +72,31 @@
     <!-- Permission rationales (used by PumpPluginBase) -->
     <!-- Insulin -->
     <!-- Concentration -->
+    <string name="formatsignedinsulinunits">%1$+.2f vv</string>
+    <string name="format_carbs">%1$dg</string>
+    <string name="carbs">Angliavandeniai</string>
+    <string name="alarminxmin">Pranešti po %1$d min</string>
+    <string name="pumpsuspended">Pompa sustabdyta</string>
+    <string name="loopsuspended">Ciklas sustabdytas</string>
+    <string name="basalprofilenotaligned">Bazės reikšmės nesuderintos su valandomis: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Nustatyta mažiausia galima valandinės bazės vertė: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Nustatyta didžiausia galima valandinės bazės vertė: %1$s</string>
+    <string name="profile_ins_units_per_hour">v/val</string>
+    <string name="profile_carbs_per_unit">g/v</string>
+    <string name="mins">%1$d min.</string>
+    <string name="record">Įrašas</string>
+    <string name="bolus">Bolusas</string>
+    <string name="uel_extended_carbs">IŠTĘSTI AV</string>
+    <string name="profile_low_target">Profilio tikslo žemoji riba</string>
+    <string name="profile_high_target">Profilio tikslo aukštoji riba</string>
+    <string name="profile_dia">Profilio IVT reikšmė</string>
+    <string name="profile_sensitivity_value">Profilio JIF reikšmė</string>
+    <string name="profile_carbs_ratio_value">Profilio IA reikšmė</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f viršija griežtą limitą</string>
+    <string name="basal_value">Valandinė bazė</string>
+    <string name="cobvsiob">AAO prieš AIO</string>
+    <string name="bolus_constraint_applied_warn">Pritaikytas boluso apribojimas: %1$.2f v iki %2$.2f v</string>
+    <string name="bolus_recorded_only">Bolusas bus tik įrašytas (nebus suleistas)</string>
+    <string name="advisoralarm">Pranešti apie laiką valgyti</string>
+    <string name="format_insulin_units">%1$.2f V</string>
 </resources>

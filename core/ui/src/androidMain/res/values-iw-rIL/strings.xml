@@ -44,13 +44,10 @@
     <string name="tdd_old_data">נתונים ישנים</string>
     <string name="goingtodeliver">עומד להזריק %1$.2f יח\'</string>
     <string name="androidaps_start">הופעל AndroidAPS</string>
-    <string name="formatsignedinsulinunits">%1$+.2f יח\'</string>
-    <string name="format_carbs">%1$d גר\'</string>
     <string name="format_hours">%1$.2f ש\'</string>
     <string name="objectives">משימות</string>
     <string name="please_wait">נא להמתין…</string>
     <string name="stop">עצור</string>
-    <string name="carbs">פחמימות</string>
     <string name="invalid_profile">פרופיל לא חוקי!</string>
     <string name="no_profile_set">לא הוגדר פרופיל</string>
     <string name="active"><![CDATA[<פועל>]]></string>
@@ -91,12 +88,9 @@
     <string name="wrong_pump_data">הנתונים מגיעים ממשאבה אחרת. בחרו מחדש את סוג המשאבה כדי לאפס את מצב המשאבה.</string>
     <string name="bg_label">BG</string>
     <string name="calibration">כיול</string>
-    <string name="alarminxmin">הפעל התראה בעוד %1$d דקות</string>
     <string name="duration_label">משך</string>
     <string name="shortgramm">גר\'</string>
-    <string name="pumpsuspended">משאבה מושהית</string>
     <string name="notconfigured">לא מוגדר</string>
-    <string name="loopsuspended">לולאה מושהית</string>
     <string name="required">נדרשים</string>
     <string name="a11y_arrow_double_down">ירידה מהירה</string>
     <string name="a11y_arrow_single_down">ירידה</string>
@@ -143,11 +137,6 @@
     <string name="passwords_dont_match">הסיסמאות אינן תואמות</string>
     <string name="pin_dont_match">קודי PIN אינם תואמים</string>
     <!--    Profile-->
-    <string name="basalprofilenotaligned">ערכי הבזאלי לא מותאמים לשעות: %1$s</string>
-    <string name="minimalbasalvaluereplaced">ערכי הבזאלי הוחלפו בערכים הנתמכים המינימליים: %1$s</string>
-    <string name="maximumbasalvaluereplaced">ערכי הבזאלי הוחלפו בערכים הנתמכים המינימליים: %1$s</string>
-    <string name="profile_ins_units_per_hour">יח\'\\שעה</string>
-    <string name="profile_carbs_per_unit">גר\'\\יח\'</string>
     <!--    ProfileFunction-->
     <string name="startprofile">הפעלת פרופיל %1$d%% במשך %2$d דק\'</string>
     <!--    APSResult-->
@@ -162,7 +151,6 @@
     <string name="average">ממוצע</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
-    <string name="mins">%1$d דק\'</string>
     <!--    Translator-->
     <string name="careportal">פורטל הטיפולים</string>
     <string name="careportal_bgcheck">בדיקת רמת סוכר בדם</string>
@@ -205,7 +193,6 @@
     <string name="custom">מותאם אישית</string>
     <string name="loop">לולאה</string>
     <string name="ns">נייטסקאוט</string>
-    <string name="record">הקלטה</string>
     <!--    Command-->
     <string name="connectiontimedout">החיבור חרג ממגבלת הזמן</string>
     <!--    PumpEnactResult-->
@@ -218,7 +205,6 @@
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d גר\' פחמימות דרושות ב-%2$d הדקות הקרובות</string>
     <string name="basalrate">בזאלי</string>
-    <string name="bolus">בולוס</string>
     <!--    Ntp-->
     <string name="timedetection">זיהוי שעה</string>
     <!-- User Entry -->
@@ -228,7 +214,6 @@
     <string name="uel_extended_bolus">בולוס ממושך</string>
     <string name="uel_superbolus_tbr">בזאלי זמני של סופר בולוס</string>
     <string name="uel_carbs">פחמימות</string>
-    <string name="uel_extended_carbs">פחמימות מורכבות</string>
     <string name="uel_temp_basal">בזאלי זמני</string>
     <string name="uel_tt">ערך מטרה זמני</string>
     <string name="uel_new_profile">פרופיל חדש</string>
@@ -313,20 +298,13 @@
     <string name="uel_loop_change">הלולאה שונתה</string>
     <string name="uel_loop_removed">הלולאה הוסרה</string>
     <!-- HardLimits -->
-    <string name="profile_low_target">ערך המטרה הנמוך של הפרופיל</string>
-    <string name="profile_high_target">ערך המטרה הגבוה של הפרופיל</string>
     <string name="temp_target_low_target">ערך תחתון של המטרה הזמנית</string>
     <string name="temp_target_high_target">ערך עליון של המטרה הזמנית</string>
     <string name="temp_target_value">ערך המטרה הזמני</string>
-    <string name="profile_dia">ערך DIA של הפרופיל</string>
-    <string name="profile_sensitivity_value">ערך הרגישות של הפרופיל</string>
     <string name="profile_max_daily_basal_value">מינון בזאלי מרבי של הפרופיל</string>
     <string name="current_basal_value">מינון בזאלי נוכחי</string>
-    <string name="profile_carbs_ratio_value">יחס הפחמימות של הפרופיל</string>
     <string name="valuelimitedto">%1$.2f מוגבל ל- %2$.2f</string>
     <string name="valueoutofrange">»הערך %1$s« מחוץ לתחום הקשיח</string>
-    <string name="value_out_of_hard_limits">»הערך %1$s« %2$.2f מחוץ לתחום הקשיח</string>
-    <string name="basal_value">ערך בזאלי</string>
     <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">בולוס %1$.2f יח\'</string>
@@ -364,10 +342,6 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">יועץ הבולוסים</string>
     <string name="bolus_advisor_message">יש לכם היפרגליקמיה. במקום לאכול עכשיו מומלץ לחכות לרמת סוכר נמוכה יותר. האם תרצו לעשות בולוס תיקון עכשיו ולאחר מכן תופעל תזכורת לאכול? במקרה זה, לא יירשמו פחמימות ויהיה עליכם להשתמש באשף מחדש כאשר תגשו לאכול.</string>
-    <string name="cobvsiob">פחמ\' פעילות לעומת אינ\' פעיל</string>
-    <string name="bolus_constraint_applied_warn">מגבלת בולוס יושמה: %1$.2f עד %2$.2f יח\'</string>
-    <string name="bolus_recorded_only">בולוס רשום בלבד (לא מוזרק על ידי המשאבה)</string>
-    <string name="advisoralarm">הפעל התראה כשצריכים לאכול</string>
     <string name="no_action_selected">לא נבחרה פעולה, דבר לא יתבצע.</string>
     <string name="wizard_no_actual_bg">אין נתוני סוכר לביסוס חישוב!</string>
     <string name="wizard_no_active_profile">לא הופעל פרופיל!</string>
@@ -489,7 +463,6 @@
     <string name="weekday_monday_short">ב\'</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f יח\'</string>
-    <string name="format_insulin_units">%1$.2f יח\'</string>
     <!--    Playback-->
     <!-- ProfileEditor -->
     <!--    Search-->

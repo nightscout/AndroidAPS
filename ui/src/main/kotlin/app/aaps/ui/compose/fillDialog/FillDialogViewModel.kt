@@ -54,6 +54,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.abs
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.core.interfaces.R as InterfacesR
 
 @HiltViewModel
 @Stable
@@ -260,12 +261,12 @@ class FillDialogViewModel @Inject constructor(
                         ch.bolusWithVolume(state.insulinAfterConstraints)
                     else
                         decimalFormatter.toPumpSupportedBolusWithUnits(state.insulinAfterConstraints, bolusStep)
-                line(ConfirmationRole.BOLUS, rh.gs(CoreUiR.string.confirmation_line, rh.gs(R.string.fill_prime_amount), bolusValue))
+                line(ConfirmationRole.BOLUS, rh.gs(InterfacesR.string.confirmation_line, rh.gs(R.string.fill_prime_amount), bolusValue))
                 if (state.constraintApplied) {
                     line(
                         ConfirmationRole.WARNING,
                         rh.gs(
-                            CoreUiR.string.bolus_constraint_applied_warn,
+                            InterfacesR.string.bolus_constraint_applied_warn,
                             state.insulin,
                             state.insulinAfterConstraints
                         )
@@ -292,15 +293,15 @@ class FillDialogViewModel @Inject constructor(
             }
 
             if (state.notes.isNotEmpty()) {
-                line(ConfirmationRole.NORMAL, rh.gs(CoreUiR.string.confirmation_line, rh.gs(CoreUiR.string.notes_label), state.notes))
+                line(ConfirmationRole.NORMAL, rh.gs(InterfacesR.string.confirmation_line, rh.gs(CoreUiR.string.notes_label), state.notes))
             }
 
             if (state.eventTimeChanged) {
-                line(ConfirmationRole.NORMAL, rh.gs(CoreUiR.string.confirmation_line, rh.gs(CoreUiR.string.time), dateUtil.dateAndTimeString(state.eventTime)))
+                line(ConfirmationRole.NORMAL, rh.gs(InterfacesR.string.confirmation_line, rh.gs(CoreUiR.string.time), dateUtil.dateAndTimeString(state.eventTime)))
             }
 
             if (state.siteRotationEnabled && state.siteLocation != TE.Location.NONE) {
-                line(ConfirmationRole.NORMAL, rh.gs(CoreUiR.string.confirmation_line, rh.gs(CoreUiR.string.site_location), translator.translate(state.siteLocation)))
+                line(ConfirmationRole.NORMAL, rh.gs(InterfacesR.string.confirmation_line, rh.gs(CoreUiR.string.site_location), translator.translate(state.siteLocation)))
             }
         }
     }

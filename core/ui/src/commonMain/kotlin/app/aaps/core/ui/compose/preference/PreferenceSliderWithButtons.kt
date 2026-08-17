@@ -1,7 +1,6 @@
 package app.aaps.core.ui.compose.preference
 
 import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.ui.UiStrings
 import app.aaps.core.keys.interfaces.TextRef
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

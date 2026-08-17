@@ -55,6 +55,7 @@ import app.aaps.ui.compose.overview.chips.IobUiState
 import app.aaps.ui.compose.overview.graphs.BgInfoUiState
 import kotlinx.coroutines.flow.StateFlow
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.core.interfaces.R as InterfacesR
 
 @Composable
 fun TreatmentDialogScreen(
@@ -182,13 +183,13 @@ internal fun TreatmentDialogContent(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 if (uiState.insulin > 0.0) {
-                    Text(stringResource(CoreUiR.string.format_insulin_units, uiState.insulin))
+                    Text(stringResource(InterfacesR.string.format_insulin_units, uiState.insulin))
                 }
                 if (uiState.insulin > 0.0 && uiState.carbs > 0) {
                     Spacer(modifier = Modifier.width(4.dp))
                 }
                 if (uiState.carbs > 0) {
-                    Text(stringResource(CoreUiR.string.format_carbs, uiState.carbs))
+                    Text(stringResource(InterfacesR.string.format_carbs, uiState.carbs))
                 }
                 if (!hasAction) {
                     Text(stringResource(CoreUiR.string.ok))
@@ -215,7 +216,7 @@ internal fun TreatmentDialogContent(
 
             // --- Forced-record-only warning ---
             if (uiState.forcedRecordOnly) {
-                WarningBanner(message = stringResource(CoreUiR.string.bolus_recorded_only))
+                WarningBanner(message = stringResource(InterfacesR.string.bolus_recorded_only))
             }
 
             // --- Single Card: Insulin + Carbs ---
@@ -236,7 +237,7 @@ internal fun TreatmentDialogContent(
                     )
 
                     NumberInputRow(
-                        labelResId = CoreUiR.string.carbs,
+                        labelResId = InterfacesR.string.carbs,
                         value = uiState.carbs.toDouble(),
                         onValueChange = onCarbsChange,
                         valueRange = 0.0..uiState.maxCarbs.toDouble(),

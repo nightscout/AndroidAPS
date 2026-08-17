@@ -125,4 +125,37 @@
     <string name="u300">U300</string>
     <string name="u500">U500</string>
 
+    <string name="profile_isf_units_mgdl">mg/dL/U</string>
+    <string name="profile_isf_units_mmol">mmol/L/U</string>
+    <string name="formatsignedinsulinunits">%1$+.2f U</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
+    <string name="carbs">Carbs</string>
+    <string name="alarminxmin">Run alarm in %1$d min</string>
+    <string name="pumpsuspended">Pump suspended</string>
+    <string name="loopsuspended">Loop suspended</string>
+    <string name="pump_disconnected">Pump disconnected</string>
+    <string name="basalprofilenotaligned">Basal values not aligned to hours: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Basal value replaced by minimum supported value: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Basal value replaced by maximum supported value: %1$s</string>
+    <string name="profile_ins_units_per_hour">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <string name="mins">%1$d min</string>
+    <string name="record">Record</string>
+    <string name="bolus">Bolus</string>
+    <string name="uel_extended_carbs">EXTENDED CARBS</string>
+    <string name="profile_low_target">Profile low target</string>
+    <string name="profile_high_target">Profile high target</string>
+    <string name="profile_dia">Profile DIA value</string>
+    <string name="profile_sensitivity_value">Profile sensitivity value</string>
+    <string name="profile_carbs_ratio_value">Profile carbs ratio value</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f is out of hard limits</string>
+    <string name="basal_value">Basal value</string>
+    <string name="cobvsiob">COB vs IOB</string>
+    <string name="slowabsorptiondetected_plain">!!!!! Slow carbs absorption detected: %1$d%% of time. Double check your calculation. COB can be overestimated thus more insulin could be given !!!!!</string>
+    <string name="bolus_constraint_applied_warn">Bolus constraint applied: %1$.2f U to %2$.2f U</string>
+    <string name="bolus_recorded_only">Bolus will be recorded only (not delivered by pump)</string>
+    <string name="advisoralarm">Run alarm when is time to eat</string>
+    <string name="wizard_ecarbs">eCarbs %1$dg / %2$dh (+%3$dmin)</string>
+    <string name="format_insulin_units">%1$.2f U</string>
 </resources>

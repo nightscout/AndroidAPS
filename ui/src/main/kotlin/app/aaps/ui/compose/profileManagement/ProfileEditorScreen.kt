@@ -58,6 +58,7 @@ import app.aaps.core.graph.TargetBgProfileGraphCompose
 import app.aaps.core.interfaces.profile.ProfileErrorType
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
+import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileEditorViewModel
@@ -448,7 +449,7 @@ private fun IcContent(
                 valueRange = state.icRange,
                 step = 0.1,
                 valueFormat = NumberFormat.DECIMAL_1,
-                unitLabel = stringResource(R.string.profile_carbs_per_unit),
+                unitLabel = stringResource(InterfacesR.string.profile_carbs_per_unit),
                 modifier = Modifier.padding(16.dp)
             )
         }
@@ -547,12 +548,12 @@ private fun BasalContent(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "${stringResource(R.string.basal_long_label)} [${stringResource(R.string.profile_ins_units_per_hour)}]",
+                        text = "${stringResource(R.string.basal_long_label)} [${stringResource(InterfacesR.string.profile_ins_units_per_hour)}]",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
-                        text = "∑ ${stringResource(R.string.format_insulin_units, state.basalSum)}",
+                        text = "∑ ${stringResource(InterfacesR.string.format_insulin_units, state.basalSum)}",
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.primary
                     )

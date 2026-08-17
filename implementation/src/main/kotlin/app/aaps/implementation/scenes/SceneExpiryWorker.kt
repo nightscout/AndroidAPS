@@ -17,6 +17,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.ui.R
+import app.aaps.core.interfaces.R as InterfacesR
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
@@ -85,7 +86,7 @@ class SceneExpiryWorker @AssistedInject constructor(
 
         val skipReason: String? = when {
             !target.isEnabled            -> rh.gs(R.string.scene_chain_skipped_disabled, target.name)
-            loopSuspended                -> rh.gs(R.string.pump_disconnected)
+            loopSuspended                -> rh.gs(InterfacesR.string.pump_disconnected)
             !pumpInit || profile == null -> rh.gs(R.string.pump_not_initialized_profile_not_set)
             else                         -> null
         }

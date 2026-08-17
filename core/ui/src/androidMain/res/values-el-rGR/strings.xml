@@ -43,13 +43,10 @@
     <string name="tdd_total">TDD σύνολο</string>
     <string name="goingtodeliver">Πρόκειται να εγχυθούν %1$.2f μονάδες</string>
     <string name="androidaps_start">Το AAPS ξεκίνησε</string>
-    <string name="formatsignedinsulinunits">%1$+.2f U</string>
-    <string name="format_carbs">%1$d g</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="objectives">Βήματα</string>
     <string name="please_wait">Περιμένετε…</string>
     <string name="stop">Stop</string>
-    <string name="carbs">Υδατάνθρακες</string>
     <string name="invalid_profile">Μη έγκυρο προφίλ!</string>
     <string name="no_profile_set">ΔΕΝ ΟΡΙΣΤΗΚΕ ΠΡΟΦΙΛ</string>
     <string name="active"><![CDATA[<Ενεργή>]]></string>
@@ -90,12 +87,9 @@
     <string name="wrong_pump_data">Τα δεδομένα προέρχονται από διαφορετική αντλία. Αλλάξτε τον οδηγό της αντλίας για να επαναφέρετε την κατάσταση της αντλίας.</string>
     <string name="bg_label">BG</string>
     <string name="calibration">Καλιμπράρισμα</string>
-    <string name="alarminxmin">Εκτέλεση συναγερμού σε %1$d λεπτά</string>
     <string name="duration_label">Διάρκεια</string>
     <string name="shortgramm">g</string>
-    <string name="pumpsuspended">Η αντλία είναι σε παύση</string>
     <string name="notconfigured">Δεν έχει ρυθμιστεί</string>
-    <string name="loopsuspended">Κύκλωμα σε αναστολή</string>
     <string name="required">req</string>
     <string name="a11y_arrow_double_down">ταχεία πτώση</string>
     <string name="a11y_arrow_single_down">πτώση</string>
@@ -138,11 +132,6 @@
     <string name="passwords_dont_match">Οι κωδικοί δεν ταιριάζουν</string>
     <string name="pin_dont_match">Τα PINs δεν ταιριάζουν</string>
     <!--    Profile-->
-    <string name="basalprofilenotaligned">Οι τιμές του βασικού ρυθμού δεν αντιστοιχούν σε ώρες: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Η τιμή του βασικού αντικαταστάθηκε από την ελάχιστη υποστηριζόμενη τιμή: %1$s</string>
-    <string name="maximumbasalvaluereplaced">Η τιμή του βασικού αντικαταστάθηκε από την μέγιστη υποστηριζόμενη τιμή: %1$s</string>
-    <string name="profile_ins_units_per_hour">U/h</string>
-    <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Έναρξη προφίλ %1$d%% για %2$d λεπτά</string>
     <!--    APSResult-->
@@ -157,7 +146,6 @@
     <string name="average">Μέση</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
-    <string name="mins">%1$d λεπτά</string>
     <!--    Translator-->
     <string name="careportal">Φροντίδα</string>
     <string name="careportal_bgcheck">Έλεγχος BG</string>
@@ -200,7 +188,6 @@
     <string name="custom">Προσαρμογή</string>
     <string name="loop">Κύκλωμα</string>
     <string name="ns">NS</string>
-    <string name="record">Εγγραφή</string>
     <!--    Command-->
     <string name="connectiontimedout">Ο χρόνος σύνδεσης έληξε</string>
     <!--    PumpEnactResult-->
@@ -213,7 +200,6 @@
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g επιπλέον υδατάνθρακες απαιτούνται μέσα σε %2$d λεπτά</string>
     <string name="basalrate">Βασικός Ρυθμός</string>
-    <string name="bolus">Bolus</string>
     <!--    Ntp-->
     <string name="timedetection">Ανίχνευση χρόνου</string>
     <!-- User Entry -->
@@ -223,7 +209,6 @@
     <string name="uel_extended_bolus">ΕΚΤΕΤΑΜΕΝΟ BOLUS</string>
     <string name="uel_superbolus_tbr">SUPERBOLUS TBR</string>
     <string name="uel_carbs">ΥΔΑΤΑΝΘΡΑΚΕΣ</string>
-    <string name="uel_extended_carbs">ΕΚΤΕΤΑΜΕΝΟΙ ΥΔΑΤΑΝΘΡΑΚΕΣ</string>
     <string name="uel_temp_basal">ΠΡΟΣΩΡΙΝΟΣ ΒΑΣΙΚΟΣ</string>
     <string name="uel_tt">ΠΡΟΣΩΡΙΝΟΣ ΣΤΟΧΟΣ</string>
     <string name="uel_new_profile">ΝΕΟ ΠΡΟΦΙΛ</string>
@@ -306,20 +291,13 @@
     <string name="uel_loop_change">ΤΟ ΚΥΚΛΩΜΑ ΑΛΛΑΞΕ</string>
     <string name="uel_loop_removed">ΤΟ ΚΥΚΛΩΜΑ ΑΦΑΙΡΕΘΗΚΕ</string>
     <!-- HardLimits -->
-    <string name="profile_low_target">Χαμηλός στόχος προφίλ</string>
-    <string name="profile_high_target">Υψηλός στόχος προφίλ</string>
     <string name="temp_target_low_target">Κάτω τιμή προσωρινού στόχου</string>
     <string name="temp_target_high_target">Πάνω τιμή προσωρινού στόχου</string>
     <string name="temp_target_value">Τιμή προσωρινού στόχου</string>
-    <string name="profile_dia">Τιμή DIA του προφίλ</string>
-    <string name="profile_sensitivity_value">Τιμή ευαισθησίας προφίλ</string>
     <string name="profile_max_daily_basal_value">Μέγιστη τιμή βασικού ρυθμού προφίλ</string>
     <string name="current_basal_value">Τρέχουσα τιμή βασικού</string>
-    <string name="profile_carbs_ratio_value">Τιμή αναλογίας υδατανθράκων προφίλ</string>
     <string name="valuelimitedto">Το %1$.2f περιορίζεται σε %2$.2f</string>
     <string name="valueoutofrange">» Το%1$s« είναι εκτός ορίων</string>
-    <string name="value_out_of_hard_limits">Η τιμή »%1$s« %2$.2f είναι εκτός ορίων</string>
-    <string name="basal_value">Τιμή Βασικού ρυθμού</string>
     <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f U</string>
@@ -354,10 +332,6 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Σύμβουλος Bolus</string>
     <string name="bolus_advisor_message">Έχετε υπεργλυκαιμία. Αντί να φάτε τώρα συνιστάτε να περιμένετε μια καλύτερη γλυκαιμία. Θέλετε να κάνετε ένα διορθωτικό bolus τώρα και να γίνει υπενθύμιση όταν έρθει η ώρα να φάτε; Σε αυτή την περίπτωση δε θα καταγραφούν καθόλου υδατάνθρακες και θα πρέπει να χρησιμοποιήσετε τον οδηγό ξανά μετά την υπενθύμιση.</string>
-    <string name="cobvsiob">COB vs IOB (ενεργοί υδατάνθρακες vs ενεργή ινσουλίνη)</string>
-    <string name="bolus_constraint_applied_warn">Ορίστηκε περιορισμός Bolus: %1$.2f U σε %2$.2f U</string>
-    <string name="bolus_recorded_only">Το Bolus μόνο θα καταγραφεί (δε θα χορηγηθεί από την αντλία)</string>
-    <string name="advisoralarm">Εκτέλεση συναγερμού όταν έρθει η ώρα να φάτε</string>
     <string name="no_action_selected">Δεν έχει επιλεγεί καμία ενέργεια, δεν υπάρχει τίποτα να κάνει</string>
     <string name="wizard_no_actual_bg">Δεν υπάρχει πρόσφατή γλυκόζη αίματος για να γίνει υπολογισμός!</string>
     <string name="wizard_no_active_profile">Δεν ορίστηκε ενεργό προφίλ!</string>
@@ -469,7 +443,6 @@
     <string name="weekday_monday_short">Δευτ</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
-    <string name="format_insulin_units">%1$.2f U</string>
     <!--    Playback-->
     <!-- ProfileEditor -->
     <!--    Search-->

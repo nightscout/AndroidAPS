@@ -44,13 +44,10 @@
     <string name="tdd_old_data">Eski veri</string>
     <string name="goingtodeliver">%1$.2f Ü gönderilecek</string>
     <string name="androidaps_start">AAPS başladı</string>
-    <string name="formatsignedinsulinunits">%1$+.2f Ü</string>
-    <string name="format_carbs">%1$d g</string>
     <string name="format_hours">%1$.2f s</string>
     <string name="objectives">Görevler</string>
     <string name="please_wait">Lütfen bekleyin…</string>
     <string name="stop">Dur</string>
-    <string name="carbs">Karbonhidrat</string>
     <string name="invalid_profile">Geçersiz profil!</string>
     <string name="no_profile_set">PROFİL AYARLANMADI</string>
     <string name="active"><![CDATA[<Aktif>]]></string>
@@ -93,14 +90,11 @@
     <string name="wrong_pump_data">Veriler farklı pompadan geliyor. Pompa durumunu sıfırlamak için pompa sürücüsünü değiştirin.</string>
     <string name="bg_label">KŞ</string>
     <string name="calibration">Kalibrasyon</string>
-    <string name="alarminxmin">Alarmı %1$d dakika içinde çalıştır</string>
     <string name="treatmentdeliveryerror">Bolus bir hata bildirdi. Gerçek iletilen insülin ve karbonhidrat miktarını manuel olarak kontrol edin</string>
     <string name="duration_label">Süre</string>
     <string name="shortgramm">gr</string>
-    <string name="pumpsuspended">Pompa Durduruldu</string>
     <string name="pump_running">Pompa çalışıyor</string>
     <string name="notconfigured">Yapılandırılmadı</string>
-    <string name="loopsuspended">Döngü duraklatıldı</string>
     <string name="required">iht.</string>
     <string name="a11y_arrow_double_down">hızla düşüyor</string>
     <string name="a11y_arrow_single_down">düşüyor</string>
@@ -130,7 +124,6 @@
     <string name="closedloop">Kapalı Döngü</string>
     <string name="openloop">Açık Döngü</string>
     <string name="lowglucosesuspend">Düşük Glikoz Duraklatma (LGS)</string>
-    <string name="pump_disconnected">Pompa bağlantısı kesildi</string>
     <string name="pump_suspended">Pompa Durduruldu</string>
     <string name="mode_reverted">Mod Döndü</string>
     <string name="dia">İES</string>
@@ -156,11 +149,6 @@
     <string name="passwords_dont_match">Şifreler eşleşmiyor</string>
     <string name="pin_dont_match">PIN\'ler eşleşmiyor</string>
     <!--    Profile-->
-    <string name="basalprofilenotaligned">Bazal değerler saatlerle uyumlu değil: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Desteklenen minimum değerle değiştirilen bazal değer: %1$s</string>
-    <string name="maximumbasalvaluereplaced">Bazal değeri maksimum desteklenen değerle değiştirilir: %1$s</string>
-    <string name="profile_ins_units_per_hour">Ü/s</string>
-    <string name="profile_carbs_per_unit">g/Ü</string>
     <!--    ProfileFunction-->
     <string name="startprofile">%2$d dakika için %1$d%% profilini başlat</string>
     <!--    APSResult-->
@@ -175,7 +163,6 @@
     <string name="average">Ortalama</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
-    <string name="mins">%1$d dak</string>
     <!--    Translator-->
     <string name="careportal">Bakım Portalı</string>
     <string name="careportal_bgcheck">KŞ Kontrol</string>
@@ -221,7 +208,6 @@
     <string name="custom">Özel</string>
     <string name="loop">Döngü</string>
     <string name="ns">NS</string>
-    <string name="record">Kayıt</string>
     <!--    Command-->
     <string name="connectiontimedout">Bağlantı zaman aşımına uğradı</string>
     <!--    PumpEnactResult-->
@@ -234,7 +220,6 @@
     <!--    CarbsReq-->
     <string name="carbsreq">%2$d dakika içinde %1$d g ek karbonhidrat gerekiyor</string>
     <string name="basalrate">Bazal</string>
-    <string name="bolus">Bolus</string>
     <!--    Ntp-->
     <string name="timedetection">Zaman algılama</string>
     <!-- User Entry -->
@@ -244,7 +229,6 @@
     <string name="uel_extended_bolus">YAYMA BOLUS</string>
     <string name="uel_superbolus_tbr">SÜPERBOLUS GBO</string>
     <string name="uel_carbs">KARBLR</string>
-    <string name="uel_extended_carbs">YAYMA KARBONHİDRAT</string>
     <string name="uel_temp_basal">GEÇİCİ BAZAL</string>
     <string name="uel_tt">GEÇİCİ HEDEF</string>
     <string name="uel_new_profile">YENİ PROFİL</string>
@@ -330,20 +314,13 @@
     <string name="uel_loop_change">DÖNGÜ DEĞİŞTİ</string>
     <string name="uel_loop_removed">DÖNGÜ KALDIRILDI</string>
     <!-- HardLimits -->
-    <string name="profile_low_target">Düşük hedef profili</string>
-    <string name="profile_high_target">Yüksek hedef profili</string>
     <string name="temp_target_low_target">Geçici hedef alt değeri</string>
     <string name="temp_target_high_target">Geçici hedef üst değeri</string>
     <string name="temp_target_value">Geçici hedef değeri</string>
-    <string name="profile_dia">Profil DIA değeri</string>
-    <string name="profile_sensitivity_value">Profil duyarlılık değeri</string>
     <string name="profile_max_daily_basal_value">Azami profil bazal değeri</string>
     <string name="current_basal_value">Mevcut bazal değer</string>
-    <string name="profile_carbs_ratio_value">Profil karbonhidrat oranı değeri</string>
     <string name="valuelimitedto">%1$.2f, %2$.2f ile sınırlıdır</string>
     <string name="valueoutofrange">»%1$s« sınırların dışında</string>
-    <string name="value_out_of_hard_limits">»%1$s« %2$.2f sınırların dışında</string>
-    <string name="basal_value">Bazal değer</string>
     <!-- Profile validation -->
     <string name="error_in_isf_values">İDF değerinde hata</string>
     <!-- Command Queue + readStatus reasons -->
@@ -382,10 +359,6 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Bolus danışmanı</string>
     <string name="bolus_advisor_message">Yüksek glisemiksiniz. Şimdi yemek yemek yerine daha iyi glisemi beklemeniz önerilir. Şimdi bir düzeltme bolusu yapmak ve yemek zamanı geldiğinde size hatırlatmak ister misiniz? Bu durumda karbonhidrat kaydı yapılmaz ve size hatırlattığımızda sihirbazı tekrar kullanmanız gerekir.</string>
-    <string name="cobvsiob">AKRB vs AİNS</string>
-    <string name="bolus_constraint_applied_warn">Bolus kısıtlaması uygulandı: %1$.2f Ü ile %2$.2f Ü</string>
-    <string name="bolus_recorded_only">Bolus yalnızca kaydedilecektir (pompa ile iletilmez)</string>
-    <string name="advisoralarm">Yemek zamanı alarmı çalıştır</string>
     <string name="no_action_selected">Seçili eylem yok, hiçbir şey olmayacak</string>
     <string name="wizard_no_actual_bg">Hesaplamayı temel alacak yeni bir KŞ yok!</string>
     <string name="wizard_no_active_profile">Etkin profil ayarlanmadı!</string>
@@ -509,7 +482,6 @@
     <string name="weekday_monday_short">Pts</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f Ü</string>
-    <string name="format_insulin_units">%1$.2f Ü</string>
     <string name="percent_rate_duration">Oran: %1$.2f%% (%2$.2f Ü/s) Süre: %3$d dk</string>
     <string name="rate_percent_duration">Oran: %1$.2f Ü/s (%2$.2f%%) Süre: %3$d dk</string>
     <string name="percent_rate_duration_formatted"><![CDATA[<b>Oran</b>: %1$.2f%% (%2$.2f Ü/s)<br><b>Süre</b>: %3$d dk<br>]]></string>

@@ -118,4 +118,37 @@
     <string name="u200">U200</string>
     <string name="u300">U300</string>
     <string name="u500">U500</string>
+    <string name="profile_isf_units_mgdl">mg/dL/U</string>
+    <string name="profile_isf_units_mmol">mmol/l/U</string>
+    <string name="formatsignedinsulinunits">%1$+.2f U</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
+    <string name="carbs">Carbohidrați</string>
+    <string name="alarminxmin">Rulați alarma în %1$d minute</string>
+    <string name="pumpsuspended">Pompă suspendată</string>
+    <string name="loopsuspended">Buclă suspendată</string>
+    <string name="pump_disconnected">Pompă deconectată</string>
+    <string name="basalprofilenotaligned">Valori bazale nesincronizate cu ora: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Valoarea bazalei a fost înlocuită cu valoarea minimă posibilă: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Valoarea bazalei a fost înlocuită cu valoarea maximă posibilă: %1$s</string>
+    <string name="profile_ins_units_per_hour">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <string name="mins">%1$d min</string>
+    <string name="record">Înregistrare</string>
+    <string name="bolus">Bolus</string>
+    <string name="uel_extended_carbs">CARBOHIDRAȚI EXTINȘI</string>
+    <string name="profile_low_target">Profil ținta joasă</string>
+    <string name="profile_high_target">Profil țintă ridicată</string>
+    <string name="profile_dia">Valoare profil DIA</string>
+    <string name="profile_sensitivity_value">Valoare sensibilitate profil</string>
+    <string name="profile_carbs_ratio_value">Valoarea raportului carbohidrați din profil</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f este in afara limitelor stabilite</string>
+    <string name="basal_value">Valoare rata bazală</string>
+    <string name="cobvsiob">COB vs IOB</string>
+    <string name="slowabsorptiondetected_plain">!!!!! S-a detectat o absorbție lentă de carbohidrați: %1$d%% din timp. Verificați de două ori calculul. COB poate fi supraestimat, astfel încât mai multă insulină poate fi administrată !!!!!</string>
+    <string name="bolus_constraint_applied_warn">Este aplicată limitarea bolusului %1$.2f U la %2$.2f U</string>
+    <string name="bolus_recorded_only">Bolusul doar va fi înregistrat (nu va fi administrat de pompă)</string>
+    <string name="advisoralarm">Executați alarma când este timpul să mâncați</string>
+    <string name="wizard_ecarbs">carbohidrați extinși %1$dg / %2$dh (+%3$dmin)</string>
+    <string name="format_insulin_units">%1$.2f U</string>
 </resources>

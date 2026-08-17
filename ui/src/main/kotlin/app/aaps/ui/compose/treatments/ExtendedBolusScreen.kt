@@ -209,7 +209,7 @@ private fun ExtendedBolusItem(
                             )
                         ) {
                             append("(")
-                            append(stringResource(app.aaps.core.ui.R.string.format_insulin_units, iob.iob))
+                            append(stringResource(app.aaps.core.interfaces.R.string.format_insulin_units, iob.iob))
                             append(")")
                         }
                     }

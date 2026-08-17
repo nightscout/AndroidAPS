@@ -372,12 +372,12 @@ class MainViewModel @Inject constructor(
     private fun computeInsulinItem(entry: QuickWizardEntry, pump: Pump, runningMode: RM.Mode?): QuickWizardItem {
         val buttonText = entry.buttonText()
         val guid = entry.guid()
-        val detail = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, entry.insulin())
+        val detail = rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, entry.insulin())
 
         val disabledReason = when {
             !pump.isInitialized()                    -> rh.gs(app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set)
-            pump.isSuspended()                       -> rh.gs(app.aaps.core.ui.R.string.pumpsuspended)
-            runningMode == RM.Mode.DISCONNECTED_PUMP -> rh.gs(app.aaps.core.ui.R.string.pump_disconnected)
+            pump.isSuspended()                       -> rh.gs(app.aaps.core.interfaces.R.string.pumpsuspended)
+            runningMode == RM.Mode.DISCONNECTED_PUMP -> rh.gs(app.aaps.core.interfaces.R.string.pump_disconnected)
             else                                     -> null
         }
         if (disabledReason != null)
@@ -394,7 +394,7 @@ class MainViewModel @Inject constructor(
     private fun computeCarbsItem(entry: QuickWizardEntry): QuickWizardItem {
         val buttonText = entry.buttonText()
         val guid = entry.guid()
-        val detail = rh.gs(app.aaps.core.ui.R.string.format_carbs, entry.carbs())
+        val detail = rh.gs(app.aaps.core.interfaces.R.string.format_carbs, entry.carbs())
 
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(entry.carbs(), aapsLogger)).value()
         if (carbsAfterConstraints != entry.carbs())
@@ -422,8 +422,8 @@ class MainViewModel @Inject constructor(
             lastBG == null                           -> rh.gs(app.aaps.core.ui.R.string.wizard_no_actual_bg)
             profile == null                          -> rh.gs(app.aaps.core.ui.R.string.noprofile)
             !pump.isInitialized()                    -> rh.gs(app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set)
-            pump.isSuspended()                       -> rh.gs(app.aaps.core.ui.R.string.pumpsuspended)
-            runningMode == RM.Mode.DISCONNECTED_PUMP -> rh.gs(app.aaps.core.ui.R.string.pump_disconnected)
+            pump.isSuspended()                       -> rh.gs(app.aaps.core.interfaces.R.string.pumpsuspended)
+            runningMode == RM.Mode.DISCONNECTED_PUMP -> rh.gs(app.aaps.core.interfaces.R.string.pump_disconnected)
             else                                     -> null
         }
         if (globalReason != null)
@@ -433,8 +433,8 @@ class MainViewModel @Inject constructor(
         if (wizard.calculatedTotalInsulin <= 0.0)
             return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, disabledReason = rh.gs(app.aaps.ui.R.string.wizard_no_insulin_required))
 
-        val detail = rh.gs(app.aaps.core.ui.R.string.format_carbs, entry.carbs()) +
-            " " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, wizard.calculatedTotalInsulin)
+        val detail = rh.gs(app.aaps.core.interfaces.R.string.format_carbs, entry.carbs()) +
+            " " + rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, wizard.calculatedTotalInsulin)
 
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(entry.carbs(), aapsLogger)).value()
         if (carbsAfterConstraints != entry.carbs())
@@ -522,7 +522,7 @@ class MainViewModel @Inject constructor(
         executeFixedBatch(
             entry,
             listOf(BatchAction.Bolus(insulin = insulin, carbs = 0, carbsTimeOffsetMinutes = 0, carbsDurationHours = 0, recordOnly = false, notes = entry.buttonText(), timestamp = 0L, iCfg = null)),
-            rh.gs(app.aaps.core.ui.R.string.bolus),
+            rh.gs(app.aaps.core.interfaces.R.string.bolus),
             IcBolus
         )
     }
@@ -540,7 +540,7 @@ class MainViewModel @Inject constructor(
                 eCarbsDelayMinutes = if (hasEcarbs) entry.time() else 0,
                 eCarbsDurationHours = if (hasEcarbs) entry.duration() else 0
             )),
-            rh.gs(app.aaps.core.ui.R.string.carbs),
+            rh.gs(app.aaps.core.interfaces.R.string.carbs),
             IcCarbs
         )
     }
@@ -554,9 +554,9 @@ class MainViewModel @Inject constructor(
         RM.Mode.OPEN_LOOP         -> rh.gs(app.aaps.core.ui.R.string.openloop)
         RM.Mode.DISABLED_LOOP     -> rh.gs(app.aaps.core.ui.R.string.disabled_loop)
         RM.Mode.SUPER_BOLUS       -> rh.gs(app.aaps.core.ui.R.string.superbolus)
-        RM.Mode.DISCONNECTED_PUMP -> rh.gs(app.aaps.core.ui.R.string.pump_disconnected)
+        RM.Mode.DISCONNECTED_PUMP -> rh.gs(app.aaps.core.interfaces.R.string.pump_disconnected)
         RM.Mode.SUSPENDED_BY_PUMP -> rh.gs(app.aaps.core.ui.R.string.pump_suspended)
-        RM.Mode.SUSPENDED_BY_USER -> rh.gs(app.aaps.core.ui.R.string.loopsuspended)
+        RM.Mode.SUSPENDED_BY_USER -> rh.gs(app.aaps.core.interfaces.R.string.loopsuspended)
         RM.Mode.SUSPENDED_BY_DST  -> rh.gs(app.aaps.core.ui.R.string.loop_suspended_by_dst)
         RM.Mode.RESUME            -> rh.gs(app.aaps.core.ui.R.string.resumeloop)
     }

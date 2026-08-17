@@ -80,7 +80,7 @@ class WidgetStateLoader @Inject constructor(
         val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
         val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
         val iobTotal = bolusIob.iob + basalIob.basaliob
-        val iobText = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, iobTotal)
+        val iobText = rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, iobTotal)
         val iobActive = abs(iobTotal) > 0.001
 
         val cobInfo = iobCobCalculator.getCobInfo("Overview COB")

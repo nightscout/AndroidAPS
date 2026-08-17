@@ -33,13 +33,10 @@
     <string name="tdd_total">TDD Total</string>
     <string name="goingtodeliver">Isporučit ću %1$.2f U</string>
     <string name="androidaps_start">AAPS je počeo</string>
-    <string name="formatsignedinsulinunits">%1$+.2f U</string>
-    <string name="format_carbs">%1$d g</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="objectives">Ciljevi</string>
     <string name="please_wait">Molimo pričekajte…</string>
     <string name="stop">Zaustavi</string>
-    <string name="carbs">UH</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Datum</string>
     <string name="units_label">Jedinice</string>
@@ -60,10 +57,8 @@
     <string name="cob">Aktivni UGH</string>
     <string name="bg_label">GUK</string>
     <string name="calibration">Kalibracija</string>
-    <string name="alarminxmin">Uključi alarm za %1$d min</string>
     <string name="duration_label">Trajanje</string>
     <string name="shortgramm">g</string>
-    <string name="loopsuspended">Petlja suspendirana</string>
     <string name="required">potrebno</string>
     <string name="a11y_arrow_double_down">brzo padajući</string>
     <string name="a11y_arrow_single_down">padanje</string>
@@ -96,11 +91,6 @@
     <string name="passwords_dont_match">Lozinke se ne podudaraju</string>
     <string name="pin_dont_match">PIN-ovi se ne podudaraju</string>
     <!--    Profile-->
-    <string name="basalprofilenotaligned">Bazalne vrijednosti nisu usklađene sa satima: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Bazalna vrijednost zamijenjena minimalnom podržanom vrijednošću: %1$s</string>
-    <string name="maximumbasalvaluereplaced">Bazalna vrijednost zamijenjena maksimalnom podržanom vrijednošću: %1$s</string>
-    <string name="profile_ins_units_per_hour">U/h</string>
-    <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Pokrenite profil %1$d%% na %2$d min</string>
     <!--    APSResult-->
@@ -128,7 +118,6 @@
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g dodatnih ugljikohidrata potrebnih unutar %2$d minuta</string>
     <string name="basalrate">Bazal</string>
-    <string name="bolus">Bolus</string>
     <!--    Ntp-->
     <string name="timedetection">Detekcija vremena</string>
     <!-- User Entry -->
@@ -172,16 +161,11 @@
     <string name="uel_loop_change">PETLJA PROMIJENJENA</string>
     <string name="uel_loop_removed">PETLJA UKLONJENA</string>
     <!-- HardLimits -->
-    <string name="profile_low_target">Profil niski cilj</string>
-    <string name="profile_high_target">Profil visoki cilj</string>
     <string name="temp_target_low_target">Privremena ciljana donja vrijednost</string>
     <string name="temp_target_high_target">Privremena ciljna gornja vrijednost</string>
     <string name="temp_target_value">Privremena ciljna vrijednost</string>
-    <string name="profile_dia">Profil DIA vrijednost</string>
-    <string name="profile_sensitivity_value">Vrijednost osjetljivosti profila</string>
     <string name="profile_max_daily_basal_value">Maksimalna bazalna vrijednost profila</string>
     <string name="current_basal_value">Trenutna bazalna vrijednost</string>
-    <string name="profile_carbs_ratio_value">Vrijednost omjera ugljikohidrata profila</string>
     <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="formatPercent">%1$.0f%%</string>

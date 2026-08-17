@@ -44,13 +44,10 @@
     <string name="tdd_old_data">오래된 데이터</string>
     <string name="goingtodeliver">%1$.2f U을 주입합니다.</string>
     <string name="androidaps_start">AAPS 시작</string>
-    <string name="formatsignedinsulinunits">%1$+.2f U</string>
-    <string name="format_carbs">%1$d g</string>
     <string name="format_hours">%1$.2f 시간</string>
     <string name="objectives">목표</string>
     <string name="please_wait">잠시 기다려 주세요...</string>
     <string name="stop">정지</string>
-    <string name="carbs">탄수화물</string>
     <string name="invalid_profile">유효하지 않은 프로파일!</string>
     <string name="no_profile_set">프로파일 설정되지 않음</string>
     <string name="active"><![CDATA[<Active>]]></string>
@@ -91,12 +88,9 @@
     <string name="wrong_pump_data">다른 펌프에서 전송된 데이터. 펌프 상태 재설정을 위해 펌프 드라이버를 바꾸세요.</string>
     <string name="bg_label">혈당</string>
     <string name="calibration">보정</string>
-    <string name="alarminxmin">%1$d분 뒤 알람 울림</string>
     <string name="duration_label">기간</string>
     <string name="shortgramm">g</string>
-    <string name="pumpsuspended">펌프 일시중지됨</string>
     <string name="notconfigured">설정되지 않음</string>
-    <string name="loopsuspended">Loop 일시중지</string>
     <string name="required">필요량</string>
     <string name="a11y_arrow_double_down">급속 하락</string>
     <string name="a11y_arrow_single_down">하락</string>
@@ -141,11 +135,6 @@
     <string name="passwords_dont_match">비밀번호가 일치하지 않습니다.</string>
     <string name="pin_dont_match">PIN이 일치하지 않습니다</string>
     <!--    Profile-->
-    <string name="basalprofilenotaligned">Basal값이 시간단위로 설정되지 않았습니다: %1$s</string>
-    <string name="minimalbasalvaluereplaced">지원되는 최대 값으로 Basal 값이 대체되었습니다: %1$s</string>
-    <string name="maximumbasalvaluereplaced">지원되는 최대값으로 Basal값이 대체되었습니다:%1$s</string>
-    <string name="profile_ins_units_per_hour">U/h</string>
-    <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <string name="startprofile">프로파일 %1$d%%을 %2$d 분 동안 시작</string>
     <!--    APSResult-->
@@ -160,7 +149,6 @@
     <string name="average">평균</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
-    <string name="mins">%1$d 분</string>
     <!--    Translator-->
     <string name="careportal">케어포털</string>
     <string name="careportal_bgcheck">혈당 체크</string>
@@ -203,7 +191,6 @@
     <string name="custom">사용자 정의</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
-    <string name="record">기록</string>
     <!--    Command-->
     <string name="connectiontimedout">연결시간초과</string>
     <!--    PumpEnactResult-->
@@ -216,7 +203,6 @@
     <!--    CarbsReq-->
     <string name="carbsreq">%2$d 분 내에 %1$d g의 추가적인 탄수화물이 필요함</string>
     <string name="basalrate">Basal</string>
-    <string name="bolus">Bolus</string>
     <!--    Ntp-->
     <string name="timedetection">시간 감지</string>
     <!-- User Entry -->
@@ -226,7 +212,6 @@
     <string name="uel_extended_bolus">확장 bolus</string>
     <string name="uel_superbolus_tbr">Superbolus TBR</string>
     <string name="uel_carbs">탄수화물</string>
-    <string name="uel_extended_carbs">확장 탄수화물</string>
     <string name="uel_temp_basal">임시 basal</string>
     <string name="uel_tt">임시 목표</string>
     <string name="uel_new_profile">새로운 프로파일</string>
@@ -309,20 +294,13 @@
     <string name="uel_loop_change">Loop 변경됨</string>
     <string name="uel_loop_removed">Loop 제거됨</string>
     <!-- HardLimits -->
-    <string name="profile_low_target">프로파일 저혈당 목표</string>
-    <string name="profile_high_target">프로파일 고혈당 목표</string>
     <string name="temp_target_low_target">임시 목표 최저값</string>
     <string name="temp_target_high_target">임시 목표 최고값</string>
     <string name="temp_target_value">임시 목표 수치</string>
-    <string name="profile_dia">프로파일 DIA 값</string>
-    <string name="profile_sensitivity_value">프로파일 민감도 값</string>
     <string name="profile_max_daily_basal_value">프로파일의 최대 basal 값</string>
     <string name="current_basal_value">현재 basal 값</string>
-    <string name="profile_carbs_ratio_value">프로파일의 탄수화물 비율 값</string>
     <string name="valuelimitedto">%1$.2f은 %2$.2f까지 제한됨</string>
     <string name="valueoutofrange">»%1$s«이 \'고정된 한계값\'을 벗어났습니다.</string>
-    <string name="value_out_of_hard_limits">»%1$s« %2$.2f이 \'고정된 한계값\'을 벗어났습니다.</string>
-    <string name="basal_value">Basal 값</string>
     <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f U</string>
@@ -357,10 +335,6 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Bolus 조언자</string>
     <string name="bolus_advisor_message">현재 높은 혈당을 가지고 있습니다. 지금 먹는 대신 더 나은 혈당을 기다리는 게 좋습니다. 지금 교정bolus 을 진행하고, 식사 시간을 알려드릴까요? 이 경우 탄수화물은 기록되지 않으며, 다시 알림을 줄 때 마법사를 다시 사용해야 합니다.</string>
-    <string name="cobvsiob">COB vs IOB</string>
-    <string name="bolus_constraint_applied_warn">적용된 Bolus 제약 조건: %1$.2f U 에서 %2$.2f U</string>
-    <string name="bolus_recorded_only">Bolus는 이 경우(펌프를 통해 공급되지 않음) 에만 기록됩니다</string>
-    <string name="advisoralarm">식사 시간이 되면 알람을 울리기</string>
     <string name="no_action_selected">선택한 실행이 없습니다. 아무런 실행이 되지 않습니다.</string>
     <string name="wizard_no_actual_bg">기저 계산에는 최근 BG가 없습니다!</string>
     <string name="wizard_no_active_profile">활성화된 프로파일 설정이 없습니다!</string>
@@ -469,7 +443,6 @@
     <string name="weekday_monday_short">월</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
-    <string name="format_insulin_units">%1$.2f U</string>
     <!--    Playback-->
     <!-- ProfileEditor -->
     <!--    Search-->

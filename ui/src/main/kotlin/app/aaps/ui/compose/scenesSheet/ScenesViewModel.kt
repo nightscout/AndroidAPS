@@ -31,6 +31,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.core.interfaces.R as InterfacesR
 
 @Immutable
 data class AutomationActionItem(
@@ -144,7 +145,7 @@ class ScenesViewModel @Inject constructor(
             val automationReason: String? = when {
                 watchOnly                                -> null  // hidden, not disabled
                 masterOfflineReason != null              -> masterOfflineReason
-                loop.runningMode().pausesLoopExecution() -> rh.gs(CoreUiR.string.pump_disconnected)
+                loop.runningMode().pausesLoopExecution() -> rh.gs(InterfacesR.string.pump_disconnected)
                 !activePlugin.activePump.isInitialized() ||
                     profileFunction.getProfile() == null -> rh.gs(CoreUiR.string.pump_not_initialized_profile_not_set)
 

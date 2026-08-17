@@ -63,4 +63,31 @@
     <!-- Permission rationales (used by PumpPluginBase) -->
     <!-- Insulin -->
     <!-- Concentration -->
+    <string name="formatsignedinsulinunits">%1$+.2f IE</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="carbs">Kulhydrater</string>
+    <string name="alarminxmin">Kør alarm om %1$d min</string>
+    <string name="pumpsuspended">Pumpe er afbrudt</string>
+    <string name="loopsuspended">Loop suspenderet</string>
+    <string name="basalprofilenotaligned">Basalværdier ikke angivet i hele timer: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Basal dosis erstattet af minimal understøttet dosis: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Basal dosis erstattet af maximal understøttet dosis: %1$s</string>
+    <string name="profile_ins_units_per_hour">E/t</string>
+    <string name="profile_carbs_per_unit">g/E</string>
+    <string name="mins">%1$d min</string>
+    <string name="record">Registrér</string>
+    <string name="bolus">Bolus</string>
+    <string name="uel_extended_carbs">FORLÆNGET KH</string>
+    <string name="profile_low_target">Nedre målværdi for profilen</string>
+    <string name="profile_high_target">Øvre målværdi for profilen</string>
+    <string name="profile_dia">Profil DIA værdi</string>
+    <string name="profile_sensitivity_value">Profil følsomhed værdi</string>
+    <string name="profile_carbs_ratio_value">Profil KH ratio værdi</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f er uden for absolutte grænser</string>
+    <string name="basal_value">Basalværdi</string>
+    <string name="cobvsiob">COB vs IOB</string>
+    <string name="bolus_constraint_applied_warn">Bolus-begrænsning anvendt: %1$.2f IE til %2$.2f IE</string>
+    <string name="bolus_recorded_only">Bolus registreres kun (bliver ikke leveret af pumpe)</string>
+    <string name="advisoralarm">Kør alarm når det er tid til at spise</string>
+    <string name="format_insulin_units">%1$.2f IE</string>
 </resources>

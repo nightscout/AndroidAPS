@@ -38,8 +38,6 @@
     <string name="event_type">Type d\'évènement</string>
     <string name="mgdl">mg/dL</string>
     <string name="mmol">mmol/L</string>
-    <string name="profile_isf_units_mgdl">mg/dL/U</string>
-    <string name="profile_isf_units_mmol">mmol/L/U</string>
     <string name="bg_mgdl">%1$d mg/dL</string>
     <string name="bg_mmol">%1$.1f mmol/L</string>
     <string name="save">Enregistrer</string>
@@ -106,18 +104,14 @@
     <string name="goingtodeliver">%1$.2f U vont être injectées</string>
     <string name="carbs_not_saved_after_bolus">Bolus injecté, mais les glucides n\'ont pas pu être enregistrés. Veuillez entrer les glucides à nouveau.</string>
     <string name="androidaps_start">AAPS démarré</string>
-    <string name="formatsignedinsulinunits">%1$+.2f U</string>
-    <string name="format_carbs">%1$d g</string>
     <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d g</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
-    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
     <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
     <string name="objectives">Objectifs</string>
     <string name="please_wait">Merci de patienter...</string>
     <string name="stop">Arrêt</string>
     <string name="stop_pressed">ARRÊT APPUYÉ</string>
-    <string name="carbs">Glucides</string>
     <string name="invalid_profile">Profil incorrect!</string>
     <string name="no_profile_set">PAS DE PROFIL SELECTIONNÉ</string>
     <string name="profile_switch_no_insulin">Impossible de changer de profil : aucune insuline n\'est utilisée, et aucune insuline n\'a été sélectionnée.</string>
@@ -173,15 +167,12 @@
     <string name="bg_label">Gly</string>
     <string name="calibration">Étalonnage</string>
     <string name="cgm">MGC</string>
-    <string name="alarminxmin">Alerter dans %1$d min</string>
     <string name="treatmentdeliveryerror">Erreur lors du Bolus. Vérifiez manuellement la quantité réellement injectée ainsi que les glucides actifs</string>
     <string name="bolus_reminder">Rappeler le bolus quand la Gly remonte</string>
     <string name="duration_label">Durée</string>
     <string name="shortgramm">g</string>
-    <string name="pumpsuspended">Pompe arrêtée</string>
     <string name="pump_running">Pompe en fonctionnement</string>
     <string name="notconfigured">Non configuré</string>
-    <string name="loopsuspended">La Boucle est suspendue</string>
     <string name="loop_suspended_by_dst">Boucle suspendue par le changement d\'heure</string>
     <string name="required">req</string>
     <string name="a11y_arrow_double_down">en baisse rapide</string>
@@ -231,7 +222,6 @@
     <string name="closedloop">Boucle Fermée</string>
     <string name="openloop">Boucle Ouverte</string>
     <string name="lowglucosesuspend">Arrêt Glycémie Basse</string>
-    <string name="pump_disconnected">Pompe déconnectée</string>
     <string name="pump_suspended">Pompe suspendue</string>
     <string name="pump_suspend">Suspendre la pompe</string>
     <string name="pump_resume">Reprendre la pompe</string>
@@ -267,11 +257,6 @@
     <string name="passwords_dont_match">Mots de passe différents</string>
     <string name="pin_dont_match">Les codes PIN ne correspondent pas</string>
     <!--    Profile-->
-    <string name="basalprofilenotaligned">Valeurs des débits de basal non alignées sur des heures: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Valeur de basal remplacée par la valeur minimale autorisée : %1$s</string>
-    <string name="maximumbasalvaluereplaced">Valeur de basal remplacée par la valeur maximale autorisée : %1$s</string>
-    <string name="profile_ins_units_per_hour">U/h</string>
-    <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Démarrer le profil %1$d%% pour %2$d min</string>
     <!--    APSResult-->
@@ -309,7 +294,6 @@
     <string name="thirty_days_short">30j</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
-    <string name="mins">%1$d min</string>
     <!--    Translator-->
     <string name="careportal">Careportal</string>
     <string name="careportal_bgcheck">Contrôle Glycémie</string>
@@ -493,7 +477,6 @@
     <string name="revert_to_defaults">Rétablir aux valeurs par défaut</string>
     <string name="loop">Boucle</string>
     <string name="ns">NS</string>
-    <string name="record">Enregistrement</string>
     <string name="location_front_right_upper_chest">Poitrine Droite</string>
     <string name="location_front_left_upper_chest">Poitrine Gauche</string>
     <string name="location_side_right_upper_arm">Bras Droit Extérieur</string>
@@ -543,7 +526,6 @@
     <!--    CarbsReq-->
     <string name="carbsreq">%1$dg de glucides requis dans %2$d min.</string>
     <string name="basalrate">Basal</string>
-    <string name="bolus">Bolus</string>
     <string name="tdd_short">DTQ</string>
     <string name="tdd">Dose Totale Quotidienne</string>
     <!--    Ntp-->
@@ -555,7 +537,6 @@
     <string name="uel_extended_bolus">BOLUS ÉTENDU</string>
     <string name="uel_superbolus_tbr">DBT SUPERBOLUS</string>
     <string name="uel_carbs">GLUCIDES</string>
-    <string name="uel_extended_carbs">GLUCIDES ÉTENDUS</string>
     <string name="uel_temp_basal">BASAL TEMP</string>
     <string name="uel_tt">CIBLE TEMP</string>
     <string name="uel_new_profile">NOUVEAU PROFIL</string>
@@ -656,22 +637,15 @@
     <string name="uel_scene_deactivated">SCÉNARIO DÉSACTIVÉ</string>
     <string name="uel_remote_config_changed">CONFIG DISTANTE CHANGÉE</string>
     <!-- HardLimits -->
-    <string name="profile_low_target">Cible basse du profil</string>
-    <string name="profile_high_target">Cible haute du profil</string>
     <string name="temp_target_low_target">Valeur basse de Cible Temp.</string>
     <string name="temp_target_high_target">Valeur haute de Cible Temp.</string>
     <string name="temp_target_value">Valeur de Cible Temporaire</string>
-    <string name="profile_dia">Valeur DAI du profil</string>
     <string name="insulin_dia">Valeur DAI de l\'insuline</string>
     <string name="insulin_peak">Valeur du Pic de l\'insuline</string>
-    <string name="profile_sensitivity_value">Valeur de sensibilité du profil</string>
     <string name="profile_max_daily_basal_value">Basale maximale du profil</string>
     <string name="current_basal_value">Basale actuelle</string>
-    <string name="profile_carbs_ratio_value">Rapport glucides/insuline de profil</string>
     <string name="valuelimitedto">%1$.2f limité à %2$.2f</string>
     <string name="valueoutofrange">\"%1$s\" est en dehors des limites</string>
-    <string name="value_out_of_hard_limits">\"%1$s\" %2$.2f est en dehors des limites</string>
-    <string name="basal_value">Valeur de Basal</string>
     <!-- Profile validation -->
     <string name="no_profile_selected">Aucun profil séléctionné</string>
     <string name="missing_profile_name">Nom de profil manquant</string>
@@ -728,18 +702,12 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Assistant bolus</string>
     <string name="bolus_advisor_message">Vous avez une glycémie élevée. Au lieu de manger maintenant, il est recommandé d\'attendre une meilleure glycémie. Voulez-vous faire un bolus de correction maintenant et avoir une alerte quand il sera temps de manger ? Dans ce cas, aucun glucide ne sera enregistré et vous devrez utiliser l\'assistant à nouveau lorsque nous vous le rappelons.</string>
-    <string name="cobvsiob">GA vs IA</string>
-    <string name="slowabsorptiondetected_plain">!!!!! Absorption lente des glucides détectée dans %1$d%% des cas. Vérifiez de nouveau votre calcul. Les GA (Glucides Actifs) peuvent être surestimés et alors trop d\'insuline pourrait être injectée !!!!!</string>
-    <string name="bolus_constraint_applied_warn">Contrainte de Bolus appliquée : %1$.2f U vers %2$.2f U</string>
-    <string name="bolus_recorded_only">Les bolus seront seulement enregistrés (pas délivrés par la pompe)</string>
-    <string name="advisoralarm">Alerter quand il est temps de manger</string>
     <string name="wizard_bg_label">Gly</string>
     <string name="wizard_correction">Correction</string>
     <string name="wizard_subtotal">Sous-total</string>
     <string name="carbs_type_bread">Pain, viennoiseries, yaourts, fruits (pomme, banane, poire), pommes de terre, riz, sarrasin d\'avoine, aliments lents et à faible teneur en glucides, légumes</string>
     <string name="carbs_type_cake">Raviolis, pâtes, cuisine asiatique riche en glucides et graisses, pâtisseries sucrées et levures, céréales, porridge de céréales, miel, confiture</string>
     <string name="carbs_type_pizza">Lasagne, pizza, hamburgers, frites, pommes de terre cuites, chips et collations similaires</string>
-    <string name="wizard_ecarbs">eGlucides %1$d g / %2$d h (+%3$d min)</string>
     <string name="wizard_total">Total</string>
     <string name="wizard_carb_time">Décalage horaire</string>
     <string name="carb_time_now">Maintenant</string>
@@ -984,7 +952,6 @@
     <string name="weekday_monday_short">Lun</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
-    <string name="format_insulin_units">%1$.2f U</string>
     <string name="format_insulin_units_signed">%1$+.2f U</string>
     <string name="percent_rate_duration">Débit: %1$.2f%% (%2$.2f U/h) Durée: %3$d min</string>
     <string name="rate_percent_duration">Débit: %1$.2f U/h (%2$.2f%%) Durée: %3$d min</string>

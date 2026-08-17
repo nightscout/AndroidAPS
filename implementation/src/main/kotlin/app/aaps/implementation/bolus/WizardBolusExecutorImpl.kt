@@ -51,6 +51,7 @@ import app.aaps.core.objects.wizard.BolusWizard
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.core.ui.R
+import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.compose.formatMinutesAsDuration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -689,29 +690,29 @@ class WizardBolusExecutorImpl @Inject constructor(
         val pumpDescription = activePlugin.activePump.pumpDescription
         val out = mutableListOf<ConfirmationLine>()
         if (insulin > 0.0) {
-            out += ConfirmationLine(ConfirmationRole.BOLUS, rh.gs(R.string.confirmation_line, rh.gs(R.string.bolus), decimalFormatter.toPumpSupportedBolusWithUnits(insulin, pumpDescription.bolusStep)))
+            out += ConfirmationLine(ConfirmationRole.BOLUS, rh.gs(InterfacesR.string.confirmation_line, rh.gs(InterfacesR.string.bolus), decimalFormatter.toPumpSupportedBolusWithUnits(insulin, pumpDescription.bolusStep)))
             if (recordOnly) {
-                out += ConfirmationLine(ConfirmationRole.WARNING, rh.gs(R.string.bolus_recorded_only))
+                out += ConfirmationLine(ConfirmationRole.WARNING, rh.gs(InterfacesR.string.bolus_recorded_only))
                 bolus.iCfg?.let { out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(R.string.selected_insulin, it.insulinLabel)) }
             } else if (abs(insulin - bolus.insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulin)) {
-                out += ConfirmationLine(ConfirmationRole.WARNING, rh.gs(R.string.bolus_constraint_applied_warn, bolus.insulin, insulin))
+                out += ConfirmationLine(ConfirmationRole.WARNING, rh.gs(InterfacesR.string.bolus_constraint_applied_warn, bolus.insulin, insulin))
             }
         }
         if (carbs != 0) {
-            out += ConfirmationLine(ConfirmationRole.CARBS, rh.gs(R.string.confirmation_line, rh.gs(R.string.carbs), rh.gs(R.string.format_carbs, carbs)))
+            out += ConfirmationLine(ConfirmationRole.CARBS, rh.gs(InterfacesR.string.confirmation_line, rh.gs(InterfacesR.string.carbs), rh.gs(InterfacesR.string.format_carbs, carbs)))
             if (!recordOnly && carbs != bolus.carbs)
                 out += ConfirmationLine(ConfirmationRole.WARNING, rh.gs(R.string.constraint_applied))
             // Delayed/extended carbs (e.g. wear eCarbs): show the scheduled start time on the general line so every
             // surface (phone, client, watch) renders it identically — the one piece of info added to the shared path.
             if (bolus.carbsTimeOffsetMinutes != 0)
-                out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(R.string.confirmation_line, rh.gs(R.string.time), dateUtil.timeString(dateUtil.now() + T.mins(bolus.carbsTimeOffsetMinutes.toLong()).msecs())))
+                out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(InterfacesR.string.confirmation_line, rh.gs(R.string.time), dateUtil.timeString(dateUtil.now() + T.mins(bolus.carbsTimeOffsetMinutes.toLong()).msecs())))
             if (bolus.carbsDurationHours > 0)
-                out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(R.string.confirmation_line, rh.gs(R.string.duration), rh.gs(R.string.value_with_unit, bolus.carbsDurationHours.toString(), rh.gs(app.aaps.core.interfaces.R.string.shorthour))))
+                out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(InterfacesR.string.confirmation_line, rh.gs(R.string.duration), rh.gs(R.string.value_with_unit, bolus.carbsDurationHours.toString(), rh.gs(app.aaps.core.interfaces.R.string.shorthour))))
         }
         if (bolus.eCarbsGrams > 0)
-            out += ConfirmationLine(ConfirmationRole.CARBS, rh.gs(R.string.wizard_ecarbs, bolus.eCarbsGrams, bolus.eCarbsDurationHours, bolus.eCarbsDelayMinutes))
+            out += ConfirmationLine(ConfirmationRole.CARBS, rh.gs(InterfacesR.string.wizard_ecarbs, bolus.eCarbsGrams, bolus.eCarbsDurationHours, bolus.eCarbsDelayMinutes))
         if (bolus.notes.isNotEmpty())
-            out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(R.string.confirmation_line, rh.gs(R.string.notes_label), bolus.notes))
+            out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(InterfacesR.string.confirmation_line, rh.gs(R.string.notes_label), bolus.notes))
         return out
     }
 
@@ -724,7 +725,7 @@ class WizardBolusExecutorImpl @Inject constructor(
     private fun buildTempTargetLines(reasonDisplay: String, lowMgdl: Double, highMgdl: Double, durationMinutes: Int, standalone: Boolean = false): List<ConfirmationLine> {
         val out = mutableListOf<ConfirmationLine>()
         if (durationMinutes == 0) {
-            out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(R.string.confirmation_line, rh.gs(R.string.temporary_target), rh.gs(R.string.cancel)))
+            out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(InterfacesR.string.confirmation_line, rh.gs(R.string.temporary_target), rh.gs(R.string.cancel)))
         } else {
             val units = profileFunction.getUnits()
             val unitLabel = if (units == GlucoseUnit.MMOL) rh.gs(R.string.mmol) else rh.gs(R.string.mgdl)
@@ -734,14 +735,14 @@ class WizardBolusExecutorImpl @Inject constructor(
             val targetLabel = if (standalone) rh.gs(R.string.target_label) else rh.gs(R.string.temporary_target)
             out += ConfirmationLine(
                 ConfirmationRole.TEMP_TARGET,
-                rh.gs(R.string.confirmation_line, targetLabel, rh.gs(R.string.value_with_unit, target, unitLabel))
+                rh.gs(InterfacesR.string.confirmation_line, targetLabel, rh.gs(R.string.value_with_unit, target, unitLabel))
             )
             out += ConfirmationLine(
                 ConfirmationRole.NORMAL,
-                rh.gs(R.string.confirmation_line, rh.gs(R.string.duration), durationText)
+                rh.gs(InterfacesR.string.confirmation_line, rh.gs(R.string.duration), durationText)
             )
             if (reasonDisplay.isNotEmpty())
-                out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(R.string.confirmation_line, rh.gs(R.string.reason), reasonDisplay))
+                out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(InterfacesR.string.confirmation_line, rh.gs(R.string.reason), reasonDisplay))
         }
         return out
     }
@@ -802,12 +803,12 @@ class WizardBolusExecutorImpl @Inject constructor(
     /** The PS line(s) for any batch (wear / client / phone) — target profile name + percentage + optional time-shift + duration. */
     private suspend fun buildPsLine(ps: BatchAction.ProfileSwitch): List<ConfirmationLine> {
         val out = mutableListOf<ConfirmationLine>()
-        out += ConfirmationLine(ConfirmationRole.PRIMARY, rh.gs(R.string.confirmation_line, rh.gs(R.string.profile), ps.profileName ?: profileFunction.getOriginalProfileName()))
-        out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(R.string.confirmation_line, rh.gs(R.string.percentage_label), rh.gs(R.string.format_percent, ps.percentage)))
+        out += ConfirmationLine(ConfirmationRole.PRIMARY, rh.gs(InterfacesR.string.confirmation_line, rh.gs(R.string.profile), ps.profileName ?: profileFunction.getOriginalProfileName()))
+        out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(InterfacesR.string.confirmation_line, rh.gs(R.string.percentage_label), rh.gs(R.string.format_percent, ps.percentage)))
         if (ps.timeShiftHours != 0)
-            out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(R.string.confirmation_line, rh.gs(R.string.timeshift_label), rh.gs(R.string.value_with_unit, ps.timeShiftHours.toString(), rh.gs(app.aaps.core.interfaces.R.string.shorthour))))
+            out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(InterfacesR.string.confirmation_line, rh.gs(R.string.timeshift_label), rh.gs(R.string.value_with_unit, ps.timeShiftHours.toString(), rh.gs(app.aaps.core.interfaces.R.string.shorthour))))
         if (ps.durationMinutes > 0)
-            out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(R.string.confirmation_line, rh.gs(R.string.duration), formatMinutesAsDuration(ps.durationMinutes, rh)))
+            out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(InterfacesR.string.confirmation_line, rh.gs(R.string.duration), formatMinutesAsDuration(ps.durationMinutes, rh)))
         return out
     }
 
@@ -861,7 +862,7 @@ class WizardBolusExecutorImpl @Inject constructor(
         val out = mutableListOf<ConfirmationLine>()
         out += ConfirmationLine(rmModeRole(rm.mode), rmModeTitle(rm.mode))
         if (rm.durationMinutes > 0)
-            out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(R.string.confirmation_line, rh.gs(R.string.duration), formatMinutesAsDuration(rm.durationMinutes, rh)))
+            out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(InterfacesR.string.confirmation_line, rh.gs(R.string.duration), formatMinutesAsDuration(rm.durationMinutes, rh)))
         return out
     }
 
@@ -883,7 +884,7 @@ class WizardBolusExecutorImpl @Inject constructor(
         RM.Mode.OPEN_LOOP                                                        -> rh.gs(R.string.openloop)
         RM.Mode.DISABLED_LOOP                                                    -> rh.gs(R.string.disableloop)
         RM.Mode.SUSPENDED_BY_USER                                                -> rh.gs(R.string.suspendloop)
-        RM.Mode.DISCONNECTED_PUMP                                                -> rh.gs(R.string.pump_disconnected)
+        RM.Mode.DISCONNECTED_PUMP                                                -> rh.gs(InterfacesR.string.pump_disconnected)
         RM.Mode.RESUME                                                           -> if (loop.runningMode() == RM.Mode.DISCONNECTED_PUMP) rh.gs(R.string.pump_reconnect) else rh.gs(R.string.resumeloop)
         RM.Mode.SUPER_BOLUS, RM.Mode.SUSPENDED_BY_PUMP, RM.Mode.SUSPENDED_BY_DST -> rh.gs(R.string.running_mode)
     }
@@ -905,8 +906,8 @@ class WizardBolusExecutorImpl @Inject constructor(
     private fun buildTempBasalLine(capped: BatchAction.TempBasal, original: BatchAction.TempBasal?): List<ConfirmationLine> {
         val out = mutableListOf<ConfirmationLine>()
         val rateStr = if (capped.isPercent) rh.gs(R.string.format_percent, capped.rate.toInt()) else rh.gs(R.string.pump_base_basal_rate, capped.rate)
-        out += ConfirmationLine(ConfirmationRole.PRIMARY, rh.gs(R.string.confirmation_line, rh.gs(R.string.tempbasal_label), rateStr))
-        out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(R.string.confirmation_line, rh.gs(R.string.duration), rh.gs(R.string.format_mins, capped.durationMinutes)))
+        out += ConfirmationLine(ConfirmationRole.PRIMARY, rh.gs(InterfacesR.string.confirmation_line, rh.gs(R.string.tempbasal_label), rateStr))
+        out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(InterfacesR.string.confirmation_line, rh.gs(R.string.duration), rh.gs(R.string.format_mins, capped.durationMinutes)))
         if (original != null && capped.rate != original.rate) out += ConfirmationLine(ConfirmationRole.WARNING, rh.gs(R.string.constraint_applied))
         return out
     }
@@ -921,8 +922,8 @@ class WizardBolusExecutorImpl @Inject constructor(
     /** The extended-bolus line(s) — insulin + duration, with a cap warning when reduced. */
     private fun buildExtendedBolusLine(capped: BatchAction.ExtendedBolus, original: BatchAction.ExtendedBolus?): List<ConfirmationLine> {
         val out = mutableListOf<ConfirmationLine>()
-        out += ConfirmationLine(ConfirmationRole.BOLUS, rh.gs(R.string.format_insulin_units, capped.insulin))
-        out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(R.string.confirmation_line, rh.gs(R.string.duration), rh.gs(R.string.format_mins, capped.durationMinutes)))
+        out += ConfirmationLine(ConfirmationRole.BOLUS, rh.gs(InterfacesR.string.format_insulin_units, capped.insulin))
+        out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(InterfacesR.string.confirmation_line, rh.gs(R.string.duration), rh.gs(R.string.format_mins, capped.durationMinutes)))
         if (original != null && abs(capped.insulin - original.insulin) > 0.01) out += ConfirmationLine(ConfirmationRole.WARNING, rh.gs(R.string.constraint_applied))
         return out
     }
@@ -943,11 +944,11 @@ class WizardBolusExecutorImpl @Inject constructor(
 
     /** The single cancel line — "Cancel: Temp basal" / "Cancel: Extended bolus" ([labelRes] = the cancelled action). */
     private fun buildCancelLine(labelRes: Int): List<ConfirmationLine> =
-        listOf(ConfirmationLine(ConfirmationRole.PRIMARY, rh.gs(R.string.confirmation_line, rh.gs(R.string.cancel), rh.gs(labelRes))))
+        listOf(ConfirmationLine(ConfirmationRole.PRIMARY, rh.gs(InterfacesR.string.confirmation_line, rh.gs(R.string.cancel), rh.gs(labelRes))))
 
     /** The insulin-activate line — "Activate insulin: <label>" (PRIMARY: changing insulin materially affects IOB). */
     private fun buildInsulinActivateLine(ia: BatchAction.InsulinActivate): List<ConfirmationLine> =
-        listOf(ConfirmationLine(ConfirmationRole.PRIMARY, rh.gs(R.string.confirmation_line, rh.gs(R.string.activate_insulin), ia.iCfg.insulinLabel)))
+        listOf(ConfirmationLine(ConfirmationRole.PRIMARY, rh.gs(InterfacesR.string.confirmation_line, rh.gs(R.string.activate_insulin), ia.iCfg.insulinLabel)))
 
     /** Apply an insulin activation: re-apply the master's CURRENT active profile with this insulin (active-EPS precondition checked at prepare). */
     private suspend fun applyInsulinActivate(ia: BatchAction.InsulinActivate, source: Sources) {
@@ -1217,7 +1218,7 @@ class WizardBolusExecutorImpl @Inject constructor(
             // treatment(s) directly. The persistence layer emits the user entry, so there's no uel.log
             // and no running-mode gate here. The user's own notes ride [detailedBolusInfo.notes] onto the
             // BS/CA; the user entry gets the uniform "record" marker (no fragile "Record: notes" concat).
-            val recordNote = rh.gs(R.string.record)
+            val recordNote = rh.gs(InterfacesR.string.record)
             appScope.launch {
                 if (detailedBolusInfo.insulin > 0) {
                     val cfg = iCfg ?: profileFunction.getProfile()?.iCfg

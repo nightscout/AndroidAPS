@@ -43,13 +43,10 @@
     <string name="tdd_total">TDD Total</string>
     <string name="goingtodeliver">Leverer %1$.2f IE</string>
     <string name="androidaps_start">AAPS startet</string>
-    <string name="formatsignedinsulinunits">%1$+.2f IE</string>
-    <string name="format_carbs">%1$d g</string>
     <string name="format_hours">%1$.2f t</string>
     <string name="objectives">Mål</string>
     <string name="please_wait">Vent venligst…</string>
     <string name="stop">Stop</string>
-    <string name="carbs">Kulhydrater</string>
     <string name="invalid_profile">Ugyldig profil!</string>
     <string name="no_profile_set">INGEN PROFIL SAT</string>
     <string name="active"><![CDATA[<Active>]]></string>
@@ -90,12 +87,9 @@
     <string name="wrong_pump_data">Data kommer fra en anden pumpe. Skift pumpedriver for at nulstille pumpetilstand.</string>
     <string name="bg_label">BG</string>
     <string name="calibration">Kalibrering</string>
-    <string name="alarminxmin">Kør alarm om %1$d min</string>
     <string name="duration_label">Varighed</string>
     <string name="shortgramm">g</string>
-    <string name="pumpsuspended">Pumpe er afbrudt</string>
     <string name="notconfigured">Ikke konfigureret</string>
-    <string name="loopsuspended">Loop suspenderet</string>
     <string name="required">krævet</string>
     <string name="a11y_arrow_double_down">falder hurtigt</string>
     <string name="a11y_arrow_single_down">falder</string>
@@ -138,11 +132,6 @@
     <string name="passwords_dont_match">Kodeordene stemmer ikke overens</string>
     <string name="pin_dont_match">PIN-koder ikke identiske</string>
     <!--    Profile-->
-    <string name="basalprofilenotaligned">Basalværdier ikke angivet i hele timer: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Basal dosis erstattet af minimal understøttet dosis: %1$s</string>
-    <string name="maximumbasalvaluereplaced">Basal dosis erstattet af maximal understøttet dosis: %1$s</string>
-    <string name="profile_ins_units_per_hour">E/t</string>
-    <string name="profile_carbs_per_unit">g/E</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Start profil %1$d%% i %2$d min</string>
     <!--    APSResult-->
@@ -157,7 +146,6 @@
     <string name="average">Gennemsnit</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
-    <string name="mins">%1$d min</string>
     <!--    Translator-->
     <string name="careportal">Behandlingsportal</string>
     <string name="careportal_bgcheck">BS kontrol</string>
@@ -200,7 +188,6 @@
     <string name="custom">Brugerdefineret</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
-    <string name="record">Registrér</string>
     <!--    Command-->
     <string name="connectiontimedout">Forbindelsen fik timeout</string>
     <!--    PumpEnactResult-->
@@ -213,7 +200,6 @@
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g ekstra kulhydrater kræves inden for %2$d minutter</string>
     <string name="basalrate">Basal</string>
-    <string name="bolus">Bolus</string>
     <!--    Ntp-->
     <string name="timedetection">Tidsdetektering</string>
     <!-- User Entry -->
@@ -223,7 +209,6 @@
     <string name="uel_extended_bolus">FORLÆNGET BOLUS</string>
     <string name="uel_superbolus_tbr">SUPERBOLUS TBR</string>
     <string name="uel_carbs">KH</string>
-    <string name="uel_extended_carbs">FORLÆNGET KH</string>
     <string name="uel_temp_basal">MIDLERTIDIG BASAL</string>
     <string name="uel_tt">MIDLERTIDIG MÅL</string>
     <string name="uel_new_profile">NY PROFIL</string>
@@ -306,20 +291,13 @@
     <string name="uel_loop_change">LOOP ÆNDRET</string>
     <string name="uel_loop_removed">LOOP FJERNET</string>
     <!-- HardLimits -->
-    <string name="profile_low_target">Nedre målværdi for profilen</string>
-    <string name="profile_high_target">Øvre målværdi for profilen</string>
     <string name="temp_target_low_target">Nedre målværdi for midlertidig mål </string>
     <string name="temp_target_high_target">Øvre målværdi for midlertidig mål</string>
     <string name="temp_target_value">Midlertidig mål værdi</string>
-    <string name="profile_dia">Profil DIA værdi</string>
-    <string name="profile_sensitivity_value">Profil følsomhed værdi</string>
     <string name="profile_max_daily_basal_value">Maksimal profil basal værdi</string>
     <string name="current_basal_value">Aktuel basal værdi</string>
-    <string name="profile_carbs_ratio_value">Profil KH ratio værdi</string>
     <string name="valuelimitedto">%1$.2f begrænset til %2$.2f</string>
     <string name="valueoutofrange">»%1$s« er uden for absolutte grænser</string>
-    <string name="value_out_of_hard_limits">»%1$s« %2$.2f er uden for absolutte grænser</string>
-    <string name="basal_value">Basalværdi</string>
     <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f IE</string>
@@ -354,10 +332,6 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Bolus-rådgiver</string>
     <string name="bolus_advisor_message">Du har høj glycæmi. I stedet for at spise nu anbefales det at vente på bedre glycæmi. Ønsker du at lave en korrektionsbolus nu og minde dig om, hvornår det er tid til at spise? I dette tilfælde vil ingen kulhydrater blive registreret, og du skal bruge guiden igen, når vi påminder dig.</string>
-    <string name="cobvsiob">COB vs IOB</string>
-    <string name="bolus_constraint_applied_warn">Bolus-begrænsning anvendt: %1$.2f IE til %2$.2f IE</string>
-    <string name="bolus_recorded_only">Bolus registreres kun (bliver ikke leveret af pumpe)</string>
-    <string name="advisoralarm">Kør alarm når det er tid til at spise</string>
     <string name="no_action_selected">Ingen handling valgt, intet vil ske</string>
     <string name="wizard_no_actual_bg">Ingen nylig BG til at basere beregningen på!</string>
     <string name="wizard_no_active_profile">Ingen aktiv profil angivet!</string>
@@ -469,7 +443,6 @@
     <string name="weekday_monday_short">Man</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f IE</string>
-    <string name="format_insulin_units">%1$.2f IE</string>
     <!--    Playback-->
     <!-- ProfileEditor -->
     <!--    Search-->

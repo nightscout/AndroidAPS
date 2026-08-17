@@ -43,13 +43,10 @@
     <string name="tdd_total">DDT Total</string>
     <string name="goingtodeliver">Iniciando aplicação de %1$.2f U</string>
     <string name="androidaps_start">AAPS iniciado</string>
-    <string name="formatsignedinsulinunits">%1$+.2f U</string>
-    <string name="format_carbs">%1$d g</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="objectives">Objetivos</string>
     <string name="please_wait">Por favor aguarde…</string>
     <string name="stop">Parar</string>
-    <string name="carbs">Carbos</string>
     <string name="invalid_profile">Perfil inválido!</string>
     <string name="no_profile_set">SEM PERFIL DEFINIDO</string>
     <string name="active"><![CDATA[<Active>]]></string>
@@ -90,12 +87,9 @@
     <string name="wrong_pump_data">Os dados estão vindo de uma bomba diferente. Alterar o driver da bomba para redefinir o estado da bomba.</string>
     <string name="bg_label">GLIC</string>
     <string name="calibration">Calibração</string>
-    <string name="alarminxmin">Disparar alarme em %1$d min</string>
     <string name="duration_label">Duração</string>
     <string name="shortgramm">g</string>
-    <string name="pumpsuspended">Bomba suspensa</string>
     <string name="notconfigured">Não configurado</string>
-    <string name="loopsuspended">Loop suspenso</string>
     <string name="required">req</string>
     <string name="a11y_arrow_double_down">caindo rapidamente</string>
     <string name="a11y_arrow_single_down">caindo</string>
@@ -138,11 +132,6 @@
     <string name="passwords_dont_match">As passwords não coincidem</string>
     <string name="pin_dont_match">PINs não conferem</string>
     <!--    Profile-->
-    <string name="basalprofilenotaligned">Valores das basais não definidos por horas: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Valor da basal alterado para o valor mínimo suportado: %1$s</string>
-    <string name="maximumbasalvaluereplaced">Valor da basal alterado para o valor máximo suportado: %1$s</string>
-    <string name="profile_ins_units_per_hour">U/h</string>
-    <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Iniciar perfil %1$d%% para %2$d min</string>
     <!--    APSResult-->
@@ -157,7 +146,6 @@
     <string name="average">Média</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
-    <string name="mins">%1$d min</string>
     <!--    Translator-->
     <string name="careportal">Careportal</string>
     <string name="careportal_bgcheck">Verificação BG</string>
@@ -200,7 +188,6 @@
     <string name="custom">Personalizado</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
-    <string name="record">Gravar</string>
     <!--    Command-->
     <string name="connectiontimedout">Ligação expirou</string>
     <!--    PumpEnactResult-->
@@ -213,7 +200,6 @@
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g de carboidratos necessários em %2$d minutos</string>
     <string name="basalrate">Basal</string>
-    <string name="bolus">Bólus</string>
     <!--    Ntp-->
     <string name="timedetection">Deteção de tempo</string>
     <!-- User Entry -->
@@ -223,7 +209,6 @@
     <string name="uel_extended_bolus">BOLUS ESTENDIDO</string>
     <string name="uel_superbolus_tbr">TBR SUPERBOLUS</string>
     <string name="uel_carbs">CARBOIDRATOS</string>
-    <string name="uel_extended_carbs">CARBOIDRATOS ESTENDIDOS</string>
     <string name="uel_temp_basal">BASAL TEMPORÁRIO</string>
     <string name="uel_tt">ALVO TEMPORÁRIO</string>
     <string name="uel_new_profile">NOVO PERFIL</string>
@@ -306,20 +291,13 @@
     <string name="uel_loop_change">LOOP ALTERADO</string>
     <string name="uel_loop_removed">LOOP REMOVIDO</string>
     <!-- HardLimits -->
-    <string name="profile_low_target">Alvo de perfil de hipoglicemia</string>
-    <string name="profile_high_target">Alvo de perfil de hiperglicemia</string>
     <string name="temp_target_low_target">Valor menor do alvo temporário</string>
     <string name="temp_target_high_target">Valor maior do alvo temporário</string>
     <string name="temp_target_value">Valor do alvo temporário</string>
-    <string name="profile_dia">Valor do perfil da DAI</string>
-    <string name="profile_sensitivity_value">Valor do perfil de sensibilidade</string>
     <string name="profile_max_daily_basal_value">Valor basal máximo do perfil</string>
     <string name="current_basal_value">Valor basal atual</string>
-    <string name="profile_carbs_ratio_value">Valor do perfil da taxa de carboidratos</string>
     <string name="valuelimitedto">%1$.2f limitado a %2$.2f</string>
     <string name="valueoutofrange">&gt;&gt;%1$s&lt;&lt; está fora dos limites estabelecidos</string>
-    <string name="value_out_of_hard_limits">»%1$s« %2$.2f está fora dos limites estabelecidos</string>
-    <string name="basal_value">Valor basal</string>
     <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">Bolus de %1$.2f U</string>
@@ -354,10 +332,6 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Assistente de bolus</string>
     <string name="bolus_advisor_message">Sua glicemia está alta. Em vez de comer agora, é recomendado esperar por uma glicemia melhor. Quer fazer um bolus de correção agora e ser lembrado de quando for hora de comer? Neste caso, nenhum carboidrato será registrado e você deverá usar o assistente novamente quando lembrarmos você.</string>
-    <string name="cobvsiob">CA vs IA</string>
-    <string name="bolus_constraint_applied_warn">Restrição de bólus aplicada: %1$.2f U para %2$.2f U</string>
-    <string name="bolus_recorded_only">Bolus será apenas registrado (não administrado pela bomba)</string>
-    <string name="advisoralarm">Disparar alarme quando for a hora de comer</string>
     <string name="no_action_selected">Nenhuma acção seleccionada, nada irá acontecer</string>
     <string name="wizard_no_actual_bg">Nenhuma glicemia recente para base de cálculo!</string>
     <string name="wizard_no_active_profile">Nenhum perfil ativo definido!</string>

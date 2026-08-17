@@ -98,4 +98,32 @@
     <!-- Permission rationales (used by PumpPluginBase) -->
     <!-- Insulin -->
     <!-- Concentration -->
+    <string name="formatsignedinsulinunits">%1$+.2f U</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="carbs">Węglowodany</string>
+    <string name="alarminxmin">Uruchom alarm za %1$d min</string>
+    <string name="pumpsuspended">Pompa wstrzymana</string>
+    <string name="loopsuspended">Pętla wstrzymana</string>
+    <string name="pump_disconnected">Pompa odłączona</string>
+    <string name="basalprofilenotaligned">Wartości bazy nie są ustawione w pełnych godzinach: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Wartość bazy zastąpiona minimalną obsługiwaną wartością: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Wartość bazy zastąpiona maksymalną obsługiwaną wartością: %1$s</string>
+    <string name="profile_ins_units_per_hour">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <string name="mins">%1$d min</string>
+    <string name="record">Wpis</string>
+    <string name="bolus">Bolus</string>
+    <string name="uel_extended_carbs">PRZEDŁUŻONE WĘGLOWODANY</string>
+    <string name="profile_low_target">Dolna granica celu profilu</string>
+    <string name="profile_high_target">Górna granica celu profilu</string>
+    <string name="profile_dia">Wartość DIA profilu</string>
+    <string name="profile_sensitivity_value">Wartość wrażliwości profilu</string>
+    <string name="profile_carbs_ratio_value">Stosunek węglowodanów profilu</string>
+    <string name="value_out_of_hard_limits">Wartość »%1$s« %2$.2f jest poza dopuszczalną granicą</string>
+    <string name="basal_value">Wartość bazy</string>
+    <string name="cobvsiob">COB vs IOB</string>
+    <string name="bolus_constraint_applied_warn">Zastosowano ograniczenie bolusa: %1$.2f U do %2$.2f U</string>
+    <string name="bolus_recorded_only">Bolus zostanie jedynie odnotowany (nie będzie podany przez pompę)</string>
+    <string name="advisoralarm">Uruchom alarm kiedy będzie czas na jedzenie</string>
+    <string name="format_insulin_units">%1$.2f U</string>
 </resources>

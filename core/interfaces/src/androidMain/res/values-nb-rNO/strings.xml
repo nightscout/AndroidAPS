@@ -115,4 +115,37 @@
     <string name="u200">U200</string>
     <string name="u300">U300</string>
     <string name="u500">U500</string>
+    <string name="profile_isf_units_mgdl">mg/dL/E</string>
+    <string name="profile_isf_units_mmol">mmol/L/E</string>
+    <string name="formatsignedinsulinunits">%1$+.2f E</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
+    <string name="carbs">Karbo</string>
+    <string name="alarminxmin">Aktiver alarm om %1$d min</string>
+    <string name="pumpsuspended">Pumpen er pauset</string>
+    <string name="loopsuspended">Loop pauset</string>
+    <string name="pump_disconnected">Pumpe frakoblet</string>
+    <string name="basalprofilenotaligned">Basalverdier er ikke angitt på hele timer: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Basalverdi erstattet med minste tillate verdi: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Basalverdi erstattet med høyeste tillate verdi: %1$s</string>
+    <string name="profile_ins_units_per_hour">E/t</string>
+    <string name="profile_carbs_per_unit">g/E</string>
+    <string name="mins">%1$d min</string>
+    <string name="record">Registrer</string>
+    <string name="bolus">Bolus</string>
+    <string name="uel_extended_carbs">FORLENGET KARBO</string>
+    <string name="profile_low_target">Profil lavt mål</string>
+    <string name="profile_high_target">Profil høyt mål</string>
+    <string name="profile_dia">Profil DIA verdi</string>
+    <string name="profile_sensitivity_value">Profilens insulinfølsomhet</string>
+    <string name="profile_carbs_ratio_value">Profilens insulin-til-karbohydratforhold (IK)</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f er utenfor lovlige grenseverdier</string>
+    <string name="basal_value">Basalverdi</string>
+    <string name="cobvsiob">COB vs IOB</string>
+    <string name="slowabsorptiondetected_plain">!!!!! Langsom karboabsorpsjon oppdaget: %1$d%% av tiden. Dobbeltsjekk beregningen din. COB kan overestimeres, og dermed kan mer insulin gis !!!!!</string>
+    <string name="bolus_constraint_applied_warn">Bolus begrensning brukt: %1$.2f E til %2$.2f E</string>
+    <string name="bolus_recorded_only">Bolus vil bare bli loggført (ikke levert av pumpe)</string>
+    <string name="advisoralarm">Aktiver alarm når det er på tide å spise</string>
+    <string name="wizard_ecarbs">eKarbo %1$dg / %2$dt (+%3$dmin)</string>
+    <string name="format_insulin_units">%1$.2f E</string>
 </resources>

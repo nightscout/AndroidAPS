@@ -38,8 +38,6 @@
     <string name="event_type">Tip eveniment</string>
     <string name="mgdl">mg/dL</string>
     <string name="mmol">mmol/L</string>
-    <string name="profile_isf_units_mgdl">mg/dL/U</string>
-    <string name="profile_isf_units_mmol">mmol/l/U</string>
     <string name="bg_mgdl">%1$d mg/dL</string>
     <string name="bg_mmol">%1$.1f mmol/l</string>
     <string name="save">Salvați</string>
@@ -106,18 +104,14 @@
     <string name="goingtodeliver">Se vor administra %1$.2fU</string>
     <string name="carbs_not_saved_after_bolus">Bolus administrat, dar carbohidrații nu au putut fi salvați. Vă rugăm să introduceți carbohidrații din nou.</string>
     <string name="androidaps_start">AAPS pornit</string>
-    <string name="formatsignedinsulinunits">%1$+.2f U</string>
-    <string name="format_carbs">%1$d g</string>
     <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d g</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
-    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
     <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
     <string name="objectives">Obiective</string>
     <string name="please_wait">Așteptați…</string>
     <string name="stop">Stop</string>
     <string name="stop_pressed">STOP APĂSAT</string>
-    <string name="carbs">Carbohidrați</string>
     <string name="invalid_profile">Profil invalid!</string>
     <string name="no_profile_set">NICIUN PROFIL SETAT</string>
     <string name="profile_switch_no_insulin">Nu se poate schimba profilul: nicio insulină nu este în uz și nu a fost selectată niciuna.</string>
@@ -173,15 +167,12 @@
     <string name="bg_label">Glicemie</string>
     <string name="calibration">Calibrare</string>
     <string name="cgm">CGM</string>
-    <string name="alarminxmin">Rulați alarma în %1$d minute</string>
     <string name="treatmentdeliveryerror">Bolusarea a raportat o eroare. Verificați manual insulina administrată și cantitatea de carbohidrați</string>
     <string name="bolus_reminder">Reamintiți de bolus atunci când glicemia revine</string>
     <string name="duration_label">Durată</string>
     <string name="shortgramm">g</string>
-    <string name="pumpsuspended">Pompă suspendată</string>
     <string name="pump_running">Pompa în funcțiune</string>
     <string name="notconfigured">Nu este configurat</string>
-    <string name="loopsuspended">Buclă suspendată</string>
     <string name="loop_suspended_by_dst">Bucla suspendată din cauza orei de vară</string>
     <string name="required">necesar</string>
     <string name="a11y_arrow_double_down">în scădere rapidă</string>
@@ -231,7 +222,6 @@
     <string name="closedloop">Buclă închisă</string>
     <string name="openloop">Buclă deschisă</string>
     <string name="lowglucosesuspend">Suspendare la glicemie scăzută</string>
-    <string name="pump_disconnected">Pompă deconectată</string>
     <string name="pump_suspended">Pompă suspendată</string>
     <string name="pump_suspend">Suspendați pompa</string>
     <string name="pump_resume">Reluați pompa</string>
@@ -267,11 +257,6 @@
     <string name="passwords_dont_match">Parolele nu corespund</string>
     <string name="pin_dont_match">PIN-urile nu se potrivesc</string>
     <!--    Profile-->
-    <string name="basalprofilenotaligned">Valori bazale nesincronizate cu ora: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Valoarea bazalei a fost înlocuită cu valoarea minimă posibilă: %1$s</string>
-    <string name="maximumbasalvaluereplaced">Valoarea bazalei a fost înlocuită cu valoarea maximă posibilă: %1$s</string>
-    <string name="profile_ins_units_per_hour">U/h</string>
-    <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Utilizați profilul %1$d%% pentru %2$d min</string>
     <!--    APSResult-->
@@ -309,7 +294,6 @@
     <string name="thirty_days_short">30z</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
-    <string name="mins">%1$d min</string>
     <!--    Translator-->
     <string name="careportal">Careportal</string>
     <string name="careportal_bgcheck">Verificare glicemie</string>
@@ -493,7 +477,6 @@
     <string name="revert_to_defaults">Reveniți la valorile implicite</string>
     <string name="loop">Buclă</string>
     <string name="ns">NS</string>
-    <string name="record">Înregistrare</string>
     <string name="location_front_right_upper_chest">Piept dreapta</string>
     <string name="location_front_left_upper_chest">Piept stânga</string>
     <string name="location_side_right_upper_arm">Partea superioară laterală a brațului drept</string>
@@ -543,7 +526,6 @@
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g carbohidrați suplimentari necesari în %2$d minute</string>
     <string name="basalrate">Bazală</string>
-    <string name="bolus">Bolus</string>
     <string name="tdd_short">DZT (Doza zilnică totală)</string>
     <string name="tdd">Doza zilnică totală</string>
     <!--    Ntp-->
@@ -555,7 +537,6 @@
     <string name="uel_extended_bolus">BOLUS EXTINS</string>
     <string name="uel_superbolus_tbr">RBT SUPERBOLUS</string>
     <string name="uel_carbs">CARBOHIDRAȚI</string>
-    <string name="uel_extended_carbs">CARBOHIDRAȚI EXTINȘI</string>
     <string name="uel_temp_basal">BAZALĂ TEMPORARĂ</string>
     <string name="uel_tt">ȚINTĂ TEMPORARĂ</string>
     <string name="uel_new_profile">PROFIL NOU</string>
@@ -656,22 +637,15 @@
     <string name="uel_scene_deactivated">SCENARIU DEZACTIVAT</string>
     <string name="uel_remote_config_changed">CONFIGURAȚIA PENTRU TELECOMANDĂ MODIFICATĂ</string>
     <!-- HardLimits -->
-    <string name="profile_low_target">Profil ținta joasă</string>
-    <string name="profile_high_target">Profil țintă ridicată</string>
     <string name="temp_target_low_target">Limita inferioară a țintei temporare</string>
     <string name="temp_target_high_target">Limita superioară a țintei temporare</string>
     <string name="temp_target_value">Valoare țintă temporară</string>
-    <string name="profile_dia">Valoare profil DIA</string>
     <string name="insulin_dia">Valoarea DIA a insulinei</string>
     <string name="insulin_peak">Vârful de acțiune al insulinei</string>
-    <string name="profile_sensitivity_value">Valoare sensibilitate profil</string>
     <string name="profile_max_daily_basal_value">Valoare bazală maximă a profilului</string>
     <string name="current_basal_value">Valoare bazală curentă</string>
-    <string name="profile_carbs_ratio_value">Valoarea raportului carbohidrați din profil</string>
     <string name="valuelimitedto">%1$.2f limitat la %2$.2f</string>
     <string name="valueoutofrange">»%1$s« este in afara limitelor stabilite</string>
-    <string name="value_out_of_hard_limits">»%1$s« %2$.2f este in afara limitelor stabilite</string>
-    <string name="basal_value">Valoare rata bazală</string>
     <!-- Profile validation -->
     <string name="no_profile_selected">Niciun profil selectat</string>
     <string name="missing_profile_name">Lipsește numele profilului</string>
@@ -728,18 +702,12 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Consilier bolus</string>
     <string name="bolus_advisor_message">Ai glicemia crescută. În loc să mănânci acum, este recomandat să aştepți o glicemie mai bună. Vrei să faci un bolus de corecție acum și să îți reamintesc când este timpul să mănânci? În acest caz, niciun carbohidrat nu va fi înregistrat și trebuie să utilizezi din nou calculatorul de vbolus când îți voi reaminti.</string>
-    <string name="cobvsiob">COB vs IOB</string>
-    <string name="slowabsorptiondetected_plain">!!!!! S-a detectat o absorbție lentă de carbohidrați: %1$d%% din timp. Verificați de două ori calculul. COB poate fi supraestimat, astfel încât mai multă insulină poate fi administrată !!!!!</string>
-    <string name="bolus_constraint_applied_warn">Este aplicată limitarea bolusului %1$.2f U la %2$.2f U</string>
-    <string name="bolus_recorded_only">Bolusul doar va fi înregistrat (nu va fi administrat de pompă)</string>
-    <string name="advisoralarm">Executați alarma când este timpul să mâncați</string>
     <string name="wizard_bg_label">Glicemie</string>
     <string name="wizard_correction">Corecție</string>
     <string name="wizard_subtotal">Subtotal</string>
     <string name="carbs_type_bread">Pâine, patiserie sărată, iaurt, fructe (măr, banană, pară), cartofi, orez, hrișcă, ovăz, alimente cu carbohidrați lenți și puțini, legume</string>
     <string name="carbs_type_cake">Găluște, paste, bucătărie asiatică bogată în carbohidrați și grăsimi, patiserie dulce și cu drojdie, cereale, terci de cereale, miere, gem</string>
     <string name="carbs_type_pizza">Lasagna, pizza, hamburgeri, cartofi prăjiți, cartofi copți, chipsuri și gustări similare</string>
-    <string name="wizard_ecarbs">carbohidrați extinși %1$dg / %2$dh (+%3$dmin)</string>
     <string name="wizard_total">Total</string>
     <string name="wizard_carb_time">Timp carbohidrați</string>
     <string name="carb_time_now">Acum</string>
@@ -987,7 +955,6 @@
     <string name="weekday_monday_short">Lun</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
-    <string name="format_insulin_units">%1$.2f U</string>
     <string name="format_insulin_units_signed">%1$+.2f U</string>
     <string name="percent_rate_duration">Rată: %1$.2f%% (%2$.2f U/h) Durată: %3$d min</string>
     <string name="rate_percent_duration">Rată: %1$.2f U/h (%2$.2f%%) Durată: %3$d min</string>

@@ -38,8 +38,6 @@
     <string name="event_type">Hendelsestype</string>
     <string name="mgdl">mg/dL</string>
     <string name="mmol">mmol/L</string>
-    <string name="profile_isf_units_mgdl">mg/dL/E</string>
-    <string name="profile_isf_units_mmol">mmol/L/E</string>
     <string name="bg_mgdl">%1$d mg/dL</string>
     <string name="bg_mmol">%1$.1f mmol/L</string>
     <string name="save">Lagre</string>
@@ -106,18 +104,14 @@
     <string name="goingtodeliver">Leverer %1$.2f enheter</string>
     <string name="carbs_not_saved_after_bolus">Bolusen ble levert, men karbohydratene kunne ikke lagres. Registrer karbo på nytt.</string>
     <string name="androidaps_start">AAPS startet</string>
-    <string name="formatsignedinsulinunits">%1$+.2f E</string>
-    <string name="format_carbs">%1$d g</string>
     <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d g</string>
     <string name="format_hours">%1$.2f t</string>
     <string name="format_mins">%1$d min</string>
-    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
     <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
     <string name="objectives">Opplæringsmål</string>
     <string name="please_wait">Vennligst vent…</string>
     <string name="stop">Stopp</string>
     <string name="stop_pressed">STOPP TRYKKET</string>
-    <string name="carbs">Karbo</string>
     <string name="invalid_profile">Ugyldig profil!</string>
     <string name="no_profile_set">INGEN PROFIL VALGT</string>
     <string name="profile_switch_no_insulin">Kan ikke bytte profil: Ingen insulin er i bruk, og ingen er valgt.</string>
@@ -173,15 +167,12 @@
     <string name="bg_label">BS</string>
     <string name="calibration">Kalibrering</string>
     <string name="cgm">Sensor</string>
-    <string name="alarminxmin">Aktiver alarm om %1$d min</string>
     <string name="treatmentdeliveryerror">Det er registrert en feil med boluslevering. Sjekk manuelt om den er levert og hvor mye</string>
     <string name="bolus_reminder">Påminnelse om bolus når BS kommer seg igjen</string>
     <string name="duration_label">Varighet</string>
     <string name="shortgramm">g</string>
-    <string name="pumpsuspended">Pumpen er pauset</string>
     <string name="pump_running">Pumpe i drift</string>
     <string name="notconfigured">Ikke konfigurert</string>
-    <string name="loopsuspended">Loop pauset</string>
     <string name="loop_suspended_by_dst">Loop suspendert av DST (Sommertid)</string>
     <string name="required">nødv</string>
     <string name="a11y_arrow_double_down">synker raskt</string>
@@ -231,7 +222,6 @@
     <string name="closedloop">Lukket Loop</string>
     <string name="openloop">Åpen Loop</string>
     <string name="lowglucosesuspend">Stopp ved lavt BS</string>
-    <string name="pump_disconnected">Pumpe frakoblet</string>
     <string name="pump_suspended">Pumpe pauset</string>
     <string name="pump_suspend">Pause pumpe</string>
     <string name="pump_resume">Gjenoppta pumpe</string>
@@ -267,11 +257,6 @@
     <string name="passwords_dont_match">Passord stemmer ikke overens</string>
     <string name="pin_dont_match">PIN-kodene samsvarer ikke</string>
     <!--    Profile-->
-    <string name="basalprofilenotaligned">Basalverdier er ikke angitt på hele timer: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Basalverdi erstattet med minste tillate verdi: %1$s</string>
-    <string name="maximumbasalvaluereplaced">Basalverdi erstattet med høyeste tillate verdi: %1$s</string>
-    <string name="profile_ins_units_per_hour">E/t</string>
-    <string name="profile_carbs_per_unit">g/E</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Start profil %1$d%% i %2$d min</string>
     <!--    APSResult-->
@@ -309,7 +294,6 @@
     <string name="thirty_days_short">30d</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
-    <string name="mins">%1$d min</string>
     <!--    Translator-->
     <string name="careportal">Helseportal</string>
     <string name="careportal_bgcheck">BS-kontroll</string>
@@ -493,7 +477,6 @@
     <string name="revert_to_defaults">Tilbakestill til standardinnstillinger</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
-    <string name="record">Registrer</string>
     <string name="location_front_right_upper_chest">Høyre bryst</string>
     <string name="location_front_left_upper_chest">Venstre bryst</string>
     <string name="location_side_right_upper_arm">Øvre høyre ytterside av armen</string>
@@ -543,7 +526,6 @@
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g ekstra karbohydrater kreves innen %2$d minutter</string>
     <string name="basalrate">Basal</string>
-    <string name="bolus">Bolus</string>
     <string name="tdd_short">TDD</string>
     <string name="tdd">Total daglig dose</string>
     <!--    Ntp-->
@@ -555,7 +537,6 @@
     <string name="uel_extended_bolus">FORLENGET BOLUS</string>
     <string name="uel_superbolus_tbr">SUPERBOLUS TBR</string>
     <string name="uel_carbs">KARBO</string>
-    <string name="uel_extended_carbs">FORLENGET KARBO</string>
     <string name="uel_temp_basal">MIDL. BASAL</string>
     <string name="uel_tt">MIDLERTIDIG MÅL</string>
     <string name="uel_new_profile">NY PROFIL</string>
@@ -656,22 +637,15 @@
     <string name="uel_scene_deactivated">SCENE DEAKTIVERT</string>
     <string name="uel_remote_config_changed">FJERNKONFIGURASJON ENDRET</string>
     <!-- HardLimits -->
-    <string name="profile_low_target">Profil lavt mål</string>
-    <string name="profile_high_target">Profil høyt mål</string>
     <string name="temp_target_low_target">Nedre grense for midlertidig mål</string>
     <string name="temp_target_high_target">Øvre grense for midlertidig mål</string>
     <string name="temp_target_value">Midlertidig målverdi</string>
-    <string name="profile_dia">Profil DIA verdi</string>
     <string name="insulin_dia">Insulin DIA-verdi</string>
     <string name="insulin_peak">Insulin toppverdi</string>
-    <string name="profile_sensitivity_value">Profilens insulinfølsomhet</string>
     <string name="profile_max_daily_basal_value">Maksimal profil basalverdi</string>
     <string name="current_basal_value">Nåværende basalverdi</string>
-    <string name="profile_carbs_ratio_value">Profilens insulin-til-karbohydratforhold (IK)</string>
     <string name="valuelimitedto">%1$.2f begrenset til %2$.2f</string>
     <string name="valueoutofrange">»%1$s« er utenfor lovlige grenseverdier</string>
-    <string name="value_out_of_hard_limits">»%1$s« %2$.2f er utenfor lovlige grenseverdier</string>
-    <string name="basal_value">Basalverdi</string>
     <!-- Profile validation -->
     <string name="no_profile_selected">Ingen profil valgt</string>
     <string name="missing_profile_name">Mangler profilnavn</string>
@@ -728,18 +702,12 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Bolusveiviser</string>
     <string name="bolus_advisor_message">Du har høyt blodsukker. I stedet for å spise nå er det bedre å utsette det til du har et lavere blodsukker. Ønsker du å sette en korreksjonsbolus nå og få en påminnelse om når det er på tide å spise? I dette tilfellet vil ingen karbohydrater registreres nå, og du må bruke boluskalkulatoren igjen når vi gir deg en påminnelse.</string>
-    <string name="cobvsiob">COB vs IOB</string>
-    <string name="slowabsorptiondetected_plain">!!!!! Langsom karboabsorpsjon oppdaget: %1$d%% av tiden. Dobbeltsjekk beregningen din. COB kan overestimeres, og dermed kan mer insulin gis !!!!!</string>
-    <string name="bolus_constraint_applied_warn">Bolus begrensning brukt: %1$.2f E til %2$.2f E</string>
-    <string name="bolus_recorded_only">Bolus vil bare bli loggført (ikke levert av pumpe)</string>
-    <string name="advisoralarm">Aktiver alarm når det er på tide å spise</string>
     <string name="wizard_bg_label">BS</string>
     <string name="wizard_correction">Korreksjon</string>
     <string name="wizard_subtotal">Delsum</string>
     <string name="carbs_type_bread">Brød, bakverk, yoghurt, frukt (eple, banan, pære), poteter, ris, bokhvete, havregryn, langsom og lavkarbo mat, grønnsaker</string>
     <string name="carbs_type_cake">Dumplings, pasta, asiatisk mat rik på karbohydrater og fett, søt gjærbakst, frokostblandinger, grøt med korn, honning, syltetøy</string>
     <string name="carbs_type_pizza">Lasagne, pizza, hamburgere, pommes frites, bakte poteter, chips og lignende snacks</string>
-    <string name="wizard_ecarbs">eKarbo %1$dg / %2$dt (+%3$dmin)</string>
     <string name="wizard_total">Total</string>
     <string name="wizard_carb_time">Karbotid</string>
     <string name="carb_time_now">Nå</string>
@@ -984,7 +952,6 @@
     <string name="weekday_monday_short">Man</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f E</string>
-    <string name="format_insulin_units">%1$.2f E</string>
     <string name="format_insulin_units_signed">%1$+.2f E</string>
     <string name="percent_rate_duration">Dose: %1$.2f%% (%2$.2f E/t) Varighet: %3$d min</string>
     <string name="rate_percent_duration">Dose: %1$.2f E/t (%2$.2f%%) Varighet: %3$d min</string>
