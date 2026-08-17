@@ -48,6 +48,7 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.combine
 import app.aaps.core.objects.extensions.convertedToAbsolute
+import app.aaps.core.data.model.iobCalc
 import app.aaps.core.objects.extensions.iobCalc
 import app.aaps.core.objects.extensions.plus
 import app.aaps.core.objects.extensions.round

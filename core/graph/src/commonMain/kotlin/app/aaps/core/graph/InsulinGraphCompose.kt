@@ -9,13 +9,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.UiStrings
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.time.T
-import app.aaps.core.objects.extensions.iobCalc
+import app.aaps.core.data.model.iobCalc
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.Zoom
 import com.patrykandpatrick.vico.compose.cartesian.axis.Axis
@@ -37,7 +38,6 @@ import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
 import com.patrykandpatrick.vico.compose.common.data.ExtraStore
 import com.patrykandpatrick.vico.compose.common.rememberHorizontalLegend
 import kotlin.math.floor
-import app.aaps.core.ui.R as CoreUiR
 
 private val InsulinLegendLabelKey = ExtraStore.Key<List<String>>()
 
@@ -65,8 +65,8 @@ fun InsulinGraphCompose(
     modifier: Modifier = Modifier
 ) {
     val modelProducer = remember { CartesianChartModelProducer() }
-    val activityLabel = stringResource(CoreUiR.string.activity)
-    val iobLabel = stringResource(CoreUiR.string.iob)
+    val activityLabel = stringResource(UiStrings.activity)
+    val iobLabel = stringResource(UiStrings.iob)
 
     LaunchedEffect(iCfg.insulinPeakTime, iCfg.insulinEndTime, iCfg.concentration, diaSample) {
         val dia = diaSample ?: iCfg.dia

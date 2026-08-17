@@ -1,14 +1,13 @@
 package app.aaps.core.graph.profile
 
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.ui.R
-import app.aaps.core.interfaces.R as InterfacesR
 
 /**
  * Pre-computed data for profile comparison (base vs effective, or any two profiles).
@@ -39,7 +38,7 @@ fun buildProfileCompareData(
     profile2: Profile,
     profileName1: String,
     profileName2: String,
-    rh: ResourceHelper,
+    rh: TextResolver,
     dateUtil: DateUtil,
     profileUtil: ProfileUtil,
     profileFunction: ProfileFunction
@@ -54,10 +53,10 @@ fun buildProfileCompareData(
         targetRows = buildTargetRows(profile1, profile2, dateUtil, profileUtil),
         baseName = profileName1,
         effectiveName = profileName2,
-        shortHourUnit = rh.gs(app.aaps.core.interfaces.R.string.shorthour),
-        icUnits = rh.gs(InterfacesR.string.profile_carbs_per_unit),
-        isfUnits = rh.gs(if (units == GlucoseUnit.MGDL) InterfacesR.string.profile_isf_units_mgdl else InterfacesR.string.profile_isf_units_mmol),
-        basalUnits = rh.gs(InterfacesR.string.profile_ins_units_per_hour),
+        shortHourUnit = rh.gs(InterfacesStrings.shorthour),
+        icUnits = rh.gs(InterfacesStrings.profile_carbs_per_unit),
+        isfUnits = rh.gs(if (units == GlucoseUnit.MGDL) InterfacesStrings.profile_isf_units_mgdl else InterfacesStrings.profile_isf_units_mmol),
+        basalUnits = rh.gs(InterfacesStrings.profile_ins_units_per_hour),
         targetUnits = units.displayLabel
     )
 }

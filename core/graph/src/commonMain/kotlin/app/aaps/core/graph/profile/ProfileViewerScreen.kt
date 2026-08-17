@@ -27,11 +27,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.UiStrings
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsTheme
 
 /**
@@ -154,7 +154,7 @@ fun ProfileViewerScreen(
                         }
 
                         IconButton(onClick = onClose) {
-                            Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.close))
+                            Icon(Icons.Filled.Close, contentDescription = stringResource(UiStrings.close))
                         }
                     }
                 }
@@ -165,7 +165,7 @@ fun ProfileViewerScreen(
             // Show error message if no profile is set
             if (data.profile == null) {
                 Text(
-                    text = stringResource(R.string.no_profile_set),
+                    text = stringResource(UiStrings.no_profile_set),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp),
@@ -210,7 +210,7 @@ fun ProfileViewerScreen(
                                         .padding(vertical = 4.dp)
                                 ) {
                                     Text(
-                                        text = stringResource(R.string.date),
+                                        text = stringResource(UiStrings.date),
                                         modifier = Modifier.weight(1f),
                                         style = MaterialTheme.typography.bodySmall,
                                         fontWeight = FontWeight.Bold

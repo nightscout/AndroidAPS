@@ -43,7 +43,7 @@ import app.aaps.core.data.model.CA
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.objects.extensions.iobCalc
+import app.aaps.core.data.model.iobCalc
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDateUtil
