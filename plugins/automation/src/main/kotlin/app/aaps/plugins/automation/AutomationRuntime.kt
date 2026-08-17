@@ -3,6 +3,11 @@ package app.aaps.plugins.automation
 import android.Manifest
 import android.content.Context
 import androidx.annotation.VisibleForTesting
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.pump.defs.PumpType
@@ -177,7 +182,9 @@ class AutomationRuntime @Inject constructor(
     @Volatile private var locationServiceRunning = false
 
     private val automationEvents = ArrayList<AutomationEventObject>()
-    var executionLog: MutableList<String> = ArrayList()
+    // AnnotatedString, not HTML in a String: the only entry that carries formatting is built below, and
+    // the screen renders this list directly. Nothing here ever leaves the app.
+    var executionLog: MutableList<AnnotatedString> = ArrayList()
 
     /** BT connect/disconnect events accumulated between processActions() runs (master only). The
      *  single external reader is TriggerBTDevice, via [recentBtConnects]. */
@@ -494,7 +501,7 @@ class AutomationRuntime @Inject constructor(
         val runningMode = loop.runningMode()
         if (runningMode.pausesLoopExecution() || !runningMode.isLoopRunning()) {
             aapsLogger.debug(LTag.AUTOMATION, "Loop suspended")
-            executionLog.add(rh.gs(app.aaps.core.ui.R.string.loopsuspended))
+            executionLog.add(AnnotatedString(rh.gs(app.aaps.core.ui.R.string.loopsuspended)))
             rxBus.send(EventAutomationUpdateGui())
             commonEventsEnabled = false
         }
@@ -503,7 +510,7 @@ class AutomationRuntime @Inject constructor(
          */
         if (!(loop as PluginBase).isEnabled()) {
             aapsLogger.debug(LTag.AUTOMATION, "Loop not enabled")
-            executionLog.add(rh.gs(app.aaps.core.ui.R.string.disconnected))
+            executionLog.add(AnnotatedString(rh.gs(app.aaps.core.ui.R.string.disconnected)))
             rxBus.send(EventAutomationUpdateGui())
             commonEventsEnabled = false
         }
@@ -513,7 +520,7 @@ class AutomationRuntime @Inject constructor(
         val enabled = constraintChecker.isAutomationEnabled()
         if (!enabled.value()) {
             val reason = enabled.getMostLimitedReasons()
-            if (executionLog.lastOrNull() != reason) executionLog.add(reason)
+            if (executionLog.lastOrNull()?.text != reason) executionLog.add(AnnotatedString(reason))
             rxBus.send(EventAutomationUpdateGui())
             commonEventsEnabled = false
         }
@@ -549,21 +556,22 @@ class AutomationRuntime @Inject constructor(
                 action.title = event.title
                 if (action.isValid()) {
                     val result = action.doAction()
-                    val sb = StringBuilder()
-                        .append(dateUtil.timeString(dateUtil.now()))
-                        .append(" ")
-                        .append(if (result.success) "☺" else "▼")
-                        .append(" <b>")
-                        .append(event.title)
-                        .append(":</b> ")
-                        .append(action.shortDescription())
-                        .append(": ")
-                        .append(result.comment)
-                    executionLog.add(sb.toString())
-                    aapsLogger.debug(LTag.AUTOMATION, "Executed: $sb")
+                    val entry = buildAnnotatedString {
+                        append(dateUtil.timeString(dateUtil.now()))
+                        append(" ")
+                        append(if (result.success) "☺" else "▼")
+                        append(" ")
+                        withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append("${event.title}:") }
+                        append(" ")
+                        append(action.shortDescription())
+                        append(": ")
+                        append(result.comment)
+                    }
+                    executionLog.add(entry)
+                    aapsLogger.debug(LTag.AUTOMATION, "Executed: ${entry.text}")
                     rxBus.send(EventAutomationUpdateGui())
                 } else {
-                    executionLog.add("Invalid action: ${action.shortDescription()}")
+                    executionLog.add(AnnotatedString("Invalid action: ${action.shortDescription()}"))
                     aapsLogger.debug(LTag.AUTOMATION, "Invalid action: ${action.shortDescription()}")
                     rxBus.send(EventAutomationUpdateGui())
                 }

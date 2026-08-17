@@ -85,6 +85,7 @@ kotlin {
                 api(libs.cmp.ui)
                 api(libs.cmp.material3)
                 api(libs.cmp.material.icons.extended)
+                implementation(compose.components.uiToolingPreview)
             }
         }
 

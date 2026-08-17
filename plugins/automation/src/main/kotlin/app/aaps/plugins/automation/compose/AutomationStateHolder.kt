@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.compose
 
+import androidx.compose.ui.text.AnnotatedString
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -287,11 +288,14 @@ class AutomationStateHolder(
                 actionIcons = actionIcons.distinct()
             )
         }
-        val sb = StringBuilder()
-        for (l in plugin.executionLog.reversed()) sb.append(l).append("<br>")
+        val sb = AnnotatedString.Builder()
+        for (l in plugin.executionLog.reversed()) {
+            sb.append(l)
+            sb.append('\n')
+        }
         _state.value = _state.value.copy(
             events = events,
-            logHtml = sb.toString()
+            log = sb.toAnnotatedString()
         )
     }
 

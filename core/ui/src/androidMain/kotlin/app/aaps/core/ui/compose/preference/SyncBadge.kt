@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.em
 import app.aaps.core.keys.interfaces.NonPreferenceKey
 import app.aaps.core.keys.interfaces.SyncDirection
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.stringResource
 

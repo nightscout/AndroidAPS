@@ -4,7 +4,6 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.UiStrings
 import androidx.annotation.StringRes
 import app.aaps.core.data.plugin.PluginType
-import app.aaps.core.ui.R
 
 /**
  * Single source of truth for the plugin-category → title string mapping, shared by the Configuration

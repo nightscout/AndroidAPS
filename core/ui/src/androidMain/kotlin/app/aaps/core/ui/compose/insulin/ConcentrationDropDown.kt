@@ -18,7 +18,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import app.aaps.core.interfaces.insulin.ConcentrationType
-import app.aaps.core.ui.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -2,7 +2,6 @@ package app.aaps.interfaces.pump
 
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.implementation.pump.PumpEnactResultObject
-import app.aaps.plugins.aps.extensions.toHtml
 import app.aaps.plugins.aps.loop.extensions.json
 import app.aaps.pump.virtual.extensions.toText
 import app.aaps.shared.tests.TestBaseWithProfile
@@ -145,20 +144,6 @@ class PumpEnactResultTest : TestBaseWithProfile() {
     Comment: AAA
     """.trimIndent()
         )
-    }
-
-    @Test fun toHtmlTest() {
-
-        var per: PumpEnactResult = PumpEnactResultObject(rh).enacted(true).bolusDelivered(10.0).comment("AAA")
-        assertThat(per.toHtml(rh, decimalFormatter)).isEqualTo("<b>Success</b>: false<br><b>Enacted</b>: true<br><b>Comment</b>: AAA<br><b>SMB</b>: 10.0 U")
-        per = PumpEnactResultObject(rh).enacted(true).isTempCancel(true).comment("AAA")
-        assertThat(per.toHtml(rh, decimalFormatter)).isEqualTo("<b>Success</b>: false<br><b>Enacted</b>: true<br><b>Comment</b>: AAA<br>Cancel temp basal")
-        per = PumpEnactResultObject(rh).enacted(true).isPercent(true).percent(90).duration(20).comment("AAA")
-        assertThat(per.toHtml(rh, decimalFormatter)).isEqualTo("<b>Success</b>: false<br><b>Enacted</b>: true<br><b>Comment</b>: AAA<br><b>Duration</b>: 20 min<br><b>Percent</b>: 90%")
-        per = PumpEnactResultObject(rh).enacted(true).isPercent(false).absolute(1.0).duration(30).comment("AAA")
-        assertThat(per.toHtml(rh, decimalFormatter)).isEqualTo("<b>Success</b>: false<br><b>Enacted</b>: true<br><b>Comment</b>: AAA<br><b>Duration</b>: 30 min<br><b>Absolute</b>: 1.00 U/h")
-        per = PumpEnactResultObject(rh).enacted(false).comment("AAA")
-        assertThat(per.toHtml(rh, decimalFormatter)).isEqualTo("<b>Success</b>: false<br><b>Comment</b>: AAA")
     }
 
     @Test fun jsonTest() {

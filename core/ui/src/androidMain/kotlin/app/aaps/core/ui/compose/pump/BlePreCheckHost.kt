@@ -11,7 +11,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.BlePreCheckResult
-import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.dialogs.OkDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

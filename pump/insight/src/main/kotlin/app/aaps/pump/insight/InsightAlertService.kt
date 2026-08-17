@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.utils.HtmlHelper
 import app.aaps.pump.insight.app_layer.activities.InsightAlertActivity
 import app.aaps.pump.insight.app_layer.remote_control.ConfirmAlertMessage
 import app.aaps.pump.insight.app_layer.remote_control.SnoozeAlertMessage
@@ -251,7 +250,7 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
         notificationBuilder.setSmallIcon(app.aaps.core.ui.R.drawable.notif_icon)
         alert.alertType?.let { notificationBuilder.setContentTitle(alertUtils.getAlertCode(it) + " – " + alertUtils.getAlertTitle(it)) }
         val description = alertUtils.getAlertDescription(alert)
-        if (description != null) notificationBuilder.setContentText(HtmlHelper.fromHtml(description).toString())
+        if (description != null) notificationBuilder.setContentText(description)
         val fullScreenIntent = Intent(this, InsightAlertActivity::class.java)
         val fullScreenPendingIntent = PendingIntent.getActivity(this, 0, fullScreenIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         notificationBuilder.setFullScreenIntent(fullScreenPendingIntent, true)

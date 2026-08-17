@@ -29,7 +29,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.R
 
 /**
  * Compact carb time row with inline expand/collapse.

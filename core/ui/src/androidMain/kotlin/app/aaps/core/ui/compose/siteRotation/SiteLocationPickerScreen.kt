@@ -19,7 +19,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import app.aaps.core.data.model.TE
-import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsTopAppBar
 
 /**

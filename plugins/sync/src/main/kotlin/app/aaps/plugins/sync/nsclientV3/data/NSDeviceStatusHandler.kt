@@ -160,7 +160,13 @@ class NSDeviceStatusHandler @Inject constructor(
             }
             pump.extended?.let {
                 val extended = StringBuilder()
-                it.keys.forEach { key -> extended.append("<b>").append(key).append(":</b> ").append(it[key]).append("<br>") }
+                // Plain text, not HTML. This used to build "<b>key:</b> value<br>" and the overview
+                // stripped the markup straight back out before showing it.
+                //
+                // The values are whatever uploaded this device status - another AAPS, an older one,
+                // or a different app entirely - so anything they marked up is flattened here, at the
+                // point the foreign data arrives, rather than at every place that displays it.
+                it.keys.forEach { key -> extended.appendLine("$key: ${it[key].toPlainText()}") }
                 deviceStatusPumpData.extended = extended.toString()
                 deviceStatusPumpData.activeProfileName = it.safeGetStringAllowNull("ActiveProfile", null)
             }
@@ -218,3 +224,14 @@ class NSDeviceStatusHandler @Inject constructor(
         }
     }
 }
+/**
+ * Flattens any markup a foreign uploader put in a device-status value.
+ *
+ * Kept identical to what the overview used to do before showing the text, so nothing that renders
+ * correctly today starts showing raw tags.
+ */
+private fun Any?.toPlainText(): String =
+    toString()
+        .replace("<br>", "\n")
+        .replace(Regex("<[^>]*>"), "")
+        .replace("&nbsp;", " ")

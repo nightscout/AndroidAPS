@@ -110,7 +110,9 @@ sealed class SearchableItem {
         val pluginRef: PluginBase
     ) : SearchableItem() {
 
-        override val key: String = pluginRef.javaClass.simpleName
+        // pluginId is the documented stable identity for a plugin and defaults to the class simple name,
+        // so this is the same string javaClass.simpleName gave - without tying the file to the JVM.
+        override val key: String = pluginRef.pluginId
         override val title: TextRef = pluginRef.pluginDescription.pluginName ?: TextRef.Literal(pluginRef.pluginId)
         override val summary: TextRef? = pluginRef.pluginDescription.description
         override val plugin: PluginBase = pluginRef

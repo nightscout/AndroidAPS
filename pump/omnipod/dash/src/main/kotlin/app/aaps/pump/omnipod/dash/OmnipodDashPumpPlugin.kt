@@ -699,7 +699,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     notifyOnUnconfirmed(
                         NotificationId.OMNIPOD_UNCERTAIN_SMB,
                         "Unable to verify whether SMB bolus ($requestedBolusAmount U) succeeded. " +
-                            "<b>Refresh pod status to confirm or deny this command.",
+                            "Refresh pod status to confirm or deny this command.",
                         AlarmSound.BOLUS_ERROR
                     )
                 } else {

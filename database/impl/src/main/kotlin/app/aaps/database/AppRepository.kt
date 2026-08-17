@@ -224,7 +224,7 @@ class AppRepository @Inject internal constructor(
         val ret = StringBuilder()
         removed
             .filter { it.second > 0 }
-            .forEach { ret.append(it.first + " " + it.second + "<br>") }
+            .forEach { ret.appendLine(it.first + " " + it.second) }
         // VACUUM is intentionally NOT run here. It is memory heavy and crashed (SQLITE_NOMEM) when
         // it overlapped live DB activity; defragmenting VACUUM now runs only at startup while the
         // DB is quiescent (see vacuumDatabase / MainApp.vacuumDatabaseIfDue).

@@ -40,7 +40,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.core.text.HtmlCompat
 import app.aaps.core.ui.compose.AapsFab
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.MasterOfflineBanner
@@ -90,7 +89,7 @@ fun AutomationScreen(
                     )
                 }
                 LogPanel(
-                    logHtml = state.logHtml,
+                    log = state.log,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -294,7 +293,7 @@ private fun IconRow(event: AutomationEventUi) {
 }
 
 @Composable
-private fun LogPanel(logHtml: String, modifier: Modifier = Modifier) {
+private fun LogPanel(log: AnnotatedString, modifier: Modifier = Modifier) {
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainerLow,
         modifier = modifier
@@ -309,19 +308,13 @@ private fun LogPanel(logHtml: String, modifier: Modifier = Modifier) {
                     .padding(horizontal = AapsSpacing.large, vertical = AapsSpacing.medium)
             ) {
                 Text(
-                    text = htmlToAnnotated(logHtml),
+                    text = log,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
     }
-}
-
-private fun htmlToAnnotated(html: String): AnnotatedString {
-    if (html.isEmpty()) return AnnotatedString("")
-    val spanned = HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_COMPACT)
-    return AnnotatedString(spanned.toString())
 }
 
 // ---------- Previews ----------
@@ -366,7 +359,7 @@ private fun sampleState() =
                 actionIcons = listOf(AutomationIcon(IcAutomation))
             )
         ),
-        logHtml = "12:00 Morning wakeup TT triggered<br>12:05 Snack reminder dismissed"
+        log = AnnotatedString("12:00 Morning wakeup TT triggered\n12:05 Snack reminder dismissed")
     )
 
 @androidx.compose.ui.tooling.preview.Preview(showBackground = true, widthDp = 380, heightDp = 640)

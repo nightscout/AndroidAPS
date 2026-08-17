@@ -977,7 +977,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
             }.trim()
             val dialogText = buildString {
                 pumpData.extended?.let {
-                    append(it.replace("<br>", "\n").replace(Regex("<[^>]*>"), "").replace("&nbsp;", " ").trim())
+                    append(it.trim())
                 }
             }
             AapsClientStatusItem(

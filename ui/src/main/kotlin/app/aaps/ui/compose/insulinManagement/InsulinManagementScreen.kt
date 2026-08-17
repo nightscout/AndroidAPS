@@ -49,6 +49,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -525,8 +529,12 @@ private fun PeakPresetChips(
         val parts = presets.map { preset ->
             Triple(stringResource(preset.label), stringResource(preset.comment), stringResource(CoreUiR.string.format_mins, preset.iCfg.peak))
         }
-        val message = parts.joinToString("\n\n") { (label, comment, peak) ->
-            "<b>$label</b>\n$comment — $peak"
+        val message = buildAnnotatedString {
+            parts.forEachIndexed { index, (label, comment, peak) ->
+                if (index > 0) append("\n\n")
+                withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append(label) }
+                append("\n$comment — $peak")
+            }
         }
         OkDialog(
             title = stringResource(R.string.load_peak_from),

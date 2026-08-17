@@ -17,7 +17,6 @@ import app.aaps.core.keys.interfaces.DoublePreferenceKey
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.keys.step
-import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.isDuration
 import app.aaps.core.ui.compose.rangeText

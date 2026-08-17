@@ -4,7 +4,6 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.UiStrings
 import androidx.annotation.StringRes
 import app.aaps.core.interfaces.clientcontrol.FailureReason
-import app.aaps.core.ui.R
 
 /**
  * The single localized-string mapping for a client-control [FailureReason], shared by the phone pending dialog
