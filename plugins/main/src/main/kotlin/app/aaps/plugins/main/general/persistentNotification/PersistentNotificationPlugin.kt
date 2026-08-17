@@ -40,7 +40,7 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.objects.extensions.apsAdjustedTargetMgdl
 import app.aaps.core.ui.extensions.generateCOBString
 import app.aaps.core.objects.extensions.round
-import app.aaps.core.objects.extensions.toStringShort
+import app.aaps.core.ui.extensions.toStringShort
 import app.aaps.core.utils.DeferredForegroundStart
 import app.aaps.plugins.main.R
 import app.aaps.core.interfaces.rx.collectResilient

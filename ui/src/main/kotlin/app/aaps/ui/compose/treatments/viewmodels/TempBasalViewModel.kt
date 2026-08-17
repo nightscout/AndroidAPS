@@ -20,7 +20,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.objects.extensions.toStringFull
+import app.aaps.core.ui.extensions.toStringFull
 import app.aaps.core.objects.extensions.toTemporaryBasal
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.SelectableListToolbar

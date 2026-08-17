@@ -30,6 +30,7 @@ import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.whenever
 
 internal class TizenPluginTest : TestBaseWithProfile() {
@@ -52,6 +53,14 @@ internal class TizenPluginTest : TestBaseWithProfile() {
         )
         // gs(TextRef) is a DEFAULT interface method, so a mock answers null unless it is stubbed.
         whenever(rh.gs(any<TextRef>())).thenAnswer {
+            when (val ref = it.getArgument<TextRef>(0)) {
+                is TextRef.Literal    -> ref.text
+                is TextRef.Named      -> ref.name
+                is TextRef.AndroidRes -> "S" + ref.id
+            }
+        }
+        // Same for the formatting overload, which TB.toStringFull uses.
+        whenever(rh.gs(any<TextRef>(), anyVararg())).thenAnswer {
             when (val ref = it.getArgument<TextRef>(0)) {
                 is TextRef.Literal    -> ref.text
                 is TextRef.Named      -> ref.name

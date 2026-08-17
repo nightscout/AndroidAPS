@@ -87,7 +87,7 @@ import app.aaps.core.objects.extensions.apsAdjustedTargetMgdl
 import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.ui.extensions.generateCOBString
 import app.aaps.core.objects.extensions.round
-import app.aaps.core.objects.extensions.toStringShort
+import app.aaps.core.ui.extensions.toStringShort
 import app.aaps.core.objects.extensions.valueToUnits
 import app.aaps.core.objects.runningMode.PumpCommandGate
 import app.aaps.core.objects.runningMode.RunningModeGuard

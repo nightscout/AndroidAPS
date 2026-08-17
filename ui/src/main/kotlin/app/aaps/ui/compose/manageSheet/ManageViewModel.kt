@@ -32,8 +32,8 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.VisibilityContext
-import app.aaps.core.objects.extensions.toStringMedium
-import app.aaps.core.objects.extensions.toStringShort
+import app.aaps.core.ui.extensions.toStringMedium
+import app.aaps.core.ui.extensions.toStringShort
 import app.aaps.core.ui.R
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.ui.R as UiR

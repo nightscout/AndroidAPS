@@ -3,6 +3,7 @@ package app.aaps.core.objects.extensions
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.TB
+import app.aaps.core.data.model.getPassedDurationToTimeInMinutes
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.IobTotal
@@ -29,9 +30,6 @@ import kotlin.math.roundToInt
 fun TB.isInProgress(dateUtil: DateUtil): Boolean =
     dateUtil.now() in timestamp..timestamp + duration
 
-fun TB.getPassedDurationToTimeInMinutes(time: Long): Int =
-    ((min(time, end) - timestamp) / 60.0 / 1000).roundToInt()
-
 val TB.plannedRemainingMinutes: Int
     get() = max(round((end - System.currentTimeMillis()) / 1000.0 / 60).toInt(), 0)
 
@@ -42,50 +40,6 @@ fun TB.convertedToAbsolute(time: Long, profile: Profile): Double =
 fun TB.convertedToPercent(time: Long, profile: Profile): Int =
     if (!isAbsolute) rate.toInt()
     else (rate / profile.getBasal(time) * 100).toInt()
-
-private fun TB.netExtendedRate(profile: Profile) = rate - profile.getBasal(timestamp)
-val TB.durationInMinutes
-    get() = T.msecs(duration).mins()
-
-fun TB.toStringFull(profile: Profile, dateUtil: DateUtil, rh: ResourceHelper): String {
-    val timeAndDuration = "${dateUtil.timeString(timestamp)} ${getPassedDurationToTimeInMinutes(dateUtil.now())}/${durationInMinutes}'"
-
-    return when {
-        type == TB.Type.FAKE_EXTENDED -> {
-            rh.gs(app.aaps.core.ui.R.string.temp_basal_tsf_fake_extended, rate, netExtendedRate(profile), timeAndDuration)
-        }
-
-        isAbsolute                    -> {
-            rh.gs(app.aaps.core.ui.R.string.temp_basal_tsf_absolute, rate, timeAndDuration)
-        }
-
-        else                          -> { // percent
-            rh.gs(app.aaps.core.ui.R.string.temp_basal_tsf_percent, rate, timeAndDuration)
-        }
-    }
-}
-
-fun TB.toStringFull(profile: Profile, dateUtil: DateUtil, ch: ConcentrationHelper): String {
-    val timeAndDuration = "${dateUtil.timeString(timestamp)} ${getPassedDurationToTimeInMinutes(dateUtil.now())}/${durationInMinutes}'"
-
-    return when {
-        type == TB.Type.FAKE_EXTENDED -> {
-            "${ch.basalRateString(PumpRate(rate), true)} (${netExtendedRate(profile)}E) $timeAndDuration"
-        }
-
-        isAbsolute                    -> {
-            "${ch.basalRateString(PumpRate(rate), true)} $timeAndDuration"
-        }
-
-        else                          -> { // percent
-            "${ch.basalRateString(PumpRate(rate), false)} $timeAndDuration"
-        }
-    }
-}
-
-fun TB.toStringShort(rh: ResourceHelper): String =
-    if (isAbsolute || type == TB.Type.FAKE_EXTENDED) rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, rate)
-    else rh.gs(app.aaps.core.ui.R.string.formatPercent, rate)
 
 fun TB.iobCalc(time: Long, profile: EffectiveProfile): IobTotal {
     if (!isValid) return IobTotal(time)
