@@ -1,4 +1,4 @@
-package app.aaps.implementation.di
+package app.aaps.di
 
 import android.content.Context
 import android.telephony.SmsManager
@@ -41,9 +41,11 @@ import javax.inject.Singleton
  * keep that module from ever becoming multiplatform. Providing them here keeps the graph identical -
  * same scopes, same instances - and is the same trade already made for `BolusProgressData`.
  *
- * Lives in :implementation rather than :core:objects for a second reason: Dagger emits Java, and the
- * AGP multiplatform library target has no Java compilation, so a `@Module` inside a multiplatform
- * module would be generated and then silently dropped.
+ * Lives in :app because Dagger emits Java and the AGP multiplatform library target has no Java
+ * compilation - a `@Module` inside a multiplatform module would be generated and then silently
+ * dropped. :app is the one module that can never become multiplatform, so wiring put here never has
+ * to move again. :implementation would probably also be safe, being the ANDROID implementation of
+ * :core:interfaces, but that is a bet on the future and this needs no bet.
  */
 @Suppress("unused")
 @Module
