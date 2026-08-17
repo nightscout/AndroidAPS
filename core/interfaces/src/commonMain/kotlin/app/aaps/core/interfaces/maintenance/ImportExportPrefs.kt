@@ -1,7 +1,5 @@
 package app.aaps.core.interfaces.maintenance
 
-import android.content.Context
-import androidx.fragment.app.FragmentActivity
 import app.aaps.core.interfaces.rx.weardata.CwfData
 
 /** Where to send the export. */
@@ -49,7 +47,6 @@ data class ExportPreparation(
 interface ImportExportPrefs {
 
     fun exportCustomWatchface(customWatchface: CwfData, withDate: Boolean = true)
-    fun exportSharedPreferences(activity: FragmentActivity)
     fun exportSharedPreferencesNonInteractive(password: String): Boolean
     fun exportUserEntriesCsv()
     suspend fun executeCsvExport(): ExportResult

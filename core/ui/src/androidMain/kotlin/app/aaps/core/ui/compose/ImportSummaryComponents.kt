@@ -1,6 +1,7 @@
 package app.aaps.core.ui.compose
 
 import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -92,7 +93,7 @@ fun ImportSummaryItem(
         Spacer(modifier = Modifier.width(4.dp))
 
         Text(
-            text = metaKey.formatForDisplay(context, metaEntry.value),
+            text = stringResource(metaKey.formatForDisplay(metaEntry.value)),
             style = MaterialTheme.typography.bodySmall,
             color = textColor,
             modifier = Modifier.weight(1f)
