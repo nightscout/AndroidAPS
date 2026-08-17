@@ -1,18 +1,19 @@
 package app.aaps.core.interfaces.ui
 
 import app.aaps.core.interfaces.notifications.AlarmSound
+import kotlin.reflect.KClass
 
 /**
  * Interface to use activities located in different modules
- * usage: startActivity(Intent(context, activityNames.xxxx))
+ * usage: startActivity(Intent(context, activityNames.xxxx.java))
  */
 interface UiInteraction {
 
     /** The main activity of the application. */
-    val mainActivity: Class<*>
+    val mainActivity: KClass<*>
 
     /** The activity for displaying error information. */
-    val errorHelperActivity: Class<*>
+    val errorHelperActivity: KClass<*>
 
     /**
      * Show ErrorHelperActivity and start alarm.

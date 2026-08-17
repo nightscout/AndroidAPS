@@ -77,7 +77,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val constraintsChecker: ConstraintsChecker,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
     private val config: Config,

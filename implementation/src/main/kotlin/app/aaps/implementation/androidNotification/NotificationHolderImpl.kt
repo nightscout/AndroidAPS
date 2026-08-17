@@ -34,8 +34,8 @@ class NotificationHolderImpl @Inject constructor(
         get() = _notification ?: placeholderNotification()
 
     override fun openAppIntent(): PendingIntent? = TaskStackBuilder.create(context).run {
-        addParentStack(uiInteraction.mainActivity)
-        addNextIntent(Intent(context, uiInteraction.mainActivity))
+        addParentStack(uiInteraction.mainActivity.java)
+        addNextIntent(Intent(context, uiInteraction.mainActivity.java))
         getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
     }
 

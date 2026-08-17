@@ -251,7 +251,7 @@ class AutomationRuntime @Inject constructor(
 
     /**
      * Location permission is required only on a master device that has at least one enabled event
-     * using a [TriggerLocation]. Queried by [ActivePlugin.collectMissingPermissions] on every
+     * using a [TriggerLocation]. Queried by [app.aaps.core.interfaces.plugin.PluginPermissions.collectMissingPermissions] on every
      * collection pass, so the permission appears/disappears as the event set changes.
      */
     override fun requiredPermissions(): List<PermissionGroup> =

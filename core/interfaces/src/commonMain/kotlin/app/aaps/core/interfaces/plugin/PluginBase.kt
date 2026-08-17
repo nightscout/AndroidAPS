@@ -3,7 +3,7 @@ package app.aaps.core.interfaces.plugin
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.interfaces.PreferenceItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +17,7 @@ import kotlinx.coroutines.runBlocking
 abstract class PluginBase(
     val pluginDescription: PluginDescription,
     val aapsLogger: AAPSLogger,
-    val rh: ResourceHelper
+    open val rh: TextResolver
 ) {
 
     protected val pluginScope = CoroutineScope(Dispatchers.Default + Job())

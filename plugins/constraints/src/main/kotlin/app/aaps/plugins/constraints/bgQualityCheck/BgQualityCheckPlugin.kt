@@ -34,7 +34,7 @@ import kotlin.math.min
 @Singleton
 class BgQualityCheckPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     private val rxBus: RxBus,
     private val iobCobCalculator: IobCobCalculator,
     private val dateUtil: DateUtil

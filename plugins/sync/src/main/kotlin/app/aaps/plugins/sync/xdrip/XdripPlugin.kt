@@ -78,7 +78,7 @@ import javax.inject.Singleton
 @Singleton
 class XdripPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,

@@ -23,7 +23,7 @@ import javax.inject.Singleton
 @Singleton
 class StorageConstraintPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     private val notificationManager: NotificationManager
 ) : PluginBase(
     PluginDescription()

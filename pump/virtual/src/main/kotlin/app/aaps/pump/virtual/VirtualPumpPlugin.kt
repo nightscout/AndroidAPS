@@ -62,7 +62,7 @@ import javax.inject.Singleton
 open class VirtualPumpPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     commandQueue: CommandQueue,
     private val pumpSync: PumpSync,

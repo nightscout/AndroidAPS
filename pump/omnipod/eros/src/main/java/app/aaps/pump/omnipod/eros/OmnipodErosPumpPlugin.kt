@@ -128,7 +128,7 @@ import javax.inject.Singleton
 @Singleton
 class OmnipodErosPumpPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     commandQueue: CommandQueue,
     private val rxBus: RxBus,
@@ -206,7 +206,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
                     if (this@OmnipodErosPumpPlugin.hasTimeDateOrTimeZoneChanged) pluginScope.launch { commandQueue.customCommand(CommandHandleTimeChange(false)) }
                     if (!this@OmnipodErosPumpPlugin.verifyPodAlertConfiguration()) pluginScope.launch { commandQueue.customCommand(CommandUpdateAlertConfiguration()) }
                     if (aapsOmnipodErosManager.isAutomaticallyAcknowledgeAlertsEnabled && podStateManager.isPodActivationCompleted &&
-                        !podStateManager.isPodDead && podStateManager.activeAlerts.size() > 0 && !commandQueue.isCustomCommandInQueue(CommandSilenceAlerts::class.java)
+                        !podStateManager.isPodDead && podStateManager.activeAlerts.size() > 0 && !commandQueue.isCustomCommandInQueue(CommandSilenceAlerts::class)
                     ) queueAcknowledgeAlertsCommand()
                 } else
                     aapsLogger.debug(LTag.PUMP, "Skipping Pod status check because command queue is not empty")
@@ -373,7 +373,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
                 notificationManager.post(NotificationId.OMNIPOD_POD_ALERTS, notificationText)
                 runBlocking { pumpSync.insertAnnouncement(notificationText, null, PumpType.OMNIPOD_EROS, serialNumber()) }
 
-                if (aapsOmnipodErosManager.isAutomaticallyAcknowledgeAlertsEnabled && !commandQueue.isCustomCommandInQueue(CommandSilenceAlerts::class.java)) {
+                if (aapsOmnipodErosManager.isAutomaticallyAcknowledgeAlertsEnabled && !commandQueue.isCustomCommandInQueue(CommandSilenceAlerts::class)) {
                     queueAcknowledgeAlertsCommand()
                 }
             }

@@ -200,7 +200,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         // folded into the scan by ConstraintsCheckerImpl via activePumpInternal (stubbed per test).
         constraintsPluginsList.add(openAPSAMAPlugin)
         constraintsPluginsList.add(openAPSSMBPlugin)
-        whenever(activePlugin.getSpecificPluginsListByInterface(PluginConstraints::class.java)).thenReturn(constraintsPluginsList)
+        whenever(activePlugin.getSpecificPluginsListByInterface(PluginConstraints::class)).thenReturn(constraintsPluginsList)
     }
 
     // Combo & Objectives

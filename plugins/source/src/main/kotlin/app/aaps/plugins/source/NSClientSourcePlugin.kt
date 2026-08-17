@@ -16,7 +16,7 @@ import javax.inject.Singleton
 
 @Singleton
 class NSClientSourcePlugin @Inject constructor(
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     config: Config,
 ) : PluginBase(

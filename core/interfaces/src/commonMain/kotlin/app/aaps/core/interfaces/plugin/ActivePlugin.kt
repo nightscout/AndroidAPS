@@ -1,6 +1,5 @@
 package app.aaps.core.interfaces.plugin
 
-import android.content.Context
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.Sensitivity
@@ -13,6 +12,7 @@ import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.smoothing.Smoothing
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.sync.Sync
+import kotlin.reflect.KClass
 
 interface ActivePlugin {
 
@@ -94,7 +94,7 @@ interface ActivePlugin {
     /**
      *  List of all plugins implementing interface
      */
-    fun getSpecificPluginsListByInterface(interfaceClass: Class<*>): ArrayList<PluginBase>
+    fun getSpecificPluginsListByInterface(interfaceClass: KClass<*>): ArrayList<PluginBase>
 
     /**
      *  Pre-process all plugin types and validate active plugins (ie. only only one plugin for type is selected)
@@ -134,16 +134,4 @@ interface ActivePlugin {
      * See: [app.aaps.core.interfaces.maintenance.ImportExportPrefs.doImportSharedPreferences]
      */
     fun afterImport()
-
-    /**
-     * Collects missing permissions across all enabled plugins, deduplicated by permission set.
-     */
-    fun collectMissingPermissions(context: Context): List<PermissionGroup>
-
-    /**
-     * Collects all required permissions (both global and plugin-declared),
-     * regardless of grant status. Used by the permission UI to show both
-     * granted and missing permissions.
-     */
-    fun collectAllPermissions(context: Context): List<PermissionGroup>
 }

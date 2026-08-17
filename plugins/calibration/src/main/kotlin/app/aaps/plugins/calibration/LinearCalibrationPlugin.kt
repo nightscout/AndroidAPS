@@ -42,7 +42,7 @@ import kotlin.math.abs
 @Singleton
 class LinearCalibrationPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     private val dateUtil: DateUtil,
     private val persistenceLayer: PersistenceLayer,
     private val notificationManager: NotificationManager,

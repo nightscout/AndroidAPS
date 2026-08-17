@@ -50,7 +50,7 @@ import javax.inject.Singleton
 @Singleton
 class TizenPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     private val context: Context,
     private val dateUtil: DateUtil,
     private val rxBus: RxBus,

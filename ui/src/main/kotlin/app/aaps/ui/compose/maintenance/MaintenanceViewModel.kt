@@ -203,7 +203,7 @@ class MaintenanceViewModel @Inject constructor(
             try {
                 withContext(Dispatchers.IO) {
                     persistenceLayer.clearDatabases()
-                    for (plugin in activePlugin.getSpecificPluginsListByInterface(OwnDatabasePlugin::class.java)) {
+                    for (plugin in activePlugin.getSpecificPluginsListByInterface(OwnDatabasePlugin::class)) {
                         (plugin as OwnDatabasePlugin).clearAllTables()
                     }
                     nsClient.dataSyncSelector.resetToNextFullSync()

@@ -54,7 +54,7 @@ open class TestOpenAPSSMBPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val constraintChecker: ConstraintsChecker,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     private val profileFunction: ProfileFunction,
     val context: Context,
     private val activePlugin: ActivePlugin,

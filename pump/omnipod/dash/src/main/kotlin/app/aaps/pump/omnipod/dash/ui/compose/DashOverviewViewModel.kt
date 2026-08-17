@@ -331,14 +331,14 @@ class DashOverviewViewModel @Inject constructor(
                 label = rh.gs(CommonR.string.omnipod_common_overview_button_silence_alerts),
                 icon = Icons.Filled.NotificationsOff,
                 enabled = queueEmpty,
-                visible = podStateManager.isPodRunning && (podStateManager.activeAlerts?.isNotEmpty() == true || commandQueue.isCustomCommandInQueue(CommandSilenceAlerts::class.java)),
+                visible = podStateManager.isPodRunning && (podStateManager.activeAlerts?.isNotEmpty() == true || commandQueue.isCustomCommandInQueue(CommandSilenceAlerts::class)),
                 onClick = { runCustomCommandWithErrorDialog(CommandSilenceAlerts(), rh.gs(CommonR.string.omnipod_common_error_failed_to_silence_alerts)) }
             ),
             PumpAction(
                 label = rh.gs(CommonR.string.omnipod_common_overview_button_resume_delivery),
                 icon = Icons.Filled.PlayArrow,
                 enabled = queueEmpty,
-                visible = podStateManager.isPodRunning && (podStateManager.isSuspended || commandQueue.isCustomCommandInQueue(CommandResumeDelivery::class.java)),
+                visible = podStateManager.isPodRunning && (podStateManager.isSuspended || commandQueue.isCustomCommandInQueue(CommandResumeDelivery::class)),
                 onClick = { runCustomCommandWithErrorDialog(CommandResumeDelivery(), rh.gs(CommonR.string.omnipod_common_error_failed_to_resume_delivery)) }
             ),
             PumpAction(
@@ -380,7 +380,7 @@ class DashOverviewViewModel @Inject constructor(
                 label = rh.gs(CommonR.string.omnipod_common_pod_management_button_play_test_beep),
                 icon = Icons.AutoMirrored.Filled.VolumeUp,
                 category = ActionCategory.MANAGEMENT,
-                enabled = podStateManager.activationProgress.isAtLeast(ActivationProgress.PHASE_1_COMPLETED) && !commandQueue.isCustomCommandInQueue(CommandPlayTestBeep::class.java),
+                enabled = podStateManager.activationProgress.isAtLeast(ActivationProgress.PHASE_1_COMPLETED) && !commandQueue.isCustomCommandInQueue(CommandPlayTestBeep::class),
                 visible = podStateManager.activationProgress.isAtLeast(ActivationProgress.PHASE_1_COMPLETED),
                 onClick = { runCustomCommandWithErrorDialog(CommandPlayTestBeep(), rh.gs(CommonR.string.omnipod_common_error_failed_to_play_test_beep)) }
             ),

@@ -62,7 +62,7 @@ class OpenAPSAMAPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val constraintsChecker: ConstraintsChecker,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     private val config: Config,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,

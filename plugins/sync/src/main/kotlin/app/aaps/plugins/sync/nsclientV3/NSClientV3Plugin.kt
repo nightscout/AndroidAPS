@@ -130,7 +130,7 @@ import kotlin.time.Duration.Companion.milliseconds
 @Singleton
 class NSClientV3Plugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     private val rxBus: RxBus,
     private val context: Context,

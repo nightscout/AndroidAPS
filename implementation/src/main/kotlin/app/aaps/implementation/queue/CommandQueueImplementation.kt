@@ -81,6 +81,7 @@ import java.util.LinkedList
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
+import kotlin.reflect.KClass
 import kotlin.time.Duration.Companion.milliseconds
 
 @OpenForTesting
@@ -729,8 +730,7 @@ class CommandQueueImplementation @Inject constructor(
     }
 
     override suspend fun customCommand(customCommand: CustomCommand): PumpEnactResult {
-        if (isCustomCommandInQueue(customCommand.javaClass)) return executingNowError()
-        removeAllCustomCommands(customCommand.javaClass)
+        if (isCustomCommandInQueue(customCommand::class)) return executingNowError()
         val deferred = CompletableDeferred<PumpEnactResult>()
         add(CommandCustomCommand(aapsLogger, activePlugin, pumpEnactResultProvider::get, customCommand, object : Callback() {
             override fun run() {
@@ -742,7 +742,7 @@ class CommandQueueImplementation @Inject constructor(
     }
 
     @Synchronized
-    override fun isCustomCommandInQueue(customCommandType: Class<out CustomCommand>): Boolean {
+    override fun isCustomCommandInQueue(customCommandType: KClass<out CustomCommand>): Boolean {
         if (isCustomCommandRunning(customCommandType)) {
             return true
         }
@@ -757,21 +757,9 @@ class CommandQueueImplementation @Inject constructor(
         return false
     }
 
-    override fun isCustomCommandRunning(customCommandType: Class<out CustomCommand>): Boolean {
+    override fun isCustomCommandRunning(customCommandType: KClass<out CustomCommand>): Boolean {
         val performing = this.performing
         return performing is CommandCustomCommand && customCommandType.isInstance(performing.customCommand)
-    }
-
-    @Synchronized
-    private fun removeAllCustomCommands(targetType: Class<out CustomCommand>) {
-        synchronized(queue) {
-            for (i in queue.indices.reversed()) {
-                val command = queue[i]
-                if (command is CustomCommand && targetType.isInstance(command.commandType)) {
-                    queue.removeAt(i)
-                }
-            }
-        }
     }
 
     /**

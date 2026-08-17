@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
+import kotlin.reflect.KClass
 
 /**
  * **Deadlock warning** — the queue is processed by a single app-owned `CommandExecutor` loop; one
@@ -55,8 +56,8 @@ interface CommandQueue {
     suspend fun deactivate(): PumpEnactResult
     suspend fun updateTime(): PumpEnactResult
     suspend fun customCommand(customCommand: CustomCommand): PumpEnactResult
-    fun isCustomCommandRunning(customCommandType: Class<out CustomCommand>): Boolean
-    fun isCustomCommandInQueue(customCommandType: Class<out CustomCommand>): Boolean
+    fun isCustomCommandRunning(customCommandType: KClass<out CustomCommand>): Boolean
+    fun isCustomCommandInQueue(customCommandType: KClass<out CustomCommand>): Boolean
     fun statusAsAnnotated(): AnnotatedString
     suspend fun isThisProfileSet(requestedProfile: EffectiveProfile): Boolean
 }

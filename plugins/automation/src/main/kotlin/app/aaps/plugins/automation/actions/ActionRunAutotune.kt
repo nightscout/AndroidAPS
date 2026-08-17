@@ -92,5 +92,5 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
         return this
     }
 
-    override fun isValid(): Boolean = runBlocking { profileFunction.getProfile() } != null && activePlugin.getSpecificPluginsListByInterface(Autotune::class.java).first().isEnabled()
+    override fun isValid(): Boolean = runBlocking { profileFunction.getProfile() } != null && activePlugin.getSpecificPluginsListByInterface(Autotune::class).first().isEnabled()
 }

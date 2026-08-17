@@ -77,7 +77,7 @@ import kotlin.math.abs
 @Singleton
 class EopatchPumpPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     commandQueue: CommandQueue,
     private val aapsSchedulers: AapsSchedulers,

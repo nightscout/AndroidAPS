@@ -1,7 +1,7 @@
 package app.aaps.core.interfaces.plugin
 
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.interfaces.NonPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
 
@@ -12,7 +12,7 @@ abstract class PluginBaseWithPreferences(
     pluginDescription: PluginDescription,
     val ownPreferences: List<NonPreferenceKey> = emptyList(),
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    rh: TextResolver,
     val preferences: Preferences
 ) : PluginBase(pluginDescription, aapsLogger, rh) {
 

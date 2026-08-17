@@ -62,7 +62,7 @@ import javax.inject.Singleton
 @Singleton
 class AutotunePlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     private val rxBus: RxBus,
     private val profileFunction: ProfileFunction,

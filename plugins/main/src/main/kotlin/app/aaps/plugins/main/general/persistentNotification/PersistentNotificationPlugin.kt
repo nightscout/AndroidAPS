@@ -61,7 +61,7 @@ import javax.inject.Singleton
 @Singleton
 class PersistentNotificationPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
     private val fabricPrivacy: FabricPrivacy,
@@ -180,10 +180,7 @@ class PersistentNotificationPlugin @Inject constructor(
             val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
             val cobInfo = iobCobCalculator.getCobInfo("PersistentNotificationPlugin")
             line2 =
-                rh.gs(app.aaps.core.ui.R.string.treatments_iob_label_string) + " " + rh.gs(R.string.notification_iob_short, bolusIob.iob + basalIob.basaliob) + " • " + rh.gs(
-                    app.aaps.core.ui.R
-                        .string.cob
-                ) + ": " + cobInfo.generateCOBString(decimalFormatter)
+                rh.gs(app.aaps.core.ui.R.string.treatments_iob_label_string) + " " + rh.gs(R.string.notification_iob_short, bolusIob.iob + basalIob.basaliob) + " • " + rh.gs(app.aaps.core.ui.R.string.cob) + ": " + cobInfo.generateCOBString(decimalFormatter)
             line3 = profileName
             /// For Android Auto
             val msgReadIntent = Intent()

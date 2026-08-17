@@ -70,7 +70,7 @@ import kotlin.math.max
 @Singleton
 class DiaconnG8Plugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     commandQueue: CommandQueue,
     private val rxBus: RxBus,

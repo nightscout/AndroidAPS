@@ -57,7 +57,7 @@ class TestOpenAPSAMAPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val constraintChecker: ConstraintsChecker,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
     private val iobCobCalculator: IobCobCalculator,

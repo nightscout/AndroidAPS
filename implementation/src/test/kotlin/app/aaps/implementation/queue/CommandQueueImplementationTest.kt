@@ -507,13 +507,13 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         commandQueue.pickup()
 
         // then
-        assertThat(commandQueue.isCustomCommandInQueue(CustomCommand1::class.java)).isTrue()
-        assertThat(commandQueue.isCustomCommandInQueue(CustomCommand2::class.java)).isTrue()
-        assertThat(commandQueue.isCustomCommandInQueue(CustomCommand3::class.java)).isFalse()
+        assertThat(commandQueue.isCustomCommandInQueue(CustomCommand1::class)).isTrue()
+        assertThat(commandQueue.isCustomCommandInQueue(CustomCommand2::class)).isTrue()
+        assertThat(commandQueue.isCustomCommandInQueue(CustomCommand3::class)).isFalse()
 
-        assertThat(commandQueue.isCustomCommandRunning(CustomCommand1::class.java)).isTrue()
-        assertThat(commandQueue.isCustomCommandRunning(CustomCommand2::class.java)).isFalse()
-        assertThat(commandQueue.isCustomCommandRunning(CustomCommand3::class.java)).isFalse()
+        assertThat(commandQueue.isCustomCommandRunning(CustomCommand1::class)).isTrue()
+        assertThat(commandQueue.isCustomCommandRunning(CustomCommand2::class)).isFalse()
+        assertThat(commandQueue.isCustomCommandRunning(CustomCommand3::class)).isFalse()
 
         assertThat(commandQueue.size()).isEqualTo(1)
     }

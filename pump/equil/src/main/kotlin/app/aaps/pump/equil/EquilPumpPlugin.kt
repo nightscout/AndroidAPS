@@ -80,7 +80,7 @@ import javax.inject.Singleton
 @Singleton
 class EquilPumpPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     commandQueue: CommandQueue,
     private val rxBus: RxBus,

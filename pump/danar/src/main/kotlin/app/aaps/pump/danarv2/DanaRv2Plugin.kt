@@ -57,7 +57,7 @@ class DanaRv2Plugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rxBus: RxBus,
     private val context: Context,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     activePlugin: ActivePlugin,
     commandQueue: CommandQueue,
     danaPump: DanaPump,

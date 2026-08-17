@@ -87,6 +87,7 @@ import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.PluginPermissions
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
@@ -193,6 +194,7 @@ class ComposeMainActivity : AppCompatActivity() {
     @Inject lateinit var cryptoUtil: CryptoUtil
     @Inject lateinit var exportPasswordDataStore: ExportPasswordDataStore
     @Inject lateinit var activePlugin: ActivePlugin
+    @Inject lateinit var pluginPermissions: PluginPermissions
     @Inject lateinit var nsClient: NsClient
     @Inject lateinit var clientControlActionDispatcher: ClientControlActionDispatcher
     @Inject lateinit var automationRuntime: AutomationRuntime
@@ -790,6 +792,7 @@ class ComposeMainActivity : AppCompatActivity() {
                 swDefinition = swDefinition,
                 rxBus = rxBus,
                 activePlugin = activePlugin,
+                pluginPermissions = pluginPermissions,
                 automationRuntime = automationRuntime,
                 preferences = preferences,
                 rh = rh,

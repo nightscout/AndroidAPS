@@ -111,7 +111,7 @@ class LoopPlugin @Inject constructor(
     private val preferences: Preferences,
     private val config: Config,
     private val constraintChecker: ConstraintsChecker,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     private val profileFunction: ProfileFunction,
     private val context: Context,
     private val commandQueue: CommandQueue,
@@ -716,14 +716,14 @@ class LoopPlugin @Inject constructor(
 
     private fun presentSuggestion(builder: NotificationCompat.Builder, contentText: String) {
         // Creates an explicit intent for an Activity in your app
-        val resultIntent = Intent(context, uiInteraction.mainActivity)
+        val resultIntent = Intent(context, uiInteraction.mainActivity.java)
 
         // The stack builder object will contain an artificial back stack for the
         // started Activity.
         // This ensures that navigating backward from the Activity leads out of
         // your application to the Home screen.
         val stackBuilder = TaskStackBuilder.create(context)
-        stackBuilder.addParentStack(uiInteraction.mainActivity)
+        stackBuilder.addParentStack(uiInteraction.mainActivity.java)
         // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(resultIntent)
         val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)

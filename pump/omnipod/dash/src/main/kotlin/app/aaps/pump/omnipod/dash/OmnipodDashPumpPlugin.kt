@@ -101,12 +101,11 @@ import javax.inject.Singleton
 import kotlin.concurrent.thread
 import kotlin.math.ceil
 import kotlin.time.Duration.Companion.hours
-import app.aaps.core.interfaces.R as CoreInterfacesR
 
 @Singleton
 class OmnipodDashPumpPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     commandQueue: CommandQueue,
     private val omnipodManager: OmnipodDashManager,
@@ -384,7 +383,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             }
             if (!podStateManager.alarmSynced) {
                 podStateManager.alarmType?.let {
-                    if (!commandQueue.isCustomCommandInQueue(CommandDeactivatePod::class.java)) {
+                    if (!commandQueue.isCustomCommandInQueue(CommandDeactivatePod::class)) {
                         showNotification(
                             NotificationId.OMNIPOD_POD_FAULT,
                             it.toString(),
@@ -804,8 +803,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 // delivery not complete yet
                 val remainingUnits = podStateManager.lastBolus!!.bolusUnitsRemaining
                 val percent = ((requestedBolusAmount - remainingUnits) / requestedBolusAmount) * 100
-                val delivered = requestedBolusAmount - remainingUnits
-                rh.gs(CoreInterfacesR.string.bolus_delivering, delivered)
                 bolusProgressData.updateProgress(percent = percent.toInt())
 
                 val sleepSeconds = if (bolusCanceled)
@@ -1078,7 +1075,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 aapsLogger.warn(LTag.PUMP, "Unsupported custom command: " + customCommand.javaClass.name)
                 pumpEnactResultProvider.get().success(false).enacted(false).comment(
                     rh.gs(
-                        app.aaps.pump.omnipod.common.R.string.omnipod_common_error_unsupported_custom_command,
+                        TextRef.AndroidRes(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_unsupported_custom_command),
                         customCommand.javaClass.name
                     )
                 )
@@ -1413,7 +1410,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     podStateManager.tempBasal = command.tempBasal
 
                     // Evaluate basal drift correction after confirmed temp basal set.
-                    if (!commandQueue.isCustomCommandInQueue(CommandDeliverBasalCorrection::class.java) &&
+                    if (!commandQueue.isCustomCommandInQueue(CommandDeliverBasalCorrection::class) &&
                         podStateManager.needsBasalCorrection()
                     ) {
                         // Queue-worker deadlock guard — don't unwrap the .launch. See CommandQueue kdoc.

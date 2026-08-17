@@ -119,7 +119,7 @@ import kotlin.math.floor
 @Singleton
 class MedtronicPumpPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     commandQueue: CommandQueue,
     rxBus: RxBus,

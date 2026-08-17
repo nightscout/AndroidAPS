@@ -116,7 +116,7 @@ internal const val PUMP_ERROR_TIMEOUT_INTERVAL_MSECS = 1000L * 60 * 5
 @Singleton
 class ComboV2Plugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     commandQueue: CommandQueue,
     private val context: Context,
@@ -1620,7 +1620,7 @@ class ComboV2Plugin @Inject constructor(
                             val description = when (val progStage = progressReport.stage) {
                                 is BasicProgressStage.EstablishingBtConnection   ->
                                     rh.gs(
-                                        R.string.combov2_establishing_bt_connection,
+                                        TextRef.AndroidRes(R.string.combov2_establishing_bt_connection),
                                         progStage.currentAttemptNr
                                     )
 
@@ -1688,7 +1688,7 @@ class ComboV2Plugin @Inject constructor(
                             val description = when (val stage = progressReport.stage) {
                                 is RTCommandProgressStage.DeliveringBolus ->
                                     rh.gs(
-                                        R.string.combov2_delivering_bolus,
+                                        TextRef.AndroidRes(R.string.combov2_delivering_bolus),
                                         stage.deliveredImmediateAmount.cctlBolusToIU(),
                                         stage.totalImmediateAmount.cctlBolusToIU()
                                     )

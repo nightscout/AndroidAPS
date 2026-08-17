@@ -39,7 +39,7 @@ import javax.inject.Singleton
 @Singleton
 class SafetyPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     private val preferences: Preferences,
     private val constraintChecker: ConstraintsChecker,
     private val activePlugin: ActivePlugin,

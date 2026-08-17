@@ -140,7 +140,7 @@ import android.app.NotificationManager as AndroidNotificationManager
 @Singleton
 class InsightPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     commandQueue: CommandQueue,
     private val rxBus: RxBus,

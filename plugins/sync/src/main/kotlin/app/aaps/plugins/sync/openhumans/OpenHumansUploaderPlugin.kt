@@ -65,7 +65,7 @@ import app.aaps.core.ui.R as CoreUiR
 
 @Singleton
 class OpenHumansUploaderPlugin @Inject internal constructor(
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     preferences: Preferences,
     internal val context: Context,

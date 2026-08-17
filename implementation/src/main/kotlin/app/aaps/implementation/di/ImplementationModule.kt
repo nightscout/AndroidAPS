@@ -19,6 +19,7 @@ import app.aaps.core.interfaces.overview.LastBgData
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PermissionProvider
+import app.aaps.core.interfaces.plugin.PluginPermissions
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileStore
@@ -149,6 +150,7 @@ class ImplementationModule {
         @Binds fun bindVisibilityContext(impl: VisibilityContextImpl): VisibilityContext
         @Binds fun bindFabricPrivacy(fabricPrivacyImpl: FabricPrivacyImpl): FabricPrivacy
         @Binds fun bindActivePlugin(pluginStore: PluginStore): ActivePlugin
+        @Binds fun bindPluginPermissions(pluginStore: PluginStore): PluginPermissions
 
         // Runtime-permission sources for non-plugin features (e.g. standalone Automation).
         // May be empty; contributors bind via @IntoSet PermissionProvider.

@@ -32,7 +32,7 @@ import javax.inject.Singleton
 @Singleton
 class ObjectivesPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     config: Config,
     val objectives: List<@JvmSuppressWildcards Objective>

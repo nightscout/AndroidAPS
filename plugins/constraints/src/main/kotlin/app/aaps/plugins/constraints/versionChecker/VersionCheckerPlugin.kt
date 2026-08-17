@@ -21,7 +21,7 @@ import javax.inject.Singleton
 @Singleton
 class VersionCheckerPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     private val versionCheckerUtils: VersionCheckerUtils,
     private val config: Config,

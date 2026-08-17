@@ -68,7 +68,7 @@ fun AllPreferencesScreen(
     val preferences = LocalPreferences.current
     val config = LocalConfig.current
     // Look up plugins by interface
-    val autotunePlugin = activePlugin.getSpecificPluginsListByInterface(Autotune::class.java).firstOrNull()
+    val autotunePlugin = activePlugin.getSpecificPluginsListByInterface(Autotune::class).firstOrNull()
 
     // Built-in preference screens from BuiltInSearchables (single source of truth)
     val generalPreferences = builtInSearchables.general

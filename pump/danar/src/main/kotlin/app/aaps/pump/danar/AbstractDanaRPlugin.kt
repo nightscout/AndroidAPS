@@ -63,7 +63,7 @@ import kotlin.math.max
 abstract class AbstractDanaRPlugin protected constructor(
     protected var danaPump: DanaPump,
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     protected val config: Config,
     commandQueue: CommandQueue,

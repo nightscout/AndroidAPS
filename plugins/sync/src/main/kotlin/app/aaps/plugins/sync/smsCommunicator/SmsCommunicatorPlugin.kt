@@ -113,7 +113,7 @@ import kotlin.math.min
 @Singleton
 class SmsCommunicatorPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     private val smsManager: SmsManager?,
     preferences: Preferences,
     private val constraintChecker: ConstraintsChecker,

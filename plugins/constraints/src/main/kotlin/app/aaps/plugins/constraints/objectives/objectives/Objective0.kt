@@ -31,7 +31,7 @@ class Objective0 @Inject constructor(
     private val passwordCheck: PasswordCheck,
 ) : Objective(preferences, rh, dateUtil, "config", R.string.objectives_0_objective, R.string.objectives_0_gate) {
 
-    val tidepoolPlugin get() = activePlugin.getSpecificPluginsListByInterface(Tidepool::class.java).firstOrNull() as Tidepool?
+    val tidepoolPlugin get() = activePlugin.getSpecificPluginsListByInterface(Tidepool::class).firstOrNull() as Tidepool?
 
     init {
         tasks.add(object : Task(this, R.string.objectives_bgavailableinns) {

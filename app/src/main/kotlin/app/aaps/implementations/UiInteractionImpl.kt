@@ -28,6 +28,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Provider
+import kotlin.reflect.KClass
 
 @Reusable
 class UiInteractionImpl @Inject constructor(
@@ -42,8 +43,8 @@ class UiInteractionImpl @Inject constructor(
     @ApplicationScope private val appScope: CoroutineScope
 ) : UiInteraction {
 
-    override val mainActivity: Class<*> = ComposeMainActivity::class.java
-    override val errorHelperActivity: Class<*> = ErrorActivity::class.java
+    override val mainActivity: KClass<*> = ComposeMainActivity::class
+    override val errorHelperActivity: KClass<*> = ErrorActivity::class
 
     override fun runAlarm(status: String, title: String, sound: AlarmSound?) {
         // Persist the error as an announcement at fire time — gated by the NS-announcement
@@ -78,7 +79,7 @@ class UiInteractionImpl @Inject constructor(
             //   • Works because the caller's process is already foreground (Android's
             //     background-activity-start restriction does not apply).
             aapsLogger.debug(LTag.CORE, "runAlarm (foreground direct): $title - $status (sound=$sound)")
-            val intent = Intent(context, errorHelperActivity).apply {
+            val intent = Intent(context, errorHelperActivity.java).apply {
                 putExtra(AlarmIntent.EXTRA_SOUND, sound?.name)
                 putExtra(AlarmIntent.EXTRA_STATUS, status)
                 putExtra(AlarmIntent.EXTRA_TITLE, title)

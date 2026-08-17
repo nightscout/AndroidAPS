@@ -30,7 +30,7 @@ import kotlin.math.roundToInt
 @Singleton
 class SensitivityOref1Plugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     private val dateUtil: DateUtil
 ) : AbstractSensitivityPlugin(

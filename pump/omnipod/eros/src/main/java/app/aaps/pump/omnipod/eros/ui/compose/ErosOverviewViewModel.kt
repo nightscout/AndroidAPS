@@ -297,28 +297,28 @@ class ErosOverviewViewModel @Inject constructor(
                 label = rh.gs(CommonR.string.omnipod_common_overview_button_silence_alerts),
                 icon = Icons.Filled.NotificationsOff,
                 enabled = rlReady && queueEmpty,
-                visible = !omnipodManager.isAutomaticallyAcknowledgeAlertsEnabled && podStateManager.isPodRunning && (podStateManager.hasActiveAlerts() || commandQueue.isCustomCommandInQueue(CommandSilenceAlerts::class.java)),
+                visible = !omnipodManager.isAutomaticallyAcknowledgeAlertsEnabled && podStateManager.isPodRunning && (podStateManager.hasActiveAlerts() || commandQueue.isCustomCommandInQueue(CommandSilenceAlerts::class)),
                 onClick = { runCustomCommandWithErrorDialog(CommandSilenceAlerts(), rh.gs(CommonR.string.omnipod_common_error_failed_to_silence_alerts)) }
             ),
             PumpAction(
                 label = rh.gs(CommonR.string.omnipod_common_overview_button_resume_delivery),
                 icon = Icons.Filled.PlayArrow,
                 enabled = rlReady && queueEmpty,
-                visible = podStateManager.isPodRunning && (podStateManager.isSuspended || commandQueue.isCustomCommandInQueue(CommandResumeDelivery::class.java)),
+                visible = podStateManager.isPodRunning && (podStateManager.isSuspended || commandQueue.isCustomCommandInQueue(CommandResumeDelivery::class)),
                 onClick = { runCustomCommandWithErrorDialog(CommandResumeDelivery(), rh.gs(CommonR.string.omnipod_common_error_failed_to_resume_delivery)) }
             ),
             PumpAction(
                 label = rh.gs(CommonR.string.omnipod_common_overview_button_suspend_delivery),
                 icon = Icons.Filled.Pause,
                 enabled = podStateManager.isPodRunning && !podStateManager.isSuspended && rlReady && queueEmpty,
-                visible = omnipodManager.isSuspendDeliveryButtonEnabled && podStateManager.isPodRunning && (!podStateManager.isSuspended || commandQueue.isCustomCommandInQueue(CommandSuspendDelivery::class.java)),
+                visible = omnipodManager.isSuspendDeliveryButtonEnabled && podStateManager.isPodRunning && (!podStateManager.isSuspended || commandQueue.isCustomCommandInQueue(CommandSuspendDelivery::class)),
                 onClick = { runCustomCommandWithErrorDialog(CommandSuspendDelivery(), rh.gs(CommonR.string.omnipod_common_error_failed_to_suspend_delivery)) }
             ),
             PumpAction(
                 label = rh.gs(CommonR.string.omnipod_common_overview_button_set_time),
                 icon = Icons.Filled.Schedule,
                 enabled = podStateManager.isPodRunning && !podStateManager.isSuspended && rlReady && queueEmpty,
-                visible = podStateManager.isPodRunning && (podStateManager.timeDeviatesMoreThan(Duration.standardMinutes(5)) || commandQueue.isCustomCommandInQueue(CommandHandleTimeChange::class.java)),
+                visible = podStateManager.isPodRunning && (podStateManager.timeDeviatesMoreThan(Duration.standardMinutes(5)) || commandQueue.isCustomCommandInQueue(CommandHandleTimeChange::class)),
                 onClick = { runCustomCommandWithErrorDialog(CommandHandleTimeChange(true), rh.gs(CommonR.string.omnipod_common_error_failed_to_set_time)) }
             )
         )
@@ -348,7 +348,7 @@ class ErosOverviewViewModel @Inject constructor(
                 label = rh.gs(CommonR.string.omnipod_common_pod_management_button_play_test_beep),
                 icon = Icons.AutoMirrored.Filled.VolumeUp,
                 category = ActionCategory.MANAGEMENT,
-                enabled = rlReady && !commandQueue.isCustomCommandInQueue(CommandPlayTestBeep::class.java),
+                enabled = rlReady && !commandQueue.isCustomCommandInQueue(CommandPlayTestBeep::class),
                 visible = podStateManager.isPodInitialized && podStateManager.activationProgress.isAtLeast(ActivationProgress.PAIRING_COMPLETED),
                 onClick = { runCustomCommandWithErrorDialog(CommandPlayTestBeep(), rh.gs(CommonR.string.omnipod_common_error_failed_to_play_test_beep)) }
             ),

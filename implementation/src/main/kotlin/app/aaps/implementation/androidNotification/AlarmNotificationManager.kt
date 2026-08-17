@@ -213,8 +213,8 @@ class AlarmNotificationManager @Inject constructor(
     private fun openAppPendingIntent(): PendingIntent? {
         val mainActivity = uiInteractionProvider.get().mainActivity
         return TaskStackBuilder.create(context).run {
-            addParentStack(mainActivity)
-            addNextIntent(Intent(context, mainActivity))
+            addParentStack(mainActivity.java)
+            addNextIntent(Intent(context, mainActivity.java))
             getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         }
     }
@@ -250,7 +250,7 @@ class AlarmNotificationManager @Inject constructor(
         // double-audio; if ErrorActivity does launch, it re-requests the same owner+sound, which the
         // player treats as idempotent (no restart glitch).
         val postedAt = SystemClock.elapsedRealtime()
-        val intent = Intent(context, uiInteractionProvider.get().errorHelperActivity).apply {
+        val intent = Intent(context, uiInteractionProvider.get().errorHelperActivity.java).apply {
             putExtra(AlarmIntent.EXTRA_SOUND, sound?.name)
             putExtra(AlarmIntent.EXTRA_STATUS, status)
             putExtra(AlarmIntent.EXTRA_TITLE, title)
@@ -332,7 +332,7 @@ class AlarmNotificationManager @Inject constructor(
         val triggerAt = System.currentTimeMillis() + SCREEN_WAKE_DELAY_MS
         val show = PendingIntent.getActivity(
             context, WAKE_REQUEST_CODE,
-            Intent(context, uiInteractionProvider.get().mainActivity),
+            Intent(context, uiInteractionProvider.get().mainActivity.java),
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
         val wakeOp = PendingIntent.getBroadcast(

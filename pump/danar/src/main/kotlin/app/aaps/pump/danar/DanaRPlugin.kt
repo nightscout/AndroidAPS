@@ -53,7 +53,7 @@ import kotlin.math.max
 @Singleton
 class DanaRPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     config: Config,
     commandQueue: CommandQueue,

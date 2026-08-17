@@ -26,7 +26,7 @@ abstract class PumpPluginBase(
     pluginDescription: PluginDescription,
     ownPreferences: List<NonPreferenceKey> = emptyList(),
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     val commandQueue: CommandQueue
 ) : PluginBaseWithPreferences(pluginDescription, ownPreferences, aapsLogger, rh, preferences) {
