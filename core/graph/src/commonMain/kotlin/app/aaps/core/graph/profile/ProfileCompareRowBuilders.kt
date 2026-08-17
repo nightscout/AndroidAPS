@@ -1,8 +1,8 @@
 package app.aaps.core.graph.profile
 
-import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil

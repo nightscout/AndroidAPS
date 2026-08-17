@@ -63,7 +63,9 @@ class YesNoCancelDialogTest {
 
     @Test
     fun yes_firesOnYesOnly() {
-        var yes = 0; var no = 0; var cancel = 0
+        var yes = 0;
+        var no = 0;
+        var cancel = 0
         show(onYes = { yes++ }, onNo = { no++ }, onCancel = { cancel++ })
         compose.onNodeWithText(yesLabel).performClick()
         assertThat(yes).isEqualTo(1)
@@ -73,7 +75,9 @@ class YesNoCancelDialogTest {
 
     @Test
     fun no_firesOnNoOnly() {
-        var yes = 0; var no = 0; var cancel = 0
+        var yes = 0;
+        var no = 0;
+        var cancel = 0
         show(onYes = { yes++ }, onNo = { no++ }, onCancel = { cancel++ })
         compose.onNodeWithText(noLabel).performClick()
         assertThat(no).isEqualTo(1)
@@ -83,7 +87,9 @@ class YesNoCancelDialogTest {
 
     @Test
     fun cancel_firesOnCancelOnly() {
-        var yes = 0; var no = 0; var cancel = 0
+        var yes = 0;
+        var no = 0;
+        var cancel = 0
         show(onYes = { yes++ }, onNo = { no++ }, onCancel = { cancel++ })
         compose.onNodeWithText(cancelLabel).performClick()
         assertThat(cancel).isEqualTo(1)
@@ -117,7 +123,9 @@ class YesNoCancelDialogTest {
 
     @Test
     fun annotatedString_yes_firesOnYesOnly() {
-        var yes = 0; var no = 0; var cancel = 0
+        var yes = 0;
+        var no = 0;
+        var cancel = 0
         showAnnotated(onYes = { yes++ }, onNo = { no++ }, onCancel = { cancel++ })
         compose.onNodeWithText(yesLabel).performClick()
         assertThat(yes).isEqualTo(1)
@@ -127,7 +135,9 @@ class YesNoCancelDialogTest {
 
     @Test
     fun annotatedString_no_firesOnNoOnly() {
-        var yes = 0; var no = 0; var cancel = 0
+        var yes = 0;
+        var no = 0;
+        var cancel = 0
         showAnnotated(onYes = { yes++ }, onNo = { no++ }, onCancel = { cancel++ })
         compose.onNodeWithText(noLabel).performClick()
         assertThat(no).isEqualTo(1)
@@ -137,7 +147,9 @@ class YesNoCancelDialogTest {
 
     @Test
     fun annotatedString_cancel_firesOnCancelOnly() {
-        var yes = 0; var no = 0; var cancel = 0
+        var yes = 0;
+        var no = 0;
+        var cancel = 0
         showAnnotated(onYes = { yes++ }, onNo = { no++ }, onCancel = { cancel++ })
         compose.onNodeWithText(cancelLabel).performClick()
         assertThat(cancel).isEqualTo(1)

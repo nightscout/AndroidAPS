@@ -45,6 +45,7 @@ open class WeekDay {
     }
 
     val weekdays = BooleanArray(DayOfWeek.entries.size)
+
     init {
         for (day in DayOfWeek.entries) set(day, false)
     }

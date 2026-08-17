@@ -5,7 +5,10 @@ package app.aaps.core.keys.interfaces
  * - [Cold]: the rarely-changing config doc (plugin config, settings).
  * - [Hot]: the small, frequently-republished runtime doc (e.g. active scene).
  */
-enum class SyncChannel { Cold, Hot }
+enum class SyncChannel {
+
+    Cold, Hot
+}
 
 /**
  * Sync authority for a preference key:
@@ -13,7 +16,10 @@ enum class SyncChannel { Cold, Hot }
  * - [Bidirectional]: the client may also edit it; the edit is pushed to the master, which applies
  *   last-writer-wins by the per-key modified stamp and republishes so devices converge.
  */
-enum class SyncDirection { MasterOnly, Bidirectional }
+enum class SyncDirection {
+
+    MasterOnly, Bidirectional
+}
 
 /**
  * Single source of truth for how a preference key participates in device-to-device sync. Declared

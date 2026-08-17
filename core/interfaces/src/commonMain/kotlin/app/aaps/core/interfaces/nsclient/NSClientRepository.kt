@@ -43,7 +43,6 @@ interface NSClientRepository {
         addLog(action, logText, null as JsonElement?)
     }
 
-
     /** Clear all log entries */
     fun clearLog()
 }

@@ -50,6 +50,7 @@ interface ImportExportPrefs {
     fun exportSharedPreferencesNonInteractive(password: String): Boolean
     fun exportUserEntriesCsv()
     suspend fun executeCsvExport(): ExportResult
+
     /**
      * Write one APS run to a debug file (engineering mode only).
      *

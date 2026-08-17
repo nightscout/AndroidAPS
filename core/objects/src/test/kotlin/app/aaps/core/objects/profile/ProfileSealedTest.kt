@@ -1,7 +1,6 @@
 package app.aaps.core.objects.profile
 
 import android.content.Context
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -11,6 +10,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.shared.tests.HardLimitsMock
@@ -43,6 +43,7 @@ class ProfileSealedTest : TestBase() {
     private lateinit var hardLimits: HardLimits
     private lateinit var dateUtil: DateUtil
     private lateinit var testPumpPlugin: TestPumpPlugin
+
     //ICfg: dia 18000000 = 5.0h, peak = 4500000 = 75
     private var okProfile = "{\"iCfg\":{\"insulinLabel\":\"\",\"insulinEndTime\":18000000,\"insulinPeakTime\":4500000,\"concentration\":\"1.0\"},\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}]," +
         "\"sens\":[{\"time\":\"00:00\",\"value\":\"6\"},{\"time\":\"2:00\",\"value\":\"6.2\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"

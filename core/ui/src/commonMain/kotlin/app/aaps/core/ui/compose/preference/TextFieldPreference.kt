@@ -17,8 +17,6 @@
 
 package app.aaps.core.ui.compose.preference
 
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -42,6 +40,8 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 
 /**
  * @see TextFieldPreferencePreview

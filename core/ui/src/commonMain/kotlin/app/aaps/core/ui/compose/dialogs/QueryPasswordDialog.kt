@@ -1,7 +1,5 @@
 package app.aaps.core.ui.compose.dialogs
 
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -27,6 +25,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.DialogProperties
+import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 
 /**
  * Dialog for querying an existing password or PIN.

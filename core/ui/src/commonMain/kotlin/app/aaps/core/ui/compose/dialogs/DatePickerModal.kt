@@ -1,7 +1,5 @@
 package app.aaps.core.ui.compose.dialogs
 
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.ui.UiStrings
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -9,6 +7,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 
 /**
  * A modal date picker dialog.

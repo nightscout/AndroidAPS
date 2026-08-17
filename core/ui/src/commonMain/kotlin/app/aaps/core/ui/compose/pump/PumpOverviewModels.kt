@@ -1,9 +1,9 @@
 package app.aaps.core.ui.compose.pump
 
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.AnnotatedString
 import app.aaps.core.ui.compose.StatusLevel
 
 /**
@@ -42,19 +42,20 @@ data class PumpInfoRow(
     val value: String,
     val level: StatusLevel = StatusLevel.UNSPECIFIED,
     val visible: Boolean = true
-): PumpInfoInterface
+) : PumpInfoInterface
 
 /**
  * Group for PumpInfoRow. Group items are displayed together, with divider only at end of group (instead of each item)
  */
 data class PumpInfoGroup(
     var list: MutableList<PumpInfoRow> = mutableListOf()
-): PumpInfoInterface
+) : PumpInfoInterface
 
 /**
  * PumpInfoRow with custom compose content.
  */
-interface PumpInfoComposable: PumpInfoInterface {
+interface PumpInfoComposable : PumpInfoInterface {
+
     fun composableContent(): @Composable () -> Unit
     fun hasDividerOnEnd(): Boolean = false
 }

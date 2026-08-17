@@ -6,6 +6,7 @@ interface Command {
 
     val commandType: CommandType
     val callback: Callback?
+
     /**
      * Makes a fresh [PumpEnactResult].
      *
@@ -40,6 +41,7 @@ interface Command {
     suspend fun executeWithCallback() {
         callback?.result(execute())?.run()
     }
+
     fun status(): String
     fun log(): String
 

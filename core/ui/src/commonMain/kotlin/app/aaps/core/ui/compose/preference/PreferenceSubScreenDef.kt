@@ -1,6 +1,5 @@
 package app.aaps.core.ui.compose.preference
 
-import app.aaps.core.ui.UiStrings
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.keys.interfaces.PreferenceItem
 import app.aaps.core.keys.interfaces.PreferenceKey

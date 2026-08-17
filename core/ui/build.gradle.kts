@@ -1,5 +1,4 @@
 import kotlin.math.min
-import org.gradle.testing.jacoco.plugins.JacocoTaskExtension
 
 plugins {
     kotlin("multiplatform")

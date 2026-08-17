@@ -29,9 +29,10 @@ data class ICfg(
 
     constructor(insulinLabel: String, peak: Int, dia: Double, concentration: Double)
         : this(insulinLabel = insulinLabel, insulinEndTime = (dia * 3600 * 1000).toLong(), insulinPeakTime = (peak * 60000).toLong(), concentration = concentration)
+
     /**
-    * Used in InsulinPlugin (insulin editor)
-    */
+     * Used in InsulinPlugin (insulin editor)
+     */
     fun isEqual(iCfg: ICfg?): Boolean {
         iCfg?.let { iCfg ->
             if (insulinLabel != iCfg.insulinLabel)
@@ -46,6 +47,7 @@ data class ICfg(
         }
         return false
     }
+
     /**
      * DIA (insulinEndTime) in hours rounded to 1 decimal place
      */
@@ -124,6 +126,7 @@ data class ICfg(
     }
 
     companion object {
+
         // Math-validity floors for iobCalcForTreatment. They only engage for corrupt/degenerate iCfg
         // and are no-ops for real configs; they are NOT the medical HardLimits.
         private const val MIN_DIA_MINUTES = 300.0 // 5 h (mirrors HardLimits.MIN_DIA); floors corrupt/sentinel DIA <= 0

@@ -16,7 +16,6 @@ fun PumpType.determineCorrectBolusSize(bolusAmount: Double): Double =
 fun PumpType.determineCorrectBolusStepSize(bolusAmount: Double): Double =
     specialBolusSize()?.getStepSizeForAmount(bolusAmount) ?: bolusSize()
 
-
 fun PumpType.determineCorrectBasalSize(basalAmount: Double): Double {
     val tSettings = tbrSettings() ?: throw IllegalStateException()
     return Round.roundTo(min(basalAmount, tSettings.maxDose), baseBasalSpecialSteps()?.getStepSizeForAmount(basalAmount) ?: baseBasalStep())

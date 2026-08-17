@@ -73,8 +73,8 @@ interface HardLimits {
         //No IOB at all
         const val MAX_IOB_LGS = 0.0
 
-        const val MAX_CARBS_DURATION_HOURS  = 10L
-        const val MAX_CARBS  = 400
+        const val MAX_CARBS_DURATION_HOURS = 10L
+        const val MAX_CARBS = 400
     }
 
     fun maxBolus(): Double

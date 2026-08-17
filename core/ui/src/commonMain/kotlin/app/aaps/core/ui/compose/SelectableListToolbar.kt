@@ -1,6 +1,5 @@
 package app.aaps.core.ui.compose
 
-import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -22,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.ui.UiStrings
 
 /**
  * Reusable toolbar builder for screens with selectable list items.

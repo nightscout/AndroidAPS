@@ -4,7 +4,6 @@
 
 package app.aaps.core.ui.compose.preference
 
-import app.aaps.core.ui.UiStrings
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -15,6 +14,7 @@ import app.aaps.core.keys.interfaces.BooleanKeyWithChangeGuard
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.VisibilityContext
+import app.aaps.core.ui.UiStrings
 import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.stringResource
 
@@ -57,11 +57,11 @@ fun AdaptiveSwitchPreferenceItem(
             { Text(stringResource(if (state.value) summaryOn else summaryOff)) }
         }
 
-        effectiveSummary != null                          -> {
+        effectiveSummary != null                -> {
             { Text(stringResource(effectiveSummary)) }
         }
 
-        else                                              -> null
+        else                                    -> null
     }
 
     if (changeGuard != null) {

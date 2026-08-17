@@ -12,7 +12,6 @@ import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import org.json.JSONArray
-import org.json.JSONObject
 
 private fun getShiftedTimeSecs(originalSeconds: Int, timeShiftHours: Int): Int {
     var shiftedSeconds = originalSeconds - timeShiftHours * 60 * 60

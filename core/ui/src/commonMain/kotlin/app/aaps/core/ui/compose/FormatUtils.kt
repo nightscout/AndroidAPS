@@ -1,10 +1,10 @@
 package app.aaps.core.ui.compose
 
-import app.aaps.core.ui.UiStrings
 import androidx.compose.runtime.Composable
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.UiStrings
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
@@ -70,7 +70,7 @@ fun formatSliderDisplayValue(
     return when {
         asDuration                     -> formatMinutesAsDuration(value.roundToInt())
 
-        valueFormatRef != null       -> {
+        valueFormatRef != null         -> {
             if (formatAsInt) stringResource(valueFormatRef, value.roundToInt())
             else stringResource(valueFormatRef, value)
         }

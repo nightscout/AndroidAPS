@@ -1,8 +1,6 @@
 package app.aaps.core.objects.profile
 
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.data.time.systemUtcOffsetAt
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.ICfg
@@ -10,6 +8,8 @@ import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.data.Block
 import app.aaps.core.data.model.data.TargetBlock
 import app.aaps.core.data.time.T
+import app.aaps.core.data.time.systemUtcOffsetAt
+import app.aaps.core.interfaces.R
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.notifications.NotificationId
@@ -25,6 +25,7 @@ import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.extensions.blockValueBySeconds
 import app.aaps.core.objects.extensions.highTargetBlockValueBySeconds
 import app.aaps.core.objects.extensions.lowTargetBlockValueBySeconds
@@ -32,16 +33,12 @@ import app.aaps.core.objects.extensions.shiftBlock
 import app.aaps.core.objects.extensions.shiftTargetBlock
 import app.aaps.core.objects.extensions.targetBlockValueBySeconds
 import app.aaps.core.objects.extensions.toJsonObject
-import app.aaps.core.interfaces.R
 import app.aaps.core.utils.MidnightUtils
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.add
 import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
-import org.json.JSONArray
-import org.json.JSONObject
 import kotlin.time.Clock
 
 sealed class ProfileSealed(
@@ -527,6 +524,7 @@ sealed class ProfileSealed(
                 elapsedSec += T.msecs(it.duration).secs().toInt()
             }
         }.toString()
+
     private fun toMgdl(value: Double, units: GlucoseUnit): Double =
         if (units == GlucoseUnit.MGDL) value else value * Constants.MMOLL_TO_MGDL
 }

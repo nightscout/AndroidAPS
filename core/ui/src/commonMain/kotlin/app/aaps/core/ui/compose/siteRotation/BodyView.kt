@@ -12,9 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Matrix
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathOperation
-import androidx.compose.ui.graphics.Matrix
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
@@ -44,7 +44,7 @@ fun BodyView(
         location != TE.Location.NONE && (
             if (editedType == TE.Type.CANNULA_CHANGE) location.pump
             else (showPumpSites && location.pump) || showCgmSites
-        )
+            )
 
     BoxWithConstraints(modifier = modifier.aspectRatio(aspectRatio)) {
         val canvasWidth = constraints.maxWidth.toFloat()

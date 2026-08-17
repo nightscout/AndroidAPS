@@ -1,8 +1,5 @@
 package app.aaps.core.ui.compose.navigation
 
-import app.aaps.core.interfaces.InterfacesStrings
-import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.UiStrings
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Add
@@ -12,8 +9,11 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.navigation.ElementCategory
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.UiStrings
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.icons.IcActivity
 import app.aaps.core.ui.compose.icons.IcAnnouncement
@@ -188,15 +188,15 @@ fun ElementType.icon(): ImageVector = when (this) {
 }
 
 fun ElementCategory.label(): TextRef? = when (this) {
-    ElementCategory.TREATMENT -> UiStrings.overview_treatment_label
-    ElementCategory.CGM -> UiStrings.cgm
+    ElementCategory.TREATMENT  -> UiStrings.overview_treatment_label
+    ElementCategory.CGM        -> UiStrings.cgm
     ElementCategory.MANAGEMENT -> UiStrings.manage
     ElementCategory.CAREPORTAL -> UiStrings.careportal
-    ElementCategory.DEVICE -> UiStrings.device_maintenance
-    ElementCategory.BASAL -> UiStrings.basal
+    ElementCategory.DEVICE     -> UiStrings.device_maintenance
+    ElementCategory.BASAL      -> UiStrings.basal
     ElementCategory.SYSTEM,
     ElementCategory.NAVIGATION,
-    ElementCategory.INTERNAL -> null
+    ElementCategory.INTERNAL   -> null
 }
 
 fun ElementType.label(): TextRef? = when (this) {

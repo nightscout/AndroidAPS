@@ -11,12 +11,12 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.ui.UiStrings
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.ICfg
-import app.aaps.core.data.time.T
 import app.aaps.core.data.model.iobCalc
+import app.aaps.core.data.time.T
+import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.Zoom
 import com.patrykandpatrick.vico.compose.cartesian.axis.Axis

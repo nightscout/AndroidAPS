@@ -1,7 +1,7 @@
 package app.aaps.core.ui.extensions
 
-import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.data.iob.CobInfo
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DecimalFormatter
 

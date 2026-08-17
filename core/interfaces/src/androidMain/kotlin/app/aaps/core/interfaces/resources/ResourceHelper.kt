@@ -33,9 +33,9 @@ interface ResourceHelper : TextResolver {
         is TextRef.Named      -> {
             val id = keysIdOf(ref)
             when {
-                id == null          -> ref.name
-                ref.args.isEmpty()  -> gs(id)
-                else                -> gs(id, *ref.args.toTypedArray())
+                id == null         -> ref.name
+                ref.args.isEmpty() -> gs(id)
+                else               -> gs(id, *ref.args.toTypedArray())
             }
         }
     }
@@ -51,7 +51,6 @@ interface ResourceHelper : TextResolver {
             ?.let { gsNotLocalised(it, *ref.args.toTypedArray()) }
             ?: ref.name
     }
-
 
     override fun shortTextMode(): Boolean
 }

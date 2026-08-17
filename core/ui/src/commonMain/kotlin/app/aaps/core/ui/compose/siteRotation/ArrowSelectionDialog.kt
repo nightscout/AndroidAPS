@@ -1,7 +1,5 @@
 package app.aaps.core.ui.compose.siteRotation
 
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,6 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.TE
+import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 
 /**
  * @see ArrowSelectionDialogPreview

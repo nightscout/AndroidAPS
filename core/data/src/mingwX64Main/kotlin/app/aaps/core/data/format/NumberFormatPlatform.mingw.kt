@@ -31,12 +31,12 @@ actual object NumberFormatPlatform {
         val floor = truncate(scaled)
         val rest = scaled - floor
         val rounded = when {
-            rest > 0.5                                              -> floor + 1
-            rest < 0.5                                              -> floor
+            rest > 0.5                                -> floor + 1
+            rest < 0.5                                -> floor
             // Exactly halfway. Where the two modes differ - see NumberRounding.
-            format.rounding == NumberRounding.HALF_UP               -> floor + 1
-            floor.toLong() % 2L == 0L                               -> floor
-            else                                                    -> floor + 1
+            format.rounding == NumberRounding.HALF_UP -> floor + 1
+            floor.toLong() % 2L == 0L                 -> floor
+            else                                      -> floor + 1
         }
 
         var whole = truncate(rounded / scale).toLong().toString()

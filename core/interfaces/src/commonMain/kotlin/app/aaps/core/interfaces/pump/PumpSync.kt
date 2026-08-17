@@ -1,6 +1,5 @@
 package app.aaps.core.interfaces.pump
 
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TB

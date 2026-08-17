@@ -11,7 +11,6 @@ interface EffectiveProfile : Profile {
     /** Applied insulin configuration */
     override val iCfg: ICfg
 
-
     /**
      * Convert EffectiveProfile to Concentrated using iCfg.concentration value
      *

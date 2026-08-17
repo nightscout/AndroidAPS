@@ -1,7 +1,5 @@
 package app.aaps.core.ui.compose.dialogs
 
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.ui.UiStrings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -10,6 +8,8 @@ import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.window.DialogProperties
+import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 
 /**
  * A modal time picker dialog.

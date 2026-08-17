@@ -1,5 +1,6 @@
 package app.aaps.core.interfaces.utils
 
+import app.aaps.core.interfaces.utils.MidnightTime.calc
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime

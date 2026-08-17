@@ -2,6 +2,7 @@ package app.aaps.core.interfaces.pump
 
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
+import app.aaps.core.interfaces.pump.BolusProgressData.Companion.AUTO_CLEAR_DELAY_MS
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
 import kotlinx.coroutines.CoroutineScope
@@ -82,12 +83,12 @@ class BolusProgressData(
         _state.value?.let { state ->
             val insulin = state.insulin
             val delivered = if (state.isPriming) PumpInsulin(insulin * percent / 100)
-                            else PumpInsulin(insulin / ch.concentration * percent / 100)
+            else PumpInsulin(insulin / ch.concentration * percent / 100)
             val done = InterfacesStrings.bolus_delivered_successfully.withArgs(insulin)
             val status = if (percent < 100) TextRef.Literal(ch.bolusProgressString(delivered, state.isPriming))
-                         else done
+            else done
             val wearStatus = if (percent < 100) TextRef.Literal(ch.bolusProgressString(delivered, insulin, state.isPriming))
-                             else done
+            else done
             _state.update { it?.copy(percent = percent, status = status, wearStatus = wearStatus, delivered = delivered, stalled = false) }
         }
     }
@@ -206,6 +207,7 @@ class BolusProgressData(
     }
 
     companion object {
+
         private const val AUTO_CLEAR_DELAY_MS = 5_000L
     }
 }

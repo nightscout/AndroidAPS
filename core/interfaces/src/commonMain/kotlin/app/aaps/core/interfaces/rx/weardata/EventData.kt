@@ -2,11 +2,11 @@ package app.aaps.core.interfaces.rx.weardata
 
 import app.aaps.core.interfaces.rx.events.Event
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.protobuf.ProtoBuf
 import kotlin.time.Clock
+import kotlin.time.Instant
 
 @Serializable
 sealed class EventData : Event() {

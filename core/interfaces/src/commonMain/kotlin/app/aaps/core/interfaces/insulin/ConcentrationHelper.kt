@@ -115,7 +115,7 @@ interface ConcentrationHelper {
      * @param durationInMin Int
      * @return String with units (U100) or with both units if not U100 and ago if less than 6 hour ago, else null
      */
-    fun insulinDeliveryAgoString(amount: PumpInsulin, totalAmount: PumpInsulin,startTime: Long, durationInMin: Int? = null): String
+    fun insulinDeliveryAgoString(amount: PumpInsulin, totalAmount: PumpInsulin, startTime: Long, durationInMin: Int? = null): String
 
     /**
      * show insulinConcentration as a String i.e. "U100", "U200", ...

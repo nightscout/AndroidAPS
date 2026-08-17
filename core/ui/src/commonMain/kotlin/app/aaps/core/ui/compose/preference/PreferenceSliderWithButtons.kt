@@ -1,7 +1,5 @@
 package app.aaps.core.ui.compose.preference
 
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.keys.interfaces.TextRef
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -19,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.SliderWithButtons
 import app.aaps.core.ui.compose.dialogs.ValueInputDialog
 import app.aaps.core.ui.compose.formatSliderDisplayValue

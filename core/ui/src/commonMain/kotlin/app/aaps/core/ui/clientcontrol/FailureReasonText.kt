@@ -1,8 +1,8 @@
 package app.aaps.core.ui.clientcontrol
 
+import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.UiStrings
-import app.aaps.core.interfaces.clientcontrol.FailureReason
 
 /**
  * The single localized-string mapping for a client-control [FailureReason], shared by the phone pending dialog

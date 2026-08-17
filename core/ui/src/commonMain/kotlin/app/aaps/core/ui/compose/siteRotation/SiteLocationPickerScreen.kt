@@ -1,7 +1,5 @@
 package app.aaps.core.ui.compose.siteRotation
 
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -19,7 +17,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import app.aaps.core.data.model.TE
+import app.aaps.core.ui.UiStrings
 import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.ui.compose.stringResource
 
 /**
  * Full-screen wrapper for [SiteLocationPicker] with a top bar and confirm button.

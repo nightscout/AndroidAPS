@@ -44,8 +44,8 @@ class ComposedKeyTest {
     @Test
     fun `gives the same text as the old String format for every key`() {
         for ((key, argument) in allKeys())
-            // Truth reads the message as a template, and key.format itself holds %s or %d,
-            // so it has to go in as a placeholder value, not inside the text.
+        // Truth reads the message as a template, and key.format itself holds %s or %d,
+        // so it has to go in as a placeholder value, not inside the text.
             assertWithMessage("key '%s' format '%s'", key.key, key.format)
                 .that(key.composeKey(argument))
                 .isEqualTo(oldComposeKey(key, argument))

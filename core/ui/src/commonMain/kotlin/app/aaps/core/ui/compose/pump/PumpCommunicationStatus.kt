@@ -1,9 +1,8 @@
 package app.aaps.core.ui.compose.pump
 
-import kotlin.time.Clock
 import androidx.compose.ui.text.AnnotatedString
-import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventQueueChanged
@@ -14,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlin.time.Clock
 
 /**
  * Shared communication status provider for all pump overview screens.

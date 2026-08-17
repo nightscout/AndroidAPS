@@ -1,5 +1,6 @@
 package app.aaps.core.interfaces.overview.graph
 
+import app.aaps.core.interfaces.overview.graph.GraphConfig.Companion.MAX_GRAPH_HEIGHT_DP
 import kotlinx.coroutines.flow.StateFlow
 
 /**

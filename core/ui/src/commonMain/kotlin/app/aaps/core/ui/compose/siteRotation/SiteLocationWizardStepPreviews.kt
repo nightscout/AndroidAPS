@@ -2,9 +2,9 @@ package app.aaps.core.ui.compose.siteRotation
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import app.aaps.core.data.model.TE
 import kotlinx.coroutines.flow.MutableStateFlow
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Preview(showBackground = true)
 @Composable

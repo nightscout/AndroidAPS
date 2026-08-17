@@ -1,6 +1,5 @@
 package app.aaps.core.ui.compose
 
-import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -20,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import app.aaps.core.ui.UiStrings
 
 /**
  * Rounded search field styled like Google Contacts search bar.

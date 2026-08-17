@@ -34,7 +34,8 @@ class ErrorDialogTest {
 
     @Test
     fun withPositiveButton_rendersBoth_andFiresCorrectCallbacks() {
-        var positive = 0; var dismiss = 0
+        var positive = 0;
+        var dismiss = 0
         compose.setContent {
             MaterialTheme {
                 ErrorDialog(
@@ -77,7 +78,8 @@ class ErrorDialogTest {
 
     @Test
     fun annotatedString_withPositiveButton_rendersBoth_andFiresCorrectCallbacks() {
-        var positive = 0; var dismiss = 0
+        var positive = 0;
+        var dismiss = 0
         compose.setContent {
             MaterialTheme {
                 ErrorDialog(

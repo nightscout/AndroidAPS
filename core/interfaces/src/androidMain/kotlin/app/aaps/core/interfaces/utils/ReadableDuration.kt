@@ -47,9 +47,9 @@ fun ResourceHelper.readableDuration(millis: Long, labels: DurationLabels): Strin
     val hours = minutes / 60
 
     return when {
-        seconds < 10          -> gs(labels.momentsAgo)
-        seconds < 60          -> gs(labels.lessThanAMinuteAgo)
-        seconds < 60 * 60     -> gs(labels.timeAgo, gq(labels.minutes, minutes.toInt(), minutes.toInt()))
+        seconds < 10           -> gs(labels.momentsAgo)
+        seconds < 60           -> gs(labels.lessThanAMinuteAgo)
+        seconds < 60 * 60      -> gs(labels.timeAgo, gq(labels.minutes, minutes.toInt(), minutes.toInt()))
 
         seconds < 24 * 60 * 60 -> {
             val minutesLeft = (minutes % 60).toInt()
@@ -62,7 +62,7 @@ fun ResourceHelper.readableDuration(millis: Long, labels: DurationLabels): Strin
                 gs(labels.timeAgo, gq(labels.hours, hours.toInt(), hours.toInt()))
         }
 
-        else                  -> {
+        else                   -> {
             val days = (hours / 24).toInt()
             val hoursLeft = (hours % 24).toInt()
             if (hoursLeft > 0)

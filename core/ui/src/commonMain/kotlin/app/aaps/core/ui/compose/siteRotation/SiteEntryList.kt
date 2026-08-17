@@ -1,7 +1,5 @@
 package app.aaps.core.ui.compose.siteRotation
 
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.ui.UiStrings
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -31,10 +29,12 @@ import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Translator
+import app.aaps.core.ui.UiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.icons.IcCannulaChange
 import app.aaps.core.ui.compose.icons.IcCgmInsert
+import app.aaps.core.ui.compose.stringResource
 
 /**
  * Pre-formatted display data for a site entry row.

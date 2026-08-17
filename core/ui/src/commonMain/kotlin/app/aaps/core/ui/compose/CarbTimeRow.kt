@@ -1,6 +1,5 @@
 package app.aaps.core.ui.compose
 
-import app.aaps.core.ui.UiStrings
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -28,7 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.UiStrings
 
 /**
  * Compact carb time row with inline expand/collapse.
@@ -66,9 +65,11 @@ fun CarbTimeRow(
     var expanded by rememberSaveable { mutableStateOf(false) }
     val expandRequester = rememberBringIntoViewOnExpand(expanded)
 
-    Column(modifier = modifier
-        .fillMaxWidth()
-        .bringIntoViewRequester(expandRequester)) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .bringIntoViewRequester(expandRequester)
+    ) {
         // Header row: icon + label + value + Change/OK button
         Row(
             verticalAlignment = Alignment.CenterVertically,

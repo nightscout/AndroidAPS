@@ -1,7 +1,5 @@
 package app.aaps.core.ui.compose.pump
 
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,7 +15,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.UiStrings
 import app.aaps.core.ui.compose.AapsSpacing
+import app.aaps.core.ui.compose.stringResource
 import kotlinx.coroutines.flow.StateFlow
 
 /**

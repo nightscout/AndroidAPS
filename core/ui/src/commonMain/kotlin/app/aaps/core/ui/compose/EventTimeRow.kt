@@ -1,6 +1,5 @@
 package app.aaps.core.ui.compose
 
-import app.aaps.core.ui.UiStrings
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -20,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import app.aaps.core.ui.UiStrings
 
 /**
  * Compact event time row with inline expand/collapse.

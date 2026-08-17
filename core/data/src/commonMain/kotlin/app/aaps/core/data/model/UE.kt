@@ -1,9 +1,9 @@
 package app.aaps.core.data.model
 
+import app.aaps.core.data.time.systemUtcOffsetAt
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
-import app.aaps.core.data.time.systemUtcOffsetAt
 
 data class UE(
     var id: Long = 0L,

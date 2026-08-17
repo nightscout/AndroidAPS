@@ -72,9 +72,11 @@ internal fun PreferenceAlertDialog(
                         title()
                     }
                 }
-                Box(modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f, fill = false)) { content() }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f, fill = false)
+                ) { content() }
                 ProvideContentColorTextStyle(
                     contentColor = MaterialTheme.colorScheme.primary,
                     textStyle = MaterialTheme.typography.labelLarge,

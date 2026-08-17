@@ -233,6 +233,7 @@ data class TargetLineData(
  * Bolus type for rendering (different shapes/colors)
  */
 enum class BolusType {
+
     NORMAL,   // Regular bolus (triangle shape)
     SMB       // Super micro bolus (small diamond)
 }
@@ -273,6 +274,7 @@ data class ExtendedBolusGraphPoint(
  * Therapy event type for rendering (different shapes/colors)
  */
 enum class TherapyEventType {
+
     MBG,                   // Manual blood glucose
     FINGER_STICK,          // Finger stick BG check
     ANNOUNCEMENT,          // Announcement

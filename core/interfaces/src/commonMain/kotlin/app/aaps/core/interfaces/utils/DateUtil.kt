@@ -440,7 +440,6 @@ interface DateUtil {
      */
     fun age(milliseconds: Long, useShortText: Boolean, rh: TextResolver): String
 
-
     /**
      * Converts a duration in milliseconds into a simplified, human-readable string with the largest appropriate unit.
      * (e.g., 120000ms becomes "2 minutes"). It handles pluralization for different languages.
@@ -449,6 +448,7 @@ interface DateUtil {
      * @return The formatted string with a single unit (e.g., "5 days").
      */
     fun niceTimeScalar(time: Long, rh: TextResolver): String
+
     /**
      * A thread-safe, locale-agnostic utility to format a double into a string with a specific number of decimal digits.
      * It is optimized to use a cached formatter on the UI thread.

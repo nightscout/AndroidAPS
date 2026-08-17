@@ -1,13 +1,13 @@
 package app.aaps.core.ui.compose.siteRotation
 
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.ui.UiStrings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.TE
+import app.aaps.core.ui.UiStrings
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
+import app.aaps.core.ui.compose.stringResource
 import kotlinx.coroutines.flow.StateFlow
 
 /**

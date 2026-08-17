@@ -1,7 +1,7 @@
 package app.aaps.core.ui.compose.pump
 
-import app.aaps.core.ui.UiStrings
 import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.ui.UiStrings
 
 /**
  * Builds the common [PumpInfoRow] items that every pump shares.

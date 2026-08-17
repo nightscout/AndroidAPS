@@ -1,6 +1,5 @@
 package app.aaps.core.ui.compose.dialogs
 
-import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -27,6 +26,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.UiStrings
 import app.aaps.core.ui.compose.formatMinutesAsDuration
 import app.aaps.core.ui.compose.stringResource
 import kotlin.math.roundToInt

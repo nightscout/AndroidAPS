@@ -1,8 +1,5 @@
 package app.aaps.core.ui.compose.dialogs
 
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.ui.compose.htmlToAnnotatedString
-import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -21,10 +18,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.compose.htmlToAnnotatedString
+import app.aaps.core.ui.compose.stringResource
 
 /**
  * A confirmation dialog with three stacked, full-width actions: primary, secondary, cancel.

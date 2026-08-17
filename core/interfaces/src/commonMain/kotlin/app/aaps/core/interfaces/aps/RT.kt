@@ -1,5 +1,10 @@
 package app.aaps.core.interfaces.aps
 
+import app.aaps.core.data.datetime.parseIsoToEpochMillisOrNull
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format.char
+import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind
@@ -7,12 +12,6 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import app.aaps.core.data.datetime.parseIsoToEpochMillisOrNull
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.format
-import kotlinx.datetime.format.char
-import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.json.Json
 import kotlin.time.Instant
 
@@ -44,7 +43,6 @@ data class RT(
     var IOB: Double? = null,
     var variable_sens: Double? = null,
     var isfMgdlForCarbs: Double? = null, // used to pass to AAPS client
-
 
     var consoleLog: MutableList<String>? = null,
     var consoleError: MutableList<String>? = null

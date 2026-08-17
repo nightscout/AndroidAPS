@@ -4,7 +4,6 @@
 
 package app.aaps.core.ui.compose.preference
 
-import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.OutlinedTextField
@@ -17,6 +16,7 @@ import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.keys.interfaces.StringValidator
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.VisibilityContext
+import app.aaps.core.ui.UiStrings
 import app.aaps.core.ui.compose.stringResource
 
 /**

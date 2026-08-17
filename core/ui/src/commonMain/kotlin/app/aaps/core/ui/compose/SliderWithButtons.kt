@@ -37,9 +37,9 @@ import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.dialogs.ValueInputDialog
 import kotlinx.coroutines.delay
-import kotlin.math.roundToLong
 import kotlin.math.pow
 import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 
 /**
  * A Slider with +/- buttons on each side for fine-grained value control.

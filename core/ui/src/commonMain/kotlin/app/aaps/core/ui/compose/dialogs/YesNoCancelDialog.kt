@@ -1,8 +1,5 @@
 package app.aaps.core.ui.compose.dialogs
 
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.ui.compose.htmlToAnnotatedString
-import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
@@ -13,6 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.DialogProperties
+import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.compose.htmlToAnnotatedString
+import app.aaps.core.ui.compose.stringResource
 
 /**
  * A dialog with Yes, No, and Cancel buttons.

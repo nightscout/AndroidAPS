@@ -61,7 +61,9 @@ class ThreeButtonDialogTest {
 
     @Test
     fun primary_firesOnPrimaryOnly() {
-        var primary = 0; var secondary = 0; var dismiss = 0
+        var primary = 0;
+        var secondary = 0;
+        var dismiss = 0
         show(onPrimary = { primary++ }, onSecondary = { secondary++ }, onDismiss = { dismiss++ })
         compose.onNodeWithText("End").performClick()
         assertThat(primary).isEqualTo(1)
@@ -71,7 +73,9 @@ class ThreeButtonDialogTest {
 
     @Test
     fun secondary_firesOnSecondaryOnly() {
-        var primary = 0; var secondary = 0; var dismiss = 0
+        var primary = 0;
+        var secondary = 0;
+        var dismiss = 0
         show(onPrimary = { primary++ }, onSecondary = { secondary++ }, onDismiss = { dismiss++ })
         compose.onNodeWithText("Skip to Cooldown").performClick()
         assertThat(secondary).isEqualTo(1)
@@ -81,7 +85,9 @@ class ThreeButtonDialogTest {
 
     @Test
     fun cancel_firesOnDismissOnly() {
-        var primary = 0; var secondary = 0; var dismiss = 0
+        var primary = 0;
+        var secondary = 0;
+        var dismiss = 0
         show(onPrimary = { primary++ }, onSecondary = { secondary++ }, onDismiss = { dismiss++ })
         compose.onNodeWithText(cancelLabel).performClick()
         assertThat(dismiss).isEqualTo(1)

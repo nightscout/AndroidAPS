@@ -1,9 +1,9 @@
 package app.aaps.core.ui.compose
 
-import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
-import app.aaps.core.ui.UiStrings
 import app.aaps.core.keys.UnitType
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
+import app.aaps.core.ui.UiStrings
 
 /**
  * Maps a [UnitType] to the text that describes it.

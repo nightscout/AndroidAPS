@@ -6,7 +6,7 @@ interface ExportPasswordDataStore {
      * Check Export password functionality
      * Returns true when Export password store is enabled.
      */
-    fun exportPasswordStoreEnabled() : Boolean
+    fun exportPasswordStoreEnabled(): Boolean
 
     /***
      * Clear password currently stored.
@@ -24,4 +24,4 @@ interface ExportPasswordDataStore {
      */
     fun getPasswordFromDataStore(): Triple<String, Boolean, Boolean>
 
-    }
+}

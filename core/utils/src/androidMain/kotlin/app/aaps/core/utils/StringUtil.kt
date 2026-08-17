@@ -21,7 +21,7 @@ private fun usPattern(decimals: Int): String =
  * @param decimals how many digits after the dot, always shown. 0 means no decimals.
  */
 fun Number.formatUS(decimals: Int): String =
-    // A new DecimalFormat for every call on purpose. DecimalFormat is not thread safe, and the
+// A new DecimalFormat for every call on purpose. DecimalFormat is not thread safe, and the
     // old shared array could give wrong text when two threads formatted at the same time.
     DecimalFormat(usPattern(decimals), US_SYMBOLS).format(this)
 

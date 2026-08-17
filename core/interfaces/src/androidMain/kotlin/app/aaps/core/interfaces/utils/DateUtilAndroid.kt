@@ -16,6 +16,7 @@ import kotlin.time.Duration.Companion.milliseconds
 fun timeAgoFullString(milliseconds: Long, rh: ResourceHelper): String =
     when {
         milliseconds <= 0 -> ""
+
         else              -> {
             val duration = milliseconds.milliseconds
             val days = duration.inWholeDays

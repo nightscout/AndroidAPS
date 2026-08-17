@@ -1,6 +1,5 @@
 package app.aaps.core.ui.compose
 
-import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,6 +33,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.UiStrings
 import kotlin.math.roundToInt
 
 /**

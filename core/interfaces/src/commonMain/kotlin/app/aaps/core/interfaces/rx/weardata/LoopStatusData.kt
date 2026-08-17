@@ -16,8 +16,10 @@ data class LoopStatusData(
     /** End time (epoch ms) of a temporary running mode (suspend/disconnect/superbolus), null when the mode is permanent */
     val modeEndTime: Long? = null
 ) {
+
     @Serializable
     enum class LoopMode {
+
         CLOSED,
         OPEN,
         LGS,

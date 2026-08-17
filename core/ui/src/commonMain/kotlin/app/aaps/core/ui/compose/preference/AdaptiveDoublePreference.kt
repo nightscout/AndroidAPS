@@ -4,7 +4,6 @@
 
 package app.aaps.core.ui.compose.preference
 
-import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,6 +16,7 @@ import app.aaps.core.keys.interfaces.DoublePreferenceKey
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.keys.step
+import app.aaps.core.ui.UiStrings
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.isDuration
 import app.aaps.core.ui.compose.rangeText

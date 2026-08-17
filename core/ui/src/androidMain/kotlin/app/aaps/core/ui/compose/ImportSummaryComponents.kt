@@ -1,8 +1,5 @@
 package app.aaps.core.ui.compose
 
-import androidx.compose.ui.res.stringResource
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,11 +20,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.maintenance.PrefMetadata
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
+import app.aaps.core.ui.UiStrings
 
 /**
  * A single metadata summary item row with status icon, category icon, and formatted text.

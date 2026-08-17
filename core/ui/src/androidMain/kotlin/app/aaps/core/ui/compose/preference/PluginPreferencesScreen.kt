@@ -1,9 +1,5 @@
 package app.aaps.core.ui.compose.preference
 
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.ui.UiStrings
-import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -25,14 +21,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.backhandler.BackHandler
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.keys.interfaces.VisibilityContext
+import app.aaps.core.ui.UiStrings
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.ComposeScreenContent
 import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.MasterOfflineBanner
 import app.aaps.core.ui.compose.masterEditingEnabled
+import app.aaps.core.ui.compose.stringResource
 import kotlinx.coroutines.launch
 
 /**

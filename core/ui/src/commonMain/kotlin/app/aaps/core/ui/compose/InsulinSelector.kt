@@ -1,7 +1,5 @@
 package app.aaps.core.ui.compose
 
-import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -18,6 +16,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import app.aaps.core.data.model.ICfg
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.UiStrings
 
 /**
  * Drop-down for picking one insulin configuration out of the catalogue.

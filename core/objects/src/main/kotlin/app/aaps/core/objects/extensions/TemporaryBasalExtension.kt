@@ -5,20 +5,14 @@ import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.getPassedDurationToTimeInMinutes
 import app.aaps.core.data.model.iobCalc
-import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.IobTotal
-import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.pump.PumpRate
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import kotlin.math.ceil
 import kotlin.math.max
-import kotlin.math.min
 import kotlin.math.round
-import kotlin.math.roundToInt
 
 /**
  * True while the temporary basal is running.

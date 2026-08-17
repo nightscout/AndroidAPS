@@ -29,10 +29,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.ui.UiStrings
 import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.ui.UiStrings
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.stringResource
 
 /**
  * Data class containing all information needed to display a profile viewer screen.

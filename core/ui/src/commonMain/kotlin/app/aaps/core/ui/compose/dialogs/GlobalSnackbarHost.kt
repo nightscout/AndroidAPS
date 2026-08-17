@@ -1,7 +1,5 @@
 package app.aaps.core.ui.compose.dialogs
 
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -33,8 +31,10 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
+import app.aaps.core.ui.UiStrings
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.SnackbarColors
+import app.aaps.core.ui.compose.stringResource
 
 /**
  * Root-level snackbar host that subscribes to [EventShowSnackbar] on [rxBus]

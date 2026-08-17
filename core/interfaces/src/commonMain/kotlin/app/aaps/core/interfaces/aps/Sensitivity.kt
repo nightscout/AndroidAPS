@@ -41,6 +41,7 @@ interface Sensitivity {
         siteChanges: List<TE>,
         profileSwitches: List<PS>
     ): AutosensResult
+
     fun maxAbsorptionHours(): Double
 
     val isMinCarbsAbsorptionDynamic: Boolean

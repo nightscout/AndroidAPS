@@ -4,7 +4,6 @@
 
 package app.aaps.core.ui.compose.preference
 
-import app.aaps.core.ui.UiStrings
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -15,6 +14,7 @@ import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.VisibilityContext
+import app.aaps.core.ui.UiStrings
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.dialogs.SetPasswordDialog
 import app.aaps.core.ui.compose.stringResource

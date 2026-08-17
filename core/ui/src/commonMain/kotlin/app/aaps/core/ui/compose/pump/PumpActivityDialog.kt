@@ -1,8 +1,5 @@
 package app.aaps.core.ui.compose.pump
 
-import androidx.compose.ui.text.AnnotatedString
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -27,13 +24,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import app.aaps.core.interfaces.pump.BolusProgressState
+import app.aaps.core.ui.UiStrings
 import app.aaps.core.ui.compose.AapsSpacing
+import app.aaps.core.ui.compose.stringResource
 
 /**
  * Shared pump activity dialog showing pump status, queue info, and bolus progress.

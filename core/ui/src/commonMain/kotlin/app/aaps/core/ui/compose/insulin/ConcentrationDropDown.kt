@@ -1,7 +1,5 @@
 package app.aaps.core.ui.compose.insulin
 
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -17,6 +15,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import app.aaps.core.interfaces.insulin.ConcentrationType
+import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

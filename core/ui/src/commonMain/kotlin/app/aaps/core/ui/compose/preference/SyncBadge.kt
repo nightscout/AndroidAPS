@@ -1,6 +1,5 @@
 package app.aaps.core.ui.compose.preference
 
-import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.InlineTextContent
@@ -23,6 +22,7 @@ import androidx.compose.ui.unit.em
 import app.aaps.core.keys.interfaces.NonPreferenceKey
 import app.aaps.core.keys.interfaces.SyncDirection
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.UiStrings
 import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.stringResource
 

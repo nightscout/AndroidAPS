@@ -1,8 +1,8 @@
 package app.aaps.core.objects.interfaces.pump.defs
 
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.keys.interfaces.TextRef
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
