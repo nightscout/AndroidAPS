@@ -1,9 +1,16 @@
-package app.aaps.core.objects.extensions
+package app.aaps.core.ui.extensions
 
 import app.aaps.core.data.iob.CobInfo
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.ui.R
 
+/**
+ * Text for a [CobInfo] on screen.
+ *
+ * These build user visible text out of this module's strings, so they belong here. They used to sit
+ * in `:core:objects`, which made a domain module depend on this one only to name a string.
+ */
 fun CobInfo.generateCOBString(decimalFormatter: DecimalFormatter): String {
     var cobStringResult = "--g"
     displayCob?.let { displayCob ->
@@ -17,7 +24,7 @@ fun CobInfo.generateCOBString(decimalFormatter: DecimalFormatter): String {
 
 fun CobInfo.displayText(rh: ResourceHelper, decimalFormatter: DecimalFormatter): String? =
     displayCob?.let { displayCob ->
-        var cobText = rh.gs(app.aaps.core.ui.R.string.format_carbs, displayCob.toInt())
+        var cobText = rh.gs(R.string.format_carbs, displayCob.toInt())
         if (futureCarbs > 0) cobText += "(" + decimalFormatter.to0Decimal(futureCarbs) + ")"
         cobText
     }

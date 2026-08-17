@@ -35,8 +35,8 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Translator
-import app.aaps.core.objects.extensions.highValueToUnitsToString
-import app.aaps.core.objects.extensions.lowValueToUnitsToString
+import app.aaps.core.ui.extensions.highValueToUnitsToString
+import app.aaps.core.ui.extensions.lowValueToUnitsToString
 import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsTheme

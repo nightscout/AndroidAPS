@@ -53,7 +53,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.withCompose
 import app.aaps.core.objects.constraints.ConstraintObject
-import app.aaps.core.objects.extensions.generateCOBString
+import app.aaps.core.ui.extensions.generateCOBString
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.runningMode.PumpCommandGate
 import app.aaps.core.objects.runningMode.RunningModeGuard

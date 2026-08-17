@@ -5,7 +5,7 @@ import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
-import app.aaps.core.objects.extensions.directionToIcon
+import app.aaps.core.ui.extensions.directionToIcon
 import app.aaps.core.objects.extensions.valueToUnits
 import app.aaps.core.ui.compose.icons.IcArrowDoubleDown
 import app.aaps.core.ui.compose.icons.IcArrowDoubleUp
