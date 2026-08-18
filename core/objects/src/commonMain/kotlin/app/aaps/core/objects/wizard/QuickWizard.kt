@@ -12,9 +12,11 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
-import org.json.JSONArray
-import org.json.JSONObject
-import java.util.UUID
+import kotlin.concurrent.Volatile
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonArray
 
 class QuickWizard(
     private val preferences: Preferences,
@@ -23,7 +25,7 @@ class QuickWizard(
     private val quickWizardEntryProvider: () -> QuickWizardEntry
 ) {
 
-    @Volatile private var storage = JSONArray()
+    @Volatile private var storage: List<QuickWizardEntryData> = emptyList()
 
     private val _changes = MutableStateFlow(0)
 
@@ -39,50 +41,64 @@ class QuickWizard(
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
 
     init {
-        storage = JSONArray(preferences.get(StringNonKey.QuickWizard))
+        storage = parse(preferences.get(StringNonKey.QuickWizard))
         setGuidsForOldEntries()
         // Keep the cache in lockstep with the persisted key. Covers edits from another screen and
         // master→client sync (applied via putRemote, which writes the key without going through save()).
         preferences.observe(StringNonKey.QuickWizard)
             .drop(1) // initial value already loaded above
             .onEach {
-                storage = JSONArray(it)
+                storage = parse(it)
                 _changes.update { v -> v + 1 }
             }
             .launchIn(scope)
     }
 
+    /**
+     * Reads the stored list, skipping anything unreadable rather than losing the whole list.
+     *
+     * An element that is not an object used to be a `ClassCastException` at construction time, which
+     * meant a single damaged entry stopped the app from starting.
+     */
+    private fun parse(raw: String): List<QuickWizardEntryData> =
+        runCatching {
+            (Json.parseToJsonElement(raw) as JsonArray).mapNotNull { element ->
+                (element as? JsonObject)?.let { QuickWizardEntryData.fromJsonObject(it) }
+            }
+        }.getOrDefault(emptyList())
+
     private fun setGuidsForOldEntries() {
         // for migration purposes; guid is a new required property
-        for (i in 0 until storage.length()) {
-            val entry = quickWizardEntryProvider().from(storage.get(i) as JSONObject, i)
-            if (entry.guid() == "") {
-                val guid = UUID.randomUUID().toString()
-                entry.storage.put("guid", guid)
-            }
-        }
+        val migrated = storage.map { if (it.guid == "") it.copy(guid = QuickWizardEntry.randomGuid()) else it }
+        if (migrated == storage) return
+        storage = migrated
+        // Persist immediately. While the entries were live JSONObjects this wrote through into the
+        // stored array and rode along on whatever save happened next; if none did, a DIFFERENT guid
+        // was generated on every app start, so nothing could resolve a legacy entry by guid across
+        // restarts. Saving here makes the migration stick the first time it runs.
+        save()
     }
 
     fun getActive(): QuickWizardEntry? {
-        for (i in 0 until storage.length()) {
-            val entry = quickWizardEntryProvider().from(storage.get(i) as JSONObject, i)
+        for (i in storage.indices) {
+            val entry = quickWizardEntryProvider().from(storage[i], i)
             if (entry.isActive()) return entry
         }
         return null
     }
 
-    fun setData(newData: JSONArray) {
+    fun setData(newData: List<QuickWizardEntryData>) {
         storage = newData
     }
 
     fun save() {
-        preferences.put(StringNonKey.QuickWizard, storage.toString())
+        preferences.put(StringNonKey.QuickWizard, buildJsonArray { storage.forEach { add(it.toJsonObject()) } }.toString())
     }
 
-    fun size(): Int = storage.length()
+    fun size(): Int = storage.size
 
     operator fun get(position: Int): QuickWizardEntry =
-        quickWizardEntryProvider().from(storage.get(position) as JSONObject, position)
+        quickWizardEntryProvider().from(storage[position], position)
 
     fun list(): ArrayList<QuickWizardEntry> =
         ArrayList<QuickWizardEntry>().also {
@@ -90,8 +106,8 @@ class QuickWizard(
         }
 
     fun get(guid: String): QuickWizardEntry? {
-        for (i in 0 until storage.length()) {
-            val entry = quickWizardEntryProvider().from(storage.get(i) as JSONObject, i)
+        for (i in storage.indices) {
+            val entry = quickWizardEntryProvider().from(storage[i], i)
             if (entry.guid() == guid) {
                 return entry
             }
@@ -116,12 +132,10 @@ class QuickWizard(
      *         is not a permutation of the current indices (the list changed underneath the caller).
      */
     fun reorder(order: List<Int>): Boolean {
-        val size = storage.length()
+        val size = storage.size
         if (order.size != size || order.toSet() != (0 until size).toSet()) return false
         if (order.withIndex().all { (newIndex, oldIndex) -> newIndex == oldIndex }) return true
-        val reordered = JSONArray()
-        order.forEach { reordered.put(storage.get(it)) }
-        storage = reordered
+        storage = order.map { storage[it] }
         save()
         return true
     }
@@ -131,23 +145,21 @@ class QuickWizard(
     }
 
     fun addOrUpdate(newItem: QuickWizardEntry) {
-        // A position past the end must append, not be handed to JSONArray.put(index, value).
-        // That call pads the list with Java nulls up to the index, and a padded slot then makes the
-        // `storage.get(i) as JSONObject` in the readers throw at the next app start. A stale position
-        // is reachable: an entry can be read at index 2 and a shorter list arrive over sync before
-        // it is written back.
-        if (newItem.position < 0 || newItem.position >= storage.length())
-            storage.put(newItem.storage)
-        else
-            storage.put(newItem.position, newItem.storage)
+        // A position past the end appends. The old JSONArray.put(index, value) padded the list with
+        // nulls up to the index instead, and a padded slot then broke the readers at the next app
+        // start. A stale position is reachable: an entry can be read at index 2 and a shorter list
+        // arrive over sync before it is written back.
+        storage =
+            if (newItem.position < 0 || newItem.position >= storage.size) storage + newItem.data
+            else storage.toMutableList().also { it[newItem.position] = newItem.data }
         save()
     }
 
     fun remove(position: Int) {
-        // JSONArray.remove returns null and does nothing when the index is out of range, so without
-        // this guard we would still save() and push an unchanged list through the sync channel.
-        if (position < 0 || position >= storage.length()) return
-        storage.remove(position)
+        // Without the guard an out of range index changed nothing but still saved, pushing an
+        // unchanged list through the sync channel.
+        if (position < 0 || position >= storage.size) return
+        storage = storage.toMutableList().also { it.removeAt(position) }
         save()
     }
 

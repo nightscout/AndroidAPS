@@ -15,14 +15,9 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.valueToUnits
-import app.aaps.core.utils.JsonHelper.safeGetDouble
-import app.aaps.core.utils.JsonHelper.safeGetInt
-import app.aaps.core.utils.JsonHelper.safeGetLong
-import app.aaps.core.utils.JsonHelper.safeGetString
 import app.aaps.core.utils.MidnightUtils
-import org.json.JSONException
-import org.json.JSONObject
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 enum class QuickWizardMode(val value: Int) {
     WIZARD(0),
@@ -59,64 +54,35 @@ class QuickWizardEntry(
 
     var time = Time()
 
-    lateinit var storage: JSONObject
+    /**
+     * The preset itself, as plain data.
+     *
+     * This used to be a live `JSONObject` that was also the element inside [QuickWizard]'s array, so
+     * writing a field here changed the stored list with no explicit step. That aliasing is gone:
+     * anything that changes [data] must now hand the entry back to [QuickWizard] to be written.
+     */
+    var data: QuickWizardEntryData = QuickWizardEntryData(guid = randomGuid(), validTo = 86340)
     var position: Int = -1
 
     companion object {
 
-        const val YES = 0
-        const val NO = 1
-        const val POSITIVE_ONLY = 2
-        const val NEGATIVE_ONLY = 3
-        const val DEVICE_ALL = 0
-        const val DEVICE_PHONE = 1
-        const val DEVICE_WATCH = 2
-        const val COOLDOWN_MILLIS = 1_800_000L // 1/2 hour
+        // Defined once in QuickWizardEntryData, which is common code. Re-exposed here so the existing
+        // `QuickWizardEntry.YES` style call sites do not have to change.
+        const val YES = QuickWizardEntryData.YES
+        const val NO = QuickWizardEntryData.NO
+        const val POSITIVE_ONLY = QuickWizardEntryData.POSITIVE_ONLY
+        const val NEGATIVE_ONLY = QuickWizardEntryData.NEGATIVE_ONLY
+        const val DEVICE_ALL = QuickWizardEntryData.DEVICE_ALL
+        const val DEVICE_PHONE = QuickWizardEntryData.DEVICE_PHONE
+        const val DEVICE_WATCH = QuickWizardEntryData.DEVICE_WATCH
+        const val COOLDOWN_MILLIS = QuickWizardEntryData.COOLDOWN_MILLIS
+
+        @OptIn(ExperimentalUuidApi::class)
+        fun randomGuid(): String = Uuid.random().toString()
     }
 
-    init {
-        val guid = UUID.randomUUID().toString()
-        val emptyData = """{
-                "guid": "$guid",
-                "buttonText": "",
-                "carbs": 0,
-                "validFrom": 0,
-                "validTo": 86340,
-                "device": "all",
-                "percentage": 100
-            }""".trimMargin()
-        storage = try {
-            JSONObject(emptyData)
-        } catch (e: JSONException) {
-            // emptyData is a literal, so this cannot fail in practice. If it ever did, leaving the
-            // lateinit unassigned turned it into an UninitializedPropertyAccessException at the first
-            // read, far from the cause. An empty document keeps every accessor on its default.
-            aapsLogger.error("Unhandled exception", e)
-            JSONObject()
-        }
-    }
-
-    /*
-        {
-            guid: string,
-            device: string, // (phone, watch, all)
-            buttonText: "Meal",
-            carbs: 36,
-            validFrom: 8 * 60 * 60, // seconds from midnight
-            validTo: 9 * 60 * 60,   // seconds from midnight
-            useBG: 0,
-            useCOB: 0,
-            useBolusIOB: 0,
-            useBasalIOB: 0,
-            useTrend: 0,
-            useSuperBolus: 0,
-            useTemptarget: 0
-            percentage: int,
-        }
-     */
-    fun from(entry: JSONObject, position: Int): QuickWizardEntry {
-        // TODO set guid if missing for migration
-        storage = entry
+    fun from(entry: QuickWizardEntryData, position: Int): QuickWizardEntry {
+        data = entry
         this.position = position
         return this
     }
@@ -194,56 +160,58 @@ class QuickWizardEntry(
         ) //tbc, ok if only quickwizard, but if other sources elsewhere use Sources.QuickWizard
     }
 
-    fun mode(): QuickWizardMode = QuickWizardMode.fromValue(safeGetInt(storage, "mode", 0))
+    fun mode(): QuickWizardMode = QuickWizardMode.fromValue(data.mode)
 
-    fun insulin(): Double = safeGetDouble(storage, "insulin", 0.0)
+    fun insulin(): Double = data.insulin
 
-    fun guid(): String = safeGetString(storage, "guid", "")
+    fun guid(): String = data.guid
 
-    fun device(): Int = safeGetInt(storage, "device", DEVICE_ALL)
+    fun device(): Int = data.device
 
     fun forDevice(device: Int) = device() == device || device() == DEVICE_ALL
 
-    fun buttonText(): String = safeGetString(storage, "buttonText", "")
+    fun buttonText(): String = data.buttonText
 
-    fun carbs(): Int = safeGetInt(storage, "carbs")
+    fun carbs(): Int = data.carbs
 
-    fun validFrom(): Int = safeGetInt(storage, "validFrom")
+    fun validFrom(): Int = data.validFrom
 
-    fun validTo(): Int = safeGetInt(storage, "validTo")
+    fun validTo(): Int = data.validTo
 
-    fun useBG(): Int = safeGetInt(storage, "useBG", YES)
+    fun useBG(): Int = data.useBG
 
-    fun useCOB(): Int = safeGetInt(storage, "useCOB", NO)
+    fun useCOB(): Int = data.useCOB
 
-    fun useIOB(): Int = safeGetInt(storage, "useIOB", YES)
+    fun useIOB(): Int = data.useIOB
 
-    fun usePositiveIOBOnly(): Int = safeGetInt(storage, "usePositiveIOBOnly", NO)
+    fun usePositiveIOBOnly(): Int = data.usePositiveIOBOnly
 
-    fun useTrend(): Int = safeGetInt(storage, "useTrend", NO)
+    fun useTrend(): Int = data.useTrend
 
-    fun useSuperBolus(): Int = safeGetInt(storage, "useSuperBolus", NO)
+    fun useSuperBolus(): Int = data.useSuperBolus
 
-    fun useTempTarget(): Int = safeGetInt(storage, "useTempTarget", NO)
+    fun useTempTarget(): Int = data.useTempTarget
 
-    fun percentage(): Int = safeGetInt(storage, "percentage", 100)
+    fun percentage(): Int = data.percentage
 
-    fun useEcarbs(): Int = safeGetInt(storage, "useEcarbs", NO)
+    fun useEcarbs(): Int = data.useEcarbs
 
-    fun carbs2(): Int = safeGetInt(storage, "carbs2")
+    fun carbs2(): Int = data.carbs2
 
-    fun time(): Int = safeGetInt(storage, "time")
+    fun time(): Int = data.time
 
-    fun duration(): Int = safeGetInt(storage, "duration")
+    fun duration(): Int = data.duration
 
-    fun carbTime(): Int = safeGetInt(storage, "carbTime")
+    fun carbTime(): Int = data.carbTime
 
-    fun useAlarm(): Int = safeGetInt(storage, "useAlarm", NO)
+    fun useAlarm(): Int = data.useAlarm
 
-    fun lastUsed(): Long = safeGetLong(storage, "lastUsed")
+    fun lastUsed(): Long = data.lastUsed
 
     fun markAsUsed() {
-        storage.put("lastUsed", dateUtil.now())
-        quickWizardProvider().save()
+        data = data.copy(lastUsed = dateUtil.now())
+        // The write-back is explicit now. It used to work only because `storage` WAS the element
+        // inside QuickWizard's array, so a plain save() picked the new value up on its own.
+        quickWizardProvider().addOrUpdate(this)
     }
 }

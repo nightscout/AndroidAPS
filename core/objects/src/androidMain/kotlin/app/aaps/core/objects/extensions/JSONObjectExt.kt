@@ -7,10 +7,6 @@ import app.aaps.core.keys.interfaces.LongPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonObjectBuilder
-import kotlinx.serialization.json.buildJsonObject
-import kotlinx.serialization.json.put
 import org.json.JSONObject
 
 fun JSONObject.put(key: IntPreferenceKey, preferences: Preferences): JSONObject =
@@ -73,37 +69,3 @@ fun JSONObject.putIfThereIsValue(key: String, value: Double?): JSONObject =
 fun JSONObject.putIfThereIsValue(key: String, value: String?): JSONObject =
     this.also { if (value != null && value.isNotEmpty()) it.put(key, value) }
 
-/**
- * kotlinx twins of [putIfThereIsValue], with the same rule: skip nulls **and** zeros.
- *
- * The zero-skipping is not cosmetic. It is what keeps an idle temp basal or extended bolus out of the
- * Nightscout device status entirely, rather than reporting a rate of 0 U/h.
- */
-fun JsonObjectBuilder.putIfThereIsValue(key: String, value: Int?) {
-    if (value != null && value != 0) put(key, value)
-}
-
-fun JsonObjectBuilder.putIfThereIsValue(key: String, value: Long?) {
-    if (value != null && value != 0L) put(key, value)
-}
-
-fun JsonObjectBuilder.putIfThereIsValue(key: String, value: Double?) {
-    if (value != null && value != 0.0) put(key, value)
-}
-
-fun JsonObjectBuilder.putIfThereIsValue(key: String, value: String?) {
-    if (value != null && value.isNotEmpty()) put(key, value)
-}
-
-/**
- * Copy of this document with [extra] entries added on top.
- *
- * A [JsonObject] cannot be written into after it is built, so code that used to take a finished
- * document and keep putting into it needs a new document instead. Entries added here win over
- * entries of the same name already present, which is what writing into the old object did.
- */
-fun JsonObject.with(extra: JsonObjectBuilder.() -> Unit): JsonObject =
-    buildJsonObject {
-        this@with.forEach { (key, value) -> put(key, value) }
-        extra()
-    }

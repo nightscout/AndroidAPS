@@ -3,9 +3,10 @@ package app.aaps.core.objects.extensions
 import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
-import org.json.JSONArray
-import org.json.JSONException
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonObjectBuilder
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 operator fun IobTotal.plus(other: IobTotal): IobTotal {
     iob += other.iob
@@ -32,37 +33,33 @@ fun IobTotal.round(): IobTotal {
 }
 
 /**
- * Puts [value] only when it is a real number.
+ * Writes [value] only when it is a real number.
  *
- * `JSONObject.put(String, double)` throws for NaN and +/-Infinity. These builders used to wrap all
- * their puts in one `try`, so a single bad value skipped every remaining put and returned a
- * half-built document - a NaN `iob` produced `{}`, losing `time` as well. Skipping just the bad key
- * keeps the rest of the document intact.
+ * kotlinx accepts NaN and Infinity and then emits the bare token `NaN`, which is not valid JSON and
+ * which `org.json` refuses to re-render - it would turn an uploaded device status into `null`. The
+ * `org.json` builder this replaced refused a non-finite value outright, so skipping the key keeps the
+ * old "a bad number never reaches the document" rule while leaving the rest of it intact.
  */
-private fun JSONObject.putIfFinite(key: String, value: Double): JSONObject =
-    if (value.isFinite()) put(key, value) else this
-
-fun IobTotal.json(dateUtil: DateUtil): JSONObject {
-    val json = JSONObject()
-    try {
-        json.putIfFinite("iob", iob)
-        json.putIfFinite("basaliob", basaliob)
-        json.putIfFinite("activity", activity)
-        json.put("time", dateUtil.toISOString(time))
-    } catch (_: JSONException) {
-    }
-    return json
+private fun JsonObjectBuilder.putIfFinite(key: String, value: Double) {
+    if (value.isFinite()) put(key, value)
 }
 
-fun IobTotal.determineBasalJson(dateUtil: DateUtil): JSONObject {
-    val json = JSONObject()
-    try {
-        json.putIfFinite("iob", iob)
-        json.putIfFinite("basaliob", basaliob)
-        json.putIfFinite("bolussnooze", bolussnooze)
-        json.putIfFinite("activity", activity)
-        json.put("lastBolusTime", lastBolusTime)
-        json.put("time", dateUtil.toISOString(time))
+fun IobTotal.jsonObject(dateUtil: DateUtil): JsonObject =
+    buildJsonObject {
+        putIfFinite("iob", iob)
+        putIfFinite("basaliob", basaliob)
+        putIfFinite("activity", activity)
+        put("time", dateUtil.toISOString(time))
+    }
+
+fun IobTotal.determineBasalJsonObject(dateUtil: DateUtil): JsonObject =
+    buildJsonObject {
+        putIfFinite("iob", iob)
+        putIfFinite("basaliob", basaliob)
+        putIfFinite("bolussnooze", bolussnooze)
+        putIfFinite("activity", activity)
+        put("lastBolusTime", lastBolusTime)
+        put("time", dateUtil.toISOString(time))
         /*
 
         This is requested by SMB determine_basal but by based on Scott's info
@@ -75,14 +72,8 @@ fun IobTotal.determineBasalJson(dateUtil: DateUtil): JSONObject {
         lastTemp.put("duration", lastTempDuration);
         json.put("lastTemp", lastTemp);
         */
-        if (iobWithZeroTemp != null) {
-            val iwzt = iobWithZeroTemp!!.determineBasalJson(dateUtil)
-            json.put("iobWithZeroTemp", iwzt)
-        }
-    } catch (_: JSONException) {
+        iobWithZeroTemp?.let { put("iobWithZeroTemp", it.determineBasalJsonObject(dateUtil)) }
     }
-    return json
-}
 
 fun IobTotal.Companion.combine(bolusIOB: IobTotal, basalIob: IobTotal): IobTotal {
     val result = IobTotal(bolusIOB.time)
@@ -98,12 +89,3 @@ fun IobTotal.Companion.combine(bolusIOB: IobTotal, basalIob: IobTotal): IobTotal
     result.iobWithZeroTemp = basalIob.iobWithZeroTemp
     return result
 }
-
-fun Array<IobTotal>.convertToJSONArray(dateUtil: DateUtil): JSONArray {
-    val array = JSONArray()
-    for (i in this.indices) {
-        array.put(this[i].determineBasalJson(dateUtil))
-    }
-    return array
-}
-

@@ -32,7 +32,8 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.rx.weardata.EventData
@@ -44,17 +45,15 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.runningMode.PumpCommandGate
 import app.aaps.core.objects.runningMode.RunningModeGuard
-import app.aaps.core.utils.JsonHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import java.util.Calendar
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
 class BolusWizard(
     private val aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val rxBus: RxBus,
     private val preferences: Preferences,
     private val profileFunction: ProfileFunction,
@@ -381,24 +380,24 @@ class BolusWizard(
                 line(
                     ConfirmationRole.BOLUS,
                     rh.gs(
-                        app.aaps.core.interfaces.R.string.confirmation_line,
-                        rh.gs(app.aaps.core.interfaces.R.string.bolus),
-                        rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, insulinAfterConstraints) + pct
+                        InterfacesStrings.confirmation_line,
+                        rh.gs(InterfacesStrings.bolus),
+                        rh.gs(InterfacesStrings.format_insulin_units, insulinAfterConstraints) + pct
                     )
                 )
             }
             if (carbs > 0 && !advisor) {
                 val timeShift = when {
-                    carbTime > 0 -> " (+" + rh.gs(app.aaps.core.interfaces.R.string.mins, carbTime) + ")"
-                    carbTime < 0 -> " (" + rh.gs(app.aaps.core.interfaces.R.string.mins, carbTime) + ")"
+                    carbTime > 0 -> " (+" + rh.gs(InterfacesStrings.mins, carbTime) + ")"
+                    carbTime < 0 -> " (" + rh.gs(InterfacesStrings.mins, carbTime) + ")"
                     else         -> ""
                 }
                 line(
                     ConfirmationRole.CARBS,
                     rh.gs(
-                        app.aaps.core.interfaces.R.string.confirmation_line,
-                        rh.gs(app.aaps.core.interfaces.R.string.carbs),
-                        rh.gs(app.aaps.core.interfaces.R.string.format_carbs, carbs) + timeShift
+                        InterfacesStrings.confirmation_line,
+                        rh.gs(InterfacesStrings.carbs),
+                        rh.gs(InterfacesStrings.format_carbs, carbs) + timeShift
                     )
                 )
             }
@@ -406,46 +405,46 @@ class BolusWizard(
                 line(
                     ConfirmationRole.COB,
                     rh.gs(
-                        app.aaps.core.interfaces.R.string.confirmation_line,
-                        rh.gs(app.aaps.core.interfaces.R.string.cobvsiob),
+                        InterfacesStrings.confirmation_line,
+                        rh.gs(InterfacesStrings.cobvsiob),
                         rh.gs(
-                            app.aaps.core.interfaces.R.string.formatsignedinsulinunits,
+                            InterfacesStrings.formatsignedinsulinunits,
                             -insulinFromBolusIOB - insulinFromBasalIOB + insulinFromCOB + insulinFromBG
                         )
                     )
                 )
                 val absorptionRate = iobCobCalculator.ads.slowAbsorptionPercentage(60)
                 if (absorptionRate > .25) {
-                    line(ConfirmationRole.COB, rh.gs(app.aaps.core.interfaces.R.string.slowabsorptiondetected_plain, (absorptionRate * 100).toInt()))
+                    line(ConfirmationRole.COB, rh.gs(InterfacesStrings.slowabsorptiondetected_plain, (absorptionRate * 100).toInt()))
                 }
             }
             if (abs(insulinAfterConstraints - calculatedTotalInsulin) > ch.bolusStep(insulinAfterConstraints)) {
-                line(ConfirmationRole.WARNING, rh.gs(app.aaps.core.interfaces.R.string.bolus_constraint_applied_warn, calculatedTotalInsulin, insulinAfterConstraints))
+                line(ConfirmationRole.WARNING, rh.gs(InterfacesStrings.bolus_constraint_applied_warn, calculatedTotalInsulin, insulinAfterConstraints))
             }
             if ((config.AAPSCLIENT || forcedRecordOnly) && insulinAfterConstraints > 0) {
-                line(ConfirmationRole.WARNING, rh.gs(app.aaps.core.interfaces.R.string.bolus_recorded_only))
+                line(ConfirmationRole.WARNING, rh.gs(InterfacesStrings.bolus_recorded_only))
             }
             if (useAlarm && !advisor && carbs > 0 && carbTime > 0) {
-                line(ConfirmationRole.INFO, rh.gs(app.aaps.core.interfaces.R.string.alarminxmin, carbTime))
+                line(ConfirmationRole.INFO, rh.gs(InterfacesStrings.alarminxmin, carbTime))
             }
             if (advisor) {
-                line(ConfirmationRole.INFO, rh.gs(app.aaps.core.interfaces.R.string.advisoralarm))
+                line(ConfirmationRole.INFO, rh.gs(InterfacesStrings.advisoralarm))
             }
 
             if (quickWizardEntry != null) {
-                val eCarbsYesNo = JsonHelper.safeGetInt(quickWizardEntry.storage, "useEcarbs", QuickWizardEntry.NO)
+                val eCarbsYesNo = quickWizardEntry.useEcarbs()
                 if (eCarbsYesNo == QuickWizardEntry.YES) {
-                    val timeOffset = JsonHelper.safeGetInt(quickWizardEntry.storage, "time", 0)
-                    val duration = JsonHelper.safeGetInt(quickWizardEntry.storage, "duration", 0)
-                    val carbs2 = JsonHelper.safeGetInt(quickWizardEntry.storage, "carbs2", 0)
+                    val timeOffset = quickWizardEntry.time()
+                    val duration = quickWizardEntry.duration()
+                    val carbs2 = quickWizardEntry.carbs2()
                     if (carbs2 > 0) {
-                        val ecarbsMessage = rh.gs(app.aaps.core.interfaces.R.string.format_carbs, carbs2) + "/" + duration + "h (+" + timeOffset + "min)"
-                        line(ConfirmationRole.INFO, rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, rh.gs(app.aaps.core.interfaces.R.string.uel_extended_carbs), ecarbsMessage))
+                        val ecarbsMessage = rh.gs(InterfacesStrings.format_carbs, carbs2) + "/" + duration + "h (+" + timeOffset + "min)"
+                        line(ConfirmationRole.INFO, rh.gs(InterfacesStrings.confirmation_line, rh.gs(InterfacesStrings.uel_extended_carbs), ecarbsMessage))
                     }
                 }
             }
             if (eCarbsGrams > 0) {
-                line(ConfirmationRole.INFO, rh.gs(app.aaps.core.interfaces.R.string.wizard_ecarbs, eCarbsGrams, eCarbsDurationHours, eCarbsDelayMinutes))
+                line(ConfirmationRole.INFO, rh.gs(InterfacesStrings.wizard_ecarbs, eCarbsGrams, eCarbsDurationHours, eCarbsDelayMinutes))
             }
         }
 
@@ -586,7 +585,7 @@ class BolusWizard(
                         bolus = detailedBolusInfo.createBolus(recordIcfg),
                         action = action,
                         source = source,
-                        note = rh.gs(app.aaps.core.interfaces.R.string.record) + if (notes.isNotEmpty()) ": $notes" else ""
+                        note = rh.gs(InterfacesStrings.record) + if (notes.isNotEmpty()) ": $notes" else ""
                     )
                 }
                 if (carbs > 0) {
@@ -594,7 +593,7 @@ class BolusWizard(
                         carbs = detailedBolusInfo.createCarbs(),
                         action = action,
                         source = source,
-                        note = notes.ifEmpty { rh.gs(app.aaps.core.interfaces.R.string.record) }
+                        note = notes.ifEmpty { rh.gs(InterfacesStrings.record) }
                     )
                 }
                 persistenceLayer.insertOrUpdateBolusCalculatorResult(bolusCalculatorResult)
@@ -631,7 +630,7 @@ class BolusWizard(
         // delayMinutes is already the total delay from now — the caller folds the meal carbTime into it.
         // Do NOT add carbTime again here or the eCarbs record lands carbTime minutes too late.
         val totalDelayMinutes = delayMinutes
-        val eventTime = Calendar.getInstance().timeInMillis + (totalDelayMinutes * 60000L)
+        val eventTime = Clock.System.now().toEpochMilliseconds() + (totalDelayMinutes * 60000L)
         if (forcedRecordOnly) {
             uel.log(
                 action = Action.EXTENDED_CARBS,
@@ -655,7 +654,7 @@ class BolusWizard(
                     carbs = detailedBolusInfo.createCarbs(),
                     action = Action.EXTENDED_CARBS,
                     source = Sources.WizardDialog,
-                    note = notes.ifEmpty { rh.gs(app.aaps.core.interfaces.R.string.record) }
+                    note = notes.ifEmpty { rh.gs(InterfacesStrings.record) }
                 )
             }
         } else {
@@ -667,17 +666,17 @@ class BolusWizard(
     }
 
     private fun scheduleECarbsFromQuickWizardCompose(quickWizardEntry: QuickWizardEntry, onError: (String) -> Unit, forcedRecordOnly: Boolean = false) {
-        val eCarbsYesNo = JsonHelper.safeGetInt(quickWizardEntry.storage, "useEcarbs", QuickWizardEntry.NO)
+        val eCarbsYesNo = quickWizardEntry.useEcarbs()
         if (eCarbsYesNo == QuickWizardEntry.YES) {
-            val timeOffset = JsonHelper.safeGetInt(quickWizardEntry.storage, "time", 0)
-            val duration = JsonHelper.safeGetInt(quickWizardEntry.storage, "duration", 0)
-            val carbs2 = JsonHelper.safeGetInt(quickWizardEntry.storage, "carbs2", 0)
+            val timeOffset = quickWizardEntry.time()
+            val duration = quickWizardEntry.duration()
+            val carbs2 = quickWizardEntry.carbs2()
 
-            val currentTime = Calendar.getInstance().timeInMillis
+            val currentTime = Clock.System.now().toEpochMilliseconds()
             val eventTime: Long = currentTime + (timeOffset * 60000)
 
             if (carbs2 > 0) {
-                val buttonText = quickWizardEntry.storage.get("buttonText").toString()
+                val buttonText = quickWizardEntry.buttonText()
                 if (forcedRecordOnly) {
                     uel.log(
                         action = Action.EXTENDED_CARBS,

@@ -7,7 +7,8 @@ import app.aaps.core.keys.StringNonKey
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
-import org.json.JSONArray
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -31,7 +32,14 @@ class QuickWizardTest : TestBaseWithProfile() {
         "\"useBG\":0,\"useCOB\":0,\"useBolusIOB\":0,\"useBasalIOB\":0,\"useTrend\":0,\"useSuperBolus\":0,\"useTemptarget\":0}"
     private val data2 = "{\"buttonText\":\"Lunch\",\"carbs\":18,\"validFrom\":36000,\"validTo\":39600," +
         "\"useBG\":0,\"useCOB\":0,\"useBolusIOB\":1,\"useBasalIOB\":2,\"useTrend\":0,\"useSuperBolus\":0,\"useTemptarget\":0}"
-    private var array: JSONArray = JSONArray("[$data1,$data2]")
+    private var array: List<QuickWizardEntryData> = entries(data1, data2)
+
+    /**
+     * Keeps the test data as the JSON text a real preference holds, and parses it the same way the
+     * production code does, so this still covers [QuickWizardEntryData.fromJsonObject].
+     */
+    private fun entries(vararg json: String): List<QuickWizardEntryData> =
+        json.map { QuickWizardEntryData.fromJsonObject(Json.parseToJsonElement(it) as JsonObject) }
 
     class MockedTime : QuickWizardEntry.Time() {
 
@@ -103,7 +111,7 @@ class QuickWizardTest : TestBaseWithProfile() {
 
     @Test
     fun reorderAppliesThePermutation() {
-        quickWizard.setData(JSONArray("[$data1,$data2,$data3]"))
+        quickWizard.setData(entries(data1, data2, data3))
 
         // order[newIndex] == oldIndex, so this reads "Dinner, Meal, Lunch".
         assertThat(quickWizard.reorder(listOf(2, 0, 1))).isTrue()
@@ -113,7 +121,7 @@ class QuickWizardTest : TestBaseWithProfile() {
 
     @Test
     fun reorderWithTheIdentityOrderDoesNotWrite() {
-        quickWizard.setData(JSONArray("[$data1,$data2]"))
+        quickWizard.setData(entries(data1, data2))
         clearInvocations(preferences)
 
         assertThat(quickWizard.reorder(listOf(0, 1))).isTrue()
@@ -126,7 +134,7 @@ class QuickWizardTest : TestBaseWithProfile() {
 
     @Test
     fun reorderRejectsAnOrderThatIsNotAPermutation() {
-        quickWizard.setData(JSONArray("[$data1,$data2,$data3]"))
+        quickWizard.setData(entries(data1, data2, data3))
 
         assertThat(quickWizard.reorder(listOf(0, 1))).isFalse()          // too short
         assertThat(quickWizard.reorder(listOf(0, 1, 1))).isFalse()       // duplicate
