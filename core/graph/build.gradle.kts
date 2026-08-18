@@ -46,7 +46,7 @@ kotlin {
                 // Vico publishes Apple targets of its own, so the charts are shared rather than
                 // reimplemented. This is the only third-party UI library in commonMain.
                 api(libs.com.patrykandpatrick.vico.compose)
-                implementation(compose.components.uiToolingPreview)
+                implementation(libs.cmp.ui.tooling.preview)
             }
         }
 

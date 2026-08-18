@@ -35,6 +35,7 @@ glance = "1.1.1"
 # 1.11.1 rather than 1.12.0-beta03 on purpose: the beta's Android side delegates to androidx
 # 1.12.0-beta02, which would drag a pre-release androidx into an app pinned to stable 1.11.x.
 composeMultiplatform = "1.11.1"
+navigationEvent = "1.0.1"
 # material3 and material-icons-extended are separate, lagging version lines in CMP.
 cmpMaterial3 = "1.9.0"
 cmpIcons = "1.7.3"
@@ -236,6 +237,13 @@ cmp-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = 
 cmp-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "composeMultiplatform" }
 cmp-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "composeMultiplatform" }
 cmp-ui-backhandler = { module = "org.jetbrains.compose.ui:ui-backhandler", version.ref = "composeMultiplatform" }
+# Replaces the deprecated `compose.components.uiToolingPreview`. It declares the annotation under the
+# androidx package name for every target, so common and Android code share one import.
+cmp-ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }
+# Replacement for the deprecated `androidx.compose.ui.backhandler.BackHandler`.
+# The JetBrains republish, not `androidx.navigationevent:navigationevent-compose` - the plain androidx
+# one ships Android/JVM variants only and cannot be used from commonMain.
+androidx-navigationevent-compose = { module = "org.jetbrains.androidx.navigationevent:navigationevent-compose", version.ref = "navigationEvent" }
 cmp-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "cmpMaterial3" }
 cmp-material-icons-extended = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "cmpIcons" }
 

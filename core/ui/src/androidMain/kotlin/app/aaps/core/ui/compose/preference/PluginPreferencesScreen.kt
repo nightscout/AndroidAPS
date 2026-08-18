@@ -21,9 +21,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.backhandler.BackHandler
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.ui.UiStrings
@@ -43,9 +44,6 @@ import kotlinx.coroutines.launch
  * @param visibilityContext Context for evaluating visibility conditions
  * @param onBackClick Callback when back button is clicked
  */
-// BackHandler is still marked experimental in Compose Multiplatform. The Android behaviour is
-// unchanged - it is the same predictive-back plumbing androidx.activity.compose.BackHandler used.
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun PluginPreferencesScreen(
     plugin: PluginBase,
@@ -58,9 +56,13 @@ fun PluginPreferencesScreen(
     // State for inline Compose screen navigation
     var composeScreen: ComposeScreenContent? by remember { mutableStateOf(null) }
 
-    BackHandler(enabled = composeScreen != null) {
-        composeScreen = null
-    }
+    // Back closes the inline sub-screen instead of leaving the preferences screen.
+    // The sub-screen is a single level, so the handler carries no navigation info.
+    NavigationBackHandler(
+        state = rememberNavigationEventState(NavigationEventInfo.None),
+        isBackEnabled = composeScreen != null,
+        onBackCompleted = { composeScreen = null }
+    )
 
     // If a compose sub-screen is active, render it instead of preferences
     composeScreen?.let { screen ->

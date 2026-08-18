@@ -12,6 +12,7 @@ import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.configuration.ConfigBuilder
@@ -198,6 +199,8 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         whenever(rh.gs(R.string.smscommunicator_carbs_set)).thenReturn("Carbs %1\$dg entered successfully")
         whenever(rh.gs(app.aaps.core.ui.R.string.noprofile)).thenReturn("No profile loaded from NS yet")
         whenever(rh.gs(app.aaps.core.interfaces.R.string.pumpsuspended)).thenReturn("Pump suspended")
+        // RunningModeGuard asks by TextRef, which is a different overload than the id above.
+        whenever(rh.gs(InterfacesStrings.pumpsuspended)).thenReturn("Pump suspended")
         whenever(rh.gs(app.aaps.core.interfaces.R.string.connected)).thenReturn("Connected")
         whenever(rh.gs(R.string.sms_delta)).thenReturn("Delta:")
         whenever(rh.gs(R.string.sms_bolus)).thenReturn("Bolus:")

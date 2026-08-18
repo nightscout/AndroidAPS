@@ -1,7 +1,7 @@
 package app.aaps.core.ui.compose.banner
 
 import androidx.compose.runtime.Composable
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 
 @Preview(showBackground = true)
 @Composable

@@ -18,9 +18,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.backhandler.BackHandler
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 
@@ -47,7 +48,6 @@ import app.aaps.core.ui.compose.dialogs.OkCancelDialog
  * @param setToolbarConfig Callback to configure the parent toolbar (hides back arrow)
  * @param stepContent Composable content for the current step
  */
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun <S> WizardScreen(
     currentStep: S?,
@@ -86,10 +86,13 @@ fun <S> WizardScreen(
         }
     }
 
-    // System back button: always confirm before leaving the wizard
-    BackHandler(enabled = true) {
-        showCancelDialog = true
-    }
+    // System back button: always confirm before leaving the wizard.
+    // The wizard has no back stack of its own, so the handler carries no navigation info.
+    NavigationBackHandler(
+        state = rememberNavigationEventState(NavigationEventInfo.None),
+        isBackEnabled = true,
+        onBackCompleted = { showCancelDialog = true }
+    )
 
     if (showCancelDialog) {
         OkCancelDialog(
