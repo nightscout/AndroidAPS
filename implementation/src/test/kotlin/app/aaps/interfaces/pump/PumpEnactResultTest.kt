@@ -1,6 +1,7 @@
 package app.aaps.interfaces.pump
 
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.ui.UiStrings
 import app.aaps.implementation.pump.PumpEnactResultObject
 import app.aaps.plugins.aps.loop.extensions.json
 import app.aaps.pump.virtual.extensions.toText
@@ -16,16 +17,16 @@ class PumpEnactResultTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun mock() {
-        whenever(rh.gs(app.aaps.core.ui.R.string.success)).thenReturn("Success")
-        whenever(rh.gs(app.aaps.core.ui.R.string.enacted)).thenReturn("Enacted")
-        whenever(rh.gs(app.aaps.core.ui.R.string.comment)).thenReturn("Comment")
-        whenever(rh.gs(app.aaps.core.ui.R.string.configbuilder_insulin)).thenReturn("Insulin")
-        whenever(rh.gs(app.aaps.core.ui.R.string.smb_shortname)).thenReturn("SMB")
-        whenever(rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname)).thenReturn("U")
-        whenever(rh.gs(app.aaps.core.ui.R.string.cancel_temp)).thenReturn("Cancel temp basal")
-        whenever(rh.gs(app.aaps.core.ui.R.string.duration)).thenReturn("Duration")
-        whenever(rh.gs(app.aaps.core.ui.R.string.percent)).thenReturn("Percent")
-        whenever(rh.gs(app.aaps.core.ui.R.string.absolute)).thenReturn("Absolute")
+        whenever(rh.gs(UiStrings.success)).thenReturn("Success")
+        whenever(rh.gs(UiStrings.enacted)).thenReturn("Enacted")
+        whenever(rh.gs(UiStrings.comment)).thenReturn("Comment")
+        whenever(rh.gs(UiStrings.configbuilder_insulin)).thenReturn("Insulin")
+        whenever(rh.gs(UiStrings.smb_shortname)).thenReturn("SMB")
+        whenever(rh.gs(UiStrings.insulin_unit_shortname)).thenReturn("U")
+        whenever(rh.gs(UiStrings.cancel_temp)).thenReturn("Cancel temp basal")
+        whenever(rh.gs(UiStrings.duration)).thenReturn("Duration")
+        whenever(rh.gs(UiStrings.percent)).thenReturn("Percent")
+        whenever(rh.gs(UiStrings.absolute)).thenReturn("Absolute")
     }
 
     @Test fun successTest() {

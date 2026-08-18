@@ -16,7 +16,7 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.defs.baseBasalRange
 import app.aaps.core.interfaces.pump.defs.hasExtendedBasals
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
@@ -37,11 +37,11 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
-import app.aaps.core.ui.R as CoreUiR
+import app.aaps.core.ui.UiStrings
 
 class VirtualPumpViewModel(
     private val virtualPumpPlugin: VirtualPumpPlugin,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val pumpSync: PumpSync,
     private val dateUtil: DateUtil,
     private val persistenceLayer: PersistenceLayer,
@@ -91,14 +91,14 @@ class VirtualPumpViewModel(
             infoRows = emptyList(),
             managementActions = listOf(
                 PumpAction(
-                    label = rh.gs(CoreUiR.string.pump_suspend),
+                    label = rh.gs(UiStrings.pump_suspend),
                     icon = IcLoopPaused,
                     category = ActionCategory.MANAGEMENT,
                     visible = !isSuspended,
                     onClick = { onSuspendToggle(true) }
                 ),
                 PumpAction(
-                    label = rh.gs(CoreUiR.string.pump_resume),
+                    label = rh.gs(UiStrings.pump_resume),
                     icon = Icons.Filled.PlayArrow,
                     category = ActionCategory.MANAGEMENT,
                     visible = isSuspended,
@@ -150,7 +150,7 @@ class VirtualPumpViewModel(
         }
 
         val battery = virtualPumpPlugin.batteryLevel.value?.let { level ->
-            rh.gs(CoreUiR.string.format_percent, level)
+            rh.gs(UiStrings.format_percent, level)
         }
 
         val reservoir = ch.insulinAmountString(virtualPumpPlugin.reservoirLevel.value)
@@ -172,13 +172,13 @@ class VirtualPumpViewModel(
             pumpType?.let { pt ->
                 add(
                     PumpInfoRow(
-                        label = rh.gs(R.string.virtual_pump_type),
+                        label = rh.gs(VirtualStrings.virtual_pump_type),
                         value = pt.description
                     )
                 )
                 add(
                     PumpInfoRow(
-                        label = rh.gs(R.string.virtual_pump_definition),
+                        label = rh.gs(VirtualStrings.virtual_pump_definition),
                         value = pt.getFullDescription(rh)
                     )
                 )
@@ -187,14 +187,14 @@ class VirtualPumpViewModel(
 
         val managementActions = listOf(
             PumpAction(
-                label = rh.gs(CoreUiR.string.pump_suspend),
+                label = rh.gs(UiStrings.pump_suspend),
                 icon = IcLoopPaused,
                 category = ActionCategory.MANAGEMENT,
                 visible = !isSuspended,
                 onClick = { onSuspendToggle(true) }
             ),
             PumpAction(
-                label = rh.gs(CoreUiR.string.pump_resume),
+                label = rh.gs(UiStrings.pump_resume),
                 icon = Icons.Filled.PlayArrow,
                 category = ActionCategory.MANAGEMENT,
                 visible = isSuspended,
@@ -210,13 +210,13 @@ class VirtualPumpViewModel(
         )
     }
 
-    private fun PumpType.getFullDescription(rh: ResourceHelper): String {
+    private fun PumpType.getFullDescription(rh: TextResolver): String {
         val unit = if (pumpTempBasalType() == PumpTempBasalType.Percent) "%" else ""
         val eb = extendedBolusSettings() ?: return ""
         val tbr = tbrSettings() ?: return ""
-        val extendedNote = if (hasExtendedBasals()) rh.gs(R.string.def_extended_note) else ""
+        val extendedNote = if (hasExtendedBasals()) rh.gs(VirtualStrings.def_extended_note) else ""
         return String.format(
-            rh.gs(R.string.virtual_pump_pump_def),
+            rh.gs(VirtualStrings.virtual_pump_pump_def),
             bolusSize().toString(),
             eb.step, eb.durationStep, eb.maxDuration / 60,
             baseBasalRange(),
