@@ -15,6 +15,7 @@ import app.aaps.core.utils.lenientString
 import app.aaps.core.utils.lenientStringOrNull
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.offsetAt
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlin.time.Instant
@@ -51,6 +52,20 @@ fun SingleProfile.toPureProfile(dateUtil: DateUtil): PureProfile? =
         glucoseUnit = if (mgdl) GlucoseUnit.MGDL else GlucoseUnit.MMOL,
         utcOffset = systemUtcOffsetAt(dateUtil.now())
     )
+
+/**
+ * Reads a profile straight from its stored text.
+ *
+ * Most callers hold the profile as a string - out of the database, or off the Nightscout wire - and
+ * only built a JSON document to hand it over. Parsing here removes that step and keeps the JSON
+ * library out of the caller entirely.
+ *
+ * Unreadable text gives null, i.e. an invalid profile, the same answer an unreadable document gives.
+ */
+fun pureProfileFromJson(profileText: String, dateUtil: DateUtil, defaultUnits: String? = null): PureProfile? {
+    val parsed = runCatching { Json.parseToJsonElement(profileText) as? JsonObject }.getOrNull() ?: return null
+    return pureProfileFromJson(parsed, dateUtil, defaultUnits)
+}
 
 /**
  * Pure profile doesn't contain timestamp, percentage, timeshift, profileName

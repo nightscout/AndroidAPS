@@ -11,12 +11,11 @@ import app.aaps.core.nssdk.localmodel.treatment.NSEffectiveProfileSwitch
 import app.aaps.core.nssdk.localmodel.treatment.NSICfg
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
-import org.json.JSONObject
 import java.security.InvalidParameterException
 
 /** [insulinFallback] stamps records uploaded without one — see `NsIncomingDataProcessor.fallbackICfg`. */
 fun NSEffectiveProfileSwitch.toEffectiveProfileSwitch(dateUtil: DateUtil, insulinFallback: ICfg): EPS? {
-    val pureProfile = pureProfileFromJson(JSONObject(profileJson), dateUtil) ?: return null
+    val pureProfile = pureProfileFromJson(profileJson, dateUtil) ?: return null
     val profileSealed = ProfileSealed.Pure(value = pureProfile, activePlugin = null)
     val iCfg =
         iCfg?.let {
