@@ -57,12 +57,14 @@ class MidnightTimeTest {
         assertThat(MidnightTime.calcDaysBack(5)).isEqualTo(c.timeInMillis)
     }
 
-    @Test fun resetCache() {
+    /**
+     * `calc` used to consult a cache that nothing ever wrote to, so it always recomputed. The cache
+     * is gone; this pins that repeated calls still agree, which is all the cache could ever have
+     * promised.
+     */
+    @Test fun repeatedCallsAgree() {
         val now = System.currentTimeMillis()
-        MidnightTime.calc(now)
-        MidnightTime.resetCache()
-        // Passes trivially: `calc` never writes to `times`, so the map is already empty before the
-        // reset. Kept as a regression guard for the day the cache is actually wired up.
-        assertThat(MidnightTime.times.size.toLong()).isEqualTo(0L)
+
+        assertThat(MidnightTime.calc(now)).isEqualTo(MidnightTime.calc(now))
     }
 }

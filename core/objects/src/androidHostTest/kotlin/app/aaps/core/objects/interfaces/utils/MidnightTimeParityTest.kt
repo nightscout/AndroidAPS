@@ -34,12 +34,10 @@ class MidnightTimeParityTest {
     @BeforeEach fun pinZone() {
         original = TimeZone.getDefault()
         TimeZone.setDefault(TimeZone.getTimeZone("Europe/Prague"))
-        MidnightTime.resetCache()
     }
 
     @AfterEach fun restoreZone() {
         TimeZone.setDefault(original)
-        MidnightTime.resetCache()
     }
 
     // ------------------------------------------------------------------ the reference
