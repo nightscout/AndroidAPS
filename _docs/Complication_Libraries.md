@@ -872,6 +872,34 @@ the bottom half of the central square of *that* — on the order of 29 % of the 
 Both style slots matter: because of the `max(...)`, setting `borderRadius` on `activeStyle` alone
 has no effect on the inset while `ambientStyle` keeps the default.
 
+### `borderWidth` does NOT inset content — it is purely a stroke width
+
+Worth stating explicitly, because `borderRadius`'s behaviour above invites the assumption that the
+other border property does something similar. It does not. `borderWidth` occurs **exactly once** in
+the whole renderer:
+
+```java
+// ComplicationRenderer.java:1383, in PaintSet's constructor
+mBorderPaint.setStrokeWidth(style.getBorderWidth());
+```
+
+`calculateBounds()` (998–1090) derives its inner box from `getBorderRadius(...)` alone (1076–1079);
+no `borderWidth` term appears in any layout path. So a border neither reserves nor consumes content
+space at any width, and the question "does a *transparent* border skip the inset?" has no subject —
+there is no inset to skip.
+
+Three related facts from the same code:
+
+- **`BORDER_STYLE_NONE` and a zero-alpha `borderColor` are the same thing.** `drawBorders`
+  (529–534) skips entirely on `NONE`, and `PaintSet` additionally does `mBorderPaint.setAlpha(0)`
+  for it (1380–1382). A solid border with a transparent colour therefore renders identically, which
+  makes `borderStyle` redundant for a watch face that controls the colour.
+- **The stroke is centred on the slot edge and nothing clips it.** `drawBorders` strokes
+  `mBackgroundBoundsF` — the full bounds — and `draw()` (445–446) only does `save()` + `translate()`,
+  no `clipRect`. Half of `borderWidth` therefore paints *outside* the declared bounds.
+- Effective default is **`1dp`**, not the `1` px field initializer, for any context-attached
+  drawable — see the resource-defaults box in the `ComplicationStyle` section.
+
 Other confirmed details: `ComplicationStyle.textSize`/`titleSize` are applied via
 `mPrimaryTextPaint.setTextSize(style.getTextSize())` (1342) and
 `mSecondaryTextPaint.setTextSize(style.getTitleSize())` (1356). `setBounds(Rect)` at 356.

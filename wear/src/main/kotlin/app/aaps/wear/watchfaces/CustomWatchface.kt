@@ -27,6 +27,7 @@ import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.toColorInt
 import androidx.core.view.forEach
 import androidx.core.view.isVisible
@@ -317,14 +318,31 @@ class CustomWatchface : BaseWatchFace() {
 
 
         /**
-         * **Provisional placeholder, not a finished value.** Ring thickness as a fraction of the
-         * slot's declared width, eyeballed against an OEM watch face (ring ~= 1/6 of radius, and
-         * radius = width/2, hence 12). Not an upstream design guideline - no such guideline exists,
-         * see [ViewMap.ringWidthPx]. To be replaced by an explicit CWF json key in the
-         * styling parameter audit, at which point this becomes only the documented fallback ratio
-         * used when the key is absent.
+         * Ring thickness used when a CWF declares no `RINGWIDTH`, in the CWF's 400x400 space like the
+         * key itself - so the parameter and its default speak one language, and "what does ringWidth
+         * mean" has a single answer.
+         *
+         * Derived from what the fallback used to compute: a fraction of the slot width, eyeballed
+         * against an OEM watch face (ring ~= 1/6 of radius, radius = width/2, hence width/12). On the
+         * 106-wide slot of the one real CWF using complications that came to ~8.8, so 9 keeps that
+         * dial looking as it did. Not an upstream design guideline - no such guideline exists, see
+         * [ViewMap.ringWidthPx].
+         *
+         * A default rather than a rule: a CWF wanting the ring to scale with an unusually large or
+         * small slot sets `RINGWIDTH` itself.
          */
-        private const val PROVISIONAL_RING_WIDTH_RATIO = 12
+        private const val PROVISIONAL_RING_WIDTH = 9
+
+        /**
+         * Border thickness used when a CWF sets `BORDERCOLOR` but no `BORDERWIDTH`, in the CWF's
+         * 400x400 space like every other dimension - so ~2.3px on a 450px screen.
+         *
+         * A starting value, chosen to sit near androidx's own effective default of `1dp` (~2.1px at
+         * this density) without borrowing `dp`, which belongs to a different resolution-independence
+         * system than [zoomFactor]. Safe to tune: border width takes part in no layout decision, so
+         * changing it moves nothing but the stroke itself.
+         */
+        private const val DEFAULT_BORDER_WIDTH = 2
 
 
     }
@@ -528,6 +546,14 @@ class CustomWatchface : BaseWatchFace() {
         val borderRadius: Int
             get() = ((json?.optInt(JsonKeys.BORDERRADIUS.key) ?: 0) * cwf.zoomFactor).toInt().coerceAtLeast(0)
 
+        /** Transparent when absent, which is what "no border" means - see [ComplicationStyleValues.borderColor]. */
+        val borderColor: Int
+            get() = cwf.getColor(json?.optString(JsonKeys.BORDERCOLOR.key) ?: "", Color.TRANSPARENT)
+
+        val borderWidth: Int
+            get() = ((json?.optInt(JsonKeys.BORDERWIDTH.key)?.takeIf { it > 0 } ?: DEFAULT_BORDER_WIDTH) * cwf.zoomFactor)
+                .toInt().coerceAtLeast(0)
+
         val textSize: Int
             get() = (dynData?.getTextSizeStep(cwf) ?: json?.optInt(JsonKeys.TEXTSIZE.key)?.takeIf { it > 0 })
                 ?.let { (it * cwf.zoomFactor).toInt() } ?: ComplicationStyleValues.TEXT_SIZE_FIT_BOX
@@ -537,12 +563,12 @@ class CustomWatchface : BaseWatchFace() {
                 ?.let { (it * cwf.zoomFactor).toInt() } ?: ComplicationStyleValues.TEXT_SIZE_FIT_BOX
 
         /**
-         * Nullable, unlike every other value here, and legitimately so: absent means "no percentage
-         * was given", which [ViewMap.ringWidthPx] answers with its own proportional fallback rather
-         * than with a percentage. The pixel value that produces is always written, so nothing
-         * persists across CWF loads.
+         * Nullable, unlike every other value here, and legitimately so: absent means "no width was
+         * given", which [ViewMap.ringWidthPx] answers with [PROVISIONAL_RING_WIDTH] rather than with a
+         * declared value. The pixel value that produces is always written, so nothing persists across
+         * CWF loads.
          */
-        val ringWidthPercent: Int?
+        val ringWidth: Int?
             get() = json?.optInt(JsonKeys.RINGWIDTH.key)?.takeIf { it > 0 }
 
         val ringPrimaryColor: Int
@@ -982,11 +1008,14 @@ class CustomWatchface : BaseWatchFace() {
         return ColorMatrixColorFilter(colorMatrix)
     }
 
+    // Matched on the part before '#' so a BG colour key can carry an alpha suffix - see
+    // withDeclaredAlpha. A plain hex colour is unaffected: it starts with '#', so its prefix is
+    // empty and can never match a key.
     private fun getColor(color: String, defaultColor: Int = Color.GRAY): Int =
-        when (color) {
-            JsonKeyValues.BGCOLOR.key      -> bgColor(0)
-            JsonKeyValues.BGCOLOR_EXT1.key -> bgColor(1)
-            JsonKeyValues.BGCOLOR_EXT2.key -> bgColor(2)
+        when (color.substringBefore('#')) {
+            JsonKeyValues.BGCOLOR.key      -> bgColor(0).withDeclaredAlpha(color)
+            JsonKeyValues.BGCOLOR_EXT1.key -> bgColor(1).withDeclaredAlpha(color)
+            JsonKeyValues.BGCOLOR_EXT2.key -> bgColor(2).withDeclaredAlpha(color)
             else                           ->
                 try {
                     color.toColorInt()
@@ -994,6 +1023,19 @@ class CustomWatchface : BaseWatchFace() {
                     defaultColor
                 }
         }
+
+    /**
+     * This BG colour with the alpha a CWF appended to the key, or unchanged when it appended none:
+     * `bgColor#80` is the BG colour at 50% opacity, plain `bgColor` keeps the opacity it already has.
+     *
+     * The alpha replaces rather than scales, so the suffix always means the same thing whatever the
+     * BG colour it is applied to. A suffix that is not exactly two hex digits is ignored rather than
+     * refused, so a typo costs the transparency and not the colour - the same forgiving choice
+     * [getColor]'s own `catch` makes.
+     */
+    private fun Int.withDeclaredAlpha(color: String): Int =
+        color.substringAfter('#', "").takeIf { it.length == 2 }?.toIntOrNull(16)
+            ?.let { ColorUtils.setAlphaComponent(this, it) } ?: this
 
     private fun manageSpecificViews() {
         resolveBackgroundDrawable()
@@ -1224,17 +1266,26 @@ class CustomWatchface : BaseWatchFace() {
             fun fromKey(key: String?): ViewMap? = entries.firstOrNull { it.key == key }
 
             /**
-             * Ring thickness in physical pixels for `RANGED_VALUE`/`GOAL_PROGRESS`, from the slot's
-             * declared size so it stays proportional to the complication rather than being the
-             * library's fixed hairline. Pure arithmetic - the json reads that feed it happen in
+             * Ring thickness in physical pixels for `RANGED_VALUE`/`GOAL_PROGRESS`, declared by the CWF
+             * in the same space as every other dimension rather than left to the library's fixed
+             * hairline. Pure arithmetic - the json reads that feed it happen in
              * [customizeComplicationView], like every other key in that block.
              *
-             * **Units.** [declaredWidth] is in the CWF's 400x400 space, so it is multiplied by
-             * [zoomFactor] to reach physical pixels - the same conversion [customizeViewCommon]
-             * applies to every other view. `ComplicationStyle.rangedValueRingWidth` is `@Px`, i.e.
-             * physical pixels, so the result is already in the right unit. [ComplicationStyleValues.MIN_RING_WIDTH_PX] is in
-             * that same unit and is deliberately **not** scaled: an absolute floor, not a design
-             * value.
+             * **Units, one convention only.** [ringWidth] and [PROVISIONAL_RING_WIDTH] - the value used
+             * when the key is absent - are both ints in the CWF's 400x400 space, as is [declaredWidth],
+             * so all of them take [zoomFactor] and nothing else, the same conversion
+             * [customizeViewCommon] applies to every other view. That a parameter and its own default
+             * are measured the same way is the point: the earlier fallback was a *fraction of the slot
+             * width*, which made "what does ringWidth mean" have two answers depending on whether the
+             * key was there. `ComplicationStyle.rangedValueRingWidth` is `@Px`, i.e. physical pixels, so
+             * the result is already in the right unit. [ComplicationStyleValues.MIN_RING_WIDTH_PX] is in
+             * that same unit and is deliberately **not** scaled: an absolute floor, not a design value.
+             *
+             * **`RINGWIDTH` is an absolute int, not a percentage** - it was briefly a percentage of the
+             * slot width during this feature's development. An int in the shared 400x400 space is what
+             * every other dimension in this format uses, and matching them was judged worth more than
+             * the proportionality a percentage would have given. The fallback below stays proportional
+             * because it must serve any slot size without being told anything.
              *
              * **Why not the library's own default?** Its effective default is `2dp`
              * (`R.dimen.complicationDrawable_rangedValueRingWidth`, applied by
@@ -1259,16 +1310,15 @@ class CustomWatchface : BaseWatchFace() {
              * Rounds rather than truncates, matching `ComplicationSlot.computeBounds`, which adds 0.5
              * before `toInt()` for exactly this reason.
              */
-            fun ringWidthPx(declaredWidth: Int, percent: Int?, zoomFactor: Double): Int {
-                if (declaredWidth <= 0) return ComplicationStyleValues.MIN_RING_WIDTH_PX
+            fun ringWidthPx(declaredWidth: Int, ringWidth: Int?, zoomFactor: Double): Int {
                 val slotWidthPx = declaredWidth * zoomFactor
-                // Clamped rather than trusted: the ring is stroked centred on the arc, so a value
-                // beyond 100 would paint outside the slot, and a negative one is meaningless. 100 is
-                // already absurd in practice (the ring would swallow the whole complication) but it
-                // is the honest upper bound of "percentage of the declared width".
-                val raw = percent?.let { slotWidthPx * it.coerceIn(1, 100) / 100.0 }
-                    ?: (slotWidthPx / PROVISIONAL_RING_WIDTH_RATIO)
-                return (0.5 + raw).toInt().coerceAtLeast(ComplicationStyleValues.MIN_RING_WIDTH_PX)
+                // Declared or defaulted, both are ints in the same 400x400 space as
+                // WIDTH/HEIGHT/BORDERRADIUS, so both take the same zoomFactor and nothing else.
+                val raw = (ringWidth ?: PROVISIONAL_RING_WIDTH) * zoomFactor
+                // The ring is stroked centred on its arc, so anything wider than the slot paints
+                // outside the complication. Absurd in practice, but this is the honest upper bound.
+                val capped = if (slotWidthPx > 0) raw.coerceAtMost(slotWidthPx) else raw
+                return (0.5 + capped).toInt().coerceAtLeast(ComplicationStyleValues.MIN_RING_WIDTH_PX)
             }
         }
 
@@ -1387,9 +1437,13 @@ class CustomWatchface : BaseWatchFace() {
                 ?.let { (it * cwf.zoomFactor).toInt() } ?: global.titleSize
             val borderRadius = viewJson?.optInt(JsonKeys.BORDERRADIUS.key)?.takeIf { it > 0 }
                 ?.let { (it * cwf.zoomFactor).toInt() } ?: global.borderRadius
+            val borderColor = viewJson?.optString(JsonKeys.BORDERCOLOR.key)?.takeIf { it.isNotEmpty() }
+                ?.let { cwf.getColor(it, Color.TRANSPARENT) } ?: global.borderColor
+            val borderWidth = viewJson?.optInt(JsonKeys.BORDERWIDTH.key)?.takeIf { it > 0 }
+                ?.let { (it * cwf.zoomFactor).toInt() } ?: global.borderWidth
             val ringWidth = ringWidthPx(
                 viewJson?.optInt(JsonKeys.WIDTH.key) ?: 0,
-                viewJson?.optInt(JsonKeys.RINGWIDTH.key)?.takeIf { it > 0 } ?: global.ringWidthPercent,
+                viewJson?.optInt(JsonKeys.RINGWIDTH.key)?.takeIf { it > 0 } ?: global.ringWidth,
                 cwf.zoomFactor
             )
             val ringPrimaryColor = viewJson?.optString(JsonKeys.RINGPRIMARYCOLOR.key)?.takeIf { it.isNotEmpty() }
@@ -1408,7 +1462,9 @@ class CustomWatchface : BaseWatchFace() {
                 textSize = textSize,
                 titleSize = titleSize,
                 ringPrimaryColor = ringPrimaryColor,
-                ringSecondaryColor = ringSecondaryColor
+                ringSecondaryColor = ringSecondaryColor,
+                borderColor = borderColor,
+                borderWidth = borderWidth
             )
             state.applyStyle()
             // Not part of the style values: nothing in ComplicationDrawable holds it, the renderer

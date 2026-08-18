@@ -19,9 +19,9 @@ enum class JsonKeyValues(val key: String) {
     BOLD("bold"),
     BOLD_ITALIC("bold_italic"),
     ITALIC("italic"),
-    BGCOLOR("bgColor"),
-    BGCOLOR_EXT1("bgColor_Ext1"),
-    BGCOLOR_EXT2("bgColor_Ext2"),
+    BGCOLOR("bgColor"),             // optional 2 hex digits alpha suffix, ie "bgColor#80" is half transparent
+    BGCOLOR_EXT1("bgColor_Ext1"),   // same optional alpha suffix, ie "bgColor_Ext1#80"
+    BGCOLOR_EXT2("bgColor_Ext2"),   // same optional alpha suffix, ie "bgColor_Ext2#80"
     SGV_LEVEL("sgvLevel"),
     SGV_LEVEL_EXT1("sgvLevel_Ext1"),
     SGV_LEVEL_EXT2("sgvLevel_Ext2"),

@@ -33,6 +33,10 @@ Investigations):
 - Full-color `MonochromaticImage`, and wide (non-square) `SmallImage`/`PhotoImage` fill — both
   confirmed unconditional androidx renderer limitations. "Own the rendering" would fix both, and
   the ring/GOAL_PROGRESS cases below — still an undecided scope/cost call, not started.
+- Fallback watch face for ~30–60 s after a reboot, a reinstall, or any watch-face process death — a
+  Samsung binding-order defect (all three entry points confirmed), proven to affect an unrelated
+  third-party watch face identically. No app-side fix; waking the watch ends it. See "Closed
+  investigations".
 
 ---
 
@@ -108,7 +112,7 @@ Investigations):
 
 **Styling parameter audit — Phase 2 (real CWF json keys, not placeholders)**
 - [x] `JsonKeys` added: `ICONCOLOR`, `TITLESIZE`, `TITLESTYLE`, `FONTTITLE`, `FONTTITLECOLOR`,
-  `BORDERRADIUS`, `RINGWIDTH` (percentage of slot width), `RINGPRIMARYCOLOR`,
+  `BORDERRADIUS`, `RINGWIDTH` (see the units change below), `RINGPRIMARYCOLOR`,
   `RINGSECONDARYCOLOR`, `COMPLICATIONSTYLE` (the global section key). `FONT`/`FONTSTYLE`/
   `FONTCOLOR`/`COLOR`/`TEXTSIZE` reused from the shared view vocabulary.
 - [x] Three-level cascade wired for every key: per-slot json → CWF-wide `complicationStyle` →
@@ -123,10 +127,51 @@ Investigations):
   **Documented limitation**: no synthetic bold for a single-weight custom font resource
   (`ComplicationStyle` exposes no `Paint` to fake it, unlike `TextView`) — affects
   `FontMap`'s `roboto_condensed_*` entries specifically.
-- [x] `RINGWIDTH` (percentage-based) replaces the previous ratio-only fallback; `2dp` (the
-  library's own default) confirmed rejected — mixes two incompatible resolution-independence
-  systems (`dp` vs. this format's `zoomFactor`), and would be the one CWF dimension that
-  doesn't scale with its slot.
+- [x] `RINGWIDTH` replaces the previous ratio-only fallback; `2dp` (the library's own default)
+  confirmed rejected — mixes two incompatible resolution-independence systems (`dp` vs. this
+  format's `zoomFactor`), and would be the one CWF dimension that doesn't scale with its slot.
+
+**`RINGWIDTH` units changed — breaking, and deliberately taken now**
+- It was implemented earlier this session as a **percentage of the slot width**. It is now an
+  **absolute int in the shared 400×400 space**, scaled by `zoomFactor`, exactly like `WIDTH`,
+  `HEIGHT` and `BORDERRADIUS`.
+- Why: consistency with the rest of the format was judged worth more than the proportionality a
+  percentage gives. Free to change today — the key has never shipped to a user, and the one real CWF
+  using complications has a 106-wide slot where both conventions land within about a pixel of each
+  other. It will not be free later, hence doing it before more CWFs adopt the key.
+- **The absent-key default moved to the same convention**, which is the point of the change:
+  `PROVISIONAL_RING_WIDTH_RATIO = 12` (meaning *slot width ÷ 12*) became
+  `PROVISIONAL_RING_WIDTH = 9` (meaning *9 in 400×400 space*, scaled by `zoomFactor` like the key).
+  Keeping a proportional default alongside an absolute key was tried first and rejected: it gives
+  "what does `ringWidth` mean" two different answers depending on whether the key is present, which
+  cannot be documented cleanly. `9` is what the old ratio produced on the 106-wide slot of the one
+  real CWF using complications (106/12 ≈ 8.8), so that dial keeps its appearance.
+- Consequence, accepted deliberately: an unusually large or small slot no longer gets a
+  proportionally scaled ring by default. A CWF that wants one sets `RINGWIDTH` itself.
+- Upper clamp re-expressed in the new units: capped at the slot width (was 100%). Same intent — the
+  ring is stroked centred on its arc, so anything wider paints outside the complication.
+
+**Border support added — `BORDERCOLOR` + `BORDERWIDTH`, no `BORDERSTYLE` ever**
+- `borderStyle` is pinned to `SOLID` in code and is not exposed as a json key. It would be a second
+  knob contradicting the first: `PaintSet` implements `BORDER_STYLE_NONE` as
+  `mBorderPaint.setAlpha(0)`, so a transparent `BORDERCOLOR` already *is* "no border".
+- `BORDERCOLOR` — string colour like every other colour key, **fully transparent when absent**, so an
+  unset border looks exactly like today's `NONE`.
+- `BORDERWIDTH` — int in the 400×400 space (not a percentage, per the alignment above), default
+  `CustomWatchface.DEFAULT_BORDER_WIDTH = 2` ⇒ ~2.3px on a 450px screen. Named constant, easy to
+  tune after testing.
+- **Verified before choosing that default, and it overturned the premise of the question:**
+  `borderWidth` takes part in **no** layout decision. It reaches only
+  `mBorderPaint.setStrokeWidth` (`ComplicationRenderer.java:1383`); `calculateBounds` insets content
+  from `borderRadius` alone. So unlike the original `borderRadius` defect, nothing has been silently
+  eating content space — and there was nothing to eat it either way, since our `borderStyle` default
+  was `NONE`, which skips `drawBorders` outright.
+- `BORDERRADIUS`'s existing default was re-checked at the same time and is **correct as-is** (`0`,
+  written unconditionally), so it stays settled rather than re-opened.
+- Documented limit: the stroke is centred on the slot edge and the renderer sets no clip, so half of
+  `BORDERWIDTH` paints *outside* the declared bounds. An argument for small values.
+- [ ] Device-confirm: `BORDERCOLOR` alone draws a ~2.3px border; `BORDERWIDTH` thickens it; neither
+  key set looks exactly as before; `RINGWIDTH: 5` gives a ~5.6px ring rather than 5% of the slot.
 - [x] **Closes the original "complications render thinner/less readable than OEM" observation.**
   Root cause was the `borderRadius`-driven ~41% content-area inset (already fixed earlier by
   forcing `borderRadius = 0` unless a CWF sets one), not text weight. Once content stopped
@@ -265,9 +310,74 @@ re-scoping without new evidence**
 - `SUPPORTEDTYPES` **mechanism already implemented and proven** — the ordered, data-bearing-first
   type list (`WatchFaceComplications.supportedTypes`) demonstrably changes negotiation outcomes.
   Remaining backlog item is narrower than originally scoped: expose it as a CWF json key, not
-  build the mechanism.
+  build the mechanism. **Now has a concrete forcing case — see "Complication type negotiation".**
+
+**Complication type negotiation — why an icon-only provider shows text, proven from its manifest**
+- Symptom: a Samsung Health exercise complication showed a white icon days earlier, then only text,
+  while the *same* provider showed its icon on a Samsung watch face throughout.
+- Cause, from `ExerciseOtherWorkoutComplicationProviderService`'s own manifest (pulled from the
+  device APK and decoded with `aapt2 dump xmltree`):
+  `SUPPORTED_TYPES = "ICON,SMALL_IMAGE,SHORT_TEXT,LONG_TEXT"` — identical for every exercise
+  provider, and containing **no** `RANGED_VALUE`/`GOAL_PROGRESS`/`WEIGHTED_ELEMENTS`.
+- The system walks *our* ordered list and takes the first type the provider also offers. Ours puts
+  the data-bearing types 1–3, `SHORT_TEXT` 4th, and `MONOCHROMATIC_IMAGE`/`SMALL_IMAGE` 6th–7th. So
+  `SHORT_TEXT` always wins for this provider — and its `SHORT_TEXT` payload carries no image, which
+  is exactly what the device log showed. The image types can never be reached.
+- Samsung's watch face shows the icon because its slots ask for `ICON`/`SMALL_IMAGE` first. Not trust
+  gating — plain negotiation order.
+- Why it worked before: the negotiated type is fixed **at pick time** and stored by the *system* per
+  (watch face, slot). An older binding had negotiated an image type; re-picking renegotiated it
+  against the current list and landed on `SHORT_TEXT`. This also explains why reinstalling an older
+  APK did not restore it — the binding is not in our app.
+- **A global reorder cannot fix it**: putting image types before text would give this provider its
+  icon but cost the heart-rate provider its value (it offers `ICON,SMALL_IMAGE,SHORT_TEXT`, so it
+  would negotiate `ICON` and lose the number). Per-slot is genuinely required.
+- Design agreed for when this is built, but **not implemented**: a per-slot json key with an *intent*
+  vocabulary rather than raw type names, since neither a CWF author nor a user should need to know
+  what `WEIGHTED_ELEMENTS` is — `value` (default, today's order), `icon`, `text`, each reordering the
+  same full list. It is a preference order, not a filter, so a "wrong" choice degrades gracefully
+  instead of breaking a slot.
+- Constraint to document for CWF authors when it lands: `supportedTypes` is a `ComplicationSlot`
+  builder argument, i.e. **creation-time only**, and the negotiated type is system-stored. So the key
+  affects only *future* picks — seeing a change requires reloading the CWF, recreating the engine
+  (watch-face switch or reboot) **and** re-picking the provider.
 - Cross-CWF persistence semantics for provider assignments — still needs a design decision
   (dormant / prompt reselection / clear) before any code; unchanged from before.
+
+**Payload-rewrite regressions found on device, fixed and now unit-tested**
+- Symptom chain, all on one slot (an exercise complication, SHORT_TEXT): icon disappeared, then the
+  **border** disappeared too as soon as `iconColor` was set on that slot — while complication1
+  (heart rate, same type, same border keys) was fine throughout.
+- Device experiment that isolated it: removing `iconColor` from that slot brought the border back.
+  Since `iconColor` does only two things — set a tint, and flip `iconColorRequested` — the tint
+  cannot reach a border, so the payload rewrite was the culprit.
+- **Two guards added**, each covering one branch of the failure:
+  1. `reapplyIconColorRequest()` now pushes into the drawable **only when the rewrite actually
+     changes the payload** (identity comparison). Re-sending unchanged data is a write the system
+     never asked for, outside its normal flow, and buys nothing.
+  2. The rewrite never trades a working image for one that cannot draw: `hasIcon()` only says the
+     field is *set*, so the icon is now resolved (`loadDrawable`) before the small image is dropped.
+- **The missing icon has a separate cause, now proven from the provider's manifest** — see
+  "Complication type negotiation" below. It is *not* trust gating: an earlier revision of this entry
+  blamed `isForSafeWatchFace`, which was wrong and is superseded. The device log
+  (`hasIcon=false hasSmallImage=false`) is accurate but is a *consequence* of the negotiated type,
+  not of what the provider is willing to tell us.
+- Honest gap: the earlier log showing that slot with *no* images contradicts `iconColor` having had
+  any effect on it at all (the guards return early with no small image). Either the payload varies by
+  selected activity, or something in the reload path is harmful even for unchanged data. Guard 1
+  covers the second case regardless, which is why both were added rather than picking one.
+
+**Unit tests for the complication rendering decisions — new, 16 tests**
+- `ComplicationPayloadPolicyTest` (10) is a truth table for the library-vs-workaround decision, now
+  extracted into a named pure function `shouldDropSmallImage(...)` so the rules are stated once and
+  testable without Android. Each case names the real device behaviour it protects — the ranged-value
+  both-images bug, heart rate's tintable icon, the exercise complication's untinted one, and the two
+  never-downgrade guards above.
+- `ComplicationImageFitTest` (6, Robolectric for `Rect`) pins `ComplicationImageFit.destination` —
+  the arithmetic whose first version shipped cropped *and* distorted, and which only device
+  comparison against a WFF face caught.
+- Deliberately not covered: anything needing a live `ComplicationDrawable`/`WatchState`. The value is
+  in the decisions, not in re-testing androidx's renderer.
 
 **`iconColor` now works for every complication type — implemented, device test pending**
 - Symptom: on `SHORT_TEXT` (Samsung heart rate) the icon stayed red whatever `iconColor` said, while
@@ -551,6 +661,72 @@ logging could simply have failed to observe it, before trusting silence as evide
 ---
 
 ## Closed investigations (kept for future maintainers — real root causes, not guesses)
+
+**Fallback watch face for ~30–60 s whenever the watch face has to be (re)bound — Samsung platform
+defect, no app-side fix.** Reported as "the watch face takes 1–2 minutes to be ready after a reboot
+or a reinstall, and the Big Digital Hour fallback shows first". Confirmed for **all three entry
+points**, each with its own `watchFaceSetReason` and failure message:
+
+| entry point | `watchFaceSetReason` | failure message |
+|---|---|---|
+| reinstall / process death | `WF_RECOVERY` | *"failed to recover … within 15000 milliseconds"* |
+| cold reboot | `REBOOT` | *"failed to connect after user unlock"* |
+| recovery retries after either | `WF_RECOVERY` | as above |
+
+Reproducible on demand with `adb shell am force-stop info.nightscout.androidaps`, which is equivalent
+to the reinstall case and needs no reboot — worth remembering, it made this diagnosable in minutes.
+
+*The mechanism, from device logs:* the system asks WearServices for a watch-face client via
+`AndroidXWatchFaceEngine.blockAndCreateWatchFaceWearServicesClient` **before** binding the wallpaper
+— `setWallpaperComponent` is either absent or called with `name=null`. That waits on a future for
+**10 s** for an engine that cannot exist, because nothing is bound. Attempts time out, then
+*"Forcing to fallback watch face"*. Only a later `USER_INITIATED` switch calls
+`setWallpaperComponent` with a real component **first**, and that one succeeds in **0.35 s**. So the
+delay is entirely the platform's retry schedule (10 s timeouts, 20 s backoffs, a 15 s deadline), not
+slowness in the watch face.
+
+*Reboot capture, 19 Aug (boot at 15:31:44):* `switchTo=…, watchFaceSetReason=REBOOT` at 15:32:36.08
+with **no preceding `setWallpaperComponent`** → `TimeoutException` after 10 s at 15:32:47.55 →
+fallback at 15:32:47.65 → `USER_INITIATED` at 15:33:12.55 → first real
+`setWallpaperComponent name=…CustomWatchface` at 15:33:13.99. Two *further* `WF_RECOVERY` attempts
+followed at 15:34:09 and 15:34:21, with another 10 s timeout and another
+`setWallpaperComponent name=null`, i.e. the system kept cycling even after the watch face was up.
+The same log is full of unrelated `TimeoutException`s from Samsung's own components
+(`StorageManagerService`, `FontLog`, `GmsPipelineLogger`, `CNotificationSetting`, `WCS`) — the device
+is broadly contended after boot, which is context worth having before blaming any one app.
+
+*Why the delay feels inconsistent rather than constant — this also answers "it is worse than
+before":* it is not a fixed cost. It lasts **until something triggers a `USER_INITIATED` switch**.
+That reboot took ~27 s to bind because the watch was being handled (wifi setup) right then; leaving
+the watch alone lets the full retry schedule run, which is where 1–2 minutes comes from. Nothing
+about this lives in AAPS, so a real regression on our side is not a plausible explanation for a
+change over time.
+
+*Proof it is not ours, and the reason this is closed rather than parked:* the identical sequence —
+`name=null`, two 10 s timeouts, forced fallback, then instant success on `USER_INITIATED` — was
+captured for **`com.space.galaxy.galaxy3d.watchface.wear`**, a third-party Watch Face Format face
+hosted in Samsung's own `com.samsung.wear.watchface.runtime`. It shares **no code** with AAPS and is
+not even code-based. Ours took ~50 s, it took ~56 s. Nothing about complications, the 3→5 slot
+change, `syncGeometry`, the preview request or the DataStore read is involved.
+
+*A wrong hypothesis worth recording, so nobody spends the build cycles again:* the prime suspect was
+the `runBlocking { getCustomWatchface() }` in `createComplicationSlotsManager` — a cold DataStore
+read blocking creation past the 10 s allowance. A temporary timing log **measured it at 41 ms** (7 ms
+warm), and the log also showed `createComplicationSlotsManager` running *after*
+`onInteractiveWatchFaceCreated`, so it cannot block creation at all. A `withTimeoutOrNull` guard was
+added, proven useless by that measurement, and reverted. Lesson: measure the blocking call before
+bounding it.
+
+*User-facing note:* waking the watch or opening the watch-face picker triggers a `USER_INITIATED`
+switch, which short-circuits the whole retry cycle and brings the watch face back immediately. That
+is the whole workaround, and it explains why the delay seems variable.
+
+*Superseded note, kept because the reasoning was sound at the time:* this entry originally excluded
+cold reboot, on the argument that a reboot has no prior crash and should therefore bind the wallpaper
+normally. The reboot capture above disproved that — the system skips the binding on the `REBOOT` path
+too. The prediction was wrong; the discriminator set up to test it (is there a
+`setWallpaperComponent` before `blockAndCreate…`?) is what settled it, and is the check to reuse if
+this resurfaces on a future Wear OS version.
 
 **Heart-rate/Cardio static label — platform limitation, confirmed, no app-side fix.** Samsung
 Health's `HeartrateComplicationProviderService` manifest declares only `ICON`/`SMALL_IMAGE`/

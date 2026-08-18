@@ -3,6 +3,7 @@ package app.aaps.wear.watchfaces.utils
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.Rect
 import android.graphics.RectF
@@ -139,6 +140,47 @@ internal enum class ComplicationImageFit {
 }
 
 /**
+ * Whether a complication's small image should be dropped so the monochromatic icon underneath it
+ * renders instead - the single decision behind both of this file's payload workarounds.
+ *
+ * Separated out, named and given no Android dependencies so the rules can be stated once and tested
+ * exhaustively. Every argument is a fact about the payload or the watch face's wishes; the caller
+ * gathers them, this decides. See `ComplicationPayloadPolicyTest` for the truth table.
+ *
+ * @param wireType `android.support.wearable.complications.ComplicationData` type constant. Ints
+ *   rather than the `ComplicationType` enum because `GOAL_PROGRESS`/`WEIGHTED_ELEMENTS` are
+ *   `@RequiresApi(TIRAMISU)` there.
+ * @param iconIsLoadable whether the monochromatic icon actually resolves to a drawable. `hasIcon`
+ *   only says the field is set, which is not the same thing.
+ * @param iconColorRequested whether the watch face asked for a specific icon colour, which is only
+ *   reachable through the monochromatic icon - see [ComplicationStyleValues.borderColor]'s
+ *   neighbours and `_docs/Complication_Libraries.md`.
+ */
+internal fun shouldDropSmallImage(
+    wireType: Int,
+    hasSmallImage: Boolean,
+    hasIcon: Boolean,
+    iconIsLoadable: Boolean,
+    iconColorRequested: Boolean
+): Boolean {
+    // Nothing to drop, or nothing to fall back on.
+    if (!hasSmallImage || !hasIcon) return false
+    // Never trade a working image for one that cannot draw: dropping the small image in favour of an
+    // unloadable icon leaves the complication with no image at all, strictly worse than before.
+    if (!iconIsLoadable) return false
+    // The ranged-value family reaches a layout bug that renders *neither* image, so there the drop is
+    // the only way to see anything at all - it applies whether or not a colour was asked for.
+    val routedThroughRangedValueLayout =
+        wireType == WireComplicationData.TYPE_RANGED_VALUE ||
+            wireType == WireComplicationData.TYPE_GOAL_PROGRESS ||
+            wireType == WireComplicationData.TYPE_WEIGHTED_ELEMENTS
+    if (routedThroughRangedValueLayout) return true
+    // Every other type renders the small image correctly, in the provider's own colours. Only an
+    // explicit colour request justifies giving that up for a tintable icon.
+    return iconColorRequested
+}
+
+/**
  * Renderer for a complication slot, existing to work around two androidx bugs and to add the image
  * fit the library has no setting for. Nothing here is specific to any watch face, so every watch face
  * hosting slots should use this rather than [CanvasComplicationDrawable] directly.
@@ -191,9 +233,18 @@ internal class SyncLoadingCanvasComplication(
      * Needed because the decision is taken in [loadData], which the system only calls when *it* has
      * new data. Starting again from [receivedData] rather than from the loaded data is what makes the
      * change reversible: a dropped small image would otherwise be gone for good.
+     *
+     * **Only pushes when the payload would actually differ.** Re-sending unchanged data into the
+     * drawable is not free - it is a write the system never asked for, outside the normal data flow -
+     * and a complication whose payload [prepared] leaves alone has nothing to gain from it. Device
+     * evidence: setting `iconColor` on a slot whose provider sends nothing strippable made that
+     * slot's border disappear, which no style value can explain; the only thing `iconColor` triggers
+     * beyond a tint is this reload.
      */
     fun reapplyIconColorRequest() {
-        receivedData?.let { super.loadData(prepared(it), false) }
+        val data = receivedData ?: return
+        val prepared = prepared(data)
+        if (prepared !== data) super.loadData(prepared, false)
     }
 
     private fun prepared(data: ComplicationData) = withoutRedundantSmallImage(data)
@@ -215,8 +266,13 @@ internal class SyncLoadingCanvasComplication(
      * for `SMALL_IMAGE`/`PHOTO_IMAGE`, which carry no text fields. Any other type keeps the library's
      * layout untouched - it places text, and reshaping it would ruin that.
      *
-     * Background and rounded corners are drawn here to match, from the same [ComplicationStyle] the
-     * library would have used, so `borderRadius` still shapes the slot and clips the image.
+     * Background, rounded corners and the border are drawn here to match, from the same
+     * [ComplicationStyle] the library would have used, so `borderRadius`/`borderColor`/`borderWidth`
+     * still shape and outline the slot exactly as they do for every other complication type. This
+     * was missed when the image takeover was first written, before border support existed: the
+     * early version returned after drawing the image, so an image-only slot lost its border
+     * unconditionally, regardless of anything declared in json - see `ComplicationRenderer.drawBorders`
+     * (rendering 1.2.1) for the library behaviour being matched here.
      */
     override fun render(canvas: Canvas, bounds: Rect, zonedDateTime: ZonedDateTime, renderParameters: RenderParameters, slotId: Int) {
         val ambient = renderParameters.drawMode == DrawMode.AMBIENT
@@ -234,7 +290,17 @@ internal class SyncLoadingCanvasComplication(
         image.bounds = imageFit().destination(image.intrinsicWidth, image.intrinsicHeight, bounds)
         image.draw(canvas)
         canvas.restore()
+        // Drawn last and unclipped, same as the library: the stroke is centred on the slot edge, so
+        // half of it paints outside the declared bounds - see the borderWidth doc in
+        // ComplicationStyleValues.
+        if (style.borderWidth > 0 && Color.alpha(style.borderColor) > 0) {
+            borderPaint.color = style.borderColor
+            borderPaint.strokeWidth = style.borderWidth.toFloat()
+            canvas.drawRoundRect(RectF(bounds), radius, radius, borderPaint)
+        }
     }
+
+    private val borderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE }
 
     /**
      * The image this complication carries, or null when it carries none - which is every type this
@@ -296,15 +362,18 @@ internal class SyncLoadingCanvasComplication(
     @Suppress("RestrictedApi")
     private fun withoutRedundantSmallImage(complicationData: ComplicationData): ComplicationData {
         val wire = complicationData.asWireComplicationData()
-        // Wire type constants rather than the ComplicationType enum: GOAL_PROGRESS and
-        // WEIGHTED_ELEMENTS are @RequiresApi(TIRAMISU) on the enum, while these are plain ints.
-        val routedThroughRangedValueLayout =
-            wire.type == WireComplicationData.TYPE_RANGED_VALUE ||
-                wire.type == WireComplicationData.TYPE_GOAL_PROGRESS ||
-                wire.type == WireComplicationData.TYPE_WEIGHTED_ELEMENTS
-        // Nothing to fall back on, or nothing to gain: leave the payload exactly as it arrived.
-        if (!wire.hasSmallImage() || !wire.hasIcon()) return complicationData
-        if (!routedThroughRangedValueLayout && !iconColorRequested()) return complicationData
+        val drop = shouldDropSmallImage(
+            wireType = wire.type,
+            hasSmallImage = wire.hasSmallImage(),
+            hasIcon = wire.hasIcon(),
+            // Resolved only when the answer could still be yes - loading an icon is not free, and the
+            // cheap facts above already decide most payloads.
+            iconIsLoadable = wire.hasIcon() && wire.hasSmallImage() && wire.icon?.loadDrawable(context) != null,
+            iconColorRequested = iconColorRequested()
+        )
+        // Returning the very same instance matters: [reapplyIconColorRequest] treats identity as
+        // "nothing to do" and skips pushing into the drawable entirely.
+        if (!drop) return complicationData
         return WireComplicationData.Builder(wire)
             .setSmallImage(null)
             .setBurnInProtectionSmallImage(null)
@@ -336,11 +405,25 @@ internal data class ComplicationStyleValues(
     val ringPrimaryColor: Int,
     val ringSecondaryColor: Int,
     /**
-     * Left to the caller rather than forced here: whether a complication draws a border is a design
-     * decision, not plumbing. Note androidx defaults it to `BORDER_STYLE_SOLID` with a 1px border no
-     * watch face asked for, so the default below is the useful one rather than the library's.
+     * Colour of the border, transparent for "no border".
+     *
+     * There is deliberately no border *style* alongside this: `borderStyle` is pinned to
+     * `BORDER_STYLE_SOLID` in [applyTo], and a fully transparent colour is what turns a border off.
+     * The two are interchangeable here - `PaintSet` implements `BORDER_STYLE_NONE` as
+     * `mBorderPaint.setAlpha(0)` (`ComplicationRenderer.java:1380-1382`) - so one knob is enough, and
+     * it is the one that also chooses the colour.
      */
-    val borderStyle: Int = ComplicationStyle.BORDER_STYLE_NONE
+    val borderColor: Int,
+    /**
+     * Border thickness in real pixels. Purely cosmetic: unlike [borderRadius] it takes part in no
+     * layout decision - `borderWidth` reaches only `mBorderPaint.setStrokeWidth`
+     * (`ComplicationRenderer.java:1383`), and `calculateBounds` insets content from [borderRadius]
+     * alone. So this never shrinks the space a complication has to draw in, at any value.
+     *
+     * The stroke is centred on the slot's edge and the renderer sets no clip, so half of it paints
+     * *outside* the declared bounds.
+     */
+    val borderWidth: Int
 ) {
 
     /**
@@ -359,7 +442,12 @@ internal data class ComplicationStyleValues(
      */
     fun applyTo(drawable: ComplicationDrawable) {
         for (style in listOf(drawable.activeStyle, drawable.ambientStyle)) {
-            style.borderStyle = borderStyle
+            // Always SOLID: a transparent [borderColor] already means "no border", and the library
+            // implements BORDER_STYLE_NONE as exactly that - a zero-alpha border paint. Leaving the
+            // style fixed keeps one knob instead of two that can contradict each other.
+            style.borderStyle = ComplicationStyle.BORDER_STYLE_SOLID
+            style.borderColor = borderColor
+            style.borderWidth = borderWidth
             style.borderRadius = borderRadius
             style.rangedValueRingWidth = ringWidth
             style.backgroundColor = backgroundColor
@@ -417,7 +505,12 @@ internal data class ComplicationStyleValues(
             textSize = TEXT_SIZE_FIT_BOX,
             titleSize = TEXT_SIZE_FIT_BOX,
             ringPrimaryColor = Color.WHITE,
-            ringSecondaryColor = RING_SECONDARY_COLOR_DEFAULT
+            ringSecondaryColor = RING_SECONDARY_COLOR_DEFAULT,
+            // No border until a watch face asks for one. The width is moot while the colour is
+            // transparent, and 0 says so plainly - androidx would have started from a 1dp 50%-black
+            // border here, which no watch face requested.
+            borderColor = Color.TRANSPARENT,
+            borderWidth = 0
         )
     }
 }
