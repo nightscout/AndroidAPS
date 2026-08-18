@@ -13,7 +13,6 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.valueToUnits
 import app.aaps.core.utils.JsonHelper.safeGetDouble
@@ -72,8 +71,6 @@ class QuickWizardEntry(
         const val DEVICE_ALL = 0
         const val DEVICE_PHONE = 1
         const val DEVICE_WATCH = 2
-        const val DEFAULT = 0
-        const val CUSTOM = 1
         const val COOLDOWN_MILLIS = 1_800_000L // 1/2 hour
     }
 
@@ -86,13 +83,16 @@ class QuickWizardEntry(
                 "validFrom": 0,
                 "validTo": 86340,
                 "device": "all",
-                "usePercentage": "default",
                 "percentage": 100
             }""".trimMargin()
-        try {
-            storage = JSONObject(emptyData)
+        storage = try {
+            JSONObject(emptyData)
         } catch (e: JSONException) {
+            // emptyData is a literal, so this cannot fail in practice. If it ever did, leaving the
+            // lateinit unassigned turned it into an UninitializedPropertyAccessException at the first
+            // read, far from the cause. An empty document keeps every accessor on its default.
             aapsLogger.error("Unhandled exception", e)
+            JSONObject()
         }
     }
 
@@ -111,7 +111,6 @@ class QuickWizardEntry(
             useTrend: 0,
             useSuperBolus: 0,
             useTemptarget: 0
-            usePercentage: string, // default, custom
             percentage: int,
         }
      */
@@ -170,7 +169,7 @@ class QuickWizardEntry(
         } else if (useTrend() == NEGATIVE_ONLY && glucoseStatus != null && glucoseStatus.shortAvgDelta < 0) {
             trend = true
         }
-        val percentage = if (usePercentage() == DEFAULT) preferences.get(IntKey.OverviewBolusPercentage) else percentage()
+        val percentage = percentage()
         return bolusWizardProvider().doCalc(
             profile,
             profileName,
@@ -226,8 +225,6 @@ class QuickWizardEntry(
     fun useSuperBolus(): Int = safeGetInt(storage, "useSuperBolus", NO)
 
     fun useTempTarget(): Int = safeGetInt(storage, "useTempTarget", NO)
-
-    fun usePercentage(): Int = safeGetInt(storage, "usePercentage", CUSTOM)
 
     fun percentage(): Int = safeGetInt(storage, "percentage", 100)
 

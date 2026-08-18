@@ -131,7 +131,12 @@ class QuickWizard(
     }
 
     fun addOrUpdate(newItem: QuickWizardEntry) {
-        if (newItem.position == -1)
+        // A position past the end must append, not be handed to JSONArray.put(index, value).
+        // That call pads the list with Java nulls up to the index, and a padded slot then makes the
+        // `storage.get(i) as JSONObject` in the readers throw at the next app start. A stale position
+        // is reachable: an entry can be read at index 2 and a shorter list arrive over sync before
+        // it is written back.
+        if (newItem.position < 0 || newItem.position >= storage.length())
             storage.put(newItem.storage)
         else
             storage.put(newItem.position, newItem.storage)
@@ -139,6 +144,9 @@ class QuickWizard(
     }
 
     fun remove(position: Int) {
+        // JSONArray.remove returns null and does nothing when the index is out of range, so without
+        // this guard we would still save() and push an unchanged list through the sync channel.
+        if (position < 0 || position >= storage.length()) return
         storage.remove(position)
         save()
     }

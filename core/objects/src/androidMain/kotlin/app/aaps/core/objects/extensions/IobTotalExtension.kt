@@ -7,21 +7,6 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
-fun IobTotal.copy(): IobTotal {
-    val i = IobTotal(time)
-    i.iob = iob
-    i.activity = activity
-    i.bolussnooze = bolussnooze
-    i.basaliob = basaliob
-    i.netbasalinsulin = netbasalinsulin
-    i.hightempinsulin = hightempinsulin
-    i.lastBolusTime = lastBolusTime
-    i.iobWithZeroTemp = iobWithZeroTemp?.copy()
-    i.netInsulin = netInsulin
-    i.extendedBolusInsulin = extendedBolusInsulin
-    return i
-}
-
 operator fun IobTotal.plus(other: IobTotal): IobTotal {
     iob += other.iob
     activity += other.activity
@@ -46,12 +31,23 @@ fun IobTotal.round(): IobTotal {
     return this
 }
 
+/**
+ * Puts [value] only when it is a real number.
+ *
+ * `JSONObject.put(String, double)` throws for NaN and +/-Infinity. These builders used to wrap all
+ * their puts in one `try`, so a single bad value skipped every remaining put and returned a
+ * half-built document - a NaN `iob` produced `{}`, losing `time` as well. Skipping just the bad key
+ * keeps the rest of the document intact.
+ */
+private fun JSONObject.putIfFinite(key: String, value: Double): JSONObject =
+    if (value.isFinite()) put(key, value) else this
+
 fun IobTotal.json(dateUtil: DateUtil): JSONObject {
     val json = JSONObject()
     try {
-        json.put("iob", iob)
-        json.put("basaliob", basaliob)
-        json.put("activity", activity)
+        json.putIfFinite("iob", iob)
+        json.putIfFinite("basaliob", basaliob)
+        json.putIfFinite("activity", activity)
         json.put("time", dateUtil.toISOString(time))
     } catch (_: JSONException) {
     }
@@ -61,10 +57,10 @@ fun IobTotal.json(dateUtil: DateUtil): JSONObject {
 fun IobTotal.determineBasalJson(dateUtil: DateUtil): JSONObject {
     val json = JSONObject()
     try {
-        json.put("iob", iob)
-        json.put("basaliob", basaliob)
-        json.put("bolussnooze", bolussnooze)
-        json.put("activity", activity)
+        json.putIfFinite("iob", iob)
+        json.putIfFinite("basaliob", basaliob)
+        json.putIfFinite("bolussnooze", bolussnooze)
+        json.putIfFinite("activity", activity)
         json.put("lastBolusTime", lastBolusTime)
         json.put("time", dateUtil.toISOString(time))
         /*

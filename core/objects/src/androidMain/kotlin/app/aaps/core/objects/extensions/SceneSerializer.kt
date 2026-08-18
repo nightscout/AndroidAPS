@@ -42,19 +42,25 @@ fun String.toScenes(): List<Scene> {
             emptyList()
         } else {
             val jsonArray = JSONArray(this)
-            (0 until jsonArray.length()).map { i ->
-                val obj = jsonArray.getJSONObject(i)
-                Scene(
-                    id = obj.getString("id"),
-                    name = obj.getString("name"),
-                    icon = obj.optString("icon", "star"),
-                    defaultDurationMinutes = obj.optInt("defaultDurationMinutes", 60),
-                    isDeletable = obj.optBoolean("isDeletable", true),
-                    isEnabled = obj.optBoolean("isEnabled", true),
-                    sortOrder = obj.optInt("sortOrder", 0),
-                    actions = obj.optJSONArray("actions")?.toSceneActions() ?: emptyList(),
-                    endAction = obj.optJSONObject("endAction")?.toSceneEndAction() ?: SceneEndAction.Notification
-                )
+            // Skip a scene we cannot read, keep the rest. Without the per-entry catch, one missing
+            // "id" or "name" threw all the way out to the outer catch below and returned an empty
+            // list - a single damaged entry silently wiped the user's whole scene catalogue. This
+            // matches how an unknown action type is already handled: skipped, not fatal.
+            (0 until jsonArray.length()).mapNotNull { i ->
+                runCatching {
+                    val obj = jsonArray.getJSONObject(i)
+                    Scene(
+                        id = obj.getString("id"),
+                        name = obj.getString("name"),
+                        icon = obj.optString("icon", "star"),
+                        defaultDurationMinutes = obj.optInt("defaultDurationMinutes", 60),
+                        isDeletable = obj.optBoolean("isDeletable", true),
+                        isEnabled = obj.optBoolean("isEnabled", true),
+                        sortOrder = obj.optInt("sortOrder", 0),
+                        actions = obj.optJSONArray("actions")?.toSceneActions() ?: emptyList(),
+                        endAction = obj.optJSONObject("endAction")?.toSceneEndAction() ?: SceneEndAction.Notification
+                    )
+                }.getOrNull()
             }
         }
     } catch (_: Exception) {

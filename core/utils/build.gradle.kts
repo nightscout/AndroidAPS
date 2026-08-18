@@ -40,6 +40,11 @@ kotlin {
         commonMain {
             dependencies {
                 api(libs.kotlinx.datetime)
+                // JsonLenientRead reads kotlinx documents from common code. The androidMain block
+                // below keeps its own `api` on the same artifact for the consumers that resolve it
+                // transitively from there.
+                api(project.dependencies.platform(libs.kotlinx.serialization.bom))
+                api(libs.kotlinx.serialization.json)
             }
         }
 
