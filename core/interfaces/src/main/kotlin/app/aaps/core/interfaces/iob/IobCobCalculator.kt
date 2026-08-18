@@ -30,6 +30,19 @@ interface IobCobCalculator {
     fun clearCache()
 
     /**
+     * Force a full recalculation of IOB/COB data with BG reload.
+     *
+     * Bypasses the debounce used for normal history changes so it works even when
+     * that path is stuck. Used by the loop watchdog in `KeepAliveWorker` to recover
+     * when the calculation chain was lost and new BG values no longer trigger loop
+     * runs. The loop run itself happens at the end of the calculation when the
+     * newest BG was not used for a loop run yet.
+     *
+     * @param reason caller identification
+     */
+    fun forceRecalculation(reason: String)
+
+    /**
      *  Calculate CobInfo to now()
      *
      *  @param reason caller identification

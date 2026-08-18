@@ -76,6 +76,14 @@ class KeepAliveWorker @AssistedInject constructor(
         private val STATUS_UPDATE_FREQUENCY = T.mins(15).msecs()
         private const val IOB_UPDATE_FREQUENCY_IN_MINUTES = 5L
 
+        // Loop watchdog: fire when the newest BG is this much newer than the last
+        // BG that triggered a loop run
+        private val LOOP_WATCHDOG_GAP = T.mins(10).msecs()
+
+        // Loop watchdog: ignore BG older than this. Matches the staleness limit of
+        // AutosensDataStore.actualBg() — with stale BG the loop cannot run anyway.
+        private val LOOP_WATCHDOG_MAX_BG_AGE = T.mins(9).msecs()
+
         private var lastReadStatus: Long = 0
         private var lastRun: Long = 0
         private var lastIobUpload: Long = 0
@@ -151,6 +159,7 @@ class KeepAliveWorker @AssistedInject constructor(
         localAlertUtils.checkStaleBGAlert()
         checkPump()
         checkAPS()
+        checkLoopWatchdog()
         maintenance.deleteLogs(30)
         workerDbStatus()
         workerActiveStatus()
@@ -238,6 +247,30 @@ class KeepAliveWorker @AssistedInject constructor(
             lastIobUpload = dateUtil.now()
             loop.scheduleBuildAndStoreDeviceStatus("KeepAliveWorker")
         }
+    }
+
+    // Watchdog for issue #5066: the calculation chain can be lost (worker cancelled
+    // by a later chain, exception in the debounce task). New BG values then keep
+    // coming but no loop run happens. Detect this and force a new calculation.
+    // The calculation ends with a loop run when the newest BG was not used for a
+    // loop run yet.
+    @VisibleForTesting
+    suspend fun checkLoopWatchdog() {
+        if (config.AAPSCLIENT) return
+        // 0 means no calculation has finished since app start. The startup
+        // calculation sets it. Do not fire during app start.
+        val lastTriggered = loop.lastBgTriggeredRun
+        if (lastTriggered == 0L) return
+        val lastBg = persistenceLayer.getLastGlucoseValue() ?: return
+        if (dateUtil.now() - lastBg.timestamp > LOOP_WATCHDOG_MAX_BG_AGE) return
+        if (lastBg.timestamp - lastTriggered < LOOP_WATCHDOG_GAP) return
+        aapsLogger.error(
+            LTag.CORE,
+            "Loop watchdog: newest BG is from ${dateUtil.dateAndTimeAndSecondsString(lastBg.timestamp)} " +
+                "but last BG triggered loop run is from ${dateUtil.dateAndTimeAndSecondsString(lastTriggered)}. Forcing recalculation."
+        )
+        fabricPrivacy.logCustom("LoopWatchdogFired")
+        iobCobCalculator.forceRecalculation("LoopWatchdog")
     }
 
     @VisibleForTesting
