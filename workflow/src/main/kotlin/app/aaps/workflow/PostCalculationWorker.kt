@@ -60,7 +60,6 @@ class PostCalculationWorker @AssistedInject constructor(
         val overviewData: OverviewData,
         val cache: OverviewDataCache,
         val signals: CalculationSignalsEmitter,
-        val triggeredByNewBG: Boolean,
         val runLoopAndWidgetPhase: Boolean
     )
 
@@ -71,7 +70,7 @@ class PostCalculationWorker @AssistedInject constructor(
         ) ?: return Result.failure(workDataOf("Error" to "missing or stale input data"))
 
         if (data.runLoopAndWidgetPhase) {
-            invokeLoop(data)
+            invokeLoop()
             if (isStopped) return Result.failure(workDataOf("Error" to "stopped"))
             widgetUpdater.update("WorkFlow")
             if (isStopped) return Result.failure(workDataOf("Error" to "stopped"))
@@ -85,11 +84,14 @@ class PostCalculationWorker @AssistedInject constructor(
     }
 
     /*
-     * Triggered once autosens calculation has completed so the Loop has current data to work with.
-     * Autosens can be triggered by multiple sources but currently only a new BG should trigger a loop run.
+     * Runs after a completed MAIN calculation so the Loop has current data to work with.
+     * The loop is invoked when the newest BG was not used for a loop run yet.
+     * The check is intentionally not tied to what started this chain: a chain started
+     * by a new BG can be cancelled and replaced by a chain started by another DB change
+     * before it reaches this worker. The replacement chain must not lose the pending
+     * BG trigger (issue #5066).
      */
-    private suspend fun invokeLoop(data: PostCalculationData) {
-        if (!data.triggeredByNewBG) return
+    private suspend fun invokeLoop() {
         val glucoseValue = iobCobCalculator.ads.actualBg() ?: return
         if (glucoseValue.timestamp <= loop.lastBgTriggeredRun) return
         loop.lastBgTriggeredRun = glucoseValue.timestamp
