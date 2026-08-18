@@ -19,11 +19,16 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.blockValueBySeconds
 import app.aaps.core.objects.extensions.pureProfileFromJson
+import app.aaps.core.objects.extensions.with
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.plugins.aps.R
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.buildJsonArray
+import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.put
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -175,20 +180,32 @@ class ATProfile @Inject constructor(
         return jsonString
     }
 
+    /**
+     * The pump profile with the tuned schedules put over it.
+     *
+     * `toPureNsJson` already answers a kotlinx document, so this used to render it to text and parse
+     * it back as `org.json` purely to overwrite three keys. It stays on kotlinx throughout now, which
+     * also removes the `try`/`catch`: nothing here throws, because a document is built rather than
+     * written into.
+     */
     fun data(circadian: Boolean = false): PureProfile? {
-        // Still org.json below: the overrides use org.json arrays and pureProfileFromJson takes one.
-        val json = JSONObject(profile.toPureNsJson(dateUtil).toString())
-        try {
+        // org.json refused NaN and Infinity outright, so a non finite tuned value used to abort the
+        // document and this answered null. kotlinx writes the bare token NaN instead, and the lenient
+        // reader parses it straight back, which would put a NaN into a dosing profile. Fail the same
+        // way it used to.
+        if (!isf.isFinite() || !ic.isFinite() || basal.any { !it.isFinite() }) {
+            aapsLogger.error(LTag.CORE, "Autotune produced a non finite value, profile rejected")
+            return null
+        }
+        val json = profile.toPureNsJson(dateUtil).with {
             if (circadian) {
-                json.put("sens", jsonArray(pumpProfile.isfBlocks, avgISF / pumpProfileAvgISF))
-                json.put("carbratio", jsonArray(pumpProfile.icBlocks, avgIC / pumpProfileAvgIC))
+                put("sens", jsonArrayOf(pumpProfile.isfBlocks, avgISF / pumpProfileAvgISF))
+                put("carbratio", jsonArrayOf(pumpProfile.icBlocks, avgIC / pumpProfileAvgIC))
             } else {
-                json.put("sens", jsonArray(profileUtil.fromMgdlToUnits(isf, profile.units)))
-                json.put("carbratio", jsonArray(ic))
+                put("sens", jsonArrayOf(profileUtil.fromMgdlToUnits(isf, profile.units)))
+                put("carbratio", jsonArrayOf(ic))
             }
-            json.put("basal", jsonArray(basal))
-        } catch (e: JSONException) {
-            aapsLogger.error(LTag.CORE, e.stackTraceToString())
+            put("basal", jsonArrayOf(basal))
         }
         return pureProfileFromJson(json, dateUtil, profile.units.asText)
     }
@@ -212,45 +229,59 @@ class ATProfile @Inject constructor(
         return profileStore
     }
 
-    private fun jsonArray(values: DoubleArray): JSONArray {
-        val json = JSONArray()
-        for (h in 0..23) {
-            val secondFromMidnight = h * 60 * 60
-            val df = NumberFormat.INTEGER_2_DIGITS
-            val time = df.format(h.toLong()) + ":00"
-            json.put(
-                JSONObject()
-                    .put("time", time)
-                    .put("timeAsSeconds", secondFromMidnight)
-                    .put("value", values[h])
+    /*
+     * The schedules are built on kotlinx and converted to org.json only for the public accessors,
+     * which still hand a JSONArray to callers. Reparsing through the text is what keeps the emitted
+     * bytes identical: org.json renders a whole numbered Double as a bare integer and kotlinx renders
+     * it with the fraction, and autotune's output files are read by people and by oref0.
+     */
+
+    private fun jsonArray(values: DoubleArray): JSONArray = JSONArray(jsonArrayOf(values).toString())
+
+    private fun jsonArray(value: Double): JSONArray = JSONArray(jsonArrayOf(value).toString())
+
+    private fun jsonArray(values: List<Block>, multiplier: Double = 1.0): JSONArray =
+        JSONArray(jsonArrayOf(values, multiplier).toString())
+
+    private fun jsonArrayOf(values: DoubleArray): JsonArray =
+        buildJsonArray {
+            for (h in 0..23) {
+                add(
+                    buildJsonObject {
+                        put("time", NumberFormat.INTEGER_2_DIGITS.format(h.toLong()) + ":00")
+                        put("timeAsSeconds", h * 60 * 60)
+                        put("value", values[h])
+                    }
+                )
+            }
+        }
+
+    private fun jsonArrayOf(value: Double): JsonArray =
+        buildJsonArray {
+            add(
+                buildJsonObject {
+                    put("time", "00:00")
+                    put("timeAsSeconds", 0)
+                    put("value", value)
+                }
             )
         }
-        return json
-    }
 
-    private fun jsonArray(value: Double): JSONArray =
-        JSONArray().put(
-            JSONObject()
-                .put("time", "00:00")
-                .put("timeAsSeconds", 0)
-                .put("value", value)
-        )
-
-    private fun jsonArray(values: List<Block>, multiplier: Double = 1.0): JSONArray {
-        val json = JSONArray()
-        var elapsedHours = 0L
-        values.forEach {
-            val value = values.blockValueBySeconds(T.hours(elapsedHours).secs().toInt(), multiplier, 0)
-            json.put(
-                JSONObject()
-                    .put("time", NumberFormat.INTEGER_2_DIGITS.format(elapsedHours) + ":00")
-                    .put("timeAsSeconds", T.hours(elapsedHours).secs())
-                    .put("value", value)
-            )
-            elapsedHours += T.msecs(it.duration).hours()
+    private fun jsonArrayOf(values: List<Block>, multiplier: Double = 1.0): JsonArray =
+        buildJsonArray {
+            var elapsedHours = 0L
+            values.forEach {
+                val value = values.blockValueBySeconds(T.hours(elapsedHours).secs().toInt(), multiplier, 0)
+                add(
+                    buildJsonObject {
+                        put("time", NumberFormat.INTEGER_2_DIGITS.format(elapsedHours) + ":00")
+                        put("timeAsSeconds", T.hours(elapsedHours).secs())
+                        put("value", value)
+                    }
+                )
+                elapsedHours += T.msecs(it.duration).hours()
+            }
         }
-        return json
-    }
 
     companion object {
 

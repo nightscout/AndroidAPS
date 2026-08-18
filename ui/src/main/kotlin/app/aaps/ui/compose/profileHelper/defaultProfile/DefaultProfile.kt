@@ -1,15 +1,14 @@
 package app.aaps.ui.compose.profileHelper.defaultProfile
 
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.data.Block
+import app.aaps.core.data.model.data.TargetBlock
+import app.aaps.core.data.time.T
+import app.aaps.core.data.time.systemUtcOffsetAt
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
-import app.aaps.core.objects.extensions.pureProfileFromJson
-import org.json.JSONArray
-import org.json.JSONObject
-import java.util.Locale
-import java.util.TimeZone
 import java.util.TreeMap
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,40 +26,54 @@ class DefaultProfile @Inject constructor(
     private var twelveToSeventeen: TreeMap<Double, Array<Double>> = TreeMap()
     @Suppress("unused") var eighteenToTwentyFour: TreeMap<Double, Array<Double>> = TreeMap()
 
+    /**
+     * Builds the profile directly.
+     *
+     * This used to assemble a JSON document and immediately parse it back with `pureProfileFromJson`,
+     * so every value made a round trip through text. The blocks are built straight away now. Three
+     * fields the old document carried are gone because nothing ever read them back: `dia`, `carbs_hr`
+     * and `delay` are not part of a [PureProfile] - the DIA comes from the insulin configuration.
+     */
     fun profile(age: Int, tdd: Double, weight: Double, units: GlucoseUnit): PureProfile? {
-        val profile = JSONObject()
+        var basalBlocks: List<Block>? = null
+        val icBlocks: List<Block>
+        val isfBlocks: List<Block>
         if (age in 1..5) {
             val _tdd = if (tdd == 0.0) 0.6 * weight else tdd
-            closest(oneToFive, _tdd * 0.3)?.let { array -> profile.put("basal", arrayToJson(array)) }
+            closest(oneToFive, _tdd * 0.3)?.let { array -> basalBlocks = hourlyBlocks(array) }
             val ic = Round.roundTo(250.0 / _tdd, 1.0)
-            profile.put("carbratio", singleValueArray(ic, arrayOf(0.0, -4.0, -1.0, -2.0, -4.0, 0.0, -4.0)))
+            icBlocks = singleValueArray(ic, arrayOf(0.0, -4.0, -1.0, -2.0, -4.0, 0.0, -4.0))
             val isf = Round.roundTo(200.0 / _tdd, 0.1)
-            profile.put("sens", singleValueArrayFromMmolToUnits(isf, arrayOf(0.0, -2.0, -0.0, -0.0, -2.0, 0.0, -2.0), units))
+            isfBlocks = singleValueArrayFromMmolToUnits(isf, arrayOf(0.0, -2.0, -0.0, -0.0, -2.0, 0.0, -2.0), units)
         } else if (age in 6..11) {
             val _tdd = if (tdd == 0.0) 0.8 * weight else tdd
-            closest(sixToEleven, _tdd * 0.4)?.let { array -> profile.put("basal", arrayToJson(array)) }
+            closest(sixToEleven, _tdd * 0.4)?.let { array -> basalBlocks = hourlyBlocks(array) }
             val ic = Round.roundTo(375.0 / _tdd, 1.0)
-            profile.put("carbratio", singleValueArray(ic, arrayOf(0.0, -3.0, 0.0, -1.0, -3.0, 0.0, -2.0)))
+            icBlocks = singleValueArray(ic, arrayOf(0.0, -3.0, 0.0, -1.0, -3.0, 0.0, -2.0))
             val isf = Round.roundTo(170.0 / _tdd, 0.1)
-            profile.put("sens", singleValueArrayFromMmolToUnits(isf, arrayOf(0.0, -1.0, -0.0, -0.0, -1.0, 0.0, -1.0), units))
+            isfBlocks = singleValueArrayFromMmolToUnits(isf, arrayOf(0.0, -1.0, -0.0, -0.0, -1.0, 0.0, -1.0), units)
         } else if (age in 12..18) {
             val _tdd = if (tdd == 0.0) 1.0 * weight else tdd
-            closest(twelveToSeventeen, _tdd * 0.5)?.let { array -> profile.put("basal", arrayToJson(array)) }
+            closest(twelveToSeventeen, _tdd * 0.5)?.let { array -> basalBlocks = hourlyBlocks(array) }
             val ic = Round.roundTo(500.0 / _tdd, 1.0)
-            profile.put("carbratio", singleValueArray(ic, arrayOf(0.0, -1.0, 0.0, 0.0, -1.0, 0.0, -1.0)))
+            icBlocks = singleValueArray(ic, arrayOf(0.0, -1.0, 0.0, 0.0, -1.0, 0.0, -1.0))
             val isf = Round.roundTo(100.0 / _tdd, 0.1)
-            profile.put("sens", singleValueArrayFromMmolToUnits(isf, arrayOf(0.2, 0.0, 0.2, 0.2, 0.0, 0.2, 0.2), units))
-        } else if (age > 18) {
+            isfBlocks = singleValueArrayFromMmolToUnits(isf, arrayOf(0.2, 0.0, 0.2, 0.2, 0.0, 0.2, 0.2), units)
+        } else {
+            // Ages outside 1..18, which includes the old `age > 18` branch.
             return null
         }
-        profile.put("dia", 5.0)
-        profile.put("carbs_hr", 20) // not used
-        profile.put("delay", 5.0) // not used
-        profile.put("timezone", TimeZone.getDefault().id)
-        profile.put("target_high", JSONArray().put(JSONObject().put("time", "00:00").put("value", profileUtil.fromMgdlToUnits(108.0, units))))
-        profile.put("target_low", JSONArray().put(JSONObject().put("time", "00:00").put("value", profileUtil.fromMgdlToUnits(108.0, units))))
-        profile.put("units", units.asText)
-        return pureProfileFromJson(profile, dateUtil)
+        // A missing basal schedule made the parsed profile invalid, i.e. null. Same answer here.
+        val basal = basalBlocks ?: return null
+        val target = profileUtil.fromMgdlToUnits(108.0, units)
+        return PureProfile(
+            basalBlocks = basal,
+            isfBlocks = isfBlocks,
+            icBlocks = icBlocks,
+            targetBlocks = listOf(TargetBlock(T.hours(24).msecs(), target, target)),
+            glucoseUnit = units,
+            utcOffset = systemUtcOffsetAt(dateUtil.now())
+        )
     }
 
     init {
@@ -155,36 +168,28 @@ class DefaultProfile @Inject constructor(
         return res
     }
 
-    private fun arrayToJson(b: Array<Double>): JSONArray {
-        val basals = JSONArray()
-        for (i in 0..23) {
-            val time = String.format(Locale.ENGLISH, "%02d:00", i)
-            basals.put(JSONObject().put("time", time).put("value", b[i].toString()).put("timeAsSeconds", i * 3600))
+    /** Hours at which [singleValueArray] and [singleValueArrayFromMmolToUnits] change value. */
+    private val sampleStartHours = intArrayOf(0, 6, 9, 11, 14, 16, 19)
+
+    /**
+     * Turns start-of-block hours plus their values into [Block]s.
+     *
+     * A [Block] carries a DURATION, not a start time, so each one runs until the next start and the
+     * last runs to midnight. This is exactly what `blockFromJson` used to work out from the
+     * `timeAsSeconds` fields, which is why building the blocks directly is equivalent.
+     */
+    private fun blocks(startHours: IntArray, values: List<Double>): List<Block> =
+        values.mapIndexed { index, value ->
+            val endHour = if (index == startHours.size - 1) 24 else startHours[index + 1]
+            Block(T.hours((endHour - startHours[index]).toLong()).msecs(), value)
         }
-        return basals
-    }
 
-    private fun singleValueArray(value: Double, sample: Array<Double>): JSONArray {
-        val array = JSONArray()
-        array.put(JSONObject().put("time", "00:00").put("value", value + sample[0]).put("timeAsSeconds", 0 * 3600))
-        array.put(JSONObject().put("time", "06:00").put("value", value + sample[1]).put("timeAsSeconds", 6 * 3600))
-        array.put(JSONObject().put("time", "09:00").put("value", value + sample[2]).put("timeAsSeconds", 9 * 3600))
-        array.put(JSONObject().put("time", "11:00").put("value", value + sample[3]).put("timeAsSeconds", 11 * 3600))
-        array.put(JSONObject().put("time", "14:00").put("value", value + sample[4]).put("timeAsSeconds", 14 * 3600))
-        array.put(JSONObject().put("time", "16:00").put("value", value + sample[5]).put("timeAsSeconds", 16 * 3600))
-        array.put(JSONObject().put("time", "19:00").put("value", value + sample[6]).put("timeAsSeconds", 19 * 3600))
-        return array
-    }
+    private fun hourlyBlocks(b: Array<Double>): List<Block> =
+        (0..23).map { Block(T.hours(1).msecs(), b[it]) }
 
-    private fun singleValueArrayFromMmolToUnits(value: Double, sample: Array<Double>, units: GlucoseUnit): JSONArray {
-        val array = JSONArray()
-        array.put(JSONObject().put("time", "00:00").put("value", profileUtil.fromMmolToUnits(value + sample[0], units)).put("timeAsSeconds", 0 * 3600))
-        array.put(JSONObject().put("time", "06:00").put("value", profileUtil.fromMmolToUnits(value + sample[1], units)).put("timeAsSeconds", 6 * 3600))
-        array.put(JSONObject().put("time", "09:00").put("value", profileUtil.fromMmolToUnits(value + sample[2], units)).put("timeAsSeconds", 9 * 3600))
-        array.put(JSONObject().put("time", "11:00").put("value", profileUtil.fromMmolToUnits(value + sample[3], units)).put("timeAsSeconds", 11 * 3600))
-        array.put(JSONObject().put("time", "14:00").put("value", profileUtil.fromMmolToUnits(value + sample[4], units)).put("timeAsSeconds", 14 * 3600))
-        array.put(JSONObject().put("time", "16:00").put("value", profileUtil.fromMmolToUnits(value + sample[5], units)).put("timeAsSeconds", 16 * 3600))
-        array.put(JSONObject().put("time", "19:00").put("value", profileUtil.fromMmolToUnits(value + sample[6], units)).put("timeAsSeconds", 19 * 3600))
-        return array
-    }
+    private fun singleValueArray(value: Double, sample: Array<Double>): List<Block> =
+        blocks(sampleStartHours, sample.map { value + it })
+
+    private fun singleValueArrayFromMmolToUnits(value: Double, sample: Array<Double>, units: GlucoseUnit): List<Block> =
+        blocks(sampleStartHours, sample.map { profileUtil.fromMmolToUnits(value + it, units) })
 }

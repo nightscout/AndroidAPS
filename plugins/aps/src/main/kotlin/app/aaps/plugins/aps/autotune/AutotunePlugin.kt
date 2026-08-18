@@ -38,14 +38,23 @@ import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.compose.icons.IcPluginAutotune
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.elements.WeekDay
-import app.aaps.core.utils.JsonHelper
+import app.aaps.core.utils.JsonHelper.safeGetBoolean
+import app.aaps.core.utils.JsonHelper.safeGetDouble
+import app.aaps.core.utils.JsonHelper.safeGetInt
+import app.aaps.core.utils.JsonHelper.safeGetJSONObject
+import app.aaps.core.utils.JsonHelper.safeGetLong
+import app.aaps.core.utils.JsonHelper.safeGetString
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.autotune.compose.AutotuneComposeContent
 import app.aaps.plugins.aps.autotune.data.ATProfile
 import app.aaps.plugins.aps.autotune.data.PreppedGlucose
 import app.aaps.plugins.aps.autotune.events.EventAutotuneUpdateGui
 import app.aaps.plugins.aps.autotune.keys.AutotuneStringKey
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.put
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.TimeZone
@@ -422,29 +431,34 @@ class AutotunePlugin @Inject constructor(
         profileRepository.replace(indexLocalProfile, updated)
     }
 
+    /**
+     * `toPureNsJson` already answers a kotlinx document, so the profiles used to be rendered to text
+     * and parsed straight back as `org.json` just to be nested here. They are nested directly now.
+     */
     fun saveLastRun() {
-        val json = JSONObject()
-        json.put("lastNbDays", lastNbDays)
-        json.put("lastRun", lastRun)
-        json.put("pumpProfile", JSONObject(pumpProfile.profile.toPureNsJson(dateUtil).toString()))
-        json.put("pumpProfileName", pumpProfile.profileName)
-        json.put("pumpPeak", pumpProfile.peak)
-        json.put("pumpDia", pumpProfile.dia)
-        tunedProfile?.let { atProfile ->
-            json.put("tunedProfile", JSONObject(atProfile.profile.toPureNsJson(dateUtil).toString()))
-            json.put("tunedCircadianProfile", JSONObject(atProfile.circadianProfile.toPureNsJson(dateUtil).toString()))
-            json.put("tunedProfileName", atProfile.profileName)
-            json.put("tunedPeak", atProfile.peak)
-            json.put("tunedDia", atProfile.dia)
-            for (i in 0..23) {
-                json.put("missingDays_$i", atProfile.basalUnTuned[i])
+        val json = buildJsonObject {
+            put("lastNbDays", lastNbDays)
+            put("lastRun", lastRun)
+            put("pumpProfile", pumpProfile.profile.toPureNsJson(dateUtil))
+            put("pumpProfileName", pumpProfile.profileName)
+            put("pumpPeak", pumpProfile.peak)
+            put("pumpDia", pumpProfile.dia)
+            tunedProfile?.let { atProfile ->
+                put("tunedProfile", atProfile.profile.toPureNsJson(dateUtil))
+                put("tunedCircadianProfile", atProfile.circadianProfile.toPureNsJson(dateUtil))
+                put("tunedProfileName", atProfile.profileName)
+                put("tunedPeak", atProfile.peak)
+                put("tunedDia", atProfile.dia)
+                for (i in 0..23) {
+                    put("missingDays_$i", atProfile.basalUnTuned[i])
+                }
             }
+            for (i in days.weekdays.indices) {
+                put(WeekDay.DayOfWeek.entries[i].name, days.weekdays[i])
+            }
+            put("result", result)
+            put("updateButtonVisibility", updateButtonVisibility)
         }
-        for (i in days.weekdays.indices) {
-            json.put(WeekDay.DayOfWeek.entries[i].name, days.weekdays[i])
-        }
-        json.put("result", result)
-        json.put("updateButtonVisibility", updateButtonVisibility)
         preferences.put(AutotuneStringKey.AutotuneLastRun, json.toString())
     }
 
@@ -452,37 +466,40 @@ class AutotunePlugin @Inject constructor(
         result = ""
         lastRunSuccess = false
         try {
-            val json = JSONObject(preferences.get(AutotuneStringKey.AutotuneLastRun))
-            lastNbDays = JsonHelper.safeGetString(json, "lastNbDays", "")
-            lastRun = JsonHelper.safeGetLong(json, "lastRun")
-            val pumpPeak = JsonHelper.safeGetInt(json, "pumpPeak")
-            val pumpDia = JsonHelper.safeGetDouble(json, "pumpDia")
-            val pumpConcentration = json.optDouble("pumpConcentration", 1.0)
+            // The kotlinx readers coerce exactly like the org.json ones did, so a document written by
+            // an older build - where a whole double was stored as a bare integer - still reads back
+            // the same.
+            val json = Json.parseToJsonElement(preferences.get(AutotuneStringKey.AutotuneLastRun)).jsonObject
+            lastNbDays = json.safeGetString("lastNbDays", "")
+            lastRun = json.safeGetLong("lastRun")
+            val pumpPeak = json.safeGetInt("pumpPeak")
+            val pumpDia = json.safeGetDouble("pumpDia")
+            val pumpConcentration = json.safeGetDouble("pumpConcentration", 1.0)
             var iCfg = ICfg("PumpInsulin", pumpPeak, pumpDia, pumpConcentration)
-            selectedProfile = JsonHelper.safeGetString(json, "pumpProfileName", "")
-            val profile = JsonHelper.safeGetJSONObject(json, "pumpProfile", null)?.let { pureProfileFromJson(it, dateUtil) }
+            selectedProfile = json.safeGetString("pumpProfileName", "")
+            val profile = json.safeGetJSONObject("pumpProfile", null)?.let { pureProfileFromJson(it, dateUtil) }
                 ?: return
             pumpProfile = atProfileProvider.get().with(ProfileSealed.Pure(value = profile, activePlugin = null), iCfg).also { it.profileName = selectedProfile }
-            val tunedPeak = JsonHelper.safeGetInt(json, "tunedPeak")
-            val tunedDia = JsonHelper.safeGetDouble(json, "tunedDia")
-            val tunedConcentration = json.optDouble("tunedConcentration", 1.0)
+            val tunedPeak = json.safeGetInt("tunedPeak")
+            val tunedDia = json.safeGetDouble("tunedDia")
+            val tunedConcentration = json.safeGetDouble("tunedConcentration", 1.0)
             iCfg = ICfg("TunedInsulin", tunedPeak, tunedDia, tunedConcentration)
-            val tunedProfileName = JsonHelper.safeGetString(json, "tunedProfileName", "")
-            val tuned = JsonHelper.safeGetJSONObject(json, "tunedProfile", null)?.let { pureProfileFromJson(it, dateUtil) }
+            val tunedProfileName = json.safeGetString("tunedProfileName", "")
+            val tuned = json.safeGetJSONObject("tunedProfile", null)?.let { pureProfileFromJson(it, dateUtil) }
                 ?: return
-            val circadianTuned = JsonHelper.safeGetJSONObject(json, "tunedCircadianProfile", null)?.let { pureProfileFromJson(it, dateUtil) }
+            val circadianTuned = json.safeGetJSONObject("tunedCircadianProfile", null)?.let { pureProfileFromJson(it, dateUtil) }
                 ?: return
             tunedProfile = atProfileProvider.get().with(ProfileSealed.Pure(value = tuned, activePlugin = null), iCfg).also { atProfile ->
                 atProfile.profileName = tunedProfileName
                 atProfile.circadianProfile = ProfileSealed.Pure(value = circadianTuned, activePlugin = null)
                 for (i in 0..23) {
-                    atProfile.basalUnTuned[i] = JsonHelper.safeGetInt(json, "missingDays_$i")
+                    atProfile.basalUnTuned[i] = json.safeGetInt("missingDays_$i")
                 }
             }
             for (i in days.weekdays.indices)
-                days.weekdays[i] = JsonHelper.safeGetBoolean(json, WeekDay.DayOfWeek.entries[i].name, true)
-            result = JsonHelper.safeGetString(json, "result", "")
-            updateButtonVisibility = JsonHelper.safeGetInt(json, "updateButtonVisibility")
+                days.weekdays[i] = json.safeGetBoolean(WeekDay.DayOfWeek.entries[i].name, true)
+            result = json.safeGetString("result", "")
+            updateButtonVisibility = json.safeGetInt("updateButtonVisibility")
             lastRunSuccess = true
         } catch (e: Exception) {
             aapsLogger.error(LTag.AUTOTUNE, e.localizedMessage ?: e.toString())

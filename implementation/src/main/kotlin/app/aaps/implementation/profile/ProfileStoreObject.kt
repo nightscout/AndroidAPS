@@ -12,12 +12,10 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
-import app.aaps.core.utils.JsonHelper
-import kotlinx.serialization.json.Json
+import app.aaps.core.utils.JsonHelper.safeGetJSONObject
+import app.aaps.core.utils.JsonHelper.safeGetString
+import app.aaps.core.utils.JsonHelper.safeGetStringAllowNull
 import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.jsonObject
-import org.json.JSONException
-import org.json.JSONObject
 import javax.inject.Inject
 
 class ProfileStoreObject @Inject constructor(
@@ -30,45 +28,47 @@ class ProfileStoreObject @Inject constructor(
     private val dateUtil: DateUtil
 ) : ProfileStore {
 
-    private lateinit var data: JSONObject
+    private lateinit var data: JsonObject
 
     /**
-     * Converts once at the boundary and keeps working on `org.json` inside.
+     * kotlinx all the way through now.
      *
-     * The interface speaks kotlinx so it can move to common code; the reading below still leans on
-     * `JsonHelper` and `pureProfileFromJson`, which are `org.json` throughout and are their own
-     * migration. This is the same inside-out step used for the profile block parsers: the contract
-     * crosses first, the internals follow.
+     * This used to convert the incoming document to `org.json` and work on that, because the readers
+     * it leaned on - `JsonHelper` and `pureProfileFromJson` - were `org.json` only. Both speak kotlinx
+     * today, so the document is kept as it arrives and the two text round trips are gone.
      */
     override fun with(data: JsonObject): ProfileStore = this.also {
-        this.data = JSONObject(data.toString())
+        this.data = data
     }
 
     /**
-     * The store as kotlinx, rebuilt on each call.
+     * The store itself.
      *
-     * Deliberately not a view of [data]: the previous version handed out the live `JSONObject`, and
-     * both sync selectors wrote into it (`profileJson.put("date", …)`), mutating the store they had
-     * just read. A kotlinx tree is immutable, so that cannot happen - the callers now build the
-     * amended copy they actually wanted.
+     * Handing out the stored object is safe because a kotlinx tree is immutable. The previous version
+     * handed out a live `JSONObject`, and both sync selectors wrote into it
+     * (`profileJson.put("date", …)`), mutating the store they had just read; callers build the amended
+     * copy they actually wanted instead. While [data] was still `org.json` this had to re-parse from
+     * text on every call to hand out a fresh copy - that is no longer needed.
      */
-    override fun getData(): JsonObject = Json.parseToJsonElement(data.toString()).jsonObject
+    override fun getData(): JsonObject = data
 
     private val cachedObjects = ArrayMap<String, PureProfile>()
 
-    private fun storeUnits(): String? = JsonHelper.safeGetStringAllowNull(data, "units", null)
+    private fun storeUnits(): String? = data.safeGetStringAllowNull("units", null)
 
-    private fun getStore(): JSONObject? {
-        try {
-            if (data.has("store")) return data.getJSONObject("store")
-        } catch (e: JSONException) {
-            aapsLogger.error("Unhandled exception", e)
+    private fun getStore(): JsonObject? {
+        val store = data["store"] ?: return null
+        // A `store` that is not an object used to throw out of getJSONObject and get logged. Keep the
+        // log: silently answering null would hide a malformed document.
+        if (store !is JsonObject) {
+            aapsLogger.error("Malformed profile store: 'store' is not an object")
+            return null
         }
-        return null
+        return store
     }
 
     override fun getStartDate(): Long {
-        val iso = JsonHelper.safeGetString(data, "created_at") ?: JsonHelper.safeGetString(data, "startDate") ?: return 0
+        val iso = data.safeGetString("created_at") ?: data.safeGetString("startDate") ?: return 0
         return try {
             dateUtil.fromISODateString(iso)
         } catch (_: Exception) {
@@ -77,34 +77,28 @@ class ProfileStoreObject @Inject constructor(
     }
 
     override fun getDefaultProfile(): PureProfile? = getDefaultProfileName()?.let { getSpecificProfile(it) }
-    override fun getDefaultProfileJson(): JsonObject? =
-        getDefaultProfileName()?.let { getSpecificProfileJson(it) }?.let { Json.parseToJsonElement(it.toString()).jsonObject }
+    override fun getDefaultProfileJson(): JsonObject? = getDefaultProfileName()?.let { getSpecificProfileJson(it) }
 
     override fun getDefaultProfileName(): String? {
-        val defaultProfileName = data.optString("defaultProfile")
-        return if (defaultProfileName.isNotEmpty()) getStore()?.has(defaultProfileName)?.let { defaultProfileName } else null
+        // optString answered "" for a missing key, and the literal text "null" for an explicit null.
+        // Either way the name failed the lookup below and this returned null, which is what the
+        // empty-string default reproduces.
+        val defaultProfileName = data.safeGetString("defaultProfile", "")
+        return if (defaultProfileName.isNotEmpty()) getStore()?.containsKey(defaultProfileName)?.let { defaultProfileName } else null
     }
 
-    override fun getProfileList(): ArrayList<CharSequence> {
-        val ret = ArrayList<CharSequence>()
-        getStore()?.keys()?.let { keys ->
-            while (keys.hasNext()) {
-                val profileName = keys.next() as String
-                ret.add(profileName)
-            }
-        }
-        return ret
-    }
+    override fun getProfileList(): ArrayList<CharSequence> =
+        ArrayList<CharSequence>().also { ret -> getStore()?.keys?.forEach { ret.add(it) } }
 
     @Synchronized
     override fun getSpecificProfile(profileName: String): PureProfile? {
         var profile: PureProfile? = null
-        val units = JsonHelper.safeGetStringAllowNull(data, "units", storeUnits())
+        val units = data.safeGetStringAllowNull("units", storeUnits())
         getStore()?.let { store ->
-            if (store.has(profileName)) {
+            if (store.containsKey(profileName)) {
                 profile = cachedObjects[profileName]
                 if (profile == null) {
-                    JsonHelper.safeGetJSONObject(store, profileName, null)?.let { profileObject ->
+                    store.safeGetJSONObject(profileName, null)?.let { profileObject ->
                         profile = pureProfileFromJson(profileObject, dateUtil, units)
                         profile?.let { cachedObjects[profileName] = profile }
                     }
@@ -114,13 +108,10 @@ class ProfileStoreObject @Inject constructor(
         return profile
     }
 
-    private fun getSpecificProfileJson(profileName: String): JSONObject? {
+    private fun getSpecificProfileJson(profileName: String): JsonObject? =
         getStore()?.let { store ->
-            if (store.has(profileName))
-                return JsonHelper.safeGetJSONObject(store, profileName, null)
+            if (store.containsKey(profileName)) store.safeGetJSONObject(profileName, null) else null
         }
-        return null
-    }
 
     override val allProfilesValid: Boolean
         // Sync/storage gate: only semantic (pump-independent) validity. A profile that is merely
