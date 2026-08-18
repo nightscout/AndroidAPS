@@ -15,12 +15,12 @@ import app.aaps.core.data.format.NumberFormatPlatform
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
 import app.aaps.core.keys.interfaces.VisibilityContext
+import app.aaps.core.ui.UiStrings
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.compose.stringResourceOrNull
 import kotlin.math.abs
-import app.aaps.core.ui.R as UiR
 
 /**
  * Composable unit double preference for use inside card sections.
@@ -62,7 +62,7 @@ fun AdaptiveUnitDoublePreferenceItem(
     val valueFormat = if (isMgdl) NumberFormat.INTEGER else NumberFormat.DECIMAL_1
 
     // Get unit label from resources - short form for slider
-    val unitLabel = TextRef.AndroidRes(if (isMgdl) UiR.string.mgdl else UiR.string.mmol)
+    val unitLabel = if (isMgdl) UiStrings.mgdl else UiStrings.mmol
 
     // Get summary if available
     val summary = stringResourceOrNull(unitKey.summary)
