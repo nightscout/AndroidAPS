@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.CAL
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.AapsCard
@@ -51,7 +52,6 @@ import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.navigation.LocalPluginNavigationRequest
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.plugins.calibration.FitMode
-import app.aaps.plugins.calibration.R
 import kotlin.math.roundToInt
 
 @Composable
@@ -297,13 +297,12 @@ private fun EntrySliderReadout(
 
 private fun Double.formatBgDisplay(unit: GlucoseUnit, signed: Boolean = false): String {
     val converted = if (unit == GlucoseUnit.MMOL) this * Constants.MGDL_TO_MMOLL else this
-    val format = when {
-        signed && unit == GlucoseUnit.MGDL -> "%+.0f"
-        signed && unit == GlucoseUnit.MMOL -> "%+.1f"
-        unit == GlucoseUnit.MGDL           -> "%.0f"
-        else                               -> "%.1f"
-    }
-    return format.format(converted)
+    val decimals = if (unit == GlucoseUnit.MGDL) 0 else 1
+    // No separator argument on purpose: this is shown to the user, so it follows the device locale
+    // exactly as `String.format` without an explicit Locale did.
+    val text = NumberFormat.withDecimalsHalfUp(decimals).format(converted)
+    // `%+` printed a sign for zero too, so the test is >= rather than >.
+    return if (signed && converted >= 0) "+$text" else text
 }
 
 @Composable

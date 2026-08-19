@@ -37,13 +37,13 @@ private const val MIN_SPAN = 80f
 private const val LONGEST_AXIS_LABEL_SAMPLE = "22.2"
 
 @Composable
-internal fun CalibrationScatterChart(
+internal actual fun CalibrationScatterChart(
     entries: List<CAL>,
     fit: CalibrationFit?,
     selectedEntryId: Long?,
     now: Long,
     glucoseUnit: GlucoseUnit,
-    modifier: Modifier = Modifier
+    modifier: Modifier
 ) {
     val axisColor = MaterialTheme.colorScheme.onSurfaceVariant
     val identityColor = MaterialTheme.colorScheme.outline
