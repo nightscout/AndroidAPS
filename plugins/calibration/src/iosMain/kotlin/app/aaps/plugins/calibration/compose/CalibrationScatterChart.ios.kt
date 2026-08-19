@@ -1,20 +1,27 @@
 package app.aaps.plugins.calibration.compose
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import app.aaps.core.data.model.CAL
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.plugins.calibration.CalibrationFit
 
 /**
- * Draws nothing yet.
+ * Says it is missing rather than drawing nothing.
  *
- * A placeholder rather than a port: the Android chart positions its axis labels from
- * `Paint.FontMetrics`, and redrawing that with `TextMeasurer` moves the labels unless the baseline
- * arithmetic is redone and checked against the real chart. Left for a change that can look at it.
+ * An empty box looks exactly like a chart that failed to render, so it names itself instead. The
+ * Android chart positions its axis labels from `Paint.FontMetrics`; redrawing that with
+ * `TextMeasurer` moves the labels unless the baseline arithmetic is redone and checked against the
+ * real chart, so the port waits for a change that can look at it.
  *
- * The screen around it already lays out and behaves correctly, so this is an empty area rather than
- * a broken one.
+ * The text is deliberately not translated: it is a developer placeholder that should never reach a
+ * user, and adding it to `strings.xml` would push it to every translator.
  */
 @Composable
 internal actual fun CalibrationScatterChart(
@@ -25,5 +32,15 @@ internal actual fun CalibrationScatterChart(
     glucoseUnit: GlucoseUnit,
     modifier: Modifier
 ) {
-    // Intentionally empty - see the expect declaration.
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "Calibration chart is not implemented on this platform yet",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center
+        )
+    }
 }

@@ -15,8 +15,10 @@ import app.aaps.plugins.calibration.CalibrationFit
  * `DrawScope.drawText`, which computes those baselines differently - a change to label POSITIONING,
  * which needs the chart in front of you to check rather than a compile.
  *
- * So the Android chart is unchanged and the other platforms draw nothing for now. Everything around
- * it - the screen, the view model, the plugin - is shared, which is what this split was for.
+ * So the Android chart is unchanged and the other platforms say the chart is missing rather than
+ * drawing an empty box, which would be indistinguishable from a chart that failed to render.
+ * Everything around it - the screen, the view model, the plugin - is shared, which is what this split
+ * was for.
  */
 @Composable
 internal expect fun CalibrationScatterChart(

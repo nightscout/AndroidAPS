@@ -3,6 +3,7 @@ package app.aaps.plugins.calibration.compose
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -10,6 +11,7 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
+import kotlin.reflect.KClass
 
 /**
  * The dependencies arrive from the plugin rather than from Hilt.
@@ -35,7 +37,7 @@ internal class CalibrationComposeContent(
         val viewModel: CalibrationViewModel = viewModel(
             factory = object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(modelClass: kotlin.reflect.KClass<T>, extras: androidx.lifecycle.viewmodel.CreationExtras): T =
+                override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T =
                     CalibrationViewModel(persistenceLayer, profileUtil, aapsLogger, dateUtil) as T
             }
         )
