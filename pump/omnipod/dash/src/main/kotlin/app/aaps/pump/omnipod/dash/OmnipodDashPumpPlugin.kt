@@ -1,5 +1,7 @@
 package app.aaps.pump.omnipod.dash
 
+import android.os.Handler
+import android.os.HandlerThread
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
@@ -144,6 +146,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     @Volatile var bolusCanceled = false
     @Volatile var bolusDeliveryInProgress = false
 
+    private var handler: Handler? = null
     private var statusChecker: Runnable
     private var nextPodWarningCheck: Long = 0
     @Volatile var stopConnecting: CountDownLatch? = null
@@ -480,6 +483,9 @@ class OmnipodDashPumpPlugin @Inject constructor(
     override suspend fun onStart() {
         super.onStart()
         podStateManager.onStart()
+        // Own handler. PumpPluginBase used to create one for every pump, but this is the only driver
+        // that posted to it, so it lives here now and is torn down in onStop below.
+        handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
         handler?.postDelayed(statusChecker, STATUS_CHECK_INTERVAL_MS)
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
@@ -497,6 +503,9 @@ class OmnipodDashPumpPlugin @Inject constructor(
         super.onStop()
         scope?.cancel()
         scope = null
+        handler?.removeCallbacksAndMessages(null)
+        handler?.looper?.quit()
+        handler = null
     }
 
     private fun deliverBasalCorrection(): PumpEnactResult {

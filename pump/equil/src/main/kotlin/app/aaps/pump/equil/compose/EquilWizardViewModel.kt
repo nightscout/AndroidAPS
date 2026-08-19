@@ -61,6 +61,7 @@ import app.aaps.pump.equil.manager.command.CmdTimeSet
 import app.aaps.pump.equil.manager.command.CmdUnPair
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -576,7 +577,11 @@ class EquilWizardViewModel @Inject constructor(
             resolvedAt = System.currentTimeMillis(),
             resolvedStatus = ResolvedResult.SUCCESS
         )
-        equilPumpPlugin.handler?.post {
+        // Was posted to the pump plugin's Handler. viewModelScope ties the write to the wizard that
+        // caused it, and the insert is a blocking Room call so it still needs a background
+        // dispatcher. The old form also dropped the record silently whenever the plugin was not
+        // started, because the handler was null then.
+        viewModelScope.launch(Dispatchers.IO) {
             equilHistoryRecordDao.insert(record)
         }
         moveStep(EquilWizardStep.ATTACH)
@@ -808,7 +813,11 @@ class EquilWizardViewModel @Inject constructor(
             resolvedAt = System.currentTimeMillis(),
             resolvedStatus = ResolvedResult.SUCCESS
         )
-        equilPumpPlugin.handler?.post {
+        // Was posted to the pump plugin's Handler. viewModelScope ties the write to the wizard that
+        // caused it, and the insert is a blocking Room call so it still needs a background
+        // dispatcher. The old form also dropped the record silently whenever the plugin was not
+        // started, because the handler was null then.
+        viewModelScope.launch(Dispatchers.IO) {
             equilHistoryRecordDao.insert(record)
         }
         equilManager.setLastDataTime(System.currentTimeMillis())

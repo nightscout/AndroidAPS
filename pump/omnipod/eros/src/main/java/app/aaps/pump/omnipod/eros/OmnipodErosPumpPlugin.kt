@@ -392,9 +392,6 @@ class OmnipodErosPumpPlugin @Inject constructor(
         aapsLogger.debug(LTag.PUMP, "OmnipodPumpPlugin.onStop()")
         scope?.cancel()
         scope = null
-        handler?.removeCallbacksAndMessages(null)
-        handler?.looper?.quit()
-        handler = null
         serviceConnection?.let { context.unbindService(it) }
         serviceConnection = null
     }
