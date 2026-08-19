@@ -1,7 +1,6 @@
 package app.aaps.core.interfaces.pump
 
-import android.Manifest
-import android.annotation.SuppressLint
+import app.aaps.core.data.model.devAssert
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -32,7 +31,7 @@ abstract class PumpPluginBase(
 
     override suspend fun onStart() {
         super.onStart()
-        assert(getType() == PluginType.PUMP)
+        devAssert(getType() == PluginType.PUMP)
         // Run the initial status read in the background so this onStart() returns immediately.
         // Pump drivers call super.onStart() first and then launch their own async hardware init
         // (e.g. ComboV2 sets up Bluetooth and its pumpManager in a coroutine). If we suspended
@@ -51,14 +50,11 @@ abstract class PumpPluginBase(
         initialReadStatusJob = null
     }
 
-    // The last thing keeping this class on Android: BLUETOOTH_CONNECT and BLUETOOTH_SCAN are Android
-    // permission constants with no iOS meaning. Everything else here is now platform neutral.
-    @SuppressLint("InlinedApi")
-    override fun requiredPermissions(): List<PermissionGroup> = listOf(
-        PermissionGroup(
-            permissions = listOf(Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN),
-            rationaleTitle = InterfacesStrings.permission_bluetooth_title,
-            rationaleDescription = InterfacesStrings.permission_bluetooth_description,
-        )
-    )
+    /**
+     * The Bluetooth permissions a hardware pump needs, on the platforms that have such a concept.
+     *
+     * Empty on iOS, where Bluetooth is declared in `Info.plist` rather than requested at runtime -
+     * see [bluetoothPermissionGroup].
+     */
+    override fun requiredPermissions(): List<PermissionGroup> = listOfNotNull(bluetoothPermissionGroup())
 }

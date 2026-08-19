@@ -9,6 +9,6 @@ import kotlin.experimental.ExperimentalNativeApi
  * than a Gradle-wide `optIn`, which would silently allow experimental Native APIs anywhere in the
  * module - and which does not reach the metadata compilation anyway.
  */
-internal actual fun devAssert(value: Boolean) {
+actual fun devAssert(value: Boolean) {
     assert(value)
 }

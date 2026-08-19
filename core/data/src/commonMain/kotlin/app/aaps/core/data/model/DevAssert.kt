@@ -13,4 +13,4 @@ package app.aaps.core.data.model
  * on under `-ea` in tests, while `require()` always throws. Swapping them would change behaviour in
  * shipped code.
  */
-internal expect fun devAssert(value: Boolean)
+expect fun devAssert(value: Boolean)
