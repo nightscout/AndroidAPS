@@ -12,12 +12,13 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.smoothing.Smoothing
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.smoothing.keys.UkfDoubleNonKey
 import app.aaps.plugins.smoothing.keys.UkfIntNonKey
 import app.aaps.plugins.smoothing.keys.UkfLongNonKey
+import kotlin.time.Clock
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -25,10 +26,10 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import java.util.Locale
-import java.util.concurrent.atomic.AtomicBoolean
-import javax.inject.Inject
-import javax.inject.Singleton
+import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.data.format.NumberFormatPlatform
+import kotlin.concurrent.atomics.AtomicBoolean
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.math.abs
 import kotlin.math.exp
 import kotlin.math.max
@@ -59,19 +60,20 @@ import kotlin.math.sqrt
  *   - h(x_t) = G
  *   - v_t ~ N(0, R) where R is adaptive based on sensor quality.
  */
-@Singleton
-class UnscentedKalmanFilterPlugin @Inject constructor(
+
+@OptIn(ExperimentalAtomicApi::class)
+class UnscentedKalmanFilterPlugin(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    rh: TextResolver,
     preferences: Preferences,
     private val persistenceLayer: PersistenceLayer
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.SMOOTHING)
         .icon(Icons.Default.Timeline)
-        .pluginName(TextRef.AndroidRes(R.string.UKF_name))
-        .shortName(TextRef.AndroidRes(R.string.smoothing_shortname))
-        .description(TextRef.AndroidRes(R.string.description_UKF)),
+        .pluginName(SmoothingStrings.UKF_name)
+        .shortName(SmoothingStrings.smoothing_shortname)
+        .description(SmoothingStrings.description_UKF),
     ownPreferences = UkfLongNonKey.entries + UkfIntNonKey.entries + UkfDoubleNonKey.entries,
     aapsLogger, rh, preferences
 ), Smoothing {
@@ -239,7 +241,7 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
 
     override suspend fun onStart() {
         super.onStart()
-        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        val newScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
         scope = newScope
 
         // Subscribe to therapy events and load initial sensor state.
@@ -286,9 +288,9 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
                 aapsLogger.info(
                     LTag.GLUCOSE,
                     "UKF: Loaded session $sensorSessionId " +
-                        "(R=${String.format(Locale.US, "%.1f", learnedR)}, " +
-                        "Q_glucose=${String.format(Locale.US, "%.2f", q[0])} [FIXED], " +
-                        "Q_rate=${String.format(Locale.US, "%.4f", q[3])} [FIXED])"
+                        "(R=${learnedR.fmt(1)}, " +
+                        "Q_glucose=${q[0].fmt(2)} [FIXED], " +
+                        "Q_rate=${q[3].fmt(4)} [FIXED])"
                 )
             }
         } catch (e: Exception) {
@@ -306,7 +308,7 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
      */
     private fun savePersistedParameters() {
         try {
-            preferences.put(UkfLongNonKey.LastSavedTimestamp, System.currentTimeMillis())
+            preferences.put(UkfLongNonKey.LastSavedTimestamp, Clock.System.now().toEpochMilliseconds())
             preferences.put(UkfLongNonKey.LastSensorChangeTimestamp, lastSensorChangeTimestamp)
             preferences.put(UkfLongNonKey.LastProcessedTimestamp, lastProcessedTimestamp)
             preferences.put(UkfDoubleNonKey.LearnedR, learnedR)
@@ -334,7 +336,7 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
     private suspend fun loadLastSensorChange() {
         try {
             val therapyEvents = persistenceLayer.getTherapyEventDataFromTime(
-                System.currentTimeMillis() - 30L * 24 * 60 * 60 * 1000,
+                Clock.System.now().toEpochMilliseconds() - 30L * 24 * 60 * 60 * 1000,
                 false
             )
             val latestSensorChange = therapyEvents
@@ -358,7 +360,7 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
                             "UKF: Sensor changed after last processing, " +
                                 "scheduling learning reset"
                         )
-                        resetRequested.set(true)
+                        resetRequested.store(true)
                     }
                 }
             }
@@ -393,7 +395,7 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
                         "UKF: New sensor change at ${latestChange.timestamp}"
                     )
                     lastSensorChangeTimestamp = latestChange.timestamp
-                    resetRequested.set(true)
+                    resetRequested.store(true)
                 }
             } catch (throwable: Throwable) {
                 aapsLogger.error(
@@ -436,7 +438,7 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
      * @return true if learning parameters should be reset to initial values.
      */
     private fun shouldResetLearning(currentTimestamp: Long): Boolean {
-        if (resetRequested.getAndSet(false)) {
+        if (resetRequested.exchange(false)) {
             aapsLogger.info(LTag.GLUCOSE, "UKF: Learning reset requested by sensor change event")
             return true
         }
@@ -468,8 +470,8 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
                 aapsLogger.info(
                     LTag.GLUCOSE,
                     "UKF: Severely mis-tuned parameters " +
-                        "(avg innovation: ${String.format(Locale.US, "%.1f", avgInnovation)}), " +
-                        "resetting (R was ${String.format(Locale.US, "%.1f", learnedR)})"
+                        "(avg innovation: ${avgInnovation.fmt(1)}), " +
+                        "resetting (R was ${learnedR.fmt(1)})"
                 )
                 return true
             }
@@ -497,9 +499,9 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
         aapsLogger.info(
             LTag.GLUCOSE,
             "UKF: Learning reset complete (session $sensorSessionId, " +
-                "R=${String.format(Locale.US, "%.1f", learnedR)}, " +
-                "Q_glucose=${String.format(Locale.US, "%.2f", q[0])} [FIXED], " +
-                "Q_rate=${String.format(Locale.US, "%.4f", q[3])} [FIXED])"
+                "R=${learnedR.fmt(1)}, " +
+                "Q_glucose=${q[0].fmt(2)} [FIXED], " +
+                "Q_rate=${q[3].fmt(4)} [FIXED])"
         )
 
         // Save the reset state.
@@ -607,11 +609,11 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
             aapsLogger.info(
                 LTag.GLUCOSE,
                 "UKF: Session $sensorSessionId, $sessionMeasurementCount measurements, " +
-                    "R=${String.format(Locale.US, "%.1f", learnedR)} [ADAPTIVE], " +
-                    "Q_glucose=${String.format(Locale.US, "%.2f", q[0])} [FIXED], " +
-                    "Q_rate=${String.format(Locale.US, "%.4f", q[3])} [FIXED], " +
-                    "AvgInnovation=${String.format(Locale.US, "%.2f", avgInnovation)}, " +
-                    "OutlierRate=${String.format(Locale.US, "%.1f%%", sessionOutlierRate * 100)}"
+                    "R=${learnedR.fmt(1)} [ADAPTIVE], " +
+                    "Q_glucose=${q[0].fmt(2)} [FIXED], " +
+                    "Q_rate=${q[3].fmt(4)} [FIXED], " +
+                    "AvgInnovation=${avgInnovation.fmt(2)}, " +
+                    "OutlierRate=${(sessionOutlierRate * 100).fmt(1)}%"
             )
         }
 
@@ -693,7 +695,7 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
                 x[1] *= rateDamp(dt)
                 aapsLogger.debug(
                     LTag.GLUCOSE,
-                    "UKF: Bridging ${String.format(Locale.US, "%.1f", dt)} min gap within segment"
+                    "UKF: Bridging ${dt.fmt(1)} min gap within segment"
                 )
             }
 
@@ -812,9 +814,9 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
             if (mahalSqEff > chiSquaredThreshold || abs(innovation) > outlierAbsolute) {
                 aapsLogger.debug(
                     LTag.GLUCOSE,
-                    "UKF: Outlier detected - χ²=${String.format(Locale.US, "%.2f", mahalSqEff)}, " +
-                        "innovation=${String.format(Locale.US, "%.1f", innovation)}, " +
-                        "P[0]=${String.format(Locale.US, "%.1f", p[0])}"
+                    "UKF: Outlier detected - χ²=${mahalSqEff.fmt(2)}, " +
+                        "innovation=${innovation.fmt(1)}, " +
+                        "P[0]=${p[0].fmt(1)}"
                 )
             }
 
@@ -830,15 +832,15 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
             // Logging with effective parameters (just switch to xPredEff for consistency).
             aapsLogger.warn(
                 LTag.GLUCOSE,
-                "UKF: live R=${String.format(Locale.US, "%.1f", r)}, " +
-                    "R_eff=${String.format(Locale.US, "%.1f", rEff)}, " +
-                    "BG=${String.format(Locale.US, "%.0f", z)}, " +
-                    "predBG=${String.format(Locale.US, "%.0f", xPredEff[0])}, " +
-                    "innov=${String.format(Locale.US, "%.1f", innovation)}, " +
-                    "|ν|/σ=${String.format(Locale.US, "%.1f", absn)}, " +
-                    "qScale=${String.format(Locale.US, "%.1f", qScale)}, " +
-                    "P[0]=${String.format(Locale.US, "%.1f", p[0])}, " +
-                    "P[3]=${String.format(Locale.US, "%.4f", p[3])}"
+                "UKF: live R=${r.fmt(1)}, " +
+                    "R_eff=${rEff.fmt(1)}, " +
+                    "BG=${z.fmt(0)}, " +
+                    "predBG=${xPredEff[0].fmt(0)}, " +
+                    "innov=${innovation.fmt(1)}, " +
+                    "|ν|/σ=${absn.fmt(1)}, " +
+                    "qScale=${qScale.fmt(1)}, " +
+                    "P[0]=${p[0].fmt(1)}, " +
+                    "P[3]=${p[3].fmt(4)}"
             )
 
             val resultIdx = i - startIdx
@@ -857,7 +859,7 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
                 LTag.GLUCOSE,
                 "UKF: Segment processed $segmentNewMeasurements new measurements, " +
                     "$segmentOutliers outliers " +
-                    "(${String.format(Locale.US, "%.1f%%", segmentOutlierRate * 100)})"
+                    "(${(segmentOutlierRate * 100).fmt(1)}%)"
             )
         }
 
@@ -1304,3 +1306,13 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
         }
     }
 }
+
+/**
+ * Fixed decimals with a dot, for the diagnostic log lines above.
+ *
+ * Replaces `String.format(Locale.US, "%.1f", x)`, which is JVM only. `withDecimalsHalfUp` matches
+ * what `%.Nf` did: exactly N decimals, rounded half up. The separator is pinned to a dot because
+ * these strings are read in logs, not shown to the user, so they must not follow the device locale.
+ */
+private fun Double.fmt(decimals: Int): String =
+    NumberFormat.withDecimalsHalfUp(decimals).format(this, NumberFormatPlatform.SEPARATOR_DOT)

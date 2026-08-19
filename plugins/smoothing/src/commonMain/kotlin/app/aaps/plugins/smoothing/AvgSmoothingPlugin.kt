@@ -11,23 +11,21 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.smoothing.Smoothing
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.math.abs
 
-@Singleton
-class AvgSmoothingPlugin @Inject constructor(
+
+class AvgSmoothingPlugin(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper
+    rh: TextResolver
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.SMOOTHING)
         .icon(Icons.Default.Timeline)
-        .pluginName(TextRef.AndroidRes(R.string.avg_smoothing_name))
-        .shortName(TextRef.AndroidRes(R.string.smoothing_shortname))
-        .description(TextRef.AndroidRes(R.string.description_avg_smoothing)),
+        .pluginName(SmoothingStrings.avg_smoothing_name)
+        .shortName(SmoothingStrings.smoothing_shortname)
+        .description(SmoothingStrings.description_avg_smoothing),
     aapsLogger, rh
 ), Smoothing {
 
