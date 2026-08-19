@@ -215,8 +215,8 @@ class VirtualPumpViewModel(
         val eb = extendedBolusSettings() ?: return ""
         val tbr = tbrSettings() ?: return ""
         val extendedNote = if (hasExtendedBasals()) rh.gs(VirtualStrings.def_extended_note) else ""
-        return String.format(
-            rh.gs(VirtualStrings.virtual_pump_pump_def),
+        return rh.gs(
+            VirtualStrings.virtual_pump_pump_def,
             bolusSize().toString(),
             eb.step, eb.durationStep, eb.maxDuration / 60,
             baseBasalRange(),

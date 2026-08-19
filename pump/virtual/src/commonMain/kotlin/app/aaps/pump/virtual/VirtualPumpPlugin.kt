@@ -29,7 +29,7 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.utils.DateUtil
@@ -40,10 +40,11 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.withEntries
 import app.aaps.core.ui.compose.icons.IcPluginVirtualPump
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
-import app.aaps.core.utils.fabric.InstanceId
 import app.aaps.pump.virtual.extensions.toText
 import app.aaps.pump.virtual.keys.VirtualBooleanNonPreferenceKey
 import kotlinx.coroutines.CoroutineScope
+import app.aaps.core.ui.UiStrings
+import kotlin.time.Clock
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
@@ -58,7 +59,7 @@ import kotlinx.coroutines.runBlocking
 open class VirtualPumpPlugin(
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
-    override val rh: ResourceHelper,
+    override val rh: TextResolver,
     preferences: Preferences,
     commandQueue: CommandQueue,
     private val pumpSync: PumpSync,
@@ -87,9 +88,9 @@ open class VirtualPumpPlugin(
             )
         }
         .icon(IcPluginVirtualPump)
-        .pluginName(TextRef.AndroidRes(app.aaps.core.ui.R.string.virtual_pump))
-        .shortName(TextRef.AndroidRes(R.string.virtual_pump_shortname))
-        .description(TextRef.AndroidRes(R.string.description_pump_virtual))
+        .pluginName(UiStrings.virtual_pump)
+        .shortName(VirtualStrings.virtual_pump_shortname)
+        .description(VirtualStrings.description_pump_virtual)
         .setDefault()
         .showInList { !config.AAPSCLIENT },
     ownPreferences = VirtualBooleanNonPreferenceKey.entries,
@@ -143,7 +144,7 @@ open class VirtualPumpPlugin(
 
     override suspend fun onStart() {
         super.onStart()
-        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        val newScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
         scope = newScope
         preferences.observe(StringKey.VirtualPumpType).drop(1).collectResilient(newScope, aapsLogger, LTag.PUMP) { refreshConfiguration() }
         batteryPercentFlow.collectResilient(newScope, aapsLogger, LTag.PUMP) { _batteryLevel.value = it }
@@ -173,18 +174,18 @@ open class VirtualPumpPlugin(
     override fun isHandshakeInProgress(): Boolean = false
 
     override fun connect(reason: String) {
-        _lastDataTime.value = System.currentTimeMillis()
+        _lastDataTime.value = Clock.System.now().toEpochMilliseconds()
     }
 
     override fun waitForDisconnectionInSeconds(): Int = 0
     override fun disconnect(reason: String) {}
     override fun stopConnecting() {}
     override suspend fun getPumpStatus(reason: String) {
-        _lastDataTime.value = System.currentTimeMillis()
+        _lastDataTime.value = Clock.System.now().toEpochMilliseconds()
     }
 
     override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
-        _lastDataTime.value = System.currentTimeMillis()
+        _lastDataTime.value = Clock.System.now().toEpochMilliseconds()
         // PROFILE_SET_OK is now posted centrally by CommandSetProfile on success && enacted (unified across pumps).
         // Do nothing here. we are using database profile
         return pumpEnactResultProvider().success(true).enacted(true)
@@ -209,7 +210,7 @@ open class VirtualPumpPlugin(
         val result = pumpEnactResultProvider()
             .success(true)
             .enacted(true)
-            .comment(rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok))
+            .comment(rh.gs(UiStrings.virtualpump_resultok))
 
         var delivering = 0.0
         var stopped = false
@@ -228,13 +229,13 @@ open class VirtualPumpPlugin(
             bolusProgressData.updateProgress(100)
             delay(1000)
         } else {
-            result.comment(rh.gs(app.aaps.core.ui.R.string.stop))
+            result.comment(rh.gs(UiStrings.stop))
         }
 
         result.bolusDelivered(delivering)
 
         aapsLogger.debug(LTag.PUMP, "Delivering treatment insulin: " + delivering + "U carbs: " + detailedBolusInfo.carbs + "g " + result)
-        _lastDataTime.value = System.currentTimeMillis()
+        _lastDataTime.value = Clock.System.now().toEpochMilliseconds()
         if (delivering > 0) {
             if (config.AAPSCLIENT) // do not store pump serial (record will not be marked PH)
                 appScope.launch {
@@ -276,7 +277,7 @@ open class VirtualPumpPlugin(
         result.isTempCancel = false
         result.absolute = absoluteRate
         result.duration = durationInMinutes
-        result.comment = rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok)
+        result.comment = rh.gs(UiStrings.virtualpump_resultok)
         pumpSync.syncTemporaryBasalWithPumpId(
             timestamp = dateUtil.now(),
             rate = PumpRate(absoluteRate),
@@ -288,7 +289,7 @@ open class VirtualPumpPlugin(
             pumpSerial = serialNumber()
         )
         aapsLogger.debug(LTag.PUMP, "Setting temp basal absolute: ${result.toText(rh)}")
-        _lastDataTime.value = System.currentTimeMillis()
+        _lastDataTime.value = Clock.System.now().toEpochMilliseconds()
         return result
     }
 
@@ -300,7 +301,7 @@ open class VirtualPumpPlugin(
         result.isPercent = true
         result.isTempCancel = false
         result.duration = durationInMinutes
-        result.comment = rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok)
+        result.comment = rh.gs(UiStrings.virtualpump_resultok)
         pumpSync.syncTemporaryBasalWithPumpId(
             timestamp = dateUtil.now(),
             rate = PumpRate(percent.toDouble()),
@@ -312,7 +313,7 @@ open class VirtualPumpPlugin(
             pumpSerial = serialNumber()
         )
         aapsLogger.debug(LTag.PUMP, "Settings temp basal percent: ${result.toText(rh)}")
-        _lastDataTime.value = System.currentTimeMillis()
+        _lastDataTime.value = Clock.System.now().toEpochMilliseconds()
         return result
     }
 
@@ -324,7 +325,7 @@ open class VirtualPumpPlugin(
         result.bolusDelivered = insulin
         result.isTempCancel = false
         result.duration = durationInMinutes
-        result.comment = rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok)
+        result.comment = rh.gs(UiStrings.virtualpump_resultok)
         pumpSync.syncExtendedBolusWithPumpId(
             timestamp = dateUtil.now(),
             rate = PumpRate(insulin),
@@ -335,7 +336,7 @@ open class VirtualPumpPlugin(
             pumpSerial = serialNumber()
         )
         aapsLogger.debug(LTag.PUMP, "Setting extended bolus: ${result.toText(rh)}")
-        _lastDataTime.value = System.currentTimeMillis()
+        _lastDataTime.value = Clock.System.now().toEpochMilliseconds()
         return result
     }
 
@@ -343,7 +344,7 @@ open class VirtualPumpPlugin(
         val result = pumpEnactResultProvider()
         result.success = true
         result.isTempCancel = true
-        result.comment = rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok)
+        result.comment = rh.gs(UiStrings.virtualpump_resultok)
         if (pumpSync.expectedPumpState().temporaryBasal != null) {
             result.enacted = true
             pumpSync.syncStopTemporaryBasalWithPumpId(
@@ -354,7 +355,7 @@ open class VirtualPumpPlugin(
             )
             aapsLogger.debug(LTag.PUMP, "Canceling temp basal: ${result.toText(rh)}")
         }
-        _lastDataTime.value = System.currentTimeMillis()
+        _lastDataTime.value = Clock.System.now().toEpochMilliseconds()
         return result
     }
 
@@ -371,15 +372,15 @@ open class VirtualPumpPlugin(
         result.success = true
         result.enacted = true
         result.isTempCancel = true
-        result.comment = rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok)
+        result.comment = rh.gs(UiStrings.virtualpump_resultok)
         aapsLogger.debug(LTag.PUMP, "Canceling extended bolus: ${result.toText(rh)}")
-        _lastDataTime.value = System.currentTimeMillis()
+        _lastDataTime.value = Clock.System.now().toEpochMilliseconds()
         return result
     }
 
     override fun manufacturer(): ManufacturerType = pumpDescription.pumpType.manufacturer()
     override fun model(): PumpType = pumpDescription.pumpType
-    override fun serialNumber(): String = InstanceId.instanceId
+    override fun serialNumber(): String = virtualPumpSerialNumber()
     override fun canHandleDST(): Boolean = true
 
     fun refreshConfiguration() {
@@ -396,7 +397,7 @@ open class VirtualPumpPlugin(
 
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
         key = "virtual_pump_settings",
-        titleResId = R.string.virtualpump_settings,
+        title = VirtualStrings.virtualpump_settings,
         items = listOf(
             StringKey.VirtualPumpType.withEntries(
                 PumpType.entries
