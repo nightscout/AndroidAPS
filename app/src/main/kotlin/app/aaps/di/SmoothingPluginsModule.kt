@@ -20,11 +20,11 @@ import dagger.multibindings.IntoMap
 import javax.inject.Singleton
 
 /**
- * Dagger wiring for `:plugins:smoothing`.
+ * Dagger wiring for `:plugins:smoothing`, lifted out of the plugin module so it can be multiplatform.
  *
- * It lives here rather than in the plugin module because a module that runs annotation processing
- * cannot be multiplatform - the AGP multiplatform library target has no Java compilation step and
- * Dagger emits Java. Same lift as [CoreObjectsModule] and [VirtualPumpModule].
+ * One such file per converted module, so that moving off this arrangement later is a per-module move.
+ * Why no KMP module may carry a Dagger annotation - and why the mistake passes the build instead of
+ * failing it - is in `_docs/KMP_IOS_FEASIBILITY.md`, under "Decisions taken".
  *
  * Self-registration into the global @AllConfigs plugin map keeps its @IntKey block 600-630, step 10.
  * See PluginsListModule for the overall @IntKey ordering overview.

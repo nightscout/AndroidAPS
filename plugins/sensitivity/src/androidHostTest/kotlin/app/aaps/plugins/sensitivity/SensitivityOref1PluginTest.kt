@@ -132,7 +132,7 @@ class SensitivityOref1PluginTest : SensitivityTestBase() {
 
     @Test
     fun isUAMEnabled_deniedWhenPluginNotSelected() {
-        whenever(rh.gs(R.string.uam_disabled_oref1_not_selected)).thenReturn("UAM disabled")
+        whenever(rh.gs(SensitivityStrings.uam_disabled_oref1_not_selected)).thenReturn("UAM disabled")
         val constraint = ConstraintObject(true, aapsLogger)
         sut.isUAMEnabled(constraint)
         assertThat(constraint.value()).isFalse()

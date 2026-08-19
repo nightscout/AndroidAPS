@@ -1,6 +1,6 @@
 package app.aaps.plugins.sensitivity
 
-import app.aaps.core.keys.interfaces.TextRef
+import androidx.collection.LongSparseArray
 import app.aaps.core.data.model.PS
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginType
@@ -13,25 +13,21 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.EffectiveProfile
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.interfaces.PreferenceItem
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.icons.IcAs
-import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.utils.MidnightUtils
-import app.aaps.core.utils.Percentile
 import app.aaps.plugins.sensitivity.extensions.isPSEvent5minBack
 import app.aaps.plugins.sensitivity.extensions.isTherapyEventEvent5minBack
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.math.roundToInt
 
-@Singleton
-class SensitivityAAPSPlugin @Inject constructor(
+class SensitivityWeightedAveragePlugin(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    rh: TextResolver,
     preferences: Preferences,
     private val dateUtil: DateUtil,
     private val activePlugin: ActivePlugin
@@ -39,9 +35,9 @@ class SensitivityAAPSPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.SENSITIVITY)
         .icon(IcAs)
-        .pluginName(TextRef.AndroidRes(R.string.sensitivity_aaps))
-        .shortName(TextRef.AndroidRes(R.string.sensitivity_plugin_shortname))
-        .description(TextRef.AndroidRes(R.string.description_sensitivity_aaps)),
+        .pluginName(SensitivityStrings.sensitivity_weighted_average)
+        .shortName(SensitivityStrings.sensitivity_plugin_shortname)
+        .description(SensitivityStrings.description_sensitivity_weighted_average),
     aapsLogger, rh, preferences
 ) {
 
@@ -59,10 +55,6 @@ class SensitivityAAPSPlugin @Inject constructor(
         profileSwitches: List<PS>
     ): AutosensResult {
         val hoursForDetection = preferences.get(IntKey.AutosensPeriod)
-        if (profile == null) {
-            aapsLogger.error("No profile")
-            return AutosensResult()
-        }
         if (ads.autosensDataTable.size() < 4) {
             aapsLogger.debug(LTag.AUTOSENS, "No autosens data available. lastDataTime=" + ads.lastDataTime(dateUtil))
             return AutosensResult()
@@ -72,10 +64,14 @@ class SensitivityAAPSPlugin @Inject constructor(
             aapsLogger.debug(LTag.AUTOSENS, "No autosens data available. toTime: " + dateUtil.dateAndTimeString(toTime) + " lastDataTime: " + ads.lastDataTime(dateUtil))
             return AutosensResult()
         }
-        val deviationsArray: MutableList<Double> = ArrayList()
+        if (profile == null) {
+            aapsLogger.debug(LTag.AUTOSENS, "No profile available")
+            return AutosensResult()
+        }
         val pastSensitivity = StringBuilder()
         // start the scan at the detection window instead of walking the whole table on every call
         var index = firstIndexAtOrAfter(ads.autosensDataTable, toTime - hoursForDetection * 60 * 60 * 1000L)
+        val data = LongSparseArray<Double>()
         while (index < ads.autosensDataTable.size()) {
             val autosensData = ads.autosensDataTable.valueAt(index)
             if (autosensData.time < fromTime) {
@@ -86,24 +82,30 @@ class SensitivityAAPSPlugin @Inject constructor(
                 index++
                 continue
             }
+            if (autosensData.time < toTime - hoursForDetection * 60 * 60 * 1000L) {
+                index++
+                continue
+            }
 
             // reset deviations after site change
             if (siteChanges.isTherapyEventEvent5minBack(autosensData.time)) {
-                deviationsArray.clear()
+                data.clear()
                 pastSensitivity.append("(SITECHANGE)")
             }
 
             // reset deviations after profile switch
             if (profileSwitches.isPSEvent5minBack(autosensData.time)) {
-                deviationsArray.clear()
+                data.clear()
                 pastSensitivity.append("(PROFILESWITCH)")
             }
             var deviation = autosensData.deviation
 
             //set positive deviations to zero if bg < 80
             if (autosensData.bg < 80 && deviation > 0) deviation = 0.0
-            if (autosensData.validDeviation) if (autosensData.time > toTime - hoursForDetection * 60 * 60 * 1000L) deviationsArray.add(deviation)
-            if (deviationsArray.size > hoursForDetection * 60 / 5) deviationsArray.removeAt(0)
+
+            //data.append(autosensData.time);
+            val reverseWeight = (toTime - autosensData.time) / (5 * 60 * 1000L)
+            if (autosensData.validDeviation) data.append(reverseWeight, deviation)
             pastSensitivity.append(autosensData.pastSensitivity)
             val secondsFromMidnight = MidnightUtils.secondsFromMidnight(autosensData.time)
             if (secondsFromMidnight % 3600 < 2.5 * 60 || secondsFromMidnight % 3600 > 57.5 * 60) {
@@ -111,25 +113,41 @@ class SensitivityAAPSPlugin @Inject constructor(
             }
             index++
         }
-        val deviations = deviationsArray.toDoubleArray()
+        if (data.size() == 0) {
+            aapsLogger.debug(LTag.AUTOSENS, "Data size: " + data.size() + " fromTime: " + dateUtil.dateAndTimeString(fromTime) + " toTime: " + dateUtil.dateAndTimeString(toTime))
+            return AutosensResult()
+        } else {
+            aapsLogger.debug(LTag.AUTOSENS, "Data size: " + data.size() + " fromTime: " + dateUtil.dateAndTimeString(fromTime) + " toTime: " + dateUtil.dateAndTimeString(toTime))
+        }
+        var weightedSum = 0.0
+        var weights = 0.0
+        val highestWeight = data.keyAt(data.size() - 1)
+        for (i in 0 until data.size()) {
+            val reversedWeight = data.keyAt(i)
+            val value = data.valueAt(i)
+            val weight = (highestWeight - reversedWeight) / 2.0
+            weights += weight
+            weightedSum += weight * value
+        }
+        if (weights == 0.0) {
+            return AutosensResult()
+        }
         val sens = current.sens
         val ratioLimit = ""
         val sensResult: String
         aapsLogger.debug(LTag.AUTOSENS, "Records: $index   $pastSensitivity")
-        deviations.sort()
-        val percentile = Percentile.percentile(deviations, 0.50)
-        val basalOff = percentile * (60.0 / 5.0) / sens
+        val average = weightedSum / weights
+        val basalOff = average * (60 / 5.0) / sens
         val ratio = 1 + basalOff / profile.getMaxDailyBasal()
         sensResult = when {
-            percentile < 0 -> "Excess insulin sensitivity detected"
-            percentile > 0 -> "Excess insulin resistance detected"
-            else           -> "Sensitivity normal"
-
+            average < 0 -> "Excess insulin sensitivity detected"
+            average > 0 -> "Excess insulin resistance detected"
+            else        -> "Sensitivity normal"
         }
         aapsLogger.debug(LTag.AUTOSENS, sensResult)
         val output = fillResult(
             ratio, current.cob, pastSensitivity.toString(), ratioLimit,
-            sensResult, deviationsArray.size
+            sensResult, data.size()
         )
         aapsLogger.debug(
             LTag.AUTOSENS, "Sensitivity to: "
@@ -137,7 +155,6 @@ class SensitivityAAPSPlugin @Inject constructor(
                 " ratio: " + output.ratio
                 + " mealCOB: " + current.cob
         )
-        aapsLogger.debug(LTag.AUTOSENS, "Sensitivity to: deviations " + deviations.contentToString())
         return output
     }
 
@@ -146,23 +163,15 @@ class SensitivityAAPSPlugin @Inject constructor(
     override val isOref1: Boolean = false
 
     override val id: SensitivityType
-        get() = SensitivityType.SENSITIVITY_AAPS
+        get() = SensitivityType.SENSITIVITY_WEIGHTED
 
-    override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
-        key = "sensitivity_aaps_settings",
-        titleResId = R.string.absorption_settings_title,
-        items = listOf(
-            DoubleKey.AbsorptionMaxTime,
-            IntKey.AutosensPeriod,
-            PreferenceSubScreenDef(
-                key = "absorption_aaps_advanced",
-                titleResId = app.aaps.core.ui.R.string.advanced_settings_title,
-                items = listOf(
-                    DoubleKey.AutosensMax,
-                    DoubleKey.AutosensMin
-                )
-            )
-        ),
-        icon = pluginDescription.icon
-    )
+    // SensitivityAAPSPlugin is always registered, so preferences are always available.
+    // Override explicitly to avoid caching a `false` from a runtime lookup race during startup.
+    override fun hasPreferences(): Boolean = true
+
+    override fun getPreferenceScreenContent(): PreferenceItem? {
+        // Share with SensitivityAAPSPlugin
+        val aapsPlugin = activePlugin.getPluginsList().firstOrNull { it::class == SensitivityAAPSPlugin::class } ?: return null
+        return aapsPlugin.getPreferenceScreenContent()
+    }
 }

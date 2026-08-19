@@ -1763,6 +1763,40 @@ because any future dead-code sweep will find them again and the finding will loo
 When the feature is revived, `CustomAction.name` is an Android string resource id and needs the same
 `TextRef` treatment as everything else here.
 
+**Dagger stays out of every KMP module, and its wiring goes in one file per module under
+`app/src/main/kotlin/app/aaps/di/`.** A module can be multiplatform only if it carries no Dagger
+annotation anywhere - not in `commonMain`, and not in `androidMain` either. `CoreObjectsModule`,
+`VirtualPumpModule`, `SmoothingPluginsModule` and `CalibrationPluginsModule` are that lift, one file
+per converted module so a later swap is a per-module move rather than a repo-wide edit.
+
+`androidMain` looks like it should be allowed, because only the iOS targets lack Java. It is not, and
+the way it fails is the reason this is written down. Probed on `:plugins:smoothing` with
+`add("kspAndroid", dagger.compiler)` and a trivial `@Inject constructor` plus `@Module`/`@Provides`
+in `androidMain`:
+
+- `kspAndroidMain` runs and writes `ProbeThing_Factory.java` and `ProbeModule_ProvideNameFactory.java`
+  into `build/generated/ksp/android/androidMain/java/`
+- the only `JavaCompile` task in the whole build is `:buildSrc:compileJava NO-SOURCE`
+- `build/classes/` gets the hand written Kotlin and **no** `*_Factory.class`
+- **the build passes** - `BUILD SUCCESSFUL`
+
+So Dagger emits Java into a target that has no javac, and nothing reports it. The module looks
+converted and its factories do not exist. This is not a Dagger bug to wait out: Dagger generates Java
+even on its KSP backend (https://dagger.dev/dev-guide/ksp.html), and moving it to Kotlin output is a
+change Google has not made.
+
+Practical consequence for planning: **a module's conversion cost is roughly its Dagger count.**
+`:plugins:sensitivity` (7 files, no Dagger, no `android.*` imports) is cheap. `:plugins:configuration`
+is 22 of 23 files Dagger-bound and is therefore mostly DI work, whatever its Android surface looks
+like.
+
+The exit, when it exists: Dagger PR #5234 (merged 30 July 2026) makes the Hilt Gradle plugin
+configure itself under `com.android.kotlin.multiplatform.library`, but only for the android target and
+it skips the Java specific steps when `isKmpProject`. We are on Dagger 2.60.1 (6 July 2026), which
+predates it. When a release containing it appears, re-run the probe above and check for
+`*_Factory.class`, not for a green build. If the generated Java compiles, these `di/` files can move
+back into their own modules one at a time.
+
 **The `QuickWizardEditor` re-indentation stays in the branch.** ~260 of its ~290 changed lines are a
 re-indent: the body of `if (mode == QuickWizardMode.WIZARD) {` was previously indented at the same
 level as the `if` itself, which reads as though the block is not there. The new indentation is

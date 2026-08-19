@@ -41,11 +41,13 @@ import javax.inject.Singleton
  * keep that module from ever becoming multiplatform. Providing them here keeps the graph identical -
  * same scopes, same instances - and is the same trade already made for `BolusProgressData`.
  *
- * Lives in :app because Dagger emits Java and the AGP multiplatform library target has no Java
- * compilation - a `@Module` inside a multiplatform module would be generated and then silently
- * dropped. :app is the one module that can never become multiplatform, so wiring put here never has
- * to move again. :implementation would probably also be safe, being the ANDROID implementation of
+ * One such file per converted module, so that moving off this arrangement later is a per-module move.
+ * :app is the one module that can never become multiplatform, so wiring put here never has to move
+ * again; :implementation would probably also be safe, being the ANDROID implementation of
  * :core:interfaces, but that is a bet on the future and this needs no bet.
+ *
+ * Why no KMP module may carry a Dagger annotation - and why the mistake passes the build instead of
+ * failing it - is in `_docs/KMP_IOS_FEASIBILITY.md`, under "Decisions taken".
  */
 @Suppress("unused")
 @Module

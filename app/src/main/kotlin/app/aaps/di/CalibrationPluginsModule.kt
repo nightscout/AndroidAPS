@@ -22,11 +22,12 @@ import dagger.multibindings.IntoMap
 import javax.inject.Singleton
 
 /**
- * Dagger wiring for `:plugins:calibration`.
+ * Dagger wiring for `:plugins:calibration`, lifted out of the plugin module so it can be
+ * multiplatform.
  *
- * Lifted out of the plugin module so it can be multiplatform - annotation processing and the AGP
- * multiplatform library target are mutually exclusive. Same as [CoreObjectsModule],
- * [VirtualPumpModule] and [SmoothingPluginsModule].
+ * One such file per converted module, so that moving off this arrangement later is a per-module move.
+ * Why no KMP module may carry a Dagger annotation - and why the mistake passes the build instead of
+ * failing it - is in `_docs/KMP_IOS_FEASIBILITY.md`, under "Decisions taken".
  *
  * Registration keeps its @IntKey block 700-710, step 10.
  */

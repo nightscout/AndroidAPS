@@ -1,6 +1,5 @@
 package app.aaps.plugins.sensitivity
 
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.PS
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginType
@@ -13,34 +12,32 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.EffectiveProfile
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.UiStrings
 import app.aaps.core.ui.compose.icons.IcAs
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.core.utils.Percentile
 import app.aaps.plugins.sensitivity.extensions.isPSEvent5minBack
 import app.aaps.plugins.sensitivity.extensions.isTherapyEventEvent5minBack
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.math.roundToInt
 
-@Singleton
-class SensitivityOref1Plugin @Inject constructor(
+class SensitivityOref1Plugin(
     aapsLogger: AAPSLogger,
-    override val rh: ResourceHelper,
+    override val rh: TextResolver,
     preferences: Preferences,
     private val dateUtil: DateUtil
 ) : AbstractSensitivityPlugin(
     PluginDescription()
         .mainType(PluginType.SENSITIVITY)
         .icon(IcAs)
-        .pluginName(TextRef.AndroidRes(R.string.sensitivity_oref1))
-        .shortName(TextRef.AndroidRes(R.string.sensitivity_plugin_shortname))
+        .pluginName(SensitivityStrings.sensitivity_oref1)
+        .shortName(SensitivityStrings.sensitivity_plugin_shortname)
         .enableByDefault(true)
-        .description(TextRef.AndroidRes(R.string.description_sensitivity_oref1))
+        .description(SensitivityStrings.description_sensitivity_oref1)
         .setDefault(),
     aapsLogger, rh, preferences
 ), PluginConstraints {
@@ -206,19 +203,19 @@ class SensitivityOref1Plugin @Inject constructor(
         get() = SensitivityType.SENSITIVITY_OREF1
 
     override fun isUAMEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        if (!isEnabled()) value.set(false, rh.gs(R.string.uam_disabled_oref1_not_selected), this)
+        if (!isEnabled()) value.set(false, rh.gs(SensitivityStrings.uam_disabled_oref1_not_selected), this)
         return value
     }
 
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
         key = "sensitivity_oref1_settings",
-        titleResId = R.string.absorption_settings_title,
+        title = SensitivityStrings.absorption_settings_title,
         items = listOf(
             DoubleKey.ApsSmbMin5MinCarbsImpact,
             DoubleKey.AbsorptionCutOff,
             PreferenceSubScreenDef(
                 key = "absorption_oref1_advanced",
-                titleResId = app.aaps.core.ui.R.string.advanced_settings_title,
+                title = UiStrings.advanced_settings_title,
                 items = listOf(
                     DoubleKey.AutosensMax,
                     DoubleKey.AutosensMin

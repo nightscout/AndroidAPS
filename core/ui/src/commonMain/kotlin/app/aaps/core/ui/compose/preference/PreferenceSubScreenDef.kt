@@ -10,14 +10,19 @@ import app.aaps.core.keys.interfaces.TextRef
  * Can contain both PreferenceKeys and nested PreferenceSubScreenDefs for hierarchical structure.
  * Content is auto-generated from items using AdaptivePreferenceList.
  *
- * The constructor still takes plain resource ids, because roughly fifty plugin call sites build
- * these with `titleResId = UiStrings.x`. The [title] and [summary] properties wrap them, so the
- * rendering code only ever deals with [TextRef], the same as it does for [PreferenceKey].
+ * Titles are [TextRef], so the rendering code deals with one form only, the same as it does for
+ * [PreferenceKey]. A second constructor takes plain resource ids, because ~174 call sites still build
+ * these with `titleResId = R.string.x`; it wraps them in [TextRef.AndroidRes].
+ *
+ * Which one you get is decided by the argument NAME, and picking the wrong one is a type error rather
+ * than anything readable: pass a [TextRef] (`title = UiStrings.x`) to `title`, and a resource id
+ * (`titleResId = R.string.x`) to `titleResId`. Multiplatform call sites want the first, since a
+ * resource id means nothing off Android.
  *
  * @param key Unique key for this subscreen
- * @param titleResId String resource ID for the screen title
+ * @param title Screen title
  * @param items List of preference items (keys and/or nested subscreens)
- * @param summaryResId Optional string resource ID for summary shown in parent list
+ * @param summary Optional summary shown in the parent list
  * @param icon Optional Compose ImageVector icon shown next to the title
  */
 data class PreferenceSubScreenDef(
@@ -30,7 +35,12 @@ data class PreferenceSubScreenDef(
     val icon: ImageVector? = null
 ) : PreferenceItem {
 
-    /** Resource id form, for the many call sites that still name their strings with R.string. */
+    /**
+     * Resource id form, for the many call sites that still name their strings with R.string.
+     *
+     * @param titleResId String resource id for the screen title
+     * @param summaryResId Optional string resource id for the summary shown in the parent list
+     */
     constructor(
         key: String,
         titleResId: Int,
