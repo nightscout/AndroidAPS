@@ -1,24 +1,8 @@
 package app.aaps.implementation.protection
 
-import android.app.Dialog
-import android.content.Context
-import androidx.annotation.StringRes
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
-import androidx.lifecycle.ViewModelStore
-import androidx.lifecycle.ViewModelStoreOwner
-import androidx.lifecycle.setViewTreeLifecycleOwner
-import androidx.lifecycle.setViewTreeViewModelStoreOwner
-import androidx.savedstate.SavedStateRegistry
-import androidx.savedstate.SavedStateRegistryController
-import androidx.savedstate.SavedStateRegistryOwner
-import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.protection.PasswordCheck
+import app.aaps.core.interfaces.protection.PasswordRequest
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
@@ -26,19 +10,26 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.crypto.CryptoUtil
-import app.aaps.core.ui.compose.AapsTheme
-import app.aaps.core.ui.compose.LocalPreferences
-import app.aaps.core.ui.compose.dialogs.QueryAnyPasswordDialog
-import app.aaps.core.ui.compose.dialogs.QueryPasswordDialog
-import app.aaps.core.ui.compose.dialogs.SetPasswordDialog
-import dagger.Reusable
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import app.aaps.core.ui.UiStrings
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@Reusable
+/**
+ * Publishes the prompt; `PasswordCheckHost` draws it.
+ *
+ * This used to build an `android.app.Dialog` around a `ComposeView`, with a hand written
+ * `LifecycleOwner`/`ViewModelStoreOwner`/`SavedStateRegistryOwner` to satisfy the view tree, and a
+ * 100 ms delay after every dismissal so the caller's callback ran once the window was gone. All of
+ * that was the cost of starting Compose from outside a composition. Publishing a request instead
+ * removes the dialog, the owner, the delay and the `Context` - the decisions about what a password
+ * MEANS all stay here.
+ */
+// Must be a singleton, not @Reusable: the caller that asks for a password and the host that draws it
+// have to see the same [request] flow.
+@Singleton
 class PasswordCheckImpl @Inject constructor(
     private val preferences: Preferences,
     private val cryptoUtil: CryptoUtil,
@@ -48,51 +39,18 @@ class PasswordCheckImpl @Inject constructor(
 
     @Inject lateinit var exportPasswordDataStore: ExportPasswordDataStore
 
-    /**
-     * A custom owner class that provides the necessary platform owners for a ComposeView
-     * hosted in a custom Dialog.
-     */
-    private class ComposeDialogOwner : LifecycleOwner, ViewModelStoreOwner, SavedStateRegistryOwner {
+    private val _request = MutableStateFlow<PasswordRequest?>(null)
+    override val request: StateFlow<PasswordRequest?> = _request.asStateFlow()
 
-        private val lifecycleRegistry = LifecycleRegistry(this)
-        private val _viewModelStore = ViewModelStore()
-        private val savedStateRegistryController = SavedStateRegistryController.create(this)
-
-        init {
-            savedStateRegistryController.performRestore(null)
-            lifecycleRegistry.currentState = Lifecycle.State.RESUMED
-        }
-
-        override val lifecycle: Lifecycle
-            get() = lifecycleRegistry
-
-        override val viewModelStore: ViewModelStore
-            get() = _viewModelStore
-
-        override val savedStateRegistry: SavedStateRegistry
-            get() = savedStateRegistryController.savedStateRegistry
-
-        fun destroy() {
-            lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
-            _viewModelStore.clear()
-        }
+    private fun dismiss() {
+        _request.value = null
     }
 
-    /**
-    Asks for "managed" kind of password, checking if it is valid.
-     */
-    override fun queryPassword(
-        context: Context,
-        @StringRes labelId: Int,
-        preference: StringPreferenceKey,
-        ok: ((String) -> Unit)?,
-        cancel: (() -> Unit)?,
-        fail: (() -> Unit)?,
-        pinInput: Boolean
-    ) = queryPassword(context, TextRef.AndroidRes(labelId), preference, ok, cancel, fail, pinInput)
+    private fun snack(message: TextRef, type: EventShowSnackbar.Type) {
+        rxBus.send(EventShowSnackbar(rh.gs(message), type))
+    }
 
     override fun queryPassword(
-        context: Context,
         label: TextRef,
         preference: StringPreferenceKey,
         ok: ((String) -> Unit)?,
@@ -106,64 +64,28 @@ class PasswordCheckImpl @Inject constructor(
             return
         }
 
-        val dialog = Dialog(context)
-        val owner = ComposeDialogOwner()
-        val composeView = ComposeView(context).apply {
-            setViewTreeLifecycleOwner(owner)
-            setViewTreeViewModelStoreOwner(owner)
-            setViewTreeSavedStateRegistryOwner(owner)
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnLifecycleDestroyed(owner))
-            setContent {
-                CompositionLocalProvider(
-                    LocalPreferences provides preferences
-                ) {
-                    AapsTheme {
-                        QueryPasswordDialog(
-                            title = rh.gs(label),
-                            pinInput = pinInput,
-                            onConfirm = { enteredPassword ->
-                                if (cryptoUtil.checkPassword(enteredPassword, password)) {
-                                    dialog.dismiss()
-                                    CoroutineScope(Dispatchers.Main).launch {
-                                        delay(100)
-                                        ok?.invoke(enteredPassword)
-                                    }
-                                } else {
-                                    val msg = if (pinInput) app.aaps.core.ui.R.string.wrongpin else app.aaps.core.ui.R.string.wrongpassword
-                                    rxBus.send(EventShowSnackbar(context.getString(msg), EventShowSnackbar.Type.Error))
-                                    fail?.invoke()
-                                }
-                            },
-                            onCancel = {
-                                dialog.dismiss()
-                                CoroutineScope(Dispatchers.Main).launch {
-                                    delay(100)
-                                    cancel?.invoke()
-                                }
-                            }
-                        )
-                    }
+        _request.value = PasswordRequest.Query(
+            label = label,
+            pinInput = pinInput,
+            onConfirm = { enteredPassword ->
+                if (cryptoUtil.checkPassword(enteredPassword, password)) {
+                    dismiss()
+                    ok?.invoke(enteredPassword)
+                } else {
+                    // Deliberately does NOT dismiss: a wrong password leaves the prompt up so the
+                    // user can try again, exactly as before.
+                    snack(if (pinInput) UiStrings.wrongpin else UiStrings.wrongpassword, EventShowSnackbar.Type.Error)
+                    fail?.invoke()
                 }
+            },
+            onCancel = {
+                dismiss()
+                cancel?.invoke()
             }
-        }
-        dialog.setContentView(composeView)
-        dialog.setCanceledOnTouchOutside(false)
-        dialog.setOnDismissListener { owner.destroy() }
-        dialog.show()
+        )
     }
 
     override fun setPassword(
-        context: Context,
-        @StringRes labelId: Int,
-        preference: StringPreferenceKey,
-        ok: ((String) -> Unit)?,
-        cancel: (() -> Unit)?,
-        clear: (() -> Unit)?,
-        pinInput: Boolean
-    ) = setPassword(context, TextRef.AndroidRes(labelId), preference, ok, cancel, clear, pinInput)
-
-    override fun setPassword(
-        context: Context,
         label: TextRef,
         preference: StringPreferenceKey,
         ok: ((String) -> Unit)?,
@@ -171,128 +93,67 @@ class PasswordCheckImpl @Inject constructor(
         clear: (() -> Unit)?,
         pinInput: Boolean
     ) {
-        val dialog = Dialog(context)
-        val owner = ComposeDialogOwner()
-        val composeView = ComposeView(context).apply {
-            setViewTreeLifecycleOwner(owner)
-            setViewTreeViewModelStoreOwner(owner)
-            setViewTreeSavedStateRegistryOwner(owner)
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnLifecycleDestroyed(owner))
-            setContent {
-                CompositionLocalProvider(
-                    LocalPreferences provides preferences
-                ) {
-                    AapsTheme {
-                        SetPasswordDialog(
-                            title = rh.gs(label),
-                            pinInput = pinInput,
-                            onConfirm = { enteredPassword, enteredPassword2 ->
-                                if (enteredPassword != enteredPassword2) {
-                                    val msg = if (pinInput) app.aaps.core.ui.R.string.pin_dont_match else app.aaps.core.ui.R.string.passwords_dont_match
-                                    rxBus.send(EventShowSnackbar(context.getString(msg), EventShowSnackbar.Type.Error))
-                                } else if (enteredPassword.isNotEmpty()) {
-                                    preferences.put(preference, cryptoUtil.hashPassword(enteredPassword))
-                                    exportPasswordDataStore.clearPasswordDataStore()
-                                    val msg = if (pinInput) app.aaps.core.ui.R.string.pin_set else app.aaps.core.ui.R.string.password_set
-                                    rxBus.send(EventShowSnackbar(context.getString(msg), EventShowSnackbar.Type.Success))
-                                    dialog.dismiss()
-                                    CoroutineScope(Dispatchers.Main).launch {
-                                        delay(100)
-                                        ok?.invoke(enteredPassword)
-                                    }
-                                } else {
-                                    if (preferences.getIfExists(preference) != null) {
-                                        preferences.remove(preference)
-                                        val msg = if (pinInput) app.aaps.core.ui.R.string.pin_cleared else app.aaps.core.ui.R.string.password_cleared
-                                        rxBus.send(EventShowSnackbar(context.getString(msg), EventShowSnackbar.Type.Success))
-                                        dialog.dismiss()
-                                        CoroutineScope(Dispatchers.Main).launch {
-                                            delay(100)
-                                            clear?.invoke()
-                                        }
-                                    } else {
-                                        val msg = if (pinInput) app.aaps.core.ui.R.string.pin_not_changed else app.aaps.core.ui.R.string.password_not_changed
-                                        rxBus.send(EventShowSnackbar(context.getString(msg), EventShowSnackbar.Type.Warning))
-                                        dialog.dismiss()
-                                        CoroutineScope(Dispatchers.Main).launch {
-                                            delay(100)
-                                            cancel?.invoke()
-                                        }
-                                    }
-                                }
-                            },
-                            onCancel = {
-                                val msg = if (pinInput) app.aaps.core.ui.R.string.pin_not_changed else app.aaps.core.ui.R.string.password_not_changed
-                                rxBus.send(EventShowSnackbar(context.getString(msg), EventShowSnackbar.Type.Info))
-                                dialog.dismiss()
-                                CoroutineScope(Dispatchers.Main).launch {
-                                    delay(100)
-                                    cancel?.invoke()
-                                }
-                            }
-                        )
+        _request.value = PasswordRequest.Set(
+            label = label,
+            pinInput = pinInput,
+            onConfirm = { enteredPassword, enteredPassword2 ->
+                when {
+                    enteredPassword != enteredPassword2 -> {
+                        // Mismatch keeps the prompt open so the entries can be corrected.
+                        snack(if (pinInput) UiStrings.pin_dont_match else UiStrings.passwords_dont_match, EventShowSnackbar.Type.Error)
+                    }
+
+                    enteredPassword.isNotEmpty()        -> {
+                        preferences.put(preference, cryptoUtil.hashPassword(enteredPassword))
+                        exportPasswordDataStore.clearPasswordDataStore()
+                        snack(if (pinInput) UiStrings.pin_set else UiStrings.password_set, EventShowSnackbar.Type.Success)
+                        dismiss()
+                        ok?.invoke(enteredPassword)
+                    }
+
+                    // Empty entry means "clear it", but only if there was one to clear.
+                    preferences.getIfExists(preference) != null -> {
+                        preferences.remove(preference)
+                        snack(if (pinInput) UiStrings.pin_cleared else UiStrings.password_cleared, EventShowSnackbar.Type.Success)
+                        dismiss()
+                        clear?.invoke()
+                    }
+
+                    else                                -> {
+                        snack(if (pinInput) UiStrings.pin_not_changed else UiStrings.password_not_changed, EventShowSnackbar.Type.Warning)
+                        dismiss()
+                        cancel?.invoke()
                     }
                 }
+            },
+            onCancel = {
+                snack(if (pinInput) UiStrings.pin_not_changed else UiStrings.password_not_changed, EventShowSnackbar.Type.Info)
+                dismiss()
+                cancel?.invoke()
             }
-        }
-        dialog.setContentView(composeView)
-        dialog.setCanceledOnTouchOutside(false)
-        dialog.setOnDismissListener { owner.destroy() }
-        dialog.show()
+        )
     }
 
-    /**
-    Prompt free-form password, with additional help and warning messages.
-    Preference ID (preference) is used only to generate ID for password managers,
-    since this query does NOT check validity of password.
-     */
     override fun queryAnyPassword(
-        context: Context,
-        @StringRes labelId: Int,
+        label: TextRef,
         preference: StringPreferenceKey,
-        @StringRes passwordExplanation: Int?,
-        @StringRes passwordWarning: Int?,
+        passwordExplanation: TextRef?,
+        passwordWarning: TextRef?,
         ok: ((String) -> Unit)?,
         cancel: (() -> Unit)?
     ) {
-        val dialog = Dialog(context)
-        val owner = ComposeDialogOwner()
-        val composeView = ComposeView(context).apply {
-            setViewTreeLifecycleOwner(owner)
-            setViewTreeViewModelStoreOwner(owner)
-            setViewTreeSavedStateRegistryOwner(owner)
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnLifecycleDestroyed(owner))
-            setContent {
-                CompositionLocalProvider(
-                    LocalPreferences provides preferences
-                ) {
-                    AapsTheme {
-                        QueryAnyPasswordDialog(
-                            title = context.getString(labelId),
-                            passwordExplanation = passwordExplanation?.let { context.getString(it) },
-                            passwordWarning = passwordWarning?.let { context.getString(it) },
-                            onConfirm = { enteredPassword ->
-                                dialog.dismiss()
-                                CoroutineScope(Dispatchers.Main).launch {
-                                    delay(100)
-                                    ok?.invoke(enteredPassword)
-                                }
-                            },
-                            onCancel = {
-                                dialog.dismiss()
-                                CoroutineScope(Dispatchers.Main).launch {
-                                    delay(100)
-                                    cancel?.invoke()
-                                }
-                            }
-                        )
-                    }
-                }
+        _request.value = PasswordRequest.QueryAny(
+            label = label,
+            explanation = passwordExplanation,
+            warning = passwordWarning,
+            onConfirm = { enteredPassword ->
+                dismiss()
+                ok?.invoke(enteredPassword)
+            },
+            onCancel = {
+                dismiss()
+                cancel?.invoke()
             }
-        }
-        dialog.setContentView(composeView)
-        dialog.setCanceledOnTouchOutside(false)
-        dialog.setOnDismissListener { owner.destroy() }
-        dialog.show()
+        )
     }
 }

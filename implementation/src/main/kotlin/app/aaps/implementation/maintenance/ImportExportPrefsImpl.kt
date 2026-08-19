@@ -2,11 +2,9 @@ package app.aaps.implementation.maintenance
 
 import android.content.Context
 import android.provider.Settings
-import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.documentfile.provider.DocumentFile
-import androidx.fragment.app.FragmentActivity
 import androidx.hilt.work.HiltWorker
 import androidx.lifecycle.lifecycleScope
 import androidx.work.ExistingWorkPolicy
@@ -37,7 +35,6 @@ import app.aaps.core.interfaces.maintenance.PrefsFile
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
-import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventDiaconnG8PumpLogReset
@@ -101,7 +98,6 @@ class ImportExportPrefsImpl @Inject constructor(
     private val config: Config,
     private val persistenceLayer: PersistenceLayer,
     private val rxBus: RxBus,
-    private val passwordCheck: PasswordCheck,
     private val exportPasswordDataStore: ExportPasswordDataStore,
     private val encryptedPrefsFormat: EncryptedPrefsFormat,
     private val prefFileList: FileListProvider,
@@ -376,71 +372,6 @@ class ImportExportPrefsImpl @Inject constructor(
         // name we detect from OS
         val systemName = n1 ?: n4 ?: n5 ?: n6 ?: defaultPatientName
         return if (patientName.isNotEmpty() && patientName != defaultPatientName) patientName else systemName
-    }
-
-    private fun askForMasterPass(activity: FragmentActivity, @StringRes canceledMsg: Int, then: ((password: String) -> Unit)) {
-        passwordCheck.queryPassword(activity, StringKey.ProtectionMasterPassword.title, StringKey.ProtectionMasterPassword, { password ->
-            then(password)
-        }, {
-                                        rxBus.send(EventShowSnackbar(rh.gs(canceledMsg), EventShowSnackbar.Type.Warning))
-                                    })
-    }
-
-    @Suppress("SameParameterValue")
-    private fun askForMasterPassIfNeeded(activity: FragmentActivity, @StringRes canceledMsg: Int, then: ((password: String) -> Unit)) {
-        askForMasterPass(activity, canceledMsg, then)
-    }
-
-    private fun assureMasterPasswordSet(activity: FragmentActivity, @StringRes wrongPwdTitle: Int): Boolean {
-        if (preferences.getIfExists(StringKey.ProtectionMasterPassword).isNullOrEmpty()) {
-            rxBus.send(
-                EventShowDialog.Error(
-                    title = rh.gs(wrongPwdTitle),
-                    message = rh.gs(app.aaps.core.ui.R.string.master_password_missing),
-                    positiveButton = rh.gs(StringKey.ProtectionMasterPassword.title),
-                    onPositive = { passwordCheck.setPassword(activity, StringKey.ProtectionMasterPassword.title, StringKey.ProtectionMasterPassword) }
-                )
-            )
-            exportPasswordDataStore.clearPasswordDataStore()
-            return false
-        }
-        return true
-    }
-
-    /***
-     * Ask to confirm export unless a valid password is already available
-     */
-    private fun askToConfirmExport(activity: FragmentActivity, fileToExport: DocumentFile, then: ((password: String) -> Unit)) {
-        if (!assureMasterPasswordSet(activity, app.aaps.core.ui.R.string.nav_export)) {
-            return
-        }
-
-        // Get password from datastore
-        val (password, isExpired, isAboutToExpire) = exportPasswordDataStore.getPasswordFromDataStore()
-        if (password.isNotEmpty() && !(isExpired || isAboutToExpire)) {
-            // We have an (encrypted) password in the phones DataStore that is not expired or about to expire (third)
-            then(password)
-            return // No need to ask.
-        }
-
-        // Make sure stored password is properly reset
-        exportPasswordDataStore.clearPasswordDataStore()
-
-        // Ask for entering password and store when successfully entered
-        rxBus.send(
-            EventShowDialog.OkCancel(
-                title = rh.gs(app.aaps.core.ui.R.string.nav_export),
-                message = rh.gs(app.aaps.core.ui.R.string.export_to) + " " + fileToExport.name + "?",
-                secondMessage = rh.gs(app.aaps.core.ui.R.string.password_preferences_encrypt_prompt),
-                icon = Icons.AutoMirrored.Filled.Logout,
-                onOk = {
-                    askForMasterPassIfNeeded(activity, app.aaps.core.ui.R.string.preferences_export_canceled)
-                    { password ->
-                        then(exportPasswordDataStore.putPasswordToDataStore(password))
-                    }
-                }
-            )
-        )
     }
 
     /**

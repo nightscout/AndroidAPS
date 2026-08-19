@@ -84,7 +84,7 @@ object BiometricCheck {
                     ERROR_USER_CANCELED        -> {
                         rxBus.send(EventShowSnackbar(errString.toString(), EventShowSnackbar.Type.Error))
                         // fallback to master password
-                        passwordCheck.queryPassword(activity, StringKey.ProtectionMasterPassword.title, StringKey.ProtectionMasterPassword, { ok?.run() }, { cancel?.run() }, { fail?.run() })
+                        passwordCheck.queryPassword(StringKey.ProtectionMasterPassword.title, StringKey.ProtectionMasterPassword, { ok?.run() }, { cancel?.run() }, { fail?.run() })
                     }
 
                     ERROR_NEGATIVE_BUTTON      ->
@@ -94,14 +94,14 @@ object BiometricCheck {
                         rxBus.send(EventShowSnackbar(errString.toString(), EventShowSnackbar.Type.Error))
                         // no pin set
                         // fallback to master password
-                        passwordCheck.queryPassword(activity, StringKey.ProtectionMasterPassword.title, StringKey.ProtectionMasterPassword, { ok?.run() }, { cancel?.run() }, { fail?.run() })
+                        passwordCheck.queryPassword(StringKey.ProtectionMasterPassword.title, StringKey.ProtectionMasterPassword, { ok?.run() }, { cancel?.run() }, { fail?.run() })
                     }
 
                     ERROR_NO_SPACE,
                     ERROR_HW_UNAVAILABLE,
                     ERROR_HW_NOT_PRESENT,
                     ERROR_NO_BIOMETRICS        ->
-                        passwordCheck.queryPassword(activity, StringKey.ProtectionMasterPassword.title, StringKey.ProtectionMasterPassword, { ok?.run() }, { cancel?.run() }, { fail?.run() })
+                        passwordCheck.queryPassword(StringKey.ProtectionMasterPassword.title, StringKey.ProtectionMasterPassword, { ok?.run() }, { cancel?.run() }, { fail?.run() })
                 }
             }
 

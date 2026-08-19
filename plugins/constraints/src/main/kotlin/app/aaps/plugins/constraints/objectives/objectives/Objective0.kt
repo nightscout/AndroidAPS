@@ -80,12 +80,12 @@ class Objective0 @Inject constructor(
             override suspend fun isCompleted(): Boolean = persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now()) != null
         })
         tasks.add(
-            UITask(this, R.string.verify_master_password, "master_password") { context, task, callback, showMessage ->
+            UITask(this, R.string.verify_master_password, "master_password") { _, task, callback, showMessage ->
                 if (preferences.get(StringKey.ProtectionMasterPassword) == "") {
                     showMessage(rh.gs(app.aaps.core.ui.R.string.master_password_not_set))
                 } else {
                     passwordCheck.queryPassword(
-                        context, StringKey.ProtectionMasterPassword.title, StringKey.ProtectionMasterPassword,
+                        StringKey.ProtectionMasterPassword.title, StringKey.ProtectionMasterPassword,
                         ok = {
                             task.answered = true
                             callback.run()

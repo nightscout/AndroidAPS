@@ -123,6 +123,7 @@ import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.dialogs.GlobalDialogHost
 import app.aaps.core.ui.compose.dialogs.GlobalSnackbarHost
 import app.aaps.core.ui.compose.dialogs.OkDialog
+import app.aaps.core.ui.compose.dialogs.PasswordCheckHost
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.LocalCheckPassword
 import app.aaps.core.ui.compose.preference.LocalClearExportPasswordStore
@@ -376,6 +377,10 @@ class ComposeMainActivity : AppCompatActivity() {
                         // Root-level dialog host — subscribes to EventShowDialog and
                         // renders one modal dialog at a time.
                         GlobalDialogHost(rxBus = rxBus)
+
+                        // Root-level password prompt. Any caller can ask for a password from plain
+                        // Kotlin; the dialog appears here, so PasswordCheck needs no Context.
+                        PasswordCheckHost(passwordCheck = passwordCheck)
 
                         // The single app-level pending modal for ANY client-control round-trip
                         // (insulin / scenes / synced-preference edits). Hosted once here, feature-
