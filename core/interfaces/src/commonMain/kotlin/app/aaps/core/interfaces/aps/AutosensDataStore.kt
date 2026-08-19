@@ -3,12 +3,14 @@ package app.aaps.core.interfaces.aps
 import androidx.collection.LongSparseArray
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.GV
+import app.aaps.core.interfaces.concurrent.AapsLock
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.utils.DateUtil
 
 interface AutosensDataStore {
 
-    val dataLock: Any
+    /** Guards [bgReadings], [autosensDataTable] and [bucketedData]. Hold it across compound work. */
+    val dataLock: AapsLock
 
     var bgReadings: List<GV>
     var autosensDataTable: LongSparseArray<AutosensData>

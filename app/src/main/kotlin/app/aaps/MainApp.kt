@@ -93,6 +93,7 @@ import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.calibration.CalibrationStringIds
 import app.aaps.plugins.constraints.objectives.keys.ObjectivesLongComposedKey
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
+import app.aaps.plugins.main.MainStringIds
 import app.aaps.plugins.sensitivity.SensitivityStringIds
 import app.aaps.plugins.smoothing.SmoothingStringIds
 import app.aaps.pump.virtual.VirtualStringIds
@@ -1025,5 +1026,6 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
         TextRefIdRegistry.register("smoothing") { name -> SmoothingStringIds.idOf(name) }
         TextRefIdRegistry.register("calibration") { name -> CalibrationStringIds.idOf(name) }
         TextRefIdRegistry.register("sensitivity") { name -> SensitivityStringIds.idOf(name) }
+        TextRefIdRegistry.register("main") { name -> MainStringIds.idOf(name) }
     }
 }

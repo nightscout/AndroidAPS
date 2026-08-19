@@ -5,6 +5,7 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.interfaces.aps.AutosensData
 import app.aaps.core.interfaces.aps.AutosensDataStore
+import app.aaps.core.interfaces.concurrent.AapsLock
 import app.aaps.core.interfaces.aps.Sensitivity
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
@@ -74,7 +75,7 @@ class PrepareGraphDataWorkerTest : TestBaseWithProfile() {
         whenever(workerParameters.inputData).thenReturn(workDataOf())
         whenever(dataIobCob.ads).thenReturn(dataAds)
         whenever(dataAds.clone()).thenReturn(dataAds)
-        whenever(dataAds.dataLock).thenReturn(Any())
+        whenever(dataAds.dataLock).thenReturn(AapsLock())
         whenever(dataAds.getBucketedDataTableCopy()).thenReturn(null)
         // Mockito returns empty (not null) for collection getters; force null so smooth/oref short-circuit.
         whenever(dataAds.bucketedData).thenReturn(null)
