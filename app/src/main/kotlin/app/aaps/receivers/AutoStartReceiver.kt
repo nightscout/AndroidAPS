@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import androidx.annotation.VisibleForTesting
-import app.aaps.plugins.main.general.persistentNotification.DummyServiceHelper
+import app.aaps.persistentNotification.DummyServiceHelper
 import dagger.android.DaggerBroadcastReceiver
 import javax.inject.Inject
 

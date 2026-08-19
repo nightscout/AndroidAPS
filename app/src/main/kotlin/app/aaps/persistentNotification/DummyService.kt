@@ -1,4 +1,4 @@
-package app.aaps.plugins.main.general.persistentNotification
+package app.aaps.persistentNotification
 
 import android.app.Notification
 import android.content.Intent

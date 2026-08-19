@@ -15,6 +15,23 @@ import kotlin.math.abs
 import kotlin.math.min
 import kotlin.math.roundToLong
 
+/**
+ * In memory store for BG readings, bucketed data and the autosens table.
+ *
+ * **Everything mutable here is guarded by the single [dataLock] monitor**, including the three
+ * property accessors. It is exposed on [AutosensDataStore] because callers need to hold it across
+ * compound work - `PrepareGraphDataWorker` sets [bgReadings] and then builds bucketed data from it in
+ * one atomic step, and `IobCobCalculatorPlugin` reads several fields together.
+ *
+ * It did not always work that way. The accessors used `@Synchronized`, which locks `this`, while the
+ * compound operations locked [dataLock] and `reset`/`newHistoryData` locked the table object itself.
+ * Three monitors that never excluded each other: a reader holding [dataLock] could see a field being
+ * written by a thread holding only `this`. Worse, `reset` locked the table and then REPLACED it, so
+ * the next thread locked the new object and walked straight in.
+ *
+ * So: one lock. When adding state here, guard it with [dataLock] too, and never lock an object that
+ * is also reassigned.
+ */
 class AutosensDataStoreObject : AutosensDataStore {
 
     override val dataLock = Any()
@@ -32,17 +49,20 @@ class AutosensDataStoreObject : AutosensDataStore {
     // once referenceTime != null all bucketed data should be (x * 5min) from referenceTime
     var referenceTime: Long = -1
 
+    // All three are guarded by [dataLock], the same monitor the compound operations use - see the
+    // class comment. They previously used @Synchronized, which locks `this` and therefore excluded
+    // nothing that mattered.
     override var bgReadings: List<GV> = listOf() // newest at index 0
-        @Synchronized set
-        @Synchronized get
+        get() = synchronized(dataLock) { field }
+        set(value) { synchronized(dataLock) { field = value } }
 
     override var autosensDataTable = LongSparseArray<AutosensData>() // oldest at index 0
-        @Synchronized set
-        @Synchronized get
+        get() = synchronized(dataLock) { field }
+        set(value) { synchronized(dataLock) { field = value } }
 
     override var bucketedData: MutableList<InMemoryGlucoseValue>? = null
-        @Synchronized set
-        @Synchronized get
+        get() = synchronized(dataLock) { field }
+        set(value) { synchronized(dataLock) { field = value } }
 
     override fun clone(): AutosensDataStore =
         AutosensDataStoreObject().also {
@@ -57,11 +77,11 @@ class AutosensDataStoreObject : AutosensDataStore {
     override fun getBgReadingsDataTableCopy(): List<GV> = synchronized(dataLock) { bgReadings.toMutableList() }
 
     override fun reset() {
-        synchronized(autosensDataTable) { autosensDataTable = LongSparseArray() }
+        synchronized(dataLock) { autosensDataTable = LongSparseArray() }
     }
 
     override fun newHistoryData(time: Long, aapsLogger: AAPSLogger, dateUtil: DateUtil) {
-        synchronized(autosensDataTable) {
+        synchronized(dataLock) {
             for (index in autosensDataTable.size() - 1 downTo 0) {
                 if (autosensDataTable.keyAt(index) > time) {
                     aapsLogger.debug(LTag.AUTOSENS) { "Removing from autosensDataTable: ${dateUtil.dateAndTimeAndSecondsString(autosensDataTable.keyAt(index))}" }
