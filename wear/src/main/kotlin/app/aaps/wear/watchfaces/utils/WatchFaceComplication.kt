@@ -10,6 +10,7 @@ import android.graphics.RectF
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.Icon
+import android.os.Build
 import android.support.wearable.complications.ComplicationData as WireComplicationData
 import androidx.annotation.StringRes
 import androidx.wear.watchface.CanvasComplication
@@ -51,6 +52,54 @@ import kotlin.math.min
  * It also carries the workarounds for androidx bugs that any watch face would hit identically -
  * see [SyncLoadingCanvasComplication].
  */
+
+/**
+ * What kind of content a slot should be offered first when the user picks a data source.
+ *
+ * The system walks a slot's `supportedTypes` **in order** and takes the first type the chosen
+ * provider also offers, so this is a *preference order*, not a filter: every entry below lists every
+ * type, only the order differs. A choice that a provider cannot satisfy therefore degrades to the
+ * next best type rather than breaking the slot - which is what makes this safe to expose to users.
+ *
+ * Why it has to be a choice at all: the right order depends on the provider, and no single global
+ * order serves them both. Device-proven with two Samsung Health providers, both declaring
+ * `SUPPORTED_TYPES = "ICON,SMALL_IMAGE,SHORT_TEXT,LONG_TEXT"` and neither offering a data-bearing
+ * type - see `_docs/CWF_ComplicationSlotsPrompt.md`, "Complication type negotiation".
+ */
+internal enum class ComplicationTypePriority {
+
+    /** Data first: a number or a gauge. What every slot did before this was configurable. */
+    VALUE,
+
+    /** Text first, for a provider whose reading is worth more as words than as a gauge. */
+    TEXT,
+
+    /** Image first, the only way to reach an icon-only provider's icon. */
+    ICON;
+
+    /**
+     * The full type list in this priority's order. Never a subset - see the class doc.
+     *
+     * `GOAL_PROGRESS`/`WEIGHTED_ELEMENTS` are `@RequiresApi(TIRAMISU)`, so they are only included
+     * where the platform has them.
+     */
+    fun supportedTypes(): List<ComplicationType> {
+        val dataBearing = buildList {
+            add(ComplicationType.RANGED_VALUE)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                add(ComplicationType.GOAL_PROGRESS)
+                add(ComplicationType.WEIGHTED_ELEMENTS)
+            }
+        }
+        val text = listOf(ComplicationType.SHORT_TEXT, ComplicationType.LONG_TEXT)
+        val images = listOf(ComplicationType.MONOCHROMATIC_IMAGE, ComplicationType.SMALL_IMAGE, ComplicationType.PHOTO_IMAGE)
+        return when (this) {
+            VALUE -> dataBearing + text + images
+            TEXT  -> text + dataBearing + images
+            ICON  -> images + text + dataBearing
+        }
+    }
+}
 
 /**
  * One complication slot of a watch face, as seen by code that must work for any watch face without
@@ -156,6 +205,9 @@ internal enum class ComplicationImageFit {
  *   reachable through the monochromatic icon - see [ComplicationStyleValues.borderColor]'s
  *   neighbours and `_docs/Complication_Libraries.md`.
  */
+// The wire ComplicationData class is @RestrictTo(LIBRARY_GROUP) - lint only, nothing enforces it at
+// runtime, and a future rename breaks the build rather than failing silently.
+@Suppress("RestrictedApi")
 internal fun shouldDropSmallImage(
     wireType: Int,
     hasSmallImage: Boolean,
@@ -568,17 +620,20 @@ internal class ComplicationSlotState(val slotId: Int) {
  * what makes it reusable by a watch face other than the one using it today.
  *
  * @param slotIds the slots to host, in the watch face's own order
- * @param supportedTypes complication types this watch face accepts, **in preference order** - during
- *   data source selection the system walks the list and picks the first entry a provider also
- *   supports (`ComplicationSlot.kt`'s `supportedTypes` doc, confirmed against source; see
- *   `_docs/Complication_Libraries.md`, "Supported-type negotiation")
+ * @param supportedTypesFor the complication types a given slot accepts, **in preference order** -
+ *   during data source selection the system walks the list and picks the first entry the provider
+ *   also supports (`ComplicationSlot.kt`'s `supportedTypes` doc, confirmed against source; see
+ *   `_docs/Complication_Libraries.md`, "Supported-type negotiation"). Per slot rather than one shared
+ *   list because the useful order depends on the provider the user picks, which differs per slot -
+ *   see [ComplicationTypePriority]. Read once per slot at creation: `supportedTypes` is a
+ *   `ComplicationSlot.Builder` argument and cannot be changed afterwards.
  * @param layoutSettingLabel label for the slot-layout user-style setting, shown by a system editor
  * @param layoutSettingDescription its description
  */
 internal class WatchFaceComplications(
     private val context: Context,
     private val slotIds: List<Int>,
-    private val supportedTypes: List<ComplicationType>,
+    private val supportedTypesFor: (slotId: Int) -> List<ComplicationType>,
     @StringRes private val layoutSettingLabel: Int,
     @StringRes private val layoutSettingDescription: Int
 ) {
@@ -677,7 +732,7 @@ internal class WatchFaceComplications(
         return ComplicationSlot.createRoundRectComplicationSlotBuilder(
             id = state.slotId,
             canvasComplicationFactory = canvasComplicationFactory,
-            supportedTypes = supportedTypes,
+            supportedTypes = supportedTypesFor(state.slotId),
             defaultDataSourcePolicy = DefaultComplicationDataSourcePolicy(),
             bounds = bounds
         ).build()

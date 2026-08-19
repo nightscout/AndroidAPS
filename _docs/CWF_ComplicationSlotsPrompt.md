@@ -337,12 +337,39 @@ re-scoping without new evidence**
   what `WEIGHTED_ELEMENTS` is — `value` (default, today's order), `icon`, `text`, each reordering the
   same full list. It is a preference order, not a filter, so a "wrong" choice degrades gracefully
   instead of breaking a slot.
-- Constraint to document for CWF authors when it lands: `supportedTypes` is a `ComplicationSlot`
-  builder argument, i.e. **creation-time only**, and the negotiated type is system-stored. So the key
-  affects only *future* picks — seeing a change requires reloading the CWF, recreating the engine
-  (watch-face switch or reboot) **and** re-picking the provider.
+- **Built, as preferences rather than a json key** — see "Complication type priority" under Done.
+- Constraint as originally predicted, and **partly wrong**: `supportedTypes` is a `ComplicationSlot`
+  builder argument, i.e. creation-time only, from which I concluded a change would need the engine
+  recreated (watch-face switch or reboot). Device testing disproved that — the editor builds its own
+  instance when the picker opens, so it uses the current setting immediately. What *is* required is
+  that the data source actually change: re-picking the same provider leaves the negotiated type
+  alone. Details in `_docs/Complication_Libraries.md`, "When negotiation actually re-runs".
 - Cross-CWF persistence semantics for provider assignments — still needs a design decision
   (dormant / prompt reselection / clear) before any code; unchanged from before.
+
+**Complication type priority — per-slot, in preferences, device-confirmed**
+- Fixes the icon-only-provider case: an exercise complication offering only
+  `ICON,SMALL_IMAGE,SHORT_TEXT,LONG_TEXT` always negotiated `SHORT_TEXT` (text-only payload) because
+  the shared list put data-bearing types first. Setting that slot to `Icon` brings its icon back.
+- **Preferences, not a CWF json key** — decided against the first instinct. The CWF author cannot know
+  which provider the user will put in a slot, and the negotiated type is stored by the *system* per
+  (watch face, slot), surviving CWF reloads. It is user state, not template state.
+- `ComplicationTypePriority` (`VALUE` / `TEXT` / `ICON`) lives in the generic layer and returns the
+  **complete** type list, only reordered — it is a preference order the system walks, not a filter, so
+  a choice a provider cannot satisfy degrades to the next best type instead of breaking the slot.
+- Screen: one `Default for all slots` plus one row per slot starting on `Use default`, reached from a
+  `Complication type priority` row after the five Complication pairs. Deliberately **not** filtered by
+  the loaded CWF, unlike every other row on that screen, because the binding it configures is not
+  template-scoped — documented on `WatchFaceSettings.subScreenRows`.
+- The 2-in-1 toggle first sketched (a mode that greys the five rows) was dropped for `Use default` as
+  an explicit value: no hidden mode state, and every row shows what it will do rather than being
+  greyed out.
+- Defaults chosen so an untouched install behaves exactly as before.
+- Device-confirmed: row opens and returns, the `EditorSession` survives the round trip (the risk
+  flagged beforehand did not materialise), and setting `Icon` + re-picking restored the icon **without
+  any reload** — see the corrected constraint under Backlog.
+- 6 new unit tests (`ComplicationTypePriorityTest`), including the exercise-provider case as a
+  regression guard: `VALUE` lands on `SHORT_TEXT`, `ICON` lands on `MONOCHROMATIC_IMAGE`.
 
 **Payload-rewrite regressions found on device, fixed and now unit-tested**
 - Symptom chain, all on one slot (an exercise complication, SHORT_TEXT): icon disappeared, then the

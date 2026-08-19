@@ -2,6 +2,7 @@ package app.aaps.wear.interaction
 
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.StringRes
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.CheckBoxPreference
 import androidx.preference.ListPreference
@@ -49,22 +50,31 @@ class CustomWatchfaceConfigurationFragment : PreferenceFragmentCompat() {
     private val complicationPickerSupport = ComplicationPickerSupport(this)
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        // A sub-screen shows what the watch face declares behind that key; the root screen shows the
+        // rows relevant to the CWF currently loaded. The configuration is fetched here but never read
+        // here: it is handed straight back to the watch face, the only thing allowed to interpret it.
+        val subScreenKey = arguments?.getInt(ARG_SUB_SCREEN_KEY, 0) ?: 0
+        val rows = if (subScreenKey != 0) {
+            CustomWatchface.subScreenRows(subScreenKey)
+        } else {
+            CustomWatchface.settingRows((activity as? CustomWatchfaceSettingsHost)?.storedWatchfaceConfiguration())
+        }
+        buildScreen(rows)
+    }
+
+    /** Turns declared rows into androidx preferences. The only place that knows how a row is shown. */
+    private fun buildScreen(rows: List<WatchFaceSettingRow>) {
         val context = preferenceManager.context
         val screen = preferenceManager.createPreferenceScreen(context)
-        // The watch face is asked which rows are worth showing for the CWF it currently has - a zip
-        // that draws no complication, for instance, contributes no complication rows at all. The
-        // configuration is fetched here but never read here: it is handed straight back to the watch
-        // face, the only thing allowed to make sense of it.
-        val rows = CustomWatchface.settingRows((activity as? CustomWatchfaceSettingsHost)?.storedWatchfaceConfiguration())
         rows.forEach { row ->
             val preference = when (row) {
-                is WatchFaceSettingRow.Toggle -> CheckBoxPreference(context).apply {
+                is WatchFaceSettingRow.Toggle    -> CheckBoxPreference(context).apply {
                     setDefaultValue(row.defaultValue)
                     setSummaryOn(R.string.on)
                     setSummaryOff(R.string.off)
                 }
 
-                is WatchFaceSettingRow.Choice -> ListPreference(context).apply {
+                is WatchFaceSettingRow.Choice    -> ListPreference(context).apply {
                     setEntries(row.entries)
                     setEntryValues(row.entryValues)
                     setDefaultValue(row.defaultValue)
@@ -72,13 +82,23 @@ class CustomWatchfaceConfigurationFragment : PreferenceFragmentCompat() {
                     summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
                 }
 
-                is WatchFaceSettingRow.Action -> Preference(context)
+                // Navigation lives here rather than in the row: the watch face says "there is another
+                // screen behind this key", and this fragment decides that a screen means an activity.
+                is WatchFaceSettingRow.SubScreen -> Preference(context).apply {
+                    intent = ComplicationTypeSettingsActivity.intent(context, row.key)
+                }
+
+                is WatchFaceSettingRow.Info      -> Preference(context).apply {
+                    isSelectable = false
+                }
+
+                is WatchFaceSettingRow.Action    -> Preference(context)
             }
             preference.key = getString(row.key)
             preference.setTitle(row.title)
             // Long titles wrap instead of being cut, as on every other watch settings screen.
             preference.layoutResource = R.layout.preference_material_multiline
-            preference.isPersistent = row !is WatchFaceSettingRow.Action
+            preference.isPersistent = row is WatchFaceSettingRow.Toggle || row is WatchFaceSettingRow.Choice
             screen.addPreference(preference)
         }
         preferenceScreen = screen
@@ -92,8 +112,12 @@ class CustomWatchfaceConfigurationFragment : PreferenceFragmentCompat() {
         }
     }
 
+    /** True when showing a sub-screen, which carries no complication picker rows to summarise. */
+    private val isSubScreen get() = (arguments?.getInt(ARG_SUB_SCREEN_KEY, 0) ?: 0) != 0
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (isSubScreen) return
         val host = activity as? ConfigurationActivity ?: return
         // A StateFlow the library fills in once per slot right after the session is created, and
         // again for one slot after a successful pick - so one subscription covers both the initial
@@ -114,7 +138,7 @@ class CustomWatchfaceConfigurationFragment : PreferenceFragmentCompat() {
         // Hosted by ConfigurationActivity the live session already fills these in. Anywhere else the
         // cache is all there is - in onResume rather than onViewCreated so it also refreshes on
         // return from the system editor, where the assignment may just have changed.
-        if (activity is ConfigurationActivity) return
+        if (isSubScreen || activity is ConfigurationActivity) return
         ComplicationPickerSupport.applyComplicationSummaries(this, ComplicationPickerSupport.cachedAssignedDataSourceNames(requireContext()))
     }
 
@@ -127,5 +151,18 @@ class CustomWatchfaceConfigurationFragment : PreferenceFragmentCompat() {
             return true
         }
         return complicationPickerSupport.handlePreferenceClick(preference) || super.onPreferenceTreeClick(preference)
+    }
+
+    companion object {
+
+        private const val ARG_SUB_SCREEN_KEY = "sub_screen_key"
+
+        /** The root screen: the rows relevant to the CWF currently loaded. */
+        fun newInstance() = CustomWatchfaceConfigurationFragment()
+
+        /** The sub-screen the watch face declares behind [subScreenKey]. */
+        fun newInstance(@StringRes subScreenKey: Int) = CustomWatchfaceConfigurationFragment().apply {
+            arguments = Bundle().apply { putInt(ARG_SUB_SCREEN_KEY, subScreenKey) }
+        }
     }
 }

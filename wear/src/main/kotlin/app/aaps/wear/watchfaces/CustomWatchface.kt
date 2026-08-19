@@ -64,6 +64,7 @@ import app.aaps.wear.watchfaces.utils.ComplicationImageFit
 import app.aaps.wear.watchfaces.utils.ComplicationRender
 import app.aaps.wear.watchfaces.utils.ComplicationSlotInfo
 import app.aaps.wear.watchfaces.utils.ComplicationStyleValues
+import app.aaps.wear.watchfaces.utils.ComplicationTypePriority
 import app.aaps.wear.watchfaces.utils.WatchFaceComplicationSlots
 import app.aaps.wear.watchfaces.utils.WatchFaceComplications
 import app.aaps.wear.watchfaces.utils.WatchFaceSettingRow
@@ -104,52 +105,46 @@ class CustomWatchface : BaseWatchFace() {
      */
     private val backgroundView by lazy { ImageView(this) }
 
-    // Order is a real preference order, not cosmetic: during data source selection the system walks
-    // this list in order and picks the first entry a provider also supports (ComplicationSlot.kt's
-    // supportedTypes doc, confirmed against source - see _docs/Complication_Libraries.md's
-    // "Supported-type negotiation" section). Data-bearing types are listed first so a provider
-    // capable of sending a live value (e.g. heart rate as RANGED_VALUE) is asked for that instead of
-    // defaulting to a static SHORT_TEXT label - which is what a Samsung Health heart-rate provider
-    // was confirmed (via device logcat) to send when SHORT_TEXT was first in this list.
-    // GOAL_PROGRESS/WEIGHTED_ELEMENTS are @RequiresApi(TIRAMISU) on the ComplicationType enum
-    // constants themselves - gated rather than included unconditionally despite that annotation
-    // being lint-only (referencing the constant can't itself crash on an older device), because
-    // whether a pre-Tiramisu Wear OS system service understands that wire type at all is a
-    // separate, unverified question this project has no way to test on such a device.
-    //
-    // RANGED_VALUE deliberately outranks GOAL_PROGRESS despite the latter's more promising name.
-    // ComplicationRenderer.drawGoalProgress() renders GOAL_PROGRESS on a completely separate path
-    // from every other type, with visuals we cannot style: progress is scaled against
-    // targetValue * 1.1 (so it always reads ~9% low), the progress mark is a dot rather than a
-    // filled arc, and a 36-degree arc at the end of the circle is painted with a hardcoded
-    // Color.RED that no ComplicationStyle property can override. RANGED_VALUE uses the ordinary
-    // arc renderer and the same content layout, so it is the better target for a
-    // progress-toward-a-goal complication. Confirmed on device against a provider offering both.
-    //
-    // TODO(later): a `SUPPORTEDTYPES` CWF key would replace this list. Creation-time only - it is a
-    //  ComplicationSlot.Builder argument, so a value arriving later cannot be applied.
-    private val complicationSupportedTypes =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            listOf(
-                ComplicationType.RANGED_VALUE,
-                ComplicationType.GOAL_PROGRESS,
-                ComplicationType.WEIGHTED_ELEMENTS,
-                ComplicationType.SHORT_TEXT,
-                ComplicationType.LONG_TEXT,
-                ComplicationType.MONOCHROMATIC_IMAGE,
-                ComplicationType.SMALL_IMAGE,
-                ComplicationType.PHOTO_IMAGE
-            )
-        } else {
-            listOf(
-                ComplicationType.RANGED_VALUE,
-                ComplicationType.SHORT_TEXT,
-                ComplicationType.LONG_TEXT,
-                ComplicationType.MONOCHROMATIC_IMAGE,
-                ComplicationType.SMALL_IMAGE,
-                ComplicationType.PHOTO_IMAGE
-            )
-        }
+    /**
+     * The complication types slot [slotId] accepts, in preference order - see
+     * [ComplicationTypePriority] for what the order does and why it is a user choice.
+     *
+     * The priority comes from preferences rather than the CWF json: the CWF author cannot know which
+     * provider the user will put in a slot, and the negotiated type is stored by the *system* per
+     * (watch face, slot), so it survives CWF reloads. That makes it user state, not template state.
+     *
+     * A slot's own setting wins; `null` there means "use the default one", which is how every slot
+     * starts. Read at slot creation only - `supportedTypes` is a `ComplicationSlot.Builder` argument -
+     * but that does **not** mean a change needs the engine recreated: the editor builds its own
+     * instance when the picker opens, so it reads the setting as it is then. Device-confirmed. What a
+     * change does need is for the data source to actually *change*, since the system skips
+     * renegotiation when the same provider is picked again.
+     *
+     * RANGED_VALUE deliberately outranks GOAL_PROGRESS inside [ComplicationTypePriority.VALUE]
+     * despite the latter's more promising name. `ComplicationRenderer.drawGoalProgress()` renders
+     * GOAL_PROGRESS on a completely separate path from every other type, with visuals we cannot
+     * style: progress is scaled against `targetValue * 1.1` (so it always reads ~9% low), the
+     * progress mark is a dot rather than a filled arc, and a 36-degree arc at the end of the circle
+     * is painted with a hardcoded `Color.RED` that no `ComplicationStyle` property can override.
+     * Confirmed on device against a provider offering both.
+     */
+    private fun complicationSupportedTypes(slotId: Int): List<ComplicationType> {
+        val slot = ComplicationMap.entries.firstOrNull { it.id == slotId }
+        val priority = slot?.let { typePriority(it.typePriorityPrefKey) } ?: typePriority(null)
+        return priority.supportedTypes()
+    }
+
+    /**
+     * The priority stored under [prefKey], falling back to the all-slots default and then to
+     * [ComplicationTypePriority.VALUE] - which is what every slot did before this became a choice, so
+     * an untouched install behaves exactly as before.
+     */
+    private fun typePriority(@StringRes prefKey: Int?): ComplicationTypePriority {
+        val stored = prefKey?.let { sp.getString(it, USE_DEFAULT_TYPE_PRIORITY) }?.takeIf { it != USE_DEFAULT_TYPE_PRIORITY }
+            ?: sp.getString(R.string.key_complication_type_priority_default, ComplicationTypePriority.VALUE.name)
+        return ComplicationTypePriority.entries.firstOrNull { it.name == stored } ?: ComplicationTypePriority.VALUE
+    }
+
 
     /**
      * The generic complication plumbing for *this* engine instance - see [WatchFaceComplications],
@@ -168,7 +163,7 @@ class CustomWatchface : BaseWatchFace() {
     private val complications = WatchFaceComplications(
         context = this,
         slotIds = complicationSlots.map { it.id },
-        supportedTypes = complicationSupportedTypes,
+        supportedTypesFor = ::complicationSupportedTypes,
         layoutSettingLabel = R.string.cwf_complication_layout,
         layoutSettingDescription = R.string.cwf_complication_layout_description
     )
@@ -231,6 +226,10 @@ class CustomWatchface : BaseWatchFace() {
                     slot.showPref.toggle()?.let { add(it) }
                     add(WatchFaceSettingRow.Action(slot.preferenceKey, slot.preferenceTitle, dependencyKey = slot.showPref.prefKey))
                 }
+                // Offered whenever this watch face has slots at all, even if the loaded CWF draws
+                // none of them: what it configures is the system's provider binding, which is not
+                // template-scoped - see [subScreenRows].
+                add(WatchFaceSettingRow.SubScreen(R.string.key_complication_type_priority_screen, R.string.pref_complication_type_priority))
                 // Last, and never filtered: these two are not about what this dial shows. One decides
                 // how data is presented, the other what a template exported from here contains - so
                 // no CWF can make either irrelevant, and both stay reachable whatever is loaded.
@@ -254,6 +253,41 @@ class CustomWatchface : BaseWatchFace() {
          */
         private fun PrefMap.toggle(): WatchFaceSettingRow.Toggle? =
             title?.let { WatchFaceSettingRow.Toggle(prefKey, it, defaultValue as Boolean) }
+
+        /**
+         * The "Complication type priority" screen: a warning, one default for every slot, then one
+         * override per slot.
+         *
+         * All five slots are listed whatever the loaded CWF draws - see [subScreenRows] for why. The
+         * per-slot rows start on `Use default`, so an untouched install keeps exactly the behaviour it
+         * had before this screen existed.
+         */
+        override fun subScreenRows(@StringRes subScreenKey: Int): List<WatchFaceSettingRow> {
+            if (subScreenKey != R.string.key_complication_type_priority_screen) return emptyList()
+            return buildList {
+                add(WatchFaceSettingRow.Info(R.string.key_complication_type_priority_warning, R.string.pref_complication_type_priority_warning))
+                add(
+                    WatchFaceSettingRow.Choice(
+                        key = R.string.key_complication_type_priority_default,
+                        title = R.string.pref_complication_type_priority_all,
+                        entries = R.array.complication_type_priority_name,
+                        entryValues = R.array.complication_type_priority_values,
+                        defaultValue = ComplicationTypePriority.VALUE.name
+                    )
+                )
+                ComplicationMap.entries.forEach { slot ->
+                    add(
+                        WatchFaceSettingRow.Choice(
+                            key = slot.typePriorityPrefKey,
+                            title = slot.preferenceTitle,
+                            entries = R.array.complication_type_priority_slot_name,
+                            entryValues = R.array.complication_type_priority_slot_values,
+                            defaultValue = USE_DEFAULT_TYPE_PRIORITY
+                        )
+                    )
+                }
+            }
+        }
 
         /**
          * Whether the loaded CWF gives this preference anything to act on: a view it gates that the
@@ -343,6 +377,13 @@ class CustomWatchface : BaseWatchFace() {
          * changing it moves nothing but the stroke itself.
          */
         private const val DEFAULT_BORDER_WIDTH = 2
+
+        /**
+         * Value meaning "this slot follows the all-slots default", and the initial value of every
+         * per-slot type priority. Deliberately not a [ComplicationTypePriority] name, so "follow the
+         * default" stays distinguishable from "happens to match it today".
+         */
+        internal const val USE_DEFAULT_TYPE_PRIORITY = "default"
 
 
     }
@@ -1087,14 +1128,20 @@ class CustomWatchface : BaseWatchFace() {
         @StringRes override val preferenceKey: Int,
         @StringRes override val preferenceTitle: Int,
         /** The "Show Complication N" toggle that decides whether this slot is drawn at all. */
-        val showPref: PrefMap
+        val showPref: PrefMap,
+        /**
+         * Key of this slot's own [ComplicationTypePriority], on the advanced screen. Separate from
+         * [preferenceKey] (which opens the data source picker) because one chooses *what* the slot
+         * shows and this one chooses *which kind of content* is asked for first.
+         */
+        @StringRes val typePriorityPrefKey: Int
     ) : ComplicationSlotInfo {
 
-        COMPLICATION1(101, R.string.key_complication_1, R.string.pref_complication_1, PrefMap.SHOW_COMPLICATION_1),
-        COMPLICATION2(102, R.string.key_complication_2, R.string.pref_complication_2, PrefMap.SHOW_COMPLICATION_2),
-        COMPLICATION3(103, R.string.key_complication_3, R.string.pref_complication_3, PrefMap.SHOW_COMPLICATION_3),
-        COMPLICATION4(104, R.string.key_complication_4, R.string.pref_complication_4, PrefMap.SHOW_COMPLICATION_4),
-        COMPLICATION5(105, R.string.key_complication_5, R.string.pref_complication_5, PrefMap.SHOW_COMPLICATION_5)
+        COMPLICATION1(101, R.string.key_complication_1, R.string.pref_complication_1, PrefMap.SHOW_COMPLICATION_1, R.string.key_complication_type_priority_1),
+        COMPLICATION2(102, R.string.key_complication_2, R.string.pref_complication_2, PrefMap.SHOW_COMPLICATION_2, R.string.key_complication_type_priority_2),
+        COMPLICATION3(103, R.string.key_complication_3, R.string.pref_complication_3, PrefMap.SHOW_COMPLICATION_3, R.string.key_complication_type_priority_3),
+        COMPLICATION4(104, R.string.key_complication_4, R.string.pref_complication_4, PrefMap.SHOW_COMPLICATION_4, R.string.key_complication_type_priority_4),
+        COMPLICATION5(105, R.string.key_complication_5, R.string.pref_complication_5, PrefMap.SHOW_COMPLICATION_5, R.string.key_complication_type_priority_5)
     }
 
     private enum class ViewMap(

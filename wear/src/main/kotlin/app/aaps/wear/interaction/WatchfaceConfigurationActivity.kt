@@ -95,7 +95,7 @@ class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferenc
     // - see CustomWatchfaceConfigurationFragment. Every other screen this activity shows (the other
     // two watch faces, and the app-wide display/graph/interface/others screens) still comes from one.
     override fun createPreferenceFragment(): PreferenceFragmentCompat =
-        if (showsCustomWatchface) CustomWatchfaceConfigurationFragment()
+        if (showsCustomWatchface) CustomWatchfaceConfigurationFragment.newInstance()
         else WatchfaceConfigurationFragment.newInstance(preferenceFile)
 
     private fun removeBackgroundRecursively(parent: View) {

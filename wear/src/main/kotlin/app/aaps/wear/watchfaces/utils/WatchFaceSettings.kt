@@ -53,6 +53,26 @@ internal sealed interface WatchFaceSettingRow {
         @StringRes override val title: Int,
         @StringRes override val dependencyKey: Int? = null
     ) : WatchFaceSettingRow
+
+    /**
+     * A row that opens another screen of rows. The fragment decides *how* to show them - a separate
+     * activity today - so nothing about navigation leaks into the watch face's own declaration.
+     */
+    data class SubScreen(
+        @StringRes override val key: Int,
+        @StringRes override val title: Int,
+        @StringRes override val dependencyKey: Int? = null
+    ) : WatchFaceSettingRow
+
+    /**
+     * A row that stores nothing and only tells the user something. Its [title] is the message, so it
+     * carries no value and is never tappable.
+     */
+    data class Info(
+        @StringRes override val key: Int,
+        @StringRes override val title: Int,
+        @StringRes override val dependencyKey: Int? = null
+    ) : WatchFaceSettingRow
 }
 
 /** A watch face that describes its settings screen rather than shipping it as a settings xml. */
@@ -70,4 +90,15 @@ internal interface WatchFaceSettings {
      * Null when nothing is stored or it could not be read.
      */
     fun settingRows(storedConfiguration: String?): List<WatchFaceSettingRow>
+
+    /**
+     * The rows behind the [WatchFaceSettingRow.SubScreen] whose key is [subScreenKey], or an empty
+     * list if this watch face declares no such screen.
+     *
+     * Deliberately **not** filtered by the loaded configuration, unlike [settingRows]: a sub-screen
+     * may configure state that is not template-scoped - a complication's type priority belongs to the
+     * system's provider binding, which outlives any one template - so hiding a row because the
+     * current template does not use it would hide a setting that still applies.
+     */
+    fun subScreenRows(@StringRes subScreenKey: Int): List<WatchFaceSettingRow> = emptyList()
 }

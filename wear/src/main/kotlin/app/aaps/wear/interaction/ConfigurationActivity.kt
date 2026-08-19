@@ -146,7 +146,7 @@ class ConfigurationActivity : WearPreferenceActivity(), CustomWatchfaceSettingsH
         // so it needs no xml here - see CustomWatchfaceConfigurationFragment.
         if (watchfaceComponentName?.className == CustomWatchface::class.java.name) {
             aapsLogger.debug(LTag.WEAR, "ConfigurationActivity::createPreferenceFragment --->> CustomWatchface screen")
-            return CustomWatchfaceConfigurationFragment()
+            return CustomWatchfaceConfigurationFragment.newInstance()
         }
 
         // Determine which preference XML to load based on the watchface component

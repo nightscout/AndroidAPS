@@ -175,6 +175,25 @@ picks the first entry of ours that the chosen provider also supports; the provid
 order carries no weight. This is the *current* androidx Kotlin API's documented behaviour, not a
 holdover from the legacy manifest-metadata generation — the two are independently consistent.
 
+**When negotiation actually re-runs — device-observed, not documented anywhere.** Two facts, both
+established on a Samsung Wear OS 5 watch by changing a watch face's `supportedTypes` order and
+watching what it took for the negotiated type to follow:
+
+- **Changing the order does *not* require the engine to be recreated.** `supportedTypes` is a
+  `ComplicationSlot.Builder` argument and so is fixed for the life of a slot, which invites the
+  conclusion that a new order needs a fresh engine (watch-face switch or reboot). It does not: the
+  editor constructs its own watch face instance when the picker opens — see
+  `WatchFace.getOrCreateEditorDelegate()` and the headless-instance note under the `EditorSession`
+  section — so it negotiates against the order in force *at that moment*.
+- **Re-picking the same data source does not renegotiate.** Choosing the identical provider again
+  leaves the previously negotiated type in place; the type only changes if the *provider* changes.
+  The working sequence is therefore: pick a different data source, then pick the intended one again.
+
+Note the first point sits in tension with the non-determinism recorded for
+`getOrCreateEditorDelegate()` (it sometimes reuses the live instance rather than building a fresh
+one). The observation above is a single device's behaviour; if a change ever fails to take effect,
+recreating the engine remains the fallback.
+
 ---
 
 ## `ComplicationDataSourceService` (watchface-complications-data-source 1.3.0, `androidx/wear/watchface/complications/datasource/ComplicationDataSourceService.kt`)
