@@ -3,6 +3,7 @@ package app.aaps.core.ui.compose
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import app.aaps.core.interfaces.InterfacesStringIds
+import app.aaps.core.interfaces.resources.TextRefIdRegistry
 import app.aaps.core.keys.KeysStringIds
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.UiStringIds
@@ -36,13 +37,15 @@ actual fun stringResource(ref: TextRef): String = when (ref) {
  * maps in some order - `ns_wifi_ssids` exists in both with different translations, and guessing
  * would silently pick one.
  *
- * `:core:ui` can see all three maps because it depends on `:core:keys` and `:core:interfaces`. A
- * module that converts later adds its own branch here, or this becomes a registry once there are
- * enough of them to be worth one.
+ * `:core:ui` can see its own three maps directly because it depends on `:core:keys` and
+ * `:core:interfaces`. Everything else - the plugin and pump modules, which `:core:ui` sits below -
+ * arrives through [TextRefIdRegistry], registered from `:app`. Without that fallback an unknown
+ * owner resolves to null and the raw name is drawn, which is how `format_carbs` once appeared on the
+ * overview instead of "12 g".
  */
 private fun androidIdOf(ref: TextRef.Named): Int? = when (ref.owner) {
     "keys"       -> KeysStringIds.idOf(ref.name)
     "ui"         -> UiStringIds.idOf(ref.name)
     "interfaces" -> InterfacesStringIds.idOf(ref.name)
-    else         -> null
+    else         -> TextRefIdRegistry.idOf(ref)
 }

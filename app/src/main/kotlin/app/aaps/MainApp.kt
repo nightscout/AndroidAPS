@@ -49,6 +49,7 @@ import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextRefIdRegistry
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppInitialized
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
@@ -89,8 +90,11 @@ import app.aaps.implementation.receivers.TimeDateOrTZChangeReceiver
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
 import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler
 import app.aaps.plugins.automation.AutomationRuntime
+import app.aaps.plugins.calibration.CalibrationStringIds
 import app.aaps.plugins.constraints.objectives.keys.ObjectivesLongComposedKey
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
+import app.aaps.plugins.smoothing.SmoothingStringIds
+import app.aaps.pump.virtual.VirtualStringIds
 import app.aaps.ui.activityMonitor.ActivityMonitor
 import app.aaps.utils.configureLeakCanary
 import com.google.firebase.Firebase
@@ -186,6 +190,8 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
+
+        registerStringOwners()
 
         // Here should be everything injected
         aapsLogger.debug("onCreate")
@@ -999,5 +1005,23 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
         unregisterActivityLifecycleCallbacks(activityMonitor)
         uiInteraction.stopAlarm("onTerminate")
         super.onTerminate()
+    }
+
+    /**
+     * Teaches the resolvers which module owns which string names.
+     *
+     * A `TextRef.Named` carries an owner and a name, and both the Compose and the ResourceHelper
+     * paths need a way to turn that into an `R.string` id. `:core:keys`, `:core:interfaces` and
+     * `:core:ui` are resolved directly because `:core:ui` sits above them, but a plugin or pump
+     * module sits ABOVE `:core:ui`, so it can only be reached from here - `:app` is the one place
+     * that depends on all of them.
+     *
+     * Without this the lookup answers null and the raw name is drawn: `virtual_pump_shortname`
+     * instead of "Virtual Pump".
+     */
+    private fun registerStringOwners() {
+        TextRefIdRegistry.register("virtual") { name -> VirtualStringIds.idOf(name) }
+        TextRefIdRegistry.register("smoothing") { name -> SmoothingStringIds.idOf(name) }
+        TextRefIdRegistry.register("calibration") { name -> CalibrationStringIds.idOf(name) }
     }
 }

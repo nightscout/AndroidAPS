@@ -9,23 +9,21 @@ import app.aaps.core.interfaces.calibration.CalibrationContext
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.ui.compose.icons.IcCalibration
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class NoCalibrationPlugin @Inject constructor(
+
+class NoCalibrationPlugin(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper
+    rh: TextResolver
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.CALIBRATION)
         .icon(IcCalibration)
         .setDefault(true)
-        .pluginName(TextRef.AndroidRes(R.string.no_calibration_name))
-        .shortName(TextRef.AndroidRes(R.string.calibration_shortname))
-        .description(TextRef.AndroidRes(R.string.description_no_calibration)),
+        .pluginName(CalibrationStrings.no_calibration_name)
+        .shortName(CalibrationStrings.calibration_shortname)
+        .description(CalibrationStrings.description_no_calibration),
     aapsLogger, rh
 ), Calibration {
 

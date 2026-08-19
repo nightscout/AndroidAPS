@@ -22,7 +22,8 @@ import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventCalibrationChanged
 import app.aaps.core.interfaces.utils.DateUtil
@@ -35,27 +36,26 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.math.abs
 
-@Singleton
-class LinearCalibrationPlugin @Inject constructor(
+
+class LinearCalibrationPlugin(
     aapsLogger: AAPSLogger,
-    override val rh: ResourceHelper,
+    override val rh: TextResolver,
     private val dateUtil: DateUtil,
     private val persistenceLayer: PersistenceLayer,
     private val notificationManager: NotificationManager,
     private val glucoseStatusProvider: GlucoseStatusProvider,
-    private val rxBus: RxBus
+    private val rxBus: RxBus,
+    private val profileUtil: ProfileUtil
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.CALIBRATION)
         .icon(IcCalibration)
-        .pluginName(TextRef.AndroidRes(R.string.linear_calibration_name))
-        .shortName(TextRef.AndroidRes(R.string.calibration_shortname))
-        .description(TextRef.AndroidRes(R.string.description_linear_calibration))
-        .composeContent { CalibrationComposeContent() },
+        .pluginName(CalibrationStrings.linear_calibration_name)
+        .shortName(CalibrationStrings.calibration_shortname)
+        .description(CalibrationStrings.description_linear_calibration)
+        .composeContent { CalibrationComposeContent(persistenceLayer, profileUtil, aapsLogger, dateUtil) },
     aapsLogger, rh
 ), Calibration {
 
@@ -63,7 +63,7 @@ class LinearCalibrationPlugin @Inject constructor(
 
     override suspend fun onStart() {
         super.onStart()
-        scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
         // Calibration entries now live in the main DB and arrive both from local entry (master)
         // and NS sync (follower). Re-emit EventCalibrationChanged on any change so the BG graph
         // recomputes the fit — replaces the event the old repository fired on insert/invalidate.
@@ -211,9 +211,9 @@ class LinearCalibrationPlugin @Inject constructor(
 
         notificationManager.post(
             id = NotificationId.SENSOR_CHANGE_DETECTED,
-            text = rh.gs(R.string.sensor_change_detected_text, dateUtil.timeString(detectedAt)),
+            text = rh.gs(CalibrationStrings.sensor_change_detected_text, dateUtil.timeString(detectedAt)),
             actions = listOf(
-                NotificationAction(TextRef.AndroidRes(R.string.sensor_change_detected_action)) {
+                NotificationAction(CalibrationStrings.sensor_change_detected_action) {
                     runBlocking { insertSensorChange(detectedAt) }
                 }
             )

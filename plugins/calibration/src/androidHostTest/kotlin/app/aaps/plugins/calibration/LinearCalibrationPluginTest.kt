@@ -1,5 +1,6 @@
 package app.aaps.plugins.calibration
 
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.CAL
 import app.aaps.core.data.model.GV
@@ -17,6 +18,7 @@ import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.shared.tests.TestBase
@@ -40,6 +42,7 @@ class LinearCalibrationPluginTest : TestBase() {
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var notificationManager: NotificationManager
     @Mock lateinit var glucoseStatusProvider: GlucoseStatusProvider
+    @Mock lateinit var profileUtil: ProfileUtil
 
     private lateinit var plugin: LinearCalibrationPlugin
 
@@ -56,7 +59,7 @@ class LinearCalibrationPluginTest : TestBase() {
         whenever(persistenceLayer.getTherapyEventDataFromToTime(any(), any())).thenReturn(emptyList())
         whenever(persistenceLayer.getValidCalibrationEntriesSince(any())).thenReturn(emptyList())
         plugin = LinearCalibrationPlugin(
-            aapsLogger, rh, dateUtil, persistenceLayer, notificationManager, glucoseStatusProvider, rxBus
+            aapsLogger, rh, dateUtil, persistenceLayer, notificationManager, glucoseStatusProvider, rxBus, profileUtil
         )
     }
 
@@ -194,7 +197,7 @@ class LinearCalibrationPluginTest : TestBase() {
 
     @Test
     fun calibrate_gapDetected_postsNotification() = runTest {
-        whenever(rh.gs(any<Int>(), any())).thenReturn("Possible sensor change")
+        whenever(rh.gs(any<TextRef>(), any())).thenReturn("Possible sensor change")
         // Gap of 60min between data[0] and data[1]; default sessionStart is 12h ago so gap is within session
         val data = mutableListOf(
             value(now, 150.0),
@@ -237,7 +240,7 @@ class LinearCalibrationPluginTest : TestBase() {
 
     @Test
     fun calibrate_notificationAction_insertsSensorChange() = runTest {
-        whenever(rh.gs(any<Int>(), any())).thenReturn("Possible sensor change")
+        whenever(rh.gs(any<TextRef>(), any())).thenReturn("Possible sensor change")
         whenever(persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(any(), any(), any(), any(), any(), any()))
             .thenReturn(PersistenceLayer.TransactionResult())
         val data = mutableListOf(

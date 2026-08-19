@@ -16,7 +16,6 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.plugins.calibration.fitLinearCalibration
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,13 +29,12 @@ import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 private val WARM_UP_DURATION_MS = T.hours(2).msecs()
 
-@HiltViewModel
+
 @Stable
-class CalibrationViewModel @Inject constructor(
+class CalibrationViewModel(
     private val persistenceLayer: PersistenceLayer,
     private val profileUtil: ProfileUtil,
     private val aapsLogger: AAPSLogger,

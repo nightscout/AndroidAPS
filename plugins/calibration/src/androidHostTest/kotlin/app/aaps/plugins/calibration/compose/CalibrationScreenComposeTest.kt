@@ -7,9 +7,12 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import app.aaps.core.data.model.CAL
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.interfaces.resources.TextRefIdRegistry
 import app.aaps.plugins.calibration.CalibrationFit
+import app.aaps.plugins.calibration.CalibrationStringIds
 import app.aaps.plugins.calibration.FitMode
 import com.google.common.truth.Truth.assertThat
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -28,6 +31,16 @@ import org.robolectric.annotation.GraphicsMode
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [35])
 class CalibrationScreenComposeTest {
+
+    /**
+     * This module's strings are `TextRef.Named("calibration", …)`, and the resolver only knows an
+     * owner once it has been registered. `MainApp` does that for the running app; a test that renders
+     * the screen on its own has to do it too, or every label draws as its raw name and the
+     * assertions below look for text that was never shown.
+     */
+    @Before fun registerStringOwner() {
+        TextRefIdRegistry.register("calibration") { name -> CalibrationStringIds.idOf(name) }
+    }
 
     @get:Rule
     val compose = createComposeRule()

@@ -1,5 +1,7 @@
 package app.aaps.plugins.calibration.compose
 
+import app.aaps.plugins.calibration.CalibrationStrings
+import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,7 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -59,8 +61,8 @@ internal fun CalibrationScreen(
     onNavigateBack: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    val title = stringResource(R.string.linear_calibration_name)
-    val backDesc = stringResource(app.aaps.core.ui.R.string.back)
+    val title = stringResource(CalibrationStrings.linear_calibration_name)
+    val backDesc = stringResource(UiStrings.back)
 
     LaunchedEffect(Unit) {
         setToolbarConfig(
@@ -127,13 +129,13 @@ internal fun CalibrationScreenContent(
                 onClick = onMarkSensorChange,
                 modifier = Modifier.weight(1f)
             ) {
-                Text(stringResource(R.string.cal_mark_sensor_change_now))
+                Text(stringResource(CalibrationStrings.cal_mark_sensor_change_now))
             }
             Button(
                 onClick = onAddCalibration,
                 modifier = Modifier.weight(1f)
             ) {
-                Text(stringResource(R.string.cal_add_calibration))
+                Text(stringResource(CalibrationStrings.cal_add_calibration))
             }
         }
 
@@ -144,7 +146,7 @@ internal fun CalibrationScreenContent(
         )
 
         Text(
-            text = stringResource(R.string.cal_entries_header, state.entries.size),
+            text = stringResource(CalibrationStrings.cal_entries_header, state.entries.size),
             style = MaterialTheme.typography.titleSmall,
             modifier = Modifier.padding(start = AapsSpacing.small, top = AapsSpacing.small)
         )
@@ -168,17 +170,17 @@ internal fun CalibrationScreenContent(
     pendingDeleteId?.let { id ->
         AlertDialog(
             onDismissRequest = { pendingDeleteId = null },
-            title = { Text(stringResource(R.string.cal_remove_entry_title)) },
-            text = { Text(stringResource(R.string.cal_remove_entry_message)) },
+            title = { Text(stringResource(CalibrationStrings.cal_remove_entry_title)) },
+            text = { Text(stringResource(CalibrationStrings.cal_remove_entry_message)) },
             confirmButton = {
                 TextButton(onClick = {
                     onDeleteEntry(id)
                     pendingDeleteId = null
-                }) { Text(stringResource(android.R.string.ok)) }
+                }) { Text(stringResource(UiStrings.ok)) }
             },
             dismissButton = {
                 TextButton(onClick = { pendingDeleteId = null }) {
-                    Text(stringResource(android.R.string.cancel))
+                    Text(stringResource(UiStrings.cancel))
                 }
             }
         )
@@ -195,25 +197,25 @@ private fun StatusCard(
         Column(modifier = Modifier.padding(AapsSpacing.medium)) {
             val statusText = when {
                 state.sessionStart == null             ->
-                    stringResource(R.string.cal_status_no_session)
+                    stringResource(CalibrationStrings.cal_status_no_session)
 
                 state.isInWarmUp                       ->
-                    stringResource(R.string.cal_status_warmup, formatTime(state.warmUpEndsAt ?: 0L))
+                    stringResource(CalibrationStrings.cal_status_warmup, formatTime(state.warmUpEndsAt ?: 0L))
 
                 state.fit == null                      ->
-                    stringResource(R.string.cal_status_need_more_entries, state.entries.size)
+                    stringResource(CalibrationStrings.cal_status_need_more_entries, state.entries.size)
 
                 !state.fit.isApplicable                ->
-                    stringResource(R.string.cal_status_unsafe_fit)
+                    stringResource(CalibrationStrings.cal_status_unsafe_fit)
 
                 state.fit.mode == FitMode.OffsetOnly   ->
-                    stringResource(R.string.cal_status_applied_offset_only)
+                    stringResource(CalibrationStrings.cal_status_applied_offset_only)
 
                 state.fit.mode == FitMode.SlopeClamped ->
-                    stringResource(R.string.cal_status_applied_slope_clamped)
+                    stringResource(CalibrationStrings.cal_status_applied_slope_clamped)
 
                 else                                   ->
-                    stringResource(R.string.cal_status_applied)
+                    stringResource(CalibrationStrings.cal_status_applied)
             }
             Text(
                 text = statusText,
@@ -224,7 +226,7 @@ private fun StatusCard(
                 Spacer(Modifier.height(AapsSpacing.small))
                 Text(
                     text = stringResource(
-                        R.string.cal_slope_offset,
+                        CalibrationStrings.cal_slope_offset,
                         fit.slope,
                         fit.correctionAtCenter.formatBgDisplay(state.glucoseUnit, signed = true)
                     ),
@@ -235,7 +237,7 @@ private fun StatusCard(
             state.sessionStart?.let { start ->
                 Spacer(Modifier.height(AapsSpacing.small))
                 Text(
-                    text = stringResource(R.string.cal_session_started, formatDateTime(start)),
+                    text = stringResource(CalibrationStrings.cal_session_started, formatDateTime(start)),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -281,7 +283,7 @@ private fun EntrySliderReadout(
     val entry = state.entries[selectedIndex]
     Text(
         text = stringResource(
-            R.string.cal_chart_entry_readout,
+            CalibrationStrings.cal_chart_entry_readout,
             selectedIndex + 1,
             state.entries.size,
             formatDateTime(entry.timestamp),
@@ -334,7 +336,7 @@ private fun EmptyEntries() {
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = stringResource(R.string.cal_no_entries),
+            text = stringResource(CalibrationStrings.cal_no_entries),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -400,7 +402,7 @@ private fun EntryRow(
                 )
                 Text(
                     text = stringResource(
-                        R.string.cal_entry_pair,
+                        CalibrationStrings.cal_entry_pair,
                         entry.fingerstickMgdl.formatBgDisplay(glucoseUnit),
                         entry.sensorMgdlAtPairing.formatBgDisplay(glucoseUnit),
                         (entry.fingerstickMgdl - entry.sensorMgdlAtPairing).formatBgDisplay(glucoseUnit, signed = true)
@@ -411,7 +413,7 @@ private fun EntryRow(
             IconButton(onClick = { onDelete(entry.id) }) {
                 Icon(
                     imageVector = Icons.Filled.Delete,
-                    contentDescription = stringResource(app.aaps.core.ui.R.string.delete),
+                    contentDescription = stringResource(UiStrings.delete),
                     modifier = Modifier.size(20.dp)
                 )
             }
