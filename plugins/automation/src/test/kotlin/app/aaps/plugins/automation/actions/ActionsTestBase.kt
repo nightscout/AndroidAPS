@@ -10,7 +10,7 @@ import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.scenes.SceneIconResolver
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
-import app.aaps.plugins.automation.TimerUtil
+import app.aaps.core.interfaces.alerts.ReminderScheduler
 import app.aaps.shared.tests.TestBaseWithProfile
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
@@ -47,7 +47,7 @@ ActionsTestBase : TestBaseWithProfile() {
 
     val actionFactory: ActionFactory by lazy {
         ActionFactory(
-            triggerDeps, aapsLogger, rh, pumpEnactResultProvider, rxBus, context, dateUtil, mock<TimerUtil>(),
+            triggerDeps, aapsLogger, rh, pumpEnactResultProvider, rxBus, context, dateUtil, mock<ReminderScheduler>(),
             config, persistenceLayer, profileFunction, profileRepository, profileUtil, glucoseStatusProvider,
             notificationManager, activePlugin, preferences, sceneApi, sceneIconResolver, smsCommunicator,
             autotunePlugin, importExportPrefs, exportPasswordDataStore

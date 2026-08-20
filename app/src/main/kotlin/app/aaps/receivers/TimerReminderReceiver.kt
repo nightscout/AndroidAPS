@@ -1,4 +1,4 @@
-package app.aaps.plugins.automation
+package app.aaps.receivers
 
 import android.content.Context
 import android.content.Intent
@@ -13,7 +13,8 @@ import javax.inject.Inject
 import app.aaps.core.ui.R as CoreUiR
 
 /**
- * Rings the AAPS full-screen alarm for a reminder previously scheduled by [TimerUtil] via AlarmManager.
+ * Rings the AAPS full-screen alarm for a reminder previously scheduled by
+ * [app.aaps.core.interfaces.alerts.ReminderScheduler] via AlarmManager.
  *
  * Why this exists: reminders ("time to eat", automation Alarm action, …) used to be handed to the system Clock
  * app with `startActivity(ACTION_SET_TIMER)`, which Android blocks from the background. So a reminder scheduled

@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation
 
+import app.aaps.core.interfaces.alerts.ReminderScheduler
 import android.Manifest
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.AutomationEvent
@@ -8,7 +9,7 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.plugins.automation.actions.Action
-import app.aaps.plugins.automation.services.LocationServiceHelper
+import app.aaps.core.interfaces.location.LocationServiceController
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.triggers.TriggerConnector
 import app.aaps.plugins.automation.triggers.TriggerLocation
@@ -46,8 +47,8 @@ class AutomationRuntimeTest : TestBaseWithProfile() {
     }
     @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var loop: Loop
-    @Mock lateinit var locationServiceHelper: LocationServiceHelper
-    @Mock lateinit var timerUtil: TimerUtil
+    @Mock lateinit var locationServiceController: LocationServiceController
+    @Mock lateinit var reminderScheduler: ReminderScheduler
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var sceneApi: SceneAutomationApi
@@ -58,7 +59,7 @@ class AutomationRuntimeTest : TestBaseWithProfile() {
     @BeforeEach fun prepare() {
         automationRuntime = AutomationRuntime(
             eventFactory, aapsLogger, rh, preferences, context, fabricPrivacy, loop, rxBus, constraintChecker,
-            aapsSchedulers, config, locationServiceHelper, dateUtil, activePlugin, timerUtil, actionFactory, triggerFactory, triggerDeps, receiverStatusStore,
+            aapsSchedulers, config, locationServiceController, dateUtil, activePlugin, reminderScheduler, actionFactory, triggerFactory, triggerDeps, receiverStatusStore,
             uel, profileRepository, sceneApi
         )
     }

@@ -2,12 +2,14 @@ package app.aaps.plugins.automation.actions
 
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputString
-import app.aaps.plugins.automation.TimerUtil
+import app.aaps.core.interfaces.alerts.ReminderScheduler
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.mock
 import org.mockito.ArgumentMatchers
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
@@ -15,7 +17,7 @@ import org.skyscreamer.jsonassert.JSONAssert
 
 class ActionAlarmTest : TestBaseWithProfile() {
 
-    private lateinit var timerUtil: TimerUtil
+    private lateinit var reminderScheduler: ReminderScheduler
     private lateinit var sut: ActionAlarm
 
 
@@ -23,11 +25,11 @@ class ActionAlarmTest : TestBaseWithProfile() {
     fun setup() {
         whenever(rh.gs(app.aaps.core.ui.R.string.alarm)).thenReturn("Alarm")
         whenever(rh.gs(ArgumentMatchers.eq(R.string.alarm_message), any())).thenReturn("Alarm: %s")
-        // TimerUtil.scheduleReminder can't reach AlarmManager in a plain JVM test (PendingIntent.getBroadcast is a
-        // static framework call), so it falls into its catch → this snackbar string must be stubbed (non-null).
-        whenever(rh.gs(R.string.error_setting_reminder)).thenReturn("error")
-        timerUtil = TimerUtil(context, rh, rxBus, dateUtil)
-        sut = ActionAlarm(aapsLogger, rh, pumpEnactResultProvider, rxBus, context, dateUtil, timerUtil, config)
+        // ReminderScheduler is an interface now - the AlarmManager implementation lives in :app,
+        // because a reminder that rings is an Android platform concern. That makes this a plain mock
+        // instead of a real object that silently fell into its own catch block in a JVM test.
+        reminderScheduler = mock()
+        sut = ActionAlarm(aapsLogger, rh, pumpEnactResultProvider, rxBus, context, dateUtil, reminderScheduler, config)
     }
 
     @Test fun friendlyNameTest() = runTest {
@@ -43,6 +45,9 @@ class ActionAlarmTest : TestBaseWithProfile() {
         sut.text = InputString("Asd")
         val result = sut.doAction()
         assertThat(result.success).isTrue()
+        // Now checkable: the old test built a real scheduler that could not reach AlarmManager from a
+        // JVM test, so it only ever proved doAction() did not throw.
+        verify(reminderScheduler).scheduleReminder(10, "Asd")
     }
 
     @Test fun hasDialogTest() = runTest {

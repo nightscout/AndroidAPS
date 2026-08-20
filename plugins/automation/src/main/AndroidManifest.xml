@@ -14,15 +14,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
 
-    <application>
-        <service
-            android:name=".services.LocationService"
-            android:exported="false"
-            android:foregroundServiceType="location" />
-
-        <receiver
-            android:name=".TimerReminderReceiver"
-            android:exported="false" />
-
-    </application>
+    <!--
+      The location service and the reminder receiver are declared in :app, not here. Both are Android
+      platform entry points, so they cannot carry their dependency-injection annotations once this
+      module becomes multiplatform. Automation reaches them through LocationServiceController and
+      ReminderScheduler instead. The permissions stay here because the location trigger is what asks
+      the user for them.
+    -->
 </manifest>

@@ -14,7 +14,7 @@ import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.lenientString
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputString
-import app.aaps.plugins.automation.TimerUtil
+import app.aaps.core.interfaces.alerts.ReminderScheduler
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
@@ -25,7 +25,7 @@ class ActionAlarm(
     private val rxBus: RxBus,
     private val context: Context,
     private val dateUtil: DateUtil,
-    private val timerUtil: TimerUtil,
+    private val reminderScheduler: ReminderScheduler,
     private val config: Config
 ) : Action(aapsLogger, rh, pumpEnactResultProvider) {
 
@@ -39,10 +39,10 @@ class ActionAlarm(
         rxBus: RxBus,
         context: Context,
         dateUtil: DateUtil,
-        timerUtil: TimerUtil,
+        reminderScheduler: ReminderScheduler,
         config: Config,
         text: String
-    ) : this(aapsLogger, rh, pumpEnactResultProvider, rxBus, context, dateUtil, timerUtil, config) {
+    ) : this(aapsLogger, rh, pumpEnactResultProvider, rxBus, context, dateUtil, reminderScheduler, config) {
         this.text = InputString(text)
     }
 
@@ -54,7 +54,7 @@ class ActionAlarm(
     override fun isValid(): Boolean = true // empty alarm will show app name
 
     override suspend fun doAction(): PumpEnactResult {
-        timerUtil.scheduleReminder(10, text.value.takeIf { it.isNotBlank() }
+        reminderScheduler.scheduleReminder(10, text.value.takeIf { it.isNotBlank() }
             ?: rh.gs(config.appName))
         return pumpEnactResultProvider.get().success(true).comment(app.aaps.core.ui.R.string.ok)
     }

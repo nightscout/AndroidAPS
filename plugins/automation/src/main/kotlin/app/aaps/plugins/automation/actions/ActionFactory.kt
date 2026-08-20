@@ -21,7 +21,7 @@ import app.aaps.core.interfaces.scenes.SceneIconResolver
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.plugins.automation.TimerUtil
+import app.aaps.core.interfaces.alerts.ReminderScheduler
 import app.aaps.plugins.automation.triggers.TriggerDeps
 import app.aaps.core.utils.lenientString
 import kotlinx.serialization.json.JsonObject
@@ -50,7 +50,7 @@ class ActionFactory @Inject constructor(
     private val rxBus: RxBus,
     private val context: Context,
     private val dateUtil: DateUtil,
-    private val timerUtil: TimerUtil,
+    private val reminderScheduler: ReminderScheduler,
     private val config: Config,
     private val persistenceLayer: PersistenceLayer,
     private val profileFunction: ProfileFunction,
@@ -76,8 +76,8 @@ class ActionFactory @Inject constructor(
         actionStartTempTarget(), actionStopProcessing(), actionStopTempTarget()
     )
 
-    fun actionAlarm() = ActionAlarm(aapsLogger, rh, pumpEnactResultProvider, rxBus, context, dateUtil, timerUtil, config)
-    fun actionAlarm(text: String) = ActionAlarm(aapsLogger, rh, pumpEnactResultProvider, rxBus, context, dateUtil, timerUtil, config, text)
+    fun actionAlarm() = ActionAlarm(aapsLogger, rh, pumpEnactResultProvider, rxBus, context, dateUtil, reminderScheduler, config)
+    fun actionAlarm(text: String) = ActionAlarm(aapsLogger, rh, pumpEnactResultProvider, rxBus, context, dateUtil, reminderScheduler, config, text)
     fun actionCarePortalEvent() = ActionCarePortalEvent(aapsLogger, rh, pumpEnactResultProvider, persistenceLayer, profileFunction, dateUtil, glucoseStatusProvider)
     fun actionDisableScene() = ActionDisableScene(aapsLogger, rh, pumpEnactResultProvider, sceneApi, sceneIconResolver)
     fun actionDummy() = ActionDummy(aapsLogger, rh, pumpEnactResultProvider)

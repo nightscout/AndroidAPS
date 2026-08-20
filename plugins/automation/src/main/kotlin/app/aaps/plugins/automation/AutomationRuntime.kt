@@ -62,7 +62,8 @@ import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDelta
 import app.aaps.plugins.automation.events.EventAutomationUpdateGui
 import app.aaps.plugins.automation.events.EventLocationChange
-import app.aaps.plugins.automation.services.LocationServiceHelper
+import app.aaps.core.interfaces.alerts.ReminderScheduler
+import app.aaps.core.interfaces.location.LocationServiceController
 import app.aaps.plugins.automation.triggers.TriggerDeps
 import app.aaps.plugins.automation.triggers.TriggerFactory
 import app.aaps.plugins.automation.triggers.Trigger
@@ -146,10 +147,10 @@ class AutomationRuntime @Inject constructor(
     private val constraintChecker: ConstraintsChecker,
     private val aapsSchedulers: AapsSchedulers,
     private val config: Config,
-    private val locationServiceHelper: LocationServiceHelper,
+    private val locationServiceController: LocationServiceController,
     private val dateUtil: DateUtil,
     private val activePlugin: ActivePlugin,
-    private val timerUtil: TimerUtil,
+    private val reminderScheduler: ReminderScheduler,
     private val actionFactory: ActionFactory,
     private val triggerFactory: TriggerFactory,
     private val triggerDeps: TriggerDeps,
@@ -362,7 +363,7 @@ class AutomationRuntime @Inject constructor(
         preferences.observe(StringKey.AutomationLocation).drop(1).onEach {
             if (locationServiceRunning) {
                 deferredStart.cancel()
-                locationServiceHelper.stopService(context)
+                locationServiceController.stopService()
                 locationServiceRunning = false
             }
             updateLocationService()
@@ -393,7 +394,7 @@ class AutomationRuntime @Inject constructor(
 
         deferredStart.cancel()
         if (locationServiceRunning) {
-            locationServiceHelper.stopService(context)
+            locationServiceController.stopService()
             locationServiceRunning = false
         }
     }
@@ -405,10 +406,10 @@ class AutomationRuntime @Inject constructor(
             // startService() returns false when the location permission isn't granted yet; only
             // latch the flag once it actually started, so a later permission grant — reconciled on
             // the next processActions tick — retries instead of leaving the service stuck off.
-            deferredStart.start { if (locationServiceHelper.startService(context)) locationServiceRunning = true }
+            deferredStart.start { if (locationServiceController.startService()) locationServiceRunning = true }
         } else if (!need && locationServiceRunning) {
             deferredStart.cancel()
-            locationServiceHelper.stopService(context)
+            locationServiceController.stopService()
             locationServiceRunning = false
         }
     }
@@ -706,12 +707,12 @@ class AutomationRuntime @Inject constructor(
     }
 
     /**
-     * Generate reminder via [TimerUtil]
+     * Generate reminder via [ReminderScheduler]
      *
      * @param seconds seconds to the future
      */
     override fun scheduleTimeToEatReminder(seconds: Int) =
-        timerUtil.scheduleReminder(seconds, rh.gs(R.string.time_to_eat))
+        reminderScheduler.scheduleReminder(seconds, rh.gs(R.string.time_to_eat))
 
     /**
      * Create new Automation event to alarm when is time to eat

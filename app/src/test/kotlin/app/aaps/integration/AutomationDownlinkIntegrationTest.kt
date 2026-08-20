@@ -14,8 +14,8 @@ import app.aaps.core.nssdk.localmodel.configuration.NSRunningConfiguration
 import app.aaps.plugins.automation.AutomationEventFactory
 import app.aaps.plugins.automation.AutomationEventObject
 import app.aaps.plugins.automation.AutomationRuntime
-import app.aaps.plugins.automation.TimerUtil
-import app.aaps.plugins.automation.services.LocationServiceHelper
+import app.aaps.core.interfaces.alerts.ReminderScheduler
+import app.aaps.core.interfaces.location.LocationServiceController
 import app.aaps.plugins.automation.triggers.TriggerConnector
 import app.aaps.plugins.automation.triggers.TriggerDeps
 import app.aaps.plugins.automation.triggers.TriggerFactory
@@ -75,8 +75,8 @@ class AutomationDownlinkIntegrationTest : TestBaseWithProfile() {
 
     // AutomationRuntime deps not provided by the base.
     @Mock private lateinit var loop: Loop
-    @Mock private lateinit var locationServiceHelper: LocationServiceHelper
-    @Mock private lateinit var timerUtil: TimerUtil
+    @Mock private lateinit var locationServiceController: LocationServiceController
+    @Mock private lateinit var reminderScheduler: ReminderScheduler
     @Mock private lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock private lateinit var uel: UserEntryLogger
     @Mock private lateinit var sceneApi: SceneAutomationApi
@@ -118,12 +118,12 @@ class AutomationDownlinkIntegrationTest : TestBaseWithProfile() {
 
         masterRuntime = AutomationRuntime(
             eventFactory, aapsLogger, rh, masterPreferences, context, fabricPrivacy, loop, rxBus, constraintsChecker,
-            aapsSchedulers, masterConfig, locationServiceHelper, dateUtil, activePlugin, timerUtil, actionFactory, triggerFactory, triggerDeps, receiverStatusStore,
+            aapsSchedulers, masterConfig, locationServiceController, dateUtil, activePlugin, reminderScheduler, actionFactory, triggerFactory, triggerDeps, receiverStatusStore,
             uel, profileRepository, sceneApi
         )
         clientRuntime = AutomationRuntime(
             eventFactory, aapsLogger, rh, preferences, context, fabricPrivacy, loop, rxBus, constraintsChecker,
-            aapsSchedulers, config, locationServiceHelper, dateUtil, activePlugin, timerUtil, actionFactory, triggerFactory, triggerDeps, receiverStatusStore,
+            aapsSchedulers, config, locationServiceController, dateUtil, activePlugin, reminderScheduler, actionFactory, triggerFactory, triggerDeps, receiverStatusStore,
             uel, profileRepository, sceneApi
         )
         runningConfig = RunningConfigurationImpl(

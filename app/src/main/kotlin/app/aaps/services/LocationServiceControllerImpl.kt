@@ -1,4 +1,4 @@
-package app.aaps.plugins.automation.services
+package app.aaps.services
 
 import android.Manifest
 import android.content.ComponentName
@@ -8,6 +8,7 @@ import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.IBinder
 import androidx.core.app.ActivityCompat
+import app.aaps.core.interfaces.location.LocationServiceController
 import app.aaps.core.interfaces.notifications.NotificationHolder
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -22,13 +23,14 @@ import javax.inject.Singleton
 
  */
 @Singleton
-class LocationServiceHelper @Inject constructor(
+class LocationServiceControllerImpl @Inject constructor(
+    private val context: Context,
     private val notificationHolder: NotificationHolder
-) {
+) : LocationServiceController {
 
     /** @return true if the service start was issued; false if it was skipped because the location
      *  permission isn't granted yet (so the caller can retry once it is). */
-    fun startService(context: Context): Boolean {
+    override fun startService(): Boolean {
         if (!hasLocationPermission(context)) return false
         val connection = object : ServiceConnection {
             override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
@@ -63,8 +65,9 @@ class LocationServiceHelper @Inject constructor(
         return true
     }
 
-    fun stopService(context: Context) =
+    override fun stopService() {
         context.stopService(Intent(context, LocationService::class.java))
+    }
 
     private fun hasLocationPermission(context: Context): Boolean {
         // FGS type=location on Android 14+ (targetSdk 34+) requires the app to either be in

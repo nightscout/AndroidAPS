@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation
 
+import app.aaps.core.interfaces.alerts.ReminderScheduler
 import app.aaps.plugins.automation.triggers.TriggerDeps
 import app.aaps.plugins.automation.triggers.TriggerFactory
 import android.content.Context
@@ -17,7 +18,7 @@ import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.plugins.automation.services.LocationServiceHelper
+import app.aaps.core.interfaces.location.LocationServiceController
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.shared.tests.TestBase
@@ -49,11 +50,11 @@ class BolusTimerImplTest : TestBase() {
     @Mock lateinit var loop: Loop
     @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var config: Config
-    @Mock lateinit var locationServiceHelper: LocationServiceHelper
+    @Mock lateinit var locationServiceController: LocationServiceController
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var profileRepository: ProfileRepository
-    @Mock lateinit var timerUtil: TimerUtil
+    @Mock lateinit var reminderScheduler: ReminderScheduler
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock lateinit var uel: UserEntryLogger
@@ -69,8 +70,8 @@ class BolusTimerImplTest : TestBase() {
         whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         dateUtil = DateUtilImpl(context)
         automationRuntime = AutomationRuntime(
-            eventFactory, aapsLogger, rh, preferences, context, fabricPrivacy, loop, rxBus, constraintChecker, aapsSchedulers, config, locationServiceHelper, dateUtil,
-            activePlugin, timerUtil, actionFactory, triggerFactory, triggerDeps, receiverStatusStore, uel, profileRepository, sceneApi
+            eventFactory, aapsLogger, rh, preferences, context, fabricPrivacy, loop, rxBus, constraintChecker, aapsSchedulers, config, locationServiceController, dateUtil,
+            activePlugin, reminderScheduler, actionFactory, triggerFactory, triggerDeps, receiverStatusStore, uel, profileRepository, sceneApi
         )
     }
 

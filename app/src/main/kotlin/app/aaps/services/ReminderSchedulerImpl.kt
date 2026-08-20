@@ -1,4 +1,4 @@
-package app.aaps.plugins.automation
+package app.aaps.services
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -9,10 +9,13 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.receivers.TimerReminderReceiver
 import javax.inject.Inject
 import javax.inject.Singleton
+import app.aaps.plugins.automation.R as AutomationR
 
-@Singleton class TimerUtil @Inject constructor(
+@Singleton
+class ReminderSchedulerImpl @Inject constructor(
     private val context: Context,
     private val rh: ResourceHelper,
     private val rxBus: RxBus,
@@ -22,7 +25,7 @@ import javax.inject.Singleton
     /**
      * Schedule a reminder that rings [seconds] from now.
      *
-     * Uses AlarmManager + [TimerReminderReceiver] → [app.aaps.core.interfaces.ui.UiInteraction.runAlarm] (a
+     * Uses AlarmManager + [app.aaps.receivers.TimerReminderReceiver] → [app.aaps.core.interfaces.ui.UiInteraction.runAlarm] (a
      * background-safe full-screen-intent alarm) instead of the system Clock app's `ACTION_SET_TIMER`: that
      * needs `startActivity`, which Android blocks from the background, so a reminder scheduled while AAPS is
      * backgrounded (e.g. a client-relayed Bolus-Wizard "Set alarm" delivered on the master) was silently lost.
@@ -43,7 +46,7 @@ import javax.inject.Singleton
             )
             alarmManager.setAlarmClock(AlarmManager.AlarmClockInfo(triggerAt, pendingIntent), pendingIntent)
         } catch (_: Exception) {
-            rxBus.send(EventShowSnackbar(rh.gs(R.string.error_setting_reminder), EventShowSnackbar.Type.Error))
+            rxBus.send(EventShowSnackbar(rh.gs(AutomationR.string.error_setting_reminder), EventShowSnackbar.Type.Error))
         }
     }
 }
