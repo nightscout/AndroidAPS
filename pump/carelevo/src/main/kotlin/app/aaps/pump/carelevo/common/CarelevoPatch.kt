@@ -291,6 +291,8 @@ class CarelevoPatch @Inject constructor(
         // patchState to NotConnectedNotBooting. There is no resting GATT to tear down — sessions are per-op.
         _patchInfo.onNext(Optional.empty())
         _infusionInfo.onNext(Optional.empty())
+        // The patch identity this baseline was tracking is gone too — see clearLastSnapshotAlarmCauses.
+        clearLastSnapshotAlarmCauses()
     }
 
     private val discardInProgress = AtomicBoolean(false)
@@ -459,6 +461,16 @@ class CarelevoPatch @Inject constructor(
 
     private fun saveLastSnapshotAlarmCauses(causes: Set<AlarmCause>) {
         sp.putString(PREF_KEY_LAST_SNAPSHOT_ALARM_CAUSES, causes.joinToString(",") { it.name })
+    }
+
+    /**
+     * The baseline is otherwise global (not keyed by patch address), so without this a cause the
+     * *previous* patch already reported would silently suppress that same cause the very first time
+     * a freshly-paired patch reports it — [applyActiveAlarmSnapshots] would see it as already-seen
+     * and never raise it, even though this patch (and its alarm records) are brand new.
+     */
+    private fun clearLastSnapshotAlarmCauses() {
+        sp.remove(PREF_KEY_LAST_SNAPSHOT_ALARM_CAUSES)
     }
 
     private fun reconcileInfusingStateFromSnapshot(infusing: Boolean) {
