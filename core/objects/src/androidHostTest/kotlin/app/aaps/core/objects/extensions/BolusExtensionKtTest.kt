@@ -1,4 +1,4 @@
-package app.aaps.plugins.main.extensions
+package app.aaps.core.objects.extensions
 
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.time.T

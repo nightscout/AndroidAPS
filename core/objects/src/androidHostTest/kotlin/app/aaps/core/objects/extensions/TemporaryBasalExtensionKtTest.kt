@@ -1,10 +1,9 @@
-package app.aaps.plugins.main.extensions
+package app.aaps.core.objects.extensions
 
 import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.AutosensResult
-import app.aaps.core.objects.extensions.iobCalc
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test

@@ -11,6 +11,8 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="app.aaps.weardata.permission" />
+    <!-- For DataLayerListenerServiceMobile below. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
 
     <permission
         android:name="app.aaps.weardata.permission"
@@ -23,6 +25,47 @@
             android:name=".nsclientV3.services.NSClientV3Service"
             android:enabled="true"
             android:exported="false" />
+
+        <!-- These two were declared from :plugins:main's manifest, which merging made work but which
+             put them a module away from the classes they name. -->
+        <activity
+            android:name=".wear.activities.CwfInfosActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme" />
+
+        <service
+            android:name=".wear.wearintegration.DataLayerListenerServiceMobile"
+            android:foregroundServiceType="connectedDevice"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.CHANNEL_EVENT" />
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.CAPABILITY_CHANGED" />
+                <data
+                    android:host="*"
+                    android:scheme="wear" />
+            </intent-filter>
+            <intent-filter>
+                <!-- listeners receive events that match the action and data filters -->
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+
+                <data
+                    android:host="*"
+                    android:pathPrefix="@string/path_rx_bridge"
+                    android:scheme="wear" />
+            </intent-filter>
+            <intent-filter>
+                <!-- listeners receive events that match the action and data filters -->
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+
+                <data
+                    android:host="*"
+                    android:pathPrefix="@string/path_rx_data_bridge"
+                    android:scheme="wear" />
+            </intent-filter>
+        </service>
 
         <activity
             android:name=".openhumans.ui.OHLoginActivity"
