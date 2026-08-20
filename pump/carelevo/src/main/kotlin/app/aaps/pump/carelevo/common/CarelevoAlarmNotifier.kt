@@ -21,7 +21,6 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.pump.carelevo.R
 import app.aaps.pump.carelevo.common.keys.CarelevoIntPreferenceKey
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
 import app.aaps.pump.carelevo.domain.type.AlarmCause
 import app.aaps.pump.carelevo.domain.type.AlarmType.Companion.isCritical
@@ -41,6 +40,14 @@ import javax.inject.Singleton
  * system-tray notification for backgrounded users ([showNotification]), and the [alarms] StateFlow.
  * `CarelevoPumpPlugin.handleAlarms` additionally routes a critical alarm through the shared AAPS
  * full-screen alarm (`UiInteraction.runAlarm`) — that escalation is independent of this class.
+ *
+ * [showTopNotification] deliberately never posts at [app.aaps.core.interfaces.notifications.NotificationLevel.URGENT]
+ * (see the comment there) — that level is `NotificationManagerImpl`'s own alarm tier, which the
+ * shared full-screen alarm's OK button silences *app-wide* on confirm (`muteAllAlarms`), wiping any
+ * URGENT+sound card off the screen without actually acknowledging it. Matching `eopatch`'s
+ * `AlarmManager.showNotification` pattern, the sound/full-screen escalation is left entirely to
+ * `runAlarm`, so the card survives that confirm and stays until the user genuinely clears the
+ * alarm through it.
  */
 @Singleton
 class CarelevoAlarmNotifier @Inject constructor(
@@ -108,22 +115,24 @@ class CarelevoAlarmNotifier @Inject constructor(
             val descArgs = buildDescArgsFor(newAlarm)
             val desc = buildDescription(descRes, descArgs)
             aapsLogger.debug(LTag.PUMPCOMM, "showTopNotification titleRes=$titleRes descArgs=$descArgs desc=$desc")
-            // Critical tiers get the id's declared URGENT level + alarm sound (the shared
-            // NotificationManagerImpl gates its ramping alarm on URGENT && soundRes != null) and do
-            // not auto-expire — an unhandled critical alarm must not disappear on its own.
-            // Non-critical notices stay NORMAL/silent and also persist until handled.
+            // Critical tiers get IMPORTANT (not URGENT) — deliberately below NotificationManagerImpl's
+            // alarm tier, matching eopatch's AlarmManager.showNotification. URGENT+sound is what the
+            // shared full-screen alarm's OK button silences app-wide on confirm (muteAllAlarms), which
+            // would wipe this card without it ever being acknowledged; sound/full-screen is runAlarm's
+            // job alone (CarelevoPumpPlugin.handleAlarms). Neither severity auto-expires — an unhandled
+            // alarm, critical or not, must not disappear on its own.
             val critical = newAlarm.alarmType.isCritical()
             notificationManager.post(
                 id = NotificationId.CARELEVO_PATCH_ALERT,
                 text = context.getString(titleRes) + "\n" + HtmlCompat.fromHtml(desc, HtmlCompat.FROM_HTML_MODE_LEGACY),
-                level = if (critical) NotificationLevel.URGENT else NotificationLevel.NORMAL,
+                level = if (critical) NotificationLevel.IMPORTANT else NotificationLevel.NORMAL,
                 actions = listOf(
                     NotificationAction(btnRes) {
                         alarmActionHandler.triggerEvent(AlarmEvent.ClearAlarm(info = newAlarm))
                     }
                 ),
                 date = dateUtil.now(),
-                soundRes = if (critical) CoreUiR.raw.error else null,
+                soundRes = null,
                 validityCheck = null,
             )
         }
