@@ -14,6 +14,18 @@ interface IntentPreferenceKey : PreferenceKey {
      * When set, clicking this preference shows an OK/Cancel dialog before executing onClick.
      * The dialog title uses [title].
      */
+    /**
+     * Platform neutral URL, as a [TextRef]. Preferred over [urlResId], which only multiplatform
+     * code cannot supply - an Android resource id means nothing off Android.
+     */
+    val urlRef: TextRef?
+        get() = null
+
+    /**
+     * Confirmation dialog message.
+     * When set, clicking this preference shows an OK/Cancel dialog before executing onClick.
+     * The dialog title uses [title].
+     */
     val confirmationMessage: TextRef?
         get() = null
 

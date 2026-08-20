@@ -1,5 +1,7 @@
 package app.aaps.core.interfaces.utils
 
+import app.aaps.core.keys.interfaces.TextRef
+
 interface HardLimits {
     companion object {
 
@@ -87,6 +89,23 @@ interface HardLimits {
 
     // safety checks
     fun checkHardLimits(value: Double, valueName: Int, lowLimit: Double, highLimit: Double): Boolean
+
+    /**
+     * [TextRef] form, for callers in multiplatform code - a resource id is an Android Int and means
+     * nothing off Android. Same behaviour as the id form; both exist while the migration is partway.
+     */
+    fun checkHardLimits(value: Double, valueName: TextRef, lowLimit: Double, highLimit: Double): Boolean
+
+    /** Same as [checkHardLimits], for the limit ranges defined above. */
+    fun checkHardLimits(value: Double, valueName: TextRef, limits: ClosedFloatingPointRange<Double>): Boolean =
+        checkHardLimits(value, valueName, limits.start, limits.endInclusive)
+
+    /** [TextRef] form of [verifyHardLimits]. */
+    fun verifyHardLimits(value: Double, valueName: TextRef, lowLimit: Double, highLimit: Double): Double
+
+    /** Same as the above, for the limit ranges defined in the companion. */
+    fun verifyHardLimits(value: Double, valueName: TextRef, limits: ClosedFloatingPointRange<Double>): Double =
+        verifyHardLimits(value, valueName, limits.start, limits.endInclusive)
 
     /** Same as [checkHardLimits], for the limit ranges defined above. */
     fun checkHardLimits(value: Double, valueName: Int, limits: ClosedFloatingPointRange<Double>): Boolean =

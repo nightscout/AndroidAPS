@@ -178,7 +178,7 @@ fun AdaptivePreferenceItem(
             val resolvedClick = key.onClick ?: onIntentClick
             val resolvedCompose = key.composeScreen as? ComposeScreenContent
             val onNavigateToCompose = LocalNavigateToCompose.current
-            val resolvedUrl = key.runtimeUrl ?: intentUrl ?: key.urlResId?.let { stringResource(TextRef.AndroidRes(it)) }
+            val resolvedUrl = key.runtimeUrl ?: intentUrl ?: key.urlRef?.let { stringResource(it) } ?: key.urlResId?.let { stringResource(TextRef.AndroidRes(it)) }
 
             when {
                 resolvedClick != null                                  -> {

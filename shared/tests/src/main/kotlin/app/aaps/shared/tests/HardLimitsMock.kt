@@ -1,5 +1,6 @@
 package app.aaps.shared.tests
 
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.StringKey
@@ -34,6 +35,13 @@ class HardLimitsMock @Inject constructor(
     // safety checks
     override fun checkHardLimits(value: Double, valueName: Int, lowLimit: Double, highLimit: Double): Boolean =
         value == verifyHardLimits(value, valueName, lowLimit, highLimit)
+
+    override fun checkHardLimits(value: Double, valueName: TextRef, lowLimit: Double, highLimit: Double): Boolean =
+        value == verifyHardLimits(value, valueName, lowLimit, highLimit)
+
+    // Both forms clamp identically here; the name is only used for the message the real one posts.
+    override fun verifyHardLimits(value: Double, valueName: TextRef, lowLimit: Double, highLimit: Double): Double =
+        verifyHardLimits(value, 0, lowLimit, highLimit)
 
     override fun verifyHardLimits(value: Double, valueName: Int, lowLimit: Double, highLimit: Double): Double {
         var newValue = value

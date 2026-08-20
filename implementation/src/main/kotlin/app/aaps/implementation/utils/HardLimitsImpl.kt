@@ -4,6 +4,7 @@ import app.aaps.core.data.model.TE
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -58,12 +59,22 @@ class HardLimitsImpl @Inject constructor(
     override fun checkHardLimits(value: Double, valueName: Int, lowLimit: Double, highLimit: Double): Boolean =
         value == verifyHardLimits(value, valueName, lowLimit, highLimit)
 
-    override fun verifyHardLimits(value: Double, valueName: Int, lowLimit: Double, highLimit: Double): Double {
+    override fun checkHardLimits(value: Double, valueName: TextRef, lowLimit: Double, highLimit: Double): Boolean =
+        value == verifyHardLimits(value, valueName, lowLimit, highLimit)
+
+    override fun verifyHardLimits(value: Double, valueName: TextRef, lowLimit: Double, highLimit: Double): Double =
+        verifyHardLimits(value, rh.gs(valueName), lowLimit, highLimit)
+
+    override fun verifyHardLimits(value: Double, valueName: Int, lowLimit: Double, highLimit: Double): Double =
+        verifyHardLimits(value, rh.gs(valueName), lowLimit, highLimit)
+
+    /** Both public forms resolve their name first and share this, so the behaviour cannot drift. */
+    private fun verifyHardLimits(value: Double, valueName: String, lowLimit: Double, highLimit: Double): Double {
         var newValue = value
         if (newValue !in lowLimit..highLimit) {
             newValue = max(newValue, lowLimit)
             newValue = min(newValue, highLimit)
-            var msg = rh.gs(app.aaps.core.ui.R.string.valueoutofrange, rh.gs(valueName))
+            var msg = rh.gs(app.aaps.core.ui.R.string.valueoutofrange, valueName)
             msg += ".\n"
             msg += rh.gs(app.aaps.core.ui.R.string.valuelimitedto, value, newValue)
             aapsLogger.error(msg)

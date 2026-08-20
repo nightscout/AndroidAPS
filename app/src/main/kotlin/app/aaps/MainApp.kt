@@ -87,7 +87,7 @@ import app.aaps.implementation.receivers.ChargingStateReceiver
 import app.aaps.implementation.receivers.KeepAliveWorker
 import app.aaps.implementation.receivers.NetworkChangeReceiver
 import app.aaps.implementation.receivers.TimeDateOrTZChangeReceiver
-import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
+import app.aaps.workers.RunningModeExpiryScheduler
 import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler
 import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.calibration.CalibrationStringIds
@@ -295,7 +295,7 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
         if (preferences.get(BooleanNonKey.VacuumInProgress)) {
             aapsLogger.error(LTag.CORE, "Previous startup VACUUM did not finish (likely native crash) — skipping for 30 days")
             // Report to Firebase so we get a fleet-wide count of users hit by a crashing startup VACUUM.
-            fabricPrivacy.logCustom("db_vacuum_crash_recovered", Bundle())
+            fabricPrivacy.logCustom("db_vacuum_crash_recovered")
             preferences.put(BooleanNonKey.VacuumInProgress, false)
             preferences.put(LongNonKey.LastVacuumRun, dateUtil.now())
             return
@@ -317,10 +317,7 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
             if (info.availableBytes in 0 until info.dbSizeBytes * 2) {
                 val freeMb = info.availableBytes / 1_048_576
                 aapsLogger.warn(LTag.CORE, "Skipping startup VACUUM: free $freeMb MB < 2x DB $dbMb MB")
-                fabricPrivacy.logCustom("db_vacuum_skip_space", Bundle().apply {
-                    putLong("db_mb", dbMb)
-                    putLong("free_mb", freeMb)
-                })
+                fabricPrivacy.logCustom("db_vacuum_skip_space", mapOf("db_mb" to dbMb, "free_mb" to freeMb))
                 return
             }
             // Commit the marker synchronously BEFORE running: a plain put() uses apply() and may not
@@ -332,11 +329,7 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
             preferences.put(LongNonKey.LastVacuumRun, dateUtil.now())
             aapsLogger.debug(LTag.CORE, "Startup VACUUM done")
             // Fleet overview of DB size / cleanup backlog / change-row volume across users.
-            fabricPrivacy.logCustom("db_vacuum_ok", Bundle().apply {
-                putLong("db_mb", dbMb)
-                putLong("deletable", info.deletableRows)
-                putLong("changes", info.changeRows)
-            })
+            fabricPrivacy.logCustom("db_vacuum_ok", mapOf("db_mb" to dbMb, "deletable" to info.deletableRows, "changes" to info.changeRows))
         } catch (e: Throwable) {
             // Throwable, not just Exception: a JVM OutOfMemoryError here must not abort app init.
             aapsLogger.error(LTag.CORE, "Startup VACUUM failed", e)

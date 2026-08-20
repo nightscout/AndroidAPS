@@ -2,8 +2,11 @@ package app.aaps.di
 
 import app.aaps.core.interfaces.di.AllConfigs
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.ui.CarbSuggestionActions
 import app.aaps.persistentNotification.DummyService
 import app.aaps.persistentNotification.PersistentNotificationPlugin
+import app.aaps.receivers.CarbSuggestionActionsImpl
+import app.aaps.receivers.CarbSuggestionReceiver
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -29,6 +32,11 @@ import dagger.multibindings.IntoMap
 abstract class PersistentNotificationModule {
 
     @ContributesAndroidInjector abstract fun contributesDummyService(): DummyService
+
+    @ContributesAndroidInjector abstract fun contributesCarbSuggestionReceiver(): CarbSuggestionReceiver
+
+    /** LoopPlugin asks for the ignore-carbs intents through this rather than naming the receiver. */
+    @Binds abstract fun bindCarbSuggestionActions(impl: CarbSuggestionActionsImpl): CarbSuggestionActions
 
     @Binds
     @AllConfigs

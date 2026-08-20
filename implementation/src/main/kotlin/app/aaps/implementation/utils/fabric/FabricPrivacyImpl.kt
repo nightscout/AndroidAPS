@@ -41,7 +41,9 @@ class FabricPrivacyImpl @Inject constructor(
 
     // Analytics logCustom
     @Suppress("unused")
-    override fun logCustom(name: String, event: Bundle) {
+    override fun logCustom(name: String, params: Map<String, Long>) {
+        // The interface takes a map because it is multiplatform; Firebase wants a Bundle.
+        val event = Bundle().apply { params.forEach { (key, value) -> putLong(key, value) } }
         try {
             if (fabricEnabled()) {
                 firebaseAnalytics.logEvent(name, event)
