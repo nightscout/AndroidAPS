@@ -9,24 +9,25 @@ import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputString
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import javax.inject.Inject
 
-class TriggerWifiSsid(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerWifiSsid(
+    deps: TriggerDeps,
+    private val receiverStatusStore: ReceiverStatusStore
+) : Trigger(deps) {
 
-    @Inject lateinit var receiverStatusStore: ReceiverStatusStore
 
     var ssid = InputString()
     var comparator = Comparator(rh)
 
     @Suppress("unused")
-    constructor(injector: HasAndroidInjector, ssid: String, compare: Comparator.Compare) : this(injector) {
+    constructor(deps: TriggerDeps, receiverStatusStore: ReceiverStatusStore, ssid: String, compare: Comparator.Compare) : this(deps, receiverStatusStore) {
         this.ssid = InputString(ssid)
         comparator = Comparator(rh, compare)
     }
 
-    constructor(injector: HasAndroidInjector, triggerWifiSsid: TriggerWifiSsid) : this(injector) {
+    constructor(deps: TriggerDeps, receiverStatusStore: ReceiverStatusStore, triggerWifiSsid: TriggerWifiSsid) : this(deps, receiverStatusStore) {
         this.ssid = InputString(triggerWifiSsid.ssid.value)
         comparator = Comparator(rh, triggerWifiSsid.comparator.value)
     }
@@ -75,6 +76,6 @@ class TriggerWifiSsid(injector: HasAndroidInjector) : Trigger(injector) {
     override fun composeIcon() = Icons.Filled.Wifi
     override fun elementType() = ElementType.AAPS
 
-    override fun duplicate(): Trigger = TriggerWifiSsid(injector, this)
+    override fun duplicate(): Trigger = TriggerWifiSsid(deps, receiverStatusStore, this)
 
 }

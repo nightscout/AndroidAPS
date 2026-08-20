@@ -11,12 +11,14 @@ import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.localmodel.configuration.NSRunningConfiguration
+import app.aaps.plugins.automation.AutomationEventFactory
 import app.aaps.plugins.automation.AutomationEventObject
 import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.automation.TimerUtil
 import app.aaps.plugins.automation.services.LocationServiceHelper
-import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.triggers.TriggerConnector
+import app.aaps.plugins.automation.triggers.TriggerDeps
+import app.aaps.plugins.automation.triggers.TriggerFactory
 import app.aaps.plugins.configuration.configBuilder.RunningConfigurationImpl
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -30,6 +32,7 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.mock
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doAnswer
@@ -53,6 +56,19 @@ class AutomationDownlinkIntegrationTest : TestBaseWithProfile() {
 
     // RunningConfigurationImpl deps (client side) not provided by the base.
     // insulin / notificationManager / constraintsChecker come from TestBaseWithProfile.
+    private val triggerFactory: TriggerFactory by lazy {
+        TriggerFactory(triggerDeps, context, mock(), mock(), mock())
+    }
+    // Real, not mocked: the runtime rebuilds triggers from the synced JSON, and a mocked factory
+    // would hand back null and silently drop every event.
+    private val triggerDeps: TriggerDeps by lazy {
+        TriggerDeps(
+            aapsLogger, rxBus, rh, profileFunction, profileUtil, preferences, mock(), mock(),
+            activePlugin, mock(), mock(), dateUtil
+        ) { triggerFactory }
+    }
+    @Mock private lateinit var actionFactory: app.aaps.plugins.automation.actions.ActionFactory
+    private val eventFactory by lazy { AutomationEventFactory(aapsLogger, dateUtil, actionFactory, triggerFactory, triggerDeps) }
     @Mock private lateinit var activeSceneSync: ActiveSceneSync
     @Mock private lateinit var pumpSync: PumpSync
     @Mock private lateinit var nsClientRepository: NSClientRepository
@@ -78,12 +94,6 @@ class AutomationDownlinkIntegrationTest : TestBaseWithProfile() {
     private lateinit var runningConfig: RunningConfigurationImpl
 
     init {
-        addInjector {
-            if (it is Trigger) {
-                it.rh = rh
-                it.aapsLogger = aapsLogger
-            }
-        }
     }
 
     @BeforeEach fun prepare() {
@@ -107,13 +117,13 @@ class AutomationDownlinkIntegrationTest : TestBaseWithProfile() {
             .whenever(preferences).putRemote(eq(StringNonKey.AutomationEvents), any<String>(), any<Long>())
 
         masterRuntime = AutomationRuntime(
-            injector, aapsLogger, rh, masterPreferences, context, fabricPrivacy, loop, rxBus, constraintsChecker,
-            aapsSchedulers, masterConfig, locationServiceHelper, dateUtil, activePlugin, timerUtil, receiverStatusStore,
+            eventFactory, aapsLogger, rh, masterPreferences, context, fabricPrivacy, loop, rxBus, constraintsChecker,
+            aapsSchedulers, masterConfig, locationServiceHelper, dateUtil, activePlugin, timerUtil, actionFactory, triggerFactory, triggerDeps, receiverStatusStore,
             uel, profileRepository, sceneApi
         )
         clientRuntime = AutomationRuntime(
-            injector, aapsLogger, rh, preferences, context, fabricPrivacy, loop, rxBus, constraintsChecker,
-            aapsSchedulers, config, locationServiceHelper, dateUtil, activePlugin, timerUtil, receiverStatusStore,
+            eventFactory, aapsLogger, rh, preferences, context, fabricPrivacy, loop, rxBus, constraintsChecker,
+            aapsSchedulers, config, locationServiceHelper, dateUtil, activePlugin, timerUtil, actionFactory, triggerFactory, triggerDeps, receiverStatusStore,
             uel, profileRepository, sceneApi
         )
         runningConfig = RunningConfigurationImpl(
@@ -130,7 +140,7 @@ class AutomationDownlinkIntegrationTest : TestBaseWithProfile() {
         val masterScope = scope()
         masterRuntime.start(masterScope)
         advanceUntilIdle()
-        masterRuntime.add(AutomationEventObject(injector).apply { title = "from-master"; trigger = TriggerConnector(injector) })
+        masterRuntime.add(eventFactory.newEvent().apply { title = "from-master"; trigger = TriggerConnector(triggerDeps) })
         advanceUntilIdle()
         val coldJson = masterAutoFlow.value
         assertThat(coldJson).contains("from-master")

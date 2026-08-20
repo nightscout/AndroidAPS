@@ -13,24 +13,24 @@ class TriggerBTDeviceTest : TriggerTestBase() {
 
     @Test fun shouldRun() {
         @Suppress("UNUSED_VARIABLE")
-        val t = TriggerBTDevice(injector)
+        val t = triggerFactory.triggerBTDevice()
     }
 
     @Test fun toJSON() {
-        val t = TriggerBTDevice(injector)
+        val t = triggerFactory.triggerBTDevice()
         t.btDevice.value = someName
         JSONAssert.assertEquals(btJson, t.toJSON(), true)
     }
 
     @Test
     fun fromJSON() {
-        val t2 = TriggerDummy(injector).instantiate(JSONObject(btJson)) as TriggerBTDevice
+        val t2 = triggerFactory.instantiate(JSONObject(btJson)) as TriggerBTDevice
         assertThat(t2.comparator.value).isEqualTo(ComparatorConnect.Compare.ON_CONNECT)
         assertThat(t2.btDevice.value).isEqualTo("Headset")
     }
 
     @Test fun duplicate() {
-        val t: TriggerBTDevice = TriggerBTDevice(injector).also {
+        val t: TriggerBTDevice = triggerFactory.triggerBTDevice().also {
             it.comparator.value = ComparatorConnect.Compare.ON_DISCONNECT
             it.btDevice.value = someName
         }

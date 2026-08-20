@@ -11,15 +11,14 @@ import app.aaps.core.utils.JsonHelper.safeGetDouble
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 
-class TriggerSensorAge(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerSensorAge(deps: TriggerDeps) : Trigger(deps) {
 
     var sensorAgeHours: InputDouble = InputDouble(0.0, 0.0, 720.0, 0.1, NumberFormat.DECIMAL_1)
     var comparator: Comparator = Comparator(rh)
 
-    private constructor(injector: HasAndroidInjector, triggerSensorAge: TriggerSensorAge) : this(injector) {
+    private constructor(deps: TriggerDeps, triggerSensorAge: TriggerSensorAge) : this(deps) {
         sensorAgeHours = InputDouble(triggerSensorAge.sensorAgeHours)
         comparator = Comparator(rh, triggerSensorAge.comparator.value)
     }
@@ -75,6 +74,6 @@ class TriggerSensorAge(injector: HasAndroidInjector) : Trigger(injector) {
     override fun composeIcon() = Icons.Filled.Sensors
     override fun elementType() = ElementType.SENSOR_INSERT
 
-    override fun duplicate(): Trigger = TriggerSensorAge(injector, this)
+    override fun duplicate(): Trigger = TriggerSensorAge(deps, this)
 
 }

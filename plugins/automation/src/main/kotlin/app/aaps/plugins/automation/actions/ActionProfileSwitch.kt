@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.actions
 
+import javax.inject.Provider
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.logging.LTag
@@ -12,15 +15,17 @@ import app.aaps.core.ui.compose.icons.IcProfile
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputProfileName
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
-import javax.inject.Inject
 
-class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
+class ActionProfileSwitch(
+    aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val profileRepository: ProfileRepository,
+    private val profileFunction: ProfileFunction,
+    private val dateUtil: DateUtil
+) : Action(aapsLogger, rh, pumpEnactResultProvider) {
 
-    @Inject lateinit var profileRepository: ProfileRepository
-    @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var dateUtil: DateUtil
 
     var inputProfileName: InputProfileName = InputProfileName("")
 

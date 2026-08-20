@@ -10,15 +10,14 @@ import app.aaps.core.utils.JsonHelper.safeGetDouble
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 
-class TriggerCannulaAge(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerCannulaAge(deps: TriggerDeps) : Trigger(deps) {
 
     var cannulaAgeHours: InputDouble = InputDouble(0.0, 0.0, 336.0, 0.1, NumberFormat.DECIMAL_1)
     var comparator: Comparator = Comparator(rh)
 
-    private constructor(injector: HasAndroidInjector, triggerCannulaAge: TriggerCannulaAge) : this(injector) {
+    private constructor(deps: TriggerDeps, triggerCannulaAge: TriggerCannulaAge) : this(deps) {
         cannulaAgeHours = InputDouble(triggerCannulaAge.cannulaAgeHours)
         comparator = Comparator(rh, triggerCannulaAge.comparator.value)
     }
@@ -74,6 +73,6 @@ class TriggerCannulaAge(injector: HasAndroidInjector) : Trigger(injector) {
     override fun composeIcon() = IcCannulaChange
     override fun elementType() = ElementType.CANNULA_CHANGE
 
-    override fun duplicate(): Trigger = TriggerCannulaAge(injector, this)
+    override fun duplicate(): Trigger = TriggerCannulaAge(deps, this)
 
 }

@@ -16,19 +16,20 @@ import app.aaps.plugins.automation.BtConnectionSource
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.ComparatorConnect
 import app.aaps.plugins.automation.elements.InputDropdownMenu
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import javax.inject.Inject
 
-class TriggerBTDevice(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerBTDevice(
+    deps: TriggerDeps,
+    private val context: Context,
+    private val btConnectionSource: BtConnectionSource
+) : Trigger(deps) {
 
-    @Inject lateinit var context: Context
-    @Inject lateinit var btConnectionSource: BtConnectionSource
 
     var btDevice = InputDropdownMenu(rh, "")
     var comparator: ComparatorConnect = ComparatorConnect(rh)
 
-    private constructor(injector: HasAndroidInjector, triggerBTDevice: TriggerBTDevice) : this(injector) {
+    private constructor(deps: TriggerDeps, context: Context, btConnectionSource: BtConnectionSource, triggerBTDevice: TriggerBTDevice) : this(deps, context, btConnectionSource) {
         comparator = ComparatorConnect(rh, triggerBTDevice.comparator.value)
         btDevice.value = triggerBTDevice.btDevice.value
     }
@@ -61,7 +62,7 @@ class TriggerBTDevice(injector: HasAndroidInjector) : Trigger(injector) {
     override fun composeIcon() = Icons.Filled.Bluetooth
     override fun elementType() = ElementType.AAPS
 
-    override fun duplicate(): Trigger = TriggerBTDevice(injector, this)
+    override fun duplicate(): Trigger = TriggerBTDevice(deps, context, btConnectionSource, this)
 
     // Get the list of paired BT devices to use in dropdown menu
     private fun devicesPaired(): ArrayList<CharSequence> {

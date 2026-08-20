@@ -15,28 +15,28 @@ class TriggerPumpBatteryLevelTest : TriggerTestBase() {
     @Test fun shouldRunTest() = runTest {
         whenever(pumpPluginWithConcentration.model()).thenReturn(PumpType.GENERIC_AAPS)
         whenever(pumpPluginWithConcentration.batteryLevel).thenReturn(MutableStateFlow(6))
-        var t: TriggerPumpBatteryLevel = TriggerPumpBatteryLevel(injector).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
+        var t: TriggerPumpBatteryLevel = TriggerPumpBatteryLevel(triggerDeps).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isFalse()
-        t = TriggerPumpBatteryLevel(injector).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
+        t = TriggerPumpBatteryLevel(triggerDeps).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerPumpBatteryLevel(injector).setValue(5.0).comparator(Comparator.Compare.IS_GREATER)
+        t = TriggerPumpBatteryLevel(triggerDeps).setValue(5.0).comparator(Comparator.Compare.IS_GREATER)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerPumpBatteryLevel(injector).setValue(5.0).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER)
+        t = TriggerPumpBatteryLevel(triggerDeps).setValue(5.0).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerPumpBatteryLevel(injector).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        t = TriggerPumpBatteryLevel(triggerDeps).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerPumpBatteryLevel(injector).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
+        t = TriggerPumpBatteryLevel(triggerDeps).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isFalse()
-        t = TriggerPumpBatteryLevel(injector).setValue(10.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        t = TriggerPumpBatteryLevel(triggerDeps).setValue(10.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerPumpBatteryLevel(injector).setValue(5.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        t = TriggerPumpBatteryLevel(triggerDeps).setValue(5.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.shouldRun()).isFalse()
     }
 
     @Test fun shouldRunBatteryLevelSupport() = runTest {
         whenever(pumpPluginWithConcentration.model()).thenReturn(PumpType.GENERIC_AAPS)
         whenever(pumpPluginWithConcentration.batteryLevel).thenReturn(MutableStateFlow(6))
-        val t: TriggerPumpBatteryLevel = TriggerPumpBatteryLevel(injector).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
+        val t: TriggerPumpBatteryLevel = TriggerPumpBatteryLevel(triggerDeps).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isTrue()
 
         whenever(pumpPluginWithConcentration.model()).thenReturn(PumpType.OMNIPOD_EROS)
@@ -50,20 +50,20 @@ class TriggerPumpBatteryLevelTest : TriggerTestBase() {
     }
 
     @Test fun copyConstructorTest() = runTest {
-        val t: TriggerPumpBatteryLevel = TriggerPumpBatteryLevel(injector).setValue(213.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        val t: TriggerPumpBatteryLevel = TriggerPumpBatteryLevel(triggerDeps).setValue(213.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.pumpBatteryLevel.value).isWithin(0.01).of(213.0)
         assertThat(t.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL_OR_LESSER)
     }
 
     @Test fun toJSONTest() = runTest {
         val triggerJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"pumpBatteryLevel\":4},\"type\":\"TriggerPumpBatteryLevel\"}"
-        val t: TriggerPumpBatteryLevel = TriggerPumpBatteryLevel(injector).setValue(4.0).comparator(Comparator.Compare.IS_EQUAL)
+        val t: TriggerPumpBatteryLevel = TriggerPumpBatteryLevel(triggerDeps).setValue(4.0).comparator(Comparator.Compare.IS_EQUAL)
         JSONAssert.assertEquals(triggerJson, t.toJSON(), true)
     }
 
     @Test fun fromJSONTest() = runTest {
-        val t: TriggerPumpBatteryLevel = TriggerPumpBatteryLevel(injector).setValue(4.0).comparator(Comparator.Compare.IS_EQUAL)
-        val t2 = TriggerDummy(injector).instantiate(JSONObject(t.toJSON())) as TriggerPumpBatteryLevel
+        val t: TriggerPumpBatteryLevel = TriggerPumpBatteryLevel(triggerDeps).setValue(4.0).comparator(Comparator.Compare.IS_EQUAL)
+        val t2 = triggerFactory.instantiate(JSONObject(t.toJSON())) as TriggerPumpBatteryLevel
         assertThat(t2.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
         assertThat(t2.pumpBatteryLevel.value).isWithin(0.01).of(4.0)
     }

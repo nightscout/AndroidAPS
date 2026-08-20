@@ -30,26 +30,26 @@ class TriggerTempTargetValueTest : TriggerTestBase() {
             )
         )
 
-        var t: TriggerTempTargetValue = TriggerTempTargetValue(injector).setUnits(GlucoseUnit.MMOL).setValue(7.7).comparator(Comparator.Compare.IS_EQUAL)
+        var t: TriggerTempTargetValue = TriggerTempTargetValue(triggerDeps).setUnits(GlucoseUnit.MMOL).setValue(7.7).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isFalse()
-        t = TriggerTempTargetValue(injector).setUnits(GlucoseUnit.MGDL).setValue(140.0).comparator(Comparator.Compare.IS_EQUAL)
+        t = TriggerTempTargetValue(triggerDeps).setUnits(GlucoseUnit.MGDL).setValue(140.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerTempTargetValue(injector).setUnits(GlucoseUnit.MGDL).setValue(140.0).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER)
+        t = TriggerTempTargetValue(triggerDeps).setUnits(GlucoseUnit.MGDL).setValue(140.0).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerTempTargetValue(injector).setUnits(GlucoseUnit.MGDL).setValue(140.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        t = TriggerTempTargetValue(triggerDeps).setUnits(GlucoseUnit.MGDL).setValue(140.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerTempTargetValue(injector).setUnits(GlucoseUnit.MGDL).setValue(139.0).comparator(Comparator.Compare.IS_EQUAL)
+        t = TriggerTempTargetValue(triggerDeps).setUnits(GlucoseUnit.MGDL).setValue(139.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isFalse()
-        t = TriggerTempTargetValue(injector).setUnits(GlucoseUnit.MGDL).setValue(141.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        t = TriggerTempTargetValue(triggerDeps).setUnits(GlucoseUnit.MGDL).setValue(141.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerTempTargetValue(injector).setUnits(GlucoseUnit.MGDL).setValue(141.0).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER)
+        t = TriggerTempTargetValue(triggerDeps).setUnits(GlucoseUnit.MGDL).setValue(141.0).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER)
         assertThat(t.shouldRun()).isFalse()
-        t = TriggerTempTargetValue(injector).setUnits(GlucoseUnit.MGDL).setValue(139.0).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER)
+        t = TriggerTempTargetValue(triggerDeps).setUnits(GlucoseUnit.MGDL).setValue(139.0).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerTempTargetValue(injector).setUnits(GlucoseUnit.MGDL).setValue(139.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        t = TriggerTempTargetValue(triggerDeps).setUnits(GlucoseUnit.MGDL).setValue(139.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.shouldRun()).isFalse()
         assertThat(t.shouldRun()).isFalse()
-        t = TriggerTempTargetValue(injector).comparator(Comparator.Compare.IS_NOT_AVAILABLE)
+        t = TriggerTempTargetValue(triggerDeps).comparator(Comparator.Compare.IS_NOT_AVAILABLE)
         assertThat(t.shouldRun()).isFalse()
         whenever(persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())).thenReturn(null)
         assertThat(t.shouldRun()).isTrue()
@@ -57,7 +57,7 @@ class TriggerTempTargetValueTest : TriggerTestBase() {
 
     @Test
     fun copyConstructorTest() {
-        val t: TriggerTempTargetValue = TriggerTempTargetValue(injector).setUnits(GlucoseUnit.MGDL).setValue(140.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        val t: TriggerTempTargetValue = TriggerTempTargetValue(triggerDeps).setUnits(GlucoseUnit.MGDL).setValue(140.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         val t1 = t.duplicate() as TriggerTempTargetValue
         assertThat(t1.ttValue.value).isWithin(0.01).of(140.0)
         assertThat(t1.ttValue.units).isEqualTo(GlucoseUnit.MGDL)
@@ -68,14 +68,14 @@ class TriggerTempTargetValueTest : TriggerTestBase() {
 
     @Test
     fun toJSONTest() {
-        val t: TriggerTempTargetValue = TriggerTempTargetValue(injector).setUnits(GlucoseUnit.MMOL).setValue(7.7).comparator(Comparator.Compare.IS_EQUAL)
+        val t: TriggerTempTargetValue = TriggerTempTargetValue(triggerDeps).setUnits(GlucoseUnit.MMOL).setValue(7.7).comparator(Comparator.Compare.IS_EQUAL)
         JSONAssert.assertEquals(ttJson, t.toJSON(), true)
     }
 
     @Test
     fun fromJSONTest() {
-        val t: TriggerTempTargetValue = TriggerTempTargetValue(injector).setUnits(GlucoseUnit.MMOL).setValue(7.7).comparator(Comparator.Compare.IS_EQUAL)
-        val t2 = TriggerDummy(injector).instantiate(JSONObject(t.toJSON())) as TriggerTempTargetValue
+        val t: TriggerTempTargetValue = TriggerTempTargetValue(triggerDeps).setUnits(GlucoseUnit.MMOL).setValue(7.7).comparator(Comparator.Compare.IS_EQUAL)
+        val t2 = triggerFactory.instantiate(JSONObject(t.toJSON())) as TriggerTempTargetValue
         assertThat(t2.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
         assertThat(t2.ttValue.value).isWithin(0.01).of(7.7)
         assertThat(t2.ttValue.units).isEqualTo(GlucoseUnit.MMOL)

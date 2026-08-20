@@ -6,18 +6,17 @@ import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.ComparatorExists
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 
-class TriggerTempTarget(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerTempTarget(deps: TriggerDeps) : Trigger(deps) {
 
     var comparator = ComparatorExists(rh)
 
-    constructor(injector: HasAndroidInjector, compare: ComparatorExists.Compare) : this(injector) {
+    constructor(deps: TriggerDeps, compare: ComparatorExists.Compare) : this(deps) {
         comparator = ComparatorExists(rh, compare)
     }
 
-    constructor(injector: HasAndroidInjector, triggerTempTarget: TriggerTempTarget) : this(injector) {
+    constructor(deps: TriggerDeps, triggerTempTarget: TriggerTempTarget) : this(deps) {
         comparator = ComparatorExists(rh, triggerTempTarget.comparator.value)
     }
 
@@ -58,6 +57,6 @@ class TriggerTempTarget(injector: HasAndroidInjector) : Trigger(injector) {
     override fun composeIcon() = IcTtManual
     override fun elementType() = ElementType.TEMP_TARGET_MANAGEMENT
 
-    override fun duplicate(): Trigger = TriggerTempTarget(injector, this)
+    override fun duplicate(): Trigger = TriggerTempTarget(deps, this)
 
 }

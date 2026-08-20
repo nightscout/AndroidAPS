@@ -19,12 +19,12 @@ class TriggerRecurringTimeTest : TriggerTestBase() {
 
     @Test fun shouldRunTest() = runTest {
 
-        var t: TriggerRecurringTime = TriggerRecurringTime(injector).time(89)
+        var t: TriggerRecurringTime = TriggerRecurringTime(triggerDeps).time(89)
         t.days.setAll(true)
         assertThat(t.shouldRun()).isFalse()
 
         // scheduled 1 min before
-        t = TriggerRecurringTime(injector).time(94)
+        t = TriggerRecurringTime(triggerDeps).time(94)
         t.days.setAll(true)
         assertThat(t.shouldRun()).isTrue()
     }
@@ -34,14 +34,14 @@ class TriggerRecurringTimeTest : TriggerTestBase() {
 
     @Test
     fun toJSONTest() = runTest {
-        val t = TriggerRecurringTime(injector).time(4444)
+        val t = TriggerRecurringTime(triggerDeps).time(4444)
         JSONAssert.assertEquals(timeJson, t.toJSON(), true)
     }
 
     @Test
     fun fromJSONTest() = runTest {
-        val t = TriggerRecurringTime(injector).time(4444)
-        val t2 = TriggerDummy(injector).instantiate(JSONObject(t.toJSON())) as TriggerRecurringTime
+        val t = TriggerRecurringTime(triggerDeps).time(4444)
+        val t2 = triggerFactory.instantiate(JSONObject(t.toJSON())) as TriggerRecurringTime
         assertThat(t2.time.value).isEqualTo(4444)
     }
 }

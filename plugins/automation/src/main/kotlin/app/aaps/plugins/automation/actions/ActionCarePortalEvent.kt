@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.actions
 
+import javax.inject.Provider
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Sources
@@ -18,16 +21,18 @@ import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.elements.InputCarePortalMenu
 import app.aaps.plugins.automation.elements.InputDuration
 import app.aaps.plugins.automation.elements.InputString
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
-import javax.inject.Inject
 
-class ActionCarePortalEvent(injector: HasAndroidInjector) : Action(injector) {
+class ActionCarePortalEvent(
+    aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val persistenceLayer: PersistenceLayer,
+    private val profileFunction: ProfileFunction,
+    private val dateUtil: DateUtil,
+    private val glucoseStatusProvider: GlucoseStatusProvider
+) : Action(aapsLogger, rh, pumpEnactResultProvider) {
 
-    @Inject lateinit var persistenceLayer: PersistenceLayer
-    @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
 
     var note = InputString()
     var duration = InputDuration(0, InputDuration.TimeUnit.MINUTES)

@@ -10,10 +10,9 @@ import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDelta
 import app.aaps.plugins.automation.elements.InputDelta.DeltaType
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 
-class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerDelta(deps: TriggerDeps) : Trigger(deps) {
 
     var units: GlucoseUnit = GlucoseUnit.MGDL
     var delta: InputDelta = InputDelta(rh)
@@ -31,13 +30,13 @@ class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
         else InputDelta(rh, 0.0, (-MGDL_MAX), MGDL_MAX, 1.0, NumberFormat.INTEGER, DeltaType.DELTA)
     }
 
-    constructor(injector: HasAndroidInjector, inputDelta: InputDelta, units: GlucoseUnit, comparator: Comparator.Compare) : this(injector) {
+    constructor(deps: TriggerDeps, inputDelta: InputDelta, units: GlucoseUnit, comparator: Comparator.Compare) : this(deps) {
         this.units = units
         this.delta = inputDelta
         this.comparator.value = comparator
     }
 
-    private constructor(injector: HasAndroidInjector, triggerDelta: TriggerDelta) : this(injector) {
+    private constructor(deps: TriggerDeps, triggerDelta: TriggerDelta) : this(deps) {
         units = triggerDelta.units
         delta = InputDelta(rh, triggerDelta.delta)
         comparator = Comparator(rh, triggerDelta.comparator.value)
@@ -108,6 +107,6 @@ class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
     override fun composeIcon() = IcDelta
     override fun elementType() = ElementType.AUTOMATION
 
-    override fun duplicate(): Trigger = TriggerDelta(injector, this)
+    override fun duplicate(): Trigger = TriggerDelta(deps, this)
 
 }

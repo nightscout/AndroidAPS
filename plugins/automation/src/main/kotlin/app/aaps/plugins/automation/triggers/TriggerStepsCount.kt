@@ -9,10 +9,9 @@ import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
 import app.aaps.plugins.automation.elements.InputDropdownMenu
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 
-class TriggerStepsCount(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerStepsCount(deps: TriggerDeps) : Trigger(deps) {
 
     var measurementDuration: InputDropdownMenu = InputDropdownMenu(rh, "5")
     var stepsCount: InputDouble = InputDouble(100.0, 0.0, 20000.0, 10.0, NumberFormat.INTEGER)
@@ -79,7 +78,7 @@ class TriggerStepsCount(injector: HasAndroidInjector) : Trigger(injector) {
     override fun elementType() = ElementType.EXERCISE
 
     override fun duplicate(): Trigger {
-        return TriggerStepsCount(injector).also { o ->
+        return TriggerStepsCount(deps).also { o ->
             o.stepsCount.setValue(stepsCount.value)
             o.measurementDuration.setValue(measurementDuration.value)
             o.comparator.setValue(comparator.value)

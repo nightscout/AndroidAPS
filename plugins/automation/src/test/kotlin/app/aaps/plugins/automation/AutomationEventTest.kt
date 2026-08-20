@@ -1,5 +1,9 @@
 package app.aaps.plugins.automation
 
+import org.mockito.kotlin.mock
+import app.aaps.plugins.automation.actions.ActionFactory
+import javax.inject.Provider
+import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
@@ -12,8 +16,6 @@ import app.aaps.plugins.automation.triggers.TriggerConnectorTest
 import app.aaps.plugins.automation.triggers.TriggerDummy
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -25,29 +27,37 @@ class AutomationEventTest : TestBase() {
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var profileFunction: ProfileFunction
+    @Mock lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
 
-    var injector: HasAndroidInjector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is AutomationEventObject) {
-                it.aapsLogger = aapsLogger
-            }
-            if (it is Action) {
-                it.aapsLogger = aapsLogger
-                it.rh = rh
-            }
-            if (it is ActionSMBChange) {
-                it.dateUtil = dateUtil
-                it.preferences = preferences
-            }
-        }
+    // Real factories over mocks: fromJSON has to rebuild actions and triggers for the clone assertions.
+    private val triggerDeps: app.aaps.plugins.automation.triggers.TriggerDeps by lazy {
+        app.aaps.plugins.automation.triggers.TriggerDeps(
+            aapsLogger, mock(), rh, profileFunction, mock(), preferences, mock(), mock(), mock(), mock(), mock(), dateUtil
+        ) { triggerFactory }
+    }
+
+    private val triggerFactory: app.aaps.plugins.automation.triggers.TriggerFactory by lazy {
+        app.aaps.plugins.automation.triggers.TriggerFactory(triggerDeps, mock(), mock(), mock(), mock())
+    }
+
+    private val actionFactory: ActionFactory by lazy {
+        ActionFactory(
+            triggerDeps, aapsLogger, rh, pumpEnactResultProvider, mock(), mock(), dateUtil, mock(), mock(), mock(),
+            profileFunction, mock(), mock(), mock(), mock(), mock(), preferences, mock(), mock(), mock(), mock(),
+            mock(), mock()
+        )
+    }
+
+    private val eventFactory: AutomationEventFactory by lazy {
+        AutomationEventFactory(aapsLogger, dateUtil, actionFactory, triggerFactory, triggerDeps)
     }
 
     @Test fun testCloneEvent() {
         // create test object
-        val event = AutomationEventObject(injector)
+        val event = eventFactory.newEvent()
         event.title = "Test"
-        event.trigger = TriggerDummy(injector).instantiate(JSONObject(TriggerConnectorTest().oneItem)) as TriggerConnector
-        event.addAction(ActionSMBChange(injector))
+        event.trigger = triggerFactory.instantiate(JSONObject(TriggerConnectorTest().oneItem)) as TriggerConnector
+        event.addAction(ActionSMBChange(aapsLogger, rh, pumpEnactResultProvider, dateUtil, preferences))
 
         // export to json
         val eventJson = event.toJSON()
@@ -62,7 +72,7 @@ class AutomationEventTest : TestBase() {
         assertThat(parsed.getBoolean("systemAction")).isFalse()
 
         // clone
-        val clone = AutomationEventObject(injector).fromJSON(eventJson)
+        val clone = eventFactory.fromJSON(eventJson)
 
         // check id preserved
         assertThat(clone.id).isEqualTo(event.id)
@@ -83,11 +93,11 @@ class AutomationEventTest : TestBase() {
     }
 
     @Test fun idPreservedOnRoundtrip() {
-        val event = AutomationEventObject(injector)
+        val event = eventFactory.newEvent()
         event.title = "Test"
-        event.trigger = TriggerDummy(injector).instantiate(JSONObject(TriggerConnectorTest().oneItem)) as TriggerConnector
+        event.trigger = triggerFactory.instantiate(JSONObject(TriggerConnectorTest().oneItem)) as TriggerConnector
         val originalId = event.id
-        val clone = AutomationEventObject(injector).fromJSON(event.toJSON())
+        val clone = eventFactory.fromJSON(event.toJSON())
         assertThat(clone.id).isEqualTo(originalId)
     }
 
@@ -95,17 +105,17 @@ class AutomationEventTest : TestBase() {
         // Simulate legacy JSON without id field
         val legacyJson =
             "{\"userAction\":false,\"autoRemove\":false,\"readOnly\":false,\"trigger\":\"{\\\"data\\\":{\\\"connectorType\\\":\\\"AND\\\",\\\"triggerList\\\":[]},\\\"type\\\":\\\"TriggerConnector\\\"}\",\"title\":\"Legacy\",\"systemAction\":false,\"actions\":[],\"enabled\":true}"
-        val event = AutomationEventObject(injector).fromJSON(legacyJson)
+        val event = eventFactory.fromJSON(legacyJson)
         assertThat(event.id).isNotEmpty()
         assertThat(event.title).isEqualTo("Legacy")
     }
 
     @Test fun hasStopProcessing() {
-        val event = AutomationEventObject(injector)
+        val event = eventFactory.newEvent()
         event.title = "Test"
-        event.trigger = TriggerDummy(injector).instantiate(JSONObject(TriggerConnectorTest().oneItem)) as TriggerConnector
+        event.trigger = triggerFactory.instantiate(JSONObject(TriggerConnectorTest().oneItem)) as TriggerConnector
         assertThat(event.hasStopProcessing()).isFalse()
-        event.addAction(ActionStopProcessing(injector))
+        event.addAction(ActionStopProcessing(aapsLogger, rh, pumpEnactResultProvider))
         assertThat(event.hasStopProcessing()).isTrue()
     }
 }

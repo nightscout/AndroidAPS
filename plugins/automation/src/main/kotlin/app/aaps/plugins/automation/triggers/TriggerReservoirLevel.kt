@@ -9,15 +9,14 @@ import app.aaps.core.utils.JsonHelper.safeGetDouble
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 
-class TriggerReservoirLevel(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerReservoirLevel(deps: TriggerDeps) : Trigger(deps) {
 
     var reservoirLevel: InputDouble = InputDouble(0.0, 0.0, 800.0, 1.0, NumberFormat.INTEGER)
     var comparator: Comparator = Comparator(rh)
 
-    private constructor(injector: HasAndroidInjector, triggerReservoirLevel: TriggerReservoirLevel) : this(injector) {
+    private constructor(deps: TriggerDeps, triggerReservoirLevel: TriggerReservoirLevel) : this(deps) {
         reservoirLevel = InputDouble(triggerReservoirLevel.reservoirLevel)
         comparator = Comparator(rh, triggerReservoirLevel.comparator.value)
     }
@@ -70,6 +69,6 @@ class TriggerReservoirLevel(injector: HasAndroidInjector) : Trigger(injector) {
     override fun composeIcon() = IcPumpCartridge
     override fun elementType() = ElementType.FILL
 
-    override fun duplicate(): Trigger = TriggerReservoirLevel(injector, this)
+    override fun duplicate(): Trigger = TriggerReservoirLevel(deps, this)
 
 }

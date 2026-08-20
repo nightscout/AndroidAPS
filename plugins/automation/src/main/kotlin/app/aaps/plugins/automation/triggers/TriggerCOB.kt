@@ -10,17 +10,16 @@ import app.aaps.core.utils.JsonHelper.safeGetDouble
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 
-class TriggerCOB(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerCOB(deps: TriggerDeps) : Trigger(deps) {
 
     private val minValue = 0
     private val maxValue = preferences.get(IntKey.SafetyMaxCarbs)
     var cob: InputDouble = InputDouble(0.0, minValue.toDouble(), maxValue.toDouble(), 1.0, NumberFormat.INTEGER)
     var comparator: Comparator = Comparator(rh)
 
-    private constructor(injector: HasAndroidInjector, triggerCOB: TriggerCOB) : this(injector) {
+    private constructor(deps: TriggerDeps, triggerCOB: TriggerCOB) : this(deps) {
         cob = InputDouble(triggerCOB.cob)
         comparator = Comparator(rh, triggerCOB.comparator.value)
     }
@@ -74,6 +73,6 @@ class TriggerCOB(injector: HasAndroidInjector) : Trigger(injector) {
     override fun composeIcon() = IcCarbs
     override fun elementType() = ElementType.COB
 
-    override fun duplicate(): Trigger = TriggerCOB(injector, this)
+    override fun duplicate(): Trigger = TriggerCOB(deps, this)
 
 }

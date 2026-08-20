@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.actions
 
+import javax.inject.Provider
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
@@ -9,14 +12,16 @@ import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputDropdownOnOffMenu
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
-import javax.inject.Inject
 
-class ActionSMBChange(injector: HasAndroidInjector) : Action(injector) {
+class ActionSMBChange(
+    aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val dateUtil: DateUtil,
+    private val preferences: Preferences
+) : Action(aapsLogger, rh, pumpEnactResultProvider) {
 
-    @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var preferences: Preferences
 
     var smbState: InputDropdownOnOffMenu = InputDropdownOnOffMenu(rh, true)
 

@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.actions
 
+import javax.inject.Provider
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.logging.AAPSLogger
 import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Alarm
@@ -12,21 +15,33 @@ import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputString
 import app.aaps.plugins.automation.TimerUtil
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
-import javax.inject.Inject
 
-class ActionAlarm(injector: HasAndroidInjector) : Action(injector) {
+class ActionAlarm(
+    aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val rxBus: RxBus,
+    private val context: Context,
+    private val dateUtil: DateUtil,
+    private val timerUtil: TimerUtil,
+    private val config: Config
+) : Action(aapsLogger, rh, pumpEnactResultProvider) {
 
-    @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var context: Context
-    @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var timerUtil: TimerUtil
-    @Inject lateinit var config: Config
 
     var text = InputString()
 
-    constructor(injector: HasAndroidInjector, text: String) : this(injector) {
+    constructor(
+        aapsLogger: AAPSLogger,
+        rh: ResourceHelper,
+        pumpEnactResultProvider: Provider<PumpEnactResult>,
+        rxBus: RxBus,
+        context: Context,
+        dateUtil: DateUtil,
+        timerUtil: TimerUtil,
+        config: Config,
+        text: String
+    ) : this(aapsLogger, rh, pumpEnactResultProvider, rxBus, context, dateUtil, timerUtil, config) {
         this.text = InputString(text)
     }
 

@@ -17,61 +17,61 @@ class TriggerAutosensValueTest : TriggerTestBase() {
         whenever(preferences.get(DoubleKey.AutosensMax)).thenReturn(1.2)
         whenever(preferences.get(DoubleKey.AutosensMin)).thenReturn(0.7)
         whenever(autosensDataStore.getLastAutosensData(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(generateAutosensData())
-        var t = TriggerAutosensValue(injector)
+        var t = TriggerAutosensValue(triggerDeps)
         t.autosens.value = 110.0
         t.comparator.value = Comparator.Compare.IS_EQUAL
         assertThat(t.autosens.value).isWithin(0.01).of(110.0)
         assertThat(t.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isFalse()
-        t = TriggerAutosensValue(injector)
+        t = TriggerAutosensValue(triggerDeps)
         t.autosens.value = 100.0
         t.comparator.value = Comparator.Compare.IS_EQUAL
         assertThat(t.autosens.value).isWithin(0.01).of(100.0)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerAutosensValue(injector)
+        t = TriggerAutosensValue(triggerDeps)
         t.autosens.value = 50.0
         t.comparator.value = Comparator.Compare.IS_EQUAL_OR_GREATER
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerAutosensValue(injector)
+        t = TriggerAutosensValue(triggerDeps)
         t.autosens.value = 310.0
         t.comparator.value = Comparator.Compare.IS_EQUAL_OR_LESSER
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerAutosensValue(injector)
+        t = TriggerAutosensValue(triggerDeps)
         t.autosens.value = 420.0
         t.comparator.value = Comparator.Compare.IS_EQUAL
         assertThat(t.shouldRun()).isFalse()
-        t = TriggerAutosensValue(injector)
+        t = TriggerAutosensValue(triggerDeps)
         t.autosens.value = 390.0
         t.comparator.value = Comparator.Compare.IS_EQUAL_OR_LESSER
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerAutosensValue(injector)
+        t = TriggerAutosensValue(triggerDeps)
         t.autosens.value = 390.0
         t.comparator.value = Comparator.Compare.IS_EQUAL_OR_GREATER
         assertThat(t.shouldRun()).isFalse()
-        t = TriggerAutosensValue(injector)
+        t = TriggerAutosensValue(triggerDeps)
         t.autosens.value = 20.0
         t.comparator.value = Comparator.Compare.IS_EQUAL_OR_GREATER
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerAutosensValue(injector)
+        t = TriggerAutosensValue(triggerDeps)
         t.autosens.value = 390.0
         t.comparator.value = Comparator.Compare.IS_EQUAL_OR_LESSER
         assertThat(t.shouldRun()).isTrue()
         whenever(autosensDataStore.getLastAutosensData(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(AutosensDataObject(aapsLogger, preferences, dateUtil))
-        t = TriggerAutosensValue(injector)
+        t = TriggerAutosensValue(triggerDeps)
         t.autosens.value = 80.0
         t.comparator.value = Comparator.Compare.IS_EQUAL_OR_LESSER
         assertThat(t.shouldRun()).isFalse()
 
         // Test autosensData == null and Comparator == IS_NOT_AVAILABLE
         whenever(autosensDataStore.getLastAutosensData(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(null)
-        t = TriggerAutosensValue(injector)
+        t = TriggerAutosensValue(triggerDeps)
         t.comparator.value = Comparator.Compare.IS_NOT_AVAILABLE
         assertThat(t.shouldRun()).isTrue()
     }
 
     @Test
     fun copyConstructorTest() = runTest {
-        val t = TriggerAutosensValue(injector)
+        val t = TriggerAutosensValue(triggerDeps)
         t.autosens.value = 213.0
         t.comparator.value = Comparator.Compare.IS_EQUAL_OR_LESSER
         val t1 = t.duplicate() as TriggerAutosensValue
@@ -83,7 +83,7 @@ class TriggerAutosensValueTest : TriggerTestBase() {
 
     @Test
     fun toJSONTest() = runTest {
-        val t = TriggerAutosensValue(injector)
+        val t = TriggerAutosensValue(triggerDeps)
         t.autosens.value = 410.0
         t.comparator.value = Comparator.Compare.IS_EQUAL
         JSONAssert.assertEquals(asJson, t.toJSON(), true)
@@ -91,10 +91,10 @@ class TriggerAutosensValueTest : TriggerTestBase() {
 
     @Test
     fun fromJSONTest() = runTest {
-        val t = TriggerAutosensValue(injector)
+        val t = TriggerAutosensValue(triggerDeps)
         t.autosens.value = 410.0
         t.comparator.value = Comparator.Compare.IS_EQUAL
-        val t2 = TriggerDummy(injector).instantiate(JSONObject(t.toJSON())) as TriggerAutosensValue
+        val t2 = triggerFactory.instantiate(JSONObject(t.toJSON())) as TriggerAutosensValue
         assertThat(t2.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
         assertThat(t2.autosens.value).isWithin(0.01).of(410.0)
     }

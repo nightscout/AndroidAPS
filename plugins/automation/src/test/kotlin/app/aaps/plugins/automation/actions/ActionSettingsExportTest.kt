@@ -21,7 +21,7 @@ class ActionSettingsExportTest : ActionsTestBase() {
     @BeforeEach
     fun setup() {
         whenever(rh.gs(anyInt(), anyVararg())).thenReturn("desc")
-        sut = ActionSettingsExport(injector)
+        sut = ActionSettingsExport(aapsLogger, rh, pumpEnactResultProvider, rxBus, notificationManager, context, dateUtil, config, persistenceLayer, importExportPrefs, exportPasswordDataStore, preferences)
     }
 
     @Test fun friendlyName() {

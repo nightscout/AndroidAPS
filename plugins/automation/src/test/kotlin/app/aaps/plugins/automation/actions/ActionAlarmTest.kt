@@ -18,19 +18,6 @@ class ActionAlarmTest : TestBaseWithProfile() {
     private lateinit var timerUtil: TimerUtil
     private lateinit var sut: ActionAlarm
 
-    init {
-        addInjector {
-            if (it is ActionAlarm) {
-                it.rh = rh
-                it.rxBus = rxBus
-                it.context = context
-                it.timerUtil = timerUtil
-                it.dateUtil = dateUtil
-                it.config = config
-                it.pumpEnactResultProvider = pumpEnactResultProvider
-            }
-        }
-    }
 
     @BeforeEach
     fun setup() {
@@ -40,7 +27,7 @@ class ActionAlarmTest : TestBaseWithProfile() {
         // static framework call), so it falls into its catch → this snackbar string must be stubbed (non-null).
         whenever(rh.gs(R.string.error_setting_reminder)).thenReturn("error")
         timerUtil = TimerUtil(context, rh, rxBus, dateUtil)
-        sut = ActionAlarm(injector)
+        sut = ActionAlarm(aapsLogger, rh, pumpEnactResultProvider, rxBus, context, dateUtil, timerUtil, config)
     }
 
     @Test fun friendlyNameTest() = runTest {

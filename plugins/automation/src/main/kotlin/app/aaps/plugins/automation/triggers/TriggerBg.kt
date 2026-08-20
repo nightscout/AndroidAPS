@@ -8,21 +8,20 @@ import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputBg
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import kotlin.math.roundToInt
 
-class TriggerBg(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerBg(deps: TriggerDeps) : Trigger(deps) {
 
     var bg = InputBg(profileFunction)
     var comparator = Comparator(rh)
 
-    constructor(injector: HasAndroidInjector, value: Double, units: GlucoseUnit, compare: Comparator.Compare) : this(injector) {
+    constructor(deps: TriggerDeps, value: Double, units: GlucoseUnit, compare: Comparator.Compare) : this(deps) {
         bg = InputBg(profileFunction, value, units)
         comparator = Comparator(rh, compare)
     }
 
-    constructor(injector: HasAndroidInjector, triggerBg: TriggerBg) : this(injector) {
+    constructor(deps: TriggerDeps, triggerBg: TriggerBg) : this(deps) {
         bg = InputBg(profileFunction, triggerBg.bg.value, triggerBg.bg.units)
         comparator = Comparator(rh, triggerBg.comparator.value)
     }
@@ -86,6 +85,6 @@ class TriggerBg(injector: HasAndroidInjector) : Trigger(injector) {
     override fun composeIcon() = IcBgCheck
     override fun elementType() = ElementType.BG_CHECK
 
-    override fun duplicate(): Trigger = TriggerBg(injector, this)
+    override fun duplicate(): Trigger = TriggerBg(deps, this)
 
 }

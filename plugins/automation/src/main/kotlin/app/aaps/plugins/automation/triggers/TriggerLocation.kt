@@ -11,10 +11,9 @@ import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputDouble
 import app.aaps.plugins.automation.elements.InputLocationMode
 import app.aaps.plugins.automation.elements.InputString
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 
-class TriggerLocation(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerLocation(deps: TriggerDeps) : Trigger(deps) {
 
     var latitude = InputDouble(0.0, -90.0, +90.0, 0.000001, NumberFormat.DECIMAL_6)
     var longitude = InputDouble(0.0, -180.0, +180.0, 0.000001, NumberFormat.DECIMAL_6)
@@ -24,7 +23,7 @@ class TriggerLocation(injector: HasAndroidInjector) : Trigger(injector) {
 
     var lastMode = InputLocationMode.Mode.INSIDE
 
-    private constructor(injector: HasAndroidInjector, triggerLocation: TriggerLocation) : this(injector) {
+    private constructor(deps: TriggerDeps, triggerLocation: TriggerLocation) : this(deps) {
         latitude = InputDouble(triggerLocation.latitude)
         longitude = InputDouble(triggerLocation.longitude)
         distance = InputDouble(triggerLocation.distance)
@@ -81,7 +80,7 @@ class TriggerLocation(injector: HasAndroidInjector) : Trigger(injector) {
     override fun composeIcon() = Icons.Filled.LocationOn
     override fun elementType() = ElementType.AAPS
 
-    override fun duplicate(): Trigger = TriggerLocation(injector, this)
+    override fun duplicate(): Trigger = TriggerLocation(deps, this)
 
     // Method to return the actual mode based on the current distance
     fun currentMode(currentDistance: Double): InputLocationMode.Mode {

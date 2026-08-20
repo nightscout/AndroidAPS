@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.actions
 
+import javax.inject.Provider
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.logging.AAPSLogger
 import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FileDownload
@@ -25,21 +28,23 @@ import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputString
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
-import javax.inject.Inject
 
-class ActionSettingsExport(injector: HasAndroidInjector) : Action(injector) {
+class ActionSettingsExport(
+    aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val rxBus: RxBus,
+    private val notificationManager: NotificationManager,
+    private val context: Context,
+    private val dateUtil: DateUtil,
+    private val config: Config,
+    private val persistenceLayer: PersistenceLayer,
+    private val importExportPrefs: ImportExportPrefs,
+    private val exportPasswordDataStore: ExportPasswordDataStore,
+    private val preferences: Preferences
+) : Action(aapsLogger, rh, pumpEnactResultProvider) {
 
-    @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var notificationManager: NotificationManager
-    @Inject lateinit var context: Context
-    @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var config: Config
-    @Inject lateinit var persistenceLayer: PersistenceLayer
-    @Inject lateinit var importExportPrefs: ImportExportPrefs
-    @Inject lateinit var exportPasswordDataStore: ExportPasswordDataStore
-    @Inject lateinit var preferences: Preferences
 
     private val text = InputString()
 

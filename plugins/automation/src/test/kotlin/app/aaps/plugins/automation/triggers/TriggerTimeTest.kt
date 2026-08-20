@@ -19,11 +19,11 @@ class TriggerTimeTest : TriggerTestBase() {
         whenever(rh.gs(R.string.atspecifiedtime)).thenReturn("At %1\$s")
 
         // scheduled 1 min before
-        var t: TriggerTime = TriggerTime(injector).runAt(now - T.mins(1).msecs())
+        var t: TriggerTime = TriggerTime(triggerDeps).runAt(now - T.mins(1).msecs())
         assertThat(t.shouldRun()).isTrue()
 
         // scheduled 1 min in the future
-        t = TriggerTime(injector).runAt(now + T.mins(1).msecs())
+        t = TriggerTime(triggerDeps).runAt(now + T.mins(1).msecs())
         assertThat(t.shouldRun()).isFalse()
     }
 
@@ -31,20 +31,20 @@ class TriggerTimeTest : TriggerTestBase() {
 
     @Test
     fun toJSONTest() = runTest {
-        val t: TriggerTime = TriggerTime(injector).runAt(now - T.mins(1).msecs())
+        val t: TriggerTime = TriggerTime(triggerDeps).runAt(now - T.mins(1).msecs())
         JSONAssert.assertEquals(timeJson, t.toJSON(), true)
     }
 
     @Test
     fun fromJSONTest() = runTest {
-        val t: TriggerTime = TriggerTime(injector).runAt(now - T.mins(1).msecs())
-        val t2 = TriggerDummy(injector).instantiate(JSONObject(t.toJSON())) as TriggerTime
+        val t: TriggerTime = TriggerTime(triggerDeps).runAt(now - T.mins(1).msecs())
+        val t2 = triggerFactory.instantiate(JSONObject(t.toJSON())) as TriggerTime
         assertThat(t2.time.value).isEqualTo(now - T.mins(1).msecs())
     }
 
     @Test
     fun copyConstructorTest() = runTest {
-        val t = TriggerTime(injector)
+        val t = TriggerTime(triggerDeps)
         t.runAt(now)
         val t1 = t.duplicate() as TriggerTime
         assertThat(t1.time.value).isEqualTo(now)
@@ -52,12 +52,12 @@ class TriggerTimeTest : TriggerTestBase() {
 
     @Test
     fun friendlyNameTest() = runTest {
-        assertThat(TriggerTime(injector).friendlyName()).isEqualTo(app.aaps.core.ui.R.string.time)
+        assertThat(TriggerTime(triggerDeps).friendlyName()).isEqualTo(app.aaps.core.ui.R.string.time)
     }
 
     @Test
     fun friendlyDescriptionTest() = runTest {
         whenever(rh.gs(R.string.atspecifiedtime)).thenReturn("At %1\$s")
-        assertThat(TriggerTime(injector).friendlyDescription()).startsWith("At ")
+        assertThat(TriggerTime(triggerDeps).friendlyDescription()).startsWith("At ")
     }
 }

@@ -10,15 +10,14 @@ import app.aaps.core.utils.JsonHelper.safeGetDouble
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 
-class TriggerPumpBatteryAge(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerPumpBatteryAge(deps: TriggerDeps) : Trigger(deps) {
 
     var pumpBatteryAgeHours: InputDouble = InputDouble(0.0, 0.0, 336.0, 0.1, NumberFormat.DECIMAL_1)
     var comparator: Comparator = Comparator(rh)
 
-    private constructor(injector: HasAndroidInjector, triggerPumpBatteryAge: TriggerPumpBatteryAge) : this(injector) {
+    private constructor(deps: TriggerDeps, triggerPumpBatteryAge: TriggerPumpBatteryAge) : this(deps) {
         pumpBatteryAgeHours = InputDouble(triggerPumpBatteryAge.pumpBatteryAgeHours)
         comparator = Comparator(rh, triggerPumpBatteryAge.comparator.value)
     }
@@ -79,6 +78,6 @@ class TriggerPumpBatteryAge(injector: HasAndroidInjector) : Trigger(injector) {
     override fun composeIcon() = IcPumpBattery
     override fun elementType() = ElementType.BATTERY_CHANGE
 
-    override fun duplicate(): Trigger = TriggerPumpBatteryAge(injector, this)
+    override fun duplicate(): Trigger = TriggerPumpBatteryAge(deps, this)
 
 }

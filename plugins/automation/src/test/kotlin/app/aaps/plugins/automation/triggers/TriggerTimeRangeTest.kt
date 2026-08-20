@@ -25,44 +25,44 @@ class TriggerTimeRangeTest : TriggerTestBase() {
     @Test
     fun shouldRunTest() = runTest {
         // range starts 1 min in the future
-        var t: TriggerTimeRange = TriggerTimeRange(injector).period((now + 1).toInt(), (now + 30).toInt())
+        var t: TriggerTimeRange = TriggerTimeRange(triggerDeps).period((now + 1).toInt(), (now + 30).toInt())
         assertThat(t.shouldRun()).isFalse()
 
         // range starts 30 min back
-        t = TriggerTimeRange(injector).period((now - 30).toInt(), (now + 30).toInt())
+        t = TriggerTimeRange(triggerDeps).period((now - 30).toInt(), (now + 30).toInt())
         assertThat(t.shouldRun()).isTrue()
 
         // Period is all day long
-        t = TriggerTimeRange(injector).period(1, 1440)
+        t = TriggerTimeRange(triggerDeps).period(1, 1440)
         assertThat(t.shouldRun()).isTrue()
     }
 
     @Test
     fun toJSONTest() = runTest {
-        val t: TriggerTimeRange = TriggerTimeRange(injector).period((now - 1).toInt(), (now + 30).toInt())
+        val t: TriggerTimeRange = TriggerTimeRange(triggerDeps).period((now - 1).toInt(), (now + 30).toInt())
         JSONAssert.assertEquals(timeJson, t.toJSON(), true)
     }
 
     @Test
     fun fromJSONTest() = runTest {
-        val t: TriggerTimeRange = TriggerTimeRange(injector).period(120, 180)
-        val t2 = TriggerDummy(injector).instantiate(JSONObject(t.toJSON())) as TriggerTimeRange
+        val t: TriggerTimeRange = TriggerTimeRange(triggerDeps).period(120, 180)
+        val t2 = triggerFactory.instantiate(JSONObject(t.toJSON())) as TriggerTimeRange
         assertThat(t2.period(753, 360).range.start).isEqualTo((now - 1).toInt())
         assertThat(t2.period(753, 360).range.end).isEqualTo(360)
     }
 
     @Test fun copyConstructorTest() = runTest {
-        val t = TriggerTimeRange(injector)
+        val t = TriggerTimeRange(triggerDeps)
         t.period(now.toInt(), (now + 30).toInt())
         val t1 = t.duplicate() as TriggerTimeRange
         assertThat(t1.range.start).isEqualTo(now.toInt())
     }
 
     @Test fun friendlyNameTest() = runTest {
-        assertThat(TriggerTimeRange(injector).friendlyName()).isEqualTo(R.string.time_range)
+        assertThat(TriggerTimeRange(triggerDeps).friendlyName()).isEqualTo(R.string.time_range)
     }
 
     @Test fun friendlyDescriptionTest() = runTest {
-        assertThat(TriggerTimeRange(injector).friendlyDescription()).isEqualTo("Time is between 12:34 PM and 12:34 PM")
+        assertThat(TriggerTimeRange(triggerDeps).friendlyDescription()).isEqualTo("Time is between 12:34 PM and 12:34 PM")
     }
 }

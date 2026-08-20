@@ -6,10 +6,9 @@ import app.aaps.core.ui.compose.icons.IcPatchPump
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 
-class TriggerPodChange(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerPodChange(deps: TriggerDeps) : Trigger(deps) {
 
     override suspend fun shouldRun(): Boolean {
         val eventLastSettingsExport = persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SETTINGS_EXPORT)
@@ -42,6 +41,6 @@ class TriggerPodChange(injector: HasAndroidInjector) : Trigger(injector) {
     override fun composeIcon() = IcPatchPump
     override fun elementType() = ElementType.CANNULA_CHANGE
 
-    override fun duplicate(): Trigger = TriggerPodChange(injector)
+    override fun duplicate(): Trigger = TriggerPodChange(deps)
 
 }

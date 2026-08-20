@@ -7,12 +7,12 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.ui.compose.icons.IcUserOptions
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.plugins.automation.AutomationEventObject
+import app.aaps.plugins.automation.AutomationEventFactory
 import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.events.EventAutomationUpdateGui
 import app.aaps.plugins.automation.triggers.TriggerConnector
 import app.aaps.plugins.automation.triggers.TriggerLocation
-import dagger.android.HasAndroidInjector
 import app.aaps.core.interfaces.rx.collectResilient
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.CoroutineScope
@@ -30,7 +30,7 @@ class AutomationStateHolder(
     private val plugin: AutomationRuntime,
     private val rxBus: RxBus,
     private val aapsLogger: AAPSLogger,
-    private val injector: HasAndroidInjector
+    private val automationEventFactory: AutomationEventFactory
 ) {
 
     private val _state = MutableStateFlow(AutomationUiState())
@@ -45,7 +45,7 @@ class AutomationStateHolder(
     private var scope: CoroutineScope? = null
 
     // Working copy for edit
-    private var workingEvent: AutomationEventObject = AutomationEventObject(injector)
+    private var workingEvent: AutomationEventObject = automationEventFactory.newEvent()
     private var workingPosition: Int = -1
 
     fun start() {
@@ -118,7 +118,7 @@ class AutomationStateHolder(
 
     // ---- Navigation / Edit ----
     fun openNew() {
-        workingEvent = AutomationEventObject(injector)
+        workingEvent = automationEventFactory.newEvent()
         workingPosition = -1
         snapshotEvent()
         _route.value = AutomationRoute.Edit(-1)
@@ -127,7 +127,7 @@ class AutomationStateHolder(
 
     fun openEdit(position: Int) {
         val source = plugin.at(position)
-        workingEvent = AutomationEventObject(injector).fromJSON(source.toJSON())
+        workingEvent = automationEventFactory.fromJSON(source.toJSON())
         workingPosition = position
         snapshotEvent()
         _route.value = AutomationRoute.Edit(position)

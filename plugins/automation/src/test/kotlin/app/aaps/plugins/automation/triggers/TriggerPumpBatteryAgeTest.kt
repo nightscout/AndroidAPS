@@ -16,36 +16,36 @@ class TriggerPumpBatteryAgeTest : TriggerTestBase() {
     @Test fun shouldRunTest() = runTest {
         val pumpBatteryChangeEvent = TE(glucoseUnit = GlucoseUnit.MGDL, timestamp = now - T.hours(6).msecs(), type = TE.Type.PUMP_BATTERY_CHANGE)
         whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.PUMP_BATTERY_CHANGE)).thenReturn(pumpBatteryChangeEvent)
-        var t: TriggerPumpBatteryAge = TriggerPumpBatteryAge(injector).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
+        var t: TriggerPumpBatteryAge = TriggerPumpBatteryAge(triggerDeps).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isFalse()
-        t = TriggerPumpBatteryAge(injector).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
+        t = TriggerPumpBatteryAge(triggerDeps).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerPumpBatteryAge(injector).setValue(5.0).comparator(Comparator.Compare.IS_GREATER)
+        t = TriggerPumpBatteryAge(triggerDeps).setValue(5.0).comparator(Comparator.Compare.IS_GREATER)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerPumpBatteryAge(injector).setValue(5.0).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER)
+        t = TriggerPumpBatteryAge(triggerDeps).setValue(5.0).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerPumpBatteryAge(injector).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        t = TriggerPumpBatteryAge(triggerDeps).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerPumpBatteryAge(injector).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
+        t = TriggerPumpBatteryAge(triggerDeps).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isFalse()
-        t = TriggerPumpBatteryAge(injector).setValue(10.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        t = TriggerPumpBatteryAge(triggerDeps).setValue(10.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerPumpBatteryAge(injector).setValue(5.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        t = TriggerPumpBatteryAge(triggerDeps).setValue(5.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.shouldRun()).isFalse()
     }
 
     @Test fun shouldRunNotAvailable() = runTest {
         whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.PUMP_BATTERY_CHANGE)).thenReturn(null)
-        var t = TriggerPumpBatteryAge(injector).apply { comparator.value = Comparator.Compare.IS_NOT_AVAILABLE }
+        var t = TriggerPumpBatteryAge(triggerDeps).apply { comparator.value = Comparator.Compare.IS_NOT_AVAILABLE }
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerPumpBatteryAge(injector).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
+        t = TriggerPumpBatteryAge(triggerDeps).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isFalse()
     }
 
     @Test fun shouldRunBatteryAgeSupport() = runTest {
         val pumpBatteryChangeEvent = TE(glucoseUnit = GlucoseUnit.MGDL, timestamp = now - T.hours(6).msecs(), type = TE.Type.PUMP_BATTERY_CHANGE)
         whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.PUMP_BATTERY_CHANGE)).thenReturn(pumpBatteryChangeEvent)
-        val t: TriggerPumpBatteryAge = TriggerPumpBatteryAge(injector).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
+        val t: TriggerPumpBatteryAge = TriggerPumpBatteryAge(triggerDeps).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
 
         whenever(pumpPluginWithConcentration.isBatteryChangeLoggingEnabled()).thenReturn(false)
         pumpDescription.isBatteryReplaceable = false
@@ -60,20 +60,20 @@ class TriggerPumpBatteryAgeTest : TriggerTestBase() {
     }
 
     @Test fun copyConstructorTest() {
-        val t: TriggerPumpBatteryAge = TriggerPumpBatteryAge(injector).setValue(213.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        val t: TriggerPumpBatteryAge = TriggerPumpBatteryAge(triggerDeps).setValue(213.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.pumpBatteryAgeHours.value).isWithin(0.01).of(213.0)
         assertThat(t.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL_OR_LESSER)
     }
 
     @Test fun toJSONTest() {
         val triggerJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"pumpBatteryAgeHours\":4},\"type\":\"TriggerPumpBatteryAge\"}"
-        val t: TriggerPumpBatteryAge = TriggerPumpBatteryAge(injector).setValue(4.0).comparator(Comparator.Compare.IS_EQUAL)
+        val t: TriggerPumpBatteryAge = TriggerPumpBatteryAge(triggerDeps).setValue(4.0).comparator(Comparator.Compare.IS_EQUAL)
         JSONAssert.assertEquals(triggerJson, t.toJSON(), true)
     }
 
     @Test fun fromJSONTest() {
-        val t: TriggerPumpBatteryAge = TriggerPumpBatteryAge(injector).setValue(4.0).comparator(Comparator.Compare.IS_EQUAL)
-        val t2 = TriggerDummy(injector).instantiate(JSONObject(t.toJSON())) as TriggerPumpBatteryAge
+        val t: TriggerPumpBatteryAge = TriggerPumpBatteryAge(triggerDeps).setValue(4.0).comparator(Comparator.Compare.IS_EQUAL)
+        val t2 = triggerFactory.instantiate(JSONObject(t.toJSON())) as TriggerPumpBatteryAge
         assertThat(t2.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
         assertThat(t2.pumpBatteryAgeHours.value).isWithin(0.01).of(4.0)
     }

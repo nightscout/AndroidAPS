@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import app.aaps.core.interfaces.alerts.ReminderScheduler
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
@@ -16,7 +17,7 @@ import javax.inject.Singleton
     private val rh: ResourceHelper,
     private val rxBus: RxBus,
     private val dateUtil: DateUtil
-) {
+) : ReminderScheduler {
 
     /**
      * Schedule a reminder that rings [seconds] from now.
@@ -30,7 +31,7 @@ import javax.inject.Singleton
      * @param seconds seconds in the future to ring
      * @param text alarm message
      */
-    fun scheduleReminder(seconds: Int, text: String) {
+    override fun scheduleReminder(seconds: Int, text: String) {
         try {
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val triggerAt = dateUtil.now() + seconds * 1000L

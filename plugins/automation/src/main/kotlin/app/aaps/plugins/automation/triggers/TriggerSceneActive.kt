@@ -8,7 +8,6 @@ import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.ComparatorExists
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import javax.inject.Inject
 
@@ -17,17 +16,19 @@ import javax.inject.Inject
  * Used as a precondition by [app.aaps.plugins.automation.actions.ActionRunScene]
  * to skip activation when a scene is already running.
  */
-class TriggerSceneActive(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerSceneActive(
+    deps: TriggerDeps,
+    private val sceneApi: SceneAutomationApi
+) : Trigger(deps) {
 
-    @Inject lateinit var sceneApi: SceneAutomationApi
 
     var comparator = ComparatorExists(rh)
 
-    constructor(injector: HasAndroidInjector, compare: ComparatorExists.Compare) : this(injector) {
+    constructor(deps: TriggerDeps, sceneApi: SceneAutomationApi, compare: ComparatorExists.Compare) : this(deps, sceneApi) {
         comparator = ComparatorExists(rh, compare)
     }
 
-    constructor(injector: HasAndroidInjector, other: TriggerSceneActive) : this(injector) {
+    constructor(deps: TriggerDeps, sceneApi: SceneAutomationApi, other: TriggerSceneActive) : this(deps, sceneApi) {
         comparator = ComparatorExists(rh, other.comparator.value)
     }
 
@@ -58,5 +59,5 @@ class TriggerSceneActive(injector: HasAndroidInjector) : Trigger(injector) {
     override fun composeIcon() = Icons.Filled.PlayArrow
     override fun elementType() = ElementType.SCENE
 
-    override fun duplicate(): Trigger = TriggerSceneActive(injector, this)
+    override fun duplicate(): Trigger = TriggerSceneActive(deps, sceneApi, this)
 }

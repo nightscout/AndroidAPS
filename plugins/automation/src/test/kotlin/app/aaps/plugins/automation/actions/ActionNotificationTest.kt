@@ -20,18 +20,6 @@ class ActionNotificationTest : TestBaseWithProfile() {
 
     private lateinit var sut: ActionNotification
 
-    init {
-        addInjector {
-            if (it is ActionNotification) {
-                it.rh = rh
-                it.rxBus = rxBus
-                it.notificationManager = notificationManager
-                it.persistenceLayer = persistenceLayer
-                it.dateUtil = dateUtil
-                it.pumpEnactResultProvider = pumpEnactResultProvider
-            }
-        }
-    }
 
     @BeforeEach
     fun setup() {
@@ -42,7 +30,7 @@ class ActionNotificationTest : TestBaseWithProfile() {
                 .thenReturn(PersistenceLayer.TransactionResult())
         }
 
-        sut = ActionNotification(injector)
+        sut = ActionNotification(aapsLogger, rh, pumpEnactResultProvider, rxBus, notificationManager, persistenceLayer, dateUtil)
     }
 
     @Test fun friendlyNameTest() {

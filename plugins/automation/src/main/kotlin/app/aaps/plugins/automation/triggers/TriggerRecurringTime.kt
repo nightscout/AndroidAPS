@@ -11,17 +11,16 @@ import app.aaps.core.utils.MidnightUtils
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputTime
 import app.aaps.plugins.automation.elements.InputWeekDay
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import java.util.Calendar
 import java.util.Objects
 
-class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerRecurringTime(deps: TriggerDeps) : Trigger(deps) {
 
     val days = InputWeekDay()
     val time = InputTime(rh, dateUtil)
 
-    constructor(injector: HasAndroidInjector, triggerRecurringTime: TriggerRecurringTime) : this(injector) {
+    constructor(deps: TriggerDeps, triggerRecurringTime: TriggerRecurringTime) : this(deps) {
         time.value = triggerRecurringTime.time.value
         if (days.weekdays.size >= 0)
             System.arraycopy(triggerRecurringTime.days.weekdays, 0, days.weekdays, 0, triggerRecurringTime.days.weekdays.size)
@@ -88,7 +87,7 @@ class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
     override fun composeIcon() = Icons.Filled.Repeat
     override fun elementType() = ElementType.AUTOMATION
 
-    override fun duplicate(): Trigger = TriggerRecurringTime(injector, this)
+    override fun duplicate(): Trigger = TriggerRecurringTime(deps, this)
 
     private fun toMills(minutesSinceMidnight: Int): Long = MidnightTime.calcMidnightPlusMinutes(minutesSinceMidnight)
 

@@ -21,28 +21,28 @@ class TriggerProfilePercentTest : TriggerTestBase() {
     }
 
     @Test fun shouldRunTest() = runTest {
-        var t: TriggerProfilePercent = TriggerProfilePercent(injector).setValue(101.0).comparator(Comparator.Compare.IS_EQUAL)
+        var t: TriggerProfilePercent = TriggerProfilePercent(triggerDeps).setValue(101.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isFalse()
-        t = TriggerProfilePercent(injector).setValue(100.0).comparator(Comparator.Compare.IS_EQUAL)
+        t = TriggerProfilePercent(triggerDeps).setValue(100.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerProfilePercent(injector).setValue(100.0).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER)
+        t = TriggerProfilePercent(triggerDeps).setValue(100.0).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerProfilePercent(injector).setValue(90.0).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER)
+        t = TriggerProfilePercent(triggerDeps).setValue(90.0).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerProfilePercent(injector).setValue(100.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        t = TriggerProfilePercent(triggerDeps).setValue(100.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerProfilePercent(injector).setValue(101.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        t = TriggerProfilePercent(triggerDeps).setValue(101.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerProfilePercent(injector).setValue(215.0).comparator(Comparator.Compare.IS_EQUAL)
+        t = TriggerProfilePercent(triggerDeps).setValue(215.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isFalse()
-        t = TriggerProfilePercent(injector).setValue(110.0).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER)
+        t = TriggerProfilePercent(triggerDeps).setValue(110.0).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER)
         assertThat(t.shouldRun()).isFalse()
-        t = TriggerProfilePercent(injector).setValue(90.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        t = TriggerProfilePercent(triggerDeps).setValue(90.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.shouldRun()).isFalse()
     }
 
     @Test fun copyConstructorTest() = runTest {
-        val t: TriggerProfilePercent = TriggerProfilePercent(injector).setValue(213.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        val t: TriggerProfilePercent = TriggerProfilePercent(triggerDeps).setValue(213.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         val t1 = t.duplicate() as TriggerProfilePercent
         assertThat(t1.pct.value).isWithin(0.01).of(213.0)
         assertThat(t.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL_OR_LESSER)
@@ -50,18 +50,18 @@ class TriggerProfilePercentTest : TriggerTestBase() {
 
     private val bgJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"percentage\":110},\"type\":\"TriggerProfilePercent\"}"
     @Test fun toJSONTest() = runTest {
-        val t: TriggerProfilePercent = TriggerProfilePercent(injector).setValue(110.0).comparator(Comparator.Compare.IS_EQUAL)
+        val t: TriggerProfilePercent = TriggerProfilePercent(triggerDeps).setValue(110.0).comparator(Comparator.Compare.IS_EQUAL)
         JSONAssert.assertEquals(bgJson, t.toJSON(), true)
     }
 
     @Test fun fromJSONTest() = runTest {
-        val t: TriggerProfilePercent = TriggerProfilePercent(injector).setValue(120.0).comparator(Comparator.Compare.IS_EQUAL)
-        val t2 = TriggerDummy(injector).instantiate(JSONObject(t.toJSON())) as TriggerProfilePercent
+        val t: TriggerProfilePercent = TriggerProfilePercent(triggerDeps).setValue(120.0).comparator(Comparator.Compare.IS_EQUAL)
+        val t2 = triggerFactory.instantiate(JSONObject(t.toJSON())) as TriggerProfilePercent
         assertThat(t2.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
         assertThat(t2.pct.value).isWithin(0.01).of(120.0)
     }
 
     @Test fun friendlyNameTest() = runTest {
-        assertThat(TriggerProfilePercent(injector).friendlyName()).isEqualTo(R.string.profilepercentage) // not mocked
+        assertThat(TriggerProfilePercent(triggerDeps).friendlyName()).isEqualTo(R.string.profilepercentage) // not mocked
     }
 }

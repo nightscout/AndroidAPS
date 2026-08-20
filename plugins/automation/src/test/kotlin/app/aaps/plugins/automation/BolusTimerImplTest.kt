@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation
 
+import app.aaps.plugins.automation.triggers.TriggerDeps
+import app.aaps.plugins.automation.triggers.TriggerFactory
 import android.content.Context
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.aps.Loop
@@ -20,16 +22,27 @@ import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.mock
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.kotlin.whenever
 
 class BolusTimerImplTest : TestBase() {
 
+@Mock lateinit var actionFactory: app.aaps.plugins.automation.actions.ActionFactory
+    private val triggerFactory: TriggerFactory by lazy {
+        TriggerFactory(triggerDeps, context, mock(), sceneApi, receiverStatusStore)
+    }
+    // Real, not mocked: the runtime rebuilds triggers from JSON, and a mocked bundle would hand
+    // nulls to element constructors that require them.
+    private val triggerDeps: TriggerDeps by lazy {
+        TriggerDeps(
+            aapsLogger, rxBus, rh, profileFunction, mock(), preferences, mock(), mock(),
+            activePlugin, mock(), mock(), dateUtil
+        ) { triggerFactory }
+    }
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var context: Context
     @Mock lateinit var fabricPrivacy: FabricPrivacy
@@ -46,14 +59,7 @@ class BolusTimerImplTest : TestBase() {
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var sceneApi: SceneAutomationApi
 
-    private val injector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is Trigger) {
-                it.profileFunction = profileFunction
-                it.rh = rh
-            }
-        }
-    }
+    private val eventFactory by lazy { AutomationEventFactory(aapsLogger, dateUtil, actionFactory, triggerFactory, triggerDeps) }
     private lateinit var dateUtil: DateUtil
     private lateinit var automationRuntime: AutomationRuntime
 
@@ -63,8 +69,8 @@ class BolusTimerImplTest : TestBase() {
         whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         dateUtil = DateUtilImpl(context)
         automationRuntime = AutomationRuntime(
-            injector, aapsLogger, rh, preferences, context, fabricPrivacy, loop, rxBus, constraintChecker, aapsSchedulers, config, locationServiceHelper, dateUtil,
-            activePlugin, timerUtil, receiverStatusStore, uel, profileRepository, sceneApi
+            eventFactory, aapsLogger, rh, preferences, context, fabricPrivacy, loop, rxBus, constraintChecker, aapsSchedulers, config, locationServiceHelper, dateUtil,
+            activePlugin, timerUtil, actionFactory, triggerFactory, triggerDeps, receiverStatusStore, uel, profileRepository, sceneApi
         )
     }
 

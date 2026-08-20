@@ -16,12 +16,12 @@ class TriggerHeartRateTest : TriggerTestBase() {
 
     @Test
     fun friendlyName() {
-        assertThat(TriggerHeartRate(injector).friendlyName()).isEqualTo(R.string.triggerHeartRate)
+        assertThat(TriggerHeartRate(triggerDeps).friendlyName()).isEqualTo(R.string.triggerHeartRate)
     }
 
     @Test
     fun friendlyDescription() {
-        val t = TriggerHeartRate(injector)
+        val t = TriggerHeartRate(triggerDeps)
         whenever(rh.gs(Comparator.Compare.IS_EQUAL_OR_GREATER.stringRes)).thenReturn(">")
         whenever(rh.gs(R.string.triggerHeartRateDesc, ">", 80.0)).thenReturn("test")
         assertThat(t.friendlyDescription()).isEqualTo("test")
@@ -29,7 +29,7 @@ class TriggerHeartRateTest : TriggerTestBase() {
 
     @Test
     fun duplicate() {
-        val t = TriggerHeartRate(injector).apply {
+        val t = TriggerHeartRate(triggerDeps).apply {
             heartRate.value = 100.0
             comparator.value = Comparator.Compare.IS_GREATER
         }
@@ -42,14 +42,14 @@ class TriggerHeartRateTest : TriggerTestBase() {
 
     @Test
     fun shouldRunNotAvailable() = runTest {
-        val t = TriggerHeartRate(injector).apply { comparator.value = Comparator.Compare.IS_NOT_AVAILABLE }
+        val t = TriggerHeartRate(triggerDeps).apply { comparator.value = Comparator.Compare.IS_NOT_AVAILABLE }
         assertThat(t.shouldRun()).isTrue()
         verifyNoMoreInteractions(persistenceLayer)
     }
 
     @Test
     fun shouldRunNoHeartRate() = runTest {
-        val t = TriggerHeartRate(injector).apply {
+        val t = TriggerHeartRate(triggerDeps).apply {
             heartRate.value = 100.0
             comparator.value = Comparator.Compare.IS_GREATER
         }
@@ -61,7 +61,7 @@ class TriggerHeartRateTest : TriggerTestBase() {
 
     @Test
     fun shouldRunBelowThreshold() = runTest {
-        val t = TriggerHeartRate(injector).apply {
+        val t = TriggerHeartRate(triggerDeps).apply {
             heartRate.value = 100.0
             comparator.value = Comparator.Compare.IS_GREATER
         }
@@ -77,7 +77,7 @@ class TriggerHeartRateTest : TriggerTestBase() {
 
     @Test
     fun shouldRunTrigger() = runTest {
-        val t = TriggerHeartRate(injector).apply {
+        val t = TriggerHeartRate(triggerDeps).apply {
             heartRate.value = 100.0
             comparator.value = Comparator.Compare.IS_GREATER
         }
@@ -92,7 +92,7 @@ class TriggerHeartRateTest : TriggerTestBase() {
 
     @Test
     fun toJSON() {
-        val t = TriggerHeartRate(injector).apply {
+        val t = TriggerHeartRate(triggerDeps).apply {
             heartRate.value = 100.0
             comparator.value = Comparator.Compare.IS_GREATER
         }
@@ -103,7 +103,7 @@ class TriggerHeartRateTest : TriggerTestBase() {
 
     @Test
     fun fromJSON() {
-        val t = TriggerDummy(injector).instantiate(
+        val t = triggerFactory.instantiate(
             JSONObject(
                 """{"data":{"comparator":"IS_GREATER","heartRate":100},"type":"TriggerHeartRate"}"""
             )

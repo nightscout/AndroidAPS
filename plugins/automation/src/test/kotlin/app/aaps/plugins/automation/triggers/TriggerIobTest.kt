@@ -21,42 +21,42 @@ class TriggerIobTest : TriggerTestBase() {
 
     @Test fun shouldRunTest() = runTest {
         whenever(iobCobCalculator.calculateFromTreatmentsAndTemps(ArgumentMatchers.anyLong(), anyOrNull())).thenReturn(generateIobRecordData())
-        var t: TriggerIob = TriggerIob(injector).setValue(1.1).comparator(Comparator.Compare.IS_EQUAL)
+        var t: TriggerIob = TriggerIob(triggerDeps).setValue(1.1).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isFalse()
-        t = TriggerIob(injector).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
+        t = TriggerIob(triggerDeps).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerIob(injector).setValue(0.8).comparator(Comparator.Compare.IS_GREATER)
+        t = TriggerIob(triggerDeps).setValue(0.8).comparator(Comparator.Compare.IS_GREATER)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerIob(injector).setValue(0.8).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER)
+        t = TriggerIob(triggerDeps).setValue(0.8).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerIob(injector).setValue(0.9).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER)
+        t = TriggerIob(triggerDeps).setValue(0.9).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerIob(injector).setValue(1.2).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        t = TriggerIob(triggerDeps).setValue(1.2).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerIob(injector).setValue(1.1).comparator(Comparator.Compare.IS_EQUAL)
+        t = TriggerIob(triggerDeps).setValue(1.1).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isFalse()
-        t = TriggerIob(injector).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        t = TriggerIob(triggerDeps).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerIob(injector).setValue(0.9).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        t = TriggerIob(triggerDeps).setValue(0.9).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.shouldRun()).isFalse()
     }
 
     @Test fun copyConstructorTest() = runTest {
-        val t: TriggerIob = TriggerIob(injector).setValue(213.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        val t: TriggerIob = TriggerIob(triggerDeps).setValue(213.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.insulin.value).isWithin(0.01).of(213.0)
         assertThat(t.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL_OR_LESSER)
     }
 
     private var bgJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"insulin\":4.1},\"type\":\"TriggerIob\"}"
     @Test fun toJSONTest() = runTest {
-        val t: TriggerIob = TriggerIob(injector).setValue(4.1).comparator(Comparator.Compare.IS_EQUAL)
+        val t: TriggerIob = TriggerIob(triggerDeps).setValue(4.1).comparator(Comparator.Compare.IS_EQUAL)
         JSONAssert.assertEquals(bgJson, t.toJSON(), true)
     }
 
     @Test
     fun fromJSONTest() = runTest {
-        val t: TriggerIob = TriggerIob(injector).setValue(4.1).comparator(Comparator.Compare.IS_EQUAL)
-        val t2 = TriggerDummy(injector).instantiate(JSONObject(t.toJSON())) as TriggerIob
+        val t: TriggerIob = TriggerIob(triggerDeps).setValue(4.1).comparator(Comparator.Compare.IS_EQUAL)
+        val t2 = triggerFactory.instantiate(JSONObject(t.toJSON())) as TriggerIob
         assertThat(t2.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
         assertThat(t2.insulin.value).isWithin(0.01).of(4.1)
     }

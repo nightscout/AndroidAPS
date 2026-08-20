@@ -17,34 +17,34 @@ class TriggerInsulinAgeTest : TriggerTestBase() {
     @Test fun shouldRunTest() = runTest {
         val insulinChangeEvent = TE(glucoseUnit = GlucoseUnit.MGDL, timestamp = now - T.hours(6).msecs(), type = TE.Type.INSULIN_CHANGE)
         whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.INSULIN_CHANGE)).thenReturn(insulinChangeEvent)
-        var t: TriggerInsulinAge = TriggerInsulinAge(injector).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
+        var t: TriggerInsulinAge = TriggerInsulinAge(triggerDeps).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isFalse()
-        t = TriggerInsulinAge(injector).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
+        t = TriggerInsulinAge(triggerDeps).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerInsulinAge(injector).setValue(5.0).comparator(Comparator.Compare.IS_GREATER)
+        t = TriggerInsulinAge(triggerDeps).setValue(5.0).comparator(Comparator.Compare.IS_GREATER)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerInsulinAge(injector).setValue(5.0).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER)
+        t = TriggerInsulinAge(triggerDeps).setValue(5.0).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerInsulinAge(injector).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        t = TriggerInsulinAge(triggerDeps).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerInsulinAge(injector).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
+        t = TriggerInsulinAge(triggerDeps).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isFalse()
-        t = TriggerInsulinAge(injector).setValue(10.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        t = TriggerInsulinAge(triggerDeps).setValue(10.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerInsulinAge(injector).setValue(5.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        t = TriggerInsulinAge(triggerDeps).setValue(5.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.shouldRun()).isFalse()
     }
 
     @Test fun shouldRunNotAvailable() = runTest {
         whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.INSULIN_CHANGE)).thenReturn(null)
-        var t = TriggerInsulinAge(injector).apply { comparator.value = Comparator.Compare.IS_NOT_AVAILABLE }
+        var t = TriggerInsulinAge(triggerDeps).apply { comparator.value = Comparator.Compare.IS_NOT_AVAILABLE }
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerInsulinAge(injector).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
+        t = TriggerInsulinAge(triggerDeps).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isFalse()
     }
 
     @Test fun shouldRunPatchPump() = runTest {
-        val t: TriggerInsulinAge = TriggerInsulinAge(injector).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
+        val t: TriggerInsulinAge = TriggerInsulinAge(triggerDeps).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
         val pumpDescription = PumpDescription()
         pumpDescription.isPatchPump = true
         whenever(pumpPluginWithConcentration.pumpDescription).thenReturn(pumpDescription)
@@ -52,20 +52,20 @@ class TriggerInsulinAgeTest : TriggerTestBase() {
     }
 
     @Test fun copyConstructorTest() {
-        val t: TriggerInsulinAge = TriggerInsulinAge(injector).setValue(213.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        val t: TriggerInsulinAge = TriggerInsulinAge(triggerDeps).setValue(213.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.insulinAgeHours.value).isWithin(0.01).of(213.0)
         assertThat(t.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL_OR_LESSER)
     }
 
     @Test fun toJSONTest() {
         val triggerJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"insulinAgeHours\":4},\"type\":\"TriggerInsulinAge\"}"
-        val t: TriggerInsulinAge = TriggerInsulinAge(injector).setValue(4.0).comparator(Comparator.Compare.IS_EQUAL)
+        val t: TriggerInsulinAge = TriggerInsulinAge(triggerDeps).setValue(4.0).comparator(Comparator.Compare.IS_EQUAL)
         JSONAssert.assertEquals(triggerJson, t.toJSON(), true)
     }
 
     @Test fun fromJSONTest() {
-        val t: TriggerInsulinAge = TriggerInsulinAge(injector).setValue(4.0).comparator(Comparator.Compare.IS_EQUAL)
-        val t2 = TriggerDummy(injector).instantiate(JSONObject(t.toJSON())) as TriggerInsulinAge
+        val t: TriggerInsulinAge = TriggerInsulinAge(triggerDeps).setValue(4.0).comparator(Comparator.Compare.IS_EQUAL)
+        val t2 = triggerFactory.instantiate(JSONObject(t.toJSON())) as TriggerInsulinAge
         assertThat(t2.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
         assertThat(t2.insulinAgeHours.value).isWithin(0.01).of(4.0)
     }

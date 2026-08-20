@@ -5,11 +5,10 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.utils.JsonHelper.safeGetString
 import app.aaps.plugins.automation.R
-import dagger.android.HasAndroidInjector
 import org.json.JSONArray
 import org.json.JSONObject
 
-class TriggerConnector(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerConnector(deps: TriggerDeps) : Trigger(deps) {
 
     var list: MutableList<Trigger> = ArrayList()
     private var connectorType: Type = Type.AND
@@ -43,7 +42,7 @@ class TriggerConnector(injector: HasAndroidInjector) : Trigger(injector) {
         }
     }
 
-    constructor(injector: HasAndroidInjector, connectorType: Type) : this(injector) {
+    constructor(deps: TriggerDeps, connectorType: Type) : this(deps) {
         this.connectorType = connectorType
     }
 
@@ -79,7 +78,7 @@ class TriggerConnector(injector: HasAndroidInjector) : Trigger(injector) {
         val array = d.getJSONArray("triggerList")
         list.clear()
         for (i in 0 until array.length()) {
-            instantiate(JSONObject(array.getString(i))).let {
+            deps.triggerFactory.get().instantiate(JSONObject(array.getString(i))).let {
                 list.add(it)
             }
         }
@@ -98,5 +97,5 @@ class TriggerConnector(injector: HasAndroidInjector) : Trigger(injector) {
         return result.toString()
     }
 
-    override fun duplicate(): Trigger = TriggerConnector(injector, connectorType)
+    override fun duplicate(): Trigger = TriggerConnector(deps, connectorType)
 }

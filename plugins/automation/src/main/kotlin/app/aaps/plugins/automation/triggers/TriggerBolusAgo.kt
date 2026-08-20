@@ -9,15 +9,14 @@ import app.aaps.core.utils.JsonHelper.safeGetString
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDuration
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 
-class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerBolusAgo(deps: TriggerDeps) : Trigger(deps) {
 
     var minutesAgo: InputDuration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
     var comparator: Comparator = Comparator(rh)
 
-    private constructor(injector: HasAndroidInjector, triggerBolusAgo: TriggerBolusAgo) : this(injector) {
+    private constructor(deps: TriggerDeps, triggerBolusAgo: TriggerBolusAgo) : this(deps) {
         minutesAgo = InputDuration(triggerBolusAgo.minutesAgo.value, InputDuration.TimeUnit.MINUTES)
         comparator = Comparator(rh, triggerBolusAgo.comparator.value)
     }
@@ -74,6 +73,6 @@ class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
     override fun composeIcon() = IcBolus
     override fun elementType() = ElementType.INSULIN
 
-    override fun duplicate(): Trigger = TriggerBolusAgo(injector, this)
+    override fun duplicate(): Trigger = TriggerBolusAgo(deps, this)
 
 }

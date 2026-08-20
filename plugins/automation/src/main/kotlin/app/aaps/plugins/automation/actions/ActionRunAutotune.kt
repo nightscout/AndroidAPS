@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.actions
 
+import javax.inject.Provider
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -17,20 +19,22 @@ import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputDuration
 import app.aaps.plugins.automation.elements.InputProfileName
 import app.aaps.plugins.automation.elements.InputWeekDay
-import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
-import javax.inject.Inject
 
-class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
+class ActionRunAutotune(
+    aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val resourceHelper: ResourceHelper,
+    private val autotunePlugin: Autotune,
+    private val profileFunction: ProfileFunction,
+    private val activePlugin: ActivePlugin,
+    private val preferences: Preferences
+) : Action(aapsLogger, rh, pumpEnactResultProvider) {
 
-    @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var autotunePlugin: Autotune
-    @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var preferences: Preferences
 
     private var defaultValue = 0
     private var inputProfileName = InputProfileName("")

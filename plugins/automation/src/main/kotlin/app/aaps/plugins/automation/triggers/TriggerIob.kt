@@ -7,15 +7,14 @@ import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputInsulin
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 
-class TriggerIob(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerIob(deps: TriggerDeps) : Trigger(deps) {
 
     var insulin = InputInsulin()
     var comparator: Comparator = Comparator(rh)
 
-    constructor(injector: HasAndroidInjector, triggerIob: TriggerIob) : this(injector) {
+    constructor(deps: TriggerDeps, triggerIob: TriggerIob) : this(deps) {
         insulin = InputInsulin(triggerIob.insulin)
         comparator = Comparator(rh, triggerIob.comparator.value)
     }
@@ -61,6 +60,6 @@ class TriggerIob(injector: HasAndroidInjector) : Trigger(injector) {
     override fun composeIcon() = IcBolus
     override fun elementType() = ElementType.INSULIN
 
-    override fun duplicate(): Trigger = TriggerIob(injector, this)
+    override fun duplicate(): Trigger = TriggerIob(deps, this)
 
 }

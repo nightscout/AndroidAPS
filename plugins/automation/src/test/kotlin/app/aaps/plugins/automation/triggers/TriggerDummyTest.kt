@@ -8,13 +8,13 @@ class TriggerDummyTest : TriggerTestBase() {
 
     @Test
     fun instantiateTest() {
-        var trigger: Trigger? = TriggerDummy(injector).instantiate(JSONObject("{\"data\":{},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerDummy\"}"))
+        var trigger: Trigger? = triggerFactory.instantiate(JSONObject("{\"data\":{},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerDummy\"}"))
         assertIs<TriggerDummy>(trigger)
 
-        trigger = TriggerDummy(injector).instantiate(JSONObject("{\"data\":{},\"type\":\"app.aaps.plugins.automation.triggers.TriggerDummy\"}"))
+        trigger = triggerFactory.instantiate(JSONObject("{\"data\":{},\"type\":\"app.aaps.plugins.automation.triggers.TriggerDummy\"}"))
         assertIs<TriggerDummy>(trigger)
 
-        trigger = TriggerDummy(injector).instantiate(JSONObject("{\"data\":{},\"type\":\"TriggerDummy\"}"))
+        trigger = triggerFactory.instantiate(JSONObject("{\"data\":{},\"type\":\"TriggerDummy\"}"))
         assertIs<TriggerDummy>(trigger)
     }
 

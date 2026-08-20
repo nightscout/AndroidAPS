@@ -9,21 +9,20 @@ import app.aaps.core.utils.JsonHelper.safeGetString
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDuration
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 
-class TriggerPumpLastConnection(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerPumpLastConnection(deps: TriggerDeps) : Trigger(deps) {
 
     var minutesAgo = InputDuration()
     var comparator = Comparator(rh)
 
     @Suppress("unused")
-    constructor(injector: HasAndroidInjector, value: Int, unit: InputDuration.TimeUnit, compare: Comparator.Compare) : this(injector) {
+    constructor(deps: TriggerDeps, value: Int, unit: InputDuration.TimeUnit, compare: Comparator.Compare) : this(deps) {
         minutesAgo = InputDuration(value, unit)
         comparator = Comparator(rh, compare)
     }
 
-    constructor(injector: HasAndroidInjector, triggerPumpLastConnection: TriggerPumpLastConnection) : this(injector) {
+    constructor(deps: TriggerDeps, triggerPumpLastConnection: TriggerPumpLastConnection) : this(deps) {
         minutesAgo = InputDuration(triggerPumpLastConnection.minutesAgo.value, triggerPumpLastConnection.minutesAgo.unit)
         comparator = Comparator(rh, triggerPumpLastConnection.comparator.value)
     }
@@ -74,6 +73,6 @@ class TriggerPumpLastConnection(injector: HasAndroidInjector) : Trigger(injector
     override fun composeIcon() = Icons.Filled.SyncProblem
     override fun elementType() = ElementType.PUMP
 
-    override fun duplicate(): Trigger = TriggerPumpLastConnection(injector, this)
+    override fun duplicate(): Trigger = TriggerPumpLastConnection(deps, this)
 
 }

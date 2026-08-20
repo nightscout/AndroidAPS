@@ -18,7 +18,7 @@ class TriggerLocationTest : TriggerTestBase() {
     }
 
     @Test fun copyConstructorTest() = runTest {
-        val t = TriggerLocation(injector)
+        val t = TriggerLocation(triggerDeps)
         t.latitude.setValue(213.0)
         t.longitude.setValue(212.0)
         t.distance.setValue(2.0)
@@ -31,7 +31,7 @@ class TriggerLocationTest : TriggerTestBase() {
     }
 
     @Test fun shouldRunTest() = runTest {
-        var t = TriggerLocation(injector)
+        var t = TriggerLocation(triggerDeps)
         t.latitude.setValue(213.0)
         t.longitude.setValue(212.0)
         t.distance.setValue(2.0)
@@ -40,12 +40,12 @@ class TriggerLocationTest : TriggerTestBase() {
         assertThat(t.shouldRun()).isFalse()
         whenever(locationDataContainer.lastLocation).thenReturn(mockedLocation())
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerLocation(injector)
+        t = TriggerLocation(triggerDeps)
         t.distance.setValue(-500.0)
         assertThat(t.shouldRun()).isFalse()
 
         //Test of GOING_IN - last mode should be OUTSIDE, and current mode should be INSIDE
-        t = TriggerLocation(injector)
+        t = TriggerLocation(triggerDeps)
         t.distance.setValue(50.0)
         t.lastMode = t.currentMode(55.0)
         whenever(locationDataContainer.lastLocation).thenReturn(null)
@@ -61,7 +61,7 @@ class TriggerLocationTest : TriggerTestBase() {
 
     private var locationJson = "{\"data\":{\"mode\":\"OUTSIDE\",\"distance\":2,\"latitude\":213,\"name\":\"\",\"longitude\":212},\"type\":\"TriggerLocation\"}"
     @Test fun toJSONTest() = runTest {
-        val t = TriggerLocation(injector)
+        val t = TriggerLocation(triggerDeps)
         t.latitude.setValue(213.0)
         t.longitude.setValue(212.0)
         t.distance.setValue(2.0)
@@ -71,12 +71,12 @@ class TriggerLocationTest : TriggerTestBase() {
     }
 
     @Test @Throws(JSONException::class) fun fromJSONTest() {
-        val t = TriggerLocation(injector)
+        val t = TriggerLocation(triggerDeps)
         t.latitude.setValue(213.0)
         t.longitude.setValue(212.0)
         t.distance.setValue(2.0)
         t.modeSelected.value = InputLocationMode.Mode.INSIDE
-        val t2 = TriggerDummy(injector).instantiate(JSONObject(t.toJSON())) as TriggerLocation
+        val t2 = triggerFactory.instantiate(JSONObject(t.toJSON())) as TriggerLocation
         assertThat(t2.latitude.value).isWithin(0.01).of(t.latitude.value)
         assertThat(t2.longitude.value).isWithin(0.01).of(t.longitude.value)
         assertThat(t2.distance.value).isWithin(0.01).of(t.distance.value)
@@ -84,11 +84,11 @@ class TriggerLocationTest : TriggerTestBase() {
     }
 
     @Test fun friendlyNameTest() = runTest {
-        assertThat(TriggerLocation(injector).friendlyName()).isEqualTo(R.string.location)
+        assertThat(TriggerLocation(triggerDeps).friendlyName()).isEqualTo(R.string.location)
     }
 
     @Test fun friendlyDescriptionTest() = runTest {
-        assertThat(TriggerLocation(injector).friendlyDescription()).isNull() //not mocked
+        assertThat(TriggerLocation(triggerDeps).friendlyDescription()).isNull() //not mocked
     }
 
     private fun mockedLocation(): Location {

@@ -26,7 +26,7 @@ class ActionSMBChangeTest : ActionsTestBase() {
         whenever(rh.gs(R.string.on)).thenReturn("ON")
         whenever(rh.gs(R.string.off)).thenReturn("OFF")
 
-        sut = ActionSMBChange(injector)
+        sut = ActionSMBChange(aapsLogger, rh, pumpEnactResultProvider, dateUtil, preferences)
     }
 
     @Test fun friendlyName() = runTest {

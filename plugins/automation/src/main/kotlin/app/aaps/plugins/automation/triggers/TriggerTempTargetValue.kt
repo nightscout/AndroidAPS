@@ -8,21 +8,20 @@ import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputBg
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import kotlin.math.roundToInt
 
-class TriggerTempTargetValue(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerTempTargetValue(deps: TriggerDeps) : Trigger(deps) {
 
     var ttValue = InputBg(profileFunction)
     var comparator = Comparator(rh)
 
-    constructor(injector: HasAndroidInjector, value: Double, units: GlucoseUnit, compare: Comparator.Compare) : this(injector) {
+    constructor(deps: TriggerDeps, value: Double, units: GlucoseUnit, compare: Comparator.Compare) : this(deps) {
         ttValue = InputBg(profileFunction, value, units)
         comparator = Comparator(rh, compare)
     }
 
-    constructor(injector: HasAndroidInjector, triggerTempTarget: TriggerTempTargetValue) : this(injector) {
+    constructor(deps: TriggerDeps, triggerTempTarget: TriggerTempTargetValue) : this(deps) {
         ttValue = InputBg(profileFunction, triggerTempTarget.ttValue.value, triggerTempTarget.ttValue.units)
         comparator = Comparator(rh, triggerTempTarget.comparator.value)
     }
@@ -82,6 +81,6 @@ class TriggerTempTargetValue(injector: HasAndroidInjector) : Trigger(injector) {
     override fun composeIcon() = IcTtManual
     override fun elementType() = ElementType.TEMP_TARGET_MANAGEMENT
 
-    override fun duplicate(): Trigger = TriggerTempTargetValue(injector, this)
+    override fun duplicate(): Trigger = TriggerTempTargetValue(deps, this)
 
 }

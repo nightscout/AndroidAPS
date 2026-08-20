@@ -1,8 +1,13 @@
 package app.aaps.core.interfaces.smsCommunicator
 
-import android.telephony.SmsMessage
 import kotlin.time.Clock
 
+/**
+ * One SMS, in or out.
+ *
+ * Platform neutral: building one from an `android.telephony.SmsMessage` is an androidMain factory
+ * (`Sms.fromSmsMessage`), so nothing here depends on the Android telephony stack.
+ */
 class Sms {
 
     var phoneNumber: String
@@ -13,12 +18,6 @@ class Sms {
     var processed = false
     var ignored = false
 
-    constructor(message: SmsMessage) {
-        phoneNumber = message.originatingAddress ?: ""
-        text = message.messageBody
-        date = message.timestampMillis
-        received = true
-    }
 
     constructor(phoneNumber: String, text: String) {
         this.phoneNumber = phoneNumber
@@ -36,6 +35,7 @@ class Sms {
         processed = other.processed
         ignored = other.ignored
     }
+
 
     override fun toString(): String {
         return "SMS from $phoneNumber: $text"

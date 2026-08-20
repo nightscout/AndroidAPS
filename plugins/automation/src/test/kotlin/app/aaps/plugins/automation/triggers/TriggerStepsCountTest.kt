@@ -16,12 +16,12 @@ class TriggerStepsCountTest : TriggerTestBase() {
 
     @Test
     fun friendlyName() {
-        assertThat(TriggerStepsCount(injector).friendlyName()).isEqualTo(R.string.triggerStepsCountLabel)
+        assertThat(TriggerStepsCount(triggerDeps).friendlyName()).isEqualTo(R.string.triggerStepsCountLabel)
     }
 
     @Test
     fun friendlyDescription() {
-        val t = TriggerStepsCount(injector)
+        val t = TriggerStepsCount(triggerDeps)
         whenever(rh.gs(Comparator.Compare.IS_EQUAL_OR_GREATER.stringRes)).thenReturn(">")
         whenever(rh.gs(R.string.triggerStepsCountDesc, "5", ">", 100.0)).thenReturn("test")
 
@@ -30,7 +30,7 @@ class TriggerStepsCountTest : TriggerTestBase() {
 
     @Test
     fun duplicate() {
-        val t = TriggerStepsCount(injector).apply {
+        val t = TriggerStepsCount(triggerDeps).apply {
             stepsCount.value = 100.0
             measurementDuration.value = "5"
             comparator.value = Comparator.Compare.IS_GREATER
@@ -44,14 +44,14 @@ class TriggerStepsCountTest : TriggerTestBase() {
 
     @Test
     fun shouldRunNotAvailable() = runTest {
-        val t = TriggerStepsCount(injector).apply { comparator.value = Comparator.Compare.IS_NOT_AVAILABLE }
+        val t = TriggerStepsCount(triggerDeps).apply { comparator.value = Comparator.Compare.IS_NOT_AVAILABLE }
         assertThat(t.shouldRun()).isTrue()
         verifyNoMoreInteractions(persistenceLayer)
     }
 
     @Test
     fun shouldRunNoStepsAvailable() = runTest {
-        val t = TriggerStepsCount(injector).apply {
+        val t = TriggerStepsCount(triggerDeps).apply {
             stepsCount.value = 100.0
             measurementDuration.value = "5"
             comparator.value = Comparator.Compare.IS_GREATER
@@ -64,7 +64,7 @@ class TriggerStepsCountTest : TriggerTestBase() {
 
     @Test
     fun shouldRunBelowThreshold() = runTest {
-        val t = TriggerStepsCount(injector).apply {
+        val t = TriggerStepsCount(triggerDeps).apply {
             stepsCount.value = 100.0
             measurementDuration.value = "5"
             comparator.value = Comparator.Compare.IS_GREATER
@@ -79,7 +79,7 @@ class TriggerStepsCountTest : TriggerTestBase() {
 
     @Test
     fun shouldRunTrigger() = runTest {
-        val t = TriggerStepsCount(injector).apply {
+        val t = TriggerStepsCount(triggerDeps).apply {
             stepsCount.value = 100.0
             measurementDuration.value = "5"
             comparator.value = Comparator.Compare.IS_GREATER
@@ -94,7 +94,7 @@ class TriggerStepsCountTest : TriggerTestBase() {
 
     @Test
     fun toJSON() {
-        val t = TriggerStepsCount(injector).apply {
+        val t = TriggerStepsCount(triggerDeps).apply {
             stepsCount.value = 110.0
             measurementDuration.value = "15"
             comparator.value = Comparator.Compare.IS_GREATER
@@ -106,7 +106,7 @@ class TriggerStepsCountTest : TriggerTestBase() {
 
     @Test
     fun fromJSON() {
-        val t = TriggerDummy(injector).instantiate(
+        val t = triggerFactory.instantiate(
             JSONObject(
                 """{"data":{"comparator":"IS_GREATER","stepsCount":110,"measurementDuration":"10"},"type":"TriggerStepsCount"}"""
             )

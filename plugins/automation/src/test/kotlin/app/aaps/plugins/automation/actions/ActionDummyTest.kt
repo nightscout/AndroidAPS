@@ -8,13 +8,13 @@ class ActionDummyTest : ActionsTestBase() {
 
     @Test
     fun instantiateTest() {
-        var action: Action? = ActionDummy(injector).instantiate(JSONObject("""{"type":"info.nightscout.androidaps.plugins.general.automation.actions.ActionDummy"}"""))
+        var action: Action? = actionFactory.instantiate(JSONObject("""{"type":"info.nightscout.androidaps.plugins.general.automation.actions.ActionDummy"}"""))
         assertIs<ActionDummy>(action)
 
-        action = ActionDummy(injector).instantiate(JSONObject("""{"type":"app.aaps.plugins.automation.actions.ActionDummy"}"""))
+        action = actionFactory.instantiate(JSONObject("""{"type":"app.aaps.plugins.automation.actions.ActionDummy"}"""))
         assertIs<ActionDummy>(action)
 
-        action = ActionDummy(injector).instantiate(JSONObject("""{"type":"ActionDummy"}"""))
+        action = actionFactory.instantiate(JSONObject("""{"type":"ActionDummy"}"""))
         assertIs<ActionDummy>(action)
     }
 }

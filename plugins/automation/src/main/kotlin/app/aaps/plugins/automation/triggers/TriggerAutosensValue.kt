@@ -10,10 +10,9 @@ import app.aaps.core.utils.JsonHelper.safeGetString
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 
-class TriggerAutosensValue(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerAutosensValue(deps: TriggerDeps) : Trigger(deps) {
 
     private val minValue = (preferences.get(DoubleKey.AutosensMin) * 100).toInt()
     private val maxValue = (preferences.get(DoubleKey.AutosensMax) * 100).toInt()
@@ -23,7 +22,7 @@ class TriggerAutosensValue(injector: HasAndroidInjector) : Trigger(injector) {
 
     var comparator: Comparator = Comparator(rh)
 
-    private constructor(injector: HasAndroidInjector, triggerAutosensValue: TriggerAutosensValue) : this(injector) {
+    private constructor(deps: TriggerDeps, triggerAutosensValue: TriggerAutosensValue) : this(deps) {
         autosens = InputDouble(triggerAutosensValue.autosens)
         comparator = Comparator(rh, triggerAutosensValue.comparator.value)
     }
@@ -65,6 +64,6 @@ class TriggerAutosensValue(injector: HasAndroidInjector) : Trigger(injector) {
     override fun composeIcon() = IcAs
     override fun elementType() = ElementType.SENSITIVITY
 
-    override fun duplicate(): Trigger = TriggerAutosensValue(injector, this)
+    override fun duplicate(): Trigger = TriggerAutosensValue(deps, this)
 
 }

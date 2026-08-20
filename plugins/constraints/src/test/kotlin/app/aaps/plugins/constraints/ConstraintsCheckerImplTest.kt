@@ -23,7 +23,9 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
+import app.aaps.core.ui.UiStrings
 import app.aaps.implementation.pump.PumpWithConcentrationImpl
+import app.aaps.plugins.aps.ApsStrings
 import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAMA
 import app.aaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import app.aaps.plugins.aps.openAPSSMB.DetermineBasalSMB
@@ -110,18 +112,22 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
 
         whenever(rh.gs(R.string.closed_loop_disabled_on_dev_branch)).thenReturn("Running dev version. Closed loop is disabled.")
         whenever(rh.gs(app.aaps.core.ui.R.string.no_valid_basal_rate)).thenReturn("No valid basal rate read from pump")
-        whenever(rh.gs(app.aaps.plugins.aps.R.string.autosens_disabled_in_preferences)).thenReturn("Autosens disabled in preferences")
-        whenever(rh.gs(app.aaps.plugins.aps.R.string.smb_disabled_in_preferences)).thenReturn("SMB disabled in preferences")
+        // :plugins:aps resolves its own strings through TextRef, so these need the ApsStrings key, not R.string.
+        whenever(rh.gs(ApsStrings.hardlimit)).thenReturn("hard limit")
+        whenever(rh.gs(UiStrings.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
+        whenever(rh.gs(ApsStrings.maxvalueinpreferences)).thenReturn("max value in preferences")
+        whenever(rh.gs(ApsStrings.autosens_disabled_in_preferences)).thenReturn("Autosens disabled in preferences")
+        whenever(rh.gs(ApsStrings.smb_disabled_in_preferences)).thenReturn("SMB disabled in preferences")
         whenever(rh.gs(app.aaps.core.ui.R.string.pumplimit)).thenReturn("pump limit")
         whenever(rh.gs(app.aaps.core.ui.R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
         whenever(rh.gs(R.string.maxvalueinpreferences)).thenReturn("max value in preferences")
-        whenever(rh.gs(app.aaps.plugins.aps.R.string.max_basal_multiplier)).thenReturn("max basal multiplier")
-        whenever(rh.gs(app.aaps.plugins.aps.R.string.max_daily_basal_multiplier)).thenReturn("max daily basal multiplier")
+        whenever(rh.gs(ApsStrings.max_basal_multiplier)).thenReturn("max basal multiplier")
+        whenever(rh.gs(ApsStrings.max_daily_basal_multiplier)).thenReturn("max daily basal multiplier")
         whenever(rh.gs(app.aaps.core.ui.R.string.pumplimit)).thenReturn("pump limit")
         whenever(rh.gs(app.aaps.core.ui.R.string.limitingbolus)).thenReturn("Limiting bolus to %.1f U because of %s")
         whenever(rh.gs(R.string.hardlimit)).thenReturn("hard limit")
         whenever(rh.gs(R.string.limitingcarbs)).thenReturn("Limiting carbs to %d g because of %s")
-        whenever(rh.gs(app.aaps.plugins.aps.R.string.limiting_iob)).thenReturn("Limiting IOB to %.1f U because of %s")
+        whenever(rh.gs(ApsStrings.limiting_iob)).thenReturn("Limiting IOB to %.1f U because of %s")
         whenever(rh.gs(app.aaps.core.ui.R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
         whenever(rh.gs(app.aaps.core.ui.R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
         whenever(rh.gs(app.aaps.core.ui.R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
@@ -179,14 +185,14 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
             OpenAPSSMBPlugin(
                 aapsLogger, rxBus, constraintChecker, rh, profileFunction, profileUtil, config, activePlugin, iobCobCalculator,
                 hardLimits, preferences, dateUtil, processedTbrEbData, persistenceLayer, smbGlucoseStatusProvider, tddCalculator, bgQualityCheck,
-                notificationManager, determineBasalSMB, profiler, GlucoseStatusCalculatorSMB(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter, deltaCalculator), apsResultProvider, ch,
+                notificationManager, determineBasalSMB, profiler, GlucoseStatusCalculatorSMB(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter, deltaCalculator), { apsResultProvider.get() }, ch,
                 fabricPrivacy
             )
         openAPSAMAPlugin =
             OpenAPSAMAPlugin(
                 aapsLogger, rxBus, constraintChecker, rh, config, profileFunction, activePlugin, iobCobCalculator, processedTbrEbData,
                 hardLimits, dateUtil, persistenceLayer, smbGlucoseStatusProvider, preferences, determineBasalAMA,
-                GlucoseStatusCalculatorSMB(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter, deltaCalculator), apsResultProvider, ch, fabricPrivacy
+                GlucoseStatusCalculatorSMB(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter, deltaCalculator), { apsResultProvider.get() }, ch, fabricPrivacy
             )
         safetyPlugin =
             SafetyPlugin(

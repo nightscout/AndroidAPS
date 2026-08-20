@@ -19,7 +19,7 @@ class TriggerPodChangeTest : TriggerTestBase() {
             TE(glucoseUnit = GlucoseUnit.MGDL, timestamp = now - T.mins(1).msecs(), type = TE.Type.SETTINGS_EXPORT)
         val settingsExportEventIsAfter =
             TE(glucoseUnit = GlucoseUnit.MGDL, timestamp = now + T.mins(1).msecs(), type = TE.Type.SETTINGS_EXPORT)
-        val t = TriggerPodChange(injector)
+        val t = TriggerPodChange(triggerDeps)
 
         whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.CANNULA_CHANGE)).thenReturn(cannulaChangeEvent)
         whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SETTINGS_EXPORT)).thenReturn(settingsExportEventIsBefore)
@@ -30,7 +30,7 @@ class TriggerPodChangeTest : TriggerTestBase() {
     }
 
     @Test fun shouldRunNotAvailable() = runTest {
-        val t = TriggerPodChange(injector)
+        val t = TriggerPodChange(triggerDeps)
         // No cannula change and no export events
         whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.CANNULA_CHANGE)).thenReturn(null)
         whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SETTINGS_EXPORT)).thenReturn(null)
@@ -48,14 +48,14 @@ class TriggerPodChangeTest : TriggerTestBase() {
     @Test fun toJSONTest() {
         // JSON not relevant...
         val podChangeJson = "{}"
-        val t = TriggerPodChange(injector)
+        val t = TriggerPodChange(triggerDeps)
         JSONAssert.assertEquals(podChangeJson, t.dataJSON().toString(), true)
     }
 
     @Test fun fromJSONTest() {
         // JSON not relevant...
         val podChangeJson = "{}"
-        val t = TriggerPodChange(injector)
+        val t = TriggerPodChange(triggerDeps)
         JSONAssert.assertEquals(podChangeJson, t.fromJSON("").dataJSON(), true)
     }
 }

@@ -25,36 +25,36 @@ class TriggerDeltaTest : TriggerTestBase() {
 
     @Test fun shouldRunTest() = runTest {
         whenever(autosensDataStore.getBucketedDataTableCopy()).thenReturn(generateValidBgData())
-        var t = TriggerDelta(injector).units(GlucoseUnit.MGDL).setValue(73.0, DeltaType.LONG_AVERAGE).comparator(Comparator.Compare.IS_EQUAL)
+        var t = TriggerDelta(triggerDeps).units(GlucoseUnit.MGDL).setValue(73.0, DeltaType.LONG_AVERAGE).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isFalse()
         assertThat(t.delta.deltaType).isEqualTo(DeltaType.LONG_AVERAGE)
-        t = TriggerDelta(injector).units(GlucoseUnit.MGDL).setValue(-2.0, DeltaType.SHORT_AVERAGE).comparator(Comparator.Compare.IS_EQUAL)
+        t = TriggerDelta(triggerDeps).units(GlucoseUnit.MGDL).setValue(-2.0, DeltaType.SHORT_AVERAGE).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isFalse()
         assertThat(t.delta.deltaType).isEqualTo(DeltaType.SHORT_AVERAGE)
-        t = TriggerDelta(injector).units(GlucoseUnit.MGDL).setValue(-3.0, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER)
+        t = TriggerDelta(triggerDeps).units(GlucoseUnit.MGDL).setValue(-3.0, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER)
         assertThat(t.shouldRun()).isTrue()
         assertThat(t.delta.deltaType).isEqualTo(DeltaType.DELTA)
-        t = TriggerDelta(injector).units(GlucoseUnit.MGDL).setValue(2.0, DeltaType.LONG_AVERAGE).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        t = TriggerDelta(triggerDeps).units(GlucoseUnit.MGDL).setValue(2.0, DeltaType.LONG_AVERAGE).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerDelta(injector).units(GlucoseUnit.MGDL).setValue(2.0, DeltaType.LONG_AVERAGE).comparator(Comparator.Compare.IS_EQUAL)
+        t = TriggerDelta(triggerDeps).units(GlucoseUnit.MGDL).setValue(2.0, DeltaType.LONG_AVERAGE).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isFalse()
-        t = TriggerDelta(injector).units(GlucoseUnit.MGDL).setValue(0.3, DeltaType.LONG_AVERAGE).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        t = TriggerDelta(triggerDeps).units(GlucoseUnit.MGDL).setValue(0.3, DeltaType.LONG_AVERAGE).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerDelta(injector).units(GlucoseUnit.MGDL).setValue(0.1, DeltaType.LONG_AVERAGE).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER)
+        t = TriggerDelta(triggerDeps).units(GlucoseUnit.MGDL).setValue(0.1, DeltaType.LONG_AVERAGE).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER)
         assertThat(t.shouldRun()).isFalse()
-        t = TriggerDelta(injector).units(GlucoseUnit.MGDL).setValue(-0.5, DeltaType.LONG_AVERAGE).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER)
+        t = TriggerDelta(triggerDeps).units(GlucoseUnit.MGDL).setValue(-0.5, DeltaType.LONG_AVERAGE).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER)
         assertThat(t.shouldRun()).isFalse()
-        t = TriggerDelta(injector).units(GlucoseUnit.MGDL).setValue(-0.2, DeltaType.LONG_AVERAGE).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        t = TriggerDelta(triggerDeps).units(GlucoseUnit.MGDL).setValue(-0.2, DeltaType.LONG_AVERAGE).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.shouldRun()).isTrue()
         whenever(autosensDataStore.getBucketedDataTableCopy()).thenReturn(ArrayList())
-        t = TriggerDelta(injector).units(GlucoseUnit.MGDL).setValue(213.0, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        t = TriggerDelta(triggerDeps).units(GlucoseUnit.MGDL).setValue(213.0, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.shouldRun()).isFalse()
-        t = TriggerDelta(injector).comparator(Comparator.Compare.IS_NOT_AVAILABLE)
+        t = TriggerDelta(triggerDeps).comparator(Comparator.Compare.IS_NOT_AVAILABLE)
         assertThat(t.shouldRun()).isTrue()
     }
 
     @Test fun copyConstructorTest() = runTest {
-        val t: TriggerDelta = TriggerDelta(injector).units(GlucoseUnit.MGDL).setValue(213.0, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        val t: TriggerDelta = TriggerDelta(triggerDeps).units(GlucoseUnit.MGDL).setValue(213.0, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         val t1 = t.duplicate() as TriggerDelta
         assertThat(t1.delta.value).isWithin(0.01).of(213.0)
         assertThat(t1.units).isEqualTo(GlucoseUnit.MGDL)
@@ -66,14 +66,14 @@ class TriggerDeltaTest : TriggerTestBase() {
 
     @Test
     fun toJSONTest() = runTest {
-        val t: TriggerDelta = TriggerDelta(injector).units(GlucoseUnit.MGDL).setValue(4.1, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL)
+        val t: TriggerDelta = TriggerDelta(triggerDeps).units(GlucoseUnit.MGDL).setValue(4.1, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL)
         JSONAssert.assertEquals(deltaJson, t.toJSON(), true)
     }
 
     @Test
     fun fromJSONTest() = runTest {
-        val t: TriggerDelta = TriggerDelta(injector).units(GlucoseUnit.MMOL).setValue(4.1, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL)
-        val t2 = TriggerDummy(injector).instantiate(JSONObject(t.toJSON())) as TriggerDelta
+        val t: TriggerDelta = TriggerDelta(triggerDeps).units(GlucoseUnit.MMOL).setValue(4.1, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL)
+        val t2 = triggerFactory.instantiate(JSONObject(t.toJSON())) as TriggerDelta
         assertThat(t2.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
         assertThat(t2.delta.value).isWithin(0.01).of(4.1)
         assertThat(t2.units).isEqualTo(GlucoseUnit.MMOL)
@@ -81,7 +81,7 @@ class TriggerDeltaTest : TriggerTestBase() {
     }
 
     @Test fun initializerTest() = runTest {
-        val t = TriggerDelta(injector)
+        val t = TriggerDelta(triggerDeps)
         assertThat(t.units).isEqualTo(GlucoseUnit.MGDL)
     }
 

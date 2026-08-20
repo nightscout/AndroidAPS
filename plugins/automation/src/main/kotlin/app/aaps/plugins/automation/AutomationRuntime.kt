@@ -40,6 +40,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.utils.DeferredForegroundStart
+import app.aaps.plugins.automation.actions.ActionFactory
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.actions.ActionAlarm
 import app.aaps.plugins.automation.actions.ActionCarePortalEvent
@@ -62,6 +63,8 @@ import app.aaps.plugins.automation.elements.InputDelta
 import app.aaps.plugins.automation.events.EventAutomationUpdateGui
 import app.aaps.plugins.automation.events.EventLocationChange
 import app.aaps.plugins.automation.services.LocationServiceHelper
+import app.aaps.plugins.automation.triggers.TriggerDeps
+import app.aaps.plugins.automation.triggers.TriggerFactory
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.triggers.TriggerAutosensValue
 import app.aaps.plugins.automation.triggers.TriggerBTDevice
@@ -89,7 +92,6 @@ import app.aaps.plugins.automation.triggers.TriggerTempTargetValue
 import app.aaps.plugins.automation.triggers.TriggerTime
 import app.aaps.plugins.automation.triggers.TriggerTimeRange
 import app.aaps.plugins.automation.triggers.TriggerWifiSsid
-import dagger.android.HasAndroidInjector
 import app.aaps.core.interfaces.rx.collectResilient
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.CoroutineScope
@@ -132,7 +134,7 @@ import kotlin.time.Duration.Companion.seconds
  */
 @Singleton
 class AutomationRuntime @Inject constructor(
-    private val injector: HasAndroidInjector,
+    private val automationEventFactory: AutomationEventFactory,
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val preferences: Preferences,
@@ -147,6 +149,9 @@ class AutomationRuntime @Inject constructor(
     private val dateUtil: DateUtil,
     private val activePlugin: ActivePlugin,
     private val timerUtil: TimerUtil,
+    private val actionFactory: ActionFactory,
+    private val triggerFactory: TriggerFactory,
+    private val triggerDeps: TriggerDeps,
     private val receiverStatusStore: ReceiverStatusStore,
     // UI-only dependencies, forwarded to the Compose screen via [composeContent].
     private val uel: UserEntryLogger,
@@ -165,7 +170,9 @@ class AutomationRuntime @Inject constructor(
             plugin = this,
             rxBus = rxBus,
             aapsLogger = aapsLogger,
-            injector = injector,
+            actionFactory = actionFactory,
+            automationEventFactory = automationEventFactory,
+            triggerFactory = triggerFactory,
             uel = uel,
             profileRepository = profileRepository,
             sceneApi = sceneApi
@@ -450,7 +457,7 @@ class AutomationRuntime @Inject constructor(
             try {
                 val array = JSONArray(data)
                 for (i in 0 until array.length()) {
-                    val event = AutomationEventObject(injector).fromJSON(array.getJSONObject(i).toString())
+                    val event = automationEventFactory.fromJSON(array.getJSONObject(i).toString())
                     previousLastRun[event.id]?.let { event.lastRun = it }
                     automationEvents.add(event)
                 }
@@ -474,7 +481,7 @@ class AutomationRuntime @Inject constructor(
         }
         val before = preferences.get(StringNonKey.AutomationEvents)
         loadFromSP()
-        if (before == "") automationEvents.add(AutomationEventObject(injector).fromJSON(EMPTY_EVENT))
+        if (before == "") automationEvents.add(automationEventFactory.fromJSON(EMPTY_EVENT))
         notifyChanged()
         val after = eventsToJson()
         if (after != before)
@@ -635,66 +642,67 @@ class AutomationRuntime @Inject constructor(
 
     fun getActionDummyObjects(): List<Action> {
         val actions = mutableListOf(
-            ActionStopProcessing(injector),
-            ActionStartTempTarget(injector),
-            ActionStopTempTarget(injector),
-            ActionNotification(injector),
-            ActionAlarm(injector),
-            ActionSettingsExport(injector),
-            ActionCarePortalEvent(injector),
-            ActionProfileSwitchPercent(injector),
-            ActionProfileSwitch(injector),
-            ActionSendSMS(injector),
-            ActionSMBChange(injector),
-            ActionRunScene(injector),
-            ActionEnableScene(injector),
-            ActionDisableScene(injector)
+            actionFactory.actionStopProcessing(),
+            actionFactory.actionStartTempTarget(),
+            actionFactory.actionStopTempTarget(),
+            actionFactory.actionNotification(),
+            actionFactory.actionAlarm(),
+            actionFactory.actionSettingsExport(),
+            actionFactory.actionCarePortalEvent(),
+            actionFactory.actionProfileSwitchPercent(),
+            actionFactory.actionProfileSwitch(),
+            actionFactory.actionSendSMS(),
+            actionFactory.actionSMBChange(),
+            actionFactory.actionRunScene(),
+            actionFactory.actionEnableScene(),
+            actionFactory.actionDisableScene()
         )
+        // Autotune is only offered in engineering builds, as before.
         if (config.isEngineeringMode() && config.isDev())
-            actions.add(ActionRunAutotune(injector))
+            actions.add(actionFactory.actionRunAutotune())
 
         return actions.toList()
     }
 
     fun getTriggerDummyObjects(): List<Trigger> {
         val triggers = mutableListOf(
-            TriggerConnector(injector),
-            TriggerTime(injector),
-            TriggerRecurringTime(injector),
-            TriggerTimeRange(injector),
-            TriggerBg(injector),
-            TriggerDelta(injector),
-            TriggerIob(injector),
-            TriggerCOB(injector),
-            TriggerProfilePercent(injector),
-            TriggerTempTarget(injector),
-            TriggerTempTargetValue(injector),
-            TriggerWifiSsid(injector),
-            TriggerLocation(injector),
-            TriggerAutosensValue(injector),
-            TriggerBolusAgo(injector),
-            TriggerPumpLastConnection(injector),
-            TriggerBTDevice(injector),
-            TriggerHeartRate(injector),
-            TriggerSensorAge(injector),
-            TriggerCannulaAge(injector),
-            TriggerReservoirLevel(injector),
-            TriggerStepsCount(injector)
+            TriggerConnector(triggerDeps),
+            TriggerTime(triggerDeps),
+            TriggerRecurringTime(triggerDeps),
+            TriggerTimeRange(triggerDeps),
+            TriggerBg(triggerDeps),
+            TriggerDelta(triggerDeps),
+            TriggerIob(triggerDeps),
+            TriggerCOB(triggerDeps),
+            TriggerProfilePercent(triggerDeps),
+            TriggerTempTarget(triggerDeps),
+            TriggerTempTargetValue(triggerDeps),
+            triggerFactory.triggerWifiSsid(),
+            TriggerLocation(triggerDeps),
+            TriggerAutosensValue(triggerDeps),
+            TriggerBolusAgo(triggerDeps),
+            TriggerPumpLastConnection(triggerDeps),
+            triggerFactory.triggerBTDevice(),
+            TriggerHeartRate(triggerDeps),
+            TriggerSensorAge(triggerDeps),
+            TriggerCannulaAge(triggerDeps),
+            TriggerReservoirLevel(triggerDeps),
+            TriggerStepsCount(triggerDeps)
         )
 
         val pump = activePlugin.activePump
 
         if (pump.pumpDescription.isPatchPump) {
-            triggers.add(TriggerPodChange(injector))
+            triggers.add(TriggerPodChange(triggerDeps))
         } else {
-            triggers.add(TriggerInsulinAge(injector))
+            triggers.add(TriggerInsulinAge(triggerDeps))
         }
         if (pump.pumpDescription.isBatteryReplaceable || pump.isBatteryChangeLoggingEnabled()) {
-            triggers.add(TriggerPumpBatteryAge(injector))
+            triggers.add(TriggerPumpBatteryAge(triggerDeps))
         }
         val erosBatteryLinkAvailable = pump.model() == PumpType.OMNIPOD_EROS && pump.isUseRileyLinkBatteryLevel()
         if (pump.model().supportBatteryLevel || erosBatteryLinkAvailable) {
-            triggers.add(TriggerPumpBatteryLevel(injector))
+            triggers.add(TriggerPumpBatteryLevel(triggerDeps))
         }
 
         return triggers.toList()
@@ -712,20 +720,20 @@ class AutomationRuntime @Inject constructor(
      * Create new Automation event to alarm when is time to eat
      */
     override fun scheduleAutomationEventEatReminder() {
-        val event = AutomationEventObject(injector).apply {
+        val event = automationEventFactory.newEvent().apply {
             title = rh.gs(app.aaps.core.ui.R.string.bolus_advisor)
             readOnly = true
             systemAction = true
             autoRemove = true
-            trigger = TriggerConnector(injector, TriggerConnector.Type.OR).apply {
+            trigger = TriggerConnector(triggerDeps, TriggerConnector.Type.OR).apply {
 
                 // Bg under 180 mgdl and dropping by 15 mgdl
-                list.add(TriggerConnector(injector, TriggerConnector.Type.AND).apply {
-                    list.add(TriggerBg(injector, 180.0, GlucoseUnit.MGDL, Comparator.Compare.IS_LESSER))
-                    list.add(TriggerDelta(injector, InputDelta(rh, -15.0, -360.0, 360.0, 1.0, NumberFormat.INTEGER, InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
+                list.add(TriggerConnector(triggerDeps, TriggerConnector.Type.AND).apply {
+                    list.add(TriggerBg(triggerDeps, 180.0, GlucoseUnit.MGDL, Comparator.Compare.IS_LESSER))
+                    list.add(TriggerDelta(triggerDeps, InputDelta(rh, -15.0, -360.0, 360.0, 1.0, NumberFormat.INTEGER, InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
                     list.add(
                         TriggerDelta(
-                            injector,
+                            triggerDeps,
                             InputDelta(rh, -8.0, -360.0, 360.0, 1.0, NumberFormat.INTEGER, InputDelta.DeltaType.SHORT_AVERAGE),
                             GlucoseUnit.MGDL,
                             Comparator.Compare.IS_EQUAL_OR_LESSER
@@ -733,12 +741,12 @@ class AutomationRuntime @Inject constructor(
                     )
                 })
                 // Bg under 160 mgdl and dropping by 9 mgdl
-                list.add(TriggerConnector(injector, TriggerConnector.Type.AND).apply {
-                    list.add(TriggerBg(injector, 160.0, GlucoseUnit.MGDL, Comparator.Compare.IS_LESSER))
-                    list.add(TriggerDelta(injector, InputDelta(rh, -9.0, -360.0, 360.0, 1.0, NumberFormat.INTEGER, InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
+                list.add(TriggerConnector(triggerDeps, TriggerConnector.Type.AND).apply {
+                    list.add(TriggerBg(triggerDeps, 160.0, GlucoseUnit.MGDL, Comparator.Compare.IS_LESSER))
+                    list.add(TriggerDelta(triggerDeps, InputDelta(rh, -9.0, -360.0, 360.0, 1.0, NumberFormat.INTEGER, InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
                     list.add(
                         TriggerDelta(
-                            injector,
+                            triggerDeps,
                             InputDelta(rh, -5.0, -360.0, 360.0, 1.0, NumberFormat.INTEGER, InputDelta.DeltaType.SHORT_AVERAGE),
                             GlucoseUnit.MGDL,
                             Comparator.Compare.IS_EQUAL_OR_LESSER
@@ -746,12 +754,12 @@ class AutomationRuntime @Inject constructor(
                     )
                 })
                 // Bg under 145 mgdl and dropping
-                list.add(TriggerConnector(injector, TriggerConnector.Type.AND).apply {
-                    list.add(TriggerBg(injector, 145.0, GlucoseUnit.MGDL, Comparator.Compare.IS_LESSER))
-                    list.add(TriggerDelta(injector, InputDelta(rh, 0.0, -360.0, 360.0, 1.0, NumberFormat.INTEGER, InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
+                list.add(TriggerConnector(triggerDeps, TriggerConnector.Type.AND).apply {
+                    list.add(TriggerBg(triggerDeps, 145.0, GlucoseUnit.MGDL, Comparator.Compare.IS_LESSER))
+                    list.add(TriggerDelta(triggerDeps, InputDelta(rh, 0.0, -360.0, 360.0, 1.0, NumberFormat.INTEGER, InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
                     list.add(
                         TriggerDelta(
-                            injector,
+                            triggerDeps,
                             InputDelta(rh, 0.0, -360.0, 360.0, 1.0, NumberFormat.INTEGER, InputDelta.DeltaType.SHORT_AVERAGE),
                             GlucoseUnit.MGDL,
                             Comparator.Compare.IS_EQUAL_OR_LESSER
@@ -759,7 +767,8 @@ class AutomationRuntime @Inject constructor(
                     )
                 })
             }
-            actions.add(ActionAlarm(injector, rh.gs(R.string.time_to_eat)))
+            // this@AutomationRuntime: inside apply{} on AutomationEventObject, which has its own actionFactory field.
+            actions.add(this@AutomationRuntime.actionFactory.actionAlarm(rh.gs(R.string.time_to_eat)))
         }
 
         addIfNotExists(event)
@@ -769,37 +778,38 @@ class AutomationRuntime @Inject constructor(
      * Remove Automation event
      */
     override fun removeAutomationEventEatReminder() {
-        val event = AutomationEventObject(injector).apply {
+        val event = automationEventFactory.newEvent().apply {
             title = rh.gs(app.aaps.core.ui.R.string.bolus_advisor)
         }
         removeIfExists(event)
     }
 
     override fun scheduleAutomationEventBolusReminder() {
-        val event = AutomationEventObject(injector).apply {
+        val event = automationEventFactory.newEvent().apply {
             title = rh.gs(app.aaps.core.ui.R.string.bolus_reminder)
             readOnly = true
             systemAction = true
             autoRemove = true
-            trigger = TriggerConnector(injector, TriggerConnector.Type.AND).apply {
+            trigger = TriggerConnector(triggerDeps, TriggerConnector.Type.AND).apply {
 
                 // Bg above 70 mgdl and delta positive mgdl
-                list.add(TriggerBg(injector, 70.0, GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_GREATER))
+                list.add(TriggerBg(triggerDeps, 70.0, GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_GREATER))
                 list.add(
                     TriggerDelta(
-                        injector, InputDelta(rh, 0.0, -360.0, 360.0, 1.0, NumberFormat.INTEGER, InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare
+                        triggerDeps, InputDelta(rh, 0.0, -360.0, 360.0, 1.0, NumberFormat.INTEGER, InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare
                             .IS_GREATER
                     )
                 )
             }
-            actions.add(ActionAlarm(injector, rh.gs(R.string.time_to_bolus)))
+            // this@AutomationRuntime: inside apply{} on AutomationEventObject, which has its own actionFactory field.
+            actions.add(this@AutomationRuntime.actionFactory.actionAlarm(rh.gs(R.string.time_to_bolus)))
         }
 
         addIfNotExists(event)
     }
 
     override fun removeAutomationEventBolusReminder() {
-        val event = AutomationEventObject(injector).apply {
+        val event = automationEventFactory.newEvent().apply {
             title = rh.gs(app.aaps.core.ui.R.string.bolus_reminder)
         }
         removeIfExists(event)

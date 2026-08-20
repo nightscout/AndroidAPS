@@ -1,15 +1,21 @@
 package app.aaps.plugins.automation.actions
 
+import javax.inject.Provider
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.logging.AAPSLogger
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Stop
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.plugins.automation.R
 import com.google.gson.JsonObject
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 
-class ActionStopProcessing(injector: HasAndroidInjector) : Action(injector) {
+class ActionStopProcessing(
+    aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    pumpEnactResultProvider: Provider<PumpEnactResult>
+) : Action(aapsLogger, rh, pumpEnactResultProvider) {
 
     override fun friendlyName(): Int = R.string.stop_processing
     override fun shortDescription(): String = rh.gs(R.string.stop_processing)

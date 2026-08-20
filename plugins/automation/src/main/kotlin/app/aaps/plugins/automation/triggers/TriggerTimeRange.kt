@@ -9,22 +9,21 @@ import app.aaps.core.utils.JsonHelper.safeGetInt
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputTimeRange
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 
 // Trigger for time range ( from 10:00AM till 13:00PM )
-class TriggerTimeRange(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerTimeRange(deps: TriggerDeps) : Trigger(deps) {
 
     // in minutes since midnight 60 means 1AM
     var range = InputTimeRange(rh, dateUtil)
 
-    constructor(injector: HasAndroidInjector, start: Int, end: Int) : this(injector) {
+    constructor(deps: TriggerDeps, start: Int, end: Int) : this(deps) {
         range.start = start
         range.end = end
     }
 
     @Suppress("unused")
-    constructor(injector: HasAndroidInjector, triggerTimeRange: TriggerTimeRange) : this(injector) {
+    constructor(deps: TriggerDeps, triggerTimeRange: TriggerTimeRange) : this(deps) {
         range.start = triggerTimeRange.range.start
         range.end = triggerTimeRange.range.end
     }
@@ -68,7 +67,7 @@ class TriggerTimeRange(injector: HasAndroidInjector) : Trigger(injector) {
     override fun composeIcon() = Icons.Filled.Timer
     override fun elementType() = ElementType.AUTOMATION
 
-    override fun duplicate(): Trigger = TriggerTimeRange(injector, range.start, range.end)
+    override fun duplicate(): Trigger = TriggerTimeRange(deps, range.start, range.end)
 
     private fun toMills(minutesSinceMidnight: Int): Long = MidnightTime.calcMidnightPlusMinutes(minutesSinceMidnight)
 

@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.actions
 
+import javax.inject.Provider
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.logging.LTag
@@ -12,20 +15,25 @@ import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDuration
 import app.aaps.plugins.automation.elements.InputPercent
+import app.aaps.plugins.automation.triggers.TriggerDeps
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.triggers.TriggerProfilePercent
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
-import javax.inject.Inject
 
-class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector) {
+class ActionProfileSwitchPercent(
+    aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val profileFunction: ProfileFunction,
+    // Only to build the Trigger precondition below.
+    private val triggerDeps: TriggerDeps
+) : Action(aapsLogger, rh, pumpEnactResultProvider) {
 
-    @Inject lateinit var profileFunction: ProfileFunction
 
     var pct = InputPercent()
     var duration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
 
-    override var precondition: Trigger? = TriggerProfilePercent(injector, 100.0, Comparator.Compare.IS_EQUAL)
+    override var precondition: Trigger? = TriggerProfilePercent(triggerDeps, 100.0, Comparator.Compare.IS_EQUAL)
 
     override fun friendlyName(): Int = R.string.profilepercentage
     override fun shortDescription(): String =

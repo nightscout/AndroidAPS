@@ -1,7 +1,6 @@
 package app.aaps.plugins.automation.triggers
 
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.ComparatorExists
 import com.google.common.truth.Truth.assertThat
@@ -11,13 +10,11 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.kotlin.anyVararg
-import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
 /** Covers [TriggerSceneActive]: the active×comparator shouldRun matrix, json round-trip, duplicate and labels. */
 class TriggerSceneActiveTest : TriggerTestBase() {
 
-    private val sceneApi: SceneAutomationApi = mock()
 
     @BeforeEach
     fun prepare() {
@@ -26,7 +23,7 @@ class TriggerSceneActiveTest : TriggerTestBase() {
     }
 
     private fun trigger(compare: ComparatorExists.Compare) =
-        TriggerSceneActive(injector, compare).also { it.sceneApi = sceneApi }
+        TriggerSceneActive(triggerDeps, sceneApi, compare)
 
     @Test fun shouldRun_whenSceneActive() = runTest {
         whenever(sceneApi.isAnySceneActive()).thenReturn(true)
@@ -41,15 +38,15 @@ class TriggerSceneActiveTest : TriggerTestBase() {
     }
 
     @Test fun json_dataRoundTrip() {
-        val data = TriggerSceneActive(injector, ComparatorExists.Compare.NOT_EXISTS).dataJSON().toString()
-        val restored = TriggerSceneActive(injector).fromJSON(data) as TriggerSceneActive
+        val data = TriggerSceneActive(triggerDeps, sceneApi, ComparatorExists.Compare.NOT_EXISTS).dataJSON().toString()
+        val restored = triggerFactory.triggerSceneActive().fromJSON(data) as TriggerSceneActive
         assertThat(restored.comparator.value).isEqualTo(ComparatorExists.Compare.NOT_EXISTS)
         // dataJSON exposes the comparator
         assertThat(JSONObject(data).getString("comparator")).isEqualTo("NOT_EXISTS")
     }
 
     @Test fun duplicate_copiesComparator() {
-        val original = TriggerSceneActive(injector, ComparatorExists.Compare.EXISTS)
+        val original = TriggerSceneActive(triggerDeps, sceneApi, ComparatorExists.Compare.EXISTS)
         val copy = original.duplicate() as TriggerSceneActive
         assertThat(copy.comparator.value).isEqualTo(ComparatorExists.Compare.EXISTS)
     }

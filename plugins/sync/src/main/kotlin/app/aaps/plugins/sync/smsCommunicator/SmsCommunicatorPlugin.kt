@@ -39,6 +39,7 @@ import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.smsCommunicator.smsFromMessage
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.sync.XDripBroadcast
@@ -250,7 +251,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             @Suppress("DEPRECATION") val pdus = bundle["pdus"] as Array<*>
             for (pdu in pdus) {
                 val message = SmsMessage.createFromPdu(pdu as ByteArray, format)
-                smsCommunicatorPlugin.processSms(Sms(message))
+                smsCommunicatorPlugin.processSms(smsFromMessage(message))
             }
         }
     }

@@ -10,10 +10,9 @@ import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 
-class TriggerHeartRate(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerHeartRate(deps: TriggerDeps) : Trigger(deps) {
 
     @VisibleForTesting val averageHeartRateDurationMillis = 330 * 1000L
     private val minValue = 30
@@ -62,7 +61,7 @@ class TriggerHeartRate(injector: HasAndroidInjector) : Trigger(injector) {
     override fun elementType() = ElementType.BG_CHECK
 
     override fun duplicate(): Trigger {
-        return TriggerHeartRate(injector).also { o ->
+        return TriggerHeartRate(deps).also { o ->
             o.heartRate.setValue(heartRate.value)
             o.comparator.setValue(comparator.value)
         }

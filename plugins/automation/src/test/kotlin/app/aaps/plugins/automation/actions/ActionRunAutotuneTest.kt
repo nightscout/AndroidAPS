@@ -23,9 +23,7 @@ class ActionRunAutotuneTest : ActionsTestBase() {
     @BeforeEach
     fun setup() {
         whenever(rh.gs(anyInt(), anyVararg())).thenReturn("desc")
-        sut = ActionRunAutotune(injector)
-        sut.resourceHelper = rh
-        sut.preferences = preferences
+        sut = ActionRunAutotune(aapsLogger, rh, pumpEnactResultProvider, rh, autotunePlugin, profileFunction, activePlugin, preferences)
     }
 
     @Test fun friendlyName() {

@@ -17,47 +17,47 @@ class TriggerCannulaAgeTest : TriggerTestBase() {
         // Cannula age is 6
         val cannulaChangeEvent = TE(glucoseUnit = GlucoseUnit.MGDL, timestamp = now - T.hours(6).msecs(), type = TE.Type.CANNULA_CHANGE)
         whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.CANNULA_CHANGE)).thenReturn(cannulaChangeEvent)
-        var t: TriggerCannulaAge = TriggerCannulaAge(injector).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
+        var t: TriggerCannulaAge = TriggerCannulaAge(triggerDeps).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isFalse()
-        t = TriggerCannulaAge(injector).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
+        t = TriggerCannulaAge(triggerDeps).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerCannulaAge(injector).setValue(5.0).comparator(Comparator.Compare.IS_GREATER)
+        t = TriggerCannulaAge(triggerDeps).setValue(5.0).comparator(Comparator.Compare.IS_GREATER)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerCannulaAge(injector).setValue(5.0).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER)
+        t = TriggerCannulaAge(triggerDeps).setValue(5.0).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerCannulaAge(injector).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        t = TriggerCannulaAge(triggerDeps).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerCannulaAge(injector).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
+        t = TriggerCannulaAge(triggerDeps).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isFalse()
-        t = TriggerCannulaAge(injector).setValue(10.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        t = TriggerCannulaAge(triggerDeps).setValue(10.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerCannulaAge(injector).setValue(5.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        t = TriggerCannulaAge(triggerDeps).setValue(5.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.shouldRun()).isFalse()
     }
 
     @Test fun shouldRunNotAvailable() = runTest {
         whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.CANNULA_CHANGE)).thenReturn(null)
-        var t = TriggerCannulaAge(injector).apply { comparator.value = Comparator.Compare.IS_NOT_AVAILABLE }
+        var t = TriggerCannulaAge(triggerDeps).apply { comparator.value = Comparator.Compare.IS_NOT_AVAILABLE }
         assertThat(t.shouldRun()).isTrue()
-        t = TriggerCannulaAge(injector).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
+        t = TriggerCannulaAge(triggerDeps).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isFalse()
     }
 
     @Test fun copyConstructorTest() {
-        val t: TriggerCannulaAge = TriggerCannulaAge(injector).setValue(213.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
+        val t: TriggerCannulaAge = TriggerCannulaAge(triggerDeps).setValue(213.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.cannulaAgeHours.value).isWithin(0.01).of(213.0)
         assertThat(t.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL_OR_LESSER)
     }
 
     @Test fun toJSONTest() {
         val cannulaJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"cannulaAgeHours\":4},\"type\":\"TriggerCannulaAge\"}"
-        val t: TriggerCannulaAge = TriggerCannulaAge(injector).setValue(4.0).comparator(Comparator.Compare.IS_EQUAL)
+        val t: TriggerCannulaAge = TriggerCannulaAge(triggerDeps).setValue(4.0).comparator(Comparator.Compare.IS_EQUAL)
         JSONAssert.assertEquals(cannulaJson, t.toJSON(), true)
     }
 
     @Test fun fromJSONTest() {
-        val t: TriggerCannulaAge = TriggerCannulaAge(injector).setValue(4.0).comparator(Comparator.Compare.IS_EQUAL)
-        val t2 = TriggerDummy(injector).instantiate(JSONObject(t.toJSON())) as TriggerCannulaAge
+        val t: TriggerCannulaAge = TriggerCannulaAge(triggerDeps).setValue(4.0).comparator(Comparator.Compare.IS_EQUAL)
+        val t2 = triggerFactory.instantiate(JSONObject(t.toJSON())) as TriggerCannulaAge
         assertThat(t2.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
         assertThat(t2.cannulaAgeHours.value).isWithin(0.01).of(4.0)
     }

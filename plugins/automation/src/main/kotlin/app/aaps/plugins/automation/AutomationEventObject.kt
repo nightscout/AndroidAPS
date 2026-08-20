@@ -7,21 +7,25 @@ import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.icons.IcUserOptions
+import app.aaps.plugins.automation.actions.ActionFactory
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.actions.ActionDummy
 import app.aaps.plugins.automation.actions.ActionStopProcessing
+import app.aaps.plugins.automation.triggers.TriggerDeps
+import app.aaps.plugins.automation.triggers.TriggerFactory
 import app.aaps.plugins.automation.triggers.TriggerConnector
 import app.aaps.plugins.automation.triggers.TriggerDummy
-import dagger.android.HasAndroidInjector
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.UUID
-import javax.inject.Inject
 
-class AutomationEventObject(private val injector: HasAndroidInjector) : AutomationEvent {
+class AutomationEventObject(private val factory: AutomationEventFactory) : AutomationEvent {
 
-    @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var dateUtil: DateUtil
+    private val aapsLogger: AAPSLogger get() = factory.aapsLogger
+    private val actionFactory: ActionFactory get() = factory.actionFactory
+    private val triggerFactory: TriggerFactory get() = factory.triggerFactory
+    private val triggerDeps: TriggerDeps get() = factory.triggerDeps
+    private val dateUtil: DateUtil get() = factory.dateUtil
 
     override var id: String = UUID.randomUUID().toString()
     override var title: String = ""
@@ -31,14 +35,10 @@ class AutomationEventObject(private val injector: HasAndroidInjector) : Automati
     var autoRemove: Boolean = false // auto-remove once used
     override var userAction: Boolean = false // shows button on Overview
 
-    var trigger: TriggerConnector = TriggerConnector(injector)
+    var trigger: TriggerConnector = TriggerConnector(triggerDeps)
     val actions: MutableList<Action> = ArrayList()
 
     var lastRun: Long = 0
-
-    init {
-        injector.androidInjector().inject(this)
-    }
 
     override suspend fun canRun(): Boolean = trigger.shouldRun()
     override suspend fun preconditionCanRun(): Boolean = getPreconditions().shouldRun()
@@ -72,7 +72,7 @@ class AutomationEventObject(private val injector: HasAndroidInjector) : Automati
     }
 
     internal fun getPreconditions(): TriggerConnector {
-        val trigger = TriggerConnector(injector, TriggerConnector.Type.AND)
+        val trigger = TriggerConnector(triggerDeps, TriggerConnector.Type.AND)
         for (action in actions) {
             action.precondition?.let { trigger.list.add(it) }
         }
@@ -118,11 +118,11 @@ class AutomationEventObject(private val injector: HasAndroidInjector) : Automati
         readOnly = d.optBoolean("readOnly", false)
         autoRemove = d.optBoolean("autoRemove", false)
         userAction = d.optBoolean("userAction", false)
-        trigger = TriggerDummy(injector).instantiate(JSONObject(d.getString("trigger"))) as TriggerConnector
+        trigger = triggerFactory.instantiate(JSONObject(d.getString("trigger"))) as TriggerConnector
         val array = d.getJSONArray("actions")
         actions.clear()
         for (i in 0 until array.length()) {
-            ActionDummy(injector).instantiate(JSONObject(array.getString(i)))?.let {
+            actionFactory.instantiate(JSONObject(array.getString(i)))?.let {
                 actions.add(it)
             }
         }

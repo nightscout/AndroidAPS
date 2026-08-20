@@ -7,16 +7,26 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.plugins.automation.triggers.Trigger
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
-import javax.inject.Inject
 import javax.inject.Provider
 
-abstract class Action(val injector: HasAndroidInjector) {
-
-    @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
+/**
+ * One step an automation performs.
+ *
+ * Actions are built from JSON rather than by Dagger - the automation list is stored as a string and
+ * each entry names its type - so they used to reach back through `HasAndroidInjector` and inject
+ * themselves. That needs a generated members injector, which is Java, so it cannot happen in a
+ * multiplatform module; and self-injection hides what an action actually depends on.
+ *
+ * Dependencies now arrive through the constructor, supplied by [ActionFactory], which owns the
+ * type-name-to-constructor mapping. The three below are needed by every action; anything else a
+ * specific action needs is on its own constructor, where it is visible.
+ */
+abstract class Action(
+    val aapsLogger: AAPSLogger,
+    val rh: ResourceHelper,
+    val pumpEnactResultProvider: Provider<PumpEnactResult>
+) {
 
     open var precondition: Trigger? = null
 
@@ -36,11 +46,6 @@ abstract class Action(val injector: HasAndroidInjector) {
 
     var title = ""
 
-    init {
-        @Suppress("LeakingThis")
-        injector.androidInjector().inject(this)
-    }
-
     open fun hasDialog(): Boolean = false
 
     open fun toJSON(): String =
@@ -55,35 +60,4 @@ abstract class Action(val injector: HasAndroidInjector) {
         if (type == javaClass.simpleName) fromJSON(data.toString())
     }
 
-    fun instantiate(obj: JSONObject): Action? {
-        try {
-            var type = obj.getString("type")
-            val data = if (obj.has("data")) obj.getJSONObject("data") else JSONObject()
-            // stripe off package name
-            val dotIndex = type.lastIndexOf('.')
-            if (dotIndex > 0) type = type.substring(dotIndex + 1)
-            return when (type) {
-                ActionAlarm::class.java.simpleName                -> ActionAlarm(injector).fromJSON(data.toString())
-                ActionSettingsExport::class.java.simpleName       -> ActionSettingsExport(injector).fromJSON(data.toString())
-                ActionCarePortalEvent::class.java.simpleName      -> ActionCarePortalEvent(injector).fromJSON(data.toString())
-                ActionDisableScene::class.java.simpleName         -> ActionDisableScene(injector).fromJSON(data.toString())
-                ActionDummy::class.java.simpleName                -> ActionDummy(injector).fromJSON(data.toString())
-                ActionEnableScene::class.java.simpleName          -> ActionEnableScene(injector).fromJSON(data.toString())
-                ActionSMBChange::class.java.simpleName            -> ActionSMBChange(injector).fromJSON(data.toString())
-                ActionNotification::class.java.simpleName         -> ActionNotification(injector).fromJSON(data.toString())
-                ActionProfileSwitch::class.java.simpleName        -> ActionProfileSwitch(injector).fromJSON(data.toString())
-                ActionProfileSwitchPercent::class.java.simpleName -> ActionProfileSwitchPercent(injector).fromJSON(data.toString())
-                ActionRunAutotune::class.java.simpleName          -> ActionRunAutotune(injector).fromJSON(data.toString())
-                ActionRunScene::class.java.simpleName             -> ActionRunScene(injector).fromJSON(data.toString())
-                ActionSendSMS::class.java.simpleName              -> ActionSendSMS(injector).fromJSON(data.toString())
-                ActionStartTempTarget::class.java.simpleName      -> ActionStartTempTarget(injector).fromJSON(data.toString())
-                ActionStopProcessing::class.java.simpleName       -> ActionStopProcessing(injector).fromJSON(data.toString())
-                ActionStopTempTarget::class.java.simpleName       -> ActionStopTempTarget(injector).fromJSON(data.toString())
-                else                                              -> throw ClassNotFoundException(type)
-            }
-        } catch (e: Exception) {
-            aapsLogger.error("Unhandled exception", e)
-        }
-        return null
-    }
 }
