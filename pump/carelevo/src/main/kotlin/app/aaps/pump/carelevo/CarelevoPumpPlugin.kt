@@ -153,6 +153,14 @@ class CarelevoPumpPlugin @Inject constructor(
     private var bleReceiverDisposable: Disposable? = null
     private val pluginDisposable = CompositeDisposable()
 
+    // Critical alarms escalate through the shared AAPS full-screen alarm (uiInteraction.runAlarm) —
+    // see handleAlarms. This dedups that escalation to once per still-active alarm id: the alarms
+    // stream re-emits on every reconnect/snapshot poll while the condition remains, and runAlarm must
+    // not re-fire (re-ring/re-launch the activity) for an alarm the patch is still reporting as active,
+    // only for one that is newly seen. An id drops out (and can re-fire later) once it's no longer in
+    // the incoming alarm list — resolved, or acknowledged.
+    private val globallyAlarmedIds = mutableSetOf<String>()
+
     private var _pumpType: PumpType = PumpType.CAREMEDI_CARELEVO
     private val _pumpDescription = PumpDescription().fillFor(_pumpType)
 
@@ -494,37 +502,33 @@ class CarelevoPumpPlugin @Inject constructor(
         }
     }
 
-    // Critical alarms already escalated to the global alarm (so a re-emission of the same list
-    // doesn't re-fire the sound). Pruned to the currently-active set on every pass.
-    private val globallyAlarmedIds = mutableSetOf<String>()
-
+    /**
+     * Two escalation surfaces, same shape EOPatch's `AlarmManager.showNotification` uses (a critical
+     * alarm gets BOTH, every other alarm gets only the second):
+     * - [uiInteraction.runAlarm]: the shared AAPS full-screen alarm — wakes/unlocks the screen and
+     *   rings, so a critical patch failure (occlusion, out of insulin, patch error, …) isn't missed
+     *   while the phone is locked or the user is elsewhere in the app. Fire-and-forget: its own OK
+     *   button only silences the sound (it's shared UI with no notion of a CareLevo alarm to clear).
+     * - [CarelevoAlarmNotifier.showTopNotification]: the persistent notification card, for every
+     *   alarm regardless of severity. Its action button is the one that actually clears the alarm
+     *   (wired to [app.aaps.pump.carelevo.presentation.model.AlarmEvent.ClearAlarm] in
+     *   [CarelevoAlarmNotifier.showTopNotification] itself) — so silencing the full-screen alarm is
+     *   not the same as acknowledging it; the card is what the user confirms on.
+     */
     private fun handleAlarms(alarms: List<CarelevoAlarmInfo>) {
         aapsLogger.debug(LTag.NOTIFICATION, "startAlarmObserving handleAlarms:: $alarms")
         globallyAlarmedIds.retainAll(alarms.map { it.alarmId }.toSet())
-        if (alarms.isEmpty()) return
 
-        val critical = alarms.filter { it.alarmType.isCritical() }
-        if (critical.isNotEmpty()) {
-            // filter-with-add: keeps only the not-yet-escalated alarms AND marks them escalated.
-            val fresh = critical.filter { globallyAlarmedIds.add(it.alarmId) }
-            if (carelevoAlarmNotifier.alarmHostActive) {
-                // The in-app host is mounted — it presents the full-screen alarm and starts the
-                // sound itself (CarelevoAlarmHost/CarelevoAlarmViewModel).
-                aapsLogger.debug(LTag.NOTIFICATION, "critical alarm handled by compose host")
-            } else if (fresh.isNotEmpty()) {
-                // No in-app surface (backgrounded, or user on another screen): fire the global AAPS
-                // alarm (sound + full-screen intent) — a critical patch alarm must NEVER depend on
-                // the user having the Carelevo screen open.
-                val first = fresh.first()
-                uiInteraction.runAlarm(
-                    status = rh.gs(first.cause.transformNotificationStringResources().first),
-                    title = rh.gs(R.string.carelevo),
-                    soundId = CoreUiR.raw.error
-                )
-            }
-        } else {
-            carelevoAlarmNotifier.showTopNotification(alarms)
+        val fresh = alarms.filter { it.alarmType.isCritical() && globallyAlarmedIds.add(it.alarmId) }
+        fresh.firstOrNull()?.let { alarm ->
+            uiInteraction.runAlarm(
+                status = rh.gs(alarm.cause.transformNotificationStringResources().first),
+                title = rh.gs(R.string.carelevo),
+                soundId = CoreUiR.raw.error
+            )
         }
+
+        carelevoAlarmNotifier.showTopNotification(alarms)
     }
 
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(

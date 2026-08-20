@@ -162,15 +162,6 @@ class CarelevoAlarmNotifierTest {
     }
 
     @Test
-    fun `alarmHostActive defaults to false and is settable`() {
-        assertThat(sut.alarmHostActive).isFalse()
-        sut.alarmHostActive = true
-        assertThat(sut.alarmHostActive).isTrue()
-        sut.alarmHostActive = false
-        assertThat(sut.alarmHostActive).isFalse()
-    }
-
-    @Test
     fun `isInForeground can be read without crashing`() {
         // ProcessLifecycleOwner resolves under Robolectric; the exact foreground state depends on the
         // Robolectric process-lifecycle setup, so only assert the accessor returns a Boolean, no throw.

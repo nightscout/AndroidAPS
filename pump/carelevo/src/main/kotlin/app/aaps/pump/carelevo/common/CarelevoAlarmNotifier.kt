@@ -38,10 +38,9 @@ import javax.inject.Singleton
  * Presentation half of the alarm pipeline: observes the persisted active-alarm set (via
  * [CarelevoAlarmActionHandler]) and surfaces it — the in-app AAPS "top notification" cards
  * ([showTopNotification], with the clear action wired back to the shared state machine), the
- * system-tray notification for backgrounded users ([showNotification]), and the [alarms] StateFlow
- * the Compose alarm host renders from. The plugin (`CarelevoPumpPlugin.handleAlarms`) decides per
- * emission which surface a given alarm set takes; [alarmHostActive] tells it whether the in-app
- * host is mounted.
+ * system-tray notification for backgrounded users ([showNotification]), and the [alarms] StateFlow.
+ * `CarelevoPumpPlugin.handleAlarms` additionally routes a critical alarm through the shared AAPS
+ * full-screen alarm (`UiInteraction.runAlarm`) — that escalation is independent of this class.
  */
 @Singleton
 class CarelevoAlarmNotifier @Inject constructor(
@@ -59,14 +58,6 @@ class CarelevoAlarmNotifier @Inject constructor(
     val alarms = _alarms.asStateFlow()
     private var onAlarmsUpdated: ((List<CarelevoAlarmInfo>) -> Unit)? = null
     private val channelId = "carelevo_alarm_channel"
-
-    /**
-     * True while the in-app Compose alarm host ([app.aaps.pump.carelevo.compose.alarm.CarelevoAlarmHost])
-     * is mounted (user is on the Carelevo screen). The plugin uses this to decide whether a critical
-     * alarm is already being presented (host shows the full-screen alarm + sound) or must fall back
-     * to the global `UiInteraction.runAlarm` so a backgrounded/elsewhere user is never left silent.
-     */
-    @Volatile var alarmHostActive: Boolean = false
 
     fun startObserving(
         onAlarmsUpdated: (List<CarelevoAlarmInfo>) -> Unit
