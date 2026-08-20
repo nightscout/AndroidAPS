@@ -5,13 +5,16 @@ import androidx.compose.material.icons.filled.Repeat
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.ui.elements.WeekDay
-import app.aaps.core.utils.JsonHelper
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.MidnightUtils
+import app.aaps.core.utils.lenientBoolean
+import app.aaps.core.utils.lenientInt
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputTime
 import app.aaps.plugins.automation.elements.InputWeekDay
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import java.util.Calendar
 import java.util.Objects
 
@@ -44,26 +47,25 @@ class TriggerRecurringTime(deps: TriggerDeps) : Trigger(deps) {
         return false
     }
 
-    override fun dataJSON(): JSONObject {
-        val data = JSONObject()
-            .put("time", time.value)
-        for (i in days.weekdays.indices) {
-            data.put(WeekDay.DayOfWeek.entries[i].name, days.weekdays[i])
+    override fun dataJSON(): JsonObject =
+        buildJsonObject {
+            put("time", time.value)
+            for (i in days.weekdays.indices) {
+                put(WeekDay.DayOfWeek.entries[i].name, days.weekdays[i])
+            }
         }
-        return data
-    }
 
     override fun fromJSON(data: String): Trigger {
-        val o = JSONObject(data)
+        val o = jsonOf(data)
         for (i in days.weekdays.indices)
-            days.weekdays[i] = JsonHelper.safeGetBoolean(o, WeekDay.DayOfWeek.entries[i].name)
-        if (o.has("hour")) {
+            days.weekdays[i] = o.lenientBoolean(WeekDay.DayOfWeek.entries[i].name, false)
+        if (o.containsKey("hour")) {
             // do conversion from 2.5.1 format
-            val hour = JsonHelper.safeGetInt(o, "hour")
-            val minute = JsonHelper.safeGetInt(o, "minute")
+            val hour = o.lenientInt("hour")
+            val minute = o.lenientInt("minute")
             time.value = 60 * hour + minute
         } else {
-            time.value = JsonHelper.safeGetInt(o, "time")
+            time.value = o.lenientInt("time")
         }
         return this
     }

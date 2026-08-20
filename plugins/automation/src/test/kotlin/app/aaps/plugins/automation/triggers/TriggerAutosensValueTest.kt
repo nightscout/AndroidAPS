@@ -2,10 +2,10 @@ package app.aaps.plugins.automation.triggers
 
 import app.aaps.core.keys.DoubleKey
 import app.aaps.implementation.iob.AutosensDataObject
+import app.aaps.plugins.automation.asJsonObject
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
-import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.whenever
@@ -94,7 +94,7 @@ class TriggerAutosensValueTest : TriggerTestBase() {
         val t = TriggerAutosensValue(triggerDeps)
         t.autosens.value = 410.0
         t.comparator.value = Comparator.Compare.IS_EQUAL
-        val t2 = triggerFactory.instantiate(JSONObject(t.toJSON())) as TriggerAutosensValue
+        val t2 = triggerFactory.instantiate(t.toJSON().asJsonObject()) as TriggerAutosensValue
         assertThat(t2.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
         assertThat(t2.autosens.value).isWithin(0.01).of(410.0)
     }

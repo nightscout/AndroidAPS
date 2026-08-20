@@ -15,8 +15,16 @@ import app.aaps.plugins.automation.triggers.TriggerDeps
 import app.aaps.plugins.automation.triggers.TriggerFactory
 import app.aaps.plugins.automation.triggers.TriggerConnector
 import app.aaps.plugins.automation.triggers.TriggerDummy
-import org.json.JSONArray
-import org.json.JSONObject
+import app.aaps.core.utils.lenientBoolean
+import app.aaps.core.utils.lenientString
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonArray
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.put
 import java.util.UUID
 
 class AutomationEventObject(private val factory: AutomationEventFactory) : AutomationEvent {
@@ -93,41 +101,44 @@ class AutomationEventObject(private val factory: AutomationEventFactory) : Autom
         return false
     }
 
-    fun toJSON(): String {
-        val array = JSONArray()
-        for (a in actions) array.put(a.toJSON())
-        return JSONObject()
-            .put("id", id)
-            .put("title", title)
-            .put("enabled", isEnabled)
-            .put("systemAction", systemAction)
-            .put("readOnly", readOnly)
-            .put("autoRemove", autoRemove)
-            .put("userAction", userAction)
-            .put("trigger", trigger.toJSON())
-            .put("actions", array)
-            .toString()
-    }
+    // The trigger and each action are stored as JSON *strings*, not nested objects. That is the format
+    // every existing install has on disk and in sync, so it stays.
+    fun toJSON(): String =
+        buildJsonObject {
+            put("id", id)
+            put("title", title)
+            put("enabled", isEnabled)
+            put("systemAction", systemAction)
+            put("readOnly", readOnly)
+            put("autoRemove", autoRemove)
+            put("userAction", userAction)
+            put("trigger", trigger.toJSON())
+            put("actions", buildJsonArray { for (a in actions) add(JsonPrimitive(a.toJSON())) })
+        }.toString()
 
     fun fromJSON(data: String): AutomationEventObject {
-        val d = JSONObject(data)
-        id = d.optString("id", "").ifEmpty { UUID.randomUUID().toString() }
-        title = d.optString("title", "")
-        isEnabled = d.optBoolean("enabled", true)
-        systemAction = d.optBoolean("systemAction", false)
-        readOnly = d.optBoolean("readOnly", false)
-        autoRemove = d.optBoolean("autoRemove", false)
-        userAction = d.optBoolean("userAction", false)
-        trigger = triggerFactory.instantiate(JSONObject(d.getString("trigger"))) as TriggerConnector
-        val array = d.getJSONArray("actions")
+        val d = jsonOf(data)
+        id = d.lenientString("id", "").ifEmpty { UUID.randomUUID().toString() }
+        title = d.lenientString("title", "")
+        isEnabled = d.lenientBoolean("enabled", true)
+        systemAction = d.lenientBoolean("systemAction", false)
+        readOnly = d.lenientBoolean("readOnly", false)
+        autoRemove = d.lenientBoolean("autoRemove", false)
+        userAction = d.lenientBoolean("userAction", false)
+        trigger = triggerFactory.instantiate(jsonOf(d.lenientString("trigger", "{}"))) as TriggerConnector
+        val array = d["actions"] as? JsonArray ?: JsonArray(emptyList())
         actions.clear()
-        for (i in 0 until array.length()) {
-            actionFactory.instantiate(JSONObject(array.getString(i)))?.let {
+        for (element in array) {
+            val child = (element as? JsonPrimitive)?.content ?: continue
+            actionFactory.instantiate(jsonOf(child))?.let {
                 actions.add(it)
             }
         }
         return this
     }
+
+    private fun jsonOf(data: String): JsonObject =
+        runCatching { Json.parseToJsonElement(data).jsonObject }.getOrElse { JsonObject(emptyMap()) }
 
     fun shouldRun(): Boolean {
         return lastRun <= dateUtil.now() - T.mins(5).msecs()

@@ -7,7 +7,12 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.plugins.automation.triggers.Trigger
-import org.json.JSONObject
+import app.aaps.core.utils.lenientString
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.put
 import javax.inject.Provider
 
 /**
@@ -49,14 +54,22 @@ abstract class Action(
     open fun hasDialog(): Boolean = false
 
     open fun toJSON(): String =
-        JSONObject().put("type", this.javaClass.simpleName).toString()
+        buildJsonObject { put("type", this@Action.javaClass.simpleName) }.toString()
 
     open fun fromJSON(data: String): Action = this
 
+    /**
+     * Parses a stored `data` block. Returns an empty object on anything unparseable, so a single bad
+     * action degrades to its defaults instead of taking the whole automation list down - the same
+     * thing org.json's lenient readers did before.
+     */
+    protected fun jsonOf(data: String): JsonObject =
+        runCatching { Json.parseToJsonElement(data).jsonObject }.getOrElse { JsonObject(emptyMap()) }
+
     fun apply(a: Action) {
-        val obj = JSONObject(a.toJSON())
-        val type = obj.getString("type")
-        val data = obj.getJSONObject("data")
+        val obj = jsonOf(a.toJSON())
+        val type = obj.lenientString("type")
+        val data = obj["data"] as? JsonObject ?: return
         if (type == javaClass.simpleName) fromJSON(data.toString())
     }
 

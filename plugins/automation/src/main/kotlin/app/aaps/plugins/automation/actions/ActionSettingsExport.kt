@@ -25,10 +25,11 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.core.objects.extensions.asSettingsExport
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.utils.JsonHelper
+import app.aaps.core.utils.lenientString
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputString
-import org.json.JSONObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 class ActionSettingsExport(
     aapsLogger: AAPSLogger,
@@ -144,16 +145,16 @@ class ActionSettingsExport(
     }
 
     override fun toJSON(): String {
-        val data = JSONObject().put("text", text.value)
-        return JSONObject()
-            .put("type", this.javaClass.simpleName)
-            .put("data", data)
-            .toString()
+        val data = buildJsonObject { put("text", text.value) }
+        return buildJsonObject {
+            put("type", this@ActionSettingsExport.javaClass.simpleName)
+            put("data", data)
+        }.toString()
     }
 
     override fun fromJSON(data: String): Action {
-        val o = JSONObject(data)
-        text.value = JsonHelper.safeGetString(o, "text", "")
+        val o = jsonOf(data)
+        text.value = o.lenientString("text", "")
         return this
     }
 

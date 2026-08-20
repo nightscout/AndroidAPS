@@ -5,11 +5,13 @@ import androidx.compose.material.icons.filled.Timer
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.utils.JsonHelper.safeGetInt
 import app.aaps.core.utils.MidnightUtils
+import app.aaps.core.utils.lenientInt
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputTimeRange
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 // Trigger for time range ( from 10:00AM till 13:00PM )
 class TriggerTimeRange(deps: TriggerDeps) : Trigger(deps) {
@@ -47,15 +49,16 @@ class TriggerTimeRange(deps: TriggerDeps) : Trigger(deps) {
         return false
     }
 
-    override fun dataJSON(): JSONObject =
-        JSONObject()
-            .put("start", range.start)
-            .put("end", range.end)
+    override fun dataJSON(): JsonObject =
+        buildJsonObject {
+            put("start", range.start)
+            put("end", range.end)
+        }
 
     override fun fromJSON(data: String): TriggerTimeRange {
-        val o = JSONObject(data)
-        range.start = safeGetInt(o, "start")
-        range.end = safeGetInt(o, "end")
+        val o = jsonOf(data)
+        range.start = o.lenientInt("start")
+        range.end = o.lenientInt("end")
         return this
     }
 

@@ -10,14 +10,15 @@ import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.scenes.SceneAutomationResult
 import app.aaps.core.interfaces.scenes.SceneIconResolver
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.utils.JsonHelper
+import app.aaps.core.utils.lenientString
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.ComparatorExists
 import app.aaps.plugins.automation.elements.InputSceneName
 import app.aaps.plugins.automation.triggers.TriggerDeps
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.triggers.TriggerSceneActive
-import org.json.JSONObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 class ActionRunScene(
     aapsLogger: AAPSLogger,
@@ -69,16 +70,16 @@ class ActionRunScene(
     override fun hasDialog(): Boolean = true
 
     override fun toJSON(): String {
-        val data = JSONObject().put("sceneId", scene.value)
-        return JSONObject()
-            .put("type", this.javaClass.simpleName)
-            .put("data", data)
-            .toString()
+        val data = buildJsonObject { put("sceneId", scene.value) }
+        return buildJsonObject {
+            put("type", this@ActionRunScene.javaClass.simpleName)
+            put("data", data)
+        }.toString()
     }
 
     override fun fromJSON(data: String): Action {
-        val o = JSONObject(data)
-        scene.value = JsonHelper.safeGetString(o, "sceneId", "")
+        val o = jsonOf(data)
+        scene.value = o.lenientString("sceneId", "")
         return this
     }
 

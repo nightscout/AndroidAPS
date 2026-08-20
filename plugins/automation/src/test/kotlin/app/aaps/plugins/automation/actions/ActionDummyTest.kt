@@ -1,20 +1,20 @@
 package app.aaps.plugins.automation.actions
 
 import kotlin.test.assertIs
-import org.json.JSONObject
+import app.aaps.plugins.automation.asJsonObject
 import org.junit.jupiter.api.Test
 
 class ActionDummyTest : ActionsTestBase() {
 
     @Test
     fun instantiateTest() {
-        var action: Action? = actionFactory.instantiate(JSONObject("""{"type":"info.nightscout.androidaps.plugins.general.automation.actions.ActionDummy"}"""))
+        var action: Action? = actionFactory.instantiate("""{"type":"info.nightscout.androidaps.plugins.general.automation.actions.ActionDummy"}""".asJsonObject())
         assertIs<ActionDummy>(action)
 
-        action = actionFactory.instantiate(JSONObject("""{"type":"app.aaps.plugins.automation.actions.ActionDummy"}"""))
+        action = actionFactory.instantiate("""{"type":"app.aaps.plugins.automation.actions.ActionDummy"}""".asJsonObject())
         assertIs<ActionDummy>(action)
 
-        action = actionFactory.instantiate(JSONObject("""{"type":"ActionDummy"}"""))
+        action = actionFactory.instantiate("""{"type":"ActionDummy"}""".asJsonObject())
         assertIs<ActionDummy>(action)
     }
 }

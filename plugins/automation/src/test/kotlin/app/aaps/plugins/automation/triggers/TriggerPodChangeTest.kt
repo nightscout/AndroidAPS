@@ -56,6 +56,6 @@ class TriggerPodChangeTest : TriggerTestBase() {
         // JSON not relevant...
         val podChangeJson = "{}"
         val t = TriggerPodChange(triggerDeps)
-        JSONAssert.assertEquals(podChangeJson, t.fromJSON("").dataJSON(), true)
+        JSONAssert.assertEquals(podChangeJson, t.fromJSON("").dataJSON().toString(), true)
     }
 }

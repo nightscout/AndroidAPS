@@ -17,11 +17,14 @@ import app.aaps.core.ui.compose.icons.IcAnnouncement
 import app.aaps.core.ui.compose.icons.IcNote
 import app.aaps.core.ui.compose.icons.IcQuestion
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.utils.JsonHelper
+import app.aaps.core.utils.lenientInt
+import app.aaps.core.utils.lenientString
+import app.aaps.core.utils.lenientStringOrNull
 import app.aaps.plugins.automation.elements.InputCarePortalMenu
 import app.aaps.plugins.automation.elements.InputDuration
 import app.aaps.plugins.automation.elements.InputString
-import org.json.JSONObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 class ActionCarePortalEvent(
     aapsLogger: AAPSLogger,
@@ -91,22 +94,23 @@ class ActionCarePortalEvent(
         return pumpEnactResultProvider.get().success(true).comment(app.aaps.core.ui.R.string.ok)
     }
 
-    override fun toJSON(): String {
-        val data = JSONObject()
-            .put("cpEvent", cpEvent.value)
-            .put("note", note.value)
-            .put("durationInMinutes", duration.value)
-        return JSONObject()
-            .put("type", this.javaClass.simpleName)
-            .put("data", data)
-            .toString()
-    }
+    override fun toJSON(): String =
+        buildJsonObject {
+            put("type", this@ActionCarePortalEvent.javaClass.simpleName)
+            put(
+                "data", buildJsonObject {
+                    put("cpEvent", cpEvent.value.toString())
+                    put("note", note.value)
+                    put("durationInMinutes", duration.value)
+                }
+            )
+        }.toString()
 
     override fun fromJSON(data: String): Action {
-        val o = JSONObject(data)
-        cpEvent.value = InputCarePortalMenu.EventType.valueOf(JsonHelper.safeGetString(o, "cpEvent")!!)
-        note.value = JsonHelper.safeGetString(o, "note", "")
-        duration.value = JsonHelper.safeGetInt(o, "durationInMinutes")
+        val o = jsonOf(data)
+        cpEvent.value = InputCarePortalMenu.EventType.valueOf(o.lenientStringOrNull("cpEvent")!!)
+        note.value = o.lenientString("note", "")
+        duration.value = o.lenientInt("durationInMinutes")
         return this
     }
 

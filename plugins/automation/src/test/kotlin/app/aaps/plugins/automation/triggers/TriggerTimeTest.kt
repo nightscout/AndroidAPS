@@ -2,9 +2,9 @@ package app.aaps.plugins.automation.triggers
 
 import app.aaps.core.data.time.T
 import app.aaps.plugins.automation.R
+import app.aaps.plugins.automation.asJsonObject
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
-import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
@@ -38,7 +38,7 @@ class TriggerTimeTest : TriggerTestBase() {
     @Test
     fun fromJSONTest() = runTest {
         val t: TriggerTime = TriggerTime(triggerDeps).runAt(now - T.mins(1).msecs())
-        val t2 = triggerFactory.instantiate(JSONObject(t.toJSON())) as TriggerTime
+        val t2 = triggerFactory.instantiate(t.toJSON().asJsonObject()) as TriggerTime
         assertThat(t2.time.value).isEqualTo(now - T.mins(1).msecs())
     }
 

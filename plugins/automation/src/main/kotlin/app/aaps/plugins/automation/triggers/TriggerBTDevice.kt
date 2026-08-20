@@ -11,12 +11,14 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.events.EventBTChange
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.utils.JsonHelper
+import app.aaps.core.utils.lenientStringOrNull
 import app.aaps.plugins.automation.BtConnectionSource
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.ComparatorConnect
 import app.aaps.plugins.automation.elements.InputDropdownMenu
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import javax.inject.Inject
 
 class TriggerBTDevice(
@@ -42,15 +44,16 @@ class TriggerBTDevice(
         return false
     }
 
-    override fun dataJSON(): JSONObject =
-        JSONObject()
-            .put("comparator", comparator.value.toString())
-            .put("name", btDevice.value)
+    override fun dataJSON(): JsonObject =
+        buildJsonObject {
+            put("comparator", comparator.value.toString())
+            put("name", btDevice.value)
+        }
 
     override fun fromJSON(data: String): Trigger {
-        val d = JSONObject(data)
-        btDevice.value = JsonHelper.safeGetString(d, "name")!!
-        comparator.value = ComparatorConnect.Compare.valueOf(JsonHelper.safeGetString(d, "comparator")!!)
+        val d = jsonOf(data)
+        btDevice.value = d.lenientStringOrNull("name")!!
+        comparator.value = ComparatorConnect.Compare.valueOf(d.lenientStringOrNull("comparator")!!)
         return this
     }
 

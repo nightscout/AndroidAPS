@@ -2,9 +2,9 @@ package app.aaps.plugins.automation.triggers
 
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.plugins.automation.R
+import app.aaps.plugins.automation.asJsonObject
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
-import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
@@ -46,7 +46,7 @@ class TriggerTimeRangeTest : TriggerTestBase() {
     @Test
     fun fromJSONTest() = runTest {
         val t: TriggerTimeRange = TriggerTimeRange(triggerDeps).period(120, 180)
-        val t2 = triggerFactory.instantiate(JSONObject(t.toJSON())) as TriggerTimeRange
+        val t2 = triggerFactory.instantiate(t.toJSON().asJsonObject()) as TriggerTimeRange
         assertThat(t2.period(753, 360).range.start).isEqualTo((now - 1).toInt())
         assertThat(t2.period(753, 360).range.end).isEqualTo(360)
     }

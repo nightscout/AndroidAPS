@@ -1,11 +1,11 @@
 package app.aaps.plugins.automation.triggers
 
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.plugins.automation.asJsonObject
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
-import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
@@ -63,7 +63,7 @@ class TriggerPumpBatteryLevelTest : TriggerTestBase() {
 
     @Test fun fromJSONTest() = runTest {
         val t: TriggerPumpBatteryLevel = TriggerPumpBatteryLevel(triggerDeps).setValue(4.0).comparator(Comparator.Compare.IS_EQUAL)
-        val t2 = triggerFactory.instantiate(JSONObject(t.toJSON())) as TriggerPumpBatteryLevel
+        val t2 = triggerFactory.instantiate(t.toJSON().asJsonObject()) as TriggerPumpBatteryLevel
         assertThat(t2.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
         assertThat(t2.pumpBatteryLevel.value).isWithin(0.01).of(4.0)
     }

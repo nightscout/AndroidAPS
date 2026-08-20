@@ -4,10 +4,10 @@ import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
+import app.aaps.plugins.automation.asJsonObject
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
-import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
@@ -68,7 +68,7 @@ class TriggerBgTest : TriggerTestBase() {
     @Test
     fun fromJSONTest() = runTest {
         val t: TriggerBg = TriggerBg(triggerDeps).setUnits(GlucoseUnit.MMOL).setValue(4.1).comparator(Comparator.Compare.IS_EQUAL)
-        val t2 = triggerFactory.instantiate(JSONObject(t.toJSON())) as TriggerBg
+        val t2 = triggerFactory.instantiate(t.toJSON().asJsonObject()) as TriggerBg
         assertThat(t2.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
         assertThat(t2.bg.value).isWithin(0.01).of(4.1)
         assertThat(t2.bg.units).isEqualTo(GlucoseUnit.MMOL)

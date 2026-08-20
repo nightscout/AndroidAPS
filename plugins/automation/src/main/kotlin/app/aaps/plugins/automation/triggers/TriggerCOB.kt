@@ -5,12 +5,14 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.keys.IntKey
 import app.aaps.core.ui.compose.icons.IcCarbs
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.utils.JsonHelper
-import app.aaps.core.utils.JsonHelper.safeGetDouble
+import app.aaps.core.utils.lenientDouble
+import app.aaps.core.utils.lenientStringOrNull
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 class TriggerCOB(deps: TriggerDeps) : Trigger(deps) {
 
@@ -53,15 +55,16 @@ class TriggerCOB(deps: TriggerDeps) : Trigger(deps) {
         return false
     }
 
-    override fun dataJSON(): JSONObject =
-        JSONObject()
-            .put("carbs", cob.value)
-            .put("comparator", comparator.value.toString())
+    override fun dataJSON(): JsonObject =
+        buildJsonObject {
+            put("carbs", cob.value)
+            put("comparator", comparator.value.toString())
+        }
 
     override fun fromJSON(data: String): Trigger {
-        val d = JSONObject(data)
-        cob.setValue(safeGetDouble(d, "carbs"))
-        comparator.setValue(Comparator.Compare.valueOf(JsonHelper.safeGetString(d, "comparator")!!))
+        val d = jsonOf(data)
+        cob.setValue(d.lenientDouble("carbs"))
+        comparator.setValue(Comparator.Compare.valueOf(d.lenientStringOrNull("comparator")!!))
         return this
     }
 

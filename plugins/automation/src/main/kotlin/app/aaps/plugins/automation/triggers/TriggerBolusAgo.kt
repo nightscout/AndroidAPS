@@ -4,12 +4,14 @@ import app.aaps.core.data.model.BS
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.ui.compose.icons.IcBolus
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.utils.JsonHelper
-import app.aaps.core.utils.JsonHelper.safeGetString
+import app.aaps.core.utils.lenientInt
+import app.aaps.core.utils.lenientStringOrNull
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDuration
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 class TriggerBolusAgo(deps: TriggerDeps) : Trigger(deps) {
 
@@ -53,15 +55,16 @@ class TriggerBolusAgo(deps: TriggerDeps) : Trigger(deps) {
         return false
     }
 
-    override fun dataJSON(): JSONObject =
-        JSONObject()
-            .put("minutesAgo", minutesAgo.value)
-            .put("comparator", comparator.value.toString())
+    override fun dataJSON(): JsonObject =
+        buildJsonObject {
+            put("minutesAgo", minutesAgo.value)
+            put("comparator", comparator.value.toString())
+        }
 
     override fun fromJSON(data: String): Trigger {
-        val d = JSONObject(data)
-        minutesAgo.setMinutes(JsonHelper.safeGetInt(d, "minutesAgo"))
-        comparator.setValue(Comparator.Compare.valueOf(safeGetString(d, "comparator")!!))
+        val d = jsonOf(data)
+        minutesAgo.setMinutes(d.lenientInt("minutesAgo"))
+        comparator.setValue(Comparator.Compare.valueOf(d.lenientStringOrNull("comparator")!!))
         return this
     }
 

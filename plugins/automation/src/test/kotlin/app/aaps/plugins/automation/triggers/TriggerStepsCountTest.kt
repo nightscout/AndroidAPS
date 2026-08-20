@@ -2,10 +2,10 @@ package app.aaps.plugins.automation.triggers
 
 import app.aaps.core.data.model.SC
 import app.aaps.plugins.automation.R
+import app.aaps.plugins.automation.asJsonObject
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
-import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
@@ -107,9 +107,7 @@ class TriggerStepsCountTest : TriggerTestBase() {
     @Test
     fun fromJSON() {
         val t = triggerFactory.instantiate(
-            JSONObject(
-                """{"data":{"comparator":"IS_GREATER","stepsCount":110,"measurementDuration":"10"},"type":"TriggerStepsCount"}"""
-            )
+            """{"data":{"comparator":"IS_GREATER","stepsCount":110,"measurementDuration":"10"},"type":"TriggerStepsCount"}""".asJsonObject()
         ) as TriggerStepsCount
         assertThat(t.comparator.value).isEqualTo(Comparator.Compare.IS_GREATER)
         assertThat(t.stepsCount.value).isWithin(0.01).of(110.0)

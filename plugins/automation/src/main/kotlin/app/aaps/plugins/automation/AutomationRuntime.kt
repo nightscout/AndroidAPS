@@ -111,9 +111,10 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import org.json.JSONArray
-import org.json.JSONException
-import org.json.JSONObject
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.jsonArray
 import java.util.Collections
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -429,15 +430,13 @@ class AutomationRuntime @Inject constructor(
 
     /** Serialize the in-memory event list to the persisted JSON shape (what [storeToSP] writes). */
     private fun eventsToJson(): String {
-        val array = JSONArray()
+        val elements = mutableListOf<JsonElement>()
         synchronized(this) { automationEvents.toMutableList() }.forEach { event ->
-            try {
-                array.put(JSONObject(event.toJSON()))
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
+            runCatching { Json.parseToJsonElement(event.toJSON()) }
+                .onSuccess { elements.add(it) }
+                .onFailure { aapsLogger.error(LTag.AUTOMATION, "Cannot serialize event ${event.title}", it) }
         }
-        return array.toString()
+        return JsonArray(elements).toString()
     }
 
     // Verbatim mirror of the persisted definitions — parse only, NO store, NO seed, NO id-backfill-store.
@@ -454,16 +453,14 @@ class AutomationRuntime @Inject constructor(
         automationEvents.clear()
         val data = preferences.get(StringNonKey.AutomationEvents)
         if (data != "")
-            try {
-                val array = JSONArray(data)
-                for (i in 0 until array.length()) {
-                    val event = automationEventFactory.fromJSON(array.getJSONObject(i).toString())
+            runCatching {
+                val array = Json.parseToJsonElement(data).jsonArray
+                for (element in array) {
+                    val event = automationEventFactory.fromJSON(element.toString())
                     previousLastRun[event.id]?.let { event.lastRun = it }
                     automationEvents.add(event)
                 }
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
+            }.onFailure { aapsLogger.error(LTag.AUTOMATION, "Cannot parse stored automation list", it) }
         notifyChanged() // fan out to UI/wear collectors; does NOT persist
     }
 

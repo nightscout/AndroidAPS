@@ -14,7 +14,9 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.icons.IcPluginAutotune
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.elements.WeekDay
-import app.aaps.core.utils.JsonHelper
+import app.aaps.core.utils.lenientBoolean
+import app.aaps.core.utils.lenientInt
+import app.aaps.core.utils.lenientString
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputDuration
 import app.aaps.plugins.automation.elements.InputProfileName
@@ -22,7 +24,8 @@ import app.aaps.plugins.automation.elements.InputWeekDay
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import org.json.JSONObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 class ActionRunAutotune(
     aapsLogger: AAPSLogger,
@@ -72,24 +75,25 @@ class ActionRunAutotune(
     override fun hasDialog(): Boolean = true
 
     override fun toJSON(): String {
-        val data = JSONObject()
-            .put("profileToTune", inputProfileName.value)
-            .put("tunedays", daysBack.value)
-        for (i in days.weekdays.indices) {
-            data.put(WeekDay.DayOfWeek.entries[i].name, days.weekdays[i])
+        val data = buildJsonObject {
+            put("profileToTune", inputProfileName.value)
+            put("tunedays", daysBack.value)
+            for (i in days.weekdays.indices) {
+                put(WeekDay.DayOfWeek.entries[i].name, days.weekdays[i])
+            }
         }
-        return JSONObject()
-            .put("type", this.javaClass.simpleName)
-            .put("data", data)
-            .toString()
+        return buildJsonObject {
+            put("type", this@ActionRunAutotune.javaClass.simpleName)
+            put("data", data)
+        }.toString()
     }
 
     override fun fromJSON(data: String): Action {
-        val o = JSONObject(data)
+        val o = jsonOf(data)
         for (i in days.weekdays.indices)
-            days.weekdays[i] = JsonHelper.safeGetBoolean(o, WeekDay.DayOfWeek.entries[i].name, true)
-        inputProfileName.value = JsonHelper.safeGetString(o, "profileToTune", "")
-        defaultValue = JsonHelper.safeGetInt(o, "tunedays")
+            days.weekdays[i] = o.lenientBoolean(WeekDay.DayOfWeek.entries[i].name, true)
+        inputProfileName.value = o.lenientString("profileToTune", "")
+        defaultValue = o.lenientInt("tunedays")
         if (defaultValue == 0)
             defaultValue = preferences.get(IntKey.AutotuneDefaultTuneDays)
         daysBack.value = defaultValue

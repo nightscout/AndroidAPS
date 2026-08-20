@@ -3,10 +3,14 @@ package app.aaps.plugins.automation.triggers
 import androidx.annotation.StringRes
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.utils.JsonHelper.safeGetString
 import app.aaps.plugins.automation.R
-import org.json.JSONArray
-import org.json.JSONObject
+import app.aaps.core.utils.lenientString
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonArray
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 class TriggerConnector(deps: TriggerDeps) : Trigger(deps) {
 
@@ -64,21 +68,22 @@ class TriggerConnector(deps: TriggerDeps) : Trigger(deps) {
         return result
     }
 
-    override fun dataJSON(): JSONObject {
-        val array = JSONArray()
-        for (t in list) array.put(t.toJSON())
-        return JSONObject()
-            .put("connectorType", connectorType.toString())
-            .put("triggerList", array)
-    }
+    // Children are stored as JSON *strings* inside triggerList, not as nested objects. That is the
+    // stored format every existing install has, so it stays.
+    override fun dataJSON(): JsonObject =
+        buildJsonObject {
+            put("connectorType", connectorType.toString())
+            put("triggerList", buildJsonArray { for (t in list) add(JsonPrimitive(t.toJSON())) })
+        }
 
     override fun fromJSON(data: String): Trigger {
-        val d = JSONObject(data)
-        connectorType = Type.valueOf(safeGetString(d, "connectorType")!!)
-        val array = d.getJSONArray("triggerList")
+        val d = jsonOf(data)
+        connectorType = Type.valueOf(d.lenientString("connectorType", Type.AND.toString()))
+        val array = d["triggerList"] as? JsonArray ?: JsonArray(emptyList())
         list.clear()
-        for (i in 0 until array.length()) {
-            deps.triggerFactory.get().instantiate(JSONObject(array.getString(i))).let {
+        for (element in array) {
+            val child = (element as? JsonPrimitive)?.content ?: continue
+            deps.triggerFactory.get().instantiate(jsonOf(child)).let {
                 list.add(it)
             }
         }

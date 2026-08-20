@@ -5,12 +5,16 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.ui.compose.icons.IcDelta
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.utils.JsonHelper
+import app.aaps.core.utils.lenientDouble
+import app.aaps.core.utils.lenientString
+import app.aaps.core.utils.lenientStringOrNull
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDelta
 import app.aaps.plugins.automation.elements.InputDelta.DeltaType
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 class TriggerDelta(deps: TriggerDeps) : Trigger(deps) {
 
@@ -80,22 +84,23 @@ class TriggerDelta(deps: TriggerDeps) : Trigger(deps) {
         return false
     }
 
-    override fun dataJSON(): JSONObject =
-        JSONObject()
-            .put("value", delta.value)
-            .put("units", units.asText)
-            .put("deltaType", delta.deltaType)
-            .put("comparator", comparator.value.toString())
+    override fun dataJSON(): JsonObject =
+        buildJsonObject {
+            put("value", delta.value)
+            put("units", units.asText)
+            put("deltaType", delta.deltaType.toString())
+            put("comparator", comparator.value.toString())
+        }
 
     override fun fromJSON(data: String): Trigger {
-        val d = JSONObject(data)
-        units = GlucoseUnit.fromText(JsonHelper.safeGetString(d, "units", GlucoseUnit.MGDL.asText))
-        val type = DeltaType.valueOf(JsonHelper.safeGetString(d, "deltaType", ""))
-        val value = JsonHelper.safeGetDouble(d, "value")
+        val d = jsonOf(data)
+        units = GlucoseUnit.fromText(d.lenientString("units", GlucoseUnit.MGDL.asText))
+        val type = DeltaType.valueOf(d.lenientString("deltaType", ""))
+        val value = d.lenientDouble("value")
         delta =
             if (units == GlucoseUnit.MMOL) InputDelta(rh, value, (-MMOL_MAX), MMOL_MAX, 0.1, NumberFormat.DECIMAL_1, type)
             else InputDelta(rh, value, (-MGDL_MAX), MGDL_MAX, 1.0, NumberFormat.INTEGER, type)
-        comparator.setValue(Comparator.Compare.valueOf(JsonHelper.safeGetString(d, "comparator")!!))
+        comparator.setValue(Comparator.Compare.valueOf(d.lenientStringOrNull("comparator")!!))
         return this
     }
 

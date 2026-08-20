@@ -5,7 +5,8 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.plugins.automation.BtConnectionSource
-import org.json.JSONObject
+import app.aaps.core.utils.lenientString
+import kotlinx.serialization.json.JsonObject
 import javax.inject.Inject
 import javax.inject.Provider
 import kotlin.reflect.full.primaryConstructor
@@ -55,10 +56,10 @@ class TriggerFactory @Inject constructor(
         }
     }.getOrNull()
 
-    fun instantiate(obj: JSONObject): Trigger {
+    fun instantiate(obj: JsonObject): Trigger {
         try {
-            var type = obj.getString("type")
-            val data = obj.getJSONObject("data")
+            var type = obj.lenientString("type")
+            val data = obj["data"] as? JsonObject ?: JsonObject(emptyMap())
             // stripe off package name
             val dotIndex = type.lastIndexOf('.')
             if (dotIndex > 0) type = type.substring(dotIndex + 1)

@@ -6,12 +6,15 @@ import androidx.compose.material.icons.filled.LocationOn
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.utils.JsonHelper
+import app.aaps.core.utils.lenientDouble
+import app.aaps.core.utils.lenientStringOrNull
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputDouble
 import app.aaps.plugins.automation.elements.InputLocationMode
 import app.aaps.plugins.automation.elements.InputString
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 class TriggerLocation(deps: TriggerDeps) : Trigger(deps) {
 
@@ -53,21 +56,22 @@ class TriggerLocation(deps: TriggerDeps) : Trigger(deps) {
         return false
     }
 
-    override fun dataJSON(): JSONObject =
-        JSONObject()
-            .put("latitude", latitude.value)
-            .put("longitude", longitude.value)
-            .put("distance", distance.value)
-            .put("name", name.value)
-            .put("mode", modeSelected.value)
+    override fun dataJSON(): JsonObject =
+        buildJsonObject {
+            put("latitude", latitude.value)
+            put("longitude", longitude.value)
+            put("distance", distance.value)
+            put("name", name.value)
+            put("mode", modeSelected.value.toString())
+        }
 
     override fun fromJSON(data: String): Trigger {
-        val d = JSONObject(data)
-        latitude.value = JsonHelper.safeGetDouble(d, "latitude")
-        longitude.value = JsonHelper.safeGetDouble(d, "longitude")
-        distance.value = JsonHelper.safeGetDouble(d, "distance")
-        name.value = JsonHelper.safeGetString(d, "name")!!
-        modeSelected.value = InputLocationMode.Mode.valueOf(JsonHelper.safeGetString(d, "mode")!!)
+        val d = jsonOf(data)
+        latitude.value = d.lenientDouble("latitude")
+        longitude.value = d.lenientDouble("longitude")
+        distance.value = d.lenientDouble("distance")
+        name.value = d.lenientStringOrNull("name")!!
+        modeSelected.value = InputLocationMode.Mode.valueOf(d.lenientStringOrNull("mode")!!)
         if (modeSelected.value == InputLocationMode.Mode.GOING_OUT) lastMode = InputLocationMode.Mode.OUTSIDE
         return this
     }

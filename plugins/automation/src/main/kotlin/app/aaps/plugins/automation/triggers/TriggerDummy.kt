@@ -1,6 +1,6 @@
 package app.aaps.plugins.automation.triggers
 
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
 
 // Used for instantiation of other triggers only
 class TriggerDummy(deps: TriggerDeps, val shouldRun: Boolean = false) : Trigger(deps) {
@@ -9,7 +9,7 @@ class TriggerDummy(deps: TriggerDeps, val shouldRun: Boolean = false) : Trigger(
         return shouldRun
     }
 
-    override fun dataJSON(): JSONObject {
+    override fun dataJSON(): JsonObject {
         throw NotImplementedError("An operation is not implemented")
     }
 

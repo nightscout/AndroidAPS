@@ -12,10 +12,11 @@ import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.icons.IcProfile
-import app.aaps.core.utils.JsonHelper
+import app.aaps.core.utils.lenientString
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputProfileName
-import org.json.JSONObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 class ActionProfileSwitch(
     aapsLogger: AAPSLogger,
@@ -80,17 +81,15 @@ class ActionProfileSwitch(
 
     override fun hasDialog(): Boolean = true
 
-    override fun toJSON(): String {
-        val data = JSONObject().put("profileToSwitchTo", inputProfileName.value)
-        return JSONObject()
-            .put("type", this.javaClass.simpleName)
-            .put("data", data)
-            .toString()
-    }
+    override fun toJSON(): String =
+        buildJsonObject {
+            put("type", this@ActionProfileSwitch.javaClass.simpleName)
+            put("data", buildJsonObject { put("profileToSwitchTo", inputProfileName.value) })
+        }.toString()
 
     override fun fromJSON(data: String): Action {
-        val o = JSONObject(data)
-        inputProfileName.value = JsonHelper.safeGetString(o, "profileToSwitchTo", "")
+        val o = jsonOf(data)
+        inputProfileName.value = o.lenientString("profileToSwitchTo", "")
         return this
     }
 

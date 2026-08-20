@@ -8,6 +8,8 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.utils.lenientBoolean
+import app.aaps.core.utils.lenientString
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.actions.ActionSMBChange
 import app.aaps.plugins.automation.actions.ActionStopProcessing
@@ -16,7 +18,6 @@ import app.aaps.plugins.automation.triggers.TriggerConnectorTest
 import app.aaps.plugins.automation.triggers.TriggerDummy
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
-import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.skyscreamer.jsonassert.JSONAssert
@@ -56,20 +57,20 @@ class AutomationEventTest : TestBase() {
         // create test object
         val event = eventFactory.newEvent()
         event.title = "Test"
-        event.trigger = triggerFactory.instantiate(JSONObject(TriggerConnectorTest().oneItem)) as TriggerConnector
+        event.trigger = triggerFactory.instantiate(TriggerConnectorTest().oneItem.asJsonObject()) as TriggerConnector
         event.addAction(ActionSMBChange(aapsLogger, rh, pumpEnactResultProvider, dateUtil, preferences))
 
         // export to json
         val eventJson = event.toJSON()
-        val parsed = JSONObject(eventJson)
+        val parsed = eventJson.asJsonObject()
         // Verify id is present and is a valid UUID
-        assertThat(parsed.has("id")).isTrue()
-        assertThat(parsed.getString("id")).isNotEmpty()
+        assertThat(parsed.containsKey("id")).isTrue()
+        assertThat(parsed.lenientString("id")).isNotEmpty()
         // Verify other fields (lenient because of id)
-        assertThat(parsed.getString("title")).isEqualTo("Test")
-        assertThat(parsed.getBoolean("enabled")).isTrue()
-        assertThat(parsed.getBoolean("userAction")).isFalse()
-        assertThat(parsed.getBoolean("systemAction")).isFalse()
+        assertThat(parsed.lenientString("title")).isEqualTo("Test")
+        assertThat(parsed.lenientBoolean("enabled", false)).isTrue()
+        assertThat(parsed.lenientBoolean("userAction", false)).isFalse()
+        assertThat(parsed.lenientBoolean("systemAction", false)).isFalse()
 
         // clone
         val clone = eventFactory.fromJSON(eventJson)
@@ -95,7 +96,7 @@ class AutomationEventTest : TestBase() {
     @Test fun idPreservedOnRoundtrip() {
         val event = eventFactory.newEvent()
         event.title = "Test"
-        event.trigger = triggerFactory.instantiate(JSONObject(TriggerConnectorTest().oneItem)) as TriggerConnector
+        event.trigger = triggerFactory.instantiate(TriggerConnectorTest().oneItem.asJsonObject()) as TriggerConnector
         val originalId = event.id
         val clone = eventFactory.fromJSON(event.toJSON())
         assertThat(clone.id).isEqualTo(originalId)
@@ -113,7 +114,7 @@ class AutomationEventTest : TestBase() {
     @Test fun hasStopProcessing() {
         val event = eventFactory.newEvent()
         event.title = "Test"
-        event.trigger = triggerFactory.instantiate(JSONObject(TriggerConnectorTest().oneItem)) as TriggerConnector
+        event.trigger = triggerFactory.instantiate(TriggerConnectorTest().oneItem.asJsonObject()) as TriggerConnector
         assertThat(event.hasStopProcessing()).isFalse()
         event.addAction(ActionStopProcessing(aapsLogger, rh, pumpEnactResultProvider))
         assertThat(event.hasStopProcessing()).isTrue()

@@ -16,7 +16,11 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.plugins.automation.services.LastLocationDataContainer
-import org.json.JSONObject
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.put
 import javax.inject.Inject
 
 abstract class Trigger(val deps: TriggerDeps) {
@@ -37,8 +41,16 @@ abstract class Trigger(val deps: TriggerDeps) {
     val dateUtil get() = deps.dateUtil
 
     abstract suspend fun shouldRun(): Boolean
-    abstract fun dataJSON(): JSONObject
+    abstract fun dataJSON(): JsonObject
     abstract fun fromJSON(data: String): Trigger
+
+    /**
+     * Parses a stored `data` block. Returns an empty object on anything unparseable, so a single bad
+     * trigger degrades to its defaults instead of taking the whole automation list down - the same
+     * thing org.json's lenient readers did before.
+     */
+    protected fun jsonOf(data: String): JsonObject =
+        runCatching { Json.parseToJsonElement(data).jsonObject }.getOrElse { JsonObject(emptyMap()) }
 
     abstract fun friendlyName(): Int
     abstract fun friendlyDescription(): String
@@ -55,10 +67,10 @@ abstract class Trigger(val deps: TriggerDeps) {
     abstract fun duplicate(): Trigger
 
     fun toJSON(): String =
-        JSONObject()
-            .put("type", this::class.java.simpleName)
-            .put("data", dataJSON())
-            .toString()
+        buildJsonObject {
+            put("type", this@Trigger::class.java.simpleName)
+            put("data", dataJSON())
+        }.toString()
 
 
 }

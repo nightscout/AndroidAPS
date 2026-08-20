@@ -5,11 +5,13 @@ import androidx.compose.material.icons.filled.Wifi
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.utils.JsonHelper
+import app.aaps.core.utils.lenientStringOrNull
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputString
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import javax.inject.Inject
 
 class TriggerWifiSsid(
@@ -56,15 +58,16 @@ class TriggerWifiSsid(
         return false
     }
 
-    override fun dataJSON(): JSONObject =
-        JSONObject()
-            .put("ssid", ssid.value)
-            .put("comparator", comparator.value.toString())
+    override fun dataJSON(): JsonObject =
+        buildJsonObject {
+            put("ssid", ssid.value)
+            put("comparator", comparator.value.toString())
+        }
 
     override fun fromJSON(data: String): Trigger {
-        val d = JSONObject(data)
-        ssid.value = JsonHelper.safeGetString(d, "ssid")!!
-        comparator.value = Comparator.Compare.valueOf(JsonHelper.safeGetString(d, "comparator")!!)
+        val d = jsonOf(data)
+        ssid.value = d.lenientStringOrNull("ssid")!!
+        comparator.value = Comparator.Compare.valueOf(d.lenientStringOrNull("comparator")!!)
         return this
     }
 

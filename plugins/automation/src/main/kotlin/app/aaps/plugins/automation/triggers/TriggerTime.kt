@@ -5,10 +5,12 @@ import androidx.compose.material.icons.filled.Schedule
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.utils.JsonHelper
+import app.aaps.core.utils.lenientLong
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputDateTime
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 class TriggerTime(deps: TriggerDeps) : Trigger(deps) {
 
@@ -38,13 +40,14 @@ class TriggerTime(deps: TriggerDeps) : Trigger(deps) {
         return false
     }
 
-    override fun dataJSON(): JSONObject =
-        JSONObject()
-            .put("runAt", time.value)
+    override fun dataJSON(): JsonObject =
+        buildJsonObject {
+            put("runAt", time.value)
+        }
 
     override fun fromJSON(data: String): Trigger {
-        val o = JSONObject(data)
-        time.value = JsonHelper.safeGetLong(o, "runAt")
+        val o = jsonOf(data)
+        time.value = o.lenientLong("runAt")
         return this
     }
 

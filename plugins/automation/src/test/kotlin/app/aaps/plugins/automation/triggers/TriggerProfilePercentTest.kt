@@ -1,11 +1,11 @@
 package app.aaps.plugins.automation.triggers
 
 import app.aaps.plugins.automation.R
+import app.aaps.plugins.automation.asJsonObject
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
-import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
@@ -56,7 +56,7 @@ class TriggerProfilePercentTest : TriggerTestBase() {
 
     @Test fun fromJSONTest() = runTest {
         val t: TriggerProfilePercent = TriggerProfilePercent(triggerDeps).setValue(120.0).comparator(Comparator.Compare.IS_EQUAL)
-        val t2 = triggerFactory.instantiate(JSONObject(t.toJSON())) as TriggerProfilePercent
+        val t2 = triggerFactory.instantiate(t.toJSON().asJsonObject()) as TriggerProfilePercent
         assertThat(t2.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
         assertThat(t2.pct.value).isWithin(0.01).of(120.0)
     }

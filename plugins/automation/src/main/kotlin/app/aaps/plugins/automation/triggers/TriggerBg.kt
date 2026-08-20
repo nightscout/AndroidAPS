@@ -4,11 +4,15 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.ui.compose.icons.IcBgCheck
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.utils.JsonHelper
+import app.aaps.core.utils.lenientDouble
+import app.aaps.core.utils.lenientString
+import app.aaps.core.utils.lenientStringOrNull
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputBg
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import kotlin.math.roundToInt
 
 class TriggerBg(deps: TriggerDeps) : Trigger(deps) {
@@ -59,17 +63,18 @@ class TriggerBg(deps: TriggerDeps) : Trigger(deps) {
         return false
     }
 
-    override fun dataJSON(): JSONObject =
-        JSONObject()
-            .put("bg", bg.value)
-            .put("comparator", comparator.value.toString())
-            .put("units", bg.units.asText)
+    override fun dataJSON(): JsonObject =
+        buildJsonObject {
+            put("bg", bg.value)
+            put("comparator", comparator.value.toString())
+            put("units", bg.units.asText)
+        }
 
     override fun fromJSON(data: String): Trigger {
-        val d = JSONObject(data)
-        bg.setUnits(GlucoseUnit.fromText(JsonHelper.safeGetString(d, "units", GlucoseUnit.MGDL.asText)))
-        bg.value = JsonHelper.safeGetDouble(d, "bg")
-        comparator.setValue(Comparator.Compare.valueOf(JsonHelper.safeGetString(d, "comparator")!!))
+        val d = jsonOf(data)
+        bg.setUnits(GlucoseUnit.fromText(d.lenientString("units", GlucoseUnit.MGDL.asText)))
+        bg.value = d.lenientDouble("bg")
+        comparator.setValue(Comparator.Compare.valueOf(d.lenientStringOrNull("comparator")!!))
         return this
     }
 

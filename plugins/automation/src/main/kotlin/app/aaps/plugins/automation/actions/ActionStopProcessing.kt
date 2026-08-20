@@ -8,8 +8,8 @@ import androidx.compose.material.icons.filled.Stop
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.plugins.automation.R
-import com.google.gson.JsonObject
-import org.json.JSONObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 class ActionStopProcessing(
     aapsLogger: AAPSLogger,
@@ -29,10 +29,10 @@ class ActionStopProcessing(
     }
 
     override fun toJSON(): String {
-        return JSONObject()
-            .put("type", this.javaClass.simpleName)
-            .put("data", JsonObject())
-            .toString()
+        return buildJsonObject {
+            put("type", this@ActionStopProcessing.javaClass.simpleName)
+            put("data", buildJsonObject { })
+        }.toString()
     }
 
     override fun fromJSON(data: String): Action = this

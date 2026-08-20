@@ -1,10 +1,10 @@
 package app.aaps.plugins.automation.triggers
 
 import app.aaps.plugins.automation.R
+import app.aaps.plugins.automation.asJsonObject
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
-import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
@@ -48,7 +48,7 @@ class TriggerPumpLastConnectionTest : TriggerTestBase() {
     @Test
     fun fromJSONTest() = runTest {
         val t: TriggerPumpLastConnection = TriggerPumpLastConnection(triggerDeps).setValue(410).comparator(Comparator.Compare.IS_EQUAL)
-        val t2 = triggerFactory.instantiate(JSONObject(t.toJSON())) as TriggerPumpLastConnection
+        val t2 = triggerFactory.instantiate(t.toJSON().asJsonObject()) as TriggerPumpLastConnection
         assertThat(t2.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
         assertThat(t2.minutesAgo.value).isEqualTo(410)
     }

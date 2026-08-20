@@ -1,11 +1,11 @@
 package app.aaps.plugins.automation.triggers
 
 import app.aaps.core.data.model.BS
+import app.aaps.plugins.automation.asJsonObject
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
 import org.json.JSONException
-import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
@@ -73,7 +73,7 @@ class TriggerBolusAgoTest : TriggerTestBase() {
 
     @Test @Throws(JSONException::class) fun fromJSONTest() {
         val t: TriggerBolusAgo = TriggerBolusAgo(triggerDeps).setValue(410).comparator(Comparator.Compare.IS_EQUAL)
-        val t2 = triggerFactory.instantiate(JSONObject(t.toJSON())) as TriggerBolusAgo
+        val t2 = triggerFactory.instantiate(t.toJSON().asJsonObject()) as TriggerBolusAgo
         assertThat(t2.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
         assertThat(t2.minutesAgo.value).isEqualTo(410)
     }

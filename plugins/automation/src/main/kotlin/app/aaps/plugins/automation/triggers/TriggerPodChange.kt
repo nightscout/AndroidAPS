@@ -6,7 +6,8 @@ import app.aaps.core.ui.compose.icons.IcPatchPump
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
 
 class TriggerPodChange(deps: TriggerDeps) : Trigger(deps) {
 
@@ -26,8 +27,8 @@ class TriggerPodChange(deps: TriggerDeps) : Trigger(deps) {
         return false
     }
 
-    override fun dataJSON(): JSONObject =
-        JSONObject()
+    override fun dataJSON(): JsonObject =
+        buildJsonObject { }
 
     override fun fromJSON(data: String): Trigger {
         return this

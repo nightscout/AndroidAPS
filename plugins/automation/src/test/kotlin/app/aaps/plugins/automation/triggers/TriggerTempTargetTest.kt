@@ -1,9 +1,9 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.plugins.automation.asJsonObject
 import app.aaps.plugins.automation.elements.ComparatorExists
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
-import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import org.skyscreamer.jsonassert.JSONAssert
 
@@ -38,7 +38,7 @@ class TriggerTempTargetTest : TriggerTestBase() {
     @Test
     fun fromJSONTest() = runTest {
         val t: TriggerTempTarget = TriggerTempTarget(triggerDeps).comparator(ComparatorExists.Compare.NOT_EXISTS)
-        val t2 = triggerFactory.instantiate(JSONObject(t.toJSON())) as TriggerTempTarget
+        val t2 = triggerFactory.instantiate(t.toJSON().asJsonObject()) as TriggerTempTarget
         assertThat(t2.comparator.value).isEqualTo(ComparatorExists.Compare.NOT_EXISTS)
     }
 }

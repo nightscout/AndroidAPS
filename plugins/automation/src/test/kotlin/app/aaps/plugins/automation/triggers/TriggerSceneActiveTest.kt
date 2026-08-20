@@ -1,11 +1,12 @@
 package app.aaps.plugins.automation.triggers
 
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.utils.lenientString
 import app.aaps.plugins.automation.R
+import app.aaps.plugins.automation.asJsonObject
 import app.aaps.plugins.automation.elements.ComparatorExists
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
-import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
@@ -42,7 +43,7 @@ class TriggerSceneActiveTest : TriggerTestBase() {
         val restored = triggerFactory.triggerSceneActive().fromJSON(data) as TriggerSceneActive
         assertThat(restored.comparator.value).isEqualTo(ComparatorExists.Compare.NOT_EXISTS)
         // dataJSON exposes the comparator
-        assertThat(JSONObject(data).getString("comparator")).isEqualTo("NOT_EXISTS")
+        assertThat(data.asJsonObject().lenientString("comparator")).isEqualTo("NOT_EXISTS")
     }
 
     @Test fun duplicate_copiesComparator() {

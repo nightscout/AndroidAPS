@@ -2,10 +2,10 @@ package app.aaps.plugins.automation.triggers
 
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TT
+import app.aaps.plugins.automation.asJsonObject
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
-import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
@@ -75,7 +75,7 @@ class TriggerTempTargetValueTest : TriggerTestBase() {
     @Test
     fun fromJSONTest() {
         val t: TriggerTempTargetValue = TriggerTempTargetValue(triggerDeps).setUnits(GlucoseUnit.MMOL).setValue(7.7).comparator(Comparator.Compare.IS_EQUAL)
-        val t2 = triggerFactory.instantiate(JSONObject(t.toJSON())) as TriggerTempTargetValue
+        val t2 = triggerFactory.instantiate(t.toJSON().asJsonObject()) as TriggerTempTargetValue
         assertThat(t2.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
         assertThat(t2.ttValue.value).isWithin(0.01).of(7.7)
         assertThat(t2.ttValue.units).isEqualTo(GlucoseUnit.MMOL)

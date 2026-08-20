@@ -4,12 +4,16 @@ import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.ui.compose.icons.IcActivity
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.utils.JsonHelper
+import app.aaps.core.utils.lenientDouble
+import app.aaps.core.utils.lenientString
+import app.aaps.core.utils.lenientStringOrNull
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
 import app.aaps.plugins.automation.elements.InputDropdownMenu
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 class TriggerStepsCount(deps: TriggerDeps) : Trigger(deps) {
 
@@ -55,17 +59,18 @@ class TriggerStepsCount(deps: TriggerDeps) : Trigger(deps) {
         }
     }
 
-    override fun dataJSON(): JSONObject =
-        JSONObject()
-            .put("stepsCount", stepsCount.value)
-            .put("measurementDuration", measurementDuration.value)
-            .put("comparator", comparator.value.toString())
+    override fun dataJSON(): JsonObject =
+        buildJsonObject {
+            put("stepsCount", stepsCount.value)
+            put("measurementDuration", measurementDuration.value)
+            put("comparator", comparator.value.toString())
+        }
 
     override fun fromJSON(data: String): Trigger {
-        val d = JSONObject(data)
-        stepsCount.setValue(JsonHelper.safeGetDouble(d, "stepsCount"))
-        measurementDuration.setValue(JsonHelper.safeGetString(d, "measurementDuration", "5"))
-        comparator.setValue(Comparator.Compare.valueOf(JsonHelper.safeGetString(d, "comparator")!!))
+        val d = jsonOf(data)
+        stepsCount.setValue(d.lenientDouble("stepsCount"))
+        measurementDuration.setValue(d.lenientString("measurementDuration", "5"))
+        comparator.setValue(Comparator.Compare.valueOf(d.lenientStringOrNull("comparator")!!))
         return this
     }
 

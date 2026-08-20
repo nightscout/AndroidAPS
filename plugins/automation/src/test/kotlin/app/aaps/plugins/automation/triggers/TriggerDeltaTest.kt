@@ -4,11 +4,11 @@ import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
+import app.aaps.plugins.automation.asJsonObject
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDelta.DeltaType
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
-import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
@@ -73,7 +73,7 @@ class TriggerDeltaTest : TriggerTestBase() {
     @Test
     fun fromJSONTest() = runTest {
         val t: TriggerDelta = TriggerDelta(triggerDeps).units(GlucoseUnit.MMOL).setValue(4.1, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL)
-        val t2 = triggerFactory.instantiate(JSONObject(t.toJSON())) as TriggerDelta
+        val t2 = triggerFactory.instantiate(t.toJSON().asJsonObject()) as TriggerDelta
         assertThat(t2.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
         assertThat(t2.delta.value).isWithin(0.01).of(4.1)
         assertThat(t2.units).isEqualTo(GlucoseUnit.MMOL)

@@ -23,7 +23,8 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.automation.TimerUtil
 import app.aaps.plugins.automation.triggers.TriggerDeps
-import org.json.JSONObject
+import app.aaps.core.utils.lenientString
+import kotlinx.serialization.json.JsonObject
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -127,10 +128,10 @@ class ActionFactory @Inject constructor(
      * Rebuilds an action from its stored form. Returns null on an unknown or malformed type, which is
      * what the caller sees for an automation saved by a newer version.
      */
-    fun instantiate(obj: JSONObject): Action? {
+    fun instantiate(obj: JsonObject): Action? {
         try {
-            val type = obj.getString("type")
-            val data = if (obj.has("data")) obj.getJSONObject("data") else JSONObject()
+            val type = obj.lenientString("type")
+            val data = obj["data"] as? JsonObject ?: JsonObject(emptyMap())
             val action = instantiate(type) ?: throw ClassNotFoundException(type)
             return action.fromJSON(data.toString())
         } catch (e: Exception) {

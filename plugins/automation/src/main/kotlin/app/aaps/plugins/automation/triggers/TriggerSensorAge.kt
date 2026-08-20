@@ -6,12 +6,14 @@ import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.utils.JsonHelper
-import app.aaps.core.utils.JsonHelper.safeGetDouble
+import app.aaps.core.utils.lenientDouble
+import app.aaps.core.utils.lenientStringOrNull
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 class TriggerSensorAge(deps: TriggerDeps) : Trigger(deps) {
 
@@ -54,15 +56,16 @@ class TriggerSensorAge(deps: TriggerDeps) : Trigger(deps) {
         return false
     }
 
-    override fun dataJSON(): JSONObject =
-        JSONObject()
-            .put("sensorAgeHours", sensorAgeHours.value)
-            .put("comparator", comparator.value.toString())
+    override fun dataJSON(): JsonObject =
+        buildJsonObject {
+            put("sensorAgeHours", sensorAgeHours.value)
+            put("comparator", comparator.value.toString())
+        }
 
     override fun fromJSON(data: String): Trigger {
-        val d = JSONObject(data)
-        sensorAgeHours.setValue(safeGetDouble(d, "sensorAgeHours"))
-        comparator.setValue(Comparator.Compare.valueOf(JsonHelper.safeGetString(d, "comparator")!!))
+        val d = jsonOf(data)
+        sensorAgeHours.setValue(d.lenientDouble("sensorAgeHours"))
+        comparator.setValue(Comparator.Compare.valueOf(d.lenientStringOrNull("comparator")!!))
         return this
     }
 

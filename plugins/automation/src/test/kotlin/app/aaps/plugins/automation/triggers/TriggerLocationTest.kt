@@ -2,11 +2,12 @@ package app.aaps.plugins.automation.triggers
 
 import android.location.Location
 import app.aaps.plugins.automation.R
+import app.aaps.plugins.automation.asJsonObject
 import app.aaps.plugins.automation.elements.InputLocationMode
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
+import org.skyscreamer.jsonassert.JSONAssert
 import org.json.JSONException
-import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
@@ -67,7 +68,10 @@ class TriggerLocationTest : TriggerTestBase() {
         t.distance.setValue(2.0)
         t.modeSelected.value = InputLocationMode.Mode.OUTSIDE
 //        t.modeSelected = t.modeSelected.value
-        assertThat(t.toJSON()).isEqualTo(locationJson)
+        // Compared as JSON, not as text. kotlinx writes the keys in insertion order where org.json
+        // wrote them in hash order, and writes a whole double as 213.0 where org.json wrote 213.
+        // Both are the same document, and it is the document that is the stored contract.
+        JSONAssert.assertEquals(locationJson, t.toJSON(), true)
     }
 
     @Test @Throws(JSONException::class) fun fromJSONTest() {
@@ -76,7 +80,7 @@ class TriggerLocationTest : TriggerTestBase() {
         t.longitude.setValue(212.0)
         t.distance.setValue(2.0)
         t.modeSelected.value = InputLocationMode.Mode.INSIDE
-        val t2 = triggerFactory.instantiate(JSONObject(t.toJSON())) as TriggerLocation
+        val t2 = triggerFactory.instantiate(t.toJSON().asJsonObject()) as TriggerLocation
         assertThat(t2.latitude.value).isWithin(0.01).of(t.latitude.value)
         assertThat(t2.longitude.value).isWithin(0.01).of(t.longitude.value)
         assertThat(t2.distance.value).isWithin(0.01).of(t.distance.value)

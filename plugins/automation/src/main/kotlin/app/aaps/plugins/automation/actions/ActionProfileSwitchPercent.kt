@@ -10,7 +10,8 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.ui.compose.icons.IcProfile
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.utils.JsonHelper
+import app.aaps.core.utils.lenientDouble
+import app.aaps.core.utils.lenientInt
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDuration
@@ -18,7 +19,8 @@ import app.aaps.plugins.automation.elements.InputPercent
 import app.aaps.plugins.automation.triggers.TriggerDeps
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.triggers.TriggerProfilePercent
-import org.json.JSONObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 class ActionProfileSwitchPercent(
     aapsLogger: AAPSLogger,
@@ -67,19 +69,20 @@ class ActionProfileSwitchPercent(
     override fun hasDialog(): Boolean = true
 
     override fun toJSON(): String {
-        val data = JSONObject()
-            .put("percentage", pct.value)
-            .put("durationInMinutes", duration.value)
-        return JSONObject()
-            .put("type", this.javaClass.simpleName)
-            .put("data", data)
-            .toString()
+        val data = buildJsonObject {
+            put("percentage", pct.value)
+            put("durationInMinutes", duration.value)
+        }
+        return buildJsonObject {
+            put("type", this@ActionProfileSwitchPercent.javaClass.simpleName)
+            put("data", data)
+        }.toString()
     }
 
     override fun fromJSON(data: String): Action {
-        val o = JSONObject(data)
-        pct.value = JsonHelper.safeGetDouble(o, "percentage")
-        duration.value = JsonHelper.safeGetInt(o, "durationInMinutes")
+        val o = jsonOf(data)
+        pct.value = o.lenientDouble("percentage")
+        duration.value = o.lenientInt("durationInMinutes")
         return this
     }
 
