@@ -176,6 +176,7 @@ class CarelevoPumpPlugin @Inject constructor(
         initializeOnStart()
         registerBleReceiverIfNeeded()
         startAlarmObserving()
+        startReconnectAlarmSnapshotObserving()
         startAutoResumeWatchdog()
         // Consume patch-pushed frames (alarms, stop/basal-restart reports) whenever a session is open.
         bleSession.unsolicitedHandler = carelevoPatch::onUnsolicited
@@ -452,6 +453,44 @@ class CarelevoPumpPlugin @Inject constructor(
         carelevoAlarmNotifier.startObserving { alarms ->
             aapsLogger.debug(LTag.NOTIFICATION, "observe alarms size=${alarms.size}, $alarms")
             handleAlarms(alarms)
+        }
+    }
+
+    private fun startReconnectAlarmSnapshotObserving() {
+        scope?.let { activeScope ->
+            bleSession.connected
+                .drop(1)
+                .onEach { connected ->
+                    if (connected) refreshActiveAlarmSnapshots()
+                }
+                .launchIn(activeScope)
+        }
+    }
+
+    private suspend fun refreshActiveAlarmSnapshots() {
+        val address = carelevoPatch.getPatchInfoAddress() ?: run {
+            aapsLogger.warn(LTag.PUMPCOMM, "active alarm snapshot skipped: no patch address")
+            return
+        }
+        try {
+            // readActiveAlarmSnapshots itself is bounded and, on timeout, does NOT tear the held link
+            // down (see CarelevoBleSession — this protocol only exists on newer firmware, so an older
+            // patch simply never answering must not disrupt whatever the queue runs next). It signals
+            // that "no answer" case as an empty list rather than throwing.
+            val snapshots = bleSession.readActiveAlarmSnapshots(address)
+            if (snapshots.isEmpty()) {
+                aapsLogger.warn(LTag.PUMPCOMM, "active alarm snapshot skipped: no response (older firmware?)")
+                return
+            }
+            carelevoPatch.applyActiveAlarmSnapshots(snapshots)
+            aapsLogger.info(
+                LTag.PUMPCOMM,
+                "active alarm snapshot OK tiers=${snapshots.map { it.tier }} infusing=${snapshots.firstOrNull()?.infusing}"
+            )
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Throwable) {
+            aapsLogger.error(LTag.PUMPCOMM, "active alarm snapshot FAILED", e)
         }
     }
 

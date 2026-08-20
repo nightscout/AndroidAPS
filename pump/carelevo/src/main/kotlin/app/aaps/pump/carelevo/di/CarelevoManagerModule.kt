@@ -6,10 +6,12 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.carelevo.ble.CarelevoBleTransport
+import app.aaps.pump.carelevo.common.ActiveAlarmSnapshotAlarmMapper
 import app.aaps.pump.carelevo.common.CarelevoPatch
 import app.aaps.pump.carelevo.domain.usecase.alarm.CarelevoAlarmInfoUseCase
 import app.aaps.pump.carelevo.domain.usecase.infusion.CarelevoInfusionInfoMonitorUseCase
 import app.aaps.pump.carelevo.domain.usecase.infusion.CarelevoPumpResumeUseCase
+import app.aaps.pump.carelevo.domain.usecase.infusion.CarelevoPumpStopUseCase
 import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchInfoMonitorUseCase
 import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchRptInfusionInfoProcessUseCase
 import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoCreateUserSettingInfoUseCase
@@ -39,7 +41,9 @@ class CarelevoManagerModule {
         carelevoPatchRptInfusionInfoProcessUseCase: CarelevoPatchRptInfusionInfoProcessUseCase,
         carelevoCreateUserSettingInfoUserCase: CarelevoCreateUserSettingInfoUseCase,
         carelevoAlarmInfoUseCase: CarelevoAlarmInfoUseCase,
-        carelevoPumpResumeUseCase: CarelevoPumpResumeUseCase
+        carelevoPumpResumeUseCase: CarelevoPumpResumeUseCase,
+        carelevoPumpStopUseCase: CarelevoPumpStopUseCase,
+        activeAlarmSnapshotAlarmMapper: ActiveAlarmSnapshotAlarmMapper
     ): CarelevoPatch {
         return CarelevoPatch(
             transport,
@@ -54,7 +58,9 @@ class CarelevoManagerModule {
             carelevoPatchRptInfusionInfoProcessUseCase,
             carelevoCreateUserSettingInfoUserCase,
             carelevoAlarmInfoUseCase,
-            carelevoPumpResumeUseCase
+            carelevoPumpResumeUseCase,
+            carelevoPumpStopUseCase,
+            activeAlarmSnapshotAlarmMapper
         )
     }
 }
