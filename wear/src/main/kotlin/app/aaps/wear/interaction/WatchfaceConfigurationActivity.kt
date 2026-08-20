@@ -61,16 +61,15 @@ class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferenc
         // display/graph/interface/complication/others screens (and the phone-triggered
         // OpenSettings default) must never activate a watch face as a side effect of being
         // opened, so the SysUI hand-off below only ever runs when one was explicitly requested.
-        // Activating the watch face is the point, not a side effect to work around: it is what
-        // makes the preference screen show a live editing session - see [SamsungWatchFaceEditor].
+        // Activating the watch face is the point: it is what makes the preference screen show a live
+        // editing session - see [SamsungWatchFaceEditor].
         //
-        // Finished immediately so this screen is never drawn: the editor takes ~1s to appear, and
-        // without this the user watches one preference menu get replaced by a near-identical one.
-        // Finishing before the first frame makes this a trampoline - Android skips drawing it - and
-        // leaves back from the editor returning to the settings list rather than to a dead copy.
+        // Finished before the first frame so this screen is never drawn, which makes it a trampoline:
+        // the user does not see one preference menu replaced by a near-identical one, and back from
+        // the editor returns to the settings list rather than to a dead copy.
         //
-        // Only when the broadcast was actually accepted. If there's no receiver (any non-Samsung
-        // watch) we must keep this screen, since it's then the only one the user gets.
+        // Only when the broadcast was accepted. With no receiver (any non-Samsung watch) this screen
+        // must stay, being the only one the user gets.
         if (savedInstanceState == null && requestedWatchFace != null) {
             val watchFaceComponent = WatchFaceCatalog.componentNameFor(this, requestedWatchFace)
             if (watchFaceComponent != null && SamsungWatchFaceEditor.requestEditor(this, watchFaceComponent)) {
@@ -91,9 +90,8 @@ class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferenc
         contentView?.setPadding(0, 50, 0, 50)
     }
 
-    // CustomWatchface's screen is built in code by the watch face's own fragment, so it takes no xml
-    // - see CustomWatchfaceConfigurationFragment. Every other screen this activity shows (the other
-    // two watch faces, and the app-wide display/graph/interface/others screens) still comes from one.
+    // CustomWatchface's screen is built in code by its own fragment, so it takes no xml - see
+    // CustomWatchfaceConfigurationFragment. Every other screen this activity shows still comes from one.
     override fun createPreferenceFragment(): PreferenceFragmentCompat =
         if (showsCustomWatchface) CustomWatchfaceConfigurationFragment.newInstance()
         else WatchfaceConfigurationFragment.newInstance(preferenceFile)
@@ -148,10 +146,8 @@ class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferenc
     }
 
     /**
-     * Fragment for loading preferences from a settings xml.
-     *
-     * Nothing here deals with complications: the only screen that has any is CustomWatchface's, and
-     * that one is built by its own fragment.
+     * Fragment for loading preferences from a settings xml. Nothing here deals with complications: the
+     * only screen that has any is CustomWatchface's, built by its own fragment.
      */
     class WatchfaceConfigurationFragment : PreferenceFragmentCompat() {
 

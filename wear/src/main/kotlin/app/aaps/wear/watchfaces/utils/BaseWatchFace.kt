@@ -168,28 +168,24 @@ abstract class BaseWatchFace : WatchFace() {
     private var mLastSvg = ""
     private var mLastDirection = ""
 
-    // True only once injection has actually returned - either via onCreate below, or via
-    // ensureInjected() for instances that never get an onCreate at all. Reflects the exact
-    // invariant (injection done or not), unlike catching UninitializedPropertyAccessException
+    // True only once injection has returned, via onCreate below or via ensureInjected() for instances
+    // that never get an onCreate. Checked instead of catching UninitializedPropertyAccessException,
     // which would also mask unrelated bugs.
     protected var daggerInjectionComplete = false
 
     /**
      * Injects this instance if [onCreate] never ran, so `@Inject` fields are usable anyway.
      *
-     * Editor sessions (and preview/screenshot generation) run the watch face as a *headless*
-     * instance, which `androidx.wear.watchface` builds by reflection - `getConstructor()
-     * .newInstance()` followed only by an internal `setContext()` that calls `attachBaseContext`.
-     * `Service.onCreate()` is never called on such an instance, so the [onCreate] injection below
-     * never runs and every `@Inject` field stays unset. Anything the framework then calls into -
-     * `createComplicationSlotsManager`, [onDestroy], a headless render - would throw
-     * `UninitializedPropertyAccessException`, and a throw during the headless release kills the
-     * binder, which makes the system drop the editing session and recover the watch face as a
-     * fresh instance (losing the complication configuration just chosen).
+     * Editor sessions and preview generation run the watch face as a *headless* instance, which
+     * `androidx.wear.watchface` builds by reflection: `newInstance()` plus an internal `setContext()`
+     * that calls `attachBaseContext`. `Service.onCreate()` is never called, so without this every
+     * `@Inject` field stays unset and anything the framework calls into throws
+     * `UninitializedPropertyAccessException` - which during a headless release kills the binder and
+     * makes the system drop the editing session, losing the configuration just chosen.
      *
-     * `attachBaseContext` having been called is what makes this work: `applicationContext`
-     * resolves to `WearApp`, a `DaggerApplication` and therefore a [HasAndroidInjector]. Safe and
-     * cheap to call repeatedly - it no-ops once injection has happened by either route.
+     * Works because `attachBaseContext` has run, so `applicationContext` resolves to `WearApp`, a
+     * `DaggerApplication` and therefore a [HasAndroidInjector]. Safe to call repeatedly - it no-ops
+     * once injection has happened by either route.
      */
     protected fun ensureInjected() {
         if (daggerInjectionComplete) return
@@ -355,8 +351,7 @@ abstract class BaseWatchFace : WatchFace() {
 
     override fun onDestroy() {
         // Headless instances reach this without ever having run onCreate, so inject first - see
-        // ensureInjected(). Watch faces that declare no complication slots (Digital, Circle) never
-        // call anything else that would have injected them, so this is their only entry point.
+        // ensureInjected(). For watch faces with no complication slots this is the only entry point.
         ensureInjected()
         disposable.clear()
         watchfaceScope.cancel()
@@ -369,9 +364,9 @@ abstract class BaseWatchFace : WatchFace() {
     }
 
     /**
-     * Override to true when a subclass needs something (e.g. complications) painted on the
-     * Canvas strictly between measure/layout and the actual mainLayout draw - see [drawMainLayout].
-     * Default false preserves today's single measure+layout+draw pass for every other watch face.
+     * Override to true when a subclass needs something - complications, say - painted on the Canvas
+     * between measure/layout and the mainLayout draw; see [drawMainLayout]. False keeps the single
+     * measure+layout+draw pass.
      */
     protected open fun deferMainLayoutDraw(): Boolean = false
 

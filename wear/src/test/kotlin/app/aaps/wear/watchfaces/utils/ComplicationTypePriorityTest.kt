@@ -11,12 +11,11 @@ import org.robolectric.annotation.Config
  * Unit tests for [ComplicationTypePriority.supportedTypes] - the ordered type list handed to each
  * complication slot.
  *
- * The invariant that matters most is that every priority lists **every** type: the list is a
- * preference order the system walks until a provider matches, so dropping a type would make a slot
- * unusable with providers that offer only that type. The per-priority ordering assertions encode the
- * device-proven cases: a Samsung Health exercise provider offers only `ICON,SMALL_IMAGE,SHORT_TEXT,
- * LONG_TEXT`, so `VALUE` order reaches `SHORT_TEXT` (text-only payload, no icon) while `ICON` order
- * reaches the image first.
+ * The main invariant is that every priority lists **every** type: the list is a preference order the
+ * system walks until a provider matches, so dropping a type would make a slot unusable with providers
+ * that offer only that type. The ordering assertions cover the case of a provider offering only
+ * `ICON,SMALL_IMAGE,SHORT_TEXT,LONG_TEXT`, where `VALUE` order reaches `SHORT_TEXT` (text only, no
+ * icon) while `ICON` order reaches the image first.
  *
  * Robolectric because `ComplicationType` touches wire-format constants.
  */
@@ -63,9 +62,8 @@ internal class ComplicationTypePriorityTest {
 
     @Test
     fun `RANGED_VALUE outranks GOAL_PROGRESS, whose visuals cannot be styled`() {
-        // GOAL_PROGRESS renders on its own path with a hardcoded red over-achievement arc, a dot
-        // instead of a filled arc, and progress scaled against target * 1.1 - see the KDoc on
-        // CustomWatchface.complicationSupportedTypes.
+        // GOAL_PROGRESS renders on its own path, with a hardcoded red over-achievement arc, a dot
+        // instead of a filled arc, and progress scaled against target * 1.1 - none of it stylable.
         val order = ComplicationTypePriority.VALUE.supportedTypes()
         if (order.contains(ComplicationType.GOAL_PROGRESS)) {
             assertThat(order.indexOf(ComplicationType.RANGED_VALUE)).isLessThan(order.indexOf(ComplicationType.GOAL_PROGRESS))

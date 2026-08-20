@@ -8,10 +8,9 @@ import org.junit.jupiter.api.Test
  * Truth table for [shouldDropSmallImage] - whether a complication's small image is dropped so the
  * monochromatic icon renders instead.
  *
- * This decision is the seam between "let the library render it" and "rewrite the payload first", and
- * every complication rendering bug in this feature so far has been a wrong answer here. Each test
- * names the real device case it came from, so a future change that breaks one says which watch face
- * behaviour it just regressed.
+ * This decision is the seam between "let the library render it" and "rewrite the payload first".
+ * Each test names the device case it covers, so a change that breaks one says which behaviour it
+ * regressed.
  */
 internal class ComplicationPayloadPolicyTest {
 
@@ -37,8 +36,8 @@ internal class ComplicationPayloadPolicyTest {
     // --- every other type renders the small image correctly, so it is kept unless asked otherwise -
 
     @Test fun `short text keeps the provider's own image when no icon colour was requested`() {
-        // The exercise complication: white icon from the provider, untinted. Dropping it here is what
-        // made the icon vanish on device.
+        // The exercise complication: white icon from the provider, untinted. Dropping it here would
+        // make the icon vanish.
         assertThat(decide(iconColorRequested = false)).isFalse()
     }
 
@@ -65,8 +64,8 @@ internal class ComplicationPayloadPolicyTest {
     }
 
     @Test fun `a working image is never traded for an icon that cannot draw`() {
-        // hasIcon only says the field is set. A provider carrying an unloadable icon must not cost
-        // the complication the image it already had - this is what left a slot with no image at all.
+        // hasIcon only says the field is set. A provider carrying an unloadable icon must not cost the
+        // complication the image it already had, or the slot ends up with no image at all.
         assertThat(decide(iconIsLoadable = false, iconColorRequested = true)).isFalse()
         assertThat(decide(iconIsLoadable = false, wireType = WireComplicationData.TYPE_RANGED_VALUE)).isFalse()
     }

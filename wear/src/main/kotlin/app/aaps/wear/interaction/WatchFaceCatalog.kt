@@ -10,9 +10,8 @@ import app.aaps.wear.watchfaces.utils.ComplicationSlotInfo
 import app.aaps.wear.watchfaces.utils.WatchfaceViewAdapter.Companion.SelectedWatchFace
 
 /**
- * The single source of truth for what identifies each of the 3 built-in, code-based watch faces:
- * its [ComponentName] and its own preference screen. [SelectedWatchFace.NONE] maps to nothing -
- * there is no watch face to activate or configure for it.
+ * The single source of truth for what identifies each of the 3 built-in, code-based watch faces: its
+ * [ComponentName] and its own preference screen. [SelectedWatchFace.NONE] maps to nothing.
  */
 internal object WatchFaceCatalog {
 
@@ -31,11 +30,9 @@ internal object WatchFaceCatalog {
     }
 
     /**
-     * The complication slots [watchFace] hosts - an empty list when it hosts none, which is the case
-     * for every watch face but the custom one today.
-     *
-     * Keeping this here rather than in [ComplicationPickerSupport] is what lets that class stay
-     * watch-face-agnostic: this object is already the single place allowed to name a watch face.
+     * The complication slots [watchFace] hosts - empty when it hosts none. Kept here rather than in
+     * [ComplicationPickerSupport], which must stay watch-face-agnostic; this object is already the one
+     * place allowed to name a watch face.
      */
     fun complicationSlotsFor(watchFace: SelectedWatchFace): List<ComplicationSlotInfo> = when (watchFace) {
         SelectedWatchFace.CUSTOM  -> CustomWatchface.complicationSlots
@@ -45,12 +42,9 @@ internal object WatchFaceCatalog {
     }
 
     /**
-     * The watch face whose settings screen the complication rows belong to.
-     *
-     * A constant while exactly one watch face hosts complications. When a second one does, this
-     * becomes a per-screen lookup - both settings activities already resolve which watch face they
-     * are showing (from the editor intent's component, and from `key_selected_watchface`), so the
-     * value is available where it will be needed; only this line has to change.
+     * The watch face whose settings screen the complication rows belong to. A constant while exactly
+     * one watch face hosts complications; a second one would make this a per-screen lookup, which both
+     * settings activities can already resolve.
      */
     val complicationWatchFace: SelectedWatchFace = SelectedWatchFace.CUSTOM
 }

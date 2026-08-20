@@ -11,10 +11,9 @@ import org.robolectric.annotation.Config
  * Unit tests for [ComplicationImageFit.destination] - where an image of a given intrinsic size lands
  * inside a slot under each fit.
  *
- * Worth locking down because this arithmetic is the whole reason the watch face draws image
- * complications itself instead of leaving them to `ComplicationDrawable`, and because getting it
- * wrong is not obvious on a screenshot: the first implementation shipped a version that cropped *and*
- * distorted a wide image, and it took device comparison against a WFF watch face to notice.
+ * Worth locking down because this arithmetic is the reason the watch face draws image complications
+ * itself instead of leaving them to `ComplicationDrawable`, and because a wrong result is hard to spot
+ * on a screenshot - a wide image can end up cropped and distorted at once.
  *
  * Robolectric only for [Rect], which is a stub in plain JVM unit tests.
  */
@@ -22,7 +21,7 @@ import org.robolectric.annotation.Config
 @Config(sdk = [35])
 internal class ComplicationImageFitTest {
 
-    /** The real case that drove this feature: a 450x225 BG graph in a 300x115 px slot. */
+    /** The reference case: a 450x225 BG graph in a 300x115 px slot. */
     private val wideSlot = Rect(0, 0, 300, 115)
 
     private val squareSlot = Rect(0, 0, 100, 100)

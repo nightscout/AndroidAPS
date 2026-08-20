@@ -14,10 +14,9 @@ import app.aaps.wear.watchfaces.utils.WatchFaceSettingRow
 import kotlinx.coroutines.launch
 
 /**
- * An activity that can show [CustomWatchfaceConfigurationFragment].
- *
- * It exists so the fragment can get the loaded CWF without reaching for the repository itself:
- * fragments are not Dagger-injected in this module, while both hosting activities already are.
+ * An activity that can show [CustomWatchfaceConfigurationFragment]. It exists so the fragment can get
+ * the loaded CWF without reaching for the repository: fragments are not Dagger-injected in this
+ * module, while both hosting activities are.
  */
 internal interface CustomWatchfaceSettingsHost {
 
@@ -26,21 +25,18 @@ internal interface CustomWatchfaceSettingsHost {
 }
 
 /**
- * The Custom watch face's settings screen, built in code from what the watch face itself declares
+ * The Custom watch face's settings screen, built in code from what the watch face declares
  * (`CustomWatchface.settingRows`) instead of from a settings xml.
  *
- * Its own fragment, not the shared one, for two reasons. It is the only screen whose rows depend on
- * the loaded CWF - soon a row will be left out entirely when the current zip has no view that uses
- * it - and Digital's and Circle's screens must not be exposed to any of that. It is also the only
- * screen with complication rows, which is what lets the shared fragments stop caring about
- * complications at all.
+ * Its own fragment, not the shared one: it is the only screen whose rows depend on the loaded CWF, and
+ * the only one with complication rows, so Digital's and Circle's screens stay clear of both.
  *
- * Hosted by both entry points, which differ in what they can do with a tap:
- * - [ConfigurationActivity] is the activity the system launches for the watch face editor, so it
- *   owns the live `EditorSession` and can open the data source picker directly. It is also the only
- *   place an assignment can change, so it is where the provider names are read and cached.
- * - [WatchfaceConfigurationActivity] (the AAPS Settings menu) has no session, so it can only show
- *   the cached names and relaunch through [ComplicationPickerSupport].
+ * Hosted by both entry points, which differ in what a tap can do:
+ * - [ConfigurationActivity] is launched by the system for the watch face editor, so it owns the live
+ *   `EditorSession` and can open the data source picker directly. It is also the only place an
+ *   assignment can change, so it is where the provider names are read and cached.
+ * - [WatchfaceConfigurationActivity] (the AAPS Settings menu) has no session, so it can only show the
+ *   cached names and relaunch through [ComplicationPickerSupport].
  */
 class CustomWatchfaceConfigurationFragment : PreferenceFragmentCompat() {
 
@@ -51,8 +47,8 @@ class CustomWatchfaceConfigurationFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         // A sub-screen shows what the watch face declares behind that key; the root screen shows the
-        // rows relevant to the CWF currently loaded. The configuration is fetched here but never read
-        // here: it is handed straight back to the watch face, the only thing allowed to interpret it.
+        // rows relevant to the loaded CWF. The configuration is fetched but never read here - it goes
+        // straight back to the watch face, the only thing allowed to interpret it.
         val subScreenKey = arguments?.getInt(ARG_SUB_SCREEN_KEY, 0) ?: 0
         val rows = if (subScreenKey != 0) {
             CustomWatchface.subScreenRows(subScreenKey)
@@ -119,9 +115,8 @@ class CustomWatchfaceConfigurationFragment : PreferenceFragmentCompat() {
         super.onViewCreated(view, savedInstanceState)
         if (isSubScreen) return
         val host = activity as? ConfigurationActivity ?: return
-        // A StateFlow the library fills in once per slot right after the session is created, and
-        // again for one slot after a successful pick - so one subscription covers both the initial
-        // display and the refresh, with no explicit call once the picker returns.
+        // A StateFlow the library fills in once per slot after the session is created, and again for
+        // one slot after a successful pick, so one subscription covers display and refresh both.
         viewLifecycleOwner.lifecycleScope.launch {
             host.awaitEditorSession().complicationsDataSourceInfo.collect { infoBySlot ->
                 val namesBySlot = infoBySlot.mapValues { (_, info) -> info?.name }
@@ -135,9 +130,9 @@ class CustomWatchfaceConfigurationFragment : PreferenceFragmentCompat() {
 
     override fun onResume() {
         super.onResume()
-        // Hosted by ConfigurationActivity the live session already fills these in. Anywhere else the
-        // cache is all there is - in onResume rather than onViewCreated so it also refreshes on
-        // return from the system editor, where the assignment may just have changed.
+        // Under ConfigurationActivity the live session fills these in; anywhere else the cache is all
+        // there is. In onResume, not onViewCreated, so it also refreshes on return from the system
+        // editor, where the assignment may just have changed.
         if (isSubScreen || activity is ConfigurationActivity) return
         ComplicationPickerSupport.applyComplicationSummaries(this, ComplicationPickerSupport.cachedAssignedDataSourceNames(requireContext()))
     }

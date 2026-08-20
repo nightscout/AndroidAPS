@@ -13,6 +13,7 @@ import android.graphics.drawable.Icon
 import android.os.Build
 import android.support.wearable.complications.ComplicationData as WireComplicationData
 import androidx.annotation.StringRes
+import androidx.core.graphics.withClip
 import androidx.wear.watchface.CanvasComplication
 import androidx.wear.watchface.CanvasComplicationFactory
 import androidx.wear.watchface.ComplicationSlot
@@ -43,49 +44,36 @@ import kotlin.math.min
 
 /*
  * Everything a watch face needs in order to host androidx complication slots, with no knowledge of
- * any particular watch face.
+ * any particular watch face: geometry and style arrive as plain values and lambdas, never as a
+ * watch-face format, a json key or a layout.
  *
- * The split this file draws: a watch face decides **what** a complication should look like and
- * **where** it sits; this file knows **how** to make androidx do it. So nothing here reads a
- * watch-face format, a json key or a layout - geometry and style arrive as plain values and lambdas.
- *
- * It also carries the workarounds for androidx bugs that any watch face would hit identically -
- * see [SyncLoadingCanvasComplication].
+ * Library behaviour referenced by the comments below is documented, with versions and line numbers,
+ * in `_docs/Complication_Libraries.md`.
  */
 
 /**
  * What kind of content a slot should be offered first when the user picks a data source.
  *
- * The system walks a slot's `supportedTypes` **in order** and takes the first type the chosen
- * provider also offers, so this is a *preference order*, not a filter: every entry below lists every
- * type, only the order differs. A choice that a provider cannot satisfy therefore degrades to the
- * next best type rather than breaking the slot - which is what makes this safe to expose to users.
- *
- * Why it has to be a choice at all: the right order depends on the provider, and no single global
- * order serves them both. Device-proven with two Samsung Health providers, both declaring
- * `SUPPORTED_TYPES = "ICON,SMALL_IMAGE,SHORT_TEXT,LONG_TEXT"` and neither offering a data-bearing
- * type - see `_docs/CWF_ComplicationSlotsPrompt.md`, "Complication type negotiation".
+ * The system walks a slot's `supportedTypes` in order and takes the first type the chosen provider
+ * also offers. Every value below lists *every* type, only the order differs, so a choice a provider
+ * cannot satisfy degrades to the next best type instead of breaking the slot.
  */
 internal enum class ComplicationTypePriority {
 
-    /** Data first: a number or a gauge. What every slot did before this was configurable. */
+    /** Data first: a number or a gauge. */
     VALUE,
 
-    /** Text first, for a provider whose reading is worth more as words than as a gauge. */
+    /** Text first. */
     TEXT,
 
-    /** Image first, the only way to reach an icon-only provider's icon. */
+    /** Image first - the only order that reaches an icon-only provider's icon. */
     ICON;
 
-    /**
-     * The full type list in this priority's order. Never a subset - see the class doc.
-     *
-     * `GOAL_PROGRESS`/`WEIGHTED_ELEMENTS` are `@RequiresApi(TIRAMISU)`, so they are only included
-     * where the platform has them.
-     */
+    /** The full type list in this priority's order. Never a subset. */
     fun supportedTypes(): List<ComplicationType> {
         val dataBearing = buildList {
             add(ComplicationType.RANGED_VALUE)
+            // GOAL_PROGRESS/WEIGHTED_ELEMENTS are @RequiresApi(TIRAMISU).
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 add(ComplicationType.GOAL_PROGRESS)
                 add(ComplicationType.WEIGHTED_ELEMENTS)
@@ -101,10 +89,7 @@ internal enum class ComplicationTypePriority {
     }
 }
 
-/**
- * One complication slot of a watch face, as seen by code that must work for any watch face without
- * naming one - the data source picker above all.
- */
+/** One complication slot of a watch face, as seen by code that must not name a watch face. */
 internal interface ComplicationSlotInfo {
 
     /**
@@ -113,30 +98,21 @@ internal interface ComplicationSlotInfo {
      */
     val id: Int
 
-    /** The key of the settings row that opens this slot's data source picker. */
+    /** Key of the settings row that opens this slot's data source picker. */
     @get:StringRes val preferenceKey: Int
 
-    /** The label of that row. */
+    /** Label of that row. */
     @get:StringRes val preferenceTitle: Int
 }
 
 /**
- * The complication slots a watch face hosts.
+ * The complication slots a watch face hosts, in the order its settings screen presents them.
  *
- * Implemented by the watch face itself (typically its companion object), because only it knows what
- * its slots are: a fixed, constant list for a watch face with a hardcoded layout, or a list derived
- * from a loaded template for one like the custom watch face. Both look the same from here.
- *
- * Nothing about visibility or user settings belongs in this contract. Which slots a watch face hosts
- * is a property of the watch face; whether the user currently wants one shown is not, and is decided
- * by the watch face or by its settings screen, never by the code reading this.
+ * Implemented by the watch face itself, since only it knows whether its slots are a fixed list or one
+ * derived from a loaded template. Nothing about visibility or user settings belongs here.
  */
 internal interface WatchFaceComplicationSlots {
 
-    /**
-     * The slots this watch face hosts, in the order its settings screen presents them. Empty for a
-     * watch face with no complications.
-     */
     val complicationSlots: List<ComplicationSlotInfo>
 }
 
@@ -156,15 +132,13 @@ internal sealed interface ComplicationRender {
 /**
  * How an image-only complication (`SMALL_IMAGE`, `PHOTO_IMAGE`) fills its slot.
  *
- * Values mean what `android.widget.ImageView.ScaleType` means, and are computed from the image's own
- * intrinsic size - which is only possible because this file draws those images itself. The library
- * cannot express any of them: `SmallImageLayoutHelper`/`LargeImageLayoutHelper` hand the image the
- * slot's central square (`LayoutUtils.getCentralSquare`, unconditional) and `RoundedDrawable`
- * centre-crops the image into it, so a wide image loses its sides and a wide slot goes half empty.
+ * Values mean what `android.widget.ImageView.ScaleType` means. None of them is expressible through
+ * `ComplicationDrawable`, which always crops the image to the slot's central square - which is why
+ * `SyncLoadingCanvasComplication` draws these two types itself.
  */
 internal enum class ComplicationImageFit {
 
-    /** Whole image, aspect kept, centred - letterboxed if the slot is a different shape. Default. */
+    /** Whole image, aspect kept, centred - letterboxed if the slot is a different shape. */
     FIT_CENTER,
 
     /** Aspect kept, scaled until the slot is covered, overflow cropped. */
@@ -190,20 +164,17 @@ internal enum class ComplicationImageFit {
 
 /**
  * Whether a complication's small image should be dropped so the monochromatic icon underneath it
- * renders instead - the single decision behind both of this file's payload workarounds.
+ * renders instead.
  *
- * Separated out, named and given no Android dependencies so the rules can be stated once and tested
- * exhaustively. Every argument is a fact about the payload or the watch face's wishes; the caller
- * gathers them, this decides. See `ComplicationPayloadPolicyTest` for the truth table.
+ * Pure and Android-free so the rules are stated once and covered by `ComplicationPayloadPolicyTest`.
  *
- * @param wireType `android.support.wearable.complications.ComplicationData` type constant. Ints
- *   rather than the `ComplicationType` enum because `GOAL_PROGRESS`/`WEIGHTED_ELEMENTS` are
- *   `@RequiresApi(TIRAMISU)` there.
- * @param iconIsLoadable whether the monochromatic icon actually resolves to a drawable. `hasIcon`
- *   only says the field is set, which is not the same thing.
- * @param iconColorRequested whether the watch face asked for a specific icon colour, which is only
- *   reachable through the monochromatic icon - see [ComplicationStyleValues.borderColor]'s
- *   neighbours and `_docs/Complication_Libraries.md`.
+ * @param wireType `android.support.wearable.complications.ComplicationData` type constant - an Int
+ *   rather than the `ComplicationType` enum, whose GOAL_PROGRESS/WEIGHTED_ELEMENTS are
+ *   `@RequiresApi(TIRAMISU)`.
+ * @param iconIsLoadable whether the monochromatic icon resolves to a drawable. `hasIcon` only says
+ *   the field is set, which is not the same thing.
+ * @param iconColorRequested whether the watch face asked for a specific icon colour, which only a
+ *   monochromatic image can honour.
  */
 // The wire ComplicationData class is @RestrictTo(LIBRARY_GROUP) - lint only, nothing enforces it at
 // runtime, and a future rename breaks the build rather than failing silently.
@@ -217,44 +188,32 @@ internal fun shouldDropSmallImage(
 ): Boolean {
     // Nothing to drop, or nothing to fall back on.
     if (!hasSmallImage || !hasIcon) return false
-    // Never trade a working image for one that cannot draw: dropping the small image in favour of an
-    // unloadable icon leaves the complication with no image at all, strictly worse than before.
+    // Never trade a working image for one that cannot draw - that leaves no image at all.
     if (!iconIsLoadable) return false
-    // The ranged-value family reaches a layout bug that renders *neither* image, so there the drop is
-    // the only way to see anything at all - it applies whether or not a colour was asked for.
+    // The ranged-value family hits a layout bug that renders neither image, so the drop is the only
+    // way to see anything there, colour requested or not.
     val routedThroughRangedValueLayout =
         wireType == WireComplicationData.TYPE_RANGED_VALUE ||
             wireType == WireComplicationData.TYPE_GOAL_PROGRESS ||
             wireType == WireComplicationData.TYPE_WEIGHTED_ELEMENTS
     if (routedThroughRangedValueLayout) return true
-    // Every other type renders the small image correctly, in the provider's own colours. Only an
-    // explicit colour request justifies giving that up for a tintable icon.
+    // Other types render the small image correctly in the provider's own colours; only an explicit
+    // colour request justifies giving that up.
     return iconColorRequested
 }
 
 /**
- * Renderer for a complication slot, existing to work around two androidx bugs and to add the image
- * fit the library has no setting for. Nothing here is specific to any watch face, so every watch face
- * hosting slots should use this rather than [CanvasComplicationDrawable] directly.
+ * Renderer for a complication slot. Every watch face hosting slots should use this rather than
+ * [CanvasComplicationDrawable] directly, for three reasons:
  *
- * **1. It forces the *synchronous* branch of `ComplicationDrawable.setComplicationData`.** With
- * `loadDrawablesAsync = true` (what the framework passes) the library does not put the new data into
- * the renderer it is currently drawing with. It builds a *second* `ComplicationRenderer` and installs
- * it only once the async drawable load completes - its own comment says this "causes it to render as
- * blank until the async load has completed". On the engine-start / complication-cache-restore path
- * that completion does not arrive, so the live renderer keeps its empty data and paints nothing at
- * all, while `ComplicationDrawable.complicationData` already reports the real type. That combination
- * is exactly the observed symptom: a complication that responds to taps (tap handling reads the slot,
- * not the renderer) and reports correct data at every layer, yet stays invisible until the provider is
- * re-picked. Loading synchronously puts the data into the live renderer immediately; the cost is
- * decoding two or three small complication icons on the calling thread instead of off it.
+ * 1. It forces the synchronous branch of `ComplicationDrawable.setComplicationData`. The async branch
+ *    installs a second `ComplicationRenderer` only once an image load completes, and on the
+ *    engine-start path that never happens - leaving a complication that reports correct data and
+ *    accepts taps but paints nothing until its provider is re-picked.
+ * 2. It drops a redundant small image - see `withoutRedundantSmallImage`.
+ * 3. It applies [ComplicationImageFit] - see [render].
  *
- * **2. It drops a redundant small image** - see [withoutRedundantSmallImage].
- *
- * **3. It applies [ComplicationImageFit]** - see [render].
- *
- * @param imageFit read per frame rather than passed once, so a watch face can change it whenever its
- *   configuration changes without rebuilding the slot.
+ * @param imageFit read per frame, so a watch face can change it without rebuilding the slot.
  */
 internal class SyncLoadingCanvasComplication(
     private val context: Context,
@@ -269,9 +228,8 @@ internal class SyncLoadingCanvasComplication(
     private var receivedData: ComplicationData? = null
 
     /**
-     * Ignores [loadDrawablesAsynchronous] and always loads synchronously - do not "simplify" this by
-     * passing the parameter through, that reintroduces the blank-until-re-picked bug. See the class
-     * doc for the full mechanism.
+     * Always loads synchronously - do not pass [loadDrawablesAsynchronous] through, that reintroduces
+     * the blank-until-re-picked bug described on the class.
      */
     override fun loadData(complicationData: ComplicationData, loadDrawablesAsynchronous: Boolean) {
         receivedData = complicationData
@@ -279,19 +237,11 @@ internal class SyncLoadingCanvasComplication(
     }
 
     /**
-     * Re-runs [prepared] on the data already received, for when the watch face's answer to
-     * [iconColorRequested] changes - a new configuration is loaded, say.
+     * Re-runs [prepared] on the data already received, for when the answer to [iconColorRequested]
+     * changes - the system only calls [loadData] when *it* has new data.
      *
-     * Needed because the decision is taken in [loadData], which the system only calls when *it* has
-     * new data. Starting again from [receivedData] rather than from the loaded data is what makes the
-     * change reversible: a dropped small image would otherwise be gone for good.
-     *
-     * **Only pushes when the payload would actually differ.** Re-sending unchanged data into the
-     * drawable is not free - it is a write the system never asked for, outside the normal data flow -
-     * and a complication whose payload [prepared] leaves alone has nothing to gain from it. Device
-     * evidence: setting `iconColor` on a slot whose provider sends nothing strippable made that
-     * slot's border disappear, which no style value can explain; the only thing `iconColor` triggers
-     * beyond a tint is this reload.
+     * Starts from [receivedData] so the change is reversible, and pushes only when the payload would
+     * actually differ: an unnecessary write into the drawable has been observed to disturb rendering.
      */
     fun reapplyIconColorRequest() {
         val data = receivedData ?: return
@@ -302,29 +252,16 @@ internal class SyncLoadingCanvasComplication(
     private fun prepared(data: ComplicationData) = withoutRedundantSmallImage(data)
 
     /**
-     * Draws the complication, taking over the image itself for the two image-only types so that
+     * Draws the complication, taking over the image for `SMALL_IMAGE`/`PHOTO_IMAGE` so
      * [ComplicationImageFit] can mean what it says.
      *
-     * **Why the image cannot be left to the library.** `SmallImageLayoutHelper` gives it the slot's
-     * central square and `RoundedDrawable.drawableToBitmap` centre-crops the image into that square,
-     * both unconditionally. The crop happens *before* anything a caller can influence, so no bounds
-     * trick and no canvas transform can recover the lost sides: measured on a 300x115 px slot with a
-     * 450x225 provider image, the library shows the middle half of the image at 0.51 scale, and
-     * scaling that square back out to the slot magnifies it to 1.33x horizontally against 0.51
-     * vertically - a wide image comes out cropped *and* distorted. Drawing it here instead uses the
-     * image's real intrinsic size, so all three fits are exact.
+     * The library crops the image to the slot's central square before any caller can influence it, so
+     * no bounds or canvas trick can recover the lost sides. Drawing here uses the image's intrinsic
+     * size instead. Only these two types are taken over - they carry no text fields; every other type
+     * keeps the library's layout.
      *
-     * Everything else still comes from `ComplicationDrawable`: this only replaces the image, and only
-     * for `SMALL_IMAGE`/`PHOTO_IMAGE`, which carry no text fields. Any other type keeps the library's
-     * layout untouched - it places text, and reshaping it would ruin that.
-     *
-     * Background, rounded corners and the border are drawn here to match, from the same
-     * [ComplicationStyle] the library would have used, so `borderRadius`/`borderColor`/`borderWidth`
-     * still shape and outline the slot exactly as they do for every other complication type. This
-     * was missed when the image takeover was first written, before border support existed: the
-     * early version returned after drawing the image, so an image-only slot lost its border
-     * unconditionally, regardless of anything declared in json - see `ComplicationRenderer.drawBorders`
-     * (rendering 1.2.1) for the library behaviour being matched here.
+     * Background, corner radius and border are reproduced from the same [ComplicationStyle] the
+     * library would have used, so those style values behave as they do for every other type.
      */
     override fun render(canvas: Canvas, bounds: Rect, zonedDateTime: ZonedDateTime, renderParameters: RenderParameters, slotId: Int) {
         val ambient = renderParameters.drawMode == DrawMode.AMBIENT
@@ -336,15 +273,13 @@ internal class SyncLoadingCanvasComplication(
         val style = if (ambient) drawable.ambientStyle else drawable.activeStyle
         // Clamped the way ComplicationRenderer clamps it, so the shape matches a library-drawn slot.
         val radius = min(style.borderRadius.toFloat(), min(bounds.width(), bounds.height()) / 2f)
-        canvas.save()
-        canvas.clipPath(Path().apply { addRoundRect(RectF(bounds), radius, radius, Path.Direction.CW) })
-        if (style.backgroundColor != Color.TRANSPARENT) canvas.drawColor(style.backgroundColor)
-        image.bounds = imageFit().destination(image.intrinsicWidth, image.intrinsicHeight, bounds)
-        image.draw(canvas)
-        canvas.restore()
-        // Drawn last and unclipped, same as the library: the stroke is centred on the slot edge, so
-        // half of it paints outside the declared bounds - see the borderWidth doc in
-        // ComplicationStyleValues.
+        canvas.withClip(Path().apply { addRoundRect(RectF(bounds), radius, radius, Path.Direction.CW) }) {
+            if (style.backgroundColor != Color.TRANSPARENT) drawColor(style.backgroundColor)
+            image.bounds = imageFit().destination(image.intrinsicWidth, image.intrinsicHeight, bounds)
+            image.draw(this)
+        }
+        // Last and unclipped, same as the library: the stroke is centred on the slot edge, so half of
+        // it paints outside the declared bounds.
         if (style.borderWidth > 0 && Color.alpha(style.borderColor) > 0) {
             borderPaint.color = style.borderColor
             borderPaint.strokeWidth = style.borderWidth.toFloat()
@@ -355,12 +290,9 @@ internal class SyncLoadingCanvasComplication(
     private val borderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE }
 
     /**
-     * The image this complication carries, or null when it carries none - which is every type this
-     * class leaves to the library.
+     * The image this complication carries, or null for every type left to the library.
      *
-     * Loading an [Icon] allocates and decodes, so the result is kept until the icon itself changes.
-     * Identity comparison is right here: data is only reloaded when the system sends new data, so the
-     * same payload keeps the same `Icon` instance.
+     * Loading an [Icon] decodes, so the result is cached until the icon instance itself changes.
      */
     private fun imageOf(data: ComplicationData, ambient: Boolean): Drawable? {
         val icon = when (data) {
@@ -379,37 +311,13 @@ internal class SyncLoadingCanvasComplication(
     private var loadedImage: Drawable? = null
 
     /**
-     * Works around an androidx layout bug that drops **both** images when a ranged-value-family
-     * complication carries a monochromatic image *and* a small image on a non-wide slot.
+     * Drops the small image when [shouldDropSmallImage] says the monochromatic icon should render
+     * instead - either to dodge the ranged-value layout bug that renders neither image, or because
+     * the watch face asked for an icon colour, which only a monochromatic image can honour.
      *
-     * `RangedValueLayoutHelper.getIconBounds` returns empty whenever a small image exists (the small
-     * image is meant to win), but its `getSmallImageBounds` then resolves the small image's position by
-     * delegating to `ShortTextLayoutHelper.getIconBounds`, which returns empty for that very same
-     * reason. Both rects end up empty and nothing is drawn - confirmed against the 1.2.1 sources and on
-     * device, where a provider sending both images rendered ring + value but no icon, while the
-     * identical payload under SHORT_TEXT (which never enters that delegation) did show one. Details in
-     * `_docs/Complication_Libraries.md`.
-     *
-     * Dropping the small image makes `hasSmallImage()` false, so the monochromatic image renders
-     * normally. Only touched when there is a monochromatic image to fall back on.
-     *
-     * **The same edit also serves a second, deliberate purpose: honouring a requested icon colour.**
-     * `iconColor` reaches only `drawIcon`, i.e. only a `MonochromaticImage`
-     * (`ComplicationRenderer.PaintSet` builds `mIconColorFilter` from `style.iconColor` and `drawIcon`
-     * applies it with no null branch). Every layout helper prefers a small image when the provider
-     * sends both - `ShortTextLayoutHelper.getIconBounds` empties the icon rect on `hasSmallImage()` -
-     * and `drawSmallImage` explicitly clears the colour filter for `IMAGE_STYLE_ICON`. So a provider
-     * sending both images renders an untintable one, and no style value can change it: Samsung's heart
-     * rate icon stays red whatever `iconColor` says. Dropping the small image when - and only when -
-     * the watch face actually asked for an icon colour puts the tintable image back in play, for any
-     * complication type. Ask for nothing and the provider's own colours are kept, which is the better
-     * default and what the library does on its own.
-     *
-     * The wire round-trip is used rather than `RangedValueComplicationData.Builder` because the builder
-     * exposes no setters for `dataSource`, `persistencePolicy`, `displayPolicy` or `extras`, so
-     * rebuilding through it would silently discard them; copying the wire object preserves every field
-     * and changes exactly one. Both conversions are `@RestrictTo` (lint-only, not private), hence the
-     * suppression.
+     * Copies the wire object rather than rebuilding through the API-level builders, which expose no
+     * setters for `dataSource`, `persistencePolicy`, `displayPolicy` or `extras` and would silently
+     * discard them.
      */
     @Suppress("RestrictedApi")
     private fun withoutRedundantSmallImage(complicationData: ComplicationData): ComplicationData {
@@ -418,13 +326,12 @@ internal class SyncLoadingCanvasComplication(
             wireType = wire.type,
             hasSmallImage = wire.hasSmallImage(),
             hasIcon = wire.hasIcon(),
-            // Resolved only when the answer could still be yes - loading an icon is not free, and the
-            // cheap facts above already decide most payloads.
+            // Resolved only when the answer could still be yes - loading an icon is not free.
             iconIsLoadable = wire.hasIcon() && wire.hasSmallImage() && wire.icon?.loadDrawable(context) != null,
             iconColorRequested = iconColorRequested()
         )
-        // Returning the very same instance matters: [reapplyIconColorRequest] treats identity as
-        // "nothing to do" and skips pushing into the drawable entirely.
+        // Returning the same instance matters: reapplyIconColorRequest() treats identity as "nothing
+        // to do" and skips pushing into the drawable.
         if (!drop) return complicationData
         return WireComplicationData.Builder(wire)
             .setSmallImage(null)
@@ -438,10 +345,8 @@ internal class SyncLoadingCanvasComplication(
  * The presentation a watch face wants for one complication, and the only thing that writes it into a
  * [ComplicationDrawable].
  *
- * A value object rather than a set of mutable fields, for three reasons: the watch face decides every
- * value in one place, "nothing declared" is a single named instance ([LIBRARY_DEFAULTS]) instead of a
- * default repeated at each field, and equality comes for free - which is what a future per-frame
- * re-apply guard needs, since every `ComplicationStyle` setter marks the style dirty.
+ * A value object so "nothing declared" is one named instance rather than a default repeated per
+ * field, and so equality comes for free.
  */
 internal data class ComplicationStyleValues(
     val textColor: Int,
@@ -457,23 +362,15 @@ internal data class ComplicationStyleValues(
     val ringPrimaryColor: Int,
     val ringSecondaryColor: Int,
     /**
-     * Colour of the border, transparent for "no border".
-     *
-     * There is deliberately no border *style* alongside this: `borderStyle` is pinned to
-     * `BORDER_STYLE_SOLID` in [applyTo], and a fully transparent colour is what turns a border off.
-     * The two are interchangeable here - `PaintSet` implements `BORDER_STYLE_NONE` as
-     * `mBorderPaint.setAlpha(0)` (`ComplicationRenderer.java:1380-1382`) - so one knob is enough, and
-     * it is the one that also chooses the colour.
+     * Colour of the border, transparent for "no border". There is deliberately no border *style*
+     * alongside it: `borderStyle` is pinned to solid in [applyTo], and the library implements
+     * `BORDER_STYLE_NONE` as a zero-alpha border paint, so the two would be redundant knobs.
      */
     val borderColor: Int,
     /**
-     * Border thickness in real pixels. Purely cosmetic: unlike [borderRadius] it takes part in no
-     * layout decision - `borderWidth` reaches only `mBorderPaint.setStrokeWidth`
-     * (`ComplicationRenderer.java:1383`), and `calculateBounds` insets content from [borderRadius]
-     * alone. So this never shrinks the space a complication has to draw in, at any value.
-     *
-     * The stroke is centred on the slot's edge and the renderer sets no clip, so half of it paints
-     * *outside* the declared bounds.
+     * Border thickness in real pixels. Purely cosmetic - unlike [borderRadius] it takes no part in
+     * layout, so it never shrinks the space a complication has to draw in. The stroke is centred on
+     * the slot edge and is not clipped, so half of it paints outside the declared bounds.
      */
     val borderWidth: Int
 ) {
@@ -481,22 +378,15 @@ internal data class ComplicationStyleValues(
     /**
      * Writes every value into both style slots of [drawable].
      *
-     * **Every property is written on every call, never conditionally.** A `ComplicationDrawable`
-     * belongs to the engine and so outlives the watch-face configuration that last styled it; a
-     * skipped write silently keeps the previous configuration's value, which is why "not declared"
-     * must already have been resolved to a real value by the caller.
+     * Every property is written on every call, never conditionally: a `ComplicationDrawable` outlives
+     * the watch-face configuration that last styled it, so a skipped write would silently keep the
+     * previous configuration's value.
      *
-     * `borderRadius` is worth knowing about: androidx defaults it to `Int.MAX_VALUE`, which
-     * `ComplicationRenderer` clamps to half the shorter edge and then uses to inset the *content* area
-     * by `ceil((sqrt(2)-1) * radius)` on every side - throwing away ~41% of the declared box before any
-     * text or icon is placed. It also shapes the background fill (a round rect) and, when a border is
-     * drawn, the border itself.
+     * Note [borderRadius] also insets the *content* area (androidx defaults it to `Int.MAX_VALUE`,
+     * which costs ~41% of the box) and shapes the background fill.
      */
     fun applyTo(drawable: ComplicationDrawable) {
         for (style in listOf(drawable.activeStyle, drawable.ambientStyle)) {
-            // Always SOLID: a transparent [borderColor] already means "no border", and the library
-            // implements BORDER_STYLE_NONE as exactly that - a zero-alpha border paint. Leaving the
-            // style fixed keeps one knob instead of two that can contradict each other.
             style.borderStyle = ComplicationStyle.BORDER_STYLE_SOLID
             style.borderColor = borderColor
             style.borderWidth = borderWidth
@@ -521,30 +411,16 @@ internal data class ComplicationStyleValues(
         const val MIN_RING_WIDTH_PX = 2
 
         /**
-         * "As large as the box allows" for `textSize`/`titleSize`.
-         *
-         * Both are *upper bounds*, not exact sizes: `ComplicationRenderer` hands them to
-         * `Paint.setTextSize` and `TextRenderer` then shrinks in steps until the text fits. This is
-         * androidx's own field-initializer value and therefore its intended "no opinion" marker - but
-         * note it is **not** what a context-attached drawable starts with, since
-         * `setStyleToDefaultValues` overwrites it from resources with 14sp. Writing it explicitly is
-         * what lets complication text use its whole box instead of being capped at 14sp.
+         * "As large as the box allows" for `textSize`/`titleSize`, which are upper bounds that
+         * `TextRenderer` shrinks to fit. Must be written explicitly: a context-attached drawable
+         * starts from a 14sp resource default instead.
          */
         const val TEXT_SIZE_FIT_BOX = Int.MAX_VALUE
 
-        /**
-         * Mirrors androidx's *resource* default for `rangedValueSecondaryColor`
-         * (`R.color.complicationDrawable_rangedValueSecondaryColor` = 50% white), so a watch face that
-         * declares no ring colours keeps the appearance it had before it styled them. The field
-         * initializer says `Color.LTGRAY`, which is not what a context-attached drawable uses - see the
-         * resource-defaults warning in `_docs/Complication_Libraries.md`.
-         */
+        /** androidx's *resource* default for `rangedValueSecondaryColor` (50% white). */
         const val RING_SECONDARY_COLOR_DEFAULT = 0x80FFFFFF.toInt()
 
-        /**
-         * What a slot looks like before any watch-face styling has been decoded - a drawable can be
-         * created before that happens, so this is what it gets in the meantime.
-         */
+        /** What a slot gets before any watch-face styling has been decoded. */
         val LIBRARY_DEFAULTS = ComplicationStyleValues(
             textColor = Color.WHITE,
             titleColor = Color.LTGRAY,
@@ -558,9 +434,6 @@ internal data class ComplicationStyleValues(
             titleSize = TEXT_SIZE_FIT_BOX,
             ringPrimaryColor = Color.WHITE,
             ringSecondaryColor = RING_SECONDARY_COLOR_DEFAULT,
-            // No border until a watch face asks for one. The width is moot while the colour is
-            // transparent, and 0 says so plainly - androidx would have started from a 1dp 50%-black
-            // border here, which no watch face requested.
             borderColor = Color.TRANSPARENT,
             borderWidth = 0
         )
@@ -570,13 +443,11 @@ internal data class ComplicationStyleValues(
 /**
  * Live state for one complication slot, scoped to one engine instance.
  *
- * [drawable] is why this cannot be static or enum state: it owns a `ComplicationRenderer` and an
- * invalidate callback bound to the engine that created it, and a watch-face editor runs a second,
- * headless instance of the same watch face concurrently.
+ * [drawable] is why this cannot be static or enum state: it is bound to the engine that created it,
+ * and the watch face editor runs a second, headless instance concurrently.
  *
- * [style] and [drawable] are filled by whichever of the two orderings the framework happens to use -
- * the watch face's configuration may be decoded before the drawable exists (renderers are created
- * lazily) or after it - so [applyStyle] is called from both paths and is idempotent.
+ * [applyStyle] is called from both the drawable-created and style-decoded paths, since renderers are
+ * created lazily and either can happen first.
  */
 internal class ComplicationSlotState(val slotId: Int) {
 
@@ -584,22 +455,16 @@ internal class ComplicationSlotState(val slotId: Int) {
 
     var style: ComplicationStyleValues = ComplicationStyleValues.LIBRARY_DEFAULTS
 
-    /**
-     * How an image-only complication fills this slot. Read on the render thread every frame, so no
-     * push into the drawable is needed - unlike [style], nothing in `ComplicationDrawable` holds it.
-     */
+    /** Read on the render thread every frame; nothing in `ComplicationDrawable` holds it. */
     @Volatile var imageFit: ComplicationImageFit = ComplicationImageFit.FIT_CENTER
 
     /** Set by [WatchFaceComplications] when the slot's renderer is created. */
     internal var renderer: SyncLoadingCanvasComplication? = null
 
     /**
-     * Whether the watch face asked for a specific icon colour on this slot, which decides whether a
-     * provider's own small image may be dropped in favour of the tintable monochromatic one - see
-     * `SyncLoadingCanvasComplication.withoutRedundantSmallImage`.
-     *
-     * Setting it re-runs that decision on the data already received, because the system only calls
-     * `loadData` when *it* has something new, and a configuration change is not that.
+     * Whether the watch face asked for a specific icon colour on this slot. Setting it re-runs the
+     * payload decision on data already received, since the system only calls `loadData` when it has
+     * something new.
      */
     @Volatile var iconColorRequested: Boolean = false
         set(value) {
@@ -615,18 +480,10 @@ internal class ComplicationSlotState(val slotId: Int) {
 /**
  * Hosts a set of androidx complication slots for one watch face engine.
  *
- * Deliberately knows nothing about any watch face: geometry arrives through lambdas, style through
- * [ComplicationSlotState.style], and the user-visible labels through resource ids passed in. That is
- * what makes it reusable by a watch face other than the one using it today.
- *
  * @param slotIds the slots to host, in the watch face's own order
- * @param supportedTypesFor the complication types a given slot accepts, **in preference order** -
- *   during data source selection the system walks the list and picks the first entry the provider
- *   also supports (`ComplicationSlot.kt`'s `supportedTypes` doc, confirmed against source; see
- *   `_docs/Complication_Libraries.md`, "Supported-type negotiation"). Per slot rather than one shared
- *   list because the useful order depends on the provider the user picks, which differs per slot -
- *   see [ComplicationTypePriority]. Read once per slot at creation: `supportedTypes` is a
- *   `ComplicationSlot.Builder` argument and cannot be changed afterwards.
+ * @param supportedTypesFor the types a given slot accepts, in preference order - the system takes the
+ *   first entry the chosen provider also supports. Per slot because the useful order depends on that
+ *   provider; see [ComplicationTypePriority]. Read once at slot creation.
  * @param layoutSettingLabel label for the slot-layout user-style setting, shown by a system editor
  * @param layoutSettingDescription its description
  */
@@ -647,13 +504,12 @@ internal class WatchFaceComplications(
 
     private val slotStates: Map<Int, ComplicationSlotState> = slotIds.associateWith { ComplicationSlotState(it) }
 
-    // Created on a background thread in createUserStyleSchema()/createSlotsManager(), read on the
-    // render thread in syncGeometry() - hence @Volatile.
+    // Created on a background thread, read on the render thread in syncGeometry() - hence @Volatile.
     @Volatile private var slotsSetting: ComplicationSlotsUserStyleSetting? = null
     @Volatile private var userStyleRepository: CurrentUserStyleRepository? = null
     @Volatile private var slotsManager: ComplicationSlotsManager? = null
 
-    // Keeps every pushed option's id distinct - see syncGeometry() for why that matters.
+    // Keeps every pushed option's id distinct - see syncGeometry().
     private var geometryRevision = 0
 
     /** The live state for [slotId], for a watch face to write its decoded style into. */
@@ -661,12 +517,10 @@ internal class WatchFaceComplications(
 
     /**
      * Declares the one [ComplicationSlotsUserStyleSetting] that [syncGeometry] needs in order to move
-     * the slots at runtime. A watch face whose slot geometry never changes does not need to call this.
+     * slots at runtime. A watch face whose slot geometry never changes need not call this.
      *
-     * The single option carries **no** overlays, which the library documents as meaning "the net result
-     * is the initial complication configuration" - so by itself this schema changes nothing. It exists
-     * only because `CurrentUserStyleRepository.updateUserStyle` validates that the *setting* is part of
-     * the schema; the options actually applied are built later, at runtime.
+     * The single option carries no overlays, so by itself this schema changes nothing; it exists only
+     * because `updateUserStyle` validates that the setting belongs to the schema.
      */
     fun createUserStyleSchema(): UserStyleSchema {
         val defaultOption = ComplicationSlotsOption(
@@ -694,17 +548,13 @@ internal class WatchFaceComplications(
     /**
      * Builds the slots, asking [initialBoundsFor] where each one starts.
      *
-     * Everything decided here is **creation-time only**: `ComplicationSlot.Builder` arguments are fixed
-     * once built, and a slot's bounds and enabled flag can afterwards be changed solely through
-     * [syncGeometry]'s user-style route. A default data source policy or a fixed data source would also
-     * have to be supplied here rather than later.
+     * Everything decided here is creation-time only: `ComplicationSlot.Builder` arguments are fixed
+     * once built, and bounds and enabled state can afterwards be changed solely through [syncGeometry].
      */
     fun createSlotsManager(
         currentUserStyleRepository: CurrentUserStyleRepository,
         initialBoundsFor: (slotId: Int) -> ComplicationSlotBounds
     ): ComplicationSlotsManager {
-        // Both kept so syncGeometry() can push slot geometry changes back through the repository, and
-        // read back what the slots actually ended up with.
         userStyleRepository = currentUserStyleRepository
         val slots = slotStates.values.map { state -> buildSlot(state, initialBoundsFor(state.slotId)) }
         return ComplicationSlotsManager(slots, currentUserStyleRepository).also { slotsManager = it }
@@ -712,11 +562,8 @@ internal class WatchFaceComplications(
 
     private fun buildSlot(state: ComplicationSlotState, bounds: ComplicationSlotBounds): ComplicationSlot {
         val canvasComplicationFactory = CanvasComplicationFactory { watchState, invalidateCallback ->
-            // The drawable is kept on the state so styling never depends on being able to reach it
-            // through ComplicationSlotsManager. The library creates renderers lazily, so this can run
-            // either before or after the watch face has decoded its style; applying here covers
-            // "drawable created last", and the watch face's own decode pass covers "style decoded
-            // last".
+            // Renderers are created lazily, so this may run before or after the watch face decodes its
+            // style; applying here covers "drawable created last", the decode pass covers the reverse.
             val drawable = ComplicationDrawable(context)
             state.drawable = drawable
             state.applyStyle()
@@ -739,47 +586,30 @@ internal class WatchFaceComplications(
     }
 
     /**
-     * Brings each slot's **declared** bounds and enabled state into line with what is actually being
-     * drawn, which is what fixes complication *taps* after the watch face moves a slot.
+     * Brings each slot's *declared* bounds and enabled state into line with what is actually drawn,
+     * which is what makes taps land correctly after a watch face moves a slot.
      *
-     * [visibleBoundsFor] returns fractional, unit-square (canvas-relative) bounds for a slot, or null
-     * when it is currently hidden - in which case the slot is pushed as disabled with empty bounds,
-     * which is what stops a hidden complication from receiving taps or system-side data at all.
+     * [visibleBoundsFor] returns fractional, unit-square bounds, or null when the slot is hidden - in
+     * which case it is pushed as disabled with empty bounds, which also stops it receiving data.
      *
-     * Painting a complication elsewhere (see [ComplicationRender]) only fixes what the user sees: tap
-     * hit-testing goes through `ComplicationSlotsManager.getComplicationSlotAt` ->
-     * `RoundRectComplicationTapFilter` -> `ComplicationSlot.computeBounds`, which reads the slot's own
-     * cached bounds and never the ones a render call was given. Left alone the two diverge the moment a
-     * watch face moves a complication - confirmed on device: with two configurations differing only by
-     * two slots being swapped, each rendered in its new place but tapping it fired the *other* slot's
-     * provider, silently and wrongly.
+     * Painting elsewhere (see [ComplicationRender]) only fixes what the user sees: tap hit-testing
+     * reads the slot's own cached bounds. Those setters are `internal`, so the only supported way to
+     * write them is a user-style change, which also keeps accessibility bounds and editor previews
+     * right.
      *
-     * `ComplicationSlot.complicationSlotBounds` and `.enabled` have `internal` setters, so the only
-     * supported way to write them is a user-style change: the library's own
-     * `ComplicationSlotsManager.listenForStyleChanges` reacts to a new [ComplicationSlotsOption] by
-     * calling `applyComplicationSlotsStyleCategoryOption`, which writes both. That also keeps
-     * accessibility bounds and what an editor sees correct, which a render-side-only fix cannot.
-     *
-     * Two non-obvious constraints, both verified against the androidx sources:
-     * - **Every push needs a fresh option id.** `UserStyleSetting.Option.equals` compares *only* the
-     *   id, and `listenForStyleChanges` ignores an option it considers equal to the previous one.
-     *   Reusing an id means new bounds are accepted and then silently never applied.
-     * - `updateUserStyle` is `@RestrictTo(LIBRARY_GROUP)`, hence the suppression. It is lint-only - the
-     *   call is ordinary type-checked Kotlin, so a future incompatible change breaks the build rather
-     *   than failing silently at runtime. `validateUserStyle` requires only that the setting belongs to
-     *   the schema and that the option's class matches it; it deliberately does *not* require the
-     *   option to be one the schema enumerated, which is what makes runtime-computed bounds legal.
+     * Three constraints, none of them obvious:
+     * - **Every push needs a fresh option id.** `UserStyleSetting.Option.equals` compares the id only,
+     *   and an option considered equal to the previous one is ignored - new bounds would be accepted
+     *   and silently never applied.
+     * - **Compare against the slots, not against what was last pushed.** An applied option that
+     *   carries no overlay for a slot resets that slot to its *initial* bounds, and the schema's own
+     *   default option carries none - so a style change from anywhere else can silently undo this.
+     *   Comparing intent to intent would never notice, leaving taps landing nowhere.
+     * - `updateUserStyle` is `@RestrictTo(LIBRARY_GROUP)`, hence the suppression; `validateUserStyle`
+     *   deliberately does not require the option to be one the schema enumerated, which is what makes
+     *   runtime-computed bounds legal.
      *
      * Safe to call once per frame: it pushes only when a slot is not already where it should be.
-     *
-     * **It compares against the slots themselves, not against what was last pushed**, and that is
-     * deliberate. `applyComplicationSlotsStyleCategoryOption`
-     * (`ComplicationSlotsManager.kt:225-239`) restores a slot's *initial* bounds and enabled flag
-     * whenever an applied option carries no overlay for it - and the schema's own default option
-     * carries none. So a style change from anywhere else silently resets slots this class is
-     * responsible for. Comparing intent to intent would then never notice: the wanted geometry has
-     * not changed, only the slot has, and the watch face would keep drawing complications correctly
-     * at coordinates the tap filter no longer knows about - visible only as taps that do nothing.
      */
     @Suppress("RestrictedApi")
     fun syncGeometry(visibleBoundsFor: (slotId: Int) -> RectF?) {
@@ -793,8 +623,8 @@ internal class WatchFaceComplications(
             val bounds = visibleBoundsFor(state.slotId)
             val enabled = bounds != null
             val wanted = ComplicationSlotBounds(bounds ?: RectF())
-            // Builder rather than the constructor: the overlay's 4-argument secondary constructor is
-            // deprecated, and named arguments resolve to it rather than to the primary one.
+            // Builder rather than the constructor: the 4-argument secondary constructor is deprecated
+            // and named arguments resolve to it.
             overlays += ComplicationSlotOverlay.Builder(state.slotId)
                 .setEnabled(enabled)
                 .setComplicationSlotBounds(wanted)

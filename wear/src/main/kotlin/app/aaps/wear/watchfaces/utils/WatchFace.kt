@@ -192,40 +192,24 @@ abstract class WatchFace : WatchFaceService() {
     protected open fun onTapCommand(tapType: Int, x: Int, y: Int, eventTime: Long) {}
 
     /**
-     * Called after complications have rendered, so a subclass can draw content that must sit on
-     * top of complications (e.g. mainLayout's own draw deferred via [BaseWatchFace.deferMainLayoutDraw]).
-     * No-op by default - every watch face that doesn't override [BaseWatchFace.deferMainLayoutDraw]
-     * already drew everything inside [onDraw], so this never needs to do anything for them.
+     * Called after complications have rendered, so a subclass can draw content that must sit on top
+     * of them - e.g. mainLayout's own draw, deferred via [BaseWatchFace.deferMainLayoutDraw]. No-op
+     * for watch faces that draw everything inside [onDraw].
      */
     protected open fun onDrawOverlay(canvas: Canvas) {}
 
     /**
-     * Decides how [slot] is painted this frame, letting a subclass supply bounds per frame instead
-     * of being stuck with the ones the slot was created with.
+     * Decides how [slot] is painted this frame, letting a subclass supply bounds per frame instead of
+     * being stuck with the ones the slot was created with. A slot's own bounds and enabled flag have
+     * `internal` setters, so they cannot be changed after [createComplicationSlotsManager]; rendering
+     * has no such restriction, since `CanvasComplication.render` takes bounds per call.
      *
-     * This exists because `ComplicationSlot.complicationSlotBounds` and `.enabled` both have an
-     * **internal** setter in androidx.wear.watchface 1.2.1 - confirmed against the real sources -
-     * so a slot's position, size and visibility cannot be changed after
-     * [createComplicationSlotsManager] has run. Rendering has no such restriction:
-     * `CanvasComplication.render` takes the bounds as a per-call parameter, and
-     * `ComplicationSlot.render` is only a convenience wrapper that fills it in from the slot's own
-     * cached value. Bypassing that wrapper is not a workaround - the library itself renders this way
-     * in `WatchFaceImpl.renderComplicationToBitmap` when an editor asks for a preview at arbitrary
-     * bounds.
+     * **Tap hit-testing still uses the slot's declared bounds, not these.** A subclass that paints a
+     * slot away from where it was declared must also bring the declared bounds up to date, or taps
+     * land on the wrong complication - see [WatchFaceComplications.syncGeometry].
      *
-     * Not covered by this: **tap hit-testing uses the slot's declared bounds, not these**
-     * (`ComplicationSlotsManager.getComplicationSlotAt` -> `ComplicationTapFilter.hitTest` ->
-     * `computeBounds`, all internal, and `createRoundRectComplicationSlotBuilder` hard-codes the
-     * filter). A subclass that paints a slot away from where it was declared must therefore also
-     * bring the declared bounds up to date, or taps land on the wrong complication - see
-     * [WatchFaceComplications.syncGeometry] for the only supported way to do that.
-     *
-     * [ComplicationRender.Declared] for every watch face that doesn't override this, which keeps the
-     * render loop below byte-for-byte equivalent to what it did before the hook existed.
-     *
-     * `internal` rather than `protected` because [ComplicationRender] is an `internal` type of this
-     * module - a `protected` member of a public class may not expose one. Every watch face lives in
-     * this module, so nothing is lost.
+     * `internal` rather than `protected` because [ComplicationRender] is an internal type and a
+     * protected member of a public class may not expose one.
      */
     internal open fun complicationRender(slot: ComplicationSlot): ComplicationRender = ComplicationRender.Declared
 
@@ -233,20 +217,12 @@ abstract class WatchFace : WatchFaceService() {
     private var renderer: WatchFaceRenderer? = null
 
     /**
-     * Asks the system to re-render the preview image it caches for this watch face - the thumbnail
-     * shown by the long-press "Customize" flow and the watch face picker.
+     * Asks the system to re-render the thumbnail it caches for this watch face. Needed by a watch face
+     * whose appearance comes from outside the style schema - a loaded template, say - since the system
+     * otherwise has no reason to redo it.
      *
-     * The system renders and caches that thumbnail itself, and only knows to redo it when the style
-     * schema changes. A watch face whose appearance comes from somewhere else - a loaded template,
-     * a chosen background - has to say so, which is exactly what this call is for
-     * (`Renderer.sendPreviewImageNeedsUpdateRequest`, whose own doc names "a watchface with a
-     * selectable background" as the case). See `_docs/Complication_Libraries.md`, "The system's
-     * cached preview image".
-     *
-     * Only worth calling when the appearance really changed: the library documents that the system
-     * may rate limit these requests, and it decides when to re-render. Safe to call at any time
-     * though - before the renderer exists the request is queued by the library and sent once it
-     * does, and a request made while nothing is listening is replayed to the next listener.
+     * Call only when the appearance really changed: the system may rate limit these requests. Safe at
+     * any time, though - the library queues the request until a renderer exists.
      */
     protected fun requestPreviewImageUpdate() {
         renderer?.sendPreviewImageNeedsUpdateRequest()

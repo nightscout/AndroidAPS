@@ -29,30 +29,23 @@ class ConfigurationActivity : WearPreferenceActivity(), CustomWatchfaceSettingsH
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var complicationDataRepository: ComplicationDataRepository
 
-    // Blocking, like every other read of this store on a screen that cannot draw without it (see
-    // CustomWatchface.createComplicationSlotsManager): the preference screen is built synchronously
-    // in onCreate, and it is a local read.
+    // Blocking: the preference screen is built synchronously in onCreate, and this is a local read.
     override fun storedWatchfaceConfiguration(): String? = runBlocking { complicationDataRepository.getCustomWatchface()?.json }
 
     private var watchfaceComponentName: ComponentName? = null
 
-    // Creation is kicked off unconditionally in onCreate() - NOT lazily on first "Complication N"
-    // tap - because EditorSession's constructor internally calls registerForActivityResult(),
-    // which throws IllegalStateException if called after the activity has moved past STARTED
-    // (confirmed via a real stack trace when this was created on-demand from onPreferenceTreeClick,
-    // i.e. long after the screen was already resumed). Kept alive and reused across multiple taps
-    // (e.g. configuring slot 1 then slot 2 without reopening this screen); closed automatically by
-    // its own lifecycle observer when this activity is destroyed - do not call .close() ourselves
-    // (that causes a separate double-close crash, see requestComplicationPicker).
+    // Created unconditionally in onCreate(), never lazily on the first "Complication N" tap:
+    // EditorSession's constructor calls registerForActivityResult(), which throws
+    // IllegalStateException once the activity has moved past STARTED. Kept alive and reused across
+    // taps, and closed by its own lifecycle observer on destroy - never call .close() ourselves,
+    // see requestComplicationPicker.
     private var editorSessionDeferred: Deferred<EditorSession>? = null
     private var complicationPickerInProgress = false
 
     companion object {
 
-        /** Set by ComplicationPickerSupport when relaunching this activity (from
-         *  WatchfaceConfigurationActivity's Settings-menu entry point) to open the picker for a
-         *  specific CustomWatchface complication slot. Preferences are shown as usual either way -
-         *  this only additionally triggers the picker for that one slot on entry. */
+        /** Set by ComplicationPickerSupport when relaunching this activity to open the picker for one
+         *  slot. Preferences are still shown as usual; this only adds the picker on entry. */
         const val EXTRA_COMPLICATION_SLOT_ID = "app.aaps.wear.interaction.EXTRA_COMPLICATION_SLOT_ID"
     }
 
@@ -94,13 +87,10 @@ class ConfigurationActivity : WearPreferenceActivity(), CustomWatchfaceSettingsH
         val contentView = findViewById<ViewGroup>(android.R.id.content)
         contentView?.setPadding(0, 50, 0, 50)
 
-        // Start the EditorSession now (see the field comment above for why this can't be deferred
-        // to the first "Complication N" tap). This is the sole activity in the app registered for
-        // ACTION_WATCH_FACE_EDITOR, so both the long-press and Settings-menu entry points end up
-        // here. If relaunched (by ComplicationPickerSupport) to open the picker for one specific
-        // slot, do that in addition to showing preferences as usual (below), not instead of - the
-        // user should land back on this same preferences screen afterward, able to configure
-        // another slot without reopening.
+        // Start the EditorSession now - see the field comment above for why this cannot be deferred.
+        // This is the only activity registered for ACTION_WATCH_FACE_EDITOR, so both the long-press
+        // and Settings-menu entry points end up here. When relaunched for one specific slot, open the
+        // picker in addition to showing preferences below, so the user lands back on this screen.
         editorSessionDeferred = lifecycleScope.async { EditorSession.createOnWatchEditorSession(this@ConfigurationActivity) }
 
         val complicationSlotId = intent.getIntExtra(EXTRA_COMPLICATION_SLOT_ID, -1)
@@ -121,12 +111,9 @@ class ConfigurationActivity : WearPreferenceActivity(), CustomWatchfaceSettingsH
             try {
                 val session = editorSessionDeferred?.await() ?: return@launch
                 session.openComplicationDataSourceChooser(slotId)
-                // Don't call session.close() here: createOnWatchEditorSession() registers its own
-                // lifecycle observer that closes the session automatically when this activity is
-                // eventually destroyed. Closing it explicitly here too would cause that observer to
-                // close an already-closed session on destroy, throwing
-                // IllegalArgumentException("EditorSession method called after close()") and
-                // crashing the app during activity teardown (confirmed via a real stack trace).
+                // Never call session.close() here: createOnWatchEditorSession() registers a lifecycle
+                // observer that closes it on destroy, and a second close throws
+                // IllegalArgumentException("EditorSession method called after close()").
             } finally {
                 complicationPickerInProgress = false
             }
@@ -134,16 +121,16 @@ class ConfigurationActivity : WearPreferenceActivity(), CustomWatchfaceSettingsH
     }
 
     /**
-     * Awaits the [EditorSession] started in [onCreate], so [ConfigurationFragment] can read each
-     * slot's currently assigned complication data source from [EditorSession.complicationsDataSourceInfo].
+     * Awaits the [EditorSession] started in [onCreate], so the fragment can read each slot's assigned
+     * data source from [EditorSession.complicationsDataSourceInfo].
      */
     suspend fun awaitEditorSession(): EditorSession = editorSessionDeferred!!.await()
 
     override fun createPreferenceFragment(): PreferenceFragmentCompat {
         val configFileName = intent.action
 
-        // CustomWatchface has its own screen: it is built in code from what that watch face declares,
-        // so it needs no xml here - see CustomWatchfaceConfigurationFragment.
+        // CustomWatchface has its own screen, built in code, so it needs no xml here - see
+        // CustomWatchfaceConfigurationFragment.
         if (watchfaceComponentName?.className == CustomWatchface::class.java.name) {
             aapsLogger.debug(LTag.WEAR, "ConfigurationActivity::createPreferenceFragment --->> CustomWatchface screen")
             return CustomWatchfaceConfigurationFragment.newInstance()
@@ -178,8 +165,8 @@ class ConfigurationActivity : WearPreferenceActivity(), CustomWatchfaceSettingsH
     /**
      * Fragment for loading watchface configuration preferences from a settings xml.
      *
-     * Only Circle and DigitalStyle reach this now - CustomWatchface has its own fragment - so nothing
-     * here deals with complications: no other watch face has any.
+     * Only Circle and DigitalStyle reach this - CustomWatchface has its own fragment - so nothing here
+     * deals with complications.
      */
     class ConfigurationFragment : PreferenceFragmentCompat() {
 
