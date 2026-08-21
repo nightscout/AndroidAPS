@@ -293,6 +293,7 @@
     <string name="nfccommands_cat_targets">Temp Targets</string>
     <string name="nfccommands_cat_system">System</string>
     <string name="nfccommands_chain_title">Command Chain</string>
+    <string name="nfccommands_add_action">Add Action</string>
     <string name="nfccommands_write_ready">Hold phone near NFC tag</string>
     <string name="nfccommands_blank_name_confirm_title">Register tag without name?</string>
     <string name="nfccommands_blank_name_confirm_message">This tag has no name. It will still be registered and shown later with the first command as its name.</string>
@@ -348,7 +349,7 @@
     <string name="nfccommands_rename_tag_title">Modify Command</string>
     <string name="nfccommands_discard_title">Discard changes?</string>
     <string name="nfccommands_discard_message">You have unsaved changes. Do you want to save them before leaving?</string>
-    <string name="nfccommands_tag_id_label">Tag ID:</string>
+    <string name="nfccommands_tag_id_label" comment="Shows the hardware id of the scanned tag. %1$s = tag UID in hex. Example: Tag ID: 04a2b7c1">Tag ID: %1$s</string>
     <string name="nfccommands_execute_tag">Execute tag</string>
     <string name="nfccommands_tag_already_registered_title">Tag already registered</string>
     <string name="nfccommands_tag_already_registered_message">This tag is already registered as \"%1$s\". Do you want to overwrite it with \"%2$s\"?</string>

@@ -50,7 +50,7 @@ class BolusAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
         val isMeal = params.optBoolean(NfcJsonKeys.IS_MEAL, false)
         val base = plugin.rh.gs(CoreUiR.string.goingtodeliver, amount)
         return if (isMeal) {
-            "$base (${plugin.rh.gs(CoreUiR.string.eatingsoon)})"
+            plugin.rh.gs(CoreUiR.string.text_with_detail, base, plugin.rh.gs(CoreUiR.string.eatingsoon))
         } else {
             base
         }

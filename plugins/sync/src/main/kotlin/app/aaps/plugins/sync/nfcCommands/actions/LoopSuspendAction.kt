@@ -59,7 +59,11 @@ class LoopSuspendAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
             )
         }
         val message = if (result) {
-            plugin.rh.gs(CoreUiR.string.loopsuspended) + " (" + plugin.rh.gs(CoreUiR.string.format_mins, normalizedDuration) + ")"
+            plugin.rh.gs(
+                CoreUiR.string.text_with_detail,
+                plugin.rh.gs(CoreUiR.string.loopsuspended),
+                plugin.rh.gs(CoreUiR.string.format_mins, normalizedDuration)
+            )
         } else {
             plugin.rh.gs(R.string.nfccommands_remote_command_not_possible)
         }

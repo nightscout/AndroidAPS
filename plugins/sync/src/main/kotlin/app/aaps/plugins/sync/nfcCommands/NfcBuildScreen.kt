@@ -474,14 +474,14 @@ fun NfcBuildScreen(
 
         if (initialTag != null) {
             Text(
-                text = "${stringResource(R.string.nfccommands_tag_id_label)} ${initialTag.tagUid}",
+                text = stringResource(R.string.nfccommands_tag_id_label, initialTag.tagUid),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(horizontal = 4.dp)
             )
         } else if (initialTagUid != null) {
             Text(
-                text = "${stringResource(R.string.nfccommands_tag_id_label)} $initialTagUid",
+                text = stringResource(R.string.nfccommands_tag_id_label, initialTagUid),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(horizontal = 4.dp)
@@ -638,7 +638,7 @@ private fun ChooseActionSheet(
                 .verticalScroll(rememberScrollState())
         ) {
             Text(
-                text = stringResource(CoreUiR.string.add) + " Action",
+                text = stringResource(R.string.nfccommands_add_action),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold
             )

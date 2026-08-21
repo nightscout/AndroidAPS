@@ -49,7 +49,11 @@ class PumpDisconnectAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
             )
         )
         val message = if (result) {
-            plugin.rh.gs(CoreUiR.string.pump_disconnected) + " (" + plugin.rh.gs(CoreUiR.string.format_mins, duration) + ")"
+            plugin.rh.gs(
+                CoreUiR.string.text_with_detail,
+                plugin.rh.gs(CoreUiR.string.pump_disconnected),
+                plugin.rh.gs(CoreUiR.string.format_mins, duration)
+            )
         } else {
             plugin.rh.gs(R.string.nfccommands_remote_command_not_possible)
         }
