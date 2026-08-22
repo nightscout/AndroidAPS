@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.tidepool
 
+import kotlin.reflect.KClass
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -45,9 +46,9 @@ class TidepoolPluginTest : TestBaseWithProfile() {
     @BeforeEach fun prepare() {
         rateLimit = RateLimit(dateUtil)
         whenever(receiverDelegate.connectivityStatusFlow).thenReturn(connectivityFlow)
-        whenever(persistenceLayer.observeChanges(anyOrNull<Class<*>>())).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(anyOrNull<KClass<*>>())).thenReturn(emptyFlow())
         tidepoolPlugin = TidepoolPlugin(
-            aapsLogger, rh, preferences, aapsSchedulers, rxBus, fabricPrivacy, tidepoolUploader, uploadChunk, rateLimit, receiverDelegate, authFlowOut, tidepoolRepository, dateUtil, persistenceLayer
+            aapsLogger, rh, preferences, rxBus, tidepoolUploader, uploadChunk, rateLimit, receiverDelegate, authFlowOut, tidepoolRepository, dateUtil, persistenceLayer
         )
     }
 
@@ -92,8 +93,8 @@ class TidepoolPluginTest : TestBaseWithProfile() {
             dateUtil, receiverDelegate, config, l, authFlowOut, rateLimit
         )
         val plugin = TidepoolPlugin(
-            aapsLogger, rh, preferences, aapsSchedulers, rxBus,
-            fabricPrivacy, realUploader, uploadChunk, rateLimit,
+            aapsLogger, rh, preferences, rxBus,
+            realUploader, uploadChunk, rateLimit,
             receiverDelegate, authFlowOut, tidepoolRepository, dateUtil, persistenceLayer
         )
         runBlocking { plugin.onStart() }
@@ -116,8 +117,8 @@ class TidepoolPluginTest : TestBaseWithProfile() {
             dateUtil, receiverDelegate, config, l, authFlowOut, rateLimit
         )
         val plugin = TidepoolPlugin(
-            aapsLogger, rh, preferences, aapsSchedulers, rxBus,
-            fabricPrivacy, realUploader, uploadChunk, rateLimit,
+            aapsLogger, rh, preferences, rxBus,
+            realUploader, uploadChunk, rateLimit,
             receiverDelegate, authFlowOut, tidepoolRepository, dateUtil, persistenceLayer
         )
         runBlocking { plugin.onStart() }

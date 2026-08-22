@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.actions
 
+import javax.inject.Provider
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Sources
@@ -14,20 +17,25 @@ import app.aaps.core.ui.compose.icons.IcAnnouncement
 import app.aaps.core.ui.compose.icons.IcNote
 import app.aaps.core.ui.compose.icons.IcQuestion
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.utils.JsonHelper
+import app.aaps.core.utils.lenientInt
+import app.aaps.core.utils.lenientString
+import app.aaps.core.utils.lenientStringOrNull
 import app.aaps.plugins.automation.elements.InputCarePortalMenu
 import app.aaps.plugins.automation.elements.InputDuration
 import app.aaps.plugins.automation.elements.InputString
-import dagger.android.HasAndroidInjector
-import org.json.JSONObject
-import javax.inject.Inject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
-class ActionCarePortalEvent(injector: HasAndroidInjector) : Action(injector) {
+class ActionCarePortalEvent(
+    aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val persistenceLayer: PersistenceLayer,
+    private val profileFunction: ProfileFunction,
+    private val dateUtil: DateUtil,
+    private val glucoseStatusProvider: GlucoseStatusProvider
+) : Action(aapsLogger, rh, pumpEnactResultProvider) {
 
-    @Inject lateinit var persistenceLayer: PersistenceLayer
-    @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
 
     var note = InputString()
     var duration = InputDuration(0, InputDuration.TimeUnit.MINUTES)
@@ -86,22 +94,23 @@ class ActionCarePortalEvent(injector: HasAndroidInjector) : Action(injector) {
         return pumpEnactResultProvider.get().success(true).comment(app.aaps.core.ui.R.string.ok)
     }
 
-    override fun toJSON(): String {
-        val data = JSONObject()
-            .put("cpEvent", cpEvent.value)
-            .put("note", note.value)
-            .put("durationInMinutes", duration.value)
-        return JSONObject()
-            .put("type", this.javaClass.simpleName)
-            .put("data", data)
-            .toString()
-    }
+    override fun toJSON(): String =
+        buildJsonObject {
+            put("type", this@ActionCarePortalEvent.javaClass.simpleName)
+            put(
+                "data", buildJsonObject {
+                    put("cpEvent", cpEvent.value.toString())
+                    put("note", note.value)
+                    put("durationInMinutes", duration.value)
+                }
+            )
+        }.toString()
 
     override fun fromJSON(data: String): Action {
-        val o = JSONObject(data)
-        cpEvent.value = InputCarePortalMenu.EventType.valueOf(JsonHelper.safeGetString(o, "cpEvent")!!)
-        note.value = JsonHelper.safeGetString(o, "note", "")
-        duration.value = JsonHelper.safeGetInt(o, "durationInMinutes")
+        val o = jsonOf(data)
+        cpEvent.value = InputCarePortalMenu.EventType.valueOf(o.lenientStringOrNull("cpEvent")!!)
+        note.value = o.lenientString("note", "")
+        duration.value = o.lenientInt("durationInMinutes")
         return this
     }
 

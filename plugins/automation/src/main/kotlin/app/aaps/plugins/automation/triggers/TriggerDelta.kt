@@ -5,15 +5,18 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.ui.compose.icons.IcDelta
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.utils.JsonHelper
+import app.aaps.core.utils.lenientDouble
+import app.aaps.core.utils.lenientString
+import app.aaps.core.utils.lenientStringOrNull
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDelta
 import app.aaps.plugins.automation.elements.InputDelta.DeltaType
-import dagger.android.HasAndroidInjector
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
-class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerDelta(deps: TriggerDeps) : Trigger(deps) {
 
     var units: GlucoseUnit = GlucoseUnit.MGDL
     var delta: InputDelta = InputDelta(rh)
@@ -31,13 +34,13 @@ class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
         else InputDelta(rh, 0.0, (-MGDL_MAX), MGDL_MAX, 1.0, NumberFormat.INTEGER, DeltaType.DELTA)
     }
 
-    constructor(injector: HasAndroidInjector, inputDelta: InputDelta, units: GlucoseUnit, comparator: Comparator.Compare) : this(injector) {
+    constructor(deps: TriggerDeps, inputDelta: InputDelta, units: GlucoseUnit, comparator: Comparator.Compare) : this(deps) {
         this.units = units
         this.delta = inputDelta
         this.comparator.value = comparator
     }
 
-    private constructor(injector: HasAndroidInjector, triggerDelta: TriggerDelta) : this(injector) {
+    private constructor(deps: TriggerDeps, triggerDelta: TriggerDelta) : this(deps) {
         units = triggerDelta.units
         delta = InputDelta(rh, triggerDelta.delta)
         comparator = Comparator(rh, triggerDelta.comparator.value)
@@ -81,22 +84,23 @@ class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
         return false
     }
 
-    override fun dataJSON(): JSONObject =
-        JSONObject()
-            .put("value", delta.value)
-            .put("units", units.asText)
-            .put("deltaType", delta.deltaType)
-            .put("comparator", comparator.value.toString())
+    override fun dataJSON(): JsonObject =
+        buildJsonObject {
+            put("value", delta.value)
+            put("units", units.asText)
+            put("deltaType", delta.deltaType.toString())
+            put("comparator", comparator.value.toString())
+        }
 
     override fun fromJSON(data: String): Trigger {
-        val d = JSONObject(data)
-        units = GlucoseUnit.fromText(JsonHelper.safeGetString(d, "units", GlucoseUnit.MGDL.asText))
-        val type = DeltaType.valueOf(JsonHelper.safeGetString(d, "deltaType", ""))
-        val value = JsonHelper.safeGetDouble(d, "value")
+        val d = jsonOf(data)
+        units = GlucoseUnit.fromText(d.lenientString("units", GlucoseUnit.MGDL.asText))
+        val type = DeltaType.valueOf(d.lenientString("deltaType", ""))
+        val value = d.lenientDouble("value")
         delta =
             if (units == GlucoseUnit.MMOL) InputDelta(rh, value, (-MMOL_MAX), MMOL_MAX, 0.1, NumberFormat.DECIMAL_1, type)
             else InputDelta(rh, value, (-MGDL_MAX), MGDL_MAX, 1.0, NumberFormat.INTEGER, type)
-        comparator.setValue(Comparator.Compare.valueOf(JsonHelper.safeGetString(d, "comparator")!!))
+        comparator.setValue(Comparator.Compare.valueOf(d.lenientStringOrNull("comparator")!!))
         return this
     }
 
@@ -108,6 +112,6 @@ class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
     override fun composeIcon() = IcDelta
     override fun elementType() = ElementType.AUTOMATION
 
-    override fun duplicate(): Trigger = TriggerDelta(injector, this)
+    override fun duplicate(): Trigger = TriggerDelta(deps, this)
 
 }

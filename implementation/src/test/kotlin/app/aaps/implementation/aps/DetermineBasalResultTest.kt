@@ -4,6 +4,9 @@ import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.RT
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.serialization.json.double
+import kotlinx.serialization.json.int
+import kotlinx.serialization.json.jsonPrimitive
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.any
@@ -56,5 +59,47 @@ class DetermineBasalResultTest : TestBaseWithProfile() {
         result.json() // valid JSON — no crash
 
         verify(fabricPrivacy, never()).logException(any())
+    }
+
+    /**
+     * What the document actually contains. The other tests only say whether `json()` throws, which left
+     * the payload uploaded to Nightscout every loop cycle unasserted.
+     */
+    @Test
+    fun `json carries the result fields`() {
+        val result = apsResultProvider.get()
+            .with(RT(runningDynamicIsf = false, algorithm = APSResult.Algorithm.SMB, eventualBG = 120.0, insulinReq = 0.5, rate = 1.5, duration = 30))
+
+        val json = result.json()!!
+
+        assertThat(json.getValue("eventualBG").jsonPrimitive.double).isEqualTo(120.0)
+        assertThat(json.getValue("insulinReq").jsonPrimitive.double).isEqualTo(0.5)
+        assertThat(json.getValue("rate").jsonPrimitive.double).isEqualTo(1.5)
+        assertThat(json.getValue("duration").jsonPrimitive.int).isEqualTo(30)
+    }
+
+    /** A field the result did not set stays out of the document rather than going out as null. */
+    @Test
+    fun `json omits fields that were not set`() {
+        val result = apsResultProvider.get()
+            .with(RT(runningDynamicIsf = false, algorithm = APSResult.Algorithm.SMB, eventualBG = 120.0))
+
+        assertThat(result.json()!!.containsKey("insulinReq")).isFalse()
+    }
+
+    /**
+     * Whole numbers print as `1.0`, not `1`.
+     *
+     * This changed when `json()` stopped going through org.json on the way out: org.json trims a
+     * trailing `.0` when it prints, kotlinx does not. Both are the same JSON number and Nightscout reads
+     * them the same way, but the bytes stored in DeviceStatus differ, so it is stated here rather than
+     * left to be noticed on a server. It also matches what `RT.serialize` has always produced.
+     */
+    @Test
+    fun `a whole number keeps its decimal point`() {
+        val result = apsResultProvider.get()
+            .with(RT(runningDynamicIsf = false, algorithm = APSResult.Algorithm.SMB, rate = 1.0, duration = 30))
+
+        assertThat(result.json().toString()).contains("\"rate\":1.0")
     }
 }

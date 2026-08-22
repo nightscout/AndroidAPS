@@ -25,7 +25,7 @@ class ActionEnableSceneTest : ActionsTestBase() {
         whenever(rh.gs(R.string.action_enable_scene)).thenReturn("Enable scene")
         whenever(rh.gs(R.string.action_enable_scene_short)).thenReturn("Enable scene: %1\$s")
         whenever(rh.gs(R.string.action_scene_not_found)).thenReturn("Scene not found")
-        sut = ActionEnableScene(injector)
+        sut = ActionEnableScene(aapsLogger, rh, pumpEnactResultProvider, sceneApi, sceneIconResolver)
     }
 
     @Test fun friendlyName() = runTest {

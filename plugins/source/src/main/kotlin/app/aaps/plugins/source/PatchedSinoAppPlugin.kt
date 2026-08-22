@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
@@ -45,9 +46,9 @@ class PatchedSinoAppPlugin @Inject constructor(
             )
         }
         .icon(IcGenericCgm)
-        .pluginName(R.string.patched_sino_app)
+        .pluginName(TextRef.AndroidRes(R.string.patched_sino_app))
         .preferencesVisibleInSimpleMode(false)
-        .description(R.string.description_source_patched_sino_app),
+        .description(TextRef.AndroidRes(R.string.description_source_patched_sino_app)),
     ownPreferences = emptyList(),
     aapsLogger, rh, preferences, config
 ), BgSource {

@@ -9,7 +9,9 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
-import org.json.JSONObject
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.whenever
@@ -29,11 +31,11 @@ class ProfileStoreObjectTest : TestBase() {
 
     private fun store(json: String): ProfileStore =
         ProfileStoreObject(aapsLogger, activePlugin, config, rh, notificationManager, hardLimits, dateUtil)
-            .with(JSONObject(json))
+            .with(Json.parseToJsonElement(json).jsonObject)
 
     @Test
     fun getData_returnsWrappedJson() {
-        assertThat(store("""{"defaultProfile":"D","store":{"D":{}}}""").getData().getString("defaultProfile")).isEqualTo("D")
+        assertThat(store("""{"defaultProfile":"D","store":{"D":{}}}""").getData()["defaultProfile"]?.jsonPrimitive?.content).isEqualTo("D")
     }
 
     @Test

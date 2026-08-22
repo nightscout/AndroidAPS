@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.interfaces.notifications.NotificationAction
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -25,6 +26,7 @@ import app.aaps.core.nssdk.localmodel.clientcontrol.MasterPairing
 import app.aaps.core.nssdk.localmodel.clientcontrol.ProgressEnvelope
 import app.aaps.core.nssdk.localmodel.clientcontrol.ProgressPhase
 import app.aaps.core.nssdk.utils.ClientControlCrypto
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
@@ -37,7 +39,8 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -117,7 +120,7 @@ internal class ClientControlRoundTripTest {
 
         verify(notificationManager).post(
             eq(NotificationId.BOLUS_DELIVERY_FAILED), any<String>(), any<NotificationLevel>(), any<Int>(),
-            anyOrNull<Int>(), any<List<NotificationAction>>(), anyOrNull<() -> Boolean>()
+            anyOrNull<AlarmSound>(), any<List<NotificationAction>>(), anyOrNull<() -> Boolean>()
         )
     }
 
@@ -146,7 +149,7 @@ internal class ClientControlRoundTripTest {
         sut.onProgressDoc(progressDoc(ProgressPhase.Active, percent = 40, status = "Delivering 0.8U", insulin = 2.0, delivered = 0.8))
 
         verify(bolusProgressData).start(eq(2.0), eq(false), eq(false))
-        verify(bolusProgressData).updateProgress(eq(40), eq("Delivering 0.8U"), any<PumpInsulin>())
+        verify(bolusProgressData).updateProgress(eq(40), eq(TextRef.Literal("Delivering 0.8U")), any<PumpInsulin>())
     }
 
     @Test
@@ -178,12 +181,12 @@ internal class ClientControlRoundTripTest {
     private fun progressDoc(
         phase: ProgressPhase, percent: Int = 0, status: String = "", insulin: Double = 2.0,
         delivered: Double = 0.0, ts: Long = now, signSecret: ByteArray = secret
-    ): JSONObject {
+    ): JsonObject {
         val env = ClientControlCrypto.signProgress(
             signSecret,
             ProgressEnvelope(clientId, phase, insulin, percent, status, delivered, stopDeliveryEnabled = true, timestamp = ts, signature = "")
         )
-        return JSONObject().apply { put("progress", JSONObject(json.encodeToString(ProgressEnvelope.serializer(), env))) }
+        return buildJsonObject { put("progress", json.encodeToJsonElement(ProgressEnvelope.serializer(), env)) }
     }
 
     private suspend fun stubPublish(result: ClientControlSendResult, ctr: Long? = counter) {
@@ -191,9 +194,9 @@ internal class ClientControlRoundTripTest {
     }
 
     /** A signed ACK doc as the WS layer would hand it to onAckDoc. [signSecret] lets a test forge one. */
-    private fun ackDoc(phase: AckPhase, status: AckStatus, reason: String? = null, payload: String? = null, ctr: Long = counter, signSecret: ByteArray = secret): JSONObject {
+    private fun ackDoc(phase: AckPhase, status: AckStatus, reason: String? = null, payload: String? = null, ctr: Long = counter, signSecret: ByteArray = secret): JsonObject {
         val ack = ClientControlCrypto.signAck(signSecret, AckEnvelope(clientId, ctr, phase, status, reason, payload, timestamp = now, signature = ""))
-        return JSONObject().apply { put("ack", JSONObject(json.encodeToString(AckEnvelope.serializer(), ack))) }
+        return buildJsonObject { put("ack", json.encodeToJsonElement(AckEnvelope.serializer(), ack)) }
     }
 
     @Test

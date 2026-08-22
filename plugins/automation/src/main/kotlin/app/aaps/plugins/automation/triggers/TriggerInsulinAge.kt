@@ -6,20 +6,21 @@ import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.utils.JsonHelper
-import app.aaps.core.utils.JsonHelper.safeGetDouble
+import app.aaps.core.utils.lenientDouble
+import app.aaps.core.utils.lenientStringOrNull
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
-import dagger.android.HasAndroidInjector
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
-class TriggerInsulinAge(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerInsulinAge(deps: TriggerDeps) : Trigger(deps) {
 
     var insulinAgeHours: InputDouble = InputDouble(0.0, 0.0, 336.0, 0.1, NumberFormat.DECIMAL_1)
     var comparator: Comparator = Comparator(rh)
 
-    private constructor(injector: HasAndroidInjector, triggerInsulinAge: TriggerInsulinAge) : this(injector) {
+    private constructor(deps: TriggerDeps, triggerInsulinAge: TriggerInsulinAge) : this(deps) {
         insulinAgeHours = InputDouble(triggerInsulinAge.insulinAgeHours)
         comparator = Comparator(rh, triggerInsulinAge.comparator.value)
     }
@@ -60,15 +61,16 @@ class TriggerInsulinAge(injector: HasAndroidInjector) : Trigger(injector) {
         return false
     }
 
-    override fun dataJSON(): JSONObject =
-        JSONObject()
-            .put("insulinAgeHours", insulinAgeHours.value)
-            .put("comparator", comparator.value.toString())
+    override fun dataJSON(): JsonObject =
+        buildJsonObject {
+            put("insulinAgeHours", insulinAgeHours.value)
+            put("comparator", comparator.value.toString())
+        }
 
     override fun fromJSON(data: String): Trigger {
-        val d = JSONObject(data)
-        insulinAgeHours.setValue(safeGetDouble(d, "insulinAgeHours"))
-        comparator.setValue(Comparator.Compare.valueOf(JsonHelper.safeGetString(d, "comparator")!!))
+        val d = jsonOf(data)
+        insulinAgeHours.setValue(d.lenientDouble("insulinAgeHours"))
+        comparator.setValue(Comparator.Compare.valueOf(d.lenientStringOrNull("comparator")!!))
         return this
     }
 
@@ -80,6 +82,6 @@ class TriggerInsulinAge(injector: HasAndroidInjector) : Trigger(injector) {
     override fun composeIcon() = Icons.Filled.HourglassBottom
     override fun elementType() = ElementType.FILL
 
-    override fun duplicate(): Trigger = TriggerInsulinAge(injector, this)
+    override fun duplicate(): Trigger = TriggerInsulinAge(deps, this)
 
 }

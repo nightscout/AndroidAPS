@@ -20,7 +20,6 @@ import app.aaps.pump.common.hw.rileylink.RileyLinkUtil
 import app.aaps.pump.common.hw.rileylink.ble.data.GattAttributes
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkPumpDevice
 import app.aaps.pump.common.hw.rileylink.keys.RileyLinkStringKey
-import app.aaps.pump.common.hw.rileylink.keys.RileyLinkStringPreferenceKey
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -111,7 +110,7 @@ class RileyLinkPairWizardViewModel @Inject constructor(
         aapsLogger.debug(LTag.PUMPBTCOMM, "RileyLinkPairWizard: selected ${device.name} (${device.address})")
         stopScan()
 
-        preferences.put(RileyLinkStringPreferenceKey.MacAddress, device.address)
+        preferences.put(RileyLinkStringKey.MacAddress, device.address)
         preferences.put(RileyLinkStringKey.Name, device.name)
 
         // Force RL reconnection with new address

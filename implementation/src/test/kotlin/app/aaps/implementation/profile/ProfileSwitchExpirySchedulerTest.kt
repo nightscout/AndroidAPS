@@ -1,5 +1,6 @@
 package app.aaps.implementation.profile
 
+import kotlin.reflect.KClass
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.PS
@@ -9,8 +10,11 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.shared.tests.TestBase
-import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -41,14 +45,18 @@ class ProfileSwitchExpirySchedulerTest : TestBase() {
     private val now = 1_700_000_000_000L
 
     private var eventCount = 0
-    private lateinit var disposable: Disposable
+    private lateinit var collector: Job
 
     @BeforeEach
     fun prepare() {
         whenever(dateUtil.now()).thenReturn(now)
         whenever(config.AAPSCLIENT).thenReturn(false)
-        whenever(persistenceLayer.observeChanges(anyOrNull<Class<*>>())).thenReturn(emptyFlow())
-        disposable = rxBus.toObservable(EventProfileChangeRequested::class.java).subscribe { eventCount++ }
+        whenever(persistenceLayer.observeChanges(anyOrNull<KClass<*>>())).thenReturn(emptyFlow())
+        // UNDISPATCHED so the collector is subscribed before the scheduler under test sends anything;
+        // RxBus has no replay, so a scheduled collector would miss those events.
+        collector = CoroutineScope(Dispatchers.Unconfined).launch(start = CoroutineStart.UNDISPATCHED) {
+            rxBus.toFlow(EventProfileChangeRequested::class).collect { eventCount++ }
+        }
         scheduler = ProfileSwitchExpiryScheduler(
             persistenceLayer = persistenceLayer,
             rxBus = rxBus,
@@ -61,7 +69,7 @@ class ProfileSwitchExpirySchedulerTest : TestBase() {
 
     @AfterEach
     fun tearDown() {
-        disposable.dispose()
+        collector.cancel()
     }
 
     @Test
@@ -133,7 +141,7 @@ class ProfileSwitchExpirySchedulerTest : TestBase() {
     @Test
     fun `a PS change cancels the previous timer before it fires`() = runTest(testDispatcher) {
         val flow = MutableSharedFlow<List<PS>>(replay = 0)
-        whenever(persistenceLayer.observeChanges(eq(PS::class.java))).thenReturn(flow)
+        whenever(persistenceLayer.observeChanges(eq(PS::class))).thenReturn(flow)
         whenever(persistenceLayer.getProfileSwitchActiveAt(anyLong())).thenReturn(tempPs(now, T.mins(30).msecs()))
 
         scheduler.start()

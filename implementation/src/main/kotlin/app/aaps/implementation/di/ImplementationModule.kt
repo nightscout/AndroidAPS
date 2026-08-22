@@ -5,6 +5,7 @@ import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensData
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
@@ -18,6 +19,7 @@ import app.aaps.core.interfaces.overview.LastBgData
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PermissionProvider
+import app.aaps.core.interfaces.plugin.PluginPermissions
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileStore
@@ -28,6 +30,7 @@ import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.SecureEncrypt
 import app.aaps.core.interfaces.pump.BlePreCheck
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpStatusProvider
@@ -103,10 +106,13 @@ import app.aaps.implementation.utils.TrendCalculatorImpl
 import app.aaps.implementation.utils.fabric.FabricPrivacyImpl
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.Multibinds
+import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineScope
 
 @Module(
     includes = [
@@ -118,6 +124,18 @@ import dagger.multibindings.Multibinds
 @InstallIn(SingletonComponent::class)
 @Suppress("unused")
 class ImplementationModule {
+
+    /**
+     * [BolusProgressData] is a plain class rather than an `@Inject constructor` one, because
+     * `javax.inject` cannot be used from code that is meant to reach commonMain. Providing it here
+     * keeps the graph identical: same singleton scope, same application-scoped CoroutineScope.
+     */
+    @Provides
+    @Singleton
+    fun provideBolusProgressData(
+        ch: ConcentrationHelper,
+        @ApplicationScope appScope: CoroutineScope
+    ): BolusProgressData = BolusProgressData(ch, appScope)
 
     @Module
     @InstallIn(SingletonComponent::class)
@@ -132,6 +150,7 @@ class ImplementationModule {
         @Binds fun bindVisibilityContext(impl: VisibilityContextImpl): VisibilityContext
         @Binds fun bindFabricPrivacy(fabricPrivacyImpl: FabricPrivacyImpl): FabricPrivacy
         @Binds fun bindActivePlugin(pluginStore: PluginStore): ActivePlugin
+        @Binds fun bindPluginPermissions(pluginStore: PluginStore): PluginPermissions
 
         // Runtime-permission sources for non-plugin features (e.g. standalone Automation).
         // May be empty; contributors bind via @IntoSet PermissionProvider.

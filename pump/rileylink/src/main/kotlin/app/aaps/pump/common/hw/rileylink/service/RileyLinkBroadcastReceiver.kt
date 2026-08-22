@@ -13,7 +13,7 @@ import app.aaps.pump.common.hw.rileylink.RileyLinkConst
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkError
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkPumpDevice
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkServiceState
-import app.aaps.pump.common.hw.rileylink.keys.RileyLinkStringPreferenceKey
+import app.aaps.pump.common.hw.rileylink.keys.RileyLinkStringKey
 import app.aaps.pump.common.hw.rileylink.service.tasks.DiscoverGattServicesTask
 import app.aaps.pump.common.hw.rileylink.service.tasks.InitializePumpManagerTask
 import app.aaps.pump.common.hw.rileylink.service.tasks.ServiceTask
@@ -119,7 +119,7 @@ class RileyLinkBroadcastReceiver : DaggerBroadcastReceiver() {
             }
 
             RileyLinkConst.Intents.RileyLinkNewAddressSet -> {
-                val rileylinkBLEAddress = preferences.get(RileyLinkStringPreferenceKey.MacAddress)
+                val rileylinkBLEAddress = preferences.get(RileyLinkStringKey.MacAddress)
                 if (rileylinkBLEAddress == "") aapsLogger.error("No Rileylink BLE Address saved in app")
                 else rileyLinkService?.reconfigureRileyLink(rileylinkBLEAddress)
                 true

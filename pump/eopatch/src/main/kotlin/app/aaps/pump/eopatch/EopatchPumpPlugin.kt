@@ -8,6 +8,7 @@ import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.pump.defs.TimeChangeType
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PermissionGroup
@@ -34,7 +35,10 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
 import app.aaps.core.keys.interfaces.withEntries
+import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.icons.IcPluginEopatch
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.pump.eopatch.alarm.IAlarmManager
@@ -73,7 +77,7 @@ import kotlin.math.abs
 @Singleton
 class EopatchPumpPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     commandQueue: CommandQueue,
     private val aapsSchedulers: AapsSchedulers,
@@ -100,12 +104,10 @@ class EopatchPumpPlugin @Inject constructor(
             )
         }
         .icon(IcPluginEopatch)
-        .pluginName(R.string.eopatch)
-        .shortName(R.string.eopatch_shortname)
-        .description(R.string.eopatch_pump_description),
-    ownPreferences = listOf(
-        EopatchIntKey::class.java, EopatchBooleanKey::class.java, EopatchStringNonKey::class.java
-    ),
+        .pluginName(TextRef.AndroidRes(R.string.eopatch))
+        .shortName(TextRef.AndroidRes(R.string.eopatch_shortname))
+        .description(TextRef.AndroidRes(R.string.eopatch_pump_description)),
+    ownPreferences = EopatchIntKey.entries + EopatchBooleanKey.entries + EopatchStringNonKey.entries,
     aapsLogger, rh, preferences, commandQueue
 ), Pump {
 
@@ -123,8 +125,8 @@ class EopatchPumpPlugin @Inject constructor(
     override fun requiredPermissions(): List<PermissionGroup> = super.requiredPermissions() + listOf(
         PermissionGroup(
             permissions = listOf(Manifest.permission.SCHEDULE_EXACT_ALARM),
-            rationaleTitle = R.string.permission_exact_alarm_title,
-            rationaleDescription = R.string.permission_exact_alarm_description,
+            rationaleTitle = TextRef.AndroidRes(R.string.permission_exact_alarm_title),
+            rationaleDescription = TextRef.AndroidRes(R.string.permission_exact_alarm_description),
             special = true,
         )
     )
@@ -358,7 +360,7 @@ class EopatchPumpPlugin @Inject constructor(
                 .subscribeOn(aapsSchedulers.io)
                 .observeOn(aapsSchedulers.main)
                 .subscribe {
-                    val status = rh.gs(app.aaps.core.interfaces.R.string.bolus_delivered_successfully, (it.injectedBolusAmount * 0.05f))
+                    val status = InterfacesStrings.bolus_delivered_successfully.withArgs(it.injectedBolusAmount * 0.05f)
                     bolusProgressData.updateProgress(bolusProgressData.state.value?.percent ?: 100, status)
                 }
         )
@@ -573,8 +575,14 @@ class EopatchPumpPlugin @Inject constructor(
         key = "eopatch_settings",
         titleResId = R.string.eopatch,
         items = listOf(
-            EopatchIntKey.LowReservoirReminder.withEntries((10..50 step 5).associateWith { "$it U" }),
-            EopatchIntKey.ExpirationReminder.withEntries((1..24).associateWith { "$it hr" }),
+            // The labels used to be built as "$it U" and "$it hr", which no translator could reach.
+            // The unit format templates already exist and are translated, so use those.
+            EopatchIntKey.LowReservoirReminder.withEntries(
+                (10..50 step 5).associateWith { TextRef.AndroidRes(CoreUiR.string.units_format_insulin_int, listOf(it)) }
+            ),
+            EopatchIntKey.ExpirationReminder.withEntries(
+                (1..24).associateWith { TextRef.AndroidRes(CoreUiR.string.units_format_hours, listOf(it)) }
+            ),
             EopatchBooleanKey.BuzzerReminder
         ),
         icon = pluginDescription.icon

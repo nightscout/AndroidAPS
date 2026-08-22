@@ -42,7 +42,8 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.toPureProfile
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
-import app.aaps.core.ui.clientcontrol.failTextResId
+import app.aaps.core.interfaces.R as InterfacesR
+import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.icons.IcProfile
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -166,7 +167,7 @@ class ProfileManagementViewModel @Inject constructor(
      */
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun observeActiveProfileForAutoNavigation() {
-        persistenceLayer.observeChanges(EPS::class.java)
+        persistenceLayer.observeChanges(EPS::class)
             .compensateForClockSkew(config, dateUtil)
             .onStart { emit(emptyList()) }
             .mapLatest {
@@ -188,7 +189,7 @@ class ProfileManagementViewModel @Inject constructor(
     val uiState: StateFlow<ProfileManagementUiState> = combine(
         profileRepository.profiles,
         _selectedIndex,
-        persistenceLayer.observeChanges(EPS::class.java).compensateForClockSkew(config, dateUtil).onStart { emit(emptyList()) },
+        persistenceLayer.observeChanges(EPS::class).compensateForClockSkew(config, dateUtil).onStart { emit(emptyList()) },
         _screenMode,
         // An input, not a snapshot: pairing/unpairing or the master going away while this screen is
         // open has to move it between editable and read-only right away.
@@ -530,7 +531,7 @@ class ProfileManagementViewModel @Inject constructor(
     fun getIsfList(profile: Profile): String = profile.getIsfList(rh, dateUtil)
     fun getBasalList(profile: Profile): String = profile.getBasalList(rh, dateUtil)
     fun getTargetList(profile: Profile): String = profile.getTargetList(rh, dateUtil)
-    fun formatBasalSum(basalSum: Double): String = rh.gs(R.string.format_insulin_units, basalSum)
+    fun formatBasalSum(basalSum: Double): String = rh.gs(InterfacesR.string.format_insulin_units, basalSum)
 
     /**
      * Get reuse values from current active profile if it has custom percentage/timeshift
@@ -655,7 +656,7 @@ class ProfileManagementViewModel @Inject constructor(
 
                                     is ActionProgress.Rejected ->
                                         if (result.reason == FailureReason.NotReachable || result.reason == FailureReason.ControlDisabled)
-                                            rxBus.send(EventShowDialog.Ok(title = label, message = rh.gs(result.reason.failTextResId())))
+                                            rxBus.send(EventShowDialog.Ok(title = label, message = rh.gs(result.reason.failText())))
                                         else result.detail?.let { detail ->
                                             rxBus.send(EventShowDialog.Ok(title = label, message = detail))
                                         }
@@ -672,7 +673,7 @@ class ProfileManagementViewModel @Inject constructor(
             // Master-local pre-check failure, or a client offline; a client round-trip failure already showed on the app modal.
             is ActionProgress.Rejected -> {
                 if (prepared.reason == FailureReason.NotReachable || prepared.reason == FailureReason.ControlDisabled)
-                    rxBus.send(EventShowDialog.Ok(title = label, message = rh.gs(prepared.reason.failTextResId())))
+                    rxBus.send(EventShowDialog.Ok(title = label, message = rh.gs(prepared.reason.failText())))
                 else prepared.detail?.let { detail ->
                     rxBus.send(EventShowDialog.Ok(title = label, message = detail))
                 }

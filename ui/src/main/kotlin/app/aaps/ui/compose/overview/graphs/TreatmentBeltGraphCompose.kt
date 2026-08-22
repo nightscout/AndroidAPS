@@ -534,8 +534,8 @@ private fun rememberModeNameMap(): Map<RM.Mode, String> {
     val disabledLoop = stringResource(app.aaps.core.ui.R.string.disabled_loop)
     val superbolus = stringResource(app.aaps.core.ui.R.string.superbolus)
     val disconnected = stringResource(app.aaps.core.ui.R.string.disconnected)
-    val pumpSuspended = stringResource(app.aaps.core.ui.R.string.pumpsuspended)
-    val loopSuspended = stringResource(app.aaps.core.ui.R.string.loopsuspended)
+    val pumpSuspended = stringResource(app.aaps.core.interfaces.R.string.pumpsuspended)
+    val loopSuspended = stringResource(app.aaps.core.interfaces.R.string.loopsuspended)
     val dstSuspended = stringResource(app.aaps.core.ui.R.string.loop_suspended_by_dst)
     return mapOf(
         RM.Mode.CLOSED_LOOP to closedLoop,

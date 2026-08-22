@@ -23,7 +23,6 @@ import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.overview.graph.AapsClientLevel
 import app.aaps.core.interfaces.overview.graph.AapsClientStatusData
@@ -87,6 +86,7 @@ import app.aaps.core.objects.extensions.fromGv
 import app.aaps.core.objects.extensions.target
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
+import app.aaps.core.interfaces.R as InterfacesR
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineScope
@@ -123,6 +123,19 @@ import kotlin.math.min
  * MIGRATION NOTE: This coexists with OverviewDataImpl during migration.
  * Workers populate graph data. After migration complete, OverviewDataImpl will be deleted.
  */
+
+// Thresholds for the pump pill shown on an AAPSClient. These are the Nightscout defaults. They used to
+// be read from the server's "extendedSettings" through NSSettingsStatus, but the NSClient V3 API does
+// not return that section, so the defaults were the only value ever used. They are stated here now.
+private const val WARN_CLOCK_MINUTES = 30L
+private const val URGENT_CLOCK_MINUTES = 60L
+private const val WARN_RESERVOIR = 10.0
+private const val URGENT_RESERVOIR = 5.0
+private const val WARN_BATTERY_PERCENT = 30.0
+private const val URGENT_BATTERY_PERCENT = 20.0
+private const val WARN_BATTERY_VOLTAGE = 1.35
+private const val URGENT_BATTERY_VOLTAGE = 1.3
+
 @OptIn(FlowPreview::class)
 class OverviewDataCacheImpl @AssistedInject constructor(
     private val aapsLogger: AAPSLogger,
@@ -137,7 +150,6 @@ class OverviewDataCacheImpl @AssistedInject constructor(
     private val loop: Loop,
     private val config: Config,
     private val processedDeviceStatusData: ProcessedDeviceStatusData,
-    private val nsSettingsStatus: NSSettingsStatus,
     private val rxBus: RxBus,
     private val activePlugin: ActivePlugin,
     private val decimalFormatter: DecimalFormatter,
@@ -286,7 +298,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
 
             // Observe GlucoseValue changes
             scope.launch {
-                persistenceLayer.observeChanges(GV::class.java)
+                persistenceLayer.observeChanges(GV::class)
                     .compensateForClockSkew(config, dateUtil)
                     .collect { glucoseValues ->
                         aapsLogger.debug(LTag.UI, "GV change detected, updating BgInfo (${glucoseValues.size} values)")
@@ -299,7 +311,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
 
             // Refresh trend arrow after bucketed data is created (bucketed data is ready after this event)
             scope.launch {
-                rxBus.toFlow(EventBucketedDataCreated::class.java).collect {
+                rxBus.toFlow(EventBucketedDataCreated::class).collect {
                     aapsLogger.debug(LTag.UI, "Bucketed data created, refreshing BgInfo for trend arrow")
                     updateBgInfoFromDatabase()
                 }
@@ -334,7 +346,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
 
             // Observe treatment-related DB changes
             for (type in listOf(
-                BS::class.java, CA::class.java, EB::class.java, TE::class.java
+                BS::class, CA::class, EB::class, TE::class
             )) {
                 scope.launch {
                     persistenceLayer.observeChanges(type)
@@ -345,7 +357,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
             }
             // Observe HR changes for treatment graph + heart rate graph
             scope.launch {
-                persistenceLayer.observeChanges(HR::class.java)
+                persistenceLayer.observeChanges(HR::class)
                     .compensateForClockSkew(config, dateUtil)
                     .debounce(300)
                     .collect {
@@ -355,7 +367,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
             }
             // Observe SC changes for treatment graph + steps graph
             scope.launch {
-                persistenceLayer.observeChanges(SC::class.java)
+                persistenceLayer.observeChanges(SC::class)
                     .compensateForClockSkew(config, dateUtil)
                     .debounce(300)
                     .collect {
@@ -365,7 +377,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
             }
             // Observe running mode changes for graph + chip
             scope.launch {
-                persistenceLayer.observeChanges(RM::class.java)
+                persistenceLayer.observeChanges(RM::class)
                     .compensateForClockSkew(config, dateUtil)
                     .debounce(300)
                     .collect {
@@ -376,7 +388,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
 
             // Observe TT changes for target line graph + chip
             scope.launch {
-                persistenceLayer.observeChanges(TT::class.java)
+                persistenceLayer.observeChanges(TT::class)
                     .compensateForClockSkew(config, dateUtil)
                     .debounce(300)
                     .collect {
@@ -388,8 +400,8 @@ class OverviewDataCacheImpl @AssistedInject constructor(
             // loop.lastRun.constraintsProcessed.targetBG) is reflected in the ADJUSTED state.
             scope.launch {
                 merge(
-                    rxBus.toFlow(EventLoopUpdateGui::class.java),
-                    rxBus.toFlow(EventNewOpenLoopNotification::class.java)
+                    rxBus.toFlow(EventLoopUpdateGui::class),
+                    rxBus.toFlow(EventNewOpenLoopNotification::class)
                 ).collect { updateTempTargetFromDatabase() }
             }
             // AAPSCLIENT counterpart: the ADJUSTED text comes from
@@ -400,14 +412,14 @@ class OverviewDataCacheImpl @AssistedInject constructor(
             // APS result no longer matches the just-expired TT.
             if (config.AAPSCLIENT) {
                 scope.launch {
-                    rxBus.toFlow(EventNsClientStatusUpdated::class.java)
+                    rxBus.toFlow(EventNsClientStatusUpdated::class)
                         .debounce(300)
                         .collect { updateTempTargetFromDatabase() }
                 }
             }
             // EPS changes affect EPS graph, profile chip, TT chip, target line, and basal
             scope.launch {
-                persistenceLayer.observeChanges(EPS::class.java)
+                persistenceLayer.observeChanges(EPS::class)
                     .compensateForClockSkew(config, dateUtil)
                     .debounce(300)
                     .collect {
@@ -422,7 +434,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
 
             // Observe basal-related DB changes
             scope.launch {
-                persistenceLayer.observeChanges(TB::class.java)
+                persistenceLayer.observeChanges(TB::class)
                     .compensateForClockSkew(config, dateUtil)
                     .debounce(300)
                     .collect {
@@ -431,7 +443,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
                     }
             }
             scope.launch {
-                persistenceLayer.observeChanges(EB::class.java)
+                persistenceLayer.observeChanges(EB::class)
                     .compensateForClockSkew(config, dateUtil)
                     .debounce(300)
                     .collect { rebuildBasalGraph() }
@@ -466,7 +478,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
                             if (!hasSubscribers) return@collectLatest
                             rebuildNsClientStatus()
                             launch {
-                                rxBus.toFlow(EventNsClientStatusUpdated::class.java).collect {
+                                rxBus.toFlow(EventNsClientStatusUpdated::class).collect {
                                     rebuildNsClientStatus()
                                 }
                             }
@@ -774,7 +786,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
                     timestamp = ca.timestamp,
                     amount = ca.amount,
                     isValid = ca.isValid && ca.amount > 0,
-                    label = rh.gs(R.string.format_carbs, ca.amount.toInt())
+                    label = rh.gs(InterfacesR.string.format_carbs, ca.amount.toInt())
                 )
             }
 
@@ -948,15 +960,15 @@ class OverviewDataCacheImpl @AssistedInject constructor(
         val now = dateUtil.now()
         val pumpItem = processedDeviceStatusData.pumpData?.let { pumpData ->
             val level = when {
-                pumpData.clock + nsSettingsStatus.extendedPumpSettings("urgentClock") * 60 * 1000L < now                               -> AapsClientLevel.URGENT
-                pumpData.reservoir < nsSettingsStatus.extendedPumpSettings("urgentRes")                                                -> AapsClientLevel.URGENT
-                pumpData.isPercent && pumpData.percent < nsSettingsStatus.extendedPumpSettings("urgentBattP")                          -> AapsClientLevel.URGENT
-                !pumpData.isPercent && pumpData.voltage > 0 && pumpData.voltage < nsSettingsStatus.extendedPumpSettings("urgentBattV") -> AapsClientLevel.URGENT
-                pumpData.clock + nsSettingsStatus.extendedPumpSettings("warnClock") * 60 * 1000L < now                                 -> AapsClientLevel.WARN
-                pumpData.reservoir < nsSettingsStatus.extendedPumpSettings("warnRes")                                                  -> AapsClientLevel.WARN
-                pumpData.isPercent && pumpData.percent < nsSettingsStatus.extendedPumpSettings("warnBattP")                            -> AapsClientLevel.WARN
-                !pumpData.isPercent && pumpData.voltage > 0 && pumpData.voltage < nsSettingsStatus.extendedPumpSettings("warnBattV")   -> AapsClientLevel.WARN
-                else                                                                                                                   -> AapsClientLevel.INFO
+                pumpData.clock + URGENT_CLOCK_MINUTES * 60 * 1000L < now                          -> AapsClientLevel.URGENT
+                pumpData.reservoir < URGENT_RESERVOIR                                             -> AapsClientLevel.URGENT
+                pumpData.isPercent && pumpData.percent < URGENT_BATTERY_PERCENT                   -> AapsClientLevel.URGENT
+                !pumpData.isPercent && pumpData.voltage > 0 && pumpData.voltage < URGENT_BATTERY_VOLTAGE -> AapsClientLevel.URGENT
+                pumpData.clock + WARN_CLOCK_MINUTES * 60 * 1000L < now                            -> AapsClientLevel.WARN
+                pumpData.reservoir < WARN_RESERVOIR                                               -> AapsClientLevel.WARN
+                pumpData.isPercent && pumpData.percent < WARN_BATTERY_PERCENT                     -> AapsClientLevel.WARN
+                !pumpData.isPercent && pumpData.voltage > 0 && pumpData.voltage < WARN_BATTERY_VOLTAGE -> AapsClientLevel.WARN
+                else                                                                              -> AapsClientLevel.INFO
             }
             // Format: "75% 3 min ago" (running mode excluded — already shown in RunningMode chip)
             val value = buildString {
@@ -966,7 +978,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
             }.trim()
             val dialogText = buildString {
                 pumpData.extended?.let {
-                    append(it.replace("<br>", "\n").replace(Regex("<[^>]*>"), "").replace("&nbsp;", " ").trim())
+                    append(it.trim())
                 }
             }
             AapsClientStatusItem(

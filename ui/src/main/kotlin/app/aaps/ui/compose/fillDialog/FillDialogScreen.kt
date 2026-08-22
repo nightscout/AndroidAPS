@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.fillDialog
 
+import app.aaps.core.ui.compose.stringResourceOrNull
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -54,6 +55,7 @@ import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.DateTimeSection
 import app.aaps.core.ui.compose.EventTimeRow
@@ -63,7 +65,7 @@ import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
 import app.aaps.core.ui.compose.insulin.SelectInsulin
-import app.aaps.core.ui.compose.navigation.labelResId
+import app.aaps.core.ui.compose.navigation.label
 import app.aaps.core.ui.compose.preference.PreferenceSheetContent
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.siteRotation.SiteLocationSummary
@@ -236,7 +238,7 @@ internal fun FillDialogContent(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(ElementType.FILL.labelResId())) },
+                title = { Text((stringResourceOrNull(ElementType.FILL.label()) ?: "")) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
@@ -382,7 +384,7 @@ internal fun FillDialogContent(
                             valueRange = 0.0..uiState.maxInsulin,
                             step = uiState.bolusStep,
                             valueFormat = bolusFormat,
-                            unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname),
+                            unitLabel = TextRef.AndroidRes(CoreUiR.string.insulin_unit_shortname),
                             enabled = uiState.showBolus
                         )
 

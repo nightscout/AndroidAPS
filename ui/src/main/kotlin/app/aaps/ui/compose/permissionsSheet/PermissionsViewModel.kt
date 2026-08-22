@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PermissionGroup
+import app.aaps.core.interfaces.plugin.PluginPermissions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -20,7 +20,7 @@ import javax.inject.Inject
 @Stable
 class PermissionsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val activePlugin: ActivePlugin,
+    private val pluginPermissions: PluginPermissions,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PermissionsUiState())
@@ -29,8 +29,8 @@ class PermissionsViewModel @Inject constructor(
     val sideEffect: SharedFlow<PermissionsSideEffect> = _sideEffect
 
     fun refresh() {
-        val allGroups = activePlugin.collectAllPermissions(context)
-        val missingGroups = activePlugin.collectMissingPermissions(context)
+        val allGroups = pluginPermissions.collectAllPermissions(context)
+        val missingGroups = pluginPermissions.collectMissingPermissions(context)
         val missingPermSets = missingGroups.map { it.permissions.toSet() }.toSet()
 
         val items = allGroups.map { group ->

@@ -2,6 +2,9 @@ package app.aaps.implementation.queue
 
 import android.content.Context
 import android.os.PowerManager
+import androidx.compose.ui.text.font.FontWeight
+import kotlin.reflect.KClass
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.BS
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.configuration.Config
@@ -9,6 +12,7 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationAction
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -67,7 +71,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     private val commandExecutorProvider: Provider<CommandExecutor> by lazy { Provider { commandExecutor } }
 
     private val testScope = CoroutineScope(Dispatchers.Unconfined)
-    private val bolusProgressData by lazy { BolusProgressData(ch, rh, testScope) }
+    private val bolusProgressData by lazy { BolusProgressData(ch, testScope) }
     private val profileSwitchSilentGate = ProfileSwitchSilentGate()
 
     class CommandQueueMocked(
@@ -107,7 +111,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     @BeforeEach
     fun prepare() {
         runTest {
-            whenever(persistenceLayer.observeChanges(anyOrNull<Class<*>>())).thenReturn(emptyFlow())
+            whenever(persistenceLayer.observeChanges(anyOrNull<KClass<*>>())).thenReturn(emptyFlow())
             commandQueue = CommandQueueMocked(
                 aapsLogger,
                 rxBus,
@@ -159,7 +163,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             whenever(rh.gs(app.aaps.core.ui.R.string.connectiontimedout)).thenReturn("Connection timed out")
             whenever(rh.gs(app.aaps.implementation.R.string.executing_right_now)).thenReturn("Executing right now")
             whenever(rh.gs(app.aaps.core.ui.R.string.command_replaced)).thenReturn("Replaced by newer command")
-            whenever(rh.gs(eq(app.aaps.core.ui.R.string.format_insulin_units), anyOrNull())).thenReturn("%1\$.2f U")
+            whenever(rh.gs(eq(app.aaps.core.interfaces.R.string.format_insulin_units), anyOrNull())).thenReturn("%1\$.2f U")
             whenever(rh.gs(app.aaps.core.ui.R.string.goingtodeliver)).thenReturn("Going to deliver %1\$.2f U")
         }
     }
@@ -225,8 +229,8 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
 
         // The user is alerted (URGENT) that the carbs were lost — not silently dropped.
         verify(notificationManager).post(
-            eq(NotificationId.CARBS_STORE_FAILED), eq("Carbs could not be saved"), any<NotificationLevel>(),
-            any<Int>(), anyOrNull(), any<List<NotificationAction>>(), anyOrNull()
+            eq(NotificationId.CARBS_STORE_FAILED), eq(TextRef.AndroidRes(app.aaps.core.ui.R.string.carbs_not_saved_after_bolus)),
+            any<NotificationLevel>(), any<Int>(), any<Long>(), any<Long>(), anyOrNull(), any<List<NotificationAction>>(), anyOrNull()
         )
     }
 
@@ -261,17 +265,20 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         return result
     }
 
-    // Both helpers match the String post() overload (id, text, level, validMinutes, soundRes, actions, validityCheck).
-    private fun verifyOkPosted(text: String) =
+    // Both helpers match the String post() overload (id, text, level, validMinutes, sound, actions, validityCheck).
+    // PROFILE_SET_OK now passes the TextRef and lets the notification resolve it, so this matches the
+    // TextRef overload (id, textRef, level, validMinutes, date, validTo, sound, actions, validityCheck).
+    private fun verifyOkPosted() =
         verify(notificationManager).post(
-            eq(NotificationId.PROFILE_SET_OK), eq(text), any<NotificationLevel>(), any<Int>(),
+            eq(NotificationId.PROFILE_SET_OK), eq(TextRef.AndroidRes(app.aaps.core.ui.R.string.profile_set_ok)),
+            any<NotificationLevel>(), any<Int>(), any<Long>(), any<Long>(),
             anyOrNull(), any<List<NotificationAction>>(), anyOrNull()
         )
 
     private fun verifyFailurePosted(text: String) =
         verify(notificationManager).post(
             eq(NotificationId.FAILED_UPDATE_PROFILE), eq(text), any<NotificationLevel>(), any<Int>(),
-            eq(app.aaps.core.ui.R.raw.boluserror), any<List<NotificationAction>>(), anyOrNull()
+            eq(AlarmSound.BOLUS_ERROR), any<List<NotificationAction>>(), anyOrNull()
         )
 
     private fun verifyNothingPosted() =
@@ -286,7 +293,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
 
         assertThat(persisted).isTrue()
         verify(notificationManager).dismiss(NotificationId.FAILED_UPDATE_PROFILE)
-        verifyOkPosted("Basal profile in pump updated")
+        verifyOkPosted()
     }
 
     @Test
@@ -500,13 +507,13 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         commandQueue.pickup()
 
         // then
-        assertThat(commandQueue.isCustomCommandInQueue(CustomCommand1::class.java)).isTrue()
-        assertThat(commandQueue.isCustomCommandInQueue(CustomCommand2::class.java)).isTrue()
-        assertThat(commandQueue.isCustomCommandInQueue(CustomCommand3::class.java)).isFalse()
+        assertThat(commandQueue.isCustomCommandInQueue(CustomCommand1::class)).isTrue()
+        assertThat(commandQueue.isCustomCommandInQueue(CustomCommand2::class)).isTrue()
+        assertThat(commandQueue.isCustomCommandInQueue(CustomCommand3::class)).isFalse()
 
-        assertThat(commandQueue.isCustomCommandRunning(CustomCommand1::class.java)).isTrue()
-        assertThat(commandQueue.isCustomCommandRunning(CustomCommand2::class.java)).isFalse()
-        assertThat(commandQueue.isCustomCommandRunning(CustomCommand3::class.java)).isFalse()
+        assertThat(commandQueue.isCustomCommandRunning(CustomCommand1::class)).isTrue()
+        assertThat(commandQueue.isCustomCommandRunning(CustomCommand2::class)).isFalse()
+        assertThat(commandQueue.isCustomCommandRunning(CustomCommand3::class)).isFalse()
 
         assertThat(commandQueue.size()).isEqualTo(1)
     }
@@ -844,13 +851,67 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         assertThat(commandQueue.size()).isEqualTo(1)
     }
 
+    /**
+     * The queue status carries real styling now.
+     *
+     * It used to be assembled as an HTML string and handed to `Html.fromHtml`, but the only consumer
+     * flattened that with `toString()` - which keeps the line breaks and silently drops the bold,
+     * because a String cannot carry spans. So the emphasis on the command actually executing never
+     * reached the screen. These two tests pin both halves of the replacement: one line per command,
+     * and the running one actually bold.
+     */
+    /**
+     * The two command captions the status list is built from.
+     *
+     * `read_status` takes an argument, and the shared mock formats it from the NO-ARG `gs(id)`, so
+     * this has to hand back the template rather than the finished string.
+     */
+    private fun stubStatusCaptions() {
+        whenever(rh.gs(app.aaps.core.ui.R.string.read_status)).thenReturn("READSTATUS %1\$s")
+        whenever(rh.gs(app.aaps.core.ui.R.string.load_events)).thenReturn("LOAD EVENTS")
+    }
+
+    @Test
+    fun `queued commands are listed one per line`() = runTest {
+        stubStatusCaptions()
+        backgroundScope.launch { commandQueue.readStatus("test") }
+        yield()
+
+        val status = commandQueue.statusAsAnnotated()
+
+        assertThat(status.text).isNotEmpty()
+        // Only one command queued and nothing running, so there is no separator yet.
+        assertThat(status.text).doesNotContain("\n")
+        assertThat(status.spanStyles).isEmpty()
+    }
+
+    @Test
+    fun `the executing command is bold, the queued ones are not`() = runTest {
+        stubStatusCaptions()
+        backgroundScope.launch { commandQueue.readStatus("test") }
+        yield()
+        // pickup() moves the head of the queue into `performing`, which is what the bold marks.
+        commandQueue.pickup()
+        backgroundScope.launch { commandQueue.loadEvents() }
+        yield()
+
+        val status = commandQueue.statusAsAnnotated()
+
+        assertThat(status.text).contains("\n")
+        val bold = status.spanStyles.filter { it.item.fontWeight == FontWeight.Bold }
+        assertThat(bold).hasSize(1)
+        // Exactly the first line - the running command - and nothing after it.
+        assertThat(bold.single().start).isEqualTo(0)
+        assertThat(bold.single().end).isEqualTo(status.text.indexOf('\n'))
+    }
+
     private suspend fun stubActiveMode(mode: app.aaps.core.data.model.RM.Mode) {
         whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(
             app.aaps.core.data.model.RM(timestamp = 0, mode = mode, duration = 0L)
         )
         // Resource strings used by the gate's rejection comment.
-        whenever(rh.gs(app.aaps.core.ui.R.string.pump_disconnected)).thenReturn("pump disconnected")
-        whenever(rh.gs(app.aaps.core.ui.R.string.loopsuspended)).thenReturn("loop suspended")
-        whenever(rh.gs(app.aaps.core.ui.R.string.pumpsuspended)).thenReturn("pump suspended")
+        whenever(rh.gs(app.aaps.core.interfaces.R.string.pump_disconnected)).thenReturn("pump disconnected")
+        whenever(rh.gs(app.aaps.core.interfaces.R.string.loopsuspended)).thenReturn("loop suspended")
+        whenever(rh.gs(app.aaps.core.interfaces.R.string.pumpsuspended)).thenReturn("pump suspended")
     }
 }

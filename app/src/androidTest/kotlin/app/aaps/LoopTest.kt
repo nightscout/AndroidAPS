@@ -96,10 +96,10 @@ class LoopTest : HiltInstrumentedTest() {
             source = Sources.Aaps,
             listValues = listOf(ValueWithUnit.SimpleString("Migration"))
         )
-        rxHelper.listen(EventLoopSetLastRunGui::class.java)
-        rxHelper.listen(EventResetOpenAPSGui::class.java)
-        rxHelper.listen(EventOpenAPSUpdateGui::class.java)
-        rxHelper.listen(EventAPSCalculationFinished::class.java)
+        rxHelper.listen(EventLoopSetLastRunGui::class)
+        rxHelper.listen(EventResetOpenAPSGui::class)
+        rxHelper.listen(EventOpenAPSUpdateGui::class)
+        rxHelper.listen(EventAPSCalculationFinished::class)
         objectivesPlugin.onStart()
 
         // Enable event logging
@@ -110,7 +110,7 @@ class LoopTest : HiltInstrumentedTest() {
 
         // Loop should be limited by unfinished objectives
         loop.invoke("test1", allowNotification = false)
-        var loopStatusEvent = rxHelper.waitFor(EventLoopSetLastRunGui::class.java, comment = "step1")
+        var loopStatusEvent = rxHelper.waitFor(EventLoopSetLastRunGui::class, comment = "step1")
         assertThat(loopStatusEvent.first).isTrue()
         assertThat((loopStatusEvent.second as EventLoopSetLastRunGui).text).contains("Loop disabled by user")
 
@@ -120,7 +120,7 @@ class LoopTest : HiltInstrumentedTest() {
         // Now there should be missing profile
         (profileFunction as ProfileFunctionImpl).cache.clear()
         loop.invoke("test2", allowNotification = false)
-        loopStatusEvent = rxHelper.waitFor(EventLoopSetLastRunGui::class.java, comment = "step2")
+        loopStatusEvent = rxHelper.waitFor(EventLoopSetLastRunGui::class, comment = "step2")
         assertThat(loopStatusEvent.first).isTrue()
         assertThat((loopStatusEvent.second as EventLoopSetLastRunGui).text).contains("NO PROFILE SET")
 
@@ -156,13 +156,13 @@ class LoopTest : HiltInstrumentedTest() {
         assertThat(rxHelper.waitUntil("step3: pump profile set") { runBlocking { pumpSync.expectedPumpState() }.profile != null }).isTrue()
 
         // Loop should run — may get "NO APS SELECTED" (no glucose) or a real result (stale glucose cache)
-        rxHelper.listen(EventLoopUpdateGui::class.java)
+        rxHelper.listen(EventLoopUpdateGui::class)
         loop.invoke("test3", allowNotification = false)
         // Accept either: error event (no glucose) or update event (APS produced result from cached data)
         assertThat(
             rxHelper.waitUntil("step4: loop completed") {
-                rxHelper.waitFor(EventLoopSetLastRunGui::class.java, maxSeconds = 1, comment = "step4").first ||
-                    rxHelper.waitFor(EventLoopUpdateGui::class.java, maxSeconds = 1, comment = "step4").first
+                rxHelper.waitFor(EventLoopSetLastRunGui::class, maxSeconds = 1, comment = "step4").first ||
+                    rxHelper.waitFor(EventLoopUpdateGui::class, maxSeconds = 1, comment = "step4").first
             }
         ).isTrue()
 
@@ -180,7 +180,7 @@ class LoopTest : HiltInstrumentedTest() {
         // GV insertion triggers calculation via observeChanges(GV) → scheduleHistoryDataChange (5s debounce)
         // The IOB/COB autosens phase may exit early ("No bucketed data") so EventAutosensCalculationFinished
         // is not guaranteed. Wait for EventAPSCalculationFinished which fires when loop runs.
-        assertThat(rxHelper.waitFor(EventAPSCalculationFinished::class.java, maxSeconds = 60, comment = "step6").first).isTrue()
+        assertThat(rxHelper.waitFor(EventAPSCalculationFinished::class, maxSeconds = 60, comment = "step6").first).isTrue()
         Thread.sleep(5000)
         assertThat(loop.lastRun).isNotNull()
     }

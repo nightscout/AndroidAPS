@@ -11,7 +11,7 @@ import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
-import app.aaps.core.ui.clientcontrol.failTextResId
+import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -52,6 +52,7 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.core.interfaces.R as InterfacesR
 
 @HiltViewModel
 class InsulinManagementViewModel @Inject constructor(
@@ -422,11 +423,11 @@ class InsulinManagementViewModel @Inject constructor(
 
         // Validation
         if (editedICfg.dia !in hardLimits.diaRange()) {
-            showSnackbar(rh.gs(CoreUiR.string.value_out_of_hard_limits, rh.gs(CoreUiR.string.insulin_dia), editedICfg.dia))
+            showSnackbar(rh.gs(InterfacesR.string.value_out_of_hard_limits, rh.gs(CoreUiR.string.insulin_dia), editedICfg.dia))
             return false
         }
         if (editedICfg.peak !in hardLimits.peakRange()) {
-            showSnackbar(rh.gs(CoreUiR.string.value_out_of_hard_limits, rh.gs(CoreUiR.string.insulin_peak), editedICfg.peak.toDouble()))
+            showSnackbar(rh.gs(InterfacesR.string.value_out_of_hard_limits, rh.gs(CoreUiR.string.insulin_peak), editedICfg.peak.toDouble()))
             return false
         }
 
@@ -510,7 +511,7 @@ class InsulinManagementViewModel @Inject constructor(
                     // Offline block (and a master-local failure, e.g. no active profile) surface here; a client round-trip
                     // failure already showed on the app-level modal.
                     is ActionProgress.Rejected ->
-                        if (prepared.reason == FailureReason.NotReachable || prepared.reason == FailureReason.ControlDisabled) showSnackbar(rh.gs(prepared.reason.failTextResId()))
+                        if (prepared.reason == FailureReason.NotReachable || prepared.reason == FailureReason.ControlDisabled) showSnackbar(rh.gs(prepared.reason.failText()))
                         else prepared.detail?.let { showSnackbar(it) }
 
                     else                       -> Unit // Unconfirmed → app-level modal
@@ -531,7 +532,7 @@ class InsulinManagementViewModel @Inject constructor(
                     refreshData()
                 }
 
-                result is ActionProgress.Rejected && (result.reason == FailureReason.NotReachable || result.reason == FailureReason.ControlDisabled) -> showSnackbar(rh.gs(result.reason.failTextResId()))
+                result is ActionProgress.Rejected && (result.reason == FailureReason.NotReachable || result.reason == FailureReason.ControlDisabled) -> showSnackbar(rh.gs(result.reason.failText()))
                 result is ActionProgress.Rejected                                                -> result.detail?.let { showSnackbar(it) }
             }
         }

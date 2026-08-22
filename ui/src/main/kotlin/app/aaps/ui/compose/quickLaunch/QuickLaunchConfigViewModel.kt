@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.quickLaunch
 
+import app.aaps.core.keys.interfaces.TextRef
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
@@ -13,7 +14,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.objects.extensions.profileNames
 import app.aaps.core.objects.wizard.QuickWizard
-import app.aaps.core.ui.compose.pluginCategoryTitleRes
+import app.aaps.core.ui.compose.pluginCategoryTitle
 import app.aaps.core.interfaces.scenes.SceneStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,7 +38,7 @@ data class QuickLaunchConfigUiState(
 @Immutable
 data class PluginGroup(
     val pluginType: PluginType,
-    val labelResId: Int,
+    val labelResId: TextRef,
     val items: List<ResolvedQuickLaunchItem>
 )
 
@@ -197,7 +198,7 @@ class QuickLaunchConfigViewModel @Inject constructor(
                 .filter { it.pluginDescription.mainType == type }
                 .map { plugin -> resolver.resolvePluginItem(plugin) }
                 .filter { actionKey(it.action) !in selectedSet }
-            if (items.isNotEmpty()) PluginGroup(type, pluginCategoryTitleRes(type), items) else null
+            if (items.isNotEmpty()) PluginGroup(type, pluginCategoryTitle(type), items) else null
         }
     }
 

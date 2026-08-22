@@ -2,6 +2,7 @@ package app.aaps.plugins.sync.garmin
 
 import android.content.Context
 import androidx.annotation.VisibleForTesting
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.plugin.PluginType
@@ -61,10 +62,10 @@ class GarminPlugin @Inject constructor(
     pluginDescription = PluginDescription()
         .mainType(PluginType.SYNC)
         .icon(IcPluginGarmin)
-        .pluginName(R.string.garmin)
-        .shortName(R.string.garmin)
-        .description(R.string.garmin_description),
-    ownPreferences = listOf(GarminStringKey::class.java, GarminBooleanKey::class.java, GarminIntKey::class.java),
+        .pluginName(TextRef.AndroidRes(R.string.garmin))
+        .shortName(TextRef.AndroidRes(R.string.garmin))
+        .description(TextRef.AndroidRes(R.string.garmin_description)),
+    ownPreferences = GarminStringKey.entries + GarminBooleanKey.entries + GarminIntKey.entries,
     aapsLogger, resourceHelper, preferences
 ) {
 
@@ -137,7 +138,7 @@ class GarminPlugin @Inject constructor(
         preferences.observe(GarminStringKey.RequestKey)
             .drop(1)
             .collectResilient(scope, aapsLogger, LTag.GARMIN) { sendPhoneAppMessage() }
-        persistenceLayer.observeChanges(GV::class.java)
+        persistenceLayer.observeChanges(GV::class)
             .collectResilient(scope, aapsLogger, LTag.GARMIN, block = ::onNewBloodGlucose)
         setupHttpServer()
         if (garminAapsKey.isNotEmpty())

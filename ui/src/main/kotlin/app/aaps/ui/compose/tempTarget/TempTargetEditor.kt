@@ -27,10 +27,10 @@ import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TTPreset
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.NumberInputRow
-import app.aaps.core.keys.R as KeysR
 
 /**
  * Editor component for temp target presets with inline activation fields.
@@ -114,7 +114,7 @@ fun TempTargetEditor(
             valueRange = targetRange,
             step = targetStep,
             valueFormat = if (units == GlucoseUnit.MGDL) NumberFormat.INTEGER else NumberFormat.DECIMAL_1,
-            unitLabel = units.displayLabel,
+            unitLabel = TextRef.Literal(units.displayLabel),
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -125,7 +125,7 @@ fun TempTargetEditor(
             onValueChange = { onDurationChange((it * 60000L).toLong()) },
             valueRange = Constants.ACTION_DURATION,
             step = 5.0,
-            unitLabelResId = KeysR.string.units_min,
+            unitLabel = TextRef.AndroidRes(R.string.units_min),
             modifier = Modifier.fillMaxWidth()
         )
 

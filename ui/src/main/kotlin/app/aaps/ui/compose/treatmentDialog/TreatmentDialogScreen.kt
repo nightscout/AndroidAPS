@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.treatmentDialog
 
+import app.aaps.core.ui.compose.stringResourceOrNull
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -41,18 +42,20 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.banner.WarningBanner
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
-import app.aaps.core.ui.compose.navigation.labelResId
+import app.aaps.core.ui.compose.navigation.label
 import app.aaps.ui.compose.components.DialogStatusBar
 import app.aaps.ui.compose.overview.chips.CobUiState
 import app.aaps.ui.compose.overview.chips.IobUiState
 import app.aaps.ui.compose.overview.graphs.BgInfoUiState
 import kotlinx.coroutines.flow.StateFlow
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.core.interfaces.R as InterfacesR
 
 @Composable
 fun TreatmentDialogScreen(
@@ -148,7 +151,7 @@ internal fun TreatmentDialogContent(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(ElementType.TREATMENT.labelResId())) },
+                title = { Text((stringResourceOrNull(ElementType.TREATMENT.label()) ?: "")) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
@@ -180,13 +183,13 @@ internal fun TreatmentDialogContent(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 if (uiState.insulin > 0.0) {
-                    Text(stringResource(CoreUiR.string.format_insulin_units, uiState.insulin))
+                    Text(stringResource(InterfacesR.string.format_insulin_units, uiState.insulin))
                 }
                 if (uiState.insulin > 0.0 && uiState.carbs > 0) {
                     Spacer(modifier = Modifier.width(4.dp))
                 }
                 if (uiState.carbs > 0) {
-                    Text(stringResource(CoreUiR.string.format_carbs, uiState.carbs))
+                    Text(stringResource(InterfacesR.string.format_carbs, uiState.carbs))
                 }
                 if (!hasAction) {
                     Text(stringResource(CoreUiR.string.ok))
@@ -213,7 +216,7 @@ internal fun TreatmentDialogContent(
 
             // --- Forced-record-only warning ---
             if (uiState.forcedRecordOnly) {
-                WarningBanner(message = stringResource(CoreUiR.string.bolus_recorded_only))
+                WarningBanner(message = stringResource(InterfacesR.string.bolus_recorded_only))
             }
 
             // --- Single Card: Insulin + Carbs ---
@@ -229,18 +232,18 @@ internal fun TreatmentDialogContent(
                         valueRange = 0.0..uiState.maxInsulin,
                         step = uiState.bolusStep,
                         valueFormat = bolusFormat,
-                        unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname),
+                        unitLabel = TextRef.AndroidRes(CoreUiR.string.insulin_unit_shortname),
                         modifier = itemModifier
                     )
 
                     NumberInputRow(
-                        labelResId = CoreUiR.string.carbs,
+                        labelResId = InterfacesR.string.carbs,
                         value = uiState.carbs.toDouble(),
                         onValueChange = onCarbsChange,
                         valueRange = 0.0..uiState.maxCarbs.toDouble(),
                         step = 1.0,
                         valueFormat = NumberFormat.INTEGER,
-                        unitLabel = stringResource(CoreUiR.string.shortgramm),
+                        unitLabel = TextRef.AndroidRes(CoreUiR.string.shortgramm),
                         modifier = itemModifier
                     )
                 }

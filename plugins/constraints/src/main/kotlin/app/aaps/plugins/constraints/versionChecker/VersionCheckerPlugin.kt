@@ -1,5 +1,6 @@
 package app.aaps.plugins.constraints.versionChecker
 
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
@@ -20,7 +21,7 @@ import javax.inject.Singleton
 @Singleton
 class VersionCheckerPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     private val versionCheckerUtils: VersionCheckerUtils,
     private val config: Config,
@@ -30,8 +31,8 @@ class VersionCheckerPlugin @Inject constructor(
         .mainType(PluginType.CONSTRAINTS)
         .alwaysEnabled(true)
         .showInList { false }
-        .pluginName(R.string.version_checker),
-    ownPreferences = listOf(VersionCheckerLongKey::class.java),
+        .pluginName(TextRef.AndroidRes(R.string.version_checker)),
+    ownPreferences = VersionCheckerLongKey.entries,
     aapsLogger, rh, preferences
 ), PluginConstraints {
 

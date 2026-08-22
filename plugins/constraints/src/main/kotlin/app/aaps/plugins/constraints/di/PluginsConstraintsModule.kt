@@ -18,7 +18,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import org.json.JSONObject
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
 import javax.inject.Singleton
 
 @Module(
@@ -44,5 +45,5 @@ open class PluginsConstraintsModule {
 
     @Provides
     @Singleton
-    fun providesVersionDefinition(context: Context, signatureVerifierPlugin: SignatureVerifierPlugin): VersionDefinition = VersionDefinition { JSONObject(signatureVerifierPlugin.readInputStream(context.assets.open("definition.json"))) }
+    fun providesVersionDefinition(context: Context, signatureVerifierPlugin: SignatureVerifierPlugin): VersionDefinition = VersionDefinition { Json.parseToJsonElement(signatureVerifierPlugin.readInputStream(context.assets.open("definition.json"))).jsonObject }
 }

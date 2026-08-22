@@ -1,10 +1,16 @@
 package app.aaps.plugins.automation.actions
 
+import javax.inject.Provider
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import dagger.android.HasAndroidInjector
 
 // Used for instantiation of other actions only
-class ActionDummy(injector: HasAndroidInjector) : Action(injector) {
+class ActionDummy(
+    aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    pumpEnactResultProvider: Provider<PumpEnactResult>
+) : Action(aapsLogger, rh, pumpEnactResultProvider) {
 
     override fun friendlyName(): Int {
         throw NotImplementedError("An operation is not implemented")

@@ -9,6 +9,7 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.HR
 import app.aaps.core.data.model.SC
@@ -28,7 +29,6 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.receivers.Intents
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppExit
@@ -44,9 +44,9 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.objects.extensions.generateCOBString
+import app.aaps.core.ui.extensions.generateCOBString
 import app.aaps.core.objects.extensions.round
-import app.aaps.core.objects.extensions.toStringShort
+import app.aaps.core.ui.extensions.toStringShort
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.compose.icons.IcXDrip
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -59,11 +59,11 @@ import app.aaps.plugins.sync.xdrip.keys.XdripIntentKey
 import app.aaps.plugins.sync.xdrip.keys.XdripLongKey
 import app.aaps.plugins.sync.xdrip.workers.XdripDataSyncWorker
 import app.aaps.shared.impl.extensions.safeQueryBroadcastReceivers
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -78,11 +78,10 @@ import javax.inject.Singleton
 @Singleton
 class XdripPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
-    private val aapsSchedulers: AapsSchedulers,
     private val context: Context,
     private val fabricPrivacy: FabricPrivacy,
     private val loop: Loop,
@@ -108,10 +107,10 @@ class XdripPlugin @Inject constructor(
             )
         }
         .icon(IcXDrip)
-        .pluginName(R.string.xdrip)
-        .shortName(R.string.xdrip_shortname)
-        .description(R.string.description_xdrip),
-    ownPreferences = listOf(XdripLongKey::class.java, XdripIntentKey::class.java),
+        .pluginName(TextRef.AndroidRes(R.string.xdrip))
+        .shortName(TextRef.AndroidRes(R.string.xdrip_shortname))
+        .description(TextRef.AndroidRes(R.string.description_xdrip)),
+    ownPreferences = XdripLongKey.entries + XdripIntentKey.entries,
     aapsLogger, rh, preferences
 ) {
 
@@ -119,7 +118,6 @@ class XdripPlugin @Inject constructor(
     private val XDRIP_JOB_NAME: String = this::class.java.simpleName
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-    private val disposable = CompositeDisposable()
     private var handler: Handler? = null
 
     // Not used Sync interface members
@@ -130,10 +128,9 @@ class XdripPlugin @Inject constructor(
     override suspend fun onStart() {
         super.onStart()
         handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
-        disposable += rxBus
-            .toObservable(EventAppExit::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ WorkManager.getInstance(context).cancelUniqueWork(XDRIP_JOB_NAME) }, fabricPrivacy::logException)
+        // scope is Dispatchers.IO, which is what observeOn(aapsSchedulers.io) gave these before.
+        rxBus.toFlow(EventAppExit::class)
+            .collectResilient(scope, aapsLogger, LTag.XDRIP, start = CoroutineStart.UNDISPATCHED) { WorkManager.getInstance(context).cancelUniqueWork(XDRIP_JOB_NAME) }
         persistenceLayer.observeAnyChange()
             // HR/SC writes come from the watch; this plugin doesn't broadcast them — skip to avoid reconnect-flush storm.
             .filter { types -> types.any { it != HR::class && it != SC::class } }
@@ -141,12 +138,10 @@ class XdripPlugin @Inject constructor(
                 sendStatusLine()
                 delayAndScheduleExecution("DB_CHANGED(${types.joinToString { it.simpleName ?: "?" }})")
             }
-        disposable += rxBus.toObservable(EventAutosensCalculationFinished::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ sendStatusLine() }, fabricPrivacy::logException)
-        disposable += rxBus.toObservable(EventAppInitialized::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ sendStatusLine() }, fabricPrivacy::logException)
+        rxBus.toFlow(EventAutosensCalculationFinished::class)
+            .collectResilient(scope, aapsLogger, LTag.XDRIP, start = CoroutineStart.UNDISPATCHED) { sendStatusLine() }
+        rxBus.toFlow(EventAppInitialized::class)
+            .collectResilient(scope, aapsLogger, LTag.XDRIP, start = CoroutineStart.UNDISPATCHED) { sendStatusLine() }
         eventWorker = Executors.newSingleThreadScheduledExecutor()
     }
 
@@ -157,7 +152,10 @@ class XdripPlugin @Inject constructor(
         handler = null
         eventWorker?.shutdown()
         eventWorker = null
-        disposable.clear()
+        // Cancel the collectors, not the scope: onStart can run again and needs it alive. This was
+        // missing before - the DB observer below was already started on this scope and never stopped,
+        // so a restart stacked a second collector on top of the first.
+        scope.coroutineContext.cancelChildren()
     }
 
     private fun addLog(action: String, logText: String?) {

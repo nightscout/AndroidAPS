@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.nsclientV3.clientcontrol
 
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationAction
@@ -85,7 +86,7 @@ internal class OrphanDetectorTest {
     @Test
     fun rosterMissingUsOutsideRaceWindowFiresOrphanNotification() {
         sut.onSettingsDoc(configWithRoster("stranger"), docSrvModified = now)
-        verify(notificationManager).post(eq(NotificationId.NSCLIENT_PAIRING_ORPHAN), any<String>(), any<NotificationLevel>(), any<Int>(), anyOrNull(), any<List<NotificationAction>>(), anyOrNull())
+        verify(notificationManager).post(eq(NotificationId.NSCLIENT_PAIRING_ORPHAN), any<TextRef>(), any<NotificationLevel>(), any<Int>(), any<Long>(), any<Long>(), anyOrNull(), any<List<NotificationAction>>(), anyOrNull())
     }
 
     /**
@@ -109,14 +110,14 @@ internal class OrphanDetectorTest {
         pairedAt = now - 2 * 60_000L
         val docSrvModified = now
         sut.onSettingsDoc(configWithRoster("stranger"), docSrvModified = docSrvModified)
-        verify(notificationManager).post(eq(NotificationId.NSCLIENT_PAIRING_ORPHAN), any<String>(), any<NotificationLevel>(), any<Int>(), anyOrNull(), any<List<NotificationAction>>(), anyOrNull())
+        verify(notificationManager).post(eq(NotificationId.NSCLIENT_PAIRING_ORPHAN), any<TextRef>(), any<NotificationLevel>(), any<Int>(), any<Long>(), any<Long>(), anyOrNull(), any<List<NotificationAction>>(), anyOrNull())
     }
 
     /** Empty roster = master has zero authorized clients (typical post-reinstall). Treat as orphan. */
     @Test
     fun emptyRosterFires() {
         sut.onSettingsDoc(configWithRoster(), docSrvModified = now)
-        verify(notificationManager).post(eq(NotificationId.NSCLIENT_PAIRING_ORPHAN), any<String>(), any<NotificationLevel>(), any<Int>(), anyOrNull(), any<List<NotificationAction>>(), anyOrNull())
+        verify(notificationManager).post(eq(NotificationId.NSCLIENT_PAIRING_ORPHAN), any<TextRef>(), any<NotificationLevel>(), any<Int>(), any<Long>(), any<Long>(), anyOrNull(), any<List<NotificationAction>>(), anyOrNull())
     }
 
     /** Master device must never alarm itself. */
@@ -146,7 +147,7 @@ internal class OrphanDetectorTest {
     fun missingSrvModifiedSkipsRaceGuardButStillFiresIfPairedAtIsZero() {
         pairedAt = 0L  // legacy install: never set pairedAt
         sut.onSettingsDoc(configWithRoster("stranger"), docSrvModified = 0L)
-        verify(notificationManager).post(eq(NotificationId.NSCLIENT_PAIRING_ORPHAN), any<String>(), any<NotificationLevel>(), any<Int>(), anyOrNull(), any<List<NotificationAction>>(), anyOrNull())
+        verify(notificationManager).post(eq(NotificationId.NSCLIENT_PAIRING_ORPHAN), any<TextRef>(), any<NotificationLevel>(), any<Int>(), any<Long>(), any<Long>(), anyOrNull(), any<List<NotificationAction>>(), anyOrNull())
     }
 
     // ---- authorized StateFlow (folded into NsClient.masterReachable to gate a revoked client's edits) ----

@@ -89,7 +89,7 @@ class BuiltInSearchables @Inject constructor(
             // Range settings subscreen
             PreferenceSubScreenDef(
                 key = "range_settings",
-                titleResId = app.aaps.core.keys.R.string.prefs_range_title,
+                titleResId = app.aaps.core.ui.R.string.prefs_range_title,
                 items = listOf(
                     UnitDoubleKey.OverviewLowMark,
                     UnitDoubleKey.OverviewHighMark
@@ -223,7 +223,7 @@ class BuiltInSearchables @Inject constructor(
      */
     val carbsButtons = PreferenceSubScreenDef(
         key = "carbs_button_settings",
-        titleResId = app.aaps.core.ui.R.string.carbs,
+        titleResId = app.aaps.core.interfaces.R.string.carbs,
         items = listOf(
             IntKey.OverviewCarbsButtonIncrement1,
             IntKey.OverviewCarbsButtonIncrement2,

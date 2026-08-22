@@ -9,6 +9,7 @@ import android.os.HandlerThread
 import android.os.IBinder
 import android.os.SystemClock
 import android.text.TextUtils
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
@@ -19,6 +20,7 @@ import app.aaps.core.data.time.T.Companion.msecs
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
@@ -41,7 +43,6 @@ import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppExit
@@ -98,9 +99,8 @@ import app.aaps.pump.omnipod.eros.rileylink.service.RileyLinkOmnipodService
 import app.aaps.pump.omnipod.eros.ui.compose.OmnipodErosComposeContent
 import app.aaps.pump.omnipod.eros.util.AapsOmnipodUtil
 import app.aaps.pump.omnipod.eros.util.OmnipodAlertUtil
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
@@ -128,10 +128,9 @@ import javax.inject.Singleton
 @Singleton
 class OmnipodErosPumpPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     commandQueue: CommandQueue,
-    private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
     private val context: Context,
     private val podStateManager: ErosPodStateManager,
@@ -159,16 +158,13 @@ class OmnipodErosPumpPlugin @Inject constructor(
             )
         }
         .icon(IcPluginOmnipod)
-        .pluginName(R.string.omnipod_eros_name)
-        .shortName(R.string.omnipod_eros_name_short)
-        .description(R.string.omnipod_eros_pump_description),
-    ownPreferences = listOf(
-        ErosBooleanPreferenceKey::class.java, ErosLongNonPreferenceKey::class.java, ErosStringNonPreferenceKey::class.java
-    ),
+        .pluginName(TextRef.AndroidRes(R.string.omnipod_eros_name))
+        .shortName(TextRef.AndroidRes(R.string.omnipod_eros_name_short))
+        .description(TextRef.AndroidRes(R.string.omnipod_eros_pump_description)),
+    ownPreferences = ErosBooleanPreferenceKey.entries + ErosLongNonPreferenceKey.entries + ErosStringNonPreferenceKey.entries,
     aapsLogger, rh, preferences, commandQueue
 ), Pump, RileyLinkPumpDevice, OmnipodEros, OwnDatabasePlugin {
 
-    private val disposable = CompositeDisposable()
     private var scope: CoroutineScope? = null
     private val displayConnectionMessages = false
     private val statusChecker: Runnable
@@ -210,7 +206,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
                     if (this@OmnipodErosPumpPlugin.hasTimeDateOrTimeZoneChanged) pluginScope.launch { commandQueue.customCommand(CommandHandleTimeChange(false)) }
                     if (!this@OmnipodErosPumpPlugin.verifyPodAlertConfiguration()) pluginScope.launch { commandQueue.customCommand(CommandUpdateAlertConfiguration()) }
                     if (aapsOmnipodErosManager.isAutomaticallyAcknowledgeAlertsEnabled && podStateManager.isPodActivationCompleted &&
-                        !podStateManager.isPodDead && podStateManager.activeAlerts.size() > 0 && !commandQueue.isCustomCommandInQueue(CommandSilenceAlerts::class.java)
+                        !podStateManager.isPodDead && podStateManager.activeAlerts.size() > 0 && !commandQueue.isCustomCommandInQueue(CommandSilenceAlerts::class)
                     ) queueAcknowledgeAlertsCommand()
                 } else
                     aapsLogger.debug(LTag.PUMP, "Skipping Pod status check because command queue is not empty")
@@ -258,33 +254,26 @@ class OmnipodErosPumpPlugin @Inject constructor(
         val intent = Intent(context, RileyLinkOmnipodService::class.java)
         serviceConnection?.let { context.bindService(intent, it, Context.BIND_AUTO_CREATE) }
 
-        disposable += rxBus
-            .toObservable(EventAppExit::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ serviceConnection?.let { context.unbindService(it) } }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventOmnipodErosTbrChanged::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ handleCancelledTbr() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventOmnipodErosUncertainTbrRecovered::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ handleUncertainTbrRecovery() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventOmnipodErosActiveAlertsChanged::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ handleActivePodAlerts() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventOmnipodErosFaultEventChanged::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ handlePodFaultEvent() }, fabricPrivacy::logException)
-        // Pass only to setup wizard
-        disposable += rxBus
-            .toObservable(EventRileyLinkDeviceStatusChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event -> rxBus.send(EventSWRLStatus(event.getStatus(context))) }, fabricPrivacy::logException)
+        // Same scope as the preference observers below: IO, like the io scheduler used before, and
+        // cancelled in onStop like the CompositeDisposable was cleared. UNDISPATCHED because RxBus
+        // has no replay, so a scheduled collector could miss an event sent before it starts.
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
+        rxBus.toFlow(EventAppExit::class)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { serviceConnection?.let { context.unbindService(it) } }
+        rxBus.toFlow(EventOmnipodErosTbrChanged::class)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { handleCancelledTbr() }
+        rxBus.toFlow(EventOmnipodErosUncertainTbrRecovered::class)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { handleUncertainTbrRecovery() }
+        rxBus.toFlow(EventOmnipodErosActiveAlertsChanged::class)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { handleActivePodAlerts() }
+        rxBus.toFlow(EventOmnipodErosFaultEventChanged::class)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { handlePodFaultEvent() }
+        // Pass only to setup wizard
+        rxBus.toFlow(EventRileyLinkDeviceStatusChange::class)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { event ->
+                rxBus.send(EventSWRLStatus(rh.gs(event.getStatus())))
+            }
         merge(
             preferences.observe(OmnipodBooleanPreferenceKey.BasalBeepsEnabled).drop(1).map {},
             preferences.observe(OmnipodBooleanPreferenceKey.BolusBeepsEnabled).drop(1).map {},
@@ -311,25 +300,23 @@ class OmnipodErosPumpPlugin @Inject constructor(
                 commandQueue.customCommand(CommandUpdateAlertConfiguration())
             }
         }
-        disposable += rxBus
-            .toObservable(EventAppInitialized::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           // See if a bolus was active before the app previously exited
-                           // If so, add it to history
-                           // Needs to be done after EventAppInitialized because otherwise, TreatmentsPlugin.onStart() hasn't been called yet
-                           // so it didn't initialize a TreatmentService yet, resulting in a NullPointerException
-                           if (preferences.getIfExists(ErosStringNonPreferenceKey.ActiveBolus) != null) {
-                               val activeBolusString = preferences.get(ErosStringNonPreferenceKey.ActiveBolus)
-                               aapsLogger.warn(LTag.PUMP, "Found active bolus in preferences: {}. Adding Treatment.", activeBolusString)
-                               try {
-                                   aapsOmnipodErosManager.addBolusToHistory(DetailedBolusInfo().fromJsonString(activeBolusString))
-                               } catch (ex: Exception) {
-                                   aapsLogger.error(LTag.PUMP, "Failed to add active bolus to history", ex)
-                               }
-                               preferences.remove(ErosStringNonPreferenceKey.ActiveBolus)
-                           }
-                       }, fabricPrivacy::logException)
+        rxBus.toFlow(EventAppInitialized::class)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) {
+                // See if a bolus was active before the app previously exited
+                // If so, add it to history
+                // Needs to be done after EventAppInitialized because otherwise, TreatmentsPlugin.onStart() hasn't been called yet
+                // so it didn't initialize a TreatmentService yet, resulting in a NullPointerException
+                if (preferences.getIfExists(ErosStringNonPreferenceKey.ActiveBolus) != null) {
+                    val activeBolusString = preferences.get(ErosStringNonPreferenceKey.ActiveBolus)
+                    aapsLogger.warn(LTag.PUMP, "Found active bolus in preferences: {}. Adding Treatment.", activeBolusString)
+                    try {
+                        aapsOmnipodErosManager.addBolusToHistory(DetailedBolusInfo().fromJsonString(activeBolusString))
+                    } catch (ex: Exception) {
+                        aapsLogger.error(LTag.PUMP, "Failed to add active bolus to history", ex)
+                    }
+                    preferences.remove(ErosStringNonPreferenceKey.ActiveBolus)
+                }
+            }
     }
 
     override fun isRileyLinkReady(): Boolean = rileyLinkServiceData.rileyLinkServiceState.isReady()
@@ -367,7 +354,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
             } else {
                 // Not sure what's going on. Notify the user
                 aapsLogger.error(LTag.PUMP, "Unknown TBR in both Pod state and AAPS")
-                notificationManager.post(NotificationId.OMNIPOD_UNKNOWN_TBR, R.string.omnipod_eros_error_tbr_running_but_aaps_not_aware, soundRes = app.aaps.core.ui.R.raw.boluserror)
+                notificationManager.post(NotificationId.OMNIPOD_UNKNOWN_TBR, TextRef.AndroidRes(R.string.omnipod_eros_error_tbr_running_but_aaps_not_aware), sound = AlarmSound.BOLUS_ERROR)
             }
         } else if (!podStateManager.isTempBasalRunning && tempBasal != null) {
             aapsLogger.warn(LTag.PUMP, "Removing AAPS TBR that actually hadn't succeeded")
@@ -386,7 +373,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
                 notificationManager.post(NotificationId.OMNIPOD_POD_ALERTS, notificationText)
                 runBlocking { pumpSync.insertAnnouncement(notificationText, null, PumpType.OMNIPOD_EROS, serialNumber()) }
 
-                if (aapsOmnipodErosManager.isAutomaticallyAcknowledgeAlertsEnabled && !commandQueue.isCustomCommandInQueue(CommandSilenceAlerts::class.java)) {
+                if (aapsOmnipodErosManager.isAutomaticallyAcknowledgeAlertsEnabled && !commandQueue.isCustomCommandInQueue(CommandSilenceAlerts::class)) {
                     queueAcknowledgeAlertsCommand()
                 }
             }
@@ -405,12 +392,8 @@ class OmnipodErosPumpPlugin @Inject constructor(
         aapsLogger.debug(LTag.PUMP, "OmnipodPumpPlugin.onStop()")
         scope?.cancel()
         scope = null
-        handler?.removeCallbacksAndMessages(null)
-        handler?.looper?.quit()
-        handler = null
         serviceConnection?.let { context.unbindService(it) }
         serviceConnection = null
-        disposable.clear()
     }
 
     private fun queueAcknowledgeAlertsCommand() {
@@ -423,17 +406,17 @@ class OmnipodErosPumpPlugin @Inject constructor(
     private fun updatePodWarningNotifications() {
         if (System.currentTimeMillis() > this.nextPodWarningCheck) {
             if (!podStateManager.isPodRunning) {
-                notificationManager.post(NotificationId.OMNIPOD_POD_NOT_ATTACHED, app.aaps.pump.omnipod.common.R.string.omnipod_common_error_pod_not_attached)
+                notificationManager.post(NotificationId.OMNIPOD_POD_NOT_ATTACHED, TextRef.AndroidRes(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_pod_not_attached))
             } else {
                 notificationManager.dismiss(NotificationId.OMNIPOD_POD_NOT_ATTACHED)
 
                 if (podStateManager.isSuspended) {
-                    notificationManager.post(NotificationId.OMNIPOD_POD_SUSPENDED, app.aaps.pump.omnipod.common.R.string.omnipod_common_error_pod_suspended)
+                    notificationManager.post(NotificationId.OMNIPOD_POD_SUSPENDED, TextRef.AndroidRes(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_pod_suspended))
                 } else {
                     notificationManager.dismiss(NotificationId.OMNIPOD_POD_SUSPENDED)
 
                     if (podStateManager.timeDeviatesMoreThan(OmnipodConstants.TIME_DEVIATION_THRESHOLD)) {
-                        notificationManager.post(NotificationId.OMNIPOD_TIME_OUT_OF_SYNC, app.aaps.pump.omnipod.common.R.string.omnipod_common_error_time_out_of_sync)
+                        notificationManager.post(NotificationId.OMNIPOD_TIME_OUT_OF_SYNC, TextRef.AndroidRes(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_time_out_of_sync))
                     } else {
                         notificationManager.dismiss(NotificationId.OMNIPOD_TIME_OUT_OF_SYNC)
                     }
@@ -661,7 +644,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
             return pumpEnactResultProvider.get().success(false).enacted(false).comment(aapsOmnipodErosManager.translateException(ex))
         }
 
-        uiInteraction.runAlarm(rh.gs(R.string.omnipod_eros_pod_management_pulse_log_value) + ":\n" + result.toString(), rh.gs(R.string.omnipod_eros_pod_management_pulse_log), 0)
+        uiInteraction.runAlarm(rh.gs(R.string.omnipod_eros_pod_management_pulse_log_value) + ":\n" + result.toString(), rh.gs(R.string.omnipod_eros_pod_management_pulse_log), null)
         return pumpEnactResultProvider.get().success(true).enacted(false)
     }
 
@@ -687,9 +670,8 @@ class OmnipodErosPumpPlugin @Inject constructor(
 
             notificationManager.post(
                 NotificationId.OMNIPOD_POD_ALERTS_UPDATED,
-                app.aaps.pump.omnipod.common.R.string.omnipod_common_confirmation_expiration_alerts_updated,
-                validMinutes = 60
-            )
+                TextRef.AndroidRes(app.aaps.pump.omnipod.common.R.string.omnipod_common_confirmation_expiration_alerts_updated),
+                validMinutes = 60)
         } else {
             aapsLogger.warn(LTag.PUMP, "Failed to configure alerts in Pod")
         }
@@ -715,9 +697,8 @@ class OmnipodErosPumpPlugin @Inject constructor(
             if (!requestedByUser && aapsOmnipodErosManager.isTimeChangeEventEnabled) {
                 notificationManager.post(
                     NotificationId.TIME_OR_TIMEZONE_CHANGE,
-                    app.aaps.pump.omnipod.common.R.string.omnipod_common_confirmation_time_on_pod_updated,
-                    validMinutes = 60
-                )
+                    TextRef.AndroidRes(app.aaps.pump.omnipod.common.R.string.omnipod_common_confirmation_time_on_pod_updated),
+                    validMinutes = 60)
             }
         } else {
             if (!requestedByUser) {
@@ -727,9 +708,8 @@ class OmnipodErosPumpPlugin @Inject constructor(
                     if (aapsOmnipodErosManager.isTimeChangeEventEnabled) {
                         notificationManager.post(
                             NotificationId.TIME_OR_TIMEZONE_CHANGE,
-                            R.string.omnipod_eros_error_automatic_time_or_timezone_change_failed,
-                            validMinutes = 60
-                        )
+                            TextRef.AndroidRes(R.string.omnipod_eros_error_automatic_time_or_timezone_change_failed),
+                            validMinutes = 60)
                     }
                     this.hasTimeDateOrTimeZoneChanged = false
                     timeChangeRetries = 0
@@ -838,7 +818,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
             }
             if (!success) {
                 aapsLogger.warn(LTag.PUMP, "Failed to retrieve Pod status on startup")
-                notificationManager.post(NotificationId.OMNIPOD_STARTUP_STATUS_REFRESH_FAILED, app.aaps.pump.omnipod.common.R.string.omnipod_common_error_failed_to_refresh_status_on_startup)
+                notificationManager.post(NotificationId.OMNIPOD_STARTUP_STATUS_REFRESH_FAILED, TextRef.AndroidRes(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_failed_to_refresh_status_on_startup))
             }
         } else {
             aapsLogger.debug(LTag.PUMP, "Not retrieving Pod status on startup: no Pod running")

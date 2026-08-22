@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.PhoneAndroid
 import androidx.compose.material.icons.filled.Style
 import androidx.compose.ui.graphics.vector.ImageVector
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
 import app.aaps.implementation.R
 import app.aaps.implementation.maintenance.data.PrefsFormat
@@ -42,15 +43,14 @@ enum class PrefsMetadataKeyImpl(override val key: String, override val icon: Ima
 
     }
 
-    override fun formatForDisplay(context: Context, value: String): String {
-        return when (this) {
+    override fun formatForDisplay(value: String): TextRef =
+        when (this) {
             FILE_FORMAT -> when (value) {
-                PrefsFormat.FORMAT_KEY_ENC -> context.getString(R.string.metadata_format_new)
-                else                       -> context.getString(R.string.metadata_format_other)
+                PrefsFormat.FORMAT_KEY_ENC -> TextRef.AndroidRes(R.string.metadata_format_new)
+                else                       -> TextRef.AndroidRes(R.string.metadata_format_other)
             }
 
-            CREATED_AT  -> value.replace("T", " ").replace("Z", " (UTC)")
-            else        -> value
+            CREATED_AT  -> TextRef.Literal(value.replace("T", " ").replace("Z", " (UTC)"))
+            else        -> TextRef.Literal(value)
         }
-    }
 }

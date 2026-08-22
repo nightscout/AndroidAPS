@@ -28,6 +28,7 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.withEntries
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -38,7 +39,7 @@ import javax.inject.Singleton
 @Singleton
 class SafetyPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     private val preferences: Preferences,
     private val constraintChecker: ConstraintsChecker,
     private val activePlugin: ActivePlugin,
@@ -53,7 +54,7 @@ class SafetyPlugin @Inject constructor(
         .mainType(PluginType.CONSTRAINTS)
         .alwaysEnabled(true)
         .showInList { false }
-        .pluginName(R.string.safety)
+        .pluginName(TextRef.AndroidRes(R.string.safety))
         .icon(Icons.Default.Shield),
     aapsLogger, rh
 ), PluginConstraints, Safety {
@@ -69,7 +70,7 @@ class SafetyPlugin @Inject constructor(
     override suspend fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         if (!config.isEngineeringModeOrRelease()) {
             if (value.value()) {
-                notificationManager.post(NotificationId.TOAST_ALARM, R.string.closed_loop_disabled_on_dev_branch, level = NotificationLevel.NORMAL)
+                notificationManager.post(NotificationId.TOAST_ALARM, TextRef.AndroidRes(R.string.closed_loop_disabled_on_dev_branch), level = NotificationLevel.NORMAL)
             }
             value.set(false, rh.gs(R.string.closed_loop_disabled_on_dev_branch), this)
         }
@@ -180,7 +181,7 @@ class SafetyPlugin @Inject constructor(
         titleResId = R.string.safety,
         items = listOf(
             StringKey.SafetyAge.withEntries(
-                hardLimits.ageEntryValues().zip(hardLimits.ageEntries()).associate { it.first.toString() to it.second.toString() }
+                hardLimits.ageEntryValues().zip(hardLimits.ageEntries()).associate { it.first.toString() to TextRef.Literal(it.second.toString()) }
             ),
             DoubleKey.SafetyMaxBolus,
             IntKey.SafetyMaxCarbs

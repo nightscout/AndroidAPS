@@ -88,10 +88,14 @@ class GetRecordPacketTest : MedtrumTestBase() {
         val bolusType = BS.Type.SMB
         val amount = 1.1
 
-        // Mocks
-        val detailedBolusInfo: DetailedBolusInfo = mock()
-        detailedBolusInfo.timestamp = timestamp // Wierd way to mock but this is a @JvmField
-        whenever(detailedBolusInfo.bolusType).thenReturn(bolusType)
+        // A real instance, not a mock. The timestamp used to be written straight onto a mock's field,
+        // which worked only because it was a @JvmField and so bypassed Mockito. It is an ordinary
+        // property now, so that write would go to a stubbed setter and be dropped. DetailedBolusInfo
+        // is plain data, so there is nothing to mock here anyway.
+        val detailedBolusInfo = DetailedBolusInfo().apply {
+            this.timestamp = timestamp
+            this.bolusType = bolusType
+        }
 
         whenever(detailedBolusInfoStorage.findDetailedBolusInfo(timestamp, amount)).thenReturn(detailedBolusInfo)
 

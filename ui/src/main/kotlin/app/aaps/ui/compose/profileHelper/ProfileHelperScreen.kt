@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.profileHelper
 
+import app.aaps.core.ui.compose.stringResourceOrNull
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -57,12 +58,14 @@ import app.aaps.core.graph.profile.buildIcRows
 import app.aaps.core.graph.profile.buildIsfRows
 import app.aaps.core.graph.profile.buildTargetRows
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.profile.ProfileSealed
+import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
-import app.aaps.core.ui.compose.navigation.labelResId
+import app.aaps.core.ui.compose.navigation.label
 import app.aaps.ui.R
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileHelperViewModel
 import app.aaps.ui.compose.stats.TddStatsCompose
@@ -168,11 +171,11 @@ fun ProfileHelperScreen(
                     profile1 = sealed1,
                     profile2 = sealed2,
                     icsRows = buildIcRows(sealed1, sealed2, viewModel.dateUtil),
-                    icUnits = viewModel.rh.gs(app.aaps.core.ui.R.string.profile_carbs_per_unit),
+                    icUnits = viewModel.rh.gs(app.aaps.core.interfaces.R.string.profile_carbs_per_unit),
                     isfsRows = buildIsfRows(sealed1, sealed2, viewModel.profileUtil, viewModel.dateUtil),
-                    isfUnits = viewModel.rh.gs(if (viewModel.getUnits() == GlucoseUnit.MGDL) app.aaps.core.ui.R.string.profile_isf_units_mgdl else app.aaps.core.ui.R.string.profile_isf_units_mmol),
+                    isfUnits = viewModel.rh.gs(if (viewModel.getUnits() == GlucoseUnit.MGDL) app.aaps.core.interfaces.R.string.profile_isf_units_mgdl else app.aaps.core.interfaces.R.string.profile_isf_units_mmol),
                     basalsRows = buildBasalRows(sealed1, sealed2, viewModel.dateUtil),
-                    basalUnits = viewModel.rh.gs(app.aaps.core.ui.R.string.profile_ins_units_per_hour),
+                    basalUnits = viewModel.rh.gs(app.aaps.core.interfaces.R.string.profile_ins_units_per_hour),
                     targetsRows = buildTargetRows(sealed1, sealed2, viewModel.dateUtil, viewModel.profileUtil),
                     targetUnits = viewModel.getUnits().displayLabel,
                     profileName1 = name0,
@@ -320,7 +323,7 @@ internal fun ProfileHelperContent(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(ElementType.PROFILE_HELPER.labelResId())) },
+                title = { Text((stringResourceOrNull(ElementType.PROFILE_HELPER.label()) ?: "")) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(Icons.Filled.Close, contentDescription = stringResource(app.aaps.core.ui.R.string.close))
@@ -488,7 +491,7 @@ fun DefaultProfileContent(
             onValueChange = { onAgeChange(it.toInt()) },
             valueRange = 1.0..99.0,
             step = 1.0,
-            unitLabelResId = app.aaps.core.keys.R.string.units_years
+            unitLabel = TextRef.AndroidRes(CoreUiR.string.units_years)
         )
         if (showTdd) NumberInputRow(
             labelResId = app.aaps.core.ui.R.string.tdd_total,
@@ -496,7 +499,7 @@ fun DefaultProfileContent(
             onValueChange = onTddChange,
             valueRange = 0.0..200.0,
             step = 1.0,
-            unitLabelResId = app.aaps.core.keys.R.string.units_insulin
+            unitLabel = TextRef.AndroidRes(CoreUiR.string.units_insulin)
         )
         if (showWeight) NumberInputRow(
             labelResId = R.string.weight_label,
@@ -504,7 +507,7 @@ fun DefaultProfileContent(
             onValueChange = onWeightChange,
             valueRange = 0.0..150.0,
             step = 1.0,
-            unitLabelResId = app.aaps.core.keys.R.string.units_kg
+            unitLabel = TextRef.AndroidRes(CoreUiR.string.units_kg)
         )
         if (showPct) NumberInputRow(
             labelResId = R.string.basal_pct_from_tdd_label,
@@ -512,7 +515,7 @@ fun DefaultProfileContent(
             onValueChange = onPctChange,
             valueRange = 32.0..37.0,
             step = 1.0,
-            unitLabelResId = app.aaps.core.keys.R.string.units_percent
+            unitLabel = TextRef.AndroidRes(CoreUiR.string.units_percent)
         )
     }
 }

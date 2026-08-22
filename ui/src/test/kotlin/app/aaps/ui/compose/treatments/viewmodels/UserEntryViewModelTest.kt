@@ -35,7 +35,7 @@ internal class UserEntryViewModelTest {
     fun setUp() {
         MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(UnconfinedTestDispatcher())
-        whenever(persistenceLayer.observeChanges(UE::class.java)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(UE::class)).thenReturn(emptyFlow())
         sut = UserEntryViewModel(persistenceLayer, rh, dateUtil, aapsLogger, rxBus)
     }
 

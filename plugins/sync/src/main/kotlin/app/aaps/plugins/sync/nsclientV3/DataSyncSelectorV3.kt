@@ -16,7 +16,6 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.sync.nsclientV3.extensions.onlyNsIdAdded
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientLongKey
@@ -974,10 +973,10 @@ class DataSyncSelectorV3 @Inject constructor(
             // Snapshot once so the validity check and JSON read see the same store.
             val profileStore = profileRepository.profile.value ?: return
             if (!profileStore.allProfilesValid) return
+            // v3 needs `date`, and the store always carries one - it is written unconditionally by the
+            // single producer, ProfileRepositoryImpl.createAndStoreConvertedProfile, and pinned by a
+            // test there. This used to patch it in when missing, which could never fire.
             val profileJson = profileStore.getData()
-            // add for v3
-            if (JsonHelper.safeGetLongAllowNull(profileJson, "date") == null)
-                profileJson.put("date", profileStore.getStartDate())
             val now = dateUtil.now()
             if (nsClientV3Plugin.get().nsAdd("profile", DataSyncSelector.PairProfileStore(profileJson, now), "") == true)
                 confirmLastProfileStore(now)

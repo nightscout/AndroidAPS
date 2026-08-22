@@ -9,14 +9,13 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.ResourceHelper
-import javax.inject.Provider
 
 class CommandReadStatus(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val activePlugin: ActivePlugin,
     private val localAlertUtils: LocalAlertUtils,
-    override val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    override val pumpEnactResultProvider: () -> PumpEnactResult,
     val reason: String,
     override val callback: Callback?,
 ) : Command {
@@ -28,7 +27,7 @@ class CommandReadStatus(
         localAlertUtils.reportPumpStatusRead()
         aapsLogger.debug(LTag.PUMPQUEUE, "CommandReadStatus executed. Reason: $reason")
         val pump = activePlugin.activePump
-        val result = pumpEnactResultProvider.get().success(false)
+        val result = pumpEnactResultProvider().success(false)
         val lastConnection = pump.lastDataTime.value
         if (lastConnection > System.currentTimeMillis() - T.mins(1).msecs()) result.success(true)
         return result

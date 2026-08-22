@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.profileManagement
 
+import app.aaps.core.ui.compose.stringResourceOrNull
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -59,7 +60,7 @@ import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.ui.compose.navigation.labelResId
+import app.aaps.core.ui.compose.navigation.label
 import app.aaps.ui.R
 import app.aaps.ui.compose.components.CarouselReorderConfig
 import app.aaps.ui.compose.components.ContentContainer
@@ -197,7 +198,7 @@ fun ProfileManagementScreen(
                     )
                 } else {
                     AapsTopAppBar(
-                        title = { Text(stringResource(ElementType.PROFILE_MANAGEMENT.labelResId())) },
+                        title = { Text((stringResourceOrNull(ElementType.PROFILE_MANAGEMENT.label()) ?: "")) },
                         navigationIcon = {
                             IconButton(onClick = onNavigateBack) {
                                 Icon(

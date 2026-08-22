@@ -13,6 +13,7 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.HR
 import app.aaps.core.data.model.HasIDs
 import app.aaps.core.data.model.SC
@@ -78,6 +79,7 @@ import app.aaps.plugins.sync.nsclientV3.extensions.toNSSvgV3
 import app.aaps.plugins.sync.nsclientV3.extensions.toNSTemporaryBasal
 import app.aaps.plugins.sync.nsclientV3.extensions.toNSTemporaryTarget
 import app.aaps.plugins.sync.nsclientV3.extensions.toNSTherapyEvent
+import app.aaps.plugins.sync.nsclientV3.json.JsonBridge.toKotlinxJson
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientLongKey
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientStringKey
@@ -117,8 +119,8 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.encodeToJsonElement
-import org.json.JSONObject
 import java.security.InvalidParameterException
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
@@ -128,7 +130,7 @@ import kotlin.time.Duration.Companion.milliseconds
 @Singleton
 class NSClientV3Plugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     private val rxBus: RxBus,
     private val context: Context,
@@ -154,9 +156,9 @@ class NSClientV3Plugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .icon(IcPluginNsClient)
-        .pluginName(R.string.ns_client_v3_title)
-        .shortName(R.string.ns_client_v3_short_name)
-        .description(R.string.description_ns_client_v3)
+        .pluginName(TextRef.AndroidRes(R.string.ns_client_v3_title))
+        .shortName(TextRef.AndroidRes(R.string.ns_client_v3_short_name))
+        .description(TextRef.AndroidRes(R.string.description_ns_client_v3))
         .composeContent { plugin ->
             NSClientComposeContent(
                 dateUtil = dateUtil,
@@ -168,7 +170,7 @@ class NSClientV3Plugin @Inject constructor(
                 title = rh.gs(R.string.ns_client_v3_title)
             )
         },
-    ownPreferences = listOf(NsclientBooleanKey::class.java, NsclientStringKey::class.java, NsclientLongKey::class.java),
+    ownPreferences = NsclientBooleanKey.entries + NsclientStringKey.entries + NsclientLongKey.entries,
     aapsLogger, rh, preferences
 ) {
 
@@ -299,7 +301,7 @@ class NSClientV3Plugin @Inject constructor(
                 wsConnectedFlow.collect { connected -> if (connected) requestMasterProbe() }
             }
         }
-        rxBus.toFlow(EventAppExit::class.java)
+        rxBus.toFlow(EventAppExit::class)
             .collectResilient(scope, aapsLogger, LTag.NSCLIENT) {
                 stopService()
                 WorkManager.getInstance(context).cancelUniqueWork(JOB_NAME)
@@ -326,6 +328,9 @@ class NSClientV3Plugin @Inject constructor(
             }
         val restartOnChange: suspend (Any) -> Unit = {
             stopService()
+            // Release the HTTP engine before dropping the reference. The Retrofit client leaked
+            // quietly here; a Ktor engine holds real connections, so it is closed explicitly.
+            nsAndroidClient?.close()
             nsAndroidClient = null
             setClient()
             nsClientRepository.updateUrl(preferences.get(StringKey.NsClientUrl))
@@ -395,7 +400,7 @@ class NSClientV3Plugin @Inject constructor(
      * rejects cleanly with a signed ACK (one place, also covering the poll fallback) rather than silently
      * dropping it, which would time a client out into a false "master offline" alarm in the toggle race window.
      */
-    fun handleClientControlSettingsEvent(identifier: String, doc: JSONObject) {
+    fun handleClientControlSettingsEvent(identifier: String, doc: JsonObject) {
         scope.launch {
             runCatching { clientControlReceiver.onSettingsDocChanged(identifier, doc) }
                 .onFailure { aapsLogger.error(LTag.NSCLIENT, "ClientControl WS dispatch failed for $identifier: ${it.message}", it) }
@@ -407,7 +412,7 @@ class NSClientV3Plugin @Inject constructor(
      * `aaps_clientcontrol_ack_<clientId>` settings events here. Synchronous parse/verify/emit — the
      * round-trip coordinator only re-publishes to an in-process flow, no IO.
      */
-    fun handleClientControlAckEvent(doc: JSONObject) {
+    fun handleClientControlAckEvent(doc: JsonObject) {
         runCatching { clientControlRoundTrip.onAckDoc(doc) }
             .onFailure { aapsLogger.error(LTag.NSCLIENT, "ClientControl ACK dispatch failed: ${it.message}", it) }
     }
@@ -416,7 +421,7 @@ class NSClientV3Plugin @Inject constructor(
      * WS-push entry for a master→client bolus-progress frame (client side). NSClientV3Service routes
      * `aaps_clientcontrol_progress_<clientId>` settings events here; feeds the client's own BolusProgressData.
      */
-    fun handleClientControlProgressEvent(doc: JSONObject) {
+    fun handleClientControlProgressEvent(doc: JsonObject) {
         runCatching { clientControlRoundTrip.onProgressDoc(doc) }
             .onFailure { aapsLogger.error(LTag.NSCLIENT, "ClientControl progress dispatch failed: ${it.message}", it) }
     }
@@ -617,7 +622,6 @@ class NSClientV3Plugin @Inject constructor(
             nsAndroidClient = NSAndroidClientImpl(
                 baseUrl = preferences.get(StringKey.NsClientUrl).lowercase().replace("https://", "").replace(Regex("/$"), ""),
                 accessToken = preferences.get(StringKey.NsClientAccessToken),
-                context = context,
                 logging = l.findByName(LTag.NSCLIENT.tag).enabled && (config.isEngineeringMode() || config.isDev()),
                 logger = { msg -> aapsLogger.debug(LTag.HTTP, msg) }
             )
@@ -836,6 +840,7 @@ class NSClientV3Plugin @Inject constructor(
 
                     201  -> nsClientRepository.addLog("◄ ADDED", "OK ${dataPair.value.javaClass.simpleName}")
                     400  -> nsClientRepository.addLog("◄ FAIL", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+
                     404  -> {
                         nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
                         if (!config.isEnabled(ExternalOptions.IGNORE_NS_V3_ERRORS) &&
@@ -890,6 +895,7 @@ class NSClientV3Plugin @Inject constructor(
 
                     201  -> nsClientRepository.addLog("◄ ADDED", "OK ${dataPair.value.javaClass.simpleName}")
                     400  -> nsClientRepository.addLog("◄ FAIL", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+
                     404  -> {
                         nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
                         if (!config.isEnabled(ExternalOptions.IGNORE_NS_V3_ERRORS) &&
@@ -944,6 +950,7 @@ class NSClientV3Plugin @Inject constructor(
 
                     201  -> nsClientRepository.addLog("◄ ADDED", "OK ${dataPair.value.javaClass.simpleName}")
                     400  -> nsClientRepository.addLog("◄ FAIL", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+
                     404  -> {
                         nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
                         if (!config.isEnabled(ExternalOptions.IGNORE_NS_V3_ERRORS) &&
@@ -1019,6 +1026,7 @@ class NSClientV3Plugin @Inject constructor(
 
                         201  -> nsClientRepository.addLog("◄ ADDED", "OK ${dataPair.value.javaClass.simpleName}")
                         400  -> nsClientRepository.addLog("◄ FAIL", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+
                         404  -> {
                             nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
                             if (!config.isEnabled(ExternalOptions.IGNORE_NS_V3_ERRORS) &&

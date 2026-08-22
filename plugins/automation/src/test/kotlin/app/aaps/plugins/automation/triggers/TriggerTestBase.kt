@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
+import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.plugins.automation.BtConnectionSource
 import app.aaps.plugins.automation.services.LastLocationDataContainer
 import app.aaps.shared.tests.TestBaseWithProfile
@@ -20,6 +21,7 @@ open class TriggerTestBase : TestBaseWithProfile() {
     @Mock lateinit var autosensDataStore: AutosensDataStore
     @Mock lateinit var btConnectionSource: BtConnectionSource
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
+    @Mock lateinit var sceneApi: SceneAutomationApi
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var pumpPluginWithConcentration: PumpWithConcentration
     val pumpDescription = PumpDescription()
@@ -36,42 +38,19 @@ open class TriggerTestBase : TestBaseWithProfile() {
         whenever(pumpPluginWithConcentration.batteryLevel).thenReturn(MutableStateFlow(null))
     }
 
-    init {
-        addInjector {
-            if (it is Trigger) {
-                it.aapsLogger = aapsLogger
-                it.rxBus = rxBus
-                it.rh = rh
-                it.profileFunction = profileFunction
-                it.preferences = preferences
-                it.locationDataContainer = locationDataContainer
-                it.persistenceLayer = persistenceLayer
-                it.activePlugin = activePlugin
-                it.iobCobCalculator = iobCobCalculator
-                it.glucoseStatusProvider = smbGlucoseStatusProvider
-                it.dateUtil = dateUtil
-                it.profileUtil = profileUtil
-            }
-            if (it is TriggerBg) {
-                it.profileFunction = profileFunction
-            }
-            if (it is TriggerTime) {
-                it.dateUtil = dateUtil
-            }
-            if (it is TriggerTimeRange) {
-                it.dateUtil = dateUtil
-            }
-            if (it is TriggerRecurringTime) {
-                it.dateUtil = dateUtil
-            }
-            if (it is TriggerBTDevice) {
-                it.context = context
-                it.btConnectionSource = btConnectionSource
-            }
-            if (it is TriggerWifiSsid) {
-                it.receiverStatusStore = receiverStatusStore
-            }
-        }
+    /**
+     * Triggers take their dependencies through [TriggerDeps] now, so the long addInjector block that
+     * used to wire each one field-by-field is gone. Tests build the trigger under test directly.
+     */
+    val triggerDeps: TriggerDeps by lazy {
+        TriggerDeps(
+            aapsLogger, rxBus, rh, profileFunction, profileUtil, preferences, locationDataContainer,
+            persistenceLayer, activePlugin, iobCobCalculator, smbGlucoseStatusProvider, dateUtil
+        ) { triggerFactory }
+    }
+
+    val triggerFactory: TriggerFactory by lazy {
+        TriggerFactory(triggerDeps, context, { btConnectionSource }, sceneApi, receiverStatusStore)
     }
 
 }

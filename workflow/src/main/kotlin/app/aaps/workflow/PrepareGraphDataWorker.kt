@@ -11,6 +11,7 @@ import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.AutosensData
 import app.aaps.core.interfaces.aps.AutosensDataStore
+import app.aaps.core.interfaces.concurrent.withLock
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.calibration.CalibrationContext
@@ -159,7 +160,7 @@ class PrepareGraphDataWorker @AssistedInject constructor(
         // there can be some readings with time in close future (caused by wrong time setting on sensor)
         // so add 2 minutes
         val readings = persistenceLayer.getBgReadingsDataFromTimeToTime(start, to + T.mins(2).msecs(), false)
-        synchronized(dataLock) {
+        dataLock.withLock {
             bgReadings = readings
             aapsLogger.debug(LTag.AUTOSENS) { "BG data loaded. Size: ${bgReadings.size} Start date: ${dateUtil.dateAndTimeString(start)} End date: ${dateUtil.dateAndTimeString(to)}" }
             createBucketedData(aapsLogger, dateUtil)
@@ -167,12 +168,12 @@ class PrepareGraphDataWorker @AssistedInject constructor(
     }
 
     private suspend fun AutosensDataStore.smoothData() {
-        val workingCopy = synchronized(dataLock) {
+        val workingCopy = dataLock.withLock {
             bucketedData?.map { it.copy(smoothed = null, calibrated = null) }?.toMutableList()
         } ?: return
         val calibrated = activePlugin.activeCalibration.calibrate(workingCopy, CalibrationContext.NONE)
         val smoothed = activePlugin.activeSmoothing.smooth(calibrated)
-        synchronized(dataLock) {
+        dataLock.withLock {
             bucketedData = smoothed
         }
     }

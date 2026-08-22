@@ -48,7 +48,7 @@ internal class ObjectivesViewModelTest {
         // scope.launch { updateState() } + the update timer are deferred by StandardTestDispatcher, so the
         // objectivesPlugin.objectives list is never enumerated at construction; only the init flow chains are built.
         Dispatchers.setMain(StandardTestDispatcher())
-        whenever(rxBus.toFlow(EventObjectivesUpdateGui::class.java)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventObjectivesUpdateGui::class)).thenReturn(emptyFlow())
         // The 8 completion-tracking prefs are observed (.drop(1).merge()) in init — each must be non-null.
         listOf(
             BooleanNonKey.ObjectivesBgIsAvailableInNs, BooleanNonKey.ObjectivesPumpStatusIsAvailableInNS,

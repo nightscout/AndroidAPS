@@ -221,8 +221,8 @@ class ConfigBuilderImpl @Inject constructor(
             uel.log(
                 action = Action.HW_PUMP_ALLOWED,
                 source = Sources.ConfigBuilder,
-                note = rh.gs(plugin.pluginDescription.pluginName),
-                value = ValueWithUnit.SimpleString(rh.gsNotLocalised(plugin.pluginDescription.pluginName))
+                note = plugin.name,
+                value = ValueWithUnit.SimpleString(plugin.pluginDescription.pluginName?.let { rh.gsNotLocalised(it) } ?: plugin.pluginId)
             )
         }
         aapsLogger.debug(LTag.PUMP, "First time HW pump allowed!")
@@ -234,14 +234,14 @@ class ConfigBuilderImpl @Inject constructor(
                 scope.launch {
                     uel.log(
                         Action.PLUGIN_ENABLED, Sources.ConfigBuilder, null,
-                        ValueWithUnit.SimpleString(rh.gsNotLocalised(changedPlugin.pluginDescription.pluginName))
+                        ValueWithUnit.SimpleString(changedPlugin.pluginDescription.pluginName?.let { rh.gsNotLocalised(it) } ?: changedPlugin.pluginId)
                     )
                 }
             } else if (!enabled) {
                 scope.launch {
                     uel.log(
                         Action.PLUGIN_DISABLED, Sources.ConfigBuilder, null,
-                        ValueWithUnit.SimpleString(rh.gsNotLocalised(changedPlugin.pluginDescription.pluginName))
+                        ValueWithUnit.SimpleString(changedPlugin.pluginDescription.pluginName?.let { rh.gsNotLocalised(it) } ?: changedPlugin.pluginId)
                     )
                 }
             }
@@ -258,14 +258,14 @@ class ConfigBuilderImpl @Inject constructor(
     override fun processOnEnabledCategoryChanged(changedPlugin: PluginBase, type: PluginType) {
         var pluginsInCategory: ArrayList<PluginBase>? = null
         when {
-            type == PluginType.SENSITIVITY -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Sensitivity::class.java)
-            type == PluginType.SMOOTHING   -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Smoothing::class.java)
-            type == PluginType.CALIBRATION -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Calibration::class.java)
-            type == PluginType.APS         -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(APS::class.java)
-            type == PluginType.BGSOURCE    -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(BgSource::class.java)
-            type == PluginType.PUMP        -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Pump::class.java)
+            type == PluginType.SENSITIVITY -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Sensitivity::class)
+            type == PluginType.SMOOTHING   -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Smoothing::class)
+            type == PluginType.CALIBRATION -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Calibration::class)
+            type == PluginType.APS         -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(APS::class)
+            type == PluginType.BGSOURCE    -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(BgSource::class)
+            type == PluginType.PUMP        -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Pump::class)
             // Process only NSClients
-            changedPlugin is NsClient      -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(NsClient::class.java)
+            changedPlugin is NsClient      -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(NsClient::class)
 
             else                           -> { // do nothing
             }

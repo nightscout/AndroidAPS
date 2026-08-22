@@ -31,6 +31,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.core.interfaces.R as InterfacesR
 
 @Immutable
 data class AutomationActionItem(
@@ -89,7 +90,7 @@ class ScenesViewModel @Inject constructor(
     private fun setupEventListeners() {
         // RxBus flows are hot and don't replay, so initial subscription doesn't refresh —
         // init { refreshState() } below covers the cold start.
-        rxBus.toFlow(EventRefreshOverview::class.java)
+        rxBus.toFlow(EventRefreshOverview::class)
             .onEach { refreshState() }.launchIn(viewModelScope)
         // StateFlow — drop(1) since init{} already reads current automation events; only react to changes.
         automation.events.drop(1)
@@ -98,11 +99,11 @@ class ScenesViewModel @Inject constructor(
         // Without these, transient "no profile / pump disconnected" windows
         // would wipe automation items and never restore them until another
         // event (e.g. editing a scene) re-fired refreshState.
-        rxBus.toFlow(EventPumpStatusChanged::class.java)
+        rxBus.toFlow(EventPumpStatusChanged::class)
             .onEach { refreshState() }.launchIn(viewModelScope)
-        rxBus.toFlow(EventLoopUpdateGui::class.java)
+        rxBus.toFlow(EventLoopUpdateGui::class)
             .onEach { refreshState() }.launchIn(viewModelScope)
-        rxBus.toFlow(EventInitializationChanged::class.java)
+        rxBus.toFlow(EventInitializationChanged::class)
             .onEach { refreshState() }.launchIn(viewModelScope)
         // StateFlow — drop(1) since init{} already reads current scenes; only react to changes.
         sceneRepository.scenesFlow
@@ -144,7 +145,7 @@ class ScenesViewModel @Inject constructor(
             val automationReason: String? = when {
                 watchOnly                                -> null  // hidden, not disabled
                 masterOfflineReason != null              -> masterOfflineReason
-                loop.runningMode().pausesLoopExecution() -> rh.gs(CoreUiR.string.pump_disconnected)
+                loop.runningMode().pausesLoopExecution() -> rh.gs(InterfacesR.string.pump_disconnected)
                 !activePlugin.activePump.isInitialized() ||
                     profileFunction.getProfile() == null -> rh.gs(CoreUiR.string.pump_not_initialized_profile_not_set)
 

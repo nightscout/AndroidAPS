@@ -1,22 +1,12 @@
 package app.aaps.implementation.resources
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.content.res.AssetFileDescriptor
 import android.content.res.Configuration
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.drawable.Drawable
-import android.util.DisplayMetrics
-import androidx.annotation.ArrayRes
-import androidx.annotation.BoolRes
-import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
 import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.content.ContextCompat
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextRefIdRegistry
+import app.aaps.core.ui.UiStringIds
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -43,6 +33,13 @@ class ResourceHelperImpl @Inject constructor(var context: Context, private val f
     private var localizedContext: Context = buildLocalizedContext()
 
     init {
+        // Teach ResourceHelper the names :core:ui owns. It cannot see UiStringIds itself - :core:ui
+        // depends on :core:interfaces, not the other way round - so without this a `ui` name read
+        // outside a Composable renders as the raw name ("format_carbs" instead of "12 g").
+        // Here rather than in :core:ui, because this class is downstream of every module that owns
+        // strings and is built before anything can ask it for text.
+        TextRefIdRegistry.register("ui") { name -> UiStringIds.idOf(name) }
+
         // GeneralLanguage changes trigger Activity.recreate() which rebuilds the context
         // via attachBaseContext/LocaleHelper.wrap — no need to rebuild here and race on Main.
         preferences.observe(BooleanKey.GeneralSimpleMode).drop(1).onEach {
@@ -89,37 +86,7 @@ class ResourceHelperImpl @Inject constructor(var context: Context, private val f
             context.createConfigurationContext(this).getString(id, *args)
         }
 
-    override fun gc(@ColorRes id: Int): Int = ContextCompat.getColor(context, id)
-
-    override fun gd(@DrawableRes id: Int): Drawable? = AppCompatResources.getDrawable(context, id)
-
-    override fun gb(@BoolRes id: Int): Boolean = context.resources.getBoolean(id)
-
-    @SuppressLint("ResourceType")
-    override fun gcs(@ColorRes id: Int): String =
-        gs(id).replace("#ff", "#")
-
-    override fun gsa(@ArrayRes id: Int): Array<String> =
-        context.resources.getStringArray(id)
-
-    override fun openRawResourceFd(id: Int): AssetFileDescriptor =
-        context.resources.openRawResourceFd(id)
-
-    override fun decodeResource(id: Int): Bitmap =
-        BitmapFactory.decodeResource(context.resources, id)
-
-    override fun getDisplayMetrics(): DisplayMetrics =
-        context.resources.displayMetrics
-
-    override fun dpToPx(dp: Int): Int {
-        val scale = context.resources.displayMetrics.density
-        return (dp * scale + 0.5f).toInt()
-    }
-
-    override fun dpToPx(dp: Float): Int {
-        val scale = context.resources.displayMetrics.density
-        return (dp * scale + 0.5f).toInt()
-    }
-
-    override fun shortTextMode(): Boolean = !gb(app.aaps.core.ui.R.bool.isTablet)
+    // Reads the bool resource directly. It used to go through gb(), which was dropped from the
+    // interface because this was its only caller.
+    override fun shortTextMode(): Boolean = !context.resources.getBoolean(app.aaps.core.ui.R.bool.isTablet)
 }

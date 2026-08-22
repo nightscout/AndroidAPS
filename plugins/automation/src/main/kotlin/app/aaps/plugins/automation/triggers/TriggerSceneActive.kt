@@ -5,11 +5,12 @@ import androidx.compose.material.icons.filled.PlayArrow
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.utils.JsonHelper
+import app.aaps.core.utils.lenientStringOrNull
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.ComparatorExists
-import dagger.android.HasAndroidInjector
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import javax.inject.Inject
 
 /**
@@ -17,17 +18,19 @@ import javax.inject.Inject
  * Used as a precondition by [app.aaps.plugins.automation.actions.ActionRunScene]
  * to skip activation when a scene is already running.
  */
-class TriggerSceneActive(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerSceneActive(
+    deps: TriggerDeps,
+    private val sceneApi: SceneAutomationApi
+) : Trigger(deps) {
 
-    @Inject lateinit var sceneApi: SceneAutomationApi
 
     var comparator = ComparatorExists(rh)
 
-    constructor(injector: HasAndroidInjector, compare: ComparatorExists.Compare) : this(injector) {
+    constructor(deps: TriggerDeps, sceneApi: SceneAutomationApi, compare: ComparatorExists.Compare) : this(deps, sceneApi) {
         comparator = ComparatorExists(rh, compare)
     }
 
-    constructor(injector: HasAndroidInjector, other: TriggerSceneActive) : this(injector) {
+    constructor(deps: TriggerDeps, sceneApi: SceneAutomationApi, other: TriggerSceneActive) : this(deps, sceneApi) {
         comparator = ComparatorExists(rh, other.comparator.value)
     }
 
@@ -42,12 +45,12 @@ class TriggerSceneActive(injector: HasAndroidInjector) : Trigger(injector) {
         return ready
     }
 
-    override fun dataJSON(): JSONObject =
-        JSONObject().put("comparator", comparator.value.toString())
+    override fun dataJSON(): JsonObject =
+        buildJsonObject { put("comparator", comparator.value.toString()) }
 
     override fun fromJSON(data: String): Trigger {
-        val d = JSONObject(data)
-        comparator.value = ComparatorExists.Compare.valueOf(JsonHelper.safeGetString(d, "comparator")!!)
+        val d = jsonOf(data)
+        comparator.value = ComparatorExists.Compare.valueOf(d.lenientStringOrNull("comparator")!!)
         return this
     }
 
@@ -58,5 +61,5 @@ class TriggerSceneActive(injector: HasAndroidInjector) : Trigger(injector) {
     override fun composeIcon() = Icons.Filled.PlayArrow
     override fun elementType() = ElementType.SCENE
 
-    override fun duplicate(): Trigger = TriggerSceneActive(injector, this)
+    override fun duplicate(): Trigger = TriggerSceneActive(deps, sceneApi, this)
 }

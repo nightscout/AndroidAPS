@@ -26,7 +26,7 @@ class CommandTempBasalPercentTest : TestBaseWithProfile() {
         tbrType: PumpSync.TemporaryBasalType = PumpSync.TemporaryBasalType.NORMAL,
         callback: Callback? = null
     ) = CommandTempBasalPercent(
-        aapsLogger, rh, activePlugin, pumpEnactResultProvider,
+        aapsLogger, rh, activePlugin, pumpEnactResultProvider::get,
         percent, durationInMinutes, enforceNew, tbrType, callback
     )
 

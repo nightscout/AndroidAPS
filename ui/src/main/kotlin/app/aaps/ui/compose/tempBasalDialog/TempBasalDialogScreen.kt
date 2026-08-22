@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.tempBasalDialog
 
+import app.aaps.core.ui.compose.stringResourceOrNull
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -41,13 +42,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
-import app.aaps.core.ui.compose.navigation.labelResId
-import app.aaps.core.keys.R as KeysR
+import app.aaps.core.ui.compose.navigation.label
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.core.interfaces.R as InterfacesR
 
 @Composable
 fun TempBasalDialogScreen(
@@ -123,7 +125,7 @@ internal fun TempBasalDialogContent(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(ElementType.TEMP_BASAL.labelResId())) },
+                title = { Text((stringResourceOrNull(ElementType.TEMP_BASAL.label()) ?: "")) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
@@ -157,7 +159,7 @@ internal fun TempBasalDialogContent(
                 if (uiState.isPercentPump && uiState.basalPercent != 100.0) {
                     Text("${NumberFormat.INTEGER.format(uiState.basalPercent)}%")
                 } else if (!uiState.isPercentPump && uiState.basalAbsolute > 0.0) {
-                    Text("${NumberFormat.DECIMAL_2.format(uiState.basalAbsolute)} ${stringResource(CoreUiR.string.profile_ins_units_per_hour)}")
+                    Text("${NumberFormat.DECIMAL_2.format(uiState.basalAbsolute)} ${stringResource(InterfacesR.string.profile_ins_units_per_hour)}")
                 } else {
                     Text(stringResource(CoreUiR.string.ok))
                 }
@@ -193,7 +195,7 @@ internal fun TempBasalDialogContent(
                             valueRange = 0.0..uiState.maxTempPercent,
                             step = uiState.tempPercentStep,
                             valueFormat = NumberFormat.INTEGER,
-                            unitLabel = "%",
+                            unitLabel = TextRef.Literal("%"),
                             modifier = itemModifier
                         )
                     } else {
@@ -204,7 +206,7 @@ internal fun TempBasalDialogContent(
                             valueRange = 0.0..uiState.maxTempAbsolute,
                             step = uiState.tempAbsoluteStep,
                             valueFormat = NumberFormat.DECIMAL_2,
-                            unitLabel = stringResource(CoreUiR.string.profile_ins_units_per_hour),
+                            unitLabel = TextRef.AndroidRes(InterfacesR.string.profile_ins_units_per_hour),
                             modifier = itemModifier
                         )
                     }
@@ -217,7 +219,7 @@ internal fun TempBasalDialogContent(
                         valueRange = uiState.tempDurationStep..uiState.tempMaxDuration,
                         step = uiState.tempDurationStep,
                         valueFormat = NumberFormat.INTEGER,
-                        unitLabelResId = KeysR.string.units_min,
+                        unitLabel = TextRef.AndroidRes(CoreUiR.string.units_min),
                         modifier = itemModifier
                     )
                 }

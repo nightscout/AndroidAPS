@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.manageSheet
 
+import app.aaps.core.ui.compose.stringResourceOrNull
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -53,9 +54,9 @@ import app.aaps.core.ui.compose.icons.IcTbrCancel
 import app.aaps.core.ui.compose.masterEditingEnabled
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.navigation.color
-import app.aaps.core.ui.compose.navigation.descriptionResId
+import app.aaps.core.ui.compose.navigation.description
 import app.aaps.core.ui.compose.navigation.icon
-import app.aaps.core.ui.compose.navigation.labelResId
+import app.aaps.core.ui.compose.navigation.label
 import app.aaps.core.ui.compose.rememberBringIntoViewOnExpand
 import app.aaps.core.ui.R as CoreUiR
 
@@ -542,9 +543,9 @@ private fun ManageGridItem(
     enabled: Boolean = true
 ) {
     val color = elementType.color()
-    val label = text ?: stringResource(elementType.labelResId())
-    val descResId = elementType.descriptionResId()
-    val description = if (descResId != 0) stringResource(descResId) else null
+    val label = text ?: (stringResourceOrNull(elementType.label()) ?: "")
+    val desc = elementType.description()
+    val description = stringResourceOrNull(desc)
     // A relayed action (visible only to master/paired-client) is also DISABLED when the master is unreachable or
     // has remote control turned off — not just hidden when unpaired. Non-relayed entries (Pump, Pair-with-master)
     // use their own visibility lambda, so they stay enabled (the only thing you can still do is re-pair).

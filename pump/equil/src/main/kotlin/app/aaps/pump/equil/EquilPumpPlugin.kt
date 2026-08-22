@@ -2,6 +2,7 @@ package app.aaps.pump.equil
 
 import android.content.Context
 import android.os.SystemClock
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -12,6 +13,7 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -78,7 +80,7 @@ import javax.inject.Singleton
 @Singleton
 class EquilPumpPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     commandQueue: CommandQueue,
     private val rxBus: RxBus,
@@ -104,13 +106,10 @@ class EquilPumpPlugin @Inject constructor(
             )
         }
         .icon(IcPluginEquil)
-        .pluginName(R.string.equil_name)
-        .shortName(R.string.equil_name_short)
-        .description(R.string.equil_pump_description),
-    ownPreferences = listOf(
-        EquilBooleanKey::class.java, EquilBooleanPreferenceKey::class.java, EquilIntPreferenceKey::class.java,
-        EquilStringKey::class.java
-    ),
+        .pluginName(TextRef.AndroidRes(R.string.equil_name))
+        .shortName(TextRef.AndroidRes(R.string.equil_name_short))
+        .description(TextRef.AndroidRes(R.string.equil_pump_description)),
+    ownPreferences = EquilBooleanKey.entries + EquilBooleanPreferenceKey.entries + EquilIntPreferenceKey.entries + EquilStringKey.entries,
     aapsLogger, rh, preferences, commandQueue
 ), Pump {
 
@@ -127,17 +126,17 @@ class EquilPumpPlugin @Inject constructor(
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
 
-        rxBus.toFlow(EventEquilDataChanged::class.java)
+        rxBus.toFlow(EventEquilDataChanged::class)
             .collectResilient(newScope, aapsLogger, LTag.PUMP) { playAlarm() }
 
-        rxBus.toFlow(EventEquilAlarm::class.java)
+        rxBus.toFlow(EventEquilAlarm::class)
             .collectResilient(newScope, aapsLogger, LTag.PUMP) { eventEquilError ->
                 aapsLogger.info(LTag.PUMPCOMM, "eventEquilError.tips====${eventEquilError.tips}")
                 // Always surface the pump alarm - it is no longer gated on a bolus being in progress
                 // (alarms now come from the GATT history read on every connection, not just from an
                 // advertisement scan caught mid-bolus). See #5040.
                 notificationManager.dismiss(NotificationId.EQUIL_ALARM)
-                notificationManager.post(NotificationId.EQUIL_ALARM, eventEquilError.tips, soundRes = app.aaps.core.ui.R.raw.alarm)
+                notificationManager.post(NotificationId.EQUIL_ALARM, eventEquilError.tips, sound = AlarmSound.ALARM)
                 // But only halt bolus tracking if a bolus is actually delivering.
                 if (commandQueue.performing()?.commandType == Command.CommandType.BOLUS) {
                     stopBolusDelivering()
@@ -419,7 +418,7 @@ class EquilPumpPlugin @Inject constructor(
                 notificationManager.post(
                     NotificationId.EQUIL_LOW_BATTERY,
                     rh.gs(R.string.equil_low_battery) + battery + "%",
-                    soundRes = app.aaps.core.ui.R.raw.alarm
+                    sound = AlarmSound.ALARM
                 )
                 preferences.put(EquilBooleanKey.AlarmBattery10, true)
             } else {
@@ -428,7 +427,7 @@ class EquilPumpPlugin @Inject constructor(
                         NotificationId.EQUIL_LOW_BATTERY,
                         rh.gs(R.string.equil_low_battery) + battery + "%",
                         NotificationLevel.IMPORTANT,
-                        soundRes = app.aaps.core.ui.R.raw.alarm
+                        sound = AlarmSound.ALARM
                     )
                 }
             }
@@ -443,7 +442,7 @@ class EquilPumpPlugin @Inject constructor(
                         notificationManager.post(
                             NotificationId.EQUIL_ALARM_INSULIN,
                             rh.gs(R.string.equil_low_insulin) + insulin + "U",
-                            soundRes = app.aaps.core.ui.R.raw.alarm
+                            sound = AlarmSound.ALARM
                         )
                         preferences.put(EquilBooleanKey.AlarmInsulin10, true)
                     }
@@ -456,7 +455,7 @@ class EquilPumpPlugin @Inject constructor(
                         notificationManager.post(
                             NotificationId.EQUIL_ALARM_INSULIN,
                             rh.gs(R.string.equil_low_insulin) + insulin + "U",
-                            soundRes = app.aaps.core.ui.R.raw.alarm
+                            sound = AlarmSound.ALARM
                         )
                         preferences.put(EquilBooleanKey.AlarmInsulin5, true)
                     }
@@ -467,7 +466,7 @@ class EquilPumpPlugin @Inject constructor(
                     notificationManager.post(
                         NotificationId.EQUIL_ALARM_INSULIN,
                         rh.gs(R.string.equil_low_insulin) + insulin + "U",
-                        soundRes = app.aaps.core.ui.R.raw.alarm
+                        sound = AlarmSound.ALARM
                     )
                 }
             }

@@ -55,8 +55,8 @@ class HistoryBrowserData @Inject constructor(
     )
     override val iobCobCalculator: IobCobCalculator =
         IobCobCalculatorPlugin(
-            aapsLogger, aapsSchedulers, rxBus, preferences, rh, profileFunction, activePlugin,
-            fabricPrivacy, dateUtil, persistenceLayer, overviewData, calculationWorkflow, decimalFormatter, processedTbrEbData,
+            aapsLogger, rxBus, preferences, rh, profileFunction, activePlugin,
+            dateUtil, persistenceLayer, overviewData, calculationWorkflow, decimalFormatter, processedTbrEbData,
             signals
         ) { cache }
 

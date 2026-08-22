@@ -39,6 +39,7 @@ import javax.inject.Singleton
 
 @Singleton
 class ExportPasswordDataStoreImpl @Inject constructor(
+    private val context: Context,
     private var aapsLogger: AAPSLogger,
     private var preferences: Preferences,
     private var config: Config
@@ -127,32 +128,32 @@ class ExportPasswordDataStoreImpl @Inject constructor(
     /***
      * Clear password currently stored in DataStore to "empty"
      */
-    override fun clearPasswordDataStore(context: Context): String {
+    override fun clearPasswordDataStore(): String {
         if (!exportPasswordStoreEnabled()) return "" // Do nothing, return empty
 
         // Store & update to empty password and return
         aapsLogger.debug(LTag.CORE, "$MODULE: clearPasswordDataStore")
-        return this.clearPassword(context)
+        return this.clearPassword()
     }
 
     /***
      * Store password in local phone's DataStore
      * Return: password
      */
-    override fun putPasswordToDataStore(context: Context, password: String): String {
+    override fun putPasswordToDataStore(password: String): String {
         if (!exportPasswordStoreEnabled()) return password // Just return the password
         aapsLogger.debug(LTag.CORE, "$MODULE: putPasswordToDataStore")
-        return this.storePassword(context, password)
+        return this.storePassword(password)
     }
 
     /***
      * Get password from local phone's DataStore
      * Return Triple (ok, password string, isExpired, isAboutToExpire)
      */
-    override fun getPasswordFromDataStore(context: Context): Triple<String, Boolean, Boolean> {
+    override fun getPasswordFromDataStore(): Triple<String, Boolean, Boolean> {
         if (!exportPasswordStoreEnabled()) return Triple("", true, true)
 
-        val passwordData = this.retrievePassword(context)
+        val passwordData = this.retrievePassword()
         with(passwordData) {
             if (password.isNotEmpty()) {  // And not expired
                 // The stored password must stay in sync with the master password. Decrypt the stored secret and
@@ -162,7 +163,7 @@ class ExportPasswordDataStoreImpl @Inject constructor(
                 val masterHash = preferences.getIfExists(StringKey.ProtectionMasterPassword)
                 if (masterHash.isNullOrEmpty() || !cryptoUtil.checkPassword(secureEncrypt.decrypt(password), masterHash)) {
                     aapsLogger.info(LTag.CORE, "$MODULE: stored password no longer matches the master password, clearing")
-                    clearPasswordDataStore(context)
+                    clearPasswordDataStore()
                     return Triple("", true, true)
                 }
                 aapsLogger.debug(LTag.CORE, "$MODULE: getPasswordFromDataStore")
@@ -188,7 +189,7 @@ class ExportPasswordDataStoreImpl @Inject constructor(
     /***
      * Clear password and timestamp
      */
-    private fun clearPassword(context: Context): String {
+    private fun clearPassword(): String {
 
         // Write setting to android datastore and return password
         fun updatePrefString(name: String) = runBlocking {
@@ -206,7 +207,7 @@ class ExportPasswordDataStoreImpl @Inject constructor(
     /***
      * Store password and set timestamp to current
      */
-    private fun storePassword(context: Context, password: String): String {
+    private fun storePassword(password: String): String {
 
         // Write encrypted password key and timestamp to the local phone's android datastore and return password
         fun updatePrefString(name: String, str: String) = runBlocking {
@@ -226,7 +227,7 @@ class ExportPasswordDataStoreImpl @Inject constructor(
      * Retrieve password from local phone's data store.
      * Reset password when validity expired
      ***/
-    private fun retrievePassword(context: Context): ClassPasswordData {
+    private fun retrievePassword(): ClassPasswordData {
 
         // Read encrypted password key and timestamp from the local phone's android datastore and return password
         var passwordStr = ""
@@ -247,7 +248,7 @@ class ExportPasswordDataStoreImpl @Inject constructor(
             val aliasInBlob = passwordStr.split(":").getOrNull(1)
             if (aliasInBlob != null && aliasInBlob != KEYSTORE_ALIAS) {
                 aapsLogger.info(LTag.CORE, "$MODULE: legacy alias '$aliasInBlob' in stored password, clearing for re-entry with hardened key")
-                clearPassword(context)
+                clearPassword()
                 passwordStr = ""
                 timestampStr = ""
                 secureEncrypt.deleteKey(aliasInBlob)
@@ -271,7 +272,7 @@ class ExportPasswordDataStoreImpl @Inject constructor(
             isAboutToExpire = expires
 
             // When expired, need to renew: clear/update password in data store
-            if (isExpired) password = clearPasswordDataStore(context)
+            if (isExpired) password = clearPasswordDataStore()
         }
         // Store/update password and return
         return classPasswordData

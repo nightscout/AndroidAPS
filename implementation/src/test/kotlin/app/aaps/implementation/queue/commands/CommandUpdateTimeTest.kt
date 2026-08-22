@@ -16,7 +16,7 @@ import org.mockito.kotlin.whenever
 class CommandUpdateTimeTest : TestBaseWithProfile() {
 
     private fun newCommand(callback: Callback? = null) =
-        CommandUpdateTime(aapsLogger, rh, activePlugin, pumpEnactResultProvider, callback)
+        CommandUpdateTime(aapsLogger, rh, activePlugin, pumpEnactResultProvider::get, callback)
 
     @Test
     fun `execute on Medtrum pump returns pump's updateTime result`() = runTest {

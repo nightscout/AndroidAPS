@@ -4,20 +4,21 @@ import app.aaps.core.data.model.BS
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.ui.compose.icons.IcBolus
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.utils.JsonHelper
-import app.aaps.core.utils.JsonHelper.safeGetString
+import app.aaps.core.utils.lenientInt
+import app.aaps.core.utils.lenientStringOrNull
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDuration
-import dagger.android.HasAndroidInjector
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
-class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerBolusAgo(deps: TriggerDeps) : Trigger(deps) {
 
     var minutesAgo: InputDuration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
     var comparator: Comparator = Comparator(rh)
 
-    private constructor(injector: HasAndroidInjector, triggerBolusAgo: TriggerBolusAgo) : this(injector) {
+    private constructor(deps: TriggerDeps, triggerBolusAgo: TriggerBolusAgo) : this(deps) {
         minutesAgo = InputDuration(triggerBolusAgo.minutesAgo.value, InputDuration.TimeUnit.MINUTES)
         comparator = Comparator(rh, triggerBolusAgo.comparator.value)
     }
@@ -54,15 +55,16 @@ class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
         return false
     }
 
-    override fun dataJSON(): JSONObject =
-        JSONObject()
-            .put("minutesAgo", minutesAgo.value)
-            .put("comparator", comparator.value.toString())
+    override fun dataJSON(): JsonObject =
+        buildJsonObject {
+            put("minutesAgo", minutesAgo.value)
+            put("comparator", comparator.value.toString())
+        }
 
     override fun fromJSON(data: String): Trigger {
-        val d = JSONObject(data)
-        minutesAgo.setMinutes(JsonHelper.safeGetInt(d, "minutesAgo"))
-        comparator.setValue(Comparator.Compare.valueOf(safeGetString(d, "comparator")!!))
+        val d = jsonOf(data)
+        minutesAgo.setMinutes(d.lenientInt("minutesAgo"))
+        comparator.setValue(Comparator.Compare.valueOf(d.lenientStringOrNull("comparator")!!))
         return this
     }
 
@@ -74,6 +76,6 @@ class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
     override fun composeIcon() = IcBolus
     override fun elementType() = ElementType.INSULIN
 
-    override fun duplicate(): Trigger = TriggerBolusAgo(injector, this)
+    override fun duplicate(): Trigger = TriggerBolusAgo(deps, this)
 
 }

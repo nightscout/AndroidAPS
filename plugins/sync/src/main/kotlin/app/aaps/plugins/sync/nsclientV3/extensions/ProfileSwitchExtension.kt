@@ -14,13 +14,12 @@ import app.aaps.core.nssdk.localmodel.treatment.NSProfileSwitch
 import app.aaps.core.objects.extensions.getCustomizedName
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
-import org.json.JSONObject
 import java.security.InvalidParameterException
 
 /** [insulinFallback] stamps records uploaded without one — see `NsIncomingDataProcessor.fallbackICfg`. */
 fun NSProfileSwitch.toProfileSwitch(profileRepository: ProfileRepository, dateUtil: DateUtil, insulinFallback: ICfg): PS? {
     val pureProfile =
-        profileJson?.let { pureProfileFromJson(JSONObject(it), dateUtil) ?: return null }
+        profileJson?.let { pureProfileFromJson(it, dateUtil) ?: return null }
             ?: profileRepository.profile.value?.getSpecificProfile(profile) ?: return null
 
     val profileSealed = ProfileSealed.Pure(value = pureProfile, activePlugin = null)

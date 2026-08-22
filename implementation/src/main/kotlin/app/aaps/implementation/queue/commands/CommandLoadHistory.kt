@@ -9,13 +9,12 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.ResourceHelper
-import javax.inject.Provider
 
 class CommandLoadHistory(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val activePlugin: ActivePlugin,
-    override val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    override val pumpEnactResultProvider: () -> PumpEnactResult,
     private val type: Byte,
     override val callback: Callback?,
 ) : Command {
@@ -27,7 +26,7 @@ class CommandLoadHistory(
         val result = when (pump) {
             is Dana    -> pump.loadHistory(type)
             is Diaconn -> pump.loadHistory()
-            else       -> pumpEnactResultProvider.get().success(true).enacted(false)
+            else       -> pumpEnactResultProvider().success(true).enacted(false)
         }
         aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${result.success} enacted: ${result.enacted}")
         return result

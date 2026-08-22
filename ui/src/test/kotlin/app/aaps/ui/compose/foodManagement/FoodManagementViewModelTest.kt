@@ -32,7 +32,7 @@ internal class FoodManagementViewModelTest {
         // stays clean and we test the synchronous update methods against the default state. The observeChanges()
         // cold flow is still built synchronously during init, so it must be stubbed non-null.
         Dispatchers.setMain(StandardTestDispatcher())
-        whenever(persistenceLayer.observeChanges(FD::class.java)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(FD::class)).thenReturn(emptyFlow())
         sut = FoodManagementViewModel(persistenceLayer, aapsLogger)
     }
 

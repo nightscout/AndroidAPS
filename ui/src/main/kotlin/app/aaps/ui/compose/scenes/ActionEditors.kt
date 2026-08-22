@@ -41,7 +41,9 @@ import app.aaps.core.data.model.SceneAction
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TTPreset
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.R
+import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.NumberInputRow
 
@@ -144,7 +146,7 @@ internal fun ProfileSwitchEditor(
         onValueChange = { onUpdate(action.copy(percentage = it.toInt())) },
         valueRange = Constants.CPP_PERCENTAGE_RANGE,
         step = 5.0,
-        unitLabelResId = app.aaps.core.keys.R.string.units_percent
+        unitLabel = TextRef.AndroidRes(R.string.units_percent)
     )
 }
 
@@ -197,12 +199,12 @@ internal fun RunningModeEditor(
 
 @Composable
 internal fun loopModeDisplayName(mode: RM.Mode): String = when (mode) {
-    RM.Mode.CLOSED_LOOP      -> stringResource(R.string.closedloop)
-    RM.Mode.CLOSED_LOOP_LGS  -> stringResource(R.string.lowglucosesuspend)
+    RM.Mode.CLOSED_LOOP       -> stringResource(R.string.closedloop)
+    RM.Mode.CLOSED_LOOP_LGS   -> stringResource(R.string.lowglucosesuspend)
     RM.Mode.OPEN_LOOP         -> stringResource(R.string.openloop)
     RM.Mode.DISABLED_LOOP     -> stringResource(R.string.disableloop)
     RM.Mode.SUSPENDED_BY_USER -> stringResource(R.string.suspendloop)
-    RM.Mode.DISCONNECTED_PUMP -> stringResource(R.string.pump_disconnected)
+    RM.Mode.DISCONNECTED_PUMP -> stringResource(InterfacesR.string.pump_disconnected)
     else                      -> mode.name
 }
 

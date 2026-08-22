@@ -88,10 +88,10 @@ internal class ErosOverviewViewModelTest {
         Dispatchers.setMain(UnconfinedTestDispatcher())
 
         // PumpCommunicationStatus + omnipodRefresh subscribe to these at construction.
-        whenever(rxBus.toFlow(EventPumpStatusChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventQueueChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventOmnipodErosPumpValuesChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventRileyLinkDeviceStatusChange::class.java)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventPumpStatusChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventQueueChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventOmnipodErosPumpValuesChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventRileyLinkDeviceStatusChange::class)).thenReturn(emptyFlow())
 
         // buildInfoRows()/buildManagementActions() read these unconditionally at construction.
         whenever(rileyLinkServiceData.rileyLinkServiceState).thenReturn(RileyLinkServiceState.NotStarted)

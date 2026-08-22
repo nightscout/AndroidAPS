@@ -8,6 +8,8 @@ import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.compose.stringResource
 import javax.inject.Inject
 
 class SWInfoText @Inject constructor(aapsLogger: AAPSLogger, rh: ResourceHelper, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck) : SWItem(aapsLogger, rh, rxBus, preferences, passwordCheck) {
@@ -15,10 +17,12 @@ class SWInfoText @Inject constructor(aapsLogger: AAPSLogger, rh: ResourceHelper,
     private var textLabel: String? = null
     private var visibilityValidator: (() -> Boolean)? = null
 
-    override fun label(label: Int): SWInfoText {
+    override fun label(label: TextRef): SWInfoText {
         this.label = label
         return this
     }
+
+    override fun label(label: Int): SWInfoText = label(TextRef.AndroidRes(label))
 
     fun label(newLabel: String): SWInfoText {
         textLabel = newLabel

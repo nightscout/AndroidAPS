@@ -24,7 +24,6 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -47,7 +46,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.PreferenceSheetContent
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -73,7 +71,6 @@ fun OverviewStatusSection(
     commandsAllowed: Boolean = true,
     onNavigate: (NavigationRequest) -> Unit,
     statusLightsDef: PreferenceSubScreenDef,
-    onCopyFromNightscout: () -> Unit,
     expanded: Boolean,
     onExpandedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
@@ -183,7 +180,6 @@ fun OverviewStatusSection(
         StatusLightsSettingsBottomSheet(
             settingsDef = statusLightsDef,
             onDismiss = { showSettingsSheet = false },
-            onCopyFromNightscout = onCopyFromNightscout,
             sheetState = sheetState
         )
     }
@@ -194,7 +190,6 @@ fun OverviewStatusSection(
 private fun StatusLightsSettingsBottomSheet(
     settingsDef: PreferenceSubScreenDef,
     onDismiss: () -> Unit,
-    onCopyFromNightscout: () -> Unit,
     sheetState: SheetState
 ) {
     ModalBottomSheet(
@@ -202,20 +197,12 @@ private fun StatusLightsSettingsBottomSheet(
         sheetState = sheetState,
         containerColor = MaterialTheme.colorScheme.surface
     ) {
-        StatusLightsSettingsContent(
-            settingsDef = settingsDef,
-            onCopyFromNightscout = onCopyFromNightscout
-        )
+        StatusLightsSettingsContent(settingsDef = settingsDef)
     }
 }
 
 @Composable
-internal fun StatusLightsSettingsContent(
-    settingsDef: PreferenceSubScreenDef,
-    onCopyFromNightscout: () -> Unit
-) {
-    var showCopyDialog by remember { mutableStateOf(false) }
-
+internal fun StatusLightsSettingsContent(settingsDef: PreferenceSubScreenDef) {
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
@@ -231,27 +218,6 @@ internal fun StatusLightsSettingsContent(
         // Multiple group subscreens → one expandable card each (collapsed by default), matching the
         // main Settings screen's look. Shared renderer; groups are the SSOT in BuiltInSearchables.
         PreferenceSheetContent(settingsDef = settingsDef)
-
-        FilledTonalButton(
-            onClick = { showCopyDialog = true },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp)
-        ) {
-            Text(text = stringResource(app.aaps.core.ui.R.string.copy_existing_values))
-        }
-    }
-
-    if (showCopyDialog) {
-        OkCancelDialog(
-            title = stringResource(app.aaps.core.ui.R.string.statuslights),
-            message = stringResource(app.aaps.core.ui.R.string.copy_existing_values),
-            onConfirm = {
-                onCopyFromNightscout()
-                showCopyDialog = false
-            },
-            onDismiss = { showCopyDialog = false }
-        )
     }
 }
 

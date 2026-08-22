@@ -49,6 +49,7 @@ import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextRefIdRegistry
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppInitialized
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
@@ -73,10 +74,10 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.locale.LocaleHelper
-import app.aaps.core.utils.JsonHelper
 import app.aaps.database.AppRepository
 import app.aaps.implementation.lifecycle.ProcessLifecycleListener
 import app.aaps.implementation.plugin.PluginStore
@@ -86,11 +87,16 @@ import app.aaps.implementation.receivers.ChargingStateReceiver
 import app.aaps.implementation.receivers.KeepAliveWorker
 import app.aaps.implementation.receivers.NetworkChangeReceiver
 import app.aaps.implementation.receivers.TimeDateOrTZChangeReceiver
-import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
+import app.aaps.workers.RunningModeExpiryScheduler
 import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler
 import app.aaps.plugins.automation.AutomationRuntime
+import app.aaps.plugins.calibration.CalibrationStringIds
 import app.aaps.plugins.constraints.objectives.keys.ObjectivesLongComposedKey
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
+import app.aaps.plugins.main.MainStringIds
+import app.aaps.plugins.sensitivity.SensitivityStringIds
+import app.aaps.plugins.smoothing.SmoothingStringIds
+import app.aaps.pump.virtual.VirtualStringIds
 import app.aaps.ui.activityMonitor.ActivityMonitor
 import app.aaps.utils.configureLeakCanary
 import com.google.firebase.Firebase
@@ -110,7 +116,9 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
-import org.json.JSONObject
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.jsonObject
 import rxdogtag2.RxDogTag
 import java.io.IOException
 import java.util.Locale
@@ -185,6 +193,8 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
     override fun onCreate() {
         super.onCreate()
 
+        registerStringOwners()
+
         // Here should be everything injected
         aapsLogger.debug("onCreate")
         ProcessLifecycleOwner.get().lifecycle.addObserver(processLifecycleListener.get())
@@ -195,7 +205,7 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
         // Visible activities host their own GlobalSnackbarHost that also
         // subscribes; those win while UI is present.
         appScope.launch {
-            rxBus.toFlow(EventShowSnackbar::class.java).collect { event ->
+            rxBus.toFlow(EventShowSnackbar::class).collect { event ->
                 val uiVisible = ProcessLifecycleOwner.get().lifecycle.currentState
                     .isAtLeast(Lifecycle.State.STARTED)
                 if (!uiVisible) {
@@ -285,7 +295,7 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
         if (preferences.get(BooleanNonKey.VacuumInProgress)) {
             aapsLogger.error(LTag.CORE, "Previous startup VACUUM did not finish (likely native crash) — skipping for 30 days")
             // Report to Firebase so we get a fleet-wide count of users hit by a crashing startup VACUUM.
-            fabricPrivacy.logCustom("db_vacuum_crash_recovered", Bundle())
+            fabricPrivacy.logCustom("db_vacuum_crash_recovered")
             preferences.put(BooleanNonKey.VacuumInProgress, false)
             preferences.put(LongNonKey.LastVacuumRun, dateUtil.now())
             return
@@ -307,10 +317,7 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
             if (info.availableBytes in 0 until info.dbSizeBytes * 2) {
                 val freeMb = info.availableBytes / 1_048_576
                 aapsLogger.warn(LTag.CORE, "Skipping startup VACUUM: free $freeMb MB < 2x DB $dbMb MB")
-                fabricPrivacy.logCustom("db_vacuum_skip_space", Bundle().apply {
-                    putLong("db_mb", dbMb)
-                    putLong("free_mb", freeMb)
-                })
+                fabricPrivacy.logCustom("db_vacuum_skip_space", mapOf("db_mb" to dbMb, "free_mb" to freeMb))
                 return
             }
             // Commit the marker synchronously BEFORE running: a plain put() uses apply() and may not
@@ -322,11 +329,7 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
             preferences.put(LongNonKey.LastVacuumRun, dateUtil.now())
             aapsLogger.debug(LTag.CORE, "Startup VACUUM done")
             // Fleet overview of DB size / cleanup backlog / change-row volume across users.
-            fabricPrivacy.logCustom("db_vacuum_ok", Bundle().apply {
-                putLong("db_mb", dbMb)
-                putLong("deletable", info.deletableRows)
-                putLong("changes", info.changeRows)
-            })
+            fabricPrivacy.logCustom("db_vacuum_ok", mapOf("db_mb" to dbMb, "deletable" to info.deletableRows, "changes" to info.changeRows))
         } catch (e: Throwable) {
             // Throwable, not just Exception: a JVM OutOfMemoryError here must not abort app init.
             aapsLogger.error(LTag.CORE, "Startup VACUUM failed", e)
@@ -447,7 +450,7 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
             if (serialNumber != null) {
                 preferences.put(StringKey.ProtectionMasterPassword, cryptoUtil.hashPassword(serialNumber))
                 fh.delete()
-                exportPasswordDataStore.clearPasswordDataStore(this@MainApp)
+                exportPasswordDataStore.clearPasswordDataStore()
                 config.showInitSnackbar(getString(app.aaps.core.ui.R.string.password_set))
             } else {
                 aapsLogger.warn(LTag.CORE, "Password reset timed out waiting for pump serial number")
@@ -458,7 +461,7 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
     private fun exportPasswordResetCheck() {
         val fh = fileListProvider.ensureExtraDirExists()?.findFile("ExportPasswordReset")
         if (fh?.exists() == true) {
-            exportPasswordDataStore.clearPasswordDataStore(this@MainApp)
+            exportPasswordDataStore.clearPasswordDataStore()
             fh.delete()
             config.showInitSnackbar(getString(app.aaps.core.ui.R.string.datastore_password_cleared))
         }
@@ -469,27 +472,27 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
         if (config.isDev() && preferences.get(StringKey.MaintenanceIdentification).isBlank())
             notificationManager.post(
                 id = NotificationId.IDENTIFICATION_NOT_SET,
-                R.string.identification_not_set,
+                TextRef.AndroidRes(R.string.identification_not_set),
                 level = NotificationLevel.INFO,
-                actions = listOf(NotificationAction(R.string.set) {}),
+                actions = listOf(NotificationAction(TextRef.AndroidRes(R.string.set)) {}),
                 validityCheck = { config.isDev() && preferences.get(StringKey.MaintenanceIdentification).isBlank() }
             )
         // Master password not set
         if (preferences.get(StringKey.ProtectionMasterPassword) == "")
             notificationManager.post(
                 id = NotificationId.MASTER_PASSWORD_NOT_SET,
-                app.aaps.core.ui.R.string.master_password_not_set,
+                TextRef.AndroidRes(app.aaps.core.ui.R.string.master_password_not_set),
                 level = NotificationLevel.NORMAL,
-                actions = listOf(NotificationAction(R.string.set) {}),
+                actions = listOf(NotificationAction(TextRef.AndroidRes(R.string.set)) {}),
                 validityCheck = { preferences.get(StringKey.ProtectionMasterPassword) == "" }
             )
         // AAPS directory not selected
         if (preferences.getIfExists(StringKey.AapsDirectoryUri).isNullOrEmpty())
             notificationManager.post(
                 id = NotificationId.AAPS_DIR_NOT_SELECTED,
-                app.aaps.core.ui.R.string.aaps_directory_not_selected,
+                TextRef.AndroidRes(app.aaps.core.ui.R.string.aaps_directory_not_selected),
                 level = NotificationLevel.LOW,
-                actions = listOf(NotificationAction(R.string.select) {}),
+                actions = listOf(NotificationAction(TextRef.AndroidRes(R.string.select)) {}),
                 validityCheck = { preferences.getIfExists(StringKey.AapsDirectoryUri).isNullOrEmpty() }
             )
     }
@@ -973,8 +976,16 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
                         @Suppress("UNCHECKED_CAST")
                         (versionCheckersUtils::class.declaredMemberProperties.find { it.name == "definition" } as KMutableProperty<Any>?)
                             ?.let {
-                                val merged = JsonHelper.merge(it.getter.call(versionCheckersUtils) as JSONObject, JSONObject(firebaseRemoteConfig.getString("defs")))
-                                it.setter.call(versionCheckersUtils, merged)
+                                // `definition` is read through reflection, so the cast below is unchecked and the
+                                // compiler cannot see it. It said JSONObject long after the property became a
+                                // kotlinx JsonObject, and the app crashed on start as soon as a remote config
+                                // fetch actually succeeded - which needs network and Play Services, so no test or
+                                // CI build ever reached it. Keep the two types here in step by hand.
+                                val current = it.getter.call(versionCheckersUtils) as JsonObject
+                                val remote = Json.parseToJsonElement(firebaseRemoteConfig.getString("defs")).jsonObject
+                                // Plus on the maps is a shallow merge with the remote keys winning, which is what
+                                // the JsonHelper.merge that used to be here did.
+                                it.setter.call(versionCheckersUtils, JsonObject(current + remote))
                             }
                     } else aapsLogger.error("RemoteConfig fetch failed")
                 }
@@ -989,5 +1000,25 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
         unregisterActivityLifecycleCallbacks(activityMonitor)
         uiInteraction.stopAlarm("onTerminate")
         super.onTerminate()
+    }
+
+    /**
+     * Teaches the resolvers which module owns which string names.
+     *
+     * A `TextRef.Named` carries an owner and a name, and both the Compose and the ResourceHelper
+     * paths need a way to turn that into an `R.string` id. `:core:keys`, `:core:interfaces` and
+     * `:core:ui` are resolved directly because `:core:ui` sits above them, but a plugin or pump
+     * module sits ABOVE `:core:ui`, so it can only be reached from here - `:app` is the one place
+     * that depends on all of them.
+     *
+     * Without this the lookup answers null and the raw name is drawn: `virtual_pump_shortname`
+     * instead of "Virtual Pump".
+     */
+    private fun registerStringOwners() {
+        TextRefIdRegistry.register("virtual") { name -> VirtualStringIds.idOf(name) }
+        TextRefIdRegistry.register("smoothing") { name -> SmoothingStringIds.idOf(name) }
+        TextRefIdRegistry.register("calibration") { name -> CalibrationStringIds.idOf(name) }
+        TextRefIdRegistry.register("sensitivity") { name -> SensitivityStringIds.idOf(name) }
+        TextRefIdRegistry.register("main") { name -> MainStringIds.idOf(name) }
     }
 }

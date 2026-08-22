@@ -31,6 +31,8 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.objects.extensions.singleBlock
+import app.aaps.core.objects.extensions.singleTargetBlock
 import app.aaps.core.keys.BooleanComposedKey
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
@@ -61,7 +63,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import org.json.JSONArray
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
@@ -462,14 +463,13 @@ class EquilEmulatorActivationTest {
     }
 
     private fun seedLocalProfile() {
-        val profile = profileRepository.newDraft().apply {
-            mgdl = true
-            ic = JSONArray(singleValue(10.0))
-            isf = JSONArray(singleValue(50.0))
-            basal = JSONArray(singleValue(0.5))
-            targetLow = JSONArray(singleValue(100.0))
-            targetHigh = JSONArray(singleValue(110.0))
-        }
+        val profile = profileRepository.newDraft().copy(
+            mgdl = true,
+            ic = singleBlock(10.0),
+            isf = singleBlock(50.0),
+            basal = singleBlock(0.5),
+            target = singleTargetBlock(100.0, 110.0)
+        )
         runBlocking { profileRepository.add(profile) }.getOrThrow()
     }
 
@@ -504,9 +504,6 @@ class EquilEmulatorActivationTest {
         }
         return null
     }
-
-    private fun singleValue(value: Double) =
-        """[{"time":"00:00","timeAsSeconds":0,"value":$value}]"""
 
     private fun clearAllSharedPrefs() {
         val ctx = instrumentation.targetContext

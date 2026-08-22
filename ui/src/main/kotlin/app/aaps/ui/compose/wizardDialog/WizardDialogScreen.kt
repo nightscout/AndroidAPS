@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.wizardDialog
 
+import app.aaps.core.ui.compose.stringResourceOrNull
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -76,6 +77,7 @@ import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.CarbTimeRow
 import app.aaps.core.ui.compose.NumberInputRow
@@ -91,13 +93,14 @@ import app.aaps.core.ui.compose.icons.IcPizza
 import app.aaps.core.ui.compose.icons.IcTtManual
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.icon
-import app.aaps.core.ui.compose.navigation.labelResId
+import app.aaps.core.ui.compose.navigation.label
 import app.aaps.core.ui.compose.preference.PreferenceSheetContent
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.rememberBringIntoViewOnExpand
 import app.aaps.ui.R
 import kotlinx.coroutines.launch
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.core.interfaces.R as InterfacesR
 
 @Composable
 fun WizardDialogScreen(
@@ -240,7 +243,7 @@ internal fun WizardDialogContent(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(ElementType.BOLUS_WIZARD.labelResId())) },
+                title = { Text((stringResourceOrNull(ElementType.BOLUS_WIZARD.label()) ?: "")) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
@@ -279,7 +282,7 @@ internal fun WizardDialogContent(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 if (uiState.totalInsulin > 0.0) {
-                    Text(stringResource(CoreUiR.string.format_insulin_units, uiState.totalInsulin))
+                    Text(stringResource(InterfacesR.string.format_insulin_units, uiState.totalInsulin))
                 }
                 if (uiState.totalInsulin > 0.0 && (uiState.effectiveCarbs > 0 || uiState.eCarbs > 0)) {
                     Spacer(modifier = Modifier.width(4.dp))
@@ -287,7 +290,7 @@ internal fun WizardDialogContent(
                 if (uiState.effectiveCarbs > 0 || uiState.eCarbs > 0) {
                     Text(
                         if (uiState.eCarbs > 0) stringResource(CoreUiR.string.format_carbs_split, uiState.effectiveCarbs, uiState.eCarbs)
-                        else stringResource(CoreUiR.string.format_carbs, uiState.effectiveCarbs)
+                        else stringResource(InterfacesR.string.format_carbs, uiState.effectiveCarbs)
                     )
                 }
                 if (!uiState.okVisible) {
@@ -308,7 +311,7 @@ internal fun WizardDialogContent(
         ) {
             // --- Forced-record-only warning ---
             if (uiState.forcedRecordOnly) {
-                WarningBanner(message = stringResource(CoreUiR.string.bolus_recorded_only))
+                WarningBanner(message = stringResource(InterfacesR.string.bolus_recorded_only))
             }
 
             // --- Calculation Card (expandable, at top) ---
@@ -341,7 +344,7 @@ internal fun WizardDialogContent(
                             if (uiState.hasResult && (uiState.totalInsulin > 0.0 || uiState.carbs > 0)) {
                                 if (uiState.totalInsulin > 0.0) {
                                     Text(
-                                        text = stringResource(CoreUiR.string.format_insulin_units, uiState.totalInsulin),
+                                        text = stringResource(InterfacesR.string.format_insulin_units, uiState.totalInsulin),
                                         fontWeight = FontWeight.Bold,
                                         color = ElementType.INSULIN.color()
                                     )
@@ -349,7 +352,7 @@ internal fun WizardDialogContent(
                                 if (uiState.effectiveCarbs > 0 || uiState.eCarbs > 0) {
                                     Text(
                                         text = if (uiState.eCarbs > 0) stringResource(CoreUiR.string.format_carbs_split, uiState.effectiveCarbs, uiState.eCarbs)
-                                        else stringResource(CoreUiR.string.format_carbs, uiState.effectiveCarbs),
+                                        else stringResource(InterfacesR.string.format_carbs, uiState.effectiveCarbs),
                                         fontWeight = FontWeight.Bold,
                                         color = ElementType.CARBS.color()
                                     )
@@ -504,7 +507,7 @@ internal fun WizardDialogContent(
                                 if (uiState.useBg && uiState.bg > 0) {
                                     CalcRow(
                                         label = stringResource(CoreUiR.string.wizard_bg_label) + " (ISF: ${decimalFormatter.to1Decimal(uiState.isf)})",
-                                        value = stringResource(CoreUiR.string.format_insulin_units, uiState.insulinFromBG)
+                                        value = stringResource(InterfacesR.string.format_insulin_units, uiState.insulinFromBG)
                                     )
                                 }
 
@@ -512,7 +515,7 @@ internal fun WizardDialogContent(
                                 if (uiState.useTrend) {
                                     CalcRow(
                                         label = uiState.trendDetail,
-                                        value = stringResource(CoreUiR.string.format_insulin_units, uiState.insulinFromTrend)
+                                        value = stringResource(InterfacesR.string.format_insulin_units, uiState.insulinFromTrend)
                                     )
                                 }
 
@@ -520,24 +523,24 @@ internal fun WizardDialogContent(
                                 if (uiState.useCOB) {
                                     CalcRow(
                                         label = stringResource(CoreUiR.string.cob) + " (IC: ${decimalFormatter.to1Decimal(uiState.ic)})",
-                                        value = stringResource(CoreUiR.string.format_insulin_units, uiState.insulinFromCOB)
+                                        value = stringResource(InterfacesR.string.format_insulin_units, uiState.insulinFromCOB)
                                     )
                                 }
 
                                 // Carbs
                                 if (uiState.eCarbs > 0) {
                                     CalcRow(
-                                        label = stringResource(CoreUiR.string.carbs) + " ${uiState.effectiveCarbs}g (IC: ${decimalFormatter.to1Decimal(uiState.ic)})",
-                                        value = stringResource(CoreUiR.string.format_insulin_units, uiState.insulinFromCarbs)
+                                        label = stringResource(InterfacesR.string.carbs) + " ${uiState.effectiveCarbs}g (IC: ${decimalFormatter.to1Decimal(uiState.ic)})",
+                                        value = stringResource(InterfacesR.string.format_insulin_units, uiState.insulinFromCarbs)
                                     )
                                     CalcRow(
-                                        label = stringResource(CoreUiR.string.wizard_ecarbs, uiState.eCarbs, uiState.eCarbsDurationHours, uiState.eCarbsDelayMinutes),
+                                        label = stringResource(InterfacesR.string.wizard_ecarbs, uiState.eCarbs, uiState.eCarbsDurationHours, uiState.eCarbsDelayMinutes),
                                         value = ""
                                     )
                                 } else {
                                     CalcRow(
-                                        label = stringResource(CoreUiR.string.carbs) + " (IC: ${decimalFormatter.to1Decimal(uiState.ic)})",
-                                        value = stringResource(CoreUiR.string.format_insulin_units, uiState.insulinFromCarbs)
+                                        label = stringResource(InterfacesR.string.carbs) + " (IC: ${decimalFormatter.to1Decimal(uiState.ic)})",
+                                        value = stringResource(InterfacesR.string.format_insulin_units, uiState.insulinFromCarbs)
                                     )
                                 }
 
@@ -548,12 +551,12 @@ internal fun WizardDialogContent(
                                         uiState.insulinFromCarbs + uiState.insulinFromCOB
                                     CalcRow(
                                         label = stringResource(CoreUiR.string.wizard_subtotal),
-                                        value = stringResource(CoreUiR.string.format_insulin_units, scaledSubtotal)
+                                        value = stringResource(InterfacesR.string.format_insulin_units, scaledSubtotal)
                                     )
                                     val afterPercentage = scaledSubtotal * uiState.percentage / 100.0
                                     CalcRow(
                                         label = stringResource(CoreUiR.string.format_percent, uiState.percentage),
-                                        value = stringResource(CoreUiR.string.format_insulin_units, afterPercentage)
+                                        value = stringResource(InterfacesR.string.format_insulin_units, afterPercentage)
                                     )
                                 }
 
@@ -565,7 +568,7 @@ internal fun WizardDialogContent(
                                 if (uiState.useIOB) {
                                     CalcRow(
                                         label = stringResource(CoreUiR.string.iob),
-                                        value = stringResource(CoreUiR.string.format_insulin_units, uiState.totalIOB)
+                                        value = stringResource(InterfacesR.string.format_insulin_units, uiState.totalIOB)
                                     )
                                 }
 
@@ -573,7 +576,7 @@ internal fun WizardDialogContent(
                                 if (uiState.insulinFromCorrection != 0.0) {
                                     CalcRow(
                                         label = stringResource(CoreUiR.string.wizard_correction),
-                                        value = stringResource(CoreUiR.string.format_insulin_units, uiState.insulinFromCorrection)
+                                        value = stringResource(InterfacesR.string.format_insulin_units, uiState.insulinFromCorrection)
                                     )
                                 }
 
@@ -581,7 +584,7 @@ internal fun WizardDialogContent(
                                 HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
                                 CalcRow(
                                     label = stringResource(CoreUiR.string.wizard_total),
-                                    value = stringResource(CoreUiR.string.format_insulin_units, uiState.totalInsulin)
+                                    value = stringResource(InterfacesR.string.format_insulin_units, uiState.totalInsulin)
                                 )
                             }
                         }
@@ -611,12 +614,12 @@ internal fun WizardDialogContent(
                     // Carbs Input
                     Column(modifier = itemModifier) {
                         NumberInputRow(
-                            labelResId = CoreUiR.string.carbs,
+                            labelResId = InterfacesR.string.carbs,
                             value = uiState.carbs.toDouble(),
                             onValueChange = onCarbsChange,
                             valueRange = 0.0..uiState.maxCarbs.toDouble(),
                             step = 1.0,
-                            unitLabel = "g"
+                            unitLabel = TextRef.Literal("g")
                         )
                         QuickAddButtons(
                             increment1 = uiState.carbsButtonIncrement1,
@@ -707,7 +710,7 @@ internal fun WizardDialogContent(
                         onValueChange = onDirectCorrectionChange,
                         valueRange = -uiState.maxBolus..uiState.maxBolus,
                         step = uiState.bolusStep,
-                        unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname),
+                        unitLabel = TextRef.AndroidRes(CoreUiR.string.insulin_unit_shortname),
                         decimalPlaces = 2,
                         modifier = itemModifier
                     )
@@ -776,7 +779,7 @@ internal fun WizardDialogContent(
                                 onValueChange = onBgChange,
                                 valueRange = uiState.bgRange,
                                 step = uiState.bgStep,
-                                unitLabel = unitsLabel,
+                                unitLabel = TextRef.Literal(unitsLabel),
                                 decimalPlaces = if (uiState.isMgdl) 0 else 1
                             )
                         }
@@ -823,7 +826,7 @@ internal fun WizardDialogContent(
                                 onValueChange = onPercentageChange,
                                 valueRange = Constants.WIZARD_PERCENTAGE_RANGE,
                                 step = 5.0,
-                                unitLabel = "%",
+                                unitLabel = TextRef.Literal("%"),
                                 decimalPlaces = 0
                             )
                         }

@@ -24,8 +24,8 @@ import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
@@ -43,8 +43,7 @@ import app.aaps.pump.dana.events.EventDanaRNewStatus
 import app.aaps.pump.dana.keys.DanaStringNonKey
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -73,7 +72,6 @@ open class DanaOverviewViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,
     protected val rh: ResourceHelper,
     rxBus: RxBus,
-    aapsSchedulers: AapsSchedulers,
     private val commandQueue: CommandQueue,
     private val dateUtil: DateUtil,
     private val danaPump: DanaPump,
@@ -85,31 +83,29 @@ open class DanaOverviewViewModel @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
-    private val disposable = CompositeDisposable()
 
     private val _events = MutableSharedFlow<DanaOverviewEvent>(extraBufferCapacity = 5)
     val events: SharedFlow<DanaOverviewEvent> = _events
 
-    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, context, viewModelScope)
+    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, rh, viewModelScope)
 
     // RxBus events converted to a flow trigger for recomposition
     protected val rxTrigger = MutableStateFlow(0L)
 
     init {
-        disposable += rxBus
-            .toObservable(EventDanaRNewStatus::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ rxTrigger.value = System.currentTimeMillis() }, { aapsLogger.error(LTag.PUMP, "Error", it) })
-        disposable += rxBus
-            .toObservable(EventInitializationChanged::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ rxTrigger.value = System.currentTimeMillis() }, { aapsLogger.error(LTag.PUMP, "Error", it) })
+        // viewModelScope dies with the view model like the CompositeDisposable did. The bodies only
+        // write a timestamp, so the dispatcher does not matter. UNDISPATCHED because RxBus has no
+        // replay, so a scheduled collector could miss an event sent before it starts.
+        rxBus.toFlow(EventDanaRNewStatus::class)
+            .collectResilient(viewModelScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { rxTrigger.value = System.currentTimeMillis() }
+        rxBus.toFlow(EventInitializationChanged::class)
+            .collectResilient(viewModelScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { rxTrigger.value = System.currentTimeMillis() }
 
         // Observe EB/TB database changes for immediate UI updates
-        persistenceLayer.observeChanges(EB::class.java)
+        persistenceLayer.observeChanges(EB::class)
             .onEach { rxTrigger.value = System.currentTimeMillis() }
             .launchIn(viewModelScope)
-        persistenceLayer.observeChanges(TB::class.java)
+        persistenceLayer.observeChanges(TB::class)
             .onEach { rxTrigger.value = System.currentTimeMillis() }
             .launchIn(viewModelScope)
     }
@@ -148,7 +144,6 @@ open class DanaOverviewViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        disposable.clear()
     }
 
     fun onRefreshClick() {

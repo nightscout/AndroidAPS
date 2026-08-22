@@ -38,7 +38,7 @@ class ProfileFunctionImplTest : TestBaseWithProfile() {
             if (attempts == 1) throw RuntimeException("induced upstream failure")
             // 2nd collection completes normally -> no further retry
         }
-        whenever(persistenceLayer.observeChanges(EPS::class.java)).thenReturn(upstream)
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(upstream)
 
         ProfileFunctionImpl(
             aapsLogger, preferences, rh, activePlugin, profileRepository,
@@ -59,7 +59,7 @@ class ProfileFunctionImplTest : TestBaseWithProfile() {
     @Test
     fun runningICfgMirrorFollowsEffectiveProfileChanges() = runTest {
         val changes = MutableSharedFlow<List<EPS>>(extraBufferCapacity = 8)
-        whenever(persistenceLayer.observeChanges(EPS::class.java)).thenReturn(changes)
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(changes)
         whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong())).thenReturn(null)
 
         val sut = ProfileFunctionImpl(
@@ -93,7 +93,7 @@ class ProfileFunctionImplTest : TestBaseWithProfile() {
 
     @Test
     fun runningProfileWins() = runTest {
-        whenever(persistenceLayer.observeChanges(EPS::class.java)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
         whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong())).thenReturn(effectiveProfileSwitch)
 
         // The running EPS is authoritative — a pending switch must not override what the pump is actually using.
@@ -102,7 +102,7 @@ class ProfileFunctionImplTest : TestBaseWithProfile() {
 
     @Test
     fun withNothingRunningFallsBackToARequestedSwitch() = runTest {
-        whenever(persistenceLayer.observeChanges(EPS::class.java)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
         whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong())).thenReturn(null)
         // The shared fixture's iCfg is ICfg("", 0, 0) — degenerate, and now correctly rejected as unusable —
         // so give this one a real insulin, which is what the case being tested actually describes.
@@ -120,7 +120,7 @@ class ProfileFunctionImplTest : TestBaseWithProfile() {
     // repair re-runs every start and still matches the sentinel, an already-broken install heals on relaunch.
     @Test
     fun aRunningProfileCarryingTheMigrationSentinelCountsAsNothingInForce() = runTest {
-        whenever(persistenceLayer.observeChanges(EPS::class.java)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
         val sentinelEps = effectiveProfileSwitch.copy(iCfg = ICfg(insulinLabel = "", insulinEndTime = -1, insulinPeakTime = -1, concentration = 1.0))
         whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong())).thenReturn(sentinelEps)
         whenever(persistenceLayer.getProfileSwitchActiveAt(anyLong())).thenReturn(null)
@@ -131,7 +131,7 @@ class ProfileFunctionImplTest : TestBaseWithProfile() {
     // …and the same for a requested switch that was stamped with the sentinel: still not a value.
     @Test
     fun aRequestedSwitchCarryingTheSentinelCountsAsNothingInForce() = runTest {
-        whenever(persistenceLayer.observeChanges(EPS::class.java)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
         whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong())).thenReturn(null)
         whenever(persistenceLayer.getProfileSwitchActiveAt(anyLong()))
             .thenReturn(profileSwitch.copy(iCfg = ICfg(insulinLabel = "", insulinEndTime = -1, insulinPeakTime = -1, concentration = 1.0)))
@@ -143,7 +143,7 @@ class ProfileFunctionImplTest : TestBaseWithProfile() {
     @Test
     fun theMirrorAlsoRejectsTheSentinel() = runTest {
         val changes = MutableSharedFlow<List<EPS>>(extraBufferCapacity = 8)
-        whenever(persistenceLayer.observeChanges(EPS::class.java)).thenReturn(changes)
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(changes)
         val sentinelEps = effectiveProfileSwitch.copy(iCfg = ICfg(insulinLabel = "", insulinEndTime = -1, insulinPeakTime = -1, concentration = 1.0))
         whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong())).thenReturn(sentinelEps)
 
@@ -157,7 +157,7 @@ class ProfileFunctionImplTest : TestBaseWithProfile() {
 
     @Test
     fun withNothingRunningOrRequestedItIsNull() = runTest {
-        whenever(persistenceLayer.observeChanges(EPS::class.java)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
         whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong())).thenReturn(null)
         whenever(persistenceLayer.getProfileSwitchActiveAt(anyLong())).thenReturn(null)
 
@@ -172,7 +172,7 @@ class ProfileFunctionImplTest : TestBaseWithProfile() {
     // dropped and the whole window shares the first one.
     @Test
     fun secondsInOneWindowShareASingleCanonicalEps() = runTest {
-        whenever(persistenceLayer.observeChanges(EPS::class.java)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
         // Fresh instance per call (same id), mirroring fromDb()'s deep copy.
         whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong())).thenAnswer { effectiveProfileSwitch.copy() }
 

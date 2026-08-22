@@ -15,10 +15,11 @@ import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
+import app.aaps.plugins.sync.nsclientV3.json.JsonBridge.toOrgJson
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
 import kotlin.math.max
 
 @HiltWorker
@@ -40,10 +41,13 @@ class LoadProfileStoreWorker @AssistedInject constructor(
             val isFirstLoad = nsClientV3Plugin.isFirstLoad(NsClient.Collection.PROFILE)
             val lastLoaded = max(nsClientV3Plugin.lastLoadedSrvModified.collections.profile, dateUtil.now() - nsClientV3Plugin.maxAge)
             if ((nsClientV3Plugin.newestDataOnServer?.collections?.profile ?: Long.MAX_VALUE) > lastLoaded) {
-                val response: NSAndroidClient.ReadResponse<List<JSONObject>> =
+                val response: NSAndroidClient.ReadResponse<List<JsonObject>> =
                     if (isFirstLoad) nsAndroidClient.getLastProfileStore()
                     else nsAndroidClient.getProfileModifiedSince(lastLoaded)
-                val profiles = response.values
+                // The profile subsystem (ProfileStore, PureProfile, JsonHelper) is built on org.json
+                // well outside this module, so profiles are converted back here at the boundary
+                // rather than migrating all of it. See JsonBridge.
+                val profiles = response.values.map { it.toOrgJson() }
                 if (profiles.isNotEmpty()) {
                     val profile = profiles[profiles.size - 1]
                     // if srvModified found in response

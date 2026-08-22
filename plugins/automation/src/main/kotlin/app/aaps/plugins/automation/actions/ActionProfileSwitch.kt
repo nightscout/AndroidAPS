@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.actions
 
+import javax.inject.Provider
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.logging.LTag
@@ -9,18 +12,21 @@ import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.icons.IcProfile
-import app.aaps.core.utils.JsonHelper
+import app.aaps.core.utils.lenientString
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputProfileName
-import dagger.android.HasAndroidInjector
-import org.json.JSONObject
-import javax.inject.Inject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
-class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
+class ActionProfileSwitch(
+    aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val profileRepository: ProfileRepository,
+    private val profileFunction: ProfileFunction,
+    private val dateUtil: DateUtil
+) : Action(aapsLogger, rh, pumpEnactResultProvider) {
 
-    @Inject lateinit var profileRepository: ProfileRepository
-    @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var dateUtil: DateUtil
 
     var inputProfileName: InputProfileName = InputProfileName("")
 
@@ -75,17 +81,15 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
 
     override fun hasDialog(): Boolean = true
 
-    override fun toJSON(): String {
-        val data = JSONObject().put("profileToSwitchTo", inputProfileName.value)
-        return JSONObject()
-            .put("type", this.javaClass.simpleName)
-            .put("data", data)
-            .toString()
-    }
+    override fun toJSON(): String =
+        buildJsonObject {
+            put("type", this@ActionProfileSwitch.javaClass.simpleName)
+            put("data", buildJsonObject { put("profileToSwitchTo", inputProfileName.value) })
+        }.toString()
 
     override fun fromJSON(data: String): Action {
-        val o = JSONObject(data)
-        inputProfileName.value = JsonHelper.safeGetString(o, "profileToSwitchTo", "")
+        val o = jsonOf(data)
+        inputProfileName.value = o.lenientString("profileToSwitchTo", "")
         return this
     }
 

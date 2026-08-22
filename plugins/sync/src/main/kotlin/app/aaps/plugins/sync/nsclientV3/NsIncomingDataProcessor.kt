@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationAction
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.NSClientRepository
@@ -25,6 +26,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.nssdk.localmodel.entry.NSMbgV3
 import app.aaps.core.nssdk.localmodel.entry.NSSgvV3
 import app.aaps.core.nssdk.localmodel.food.NSFood
@@ -53,6 +55,7 @@ import app.aaps.plugins.sync.nsclientV3.extensions.toRunningMode
 import app.aaps.plugins.sync.nsclientV3.extensions.toTemporaryBasal
 import app.aaps.plugins.sync.nsclientV3.extensions.toTemporaryTarget
 import app.aaps.plugins.sync.nsclientV3.extensions.toTherapyEvent
+import app.aaps.plugins.sync.nsclientV3.json.JsonBridge.toKotlinxJson
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Provider
@@ -214,8 +217,8 @@ class NsIncomingDataProcessor @Inject constructor(
                                         id = NotificationId.NS_ANNOUNCEMENT,
                                         text = therapyEvent.note ?: "",
                                         validTo = dateUtil.now() + T.mins(60).msecs(),
-                                        soundRes = R.raw.alarm,
-                                        actions = listOf(NotificationAction(R.string.snooze) { })
+                                        sound = AlarmSound.ALARM,
+                                        actions = listOf(NotificationAction(TextRef.AndroidRes(R.string.snooze)) { })
                                     )
                             }
 
@@ -272,7 +275,7 @@ class NsIncomingDataProcessor @Inject constructor(
             if (config.AAPSCLIENT) !nsClient.masterOrPairedClientFlow.value
             else preferences.get(BooleanKey.NsClientAcceptProfileStore) || doFullSync
         if (accept) {
-            val store = profileStoreProvider.get().with(profileJson)
+            val store = profileStoreProvider.get().with(profileJson.toKotlinxJson())
             val createdAt = store.getStartDate()
             val lastLocalChange = preferences.get(LongNonKey.LocalProfileLastChange)
             aapsLogger.debug(LTag.PROFILE, "Received profileStore: createdAt: $createdAt Local last modification: $lastLocalChange")

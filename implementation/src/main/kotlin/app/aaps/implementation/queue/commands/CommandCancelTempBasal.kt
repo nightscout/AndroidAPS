@@ -9,7 +9,6 @@ import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
-import javax.inject.Provider
 
 class CommandCancelTempBasal(
     private val aapsLogger: AAPSLogger,
@@ -17,7 +16,7 @@ class CommandCancelTempBasal(
     private val activePlugin: ActivePlugin,
     private val pumpSync: PumpSync,
     private val dateUtil: DateUtil,
-    override val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    override val pumpEnactResultProvider: () -> PumpEnactResult,
     private val enforceNew: Boolean,
     /** true if called by detection of pump in suspend mode */
     private val autoForced: Boolean,

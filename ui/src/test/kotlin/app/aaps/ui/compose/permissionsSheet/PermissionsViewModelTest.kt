@@ -1,7 +1,7 @@
 package app.aaps.ui.compose.permissionsSheet
 
 import android.content.Context
-import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.PluginPermissions
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -20,7 +20,7 @@ import org.mockito.kotlin.whenever
 internal class PermissionsViewModelTest {
 
     @Mock private lateinit var context: Context
-    @Mock private lateinit var activePlugin: ActivePlugin
+    @Mock private lateinit var pluginPermissions: PluginPermissions
 
     private lateinit var sut: PermissionsViewModel
 
@@ -30,7 +30,7 @@ internal class PermissionsViewModelTest {
         // requestPermission()/onPermissionsDenied() use viewModelScope; setMain keeps those deferred.
         // Construction reads nothing from deps (no init block), so no stubbing is required to build.
         Dispatchers.setMain(StandardTestDispatcher())
-        sut = PermissionsViewModel(context, activePlugin)
+        sut = PermissionsViewModel(context, pluginPermissions)
     }
 
     @AfterEach
@@ -59,8 +59,8 @@ internal class PermissionsViewModelTest {
 
     @Test
     fun `refresh with no permissions produces empty granted state`() {
-        whenever(activePlugin.collectAllPermissions(any())).thenReturn(emptyList())
-        whenever(activePlugin.collectMissingPermissions(any())).thenReturn(emptyList())
+        whenever(pluginPermissions.collectAllPermissions(any())).thenReturn(emptyList())
+        whenever(pluginPermissions.collectMissingPermissions(any())).thenReturn(emptyList())
 
         sut.refresh()
 

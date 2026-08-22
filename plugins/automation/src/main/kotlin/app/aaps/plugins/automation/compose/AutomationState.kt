@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.compose
 
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.interfaces.navigation.ElementType
 
@@ -56,5 +57,5 @@ data class AutomationEventUi(
 
 data class AutomationUiState(
     val events: List<AutomationEventUi> = emptyList(),
-    val logHtml: String = ""
+    val log: AnnotatedString = AnnotatedString("")
 )

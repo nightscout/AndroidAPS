@@ -10,8 +10,8 @@ import app.aaps.core.interfaces.logging.LoggerUtils
 import app.aaps.core.interfaces.maintenance.ExportResult
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.maintenance.Maintenance
-import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
@@ -35,7 +35,7 @@ class MaintenanceImpl @Inject constructor(
     private val context: Context,
     private val rh: ResourceHelper,
     private val preferences: Preferences,
-    private val nsSettingsStatus: NSSettingsStatus,
+    private val nsClient: NsClient,
     private val aapsLogger: AAPSLogger,
     private val config: Config,
     private val fileListProvider: FileListProvider,
@@ -193,7 +193,7 @@ class MaintenanceImpl @Inject constructor(
         builder.append("Build: " + config.BUILD_VERSION + System.lineSeparator())
         builder.append("Remote: " + config.REMOTE + System.lineSeparator())
         builder.append("Flavor: " + config.FLAVOR + config.BUILD_TYPE + System.lineSeparator())
-        builder.append(rh.gs(app.aaps.core.ui.R.string.configbuilder_nightscoutversion_label) + " " + nsSettingsStatus.getVersion() + System.lineSeparator())
+        builder.append(rh.gs(app.aaps.core.ui.R.string.configbuilder_nightscoutversion_label) + " " + (nsClient.detectedNsVersion() ?: "UNKNOWN") + System.lineSeparator())
         if (config.isEngineeringMode()) builder.append(rh.gs(app.aaps.core.ui.R.string.engineering_mode_enabled))
         val body = builder.toString()
         aapsLogger.debug("sending email to $recipient with subject $subject")

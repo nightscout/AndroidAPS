@@ -2,10 +2,10 @@ package app.aaps.plugins.automation.triggers
 
 import app.aaps.core.data.model.SC
 import app.aaps.plugins.automation.R
+import app.aaps.plugins.automation.asJsonObject
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
-import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
@@ -16,12 +16,12 @@ class TriggerStepsCountTest : TriggerTestBase() {
 
     @Test
     fun friendlyName() {
-        assertThat(TriggerStepsCount(injector).friendlyName()).isEqualTo(R.string.triggerStepsCountLabel)
+        assertThat(TriggerStepsCount(triggerDeps).friendlyName()).isEqualTo(R.string.triggerStepsCountLabel)
     }
 
     @Test
     fun friendlyDescription() {
-        val t = TriggerStepsCount(injector)
+        val t = TriggerStepsCount(triggerDeps)
         whenever(rh.gs(Comparator.Compare.IS_EQUAL_OR_GREATER.stringRes)).thenReturn(">")
         whenever(rh.gs(R.string.triggerStepsCountDesc, "5", ">", 100.0)).thenReturn("test")
 
@@ -30,7 +30,7 @@ class TriggerStepsCountTest : TriggerTestBase() {
 
     @Test
     fun duplicate() {
-        val t = TriggerStepsCount(injector).apply {
+        val t = TriggerStepsCount(triggerDeps).apply {
             stepsCount.value = 100.0
             measurementDuration.value = "5"
             comparator.value = Comparator.Compare.IS_GREATER
@@ -44,14 +44,14 @@ class TriggerStepsCountTest : TriggerTestBase() {
 
     @Test
     fun shouldRunNotAvailable() = runTest {
-        val t = TriggerStepsCount(injector).apply { comparator.value = Comparator.Compare.IS_NOT_AVAILABLE }
+        val t = TriggerStepsCount(triggerDeps).apply { comparator.value = Comparator.Compare.IS_NOT_AVAILABLE }
         assertThat(t.shouldRun()).isTrue()
         verifyNoMoreInteractions(persistenceLayer)
     }
 
     @Test
     fun shouldRunNoStepsAvailable() = runTest {
-        val t = TriggerStepsCount(injector).apply {
+        val t = TriggerStepsCount(triggerDeps).apply {
             stepsCount.value = 100.0
             measurementDuration.value = "5"
             comparator.value = Comparator.Compare.IS_GREATER
@@ -64,7 +64,7 @@ class TriggerStepsCountTest : TriggerTestBase() {
 
     @Test
     fun shouldRunBelowThreshold() = runTest {
-        val t = TriggerStepsCount(injector).apply {
+        val t = TriggerStepsCount(triggerDeps).apply {
             stepsCount.value = 100.0
             measurementDuration.value = "5"
             comparator.value = Comparator.Compare.IS_GREATER
@@ -79,7 +79,7 @@ class TriggerStepsCountTest : TriggerTestBase() {
 
     @Test
     fun shouldRunTrigger() = runTest {
-        val t = TriggerStepsCount(injector).apply {
+        val t = TriggerStepsCount(triggerDeps).apply {
             stepsCount.value = 100.0
             measurementDuration.value = "5"
             comparator.value = Comparator.Compare.IS_GREATER
@@ -94,7 +94,7 @@ class TriggerStepsCountTest : TriggerTestBase() {
 
     @Test
     fun toJSON() {
-        val t = TriggerStepsCount(injector).apply {
+        val t = TriggerStepsCount(triggerDeps).apply {
             stepsCount.value = 110.0
             measurementDuration.value = "15"
             comparator.value = Comparator.Compare.IS_GREATER
@@ -106,10 +106,8 @@ class TriggerStepsCountTest : TriggerTestBase() {
 
     @Test
     fun fromJSON() {
-        val t = TriggerDummy(injector).instantiate(
-            JSONObject(
-                """{"data":{"comparator":"IS_GREATER","stepsCount":110,"measurementDuration":"10"},"type":"TriggerStepsCount"}"""
-            )
+        val t = triggerFactory.instantiate(
+            """{"data":{"comparator":"IS_GREATER","stepsCount":110,"measurementDuration":"10"},"type":"TriggerStepsCount"}""".asJsonObject()
         ) as TriggerStepsCount
         assertThat(t.comparator.value).isEqualTo(Comparator.Compare.IS_GREATER)
         assertThat(t.stepsCount.value).isWithin(0.01).of(110.0)

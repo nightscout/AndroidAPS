@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.actions
 
+import javax.inject.Provider
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.logging.LTag
@@ -7,25 +10,32 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.ui.compose.icons.IcProfile
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.utils.JsonHelper
+import app.aaps.core.utils.lenientDouble
+import app.aaps.core.utils.lenientInt
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDuration
 import app.aaps.plugins.automation.elements.InputPercent
+import app.aaps.plugins.automation.triggers.TriggerDeps
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.triggers.TriggerProfilePercent
-import dagger.android.HasAndroidInjector
-import org.json.JSONObject
-import javax.inject.Inject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
-class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector) {
+class ActionProfileSwitchPercent(
+    aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val profileFunction: ProfileFunction,
+    // Only to build the Trigger precondition below.
+    private val triggerDeps: TriggerDeps
+) : Action(aapsLogger, rh, pumpEnactResultProvider) {
 
-    @Inject lateinit var profileFunction: ProfileFunction
 
     var pct = InputPercent()
     var duration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
 
-    override var precondition: Trigger? = TriggerProfilePercent(injector, 100.0, Comparator.Compare.IS_EQUAL)
+    override var precondition: Trigger? = TriggerProfilePercent(triggerDeps, 100.0, Comparator.Compare.IS_EQUAL)
 
     override fun friendlyName(): Int = R.string.profilepercentage
     override fun shortDescription(): String =
@@ -59,19 +69,20 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
     override fun hasDialog(): Boolean = true
 
     override fun toJSON(): String {
-        val data = JSONObject()
-            .put("percentage", pct.value)
-            .put("durationInMinutes", duration.value)
-        return JSONObject()
-            .put("type", this.javaClass.simpleName)
-            .put("data", data)
-            .toString()
+        val data = buildJsonObject {
+            put("percentage", pct.value)
+            put("durationInMinutes", duration.value)
+        }
+        return buildJsonObject {
+            put("type", this@ActionProfileSwitchPercent.javaClass.simpleName)
+            put("data", data)
+        }.toString()
     }
 
     override fun fromJSON(data: String): Action {
-        val o = JSONObject(data)
-        pct.value = JsonHelper.safeGetDouble(o, "percentage")
-        duration.value = JsonHelper.safeGetInt(o, "durationInMinutes")
+        val o = jsonOf(data)
+        pct.value = o.lenientDouble("percentage")
+        duration.value = o.lenientInt("durationInMinutes")
         return this
     }
 

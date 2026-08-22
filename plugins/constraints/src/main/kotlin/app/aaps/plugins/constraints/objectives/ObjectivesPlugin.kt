@@ -1,5 +1,6 @@
 package app.aaps.plugins.constraints.objectives
 
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
@@ -31,7 +32,7 @@ import javax.inject.Singleton
 @Singleton
 class ObjectivesPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     config: Config,
     val objectives: List<@JvmSuppressWildcards Objective>
@@ -40,11 +41,11 @@ class ObjectivesPlugin @Inject constructor(
         .mainType(PluginType.CONSTRAINTS)
         .composeContent { ObjectivesComposeContent() }
         .icon(IcPluginObjectives)
-        .pluginName(app.aaps.core.ui.R.string.objectives)
-        .shortName(R.string.objectives_shortname)
+        .pluginName(TextRef.AndroidRes(app.aaps.core.ui.R.string.objectives))
+        .shortName(TextRef.AndroidRes(R.string.objectives_shortname))
         .enableByDefault(config.APS)
-        .description(R.string.description_objectives),
-    ownPreferences = listOf(ObjectivesBooleanComposedKey::class.java, ObjectivesLongComposedKey::class.java),
+        .description(TextRef.AndroidRes(R.string.description_objectives)),
+    ownPreferences = ObjectivesBooleanComposedKey.entries + ObjectivesLongComposedKey.entries,
     aapsLogger, rh, preferences
 ), PluginConstraints, Objectives {
 

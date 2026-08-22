@@ -11,7 +11,9 @@ import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Provider
@@ -93,7 +95,7 @@ class PairingOfferPublisher @Inject constructor(
         }
     }
 
-    private fun buildOfferDoc(payload: PairingPayload, pin: String): JSONObject {
+    private fun buildOfferDoc(payload: PairingPayload, pin: String): JsonObject {
         val payloadBytes = json.encodeToString(PairingPayload.serializer(), payload).toByteArray(Charsets.UTF_8)
         val salt = ClientControlPairingCrypto.newSalt()
         val iv = ClientControlPairingCrypto.newIv()
@@ -105,14 +107,14 @@ class PairingOfferPublisher @Inject constructor(
             ivB64 = Base64.encodeToString(iv, Base64.NO_WRAP),
             wrappedB64 = Base64.encodeToString(wrapped, Base64.NO_WRAP)
         )
-        return JSONObject().apply {
+        return buildJsonObject {
             // Same placeholder convention as ClientControlPublisher.uploadEnvelope — `date` is
             // immutable on subsequent PUTs, so a constant placeholder is the only safe value.
             put("date", ClientControlPublisher.DOC_DATE)
             put("utcOffset", 0)
             put("app", "AAPS")
             put("schemaVersion", ClientControlPublisher.SCHEMA_VERSION)
-            put("offer", JSONObject(json.encodeToString(PairingOffer.serializer(), offer)))
+            put("offer", json.encodeToJsonElement(PairingOffer.serializer(), offer))
         }
     }
 }

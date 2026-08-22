@@ -1,5 +1,7 @@
 package app.aaps.ui.compose.clientcontrol
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.keys.interfaces.TextRef
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.FailureReason
-import app.aaps.core.ui.clientcontrol.failTextResId
+import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.core.interfaces.clientcontrol.PendingAction
 import app.aaps.ui.R
 import app.aaps.core.ui.R as CoreUiR
@@ -90,4 +92,4 @@ fun ClientControlPendingDialog(
 
 /** Localized message for a [FailureReason] code (the shared mapping; unknown codes from a newer master → generic). */
 @Composable
-private fun reasonText(reason: FailureReason): String = stringResource(reason.failTextResId())
+private fun reasonText(reason: FailureReason): String = stringResource(reason.failText())

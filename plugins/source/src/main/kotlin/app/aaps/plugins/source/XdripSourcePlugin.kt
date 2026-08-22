@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TE
@@ -55,9 +56,9 @@ class XdripSourcePlugin @Inject constructor(
             )
         }
         .icon(IcXDrip)
-        .pluginName(R.string.source_xdrip)
+        .pluginName(TextRef.AndroidRes(R.string.source_xdrip))
         .preferencesVisibleInSimpleMode(false)
-        .description(R.string.description_source_xdrip),
+        .description(TextRef.AndroidRes(R.string.description_source_xdrip)),
     aapsLogger = aapsLogger,
     rh = rh,
     preferences = preferences

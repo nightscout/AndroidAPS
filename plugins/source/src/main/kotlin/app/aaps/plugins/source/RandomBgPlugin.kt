@@ -7,6 +7,7 @@ import android.os.HandlerThread
 import android.os.PowerManager
 import android.os.SystemClock
 import androidx.annotation.VisibleForTesting
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.CA
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.IDs
@@ -60,10 +61,10 @@ class RandomBgPlugin @Inject constructor(
             )
         }
         .icon(IcPluginRandomBg)
-        .pluginName(R.string.random_bg)
-        .shortName(R.string.random_bg_short)
+        .pluginName(TextRef.AndroidRes(R.string.random_bg))
+        .shortName(TextRef.AndroidRes(R.string.random_bg_short))
         .preferencesVisibleInSimpleMode(false)
-        .description(R.string.description_source_random_bg),
+        .description(TextRef.AndroidRes(R.string.description_source_random_bg)),
     aapsLogger = aapsLogger,
     rh = rh,
     preferences = preferences,

@@ -9,6 +9,7 @@ import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import app.aaps.core.interfaces.plugin.PermissionGroup
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.ui.R
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
@@ -43,8 +44,8 @@ class PermissionsSheetContentTest {
     fun rendersTitleAndFiresGrant() {
         val group = PermissionGroup(
             permissions = listOf("android.permission.POST_NOTIFICATIONS"),
-            rationaleTitle = R.string.permission_change,
-            rationaleDescription = R.string.permission_sheet_subtitle
+            rationaleTitle = TextRef.AndroidRes(R.string.permission_change),
+            rationaleDescription = TextRef.AndroidRes(R.string.permission_sheet_subtitle)
         )
         var requested: PermissionGroup? = null
         compose.setContent {

@@ -10,13 +10,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Alarm
 import androidx.compose.material.icons.filled.PhoneAndroid
 import androidx.compose.material.icons.filled.Watch
-import app.aaps.core.ui.compose.icons.IcBolus
-import app.aaps.core.ui.compose.icons.IcCarbs
-import app.aaps.core.ui.compose.icons.IcQuickwizard
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,19 +25,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import app.aaps.core.keys.IntKey
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.wizard.QuickWizardMode
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.TimeRangePicker
+import app.aaps.core.ui.compose.icons.IcBolus
+import app.aaps.core.ui.compose.icons.IcCarbs
+import app.aaps.core.ui.compose.icons.IcQuickwizard
 import app.aaps.ui.R
 import app.aaps.ui.compose.quickWizard.viewmodels.TrendOption
-import app.aaps.core.keys.R as KeysR
 import app.aaps.core.ui.R as CoreR
+import app.aaps.core.interfaces.R as InterfacesR
 
 /**
  * Editor for QuickWizard entry with all configurable fields.
@@ -198,7 +200,7 @@ fun QuickWizardEditor(
                 valueRange = 0.0..maxInsulin,
                 step = 0.05,
                 decimalPlaces = 2,
-                unitLabel = stringResource(CoreR.string.insulin_unit_shortname),
+                unitLabel = TextRef.AndroidRes(CoreR.string.insulin_unit_shortname),
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -206,12 +208,12 @@ fun QuickWizardEditor(
         // Carbs (WIZARD and CARBS modes)
         if (mode != QuickWizardMode.INSULIN) {
             NumberInputRow(
-                labelResId = CoreR.string.carbs,
+                labelResId = InterfacesR.string.carbs,
                 value = carbs.toDouble(),
                 onValueChange = { onCarbsChange(it.toInt()) },
                 valueRange = 0.0..maxCarbs,
                 step = 1.0,
-                unitLabelResId = KeysR.string.units_grams,
+                unitLabel = TextRef.AndroidRes(CoreR.string.units_grams),
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -224,7 +226,7 @@ fun QuickWizardEditor(
                 onValueChange = { onCarbTimeChange(it.toInt()) },
                 valueRange = -60.0..60.0,
                 step = 5.0,
-                unitLabelResId = KeysR.string.units_min,
+                unitLabel = TextRef.AndroidRes(CoreR.string.units_min),
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -241,113 +243,113 @@ fun QuickWizardEditor(
 
         // Calculator Options (WIZARD mode only)
         if (mode == QuickWizardMode.WIZARD) {
-        HorizontalDivider()
+            HorizontalDivider()
 
-        // Calculator Options Section
-        Text(
-            text = stringResource(R.string.calculator_options),
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.primary
-        )
-
-        // Use BG
-        SwitchRow(
-            label = stringResource(R.string.use_bg),
-            checked = useBG,
-            onCheckedChange = onUseBGChange
-        )
-
-        // Use COB
-        SwitchRow(
-            label = stringResource(R.string.use_cob),
-            checked = useCOB,
-            onCheckedChange = onUseCOBChange
-        )
-
-        // Use IOB
-        SwitchRow(
-            label = stringResource(R.string.use_iob),
-            checked = useIOB,
-            onCheckedChange = onUseIOBChange
-        )
-
-        // Use Positive IOB Only (only visible when IOB enabled)
-        if (useIOB) {
-            SwitchRow(
-                label = stringResource(R.string.overview_edit_quickwizard_use_positive_iob_only),
-                checked = usePositiveIOBOnly,
-                onCheckedChange = onUsePositiveIOBOnlyChange,
-                modifier = Modifier.padding(start = 16.dp)
+            // Calculator Options Section
+            Text(
+                text = stringResource(R.string.calculator_options),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary
             )
-        }
 
-        // Use Trend
-        Column(modifier = Modifier.fillMaxWidth()) {
+            // Use BG
             SwitchRow(
-                label = stringResource(R.string.use_trend),
-                checked = useTrend != TrendOption.NO,
-                onCheckedChange = { enabled ->
-                    onUseTrendChange(if (enabled) TrendOption.YES else TrendOption.NO)
-                }
+                label = stringResource(R.string.use_bg),
+                checked = useBG,
+                onCheckedChange = onUseBGChange
             )
-            // Trend options (only visible when trend enabled)
-            if (useTrend != TrendOption.NO) {
-                Column(modifier = Modifier.padding(start = 16.dp, top = 8.dp)) {
-                    TrendRadioButton(
-                        label = stringResource(R.string.trend_all),
-                        selected = useTrend == TrendOption.YES,
-                        onClick = { onUseTrendChange(TrendOption.YES) }
-                    )
-                    TrendRadioButton(
-                        label = stringResource(R.string.trend_positive_only),
-                        selected = useTrend == TrendOption.POSITIVE_ONLY,
-                        onClick = { onUseTrendChange(TrendOption.POSITIVE_ONLY) }
-                    )
-                    TrendRadioButton(
-                        label = stringResource(R.string.trend_negative_only),
-                        selected = useTrend == TrendOption.NEGATIVE_ONLY,
-                        onClick = { onUseTrendChange(TrendOption.NEGATIVE_ONLY) }
-                    )
+
+            // Use COB
+            SwitchRow(
+                label = stringResource(R.string.use_cob),
+                checked = useCOB,
+                onCheckedChange = onUseCOBChange
+            )
+
+            // Use IOB
+            SwitchRow(
+                label = stringResource(R.string.use_iob),
+                checked = useIOB,
+                onCheckedChange = onUseIOBChange
+            )
+
+            // Use Positive IOB Only (only visible when IOB enabled)
+            if (useIOB) {
+                SwitchRow(
+                    label = stringResource(R.string.overview_edit_quickwizard_use_positive_iob_only),
+                    checked = usePositiveIOBOnly,
+                    onCheckedChange = onUsePositiveIOBOnlyChange,
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+            }
+
+            // Use Trend
+            Column(modifier = Modifier.fillMaxWidth()) {
+                SwitchRow(
+                    label = stringResource(R.string.use_trend),
+                    checked = useTrend != TrendOption.NO,
+                    onCheckedChange = { enabled ->
+                        onUseTrendChange(if (enabled) TrendOption.YES else TrendOption.NO)
+                    }
+                )
+                // Trend options (only visible when trend enabled)
+                if (useTrend != TrendOption.NO) {
+                    Column(modifier = Modifier.padding(start = 16.dp, top = 8.dp)) {
+                        TrendRadioButton(
+                            label = stringResource(R.string.trend_all),
+                            selected = useTrend == TrendOption.YES,
+                            onClick = { onUseTrendChange(TrendOption.YES) }
+                        )
+                        TrendRadioButton(
+                            label = stringResource(R.string.trend_positive_only),
+                            selected = useTrend == TrendOption.POSITIVE_ONLY,
+                            onClick = { onUseTrendChange(TrendOption.POSITIVE_ONLY) }
+                        )
+                        TrendRadioButton(
+                            label = stringResource(R.string.trend_negative_only),
+                            selected = useTrend == TrendOption.NEGATIVE_ONLY,
+                            onClick = { onUseTrendChange(TrendOption.NEGATIVE_ONLY) }
+                        )
+                    }
                 }
             }
-        }
 
-        // Use Super Bolus (only if enabled in preferences)
-        if (showSuperBolusOption) {
+            // Use Super Bolus (only if enabled in preferences)
+            if (showSuperBolusOption) {
+                SwitchRow(
+                    label = stringResource(R.string.overview_edit_quickwizard_superbolus),
+                    checked = useSuperBolus,
+                    onCheckedChange = onUseSuperBolusChange
+                )
+            }
+
+            // Use Temp Target
             SwitchRow(
-                label = stringResource(R.string.overview_edit_quickwizard_superbolus),
-                checked = useSuperBolus,
-                onCheckedChange = onUseSuperBolusChange
+                label = stringResource(R.string.use_temp_target),
+                checked = useTempTarget,
+                onCheckedChange = onUseTempTargetChange
             )
-        }
 
-        // Use Temp Target
-        SwitchRow(
-            label = stringResource(R.string.use_temp_target),
-            checked = useTempTarget,
-            onCheckedChange = onUseTempTargetChange
-        )
+            // Alarm
+            SwitchRow(
+                label = stringResource(R.string.use_alarm),
+                checked = useAlarm,
+                onCheckedChange = onUseAlarmChange,
+                icon = Icons.Default.Alarm
+            )
 
-        // Alarm
-        SwitchRow(
-            label = stringResource(R.string.use_alarm),
-            checked = useAlarm,
-            onCheckedChange = onUseAlarmChange,
-            icon = Icons.Default.Alarm
-        )
+            HorizontalDivider()
 
-        HorizontalDivider()
-
-        // Percentage
-        NumberInputRow(
-            labelResId = KeysR.string.pref_title_bolus_percentage,
-            value = percentage.toDouble(),
-            onValueChange = { onPercentageChange(it.toInt()) },
-            valueRange = Constants.WIZARD_PERCENTAGE_RANGE,
-            step = 5.0,
-            unitLabelResId = KeysR.string.units_percent,
-            modifier = Modifier.fillMaxWidth()
-        )
+            // Percentage
+            NumberInputRow(
+                labelRef = IntKey.OverviewBolusPercentage.title,
+                value = percentage.toDouble(),
+                onValueChange = { onPercentageChange(it.toInt()) },
+                valueRange = Constants.WIZARD_PERCENTAGE_RANGE,
+                step = 5.0,
+                unitLabel = TextRef.AndroidRes(CoreR.string.units_percent),
+                modifier = Modifier.fillMaxWidth()
+            )
 
         } // end WIZARD-only section
 
@@ -377,54 +379,54 @@ fun QuickWizardEditor(
 
         // Extended Carbs Section (WIZARD and CARBS modes)
         if (mode != QuickWizardMode.INSULIN) {
-        HorizontalDivider()
-        SwitchRow(
-            label = stringResource(R.string.additional_ecarbs),
-            checked = useEcarbs,
-            onCheckedChange = onUseEcarbsChange
-        )
+            HorizontalDivider()
+            SwitchRow(
+                label = stringResource(R.string.additional_ecarbs),
+                checked = useEcarbs,
+                onCheckedChange = onUseEcarbsChange
+            )
 
-        if (useEcarbs) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                // Time offset
-                NumberInputRow(
-                    labelResId = R.string.time_offset,
-                    value = time.toDouble(),
-                    onValueChange = { onTimeChange(it.toInt()) },
-                    valueRange = (-7 * 24 * 60).toDouble()..(12 * 60).toDouble(),
-                    step = 5.0,
-                    unitLabelResId = KeysR.string.units_min,
-                    modifier = Modifier.fillMaxWidth()
-                )
+            if (useEcarbs) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    // Time offset
+                    NumberInputRow(
+                        labelResId = R.string.time_offset,
+                        value = time.toDouble(),
+                        onValueChange = { onTimeChange(it.toInt()) },
+                        valueRange = (-7 * 24 * 60).toDouble()..(12 * 60).toDouble(),
+                        step = 5.0,
+                        unitLabel = TextRef.AndroidRes(CoreR.string.units_min),
+                        modifier = Modifier.fillMaxWidth()
+                    )
 
-                // Duration
-                NumberInputRow(
-                    labelResId = CoreR.string.duration,
-                    value = duration.toDouble(),
-                    onValueChange = { onDurationChange(it.toInt()) },
-                    valueRange = 0.0..10.0,
-                    step = 1.0,
-                    unitLabelResId = KeysR.string.units_hours,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                    // Duration
+                    NumberInputRow(
+                        labelResId = CoreR.string.duration,
+                        value = duration.toDouble(),
+                        onValueChange = { onDurationChange(it.toInt()) },
+                        valueRange = 0.0..10.0,
+                        step = 1.0,
+                        unitLabel = TextRef.AndroidRes(CoreR.string.units_hours),
+                        modifier = Modifier.fillMaxWidth()
+                    )
 
-                // Additional carbs
-                NumberInputRow(
-                    labelResId = R.string.ecarbs_additional,
-                    value = carbs2.toDouble(),
-                    onValueChange = { onCarbs2Change(it.toInt()) },
-                    valueRange = 0.0..maxCarbs,
-                    step = 1.0,
-                    unitLabelResId = KeysR.string.units_grams,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                    // Additional carbs
+                    NumberInputRow(
+                        labelResId = R.string.ecarbs_additional,
+                        value = carbs2.toDouble(),
+                        onValueChange = { onCarbs2Change(it.toInt()) },
+                        valueRange = 0.0..maxCarbs,
+                        step = 1.0,
+                        unitLabel = TextRef.AndroidRes(CoreR.string.units_grams),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
-        }
         } // end non-INSULIN section
     }
 }

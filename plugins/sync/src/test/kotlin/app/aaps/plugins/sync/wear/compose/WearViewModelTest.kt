@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.wear.WearPlugin
 import com.google.common.truth.Truth.assertThat
@@ -58,7 +59,7 @@ internal class WearViewModelTest {
         Dispatchers.setMain(UnconfinedTestDispatcher())
         whenever(wearPlugin.connectedDevice).thenReturn(connectedDeviceFlow)
         whenever(wearPlugin.savedCustomWatchface).thenReturn(savedCustomWatchfaceFlow)
-        whenever(rxBus.toFlow(EventWearUpdateGui::class.java)).thenReturn(eventWearUpdateGuiFlow)
+        whenever(rxBus.toFlow(EventWearUpdateGui::class)).thenReturn(eventWearUpdateGuiFlow)
         whenever(rh.gs(R.string.no_watch_connected)).thenReturn("No watch connected")
         sut = WearViewModel(wearPlugin, rxBus, rh, dateUtil, preferences, versionCheckerUtils, fileListProvider, aapsLogger)
     }
@@ -185,6 +186,9 @@ internal class WearViewModelTest {
 
         // Mock resource helper calls
         whenever(rh.gs(any<Int>(), any())).thenReturn("mocked")
+        // CwfMetadataKey.label is a TextRef now; gs(TextRef, vararg) is a default interface method,
+        // which a mock intercepts and answers with null unless it is stubbed here too.
+        whenever(rh.gs(any<TextRef>(), any())).thenReturn("mocked")
         whenever(versionCheckerUtils.versionDigits(any())).thenReturn(intArrayOf(1, 0, 0))
 
         sut.showCwfInfos()

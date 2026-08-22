@@ -1,5 +1,6 @@
 package app.aaps.implementation.insulin
 
+import kotlin.reflect.KClass
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -8,6 +9,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
@@ -46,8 +48,16 @@ class InsulinImplSyncTest : TestBase() {
 
     @BeforeEach
     fun setup() {
-        whenever(persistenceLayer.observeChanges(any<Class<*>>())).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(any<KClass<*>>())).thenReturn(emptyFlow())
         whenever(rh.gs(any<Int>())).thenAnswer { "S" + it.getArgument<Int>(0) }
+        // gs(TextRef) is a DEFAULT interface method, so a mock returns null rather than running it.
+        whenever(rh.gs(any<TextRef>())).thenAnswer {
+            when (val ref = it.getArgument<TextRef>(0)) {
+                is TextRef.Named      -> "S" + ref.name
+                is TextRef.AndroidRes -> "S" + ref.id
+                is TextRef.Literal    -> ref.text
+            }
+        }
         whenever(config.AAPSCLIENT).thenReturn(true)
 
         whenever(preferences.observe(StringNonKey.InsulinConfiguration)).thenReturn(configFlow)

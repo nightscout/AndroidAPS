@@ -15,7 +15,7 @@ import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
-import app.aaps.core.ui.clientcontrol.failTextResId
+import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -54,6 +54,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.abs
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.core.interfaces.R as InterfacesR
 
 @HiltViewModel
 @Stable
@@ -260,12 +261,12 @@ class FillDialogViewModel @Inject constructor(
                         ch.bolusWithVolume(state.insulinAfterConstraints)
                     else
                         decimalFormatter.toPumpSupportedBolusWithUnits(state.insulinAfterConstraints, bolusStep)
-                line(ConfirmationRole.BOLUS, rh.gs(CoreUiR.string.confirmation_line, rh.gs(R.string.fill_prime_amount), bolusValue))
+                line(ConfirmationRole.BOLUS, rh.gs(InterfacesR.string.confirmation_line, rh.gs(R.string.fill_prime_amount), bolusValue))
                 if (state.constraintApplied) {
                     line(
                         ConfirmationRole.WARNING,
                         rh.gs(
-                            CoreUiR.string.bolus_constraint_applied_warn,
+                            InterfacesR.string.bolus_constraint_applied_warn,
                             state.insulin,
                             state.insulinAfterConstraints
                         )
@@ -292,15 +293,15 @@ class FillDialogViewModel @Inject constructor(
             }
 
             if (state.notes.isNotEmpty()) {
-                line(ConfirmationRole.NORMAL, rh.gs(CoreUiR.string.confirmation_line, rh.gs(CoreUiR.string.notes_label), state.notes))
+                line(ConfirmationRole.NORMAL, rh.gs(InterfacesR.string.confirmation_line, rh.gs(CoreUiR.string.notes_label), state.notes))
             }
 
             if (state.eventTimeChanged) {
-                line(ConfirmationRole.NORMAL, rh.gs(CoreUiR.string.confirmation_line, rh.gs(CoreUiR.string.time), dateUtil.dateAndTimeString(state.eventTime)))
+                line(ConfirmationRole.NORMAL, rh.gs(InterfacesR.string.confirmation_line, rh.gs(CoreUiR.string.time), dateUtil.dateAndTimeString(state.eventTime)))
             }
 
             if (state.siteRotationEnabled && state.siteLocation != TE.Location.NONE) {
-                line(ConfirmationRole.NORMAL, rh.gs(CoreUiR.string.confirmation_line, rh.gs(CoreUiR.string.site_location), translator.translate(state.siteLocation)))
+                line(ConfirmationRole.NORMAL, rh.gs(InterfacesR.string.confirmation_line, rh.gs(CoreUiR.string.site_location), translator.translate(state.siteLocation)))
             }
         }
     }
@@ -436,7 +437,7 @@ class FillDialogViewModel @Inject constructor(
 
             else                          -> {
                 // Rejected, or a non-terminal value that can never become one here (nothing further awaits it).
-                val detail = (outcome as? ActionProgress.Rejected)?.let { rh.gs(it.reason.failTextResId()) }
+                val detail = (outcome as? ActionProgress.Rejected)?.let { rh.gs(it.reason.failText()) }
                 aapsLogger.warn(LTag.UI, "Fill insulin activation failed: $outcome")
                 reportAfterClose(
                     CoreUiR.string.activate_insulin,

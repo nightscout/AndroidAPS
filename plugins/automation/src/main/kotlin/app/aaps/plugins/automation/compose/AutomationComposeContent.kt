@@ -32,31 +32,32 @@ import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileRepository
-import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.objects.extensions.profileNames
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.masterEditingEnabled
+import app.aaps.plugins.automation.AutomationEventFactory
 import app.aaps.plugins.automation.AutomationRuntime
+import app.aaps.plugins.automation.actions.ActionFactory
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.compose.actions.ActionOption
 import app.aaps.plugins.automation.compose.actions.ChooseActionSheet
+import app.aaps.plugins.automation.triggers.TriggerFactory
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.triggers.TriggerConnector
-import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlin.reflect.full.primaryConstructor
 
 class AutomationComposeContent(
     private val plugin: AutomationRuntime,
     private val rxBus: RxBus,
-    private val aapsSchedulers: AapsSchedulers,
-    private val fabricPrivacy: FabricPrivacy,
-    private val injector: HasAndroidInjector,
+    private val aapsLogger: AAPSLogger,
+    private val actionFactory: ActionFactory,
+    private val automationEventFactory: AutomationEventFactory,
+    private val triggerFactory: TriggerFactory,
     private val uel: UserEntryLogger,
     private val profileRepository: ProfileRepository,
     private val sceneApi: SceneAutomationApi
@@ -69,7 +70,7 @@ class AutomationComposeContent(
         onSettings: (() -> Unit)?
     ) {
         val holder = remember {
-            AutomationStateHolder(plugin, rxBus, aapsSchedulers, fabricPrivacy, injector)
+            AutomationStateHolder(plugin, rxBus, aapsLogger, automationEventFactory)
         }
         DisposableEffect(holder) {
             holder.start()
@@ -259,7 +260,7 @@ class AutomationComposeContent(
                 root = holder.workingEvent().trigger,
                 availableTriggers = plugin.getTriggerDummyObjects(),
                 createTrigger = { cn -> instantiateTrigger(cn) },
-                newConnector = { TriggerConnector(injector) },
+                newConnector = { TriggerConnector(triggerFactory.deps) },
                 onChange = { holder.onTriggerChanged() },
                 onPickLocationFromMap = { triggerLoc -> holder.openMapPicker(triggerLoc) }
             )
@@ -308,10 +309,7 @@ class AutomationComposeContent(
         )
     }
 
-    private fun instantiateTrigger(className: String): Trigger? = runCatching {
-        val k = Class.forName(className).kotlin
-        k.primaryConstructor?.call(injector) as? Trigger
-    }.getOrNull()
+    private fun instantiateTrigger(className: String): Trigger? = triggerFactory.instantiate(className)
 
     @Composable
     private fun EditRoute(
@@ -439,10 +437,8 @@ class AutomationComposeContent(
         @Suppress("UNUSED_EXPRESSION") activity
     }
 
-    private fun instantiateAction(className: String): app.aaps.plugins.automation.actions.Action? = runCatching {
-        val k = Class.forName(className).kotlin
-        k.primaryConstructor?.call(injector) as? app.aaps.plugins.automation.actions.Action
-    }.getOrNull()
+    // Fully qualified: `Action` here is app.aaps.core.data.ue.Action, imported for the UserEntry logging.
+    private fun instantiateAction(className: String): app.aaps.plugins.automation.actions.Action? = actionFactory.instantiate(className)
 
     private fun localProfileNames(): List<String> = profileRepository.profileNames()
 }

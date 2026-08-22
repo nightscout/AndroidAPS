@@ -81,11 +81,13 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.PluginPermissions
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
@@ -121,6 +123,7 @@ import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.dialogs.GlobalDialogHost
 import app.aaps.core.ui.compose.dialogs.GlobalSnackbarHost
 import app.aaps.core.ui.compose.dialogs.OkDialog
+import app.aaps.core.ui.compose.dialogs.PasswordCheckHost
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.LocalCheckPassword
 import app.aaps.core.ui.compose.preference.LocalClearExportPasswordStore
@@ -193,6 +196,7 @@ class ComposeMainActivity : AppCompatActivity() {
     @Inject lateinit var cryptoUtil: CryptoUtil
     @Inject lateinit var exportPasswordDataStore: ExportPasswordDataStore
     @Inject lateinit var activePlugin: ActivePlugin
+    @Inject lateinit var pluginPermissions: PluginPermissions
     @Inject lateinit var nsClient: NsClient
     @Inject lateinit var clientControlActionDispatcher: ClientControlActionDispatcher
     @Inject lateinit var automationRuntime: AutomationRuntime
@@ -251,7 +255,7 @@ class ComposeMainActivity : AppCompatActivity() {
     private val siteRotationManagementViewModel: SiteRotationManagementViewModel by viewModels()
 
     private val pumpCommunicationStatus by lazy {
-        PumpCommunicationStatus(rxBus, commandQueue, this, lifecycleScope)
+        PumpCommunicationStatus(rxBus, commandQueue, rh, lifecycleScope)
     }
     private var navController: NavHostController? = null
     private val _autoShowNotifications = mutableStateOf(false)
@@ -337,7 +341,7 @@ class ComposeMainActivity : AppCompatActivity() {
             LocalProfileUtil provides profileUtil,
             LocalCheckPassword provides cryptoUtil::checkPassword,
             LocalHashPassword provides cryptoUtil::hashPassword,
-            LocalClearExportPasswordStore provides { exportPasswordDataStore.clearPasswordDataStore(this@ComposeMainActivity) },
+            LocalClearExportPasswordStore provides { exportPasswordDataStore.clearPasswordDataStore() },
             LocalVisibilityContext provides visibilityContext
         ) {
             AapsTheme {
@@ -376,6 +380,10 @@ class ComposeMainActivity : AppCompatActivity() {
                         // Root-level dialog host — subscribes to EventShowDialog and
                         // renders one modal dialog at a time.
                         GlobalDialogHost(rxBus = rxBus)
+
+                        // Root-level password prompt. Any caller can ask for a password from plain
+                        // Kotlin; the dialog appears here, so PasswordCheck needs no Context.
+                        PasswordCheckHost(passwordCheck = passwordCheck)
 
                         // The single app-level pending modal for ANY client-control round-trip
                         // (insulin / scenes / synced-preference edits). Hosted once here, feature-
@@ -500,11 +508,11 @@ class ComposeMainActivity : AppCompatActivity() {
             protectionCheck = protectionCheck,
             preferences = preferences,
             checkPassword = cryptoUtil::checkPassword,
-            showBiometric = { activity, titleRes, onGranted, onCancelled, onDenied ->
-                BiometricCheck.biometricPrompt(activity, titleRes, rxBus, onGranted, onCancelled, onDenied, passwordCheck)
+            showBiometric = { activity, title, onGranted, onCancelled, onDenied ->
+                BiometricCheck.biometricPrompt(activity, title, rxBus, onGranted, onCancelled, onDenied, passwordCheck)
             },
-            showBiometricSimple = { activity, titleRes, onSuccess, onFallback, onCancel ->
-                BiometricCheck.biometricPromptSimple(activity, titleRes, rxBus, onSuccess, onFallback, onCancel)
+            showBiometricSimple = { activity, title, onSuccess, onFallback, onCancel ->
+                BiometricCheck.biometricPromptSimple(activity, title, rxBus, onSuccess, onFallback, onCancel)
             }
         )
 
@@ -646,7 +654,7 @@ class ComposeMainActivity : AppCompatActivity() {
                     isSimpleMode = state.isSimpleMode,
                     onNavigate = { request -> handleNavigationRequest(request, navController) },
                     onActionsError = { comment, title ->
-                        uiInteraction.runAlarm(comment, title, app.aaps.core.ui.R.raw.boluserror)
+                        uiInteraction.runAlarm(comment, title, AlarmSound.BOLUS_ERROR)
                     },
                 )
 
@@ -792,6 +800,7 @@ class ComposeMainActivity : AppCompatActivity() {
                 swDefinition = swDefinition,
                 rxBus = rxBus,
                 activePlugin = activePlugin,
+                pluginPermissions = pluginPermissions,
                 automationRuntime = automationRuntime,
                 preferences = preferences,
                 rh = rh,
@@ -802,7 +811,7 @@ class ComposeMainActivity : AppCompatActivity() {
                 visibilityContext = visibilityContext,
                 onNavigationRequest = { request, nc -> handleNavigationRequest(request, nc) },
                 onShowDeliveryError = { comment, titleResId ->
-                    uiInteraction.runAlarm(comment, rh.gs(titleResId), app.aaps.core.ui.R.raw.boluserror)
+                    uiInteraction.runAlarm(comment, rh.gs(titleResId), AlarmSound.BOLUS_ERROR)
                 },
                 withProtection = { protection, action -> withProtection(protection, action) },
                 requestEditModeAuthorization = { onGranted ->

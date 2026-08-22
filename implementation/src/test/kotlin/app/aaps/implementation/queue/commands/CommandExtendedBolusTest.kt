@@ -20,7 +20,7 @@ class CommandExtendedBolusTest : TestBaseWithProfile() {
         durationInMinutes: Int = 30,
         callback: Callback? = null
     ) = CommandExtendedBolus(
-        aapsLogger, rh, activePlugin, pumpEnactResultProvider,
+        aapsLogger, rh, activePlugin, pumpEnactResultProvider::get,
         insulin, durationInMinutes, callback
     )
 

@@ -1,16 +1,25 @@
 package app.aaps.plugins.constraints.versionChecker
 
-import app.aaps.core.utils.JsonHelper
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 
 object AllowedVersions {
 
-    fun findByApi(definition: JSONObject, api: Int): String? = JsonHelper.safeGetString(definition, api.toString())
+    fun findByApi(definition: JsonObject, api: Int): String? = definition.stringOrNull(api.toString())
 
-    fun findByVersion(definition: JSONObject, version: String): String? = JsonHelper.safeGetString(definition, version)
+    fun findByVersion(definition: JsonObject, version: String): String? = definition.stringOrNull(version)
+
+    /**
+     * Missing key -> null, matching what `JsonHelper.safeGetString` did.
+     *
+     * `content` rather than a string-only check on purpose: org.json's `getString` coerces a number
+     * or boolean to its text, so filtering to string primitives would reject values the old reader
+     * accepted.
+     */
+    private fun JsonObject.stringOrNull(key: String): String? = (this[key] as? JsonPrimitive)?.content
 
     fun endDateToMilliseconds(endDate: String): Long? =
         try {

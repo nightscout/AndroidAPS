@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.extendedBolusDialog
 
+import app.aaps.core.ui.compose.stringResourceOrNull
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -41,14 +42,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
-import app.aaps.core.ui.compose.navigation.labelResId
-import app.aaps.core.keys.R as KeysR
+import app.aaps.core.ui.compose.navigation.label
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.core.interfaces.R as InterfacesR
 
 @Composable
 fun ExtendedBolusDialogScreen(
@@ -131,7 +133,7 @@ internal fun ExtendedBolusDialogContent(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(ElementType.EXTENDED_BOLUS.labelResId())) },
+                title = { Text((stringResourceOrNull(ElementType.EXTENDED_BOLUS.label()) ?: "")) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
@@ -162,7 +164,7 @@ internal fun ExtendedBolusDialogContent(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 if (uiState.insulin > 0.0) {
-                    Text(stringResource(CoreUiR.string.format_insulin_units, uiState.insulin))
+                    Text(stringResource(InterfacesR.string.format_insulin_units, uiState.insulin))
                 } else {
                     Text(stringResource(CoreUiR.string.ok))
                 }
@@ -196,7 +198,7 @@ internal fun ExtendedBolusDialogContent(
                         valueRange = uiState.minInsulin..uiState.maxInsulin,
                         step = uiState.extendedStep,
                         valueFormat = NumberFormat.DECIMAL_2,
-                        unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname),
+                        unitLabel = TextRef.AndroidRes(CoreUiR.string.insulin_unit_shortname),
                         modifier = itemModifier
                     )
 
@@ -207,7 +209,7 @@ internal fun ExtendedBolusDialogContent(
                         valueRange = uiState.extendedDurationStep..uiState.extendedMaxDuration,
                         step = uiState.extendedDurationStep,
                         valueFormat = NumberFormat.INTEGER,
-                        unitLabelResId = KeysR.string.units_min,
+                        unitLabel = TextRef.AndroidRes(CoreUiR.string.units_min),
                         modifier = itemModifier
                     )
                 }

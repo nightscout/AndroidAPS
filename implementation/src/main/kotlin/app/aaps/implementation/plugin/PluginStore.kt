@@ -24,6 +24,8 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PermissionProvider
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginPermissions
+import app.aaps.core.interfaces.plugin.missingPermissions
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpWithConcentration
@@ -32,10 +34,12 @@ import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.implementation.R
 import dagger.Lazy
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.reflect.KClass
 
 @Singleton
 class PluginStore @Inject constructor(
@@ -45,7 +49,7 @@ class PluginStore @Inject constructor(
     // Lazy: a PermissionProvider (e.g. AutomationRuntime) transitively depends on ActivePlugin
     // (= this PluginStore), so eager injection would form a Dagger dependency cycle.
     private val permissionProviders: Lazy<Set<@JvmSuppressWildcards PermissionProvider>>
-) : ActivePlugin {
+) : ActivePlugin, PluginPermissions {
 
     companion object {
 
@@ -73,16 +77,16 @@ class PluginStore @Inject constructor(
         add(
             PermissionGroup(
                 permissions = listOf(Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS),
-                rationaleTitle = R.string.permission_battery_title,
-                rationaleDescription = R.string.permission_battery_description,
+                rationaleTitle = TextRef.AndroidRes(R.string.permission_battery_title),
+                rationaleDescription = TextRef.AndroidRes(R.string.permission_battery_description),
                 special = true,
             )
         )
         add(
             PermissionGroup(
                 permissions = listOf(PERMISSION_SELECT_DIRECTORY),
-                rationaleTitle = R.string.permission_directory_title,
-                rationaleDescription = R.string.permission_directory_description,
+                rationaleTitle = TextRef.AndroidRes(R.string.permission_directory_title),
+                rationaleDescription = TextRef.AndroidRes(R.string.permission_directory_description),
                 special = true,
                 alwaysShowAction = true,
             )
@@ -95,8 +99,8 @@ class PluginStore @Inject constructor(
             add(
                 PermissionGroup(
                     permissions = listOf(Manifest.permission.POST_NOTIFICATIONS),
-                    rationaleTitle = R.string.permission_notifications_title,
-                    rationaleDescription = R.string.permission_notifications_description,
+                    rationaleTitle = TextRef.AndroidRes(R.string.permission_notifications_title),
+                    rationaleDescription = TextRef.AndroidRes(R.string.permission_notifications_description),
                     special = needsSettingsWorkaround,
                 )
             )
@@ -141,10 +145,10 @@ class PluginStore @Inject constructor(
         }
     }
 
-    override fun getSpecificPluginsListByInterface(interfaceClass: Class<*>): ArrayList<PluginBase> {
+    override fun getSpecificPluginsListByInterface(interfaceClass: KClass<*>): ArrayList<PluginBase> {
         val newList = ArrayList<PluginBase>()
         for (p in plugins) {
-            if (!interfaceClass.isAssignableFrom(ConfigBuilder::class.java) && interfaceClass.isAssignableFrom(p.javaClass)) newList.add(p)
+            if (!interfaceClass.java.isAssignableFrom(ConfigBuilder::class.java) && interfaceClass.isInstance(p)) newList.add(p)
         }
         return newList
     }
@@ -278,20 +282,20 @@ class PluginStore @Inject constructor(
         get() = activeCalibrationStore ?: checkNotNull(activeCalibrationStore) { "No calibration selected" }
 
     override val activeSafety: Safety
-        get() = getSpecificPluginsListByInterface(Safety::class.java).first() as Safety
+        get() = getSpecificPluginsListByInterface(Safety::class).first() as Safety
 
     override val activeIobCobCalculator: IobCobCalculator
-        get() = getSpecificPluginsListByInterface(IobCobCalculator::class.java).first() as IobCobCalculator
+        get() = getSpecificPluginsListByInterface(IobCobCalculator::class).first() as IobCobCalculator
     override val activeObjectives: Objectives?
-        get() = getSpecificPluginsListByInterface(Objectives::class.java).firstOrNull() as Objectives?
+        get() = getSpecificPluginsListByInterface(Objectives::class).firstOrNull() as Objectives?
 
     @Suppress("UNCHECKED_CAST")
     override val firstActiveSync: Sync?
-        get() = (getSpecificPluginsListByInterface(Sync::class.java) as ArrayList<Sync>).firstOrNull { it.connected }
+        get() = (getSpecificPluginsListByInterface(Sync::class) as ArrayList<Sync>).firstOrNull { it.connected }
 
     @Suppress("UNCHECKED_CAST")
     override val activeSyncs: ArrayList<Sync>
-        get() = getSpecificPluginsListByInterface(Sync::class.java) as ArrayList<Sync>
+        get() = getSpecificPluginsListByInterface(Sync::class) as ArrayList<Sync>
 
     override fun getPluginsList(): ArrayList<PluginBase> = ArrayList(plugins)
 

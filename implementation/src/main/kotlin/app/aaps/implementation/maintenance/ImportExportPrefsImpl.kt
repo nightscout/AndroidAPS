@@ -2,11 +2,9 @@ package app.aaps.implementation.maintenance
 
 import android.content.Context
 import android.provider.Settings
-import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.documentfile.provider.DocumentFile
-import androidx.fragment.app.FragmentActivity
 import androidx.hilt.work.HiltWorker
 import androidx.lifecycle.lifecycleScope
 import androidx.work.ExistingWorkPolicy
@@ -37,7 +35,6 @@ import app.aaps.core.interfaces.maintenance.PrefsFile
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
-import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventDiaconnG8PumpLogReset
@@ -75,7 +72,10 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.json.JSONObject
+import kotlinx.serialization.SerializationException
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.time.LocalDateTime
@@ -98,7 +98,6 @@ class ImportExportPrefsImpl @Inject constructor(
     private val config: Config,
     private val persistenceLayer: PersistenceLayer,
     private val rxBus: RxBus,
-    private val passwordCheck: PasswordCheck,
     private val exportPasswordDataStore: ExportPasswordDataStore,
     private val encryptedPrefsFormat: EncryptedPrefsFormat,
     private val prefFileList: FileListProvider,
@@ -214,9 +213,9 @@ class ImportExportPrefsImpl @Inject constructor(
             pendingExportFile = newFile
         }
 
-        val (password, isExpired, isAboutToExpire) = exportPasswordDataStore.getPasswordFromDataStore(context)
+        val (password, isExpired, isAboutToExpire) = exportPasswordDataStore.getPasswordFromDataStore()
         val cachedPassword = if (password.isNotEmpty() && !(isExpired || isAboutToExpire)) password else {
-            exportPasswordDataStore.clearPasswordDataStore(context)
+            exportPasswordDataStore.clearPasswordDataStore()
             null
         }
 
@@ -287,7 +286,7 @@ class ImportExportPrefsImpl @Inject constructor(
 
     /**
      * Perform cloud export without UI interaction.
-     * Reuses logic from doExportToCloud() but works without an Activity.
+     * Works without an Activity.
      */
     private suspend fun performCloudExport(password: String): Boolean {
         try {
@@ -342,13 +341,7 @@ class ImportExportPrefsImpl @Inject constructor(
     }
 
     override fun cacheExportPassword(password: String): String =
-        exportPasswordDataStore.putPasswordToDataStore(context, password)
-
-    // Legacy export — uses dialogs via uiInteraction (kept for old UI)
-
-    override fun exportSharedPreferences(activity: FragmentActivity) {
-        exportSharedPreferencesLegacy(activity)
-    }
+        exportPasswordDataStore.putPasswordToDataStore(password)
 
     private fun prepareMetadata(context: Context): Map<PrefsMetadataKey, PrefMetadata> {
 
@@ -379,71 +372,6 @@ class ImportExportPrefsImpl @Inject constructor(
         // name we detect from OS
         val systemName = n1 ?: n4 ?: n5 ?: n6 ?: defaultPatientName
         return if (patientName.isNotEmpty() && patientName != defaultPatientName) patientName else systemName
-    }
-
-    private fun askForMasterPass(activity: FragmentActivity, @StringRes canceledMsg: Int, then: ((password: String) -> Unit)) {
-        passwordCheck.queryPassword(activity, app.aaps.core.keys.R.string.master_password, StringKey.ProtectionMasterPassword, { password ->
-            then(password)
-        }, {
-                                        rxBus.send(EventShowSnackbar(rh.gs(canceledMsg), EventShowSnackbar.Type.Warning))
-                                    })
-    }
-
-    @Suppress("SameParameterValue")
-    private fun askForMasterPassIfNeeded(activity: FragmentActivity, @StringRes canceledMsg: Int, then: ((password: String) -> Unit)) {
-        askForMasterPass(activity, canceledMsg, then)
-    }
-
-    private fun assureMasterPasswordSet(activity: FragmentActivity, @StringRes wrongPwdTitle: Int): Boolean {
-        if (preferences.getIfExists(StringKey.ProtectionMasterPassword).isNullOrEmpty()) {
-            rxBus.send(
-                EventShowDialog.Error(
-                    title = rh.gs(wrongPwdTitle),
-                    message = rh.gs(app.aaps.core.ui.R.string.master_password_missing),
-                    positiveButton = rh.gs(app.aaps.core.keys.R.string.master_password),
-                    onPositive = { passwordCheck.setPassword(activity, app.aaps.core.keys.R.string.master_password, StringKey.ProtectionMasterPassword) }
-                )
-            )
-            exportPasswordDataStore.clearPasswordDataStore(context)
-            return false
-        }
-        return true
-    }
-
-    /***
-     * Ask to confirm export unless a valid password is already available
-     */
-    private fun askToConfirmExport(activity: FragmentActivity, fileToExport: DocumentFile, then: ((password: String) -> Unit)) {
-        if (!assureMasterPasswordSet(activity, app.aaps.core.ui.R.string.nav_export)) {
-            return
-        }
-
-        // Get password from datastore
-        val (password, isExpired, isAboutToExpire) = exportPasswordDataStore.getPasswordFromDataStore(context)
-        if (password.isNotEmpty() && !(isExpired || isAboutToExpire)) {
-            // We have an (encrypted) password in the phones DataStore that is not expired or about to expire (third)
-            then(password)
-            return // No need to ask.
-        }
-
-        // Make sure stored password is properly reset
-        exportPasswordDataStore.clearPasswordDataStore((context))
-
-        // Ask for entering password and store when successfully entered
-        rxBus.send(
-            EventShowDialog.OkCancel(
-                title = rh.gs(app.aaps.core.ui.R.string.nav_export),
-                message = rh.gs(app.aaps.core.ui.R.string.export_to) + " " + fileToExport.name + "?",
-                secondMessage = rh.gs(app.aaps.core.ui.R.string.password_preferences_encrypt_prompt),
-                icon = Icons.AutoMirrored.Filled.Logout,
-                onOk = {
-                    askForMasterPassIfNeeded(activity, app.aaps.core.ui.R.string.preferences_export_canceled)
-                    { password ->
-                        then(exportPasswordDataStore.putPasswordToDataStore(context, password))
-                    }
-                }
-            )
-        )
     }
 
     /**
@@ -477,235 +405,7 @@ class ImportExportPrefsImpl @Inject constructor(
         return resultOk
     }
 
-    private fun exportSharedPreferencesLegacy(activity: FragmentActivity) {
-        // Check export destination preference for user settings
-        val localEnabled = preferences.get(BooleanNonKey.ExportSettingsLocalEnabled)
-        val cloudEnabled = preferences.get(BooleanNonKey.ExportSettingsCloudEnabled)
-        val isCloudActive = cloudStorageManager.isCloudStorageActive()
-
-        // Determine export destinations
-        val exportToLocal = localEnabled
-        val exportToCloud = cloudEnabled && isCloudActive
-
-        aapsLogger.info(LTag.CORE, "${CloudConstants.LOG_PREFIX} EXPORT exportToLocal=$exportToLocal, exportToCloud=$exportToCloud")
-
-        if (exportToLocal && exportToCloud) {
-            // Export to both: local first, then cloud
-            exportToBoth(activity)
-            return
-        }
-
-        if (exportToCloud) {
-            exportToCloud(activity)
-            return
-        }
-
-        // Local export requires AAPS base directory
-        val directoryUri = preferences.getIfExists(StringKey.AapsDirectoryUri)
-        if (directoryUri.isNullOrEmpty()) {
-            rxBus.send(EventShowSnackbar(rh.gs(R.string.error_accessing_filesystem_select_aaps_directory_properly), EventShowSnackbar.Type.Error))
-            return
-        }
-        exportToLocal(activity)
-    }
-
-    /**
-     * Export to both local and cloud storage
-     * First export to local, then to cloud
-     */
-    private fun exportToBoth(activity: FragmentActivity) {
-        // Check local directory first
-        val directoryUri = preferences.getIfExists(StringKey.AapsDirectoryUri)
-        if (directoryUri.isNullOrEmpty()) {
-            rxBus.send(EventShowSnackbar(rh.gs(R.string.error_accessing_filesystem_select_aaps_directory_properly), EventShowSnackbar.Type.Error))
-            return
-        }
-
-        prefFileList.ensureExportDirExists()
-        val newFile = prefFileList.newPreferenceFile()
-
-        if (newFile == null) {
-            rxBus.send(EventShowSnackbar(rh.gs(R.string.exported_failed), EventShowSnackbar.Type.Error))
-            return
-        }
-
-        // Ask password once, then export to both destinations
-        askToConfirmExport(activity, newFile) { password ->
-            // Export to local first
-            doExportToLocal(activity, newFile, password)
-            // Then export to cloud
-            doExportToCloud(activity, password)
-        }
-    }
-
-    private fun exportToLocal(activity: FragmentActivity) {
-        prefFileList.ensureExportDirExists()
-        val newFile = prefFileList.newPreferenceFile()
-
-        if (newFile == null) {
-            rxBus.send(EventShowSnackbar(rh.gs(R.string.exported_failed), EventShowSnackbar.Type.Error))
-            return
-        }
-
-        askToConfirmExport(activity, newFile) { password ->
-            doExportToLocal(activity, newFile, password)
-        }
-    }
-
-    /**
-     * Perform local export without password prompt
-     */
-    private fun doExportToLocal(activity: FragmentActivity, newFile: DocumentFile, password: String) {
-        val exportResultMessage = if (savePreferences(newFile, password))
-            rh.gs(R.string.exported)
-        else
-            rh.gs(R.string.exported_failed)
-
-        rxBus.send(EventShowSnackbar(exportResultMessage, EventShowSnackbar.Type.Success))
-
-        appScope.launch {
-            persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
-                therapyEvent = TE.asSettingsExport(error = exportResultMessage),
-                timestamp = dateUtil.now(),
-                action = Action.EXPORT_SETTINGS,
-                source = Sources.Automation,
-                note = "Manual Local: $exportResultMessage",
-                listValues = listOf()
-            )
-        }
-    }
-
-    private fun exportToCloud(activity: FragmentActivity) {
-        activity.lifecycleScope.launch {
-            // Pre-check cloud connection before asking for password
-            val provider = cloudStorageManager.getActiveProvider()
-            if (provider == null) {
-                aapsLogger.error(LTag.CORE, "${CloudConstants.LOG_PREFIX} EXPORT_NO_PROVIDER")
-                rxBus.send(EventShowSnackbar(rh.gs(app.aaps.core.ui.R.string.cloud_connection_failed), EventShowSnackbar.Type.Error))
-                return@launch
-            }
-
-            if (!provider.testConnection()) {
-                aapsLogger.error(LTag.CORE, "${CloudConstants.LOG_PREFIX} EXPORT_CONN_FAIL")
-                rxBus.send(EventShowSnackbar(rh.gs(app.aaps.core.ui.R.string.cloud_connection_failed), EventShowSnackbar.Type.Error))
-                return@launch
-            }
-
-            // Create temp file for password prompt display
-            val tempDir = prefFileList.ensureTempDirExists()
-            if (tempDir == null) {
-                aapsLogger.error(LTag.CORE, "${CloudConstants.LOG_PREFIX} EXPORT_NO_TEMP_DIR")
-                rxBus.send(EventShowSnackbar(rh.gs(R.string.exported_failed), EventShowSnackbar.Type.Error))
-                return@launch
-            }
-
-            val timeLocal = filenameTimestamp()
-            val exportFileName = "${timeLocal}_${config.FLAVOR}.json"
-            val tempDoc = tempDir.createFile("application/json", exportFileName)
-            if (tempDoc == null) {
-                aapsLogger.error(LTag.CORE, "${CloudConstants.LOG_PREFIX} EXPORT_CREATE_TEMP_FAIL")
-                rxBus.send(EventShowSnackbar(rh.gs(R.string.exported_failed), EventShowSnackbar.Type.Error))
-                return@launch
-            }
-
-            askToConfirmExport(activity, tempDoc) { password ->
-                // Delete the temp file created for prompt, doExportToCloud will create its own
-                tempDoc.delete()
-                doExportToCloud(activity, password)
-            }
-        }
-    }
-
-    /**
-     * Perform cloud export without password prompt
-     */
-    private fun doExportToCloud(activity: FragmentActivity, password: String) {
-        activity.lifecycleScope.launch {
-            try {
-                val provider = cloudStorageManager.getActiveProvider()
-                if (provider == null) {
-                    aapsLogger.error(LTag.CORE, "${CloudConstants.LOG_PREFIX} EXPORT_NO_PROVIDER")
-                    rxBus.send(EventShowSnackbar(rh.gs(app.aaps.core.ui.R.string.cloud_connection_failed), EventShowSnackbar.Type.Error))
-                    return@launch
-                }
-
-                if (!provider.testConnection()) {
-                    aapsLogger.error(LTag.CORE, "${CloudConstants.LOG_PREFIX} EXPORT_CONN_FAIL")
-                    rxBus.send(EventShowSnackbar(rh.gs(app.aaps.core.ui.R.string.cloud_connection_failed), EventShowSnackbar.Type.Error))
-                    return@launch
-                }
-
-                val tempDir = prefFileList.ensureTempDirExists()
-                if (tempDir == null) {
-                    aapsLogger.error(LTag.CORE, "${CloudConstants.LOG_PREFIX} EXPORT_NO_TEMP_DIR")
-                    rxBus.send(EventShowSnackbar(rh.gs(R.string.export_to_cloud_failed), EventShowSnackbar.Type.Error))
-                    return@launch
-                }
-
-                val timeLocal = filenameTimestamp()
-                val exportFileName = "${timeLocal}_${config.FLAVOR}.json"
-                val tempDoc = tempDir.createFile("application/json", exportFileName)
-                if (tempDoc == null) {
-                    aapsLogger.error(LTag.CORE, "${CloudConstants.LOG_PREFIX} EXPORT_CREATE_TEMP_FAIL")
-                    rxBus.send(EventShowSnackbar(rh.gs(R.string.export_to_cloud_failed), EventShowSnackbar.Type.Error))
-                    return@launch
-                }
-
-                val saved = savePreferences(tempDoc, password)
-                if (!saved) {
-                    aapsLogger.error(LTag.CORE, "${CloudConstants.LOG_PREFIX} EXPORT_SAVE_PREFS_FAIL")
-                    rxBus.send(EventShowSnackbar(rh.gs(R.string.export_to_cloud_failed), EventShowSnackbar.Type.Error))
-                    tempDoc.delete()
-                    return@launch
-                }
-
-                val bytes = activity.contentResolver.openInputStream(tempDoc.uri)?.use { it.readBytes() }
-                if (bytes == null) {
-                    aapsLogger.error(LTag.CORE, "${CloudConstants.LOG_PREFIX} EXPORT_READ_TEMP_FAIL")
-                    rxBus.send(EventShowSnackbar(rh.gs(R.string.export_to_cloud_failed), EventShowSnackbar.Type.Error))
-                    tempDoc.delete()
-                    return@launch
-                }
-
-                provider.getOrCreateFolderPath(CloudConstants.CLOUD_PATH_SETTINGS)?.let {
-                    provider.setSelectedFolderId(it)
-                }
-
-                rxBus.send(EventShowSnackbar(rh.gs(R.string.uploading_to_cloud), EventShowSnackbar.Type.Info))
-
-                var uploadedFileId = provider.uploadFileToPath(
-                    exportFileName, bytes, "application/json", CloudConstants.CLOUD_PATH_SETTINGS
-                )
-                if (uploadedFileId == null) {
-                    uploadedFileId = provider.uploadFile(exportFileName, bytes, "application/json")
-                }
-
-                val exportResultMessage = if (uploadedFileId != null) {
-                    rh.gs(R.string.exported_to_cloud) + "\n" + rh.gs(R.string.cloud_directory_path, CloudConstants.CLOUD_PATH_SETTINGS)
-                } else {
-                    rh.gs(R.string.export_to_cloud_failed)
-                }
-
-                rxBus.send(EventShowSnackbar(exportResultMessage, EventShowSnackbar.Type.Info))
-
-                persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
-                    therapyEvent = TE.asSettingsExport(error = exportResultMessage),
-                    timestamp = dateUtil.now(),
-                    action = Action.EXPORT_SETTINGS,
-                    source = Sources.Automation,
-                    note = "Manual Cloud: $exportResultMessage",
-                    listValues = listOf()
-                )
-
-                tempDoc.delete()
-            } catch (e: Exception) {
-                aapsLogger.error(LTag.CORE, "${CloudConstants.LOG_PREFIX} EXPORT_EXCEPTION", e)
-                rxBus.send(EventShowSnackbar(rh.gs(R.string.export_to_cloud_failed), EventShowSnackbar.Type.Error))
-            }
-        }
-    }
-
-    override fun exportSharedPreferencesNonInteractive(context: Context, password: String): Boolean {
+    override fun exportSharedPreferencesNonInteractive(password: String): Boolean {
         // Check export destination preferences (same logic as manual export)
         val localEnabled = preferences.get(BooleanNonKey.ExportSettingsLocalEnabled)
         val cloudEnabled = preferences.get(BooleanNonKey.ExportSettingsCloudEnabled)
@@ -926,7 +626,7 @@ class ImportExportPrefsImpl @Inject constructor(
         preferences.put(BooleanNonKey.GeneralSetupWizardProcessed, true)
     }
 
-    override fun exportUserEntriesCsv(context: Context) {
+    override fun exportUserEntriesCsv() {
         aapsLogger.info(LTag.CORE, "${CloudConstants.LOG_PREFIX} CSV_EXPORT exportUserEntriesCsv called, enqueuing WorkManager")
         WorkManager.getInstance(context).enqueueUniqueWork(
             "export",
@@ -1135,7 +835,7 @@ class ImportExportPrefsImpl @Inject constructor(
         }
     }
 
-    override fun exportApsResult(algorithm: String?, input: JSONObject, output: JSONObject?) {
+    override fun exportApsResult(algorithm: String?, input: String, output: String?) {
         dataInbox.putAndEnqueue(ApsExportInbox, ApsResultExportWorker.ApsResultData(algorithm, input, output))
     }
 
@@ -1151,7 +851,8 @@ class ImportExportPrefsImpl @Inject constructor(
         private val dataInbox: DataInbox
     ) : LoggingWorker(context, params, Dispatchers.IO, aapsLogger, fabricPrivacy) {
 
-        data class ApsResultData(val algorithm: String?, val input: JSONObject, val output: JSONObject?)
+        /** [input] and [output] are already serialised JSON documents. */
+        data class ApsResultData(val algorithm: String?, val input: String, val output: String?)
 
         override suspend fun doWorkAndLog(): Result {
             if (!config.isEngineeringMode()) return Result.success(workDataOf("Result" to "Export not enabled"))
@@ -1163,10 +864,13 @@ class ImportExportPrefsImpl @Inject constructor(
             for (apsResultData in items) {
                 val newFile = prefFileList.newResultFile()
                 try {
-                    val jsonObject = JSONObject().apply {
-                        put("algorithm", apsResultData.algorithm)
-                        put("input", apsResultData.input)
-                        put("output", apsResultData.output)
+                    // parseToJsonElement, not put(key, text): the documents must be nested, and writing
+                    // them as text would quote and escape the whole thing into a single string value.
+                    val jsonObject = buildJsonObject {
+                        // A null algorithm left the key out before. Keep it out.
+                        apsResultData.algorithm?.let { put("algorithm", it) }
+                        put("input", Json.parseToJsonElement(apsResultData.input))
+                        apsResultData.output?.let { put("output", Json.parseToJsonElement(it)) }
                     }
                     storage.putFileContents(newFile, jsonObject.toString())
                 } catch (e: FileNotFoundException) {
@@ -1174,6 +878,11 @@ class ImportExportPrefsImpl @Inject constructor(
                     hadFailure = true
                 } catch (e: IOException) {
                     aapsLogger.error(LTag.CORE, "Unhandled exception", e)
+                    hadFailure = true
+                } catch (e: SerializationException) {
+                    // Only reachable now that the documents arrive as text - a caller that hands us
+                    // something unparsable loses this one file instead of taking the worker down.
+                    aapsLogger.error(LTag.CORE, "APS result is not valid JSON", e)
                     hadFailure = true
                 }
             }

@@ -59,7 +59,7 @@ class BlePreCheckImpl @Inject constructor(
         return true
     }
 
-    override fun checkBleReady(context: Context): BlePreCheckResult {
+    override fun checkBleReady(): BlePreCheckResult {
         if (!context.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             return BlePreCheckResult.BLE_NOT_SUPPORTED
         }

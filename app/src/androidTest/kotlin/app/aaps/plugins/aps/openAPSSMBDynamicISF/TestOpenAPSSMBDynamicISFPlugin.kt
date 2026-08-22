@@ -1,6 +1,7 @@
 package app.aaps.plugins.aps.openAPSSMBDynamicISF
 
 import android.content.Context
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.DetermineBasalAdapter
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
@@ -81,9 +82,9 @@ class TestOpenAPSSMBDynamicISFPlugin @Inject constructor(
 
     init {
         pluginDescription
-            .pluginName(R.string.openaps_smb_dynamic_isf)
-            .description(R.string.description_smb_dynamic_isf)
-            .shortName(R.string.dynisf_shortname)
+            .pluginName(TextRef.AndroidRes(R.string.openaps_smb_dynamic_isf))
+            .description(TextRef.AndroidRes(R.string.description_smb_dynamic_isf))
+            .shortName(TextRef.AndroidRes(R.string.dynisf_shortname))
             .preferencesVisibleInSimpleMode(true)
             .setDefault(false)
     }
@@ -96,10 +97,9 @@ class TestOpenAPSSMBDynamicISFPlugin @Inject constructor(
         if (tdd1D == null || tdd7D == null || tddLast4H == null || tddLast8to4H == null || tddLast24H == null || !dynIsfEnabled.value()) {
             notificationManager.post(
                 NotificationId.SMB_FALLBACK,
-                R.string.fallback_smb_no_tdd,
+                TextRef.AndroidRes(R.string.fallback_smb_no_tdd),
                 level = NotificationLevel.INFO,
-                validTo = dateUtil.now() + T.mins(1).msecs()
-            )
+                validTo = dateUtil.now() + T.mins(1).msecs())
             DetermineBasalAdapterSMBJS(ScriptReader(), injector)
         } else {
             notificationManager.dismiss(NotificationId.SMB_FALLBACK)

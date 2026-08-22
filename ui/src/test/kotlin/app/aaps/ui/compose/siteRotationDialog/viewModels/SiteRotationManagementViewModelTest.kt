@@ -47,7 +47,7 @@ internal class SiteRotationManagementViewModelTest {
         // stays clean and we test the synchronous setters against the default state. The cold flow chains built
         // synchronously in setupEventListeners() must be stubbed to non-null flows or construction NPEs.
         Dispatchers.setMain(StandardTestDispatcher())
-        whenever(persistenceLayer.observeChanges(TE::class.java)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(TE::class)).thenReturn(emptyFlow())
         whenever(preferences.observe(IntKey.SiteRotationUserProfile)).thenReturn(MutableStateFlow(0))
         whenever(preferences.get(IntKey.SiteRotationUserProfile)).thenReturn(0)
         sut = SiteRotationManagementViewModel(

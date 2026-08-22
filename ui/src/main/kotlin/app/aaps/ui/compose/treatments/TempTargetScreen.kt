@@ -35,8 +35,9 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Translator
-import app.aaps.core.objects.extensions.highValueToUnitsToString
-import app.aaps.core.objects.extensions.lowValueToUnitsToString
+import app.aaps.core.ui.extensions.highValueToUnitsToString
+import app.aaps.core.ui.extensions.lowValueToUnitsToString
+import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDateUtil
@@ -202,7 +203,7 @@ private fun TempTargetItem(
                     append(" ")
                     // Duration
                     append(T.msecs(tempTarget.duration).mins().toInt())
-                    append(rh.gs(app.aaps.core.keys.R.string.units_min))
+                    append(rh.gs(CoreUiR.string.units_min))
                     append(" ")
                     // Reason (without "Reason:" label)
                     append(translator.translate(tempTarget.reason))

@@ -1,6 +1,6 @@
 package app.aaps.pump.common.events
 
-import android.content.Context
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.pump.defs.PumpDeviceState
 import app.aaps.core.interfaces.rx.events.EventStatus
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkError
@@ -33,16 +33,16 @@ open class EventRileyLinkDeviceStatusChange : EventStatus {
         this.errorDescription = errorDescription
     }
 
-    override fun getStatus(context: Context): String {
-        val rileyLinkServiceState = this.rileyLinkServiceState ?: return ""
+    override fun getStatus(): TextRef {
+        val rileyLinkServiceState = this.rileyLinkServiceState ?: return TextRef.Literal("")
         val resourceId = rileyLinkServiceState.resourceId
         val rileyLinkError = this.rileyLinkError
 
         if (rileyLinkServiceState.isError() && rileyLinkError != null) {
-            val rileyLinkTargetDevice = this.rileyLinkTargetDevice ?: return ""
-            return context.getString(rileyLinkError.getResourceId(rileyLinkTargetDevice))
+            val rileyLinkTargetDevice = this.rileyLinkTargetDevice ?: return TextRef.Literal("")
+            return TextRef.AndroidRes(rileyLinkError.getResourceId(rileyLinkTargetDevice))
         }
 
-        return context.getString(resourceId)
+        return TextRef.AndroidRes(resourceId)
     }
 }

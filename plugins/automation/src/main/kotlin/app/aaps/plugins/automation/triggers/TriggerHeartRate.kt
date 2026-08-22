@@ -6,14 +6,16 @@ import androidx.compose.material.icons.filled.MonitorHeart
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.utils.JsonHelper
+import app.aaps.core.utils.lenientDouble
+import app.aaps.core.utils.lenientStringOrNull
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
-import dagger.android.HasAndroidInjector
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
-class TriggerHeartRate(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerHeartRate(deps: TriggerDeps) : Trigger(deps) {
 
     @VisibleForTesting val averageHeartRateDurationMillis = 330 * 1000L
     private val minValue = 30
@@ -41,15 +43,16 @@ class TriggerHeartRate(injector: HasAndroidInjector) : Trigger(injector) {
         }
     }
 
-    override fun dataJSON(): JSONObject =
-        JSONObject()
-            .put("heartRate", heartRate.value)
-            .put("comparator", comparator.value.toString())
+    override fun dataJSON(): JsonObject =
+        buildJsonObject {
+            put("heartRate", heartRate.value)
+            put("comparator", comparator.value.toString())
+        }
 
     override fun fromJSON(data: String): Trigger {
-        val d = JSONObject(data)
-        heartRate.setValue(JsonHelper.safeGetDouble(d, "heartRate"))
-        comparator.setValue(Comparator.Compare.valueOf(JsonHelper.safeGetString(d, "comparator")!!))
+        val d = jsonOf(data)
+        heartRate.setValue(d.lenientDouble("heartRate"))
+        comparator.setValue(Comparator.Compare.valueOf(d.lenientStringOrNull("comparator")!!))
         return this
     }
 
@@ -62,7 +65,7 @@ class TriggerHeartRate(injector: HasAndroidInjector) : Trigger(injector) {
     override fun elementType() = ElementType.BG_CHECK
 
     override fun duplicate(): Trigger {
-        return TriggerHeartRate(injector).also { o ->
+        return TriggerHeartRate(deps).also { o ->
             o.heartRate.setValue(heartRate.value)
             o.comparator.setValue(comparator.value)
         }

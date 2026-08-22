@@ -7,12 +7,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
+import app.aaps.core.ui.compose.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.keys.StringKey
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.dialogs.QueryAnyPasswordDialog
 import app.aaps.ui.compose.maintenance.MaintenanceViewModel.ExportState
-import app.aaps.core.keys.R as KeysR
 import app.aaps.core.ui.R as CoreUiR
 
 /**
@@ -209,7 +214,7 @@ fun MaintenanceDialogs(
         is ExportState.AskPassword           -> {
             val askState = exportState as ExportState.AskPassword
             QueryAnyPasswordDialog(
-                title = stringResource(KeysR.string.master_password),
+                title = stringResource(StringKey.ProtectionMasterPassword.title),
                 passwordExplanation = stringResource(CoreUiR.string.password_preferences_encrypt_prompt),
                 errorMessage = if (askState.wrongPassword) stringResource(CoreUiR.string.wrongpassword) else null,
                 onConfirm = { password -> maintenanceViewModel.onExportPasswordEntered(password) },
@@ -225,7 +230,11 @@ fun MaintenanceDialogs(
     cleanupResultText?.let { result ->
         OkDialog(
             title = stringResource(CoreUiR.string.result),
-            message = "<b>" + stringResource(CoreUiR.string.cleared_entries) + "</b><br>" + result,
+            message = buildAnnotatedString {
+                withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append(stringResource(CoreUiR.string.cleared_entries)) }
+                appendLine()
+                append(result)
+            },
             onDismiss = { cleanupResultText = null }
         )
     }

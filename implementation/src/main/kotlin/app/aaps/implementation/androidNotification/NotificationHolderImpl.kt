@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import androidx.core.app.NotificationCompat
 import androidx.core.app.TaskStackBuilder
 import app.aaps.core.interfaces.notifications.NotificationHolder
@@ -32,9 +33,9 @@ class NotificationHolderImpl @Inject constructor(
         }
         get() = _notification ?: placeholderNotification()
 
-    override fun openAppIntent(context: Context): PendingIntent? = TaskStackBuilder.create(context).run {
-        addParentStack(uiInteraction.mainActivity)
-        addNextIntent(Intent(context, uiInteraction.mainActivity))
+    override fun openAppIntent(): PendingIntent? = TaskStackBuilder.create(context).run {
+        addParentStack(uiInteraction.mainActivity.java)
+        addNextIntent(Intent(context, uiInteraction.mainActivity.java))
         getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
@@ -47,9 +48,9 @@ class NotificationHolderImpl @Inject constructor(
             .setOnlyAlertOnce(true)
             .setCategory(NotificationCompat.CATEGORY_STATUS)
             .setSmallIcon(iconsProvider.getNotificationIcon())
-            .setLargeIcon(rh.decodeResource(iconsProvider.getIcon()))
+            .setLargeIcon(BitmapFactory.decodeResource(context.resources, iconsProvider.getIcon()))
             .setContentTitle(rh.gs(app.aaps.core.ui.R.string.loading))
-            .setContentIntent(openAppIntent(context))
+            .setContentIntent(openAppIntent())
             .build()
             .also {
                 (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).notify(notificationID, it)

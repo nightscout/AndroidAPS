@@ -52,7 +52,7 @@ internal class ProfileHelperViewModelTest {
         // coroutines (no advanceUntilIdle), so construction stays clean and we test the synchronous getters
         // against the default uiState. Only the EPS observeChanges cold flow chain is built synchronously.
         Dispatchers.setMain(StandardTestDispatcher())
-        whenever(persistenceLayer.observeChanges(EPS::class.java)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
         sut = ProfileHelperViewModel(
             persistenceLayer, profileRepository, profileFunction, profileUtil, rh, dateUtil,
             tddCalculator, defaultProfile, defaultProfileDPV, rxBus, fabricPrivacy

@@ -158,7 +158,7 @@ class CareDialogViewModel @Inject constructor(
             if (state.showBgSection) {
                 line(
                     ConfirmationRole.NORMAL,
-                    rh.gs(app.aaps.core.ui.R.string.confirmation_line, rh.gs(R.string.glucose_type), translator.translate(state.meterType))
+                    rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, rh.gs(R.string.glucose_type), translator.translate(state.meterType))
                 )
                 val unitResId = if (state.glucoseUnits == GlucoseUnit.MGDL)
                     app.aaps.core.ui.R.string.mgdl else app.aaps.core.ui.R.string.mmol
@@ -169,7 +169,7 @@ class CareDialogViewModel @Inject constructor(
                 )
                 line(
                     ConfirmationRole.PRIMARY,
-                    rh.gs(app.aaps.core.ui.R.string.confirmation_line, rh.gs(app.aaps.core.ui.R.string.bg_label), bgWithUnit)
+                    rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, rh.gs(app.aaps.core.ui.R.string.bg_label), bgWithUnit)
                 )
             }
 
@@ -177,7 +177,7 @@ class CareDialogViewModel @Inject constructor(
                 line(
                     ConfirmationRole.NORMAL,
                     rh.gs(
-                        app.aaps.core.ui.R.string.confirmation_line,
+                        app.aaps.core.interfaces.R.string.confirmation_line,
                         rh.gs(app.aaps.core.ui.R.string.duration_label),
                         rh.gs(app.aaps.core.ui.R.string.format_mins, state.duration.toInt())
                     )
@@ -187,21 +187,21 @@ class CareDialogViewModel @Inject constructor(
             if (state.notes.isNotEmpty()) {
                 line(
                     ConfirmationRole.NORMAL,
-                    rh.gs(app.aaps.core.ui.R.string.confirmation_line, rh.gs(app.aaps.core.ui.R.string.notes_label), state.notes)
+                    rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, rh.gs(app.aaps.core.ui.R.string.notes_label), state.notes)
                 )
             }
 
             if (state.eventTimeChanged) {
                 line(
                     ConfirmationRole.NORMAL,
-                    rh.gs(app.aaps.core.ui.R.string.confirmation_line, rh.gs(app.aaps.core.ui.R.string.time), dateUtil.dateAndTimeString(state.eventTime))
+                    rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, rh.gs(app.aaps.core.ui.R.string.time), dateUtil.dateAndTimeString(state.eventTime))
                 )
             }
 
             if (state.showSiteRotationSection && state.siteLocation != TE.Location.NONE) {
                 line(
                     ConfirmationRole.NORMAL,
-                    rh.gs(app.aaps.core.ui.R.string.confirmation_line, rh.gs(app.aaps.core.ui.R.string.site_location), translator.translate(state.siteLocation))
+                    rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, rh.gs(app.aaps.core.ui.R.string.site_location), translator.translate(state.siteLocation))
                 )
             }
         }

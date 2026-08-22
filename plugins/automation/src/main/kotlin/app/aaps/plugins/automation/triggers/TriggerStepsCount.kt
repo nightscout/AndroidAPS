@@ -4,15 +4,18 @@ import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.ui.compose.icons.IcActivity
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.utils.JsonHelper
+import app.aaps.core.utils.lenientDouble
+import app.aaps.core.utils.lenientString
+import app.aaps.core.utils.lenientStringOrNull
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
 import app.aaps.plugins.automation.elements.InputDropdownMenu
-import dagger.android.HasAndroidInjector
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
-class TriggerStepsCount(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerStepsCount(deps: TriggerDeps) : Trigger(deps) {
 
     var measurementDuration: InputDropdownMenu = InputDropdownMenu(rh, "5")
     var stepsCount: InputDouble = InputDouble(100.0, 0.0, 20000.0, 10.0, NumberFormat.INTEGER)
@@ -56,17 +59,18 @@ class TriggerStepsCount(injector: HasAndroidInjector) : Trigger(injector) {
         }
     }
 
-    override fun dataJSON(): JSONObject =
-        JSONObject()
-            .put("stepsCount", stepsCount.value)
-            .put("measurementDuration", measurementDuration.value)
-            .put("comparator", comparator.value.toString())
+    override fun dataJSON(): JsonObject =
+        buildJsonObject {
+            put("stepsCount", stepsCount.value)
+            put("measurementDuration", measurementDuration.value)
+            put("comparator", comparator.value.toString())
+        }
 
     override fun fromJSON(data: String): Trigger {
-        val d = JSONObject(data)
-        stepsCount.setValue(JsonHelper.safeGetDouble(d, "stepsCount"))
-        measurementDuration.setValue(JsonHelper.safeGetString(d, "measurementDuration", "5"))
-        comparator.setValue(Comparator.Compare.valueOf(JsonHelper.safeGetString(d, "comparator")!!))
+        val d = jsonOf(data)
+        stepsCount.setValue(d.lenientDouble("stepsCount"))
+        measurementDuration.setValue(d.lenientString("measurementDuration", "5"))
+        comparator.setValue(Comparator.Compare.valueOf(d.lenientStringOrNull("comparator")!!))
         return this
     }
 
@@ -79,7 +83,7 @@ class TriggerStepsCount(injector: HasAndroidInjector) : Trigger(injector) {
     override fun elementType() = ElementType.EXERCISE
 
     override fun duplicate(): Trigger {
-        return TriggerStepsCount(injector).also { o ->
+        return TriggerStepsCount(deps).also { o ->
             o.stepsCount.setValue(stepsCount.value)
             o.measurementDuration.setValue(measurementDuration.value)
             o.comparator.setValue(comparator.value)

@@ -1,5 +1,6 @@
 package app.aaps.implementation.insulin
 
+import kotlin.reflect.KClass
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -14,6 +15,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
@@ -70,12 +72,22 @@ class InsulinImplMigrationTest : TestBase() {
 
     @BeforeEach
     fun setup() {
-        whenever(persistenceLayer.observeChanges(any<Class<*>>())).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(any<KClass<*>>())).thenReturn(emptyFlow())
         // getProfile() is suspend & returns a nullable type → an unstubbed mock already returns null,
         // which is the "no active profile" case (iCfg then falls back to insulins[0]).
         // Deterministic, unique string per resource id — avoids depending on real translations while
         // still letting us assert "nickname == template label" by calling the same stub.
         whenever(rh.gs(any<Int>())).thenAnswer { "S" + it.getArgument<Int>(0) }
+        // InsulinType.label is a TextRef now, and gs(TextRef) is a DEFAULT interface method: a mock
+        // intercepts it and returns null instead of running the body that would delegate to gs(id).
+        // So it needs its own stub, following the same "unique string per reference" rule.
+        whenever(rh.gs(any<TextRef>())).thenAnswer {
+            when (val ref = it.getArgument<TextRef>(0)) {
+                is TextRef.Named      -> "S" + ref.name
+                is TextRef.AndroidRes -> "S" + ref.id
+                is TextRef.Literal    -> ref.text
+            }
+        }
 
         whenever(preferences.get(StringNonKey.InsulinConfiguration)).thenAnswer { storedConfig }
         doAnswer { storedConfig = it.getArgument(1); null }

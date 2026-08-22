@@ -56,7 +56,7 @@ class ProfileSwitchExpiryScheduler @Inject constructor(
         }
         appScope.launch {
             reschedule()
-            persistenceLayer.observeChanges(PS::class.java).collect { reschedule() }
+            persistenceLayer.observeChanges(PS::class).collect { reschedule() }
         }
     }
 

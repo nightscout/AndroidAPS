@@ -23,7 +23,7 @@ class CommandTempBasalAbsoluteTest : TestBaseWithProfile() {
         tbrType: PumpSync.TemporaryBasalType = PumpSync.TemporaryBasalType.NORMAL,
         callback: Callback? = null
     ) = CommandTempBasalAbsolute(
-        aapsLogger, rh, activePlugin, pumpEnactResultProvider,
+        aapsLogger, rh, activePlugin, pumpEnactResultProvider::get,
         absoluteRate, durationInMinutes, enforceNew, tbrType, callback
     )
 

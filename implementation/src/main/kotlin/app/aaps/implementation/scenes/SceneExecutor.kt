@@ -45,6 +45,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.compose.formatMinutesAsDuration
 
 /**
@@ -91,7 +92,7 @@ class SceneExecutor @Inject constructor(
      */
     suspend fun validateActivation(scene: Scene): String? {
         if (loop.runningMode().pausesLoopExecution())
-            return rh.gs(CoreUiR.string.pump_disconnected)
+            return rh.gs(InterfacesR.string.pump_disconnected)
         if (!activePlugin.activePump.isInitialized() || profileFunction.getProfile() == null)
             return rh.gs(CoreUiR.string.pump_not_initialized_profile_not_set)
         if (scene.actions.isEmpty())
@@ -139,7 +140,7 @@ class SceneExecutor @Inject constructor(
     private fun buildSceneLines(scene: Scene, durationMinutes: Int): List<ConfirmationLine> = buildList {
         add(ConfirmationLine(ConfirmationRole.SCENE, scene.name))
         if (durationMinutes > 0)
-            add(ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(CoreUiR.string.confirmation_line, rh.gs(CoreUiR.string.duration), formatMinutesAsDuration(durationMinutes, rh))))
+            add(ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(InterfacesR.string.confirmation_line, rh.gs(CoreUiR.string.duration), formatMinutesAsDuration(durationMinutes, rh))))
         scene.actions.forEach { add(ConfirmationLine(ConfirmationRole.NORMAL, sceneActionLine(it))) }
     }
 

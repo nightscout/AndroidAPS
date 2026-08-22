@@ -32,7 +32,7 @@ object BiometricCheck {
      * All errors and the negative button trigger [onFallback], letting the caller
      * (e.g. ProtectionHost) show the unified auth dialog instead.
      */
-    fun biometricPromptSimple(activity: FragmentActivity, title: Int, rxBus: RxBus, onSuccess: Runnable?, onFallback: Runnable?, onCancel: Runnable?) {
+    fun biometricPromptSimple(activity: FragmentActivity, title: String, rxBus: RxBus, onSuccess: Runnable?, onFallback: Runnable?, onCancel: Runnable?) {
         val executor = ContextCompat.getMainExecutor(activity)
 
         val biometricPrompt = BiometricPrompt(activity, executor, object : BiometricPrompt.AuthenticationCallback() {
@@ -57,7 +57,7 @@ object BiometricCheck {
         })
 
         val promptInfo = PromptInfo.Builder()
-            .setTitle(activity.getString(title))
+            .setTitle(title)
             .setDescription(activity.getString(R.string.biometric_title))
             .setNegativeButtonText(activity.getString(R.string.use_pin_password))
             .setConfirmationRequired(false)
@@ -68,7 +68,7 @@ object BiometricCheck {
         }
     }
 
-    fun biometricPrompt(activity: FragmentActivity, title: Int, rxBus: RxBus, ok: Runnable?, cancel: Runnable? = null, fail: Runnable? = null, passwordCheck: PasswordCheck) {
+    fun biometricPrompt(activity: FragmentActivity, title: String, rxBus: RxBus, ok: Runnable?, cancel: Runnable? = null, fail: Runnable? = null, passwordCheck: PasswordCheck) {
         val executor = ContextCompat.getMainExecutor(activity)
 
         val biometricPrompt = BiometricPrompt(activity, executor, object : BiometricPrompt.AuthenticationCallback() {
@@ -84,7 +84,7 @@ object BiometricCheck {
                     ERROR_USER_CANCELED        -> {
                         rxBus.send(EventShowSnackbar(errString.toString(), EventShowSnackbar.Type.Error))
                         // fallback to master password
-                        passwordCheck.queryPassword(activity, app.aaps.core.keys.R.string.master_password, StringKey.ProtectionMasterPassword, { ok?.run() }, { cancel?.run() }, { fail?.run() })
+                        passwordCheck.queryPassword(StringKey.ProtectionMasterPassword.title, StringKey.ProtectionMasterPassword, { ok?.run() }, { cancel?.run() }, { fail?.run() })
                     }
 
                     ERROR_NEGATIVE_BUTTON      ->
@@ -94,14 +94,14 @@ object BiometricCheck {
                         rxBus.send(EventShowSnackbar(errString.toString(), EventShowSnackbar.Type.Error))
                         // no pin set
                         // fallback to master password
-                        passwordCheck.queryPassword(activity, app.aaps.core.keys.R.string.master_password, StringKey.ProtectionMasterPassword, { ok?.run() }, { cancel?.run() }, { fail?.run() })
+                        passwordCheck.queryPassword(StringKey.ProtectionMasterPassword.title, StringKey.ProtectionMasterPassword, { ok?.run() }, { cancel?.run() }, { fail?.run() })
                     }
 
                     ERROR_NO_SPACE,
                     ERROR_HW_UNAVAILABLE,
                     ERROR_HW_NOT_PRESENT,
                     ERROR_NO_BIOMETRICS        ->
-                        passwordCheck.queryPassword(activity, app.aaps.core.keys.R.string.master_password, StringKey.ProtectionMasterPassword, { ok?.run() }, { cancel?.run() }, { fail?.run() })
+                        passwordCheck.queryPassword(StringKey.ProtectionMasterPassword.title, StringKey.ProtectionMasterPassword, { ok?.run() }, { cancel?.run() }, { fail?.run() })
                 }
             }
 
@@ -119,7 +119,7 @@ object BiometricCheck {
         })
 
         val promptInfo = PromptInfo.Builder()
-            .setTitle(activity.getString(title))
+            .setTitle(title)
             .setDescription(activity.getString(R.string.biometric_title))
             .setNegativeButtonText(activity.getString(R.string.cancel)) // not possible with setDeviceCredentialAllowed
             .setConfirmationRequired(false)

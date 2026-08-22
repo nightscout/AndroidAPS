@@ -28,7 +28,7 @@ class ActionRunSceneTest : ActionsTestBase() {
         whenever(rh.gs(R.string.action_run_scene_short)).thenReturn("Run scene: %1\$s")
         whenever(rh.gs(R.string.action_scene_not_found)).thenReturn("Scene not found")
         whenever(rh.gs(R.string.action_scene_disabled)).thenReturn("Scene is disabled")
-        sut = ActionRunScene(injector)
+        sut = ActionRunScene(aapsLogger, rh, pumpEnactResultProvider, sceneApi, sceneIconResolver, triggerDeps)
     }
 
     @Test fun friendlyName() = runTest {

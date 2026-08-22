@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.maintenance.CloudFileListResult
 import app.aaps.core.interfaces.maintenance.CloudFolder
 import app.aaps.core.interfaces.maintenance.CloudStorageProvider
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.icons.IcGoogleDrive
 import app.aaps.implementation.R
 import app.aaps.implementation.maintenance.cloud.StorageTypes
@@ -45,9 +46,9 @@ class GoogleDriveProvider @Inject constructor(
 
     override val icon: ImageVector = IcGoogleDrive
 
-    override val authorizedTextResId: Int = R.string.google_drive_authorized
+    override val authorizedText: TextRef = TextRef.AndroidRes(R.string.google_drive_authorized)
 
-    override val reAuthRequiredTextResId: Int = R.string.google_drive_reauth_required
+    override val reAuthRequiredText: TextRef = TextRef.AndroidRes(R.string.google_drive_reauth_required)
 
     // ==================== Authentication ====================
 

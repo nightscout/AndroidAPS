@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.actions
 
+import javax.inject.Provider
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.logging.AAPSLogger
 import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FileDownload
@@ -22,24 +25,27 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.core.objects.extensions.asSettingsExport
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.utils.JsonHelper
+import app.aaps.core.utils.lenientString
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputString
-import dagger.android.HasAndroidInjector
-import org.json.JSONObject
-import javax.inject.Inject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
-class ActionSettingsExport(injector: HasAndroidInjector) : Action(injector) {
+class ActionSettingsExport(
+    aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val rxBus: RxBus,
+    private val notificationManager: NotificationManager,
+    private val context: Context,
+    private val dateUtil: DateUtil,
+    private val config: Config,
+    private val persistenceLayer: PersistenceLayer,
+    private val importExportPrefs: ImportExportPrefs,
+    private val exportPasswordDataStore: ExportPasswordDataStore,
+    private val preferences: Preferences
+) : Action(aapsLogger, rh, pumpEnactResultProvider) {
 
-    @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var notificationManager: NotificationManager
-    @Inject lateinit var context: Context
-    @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var config: Config
-    @Inject lateinit var persistenceLayer: PersistenceLayer
-    @Inject lateinit var importExportPrefs: ImportExportPrefs
-    @Inject lateinit var exportPasswordDataStore: ExportPasswordDataStore
-    @Inject lateinit var preferences: Preferences
 
     private val text = InputString()
 
@@ -61,7 +67,7 @@ class ActionSettingsExport(injector: HasAndroidInjector) : Action(injector) {
         if (exportPasswordDataStore.exportPasswordStoreEnabled()) {
 
             // Get the (encrypted) password and status from the DataStore
-            val (password, isExpired, isAboutToExpire) = exportPasswordDataStore.getPasswordFromDataStore(context)
+            val (password, isExpired, isAboutToExpire) = exportPasswordDataStore.getPasswordFromDataStore()
             aapsLogger.debug(LTag.AUTOMATION, "Exporting settings: passwordIsNotEmpty=${password.isNotEmpty()}, isExpired=$isExpired, isAboutToExpire=$isAboutToExpire")
 
             // And do according to password state
@@ -80,7 +86,7 @@ class ActionSettingsExport(injector: HasAndroidInjector) : Action(injector) {
                     exportResultLevel = NotificationLevel.INFO // INFO -> e.g. color GREEN
                 }
                 // Execute settings export, then notify user
-                if (!importExportPrefs.exportSharedPreferencesNonInteractive(context, password)) {
+                if (!importExportPrefs.exportSharedPreferencesNonInteractive(password)) {
                     // :-( Export failed (see logfile!?)
                     aapsLogger.error(LTag.AUTOMATION, "ERROR: exportSharedPreferencesNonInteractive() failed to export settings")
                     exportResultComment = app.aaps.core.ui.R.string.export_failed
@@ -95,7 +101,7 @@ class ActionSettingsExport(injector: HasAndroidInjector) : Action(injector) {
                 exportResultLevel = NotificationLevel.IMPORTANT  // URGENT -> e.g. color RED
                 // Clear password in datastore, then notify user
                 aapsLogger.info(LTag.AUTOMATION, "No password or was expired and needs re-entering by user")
-                exportPasswordDataStore.clearPasswordDataStore(context)
+                exportPasswordDataStore.clearPasswordDataStore()
                 announceAlert = true
             }
         } else {
@@ -139,16 +145,16 @@ class ActionSettingsExport(injector: HasAndroidInjector) : Action(injector) {
     }
 
     override fun toJSON(): String {
-        val data = JSONObject().put("text", text.value)
-        return JSONObject()
-            .put("type", this.javaClass.simpleName)
-            .put("data", data)
-            .toString()
+        val data = buildJsonObject { put("text", text.value) }
+        return buildJsonObject {
+            put("type", this@ActionSettingsExport.javaClass.simpleName)
+            put("data", data)
+        }.toString()
     }
 
     override fun fromJSON(data: String): Action {
-        val o = JSONObject(data)
-        text.value = JsonHelper.safeGetString(o, "text", "")
+        val o = jsonOf(data)
+        text.value = o.lenientString("text", "")
         return this
     }
 

@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.icons.IcPluginByoda
 import app.aaps.plugins.source.compose.BgSourceComposeContent
 import app.aaps.plugins.source.notificationreader.PackageConfig
@@ -34,9 +35,9 @@ class NotificationReaderPlugin @Inject constructor(
             )
         }
         .icon(IcPluginByoda)
-        .pluginName(R.string.notification_reader)
+        .pluginName(TextRef.AndroidRes(R.string.notification_reader))
         .preferencesVisibleInSimpleMode(false)
-        .description(R.string.description_source_notification_reader),
+        .description(TextRef.AndroidRes(R.string.description_source_notification_reader)),
     ownPreferences = emptyList(),
     aapsLogger, rh, preferences, config
 ), BgSource {
@@ -54,8 +55,8 @@ class NotificationReaderPlugin @Inject constructor(
     override fun requiredPermissions(): List<PermissionGroup> = listOf(
         PermissionGroup(
             permissions = listOf(PERMISSION_NOTIFICATION_LISTENER),
-            rationaleTitle = R.string.permission_notification_listener_title,
-            rationaleDescription = R.string.permission_notification_listener_description,
+            rationaleTitle = TextRef.AndroidRes(R.string.permission_notification_listener_title),
+            rationaleDescription = TextRef.AndroidRes(R.string.permission_notification_listener_description),
             special = true,
         )
     )

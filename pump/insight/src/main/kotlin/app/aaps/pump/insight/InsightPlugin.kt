@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import android.os.SystemClock
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginType
@@ -139,7 +140,7 @@ import android.app.NotificationManager as AndroidNotificationManager
 @Singleton
 class InsightPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     commandQueue: CommandQueue,
     private val rxBus: RxBus,
@@ -158,29 +159,26 @@ class InsightPlugin @Inject constructor(
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .icon(IcPluginInsight)
-        .pluginName(R.string.insight_local)
-        .shortName(R.string.insightpump_shortname)
+        .pluginName(TextRef.AndroidRes(R.string.insight_local))
+        .shortName(TextRef.AndroidRes(R.string.insightpump_shortname))
         .mainType(PluginType.PUMP)
-        .description(R.string.description_pump_insight_local)
+        .description(TextRef.AndroidRes(R.string.description_pump_insight_local))
         .composeContent { plugin ->
             InsightComposeContent(
                 insightPlugin = plugin as InsightPlugin,
+                aapsLogger = aapsLogger,
                 rh = rh,
                 rxBus = rxBus,
                 dateUtil = dateUtil,
                 commandQueue = commandQueue,
                 context = context,
-                aapsSchedulers = aapsSchedulers,
                 pumpSync = pumpSync,
                 blePreCheck = blePreCheck,
                 ch = ch,
                 appScope = appScope
             )
         },
-    ownPreferences = listOf(
-        InsightBooleanKey::class.java, InsightIntKey::class.java,
-        InsightLongNonKey::class.java, InsightDoubleNonKey::class.java,
-    ),
+    ownPreferences = InsightBooleanKey.entries + InsightIntKey.entries + InsightLongNonKey.entries + InsightDoubleNonKey.entries,
     aapsLogger, rh, preferences, commandQueue
 ), Pump, Insight, PumpPluginConstraints, InsightConnectionService.StateCallback, OwnDatabasePlugin {
 
@@ -354,7 +352,7 @@ class InsightPlugin @Inject constructor(
                 val setDateTimeMessage = SetDateTimeMessage()
                 setDateTimeMessage.pumpTime = pumpTime
                 connectionService?.requestMessage(setDateTimeMessage)?.await()
-                notificationManager.post(NotificationId.INSIGHT_DATE_TIME_UPDATED, app.aaps.core.ui.R.string.pump_time_updated, validMinutes = 60)
+                notificationManager.post(NotificationId.INSIGHT_DATE_TIME_UPDATED, TextRef.AndroidRes(app.aaps.core.ui.R.string.pump_time_updated), validMinutes = 60)
             }
         }
     }
@@ -1581,7 +1579,7 @@ class InsightPlugin @Inject constructor(
     }
 
     override fun onTimeoutDuringHandshake() {
-        notificationManager.post(NotificationId.INSIGHT_TIMEOUT_DURING_HANDSHAKE, R.string.timeout_during_handshake, level = NotificationLevel.IMPORTANT)
+        notificationManager.post(NotificationId.INSIGHT_TIMEOUT_DURING_HANDSHAKE, TextRef.AndroidRes(R.string.timeout_during_handshake), level = NotificationLevel.IMPORTANT)
     }
 
     override fun canHandleDST(): Boolean {

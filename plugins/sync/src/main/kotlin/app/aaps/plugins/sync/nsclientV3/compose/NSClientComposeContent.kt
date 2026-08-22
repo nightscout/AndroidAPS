@@ -7,6 +7,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import app.aaps.core.data.ue.Action
@@ -52,7 +57,7 @@ class NSClientComposeContent(
         var showFullSyncDialog by remember { mutableStateOf(false) }
         var showCleanupDialog by remember { mutableStateOf(false) }
         var showResultDialog by remember { mutableStateOf(false) }
-        var resultMessage by remember { mutableStateOf("") }
+        var resultMessage by remember { mutableStateOf(AnnotatedString("")) }
 
         // Load initial data
         LaunchedEffect(Unit) { viewModel.loadInitialData() }
@@ -86,7 +91,11 @@ class NSClientComposeContent(
                                 persistenceLayer.cleanupDatabase(CLEANUP_RETENTION_DAYS, deleteTrackedChanges = true)
                             }
                             if (result.isNotEmpty()) {
-                                resultMessage = "<b>$clearedEntriesText</b><br>$result"
+                                resultMessage = buildAnnotatedString {
+                                    withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append(clearedEntriesText) }
+                                    appendLine()
+                                    append(result)
+                                }
                                 showResultDialog = true
                             }
                             aapsLogger.info(LTag.CORE, "Cleaned up databases with result: $result")

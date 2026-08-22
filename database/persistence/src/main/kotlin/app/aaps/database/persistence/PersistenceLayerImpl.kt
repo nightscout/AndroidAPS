@@ -179,58 +179,58 @@ class PersistenceLayerImpl @Inject constructor(
 
     // Flow-based change observation
     @Suppress("UNCHECKED_CAST")
-    override fun <T : Any> observeChanges(type: Class<T>): Flow<List<T>> {
+    override fun <T : Any> observeChanges(type: KClass<T>): Flow<List<T>> {
         // Map database entity changes to domain types
         return when (type) {
-            BS::class.java  -> repository.changesOfType<Bolus>()
+            BS::class  -> repository.changesOfType<Bolus>()
                 .map { list -> list.map { it.fromDb() } }
 
-            CA::class.java  -> repository.changesOfType<Carbs>()
+            CA::class  -> repository.changesOfType<Carbs>()
                 .map { list -> list.map { it.fromDb() } }
 
-            BCR::class.java -> repository.changesOfType<BolusCalculatorResult>()
+            BCR::class -> repository.changesOfType<BolusCalculatorResult>()
                 .map { list -> list.map { it.fromDb() } }
 
-            EB::class.java  -> repository.changesOfType<ExtendedBolus>()
+            EB::class  -> repository.changesOfType<ExtendedBolus>()
                 .map { list -> list.map { it.fromDb() } }
 
-            TB::class.java  -> repository.changesOfType<TemporaryBasal>()
+            TB::class  -> repository.changesOfType<TemporaryBasal>()
                 .map { list -> list.map { it.fromDb() } }
 
-            TT::class.java  -> repository.changesOfType<TemporaryTarget>()
+            TT::class  -> repository.changesOfType<TemporaryTarget>()
                 .map { list -> list.map { it.fromDb() } }
 
-            TE::class.java  -> repository.changesOfType<TherapyEvent>()
+            TE::class  -> repository.changesOfType<TherapyEvent>()
                 .map { list -> list.map { it.fromDb() } }
 
-            PS::class.java  -> repository.changesOfType<ProfileSwitch>()
+            PS::class  -> repository.changesOfType<ProfileSwitch>()
                 .map { list -> list.map { it.fromDb() } }
 
-            EPS::class.java -> repository.changesOfType<EffectiveProfileSwitch>()
+            EPS::class -> repository.changesOfType<EffectiveProfileSwitch>()
                 .map { list -> list.map { it.fromDb() } }
 
-            GV::class.java  -> repository.changesOfType<GlucoseValue>()
+            GV::class  -> repository.changesOfType<GlucoseValue>()
                 .map { list -> list.map { it.fromDb() } }
 
-            CAL::class.java -> repository.changesOfType<CalibrationEntry>()
+            CAL::class -> repository.changesOfType<CalibrationEntry>()
                 .map { list -> list.map { it.fromDb() } }
 
-            UE::class.java  -> repository.changesOfType<UserEntry>()
+            UE::class  -> repository.changesOfType<UserEntry>()
                 .map { list -> list.map { it.fromDb() } }
 
-            RM::class.java  -> repository.changesOfType<RunningMode>()
+            RM::class  -> repository.changesOfType<RunningMode>()
                 .map { list -> list.map { it.fromDb() } }
 
-            DS::class.java  -> repository.changesOfType<DeviceStatus>()
+            DS::class  -> repository.changesOfType<DeviceStatus>()
                 .map { list -> list.map { it.fromDb() } }
 
-            HR::class.java  -> repository.changesOfType<HeartRate>()
+            HR::class  -> repository.changesOfType<HeartRate>()
                 .map { list -> list.map { it.fromDb() } }
 
-            SC::class.java  -> repository.changesOfType<StepsCount>()
+            SC::class  -> repository.changesOfType<StepsCount>()
                 .map { list -> list.map { it.fromDb() } }
 
-            FD::class.java  -> repository.changesOfType<Food>()
+            FD::class  -> repository.changesOfType<Food>()
                 .map { list -> list.map { it.fromDb() } }
 
             else            -> throw IllegalArgumentException("Unsupported observation type: ${type.simpleName}")

@@ -22,6 +22,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.ComposeScreenContent
 import app.aaps.core.ui.compose.LocalSnackbarHostState
@@ -51,11 +53,9 @@ fun PreferenceScreenView(
     highlightKey: String? = null,
     onBackClick: () -> Unit
 ) {
-    val title = if (screenDef.titleResId != 0) {
-        stringResource(screenDef.titleResId)
-    } else {
-        screenDef.key
-    }
+    // A screen built with titleResId = 0 has no title of its own and falls back to its key.
+    val titleRef = screenDef.title
+    val title = if (titleRef is TextRef.AndroidRes && titleRef.id == 0) screenDef.key else stringResource(titleRef)
 
     val sectionState = rememberPreferenceSectionState()
     val snackbarHostState = LocalSnackbarHostState.current

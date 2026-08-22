@@ -73,7 +73,7 @@ class RileyLinkMedtronicService : RileyLinkService() {
         setPumpIDString(preferences.get(MedtronicStringPreferenceKey.Serial))
 
         // get most recently used RileyLink address and name
-        rileyLinkServiceData.rileyLinkAddress = preferences.get(RileyLinkStringPreferenceKey.MacAddress)
+        rileyLinkServiceData.rileyLinkAddress = preferences.get(RileyLinkStringKey.MacAddress)
         rileyLinkServiceData.rileyLinkName = preferences.get(RileyLinkStringKey.Name)
         rfSpy.startReader()
         aapsLogger.debug(LTag.PUMPCOMM, "RileyLinkMedtronicService newly constructed")
@@ -158,7 +158,7 @@ class RileyLinkMedtronicService : RileyLinkService() {
                 }
             }
             rileyLinkServiceData.rileyLinkTargetFrequency = RileyLinkTargetFrequency.getByKey(preferences.get(MedtronicStringPreferenceKey.PumpFrequency))
-            val rileyLinkAddress = preferences.get(RileyLinkStringPreferenceKey.MacAddress)
+            val rileyLinkAddress = preferences.get(RileyLinkStringKey.MacAddress)
             if (rileyLinkAddress.isEmpty()) {
                 aapsLogger.debug(LTag.PUMP, "RileyLink address invalid: null")
                 medtronicPumpStatus.errorDescription = rh.gs(R.string.medtronic_error_rileylink_address_invalid)

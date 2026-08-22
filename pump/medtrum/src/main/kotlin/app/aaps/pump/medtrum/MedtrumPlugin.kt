@@ -30,15 +30,14 @@ import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.pump.mapState
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.withEntriesProvider
 import app.aaps.core.ui.compose.icons.IcPluginMedtrum
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -53,30 +52,27 @@ import app.aaps.pump.medtrum.keys.MedtrumLongNonKey
 import app.aaps.pump.medtrum.keys.MedtrumStringKey
 import app.aaps.pump.medtrum.keys.MedtrumStringNonKey
 import app.aaps.pump.medtrum.services.MedtrumService
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.drop
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
 import kotlin.math.abs
 import kotlin.math.min
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.drop
 
 @Singleton
 class MedtrumPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     commandQueue: CommandQueue,
-    private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
     private val context: Context,
-    private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
     private val medtrumPump: MedtrumPump,
     private val temporaryBasalStorage: TemporaryBasalStorage,
@@ -87,9 +83,9 @@ class MedtrumPlugin @Inject constructor(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
         .icon(IcPluginMedtrum)
-        .pluginName(R.string.medtrum)
-        .shortName(R.string.medtrum_pump_shortname)
-        .description(R.string.medtrum_pump_description)
+        .pluginName(TextRef.AndroidRes(R.string.medtrum))
+        .shortName(TextRef.AndroidRes(R.string.medtrum_pump_shortname))
+        .description(TextRef.AndroidRes(R.string.medtrum_pump_description))
         .composeContent { _ ->
             MedtrumComposeContent(
                 pluginName = rh.gs(R.string.medtrum),
@@ -97,15 +93,11 @@ class MedtrumPlugin @Inject constructor(
                 blePreCheck = blePreCheck
             )
         },
-    ownPreferences = listOf(
-        MedtrumStringKey::class.java, MedtrumIntKey::class.java, MedtrumBooleanKey::class.java,
-        MedtrumIntNonKey::class.java, MedtrumLongNonKey::class.java, MedtrumStringNonKey::class.java, MedtrumDoubleNonKey::class.java,
-        MedtrumBooleanNonKey::class.java
-    ),
+    ownPreferences = MedtrumStringKey.entries + MedtrumIntKey.entries + MedtrumBooleanKey.entries + MedtrumIntNonKey.entries +
+        MedtrumLongNonKey.entries + MedtrumStringNonKey.entries + MedtrumDoubleNonKey.entries + MedtrumBooleanNonKey.entries,
     aapsLogger, rh, preferences, commandQueue
 ), Pump, Medtrum {
 
-    private val disposable = CompositeDisposable()
     private var scope: CoroutineScope? = null
     private var medtrumService: MedtrumService? = null
 
@@ -115,12 +107,13 @@ class MedtrumPlugin @Inject constructor(
         medtrumPump.loadVarsFromSP()
         val intent = Intent(context, MedtrumService::class.java)
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
-        disposable += rxBus
-            .toObservable(EventAppExit::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ context.unbindService(mConnection) }, fabricPrivacy::logException)
+        // Same scope as the preference observer below: IO, like the io scheduler used before, and
+        // cancelled in onStop like the CompositeDisposable was cleared. UNDISPATCHED because RxBus
+        // has no replay, so a scheduled collector could miss an exit sent before it starts.
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
+        rxBus.toFlow(EventAppExit::class)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { context.unbindService(mConnection) }
         preferences.observe(MedtrumStringNonKey.SnInput).drop(1).collectResilient(newScope, aapsLogger, LTag.PUMP) {
             updateMaxInsulinLimitsForPumpType()
         }
@@ -134,7 +127,6 @@ class MedtrumPlugin @Inject constructor(
         scope?.cancel()
         scope = null
         context.unbindService(mConnection)
-        disposable.clear()
         super.onStop()
     }
 
@@ -416,7 +408,7 @@ class MedtrumPlugin @Inject constructor(
             titleResId = R.string.medtrum_pump_setting,
             items = listOf(
                 MedtrumStringKey.MedtrumAlarmSettings.withEntriesProvider(
-                    provider = { context -> getAlarmEntriesForPumpType(context) }
+                    provider = { getAlarmEntriesForPumpType() }
                 ),
                 MedtrumBooleanKey.MedtrumWarningNotification,
                 MedtrumBooleanKey.MedtrumPatchExpiration,
@@ -458,23 +450,23 @@ class MedtrumPlugin @Inject constructor(
         preferences.put(MedtrumIntKey.MedtrumDailyMaxInsulin, min(preferences.get(MedtrumIntKey.MedtrumDailyMaxInsulin), MedtrumIntKey.MedtrumDailyMaxInsulin.max))
     }
 
-    private fun getAlarmEntriesForPumpType(context: Context): Map<String, String> {
+    private fun getAlarmEntriesForPumpType(): Map<String, TextRef> {
         // For NANO and 300U pumps, only Beep and Silent options are available
         return when (medtrumPump.pumpType()) {
             PumpType.MEDTRUM_NANO, PumpType.MEDTRUM_300U -> mapOf(
-                "6" to context.getString(R.string.alarm_setting_beep),
-                "7" to context.getString(R.string.alarm_setting_silent)
+                "6" to TextRef.AndroidRes(R.string.alarm_setting_beep),
+                "7" to TextRef.AndroidRes(R.string.alarm_setting_silent)
             )
 
             else                                         -> mapOf(
-                "0" to context.getString(R.string.alarm_setting_light_vibrate_beep),
-                "1" to context.getString(R.string.alarm_setting_light_vibrate),
-                "2" to context.getString(R.string.alarm_setting_light_beep),
-                "3" to context.getString(R.string.alarm_setting_light),
-                "4" to context.getString(R.string.alarm_setting_vibrate_beep),
-                "5" to context.getString(R.string.alarm_setting_vibrate),
-                "6" to context.getString(R.string.alarm_setting_beep),
-                "7" to context.getString(R.string.alarm_setting_silent)
+                "0" to TextRef.AndroidRes(R.string.alarm_setting_light_vibrate_beep),
+                "1" to TextRef.AndroidRes(R.string.alarm_setting_light_vibrate),
+                "2" to TextRef.AndroidRes(R.string.alarm_setting_light_beep),
+                "3" to TextRef.AndroidRes(R.string.alarm_setting_light),
+                "4" to TextRef.AndroidRes(R.string.alarm_setting_vibrate_beep),
+                "5" to TextRef.AndroidRes(R.string.alarm_setting_vibrate),
+                "6" to TextRef.AndroidRes(R.string.alarm_setting_beep),
+                "7" to TextRef.AndroidRes(R.string.alarm_setting_silent)
             )
         }
     }

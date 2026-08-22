@@ -1,5 +1,6 @@
 package app.aaps.pump.medtronic.data
 
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -781,7 +782,7 @@ class MedtronicHistoryData @Inject constructor(
                         )
 
                         if (tempBasalProcessDTO.durationAsSeconds <= 0) {
-                            notificationManager.post(NotificationId.MDT_INVALID_HISTORY_DATA, R.string.invalid_history_data, level = NotificationLevel.IMPORTANT)
+                            notificationManager.post(NotificationId.MDT_INVALID_HISTORY_DATA, TextRef.AndroidRes(R.string.invalid_history_data), level = NotificationLevel.IMPORTANT)
                             aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId - Skipped")
                         } else {
                             val result = runBlocking {
@@ -825,7 +826,7 @@ class MedtronicHistoryData @Inject constructor(
                         )
 
                         if (tempBasalProcessDTO.durationAsSeconds <= 0) {
-                            notificationManager.post(NotificationId.MDT_INVALID_HISTORY_DATA, R.string.invalid_history_data, level = NotificationLevel.IMPORTANT)
+                            notificationManager.post(NotificationId.MDT_INVALID_HISTORY_DATA, TextRef.AndroidRes(R.string.invalid_history_data), level = NotificationLevel.IMPORTANT)
                             aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId - Skipped")
                         } else {
                             val result = runBlocking {
@@ -1097,7 +1098,7 @@ class MedtronicHistoryData @Inject constructor(
             )
 
             if (tempBasalProcess.durationAsSeconds <= 0) {
-                notificationManager.post(NotificationId.MDT_INVALID_HISTORY_DATA, R.string.invalid_history_data, level = NotificationLevel.IMPORTANT)
+                notificationManager.post(NotificationId.MDT_INVALID_HISTORY_DATA, TextRef.AndroidRes(R.string.invalid_history_data), level = NotificationLevel.IMPORTANT)
                 aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId - Skipped")
             } else {
                 val result = runBlocking {

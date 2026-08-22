@@ -19,6 +19,8 @@ import app.aaps.pump.dana.keys.DanaStringNonKey
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.json.JSONArray
@@ -408,7 +410,7 @@ class DanaPump @Inject constructor(
             } catch (e: Exception) {
                 return null
             }
-            return profileStoreProvider.get().with(json)
+            return profileStoreProvider.get().with(Json.parseToJsonElement(json.toString()).jsonObject)
         }
         return null
     }

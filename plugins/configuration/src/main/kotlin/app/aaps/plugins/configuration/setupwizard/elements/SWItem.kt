@@ -11,10 +11,15 @@ import app.aaps.core.keys.interfaces.PreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import app.aaps.core.keys.interfaces.StringPreferenceKey
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.disposables.Disposable
-import java.util.concurrent.TimeUnit
+import app.aaps.core.keys.interfaces.TextRef
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 open class SWItem @Inject constructor(
     val aapsLogger: AAPSLogger,
@@ -24,16 +29,22 @@ open class SWItem @Inject constructor(
     val passwordCheck: PasswordCheck
 ) {
 
-    private var scheduledEventPost: Disposable? = null
+    // Lives as long as the item, like the Disposable before it, which only the next scheduleChange
+    // ever cancelled. Default because the body only sends on the bus and touches no UI.
+    private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+    private var scheduledEventPost: Job? = null
 
-    var label: Int? = null
+    var label: TextRef? = null
     var comment: Int? = null
     var preference: PreferenceKey? = null
 
-    open fun label(@StringRes label: Int): SWItem {
+    open fun label(label: TextRef): SWItem {
         this.label = label
         return this
     }
+
+    /** Convenience for the many call sites that pass their own module's `R.string.x`. */
+    open fun label(@StringRes label: Int): SWItem = label(TextRef.AndroidRes(label))
 
     fun comment(@StringRes comment: Int): SWItem {
         this.comment = comment
@@ -54,11 +65,10 @@ open class SWItem @Inject constructor(
 
     fun scheduleChange(updateDelay: Long) {
         // cancel waiting task to prevent sending multiple posts
-        scheduledEventPost?.dispose()
-        scheduledEventPost = Completable
-            .timer(updateDelay, TimeUnit.SECONDS)
-            .subscribe {
-                rxBus.send(EventSWUpdate(false))
-            }
+        scheduledEventPost?.cancel()
+        scheduledEventPost = scope.launch {
+            delay(updateDelay.seconds)
+            rxBus.send(EventSWUpdate(false))
+        }
     }
 }

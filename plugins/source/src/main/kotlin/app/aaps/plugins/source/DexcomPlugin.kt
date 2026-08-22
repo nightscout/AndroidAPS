@@ -30,6 +30,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.ui.compose.icons.IcPluginByoda
 import app.aaps.core.utils.receivers.DataInbox
@@ -60,10 +61,10 @@ class DexcomPlugin @Inject constructor(
             )
         }
         .icon(IcPluginByoda)
-        .pluginName(R.string.dexcom_app_patched)
-        .shortName(R.string.dexcom_short)
+        .pluginName(TextRef.AndroidRes(R.string.dexcom_app_patched))
+        .shortName(TextRef.AndroidRes(R.string.dexcom_short))
         .preferencesVisibleInSimpleMode(false)
-        .description(R.string.description_source_dexcom),
+        .description(TextRef.AndroidRes(R.string.description_source_dexcom)),
     aapsLogger = aapsLogger,
     rh = rh,
     preferences = preferences
@@ -79,8 +80,8 @@ class DexcomPlugin @Inject constructor(
         if (isDexcomAppInstalled()) listOf(
             PermissionGroup(
                 permissions = listOf(PERMISSION),
-                rationaleTitle = R.string.permission_dexcom_title,
-                rationaleDescription = R.string.permission_dexcom_description,
+                rationaleTitle = TextRef.AndroidRes(R.string.permission_dexcom_title),
+                rationaleDescription = TextRef.AndroidRes(R.string.permission_dexcom_description),
                 special = true,
             )
         ) else emptyList()

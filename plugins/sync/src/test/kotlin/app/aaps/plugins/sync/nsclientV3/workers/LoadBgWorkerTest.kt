@@ -8,6 +8,7 @@ import androidx.work.WorkManager
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 import androidx.work.testing.TestListenableWorkerBuilder
+import kotlin.reflect.KClass
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.SourceSensor
@@ -80,7 +81,7 @@ internal class LoadBgWorkerTest : TestBaseWithProfile() {
     @BeforeEach
     fun setUp() {
         whenever(nsClientSource.isEnabled()).thenReturn(true)
-        whenever(persistenceLayer.observeChanges(anyOrNull<Class<*>>())).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(anyOrNull<KClass<*>>())).thenReturn(emptyFlow())
         whenever(persistenceLayer.observeAnyChange()).thenReturn(emptyFlow())
         whenever(receiverStatusStore.networkStatusFlow).thenReturn(MutableStateFlow(null))
         whenever(receiverStatusStore.chargingStatusFlow).thenReturn(MutableStateFlow(null))

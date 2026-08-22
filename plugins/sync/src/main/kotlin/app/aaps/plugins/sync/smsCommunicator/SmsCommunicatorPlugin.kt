@@ -39,6 +39,7 @@ import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.smsCommunicator.smsFromMessage
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.sync.XDripBroadcast
@@ -50,9 +51,10 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.withCompose
 import app.aaps.core.objects.constraints.ConstraintObject
-import app.aaps.core.objects.extensions.generateCOBString
+import app.aaps.core.ui.extensions.generateCOBString
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.runningMode.PumpCommandGate
 import app.aaps.core.objects.runningMode.RunningModeGuard
@@ -112,7 +114,7 @@ import kotlin.math.min
 @Singleton
 class SmsCommunicatorPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     private val smsManager: SmsManager?,
     preferences: Preferences,
     private val constraintChecker: ConstraintsChecker,
@@ -143,10 +145,10 @@ class SmsCommunicatorPlugin @Inject constructor(
         .mainType(PluginType.SYNC)
         .composeContent { SmsCommunicatorComposeContent() }
         .icon(IcPluginSms)
-        .pluginName(R.string.smscommunicator)
-        .shortName(R.string.smscommunicator_shortname)
-        .description(R.string.description_sms_communicator),
-    ownPreferences = listOf(SmsIntentKey::class.java),
+        .pluginName(TextRef.AndroidRes(R.string.smscommunicator))
+        .shortName(TextRef.AndroidRes(R.string.smscommunicator_shortname))
+        .description(TextRef.AndroidRes(R.string.description_sms_communicator)),
+    ownPreferences = SmsIntentKey.entries,
     aapsLogger, rh, preferences
 ), SmsCommunicator {
 
@@ -185,8 +187,8 @@ class SmsCommunicatorPlugin @Inject constructor(
     override fun requiredPermissions(): List<PermissionGroup> = listOf(
         PermissionGroup(
             permissions = listOf(Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS, Manifest.permission.RECEIVE_MMS),
-            rationaleTitle = R.string.permission_sms_title,
-            rationaleDescription = R.string.permission_sms_description,
+            rationaleTitle = TextRef.AndroidRes(R.string.permission_sms_title),
+            rationaleDescription = TextRef.AndroidRes(R.string.permission_sms_description),
         )
     )
 
@@ -249,7 +251,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             @Suppress("DEPRECATION") val pdus = bundle["pdus"] as Array<*>
             for (pdu in pdus) {
                 val message = SmsMessage.createFromPdu(pdu as ByteArray, format)
-                smsCommunicatorPlugin.processSms(Sms(message))
+                smsCommunicatorPlugin.processSms(smsFromMessage(message))
             }
         }
     }
@@ -439,8 +441,8 @@ class SmsCommunicatorPlugin @Inject constructor(
                         RM.Mode.CLOSED_LOOP       -> rh.gs(R.string.smscommunicator_loop_is_enabled) + " - " + rh.gs(app.aaps.core.ui.R.string.closedloop)
                         RM.Mode.CLOSED_LOOP_LGS   -> rh.gs(R.string.smscommunicator_loop_is_enabled) + " - " + rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)
                         RM.Mode.SUPER_BOLUS       -> rh.gs(app.aaps.core.ui.R.string.superbolus)
-                        RM.Mode.DISCONNECTED_PUMP -> rh.gs(app.aaps.core.ui.R.string.pump_disconnected)
-                        RM.Mode.SUSPENDED_BY_PUMP -> rh.gs(app.aaps.core.ui.R.string.pumpsuspended)
+                        RM.Mode.DISCONNECTED_PUMP -> rh.gs(app.aaps.core.interfaces.R.string.pump_disconnected)
+                        RM.Mode.SUSPENDED_BY_PUMP -> rh.gs(app.aaps.core.interfaces.R.string.pumpsuspended)
                         RM.Mode.SUSPENDED_BY_DST  -> rh.gs(app.aaps.core.ui.R.string.loop_suspended_by_dst)
                         RM.Mode.SUSPENDED_BY_USER -> rh.gs(R.string.sms_loop_suspended_for, loop.minutesToEndOfSuspend())
                         RM.Mode.RESUME            -> error("Invalid mode")
@@ -1066,10 +1068,10 @@ class SmsCommunicatorPlugin @Inject constructor(
             messages.add(sms)
         } catch (e: IllegalArgumentException) {
             return if (e.message == "Invalid message body") {
-                notificationManager.post(NotificationId.INVALID_MESSAGE_BODY, R.string.smscommunicator_message_body)
+                notificationManager.post(NotificationId.INVALID_MESSAGE_BODY, TextRef.AndroidRes(R.string.smscommunicator_message_body))
                 false
             } else {
-                notificationManager.post(NotificationId.INVALID_PHONE_NUMBER, R.string.smscommunicator_invalid_phone_number)
+                notificationManager.post(NotificationId.INVALID_PHONE_NUMBER, TextRef.AndroidRes(R.string.smscommunicator_invalid_phone_number))
                 false
             }
         } catch (_: SecurityException) {

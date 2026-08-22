@@ -4,26 +4,27 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.SyncProblem
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.utils.JsonHelper.safeGetInt
-import app.aaps.core.utils.JsonHelper.safeGetString
+import app.aaps.core.utils.lenientInt
+import app.aaps.core.utils.lenientStringOrNull
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDuration
-import dagger.android.HasAndroidInjector
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
-class TriggerPumpLastConnection(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerPumpLastConnection(deps: TriggerDeps) : Trigger(deps) {
 
     var minutesAgo = InputDuration()
     var comparator = Comparator(rh)
 
     @Suppress("unused")
-    constructor(injector: HasAndroidInjector, value: Int, unit: InputDuration.TimeUnit, compare: Comparator.Compare) : this(injector) {
+    constructor(deps: TriggerDeps, value: Int, unit: InputDuration.TimeUnit, compare: Comparator.Compare) : this(deps) {
         minutesAgo = InputDuration(value, unit)
         comparator = Comparator(rh, compare)
     }
 
-    constructor(injector: HasAndroidInjector, triggerPumpLastConnection: TriggerPumpLastConnection) : this(injector) {
+    constructor(deps: TriggerDeps, triggerPumpLastConnection: TriggerPumpLastConnection) : this(deps) {
         minutesAgo = InputDuration(triggerPumpLastConnection.minutesAgo.value, triggerPumpLastConnection.minutesAgo.unit)
         comparator = Comparator(rh, triggerPumpLastConnection.comparator.value)
     }
@@ -54,15 +55,16 @@ class TriggerPumpLastConnection(injector: HasAndroidInjector) : Trigger(injector
         return false
     }
 
-    override fun dataJSON(): JSONObject =
-        JSONObject()
-            .put("minutesAgo", minutesAgo.value)
-            .put("comparator", comparator.value.toString())
+    override fun dataJSON(): JsonObject =
+        buildJsonObject {
+            put("minutesAgo", minutesAgo.value)
+            put("comparator", comparator.value.toString())
+        }
 
     override fun fromJSON(data: String): Trigger {
-        val d = JSONObject(data)
-        minutesAgo.setMinutes(safeGetInt(d, "minutesAgo"))
-        comparator.setValue(Comparator.Compare.valueOf(safeGetString(d, "comparator")!!))
+        val d = jsonOf(data)
+        minutesAgo.setMinutes(d.lenientInt("minutesAgo"))
+        comparator.setValue(Comparator.Compare.valueOf(d.lenientStringOrNull("comparator")!!))
         return this
     }
 
@@ -74,6 +76,6 @@ class TriggerPumpLastConnection(injector: HasAndroidInjector) : Trigger(injector
     override fun composeIcon() = Icons.Filled.SyncProblem
     override fun elementType() = ElementType.PUMP
 
-    override fun duplicate(): Trigger = TriggerPumpLastConnection(injector, this)
+    override fun duplicate(): Trigger = TriggerPumpLastConnection(deps, this)
 
 }

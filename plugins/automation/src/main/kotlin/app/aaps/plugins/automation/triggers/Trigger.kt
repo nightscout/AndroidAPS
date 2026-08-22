@@ -16,33 +16,41 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.plugins.automation.services.LastLocationDataContainer
-import dagger.android.HasAndroidInjector
-import org.json.JSONObject
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.put
 import javax.inject.Inject
 
-abstract class Trigger(val injector: HasAndroidInjector) {
+abstract class Trigger(val deps: TriggerDeps) {
 
-    @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var profileUtil: ProfileUtil
-    @Inject lateinit var preferences: Preferences
-    @Inject lateinit var locationDataContainer: LastLocationDataContainer
-    @Inject lateinit var persistenceLayer: PersistenceLayer
-    @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var iobCobCalculator: IobCobCalculator
-    @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
-    @Inject lateinit var dateUtil: DateUtil
-
-    init {
-        @Suppress("LeakingThis")
-        injector.androidInjector().inject(this)
-    }
+    // Exposed from [deps] so the 29 subclass bodies read exactly as they did before the deps
+    // was removed - only their constructors changed.
+    val aapsLogger get() = deps.aapsLogger
+    val rxBus get() = deps.rxBus
+    val rh get() = deps.rh
+    val profileFunction get() = deps.profileFunction
+    val profileUtil get() = deps.profileUtil
+    val preferences get() = deps.preferences
+    val locationDataContainer get() = deps.locationDataContainer
+    val persistenceLayer get() = deps.persistenceLayer
+    val activePlugin get() = deps.activePlugin
+    val iobCobCalculator get() = deps.iobCobCalculator
+    val glucoseStatusProvider get() = deps.glucoseStatusProvider
+    val dateUtil get() = deps.dateUtil
 
     abstract suspend fun shouldRun(): Boolean
-    abstract fun dataJSON(): JSONObject
+    abstract fun dataJSON(): JsonObject
     abstract fun fromJSON(data: String): Trigger
+
+    /**
+     * Parses a stored `data` block. Returns an empty object on anything unparseable, so a single bad
+     * trigger degrades to its defaults instead of taking the whole automation list down - the same
+     * thing org.json's lenient readers did before.
+     */
+    protected fun jsonOf(data: String): JsonObject =
+        runCatching { Json.parseToJsonElement(data).jsonObject }.getOrElse { JsonObject(emptyMap()) }
 
     abstract fun friendlyName(): Int
     abstract fun friendlyDescription(): String
@@ -59,54 +67,10 @@ abstract class Trigger(val injector: HasAndroidInjector) {
     abstract fun duplicate(): Trigger
 
     fun toJSON(): String =
-        JSONObject()
-            .put("type", this::class.java.simpleName)
-            .put("data", dataJSON())
-            .toString()
+        buildJsonObject {
+            put("type", this@Trigger::class.java.simpleName)
+            put("data", dataJSON())
+        }.toString()
 
-    fun instantiate(obj: JSONObject): Trigger {
-        try {
-            var type = obj.getString("type")
-            val data = obj.getJSONObject("data")
-            // stripe off package name
-            val dotIndex = type.lastIndexOf('.')
-            if (dotIndex > 0) type = type.substring(dotIndex + 1)
-            return when (type) {
-                TriggerAutosensValue::class.java.simpleName      -> TriggerAutosensValue(injector).fromJSON(data.toString())
-                TriggerBg::class.java.simpleName                 -> TriggerBg(injector).fromJSON(data.toString())
-                TriggerBolusAgo::class.java.simpleName           -> TriggerBolusAgo(injector).fromJSON(data.toString())
-                TriggerBTDevice::class.java.simpleName           -> TriggerBTDevice(injector).fromJSON(data.toString())
-                TriggerSensorAge::class.java.simpleName          -> TriggerSensorAge(injector).fromJSON(data.toString())
-                TriggerCannulaAge::class.java.simpleName         -> TriggerCannulaAge(injector).fromJSON(data.toString())
-                TriggerPodChange::class.java.simpleName          -> TriggerPodChange(injector).fromJSON(data.toString())
-                TriggerInsulinAge::class.java.simpleName         -> TriggerInsulinAge(injector).fromJSON(data.toString())
-                TriggerReservoirLevel::class.java.simpleName     -> TriggerReservoirLevel(injector).fromJSON(data.toString())
-                TriggerPumpBatteryAge::class.java.simpleName     -> TriggerPumpBatteryAge(injector).fromJSON(data.toString())
-                TriggerPumpBatteryLevel::class.java.simpleName   -> TriggerPumpBatteryLevel(injector).fromJSON(data.toString())
-                TriggerIob::class.java.simpleName                -> TriggerIob(injector).fromJSON(data.toString())
-                TriggerCOB::class.java.simpleName                -> TriggerCOB(injector).fromJSON(data.toString())
-                TriggerConnector::class.java.simpleName          -> TriggerConnector(injector).fromJSON(data.toString())
-                TriggerDelta::class.java.simpleName              -> TriggerDelta(injector).fromJSON(data.toString())
-                TriggerDummy::class.java.simpleName              -> TriggerDummy(injector).fromJSON(data.toString())
-                TriggerHeartRate::class.java.simpleName          -> TriggerHeartRate(injector).fromJSON(data.toString())
-                TriggerLocation::class.java.simpleName           -> TriggerLocation(injector).fromJSON(data.toString())
-                TriggerProfilePercent::class.java.simpleName     -> TriggerProfilePercent(injector).fromJSON(data.toString())
-                TriggerPumpLastConnection::class.java.simpleName -> TriggerPumpLastConnection(injector).fromJSON(data.toString())
-                TriggerRecurringTime::class.java.simpleName      -> TriggerRecurringTime(injector).fromJSON(data.toString())
-                TriggerSceneActive::class.java.simpleName        -> TriggerSceneActive(injector).fromJSON(data.toString())
-                TriggerTempTarget::class.java.simpleName         -> TriggerTempTarget(injector).fromJSON(data.toString())
-                TriggerTempTargetValue::class.java.simpleName    -> TriggerTempTargetValue(injector).fromJSON(data.toString())
-                TriggerTime::class.java.simpleName               -> TriggerTime(injector).fromJSON(data.toString())
-                TriggerTimeRange::class.java.simpleName          -> TriggerTimeRange(injector).fromJSON(data.toString())
-                TriggerWifiSsid::class.java.simpleName           -> TriggerWifiSsid(injector).fromJSON(data.toString())
-                TriggerStepsCount::class.java.simpleName         -> TriggerStepsCount(injector).fromJSON(data.toString())
-
-                else                                             -> TriggerConnector(injector)
-            }
-        } catch (e: Exception) {
-            aapsLogger.error(LTag.AUTOMATION, "Error parsing $obj : $e")
-        }
-        return TriggerConnector(injector)
-    }
 
 }

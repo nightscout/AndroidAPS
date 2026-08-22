@@ -1,6 +1,7 @@
 package app.aaps.plugins.sync.smsCommunicator
 
 import android.telephony.SmsMessage
+import app.aaps.core.interfaces.smsCommunicator.smsFromMessage
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
@@ -14,7 +15,7 @@ class SmsTest : TestBase() {
         val smsMessage: SmsMessage = mock()
         whenever(smsMessage.originatingAddress).thenReturn("aNumber")
         whenever(smsMessage.messageBody).thenReturn("aBody")
-        var sms = Sms(smsMessage)
+        var sms = smsFromMessage(smsMessage)
         assertThat(sms.phoneNumber).isEqualTo("aNumber")
         assertThat(sms.text).isEqualTo("aBody")
         assertThat(sms.received).isTrue()

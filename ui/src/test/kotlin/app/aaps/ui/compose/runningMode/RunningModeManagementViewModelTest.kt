@@ -54,8 +54,8 @@ internal class RunningModeManagementViewModelTest {
         // loadState() launch + the observer launchIns are deferred by StandardTestDispatcher; the observed flows
         // are still built, so they must be non-null.
         Dispatchers.setMain(StandardTestDispatcher())
-        whenever(persistenceLayer.observeChanges(RM::class.java)).thenReturn(emptyFlow())
-        whenever(persistenceLayer.observeChanges(EPS::class.java)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(RM::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
         sut = RunningModeManagementViewModel(
             loop, activePlugin, profileFunction, translator, preferences, persistenceLayer, aapsLogger,
             rxBus, rh, dateUtil, config, batchExecutor, CoroutineScope(UnconfinedTestDispatcher())

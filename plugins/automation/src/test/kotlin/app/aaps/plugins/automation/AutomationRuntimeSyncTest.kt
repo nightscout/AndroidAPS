@@ -1,14 +1,17 @@
 package app.aaps.plugins.automation
 
+import app.aaps.core.interfaces.alerts.ReminderScheduler
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.keys.StringNonKey
-import app.aaps.plugins.automation.services.LocationServiceHelper
+import app.aaps.core.interfaces.location.LocationServiceController
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.triggers.TriggerConnector
+import app.aaps.plugins.automation.triggers.TriggerDeps
+import app.aaps.plugins.automation.triggers.TriggerFactory
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
@@ -21,6 +24,7 @@ import kotlinx.coroutines.test.runTest
 import org.json.JSONArray
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.mock
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doAnswer
@@ -44,14 +48,27 @@ import org.mockito.kotlin.whenever
 @OptIn(ExperimentalCoroutinesApi::class)
 class AutomationRuntimeSyncTest : TestBaseWithProfile() {
 
+@Mock lateinit var actionFactory: app.aaps.plugins.automation.actions.ActionFactory
+    private val triggerFactory: TriggerFactory by lazy {
+        TriggerFactory(triggerDeps, context, mock(), sceneApi, receiverStatusStore)
+    }
+    // Real, not mocked: the runtime rebuilds triggers from JSON, and a mocked bundle would hand
+    // nulls to element constructors that require them.
+    private val triggerDeps: TriggerDeps by lazy {
+        TriggerDeps(
+            aapsLogger, rxBus, rh, profileFunction, profileUtil, preferences, mock(), mock(),
+            activePlugin, iobCobCalculator, smbGlucoseStatusProvider, dateUtil
+        ) { triggerFactory }
+    }
     @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var loop: Loop
-    @Mock lateinit var locationServiceHelper: LocationServiceHelper
-    @Mock lateinit var timerUtil: TimerUtil
+    @Mock lateinit var locationServiceController: LocationServiceController
+    @Mock lateinit var reminderScheduler: ReminderScheduler
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var sceneApi: SceneAutomationApi
 
+    private val eventFactory by lazy { AutomationEventFactory(aapsLogger, dateUtil, actionFactory, triggerFactory, triggerDeps) }
     private lateinit var automationRuntime: AutomationRuntime
 
     // Seed with an empty JSON array (not "") so loadFromSP doesn't inject the EMPTY_EVENT default,
@@ -61,14 +78,6 @@ class AutomationRuntimeSyncTest : TestBaseWithProfile() {
     private var localPutCount = 0
     private val remoteWrites = mutableListOf<String>() // values written via putRemote (master-wins apply)
 
-    init {
-        addInjector {
-            if (it is Trigger) {
-                it.rh = rh
-                it.aapsLogger = aapsLogger
-            }
-        }
-    }
 
     @BeforeEach fun prepare() {
         // In-memory fake for StringNonKey.AutomationEvents (overrides the base's generic observe stub).
@@ -86,14 +95,14 @@ class AutomationRuntimeSyncTest : TestBaseWithProfile() {
     }
 
     private fun newRuntime() = AutomationRuntime(
-        injector, aapsLogger, rh, preferences, context, fabricPrivacy, loop, rxBus, constraintChecker,
-        aapsSchedulers, config, locationServiceHelper, dateUtil, activePlugin, timerUtil, receiverStatusStore,
+        eventFactory, aapsLogger, rh, preferences, context, fabricPrivacy, loop, rxBus, constraintChecker,
+        aapsSchedulers, config, locationServiceController, dateUtil, activePlugin, reminderScheduler, actionFactory, triggerFactory, triggerDeps, receiverStatusStore,
         uel, profileRepository, sceneApi
     )
 
-    private fun event(title: String) = AutomationEventObject(injector).apply {
+    private fun event(title: String) = eventFactory.newEvent().apply {
         this.title = title
-        trigger = TriggerConnector(injector)
+        trigger = TriggerConnector(triggerDeps)
     }
 
     @Test

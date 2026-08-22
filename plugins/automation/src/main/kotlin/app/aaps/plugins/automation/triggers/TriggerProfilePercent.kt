@@ -4,25 +4,27 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.compose.icons.IcProfile
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.utils.JsonHelper
+import app.aaps.core.utils.lenientDouble
+import app.aaps.core.utils.lenientStringOrNull
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputPercent
-import dagger.android.HasAndroidInjector
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import kotlin.math.roundToInt
 
-class TriggerProfilePercent(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerProfilePercent(deps: TriggerDeps) : Trigger(deps) {
 
     var pct = InputPercent()
     var comparator = Comparator(rh)
 
-    constructor(injector: HasAndroidInjector, value: Double, compare: Comparator.Compare) : this(injector) {
+    constructor(deps: TriggerDeps, value: Double, compare: Comparator.Compare) : this(deps) {
         pct = InputPercent(value)
         comparator = Comparator(rh, compare)
     }
 
-    constructor(injector: HasAndroidInjector, triggerProfilePercent: TriggerProfilePercent) : this(injector) {
+    constructor(deps: TriggerDeps, triggerProfilePercent: TriggerProfilePercent) : this(deps) {
         pct = InputPercent(triggerProfilePercent.pct.value)
         comparator = Comparator(rh, triggerProfilePercent.comparator.value)
     }
@@ -61,15 +63,16 @@ class TriggerProfilePercent(injector: HasAndroidInjector) : Trigger(injector) {
         return false
     }
 
-    override fun dataJSON(): JSONObject =
-        JSONObject()
-            .put("percentage", pct.value)
-            .put("comparator", comparator.value.toString())
+    override fun dataJSON(): JsonObject =
+        buildJsonObject {
+            put("percentage", pct.value)
+            put("comparator", comparator.value.toString())
+        }
 
     override fun fromJSON(data: String): Trigger {
-        val d = JSONObject(data)
-        pct.value = JsonHelper.safeGetDouble(d, "percentage")
-        comparator.setValue(Comparator.Compare.valueOf(JsonHelper.safeGetString(d, "comparator")!!))
+        val d = jsonOf(data)
+        pct.value = d.lenientDouble("percentage")
+        comparator.setValue(Comparator.Compare.valueOf(d.lenientStringOrNull("comparator")!!))
         return this
     }
 
@@ -81,6 +84,6 @@ class TriggerProfilePercent(injector: HasAndroidInjector) : Trigger(injector) {
     override fun composeIcon() = IcProfile
     override fun elementType() = ElementType.PROFILE_MANAGEMENT
 
-    override fun duplicate(): Trigger = TriggerProfilePercent(injector, this)
+    override fun duplicate(): Trigger = TriggerProfilePercent(deps, this)
 
 }

@@ -20,7 +20,6 @@ import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType;
 import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import app.aaps.pump.common.hw.rileylink.keys.RileyLinkStringKey;
-import app.aaps.pump.common.hw.rileylink.keys.RileyLinkStringPreferenceKey;
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkService;
 import app.aaps.pump.omnipod.eros.OmnipodErosPumpPlugin;
 import app.aaps.pump.omnipod.eros.R;
@@ -69,7 +68,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
         rileyLinkServiceData.setTargetDevice(RileyLinkTargetDevice.Omnipod);
         rileyLinkServiceData.setRileyLinkTargetFrequency(RileyLinkTargetFrequency.Omnipod);
 
-        rileyLinkServiceData.setRileyLinkAddress(preferences.get(RileyLinkStringPreferenceKey.MacAddress));
+        rileyLinkServiceData.setRileyLinkAddress(preferences.get(RileyLinkStringKey.MacAddress));
         rileyLinkServiceData.setRileyLinkName(preferences.get(RileyLinkStringKey.Name));
 
         rfSpy.startReader();
@@ -103,7 +102,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
         try {
             errorDescription = null;
 
-            String rileyLinkAddress = preferences.get(RileyLinkStringPreferenceKey.MacAddress);
+            String rileyLinkAddress = preferences.get(RileyLinkStringKey.MacAddress);
 
             if (StringUtils.isEmpty(rileyLinkAddress)) {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "RileyLink address invalid: no address");

@@ -7,10 +7,12 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.media.AudioAttributes
 import android.net.Uri
 import android.os.SystemClock
-import androidx.annotation.RawRes
+import app.aaps.core.interfaces.notifications.AlarmSound
+import app.aaps.core.ui.rawRes
 import androidx.core.app.NotificationCompat
 import androidx.core.app.TaskStackBuilder
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -94,18 +96,18 @@ class AlarmNotificationManager @Inject constructor(
          */
         const val SOUND_ID_OFFSET = 100_000
 
-        private val SOUND_NAMES: Map<Int, String> = mapOf(
-            app.aaps.core.ui.R.raw.alarm to "alarm",
-            app.aaps.core.ui.R.raw.boluserror to "boluserror",
-            app.aaps.core.ui.R.raw.error to "error",
-            app.aaps.core.ui.R.raw.urgentalarm to "urgentalarm"
+        private val SOUND_NAMES: Map<AlarmSound, String> = mapOf(
+            AlarmSound.ALARM to "alarm",
+            AlarmSound.BOLUS_ERROR to "boluserror",
+            AlarmSound.ERROR to "error",
+            AlarmSound.URGENT_ALARM to "urgentalarm"
         )
 
-        private val DISPLAY_NAMES: Map<Int, String> = mapOf(
-            app.aaps.core.ui.R.raw.alarm to "Standard alarm",
-            app.aaps.core.ui.R.raw.boluserror to "Bolus error",
-            app.aaps.core.ui.R.raw.error to "General error",
-            app.aaps.core.ui.R.raw.urgentalarm to "Urgent alarm"
+        private val DISPLAY_NAMES: Map<AlarmSound, String> = mapOf(
+            AlarmSound.ALARM to "Standard alarm",
+            AlarmSound.BOLUS_ERROR to "Bolus error",
+            AlarmSound.ERROR to "General error",
+            AlarmSound.URGENT_ALARM to "Urgent alarm"
         )
     }
 
@@ -170,8 +172,8 @@ class AlarmNotificationManager @Inject constructor(
         // tap the notification. When the FSI does auto-launch (lockscreen/idle), ErrorActivity's
         // looping ramped audio takes over — its volume ramp starts at 0 so the overlap with the
         // channel one-shot is inaudible.
-        for ((soundId, displayName) in DISPLAY_NAMES) {
-            val uri: Uri = Uri.parse("android.resource://${context.packageName}/$soundId")
+        for ((sound, displayName) in DISPLAY_NAMES) {
+            val uri: Uri = Uri.parse("android.resource://${context.packageName}/${sound.rawRes}")
 
             val alarmAttrs = AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_ALARM)
@@ -179,7 +181,7 @@ class AlarmNotificationManager @Inject constructor(
                 .build()
             mgr.createNotificationChannel(
                 NotificationChannel(
-                    channelIdForSound(soundId, overrideDnd = true),
+                    channelIdForSound(sound, overrideDnd = true),
                     "$displayName (override DND)",
                     NotificationManager.IMPORTANCE_HIGH
                 ).apply {
@@ -197,7 +199,7 @@ class AlarmNotificationManager @Inject constructor(
             // For medical alarms we always want heads-up visibility.
             mgr.createNotificationChannel(
                 NotificationChannel(
-                    channelIdForSound(soundId, overrideDnd = false),
+                    channelIdForSound(sound, overrideDnd = false),
                     "$displayName (respects DND)",
                     NotificationManager.IMPORTANCE_HIGH
                 ).apply {
@@ -211,14 +213,14 @@ class AlarmNotificationManager @Inject constructor(
     private fun openAppPendingIntent(): PendingIntent? {
         val mainActivity = uiInteractionProvider.get().mainActivity
         return TaskStackBuilder.create(context).run {
-            addParentStack(mainActivity)
-            addNextIntent(Intent(context, mainActivity))
+            addParentStack(mainActivity.java)
+            addNextIntent(Intent(context, mainActivity.java))
             getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         }
     }
 
-    private fun channelIdForSound(@RawRes soundId: Int, overrideDnd: Boolean): String {
-        val name = SOUND_NAMES[soundId] ?: "error"
+    private fun channelIdForSound(sound: AlarmSound, overrideDnd: Boolean): String {
+        val name = SOUND_NAMES[sound] ?: "error"
         val suffix = if (overrideDnd) "alarm" else "notify"
         return "aaps_alarm_${name}_$suffix"
     }
@@ -229,7 +231,7 @@ class AlarmNotificationManager @Inject constructor(
      * launches it full-screen (device idle / lock screen) or shows a heads-up notification.
      * The activity is responsible for sound playback.
      */
-    fun postFullScreenAlarm(status: String, title: String, @RawRes soundId: Int) {
+    fun postFullScreenAlarm(status: String, title: String, sound: AlarmSound?) {
         // Reached only from the background / off-main branches of UiInteraction.runAlarm.
         //
         // Screen-wake + full-screen ErrorActivity launch no longer rely on USE_FULL_SCREEN_INTENT
@@ -248,8 +250,8 @@ class AlarmNotificationManager @Inject constructor(
         // double-audio; if ErrorActivity does launch, it re-requests the same owner+sound, which the
         // player treats as idempotent (no restart glitch).
         val postedAt = SystemClock.elapsedRealtime()
-        val intent = Intent(context, uiInteractionProvider.get().errorHelperActivity).apply {
-            putExtra(AlarmIntent.EXTRA_SOUND_ID, soundId)
+        val intent = Intent(context, uiInteractionProvider.get().errorHelperActivity.java).apply {
+            putExtra(AlarmIntent.EXTRA_SOUND, sound?.name)
             putExtra(AlarmIntent.EXTRA_STATUS, status)
             putExtra(AlarmIntent.EXTRA_TITLE, title)
             putExtra(AlarmIntent.EXTRA_POSTED_AT_ELAPSED_REALTIME, postedAt)
@@ -263,9 +265,9 @@ class AlarmNotificationManager @Inject constructor(
         )
 
         val overrideDnd = preferences.get(BooleanKey.AlertOverrideDoNotDisturb)
-        // Always a sound-bearing channel (matching the requested soundId + DND preference) so the alarm
+        // Always a sound-bearing channel (matching the requested sound + DND preference) so the alarm
         // is audible from the notification regardless of whether the FSI activity ever launches.
-        val channelId = channelIdForSound(soundId, overrideDnd)
+        val channelId = channelIdForSound(sound ?: AlarmSound.ERROR, overrideDnd)
 
         // Mute action so the user can silence the looping alarm straight from the lock-screen
         // notification when ErrorActivity isn't in the foreground (see AlarmMuteReceiver).
@@ -305,7 +307,7 @@ class AlarmNotificationManager @Inject constructor(
         // Continuous looping/ramping audio so the alarm keeps sounding even if ErrorActivity never
         // comes to the foreground (deferred past the channel one-shot via postedAt). Stopped by
         // muteAllAlarms() / ErrorActivity acknowledge, both of which stop OWNER_FULLSCREEN.
-        alarmSoundPlayer.play(soundId, AlarmSoundPlayer.OWNER_FULLSCREEN, postedAt)
+        sound?.let { alarmSoundPlayer.play(it, AlarmSoundPlayer.OWNER_FULLSCREEN, postedAt) }
 
         // Permission-free screen-wake + activity launch (independent of the notification above, so it
         // still runs even if POST_NOTIFICATIONS was revoked and mgr.notify threw).
@@ -330,7 +332,7 @@ class AlarmNotificationManager @Inject constructor(
         val triggerAt = System.currentTimeMillis() + SCREEN_WAKE_DELAY_MS
         val show = PendingIntent.getActivity(
             context, WAKE_REQUEST_CODE,
-            Intent(context, uiInteractionProvider.get().mainActivity),
+            Intent(context, uiInteractionProvider.get().mainActivity.java),
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
         val wakeOp = PendingIntent.getBroadcast(
@@ -362,7 +364,7 @@ class AlarmNotificationManager @Inject constructor(
     ) {
         val builder = NotificationCompat.Builder(context, CHANNEL_FULL_SCREEN_SILENT)
             .setSmallIcon(iconsProvider.getNotificationIcon())
-            .setLargeIcon(rh.decodeResource(iconsProvider.getIcon()))
+            .setLargeIcon(BitmapFactory.decodeResource(context.resources, iconsProvider.getIcon()))
             .setContentTitle(title)
             .setContentText(body)
             .setStyle(NotificationCompat.BigTextStyle().bigText(body))

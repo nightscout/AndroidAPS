@@ -38,34 +38,22 @@ class SPImplTest {
         assertThat(sut.getBoolean("test", false)).isTrue()
         sut.edit { remove("test") }
         assertThat(sut.contains("test")).isFalse()
-        sut.edit { putBoolean(someResource, true) }
-        assertThat(sut.getBoolean(someResource, false)).isTrue()
-        sut.edit { remove(someResource) }
-        assertThat(sut.contains(someResource)).isFalse()
 
         sut.edit(commit = true) { putDouble("test", 1.0) }
         assertThat(sut.getDouble("test", 2.0)).isEqualTo(1.0)
-        sut.edit { putDouble(someResource, 1.0) }
-        assertThat(sut.getDouble(someResource, 2.0)).isEqualTo(1.0)
         sut.edit { clear() }
         assertThat(sut.contains(someResource2)).isFalse()
 
         sut.edit { putInt("test", 1) }
         assertThat(sut.getInt("test", 2)).isEqualTo(1)
-        sut.edit { putInt(someResource, 1) }
-        assertThat(sut.getInt(someResource, 2)).isEqualTo(1)
         sut.edit { clear() }
 
         sut.edit { putLong("test", 1L) }
         assertThat(sut.getLong("test", 2L)).isEqualTo(1L)
-        sut.edit { putLong(someResource, 1) }
-        assertThat(sut.getLong(someResource, 2L)).isEqualTo(1L)
         sut.edit { clear() }
 
         sut.edit { putString("test", "string") }
         assertThat(sut.getString("test", "a")).isEqualTo("string")
-        sut.edit { putString(someResource, "string") }
-        assertThat(sut.getString(someResource, "a")).isEqualTo("string")
         sut.edit { clear() }
     }
 

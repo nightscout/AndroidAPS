@@ -5,22 +5,23 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.keys.IntKey
 import app.aaps.core.ui.compose.icons.IcCarbs
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.utils.JsonHelper
-import app.aaps.core.utils.JsonHelper.safeGetDouble
+import app.aaps.core.utils.lenientDouble
+import app.aaps.core.utils.lenientStringOrNull
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
-import dagger.android.HasAndroidInjector
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
-class TriggerCOB(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerCOB(deps: TriggerDeps) : Trigger(deps) {
 
     private val minValue = 0
     private val maxValue = preferences.get(IntKey.SafetyMaxCarbs)
     var cob: InputDouble = InputDouble(0.0, minValue.toDouble(), maxValue.toDouble(), 1.0, NumberFormat.INTEGER)
     var comparator: Comparator = Comparator(rh)
 
-    private constructor(injector: HasAndroidInjector, triggerCOB: TriggerCOB) : this(injector) {
+    private constructor(deps: TriggerDeps, triggerCOB: TriggerCOB) : this(deps) {
         cob = InputDouble(triggerCOB.cob)
         comparator = Comparator(rh, triggerCOB.comparator.value)
     }
@@ -54,15 +55,16 @@ class TriggerCOB(injector: HasAndroidInjector) : Trigger(injector) {
         return false
     }
 
-    override fun dataJSON(): JSONObject =
-        JSONObject()
-            .put("carbs", cob.value)
-            .put("comparator", comparator.value.toString())
+    override fun dataJSON(): JsonObject =
+        buildJsonObject {
+            put("carbs", cob.value)
+            put("comparator", comparator.value.toString())
+        }
 
     override fun fromJSON(data: String): Trigger {
-        val d = JSONObject(data)
-        cob.setValue(safeGetDouble(d, "carbs"))
-        comparator.setValue(Comparator.Compare.valueOf(JsonHelper.safeGetString(d, "comparator")!!))
+        val d = jsonOf(data)
+        cob.setValue(d.lenientDouble("carbs"))
+        comparator.setValue(Comparator.Compare.valueOf(d.lenientStringOrNull("comparator")!!))
         return this
     }
 
@@ -74,6 +76,6 @@ class TriggerCOB(injector: HasAndroidInjector) : Trigger(injector) {
     override fun composeIcon() = IcCarbs
     override fun elementType() = ElementType.COB
 
-    override fun duplicate(): Trigger = TriggerCOB(injector, this)
+    override fun duplicate(): Trigger = TriggerCOB(deps, this)
 
 }

@@ -22,9 +22,9 @@ import app.aaps.core.ui.compose.icons.IcTtActivity
 import app.aaps.core.ui.compose.icons.IcTtEatingSoon
 import app.aaps.core.ui.compose.icons.IcTtHypo
 import app.aaps.core.ui.compose.icons.IcTtManual
-import app.aaps.core.ui.compose.navigation.descriptionResId
+import app.aaps.core.ui.compose.navigation.description
 import app.aaps.core.ui.compose.navigation.icon
-import app.aaps.core.ui.compose.navigation.labelResId
+import app.aaps.core.ui.compose.navigation.label
 import app.aaps.ui.compose.navigation.ElementAvailability
 import app.aaps.ui.compose.scenes.SceneIcons
 import app.aaps.core.interfaces.scenes.SceneStore
@@ -131,11 +131,11 @@ class QuickLaunchResolver @Inject constructor(
 
         is QuickLaunchAction.ProfileAction     -> buildProfileLabel(action)
         is QuickLaunchAction.SceneAction       -> sceneRepository.getScene(action.sceneId)?.name ?: "?"
-        is QuickLaunchAction.PluginAction      -> findPlugin(action.className)?.let { rh.gs(it.pluginDescription.pluginName) } ?: "?"
+        is QuickLaunchAction.PluginAction      -> findPlugin(action.className)?.name ?: "?"
 
         else                                   -> {
-            val resId = action.elementType?.labelResId() ?: 0
-            if (resId != 0) rh.gs(resId) else action.typeId
+            val label = action.elementType?.label()
+            label?.let { rh.gs(it) } ?: action.typeId
         }
     }
 
@@ -144,7 +144,7 @@ class QuickLaunchResolver @Inject constructor(
             when (entry.mode()) {
                 QuickWizardMode.INSULIN -> {
                     val insulin = entry.insulin()
-                    if (insulin > 0.0) rh.gs(app.aaps.core.ui.R.string.format_insulin_units, insulin) else null
+                    if (insulin > 0.0) rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, insulin) else null
                 }
 
                 QuickWizardMode.CARBS   -> {
@@ -178,19 +178,19 @@ class QuickLaunchResolver @Inject constructor(
         }
 
         is QuickLaunchAction.PluginAction      -> findPlugin(action.className)
-            ?.pluginDescription?.description?.takeIf { it != -1 }?.let { rh.gs(it) }
+            ?.pluginDescription?.description?.let { rh.gs(it) }
 
         else                                   -> {
-            val resId = action.elementType?.descriptionResId() ?: 0
-            if (resId != 0) rh.gs(resId) else null
+            val desc = action.elementType?.description()
+            desc?.let { rh.gs(it) }
         }
     }
 
     fun resolvePluginItem(plugin: PluginBase): ResolvedQuickLaunchItem {
         val action = QuickLaunchAction.PluginAction(plugin.javaClass.simpleName)
         val icon = plugin.pluginDescription.icon ?: Icons.Default.Extension
-        val label = rh.gs(plugin.pluginDescription.pluginName)
-        val desc = plugin.pluginDescription.description.takeIf { it != -1 }?.let { rh.gs(it) }
+        val label = plugin.name
+        val desc = plugin.pluginDescription.description?.let { rh.gs(it) }
         return ResolvedQuickLaunchItem(
             action = action,
             label = label,

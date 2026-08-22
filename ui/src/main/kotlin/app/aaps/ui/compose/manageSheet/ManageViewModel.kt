@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.EB
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TB
-import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.aps.Loop
@@ -14,13 +13,11 @@ import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.FailureReason
-import app.aaps.core.ui.clientcontrol.failTextResId
+import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.di.ApplicationScope
-import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -33,11 +30,10 @@ import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.VisibilityContext
-import app.aaps.core.objects.extensions.toStringMedium
-import app.aaps.core.objects.extensions.toStringShort
+import app.aaps.core.ui.extensions.toStringMedium
+import app.aaps.core.ui.extensions.toStringShort
 import app.aaps.core.ui.R
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.ui.R as UiR
@@ -68,10 +64,8 @@ class ManageViewModel @Inject constructor(
     private val config: Config,
     private val processedTbrEbData: ProcessedTbrEbData,
     private val persistenceLayer: PersistenceLayer,
-    private val uel: UserEntryLogger,
     private val rxBus: RxBus,
     private val dateUtil: DateUtil,
-    private val nsSettingStatus: NSSettingsStatus,
     private val preferences: Preferences,
     private val batchExecutor: BatchExecutor,
     private val nsClient: NsClient,
@@ -100,13 +94,13 @@ class ManageViewModel @Inject constructor(
     }
 
     private fun setupEventListeners() {
-        rxBus.toFlow(EventInitializationChanged::class.java)
+        rxBus.toFlow(EventInitializationChanged::class)
             .onEach { refreshState() }.launchIn(viewModelScope)
-        persistenceLayer.observeChanges(EB::class.java)
+        persistenceLayer.observeChanges(EB::class)
             .onEach { refreshState() }.launchIn(viewModelScope)
-        persistenceLayer.observeChanges(TB::class.java)
+        persistenceLayer.observeChanges(TB::class)
             .onEach { refreshState() }.launchIn(viewModelScope)
-        rxBus.toFlow(EventCustomActionsChanged::class.java)
+        rxBus.toFlow(EventCustomActionsChanged::class)
             .onEach { refreshState() }.launchIn(viewModelScope)
         // Re-evaluate showMutatingActions when the client pairs/unpairs (stable signal, flips rarely).
         nsClient.masterOrPairedClientFlow
@@ -221,7 +215,7 @@ class ManageViewModel @Inject constructor(
                 is ActionProgress.Prepared -> _sideEffect.tryEmit(SideEffect.ShowConfirmation(elementType, prepared.id, prepared.lines, label))
                 // Offline block (and a master-local failure) surface here; a client round-trip failure already showed on the modal.
                 is ActionProgress.Rejected ->
-                    if (prepared.reason == FailureReason.NotReachable || prepared.reason == FailureReason.ControlDisabled) rxBus.send(EventShowDialog.Ok(title = label, message = rh.gs(prepared.reason.failTextResId())))
+                    if (prepared.reason == FailureReason.NotReachable || prepared.reason == FailureReason.ControlDisabled) rxBus.send(EventShowDialog.Ok(title = label, message = rh.gs(prepared.reason.failText())))
                     else prepared.detail?.let { detail ->
                         if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = label, message = detail))
                         else _sideEffect.tryEmit(SideEffect.ShowError(elementType, detail))
@@ -238,7 +232,7 @@ class ManageViewModel @Inject constructor(
             // NoPendingBolus (a double-tapped dialog already consumed it) stays silent — the cancel ran once.
             val result = batchExecutor.commit(bolusId, Sources.Actions, label, pumpDirect = true)
             if (result is ActionProgress.Rejected)
-                if (result.reason == FailureReason.NotReachable || result.reason == FailureReason.ControlDisabled) rxBus.send(EventShowDialog.Ok(title = label, message = rh.gs(result.reason.failTextResId())))
+                if (result.reason == FailureReason.NotReachable || result.reason == FailureReason.ControlDisabled) rxBus.send(EventShowDialog.Ok(title = label, message = rh.gs(result.reason.failText())))
                 else result.detail?.let { detail ->
                     if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = label, message = detail))
                     else _sideEffect.tryEmit(SideEffect.ShowError(elementType, detail))
@@ -250,23 +244,4 @@ class ManageViewModel @Inject constructor(
         activePlugin.activePump.executeCustomAction(actionType)
     }
 
-    fun copyStatusLightsFromNightscout() {
-        val cageWarn = nsSettingStatus.getExtendedWarnValue("cage", "warn")?.toInt()
-        val cageCritical = nsSettingStatus.getExtendedWarnValue("cage", "urgent")?.toInt()
-        val iageWarn = nsSettingStatus.getExtendedWarnValue("iage", "warn")?.toInt()
-        val iageCritical = nsSettingStatus.getExtendedWarnValue("iage", "urgent")?.toInt()
-        val sageWarn = nsSettingStatus.getExtendedWarnValue("sage", "warn")?.toInt()
-        val sageCritical = nsSettingStatus.getExtendedWarnValue("sage", "urgent")?.toInt()
-        val bageWarn = nsSettingStatus.getExtendedWarnValue("bage", "warn")?.toInt()
-        val bageCritical = nsSettingStatus.getExtendedWarnValue("bage", "urgent")?.toInt()
-        cageWarn?.let { preferences.put(IntKey.OverviewCageWarning, it) }
-        cageCritical?.let { preferences.put(IntKey.OverviewCageCritical, it) }
-        iageWarn?.let { preferences.put(IntKey.OverviewIageWarning, it) }
-        iageCritical?.let { preferences.put(IntKey.OverviewIageCritical, it) }
-        sageWarn?.let { preferences.put(IntKey.OverviewSageWarning, it) }
-        sageCritical?.let { preferences.put(IntKey.OverviewSageCritical, it) }
-        bageWarn?.let { preferences.put(IntKey.OverviewBageWarning, it) }
-        bageCritical?.let { preferences.put(IntKey.OverviewBageCritical, it) }
-        uel.log(Action.NS_SETTINGS_COPIED, Sources.NSClient)
-    }
 }

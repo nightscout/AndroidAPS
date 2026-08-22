@@ -11,6 +11,7 @@ junit = "6.1.2"
 robolectric = "4.16.1"
 okhttp = "5.4.0"
 retrofit = "3.0.0"
+ktor = "3.3.0"
 kotlinx-serialization = "1.11.0"
 kotlinx-coroutines = "1.11.0"
 work = "2.11.2"
@@ -28,13 +29,32 @@ vico = "3.2.3"
 composeUi = "1.11.4"
 glance = "1.1.1"
 
+# Compose Multiplatform - spike only, see :spike:cmp. Separate from the androidx Compose above:
+# CMP publishes the same androidx.compose.* package names and its Android variants delegate to
+# androidx, so the composeBom still decides the Android versions.
+# 1.11.1 rather than 1.12.0-beta03 on purpose: the beta's Android side delegates to androidx
+# 1.12.0-beta02, which would drag a pre-release androidx into an app pinned to stable 1.11.x.
+composeMultiplatform = "1.11.1"
+navigationEvent = "1.0.1"
+jetbrainsLifecycle = "2.9.6"
+# material3 and material-icons-extended are separate, lagging version lines in CMP.
+cmpMaterial3 = "1.9.0"
+cmpIcons = "1.7.3"
+
 [plugins]
 android-library = { id = "com.android.library" }
+# No version, exactly like android-library above: both plugin ids ship in com.android.tools.build:gradle,
+# which is already on the root buildscript classpath. AGP 9 refuses com.android.library together with
+# the Kotlin multiplatform plugin, so a multiplatform module with an Android target needs this one.
+android-kmp-library = { id = "com.android.kotlin.multiplatform.library" }
 klint = { id = "org.jlleitschuh.gradle.ktlint", version = "14.2.0" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 ksp = { id = "com.google.devtools.ksp", version = "2.3.10" }
 android-test = { id = "com.android.test", version.ref = "gradlePlugin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+# Compose Multiplatform framework plugin. It hard-fails unless compose-compiler above is applied in
+# the same module - the compiler itself ships with Kotlin, this plugin only adds the framework.
+compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
 
 [libraries]
 com-android-tools-build = { group = "com.android.tools.build", name = "gradle", version.ref = "gradlePlugin" }
@@ -90,6 +110,11 @@ androidx-activity = { group = "androidx.activity", name = "activity-ktx", versio
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version = "1.7.1" }
 androidx-biometric = { group = "androidx.biometric", name = "biometric", version = "1.1.0" }
 androidx-browser = { group = "androidx.browser", name = "browser", version = "1.10.0" }
+# Declared rather than left to transitive resolution: it used to land on 1.1.0 in some modules and
+# 1.5.0 in others, and those are different generations of the same class (the newer one is a Kotlin
+# rewrite where size is also a property), so the same code did not compile everywhere. From 1.4.0 it
+# is multiplatform, which is what keeps LongSparseArray usable from shared code.
+androidx-collection = { group = "androidx.collection", name = "collection", version = "1.6.0" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version = "2.2.2" }
 androidx-core = { group = "androidx.core", name = "core-ktx", version = "1.19.0" }
 androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "datastorePreferences" }
@@ -129,8 +154,17 @@ com-uber-rxdogtag2-rxdogtag = { group = "com.uber.rxdogtag2", name = "rxdogtag",
 com-squareup-leakcanary-android = { group = "com.squareup.leakcanary", name = "leakcanary-android", version = "2.14" }
 com-squareup-okhttp3-okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 com-squareup-okhttp3-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+com-squareup-okhttp3-mockwebserver = { group = "com.squareup.okhttp3", name = "mockwebserver3-junit5", version.ref = "okhttp" }
+
+io-ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+io-ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
+io-ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+io-ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+io-ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
+io-ktor-client-darwin = { group = "io.ktor", name = "ktor-client-darwin", version.ref = "ktor" }
 com-squareup-retrofit2-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 com-squareup-retrofit2-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+com-squareup-retrofit2-converter-kotlinx-serialization = { group = "com.squareup.retrofit2", name = "converter-kotlinx-serialization", version.ref = "retrofit" }
 
 org-apache-commons-lang3 = { group = "org.apache.commons", name = "commons-lang3", version = "3.20.0" }
 org-mozilla-rhino = { group = "org.mozilla", name = "rhino", version = "1.9.1" }
@@ -153,6 +187,12 @@ com-caverock-androidsvg = { group = "com.caverock", name = "androidsvg", version
 net-danlew-android-joda = { group = "net.danlew", name = "android.joda", version = "2.14.2.1" }
 joda-time = { group = "joda-time", name = "joda-time", version = "2.14.3" }
 org-skyscreamer-jsonassert = { group = "org.skyscreamer", name = "jsonassert", version = "1.5.3" }
+# Test-only oracle. On Android `org.json` comes from the platform, so a plain JVM test has no real
+# implementation to compare against. This is AOSP's own org.json, repackaged for the JVM - NOT
+# Crockford's `org.json:json`, which is a different implementation and disagrees on real cases
+# (optString of a JSON null gives "" there and "null" on Android). It is what jsonassert already
+# pulls in, so Android module tests are measured against this too. Never use it in main source.
+org-json-android = { group = "com.vaadin.external.google", name = "android-json", version = "0.0.20131108.vaadin1" }
 com-eatthepath-java-otp = { group = "com.eatthepath", name = "java-otp", version = "0.4.0" }
 com-github-bumptech-glide-compose = { group = "com.github.bumptech.glide", name = "compose", version = "1.0.0-beta10" } # do not update to 4.xx
 com-github-kenglxn-qrgen-android = { group = "com.github.kenglxn.QRGen", name = "android", version = "3.0.1" }
@@ -191,4 +231,25 @@ androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-te
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 sh-calvin-reorderable = { group = "sh.calvin.reorderable", name = "reorderable", version = "3.1.0" }
 androidx-glance-appwidget = { group = "androidx.glance", name = "glance-appwidget", version.ref = "glance" }
+
+# Compose Multiplatform - spike only. Explicit coordinates rather than the `compose.xxx` DSL
+# accessors, which are deprecated in 1.11.1.
+cmp-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "composeMultiplatform" }
+cmp-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "composeMultiplatform" }
+cmp-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "composeMultiplatform" }
+cmp-ui-backhandler = { module = "org.jetbrains.compose.ui:ui-backhandler", version.ref = "composeMultiplatform" }
+# Replaces the deprecated `compose.components.uiToolingPreview`. It declares the annotation under the
+# androidx package name for every target, so common and Android code share one import.
+cmp-ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }
+# The JetBrains republish of androidx lifecycle. The plain `androidx.lifecycle` artifacts are
+# Android only; these carry the uikit targets, so ViewModel, viewModelScope, `viewModel { }` and
+# collectAsStateWithLifecycle can all be used from commonMain.
+jetbrains-lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "jetbrainsLifecycle" }
+jetbrains-lifecycle-runtime-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "jetbrainsLifecycle" }
+# Replacement for the deprecated `androidx.compose.ui.backhandler.BackHandler`.
+# The JetBrains republish, not `androidx.navigationevent:navigationevent-compose` - the plain androidx
+# one ships Android/JVM variants only and cannot be used from commonMain.
+androidx-navigationevent-compose = { module = "org.jetbrains.androidx.navigationevent:navigationevent-compose", version.ref = "navigationEvent" }
+cmp-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "cmpMaterial3" }
+cmp-material-icons-extended = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "cmpIcons" }
 

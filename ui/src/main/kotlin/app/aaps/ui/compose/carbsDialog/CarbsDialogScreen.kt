@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.carbsDialog
 
+import app.aaps.core.ui.compose.stringResourceOrNull
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -54,6 +55,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.CarbTimeRow
 import app.aaps.core.ui.compose.NumberInputRow
@@ -62,7 +64,7 @@ import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
-import app.aaps.core.ui.compose.navigation.labelResId
+import app.aaps.core.ui.compose.navigation.label
 import app.aaps.core.ui.compose.preference.PreferenceSheetContent
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.ui.compose.EventDatePicker
@@ -229,7 +231,7 @@ internal fun CarbsDialogContent(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(ElementType.CARBS.labelResId())) },
+                title = { Text((stringResourceOrNull(ElementType.CARBS.label()) ?: "")) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
@@ -271,7 +273,7 @@ internal fun CarbsDialogContent(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 if (uiState.carbs > 0) {
-                    Text(stringResource(CoreUiR.string.format_carbs, uiState.carbs))
+                    Text(stringResource(InterfacesR.string.format_carbs, uiState.carbs))
                 } else {
                     Text(stringResource(CoreUiR.string.ok))
                 }
@@ -322,14 +324,14 @@ internal fun CarbsDialogContent(
                     // Carbs + Quick add
                     Column(modifier = itemModifier) {
                         NumberInputRow(
-                            labelResId = CoreUiR.string.carbs,
+                            labelResId = InterfacesR.string.carbs,
                             value = uiState.carbs.toDouble(),
                             onValueChange = onCarbsChange,
                             // Lower bound = -COB (can't remove more than is on board); at COB 0 the minimum is 0.
                             valueRange = (-uiState.cobLimit).toDouble()..uiState.maxCarbs.toDouble(),
                             step = 1.0,
                             valueFormat = NumberFormat.INTEGER,
-                            unitLabel = stringResource(CoreUiR.string.shortgramm)
+                            unitLabel = TextRef.AndroidRes(CoreUiR.string.shortgramm)
                         )
                         // Removing carbs (negative): show the COB-bounded limit so the user understands why it can't go lower.
                         if (uiState.carbs < 0) {
@@ -355,7 +357,7 @@ internal fun CarbsDialogContent(
                         valueRange = 0.0..uiState.maxCarbsDurationHours.toDouble(),
                         step = 1.0,
                         valueFormat = NumberFormat.INTEGER,
-                        unitLabel = stringResource(InterfacesR.string.shorthour),
+                        unitLabel = TextRef.AndroidRes(InterfacesR.string.shorthour),
                         modifier = itemModifier
                     )
 

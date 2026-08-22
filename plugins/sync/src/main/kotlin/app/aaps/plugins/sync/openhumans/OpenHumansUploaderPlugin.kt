@@ -26,6 +26,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.icons.IcPluginOpenHumans
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.plugins.sync.R
@@ -64,7 +65,7 @@ import app.aaps.core.ui.R as CoreUiR
 
 @Singleton
 class OpenHumansUploaderPlugin @Inject internal constructor(
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     preferences: Preferences,
     internal val context: Context,
@@ -78,16 +79,16 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .icon(IcPluginOpenHumans)
-        .pluginName(R.string.open_humans)
-        .shortName(R.string.open_humans_short)
-        .description(R.string.open_humans_description)
+        .pluginName(TextRef.AndroidRes(R.string.open_humans))
+        .shortName(TextRef.AndroidRes(R.string.open_humans_short))
+        .description(TextRef.AndroidRes(R.string.open_humans_description))
         .composeContent { plugin ->
             OHComposeContent(
                 plugin = plugin as OpenHumansUploaderPlugin,
                 context = plugin.context,
             )
         },
-    ownPreferences = listOf(OhStringKey.AppId::class.java, OhLongKey.Counter::class.java),
+    ownPreferences = OhStringKey.entries + OhLongKey.entries,
     aapsLogger, rh, preferences
 ) {
 
@@ -628,7 +629,7 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
             text = rh.gs(R.string.you_have_been_signed_out_of_open_humans)
                 + "\n" + rh.gs(R.string.click_here_to_sign_in_again_if_this_wasnt_on_purpose),
             actions = listOf(
-                NotificationAction(CoreUiR.string.login) {
+                NotificationAction(TextRef.AndroidRes(CoreUiR.string.login)) {
                     val intent = Intent(context, OHLoginActivity::class.java).apply {
                         flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                     }

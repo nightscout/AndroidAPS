@@ -1,11 +1,15 @@
 package app.aaps.implementation.profile
 
+import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.profile.SingleProfile
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.ProfileComposedBooleanKey
 import app.aaps.core.keys.ProfileComposedStringKey
 import app.aaps.core.keys.ProfileIntKey
 import app.aaps.core.keys.StringNonKey
+import app.aaps.core.objects.extensions.singleBlock
+import app.aaps.core.objects.extensions.singleTargetBlock
+import app.aaps.core.objects.extensions.toJSONArray
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import dagger.Lazy
@@ -14,6 +18,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.longOrNull
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
@@ -23,6 +29,7 @@ import org.mockito.kotlin.atLeast
 import org.mockito.kotlin.clearInvocations
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.inOrder
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
@@ -34,17 +41,13 @@ import org.mockito.kotlin.whenever
 @OptIn(ExperimentalCoroutinesApi::class)
 class ProfileRepositoryImplTest : TestBaseWithProfile() {
 
-    private fun singleBlock(value: Double): JSONArray =
-        JSONArray().put(JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", value))
-
     private fun profile(name: String) = SingleProfile(
         name = name,
         mgdl = true,
         ic = singleBlock(15.0),
         isf = singleBlock(100.0),
         basal = singleBlock(0.1),
-        targetLow = singleBlock(110.0),
-        targetHigh = singleBlock(120.0)
+        target = singleTargetBlock(110.0, 120.0)
     )
 
     // The document the repository reads on start, and the flow it watches for values arriving from
@@ -72,11 +75,11 @@ class ProfileRepositoryImplTest : TestBaseWithProfile() {
                         JSONObject()
                             .put("name", name)
                             .put("mgdl", true)
-                            .put("ic", singleBlock(15.0))
-                            .put("isf", singleBlock(100.0))
-                            .put("basal", singleBlock(0.1))
-                            .put("targetLow", singleBlock(110.0))
-                            .put("targetHigh", singleBlock(120.0))
+                            .put("ic", singleBlock(15.0).toJSONArray())
+                            .put("isf", singleBlock(100.0).toJSONArray())
+                            .put("basal", singleBlock(0.1).toJSONArray())
+                            .put("targetLow", singleBlock(110.0).toJSONArray())
+                            .put("targetHigh", singleBlock(120.0).toJSONArray())
                     )
                 }
             })
@@ -185,16 +188,96 @@ class ProfileRepositoryImplTest : TestBaseWithProfile() {
     // ---------------------------------------------------------------------------------------------
 
     /** Stub the pre-JSON per-profile keys so the legacy reader finds [names]. */
+    /** A schedule the way a pre-JSON build wrote it. ASCII digits, whole hours, both time fields. */
+    private fun legacySchedule(vararg hourToValue: Pair<Int, Double>): String =
+        hourToValue.joinToString(",", "[", "]") { (hour, value) ->
+            val hh = if (hour < 10) "0$hour" else "$hour"
+            """{"time":"$hh:00","timeAsSeconds":${hour * 3600},"value":$value}"""
+        }
+
+    /**
+     * One profile in the pre-JSON keys, shaped like real data rather than a placeholder.
+     *
+     * The values are taken from an actual 3.4.x install: mmol/L, several blocks per schedule, and the
+     * long decimals that come out of unit conversion. The existing [givenLegacyProfiles] fixture uses
+     * one round-numbered block per schedule, which cannot catch a boundary or precision mistake.
+     */
+    private fun givenRealisticLegacyProfile(name: String) {
+        whenever(preferences.get(ProfileIntKey.AmountOfProfiles)).thenReturn(1)
+        whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedName, 0)).thenReturn(name)
+        whenever(preferences.get(ProfileComposedBooleanKey.LocalProfileNumberedMgdl, 0)).thenReturn(false)
+        whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIc, 0))
+            .thenReturn(legacySchedule(0 to 8.1, 7 to 6.0, 10 to 8.0))
+        whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIsf, 0))
+            .thenReturn(legacySchedule(0 to 9.523809523809524))
+        whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedBasal, 0))
+            .thenReturn(legacySchedule(0 to 1.0, 6 to 1.27, 11 to 1.6300000000000001))
+        whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetLow, 0))
+            .thenReturn(legacySchedule(0 to 5.5, 11 to 6.6000000000000005))
+        whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetHigh, 0))
+            .thenReturn(legacySchedule(0 to 5.5, 11 to 7.7))
+    }
+
+    /**
+     * The 3.4.x upgrade: legacy keys in, one JSON document out, nothing altered on the way.
+     *
+     * This is the highest-risk path in the profile rework - it runs once, silently, on every upgrading
+     * install, and a mistake in it corrupts profiles that were fine. It was verified against a real
+     * device carrying five such profiles; this pins the same guarantees so a future change cannot undo
+     * it. Times, values and the unit flag must survive exactly, including the long decimals, because
+     * blocks are stored as durations and rebuilt as start times.
+     */
+    @Test
+    fun `legacy keys migrate into the document without altering any value`() = runTest {
+        givenRealisticLegacyProfile("Vsedni den")
+        whenever(config.APS).thenReturn(true)
+
+        val sut = createSut()
+
+        assertThat(sut.names()).containsExactly("Vsedni den")
+        val migrated = JSONObject(localWrites().last()).getJSONArray("profiles").getJSONObject(0)
+        assertThat(migrated.getString("name")).isEqualTo("Vsedni den")
+        assertThat(migrated.getBoolean("mgdl")).isFalse()
+
+        fun schedule(key: String) = migrated.getJSONArray(key).let { array ->
+            (0 until array.length()).map { array.getJSONObject(it).getInt("timeAsSeconds") to array.getJSONObject(it).getDouble("value") }
+        }
+
+        assertThat(schedule("ic")).containsExactly(0 to 8.1, 25200 to 6.0, 36000 to 8.0).inOrder()
+        assertThat(schedule("isf")).containsExactly(0 to 9.523809523809524).inOrder()
+        assertThat(schedule("basal")).containsExactly(0 to 1.0, 21600 to 1.27, 39600 to 1.6300000000000001).inOrder()
+        assertThat(schedule("targetLow")).containsExactly(0 to 5.5, 39600 to 6.6000000000000005).inOrder()
+        assertThat(schedule("targetHigh")).containsExactly(0 to 5.5, 39600 to 7.7).inOrder()
+    }
+
+    /** The migrated profile must also be readable back, not merely written correctly. */
+    @Test
+    fun `a migrated profile is usable as a profile`() = runTest {
+        givenRealisticLegacyProfile("Vsedni den")
+        whenever(config.APS).thenReturn(true)
+
+        val sut = createSut()
+        val profile = sut.profiles.value.single()
+
+        assertThat(profile.mgdl).isFalse()
+        assertThat(profile.ic).hasSize(3)
+        assertThat(profile.basal).hasSize(3)
+        assertThat(profile.target).hasSize(2)
+        // Durations, not start times: 00:00-07:00 is seven hours.
+        assertThat(profile.ic.first().duration).isEqualTo(7 * 3600 * 1000L)
+        assertThat(profile.basal.last().amount).isEqualTo(1.6300000000000001)
+    }
+
     private fun givenLegacyProfiles(vararg names: String) {
         whenever(preferences.get(ProfileIntKey.AmountOfProfiles)).thenReturn(names.size)
         names.forEachIndexed { i, name ->
             whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedName, i)).thenReturn(name)
             whenever(preferences.get(ProfileComposedBooleanKey.LocalProfileNumberedMgdl, i)).thenReturn(true)
-            whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIc, i)).thenReturn(singleBlock(15.0).toString())
-            whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIsf, i)).thenReturn(singleBlock(100.0).toString())
-            whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedBasal, i)).thenReturn(singleBlock(0.1).toString())
-            whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetLow, i)).thenReturn(singleBlock(110.0).toString())
-            whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetHigh, i)).thenReturn(singleBlock(120.0).toString())
+            whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIc, i)).thenReturn(singleBlock(15.0).toJSONArray().toString())
+            whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIsf, i)).thenReturn(singleBlock(100.0).toJSONArray().toString())
+            whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedBasal, i)).thenReturn(singleBlock(0.1).toJSONArray().toString())
+            whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetLow, i)).thenReturn(singleBlock(110.0).toJSONArray().toString())
+            whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetHigh, i)).thenReturn(singleBlock(120.0).toJSONArray().toString())
         }
     }
 
@@ -338,5 +421,57 @@ class ProfileRepositoryImplTest : TestBaseWithProfile() {
         // put() would publish the list; a store we merely took over must not travel back out.
         assertThat(adoptedWrites()).isNotEmpty()
         assertThat(localWrites()).isEmpty()
+    }
+
+    /**
+     * A store Nightscout pushed but we refused changes nothing, so it must not count as a mutation.
+     *
+     * [ProfileRepositoryImpl.revision] means "something happened", and the profile editor reloads its
+     * working copy on every bump — so bumping here would throw away edits the user was in the middle
+     * of typing, for an event that did not touch a single profile. The old code got this right by
+     * accident: profiles were compared by identity, so re-publishing the same list simply did not emit.
+     */
+    @Test
+    fun `a rejected Nightscout store does not count as a mutation`() = runTest {
+        val sut = createSut()
+        sut.add(profile("Mine"))
+        val revisionBefore = sut.revision.value
+        val listBefore = sut.profiles.value
+
+        // An empty store has no profile to accept, so loadFromStoreInternal rejects it.
+        sut.loadFromNs(mock<ProfileStore>().also { whenever(it.getProfileList()).thenReturn(ArrayList()) })
+
+        assertThat(sut.revision.value).isEqualTo(revisionBefore)
+        assertThat(sut.profiles.value).isSameInstanceAs(listBefore)
+    }
+
+    /**
+     * The published store always carries a numeric `date`.
+     *
+     * Nightscout v3 needs that field, and both sync selectors now read it straight from the store.
+     * They used to patch it in when absent - a branch that could never fire, because this is the only
+     * producer and it writes `date` unconditionally. Deleting an unreachable guard is only safe if the
+     * invariant it guarded is pinned somewhere reachable, which is what this is.
+     */
+    @Test
+    fun `the published store always carries a numeric date`() = runTest {
+        val sut = createSut()
+        assertThat(sut.profile.value?.getData()?.get("date")?.jsonPrimitive?.longOrNull).isNotNull()
+
+        // And still after a mutation rebuilds it.
+        sut.add(profile("Mine"))
+
+        assertThat(sut.profile.value?.getData()?.get("date")?.jsonPrimitive?.longOrNull).isNotNull()
+    }
+
+    /** The accepted case still bumps, otherwise the editor would never notice an NS push. */
+    @Test
+    fun `an accepted Nightscout store does count as a mutation`() = runTest {
+        val sut = createSut()
+        val revisionBefore = sut.revision.value
+
+        sut.loadFromNs(getValidProfileStore())
+
+        assertThat(sut.revision.value).isGreaterThan(revisionBefore)
     }
 }

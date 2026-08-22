@@ -16,7 +16,7 @@ import org.mockito.kotlin.whenever
 class CommandLoadTDDsTest : TestBaseWithProfile() {
 
     private fun newCommand(callback: Callback? = null) =
-        CommandLoadTDDs(aapsLogger, rh, activePlugin, pumpEnactResultProvider, callback)
+        CommandLoadTDDs(aapsLogger, rh, activePlugin, pumpEnactResultProvider::get, callback)
 
     @Test
     fun `execute returns pump's loadTDDs result`() = runTest {

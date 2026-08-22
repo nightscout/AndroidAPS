@@ -22,6 +22,7 @@ import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.ui.R
+import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.compose.SelectableListToolbar
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.ui.compose.treatments.MealLink
@@ -196,11 +197,11 @@ class BolusCarbsViewModel @Inject constructor(
             val ml = selected.first()
             val bolus = ml.bolus
             if (bolus != null) {
-                "${rh.gs(R.string.configbuilder_insulin)}: ${rh.gs(R.string.format_insulin_units, bolus.amount)}\n${rh.gs(R.string.date)}: ${dateUtil.dateAndTimeString(bolus.timestamp)}"
+                "${rh.gs(R.string.configbuilder_insulin)}: ${rh.gs(InterfacesR.string.format_insulin_units, bolus.amount)}\n${rh.gs(R.string.date)}: ${dateUtil.dateAndTimeString(bolus.timestamp)}"
             } else {
                 val carbs = ml.carbs
                 if (carbs != null) {
-                    "${rh.gs(R.string.carbs)}: ${rh.gs(R.string.format_carbs, carbs.amount.toInt())}\n${rh.gs(R.string.date)}: ${dateUtil.dateAndTimeString(carbs.timestamp)}"
+                    "${rh.gs(InterfacesR.string.carbs)}: ${rh.gs(InterfacesR.string.format_carbs, carbs.amount.toInt())}\n${rh.gs(R.string.date)}: ${dateUtil.dateAndTimeString(carbs.timestamp)}"
                 } else {
                     rh.gs(R.string.confirm_remove_multiple_items, selected.size)
                 }

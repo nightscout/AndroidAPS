@@ -18,6 +18,7 @@ import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.plugins.constraints.R
 import app.aaps.plugins.constraints.dstHelper.keys.DstHelperLongKey
 import kotlinx.coroutines.runBlocking
@@ -39,8 +40,8 @@ class DstHelperPlugin @Inject constructor(
         .mainType(PluginType.GENERAL)
         .alwaysEnabled(true)
         .showInList { false }
-        .pluginName(R.string.dst_plugin_name),
-    ownPreferences = listOf(DstHelperLongKey::class.java),
+        .pluginName(TextRef.AndroidRes(R.string.dst_plugin_name)),
+    ownPreferences = DstHelperLongKey.entries,
     aapsLogger, rh, preferences
 ), DstHelper {
 
@@ -60,11 +61,10 @@ class DstHelperPlugin @Inject constructor(
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
                 notificationManager.post(
                     NotificationId.DST_IN_24H,
-                    R.string.dst_in_24h_warning,
-                    actions = listOf(NotificationAction(app.aaps.core.ui.R.string.snooze) {
+                    TextRef.AndroidRes(R.string.dst_in_24h_warning),
+                    actions = listOf(NotificationAction(TextRef.AndroidRes(app.aaps.core.ui.R.string.snooze)) {
                         preferences.put(DstHelperLongKey.SnoozeDstIn24h, System.currentTimeMillis() + T.hours(24).msecs())
-                    })
-                )
+                    }))
             }
         }
         if (wasDST(cal)) {
@@ -80,11 +80,10 @@ class DstHelperPlugin @Inject constructor(
                 if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
                     notificationManager.post(
                         NotificationId.DST_LOOP_DISABLED,
-                        R.string.dst_loop_disabled_warning,
-                        actions = listOf(NotificationAction(app.aaps.core.ui.R.string.snooze) {
+                        TextRef.AndroidRes(R.string.dst_loop_disabled_warning),
+                        actions = listOf(NotificationAction(TextRef.AndroidRes(app.aaps.core.ui.R.string.snooze)) {
                             preferences.put(DstHelperLongKey.SnoozeLoopDisabled, System.currentTimeMillis() + T.hours(24).msecs())
-                        })
-                    )
+                        }))
                 }
             } else {
                 aapsLogger.debug(LTag.CONSTRAINTS, "Loop already suspended")

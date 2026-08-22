@@ -4,6 +4,9 @@ import app.aaps.core.interfaces.aps.Predictions
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.plugins.aps.openAPS.APSResultObject
 import dagger.android.HasAndroidInjector
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.jsonObject
 import org.json.JSONObject
 import org.mozilla.javascript.NativeObject
 import javax.inject.Inject
@@ -56,7 +59,9 @@ class DetermineBasalResultAMAFromJS @Inject constructor(injector: HasAndroidInje
         return newResult
     }
 
-    override fun json(): JSONObject? = json
+    // The JS bridge hands over an org.json document and predictions() reads predBGs out of it, so the
+    // field stays as it is and only the contract is converted. androidTest, so a reparse costs nothing.
+    override fun json(): JsonObject? = json?.let { Json.parseToJsonElement(it.toString()).jsonObject }
 
     override fun predictions(): Predictions {
         val predictions = Predictions()

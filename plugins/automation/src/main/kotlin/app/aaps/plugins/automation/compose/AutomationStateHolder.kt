@@ -1,19 +1,20 @@
 package app.aaps.plugins.automation.compose
 
-import app.aaps.core.interfaces.rx.AapsSchedulers
+import androidx.compose.ui.text.AnnotatedString
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.compose.icons.IcUserOptions
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.plugins.automation.AutomationEventObject
+import app.aaps.plugins.automation.AutomationEventFactory
 import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.events.EventAutomationUpdateGui
 import app.aaps.plugins.automation.triggers.TriggerConnector
 import app.aaps.plugins.automation.triggers.TriggerLocation
-import dagger.android.HasAndroidInjector
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import app.aaps.core.interfaces.rx.collectResilient
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -28,9 +29,8 @@ import kotlinx.coroutines.flow.onEach
 class AutomationStateHolder(
     private val plugin: AutomationRuntime,
     private val rxBus: RxBus,
-    private val aapsSchedulers: AapsSchedulers,
-    private val fabricPrivacy: FabricPrivacy,
-    private val injector: HasAndroidInjector
+    private val aapsLogger: AAPSLogger,
+    private val automationEventFactory: AutomationEventFactory
 ) {
 
     private val _state = MutableStateFlow(AutomationUiState())
@@ -42,23 +42,14 @@ class AutomationStateHolder(
     private val _editState = MutableStateFlow(AutomationEditUiState())
     val editState: StateFlow<AutomationEditUiState> = _editState.asStateFlow()
 
-    private var disposable: CompositeDisposable? = null
     private var scope: CoroutineScope? = null
 
     // Working copy for edit
-    private var workingEvent: AutomationEventObject = AutomationEventObject(injector)
+    private var workingEvent: AutomationEventObject = automationEventFactory.newEvent()
     private var workingPosition: Int = -1
 
     fun start() {
-        if (disposable != null) return
-        val d = CompositeDisposable()
-        d += rxBus.toObservable(EventAutomationUpdateGui::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({
-                           refresh()
-                           refreshEditState()
-                       }, fabricPrivacy::logException)
-        disposable = d
+        if (scope != null) return
         // drop(1) skips the seed empty snapshot the plugin emits before loadFromSP runs — the
         // refresh() below covers the cold start, and the plugin's first real emission after load
         // re-triggers it. EventWearUpdateTiles is now broadcast from the plugin's own scope so it
@@ -66,13 +57,18 @@ class AutomationStateHolder(
         // gated on this holder being alive.
         val newScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
         scope = newScope
+        // This one observed on aapsSchedulers.main and the scope is already Main, so the dispatcher
+        // matches without any extra step - it touches Compose state.
+        rxBus.toFlow(EventAutomationUpdateGui::class)
+            .collectResilient(newScope, aapsLogger, LTag.AUTOMATION, start = CoroutineStart.UNDISPATCHED) {
+                refresh()
+                refreshEditState()
+            }
         plugin.events.drop(1).onEach { refresh() }.launchIn(newScope)
         refresh()
     }
 
     fun stop() {
-        disposable?.clear()
-        disposable = null
         scope?.cancel()
         scope = null
     }
@@ -122,7 +118,7 @@ class AutomationStateHolder(
 
     // ---- Navigation / Edit ----
     fun openNew() {
-        workingEvent = AutomationEventObject(injector)
+        workingEvent = automationEventFactory.newEvent()
         workingPosition = -1
         snapshotEvent()
         _route.value = AutomationRoute.Edit(-1)
@@ -131,7 +127,7 @@ class AutomationStateHolder(
 
     fun openEdit(position: Int) {
         val source = plugin.at(position)
-        workingEvent = AutomationEventObject(injector).fromJSON(source.toJSON())
+        workingEvent = automationEventFactory.fromJSON(source.toJSON())
         workingPosition = position
         snapshotEvent()
         _route.value = AutomationRoute.Edit(position)
@@ -292,11 +288,14 @@ class AutomationStateHolder(
                 actionIcons = actionIcons.distinct()
             )
         }
-        val sb = StringBuilder()
-        for (l in plugin.executionLog.reversed()) sb.append(l).append("<br>")
+        val sb = AnnotatedString.Builder()
+        for (l in plugin.executionLog.reversed()) {
+            sb.append(l)
+            sb.append('\n')
+        }
         _state.value = _state.value.copy(
             events = events,
-            logHtml = sb.toString()
+            log = sb.toAnnotatedString()
         )
     }
 

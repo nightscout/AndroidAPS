@@ -42,6 +42,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.objects.extensions.getCustomizedName
 import app.aaps.core.objects.profile.ProfileSealed
+import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDateUtil
@@ -249,7 +250,7 @@ private fun ProfileSwitchItem(
                     if (profileSwitch.duration != null && profileSwitch.duration != 0L) {
                         append(" ")
                         append(T.msecs(profileSwitch.duration ?: 0L).mins().toInt())
-                        append(rh.gs(app.aaps.core.keys.R.string.units_min))
+                        append(rh.gs(CoreUiR.string.units_min))
                     }
                 },
                 modifier = Modifier.padding(start = 4.dp),

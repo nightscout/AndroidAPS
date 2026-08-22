@@ -4,6 +4,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.SourceSensor
@@ -65,9 +66,10 @@ class BgSourceScreenTest {
         whenever(viewModel.rh).thenReturn(rh)
         whenever(viewModel.dateUtil).thenReturn(dateUtil)
         whenever(viewModel.formatGlucoseValue(any())).thenReturn("100 mg/dl")
-        // removing-mode toolbar builds its title via rh.gs(count_selected, n) and rh.gs(close)
-        whenever(rh.gs(any<Int>())).thenReturn("label")
-        whenever(rh.gs(any<Int>(), any())).thenReturn("selected")
+        // removing-mode toolbar builds its title via rh.gs(count_selected, n) and rh.gs(close).
+        // SelectableListToolbar names its strings with TextRef now, so stub that overload.
+        whenever(rh.gs(any<TextRef>())).thenReturn("label")
+        whenever(rh.gs(any<TextRef>(), any())).thenReturn("selected")
         whenever(prefs.observe(StringKey.GeneralDarkMode)).thenReturn(MutableStateFlow("light"))
         whenever(dateUtil.dateString(any())).thenReturn("2024-01-01")
         whenever(dateUtil.dateStringRelative(any(), any())).thenReturn("Today")

@@ -56,10 +56,10 @@ internal class ScenesViewModelTest {
         whenever(nsClient.masterReachable).thenReturn(MutableStateFlow(true))
         whenever(automation.events).thenReturn(MutableStateFlow<List<AutomationEvent>>(emptyList()))
         whenever(sceneRepository.scenesFlow).thenReturn(MutableStateFlow(""))
-        whenever(rxBus.toFlow(EventRefreshOverview::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventPumpStatusChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventLoopUpdateGui::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventInitializationChanged::class.java)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventRefreshOverview::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventPumpStatusChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventLoopUpdateGui::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventInitializationChanged::class)).thenReturn(emptyFlow())
         sut = ScenesViewModel(
             automation, activePlugin, loop, profileFunction, config, rxBus,
             sceneRepository, sceneActions, rh, nsClient

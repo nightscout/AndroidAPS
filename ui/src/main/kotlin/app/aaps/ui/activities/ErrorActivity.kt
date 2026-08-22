@@ -26,6 +26,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.notifications.AlarmIntent
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.ui.IconsProvider
@@ -63,7 +64,7 @@ class ErrorActivity : DaggerAppCompatActivity() {
 
     private var status by mutableStateOf("")
     private var title by mutableStateOf("")
-    private var sound: Int = 0
+    private var sound: AlarmSound = AlarmSound.ERROR
 
     /**
      * `SystemClock.elapsedRealtime()` when the originating notification was posted (from
@@ -86,7 +87,7 @@ class ErrorActivity : DaggerAppCompatActivity() {
 
         status = intent.getStringExtra(AlarmIntent.EXTRA_STATUS) ?: ""
         title = intent.getStringExtra(AlarmIntent.EXTRA_TITLE) ?: ""
-        sound = intent.getIntExtra(AlarmIntent.EXTRA_SOUND_ID, app.aaps.core.ui.R.raw.error)
+        sound = intent.getStringExtra(AlarmIntent.EXTRA_SOUND)?.let { runCatching { AlarmSound.valueOf(it) }.getOrNull() } ?: AlarmSound.ERROR
         postedAtElapsedRealtime = intent.getLongExtra(AlarmIntent.EXTRA_POSTED_AT_ELAPSED_REALTIME, 0L)
         val appIcon = iconsProvider.getIcon()
 
@@ -143,7 +144,7 @@ class ErrorActivity : DaggerAppCompatActivity() {
         setIntent(intent)
         status = intent.getStringExtra(AlarmIntent.EXTRA_STATUS) ?: ""
         title = intent.getStringExtra(AlarmIntent.EXTRA_TITLE) ?: ""
-        sound = intent.getIntExtra(AlarmIntent.EXTRA_SOUND_ID, app.aaps.core.ui.R.raw.error)
+        sound = intent.getStringExtra(AlarmIntent.EXTRA_SOUND)?.let { runCatching { AlarmSound.valueOf(it) }.getOrNull() } ?: AlarmSound.ERROR
         postedAtElapsedRealtime = intent.getLongExtra(AlarmIntent.EXTRA_POSTED_AT_ELAPSED_REALTIME, 0L)
         aapsLogger.debug("Error activity updated: $title - $status")
         handler.removeCallbacksAndMessages(null)
@@ -160,7 +161,7 @@ class ErrorActivity : DaggerAppCompatActivity() {
     }
 
     private fun startAlarm() {
-        if (sound != 0) alarmSoundPlayer.play(sound, AlarmSoundPlayer.OWNER_FULLSCREEN, postedAtElapsedRealtime)
+        alarmSoundPlayer.play(sound, AlarmSoundPlayer.OWNER_FULLSCREEN, postedAtElapsedRealtime)
     }
 
     private fun stopAlarm(reason: String) {

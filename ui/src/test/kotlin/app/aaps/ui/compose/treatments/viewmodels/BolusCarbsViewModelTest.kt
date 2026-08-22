@@ -50,9 +50,9 @@ internal class BolusCarbsViewModelTest {
         // observeTreatmentChanges() merges these three in init; empty flows complete and never re-trigger.
         // The initial loadData() background load is intentionally left unstubbed — it fails and is swallowed
         // by the VM's try/catch, never mutating the structural fields asserted below.
-        whenever(persistenceLayer.observeChanges(BS::class.java)).thenReturn(emptyFlow())
-        whenever(persistenceLayer.observeChanges(CA::class.java)).thenReturn(emptyFlow())
-        whenever(persistenceLayer.observeChanges(BCR::class.java)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(BS::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(CA::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(BCR::class)).thenReturn(emptyFlow())
         sut = BolusCarbsViewModel(persistenceLayer, profileFunction, rh, dateUtil, decimalFormatter, aapsLogger, rxBus)
     }
 

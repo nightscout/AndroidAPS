@@ -1,5 +1,6 @@
 package app.aaps.pump.danar
 
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -25,8 +26,8 @@ import app.aaps.core.interfaces.pump.PumpSync.TemporaryBasalType
 import app.aaps.core.interfaces.pump.mapState
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -43,9 +44,8 @@ import app.aaps.pump.dana.keys.DanaIntentKey
 import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danar.compose.DanaRComposeContent
 import app.aaps.pump.danar.services.AbstractDanaRExecutionService
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
@@ -63,11 +63,10 @@ import kotlin.math.max
 abstract class AbstractDanaRPlugin protected constructor(
     protected var danaPump: DanaPump,
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     protected val config: Config,
     commandQueue: CommandQueue,
-    protected var aapsSchedulers: AapsSchedulers,
     protected var rxBus: RxBus,
     protected var activePlugin: ActivePlugin,
     protected var dateUtil: DateUtil,
@@ -86,28 +85,28 @@ abstract class AbstractDanaRPlugin protected constructor(
             )
         }
         .icon(IcPluginDanaI)
-        .pluginName(app.aaps.pump.dana.R.string.danarpump)
-        .shortName(app.aaps.pump.dana.R.string.danarpump_shortname)
-        .description(app.aaps.pump.dana.R.string.description_pump_dana_r),
-    ownPreferences = listOf(DanaStringNonKey::class.java, DanaIntKey::class.java, DanaIntNonKey::class.java, DanaBooleanKey::class.java, DanaIntentKey::class.java),
+        .pluginName(TextRef.AndroidRes(app.aaps.pump.dana.R.string.danarpump))
+        .shortName(TextRef.AndroidRes(app.aaps.pump.dana.R.string.danarpump_shortname))
+        .description(TextRef.AndroidRes(app.aaps.pump.dana.R.string.description_pump_dana_r)),
+    ownPreferences = DanaStringNonKey.entries + DanaIntKey.entries + DanaIntNonKey.entries + DanaBooleanKey.entries + DanaIntentKey.entries,
     aapsLogger, rh, preferences, commandQueue
 ), Pump, Dana, PumpPluginConstraints, OwnDatabasePlugin {
 
     protected var executionService: AbstractDanaRExecutionService? = null
-    protected var disposable = CompositeDisposable()
     private var scope: CoroutineScope? = null
     override var pumpDescription = PumpDescription()
         protected set
 
     override suspend fun onStart() {
         super.onStart()
-        disposable += rxBus
-            .toObservable(EventConfigBuilderChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe { danaPump.reset() }
-
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
+        // Same scope as the preference observer below: IO, like the io scheduler used before, and
+        // cancelled in onStop like the CompositeDisposable was cleared. UNDISPATCHED because RxBus
+        // has no replay, so a scheduled collector could miss a change sent before it starts.
+        rxBus.toFlow(EventConfigBuilderChange::class)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { danaPump.reset() }
+
         preferences.observe(DanaStringNonKey.RName).drop(1).onEach {
             danaPump.reset()
             pumpSync.connectNewPump(true)
@@ -120,7 +119,6 @@ abstract class AbstractDanaRPlugin protected constructor(
         super.onStop()
         scope?.cancel()
         scope = null
-        disposable.clear()
     }
 
     override fun isSuspended(): Boolean {

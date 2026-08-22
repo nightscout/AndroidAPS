@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    Dialogs-->
+    <!--    Events-->
+    <!-- PumpPluginBase -->
+    <string name="pump_driver_changed" comment="26 characters max for translation">Ο οδηγός της αντλίας άλλαξε.</string>
+    <!--    DateUtil-->
+    <string name="minago_long">%1$d λεπτά πριν</string>
+    <string name="days_ago">%1$.1f ημέρες πριν</string>
+    <string name="days_ago_round">%1$.0f ημέρες πριν</string>
+    <string name="in_days">σε %1$.0f ημέρες</string>
+    <string name="in_days_round">σε %1$.0f ημέρες</string>
+    <string name="shorthour">h</string>
+    <string name="days">ημέρες</string>
+    <string name="hours">ώρες</string>
+    <string name="unit_second">δευτερόλεπτο</string>
+    <string name="unit_minute">λεπτό</string>
+    <string name="unit_hour">ώρα</string>
+    <string name="unit_day">ημέρα</string>
+    <string name="unit_week">εβδομάδα</string>
+    <string name="unit_seconds">δευτερόλεπτα</string>
+    <string name="unit_minutes">λεπτά</string>
+    <string name="unit_hours">ώρες</string>
+    <string name="unit_days">ημέρες</string>
+    <string name="unit_weeks">εβδομάδες</string>
+    <string name="shortminute">m</string>
+    <string name="shortday">ημ</string>
+    <string name="later_today">Αργότερα σήμερα</string>
+    <string name="tomorrow">Αύριο</string>
+    <string name="today">Σήμερα</string>
+    <string name="yesterday">Χθες</string>
+    <!-- Rx -->
+    <string name="connecting_for">Σύνδεση για %1$d δευτερόλεπτα</string>
+    <string name="handshaking">Δημιουργία σύνδεσης</string>
+    <string name="connected">Συνδέθηκε</string>
+    <string name="disconnecting">Αποσυνδέεται</string>
+    <string name="waiting_for_disconnection">Αναμονή για αποσύνδεση</string>
+    <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_created_at">Δημιουργήθηκε: %1$s</string>
+    <string name="metadata_label_watchface_author">Συντάκτης: %1$s</string>
+    <string name="metadata_label_watchface_name">Όνομα: %1$s</string>
+    <string name="metadata_wear_import_filename">Όνομα αρχείου: %1$s</string>
+    <string name="metadata_label_plugin_version">Έκδοση πρόσθετου: %1$s</string>
+    <string name="metadata_label_watchface_name_version">Όνομα: %1$s (%2$s)</string>
+    <string name="metadata_label_watchface_infos">Πληροφορίες: %1$s</string>
+    <string name="pref_show_iob">Εμφάνιση IOB</string>
+    <string name="pref_show_detailed_iob">Εμφάνιση λεπτομερούς IOB</string>
+    <string name="pref_show_cob">Εμφάνιση COB</string>
+    <string name="pref_show_delta">Εμφάνιση Διαφοράς</string>
+    <string name="pref_show_detailed_delta">Εμφάνιση λεπτομερούς Διαφοράς</string>
+    <string name="pref_show_avgdelta">Εμφάνιση Μέσης Διαφοράς</string>
+    <string name="pref_show_phone_battery">Εμφάνιση Μπαταρίας Τηλεφώνου</string>
+    <string name="pref_show_rig_battery">Εμφάνιση Μπαταρίας Rig</string>
+    <string name="pref_show_basal_rate">Εμφάνιση Βασικού Ρυθμού</string>
+    <string name="pref_show_loop_status">Εμφάνιση Κατάστασης Κυκλώματος</string>
+    <string name="pref_show_bg">Εμφάνιση γλυκόζης αίματος</string>
+    <string name="pref_show_bgi">Εμφάνιση BGI</string>
+    <string name="pref_show_direction_arrow">Εμφάνιση Βέλους Κατεύθυνσης</string>
+    <string name="pref_show_ago">Εμφάνιση Πριν</string>
+    <string name="pref_show_week_number">Εμφάνιση αριθμού Εβδομάδας</string>
+    <string name="default_custom_watchface_comment">Προεπιλεγμένη πρόσοψη ρολογιού, μπορείτε να κάνετε κλικ στο κουμπί ΕΞΑΓΩΓΗ ΠΡΟΣΟΨΗΣ για να δημιουργήσετε ένα πρότυπο</string>
+    <string name="wear_default_watchface">Προεπιλεγμένη πρόσοψη ρολογιού</string>
+    <!-- Permission rationales (used by PumpPluginBase) -->
+    <!-- Insulin -->
+    <!-- Concentration -->
+    <string name="formatsignedinsulinunits">%1$+.2f U</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="carbs">Υδατάνθρακες</string>
+    <string name="alarminxmin">Εκτέλεση συναγερμού σε %1$d λεπτά</string>
+    <string name="pumpsuspended">Η αντλία είναι σε παύση</string>
+    <string name="loopsuspended">Κύκλωμα σε αναστολή</string>
+    <string name="basalprofilenotaligned">Οι τιμές του βασικού ρυθμού δεν αντιστοιχούν σε ώρες: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Η τιμή του βασικού αντικαταστάθηκε από την ελάχιστη υποστηριζόμενη τιμή: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Η τιμή του βασικού αντικαταστάθηκε από την μέγιστη υποστηριζόμενη τιμή: %1$s</string>
+    <string name="profile_ins_units_per_hour">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <string name="mins">%1$d λεπτά</string>
+    <string name="record">Εγγραφή</string>
+    <string name="bolus">Bolus</string>
+    <string name="uel_extended_carbs">ΕΚΤΕΤΑΜΕΝΟΙ ΥΔΑΤΑΝΘΡΑΚΕΣ</string>
+    <string name="profile_low_target">Χαμηλός στόχος προφίλ</string>
+    <string name="profile_high_target">Υψηλός στόχος προφίλ</string>
+    <string name="profile_dia">Τιμή DIA του προφίλ</string>
+    <string name="profile_sensitivity_value">Τιμή ευαισθησίας προφίλ</string>
+    <string name="profile_carbs_ratio_value">Τιμή αναλογίας υδατανθράκων προφίλ</string>
+    <string name="value_out_of_hard_limits">Η τιμή »%1$s« %2$.2f είναι εκτός ορίων</string>
+    <string name="basal_value">Τιμή Βασικού ρυθμού</string>
+    <string name="cobvsiob">COB vs IOB (ενεργοί υδατάνθρακες vs ενεργή ινσουλίνη)</string>
+    <string name="bolus_constraint_applied_warn">Ορίστηκε περιορισμός Bolus: %1$.2f U σε %2$.2f U</string>
+    <string name="bolus_recorded_only">Το Bolus μόνο θα καταγραφεί (δε θα χορηγηθεί από την αντλία)</string>
+    <string name="advisoralarm">Εκτέλεση συναγερμού όταν έρθει η ώρα να φάτε</string>
+    <string name="format_insulin_units">%1$.2f U</string>
+</resources>

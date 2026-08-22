@@ -1,5 +1,6 @@
 package app.aaps.pump.danar.comm
 
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
@@ -17,7 +18,7 @@ class MsgInitConnStatusTime(
 
     override fun handleMessage(bytes: ByteArray) {
         if (bytes.size - 10 > 7) {
-            notificationManager.post(NotificationId.WRONG_DRIVER, app.aaps.pump.dana.R.string.pumpdrivercorrected)
+            notificationManager.post(NotificationId.WRONG_DRIVER, TextRef.AndroidRes(app.aaps.pump.dana.R.string.pumpdrivercorrected))
             danaRPlugin.disconnect("Wrong Model")
             aapsLogger.debug(LTag.PUMPCOMM, "Wrong model selected. Switching to Korean DanaR")
             danaRKoreanPlugin.setPluginEnabled(PluginType.PUMP, true)

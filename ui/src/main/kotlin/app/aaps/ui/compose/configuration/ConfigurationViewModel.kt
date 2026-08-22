@@ -15,7 +15,7 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.ConfigPluginUiModel
-import app.aaps.core.ui.compose.pluginCategoryTitleRes
+import app.aaps.core.ui.compose.pluginCategoryTitle
 import app.aaps.ui.plugin.HardwarePumpConfirmation
 import app.aaps.ui.plugin.PluginSwitchConfirmation
 import app.aaps.ui.plugin.PluginSwitchDialogs
@@ -132,7 +132,7 @@ class ConfigurationViewModel @Inject constructor(
         fun addCategory(type: PluginType) {
             val plugins = activePlugin.getSpecificPluginsVisibleInList(type)
             if (plugins.isEmpty()) return
-            val titleRes = pluginCategoryTitleRes(type)
+            val titleRes = pluginCategoryTitle(type)
             val isMultiSelect = isMultiSelect(type)
 
             val pluginModels = plugins.map { plugin ->

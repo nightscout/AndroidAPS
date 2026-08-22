@@ -125,7 +125,7 @@ class DanaRSServiceIntegrationTest : TestBase() {
     @Mock lateinit var ch: ConcentrationHelper
     @Mock lateinit var profile: Profile
 
-    private val bolusProgressData by lazy { BolusProgressData(ch, rh, CoroutineScope(Dispatchers.Unconfined)) }
+    private val bolusProgressData by lazy { BolusProgressData(ch, CoroutineScope(Dispatchers.Unconfined)) }
     private lateinit var danaPump: DanaPump
     private lateinit var bleEncryption: BleEncryption
     private lateinit var emulatorTransport: EmulatorBleTransport
@@ -202,7 +202,6 @@ class DanaRSServiceIntegrationTest : TestBase() {
         // Create service and wire all dependencies
         danaRSService = DanaRSService()
         danaRSService.aapsLogger = aapsLogger
-        danaRSService.aapsSchedulers = aapsSchedulers
         danaRSService.rxBus = rxBus
         danaRSService.preferences = preferences
         danaRSService.rh = rh
@@ -213,7 +212,6 @@ class DanaRSServiceIntegrationTest : TestBase() {
         danaRSService.activePlugin = activePlugin
         danaRSService.uiInteraction = uiInteraction
         danaRSService.bleComm = bleComm
-        danaRSService.fabricPrivacy = fabricPrivacy
         danaRSService.pumpSync = pumpSync
         danaRSService.dateUtil = dateUtil
         danaRSService.bolusProgressData = bolusProgressData

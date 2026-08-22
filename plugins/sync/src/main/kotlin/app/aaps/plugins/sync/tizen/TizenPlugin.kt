@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ResolveInfo
 import android.os.Bundle
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
@@ -23,25 +24,22 @@ import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.receivers.Intents
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.Event
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.objects.extensions.durationInMinutes
+import app.aaps.core.data.model.durationInMinutes
 import app.aaps.core.objects.extensions.round
-import app.aaps.core.objects.extensions.toStringFull
+import app.aaps.core.ui.extensions.toStringFull
 import app.aaps.core.ui.compose.icons.IcPluginTizen
 import app.aaps.plugins.sync.R
 import app.aaps.shared.impl.extensions.safeQueryBroadcastReceivers
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
@@ -52,11 +50,9 @@ import javax.inject.Singleton
 @Singleton
 class TizenPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
-    private val aapsSchedulers: AapsSchedulers,
+    override val rh: ResourceHelper,
     private val context: Context,
     private val dateUtil: DateUtil,
-    private val fabricPrivacy: FabricPrivacy,
     private val rxBus: RxBus,
     private val iobCobCalculator: IobCobCalculator,
     private val processedTbrEbData: ProcessedTbrEbData,
@@ -74,27 +70,23 @@ class TizenPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .icon(IcPluginTizen)
-        .pluginName(R.string.tizen)
-        .shortName(R.string.tizen_short)
-        .description(R.string.tizen_description),
+        .pluginName(TextRef.AndroidRes(R.string.tizen))
+        .shortName(TextRef.AndroidRes(R.string.tizen_short))
+        .description(TextRef.AndroidRes(R.string.tizen_description)),
     aapsLogger, rh
 ) {
 
-    private val disposable = CompositeDisposable()
     private var scope: CoroutineScope? = null
 
     override suspend fun onStart() {
         super.onStart()
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
-        disposable += rxBus
-            .toObservable(EventLoopUpdateGui::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ sendData(it) }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventAutosensCalculationFinished::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ sendData(it) }, fabricPrivacy::logException)
+        // newScope is Dispatchers.IO, matching the scheduler these subscriptions used before.
+        rxBus.toFlow(EventLoopUpdateGui::class)
+            .collectResilient(newScope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) { sendData(it) }
+        rxBus.toFlow(EventAutosensCalculationFinished::class)
+            .collectResilient(newScope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) { sendData(it) }
         bolusProgressData.state
             .collectResilient(newScope, aapsLogger, LTag.CORE) { state ->
                 if (state != null && !state.isSMB) {
@@ -104,7 +96,6 @@ class TizenPlugin @Inject constructor(
     }
 
     override suspend fun onStop() {
-        disposable.clear()
         scope?.cancel()
         scope = null
         super.onStop()
@@ -120,7 +111,7 @@ class TizenPlugin @Inject constructor(
         bolusProgressData.state.value?.let { state ->
             if (!state.isSMB) {
                 bundle.putInt("progressPercent", state.percent)
-                bundle.putString("progressStatus", state.status)
+                bundle.putString("progressStatus", rh.gs(state.status))
             }
         }
     }

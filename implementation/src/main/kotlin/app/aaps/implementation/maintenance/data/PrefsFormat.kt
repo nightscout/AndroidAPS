@@ -9,8 +9,6 @@ import androidx.documentfile.provider.DocumentFile
 import app.aaps.core.interfaces.maintenance.PrefMetadataMap
 import app.aaps.core.interfaces.maintenance.Prefs
 import app.aaps.core.interfaces.maintenance.PrefsStatus
-import kotlinx.parcelize.IgnoredOnParcel
-import kotlinx.parcelize.Parcelize
 
 interface PrefsFormat {
     companion object {
@@ -24,12 +22,10 @@ interface PrefsFormat {
     fun isPreferencesFile(file: DocumentFile, preloadedContents: String? = null): Boolean
 }
 
-@Parcelize
 enum class PrefsStatusImpl : PrefsStatus {
 
     OK, WARN, ERROR, UNKNOWN, DISABLED;
 
-    @IgnoredOnParcel
     override val icon: ImageVector
         get() = when (this) {
             OK                       -> Icons.Default.Check

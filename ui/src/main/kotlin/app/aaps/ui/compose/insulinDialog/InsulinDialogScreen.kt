@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.insulinDialog
 
+import app.aaps.core.ui.compose.stringResourceOrNull
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -52,6 +53,7 @@ import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.DateTimeSection
 import app.aaps.core.ui.compose.InsulinSelector
@@ -60,7 +62,7 @@ import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
-import app.aaps.core.ui.compose.navigation.labelResId
+import app.aaps.core.ui.compose.navigation.label
 import app.aaps.core.ui.compose.preference.PreferenceSheetContent
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.ui.compose.EventDatePicker
@@ -70,8 +72,8 @@ import app.aaps.ui.compose.overview.chips.CobUiState
 import app.aaps.ui.compose.overview.chips.IobUiState
 import app.aaps.ui.compose.overview.graphs.BgInfoUiState
 import kotlinx.coroutines.flow.StateFlow
-import app.aaps.core.keys.R as KeysR
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.core.interfaces.R as InterfacesR
 
 @Composable
 fun InsulinDialogScreen(
@@ -225,7 +227,7 @@ internal fun InsulinDialogContent(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(ElementType.INSULIN.labelResId())) },
+                title = { Text((stringResourceOrNull(ElementType.INSULIN.label()) ?: "")) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
@@ -266,7 +268,7 @@ internal fun InsulinDialogContent(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 if (uiState.insulin > 0.0) {
-                    Text(stringResource(CoreUiR.string.format_insulin_units, uiState.insulin))
+                    Text(stringResource(InterfacesR.string.format_insulin_units, uiState.insulin))
                 } else {
                     Text(stringResource(CoreUiR.string.ok))
                 }
@@ -328,7 +330,7 @@ internal fun InsulinDialogContent(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = stringResource(CoreUiR.string.bolus_recorded_only),
+                            text = stringResource(InterfacesR.string.bolus_recorded_only),
                             style = MaterialTheme.typography.bodyLarge,
                             color = if (uiState.forcedRecordOnly) MaterialTheme.colorScheme.error
                             else MaterialTheme.colorScheme.onSurface,
@@ -356,7 +358,7 @@ internal fun InsulinDialogContent(
                         valueRange = 0.0..uiState.maxInsulin,
                         step = uiState.bolusStep,
                         valueFormat = bolusFormat,
-                        unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname)
+                        unitLabel = TextRef.AndroidRes(CoreUiR.string.insulin_unit_shortname)
                     )
                     InsulinQuickAddButtons(
                         increment1 = uiState.insulinButtonIncrement1,
@@ -403,7 +405,7 @@ internal fun InsulinDialogContent(
                             onValueChange = onTimeOffsetChange,
                             valueRange = -12.0 * 60..12.0 * 60,
                             step = 5.0,
-                            unitLabelResId = KeysR.string.units_min
+                            unitLabel = TextRef.AndroidRes(CoreUiR.string.units_min)
                         )
                         DateTimeSection(
                             dateString = dateString,

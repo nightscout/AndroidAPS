@@ -5,15 +5,16 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.ui.compose.icons.IcAs
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.utils.JsonHelper.safeGetDouble
-import app.aaps.core.utils.JsonHelper.safeGetString
+import app.aaps.core.utils.lenientDouble
+import app.aaps.core.utils.lenientStringOrNull
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
-import dagger.android.HasAndroidInjector
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
-class TriggerAutosensValue(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerAutosensValue(deps: TriggerDeps) : Trigger(deps) {
 
     private val minValue = (preferences.get(DoubleKey.AutosensMin) * 100).toInt()
     private val maxValue = (preferences.get(DoubleKey.AutosensMax) * 100).toInt()
@@ -23,7 +24,7 @@ class TriggerAutosensValue(injector: HasAndroidInjector) : Trigger(injector) {
 
     var comparator: Comparator = Comparator(rh)
 
-    private constructor(injector: HasAndroidInjector, triggerAutosensValue: TriggerAutosensValue) : this(injector) {
+    private constructor(deps: TriggerDeps, triggerAutosensValue: TriggerAutosensValue) : this(deps) {
         autosens = InputDouble(triggerAutosensValue.autosens)
         comparator = Comparator(rh, triggerAutosensValue.comparator.value)
     }
@@ -45,15 +46,16 @@ class TriggerAutosensValue(injector: HasAndroidInjector) : Trigger(injector) {
         return false
     }
 
-    override fun dataJSON(): JSONObject =
-        JSONObject()
-            .put("value", autosens.value)
-            .put("comparator", comparator.value.toString())
+    override fun dataJSON(): JsonObject =
+        buildJsonObject {
+            put("value", autosens.value)
+            put("comparator", comparator.value.toString())
+        }
 
     override fun fromJSON(data: String): Trigger {
-        val d = JSONObject(data)
-        autosens.setValue(safeGetDouble(d, "value"))
-        comparator.setValue(Comparator.Compare.valueOf(safeGetString(d, "comparator")!!))
+        val d = jsonOf(data)
+        autosens.setValue(d.lenientDouble("value"))
+        comparator.setValue(Comparator.Compare.valueOf(d.lenientStringOrNull("comparator")!!))
         return this
     }
 
@@ -65,6 +67,6 @@ class TriggerAutosensValue(injector: HasAndroidInjector) : Trigger(injector) {
     override fun composeIcon() = IcAs
     override fun elementType() = ElementType.SENSITIVITY
 
-    override fun duplicate(): Trigger = TriggerAutosensValue(injector, this)
+    override fun duplicate(): Trigger = TriggerAutosensValue(deps, this)
 
 }

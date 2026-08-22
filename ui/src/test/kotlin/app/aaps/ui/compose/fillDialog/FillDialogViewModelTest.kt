@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.fillDialog
 
+import app.aaps.core.keys.interfaces.TextRef
 import androidx.lifecycle.SavedStateHandle
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.interfaces.bolus.BatchExecutor
@@ -109,6 +110,7 @@ internal class FillDialogViewModelTest {
      */
     private fun stubStrings() {
         whenever(rh.gs(any<Int>())).thenReturn("s")
+        whenever(rh.gs(any<TextRef>())).thenReturn("s")
         whenever(rh.gs(any<Int>(), anyOrNull())).thenReturn("s")
         whenever(rh.gs(any<Int>(), anyOrNull(), anyOrNull())).thenReturn("s")
         whenever(rh.gs(CoreUiR.string.insulin_activation_unconfirmed)).thenReturn("UNCONFIRMED")

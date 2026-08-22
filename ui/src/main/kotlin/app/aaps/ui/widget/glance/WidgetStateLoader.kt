@@ -24,7 +24,7 @@ import app.aaps.core.keys.BooleanComposedKey
 import app.aaps.core.keys.IntComposedKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.apsAdjustedTargetMgdl
-import app.aaps.core.objects.extensions.displayText
+import app.aaps.core.ui.extensions.displayText
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.compose.DarkGeneralColors
@@ -63,9 +63,9 @@ class WidgetStateLoader @Inject constructor(
         val bgText = lastBg?.let { profileUtil.fromMgdlToStringInUnits(it.recalculated) }
             ?: rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
         val bgColor = when {
-            lastBgData.isLow()  -> rh.gc(app.aaps.core.ui.R.color.widget_low)
-            lastBgData.isHigh() -> rh.gc(app.aaps.core.ui.R.color.widget_high)
-            else                -> rh.gc(app.aaps.core.ui.R.color.widget_inrange)
+            lastBgData.isLow()  -> BgGraphColors.WIDGET.low
+            lastBgData.isHigh() -> BgGraphColors.WIDGET.high
+            else                -> BgGraphColors.WIDGET.inRange
         }
         val strikeThrough = !lastBgData.isActualBg()
 
@@ -80,7 +80,7 @@ class WidgetStateLoader @Inject constructor(
         val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
         val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
         val iobTotal = bolusIob.iob + basalIob.basaliob
-        val iobText = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, iobTotal)
+        val iobText = rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, iobTotal)
         val iobActive = abs(iobTotal) > 0.001
 
         val cobInfo = iobCobCalculator.getCobInfo("Overview COB")

@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.actions
 
+import javax.inject.Provider
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -12,25 +14,30 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.icons.IcPluginAutotune
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.elements.WeekDay
-import app.aaps.core.utils.JsonHelper
+import app.aaps.core.utils.lenientBoolean
+import app.aaps.core.utils.lenientInt
+import app.aaps.core.utils.lenientString
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputDuration
 import app.aaps.plugins.automation.elements.InputProfileName
 import app.aaps.plugins.automation.elements.InputWeekDay
-import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import org.json.JSONObject
-import javax.inject.Inject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
-class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
+class ActionRunAutotune(
+    aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val resourceHelper: ResourceHelper,
+    private val autotunePlugin: Autotune,
+    private val profileFunction: ProfileFunction,
+    private val activePlugin: ActivePlugin,
+    private val preferences: Preferences
+) : Action(aapsLogger, rh, pumpEnactResultProvider) {
 
-    @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var autotunePlugin: Autotune
-    @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var preferences: Preferences
 
     private var defaultValue = 0
     private var inputProfileName = InputProfileName("")
@@ -68,29 +75,30 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
     override fun hasDialog(): Boolean = true
 
     override fun toJSON(): String {
-        val data = JSONObject()
-            .put("profileToTune", inputProfileName.value)
-            .put("tunedays", daysBack.value)
-        for (i in days.weekdays.indices) {
-            data.put(WeekDay.DayOfWeek.entries[i].name, days.weekdays[i])
+        val data = buildJsonObject {
+            put("profileToTune", inputProfileName.value)
+            put("tunedays", daysBack.value)
+            for (i in days.weekdays.indices) {
+                put(WeekDay.DayOfWeek.entries[i].name, days.weekdays[i])
+            }
         }
-        return JSONObject()
-            .put("type", this.javaClass.simpleName)
-            .put("data", data)
-            .toString()
+        return buildJsonObject {
+            put("type", this@ActionRunAutotune.javaClass.simpleName)
+            put("data", data)
+        }.toString()
     }
 
     override fun fromJSON(data: String): Action {
-        val o = JSONObject(data)
+        val o = jsonOf(data)
         for (i in days.weekdays.indices)
-            days.weekdays[i] = JsonHelper.safeGetBoolean(o, WeekDay.DayOfWeek.entries[i].name, true)
-        inputProfileName.value = JsonHelper.safeGetString(o, "profileToTune", "")
-        defaultValue = JsonHelper.safeGetInt(o, "tunedays")
+            days.weekdays[i] = o.lenientBoolean(WeekDay.DayOfWeek.entries[i].name, true)
+        inputProfileName.value = o.lenientString("profileToTune", "")
+        defaultValue = o.lenientInt("tunedays")
         if (defaultValue == 0)
             defaultValue = preferences.get(IntKey.AutotuneDefaultTuneDays)
         daysBack.value = defaultValue
         return this
     }
 
-    override fun isValid(): Boolean = runBlocking { profileFunction.getProfile() } != null && activePlugin.getSpecificPluginsListByInterface(Autotune::class.java).first().isEnabled()
+    override fun isValid(): Boolean = runBlocking { profileFunction.getProfile() } != null && activePlugin.getSpecificPluginsListByInterface(Autotune::class).first().isEnabled()
 }

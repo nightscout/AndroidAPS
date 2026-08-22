@@ -1,5 +1,6 @@
 package app.aaps.implementation.insulin
 
+import kotlin.reflect.KClass
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.interfaces.R
@@ -11,7 +12,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.objects.extensions.iobCalc
+import app.aaps.core.data.model.iobCalc
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -45,7 +46,7 @@ class InsulinImplTest : TestBase() {
         // dia 5.0 h, Peak 30 min
         insulinConfiguration = "{\"insulin\":[{\"insulinLabel\":\"test\",\"insulinEndTime\":18000000,\"insulinPeakTime\":1800000,\"concentration\":1.0}]}"
         whenever(preferences.get(StringNonKey.InsulinConfiguration)).thenReturn(insulinConfiguration)
-        whenever(persistenceLayer.observeChanges(any<Class<*>>())).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(any<KClass<*>>())).thenReturn(emptyFlow())
         // Mock rh.gs() for nickname resolution (OREF_FREE_PEAK template) and buildSuffix (U100 concentration)
         whenever(rh.gs(eq(R.string.free_peak_oref))).thenReturn("Free-Peak Oref")
         whenever(rh.gs(eq(R.string.u100))).thenReturn("U100")

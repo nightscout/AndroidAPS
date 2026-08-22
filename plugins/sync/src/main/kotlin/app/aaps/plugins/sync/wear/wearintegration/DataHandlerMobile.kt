@@ -51,8 +51,9 @@ import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.chunkedOnQuietPeriod
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.rx.events.EventWearUpdateGui
@@ -84,28 +85,28 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.apsAdjustedTargetMgdl
 import app.aaps.core.objects.extensions.convertedToAbsolute
-import app.aaps.core.objects.extensions.generateCOBString
+import app.aaps.core.ui.extensions.generateCOBString
 import app.aaps.core.objects.extensions.round
-import app.aaps.core.objects.extensions.toStringShort
+import app.aaps.core.ui.extensions.toStringShort
 import app.aaps.core.objects.extensions.valueToUnits
 import app.aaps.core.objects.runningMode.PumpCommandGate
 import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.core.objects.wizard.QuickWizardMode
-import app.aaps.core.ui.clientcontrol.failTextResId
+import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.core.ui.compose.DarkGeneralColors
 import app.aaps.core.ui.compose.LightGeneralColors
 import app.aaps.plugins.sync.R
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
-import kotlinx.coroutines.rx3.rxCompletable
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.LinkedList
 import java.util.Locale
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
@@ -117,7 +118,6 @@ private const val HEALTH_EVENT_QUIET_PERIOD_MS = 500L
 
 @Singleton
 class DataHandlerMobile @Inject constructor(
-    private val aapsSchedulers: AapsSchedulers,
     private val context: Context,
     private val rxBus: RxBus,
     private val aapsLogger: AAPSLogger,
@@ -158,7 +158,11 @@ class DataHandlerMobile @Inject constructor(
     @Inject lateinit var automation: Automation
     @Inject lateinit var scenes: SceneAutomationApi
     @Inject lateinit var sceneActions: SceneActions
-    private val disposable = CompositeDisposable()
+
+    // App lifetime: this is a @Singleton that subscribes in init and
+    // never tears down. Dispatchers.IO because that is what the io scheduler gave these handlers, and
+    // they do database and broadcast work - the Default pool would be the wrong one.
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     /**
      * Registers a serialized suspend [handler] for one [EventData] subtype arriving from Wear.
@@ -168,18 +172,18 @@ class DataHandlerMobile @Inject constructor(
      * are logged and swallowed so a single failing event can't tear the subscription down.
      */
     private inline fun <reified T : EventData> onEvent(crossinline handler: suspend (T) -> Unit) {
-        disposable += rxBus
-            .toObservable(T::class.java)
-            .observeOn(aapsSchedulers.io)
-            .concatMapCompletable { event ->
-                rxCompletable {
-                    aapsLogger.debug(LTag.WEAR, "${T::class.java.simpleName} received from ${event.sourceNodeId}")
-                    handler(event)
-                }
-                    .doOnError(fabricPrivacy::logException)
-                    .onErrorComplete()
+        // concatMapCompletable serialized same-type events; a Flow collector is sequential by
+        // construction, so that ordering survives without an operator, and one collector per type keeps
+        // different types independent as before. collectResilient logs and continues, which is what
+        // doOnError + onErrorComplete did.
+        //
+        // UNDISPATCHED is required, not cosmetic: these subscribe from init on a replay-0 bus, so a
+        // scheduled collector would drop anything sent before it started.
+        rxBus.toFlow(T::class)
+            .collectResilient(scope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { event ->
+                aapsLogger.debug(LTag.WEAR, "${T::class.java.simpleName} received from ${event.sourceNodeId}")
+                handler(event)
             }
-            .subscribe()
     }
 
     /**
@@ -191,13 +195,11 @@ class DataHandlerMobile @Inject constructor(
         crossinline detail: (T) -> String = { "" },
         crossinline handler: (T) -> Unit
     ) {
-        disposable += rxBus
-            .toObservable(T::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           aapsLogger.debug(LTag.WEAR, "${T::class.java.simpleName} received from ${it.sourceNodeId}${detail(it)}")
-                           handler(it)
-                       }, fabricPrivacy::logException)
+        rxBus.toFlow(T::class)
+            .collectResilient(scope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) {
+                aapsLogger.debug(LTag.WEAR, "${T::class.java.simpleName} received from ${it.sourceNodeId}${detail(it)}")
+                handler(it)
+            }
     }
 
     init {
@@ -335,27 +337,16 @@ class DataHandlerMobile @Inject constructor(
         onEventSync<EventData.SnoozeAlert> { uiInteraction.stopAlarm("Muted from wear") }
         onEventSync<EventData.WearException> { fabricPrivacy.logWearException(it) }
         // Coalesce Wear reconnect-flush bursts (Data Layer replays queued events back-to-back).
-        // publish/debounce keeps the timer idle when no events arrive, unlike fixed-window buffer().
-        disposable += rxBus
-            .toObservable(EventData.ActionHeartRate::class.java)
-            .publish { shared -> shared.buffer(shared.debounce(HEALTH_EVENT_QUIET_PERIOD_MS, TimeUnit.MILLISECONDS, aapsSchedulers.io)) }
-            .observeOn(aapsSchedulers.io)
-            .concatMapCompletable {
-                rxCompletable { handleHeartRateBatch(it) }
-                    .doOnError(fabricPrivacy::logException)
-                    .onErrorComplete()
-            }
-            .subscribe()
-        disposable += rxBus
-            .toObservable(EventData.ActionStepsRate::class.java)
-            .publish { shared -> shared.buffer(shared.debounce(HEALTH_EVENT_QUIET_PERIOD_MS, TimeUnit.MILLISECONDS, aapsSchedulers.io)) }
-            .observeOn(aapsSchedulers.io)
-            .concatMapCompletable {
-                rxCompletable { handleStepsCountBatch(it) }
-                    .doOnError(fabricPrivacy::logException)
-                    .onErrorComplete()
-            }
-            .subscribe()
+        // chunkedOnQuietPeriod keeps the timer idle when no events arrive, unlike a fixed window.
+        // The collector is sequential, so batches are still handled one after another the way
+        // concatMapCompletable did, and collectResilient logs and continues like doOnError +
+        // onErrorComplete.
+        rxBus.toFlow(EventData.ActionHeartRate::class)
+            .chunkedOnQuietPeriod(HEALTH_EVENT_QUIET_PERIOD_MS)
+            .collectResilient(scope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { handleHeartRateBatch(it) }
+        rxBus.toFlow(EventData.ActionStepsRate::class)
+            .chunkedOnQuietPeriod(HEALTH_EVENT_QUIET_PERIOD_MS)
+            .collectResilient(scope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { handleStepsCountBatch(it) }
         onEventSync<EventData.ActionGetCustomWatchface>(detail = { " watchface=${it.customWatchface}" }) { handleGetCustomWatchface(it) }
     }
 
@@ -716,7 +707,7 @@ class DataHandlerMobile @Inject constructor(
                     recordOnly = false, notes = entry.buttonText(), timestamp = 0L, iCfg = null,
                     quickWizardGuid = command.guid // the MASTER marks the entry used on commit (SOT) — no local pref write
                 ),
-                label = rh.gs(app.aaps.core.ui.R.string.bolus)
+                label = rh.gs(app.aaps.core.interfaces.R.string.bolus)
             ) { bolusId -> EventData.ActionBolusConfirmed(bolusId) }
 
             QuickWizardMode.CARBS   -> {
@@ -730,7 +721,7 @@ class DataHandlerMobile @Inject constructor(
                         eCarbsDurationHours = if (hasEcarbs) entry.duration() else 0,
                         quickWizardGuid = command.guid // the MASTER marks the entry used on commit (SOT) — no local pref write
                     ),
-                    label = rh.gs(app.aaps.core.ui.R.string.carbs)
+                    label = rh.gs(app.aaps.core.interfaces.R.string.carbs)
                 ) { bolusId -> EventData.ActionBolusConfirmed(bolusId) }
             }
 
@@ -841,7 +832,7 @@ class DataHandlerMobile @Inject constructor(
      */
     private fun relayReason(progress: ActionProgress): String = when (progress) {
         is ActionProgress.Unconfirmed -> rh.gs(app.aaps.core.ui.R.string.clientcontrol_unconfirmed_wear)
-        is ActionProgress.Rejected    -> progress.detail ?: rh.gs(progress.reason.failTextResId())
+        is ActionProgress.Rejected    -> progress.detail ?: rh.gs(progress.reason.failText())
         else                          -> rh.gs(app.aaps.core.ui.R.string.error)
     }
 
@@ -1467,11 +1458,11 @@ class DataHandlerMobile @Inject constructor(
         val out = mutableListOf(ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(app.aaps.core.ui.R.string.loopstatus_targets)))
         persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())?.let { tt ->
             // Show the full low–high range (was passing lowTarget twice — a range TT only showed its low bound).
-            out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(app.aaps.core.ui.R.string.confirmation_line, rh.gs(R.string.temp_target), profileUtil.toTargetRangeString(tt.lowTarget, tt.highTarget, GlucoseUnit.MGDL)))
-            out += ConfirmationLine(ConfirmationRole.INFO, rh.gs(app.aaps.core.ui.R.string.confirmation_line, rh.gs(R.string.until), dateUtil.timeString(tt.end)))
+            out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, rh.gs(R.string.temp_target), profileUtil.toTargetRangeString(tt.lowTarget, tt.highTarget, GlucoseUnit.MGDL)))
+            out += ConfirmationLine(ConfirmationRole.INFO, rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, rh.gs(R.string.until), dateUtil.timeString(tt.end)))
         }
-        out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(app.aaps.core.ui.R.string.confirmation_line, rh.gs(R.string.default_range), profileUtil.toTargetRangeString(profile.getTargetLowMgdl(), profile.getTargetHighMgdl(), GlucoseUnit.MGDL)))
-        out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(app.aaps.core.ui.R.string.confirmation_line, rh.gs(R.string.target), profileUtil.fromMgdlToStringInUnits(profile.getTargetMgdl())))
+        out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, rh.gs(R.string.default_range), profileUtil.toTargetRangeString(profile.getTargetLowMgdl(), profile.getTargetHighMgdl(), GlucoseUnit.MGDL)))
+        out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, rh.gs(R.string.target), profileUtil.fromMgdlToStringInUnits(profile.getTargetMgdl())))
         return out
     }
 
@@ -1486,7 +1477,7 @@ class DataHandlerMobile @Inject constructor(
             result.rate == 0.0 && result.duration == 0 -> ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(app.aaps.core.ui.R.string.cancel_temp))
             else                                       -> ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(R.string.rate_duration, result.rate, result.rate / ch.fromPump(activePlugin.activePump.baseBasalRate) * 100, result.duration))
         }
-        out += ConfirmationLine(ConfirmationRole.INFO, rh.gs(app.aaps.core.ui.R.string.confirmation_line, rh.gs(app.aaps.core.ui.R.string.reason), result.reason))
+        out += ConfirmationLine(ConfirmationRole.INFO, rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, rh.gs(app.aaps.core.ui.R.string.reason), result.reason))
         return out
     }
 
@@ -1505,10 +1496,10 @@ class DataHandlerMobile @Inject constructor(
             }
         }
         if (rm.isLoopRunning()) {
-            out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(app.aaps.core.ui.R.string.confirmation_line, rh.gs(R.string.aps), (activePlugin.activeAPS as? PluginBase)?.name ?: ""))
+            out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, rh.gs(R.string.aps), (activePlugin.activeAPS as? PluginBase)?.name ?: ""))
             loop.lastRun?.let { lastRun ->
-                out += ConfirmationLine(ConfirmationRole.INFO, rh.gs(app.aaps.core.ui.R.string.confirmation_line, rh.gs(R.string.last_run), dateUtil.timeString(lastRun.lastAPSRun)))
-                if (lastRun.lastTBREnact != 0L) out += ConfirmationLine(ConfirmationRole.INFO, rh.gs(app.aaps.core.ui.R.string.confirmation_line, rh.gs(R.string.last_enact), dateUtil.timeString(lastRun.lastTBREnact)))
+                out += ConfirmationLine(ConfirmationRole.INFO, rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, rh.gs(R.string.last_run), dateUtil.timeString(lastRun.lastAPSRun)))
+                if (lastRun.lastTBREnact != 0L) out += ConfirmationLine(ConfirmationRole.INFO, rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, rh.gs(R.string.last_enact), dateUtil.timeString(lastRun.lastTBREnact)))
             }
         }
         return out

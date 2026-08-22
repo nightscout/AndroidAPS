@@ -42,6 +42,8 @@ import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.objects.extensions.iobCalc
+import app.aaps.core.objects.extensions.isInProgress
+import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDateUtil
@@ -127,7 +129,7 @@ fun TempBasalScreen(
                     itemContent = { tb ->
                         TempBasalItem(
                             tempBasal = tb,
-                            isActive = tb.isInProgress,
+                            isActive = tb.isInProgress(viewModel.dateUtil),
                             isFuture = tb.timestamp > viewModel.dateUtil.now(),
                             isRemovingMode = uiState.isRemovingMode,
                             isSelected = tb in uiState.selectedItems,
@@ -218,14 +220,14 @@ private fun TempBasalItem(
                             )
                         ) {
                             append("(")
-                            append(stringResource(app.aaps.core.ui.R.string.format_insulin_units, iob.basaliob))
+                            append(stringResource(app.aaps.core.interfaces.R.string.format_insulin_units, iob.basaliob))
                             append(")")
                         }
                     }
                     append(" ")
                     // Duration
                     append(T.msecs(tempBasal.duration).mins().toInt().toString())
-                    append(stringResource(app.aaps.core.keys.R.string.units_min))
+                    append(stringResource(CoreUiR.string.units_min))
                 },
                 modifier = Modifier.padding(start = 4.dp),
                 fontSize = 14.sp,

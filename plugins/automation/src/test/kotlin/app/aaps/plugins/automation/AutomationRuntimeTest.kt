@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation
 
+import app.aaps.core.interfaces.alerts.ReminderScheduler
 import android.Manifest
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.AutomationEvent
@@ -8,10 +9,12 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.plugins.automation.actions.Action
-import app.aaps.plugins.automation.services.LocationServiceHelper
+import app.aaps.core.interfaces.location.LocationServiceController
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.triggers.TriggerConnector
 import app.aaps.plugins.automation.triggers.TriggerLocation
+import app.aaps.plugins.automation.triggers.TriggerDeps
+import app.aaps.plugins.automation.triggers.TriggerFactory
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -30,29 +33,33 @@ import org.mockito.kotlin.whenever
 
 class AutomationRuntimeTest : TestBaseWithProfile() {
 
+@Mock lateinit var actionFactory: app.aaps.plugins.automation.actions.ActionFactory
+    private val triggerFactory: TriggerFactory by lazy {
+        TriggerFactory(triggerDeps, context, mock(), sceneApi, receiverStatusStore)
+    }
+    // Real, not mocked: the runtime rebuilds triggers from JSON, and a mocked bundle would hand
+    // nulls to element constructors that require them.
+    private val triggerDeps: TriggerDeps by lazy {
+        TriggerDeps(
+            aapsLogger, rxBus, rh, profileFunction, profileUtil, preferences, mock(), mock(),
+            activePlugin, iobCobCalculator, smbGlucoseStatusProvider, dateUtil
+        ) { triggerFactory }
+    }
     @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var loop: Loop
-    @Mock lateinit var locationServiceHelper: LocationServiceHelper
-    @Mock lateinit var timerUtil: TimerUtil
+    @Mock lateinit var locationServiceController: LocationServiceController
+    @Mock lateinit var reminderScheduler: ReminderScheduler
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var sceneApi: SceneAutomationApi
+    private val eventFactory by lazy { AutomationEventFactory(aapsLogger, dateUtil, actionFactory, triggerFactory, triggerDeps) }
     private lateinit var automationRuntime: AutomationRuntime
 
-    init {
-        // Triggers read injected fields (e.g. rh) in their constructors.
-        addInjector {
-            if (it is Trigger) {
-                it.rh = rh
-                it.aapsLogger = aapsLogger
-            }
-        }
-    }
 
     @BeforeEach fun prepare() {
         automationRuntime = AutomationRuntime(
-            injector, aapsLogger, rh, preferences, context, fabricPrivacy, loop, rxBus, constraintChecker,
-            aapsSchedulers, config, locationServiceHelper, dateUtil, activePlugin, timerUtil, receiverStatusStore,
+            eventFactory, aapsLogger, rh, preferences, context, fabricPrivacy, loop, rxBus, constraintChecker,
+            aapsSchedulers, config, locationServiceController, dateUtil, activePlugin, reminderScheduler, actionFactory, triggerFactory, triggerDeps, receiverStatusStore,
             uel, profileRepository, sceneApi
         )
     }
@@ -60,9 +67,9 @@ class AutomationRuntimeTest : TestBaseWithProfile() {
     private fun addLocationEvent() {
         // usesLocationTrigger() only does `is TriggerLocation` type checks, so the trigger's
         // injected fields don't need to be populated here.
-        val event = AutomationEventObject(injector).apply {
+        val event = eventFactory.newEvent().apply {
             isEnabled = true
-            trigger = TriggerConnector(injector).also { it.list.add(TriggerLocation(injector)) }
+            trigger = TriggerConnector(triggerDeps).also { it.list.add(TriggerLocation(triggerDeps)) }
         }
         automationRuntime.add(event)
     }
@@ -102,7 +109,7 @@ class AutomationRuntimeTest : TestBaseWithProfile() {
         val action = mock<Action>()
         // Default (empty) trigger -> canRun()/preconditionCanRun() would both be true on master, so
         // the only thing stopping execution here is the master-only guard at the top of processEvent.
-        val event = AutomationEventObject(injector).apply { actions.add(action) }
+        val event = eventFactory.newEvent().apply { actions.add(action) }
         automationRuntime.processEvent(event)
         verifyNoInteractions(action) // guard returned before the actions loop
     }

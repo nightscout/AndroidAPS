@@ -4,25 +4,28 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.ui.compose.icons.IcTtManual
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.utils.JsonHelper
+import app.aaps.core.utils.lenientDouble
+import app.aaps.core.utils.lenientString
+import app.aaps.core.utils.lenientStringOrNull
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputBg
-import dagger.android.HasAndroidInjector
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import kotlin.math.roundToInt
 
-class TriggerTempTargetValue(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerTempTargetValue(deps: TriggerDeps) : Trigger(deps) {
 
     var ttValue = InputBg(profileFunction)
     var comparator = Comparator(rh)
 
-    constructor(injector: HasAndroidInjector, value: Double, units: GlucoseUnit, compare: Comparator.Compare) : this(injector) {
+    constructor(deps: TriggerDeps, value: Double, units: GlucoseUnit, compare: Comparator.Compare) : this(deps) {
         ttValue = InputBg(profileFunction, value, units)
         comparator = Comparator(rh, compare)
     }
 
-    constructor(injector: HasAndroidInjector, triggerTempTarget: TriggerTempTargetValue) : this(injector) {
+    constructor(deps: TriggerDeps, triggerTempTarget: TriggerTempTargetValue) : this(deps) {
         ttValue = InputBg(profileFunction, triggerTempTarget.ttValue.value, triggerTempTarget.ttValue.units)
         comparator = Comparator(rh, triggerTempTarget.comparator.value)
     }
@@ -56,17 +59,18 @@ class TriggerTempTargetValue(injector: HasAndroidInjector) : Trigger(injector) {
         return false
     }
 
-    override fun dataJSON(): JSONObject =
-        JSONObject()
-            .put("tt", ttValue.value)
-            .put("comparator", comparator.value.toString())
-            .put("units", ttValue.units.asText)
+    override fun dataJSON(): JsonObject =
+        buildJsonObject {
+            put("tt", ttValue.value)
+            put("comparator", comparator.value.toString())
+            put("units", ttValue.units.asText)
+        }
 
     override fun fromJSON(data: String): Trigger {
-        val d = JSONObject(data)
-        ttValue.setUnits(GlucoseUnit.fromText(JsonHelper.safeGetString(d, "units", GlucoseUnit.MGDL.asText)))
-        ttValue.value = JsonHelper.safeGetDouble(d, "tt")
-        comparator.setValue(Comparator.Compare.valueOf(JsonHelper.safeGetString(d, "comparator")!!))
+        val d = jsonOf(data)
+        ttValue.setUnits(GlucoseUnit.fromText(d.lenientString("units", GlucoseUnit.MGDL.asText)))
+        ttValue.value = d.lenientDouble("tt")
+        comparator.setValue(Comparator.Compare.valueOf(d.lenientStringOrNull("comparator")!!))
         return this
     }
 
@@ -82,6 +86,6 @@ class TriggerTempTargetValue(injector: HasAndroidInjector) : Trigger(injector) {
     override fun composeIcon() = IcTtManual
     override fun elementType() = ElementType.TEMP_TARGET_MANAGEMENT
 
-    override fun duplicate(): Trigger = TriggerTempTargetValue(injector, this)
+    override fun duplicate(): Trigger = TriggerTempTargetValue(deps, this)
 
 }

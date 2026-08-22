@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.quickWizard
 
+import app.aaps.core.ui.compose.stringResourceOrNull
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
@@ -59,7 +60,7 @@ import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.masterEditingEnabled
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.ui.compose.navigation.labelResId
+import app.aaps.core.ui.compose.navigation.label
 import app.aaps.ui.R
 import app.aaps.ui.compose.components.CarouselReorderConfig
 import app.aaps.ui.compose.components.ContentContainer
@@ -215,7 +216,7 @@ fun QuickWizardManagementScreen(
                     )
                 } else {
                     AapsTopAppBar(
-                        title = { Text(stringResource(ElementType.QUICK_WIZARD_MANAGEMENT.labelResId())) },
+                        title = { Text((stringResourceOrNull(ElementType.QUICK_WIZARD_MANAGEMENT.label()) ?: "")) },
                         navigationIcon = {
                             IconButton(onClick = {
                                 if (!isPlayMode && viewModel.hasUnsavedChanges()) {

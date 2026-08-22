@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.actions
 
+import javax.inject.Provider
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.logging.AAPSLogger
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import app.aaps.core.interfaces.pump.PumpEnactResult
@@ -7,26 +10,32 @@ import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.scenes.SceneAutomationResult
 import app.aaps.core.interfaces.scenes.SceneIconResolver
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.utils.JsonHelper
+import app.aaps.core.utils.lenientString
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.ComparatorExists
 import app.aaps.plugins.automation.elements.InputSceneName
+import app.aaps.plugins.automation.triggers.TriggerDeps
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.triggers.TriggerSceneActive
-import dagger.android.HasAndroidInjector
-import org.json.JSONObject
-import javax.inject.Inject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
-class ActionRunScene(injector: HasAndroidInjector) : Action(injector) {
+class ActionRunScene(
+    aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val sceneApi: SceneAutomationApi,
+    private val sceneIconResolver: SceneIconResolver,
+    // Only to build the Trigger precondition below.
+    private val triggerDeps: TriggerDeps
+) : Action(aapsLogger, rh, pumpEnactResultProvider) {
 
-    @Inject lateinit var sceneApi: SceneAutomationApi
-    @Inject lateinit var sceneIconResolver: SceneIconResolver
 
     var scene: InputSceneName = InputSceneName()
 
     // Skip activation if a scene is already running — don't overwrite a manually
     // activated scene the user may be relying on.
-    override var precondition: Trigger? = TriggerSceneActive(injector, ComparatorExists.Compare.NOT_EXISTS)
+    override var precondition: Trigger? = TriggerSceneActive(triggerDeps, sceneApi, ComparatorExists.Compare.NOT_EXISTS)
 
     override fun friendlyName(): Int = R.string.action_run_scene
     override fun shortDescription(): String =
@@ -61,16 +70,16 @@ class ActionRunScene(injector: HasAndroidInjector) : Action(injector) {
     override fun hasDialog(): Boolean = true
 
     override fun toJSON(): String {
-        val data = JSONObject().put("sceneId", scene.value)
-        return JSONObject()
-            .put("type", this.javaClass.simpleName)
-            .put("data", data)
-            .toString()
+        val data = buildJsonObject { put("sceneId", scene.value) }
+        return buildJsonObject {
+            put("type", this@ActionRunScene.javaClass.simpleName)
+            put("data", data)
+        }.toString()
     }
 
     override fun fromJSON(data: String): Action {
-        val o = JSONObject(data)
-        scene.value = JsonHelper.safeGetString(o, "sceneId", "")
+        val o = jsonOf(data)
+        scene.value = o.lenientString("sceneId", "")
         return this
     }
 

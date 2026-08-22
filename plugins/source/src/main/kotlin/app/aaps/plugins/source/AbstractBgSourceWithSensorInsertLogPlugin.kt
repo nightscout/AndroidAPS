@@ -12,7 +12,7 @@ import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 
 abstract class AbstractBgSourceWithSensorInsertLogPlugin(
     pluginDescription: PluginDescription,
-    ownPreferences: List<Class<out NonPreferenceKey>> = emptyList(),
+    ownPreferences: List<NonPreferenceKey> = emptyList(),
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     preferences: Preferences,
@@ -20,7 +20,8 @@ abstract class AbstractBgSourceWithSensorInsertLogPlugin(
 
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
         key = "bg_source_with_sensor_settings",
-        titleResId = pluginDescription.pluginName,
+        // a BG source plugin always names itself
+        title = pluginDescription.pluginName!!,
         items = listOf(
             BooleanKey.BgSourceUploadToNs,
             BooleanKey.BgSourceCreateSensorChange

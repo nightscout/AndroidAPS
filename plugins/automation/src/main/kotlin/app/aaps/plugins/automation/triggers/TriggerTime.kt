@@ -5,22 +5,23 @@ import androidx.compose.material.icons.filled.Schedule
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.utils.JsonHelper
+import app.aaps.core.utils.lenientLong
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputDateTime
-import dagger.android.HasAndroidInjector
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
-class TriggerTime(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerTime(deps: TriggerDeps) : Trigger(deps) {
 
     var time = InputDateTime(rh, dateUtil)
 
-    constructor(injector: HasAndroidInjector, runAt: Long) : this(injector) {
+    constructor(deps: TriggerDeps, runAt: Long) : this(deps) {
         this.time.value = runAt
     }
 
     @Suppress("unused")
-    constructor(injector: HasAndroidInjector, triggerTime: TriggerTime) : this(injector) {
+    constructor(deps: TriggerDeps, triggerTime: TriggerTime) : this(deps) {
         this.time.value = triggerTime.time.value
     }
 
@@ -39,13 +40,14 @@ class TriggerTime(injector: HasAndroidInjector) : Trigger(injector) {
         return false
     }
 
-    override fun dataJSON(): JSONObject =
-        JSONObject()
-            .put("runAt", time.value)
+    override fun dataJSON(): JsonObject =
+        buildJsonObject {
+            put("runAt", time.value)
+        }
 
     override fun fromJSON(data: String): Trigger {
-        val o = JSONObject(data)
-        time.value = JsonHelper.safeGetLong(o, "runAt")
+        val o = jsonOf(data)
+        time.value = o.lenientLong("runAt")
         return this
     }
 
@@ -57,6 +59,6 @@ class TriggerTime(injector: HasAndroidInjector) : Trigger(injector) {
     override fun composeIcon() = Icons.Filled.Schedule
     override fun elementType() = ElementType.AUTOMATION
 
-    override fun duplicate(): Trigger = TriggerTime(injector, time.value)
+    override fun duplicate(): Trigger = TriggerTime(deps, time.value)
 
 }

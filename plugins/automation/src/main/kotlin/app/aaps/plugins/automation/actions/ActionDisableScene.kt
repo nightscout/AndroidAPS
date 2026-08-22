@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.actions
 
+import javax.inject.Provider
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.logging.AAPSLogger
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.VisibilityOff
 import app.aaps.core.interfaces.pump.PumpEnactResult
@@ -7,17 +10,20 @@ import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.scenes.SceneAutomationResult
 import app.aaps.core.interfaces.scenes.SceneIconResolver
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.utils.JsonHelper
+import app.aaps.core.utils.lenientString
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputSceneName
-import dagger.android.HasAndroidInjector
-import org.json.JSONObject
-import javax.inject.Inject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
-class ActionDisableScene(injector: HasAndroidInjector) : Action(injector) {
+class ActionDisableScene(
+    aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val sceneApi: SceneAutomationApi,
+    private val sceneIconResolver: SceneIconResolver
+) : Action(aapsLogger, rh, pumpEnactResultProvider) {
 
-    @Inject lateinit var sceneApi: SceneAutomationApi
-    @Inject lateinit var sceneIconResolver: SceneIconResolver
 
     var scene: InputSceneName = InputSceneName()
 
@@ -47,17 +53,15 @@ class ActionDisableScene(injector: HasAndroidInjector) : Action(injector) {
 
     override fun hasDialog(): Boolean = true
 
-    override fun toJSON(): String {
-        val data = JSONObject().put("sceneId", scene.value)
-        return JSONObject()
-            .put("type", this.javaClass.simpleName)
-            .put("data", data)
-            .toString()
-    }
+    override fun toJSON(): String =
+        buildJsonObject {
+            put("type", this@ActionDisableScene.javaClass.simpleName)
+            put("data", buildJsonObject { put("sceneId", scene.value) })
+        }.toString()
 
     override fun fromJSON(data: String): Action {
-        val o = JSONObject(data)
-        scene.value = JsonHelper.safeGetString(o, "sceneId", "")
+        val o = jsonOf(data)
+        scene.value = o.lenientString("sceneId", "")
         return this
     }
 

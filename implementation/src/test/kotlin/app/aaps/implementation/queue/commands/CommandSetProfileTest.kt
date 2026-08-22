@@ -32,7 +32,7 @@ class CommandSetProfileTest : TestBaseWithProfile() {
     private fun newCommand(hasNsId: Boolean = false, callback: Callback? = null) =
         CommandSetProfile(
             aapsLogger, rh, smsCommunicator, activePlugin, dateUtil, commandQueue, config, persistenceLayer,
-            pumpEnactResultProvider, effectiveProfile, hasNsId, callback
+            pumpEnactResultProvider::get, effectiveProfile, hasNsId, callback
         )
 
     @Test

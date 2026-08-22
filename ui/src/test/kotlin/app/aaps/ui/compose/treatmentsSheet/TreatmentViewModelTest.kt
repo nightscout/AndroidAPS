@@ -65,7 +65,7 @@ internal class TreatmentViewModelTest {
         whenever(preferences.observe(BooleanKey.OverviewShowWizardButton)).thenReturn(MutableStateFlow(false))
         whenever(preferences.observe(BooleanKey.GeneralSimpleMode)).thenReturn(MutableStateFlow(false))
         whenever(quickWizard.changes).thenReturn(MutableStateFlow(0))
-        whenever(rxBus.toFlow(EventRefreshOverview::class.java)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventRefreshOverview::class)).thenReturn(emptyFlow())
         sut = TreatmentViewModel(
             rh, preferences, activePlugin, config, profileFunction, loop, iobCobCalculator,
             constraintChecker, quickWizard, rxBus, aapsLogger, dexcomBoyda, elementAvailability

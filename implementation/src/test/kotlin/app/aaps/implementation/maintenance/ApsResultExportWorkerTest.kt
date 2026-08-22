@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.storage.Storage
 import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.shared.tests.TestBaseWithProfile
+import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doThrow
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -31,8 +33,8 @@ class ApsResultExportWorkerTest : TestBaseWithProfile() {
     private fun worker() =
         ImportExportPrefsImpl.ApsResultExportWorker(context, workerParameters, aapsLogger, fabricPrivacy, prefFileList, storage, config, dataInbox)
 
-    private fun apsData() =
-        ImportExportPrefsImpl.ApsResultExportWorker.ApsResultData("SMB", JSONObject().put("a", 1), JSONObject().put("b", 2))
+    private fun apsData(input: String = """{"a":1}""", output: String? = """{"b":2}""") =
+        ImportExportPrefsImpl.ApsResultExportWorker.ApsResultData("SMB", input, output)
 
     @BeforeEach
     fun setup() {
@@ -81,5 +83,54 @@ class ApsResultExportWorkerTest : TestBaseWithProfile() {
         val result = worker().doWorkAndLog()
 
         assertIs<ListenableWorker.Result.Failure>(result)
+    }
+
+    /**
+     * The documents arrive as text and must end up **nested** in the envelope. Writing them with a
+     * plain string put would quote and escape each one into a single string value - which compiles,
+     * never throws, and silently produces a file the tooling can no longer read. `getJSONObject`
+     * fails on a string value, so this test bites exactly there.
+     */
+    @Test
+    fun `documents are nested rather than written as escaped text`() = runTest {
+        whenever(config.isEngineeringMode()).thenReturn(true)
+        whenever(dataInbox.drain(ApsExportInbox)).thenReturn(listOf(apsData()))
+        val written = argumentCaptor<String>()
+
+        worker().doWorkAndLog()
+
+        verify(storage).putFileContents(any<File>(), written.capture())
+        val json = JSONObject(written.firstValue)
+        assertThat(json.getString("algorithm")).isEqualTo("SMB")
+        assertThat(json.getJSONObject("input").getInt("a")).isEqualTo(1)
+        assertThat(json.getJSONObject("output").getInt("b")).isEqualTo(2)
+    }
+
+    /** A run with no output left the key out before, and still does. */
+    @Test
+    fun `a missing output leaves the key out`() = runTest {
+        whenever(config.isEngineeringMode()).thenReturn(true)
+        whenever(dataInbox.drain(ApsExportInbox)).thenReturn(listOf(apsData(output = null)))
+        val written = argumentCaptor<String>()
+
+        worker().doWorkAndLog()
+
+        verify(storage).putFileContents(any<File>(), written.capture())
+        assertThat(JSONObject(written.firstValue).has("output")).isFalse()
+    }
+
+    /**
+     * Parsing the text back is a failure mode that could not exist while the caller handed over
+     * objects. One bad document must cost that one file, not the whole worker run.
+     */
+    @Test
+    fun `unparsable input fails without throwing out of the worker`() = runTest {
+        whenever(config.isEngineeringMode()).thenReturn(true)
+        whenever(dataInbox.drain(ApsExportInbox)).thenReturn(listOf(apsData(input = "not json")))
+
+        val result = worker().doWorkAndLog()
+
+        assertIs<ListenableWorker.Result.Failure>(result)
+        verify(storage, never()).putFileContents(any<File>(), any())
     }
 }

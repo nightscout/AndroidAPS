@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.main
 
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -139,7 +140,7 @@ fun MainScreen(
     // Pump activity
     bolusState: BolusProgressState? = null,
     pumpStatusText: String = "",
-    queueStatusText: String? = null,
+    queueStatusText: AnnotatedString? = null,
     isPumpCommunicating: Boolean = false,
     onStopBolus: () -> Unit = {},
     modifier: Modifier = Modifier

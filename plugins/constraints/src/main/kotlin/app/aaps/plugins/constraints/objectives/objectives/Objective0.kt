@@ -31,7 +31,7 @@ class Objective0 @Inject constructor(
     private val passwordCheck: PasswordCheck,
 ) : Objective(preferences, rh, dateUtil, "config", R.string.objectives_0_objective, R.string.objectives_0_gate) {
 
-    val tidepoolPlugin get() = activePlugin.getSpecificPluginsListByInterface(Tidepool::class.java).firstOrNull() as Tidepool?
+    val tidepoolPlugin get() = activePlugin.getSpecificPluginsListByInterface(Tidepool::class).firstOrNull() as Tidepool?
 
     init {
         tasks.add(object : Task(this, R.string.objectives_bgavailableinns) {
@@ -80,12 +80,12 @@ class Objective0 @Inject constructor(
             override suspend fun isCompleted(): Boolean = persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now()) != null
         })
         tasks.add(
-            UITask(this, R.string.verify_master_password, "master_password") { context, task, callback, showMessage ->
+            UITask(this, R.string.verify_master_password, "master_password") { _, task, callback, showMessage ->
                 if (preferences.get(StringKey.ProtectionMasterPassword) == "") {
                     showMessage(rh.gs(app.aaps.core.ui.R.string.master_password_not_set))
                 } else {
                     passwordCheck.queryPassword(
-                        context, app.aaps.core.keys.R.string.master_password, StringKey.ProtectionMasterPassword,
+                        StringKey.ProtectionMasterPassword.title, StringKey.ProtectionMasterPassword,
                         ok = {
                             task.answered = true
                             callback.run()

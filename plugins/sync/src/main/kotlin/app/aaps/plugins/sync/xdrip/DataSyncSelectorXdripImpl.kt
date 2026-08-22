@@ -13,7 +13,6 @@ import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
 import app.aaps.plugins.sync.xdrip.keys.XdripLongKey
 import dagger.Lazy
@@ -652,10 +651,8 @@ class DataSyncSelectorXdripImpl @Inject constructor(
             // Snapshot once so the validity check and JSON read see the same store.
             val profileStore = profileRepository.profile.value ?: return
             if (!profileStore.allProfilesValid) return
+            // The store always carries `date` - see the same spot in DataSyncSelectorV3.
             val profileJson = profileStore.getData()
-            // add for v3
-            if (JsonHelper.safeGetLongAllowNull(profileJson, "date") == null)
-                profileJson.put("date", profileStore.getStartDate())
             val now = dateUtil.now()
             xdripPlugin.sendToXdrip("profile", DataSyncSelector.PairProfileStore(profileJson, now), "")
             confirmLastProfileStore(now)

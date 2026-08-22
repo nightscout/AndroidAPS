@@ -7,8 +7,8 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
@@ -19,8 +19,7 @@ import app.aaps.core.objects.wizard.QuickWizardMode
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.ui.events.EventQuickWizardChange
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -46,7 +45,6 @@ import javax.inject.Inject
 class QuickWizardManagementViewModel @Inject constructor(
     private val quickWizard: QuickWizard,
     private val rxBus: RxBus,
-    private val aapsSchedulers: AapsSchedulers,
     private val constraintChecker: ConstraintsChecker,
     private val preferences: Preferences,
     val rh: ResourceHelper,
@@ -54,7 +52,6 @@ class QuickWizardManagementViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger
 ) : ViewModel() {
 
-    private val disposable = CompositeDisposable()
 
     private val _uiState = MutableStateFlow(QuickWizardManagementUiState())
     val uiState: StateFlow<QuickWizardManagementUiState> = _uiState.asStateFlow()
@@ -84,11 +81,6 @@ class QuickWizardManagementViewModel @Inject constructor(
         loadData()
         observeQuickWizardChanges()
         observeQuickWizardPrefChanges()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        disposable.clear()
     }
 
     /**
@@ -130,14 +122,11 @@ class QuickWizardManagementViewModel @Inject constructor(
      * Observe QuickWizard changes from RxBus
      */
     private fun observeQuickWizardChanges() {
-        disposable += rxBus
-            .toObservable(EventQuickWizardChange::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({
-                           loadData()
-                       }, { throwable ->
-                           aapsLogger.error(LTag.UI, "Error observing QuickWizard changes", throwable)
-                       })
+        // viewModelScope is Main, like observeOn(aapsSchedulers.main), and dies with the view model
+        // like the CompositeDisposable did. UNDISPATCHED because RxBus has no replay: a scheduled
+        // collector could miss a change sent before it starts.
+        rxBus.toFlow(EventQuickWizardChange::class)
+            .collectResilient(viewModelScope, aapsLogger, LTag.UI, start = CoroutineStart.UNDISPATCHED) { loadData() }
     }
 
     /**
@@ -340,24 +329,6 @@ class QuickWizardManagementViewModel @Inject constructor(
                     }
                 }
 
-                // Update entry storage
-                entry.storage.put("mode", mode.value)
-                entry.storage.put("buttonText", currentState.editorButtonText)
-                entry.storage.put("insulin", currentState.editorInsulin)
-                entry.storage.put("carbs", currentState.editorCarbs)
-                entry.storage.put("carbTime", currentState.editorCarbTime)
-                entry.storage.put("useAlarm", booleanToRadioNumber(currentState.editorUseAlarm))
-                entry.storage.put("validFrom", currentState.editorValidFrom)
-                entry.storage.put("validTo", currentState.editorValidTo)
-                entry.storage.put("useBG", booleanToRadioNumber(currentState.editorUseBG))
-                entry.storage.put("useCOB", booleanToRadioNumber(currentState.editorUseCOB))
-                entry.storage.put("useIOB", booleanToRadioNumber(currentState.editorUseIOB))
-                entry.storage.put("usePositiveIOBOnly", booleanToRadioNumber(currentState.editorUsePositiveIOBOnly))
-                entry.storage.put("useTrend", currentState.editorUseTrend.toInt())
-                entry.storage.put("useSuperBolus", booleanToRadioNumber(currentState.editorUseSuperBolus))
-                entry.storage.put("useTempTarget", booleanToRadioNumber(currentState.editorUseTempTarget))
-                entry.storage.put("percentage", currentState.editorPercentage)
-
                 // Device selection
                 val device = when {
                     currentState.editorDevicePhone && currentState.editorDeviceWatch -> QuickWizardEntry.DEVICE_ALL
@@ -365,13 +336,32 @@ class QuickWizardManagementViewModel @Inject constructor(
                     currentState.editorDeviceWatch                                   -> QuickWizardEntry.DEVICE_WATCH
                     else                                                             -> QuickWizardEntry.DEVICE_ALL
                 }
-                entry.storage.put("device", device)
 
-                // eCarbs
-                entry.storage.put("useEcarbs", booleanToRadioNumber(currentState.editorUseEcarbs))
-                entry.storage.put("time", currentState.editorTime)
-                entry.storage.put("duration", currentState.editorDuration)
-                entry.storage.put("carbs2", currentState.editorCarbs2)
+                // Update the entry. addOrUpdate below is what writes it - the entry no longer shares
+                // its storage with the stored list, so nothing is persisted until it is handed over.
+                entry.data = entry.data.copy(
+                    mode = mode.value,
+                    buttonText = currentState.editorButtonText,
+                    insulin = currentState.editorInsulin,
+                    carbs = currentState.editorCarbs,
+                    carbTime = currentState.editorCarbTime,
+                    useAlarm = booleanToRadioNumber(currentState.editorUseAlarm),
+                    validFrom = currentState.editorValidFrom,
+                    validTo = currentState.editorValidTo,
+                    useBG = booleanToRadioNumber(currentState.editorUseBG),
+                    useCOB = booleanToRadioNumber(currentState.editorUseCOB),
+                    useIOB = booleanToRadioNumber(currentState.editorUseIOB),
+                    usePositiveIOBOnly = booleanToRadioNumber(currentState.editorUsePositiveIOBOnly),
+                    useTrend = currentState.editorUseTrend.toInt(),
+                    useSuperBolus = booleanToRadioNumber(currentState.editorUseSuperBolus),
+                    useTempTarget = booleanToRadioNumber(currentState.editorUseTempTarget),
+                    percentage = currentState.editorPercentage,
+                    device = device,
+                    useEcarbs = booleanToRadioNumber(currentState.editorUseEcarbs),
+                    time = currentState.editorTime,
+                    duration = currentState.editorDuration,
+                    carbs2 = currentState.editorCarbs2
+                )
 
                 quickWizard.addOrUpdate(entry)
                 rxBus.send(EventQuickWizardChange())
@@ -397,11 +387,8 @@ class QuickWizardManagementViewModel @Inject constructor(
     fun addNewEntry() {
         viewModelScope.launch {
             try {
+                // A fresh entry already carries these defaults, so nothing needs setting here.
                 val newEntry = quickWizard.newEmptyItem()
-                newEntry.storage.put("buttonText", "")
-                newEntry.storage.put("carbs", 0)
-                newEntry.storage.put("validFrom", 0)
-                newEntry.storage.put("validTo", 86340)
 
                 quickWizard.addOrUpdate(newEntry)
                 rxBus.send(EventQuickWizardChange())
@@ -429,28 +416,13 @@ class QuickWizardManagementViewModel @Inject constructor(
                 val sourceEntry = currentState.entries[index]
                 val newEntry = quickWizard.newEmptyItem()
 
-                // Copy all fields from source entry
-                newEntry.storage.put("mode", sourceEntry.mode().value)
-                newEntry.storage.put("buttonText", sourceEntry.buttonText() + " (Copy)")
-                newEntry.storage.put("insulin", sourceEntry.insulin())
-                newEntry.storage.put("carbs", sourceEntry.carbs())
-                newEntry.storage.put("carbTime", sourceEntry.carbTime())
-                newEntry.storage.put("useAlarm", sourceEntry.useAlarm())
-                newEntry.storage.put("validFrom", sourceEntry.validFrom())
-                newEntry.storage.put("validTo", sourceEntry.validTo())
-                newEntry.storage.put("useBG", sourceEntry.useBG())
-                newEntry.storage.put("useCOB", sourceEntry.useCOB())
-                newEntry.storage.put("useIOB", sourceEntry.useIOB())
-                newEntry.storage.put("usePositiveIOBOnly", sourceEntry.usePositiveIOBOnly())
-                newEntry.storage.put("useTrend", sourceEntry.useTrend())
-                newEntry.storage.put("useSuperBolus", sourceEntry.useSuperBolus())
-                newEntry.storage.put("useTempTarget", sourceEntry.useTempTarget())
-                newEntry.storage.put("percentage", sourceEntry.percentage())
-                newEntry.storage.put("device", sourceEntry.device())
-                newEntry.storage.put("useEcarbs", sourceEntry.useEcarbs())
-                newEntry.storage.put("time", sourceEntry.time())
-                newEntry.storage.put("duration", sourceEntry.duration())
-                newEntry.storage.put("carbs2", sourceEntry.carbs2())
+                // Copy every field from the source entry, but keep the fresh guid and drop lastUsed
+                // so the copy starts its own cooldown rather than inheriting the original's.
+                newEntry.data = sourceEntry.data.copy(
+                    guid = newEntry.data.guid,
+                    lastUsed = 0,
+                    buttonText = sourceEntry.buttonText() + " (Copy)"
+                )
 
                 quickWizard.addOrUpdate(newEntry)
                 rxBus.send(EventQuickWizardChange())

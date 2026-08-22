@@ -1,6 +1,5 @@
 package app.aaps.implementation.aps
 
-import android.text.Spanned
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
@@ -32,8 +31,9 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.convertedToPercent
 import app.aaps.core.ui.R
-import app.aaps.core.utils.HtmlHelper
-import org.json.JSONObject
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.jsonObject
 import javax.inject.Inject
 import javax.inject.Provider
 import kotlin.math.abs
@@ -142,35 +142,13 @@ class DetermineBasalResult @Inject constructor(
         } else rh.gs(R.string.nochangerequested)
     }
 
-    override suspend fun resultAsSpanned(): Spanned = HtmlHelper.fromHtml(resultAsHtmlString())
-    override suspend fun resultAsHtmlString(): String {
-        val pump = activePlugin.activePump
-        if (isChangeRequested()) {
-            // rate
-            var ret: String =
-                if (rate == 0.0 && duration == 0) rh.gs(R.string.cancel_temp) + "<br>"
-                else if (rate == -1.0) rh.gs(R.string.let_temp_basal_run) + "<br>"
-                else if (usePercent) rh.gs(R.string.percent_rate_duration_formatted, percent.toDouble(), percent * ch.fromPump(pump.baseBasalRate) / 100.0, duration)
-                else rh.gs(R.string.rate_percent_duration_formatted, rate, rate / ch.fromPump(pump.baseBasalRate) * 100.0, duration)
-
-            // smb
-            if (smb != 0.0) ret += "<b>" + "SMB" + "</b>: " + decimalFormatter.toPumpSupportedBolus(smb, activePlugin.activePump.pumpDescription.bolusStep) + "<br>"
-            if (isCarbsRequired) {
-                ret += "$carbsRequiredText<br>"
-            }
-
-            // reason
-            ret += "<b>" + rh.gs(R.string.reason) + "</b>: " + reason.replace("<", "&lt;").replace(">", "&gt;")
-            return ret
-        }
-        return if (isCarbsRequired) carbsRequiredText
-        else rh.gs(R.string.nochangerequested)
-    }
-
     override fun newAndClone(): APSResult = apsResultProvider.get().with(result)
-    override fun json(): JSONObject {
+    override fun json(): JsonObject {
         reportNonFiniteResultFields()
-        return JSONObject(result.serialize())
+        // Straight to a tree. This used to serialise to text and parse it back with org.json, once per
+        // loop cycle. Same default Json either way, so a non-finite Double still throws here - see
+        // `reportNonFiniteResultFields`, that crash is the signal and must not be swallowed.
+        return Json.encodeToJsonElement(RT.serializer(), result).jsonObject
     }
 
     /**
@@ -182,9 +160,9 @@ class DetermineBasalResult @Inject constructor(
      *
      * We deliberately do NOT sanitize/swallow here — the crash is the signal driving the ongoing
      * DetermineBasal NaN hunt (see `DetermineBasalSMB` minPredBG pin, `OpenAPSSMBPlugin` invalidInputs
-     * guard). Instead, right before the (still-crashing) serialize, we report exactly which field is
+     * guard). Instead, right before the (still-crashing) encode, we report exactly which field is
      * non-finite plus the ISF inputs that feed it, so the next occurrence pinpoints the field and
-     * algorithm instead of an opaque framework trace. `[result.serialize]` runs unchanged afterwards.
+     * algorithm instead of an opaque framework trace. The encode runs unchanged afterwards.
      */
     private fun reportNonFiniteResultFields() {
         val offenders = buildList {

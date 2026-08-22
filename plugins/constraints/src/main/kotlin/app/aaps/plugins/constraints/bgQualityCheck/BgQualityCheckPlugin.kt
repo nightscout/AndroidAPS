@@ -1,5 +1,6 @@
 package app.aaps.plugins.constraints.bgQualityCheck
 
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
@@ -11,14 +12,16 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventBucketedDataCreated
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.plugins.constraints.R
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,35 +34,35 @@ import kotlin.math.min
 @Singleton
 class BgQualityCheckPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     private val rxBus: RxBus,
     private val iobCobCalculator: IobCobCalculator,
-    private val aapsSchedulers:
-    AapsSchedulers,
-    private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
         .alwaysEnabled(true)
         .showInList { false }
-        .pluginName(R.string.bg_quality),
+        .pluginName(TextRef.AndroidRes(R.string.bg_quality)),
     aapsLogger, rh
 ), PluginConstraints, BgQualityCheck {
 
-    private var disposable: CompositeDisposable = CompositeDisposable()
+    private var scope: CoroutineScope? = null
 
     override suspend fun onStart() {
         super.onStart()
-        disposable += rxBus
-            .toObservable(EventBucketedDataCreated::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ processBgData() }, fabricPrivacy::logException)
+        // Own scope on IO, matching observeOn(aapsSchedulers.io), cancelled in onStop like the
+        // CompositeDisposable was cleared. UNDISPATCHED because RxBus has no replay: a scheduled
+        // collector could miss data created before it starts.
+        val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO).also { this.scope = it }
+        rxBus.toFlow(EventBucketedDataCreated::class)
+            .collectResilient(scope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) { processBgData() }
     }
 
     override suspend fun onStop() {
         super.onStop()
-        disposable.clear()
+        scope?.cancel()
+        scope = null
     }
 
     private val _stateFlow = MutableStateFlow(BgQualityCheck.State.UNKNOWN)

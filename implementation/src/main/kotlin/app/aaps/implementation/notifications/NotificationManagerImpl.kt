@@ -10,7 +10,8 @@ import android.content.IntentFilter
 import android.media.AudioManager
 import android.media.RingtoneManager
 import android.os.Build
-import androidx.annotation.RawRes
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.interfaces.notifications.AlarmSound
 import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -41,6 +42,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.time.Duration.Companion.minutes
 import android.app.NotificationManager as AndroidNotificationManager
+import android.graphics.BitmapFactory
 
 @Singleton
 class NotificationManagerImpl @Inject constructor(
@@ -108,7 +110,7 @@ class NotificationManagerImpl @Inject constructor(
         text: String,
         level: NotificationLevel,
         validMinutes: Int,
-        @RawRes soundRes: Int?,
+        sound: AlarmSound?,
         actions: List<NotificationAction>,
         validityCheck: (() -> Boolean)?
     ): NotificationHandle {
@@ -117,7 +119,7 @@ class NotificationManagerImpl @Inject constructor(
         return postInternal(
             id = id, text = text, level = level,
             date = now, validTo = validTo,
-            soundRes = soundRes, actions = actions, validityCheck = validityCheck
+            sound = sound, actions = actions, validityCheck = validityCheck
         )
     }
 
@@ -128,14 +130,14 @@ class NotificationManagerImpl @Inject constructor(
         level: NotificationLevel,
         date: Long,
         validTo: Long,
-        @RawRes soundRes: Int?,
+        sound: AlarmSound?,
         actions: List<NotificationAction>,
         validityCheck: (() -> Boolean)?
     ): NotificationHandle {
         return postInternal(
             id = id, text = text, level = level,
             date = date, validTo = validTo,
-            soundRes = soundRes, actions = actions, validityCheck = validityCheck
+            sound = sound, actions = actions, validityCheck = validityCheck
         )
     }
 
@@ -145,7 +147,7 @@ class NotificationManagerImpl @Inject constructor(
         level: NotificationLevel,
         date: Long,
         validTo: Long,
-        @RawRes soundRes: Int?,
+        sound: AlarmSound?,
         actions: List<NotificationAction>,
         validityCheck: (() -> Boolean)?
     ): NotificationHandle {
@@ -173,7 +175,7 @@ class NotificationManagerImpl @Inject constructor(
             level = level,
             date = date,
             validTo = validTo,
-            soundRes = soundRes,
+            sound = sound,
             actions = actions,
             validityCheck = validityCheck
         )
@@ -185,8 +187,8 @@ class NotificationManagerImpl @Inject constructor(
         // Alarm tier (URGENT + sound): the system notification is silent (heads-up + vibration, no
         // channel sound); the ramping audio is owned by AlarmSoundPlayer and driven by
         // refreshAlarmSound() below so concurrent URGENT alarms hand off correctly. Sound is gated
-        // on URGENT — a soundRes on a lower level is intentionally ignored (only the alarm tier rings).
-        if (level == NotificationLevel.URGENT && soundRes != null && soundRes != 0) {
+        // on URGENT — a sound on a lower level is intentionally ignored (only the alarm tier rings).
+        if (level == NotificationLevel.URGENT && sound != null) {
             alarmNotificationManager.postSilentAlarmNotification(
                 notificationKey = instanceKey,
                 title = rh.gs(app.aaps.core.ui.R.string.urgent_alarm),
@@ -206,22 +208,21 @@ class NotificationManagerImpl @Inject constructor(
     @Synchronized
     override fun post(
         id: NotificationId,
-        @StringRes textRes: Int,
-        vararg formatArgs: Any?,
+        textRef: TextRef,
         level: NotificationLevel,
         validMinutes: Int,
         date: Long,
         validTo: Long,
-        @RawRes soundRes: Int?,
+        sound: AlarmSound?,
         actions: List<NotificationAction>,
         validityCheck: (() -> Boolean)?
     ): NotificationHandle {
-        val text = if (formatArgs.isEmpty()) rh.gs(textRes) else rh.gs(textRes, *formatArgs)
+        val text = rh.gs(textRef)
         val effectiveValidTo = if (validMinutes > 0) date + validMinutes.toLong().minutes.inWholeMilliseconds else validTo
         return postInternal(
             id = id, text = text, level = level,
             date = date, validTo = effectiveValidTo,
-            soundRes = soundRes, actions = actions, validityCheck = validityCheck
+            sound = sound, actions = actions, validityCheck = validityCheck
         )
     }
 
@@ -268,7 +269,7 @@ class NotificationManagerImpl @Inject constructor(
     @Synchronized
     override fun muteAllAlarms() {
         val current = _notifications.value
-        val audible = current.filter { it.level == NotificationLevel.URGENT && it.soundRes != null && it.soundRes != 0 }
+        val audible = current.filter { it.level == NotificationLevel.URGENT && it.sound != null }
         if (audible.isNotEmpty()) {
             audible.forEach { cancelSilentAlarmNotification(it) }
             _notifications.value = current - audible.toSet()
@@ -307,7 +308,7 @@ class NotificationManagerImpl @Inject constructor(
      * audio is (re)evaluated separately by [refreshAlarmSound] after the registry has changed.
      */
     private fun cancelSilentAlarmNotification(n: AapsNotification) {
-        if (n.soundRes != null) alarmNotificationManager.cancelSoundAlarm(n.instanceKey)
+        if (n.sound != null) alarmNotificationManager.cancelSoundAlarm(n.instanceKey)
     }
 
     /**
@@ -321,7 +322,7 @@ class NotificationManagerImpl @Inject constructor(
      */
     private fun refreshAlarmSound() {
         val top = _notifications.value
-            .filter { it.level == NotificationLevel.URGENT && it.soundRes != null && it.soundRes != 0 }
+            .filter { it.level == NotificationLevel.URGENT && it.sound != null }
             .maxByOrNull { it.date }
         when {
             top == null                    ->
@@ -332,7 +333,7 @@ class NotificationManagerImpl @Inject constructor(
 
             top.instanceKey != soundingKey -> {
                 soundingKey = top.instanceKey
-                alarmSoundPlayer.play(top.soundRes!!, AlarmSoundPlayer.OWNER_INTERNAL)
+                alarmSoundPlayer.play(top.sound!!, AlarmSoundPlayer.OWNER_INTERNAL)
             }
             // else: already playing the top alarm — leave the ramp running.
         }
@@ -340,7 +341,7 @@ class NotificationManagerImpl @Inject constructor(
 
     private fun raiseSystemNotification(n: AapsNotification) {
         val mgr = context.getSystemService(Context.NOTIFICATION_SERVICE) as AndroidNotificationManager
-        val largeIcon = rh.decodeResource(iconsProvider.getIcon())
+        val largeIcon = BitmapFactory.decodeResource(context.resources, iconsProvider.getIcon())
         val smallIcon = iconsProvider.getNotificationIcon()
         val sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
         val notificationBuilder = NotificationCompat.Builder(context, NotificationManager.CHANNEL_ID)
@@ -350,7 +351,7 @@ class NotificationManagerImpl @Inject constructor(
             .setStyle(NotificationCompat.BigTextStyle().bigText(n.text))
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setDeleteIntent(deleteIntent(n.id.ordinal))
-            .setContentIntent(notificationHolder.openAppIntent(context))
+            .setContentIntent(notificationHolder.openAppIntent())
         if (n.level == NotificationLevel.URGENT) {
             notificationBuilder.setVibrate(longArrayOf(1000, 1000, 1000, 1000))
                 .setContentTitle(rh.gs(app.aaps.core.ui.R.string.urgent_alarm))
