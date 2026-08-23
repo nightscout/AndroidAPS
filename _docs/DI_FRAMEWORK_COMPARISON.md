@@ -121,3 +121,49 @@ pile iOS can never read, which grows with every module converted while this stay
 - Build-time effect of removing Dagger: measured only as potential - KSP totals 128.7s of task time in
   a full `:app` build, of which Room is 17.8s, pumps 61.9s and non-pump Dagger 49.0s. Only that 49s is
   recoverable, and only once the last non-pump Dagger annotation is gone.
+
+## Decision
+
+**Metro, and the target end state is Dagger fully removed - not Metro alongside Dagger.**
+
+Taken after the three spikes above. The reasoning for going all the way rather than stopping at
+"Metro for multiplatform modules, Dagger for the rest":
+
+The expensive part of this migration is not converting modules - it is the **bridge**. Every hazard
+that cost real debugging time on all three branches comes from Dagger and the new framework coexisting:
+the re-entrancy StackOverflowError (three times), double instantiation, singleton identity, two mental
+models. None of that is detectable by either framework, because the cycle crosses a boundary neither
+can see. It ends only when Dagger does. A permanently half-migrated tree keeps every one of those costs
+forever, which is the worst outcome available.
+
+Metro's Kotlin tracking, measured, is what makes committing defensible:
+
+| Kotlin release | date | Metro support | lag |
+|---|---|---|---|
+| 2.3.21 | 2026-04-23 | 1.0.0-RC4, 2026-04-24 | 1 day |
+| 2.4.0 | 2026-06-03 | 1.2.0, 2026-06-10 | 7 days |
+| 2.4.10 | 2026-07-14 | 1.3.1 "Test Kotlin 2.4.10-RC2", 2026-07-11 | ahead of release |
+
+Metro 1.4.2 (2026-08-14) already states "Support Kotlin 2.5.0-dev-3513" and "Test Kotlin 2.4.20-RC" -
+two versions ahead of this repo. They test against Kotlin RCs before stable ships, which is why the lag
+is days rather than weeks. The compiler-plugin coupling is real but actively managed.
+
+The accepted risks: Metro is the least adopted of the three, and the Kotlin coupling is structural even
+though it is currently well handled. The mitigation is that the *shapes* are portable - the
+source-set rule, the deferring-bridge rule, and a plain-data plugin registration are all
+framework-neutral, so a forced move later would be a rewrite of module wiring, not of architecture.
+
+### What must be proven before the volume work
+
+Removing Dagger means removing **Hilt**, and Hilt is what currently answers the Android entry points:
+
+| | count | who answers it today |
+|---|---|---|
+| `@ContributesAndroidInjector` | 294 | dagger.android |
+| `@HiltWorker` | 42 | Hilt + WorkManager integration |
+| `@AndroidEntryPoint` | 3 | Hilt |
+| `@HiltViewModel` | 77 | Hilt |
+
+These are the precondition. Converting more multiplatform modules proves nothing about them, and if
+Metro cannot replace them cleanly the end state falls back to "Metro for multiplatform modules, Dagger
+for the rest" - which is the outcome this decision exists to avoid. Prove the entry points first.
