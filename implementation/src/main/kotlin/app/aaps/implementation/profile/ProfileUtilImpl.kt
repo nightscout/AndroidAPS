@@ -11,12 +11,12 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.R
-import dagger.Reusable
 import java.util.Locale
 import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.math.roundToInt
 
-@Reusable
+@Singleton
 class ProfileUtilImpl @Inject constructor(
     private val preferences: Preferences,
     private val decimalFormatter: DecimalFormatter,

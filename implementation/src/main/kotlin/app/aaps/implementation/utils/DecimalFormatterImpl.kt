@@ -4,10 +4,10 @@ import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import dagger.Reusable
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@Reusable
+@Singleton
 class DecimalFormatterImpl @Inject constructor(
     private val rh: ResourceHelper
 ) : DecimalFormatter {

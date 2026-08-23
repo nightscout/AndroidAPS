@@ -19,14 +19,14 @@ import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.asAnnouncement
-import dagger.Reusable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.math.max
 import kotlin.math.min
 
-@Reusable
+@Singleton
 class HardLimitsImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val notificationManager: NotificationManager,

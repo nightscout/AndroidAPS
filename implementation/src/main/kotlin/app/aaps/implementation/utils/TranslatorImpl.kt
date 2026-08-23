@@ -10,10 +10,10 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.ui.R
 import app.aaps.core.interfaces.R as InterfacesR
-import dagger.Reusable
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@Reusable
+@Singleton
 class TranslatorImpl @Inject internal constructor(
     private val rh: ResourceHelper
 ) : Translator {

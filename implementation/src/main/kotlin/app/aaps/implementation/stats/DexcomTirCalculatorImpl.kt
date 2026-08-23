@@ -5,8 +5,8 @@ import app.aaps.core.interfaces.stats.DexcomTIR
 import app.aaps.core.interfaces.stats.DexcomTirCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
-import dagger.Reusable
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Implementation of Dexcom Time In Range (TIR) statistics calculator.
@@ -21,7 +21,7 @@ import javax.inject.Inject
  * 3. Processes each reading into appropriate glucose ranges
  * 4. Returns a DexcomTirImpl with all calculated statistics
  *
- * This class is marked as @Reusable for efficient dependency injection, as it has no
+ * This class is a singleton for dependency injection, as it has no
  * mutable state and can be shared across multiple injection points.
  *
  * @property dateUtil Utility for date/time calculations
@@ -30,7 +30,7 @@ import javax.inject.Inject
  * @see DexcomTirCalculator
  * @see DexcomTirImpl
  */
-@Reusable
+@Singleton
 class DexcomTirCalculatorImpl @Inject constructor(
     private val dateUtil: DateUtil,
     private val persistenceLayer: PersistenceLayer

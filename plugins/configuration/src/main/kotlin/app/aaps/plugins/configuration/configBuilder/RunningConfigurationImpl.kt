@@ -33,14 +33,14 @@ import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.nssdk.localmodel.configuration.NSActiveScene
 import app.aaps.core.nssdk.localmodel.configuration.NSRunningConfiguration
 import app.aaps.plugins.configuration.R
-import dagger.Reusable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@Reusable
+@Singleton
 class RunningConfigurationImpl @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val activeSceneSync: ActiveSceneSync,

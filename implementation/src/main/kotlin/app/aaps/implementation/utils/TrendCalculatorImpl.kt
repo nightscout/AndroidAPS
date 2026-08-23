@@ -5,10 +5,10 @@ import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.TrendCalculator
-import dagger.Reusable
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@Reusable
+@Singleton
 class TrendCalculatorImpl @Inject constructor(
     private val rh: ResourceHelper
 ) : TrendCalculator {

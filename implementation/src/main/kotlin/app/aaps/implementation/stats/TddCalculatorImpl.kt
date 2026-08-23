@@ -15,10 +15,10 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
-import dagger.Reusable
 import java.time.Instant
 import java.time.ZoneId
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Implementation of Total Daily Dose (TDD) calculator for insulin usage statistics.
@@ -62,7 +62,7 @@ import javax.inject.Inject
  * @see app.aaps.core.data.model.TDD
  * @see app.aaps.core.data.aps.AverageTDD
  */
-@Reusable
+@Singleton
 class TddCalculatorImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val activePlugin: ActivePlugin,

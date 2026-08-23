@@ -25,7 +25,6 @@ abstract class MaintenanceImplModule {
 
     // CsvExportWorker and ApsResultExportWorker migrated to @HiltWorker (constructed by HiltWorkerFactory).
     @ContributesAndroidInjector abstract fun encryptedPrefsFormatInjector(): EncryptedPrefsFormat
-    @ContributesAndroidInjector abstract fun prefImportListProviderInjector(): FileListProvider
 
     @Binds abstract fun bindPrefFileListProvider(impl: FileListProviderImpl): FileListProvider
     @Binds abstract fun bindImportExportPrefsInterface(impl: ImportExportPrefsImpl): ImportExportPrefs

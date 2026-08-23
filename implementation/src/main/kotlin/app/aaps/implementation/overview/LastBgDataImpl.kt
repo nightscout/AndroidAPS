@@ -12,11 +12,11 @@ import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.fromGv
 import app.aaps.core.objects.extensions.valueToUnits
-import dagger.Reusable
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@Reusable
+@Singleton
 class LastBgDataImpl @Inject constructor(
     private val rh: ResourceHelper,
     private val dateUtil: DateUtil,

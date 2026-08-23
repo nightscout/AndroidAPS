@@ -2,7 +2,6 @@ package app.aaps.implementation.stats
 
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.stats.DexcomTIR
-import dagger.Reusable
 import java.util.Calendar
 import kotlin.math.pow
 import kotlin.math.roundToInt
@@ -36,7 +35,6 @@ import kotlin.math.sqrt
  * @see DexcomTIR
  * @see DexcomTirCalculatorImpl
  */
-@Reusable
 class DexcomTirImpl : DexcomTIR {
 
     /** Count of readings in Very Low range (< 54 mg/dL) */

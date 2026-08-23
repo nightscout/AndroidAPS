@@ -6,8 +6,8 @@ import app.aaps.core.interfaces.stats.TIR
 import app.aaps.core.interfaces.stats.TirCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
-import dagger.Reusable
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Implementation of Time In Range (TIR) statistics calculator.
@@ -37,7 +37,7 @@ import javax.inject.Inject
  * - High threshold must be > low threshold
  * - Violations throw RuntimeException
  *
- * This class is marked as @Reusable for efficient dependency injection.
+ * This class is a singleton for dependency injection.
  *
  * @property dateUtil Utility for date/time calculations
  * @property persistenceLayer Database layer for retrieving BG readings
@@ -46,7 +46,7 @@ import javax.inject.Inject
  * @see TirImpl
  * @see DexcomTirCalculatorImpl
  */
-@Reusable
+@Singleton
 class TirCalculatorImpl @Inject constructor(
     private val dateUtil: DateUtil,
     private val persistenceLayer: PersistenceLayer
