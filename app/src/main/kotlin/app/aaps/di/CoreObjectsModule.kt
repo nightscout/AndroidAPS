@@ -20,6 +20,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.di.metro.MetroGraphs
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.objects.wizard.BolusWizard
@@ -62,59 +63,14 @@ class CoreObjectsModule {
     @Singleton
     fun provideCryptoUtil(aapsLogger: AAPSLogger): CryptoUtil = CryptoUtil(aapsLogger)
 
-    @Provides
-    @Singleton
-    fun provideRunningModeGuard(loop: Loop, rh: ResourceHelper, rxBus: RxBus): RunningModeGuard =
-        RunningModeGuard(loop, rh, rxBus)
+    /*
+     * Built by Metro now - see CoreObjectsGraph in :core:objects commonMain, which compiles for iOS.
+     * These delegate so Dagger consumers keep working and there is exactly one instance.
+     * CryptoUtil above is NOT delegated: its class is androidMain, so it cannot be in the graph.
+     */
+    @Provides @Singleton fun provideRunningModeGuard(graphs: MetroGraphs): RunningModeGuard = graphs.runningModeGuard
 
-    @Provides
-    @Singleton
-    fun provideQuickWizard(preferences: Preferences, quickWizardEntry: Provider<QuickWizardEntry>): QuickWizard =
-        QuickWizard(preferences) { quickWizardEntry.get() }
+    @Provides @Singleton fun provideQuickWizard(graphs: MetroGraphs): QuickWizard = graphs.quickWizard
 
-    @Provides
-    fun provideQuickWizardEntry(
-        aapsLogger: AAPSLogger,
-        preferences: Preferences,
-        profileFunction: ProfileFunction,
-        loop: Loop,
-        iobCobCalculator: IobCobCalculator,
-        persistenceLayer: PersistenceLayer,
-        dateUtil: DateUtil,
-        glucoseStatusProvider: GlucoseStatusProvider,
-        bolusWizard: Provider<BolusWizard>,
-        quickWizard: Provider<QuickWizard>
-    ): QuickWizardEntry = QuickWizardEntry(
-        aapsLogger, preferences, profileFunction, loop, iobCobCalculator, persistenceLayer, dateUtil,
-        glucoseStatusProvider, { bolusWizard.get() }, { quickWizard.get() }
-    )
-
-    @Suppress("LongParameterList")
-    @Provides
-    fun provideBolusWizard(
-        aapsLogger: AAPSLogger,
-        rh: ResourceHelper,
-        rxBus: RxBus,
-        preferences: Preferences,
-        profileFunction: ProfileFunction,
-        profileUtil: ProfileUtil,
-        constraintChecker: ConstraintsChecker,
-        loop: Loop,
-        iobCobCalculator: IobCobCalculator,
-        dateUtil: DateUtil,
-        config: Config,
-        uel: UserEntryLogger,
-        automation: Automation,
-        glucoseStatusProvider: GlucoseStatusProvider,
-        persistenceLayer: PersistenceLayer,
-        processedDeviceStatusData: ProcessedDeviceStatusData,
-        runningModeGuard: RunningModeGuard,
-        ch: ConcentrationHelper,
-        wizardBolusExecutor: WizardBolusExecutor,
-        @ApplicationScope appScope: CoroutineScope
-    ): BolusWizard = BolusWizard(
-        aapsLogger, rh, rxBus, preferences, profileFunction, profileUtil, constraintChecker, loop,
-        iobCobCalculator, dateUtil, config, uel, automation, glucoseStatusProvider, persistenceLayer,
-        processedDeviceStatusData, runningModeGuard, ch, wizardBolusExecutor, appScope
-    )
+    @Provides fun provideBolusWizard(graphs: MetroGraphs): BolusWizard = graphs.bolusWizard
 }

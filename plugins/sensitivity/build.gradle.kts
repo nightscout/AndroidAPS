@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.android.kmp.library)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.multiplatform)
+    // Metro is a Kotlin COMPILER plugin, not KSP. Same one line as :plugins:smoothing.
+    alias(libs.plugins.metro)
 }
 
 // Same generator as :plugins:smoothing, pointed at this module's strings. The strings themselves do

@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.di.NotNSClient
 import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.di.metro.MetroGraphs
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.history.HistoryBrowserData
 import app.aaps.implementations.ConfigImpl
@@ -51,6 +52,7 @@ abstract class AppModule {
             @PumpDriver pumpDrivers: Lazy<Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>>,
             @NotNSClient notNsClient: Lazy<Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>>,
             @APS aps: Lazy<Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>>,
+            metroGraphs: MetroGraphs,
             //@PluginsListModule.Unfinished unfinished: Lazy<Map<@JvmSuppressWildcards Int,  @JvmSuppressWildcards PluginBase>>
         )
             : List<@JvmSuppressWildcards PluginBase> {
@@ -59,6 +61,10 @@ abstract class AppModule {
             if (config.APS) plugins += aps.get()
             if (!config.AAPSCLIENT) plugins += notNsClient.get()
             //if (config.isEnabled(ExternalOptions.UNFINISHED_MODE)) plugins += unfinished.get()
+            // Modules migrated to Metro contribute a compile-time @IntoMap multibinding of the same
+            // shape, merged on the same Int order so modules can move one at a time.
+            plugins += metroGraphs.plugins()
+
             return plugins.toList().sortedBy { it.first }.map { it.second }
         }
 

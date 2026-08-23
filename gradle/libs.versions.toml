@@ -6,6 +6,7 @@ kotlin = "2.4.10"
 room = "2.8.4"
 sqlite = "2.7.0"
 dagger = "2.60.1"
+metro = "1.4.2"
 mockito = "5.23.0"
 junit = "6.1.2"
 robolectric = "4.16.1"
@@ -50,6 +51,7 @@ android-kmp-library = { id = "com.android.kotlin.multiplatform.library" }
 klint = { id = "org.jlleitschuh.gradle.ktlint", version = "14.2.0" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 ksp = { id = "com.google.devtools.ksp", version = "2.3.10" }
+metro = { id = "dev.zacsweers.metro", version.ref = "metro" }
 android-test = { id = "com.android.test", version.ref = "gradlePlugin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 # Compose Multiplatform framework plugin. It hard-fails unless compose-compiler above is applied in
