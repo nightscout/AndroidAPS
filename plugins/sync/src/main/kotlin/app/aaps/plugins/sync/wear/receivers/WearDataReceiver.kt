@@ -11,8 +11,12 @@ import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.utils.receivers.BundleLogger
 import dagger.android.DaggerBroadcastReceiver
+import dev.zacsweers.metro.HasMemberInjections
 import javax.inject.Inject
 
+// Still built by dagger.android. The annotation is Metro's requirement for a non-final class with
+// injected fields, needed because this module turns on Metro javax interop; it is inert for Dagger.
+@HasMemberInjections
 open class WearDataReceiver : DaggerBroadcastReceiver() {
 
     @Inject lateinit var aapsLogger: AAPSLogger

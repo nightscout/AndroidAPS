@@ -5,7 +5,6 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.plugins.sync.openhumans.delegates.OHStateDelegate
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,7 +18,6 @@ internal data class OHUiState(
     val projectMemberId: String? = null
 )
 
-@HiltViewModel
 @Stable
 internal class OHViewModel @Inject constructor(
     private val stateDelegate: OHStateDelegate

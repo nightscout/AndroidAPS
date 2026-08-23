@@ -27,7 +27,7 @@ import app.aaps.plugins.sync.xdrip.XdripPlugin
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import dagger.Reusable
+import javax.inject.Singleton
 import dagger.android.ContributesAndroidInjector
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
@@ -54,9 +54,12 @@ abstract class SyncModule {
     @InstallIn(SingletonComponent::class)
     open class Provide {
 
-        @Reusable
+        // Was @Reusable. Metro does not support it, and this module turns on Dagger interop so Metro
+        // validates every Dagger annotation here. WorkManager.getInstance already returns one
+        // instance, so @Singleton is the same behaviour.
+        @Singleton
         @Provides
-        fun providesWorkManager(context: Context) = WorkManager.getInstance(context)
+        fun providesWorkManager(context: Context): WorkManager = WorkManager.getInstance(context)
     }
 
     @Module

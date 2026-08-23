@@ -3,10 +3,24 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    // Metro beside Hilt in the same module, so one feature can move while the rest stays on Hilt.
+    // This is what makes the migration incremental.
+    alias(libs.plugins.metro)
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("compose-test-module-dependencies")
     id("jacoco-module-dependencies")
+}
+
+metro {
+    interop {
+        // Teach Metro to read javax.inject and Dagger annotations, so a class does not have to be
+        // rewritten to
+        // Metro's own @Inject/@Qualifier just to be built by a Metro graph. Without this, Metro
+        // ignores javax qualifiers entirely - five differently qualified Strings here collapsed into
+        // one binding, and the graph failed to compile.
+        includeDagger()
+    }
 }
 
 android {

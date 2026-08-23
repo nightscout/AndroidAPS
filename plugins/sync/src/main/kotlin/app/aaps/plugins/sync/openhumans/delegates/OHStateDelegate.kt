@@ -7,11 +7,12 @@ import app.aaps.plugins.sync.openhumans.keys.OhStringKey
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import kotlin.reflect.KProperty
 
-@Singleton
+@SingleIn(AppScope::class)
 internal class OHStateDelegate @Inject internal constructor(
     private val preferences: Preferences
 ) {

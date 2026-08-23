@@ -153,17 +153,184 @@ though it is currently well handled. The mitigation is that the *shapes* are por
 source-set rule, the deferring-bridge rule, and a plain-data plugin registration are all
 framework-neutral, so a forced move later would be a rewrite of module wiring, not of architecture.
 
-### What must be proven before the volume work
+### The Android entry points - proven
 
-Removing Dagger means removing **Hilt**, and Hilt is what currently answers the Android entry points:
+Removing Dagger means removing **Hilt**, and Hilt is what answers the Android entry points. This was
+the precondition for the decision above, so it was tested first, before any volume work. All four
+categories now run on Metro on a Pixel 9a.
 
-| | count | who answers it today |
+| Hilt today | count | Metro replacement | proven by |
+|---|---|---|---|
+| `@HiltWorker` | 42 | `@AssistedInject` + `@AssistedFactory` into a `@ClassKey` map, read by our own `WorkerFactory` | `KeepAliveWorker`, `RunningModeExpiryWorker` |
+| `@ContributesAndroidInjector` | 294 | `MembersInjector<T>` in a `@ClassKey` map, reached through `MetroMemberInjector` on the `Application` | `NetworkChangeReceiver`, `ChargingStateReceiver` |
+| `@AndroidEntryPoint` | 3 | the same `MembersInjector` map | `OHLoginActivity` |
+| `@HiltViewModel` | 77 | `MetroViewModelFactory` (a `ViewModelProvider.Factory`) over a `@ClassKey` map | `OHLoginViewModel` |
+
+The cases were picked to be awkward rather than easy. `KeepAliveWorker` takes **nineteen**
+dependencies, lives in another module, and runs every fifteen minutes - and two of its dependencies,
+`Loop` and `ActivePlugin`, are exactly the ones that lead back into the plugin list. `OHLoginActivity`
+needed two categories at once, because `@AndroidEntryPoint` filled its fields *and* made
+`by viewModels()` resolve, and one of those fields is **qualified** (`@AuthUrl String`).
+
+Evidence: `KeepAliveWorker` ran to `SUCCESS` including `checkPump()`, which needs the command queue,
+active plugin and profile function. `NetworkChangeReceiver` logged its network status through its
+injected logger with dagger.android's base class removed. `OHLoginActivity` rendered its welcome
+screen, which reads all three injected fields and the view model's state flow.
+
+**Coexistence works at module level, not just app level.** `:implementation` runs Metro beside Dagger
+and `:plugins:sync` runs Metro beside Hilt, each with one class converted and the rest untouched. Every
+lookup falls back - Metro first, then Hilt, then WorkManager's default factory - so the 294 and the 42
+can move a few at a time instead of in one commit.
+
+What this cost in mechanism, per converted class: one `@Provides @IntoMap @ClassKey` line, the same
+order of work as the `@ContributesAndroidInjector` line it replaces.
+
+### What the entry-point work taught
+
+- **Metro will not build a `MembersInjector<T>` for a class whose fields use `javax.inject.Inject`** -
+  *unless interop is switched on for the module*, which changes this picture completely. See the
+  interop section below; it was found later and it matters more than anything else here.
+- **`@ClassKey` produces `KClass<*>` keys**, not `KClass<out Base>`. Declaring the narrower map type
+  fails to resolve.
+- **A module with `internal` qualifiers must own its bridge.** `@AuthUrl` cannot be named from `:app`,
+  so the Dagger-to-Metro handover for `:plugins:sync` lives in `:plugins:sync`. This turned out to be
+  the better arrangement regardless: the module exposes its maps, never its graph, and when its last
+  Dagger consumer goes the bridge is deleted with it instead of leaving a stub in `:app`.
+- **A graph is only as visible as what it builds.** An `internal` view model forces an `internal`
+  graph, which is why the bridge exposes `Map<KClass<*>, …>` rather than the graph type.
+- **`hiltViewModel()` is Android-only.** `viewModel(factory = …)` is the Compose Multiplatform shape,
+  so replacing `@HiltViewModel` is not only about removing Dagger - it is the form shared iOS UI needs
+  anyway. That makes the 77 the most valuable of the four categories, not the most expensive.
+- **Scope device evidence to the process ID.** Three AAPS variants are installed on the test phone. The
+  first worker run that looked like proof was `aapsclient2`, an older build that was never reinstalled.
+  Checking `pidof` against the rebuilt package is what caught it.
+
+### The fifth pattern: a second set of the same objects
+
+The four categories above are all about classes **Android** constructs. The History Browser is a
+different question that only turned up when someone asked: it needs its **own** `OverviewData`,
+`CalculationSignals`, `OverviewDataCache` and `IobCobCalculator`, because it recalculates over a
+different time range and must not write into the state the running loop is using.
+
+Today it arranges that without DI at all - `HistoryBrowserData` took fourteen dependencies, passed most
+of them straight through, and constructed the four objects by hand. That ports to any framework
+unchanged, so it was never a blocker. It becomes one the moment those four types move into Metro
+graphs as `@SingleIn`, because then the history window must be told not to take the app-wide instance.
+
+`MetroScopingTest` measures what Metro actually guarantees, rather than trusting the documentation:
+
+| | result |
+|---|---|
+| same graph, asked twice | same instance |
+| two **root** graphs from one factory | **nothing shared** |
+| extension vs its parent | parent's scoped objects shared |
+| two extensions of one parent | own copy of their own scoped objects |
+
+The second row is the important one, because it rules out the obvious shortcut. "Just build the graph
+twice" would hand the history window its own logger and its own database handle - it isolates far too
+much, and nothing would report it. Shared leaves have to come from outside: for now from Dagger through
+`DeferredRef`, and once the leaves are Metro-owned, from a parent graph via `@GraphExtension`. That is
+the fourth row, and it is exactly the Dagger subcomponent this codebase would otherwise need.
+
+**A structural consequence for the migration plan.** The bridge currently creates *seven independent
+root graphs*. That is safe only because every object they share is still Dagger's, so Dagger keeps it
+single. The first time two Metro graphs both scope the same type, they will silently get one instance
+each - the same failure the second row describes, arriving quietly. So as modules move, the roots have
+to converge on **one** root graph with extensions hanging off it. Worth deciding early; it gets more
+expensive later.
+
+What was built: `HistoryWindowGraph` with its own `HistoryWindowScope`, the cache/calculator cycle
+expressed with Metro's `Provider` instead of a hand-written lambda, and `HistoryBrowserData` reduced
+from fourteen constructor dependencies to one. Two of those fourteen (`AapsSchedulers`,
+`FabricPrivacy`) turned out to be unused and went with the rewrite.
+
+Verified on device: the History Browser draws its BG, IOB/BAS and COB graphs - which are the *output*
+of the isolated calculation objects - and after browsing back to a date two days earlier, the live
+overview still showed current values advancing in real time (BG 10.7 from 1m ago, IOB 2.48 U, COB 13 g).
+Had the window shared the loop's objects, that is where it would have shown.
+
+### Interop: the setting that decides how big this migration is
+
+Metro's Gradle plugin can be told to read other frameworks' annotations:
+
+```kotlin
+metro { interop { includeDagger() } }   // also includeJavax(), includeHilt(), includeAnvilForDagger()
+```
+
+This is the single most important thing found so far, because it decides whether "replace Dagger"
+means *rewriting 2,816 annotations* or *moving wiring while the annotations stay put*. With interop on,
+converting a class means *removing its Hilt annotation and adding one binding to a graph* - its
+`javax.inject.Inject` and its qualifiers keep working. `OHViewModel` was converted exactly that way and
+still declares `javax.inject.Inject` today.
+
+**Without interop, qualifiers are silently ignored.** This corrects something stated earlier in this
+document. The `@AuthUrl String` injection appeared to work only because that graph happened to contain
+exactly one `String`; Metro was not honouring the qualifier at all, it was matching on type. The moment
+the graph held five qualified `String`s, they collapsed into one binding and the build failed with
+`DuplicateBinding`. A graph with a single binding of a type would have kept working and injected a value
+the qualifier was meant to exclude - a wrong value, with no error anywhere. That is a serious enough
+failure mode that **interop should be considered mandatory, not optional**, for any module that uses
+qualifiers.
+
+Interop is per module and all-or-nothing: Metro then validates *every* Dagger annotation in that
+module, including in classes still owned by Dagger. Turning it on for `:plugins:sync` required:
+
+| what Metro rejected | fix | project-wide count |
 |---|---|---|
-| `@ContributesAndroidInjector` | 294 | dagger.android |
-| `@HiltWorker` | 42 | Hilt + WorkManager integration |
-| `@AndroidEntryPoint` | 3 | Hilt |
-| `@HiltViewModel` | 77 | Hilt |
+| `@Reusable` is not supported at all | change to `@Singleton` | **32 uses** |
+| non-final class with injected fields | add `@HasMemberInjections` (inert for Dagger) | 1 here |
+| `@Provides` with an implicit return type | write the return type | 1 here |
+| injected field from a Java supertype (`DaggerAppCompatActivity`) | `includeDagger()`, not just `includeJavax()` | n/a |
 
-These are the precondition. Converting more multiplatform modules proves nothing about them, and if
-Metro cannot replace them cleanly the end state falls back to "Metro for multiplatform modules, Dagger
-for the rest" - which is the outcome this decision exists to avoid. Prove the entry points first.
+Each is small and mechanical, but they are a per-module entry fee that has to be paid before any of
+that module's classes can move. `@Reusable` is the one to look at first, because Metro has no
+equivalent and 32 call sites have to be re-examined rather than mechanically rewritten - `@Reusable`
+permits caching, `@Singleton` guarantees it, so each one is a small semantic decision.
+
+### A non-KMP plugin, and a whole feature
+
+The three plugins converted earlier were all `commonMain` in KMP modules, constructor-injected and
+leaf-like - chosen to prove the multiplatform point, not to stress plugin wiring. Open Humans is the
+opposite: an ordinary Android library module, `Context` in the constructor, Android resources, an icon,
+Compose content that casts the plugin back to its own type, `PluginBaseWithPreferences` rather than
+`PluginBase`, and its own `ownPreferences`.
+
+The whole feature moved, not just the plugin: the plugin, its three preference delegates, its HTTP
+client, its upload worker, two view models and its activity. `OpenHumansModule` was deleted and its five
+constants now live in the graph. What still crosses from Dagger is only app-wide infrastructure -
+logger, resources, preferences, context, database, notifications - which is by definition the last thing
+that can move. Converting a feature end to end is worth more than half-converting several, because the
+bridge is the expensive part.
+
+**The behaviour that had to be preserved:** the Dagger binding carried a `@NotNSClient` qualifier, and
+`AppModule.providesPlugins` merges that bucket only when the build is not an AAPSCLIENT one. Merging
+Metro's plugins unconditionally would have added Open Humans to every follower build. The Metro side
+therefore keeps a separate `notNsClientPlugins()` map, merged under the same condition. This is the
+second time a plugin-bucket qualifier has nearly been dropped in this migration; the buckets deserve
+attention on every module that moves.
+
+**Verified on device:** the plugin list holds **61 entries and 61 distinct classes - no duplicates -
+with `OpenHumansUploaderPlugin` appearing exactly once**, read from `ConfigBuilderImpl.loadSettings`,
+which logs one line per plugin in the assembled list. That is the check that a converted plugin has not
+been contributed by both frameworks. The login activity still renders, and the `aapsclient` variant
+still compiles.
+
+The plugin's own Compose screen was checked too, by enabling the plugin on the test phone. It renders
+"Open Humans is currently inactive", which is `OHUiState(isLoggedIn = false)` - a value produced by
+`OHViewModel` collecting `OHStateDelegate.stateFlow`. So the Metro-built view model, reached through
+`viewModel(factory = …)` with no `hiltViewModel()` anywhere in the path, received the Metro-built
+delegate and drove the UI. Nothing is uploaded without an OAuth token, and the plugin was switched back
+off afterwards.
+
+That makes the whole slice device-verified end to end: plugin in the list, plugin screen, view model,
+delegates, login activity, qualified injection.
+
+### What is still not proven
+
+- Only two of 42 workers, two of 294 injectors, one of 3 activities and one of 77 view models were
+  converted. The mechanism is proven; the volume is not.
+- **`SavedStateHandle` view models** (8 of them) take the assisted-factory path rather than the plain
+  provider path used here. The design accounts for it - `MetroViewModelCreator` receives
+  `CreationExtras` - but no such view model has been converted yet.
+- `@IntoSet` (12 uses) is still untested on any of the three frameworks.
+- Nothing has executed on iOS, for any framework, because there is no iOS app yet.

@@ -2,6 +2,10 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
+    // Metro beside Dagger in the same ordinary Android library module. This module is not
+    // multiplatform and never will be, so Metro is here only to take over the Android entry points
+    // Hilt answers today - the precondition for removing Dagger at all.
+    alias(libs.plugins.metro)
     id("android-module-dependencies")
     id("all-open-dependencies")
     id("test-module-dependencies")

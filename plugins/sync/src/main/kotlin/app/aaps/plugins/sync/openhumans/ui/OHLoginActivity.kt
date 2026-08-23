@@ -22,10 +22,19 @@ import app.aaps.core.ui.compose.dialogs.GlobalSnackbarHost
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.plugins.sync.di.AuthUrl
 import app.aaps.plugins.sync.openhumans.compose.OHLoginScreen
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import app.aaps.core.objects.workflow.MetroMemberInjector
+import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
+import dev.zacsweers.metro.Inject
 
-@AndroidEntryPoint
+/**
+ * Converted off Hilt to Metro, as the proof that `@AndroidEntryPoint` and `@HiltViewModel` can both be
+ * replaced.
+ *
+ * This activity needed both at once, which is why it was chosen. `@AndroidEntryPoint` filled the three
+ * fields below - including [authUrl], which is qualified - and it is also what made `by viewModels()`
+ * resolve [OHLoginViewModel] through Hilt's factory. Now the fields come from [MetroMemberInjector]
+ * and the view model from [MetroViewModelFactory], both backed by `OpenHumansMetroGraph`.
+ */
 class OHLoginActivity : AppCompatActivity() {
 
     @Inject
@@ -38,13 +47,18 @@ class OHLoginActivity : AppCompatActivity() {
     @Inject
     lateinit var rxBus: RxBus
 
-    private val viewModel by viewModels<OHLoginViewModel>()
+    private val viewModel by viewModels<OHLoginViewModel> {
+        (applicationContext as MetroViewModelFactoryOwner).metroViewModelFactory
+    }
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Where @AndroidEntryPoint used to inject before super.onCreate. Fields must be filled before
+        // anything below reads them, and before the view model is first touched.
+        (applicationContext as MetroMemberInjector).injectMembers(this)
         super.onCreate(savedInstanceState)
 
         val code = intent.data?.getQueryParameter("code")

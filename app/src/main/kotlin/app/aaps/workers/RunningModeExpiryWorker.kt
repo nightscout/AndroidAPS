@@ -1,14 +1,15 @@
 package app.aaps.workers
 
 import android.content.Context
-import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryJob
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
+import app.aaps.core.objects.workflow.MetroWorkerCreator
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.Dispatchers
 
 /**
@@ -24,7 +25,6 @@ import kotlinx.coroutines.Dispatchers
  * There are ~42 of these across the repo. If they are ever unified behind one generic worker
  * dispatching on a job id, this is the shape to unify: a thin envelope over a platform free job.
  */
-@HiltWorker
 class RunningModeExpiryWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
@@ -36,6 +36,16 @@ class RunningModeExpiryWorker @AssistedInject constructor(
     override suspend fun doWorkAndLog(): Result {
         job.run()
         return Result.success()
+    }
+
+    /**
+     * Metro builds the worker through this. WorkManager supplies the context and parameters, the
+     * graph supplies the rest - the same split @HiltWorker expressed, without Hilt.
+     */
+    @AssistedFactory
+    fun interface Factory : MetroWorkerCreator {
+
+        override fun create(context: Context, params: WorkerParameters): RunningModeExpiryWorker
     }
 
     companion object {

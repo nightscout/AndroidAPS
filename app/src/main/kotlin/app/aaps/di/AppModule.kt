@@ -64,6 +64,9 @@ abstract class AppModule {
             // Modules migrated to Metro contribute a compile-time @IntoMap multibinding of the same
             // shape, merged on the same Int order so modules can move one at a time.
             plugins += metroGraphs.plugins()
+            // Metro's @NotNSClient bucket, merged under the same condition as Dagger's above. Keeping
+            // the two buckets apart is what stops a converted plugin appearing in follower builds.
+            if (!config.AAPSCLIENT) plugins += metroGraphs.notNsClientPlugins()
 
             return plugins.toList().sortedBy { it.first }.map { it.second }
         }
