@@ -86,9 +86,6 @@ import app.aaps.implementation.pump.PumpStatusProviderImpl
 import app.aaps.implementation.pump.PumpSyncImplementation
 import app.aaps.implementation.pump.PumpWithConcentrationImpl
 import app.aaps.implementation.pump.TemporaryBasalStorageImpl
-import app.aaps.implementation.receivers.BTReceiver
-import app.aaps.implementation.receivers.ChargingStateReceiver
-import app.aaps.implementation.receivers.NetworkChangeReceiver
 import app.aaps.implementation.receivers.ReceiverStatusStoreImpl
 import app.aaps.implementation.receivers.TimeDateOrTZChangeReceiver
 import app.aaps.implementation.resources.IconsProviderImplementation
@@ -141,9 +138,9 @@ class ImplementationModule {
     @InstallIn(SingletonComponent::class)
     interface Bindings {
 
-        @ContributesAndroidInjector fun contributesNetworkChangeReceiver(): NetworkChangeReceiver
-        @ContributesAndroidInjector fun contributesBTReceiver(): BTReceiver
-        @ContributesAndroidInjector fun contributesChargingStateReceiver(): ChargingStateReceiver
+        // NetworkChangeReceiver, BTReceiver and ChargingStateReceiver moved to Metro - see
+        // AppReceiversGraph. They no longer extend a dagger.android base class, so leaving them here
+        // would only generate an injector that injects nothing.
         @ContributesAndroidInjector fun contributesTimeDateOrTZChangeReceiver(): TimeDateOrTZChangeReceiver
 
         @Binds fun bindPreferences(preferencesImpl: PreferencesImpl): Preferences

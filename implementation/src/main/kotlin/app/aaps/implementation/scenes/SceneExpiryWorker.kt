@@ -1,7 +1,6 @@
 package app.aaps.implementation.scenes
 
 import android.content.Context
-import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import app.aaps.core.data.model.SceneEndAction
 import app.aaps.core.interfaces.aps.Loop
@@ -18,8 +17,10 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.ui.R
 import app.aaps.core.interfaces.R as InterfacesR
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
+import app.aaps.core.objects.workflow.MetroWorkerCreator
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.Dispatchers
 
 /**
@@ -27,7 +28,6 @@ import kotlinx.coroutines.Dispatchers
  * Reverts non-duration actions (SMB), marks scene as expired, and either
  * auto-activates a chained follow-up scene or posts an "ended" notification.
  */
-@HiltWorker
 class SceneExpiryWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
@@ -137,6 +137,16 @@ class SceneExpiryWorker @AssistedInject constructor(
             id = NotificationId.SCENE_CHAIN_ERROR,
             text = "$summary\n$details"
         )
+    }
+
+    /**
+     * Metro builds the worker through this, replacing what `@HiltWorker` did. The parameter names
+     * must match [MetroWorkerCreator], because Metro matches assisted parameters by name.
+     */
+    @AssistedFactory
+    fun interface Factory : MetroWorkerCreator {
+
+        override fun create(context: Context, params: WorkerParameters): SceneExpiryWorker
     }
 
     companion object {

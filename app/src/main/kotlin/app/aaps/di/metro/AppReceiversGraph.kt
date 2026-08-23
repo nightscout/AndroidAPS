@@ -3,6 +3,8 @@ package app.aaps.di.metro
 import app.aaps.core.interfaces.di.DeferredRef
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.implementation.receivers.BTReceiver
 import app.aaps.implementation.receivers.ChargingStateReceiver
 import app.aaps.implementation.receivers.NetworkChangeReceiver
 import dev.zacsweers.metro.AppScope
@@ -37,12 +39,14 @@ interface AppReceiversGraph {
 
         fun create(
             @Provides aapsLoggerRef: DeferredRef<AAPSLogger>,
-            @Provides receiverStatusStoreRef: DeferredRef<ReceiverStatusStore>
+            @Provides receiverStatusStoreRef: DeferredRef<ReceiverStatusStore>,
+            @Provides rxBusRef: DeferredRef<RxBus>
         ): AppReceiversGraph
     }
 
     @Provides fun aapsLogger(r: DeferredRef<AAPSLogger>): AAPSLogger = r.get()
     @Provides fun receiverStatusStore(r: DeferredRef<ReceiverStatusStore>): ReceiverStatusStore = r.get()
+    @Provides fun rxBus(r: DeferredRef<RxBus>): RxBus = r.get()
 
     @Provides
     @IntoMap
@@ -53,4 +57,9 @@ interface AppReceiversGraph {
     @IntoMap
     @ClassKey(NetworkChangeReceiver::class)
     fun bindNetworkChangeReceiver(injector: MembersInjector<NetworkChangeReceiver>): MembersInjector<*> = injector
+
+    @Provides
+    @IntoMap
+    @ClassKey(BTReceiver::class)
+    fun bindBTReceiver(injector: MembersInjector<BTReceiver>): MembersInjector<*> = injector
 }

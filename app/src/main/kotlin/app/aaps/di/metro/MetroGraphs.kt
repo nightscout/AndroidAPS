@@ -40,6 +40,9 @@ import app.aaps.core.objects.wizard.BolusWizard
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.ui.compose.MetroViewModelFactory
 import app.aaps.ui.compose.overview.OverviewDataCacheFactory
+import app.aaps.implementation.scenes.ActiveSceneManager
+import app.aaps.implementation.scenes.SceneExecutor
+import app.aaps.implementation.scenes.SceneRepository
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryJob
 import app.aaps.plugins.calibration.di.CalibrationGraph
 import app.aaps.plugins.sensitivity.di.SensitivityGraph
@@ -112,7 +115,10 @@ class MetroGraphs @Inject constructor(
     private val calculationWorkflow: Provider<CalculationWorkflow>,
     private val decimalFormatter: Provider<DecimalFormatter>,
     private val processedTbrEbData: Provider<ProcessedTbrEbData>,
-    private val overviewDataCacheFactory: Provider<OverviewDataCacheFactory>
+    private val overviewDataCacheFactory: Provider<OverviewDataCacheFactory>,
+    private val activeSceneManager: Provider<ActiveSceneManager>,
+    private val sceneExecutor: Provider<SceneExecutor>,
+    private val sceneRepository: Provider<SceneRepository>
 ) {
 
     private val smoothing: SmoothingGraph by lazy {
@@ -192,7 +198,11 @@ class MetroGraphs @Inject constructor(
             DeferredRef { preferences.get() },
             DeferredRef { dstHelper.get() },
             DeferredRef { workManager.get() },
-            DeferredRef { concentrationHelper.get() }
+            DeferredRef { concentrationHelper.get() },
+            DeferredRef { notificationManager.get() },
+            DeferredRef { activeSceneManager.get() },
+            DeferredRef { sceneExecutor.get() },
+            DeferredRef { sceneRepository.get() }
         )
     }
 
@@ -208,7 +218,8 @@ class MetroGraphs @Inject constructor(
     private val receivers: AppReceiversGraph by lazy {
         createGraphFactory<AppReceiversGraph.Factory>().create(
             DeferredRef { aapsLogger.get() },
-            DeferredRef { receiverStatusStore.get() }
+            DeferredRef { receiverStatusStore.get() },
+            DeferredRef { rxBus.get() }
         )
     }
 

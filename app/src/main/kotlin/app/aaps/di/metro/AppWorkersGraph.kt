@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.dst.DstHelper
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -21,6 +22,10 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.MetroWorkerCreator
 import app.aaps.implementation.receivers.KeepAliveWorker
+import app.aaps.implementation.scenes.ActiveSceneManager
+import app.aaps.implementation.scenes.SceneExecutor
+import app.aaps.implementation.scenes.SceneExpiryWorker
+import app.aaps.implementation.scenes.SceneRepository
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryJob
 import app.aaps.workers.RunningModeExpiryWorker
 import dev.zacsweers.metro.AppScope
@@ -83,7 +88,11 @@ interface AppWorkersGraph {
             @Provides preferencesRef: DeferredRef<Preferences>,
             @Provides dstHelperRef: DeferredRef<DstHelper>,
             @Provides workManagerRef: DeferredRef<WorkManager>,
-            @Provides concentrationHelperRef: DeferredRef<ConcentrationHelper>
+            @Provides concentrationHelperRef: DeferredRef<ConcentrationHelper>,
+            @Provides notificationManagerRef: DeferredRef<NotificationManager>,
+            @Provides activeSceneManagerRef: DeferredRef<ActiveSceneManager>,
+            @Provides sceneExecutorRef: DeferredRef<SceneExecutor>,
+            @Provides sceneRepositoryRef: DeferredRef<SceneRepository>
         ): AppWorkersGraph
     }
 
@@ -106,6 +115,10 @@ interface AppWorkersGraph {
     @Provides fun dstHelper(r: DeferredRef<DstHelper>): DstHelper = r.get()
     @Provides fun workManager(r: DeferredRef<WorkManager>): WorkManager = r.get()
     @Provides fun concentrationHelper(r: DeferredRef<ConcentrationHelper>): ConcentrationHelper = r.get()
+    @Provides fun notificationManager(r: DeferredRef<NotificationManager>): NotificationManager = r.get()
+    @Provides fun activeSceneManager(r: DeferredRef<ActiveSceneManager>): ActiveSceneManager = r.get()
+    @Provides fun sceneExecutor(r: DeferredRef<SceneExecutor>): SceneExecutor = r.get()
+    @Provides fun sceneRepository(r: DeferredRef<SceneRepository>): SceneRepository = r.get()
 
     /**
      * The whole `@HiltWorker` replacement, per worker: one line binding the generated assisted factory
@@ -121,4 +134,9 @@ interface AppWorkersGraph {
     @IntoMap
     @ClassKey(KeepAliveWorker::class)
     fun bindKeepAliveWorker(factory: KeepAliveWorker.Factory): MetroWorkerCreator = factory
+
+    @Provides
+    @IntoMap
+    @ClassKey(SceneExpiryWorker::class)
+    fun bindSceneExpiryWorker(factory: SceneExpiryWorker.Factory): MetroWorkerCreator = factory
 }
