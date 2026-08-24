@@ -50,9 +50,18 @@ class GetGlucoseDataPacket(private val sensorIdLen: Int) : EversenseBasePacket()
             .toByteArray().joinToString("") { "%02x".format(it) }
         val rawHex = receivedData.toByteArray().joinToString("") { "%02x".format(it) }
 
+        val glucoseInMgDl = receivedData.copyOfRange(20 + sensorIdLen, 22 + sensorIdLen).toInt()
+        // Reject implausible glucose values before they reach state - matches EversenseKit's
+        // (loopandlearn/bastiaanv, the reference iOS implementation this port is based on)
+        // safety ceiling, tightened from 1000 to 450 mg/dl.
+        if (glucoseInMgDl >= 450) {
+            EversenseLogger.warning("GetGlucoseDataPacket", "Glucose exceeds safety limits: $glucoseInMgDl — rejecting")
+            return null
+        }
+
         return Response(
             datetime = receivedData.copyOfRange(12 + sensorIdLen, 20 + sensorIdLen).toUnix(),
-            glucoseInMgDl = receivedData.copyOfRange(20 + sensorIdLen, 22 + sensorIdLen).toInt(),
+            glucoseInMgDl = glucoseInMgDl,
             trend = getTrend(receivedData[164 + sensorIdLen].toInt()),
             signalStrength = signalRaw,
             sensorId = sensorId,

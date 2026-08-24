@@ -54,7 +54,9 @@ class GetGlucoseLogValuesPacket(
             val trend = getTrend(chunk[offsetTrend].toInt() and 0xFF)
             i += recordLength
 
-            if (glucose >= 0x03E8) {
+            // Safety ceiling matches EversenseKit's (loopandlearn/bastiaanv, the reference iOS
+            // implementation this port is based on), tightened from 1000 to 450 mg/dl.
+            if (glucose >= 450) {
                 EversenseLogger.warning("GetGlucoseLogValuesPacket", "Glucose exceeds limits: $glucose — skipping")
                 continue
             }

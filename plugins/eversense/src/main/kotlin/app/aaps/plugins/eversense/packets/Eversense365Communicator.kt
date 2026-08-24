@@ -63,11 +63,6 @@ class Eversense365Communicator {
                 return
             }
 
-            if (glucoseData.glucoseInMgDl > 1000) {
-                EversenseLogger.error(TAG, "recentGlucose exceeds range - received: ${glucoseData.glucoseInMgDl}")
-                return
-            }
-
             var currentGlucose = glucoseData.glucoseInMgDl
 
             val result = mutableListOf<EversenseCGMResult>()
