@@ -10,6 +10,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import app.aaps.plugins.sync.di.OpenHumansScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import javax.inject.Inject
 
 @Immutable
@@ -19,6 +23,10 @@ internal data class OHUiState(
 )
 
 @Stable
+// Contributed to OpenHumansScope, not AppScope: this class is internal to the module, and a
+// contribution to AppScope would have to be nameable from `:app` where the root graph is generated.
+@ContributesIntoMap(OpenHumansScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 internal class OHViewModel @Inject constructor(
     private val stateDelegate: OHStateDelegate
 ) : ViewModel() {

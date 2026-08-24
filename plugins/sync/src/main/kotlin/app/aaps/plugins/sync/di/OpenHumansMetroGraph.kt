@@ -14,9 +14,7 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.MetroWorkerCreator
 import app.aaps.core.objects.workflow.WorkerKey
-import app.aaps.core.ui.compose.MetroViewModelCreator
 import app.aaps.plugins.sync.openhumans.OpenHumansUploaderPlugin
-import app.aaps.plugins.sync.openhumans.compose.OHViewModel
 import app.aaps.plugins.sync.openhumans.OpenHumansWorker
 import app.aaps.plugins.sync.openhumans.ui.OHLoginActivity
 import app.aaps.plugins.sync.openhumans.ui.OHLoginViewModel
@@ -27,6 +25,7 @@ import dev.zacsweers.metro.IntoMap
 import dev.zacsweers.metro.MembersInjector
 import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.Provides
+import dev.zacsweers.metrox.viewmodel.MetroViewModelMultibindings
 import kotlin.reflect.KClass
 
 /**
@@ -64,7 +63,7 @@ abstract class OpenHumansScope private constructor()
  * `String`), a view model ([OHLoginViewModel]) and a plugin ([OpenHumansUploaderPlugin]).
  */
 @DependencyGraph(OpenHumansScope::class)
-internal interface OpenHumansMetroGraph {
+internal interface OpenHumansMetroGraph : MetroViewModelMultibindings {
 
     /**
      * Contributed under [NotNSClient], exactly as the Dagger binding was.
@@ -78,9 +77,6 @@ internal interface OpenHumansMetroGraph {
 
     /** Fills [OHLoginActivity]'s fields - the `@AndroidEntryPoint` replacement. */
     val memberInjectors: Map<KClass<*>, MembersInjector<*>>
-
-    /** Builds [OHLoginViewModel] - the `@HiltViewModel` replacement. */
-    val viewModelCreators: Map<KClass<*>, MetroViewModelCreator>
 
     /** Builds [OpenHumansWorker] - the `@HiltWorker` replacement. */
     val workerCreators: Map<KClass<out ListenableWorker>, MetroWorkerCreator>
@@ -135,22 +131,11 @@ internal interface OpenHumansMetroGraph {
     @ClassKey(OHLoginActivity::class)
     fun bindOHLoginActivity(injector: MembersInjector<OHLoginActivity>): MembersInjector<*> = injector
 
-    @Provides
-    @IntoMap
-    @ClassKey(OHLoginViewModel::class)
-    fun bindOHLoginViewModel(provider: Provider<OHLoginViewModel>): MetroViewModelCreator =
-        MetroViewModelCreator { provider() }
-
     /**
      * The plugin's own screen. Note this class still declares `javax.inject.Inject` - with Dagger
      * interop switched on for this module, Metro reads it, so converting a class means removing the
      * Hilt annotation and adding a binding here, not rewriting its annotations.
      */
-    @Provides
-    @IntoMap
-    @ClassKey(OHViewModel::class)
-    fun bindOHViewModel(provider: Provider<OHViewModel>): MetroViewModelCreator =
-        MetroViewModelCreator { provider() }
 
     @Provides
     @IntoMap

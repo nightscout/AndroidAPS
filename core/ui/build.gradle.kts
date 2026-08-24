@@ -86,6 +86,9 @@ kotlin {
                 api(libs.androidx.navigationevent.compose)
                 api(libs.cmp.material3)
                 api(libs.cmp.material.icons.extended)
+                // Metro's view model extension. `api` so every module with a view model gets @ViewModelKey
+                // without repeating the dependency - there are eighty of them to convert.
+                api(libs.metrox.viewmodel)
                 implementation(libs.cmp.ui.tooling.preview)
             }
         }

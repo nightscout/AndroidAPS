@@ -12,7 +12,9 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.MetroWorkerCreator
-import app.aaps.core.ui.compose.MetroViewModelCreator
+import androidx.lifecycle.ViewModel
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
+import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactory
 import dev.zacsweers.metro.MembersInjector
 import dev.zacsweers.metro.createGraphFactory
 import javax.inject.Inject
@@ -69,6 +71,15 @@ class OpenHumansMetroBridge @Inject constructor(
      */
     val notNsClientPlugins: Map<Int, PluginBase> get() = graph.notNsClientPlugins
     val memberInjectors: Map<KClass<*>, MembersInjector<*>> get() = graph.memberInjectors
-    val viewModelCreators: Map<KClass<*>, MetroViewModelCreator> get() = graph.viewModelCreators
+    /**
+     * View models this module contributes, in the shape metrox's factory reads. `:app` merges these
+     * with the root graph's - see `AapsViewModelFactory`.
+     */
+    val viewModelProviders: Map<KClass<out ViewModel>, () -> ViewModel> get() = graph.viewModelProviders
+    val assistedFactoryProviders: Map<KClass<out ViewModel>, () -> ViewModelAssistedFactory>
+        get() = graph.assistedFactoryProviders
+    val manualAssistedFactoryProviders:
+        Map<KClass<out ManualViewModelAssistedFactory>, () -> ManualViewModelAssistedFactory>
+        get() = graph.manualAssistedFactoryProviders
     val workerCreators: Map<KClass<out ListenableWorker>, MetroWorkerCreator> get() = graph.workerCreators
 }

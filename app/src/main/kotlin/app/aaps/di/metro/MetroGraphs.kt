@@ -16,10 +16,9 @@ import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.objects.workflow.MetroWorkerCreator
 import app.aaps.core.objects.wizard.BolusWizard
 import app.aaps.core.objects.wizard.QuickWizard
-import app.aaps.core.ui.compose.MetroViewModelFactory
+import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
 import app.aaps.plugins.automation.di.AutomationMetroGraph
-import app.aaps.plugins.constraints.di.ConstraintsMetroGraph
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import app.aaps.plugins.source.di.SourceMetroGraph
 import app.aaps.plugins.sync.di.OpenHumansMetroBridge
@@ -87,7 +86,6 @@ class MetroGraphs @Inject constructor(
     // The module owns its own bridge, because its DI qualifiers are internal to it.
     private val openHumans: OpenHumansMetroBridge get() = openHumansMetroBridge.get()
     private val automation: AutomationMetroGraph get() = root.automationGraph
-    private val constraints: ConstraintsMetroGraph get() = root.constraintsGraph
 
     /**
      * Builds one history browsing window, with its own calculation objects.
@@ -118,9 +116,7 @@ class MetroGraphs @Inject constructor(
      * The `@HiltViewModel` replacement. Built once, from every module graph that contributes view
      * models - one map, the same way Hilt presents one factory for the whole app.
      */
-    val viewModelFactory: MetroViewModelFactory by lazy {
-        MetroViewModelFactory(openHumans.viewModelCreators + constraints.viewModelCreators)
-    }
+    val viewModelFactory: MetroViewModelFactory by lazy { AapsViewModelFactory(root, openHumans) }
 
     /** Handed back to Dagger consumers that have not moved - Dagger delegates, never constructs. */
     val runningModeGuard: RunningModeGuard get() = coreObjects.runningModeGuard

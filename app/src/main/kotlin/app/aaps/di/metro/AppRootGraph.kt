@@ -6,7 +6,6 @@ import app.aaps.core.interfaces.di.NotNSClient
 import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.plugins.automation.di.AutomationMetroGraph
 import app.aaps.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
-import app.aaps.plugins.constraints.di.ConstraintsMetroGraph
 import app.aaps.plugins.constraints.dstHelper.DstHelperPlugin
 import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.constraints.objectives.objectives.Objective
@@ -19,6 +18,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Includes
 import dev.zacsweers.metro.Provides
+import dev.zacsweers.metrox.viewmodel.MetroViewModelMultibindings
 
 /**
  * The one Metro root. Everything else hangs off it as a graph extension.
@@ -41,7 +41,7 @@ import dev.zacsweers.metro.Provides
  * When Dagger is gone the factory below goes with it and these become ordinary bindings.
  */
 @DependencyGraph(AppScope::class)
-interface AppRootGraph {
+interface AppRootGraph : MetroViewModelMultibindings {
 
     /** Android classes that fill their own fields. */
     val receiversGraph: AppReceiversGraph
@@ -115,7 +115,6 @@ interface AppRootGraph {
 
     val sourceGraph: SourceMetroGraph
     val automationGraph: AutomationMetroGraph
-    val constraintsGraph: ConstraintsMetroGraph
 
     @DependencyGraph.Factory
     fun interface Factory {
