@@ -11,8 +11,20 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.ui.compose.icons.IcCalibration
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 
 
+@Inject
+@SingleIn(AppScope::class)
+// Bound as PluginBase, not implicitly: the class has more than one supertype, so Metro cannot pick
+// one. The plugin list wants PluginBase.
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@IntKey(700)
 class NoCalibrationPlugin(
     aapsLogger: AAPSLogger,
     rh: TextResolver

@@ -16,9 +16,7 @@ import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.ui.compose.MetroViewModelFactory
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
 import app.aaps.plugins.automation.di.AutomationMetroGraph
-import app.aaps.plugins.calibration.di.CalibrationGraph
 import app.aaps.plugins.constraints.di.ConstraintsMetroGraph
-import app.aaps.plugins.sensitivity.di.SensitivityGraph
 import app.aaps.plugins.source.di.SourceMetroGraph
 import app.aaps.plugins.sync.di.OpenHumansMetroBridge
 import dev.zacsweers.metro.MembersInjector
@@ -58,10 +56,6 @@ class MetroGraphs @Inject constructor(
 ) {
 
     private val coreObjects: CoreObjectsGraph get() = root.coreObjectsGraph
-
-    private val calibration: CalibrationGraph get() = root.calibrationGraph
-
-    private val sensitivity: SensitivityGraph get() = root.sensitivityGraph
 
     /**
      * Workers Metro can build, keyed by class name because that is all WorkManager gives us.
@@ -136,7 +130,7 @@ class MetroGraphs @Inject constructor(
      * shape the Dagger module used, unlike the Koin branch which had to invent a registration object.
      */
     fun plugins(): Map<Int, PluginBase> =
-        root.contributedPlugins + calibration.plugins + sensitivity.plugins +
+        root.contributedPlugins +
             constraints.allConfigsPlugins
 
     /**

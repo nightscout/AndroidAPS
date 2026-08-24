@@ -1,5 +1,10 @@
 package app.aaps.di.metro
 
+import app.aaps.plugins.calibration.LinearCalibrationPlugin
+import app.aaps.plugins.calibration.NoCalibrationPlugin
+import app.aaps.plugins.sensitivity.SensitivityAAPSPlugin
+import app.aaps.plugins.sensitivity.SensitivityOref1Plugin
+import app.aaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
 import app.aaps.plugins.smoothing.AvgSmoothingPlugin
 import app.aaps.plugins.smoothing.ExponentialSmoothingPlugin
 import app.aaps.plugins.smoothing.NoSmoothingPlugin
@@ -20,16 +25,21 @@ class ContributedPluginsTest {
     private val plugins get() = testRoot().contributedPlugins
 
     @Test
-    fun `the four smoothing plugins are contributed under their order keys`() {
-        assertThat(plugins.keys).containsExactly(600, 610, 620, 630)
+    fun `every contributed plugin appears under its order key`() {
+        assertThat(plugins.keys).containsExactly(100, 110, 120, 600, 610, 620, 630, 700, 710)
     }
 
     @Test
     fun `each order key holds the plugin it is meant to`() {
+        assertThat(plugins[100]).isInstanceOf(SensitivityAAPSPlugin::class.java)
+        assertThat(plugins[110]).isInstanceOf(SensitivityWeightedAveragePlugin::class.java)
+        assertThat(plugins[120]).isInstanceOf(SensitivityOref1Plugin::class.java)
         assertThat(plugins[600]).isInstanceOf(NoSmoothingPlugin::class.java)
         assertThat(plugins[610]).isInstanceOf(ExponentialSmoothingPlugin::class.java)
         assertThat(plugins[620]).isInstanceOf(AvgSmoothingPlugin::class.java)
         assertThat(plugins[630]).isInstanceOf(UnscentedKalmanFilterPlugin::class.java)
+        assertThat(plugins[700]).isInstanceOf(NoCalibrationPlugin::class.java)
+        assertThat(plugins[710]).isInstanceOf(LinearCalibrationPlugin::class.java)
     }
 
     @Test
