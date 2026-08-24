@@ -87,7 +87,6 @@ import app.aaps.implementation.pump.PumpSyncImplementation
 import app.aaps.implementation.pump.PumpWithConcentrationImpl
 import app.aaps.implementation.pump.TemporaryBasalStorageImpl
 import app.aaps.implementation.receivers.ReceiverStatusStoreImpl
-import app.aaps.implementation.receivers.TimeDateOrTZChangeReceiver
 import app.aaps.implementation.resources.IconsProviderImplementation
 import app.aaps.implementation.resources.ResourceHelperImpl
 import app.aaps.implementation.sharedPreferences.PreferencesImpl
@@ -104,7 +103,6 @@ import app.aaps.implementation.utils.fabric.FabricPrivacyImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import dagger.android.ContributesAndroidInjector
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.Multibinds
@@ -141,7 +139,8 @@ class ImplementationModule {
         // NetworkChangeReceiver, BTReceiver and ChargingStateReceiver moved to Metro - see
         // AppReceiversGraph. They no longer extend a dagger.android base class, so leaving them here
         // would only generate an injector that injects nothing.
-        @ContributesAndroidInjector fun contributesTimeDateOrTZChangeReceiver(): TimeDateOrTZChangeReceiver
+        // TimeDateOrTZChangeReceiver moved to Metro - see AppReceiversGraph. It was the last
+        // dagger.android receiver in this module.
 
         @Binds fun bindPreferences(preferencesImpl: PreferencesImpl): Preferences
         @Binds fun bindVisibilityContext(impl: VisibilityContextImpl): VisibilityContext

@@ -35,7 +35,12 @@ import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.core.objects.runningMode.RunningModeGuard
+import app.aaps.core.interfaces.maintenance.FileListProvider
+import app.aaps.core.interfaces.storage.Storage
+import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
 import app.aaps.core.objects.workflow.MetroWorkerCreator
+import app.aaps.core.utils.receivers.DataInbox
+import app.aaps.implementation.maintenance.cloud.CloudStorageManager
 import app.aaps.core.objects.wizard.BolusWizard
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.ui.compose.MetroViewModelFactory
@@ -125,7 +130,12 @@ class MetroGraphs @Inject constructor(
     private val overviewDataCacheFactory: Provider<OverviewDataCacheFactory>,
     private val activeSceneManager: Provider<ActiveSceneManager>,
     private val sceneExecutor: Provider<SceneExecutor>,
-    private val sceneRepository: Provider<SceneRepository>
+    private val sceneRepository: Provider<SceneRepository>,
+    private val fileListProvider: Provider<FileListProvider>,
+    private val storage: Provider<Storage>,
+    private val userEntryPresentationHelper: Provider<UserEntryPresentationHelper>,
+    private val dataInbox: Provider<DataInbox>,
+    private val cloudStorageManager: Provider<CloudStorageManager>
 ) {
 
     private val smoothing: SmoothingGraph by lazy {
@@ -210,6 +220,11 @@ class MetroGraphs @Inject constructor(
             DeferredRef { activeSceneManager.get() },
             DeferredRef { sceneExecutor.get() },
             DeferredRef { sceneRepository.get() },
+            DeferredRef { fileListProvider.get() },
+            DeferredRef { storage.get() },
+            DeferredRef { userEntryPresentationHelper.get() },
+            DeferredRef { dataInbox.get() },
+            DeferredRef { cloudStorageManager.get() },
             DeferredRef { appScope.get() }
         )
     }
@@ -231,7 +246,9 @@ class MetroGraphs @Inject constructor(
         createGraphFactory<AppReceiversGraph.Factory>().create(
             DeferredRef { aapsLogger.get() },
             DeferredRef { receiverStatusStore.get() },
-            DeferredRef { rxBus.get() }
+            DeferredRef { rxBus.get() },
+            DeferredRef { activePlugin.get() },
+            DeferredRef { appScope.get() }
         )
     }
 

@@ -20,8 +20,14 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.interfaces.maintenance.FileListProvider
+import app.aaps.core.interfaces.storage.Storage
+import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
 import app.aaps.core.objects.workflow.MetroWorkerCreator
+import app.aaps.core.utils.receivers.DataInbox
+import app.aaps.implementation.maintenance.cloud.CloudStorageManager
 import app.aaps.implementation.receivers.KeepAliveWorker
+import app.aaps.implementation.maintenance.ImportExportPrefsImpl
 import app.aaps.implementation.scenes.ActiveSceneManager
 import app.aaps.implementation.scenes.SceneExecutor
 import app.aaps.implementation.scenes.SceneExpiryWorker
@@ -102,6 +108,11 @@ interface AppWorkersGraph {
             @Provides activeSceneManagerRef: DeferredRef<ActiveSceneManager>,
             @Provides sceneExecutorRef: DeferredRef<SceneExecutor>,
             @Provides sceneRepositoryRef: DeferredRef<SceneRepository>,
+            @Provides fileListProviderRef: DeferredRef<FileListProvider>,
+            @Provides storageRef: DeferredRef<Storage>,
+            @Provides userEntryPresentationHelperRef: DeferredRef<UserEntryPresentationHelper>,
+            @Provides dataInboxRef: DeferredRef<DataInbox>,
+            @Provides cloudStorageManagerRef: DeferredRef<CloudStorageManager>,
             @Provides appScopeRef: DeferredRef<CoroutineScope>
         ): AppWorkersGraph
     }
@@ -129,6 +140,11 @@ interface AppWorkersGraph {
     @Provides fun activeSceneManager(r: DeferredRef<ActiveSceneManager>): ActiveSceneManager = r.get()
     @Provides fun sceneExecutor(r: DeferredRef<SceneExecutor>): SceneExecutor = r.get()
     @Provides fun sceneRepository(r: DeferredRef<SceneRepository>): SceneRepository = r.get()
+    @Provides fun fileListProvider(r: DeferredRef<FileListProvider>): FileListProvider = r.get()
+    @Provides fun storage(r: DeferredRef<Storage>): Storage = r.get()
+    @Provides fun userEntryPresentationHelper(r: DeferredRef<UserEntryPresentationHelper>): UserEntryPresentationHelper = r.get()
+    @Provides fun dataInbox(r: DeferredRef<DataInbox>): DataInbox = r.get()
+    @Provides fun cloudStorageManager(r: DeferredRef<CloudStorageManager>): CloudStorageManager = r.get()
     @Provides fun appScope(r: DeferredRef<CoroutineScope>): CoroutineScope = r.get()
 
     /**
@@ -150,4 +166,16 @@ interface AppWorkersGraph {
     @IntoMap
     @ClassKey(SceneExpiryWorker::class)
     fun bindSceneExpiryWorker(factory: SceneExpiryWorker.Factory): MetroWorkerCreator = factory
+
+    @Provides
+    @IntoMap
+    @ClassKey(ImportExportPrefsImpl.CsvExportWorker::class)
+    fun bindCsvExportWorker(f: ImportExportPrefsImpl.CsvExportWorker.Factory): MetroWorkerCreator = f
+
+    @Provides
+    @IntoMap
+    @ClassKey(ImportExportPrefsImpl.ApsResultExportWorker::class)
+    fun bindApsResultExportWorker(
+        f: ImportExportPrefsImpl.ApsResultExportWorker.Factory
+    ): MetroWorkerCreator = f
 }
