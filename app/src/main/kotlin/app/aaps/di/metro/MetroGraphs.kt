@@ -195,9 +195,27 @@ class MetroGraphs @Inject constructor(
         )
     }
 
-    private val workers: AppWorkersGraph by lazy {
-        createGraphFactory<AppWorkersGraph.Factory>().create(
+    /**
+     * Workers Metro can build, keyed by class name because that is all WorkManager gives us.
+     *
+     * Resolved on each call rather than cached, so nothing here runs until a worker is really built -
+     * WorkManager can initialise during startup and this must not resolve Dagger providers then.
+     */
+    /** Handed to Dagger consumers - it is built by Metro, in the module that owns the worker. */
+    val runningModeExpiryScheduler: RunningModeExpiryScheduler get() = workers.runningModeExpiryScheduler
+
+    fun workerCreators(): Map<String, MetroWorkerCreator> =
+        (workers.workerCreators + openHumans.workerCreators + sourceMetroBridge.get().workerCreators)
+            .mapKeys { (klass, _) -> klass.java.name }
+
+    /** The one Metro root. Sub-graphs are extensions of it rather than roots of their own. */
+    private val root: AppRootGraph by lazy {
+        createGraphFactory<AppRootGraph.Factory>().create(
             DeferredRef { aapsLogger.get() },
+            DeferredRef { receiverStatusStore.get() },
+            DeferredRef { rxBus.get() },
+            DeferredRef { activePlugin.get() },
+            DeferredRef { appScope.get() },
             DeferredRef { fabricPrivacy.get() },
             DeferredRef { runningModeExpiryJob.get() },
             DeferredRef { localAlertUtils.get() },
@@ -206,9 +224,8 @@ class MetroGraphs @Inject constructor(
             DeferredRef { iobCobCalculator.get() },
             DeferredRef { loop.get() },
             DeferredRef { dateUtil.get() },
-            DeferredRef { activePlugin.get() },
             DeferredRef { profileFunction.get() },
-            DeferredRef { rxBus.get() },
+            DeferredRef { profileUtil.get() },
             DeferredRef { commandQueue.get() },
             DeferredRef { maintenance.get() },
             DeferredRef { rh.get() },
@@ -225,32 +242,15 @@ class MetroGraphs @Inject constructor(
             DeferredRef { userEntryPresentationHelper.get() },
             DeferredRef { dataInbox.get() },
             DeferredRef { cloudStorageManager.get() },
-            DeferredRef { appScope.get() }
+            DeferredRef { calculationWorkflow.get() },
+            DeferredRef { decimalFormatter.get() },
+            DeferredRef { processedTbrEbData.get() },
+            DeferredRef { overviewDataCacheFactory.get() }
         )
     }
 
-    /**
-     * Workers Metro can build, keyed by class name because that is all WorkManager gives us.
-     *
-     * Resolved on each call rather than cached, so nothing here runs until a worker is really built -
-     * WorkManager can initialise during startup and this must not resolve Dagger providers then.
-     */
-    /** Handed to Dagger consumers - it is built by Metro, in the module that owns the worker. */
-    val runningModeExpiryScheduler: RunningModeExpiryScheduler get() = workers.runningModeExpiryScheduler
-
-    fun workerCreators(): Map<String, MetroWorkerCreator> =
-        (workers.workerCreators + openHumans.workerCreators + sourceMetroBridge.get().workerCreators)
-            .mapKeys { (klass, _) -> klass.java.name }
-
-    private val receivers: AppReceiversGraph by lazy {
-        createGraphFactory<AppReceiversGraph.Factory>().create(
-            DeferredRef { aapsLogger.get() },
-            DeferredRef { receiverStatusStore.get() },
-            DeferredRef { rxBus.get() },
-            DeferredRef { activePlugin.get() },
-            DeferredRef { appScope.get() }
-        )
-    }
+    private val receivers: AppReceiversGraph get() = root.receiversGraph
+    private val workers: AppWorkersGraph get() = root.workersGraph
 
     // The module owns its own bridge, because its DI qualifiers are internal to it.
     private val openHumans: OpenHumansMetroBridge get() = openHumansMetroBridge.get()
@@ -262,21 +262,7 @@ class MetroGraphs @Inject constructor(
      * own. Everything the window shares with the app arrives deferred, because [ActivePlugin] leads
      * back to the plugin list and so back into these graphs.
      */
-    fun newHistoryWindow(): HistoryWindowGraph =
-        createGraphFactory<HistoryWindowGraph.Factory>().create(
-            DeferredRef { aapsLogger.get() },
-            DeferredRef { rxBus.get() },
-            DeferredRef { preferences.get() },
-            DeferredRef { rh.get() },
-            DeferredRef { profileFunction.get() },
-            DeferredRef { activePlugin.get() },
-            DeferredRef { dateUtil.get() },
-            DeferredRef { persistenceLayer.get() },
-            DeferredRef { calculationWorkflow.get() },
-            DeferredRef { decimalFormatter.get() },
-            DeferredRef { processedTbrEbData.get() },
-            DeferredRef { overviewDataCacheFactory.get() }
-        )
+    fun newHistoryWindow(): HistoryWindowGraph = root.historyWindowFactory.create()
 
     /**
      * Fills the `@Inject` fields of an Android class Metro knows about - the `HasAndroidInjector`

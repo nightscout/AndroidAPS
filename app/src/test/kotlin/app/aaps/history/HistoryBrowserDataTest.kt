@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.workflow.CalculationSignals
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.objects.workflow.CalculationSignalsImpl
+import app.aaps.di.metro.AppRootGraph
 import app.aaps.di.metro.HistoryWindowGraph
 import app.aaps.implementation.overview.OverviewDataImpl
 import app.aaps.plugins.main.iob.iobCobCalculator.IobCobCalculatorPlugin
@@ -47,20 +48,26 @@ class HistoryBrowserDataTest : TestBaseWithProfile() {
         sut = createSut()
     }
 
-    private fun createSut() = createGraphFactory<HistoryWindowGraph.Factory>().create(
-        DeferredRef { aapsLogger },
-        DeferredRef { rxBus },
-        DeferredRef { preferences },
-        DeferredRef { rh },
-        DeferredRef { profileFunction },
-        DeferredRef { activePlugin },
-        DeferredRef { dateUtil },
-        DeferredRef { persistenceLayer },
-        DeferredRef { calculationWorkflow },
-        DeferredRef { decimalFormatter },
-        DeferredRef { processedTbrEbData },
-        DeferredRef { overviewDataCacheFactory }
+    private fun <T : Any> unused(): DeferredRef<T> = DeferredRef { error("must not be resolved") }
+
+    /**
+     * Builds the real root and opens windows from it, rather than building a window directly. That is
+     * the point of the check now: the root binds the app-wide IobCobCalculator, the window binds its
+     * own, and the window must win. If the extension quietly resolved the parent's calculator instead,
+     * history browsing would compute into the running loop's state.
+     */
+    private fun root() = createGraphFactory<AppRootGraph.Factory>().create(
+        DeferredRef { aapsLogger }, unused(), DeferredRef { rxBus }, DeferredRef { activePlugin },
+        unused(), unused(), unused(), unused(), DeferredRef { persistenceLayer }, unused(),
+        unused(), unused(), DeferredRef { dateUtil }, DeferredRef { profileFunction }, unused(),
+        unused(), unused(), DeferredRef { rh }, DeferredRef { preferences }, unused(),
+        unused(), unused(), unused(), unused(), unused(),
+        unused(), unused(), unused(), unused(), unused(),
+        unused(), DeferredRef { calculationWorkflow }, DeferredRef { decimalFormatter },
+        DeferredRef { processedTbrEbData }, DeferredRef { overviewDataCacheFactory }
     )
+
+    private fun createSut(): HistoryWindowGraph = root().historyWindowFactory.create()
 
     @Test
     fun `builds its own overview data and signals (not the injected singletons)`() {
@@ -97,9 +104,24 @@ class HistoryBrowserDataTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `each window owns separate overview data and calculator`() {
-        val other = createSut()
-        assertThat(other.overviewData).isNotSameInstanceAs(sut.overviewData)
-        assertThat(other.iobCobCalculator).isNotSameInstanceAs(sut.iobCobCalculator)
+    fun `two windows of the same root own separate overview data and calculator`() {
+        // One root, two windows - not two roots. Two roots share nothing anyway, so that would prove
+        // nothing about the extension scope. This is the real question: does opening a second window
+        // give it its own calculation objects while both still sit under one application graph.
+        val shared = root()
+        val first = shared.historyWindowFactory.create()
+        val second = shared.historyWindowFactory.create()
+
+        assertThat(second.overviewData).isNotSameInstanceAs(first.overviewData)
+        assertThat(second.iobCobCalculator).isNotSameInstanceAs(first.iobCobCalculator)
+        assertThat(second.signals).isNotSameInstanceAs(first.signals)
+    }
+
+    @Test
+    fun `the window does not fall through to the application's own calculator`() {
+        // The root's IobCobCalculator is deliberately a handle that throws. Reaching this line at all
+        // means the window resolved its own binding and never touched the parent's - which is the
+        // whole safety property: history recalculating must not run on the loop's calculator.
+        assertThat(sut.iobCobCalculator).isInstanceOf(IobCobCalculatorPlugin::class.java)
     }
 }
