@@ -96,6 +96,11 @@ class HistoryViewModel @Inject constructor(
     }
 
     private fun runCalculation(from: String) {
+        // Clear the old window before recalculating. The worker fills the cache one series at a time
+        // and BG comes last, so without this the graph shows the new date over the previous day's
+        // blood glucose for the several seconds the calculation takes - insulin and BG history that
+        // never belonged to the day on the label. The progress bar already tells the user to wait.
+        historyScope.cache.reset()
         calculationWorkflow.runCalculation(
             job = CalculationWorkflow.HISTORY_CALCULATION,
             iobCobCalculator = historyScope.iobCobCalculator,
