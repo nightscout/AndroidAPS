@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.di.metro.MetroGraphs
+import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.history.HistoryBrowserData
 import app.aaps.implementations.ConfigImpl
@@ -93,6 +94,16 @@ abstract class AppModule {
         @Provides
         fun providesDefaultSharedPreferences(context: Context): SharedPreferences =
             context.getSharedPreferences("${context.packageName}_preferences", Context.MODE_PRIVATE)
+
+        /**
+         * Built by Metro, in the multiplatform module that owns the worker it schedules. Dagger
+         * delegates rather than constructs: building it on both sides would give two schedulers,
+         * each posting its own expiry work.
+         */
+        @Provides
+        @Singleton
+        fun provideRunningModeExpiryScheduler(metroGraphs: MetroGraphs): RunningModeExpiryScheduler =
+            metroGraphs.runningModeExpiryScheduler
 
         @Provides
         fun provideContext(@ApplicationContext context: Context): Context = context

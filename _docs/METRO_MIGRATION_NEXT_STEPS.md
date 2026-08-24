@@ -86,10 +86,19 @@ their tests, their `<service>` and `<receiver>` entries, and their bindings. `Au
 in `:app` is deleted. `AutomationManifestTest` now guards that module's manifest, because
 `ManifestComponentsTest` only reads `:app`'s.
 
-Still parked in `:app`, and genuinely belonging there: `AutoStartReceiver`, `CarbSuggestionReceiver`,
-`DataReceiver` and `SmsReceiver` were never exiled - they have always lived in `:app`.
-`RunningModeExpiryScheduler` is the one real leftover; it came from `:plugins:aps` and can follow the
-worker home.
+`RunningModeExpiryScheduler` followed the worker into `:plugins:aps` androidMain, with its nine tests.
+It could not stay a plain Dagger class there - Dagger builds an `@Inject constructor` class by
+generating a Java factory in the module that compiles it, and a multiplatform module has no Java step -
+so it is now Metro `@Inject` / `@SingleIn(AppScope::class)`, exposed through `AppWorkersGraph`, and
+`AppModule` hands that one instance to Dagger consumers rather than building a second.
+
+Worth noting for the modules still to come: **a module's Dagger-side bridge can only live in that
+module if the module is a plain Android library.** `:plugins:sync` and `:plugins:automation` own their
+bridges. A multiplatform module cannot, for the same javac reason, so its bridge stays in `:app` -
+which is what `MetroGraphs` is.
+
+Nothing exiled is left in `:app`. `AutoStartReceiver`, `CarbSuggestionReceiver`, `DataReceiver` and
+`SmsReceiver` remain there because they were never moved - they have always been `:app`'s.
 
 ## Decisions waiting for you
 

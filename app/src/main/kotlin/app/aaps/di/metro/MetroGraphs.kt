@@ -44,6 +44,7 @@ import app.aaps.implementation.scenes.ActiveSceneManager
 import app.aaps.implementation.scenes.SceneExecutor
 import app.aaps.implementation.scenes.SceneRepository
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryJob
+import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
 import app.aaps.plugins.automation.di.AutomationMetroBridge
 import app.aaps.plugins.calibration.di.CalibrationGraph
 import app.aaps.plugins.sensitivity.di.SensitivityGraph
@@ -204,7 +205,8 @@ class MetroGraphs @Inject constructor(
             DeferredRef { notificationManager.get() },
             DeferredRef { activeSceneManager.get() },
             DeferredRef { sceneExecutor.get() },
-            DeferredRef { sceneRepository.get() }
+            DeferredRef { sceneRepository.get() },
+            DeferredRef { appScope.get() }
         )
     }
 
@@ -214,6 +216,9 @@ class MetroGraphs @Inject constructor(
      * Resolved on each call rather than cached, so nothing here runs until a worker is really built -
      * WorkManager can initialise during startup and this must not resolve Dagger providers then.
      */
+    /** Handed to Dagger consumers - it is built by Metro, in the module that owns the worker. */
+    val runningModeExpiryScheduler: RunningModeExpiryScheduler get() = workers.runningModeExpiryScheduler
+
     fun workerCreators(): Map<String, MetroWorkerCreator> =
         (workers.workerCreators + openHumans.workerCreators).mapKeys { (klass, _) -> klass.java.name }
 

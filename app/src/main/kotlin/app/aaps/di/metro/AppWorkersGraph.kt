@@ -27,12 +27,14 @@ import app.aaps.implementation.scenes.SceneExecutor
 import app.aaps.implementation.scenes.SceneExpiryWorker
 import app.aaps.implementation.scenes.SceneRepository
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryJob
+import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryWorker
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ClassKey
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.IntoMap
 import dev.zacsweers.metro.Provides
+import kotlinx.coroutines.CoroutineScope
 import kotlin.reflect.KClass
 
 /**
@@ -62,6 +64,12 @@ import kotlin.reflect.KClass
  */
 @DependencyGraph(AppScope::class)
 interface AppWorkersGraph {
+
+    /**
+     * Schedules [RunningModeExpiryWorker]. It lives in the same multiplatform module as the worker
+     * and the job now, so Metro builds it and Dagger consumers are handed this instance.
+     */
+    val runningModeExpiryScheduler: RunningModeExpiryScheduler
 
     /** Every Metro-wired worker, keyed by its class. [MetroWorkerFactory] matches on the class name. */
     val workerCreators: Map<KClass<*>, MetroWorkerCreator>
@@ -93,7 +101,8 @@ interface AppWorkersGraph {
             @Provides notificationManagerRef: DeferredRef<NotificationManager>,
             @Provides activeSceneManagerRef: DeferredRef<ActiveSceneManager>,
             @Provides sceneExecutorRef: DeferredRef<SceneExecutor>,
-            @Provides sceneRepositoryRef: DeferredRef<SceneRepository>
+            @Provides sceneRepositoryRef: DeferredRef<SceneRepository>,
+            @Provides appScopeRef: DeferredRef<CoroutineScope>
         ): AppWorkersGraph
     }
 
@@ -120,6 +129,7 @@ interface AppWorkersGraph {
     @Provides fun activeSceneManager(r: DeferredRef<ActiveSceneManager>): ActiveSceneManager = r.get()
     @Provides fun sceneExecutor(r: DeferredRef<SceneExecutor>): SceneExecutor = r.get()
     @Provides fun sceneRepository(r: DeferredRef<SceneRepository>): SceneRepository = r.get()
+    @Provides fun appScope(r: DeferredRef<CoroutineScope>): CoroutineScope = r.get()
 
     /**
      * The whole `@HiltWorker` replacement, per worker: one line binding the generated assisted factory

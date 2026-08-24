@@ -1,4 +1,4 @@
-package app.aaps.workers
+package app.aaps.plugins.aps.loop.runningMode
 
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
@@ -6,16 +6,15 @@ import androidx.work.WorkManager
 import app.aaps.core.data.model.RM
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryWorker
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Schedules [RunningModeExpiryWorker] to fire at the exact end of any temporary running mode.
@@ -28,14 +27,16 @@ import javax.inject.Singleton
  * Uses a single unique-work name; [ExistingWorkPolicy.REPLACE] ensures at most one pending
  * expiry job at a time. Gated by `config.APS`.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class RunningModeExpiryScheduler @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val workManager: WorkManager,
     private val config: Config,
     private val dateUtil: DateUtil,
     private val aapsLogger: AAPSLogger,
-    @ApplicationScope private val appScope: CoroutineScope
+    // The graph binds the application scope here; it holds only one CoroutineScope, so no qualifier
+    // is needed to pick it out.
+    private val appScope: CoroutineScope
 ) {
 
     private var started = false
