@@ -163,6 +163,35 @@ root graphs from the same factory share nothing at all.
 So as modules move, the roots have to converge on **one** root graph with `@GraphExtension`s hanging
 off it. This gets more expensive the longer it waits. It is the biggest open design decision.
 
+## Binding containers, and where they hit a Metro bug
+
+The graphs used to name every leaf four times: a constructor parameter on the bridge, a `DeferredRef`
+argument, a factory parameter on the graph, and a one-line function unwrapping it. `AapsLeaves` replaces
+the last two with a single `@BindingContainer` passed through one `@Includes` parameter. `AppRootGraph`
+lost 128 lines and `MetroGraphs` 39, for 45 lines of container - a net saving, and each leaf is now
+named twice instead of four times.
+
+It also **replaces `DeferredRef` on that graph**. A container's `@Provides` function is called only
+when something asks for that type, so building the graph resolves nothing. The re-entrancy that
+`DeferredRef` was hand-rolling (`Loop` leads to the plugin list, which asks these graphs) is handled by
+the shape of the binding instead of by a wrapper around the value.
+
+**The same change fails to compile in `:plugins:constraints`.** Metro 1.4.2 throws
+`IllegalStateException: Transforming after locked!` from `BindingContainerTransformer` while
+`IrBindingContainerResolver` resolves the included container for `ConstraintsMetroGraph`. Three
+hypotheses were tested and all ruled out:
+
+- **Not** the container and the `createGraphFactory` caller being the same class - splitting them into
+  `ConstraintsLeaves` and `ConstraintsMetroBridge` changed nothing.
+- **Not** the javax `@Singleton` on the container - removing it changed nothing.
+- **Not** a `@Provides` in the graph body alongside `@Includes` - adding one to `AppRootGraph` compiles
+  fine.
+
+What still differs: the constraints graph is `internal`, and the classes Metro builds from the
+container's leaves live in that same graph rather than in an extension of it. Neither has been tested.
+Until this is understood, that module keeps `DeferredRef` and its long factory - it works, it is just
+verbose. Worth reporting upstream with a reducer.
+
 ## Notes for whoever continues
 
 - `TimeDateOrTZChangeReceiver` is the last dagger.android receiver in `:implementation`. It was left

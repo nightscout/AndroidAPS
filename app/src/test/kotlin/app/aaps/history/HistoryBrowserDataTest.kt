@@ -1,11 +1,11 @@
 package app.aaps.history
 
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.di.DeferredRef
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.workflow.CalculationSignals
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.objects.workflow.CalculationSignalsImpl
+import app.aaps.di.metro.AapsLeaves
 import app.aaps.di.metro.AppRootGraph
 import app.aaps.di.metro.HistoryWindowGraph
 import app.aaps.implementation.overview.OverviewDataImpl
@@ -24,6 +24,7 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import javax.inject.Provider
 
 /**
  * The History Browser must not share calculation objects with the running loop.
@@ -48,7 +49,53 @@ class HistoryBrowserDataTest : TestBaseWithProfile() {
         sut = createSut()
     }
 
-    private fun <T : Any> unused(): DeferredRef<T> = DeferredRef { error("must not be resolved") }
+    /**
+     * A leaf this test must never need. It throws instead of returning a mock, so that a binding the
+     * window graph should not touch cannot pass unnoticed.
+     */
+    private fun <T : Any> unused(): Provider<T> = Provider { error("must not be resolved") }
+
+    /**
+     * The leaves the app-wide graph is given. Named, so adding or reordering a leaf cannot silently
+     * shift every argument by one - which the old positional list of thirty-five could.
+     */
+    private fun leaves() = AapsLeaves(
+        aapsLoggerProvider = Provider { aapsLogger },
+        receiverStatusStoreProvider = unused(),
+        rxBusProvider = Provider { rxBus },
+        activePluginProvider = Provider { activePlugin },
+        appScopeProvider = unused(),
+        fabricPrivacyProvider = unused(),
+        runningModeExpiryJobProvider = unused(),
+        localAlertUtilsProvider = unused(),
+        persistenceLayerProvider = Provider { persistenceLayer },
+        configProvider = unused(),
+        iobCobCalculatorProvider = unused(),
+        loopProvider = unused(),
+        dateUtilProvider = Provider { dateUtil },
+        profileFunctionProvider = Provider { profileFunction },
+        profileUtilProvider = unused(),
+        commandQueueProvider = unused(),
+        maintenanceProvider = unused(),
+        rhProvider = Provider { rh },
+        preferencesProvider = Provider { preferences },
+        dstHelperProvider = unused(),
+        workManagerProvider = unused(),
+        concentrationHelperProvider = unused(),
+        notificationManagerProvider = unused(),
+        activeSceneManagerProvider = unused(),
+        sceneExecutorProvider = unused(),
+        sceneRepositoryProvider = unused(),
+        fileListProviderProvider = unused(),
+        storageProvider = unused(),
+        userEntryPresentationHelperProvider = unused(),
+        dataInboxProvider = unused(),
+        cloudStorageManagerProvider = unused(),
+        calculationWorkflowProvider = Provider { calculationWorkflow },
+        decimalFormatterProvider = Provider { decimalFormatter },
+        processedTbrEbDataProvider = Provider { processedTbrEbData },
+        overviewDataCacheFactoryProvider = Provider { overviewDataCacheFactory }
+    )
 
     /**
      * Builds the real root and opens windows from it, rather than building a window directly. That is
@@ -56,16 +103,7 @@ class HistoryBrowserDataTest : TestBaseWithProfile() {
      * own, and the window must win. If the extension quietly resolved the parent's calculator instead,
      * history browsing would compute into the running loop's state.
      */
-    private fun root() = createGraphFactory<AppRootGraph.Factory>().create(
-        DeferredRef { aapsLogger }, unused(), DeferredRef { rxBus }, DeferredRef { activePlugin },
-        unused(), unused(), unused(), unused(), DeferredRef { persistenceLayer }, unused(),
-        unused(), unused(), DeferredRef { dateUtil }, DeferredRef { profileFunction }, unused(),
-        unused(), unused(), DeferredRef { rh }, DeferredRef { preferences }, unused(),
-        unused(), unused(), unused(), unused(), unused(),
-        unused(), unused(), unused(), unused(), unused(),
-        unused(), DeferredRef { calculationWorkflow }, DeferredRef { decimalFormatter },
-        DeferredRef { processedTbrEbData }, DeferredRef { overviewDataCacheFactory }
-    )
+    private fun root() = createGraphFactory<AppRootGraph.Factory>().create(leaves())
 
     private fun createSut(): HistoryWindowGraph = root().historyWindowFactory.create()
 

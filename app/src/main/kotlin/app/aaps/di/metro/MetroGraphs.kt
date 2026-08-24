@@ -124,6 +124,7 @@ class MetroGraphs @Inject constructor(
     private val automationMetroBridge: Provider<AutomationMetroBridge>,
     private val constraintsMetroBridge: Provider<ConstraintsMetroBridge>,
     private val sourceMetroBridge: Provider<SourceMetroBridge>,
+    private val leaves: Provider<AapsLeaves>,
     private val calculationWorkflow: Provider<CalculationWorkflow>,
     private val decimalFormatter: Provider<DecimalFormatter>,
     private val processedTbrEbData: Provider<ProcessedTbrEbData>,
@@ -210,43 +211,7 @@ class MetroGraphs @Inject constructor(
 
     /** The one Metro root. Sub-graphs are extensions of it rather than roots of their own. */
     private val root: AppRootGraph by lazy {
-        createGraphFactory<AppRootGraph.Factory>().create(
-            DeferredRef { aapsLogger.get() },
-            DeferredRef { receiverStatusStore.get() },
-            DeferredRef { rxBus.get() },
-            DeferredRef { activePlugin.get() },
-            DeferredRef { appScope.get() },
-            DeferredRef { fabricPrivacy.get() },
-            DeferredRef { runningModeExpiryJob.get() },
-            DeferredRef { localAlertUtils.get() },
-            DeferredRef { persistenceLayer.get() },
-            DeferredRef { config.get() },
-            DeferredRef { iobCobCalculator.get() },
-            DeferredRef { loop.get() },
-            DeferredRef { dateUtil.get() },
-            DeferredRef { profileFunction.get() },
-            DeferredRef { profileUtil.get() },
-            DeferredRef { commandQueue.get() },
-            DeferredRef { maintenance.get() },
-            DeferredRef { rh.get() },
-            DeferredRef { preferences.get() },
-            DeferredRef { dstHelper.get() },
-            DeferredRef { workManager.get() },
-            DeferredRef { concentrationHelper.get() },
-            DeferredRef { notificationManager.get() },
-            DeferredRef { activeSceneManager.get() },
-            DeferredRef { sceneExecutor.get() },
-            DeferredRef { sceneRepository.get() },
-            DeferredRef { fileListProvider.get() },
-            DeferredRef { storage.get() },
-            DeferredRef { userEntryPresentationHelper.get() },
-            DeferredRef { dataInbox.get() },
-            DeferredRef { cloudStorageManager.get() },
-            DeferredRef { calculationWorkflow.get() },
-            DeferredRef { decimalFormatter.get() },
-            DeferredRef { processedTbrEbData.get() },
-            DeferredRef { overviewDataCacheFactory.get() }
-        )
+        createGraphFactory<AppRootGraph.Factory>().create(leaves.get())
     }
 
     private val receivers: AppReceiversGraph get() = root.receiversGraph
