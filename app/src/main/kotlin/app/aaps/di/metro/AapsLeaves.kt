@@ -52,18 +52,8 @@ import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryJob
 import app.aaps.plugins.automation.services.LastLocationDataContainer
 import app.aaps.plugins.constraints.objectives.SntpClient
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
-import app.aaps.plugins.source.AidexPlugin
 import app.aaps.plugins.source.DexcomPlugin
-import app.aaps.plugins.source.GlimpPlugin
-import app.aaps.plugins.source.MM640gPlugin
-import app.aaps.plugins.source.NotificationReaderPlugin
-import app.aaps.plugins.source.PatchedSiAppPlugin
-import app.aaps.plugins.source.PatchedSinoAppPlugin
-import app.aaps.plugins.source.PoctechPlugin
-import app.aaps.plugins.source.SyaiPlugin
-import app.aaps.plugins.source.TomatoPlugin
 import app.aaps.plugins.source.XdripSourcePlugin
-import app.aaps.plugins.source.instara.InstaraPlugin
 import app.aaps.ui.compose.overview.OverviewDataCacheFactory
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.Provides
@@ -142,18 +132,8 @@ class AapsLeaves @Inject constructor(
     // Source plugins, still built by Dagger. They live here rather than in their own module because a
     // graph extension is generated in the parent's module, so Metro cannot read a container from the
     // module the extension is declared in.
-    private val aidexProvider: Provider<AidexPlugin>,
     private val dexcomProvider: Provider<DexcomPlugin>,
-    private val glimpProvider: Provider<GlimpPlugin>,
-    private val instaraProvider: Provider<InstaraPlugin>,
-    private val mm640gProvider: Provider<MM640gPlugin>,
-    private val patchedSiAppProvider: Provider<PatchedSiAppPlugin>,
-    private val patchedSinoAppProvider: Provider<PatchedSinoAppPlugin>,
-    private val poctechProvider: Provider<PoctechPlugin>,
-    private val syaiProvider: Provider<SyaiPlugin>,
-    private val tomatoProvider: Provider<TomatoPlugin>,
     private val xdripProvider: Provider<XdripSourcePlugin>,
-    private val notificationReaderProvider: Provider<NotificationReaderPlugin>,
     // Automation.
     private val uiInteractionProvider: Provider<UiInteraction>,
     private val notificationHolderProvider: Provider<NotificationHolder>,
@@ -217,18 +197,8 @@ class AapsLeaves @Inject constructor(
     @Provides fun context(): Context = contextProvider.get()
     @Provides fun virtualPump(): VirtualPump = virtualPumpProvider.get()
 
-    @Provides fun aidex(): AidexPlugin = aidexProvider.get()
     @Provides fun dexcom(): DexcomPlugin = dexcomProvider.get()
-    @Provides fun glimp(): GlimpPlugin = glimpProvider.get()
-    @Provides fun instara(): InstaraPlugin = instaraProvider.get()
-    @Provides fun mm640g(): MM640gPlugin = mm640gProvider.get()
-    @Provides fun patchedSiApp(): PatchedSiAppPlugin = patchedSiAppProvider.get()
-    @Provides fun patchedSinoApp(): PatchedSinoAppPlugin = patchedSinoAppProvider.get()
-    @Provides fun poctech(): PoctechPlugin = poctechProvider.get()
-    @Provides fun syai(): SyaiPlugin = syaiProvider.get()
-    @Provides fun tomato(): TomatoPlugin = tomatoProvider.get()
     @Provides fun xdrip(): XdripSourcePlugin = xdripProvider.get()
-    @Provides fun notificationReader(): NotificationReaderPlugin = notificationReaderProvider.get()
 
     @Provides fun uiInteraction(): UiInteraction = uiInteractionProvider.get()
     @Provides fun notificationHolder(): NotificationHolder = notificationHolderProvider.get()

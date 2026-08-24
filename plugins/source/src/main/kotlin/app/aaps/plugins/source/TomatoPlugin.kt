@@ -28,7 +28,16 @@ import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import javax.inject.Singleton
+import app.aaps.core.interfaces.plugin.PluginBase
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.binding
 
+// Registers itself into the plugin list. javax @Singleton stays: this module has Dagger interop on, so
+// Metro reads it as the scope, and the class is still built by Metro only once.
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@IntKey(470)
 @Singleton
 class TomatoPlugin @Inject constructor(
     rh: ResourceHelper,

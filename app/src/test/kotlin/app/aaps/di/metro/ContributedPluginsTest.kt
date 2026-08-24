@@ -26,7 +26,17 @@ class ContributedPluginsTest {
 
     @Test
     fun `every contributed plugin appears under its order key`() {
-        assertThat(plugins.keys).containsExactly(100, 110, 120, 600, 610, 620, 630, 700, 710)
+        assertThat(plugins.keys).containsExactly(
+            // sensitivity
+            100, 110, 120,
+            // source. 400 xDrip, 410 NSClient and 440 Dexcom are absent on purpose: those three are
+            // still bound to an interface by Dagger, so Dagger still builds them.
+            420, 430, 450, 460, 470, 480, 490, 500, 510, 520, 530, 540, 550,
+            // smoothing
+            600, 610, 620, 630,
+            // calibration
+            700, 710
+        )
     }
 
     @Test

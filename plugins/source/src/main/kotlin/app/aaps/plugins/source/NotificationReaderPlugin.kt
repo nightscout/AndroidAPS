@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PermissionGroup
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
@@ -18,7 +19,15 @@ import app.aaps.plugins.source.notificationreader.PackageConfig
 import java.net.URL
 import javax.inject.Inject
 import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.binding
 
+// Registers itself into the plugin list. javax @Singleton stays: this module has Dagger interop on,
+// so Metro reads it as the scope and builds the class exactly once.
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@IntKey(530)
 @Singleton
 class NotificationReaderPlugin @Inject constructor(
     rh: ResourceHelper,

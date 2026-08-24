@@ -19,6 +19,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.receivers.Intents
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -37,7 +38,15 @@ import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.binding
 
+// Registers itself into the plugin list. javax @Singleton stays: this module has Dagger interop on,
+// so Metro reads it as the scope and builds the class exactly once.
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@IntKey(450)
 @Singleton
 class AidexPlugin @Inject constructor(
     rh: ResourceHelper,
