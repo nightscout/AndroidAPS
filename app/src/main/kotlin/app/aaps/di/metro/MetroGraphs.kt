@@ -19,7 +19,6 @@ import app.aaps.plugins.automation.di.AutomationMetroGraph
 import app.aaps.plugins.calibration.di.CalibrationGraph
 import app.aaps.plugins.constraints.di.ConstraintsMetroGraph
 import app.aaps.plugins.sensitivity.di.SensitivityGraph
-import app.aaps.plugins.smoothing.di.SmoothingGraph
 import app.aaps.plugins.source.di.SourceMetroGraph
 import app.aaps.plugins.sync.di.OpenHumansMetroBridge
 import dev.zacsweers.metro.MembersInjector
@@ -57,8 +56,6 @@ class MetroGraphs @Inject constructor(
     private val openHumansMetroBridge: Provider<OpenHumansMetroBridge>,
     private val leaves: Provider<AapsLeaves>
 ) {
-
-    private val smoothing: SmoothingGraph get() = root.smoothingGraph
 
     private val coreObjects: CoreObjectsGraph get() = root.coreObjectsGraph
 
@@ -139,7 +136,7 @@ class MetroGraphs @Inject constructor(
      * shape the Dagger module used, unlike the Koin branch which had to invent a registration object.
      */
     fun plugins(): Map<Int, PluginBase> =
-        smoothing.plugins + calibration.plugins + sensitivity.plugins +
+        root.contributedPlugins + calibration.plugins + sensitivity.plugins +
             constraints.allConfigsPlugins
 
     /**

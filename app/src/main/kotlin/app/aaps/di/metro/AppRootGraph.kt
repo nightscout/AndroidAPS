@@ -1,11 +1,11 @@
 package app.aaps.di.metro
 
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.plugins.automation.di.AutomationMetroGraph
 import app.aaps.plugins.calibration.di.CalibrationGraph
 import app.aaps.plugins.constraints.di.ConstraintsMetroGraph
 import app.aaps.plugins.sensitivity.di.SensitivityGraph
-import app.aaps.plugins.smoothing.di.SmoothingGraph
 import app.aaps.plugins.source.di.SourceMetroGraph
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
@@ -54,10 +54,17 @@ interface AppRootGraph {
      * get a separate copy of anything scoped there, and nothing reports it. As extensions they share
      * this graph's bindings instead of restating them, so their factories take no arguments at all.
      */
-    val smoothingGraph: SmoothingGraph
     val sensitivityGraph: SensitivityGraph
     val calibrationGraph: CalibrationGraph
     val coreObjectsGraph: CoreObjectsGraph
+
+    /**
+     * Plugins that register themselves with @ContributesIntoMap rather than being listed in a graph.
+     *
+     * Smoothing is the first module on this shape: its four plugins carry the binding on the class, so
+     * the module has no DI file at all. As other modules follow, their entries land in this same map.
+     */
+    val contributedPlugins: Map<Int, PluginBase>
 
     val sourceGraph: SourceMetroGraph
     val automationGraph: AutomationMetroGraph
