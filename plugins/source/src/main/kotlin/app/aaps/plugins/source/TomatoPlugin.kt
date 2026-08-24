@@ -32,13 +32,14 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 
 // Registers itself into the plugin list. javax @Singleton stays: this module has Dagger interop on, so
 // Metro reads it as the scope, and the class is still built by Metro only once.
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @IntKey(470)
-@Singleton
+@SingleIn(AppScope::class)
 class TomatoPlugin @Inject constructor(
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,

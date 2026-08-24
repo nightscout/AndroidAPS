@@ -12,18 +12,18 @@ import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.ui.compose.icons.IcPluginNsClientBg
 import app.aaps.plugins.source.compose.BgSourceComposeContent
 import javax.inject.Inject
-import javax.inject.Singleton
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 
-// Registers itself into the plugin list. It is also bound to an interface, and that binding is a
-// @Provides delegate in `:app` rather than a Dagger @Binds - a @Binds would have Dagger build a
-// second copy, giving an unstarted twin to everyone who asks for the interface.
+// Registers itself into the plugin list. Scoped with Metro's own @SingleIn, not javax @Singleton - see
+// the note on the other source plugins. It is also bound to an interface, and that binding is a
+// @Provides delegate in `:app` rather than a Dagger @Binds, so Dagger hands out THIS instance.
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @IntKey(410)
-@Singleton
+@SingleIn(AppScope::class)
 class NSClientSourcePlugin @Inject constructor(
     override val rh: ResourceHelper,
     aapsLogger: AAPSLogger,

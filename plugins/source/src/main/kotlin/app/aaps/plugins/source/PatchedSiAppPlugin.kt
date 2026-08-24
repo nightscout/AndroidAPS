@@ -35,13 +35,15 @@ import javax.inject.Singleton
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 
-// Registers itself into the plugin list. javax @Singleton stays: this module has Dagger interop on,
-// so Metro reads it as the scope and builds the class exactly once.
+// Registers itself into the plugin list. Scoped with Metro's own @SingleIn, NOT javax @Singleton: the
+// graph that builds a contributed class is generated in `:app`, which has no Dagger interop, so a javax
+// scope there is silently ignored and every read builds a new plugin.
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @IntKey(510)
-@Singleton
+@SingleIn(AppScope::class)
 class PatchedSiAppPlugin @Inject constructor(
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,

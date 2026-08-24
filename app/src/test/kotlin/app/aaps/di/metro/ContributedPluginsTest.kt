@@ -10,6 +10,7 @@ import app.aaps.plugins.smoothing.ExponentialSmoothingPlugin
 import app.aaps.plugins.smoothing.NoSmoothingPlugin
 import app.aaps.plugins.smoothing.UnscentedKalmanFilterPlugin
 import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth.assertWithMessage
 import org.junit.jupiter.api.Test
 
 /**
@@ -50,6 +51,33 @@ class ContributedPluginsTest {
         assertThat(plugins[630]).isInstanceOf(UnscentedKalmanFilterPlugin::class.java)
         assertThat(plugins[700]).isInstanceOf(NoCalibrationPlugin::class.java)
         assertThat(plugins[710]).isInstanceOf(LinearCalibrationPlugin::class.java)
+    }
+
+    @Test
+    fun `an interface-bound plugin is the SAME instance as the one in the plugin list`() {
+        // The whole point of the delegates in CoreObjectsModule. These plugins carry javax @Singleton,
+        // which Metro reads through the source module's Dagger interop - but the graph that builds them
+        // is generated in `:app`, where interop is off. If the scope were lost, each read would build a
+        // new one and Dagger consumers of XDripSource would get an unstarted twin of the plugin that is
+        // actually in the list.
+        val root = testRoot()
+        assertThat(root.xdripSourcePlugin).isSameInstanceAs(root.contributedPlugins[400])
+        assertThat(root.nsClientSourcePlugin).isSameInstanceAs(root.contributedPlugins[410])
+        assertThat(root.dexcomPlugin).isSameInstanceAs(root.contributedPlugins[440])
+    }
+
+    @Test
+    fun `EVERY contributed plugin is scoped`() {
+        // Not just a spot check. A missing scope is invisible until some other caller holds the plugin
+        // and finds its state does not match the one the app started, so this asserts the property for
+        // the whole map rather than for the three that happen to have an interface today.
+        val root = testRoot()
+        val first = root.contributedPlugins
+        val second = root.contributedPlugins
+        first.keys.forEach { key ->
+            assertWithMessage("plugin $key is rebuilt on every read - it needs @SingleIn(AppScope::class)")
+                .that(second[key]).isSameInstanceAs(first[key])
+        }
     }
 
     @Test
