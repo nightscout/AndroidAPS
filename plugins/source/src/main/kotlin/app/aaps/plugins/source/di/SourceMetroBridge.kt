@@ -1,6 +1,7 @@
 package app.aaps.plugins.source.di
 
 import android.content.Context
+import androidx.work.ListenableWorker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.di.DeferredRef
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -96,6 +97,6 @@ class SourceMetroBridge @Inject constructor(
         )
     }
 
-    val workerCreators: Map<KClass<*>, MetroWorkerCreator> get() = graph.workerCreators
+    val workerCreators: Map<KClass<out ListenableWorker>, MetroWorkerCreator> get() = graph.workerCreators
     val memberInjectors: Map<KClass<*>, MembersInjector<*>> get() = graph.memberInjectors
 }

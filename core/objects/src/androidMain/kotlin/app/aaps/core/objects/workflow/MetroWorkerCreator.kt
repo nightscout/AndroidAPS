@@ -3,6 +3,8 @@ package app.aaps.core.objects.workflow
 import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
+import dev.zacsweers.metro.MapKey
+import kotlin.reflect.KClass
 
 /**
  * What a worker wired by Metro contributes so the app's `WorkerFactory` can build it.
@@ -24,3 +26,18 @@ fun interface MetroWorkerCreator {
 
     fun create(context: Context, params: WorkerParameters): ListenableWorker
 }
+
+/**
+ * The map key for the worker multibinding.
+ *
+ * A key of its own rather than Metro's general `@ClassKey`, because `@ClassKey` produces a
+ * `KClass<*>`: the map has to be declared as `Map<KClass<*>, MetroWorkerCreator>` and any class at all
+ * type-checks as a key. This one only accepts a [ListenableWorker], so keying a worker binding with the
+ * wrong class is a compile error instead of a lookup that never matches - and a lookup that never
+ * matches means WorkManager quietly falls back, which is the failure mode this whole seam exists to
+ * remove. Metro's own Android sample defines the same key for the same reason.
+ */
+@MapKey
+@Target(AnnotationTarget.CLASS, AnnotationTarget.PROPERTY, AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.RUNTIME)
+annotation class WorkerKey(val value: KClass<out ListenableWorker>)

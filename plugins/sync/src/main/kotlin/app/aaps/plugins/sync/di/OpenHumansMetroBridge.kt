@@ -1,6 +1,7 @@
 package app.aaps.plugins.sync.di
 
 import android.content.Context
+import androidx.work.ListenableWorker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.di.DeferredRef
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -69,5 +70,5 @@ class OpenHumansMetroBridge @Inject constructor(
     val notNsClientPlugins: Map<Int, PluginBase> get() = graph.notNsClientPlugins
     val memberInjectors: Map<KClass<*>, MembersInjector<*>> get() = graph.memberInjectors
     val viewModelCreators: Map<KClass<*>, MetroViewModelCreator> get() = graph.viewModelCreators
-    val workerCreators: Map<KClass<*>, MetroWorkerCreator> get() = graph.workerCreators
+    val workerCreators: Map<KClass<out ListenableWorker>, MetroWorkerCreator> get() = graph.workerCreators
 }

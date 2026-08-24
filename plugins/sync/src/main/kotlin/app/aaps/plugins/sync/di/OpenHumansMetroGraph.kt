@@ -1,6 +1,7 @@
 package app.aaps.plugins.sync.di
 
 import android.content.Context
+import androidx.work.ListenableWorker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.di.DeferredRef
 import app.aaps.core.interfaces.di.NotNSClient
@@ -12,6 +13,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.MetroWorkerCreator
+import app.aaps.core.objects.workflow.WorkerKey
 import app.aaps.core.ui.compose.MetroViewModelCreator
 import app.aaps.plugins.sync.openhumans.OpenHumansUploaderPlugin
 import app.aaps.plugins.sync.openhumans.compose.OHViewModel
@@ -66,7 +68,7 @@ internal interface OpenHumansMetroGraph {
     val viewModelCreators: Map<KClass<*>, MetroViewModelCreator>
 
     /** Builds [OpenHumansWorker] - the `@HiltWorker` replacement. */
-    val workerCreators: Map<KClass<*>, MetroWorkerCreator>
+    val workerCreators: Map<KClass<out ListenableWorker>, MetroWorkerCreator>
 
     @DependencyGraph.Factory
     fun interface Factory {
@@ -137,6 +139,6 @@ internal interface OpenHumansMetroGraph {
 
     @Provides
     @IntoMap
-    @ClassKey(OpenHumansWorker::class)
+    @WorkerKey(OpenHumansWorker::class)
     fun bindOpenHumansWorker(factory: OpenHumansWorker.Factory): MetroWorkerCreator = factory
 }

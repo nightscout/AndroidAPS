@@ -1,6 +1,7 @@
 package app.aaps.plugins.source.di
 
 import android.content.Context
+import androidx.work.ListenableWorker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.di.DeferredRef
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -13,6 +14,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.MetroWorkerCreator
+import app.aaps.core.objects.workflow.WorkerKey
 import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.plugins.source.AidexPlugin
 import app.aaps.plugins.source.DexcomPlugin
@@ -40,7 +42,7 @@ import kotlin.reflect.KClass
  * Metro wiring for the blood-glucose source workers and the notification reader service.
  *
  * Twelve workers is the first real volume test of the worker seam - the ones before this were single
- * cases proving it worked at all. Each is one `@Provides @IntoMap @ClassKey` line here plus a nested
+ * cases proving it worked at all. Each is one `@Provides @IntoMap @WorkerKey` line here plus a nested
  * `@AssistedFactory` on the worker, and nothing else about the workers changed: they keep their
  * `javax.inject` dependencies, which Dagger interop lets Metro read.
  *
@@ -56,7 +58,7 @@ import kotlin.reflect.KClass
 internal interface SourceMetroGraph {
 
     /** Workers this module owns, keyed by class. `MetroWorkerFactory` looks them up by class name. */
-    val workerCreators: Map<KClass<*>, MetroWorkerCreator>
+    val workerCreators: Map<KClass<out ListenableWorker>, MetroWorkerCreator>
 
     /** Android classes that fill their own fields - here, only the notification reader service. */
     val memberInjectors: Map<KClass<*>, MembersInjector<*>>
@@ -118,40 +120,40 @@ internal interface SourceMetroGraph {
     @Provides fun xdrip(r: DeferredRef<XdripSourcePlugin>): XdripSourcePlugin = r.get()
     @Provides fun notificationReader(r: DeferredRef<NotificationReaderPlugin>): NotificationReaderPlugin = r.get()
 
-    @Provides @IntoMap @ClassKey(AidexPlugin.AidexWorker::class)
+    @Provides @IntoMap @WorkerKey(AidexPlugin.AidexWorker::class)
     fun bindAidexWorker(f: AidexPlugin.AidexWorker.Factory): MetroWorkerCreator = f
 
-    @Provides @IntoMap @ClassKey(DexcomPlugin.DexcomWorker::class)
+    @Provides @IntoMap @WorkerKey(DexcomPlugin.DexcomWorker::class)
     fun bindDexcomWorker(f: DexcomPlugin.DexcomWorker.Factory): MetroWorkerCreator = f
 
-    @Provides @IntoMap @ClassKey(GlimpPlugin.GlimpWorker::class)
+    @Provides @IntoMap @WorkerKey(GlimpPlugin.GlimpWorker::class)
     fun bindGlimpWorker(f: GlimpPlugin.GlimpWorker.Factory): MetroWorkerCreator = f
 
-    @Provides @IntoMap @ClassKey(InstaraPlugin.InstaraWorker::class)
+    @Provides @IntoMap @WorkerKey(InstaraPlugin.InstaraWorker::class)
     fun bindInstaraWorker(f: InstaraPlugin.InstaraWorker.Factory): MetroWorkerCreator = f
 
-    @Provides @IntoMap @ClassKey(InstaraStaleCheckWorker::class)
+    @Provides @IntoMap @WorkerKey(InstaraStaleCheckWorker::class)
     fun bindInstaraStaleCheckWorker(f: InstaraStaleCheckWorker.Factory): MetroWorkerCreator = f
 
-    @Provides @IntoMap @ClassKey(MM640gPlugin.MM640gWorker::class)
+    @Provides @IntoMap @WorkerKey(MM640gPlugin.MM640gWorker::class)
     fun bindMM640gWorker(f: MM640gPlugin.MM640gWorker.Factory): MetroWorkerCreator = f
 
-    @Provides @IntoMap @ClassKey(PatchedSiAppPlugin.PatchedSiAppWorker::class)
+    @Provides @IntoMap @WorkerKey(PatchedSiAppPlugin.PatchedSiAppWorker::class)
     fun bindPatchedSiAppWorker(f: PatchedSiAppPlugin.PatchedSiAppWorker.Factory): MetroWorkerCreator = f
 
-    @Provides @IntoMap @ClassKey(PatchedSinoAppPlugin.PatchedSinoAppWorker::class)
+    @Provides @IntoMap @WorkerKey(PatchedSinoAppPlugin.PatchedSinoAppWorker::class)
     fun bindPatchedSinoAppWorker(f: PatchedSinoAppPlugin.PatchedSinoAppWorker.Factory): MetroWorkerCreator = f
 
-    @Provides @IntoMap @ClassKey(PoctechPlugin.PoctechWorker::class)
+    @Provides @IntoMap @WorkerKey(PoctechPlugin.PoctechWorker::class)
     fun bindPoctechWorker(f: PoctechPlugin.PoctechWorker.Factory): MetroWorkerCreator = f
 
-    @Provides @IntoMap @ClassKey(SyaiPlugin.SyaiWorker::class)
+    @Provides @IntoMap @WorkerKey(SyaiPlugin.SyaiWorker::class)
     fun bindSyaiWorker(f: SyaiPlugin.SyaiWorker.Factory): MetroWorkerCreator = f
 
-    @Provides @IntoMap @ClassKey(TomatoPlugin.TomatoWorker::class)
+    @Provides @IntoMap @WorkerKey(TomatoPlugin.TomatoWorker::class)
     fun bindTomatoWorker(f: TomatoPlugin.TomatoWorker.Factory): MetroWorkerCreator = f
 
-    @Provides @IntoMap @ClassKey(XdripSourcePlugin.XdripSourceWorker::class)
+    @Provides @IntoMap @WorkerKey(XdripSourcePlugin.XdripSourceWorker::class)
     fun bindXdripSourceWorker(f: XdripSourcePlugin.XdripSourceWorker.Factory): MetroWorkerCreator = f
 
     @Provides @IntoMap @ClassKey(NotificationCollectorService::class)

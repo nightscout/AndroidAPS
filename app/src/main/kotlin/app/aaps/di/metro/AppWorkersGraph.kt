@@ -1,7 +1,9 @@
 package app.aaps.di.metro
 
 import androidx.work.WorkManager
+import androidx.work.ListenableWorker
 import app.aaps.core.objects.workflow.MetroWorkerCreator
+import app.aaps.core.objects.workflow.WorkerKey
 import app.aaps.implementation.receivers.KeepAliveWorker
 import app.aaps.implementation.maintenance.ImportExportPrefsImpl
 import app.aaps.implementation.scenes.SceneExpiryWorker
@@ -43,7 +45,7 @@ interface AppWorkersGraph {
     val runningModeExpiryScheduler: RunningModeExpiryScheduler
 
     /** Every Metro-wired worker, keyed by its class. [MetroWorkerFactory] matches on the class name. */
-    val workerCreators: Map<KClass<*>, MetroWorkerCreator>
+    val workerCreators: Map<KClass<out ListenableWorker>, MetroWorkerCreator>
 
     /**
      * The whole `@HiltWorker` replacement, per worker: one line binding the generated assisted factory
@@ -52,27 +54,27 @@ interface AppWorkersGraph {
      */
     @Provides
     @IntoMap
-    @ClassKey(RunningModeExpiryWorker::class)
+    @WorkerKey(RunningModeExpiryWorker::class)
     fun bindRunningModeExpiryWorker(factory: RunningModeExpiryWorker.Factory): MetroWorkerCreator = factory
 
     @Provides
     @IntoMap
-    @ClassKey(KeepAliveWorker::class)
+    @WorkerKey(KeepAliveWorker::class)
     fun bindKeepAliveWorker(factory: KeepAliveWorker.Factory): MetroWorkerCreator = factory
 
     @Provides
     @IntoMap
-    @ClassKey(SceneExpiryWorker::class)
+    @WorkerKey(SceneExpiryWorker::class)
     fun bindSceneExpiryWorker(factory: SceneExpiryWorker.Factory): MetroWorkerCreator = factory
 
     @Provides
     @IntoMap
-    @ClassKey(ImportExportPrefsImpl.CsvExportWorker::class)
+    @WorkerKey(ImportExportPrefsImpl.CsvExportWorker::class)
     fun bindCsvExportWorker(f: ImportExportPrefsImpl.CsvExportWorker.Factory): MetroWorkerCreator = f
 
     @Provides
     @IntoMap
-    @ClassKey(ImportExportPrefsImpl.ApsResultExportWorker::class)
+    @WorkerKey(ImportExportPrefsImpl.ApsResultExportWorker::class)
     fun bindApsResultExportWorker(
         f: ImportExportPrefsImpl.ApsResultExportWorker.Factory
     ): MetroWorkerCreator = f
