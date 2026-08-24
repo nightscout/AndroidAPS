@@ -1,34 +1,47 @@
 package app.aaps.plugins.constraints.di
 
+import android.content.Context
+import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.di.APS
 import app.aaps.core.interfaces.di.AllConfigs
-import app.aaps.core.interfaces.di.NotNSClient
 import app.aaps.core.interfaces.di.DeferredRef
+import app.aaps.core.interfaces.di.NotNSClient
+import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.MetroViewModelCreator
-import app.aaps.plugins.constraints.objectives.SntpClient
-import app.aaps.plugins.constraints.objectives.compose.ObjectivesViewModel
 import app.aaps.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
 import app.aaps.plugins.constraints.dstHelper.DstHelperPlugin
 import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
+import app.aaps.plugins.constraints.objectives.SntpClient
+import app.aaps.plugins.constraints.objectives.compose.ObjectivesViewModel
 import app.aaps.plugins.constraints.safety.SafetyPlugin
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import app.aaps.plugins.constraints.storage.StorageConstraintPlugin
 import app.aaps.plugins.constraints.versionChecker.VersionCheckerPlugin
 import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ClassKey
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.IntoMap
-import dev.zacsweers.metro.ClassKey
 import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.Provides
+import javax.inject.Singleton
 import kotlin.reflect.KClass
 
 /**
@@ -38,15 +51,30 @@ import kotlin.reflect.KClass
  * each bucket under its own condition: `@AllConfigs` always, `@APS` only when the build runs a loop,
  * `@NotNSClient` only when the build is not a follower. Put a plugin in the wrong map and it either
  * disappears from the app or turns up in a build that has never shown it - and nothing would fail,
- * because a plugin list is just a list.
+ * because a plugin list is just a list. `ConstraintsBucketsTest` checks the split.
  *
- * That is also why this module has Dagger interop switched on. Without it Metro ignores the javax
- * qualifiers on the bindings it reads and matches on type alone, and every one of these is the same
- * type. `ConstraintsBucketsTest` checks the split rather than trusting it.
+ * ## Who constructs what
  *
- * The plugins themselves are untouched: they keep their `javax.inject` constructors, which interop
- * lets Metro read. Converting a module is moving the wiring, not rewriting the classes.
+ * Five of the seven are **built here**. Metro reads their existing `javax.inject` constructors through
+ * this module's Dagger interop, so the classes themselves are untouched. Nothing else injects them -
+ * that was checked before the change - so there is exactly one instance and no window in which both
+ * frameworks could build one.
+ *
+ * Two are still **handed over** from Dagger, on purpose:
+ *
+ *  - [ObjectivesPlugin] injects `List<Objective>`, a ten-entry Dagger multibinding over twelve classes.
+ *    That list has to be ported before this plugin can move, and that is its own change.
+ *  - [SignatureVerifierPlugin] is injected by `MainApp` for a single `shortHashes()` call. Building it
+ *    here while Dagger still injects it there would give two instances, so it moves when that call
+ *    does.
+ *
+ * Everything arrives as [DeferredRef], for the re-entrancy reason written up in `MetroGraphs`. It is
+ * not theoretical here: [SafetyPlugin] takes a [ConstraintsChecker], which aggregates the constraint
+ * plugins - a loop straight back into this graph, broken by the leaves arriving deferred.
  */
+// Scoped with javax @Singleton, not Metro's @SingleIn: the plugins carry @Singleton on the class and
+// interop reads it as their scope, so the graph has to declare the same one to hold them.
+@Singleton
 @DependencyGraph(AppScope::class)
 internal interface ConstraintsMetroGraph {
 
@@ -62,18 +90,18 @@ internal interface ConstraintsMetroGraph {
     @NotNSClient
     val notNsClientPlugins: Map<Int, PluginBase>
 
+    /** Builds [ObjectivesViewModel] - the `@HiltViewModel` replacement for this module. */
+    val viewModelCreators: Map<KClass<*>, MetroViewModelCreator>
+
     @DependencyGraph.Factory
     fun interface Factory {
 
         @Suppress("LongParameterList")
         fun create(
-            @Provides safetyRef: DeferredRef<SafetyPlugin>,
-            @Provides versionCheckerRef: DeferredRef<VersionCheckerPlugin>,
-            @Provides storageConstraintRef: DeferredRef<StorageConstraintPlugin>,
+            // Still built by Dagger - see the note above.
             @Provides signatureVerifierRef: DeferredRef<SignatureVerifierPlugin>,
             @Provides objectivesRef: DeferredRef<ObjectivesPlugin>,
-            @Provides dstHelperRef: DeferredRef<DstHelperPlugin>,
-            @Provides bgQualityCheckRef: DeferredRef<BgQualityCheckPlugin>,
+            // App-wide leaves, from which the other five plugins and the view model are built.
             @Provides aapsLoggerRef: DeferredRef<AAPSLogger>,
             @Provides rxBusRef: DeferredRef<RxBus>,
             @Provides rhRef: DeferredRef<ResourceHelper>,
@@ -81,19 +109,24 @@ internal interface ConstraintsMetroGraph {
             @Provides sntpClientRef: DeferredRef<SntpClient>,
             @Provides receiverStatusStoreRef: DeferredRef<ReceiverStatusStore>,
             @Provides uelRef: DeferredRef<UserEntryLogger>,
-            @Provides preferencesRef: DeferredRef<Preferences>
+            @Provides preferencesRef: DeferredRef<Preferences>,
+            @Provides constraintsCheckerRef: DeferredRef<ConstraintsChecker>,
+            @Provides activePluginRef: DeferredRef<ActivePlugin>,
+            @Provides hardLimitsRef: DeferredRef<HardLimits>,
+            @Provides configRef: DeferredRef<Config>,
+            @Provides persistenceLayerRef: DeferredRef<PersistenceLayer>,
+            @Provides notificationManagerRef: DeferredRef<NotificationManager>,
+            @Provides decimalFormatterRef: DeferredRef<DecimalFormatter>,
+            @Provides versionCheckerUtilsRef: DeferredRef<VersionCheckerUtils>,
+            @Provides loopRef: DeferredRef<Loop>,
+            @Provides profileFunctionRef: DeferredRef<ProfileFunction>,
+            @Provides iobCobCalculatorRef: DeferredRef<IobCobCalculator>,
+            @Provides contextRef: DeferredRef<Context>
         ): ConstraintsMetroGraph
     }
 
-    // The plugins arrive already built, from Dagger. They are deferred for the re-entrancy reason in
-    // MetroGraphs: a plugin's own dependencies lead back to the plugin list, which asks this graph.
-    @Provides fun safety(r: DeferredRef<SafetyPlugin>): SafetyPlugin = r.get()
-    @Provides fun versionChecker(r: DeferredRef<VersionCheckerPlugin>): VersionCheckerPlugin = r.get()
-    @Provides fun storageConstraint(r: DeferredRef<StorageConstraintPlugin>): StorageConstraintPlugin = r.get()
     @Provides fun signatureVerifier(r: DeferredRef<SignatureVerifierPlugin>): SignatureVerifierPlugin = r.get()
     @Provides fun objectives(r: DeferredRef<ObjectivesPlugin>): ObjectivesPlugin = r.get()
-    @Provides fun dstHelper(r: DeferredRef<DstHelperPlugin>): DstHelperPlugin = r.get()
-    @Provides fun bgQualityCheck(r: DeferredRef<BgQualityCheckPlugin>): BgQualityCheckPlugin = r.get()
     @Provides fun aapsLogger(r: DeferredRef<AAPSLogger>): AAPSLogger = r.get()
     @Provides fun rxBus(r: DeferredRef<RxBus>): RxBus = r.get()
     @Provides fun rh(r: DeferredRef<ResourceHelper>): ResourceHelper = r.get()
@@ -102,7 +135,21 @@ internal interface ConstraintsMetroGraph {
     @Provides fun receiverStatusStore(r: DeferredRef<ReceiverStatusStore>): ReceiverStatusStore = r.get()
     @Provides fun uel(r: DeferredRef<UserEntryLogger>): UserEntryLogger = r.get()
     @Provides fun preferences(r: DeferredRef<Preferences>): Preferences = r.get()
+    @Provides fun constraintsChecker(r: DeferredRef<ConstraintsChecker>): ConstraintsChecker = r.get()
+    @Provides fun activePlugin(r: DeferredRef<ActivePlugin>): ActivePlugin = r.get()
+    @Provides fun hardLimits(r: DeferredRef<HardLimits>): HardLimits = r.get()
+    @Provides fun config(r: DeferredRef<Config>): Config = r.get()
+    @Provides fun persistenceLayer(r: DeferredRef<PersistenceLayer>): PersistenceLayer = r.get()
+    @Provides fun notificationManager(r: DeferredRef<NotificationManager>): NotificationManager = r.get()
+    @Provides fun decimalFormatter(r: DeferredRef<DecimalFormatter>): DecimalFormatter = r.get()
+    @Provides fun versionCheckerUtils(r: DeferredRef<VersionCheckerUtils>): VersionCheckerUtils = r.get()
+    @Provides fun loop(r: DeferredRef<Loop>): Loop = r.get()
+    @Provides fun profileFunction(r: DeferredRef<ProfileFunction>): ProfileFunction = r.get()
+    @Provides fun iobCobCalculator(r: DeferredRef<IobCobCalculator>): IobCobCalculator = r.get()
+    @Provides fun context(r: DeferredRef<Context>): Context = r.get()
 
+    // A plugin is one object for the app's lifetime: it holds its enabled state and, for several of
+    // these, a notification it has raised. Two instances would mean one of them silently ignored.
     @Provides @AllConfigs @IntoMap @IntKey(800)
     fun bindSafety(plugin: SafetyPlugin): PluginBase = plugin
 
@@ -123,9 +170,6 @@ internal interface ConstraintsMetroGraph {
 
     @Provides @AllConfigs @IntoMap @IntKey(860)
     fun bindBgQualityCheck(plugin: BgQualityCheckPlugin): PluginBase = plugin
-
-    /** Builds [ObjectivesViewModel] - the `@HiltViewModel` replacement for this module. */
-    val viewModelCreators: Map<KClass<*>, MetroViewModelCreator>
 
     @Provides
     @IntoMap

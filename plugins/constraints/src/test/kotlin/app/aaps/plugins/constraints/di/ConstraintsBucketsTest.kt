@@ -1,13 +1,8 @@
 package app.aaps.plugins.constraints.di
 
 import app.aaps.core.interfaces.di.DeferredRef
-import app.aaps.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
-import app.aaps.plugins.constraints.dstHelper.DstHelperPlugin
 import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
-import app.aaps.plugins.constraints.safety.SafetyPlugin
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
-import app.aaps.plugins.constraints.storage.StorageConstraintPlugin
-import app.aaps.plugins.constraints.versionChecker.VersionCheckerPlugin
 import com.google.common.truth.Truth.assertThat
 import dev.zacsweers.metro.createGraphFactory
 import org.junit.jupiter.api.Test
@@ -25,20 +20,16 @@ import org.mockito.kotlin.mock
  */
 class ConstraintsBucketsTest {
 
-    private fun <T : Any> unused(): DeferredRef<T> = DeferredRef { error("must not be resolved") }
+    /** A mocked leaf. Five of the plugins are really constructed now, so these must be usable. */
+    private inline fun <reified T : Any> leaf(): DeferredRef<T> = DeferredRef { mock<T>() }
 
     private fun graph(): ConstraintsMetroGraph =
         createGraphFactory<ConstraintsMetroGraph.Factory>().create(
-            DeferredRef { mock<SafetyPlugin>() },
-            DeferredRef { mock<VersionCheckerPlugin>() },
-            DeferredRef { mock<StorageConstraintPlugin>() },
             DeferredRef { mock<SignatureVerifierPlugin>() },
             DeferredRef { mock<ObjectivesPlugin>() },
-            DeferredRef { mock<DstHelperPlugin>() },
-            DeferredRef { mock<BgQualityCheckPlugin>() },
-            // The view model's dependencies. Reading bucket keys never builds a view model, so these
-            // are handles that would throw if anything tried.
-            unused(), unused(), unused(), unused(), unused(), unused(), unused(), unused()
+            leaf(), leaf(), leaf(), leaf(), leaf(), leaf(), leaf(), leaf(),
+            leaf(), leaf(), leaf(), leaf(), leaf(), leaf(), leaf(), leaf(),
+            leaf(), leaf(), leaf(), leaf()
         )
 
     @Test
