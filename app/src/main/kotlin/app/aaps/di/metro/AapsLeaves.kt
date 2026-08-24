@@ -55,9 +55,7 @@ import app.aaps.ui.compose.overview.OverviewDataCacheFactory
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.Provides
 import kotlinx.coroutines.CoroutineScope
-import javax.inject.Inject
 import javax.inject.Provider
-import javax.inject.Singleton
 
 /**
  * Every app-wide object Dagger still owns, offered to Metro as one thing.
@@ -79,9 +77,8 @@ import javax.inject.Singleton
  *
  * When Dagger is gone this class goes with it, and the graphs that include it lose one parameter each.
  */
-@Singleton
 @BindingContainer
-class AapsLeaves @Inject constructor(
+class AapsLeaves(
     private val aapsLoggerProvider: Provider<AAPSLogger>,
     private val rxBusProvider: Provider<RxBus>,
     private val activePluginProvider: Provider<ActivePlugin>,
@@ -139,8 +136,20 @@ class AapsLeaves @Inject constructor(
     @Provides fun rxBus(): RxBus = rxBusProvider.get()
     @Provides fun activePlugin(): ActivePlugin = activePluginProvider.get()
 
-    /** The application scope. Bound unqualified because a graph holds only this one. */
-    @Provides fun appScope(): CoroutineScope = appScopeProvider.get()
+    /**
+     * The application scope, qualified.
+     *
+     * It used to be bound unqualified, because without Dagger interop Metro ignored the javax
+     * @Qualifier entirely. With interop on, consumers ask for the qualified type and get it.
+     */
+    @Provides @ApplicationScope fun appScope(): CoroutineScope = appScopeProvider.get()
+
+    /**
+     * The same scope again, unqualified, for the multiplatform classes that take a plain
+     * `CoroutineScope` - `@ApplicationScope` is a javax qualifier and cannot appear in commonMain.
+     * Same instance either way.
+     */
+    @Provides fun unqualifiedAppScope(): CoroutineScope = appScopeProvider.get()
 
     @Provides fun fabricPrivacy(): FabricPrivacy = fabricPrivacyProvider.get()
     @Provides fun runningModeExpiryJob(): RunningModeExpiryJob = runningModeExpiryJobProvider.get()

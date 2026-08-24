@@ -33,8 +33,12 @@ import app.aaps.plugins.source.XdripInbox
 import app.aaps.plugins.source.instara.InstaraPlugin
 import app.aaps.plugins.sync.smsCommunicator.SmsInbox
 import dagger.android.DaggerBroadcastReceiver
+import dev.zacsweers.metro.HasMemberInjections
 import javax.inject.Inject
 
+// Metro reads this class now that interop is on for `:app`. It is `open`, so it has to say its injected
+// fields are meant to be filled - Metro will not infer that for a subclassable type.
+@HasMemberInjections
 open class DataReceiver : DaggerBroadcastReceiver() {
 
     @Inject lateinit var aapsLogger: AAPSLogger

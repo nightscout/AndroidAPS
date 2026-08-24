@@ -56,6 +56,32 @@ import app.aaps.core.interfaces.stats.DexcomTirCalculator
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.insulin.InsulinManager
+import app.aaps.di.metro.AapsLeaves
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.implementation.scenes.ActiveSceneManager
+import app.aaps.core.interfaces.workflow.CalculationWorkflow
+import app.aaps.implementation.maintenance.cloud.CloudStorageManager
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.utils.receivers.DataInbox
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.interfaces.maintenance.FileListProvider
+import app.aaps.plugins.automation.services.LastLocationDataContainer
+import app.aaps.core.interfaces.alerts.LocalAlertUtils
+import app.aaps.core.interfaces.maintenance.Maintenance
+import app.aaps.core.interfaces.notifications.NotificationHolder
+import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.ui.compose.overview.OverviewDataCacheFactory
+import app.aaps.core.interfaces.protection.PasswordCheck
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
+import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryJob
+import app.aaps.implementation.scenes.SceneExecutor
+import app.aaps.implementation.scenes.SceneRepository
+import app.aaps.plugins.constraints.objectives.SntpClient
+import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
+import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
+import app.aaps.core.interfaces.pump.VirtualPump
+import androidx.work.WorkManager
 
 /**
  * Constructs the :core:objects classes.
@@ -160,4 +186,108 @@ class CoreObjectsModule {
 
     // Unscoped, as its Dagger @Binds was: a profile store is a value object built per caller.
     @Provides fun provideProfileStore(graphs: MetroGraphs): ProfileStore = graphs.profileStore
+    /**
+     * Builds [AapsLeaves] by hand rather than letting Dagger inject it.
+     *
+     * The class must NOT carry a javax `@Inject` constructor. With Dagger interop enabled in this
+     * module, Metro would then see the container as something it can also construct, and the
+     * compiler crashes with "Transforming after locked!" while transforming the very container it
+     * is including. Constructing it here keeps the `@Inject` off the class and the crash away.
+     */
+    @Provides
+    @Singleton
+    @Suppress("LongParameterList")
+    fun provideAapsLeaves(
+        aapsLoggerProvider: Provider<AAPSLogger>,
+        rxBusProvider: Provider<RxBus>,
+        activePluginProvider: Provider<ActivePlugin>,
+        @ApplicationScope appScopeProvider: Provider<CoroutineScope>,
+        fabricPrivacyProvider: Provider<FabricPrivacy>,
+        runningModeExpiryJobProvider: Provider<RunningModeExpiryJob>,
+        localAlertUtilsProvider: Provider<LocalAlertUtils>,
+        persistenceLayerProvider: Provider<PersistenceLayer>,
+        configProvider: Provider<Config>,
+        iobCobCalculatorProvider: Provider<IobCobCalculator>,
+        loopProvider: Provider<Loop>,
+        dateUtilProvider: Provider<DateUtil>,
+        profileFunctionProvider: Provider<ProfileFunction>,
+        commandQueueProvider: Provider<CommandQueue>,
+        maintenanceProvider: Provider<Maintenance>,
+        rhProvider: Provider<ResourceHelper>,
+        preferencesProvider: Provider<Preferences>,
+        dstHelperProvider: Provider<DstHelper>,
+        workManagerProvider: Provider<WorkManager>,
+        concentrationHelperProvider: Provider<ConcentrationHelper>,
+        notificationManagerProvider: Provider<NotificationManager>,
+        activeSceneManagerProvider: Provider<ActiveSceneManager>,
+        sceneExecutorProvider: Provider<SceneExecutor>,
+        sceneRepositoryProvider: Provider<SceneRepository>,
+        fileListProviderProvider: Provider<FileListProvider>,
+        userEntryPresentationHelperProvider: Provider<UserEntryPresentationHelper>,
+        dataInboxProvider: Provider<DataInbox>,
+        cloudStorageManagerProvider: Provider<CloudStorageManager>,
+        calculationWorkflowProvider: Provider<CalculationWorkflow>,
+        processedTbrEbDataProvider: Provider<ProcessedTbrEbData>,
+        overviewDataCacheFactoryProvider: Provider<OverviewDataCacheFactory>,
+        constraintsCheckerProvider: Provider<ConstraintsChecker>,
+        uelProvider: Provider<UserEntryLogger>,
+        automationProvider: Provider<Automation>,
+        glucoseStatusProvider: Provider<GlucoseStatusProvider>,
+        processedDeviceStatusDataProvider: Provider<ProcessedDeviceStatusData>,
+        wizardBolusExecutorProvider: Provider<WizardBolusExecutor>,
+        contextProvider: Provider<Context>,
+        virtualPumpProvider: Provider<VirtualPump>,
+        uiInteractionProvider: Provider<UiInteraction>,
+        notificationHolderProvider: Provider<NotificationHolder>,
+        lastLocationDataContainerProvider: Provider<LastLocationDataContainer>,
+        versionCheckerUtilsProvider: Provider<VersionCheckerUtils>,
+        passwordCheckProvider: Provider<PasswordCheck>,
+        sntpClientProvider: Provider<SntpClient>
+    ): AapsLeaves = AapsLeaves(
+        aapsLoggerProvider,
+        rxBusProvider,
+        activePluginProvider,
+        appScopeProvider,
+        fabricPrivacyProvider,
+        runningModeExpiryJobProvider,
+        localAlertUtilsProvider,
+        persistenceLayerProvider,
+        configProvider,
+        iobCobCalculatorProvider,
+        loopProvider,
+        dateUtilProvider,
+        profileFunctionProvider,
+        commandQueueProvider,
+        maintenanceProvider,
+        rhProvider,
+        preferencesProvider,
+        dstHelperProvider,
+        workManagerProvider,
+        concentrationHelperProvider,
+        notificationManagerProvider,
+        activeSceneManagerProvider,
+        sceneExecutorProvider,
+        sceneRepositoryProvider,
+        fileListProviderProvider,
+        userEntryPresentationHelperProvider,
+        dataInboxProvider,
+        cloudStorageManagerProvider,
+        calculationWorkflowProvider,
+        processedTbrEbDataProvider,
+        overviewDataCacheFactoryProvider,
+        constraintsCheckerProvider,
+        uelProvider,
+        automationProvider,
+        glucoseStatusProvider,
+        processedDeviceStatusDataProvider,
+        wizardBolusExecutorProvider,
+        contextProvider,
+        virtualPumpProvider,
+        uiInteractionProvider,
+        notificationHolderProvider,
+        lastLocationDataContainerProvider,
+        versionCheckerUtilsProvider,
+        passwordCheckProvider,
+        sntpClientProvider
+    )
 }
