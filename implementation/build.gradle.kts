@@ -13,6 +13,16 @@ plugins {
     id("jacoco-module-dependencies")
 }
 
+metro {
+    interop {
+        // Lets Metro read the javax and Dagger annotations already on this module's classes, so a
+        // class only has to move its wiring, not rewrite its annotations. This could not be switched
+        // on until the last @Reusable was gone: Metro does not support @Reusable at all, and interop
+        // is what makes it look at those annotations in the first place.
+        includeDagger()
+    }
+}
+
 android {
     namespace = "app.aaps.implementation"
 

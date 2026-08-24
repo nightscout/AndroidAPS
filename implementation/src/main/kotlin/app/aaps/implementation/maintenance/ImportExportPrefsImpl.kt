@@ -65,7 +65,6 @@ import app.aaps.implementation.maintenance.data.PrefsFormat
 import app.aaps.implementation.maintenance.data.PrefsStatusImpl
 import app.aaps.implementation.maintenance.formats.EncryptedPrefsFormat
 import app.aaps.shared.impl.weardata.ZipWatchfaceFormat
-import dagger.Reusable
 import app.aaps.core.objects.workflow.MetroWorkerCreator
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -82,6 +81,7 @@ import java.io.IOException
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Created by mike on 03.07.2016.
@@ -90,7 +90,7 @@ import javax.inject.Inject
 private fun filenameTimestamp(): String =
     LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HHmmss"))
 
-@Reusable
+@Singleton
 class ImportExportPrefsImpl @Inject constructor(
     private var aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,

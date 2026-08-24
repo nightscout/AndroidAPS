@@ -11,7 +11,6 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.locale.LocaleHelper
-import dagger.Reusable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -20,11 +19,12 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import java.util.Locale
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Created by adrian on 2019-12-23.
  */
-@Reusable
+@Singleton
 class ResourceHelperImpl @Inject constructor(var context: Context, private val fabricPrivacy: FabricPrivacy, preferences: Preferences) : ResourceHelper {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
