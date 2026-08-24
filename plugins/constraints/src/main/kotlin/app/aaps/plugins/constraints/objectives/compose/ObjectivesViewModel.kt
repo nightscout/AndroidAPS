@@ -23,7 +23,6 @@ import app.aaps.plugins.constraints.objectives.events.EventObjectivesUpdateGui
 import app.aaps.plugins.constraints.objectives.objectives.Objective
 import app.aaps.plugins.constraints.objectives.objectives.Objective.ExamTask
 import app.aaps.plugins.constraints.objectives.objectives.Objective.UITask
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,7 +38,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-@HiltViewModel
 class ObjectivesViewModel @Inject constructor(
     private val objectivesPlugin: ObjectivesPlugin,
     private val rxBus: RxBus,

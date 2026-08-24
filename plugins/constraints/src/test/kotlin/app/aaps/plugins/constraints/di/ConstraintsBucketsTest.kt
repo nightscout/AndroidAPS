@@ -25,6 +25,8 @@ import org.mockito.kotlin.mock
  */
 class ConstraintsBucketsTest {
 
+    private fun <T : Any> unused(): DeferredRef<T> = DeferredRef { error("must not be resolved") }
+
     private fun graph(): ConstraintsMetroGraph =
         createGraphFactory<ConstraintsMetroGraph.Factory>().create(
             DeferredRef { mock<SafetyPlugin>() },
@@ -33,7 +35,10 @@ class ConstraintsBucketsTest {
             DeferredRef { mock<SignatureVerifierPlugin>() },
             DeferredRef { mock<ObjectivesPlugin>() },
             DeferredRef { mock<DstHelperPlugin>() },
-            DeferredRef { mock<BgQualityCheckPlugin>() }
+            DeferredRef { mock<BgQualityCheckPlugin>() },
+            // The view model's dependencies. Reading bucket keys never builds a view model, so these
+            // are handles that would throw if anything tried.
+            unused(), unused(), unused(), unused(), unused(), unused(), unused(), unused()
         )
 
     @Test

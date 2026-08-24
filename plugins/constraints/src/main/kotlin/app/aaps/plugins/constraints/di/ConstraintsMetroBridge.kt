@@ -1,7 +1,16 @@
 package app.aaps.plugins.constraints.di
 
 import app.aaps.core.interfaces.di.DeferredRef
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.receivers.ReceiverStatusStore
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.MetroViewModelCreator
+import app.aaps.plugins.constraints.objectives.SntpClient
 import app.aaps.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
 import app.aaps.plugins.constraints.dstHelper.DstHelperPlugin
 import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
@@ -13,6 +22,7 @@ import dev.zacsweers.metro.createGraphFactory
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
+import kotlin.reflect.KClass
 
 /**
  * Hands this module's plugins from Dagger to [ConstraintsMetroGraph] and passes the three buckets back.
@@ -29,7 +39,15 @@ class ConstraintsMetroBridge @Inject constructor(
     private val signatureVerifier: Provider<SignatureVerifierPlugin>,
     private val objectives: Provider<ObjectivesPlugin>,
     private val dstHelper: Provider<DstHelperPlugin>,
-    private val bgQualityCheck: Provider<BgQualityCheckPlugin>
+    private val bgQualityCheck: Provider<BgQualityCheckPlugin>,
+    private val aapsLogger: Provider<AAPSLogger>,
+    private val rxBus: Provider<RxBus>,
+    private val rh: Provider<ResourceHelper>,
+    private val dateUtil: Provider<DateUtil>,
+    private val sntpClient: Provider<SntpClient>,
+    private val receiverStatusStore: Provider<ReceiverStatusStore>,
+    private val uel: Provider<UserEntryLogger>,
+    private val preferences: Provider<Preferences>
 ) {
 
     private val graph: ConstraintsMetroGraph by lazy {
@@ -40,7 +58,15 @@ class ConstraintsMetroBridge @Inject constructor(
             DeferredRef { signatureVerifier.get() },
             DeferredRef { objectives.get() },
             DeferredRef { dstHelper.get() },
-            DeferredRef { bgQualityCheck.get() }
+            DeferredRef { bgQualityCheck.get() },
+            DeferredRef { aapsLogger.get() },
+            DeferredRef { rxBus.get() },
+            DeferredRef { rh.get() },
+            DeferredRef { dateUtil.get() },
+            DeferredRef { sntpClient.get() },
+            DeferredRef { receiverStatusStore.get() },
+            DeferredRef { uel.get() },
+            DeferredRef { preferences.get() }
         )
     }
 
@@ -48,4 +74,5 @@ class ConstraintsMetroBridge @Inject constructor(
     val allConfigsPlugins: Map<Int, PluginBase> get() = graph.allConfigsPlugins
     val apsPlugins: Map<Int, PluginBase> get() = graph.apsPlugins
     val notNsClientPlugins: Map<Int, PluginBase> get() = graph.notNsClientPlugins
+    val viewModelCreators: Map<KClass<*>, MetroViewModelCreator> get() = graph.viewModelCreators
 }

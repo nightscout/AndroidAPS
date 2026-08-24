@@ -285,7 +285,7 @@ class MetroGraphs @Inject constructor(
      * models - one map, the same way Hilt presents one factory for the whole app.
      */
     val viewModelFactory: MetroViewModelFactory by lazy {
-        MetroViewModelFactory(openHumans.viewModelCreators)
+        MetroViewModelFactory(openHumans.viewModelCreators + constraintsMetroBridge.get().viewModelCreators)
     }
 
     /** Handed back to Dagger consumers that have not moved - Dagger delegates, never constructs. */

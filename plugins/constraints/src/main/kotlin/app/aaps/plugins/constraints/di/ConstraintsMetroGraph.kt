@@ -4,7 +4,17 @@ import app.aaps.core.interfaces.di.APS
 import app.aaps.core.interfaces.di.AllConfigs
 import app.aaps.core.interfaces.di.NotNSClient
 import app.aaps.core.interfaces.di.DeferredRef
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.receivers.ReceiverStatusStore
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.MetroViewModelCreator
+import app.aaps.plugins.constraints.objectives.SntpClient
+import app.aaps.plugins.constraints.objectives.compose.ObjectivesViewModel
 import app.aaps.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
 import app.aaps.plugins.constraints.dstHelper.DstHelperPlugin
 import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
@@ -16,7 +26,10 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.IntoMap
+import dev.zacsweers.metro.ClassKey
+import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.Provides
+import kotlin.reflect.KClass
 
 /**
  * Metro wiring for this module's seven plugins, replacing `ConstraintsPluginsListModule`.
@@ -60,7 +73,15 @@ internal interface ConstraintsMetroGraph {
             @Provides signatureVerifierRef: DeferredRef<SignatureVerifierPlugin>,
             @Provides objectivesRef: DeferredRef<ObjectivesPlugin>,
             @Provides dstHelperRef: DeferredRef<DstHelperPlugin>,
-            @Provides bgQualityCheckRef: DeferredRef<BgQualityCheckPlugin>
+            @Provides bgQualityCheckRef: DeferredRef<BgQualityCheckPlugin>,
+            @Provides aapsLoggerRef: DeferredRef<AAPSLogger>,
+            @Provides rxBusRef: DeferredRef<RxBus>,
+            @Provides rhRef: DeferredRef<ResourceHelper>,
+            @Provides dateUtilRef: DeferredRef<DateUtil>,
+            @Provides sntpClientRef: DeferredRef<SntpClient>,
+            @Provides receiverStatusStoreRef: DeferredRef<ReceiverStatusStore>,
+            @Provides uelRef: DeferredRef<UserEntryLogger>,
+            @Provides preferencesRef: DeferredRef<Preferences>
         ): ConstraintsMetroGraph
     }
 
@@ -73,6 +94,14 @@ internal interface ConstraintsMetroGraph {
     @Provides fun objectives(r: DeferredRef<ObjectivesPlugin>): ObjectivesPlugin = r.get()
     @Provides fun dstHelper(r: DeferredRef<DstHelperPlugin>): DstHelperPlugin = r.get()
     @Provides fun bgQualityCheck(r: DeferredRef<BgQualityCheckPlugin>): BgQualityCheckPlugin = r.get()
+    @Provides fun aapsLogger(r: DeferredRef<AAPSLogger>): AAPSLogger = r.get()
+    @Provides fun rxBus(r: DeferredRef<RxBus>): RxBus = r.get()
+    @Provides fun rh(r: DeferredRef<ResourceHelper>): ResourceHelper = r.get()
+    @Provides fun dateUtil(r: DeferredRef<DateUtil>): DateUtil = r.get()
+    @Provides fun sntpClient(r: DeferredRef<SntpClient>): SntpClient = r.get()
+    @Provides fun receiverStatusStore(r: DeferredRef<ReceiverStatusStore>): ReceiverStatusStore = r.get()
+    @Provides fun uel(r: DeferredRef<UserEntryLogger>): UserEntryLogger = r.get()
+    @Provides fun preferences(r: DeferredRef<Preferences>): Preferences = r.get()
 
     @Provides @AllConfigs @IntoMap @IntKey(800)
     fun bindSafety(plugin: SafetyPlugin): PluginBase = plugin
@@ -94,4 +123,13 @@ internal interface ConstraintsMetroGraph {
 
     @Provides @AllConfigs @IntoMap @IntKey(860)
     fun bindBgQualityCheck(plugin: BgQualityCheckPlugin): PluginBase = plugin
+
+    /** Builds [ObjectivesViewModel] - the `@HiltViewModel` replacement for this module. */
+    val viewModelCreators: Map<KClass<*>, MetroViewModelCreator>
+
+    @Provides
+    @IntoMap
+    @ClassKey(ObjectivesViewModel::class)
+    fun bindObjectivesViewModel(provider: Provider<ObjectivesViewModel>): MetroViewModelCreator =
+        MetroViewModelCreator { provider() }
 }
