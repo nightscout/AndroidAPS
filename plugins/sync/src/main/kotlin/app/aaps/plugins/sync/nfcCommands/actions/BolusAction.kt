@@ -25,10 +25,11 @@ import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
 import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
 import org.json.JSONObject
 import java.util.concurrent.TimeUnit
+import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.R as CoreUiR
 
 class BolusAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
-    @StringRes override val labelResId = CoreUiR.string.bolus
+    @StringRes override val labelResId = InterfacesR.string.bolus
     override val elementType = ElementType.INSULIN
     override val argType = listOf(ArgType.INSULIN, ArgType.MEAL_CHECK)
     override val icon
@@ -64,7 +65,7 @@ class BolusAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
             return NfcExecutionResult(false, plugin.rh.gs(R.string.nfccommands_remote_bolus_not_allowed))
         }
         if (plugin.loop.runningMode().pausesLoopExecution()) {
-            return NfcExecutionResult(false, plugin.rh.gs(CoreUiR.string.pumpsuspended))
+            return NfcExecutionResult(false, plugin.rh.gs(InterfacesR.string.pumpsuspended))
         }
         
         var bolus = params.optDouble(NfcJsonKeys.AMOUNT, 0.0)

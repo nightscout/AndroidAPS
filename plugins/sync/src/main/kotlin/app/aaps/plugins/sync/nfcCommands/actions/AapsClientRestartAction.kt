@@ -18,7 +18,7 @@ class AapsClientRestartAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
     override val icon = IcAaps
 
     override suspend fun execute(): NfcExecutionResult {
-        plugin.activePlugin.getSpecificPluginsListByInterface(NsClient::class.java).forEach {
+        plugin.activePlugin.getSpecificPluginsListByInterface(NsClient::class).forEach {
             (it as? NsClient)?.resend("NFC")
         }
         uel.log(

@@ -16,6 +16,7 @@ import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
 import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
 import app.aaps.plugins.sync.R
 import org.json.JSONObject
+import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.R as CoreUiR
 
 class BolusWizardAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
@@ -56,7 +57,7 @@ class BolusWizardAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
                 // client-control), instead of re-driving a shared/leftover BolusWizard instance.
                 plugin.setActionState(params.toString(), prepared)
                 val base = plugin.rh.gs(CoreUiR.string.goingtodeliver, prepared.insulin)
-                val carbs = plugin.rh.gs(CoreUiR.string.format_carbs, amount)
+                val carbs = plugin.rh.gs(InterfacesR.string.format_carbs, amount)
                 "$base ($carbs)"
             }
             is WizardBolusExecutor.PrepareResult.Error   -> prepared.message
@@ -72,7 +73,7 @@ class BolusWizardAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
             return NfcExecutionResult(false, plugin.rh.gs(R.string.nfccommands_remote_bolus_not_allowed))
         }
         if (plugin.loop.runningMode().pausesLoopExecution()) {
-            return NfcExecutionResult(false, plugin.rh.gs(CoreUiR.string.pumpsuspended))
+            return NfcExecutionResult(false, plugin.rh.gs(InterfacesR.string.pumpsuspended))
         }
 
         val prepared = plugin.getActionState(params.toString()) as? WizardBolusExecutor.PrepareResult.Preview

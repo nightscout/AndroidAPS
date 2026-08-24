@@ -15,6 +15,7 @@ import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
 import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
 import app.aaps.plugins.sync.R
 import org.json.JSONObject
+import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.R as CoreUiR
 
 class LoopSuspendAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
@@ -61,7 +62,7 @@ class LoopSuspendAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
         val message = if (result) {
             plugin.rh.gs(
                 CoreUiR.string.text_with_detail,
-                plugin.rh.gs(CoreUiR.string.loopsuspended),
+                plugin.rh.gs(InterfacesR.string.loopsuspended),
                 plugin.rh.gs(CoreUiR.string.format_mins, normalizedDuration)
             )
         } else {

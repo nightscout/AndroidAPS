@@ -81,7 +81,7 @@ class NfcControlActivityTest : TestBaseWithProfile() {
     @Test
     fun `processIntent does nothing when plugin disabled`() {
         pluginUnderTest.setPluginEnabledBlocking(app.aaps.core.data.plugin.PluginType.SYNC, false)
-        whenever(rh.gs(any())).thenReturn("Disabled")
+        whenever(rh.gs(any<Int>())).thenReturn("Disabled")
 
         val result = process(createNfcIntent(mockNfcTag(fakeUid)))
 

@@ -35,6 +35,7 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.R as CoreUiR
 
 class NfcCommandsPluginTest : TestBaseWithProfile() {
@@ -101,7 +102,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(rh.gsNotLocalised(any<Int>(), any())).thenReturn("Mock String")
         whenever(rh.gs(R.string.wrong_format)).thenReturn("Wrong format")
         whenever(rh.gs(R.string.nfccommands_wrong_duration)).thenReturn("Wrong duration")
-        whenever(rh.gs(CoreUiR.string.pump_disconnected)).thenReturn("Pump disconnected")
+        whenever(rh.gs(InterfacesR.string.pump_disconnected)).thenReturn("Pump disconnected")
         whenever(rh.gs(CoreUiR.string.noprofile)).thenReturn("No profile")
         whenever(rh.gs(CoreUiR.string.ok)).thenReturn("OK")
     }
@@ -202,7 +203,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     fun `executeCommand LOOP_SUSPEND should call handleRunningModeChange directly`() {
         runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.SUSPENDED_BY_USER)) }
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
-        whenever(rh.gs(CoreUiR.string.loopsuspended)).thenReturn("Loop suspended")
+        whenever(rh.gs(InterfacesR.string.loopsuspended)).thenReturn("Loop suspended")
 
         val result = execute(NfcCommandCode.LOOP_SUSPEND, JSONObject().put(NfcJsonKeys.DURATION, 30))
 
@@ -282,7 +283,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     @Test
     fun `executeCommand PUMP_DISCONNECT should disconnect pump`() {
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
-        whenever(rh.gs(CoreUiR.string.pump_disconnected)).thenReturn("Pump disconnected")
+        whenever(rh.gs(InterfacesR.string.pump_disconnected)).thenReturn("Pump disconnected")
 
         val result = execute(NfcCommandCode.PUMP_DISCONNECT, JSONObject().put(NfcJsonKeys.DURATION, 180))
 

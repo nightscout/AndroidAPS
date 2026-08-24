@@ -62,7 +62,7 @@ open class NfcControlActivity : FragmentActivity() {
     @Inject lateinit var clientControlActionDispatcher: ClientControlActionDispatcher
 
     private val pumpCommunicationStatus by lazy {
-        PumpCommunicationStatus(rxBus, commandQueue, this, lifecycleScope)
+        PumpCommunicationStatus(rxBus, commandQueue, rh, lifecycleScope)
     }
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
@@ -140,7 +140,7 @@ open class NfcControlActivity : FragmentActivity() {
                                     PumpActivityDialog(
                                         bolusState = state,
                                         pumpStatus = pumpStatus?.text ?: "",
-                                        queueStatus = queueStatus ?: "",
+                                        queueStatus = queueStatus,
                                         isModal = true,
                                         onStop = {
                                             if (config.AAPSCLIENT) {

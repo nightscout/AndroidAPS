@@ -13,10 +13,11 @@ import app.aaps.plugins.sync.nfcCommands.NfcCommandsPlugin
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
 import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
 import org.json.JSONObject
+import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.R as CoreUiR
 
 class CarbsAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
-    @StringRes override val labelResId = CoreUiR.string.carbs
+    @StringRes override val labelResId = InterfacesR.string.carbs
     override val elementType = ElementType.CARBS
     override val argType = listOf(ArgType.AMOUNT_GRAMS)
     override val icon
@@ -27,7 +28,7 @@ class CarbsAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
 
     override suspend fun formatParams(): String {
         val grams = params.optInt(NfcJsonKeys.AMOUNT, 0)
-        return plugin.rh.gs(CoreUiR.string.format_carbs, grams)
+        return plugin.rh.gs(InterfacesR.string.format_carbs, grams)
     }
 
     override suspend fun execute(): NfcExecutionResult {
@@ -51,7 +52,7 @@ class CarbsAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
                     ValueWithUnit.Gram(grams)
                 )
             )
-            return NfcExecutionResult(true, plugin.rh.gs(CoreUiR.string.format_carbs, grams))
+            return NfcExecutionResult(true, plugin.rh.gs(InterfacesR.string.format_carbs, grams))
         } else {
             plugin.aapsLogger.error(LTag.NFC, "carbs bolus failed: ${result.comment}")
             return commandNotPossible()

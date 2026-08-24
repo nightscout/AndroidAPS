@@ -38,6 +38,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.icons.IcPluginNfc
 import app.aaps.core.ui.compose.preference.PreferenceActionItem
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -76,7 +77,9 @@ data class NfcExecutionResult(
 class NfcCommandsPlugin @Inject constructor(
     private val context: Context,
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    // Narrows PluginBase.rh, which is a TextResolver and so only takes TextRef. This module still owns
+    // AAPT resources, so it needs the resource id overloads. Same as SmsCommunicatorPlugin.
+    override val rh: ResourceHelper,
     preferences: Preferences,
     val nfcTagStore: NfcTagStore,
     val constraintChecker: ConstraintsChecker,
@@ -103,9 +106,9 @@ class NfcCommandsPlugin @Inject constructor(
         .mainType(PluginType.SYNC)
         .icon(IcPluginNfc)
         .composeContent { NfcCommandsComposeContent(it as NfcCommandsPlugin) }
-        .pluginName(R.string.nfccommands)
-        .shortName(R.string.nfccommands_shortname)
-        .description(R.string.description_nfc_communicator),
+        .pluginName(TextRef.AndroidRes(R.string.nfccommands))
+        .shortName(TextRef.AndroidRes(R.string.nfccommands_shortname))
+        .description(TextRef.AndroidRes(R.string.description_nfc_communicator)),
     ownPreferences = emptyList(),
     aapsLogger,
     rh,
@@ -132,8 +135,8 @@ class NfcCommandsPlugin @Inject constructor(
             BooleanKey.NfcForegroundPriority,
             PreferenceActionItem(
                 key = "nfccommunicator_clear_log",
-                titleResId = R.string.nfccommands_clear_log,
-                summaryResId = R.string.nfccommands_clear_log_summary,
+                title = TextRef.AndroidRes(R.string.nfccommands_clear_log),
+                summary = TextRef.AndroidRes(R.string.nfccommands_clear_log_summary),
                 onAction = {
                     nfcTagStore.clearLog()
                     showToast(rh.gs(R.string.nfccommands_log_cleared))
