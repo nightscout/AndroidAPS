@@ -13,6 +13,8 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.protection.PasswordCheck
+import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -22,6 +24,8 @@ import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.MetroViewModelCreator
+import app.aaps.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
+import app.aaps.plugins.constraints.dstHelper.DstHelperPlugin
 import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.constraints.objectives.SntpClient
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
@@ -46,7 +50,6 @@ import kotlin.reflect.KClass
 @Singleton
 class ConstraintsMetroBridge @Inject constructor(
     private val signatureVerifier: Provider<SignatureVerifierPlugin>,
-    private val objectives: Provider<ObjectivesPlugin>,
     private val aapsLogger: Provider<AAPSLogger>,
     private val rxBus: Provider<RxBus>,
     private val rh: Provider<ResourceHelper>,
@@ -66,13 +69,14 @@ class ConstraintsMetroBridge @Inject constructor(
     private val loop: Provider<Loop>,
     private val profileFunction: Provider<ProfileFunction>,
     private val iobCobCalculator: Provider<IobCobCalculator>,
-    private val context: Provider<Context>
+    private val context: Provider<Context>,
+    private val virtualPump: Provider<VirtualPump>,
+    private val passwordCheck: Provider<PasswordCheck>
 ) {
 
     private val graph: ConstraintsMetroGraph by lazy {
         createGraphFactory<ConstraintsMetroGraph.Factory>().create(
             DeferredRef { signatureVerifier.get() },
-            DeferredRef { objectives.get() },
             DeferredRef { aapsLogger.get() },
             DeferredRef { rxBus.get() },
             DeferredRef { rh.get() },
@@ -92,7 +96,9 @@ class ConstraintsMetroBridge @Inject constructor(
             DeferredRef { loop.get() },
             DeferredRef { profileFunction.get() },
             DeferredRef { iobCobCalculator.get() },
-            DeferredRef { context.get() }
+            DeferredRef { context.get() },
+            DeferredRef { virtualPump.get() },
+            DeferredRef { passwordCheck.get() }
         )
     }
 
@@ -101,4 +107,9 @@ class ConstraintsMetroBridge @Inject constructor(
     val apsPlugins: Map<Int, PluginBase> get() = graph.apsPlugins
     val notNsClientPlugins: Map<Int, PluginBase> get() = graph.notNsClientPlugins
     val viewModelCreators: Map<KClass<*>, MetroViewModelCreator> get() = graph.viewModelCreators
+
+    /** Dagger delegates to these rather than constructing its own - see the graph for why. */
+    val bgQualityCheckPlugin: BgQualityCheckPlugin get() = graph.bgQualityCheckPlugin
+    val dstHelperPlugin: DstHelperPlugin get() = graph.dstHelperPlugin
+    val objectivesPlugin: ObjectivesPlugin get() = graph.objectivesPlugin
 }

@@ -16,6 +16,8 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.protection.PasswordCheck
+import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -28,6 +30,17 @@ import app.aaps.core.ui.compose.MetroViewModelCreator
 import app.aaps.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
 import app.aaps.plugins.constraints.dstHelper.DstHelperPlugin
 import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
+import app.aaps.plugins.constraints.objectives.objectives.Objective
+import app.aaps.plugins.constraints.objectives.objectives.Objective0
+import app.aaps.plugins.constraints.objectives.objectives.Objective1
+import app.aaps.plugins.constraints.objectives.objectives.Objective2
+import app.aaps.plugins.constraints.objectives.objectives.Objective3
+import app.aaps.plugins.constraints.objectives.objectives.Objective4
+import app.aaps.plugins.constraints.objectives.objectives.Objective5
+import app.aaps.plugins.constraints.objectives.objectives.Objective6
+import app.aaps.plugins.constraints.objectives.objectives.Objective7
+import app.aaps.plugins.constraints.objectives.objectives.Objective8
+import app.aaps.plugins.constraints.objectives.objectives.Objective9
 import app.aaps.plugins.constraints.objectives.SntpClient
 import app.aaps.plugins.constraints.objectives.compose.ObjectivesViewModel
 import app.aaps.plugins.constraints.safety.SafetyPlugin
@@ -93,6 +106,18 @@ internal interface ConstraintsMetroGraph {
     /** Builds [ObjectivesViewModel] - the `@HiltViewModel` replacement for this module. */
     val viewModelCreators: Map<KClass<*>, MetroViewModelCreator>
 
+    /**
+     * The plugins that are also bound to an interface for other callers.
+     *
+     * Dagger must hand out these exact objects rather than build its own. A plugin bound to an
+     * interface is easy to miss when checking who still consumes it - it does not look like an
+     * injection site - and the result is two instances: the one in the plugin list, which is enabled
+     * and started, and a second one behind the interface that nobody ever starts.
+     */
+    val bgQualityCheckPlugin: BgQualityCheckPlugin
+    val dstHelperPlugin: DstHelperPlugin
+    val objectivesPlugin: ObjectivesPlugin
+
     @DependencyGraph.Factory
     fun interface Factory {
 
@@ -100,7 +125,6 @@ internal interface ConstraintsMetroGraph {
         fun create(
             // Still built by Dagger - see the note above.
             @Provides signatureVerifierRef: DeferredRef<SignatureVerifierPlugin>,
-            @Provides objectivesRef: DeferredRef<ObjectivesPlugin>,
             // App-wide leaves, from which the other five plugins and the view model are built.
             @Provides aapsLoggerRef: DeferredRef<AAPSLogger>,
             @Provides rxBusRef: DeferredRef<RxBus>,
@@ -121,12 +145,13 @@ internal interface ConstraintsMetroGraph {
             @Provides loopRef: DeferredRef<Loop>,
             @Provides profileFunctionRef: DeferredRef<ProfileFunction>,
             @Provides iobCobCalculatorRef: DeferredRef<IobCobCalculator>,
-            @Provides contextRef: DeferredRef<Context>
+            @Provides contextRef: DeferredRef<Context>,
+            @Provides virtualPumpRef: DeferredRef<VirtualPump>,
+            @Provides passwordCheckRef: DeferredRef<PasswordCheck>
         ): ConstraintsMetroGraph
     }
 
     @Provides fun signatureVerifier(r: DeferredRef<SignatureVerifierPlugin>): SignatureVerifierPlugin = r.get()
-    @Provides fun objectives(r: DeferredRef<ObjectivesPlugin>): ObjectivesPlugin = r.get()
     @Provides fun aapsLogger(r: DeferredRef<AAPSLogger>): AAPSLogger = r.get()
     @Provides fun rxBus(r: DeferredRef<RxBus>): RxBus = r.get()
     @Provides fun rh(r: DeferredRef<ResourceHelper>): ResourceHelper = r.get()
@@ -147,6 +172,8 @@ internal interface ConstraintsMetroGraph {
     @Provides fun profileFunction(r: DeferredRef<ProfileFunction>): ProfileFunction = r.get()
     @Provides fun iobCobCalculator(r: DeferredRef<IobCobCalculator>): IobCobCalculator = r.get()
     @Provides fun context(r: DeferredRef<Context>): Context = r.get()
+    @Provides fun virtualPump(r: DeferredRef<VirtualPump>): VirtualPump = r.get()
+    @Provides fun passwordCheck(r: DeferredRef<PasswordCheck>): PasswordCheck = r.get()
 
     // A plugin is one object for the app's lifetime: it holds its enabled state and, for several of
     // these, a notification it has raised. Two instances would mean one of them silently ignored.
@@ -170,6 +197,39 @@ internal interface ConstraintsMetroGraph {
 
     @Provides @AllConfigs @IntoMap @IntKey(860)
     fun bindBgQualityCheck(plugin: BgQualityCheckPlugin): PluginBase = plugin
+
+
+    /**
+     * The ten objectives, in order. This replaces `ObjectivesModule`, which did the same thing with
+     * Dagger `@Binds @IntoMap` plus a `@Provides` that sorted the map into a list.
+     *
+     * The original map carried an `@ObjectiveClass` qualifier to tell it apart from other maps. There
+     * is only one `Map<Int, Objective>` in this graph, so the qualifier would distinguish nothing and
+     * is dropped - unlike the plugin buckets above, where the qualifier is the whole point.
+     */
+    @Provides
+    fun objectivesList(objectives: Map<Int, Objective>): List<Objective> =
+        objectives.toList().sortedBy { it.first }.map { it.second }
+
+    @Provides @IntoMap @IntKey(0) fun objective0(o: Objective0): Objective = o
+
+    @Provides @IntoMap @IntKey(1) fun objective1(o: Objective1): Objective = o
+
+    @Provides @IntoMap @IntKey(2) fun objective2(o: Objective2): Objective = o
+
+    @Provides @IntoMap @IntKey(3) fun objective3(o: Objective3): Objective = o
+
+    @Provides @IntoMap @IntKey(4) fun objective4(o: Objective4): Objective = o
+
+    @Provides @IntoMap @IntKey(5) fun objective5(o: Objective5): Objective = o
+
+    @Provides @IntoMap @IntKey(6) fun objective6(o: Objective6): Objective = o
+
+    @Provides @IntoMap @IntKey(7) fun objective7(o: Objective7): Objective = o
+
+    @Provides @IntoMap @IntKey(8) fun objective8(o: Objective8): Objective = o
+
+    @Provides @IntoMap @IntKey(9) fun objective9(o: Objective9): Objective = o
 
     @Provides
     @IntoMap

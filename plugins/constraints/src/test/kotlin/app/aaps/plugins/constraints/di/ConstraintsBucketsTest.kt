@@ -1,7 +1,6 @@
 package app.aaps.plugins.constraints.di
 
 import app.aaps.core.interfaces.di.DeferredRef
-import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import com.google.common.truth.Truth.assertThat
 import dev.zacsweers.metro.createGraphFactory
@@ -26,10 +25,9 @@ class ConstraintsBucketsTest {
     private fun graph(): ConstraintsMetroGraph =
         createGraphFactory<ConstraintsMetroGraph.Factory>().create(
             DeferredRef { mock<SignatureVerifierPlugin>() },
-            DeferredRef { mock<ObjectivesPlugin>() },
             leaf(), leaf(), leaf(), leaf(), leaf(), leaf(), leaf(), leaf(),
             leaf(), leaf(), leaf(), leaf(), leaf(), leaf(), leaf(), leaf(),
-            leaf(), leaf(), leaf(), leaf()
+            leaf(), leaf(), leaf(), leaf(), leaf(), leaf()
         )
 
     @Test

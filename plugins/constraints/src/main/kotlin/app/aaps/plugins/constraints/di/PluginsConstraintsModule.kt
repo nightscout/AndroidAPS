@@ -25,7 +25,6 @@ import javax.inject.Singleton
 @Module(
     includes = [
         PluginsConstraintsModule.Bindings::class,
-        ObjectivesModule::class
     ]
 )
 @InstallIn(SingletonComponent::class)
@@ -37,11 +36,24 @@ open class PluginsConstraintsModule {
     interface Bindings {
 
         @Binds fun bindVersionCheckerUtils(versionCheckerUtils: VersionCheckerUtilsImpl): VersionCheckerUtils
-        @Binds fun bindBgQualityCheck(bgQualityCheck: BgQualityCheckPlugin): BgQualityCheck
-        @Binds fun bindDstHelper(dstHelperPlugin: DstHelperPlugin): DstHelper
+        // BgQualityCheck, DstHelper and Objectives are NOT bound here any more. Metro builds those
+        // plugins now, so a @Binds would have Dagger construct a second copy: the plugin list would
+        // hold the started one and these interfaces would hand out an unstarted twin. See the
+        // @Provides delegates below.
         @Binds fun bindsConstraintChecker(constraintsCheckerImpl: ConstraintsCheckerImpl): ConstraintsChecker
-        @Binds fun bindsObjectives(objectivesPlugin: ObjectivesPlugin): Objectives
     }
+
+    @Provides
+    @Singleton
+    fun providesBgQualityCheck(bridge: ConstraintsMetroBridge): BgQualityCheck = bridge.bgQualityCheckPlugin
+
+    @Provides
+    @Singleton
+    fun providesDstHelper(bridge: ConstraintsMetroBridge): DstHelper = bridge.dstHelperPlugin
+
+    @Provides
+    @Singleton
+    fun providesObjectives(bridge: ConstraintsMetroBridge): Objectives = bridge.objectivesPlugin
 
     @Provides
     @Singleton
