@@ -64,7 +64,6 @@ class HistoryBrowserDataTest : TestBaseWithProfile() {
         whenever(leaves.rh()).thenReturn(rh)
         whenever(leaves.preferences()).thenReturn(preferences)
         whenever(leaves.calculationWorkflow()).thenReturn(calculationWorkflow)
-        whenever(leaves.decimalFormatter()).thenReturn(decimalFormatter)
         whenever(leaves.processedTbrEbData()).thenReturn(processedTbrEbData)
         whenever(leaves.overviewDataCacheFactory()).thenReturn(overviewDataCacheFactory)
     }

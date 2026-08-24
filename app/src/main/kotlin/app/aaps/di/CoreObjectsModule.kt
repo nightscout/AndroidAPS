@@ -22,6 +22,11 @@ import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.source.XDripSource
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.receivers.ReceiverStatusStore
+import app.aaps.core.interfaces.storage.Storage
+import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.constraints.Objectives
@@ -115,4 +120,21 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideNSClientSource(graphs: MetroGraphs): NSClientSource = graphs.nsClientSource
 
     @Provides @Singleton fun provideDexcomBoyda(graphs: MetroGraphs): DexcomBoyda = graphs.dexcomBoyda
+
+    /*
+     * Implementations that Metro builds now. `:implementation` used to @Binds these; the class carries
+     * @ContributesBinding instead, so Metro owns the instance and Dagger consumers get it here. The
+     * delegate is what stops Dagger building a second one.
+     */
+    @Provides @Singleton fun provideTrendCalculator(graphs: MetroGraphs): TrendCalculator = graphs.trendCalculator
+
+    @Provides @Singleton fun provideDecimalFormatter(graphs: MetroGraphs): DecimalFormatter = graphs.decimalFormatter
+
+    @Provides @Singleton fun provideProfileUtil(graphs: MetroGraphs): ProfileUtil = graphs.profileUtil
+
+    @Provides @Singleton fun provideHardLimits(graphs: MetroGraphs): HardLimits = graphs.hardLimits
+
+    @Provides @Singleton fun provideStorage(graphs: MetroGraphs): Storage = graphs.storage
+
+    @Provides @Singleton fun provideReceiverStatusStore(graphs: MetroGraphs): ReceiverStatusStore = graphs.receiverStatusStore
 }

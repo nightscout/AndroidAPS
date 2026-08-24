@@ -2,6 +2,12 @@ package app.aaps.di.metro
 
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.di.APS
+import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.receivers.ReceiverStatusStore
+import app.aaps.core.interfaces.storage.Storage
+import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.interfaces.di.NotNSClient
 import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.plugins.automation.di.AutomationMetroGraph
@@ -99,6 +105,17 @@ interface AppRootGraph : MetroViewModelMultibindings {
      * Constraint plugins that are also bound to an interface, or injected directly. Dagger delegates
      * to these instances in `CoreObjectsModule` rather than building its own.
      */
+    /**
+     * Objects Metro builds that Dagger consumers still ask for. Each has a @Provides delegate in
+     * `CoreObjectsModule`; Dagger must never construct its own, or there would be two.
+     */
+    val trendCalculator: TrendCalculator
+    val decimalFormatter: DecimalFormatter
+    val profileUtil: ProfileUtil
+    val hardLimits: HardLimits
+    val storage: Storage
+    val receiverStatusStore: ReceiverStatusStore
+
     val bgQualityCheckPlugin: BgQualityCheckPlugin
     val dstHelperPlugin: DstHelperPlugin
     val objectivesPlugin: ObjectivesPlugin

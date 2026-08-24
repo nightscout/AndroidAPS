@@ -48,7 +48,6 @@ import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.Translator
-import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.keys.interfaces.Preferences
@@ -73,7 +72,6 @@ import app.aaps.implementation.preference.VisibilityContextImpl
 import app.aaps.implementation.profile.ProfileFunctionImpl
 import app.aaps.implementation.profile.ProfileRepositoryImpl
 import app.aaps.implementation.profile.ProfileStoreObject
-import app.aaps.implementation.profile.ProfileUtilImpl
 import app.aaps.implementation.profiling.ProfilerImpl
 import app.aaps.implementation.protection.ExportPasswordDataStoreImpl
 import app.aaps.implementation.protection.PasswordCheckImpl
@@ -86,19 +84,14 @@ import app.aaps.implementation.pump.PumpStatusProviderImpl
 import app.aaps.implementation.pump.PumpSyncImplementation
 import app.aaps.implementation.pump.PumpWithConcentrationImpl
 import app.aaps.implementation.pump.TemporaryBasalStorageImpl
-import app.aaps.implementation.receivers.ReceiverStatusStoreImpl
 import app.aaps.implementation.resources.IconsProviderImplementation
 import app.aaps.implementation.resources.ResourceHelperImpl
 import app.aaps.implementation.sharedPreferences.PreferencesImpl
 import app.aaps.implementation.stats.DexcomTirCalculatorImpl
 import app.aaps.implementation.stats.TddCalculatorImpl
 import app.aaps.implementation.stats.TirCalculatorImpl
-import app.aaps.implementation.storage.FileStorage
 import app.aaps.implementation.userEntry.UserEntryPresentationHelperImpl
-import app.aaps.implementation.utils.DecimalFormatterImpl
-import app.aaps.implementation.utils.HardLimitsImpl
 import app.aaps.implementation.utils.TranslatorImpl
-import app.aaps.implementation.utils.TrendCalculatorImpl
 import app.aaps.implementation.utils.fabric.FabricPrivacyImpl
 import dagger.Binds
 import dagger.Module
@@ -168,14 +161,12 @@ class ImplementationModule {
         @Binds fun bindSecureEncrypt(secureEncryptImpl: SecureEncryptImpl): SecureEncrypt
         @Binds fun bindLoggerUtils(loggerUtilsImpl: LoggerUtilsImpl): LoggerUtils
         @Binds fun bindProfiler(profilerImpl: ProfilerImpl): Profiler
-        @Binds fun bindHardLimits(hardLimitsImpl: HardLimitsImpl): HardLimits
         @Binds fun bindResourceHelper(resourceHelperImpl: ResourceHelperImpl): ResourceHelper
         @Binds fun bindBlePreCheck(blePreCheckImpl: BlePreCheckImpl): BlePreCheck
         @Binds fun bindLocaleDependentSetting(localeDependentSettingImpl: LocaleDependentSettingImpl): LocaleDependentSetting
         @Binds fun bindPumpWithConcentration(pumpWithConcentrationImpl: PumpWithConcentrationImpl): PumpWithConcentration
         @Binds fun bindPumpStatusGenerator(pumpStatusGeneratorImpl: PumpStatusProviderImpl): PumpStatusProvider
 
-        @Binds fun bindTrendCalculatorInterface(trendCalculator: TrendCalculatorImpl): TrendCalculator
         @Binds fun bindTddCalculatorInterface(tddCalculator: TddCalculatorImpl): TddCalculator
         @Binds fun bindTirCalculatorInterface(tirCalculator: TirCalculatorImpl): TirCalculator
         @Binds fun bindDexcomTirCalculatorInterface(dexcomTirCalculator: DexcomTirCalculatorImpl): DexcomTirCalculator
@@ -186,13 +177,9 @@ class ImplementationModule {
         @Binds fun bindNotificationManager(notificationManagerImpl: NotificationManagerImpl): NotificationManager
         @Binds fun bindAlarmSoundPlayer(alarmSoundPlayerImpl: AlarmSoundPlayerImpl): AlarmSoundPlayer
         @Binds fun bindsProfileFunction(profileFunctionImpl: ProfileFunctionImpl): ProfileFunction
-        @Binds fun bindsProfileUtil(profileUtilImpl: ProfileUtilImpl): ProfileUtil
         @Binds fun bindsProfileRepository(profileRepositoryImpl: ProfileRepositoryImpl): ProfileRepository
-        @Binds fun bindsStorage(fileStorage: FileStorage): Storage
-        @Binds fun bindsReceiverStatusStore(receiverStatusStoreImpl: ReceiverStatusStoreImpl): ReceiverStatusStore
         @Binds fun bindsUserEntryPresentationHelper(userEntryPresentationHelperImpl: UserEntryPresentationHelperImpl): UserEntryPresentationHelper
         @Binds fun bindsGlucoseStatusProvider(glucoseStatusProviderImpl: GlucoseStatusProviderImpl): GlucoseStatusProvider
-        @Binds fun bindsDecimalFormatter(decimalFormatterImpl: DecimalFormatterImpl): DecimalFormatter
         @Binds fun bindsProfileStore(profileStoreObject: ProfileStoreObject): ProfileStore
         @Binds fun bindsAutosensData(autosensDataObject: AutosensDataObject): AutosensData
         @Binds fun bindsAPSResult(determineBasalResult: DetermineBasalResult): APSResult

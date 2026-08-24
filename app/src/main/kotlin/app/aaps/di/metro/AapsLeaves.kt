@@ -83,7 +83,6 @@ import javax.inject.Singleton
 @BindingContainer
 class AapsLeaves @Inject constructor(
     private val aapsLoggerProvider: Provider<AAPSLogger>,
-    private val receiverStatusStoreProvider: Provider<ReceiverStatusStore>,
     private val rxBusProvider: Provider<RxBus>,
     private val activePluginProvider: Provider<ActivePlugin>,
     @ApplicationScope private val appScopeProvider: Provider<CoroutineScope>,
@@ -96,7 +95,6 @@ class AapsLeaves @Inject constructor(
     private val loopProvider: Provider<Loop>,
     private val dateUtilProvider: Provider<DateUtil>,
     private val profileFunctionProvider: Provider<ProfileFunction>,
-    private val profileUtilProvider: Provider<ProfileUtil>,
     private val commandQueueProvider: Provider<CommandQueue>,
     private val maintenanceProvider: Provider<Maintenance>,
     private val rhProvider: Provider<ResourceHelper>,
@@ -109,12 +107,10 @@ class AapsLeaves @Inject constructor(
     private val sceneExecutorProvider: Provider<SceneExecutor>,
     private val sceneRepositoryProvider: Provider<SceneRepository>,
     private val fileListProviderProvider: Provider<FileListProvider>,
-    private val storageProvider: Provider<Storage>,
     private val userEntryPresentationHelperProvider: Provider<UserEntryPresentationHelper>,
     private val dataInboxProvider: Provider<DataInbox>,
     private val cloudStorageManagerProvider: Provider<CloudStorageManager>,
     private val calculationWorkflowProvider: Provider<CalculationWorkflow>,
-    private val decimalFormatterProvider: Provider<DecimalFormatter>,
     private val processedTbrEbDataProvider: Provider<ProcessedTbrEbData>,
     private val overviewDataCacheFactoryProvider: Provider<OverviewDataCacheFactory>,
     // Needed by the feature extensions below the root, which no longer carry their own leaf lists.
@@ -134,14 +130,12 @@ class AapsLeaves @Inject constructor(
     private val notificationHolderProvider: Provider<NotificationHolder>,
     private val lastLocationDataContainerProvider: Provider<LastLocationDataContainer>,
     // Constraints.
-    private val hardLimitsProvider: Provider<HardLimits>,
     private val versionCheckerUtilsProvider: Provider<VersionCheckerUtils>,
     private val passwordCheckProvider: Provider<PasswordCheck>,
     private val sntpClientProvider: Provider<SntpClient>
 ) {
 
     @Provides fun aapsLogger(): AAPSLogger = aapsLoggerProvider.get()
-    @Provides fun receiverStatusStore(): ReceiverStatusStore = receiverStatusStoreProvider.get()
     @Provides fun rxBus(): RxBus = rxBusProvider.get()
     @Provides fun activePlugin(): ActivePlugin = activePluginProvider.get()
 
@@ -157,7 +151,6 @@ class AapsLeaves @Inject constructor(
     @Provides fun loop(): Loop = loopProvider.get()
     @Provides fun dateUtil(): DateUtil = dateUtilProvider.get()
     @Provides fun profileFunction(): ProfileFunction = profileFunctionProvider.get()
-    @Provides fun profileUtil(): ProfileUtil = profileUtilProvider.get()
     @Provides fun commandQueue(): CommandQueue = commandQueueProvider.get()
     @Provides fun maintenance(): Maintenance = maintenanceProvider.get()
     @Provides fun rh(): ResourceHelper = rhProvider.get()
@@ -174,12 +167,10 @@ class AapsLeaves @Inject constructor(
     @Provides fun sceneExecutor(): SceneExecutor = sceneExecutorProvider.get()
     @Provides fun sceneRepository(): SceneRepository = sceneRepositoryProvider.get()
     @Provides fun fileListProvider(): FileListProvider = fileListProviderProvider.get()
-    @Provides fun storage(): Storage = storageProvider.get()
     @Provides fun userEntryPresentationHelper(): UserEntryPresentationHelper = userEntryPresentationHelperProvider.get()
     @Provides fun dataInbox(): DataInbox = dataInboxProvider.get()
     @Provides fun cloudStorageManager(): CloudStorageManager = cloudStorageManagerProvider.get()
     @Provides fun calculationWorkflow(): CalculationWorkflow = calculationWorkflowProvider.get()
-    @Provides fun decimalFormatter(): DecimalFormatter = decimalFormatterProvider.get()
     @Provides fun processedTbrEbData(): ProcessedTbrEbData = processedTbrEbDataProvider.get()
     @Provides fun overviewDataCacheFactory(): OverviewDataCacheFactory = overviewDataCacheFactoryProvider.get()
     @Provides fun constraintsChecker(): ConstraintsChecker = constraintsCheckerProvider.get()
@@ -196,7 +187,6 @@ class AapsLeaves @Inject constructor(
     @Provides fun notificationHolder(): NotificationHolder = notificationHolderProvider.get()
     @Provides fun lastLocationDataContainer(): LastLocationDataContainer = lastLocationDataContainerProvider.get()
 
-    @Provides fun hardLimits(): HardLimits = hardLimitsProvider.get()
     @Provides fun versionCheckerUtils(): VersionCheckerUtils = versionCheckerUtilsProvider.get()
     @Provides fun passwordCheck(): PasswordCheck = passwordCheckProvider.get()
     @Provides fun sntpClient(): SntpClient = sntpClientProvider.get()

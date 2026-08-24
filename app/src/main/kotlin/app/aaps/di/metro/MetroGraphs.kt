@@ -11,6 +11,12 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.source.XDripSource
+import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.receivers.ReceiverStatusStore
+import app.aaps.core.interfaces.storage.Storage
+import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.objects.workflow.MetroWorkerCreator
@@ -163,4 +169,10 @@ class MetroGraphs @Inject constructor(
     val dstHelper: DstHelper get() = root.dstHelperPlugin
     val objectives: Objectives get() = root.objectivesPlugin
     val signatureVerifier: SignatureVerifierPlugin get() = root.signatureVerifierPlugin
+    val trendCalculator: TrendCalculator get() = root.trendCalculator
+    val decimalFormatter: DecimalFormatter get() = root.decimalFormatter
+    val profileUtil: ProfileUtil get() = root.profileUtil
+    val hardLimits: HardLimits get() = root.hardLimits
+    val storage: Storage get() = root.storage
+    val receiverStatusStore: ReceiverStatusStore get() = root.receiverStatusStore
 }
