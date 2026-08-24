@@ -9,7 +9,6 @@ import app.aaps.core.interfaces.workflow.CalculationSignals
 import app.aaps.core.ui.search.SearchableProvider
 import app.aaps.ui.activities.ErrorActivity
 import app.aaps.ui.compose.overview.OverviewDataCacheFactory
-import app.aaps.ui.compose.overview.graphs.GraphConfigRepositoryImpl
 import app.aaps.ui.compose.scenes.SceneIconResolverImpl
 
 import app.aaps.ui.search.BuiltInSearchables
@@ -38,8 +37,6 @@ abstract class UiModule {
     @Module
     @InstallIn(SingletonComponent::class)
     interface Bindings {
-
-        @Binds fun bindGraphConfigRepository(impl: GraphConfigRepositoryImpl): GraphConfigRepository
 
         @Binds fun bindWidgetUpdater(impl: WidgetUpdaterImpl): WidgetUpdater
 

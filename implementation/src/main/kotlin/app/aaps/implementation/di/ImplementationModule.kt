@@ -52,7 +52,6 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.implementation.profile.ProfileRepositoryImpl
-import app.aaps.implementation.preference.VisibilityContextImpl
 import app.aaps.implementation.alerts.LocalAlertUtilsImpl
 import app.aaps.implementation.androidNotification.AlarmSoundPlayerImpl
 import app.aaps.implementation.androidNotification.NotificationHolderImpl
@@ -128,8 +127,6 @@ class ImplementationModule {
         // dagger.android receiver in this module.
 
         @Binds fun bindPreferences(preferencesImpl: PreferencesImpl): Preferences
-        // Not contributed to Metro yet: this takes an NsClient, which Dagger still owns.
-        @Binds fun bindVisibilityContext(impl: VisibilityContextImpl): VisibilityContext
 
         @Binds fun bindFabricPrivacy(fabricPrivacyImpl: FabricPrivacyImpl): FabricPrivacy
         @Binds fun bindActivePlugin(pluginStore: PluginStore): ActivePlugin

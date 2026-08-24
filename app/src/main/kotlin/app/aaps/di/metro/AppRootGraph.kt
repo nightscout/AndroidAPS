@@ -1,5 +1,8 @@
 package app.aaps.di.metro
 
+import app.aaps.core.keys.interfaces.VisibilityContext
+import app.aaps.core.interfaces.maintenance.CloudDirectoryManager
+import app.aaps.core.interfaces.overview.graph.GraphConfigRepository
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.configuration.ConfigBuilder
@@ -31,6 +34,8 @@ import app.aaps.plugins.constraints.dstHelper.DstHelperPlugin
 import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.constraints.objectives.objectives.Objective
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
+import app.aaps.core.interfaces.source.DexcomBoyda
+import app.aaps.core.interfaces.source.XDripSource
 import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.NSClientSourcePlugin
 import app.aaps.plugins.source.XdripSourcePlugin
@@ -149,6 +154,9 @@ interface AppRootGraph : MetroViewModelMultibindings {
      * `CoreObjectsModule`; Dagger must never construct its own, or there would be two.
      */
     val trendCalculator: TrendCalculator
+    val visibilityContext: VisibilityContext
+    val cloudDirectoryManager: CloudDirectoryManager
+    val graphConfigRepository: GraphConfigRepository
     val batchExecutor: BatchExecutor
     val wizardExecutor: WizardExecutor
     val configBuilder: ConfigBuilder
@@ -192,6 +200,14 @@ interface AppRootGraph : MetroViewModelMultibindings {
 
     val sourceGraph: SourceMetroGraph
     val automationGraph: AutomationMetroGraph
+
+    /**
+     * Interfaces backed by a plugin this graph already builds. A `@Provides` rather than a delegate,
+     * because the instance is the plugin - binding it any other way would make a second one.
+     */
+    @Provides fun dexcomBoyda(plugin: DexcomPlugin): DexcomBoyda = plugin
+
+    @Provides fun xDripSource(plugin: XdripSourcePlugin): XDripSource = plugin
 
     @DependencyGraph.Factory
     fun interface Factory {

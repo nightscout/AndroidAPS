@@ -3,6 +3,10 @@ package app.aaps.di.metro
 import android.content.Context
 
 import androidx.work.WorkManager
+import app.aaps.core.objects.crypto.CryptoUtil
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.protection.SecureEncrypt
+import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
@@ -18,6 +22,7 @@ import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -55,6 +60,7 @@ import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryJob
 import app.aaps.plugins.automation.services.LastLocationDataContainer
 import app.aaps.plugins.constraints.objectives.SntpClient
 import app.aaps.ui.compose.overview.OverviewDataCacheFactory
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.Provides
 import kotlinx.coroutines.CoroutineScope
@@ -135,6 +141,8 @@ class AapsLeaves(
     // Still Dagger-owned, and needed by the scene classes that moved to Metro.
     // Dagger-owned on purpose: it is bound from XdripPlugin, which is still in the Dagger plugin list.
     // Contributing it would have Metro build a second copy of that plugin.
+    private val lProvider: Provider<L>,
+    @ApplicationContext private val appContextProvider: Provider<Context>,
     private val xDripBroadcastProvider: Provider<XDripBroadcast>,
     private val nsClientProvider: Provider<NsClient>,
     private val clientControlActionDispatcherProvider: Provider<ClientControlActionDispatcher>,
@@ -209,6 +217,10 @@ class AapsLeaves(
     @Provides fun passwordCheck(): PasswordCheck = passwordCheckProvider.get()
     @Provides fun sntpClient(): SntpClient = sntpClientProvider.get()
     @Provides fun xDripBroadcast(): XDripBroadcast = xDripBroadcastProvider.get()
+    @Provides fun l(): L = lProvider.get()
+
+    /** Hilt's qualifier, read now that interop is on. Same Context as the unqualified binding. */
+    @Provides @ApplicationContext fun appContext(): Context = appContextProvider.get()
     @Provides fun nsClient(): NsClient = nsClientProvider.get()
     @Provides fun clientControlActionDispatcher(): ClientControlActionDispatcher = clientControlActionDispatcherProvider.get()
 }

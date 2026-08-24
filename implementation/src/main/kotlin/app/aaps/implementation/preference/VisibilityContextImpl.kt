@@ -18,7 +18,9 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Implementation of [VisibilityContext] that provides runtime context
@@ -27,7 +29,10 @@ import javax.inject.Singleton
  * This class bridges the gap between the preference key definitions (which declare
  * visibility conditions) and the runtime state of the app (pump type, BG source, etc.).
  */
-@Singleton
+// Metro builds this; Dagger receives it via a @Provides delegate in `:app`. Metro's @SingleIn,
+// not javax @Singleton, because the graph is generated in `:app`.
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class VisibilityContextImpl @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val persistenceLayer: PersistenceLayer,

@@ -1,6 +1,9 @@
 package app.aaps.di.metro
 
 import androidx.work.WorkManager
+import app.aaps.core.keys.interfaces.VisibilityContext
+import app.aaps.core.interfaces.maintenance.CloudDirectoryManager
+import app.aaps.core.interfaces.overview.graph.GraphConfigRepository
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.configuration.ConfigBuilder
@@ -189,6 +192,9 @@ class MetroGraphs @Inject constructor(
     val objectives: Objectives get() = root.objectivesPlugin
     val signatureVerifier: SignatureVerifierPlugin get() = root.signatureVerifierPlugin
     val trendCalculator: TrendCalculator get() = root.trendCalculator
+    val visibilityContext: VisibilityContext get() = root.visibilityContext
+    val cloudDirectoryManager: CloudDirectoryManager get() = root.cloudDirectoryManager
+    val graphConfigRepository: GraphConfigRepository get() = root.graphConfigRepository
     val batchExecutor: BatchExecutor get() = root.batchExecutor
     val wizardExecutor: WizardExecutor get() = root.wizardExecutor
     val configBuilder: ConfigBuilder get() = root.configBuilder

@@ -2,6 +2,12 @@ package app.aaps.di
 
 import android.content.Context
 import android.telephony.SmsManager
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.protection.SecureEncrypt
+import app.aaps.core.interfaces.protection.ExportPasswordDataStore
+import app.aaps.core.keys.interfaces.VisibilityContext
+import app.aaps.core.interfaces.maintenance.CloudDirectoryManager
+import app.aaps.core.interfaces.overview.graph.GraphConfigRepository
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.configuration.ConfigBuilder
@@ -23,6 +29,7 @@ import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -54,6 +61,7 @@ import app.aaps.core.objects.wizard.BolusWizard
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -176,6 +184,9 @@ class CoreObjectsModule {
      * delegate is what stops Dagger building a second one.
      */
     @Provides @Singleton fun provideTrendCalculator(graphs: MetroGraphs): TrendCalculator = graphs.trendCalculator
+    @Provides @Singleton fun provideVisibilityContext(graphs: MetroGraphs): VisibilityContext = graphs.visibilityContext
+    @Provides @Singleton fun provideCloudDirectoryManager(graphs: MetroGraphs): CloudDirectoryManager = graphs.cloudDirectoryManager
+    @Provides @Singleton fun provideGraphConfigRepository(graphs: MetroGraphs): GraphConfigRepository = graphs.graphConfigRepository
     @Provides @Singleton fun provideBatchExecutor(graphs: MetroGraphs): BatchExecutor = graphs.batchExecutor
     @Provides @Singleton fun provideWizardExecutor(graphs: MetroGraphs): WizardExecutor = graphs.wizardExecutor
     @Provides @Singleton fun provideConfigBuilder(graphs: MetroGraphs): ConfigBuilder = graphs.configBuilder
@@ -265,6 +276,8 @@ class CoreObjectsModule {
         lastLocationDataContainerProvider: Provider<LastLocationDataContainer>,
         versionCheckerUtilsProvider: Provider<VersionCheckerUtils>,
         passwordCheckProvider: Provider<PasswordCheck>,
+        lProvider: Provider<L>,
+        @ApplicationContext appContextProvider: Provider<Context>,
         xDripBroadcastProvider: Provider<XDripBroadcast>,
         nsClientProvider: Provider<NsClient>,
         clientControlActionDispatcherProvider: Provider<ClientControlActionDispatcher>,
@@ -314,6 +327,8 @@ class CoreObjectsModule {
         lastLocationDataContainerProvider,
         versionCheckerUtilsProvider,
         passwordCheckProvider,
+        lProvider,
+        appContextProvider,
         xDripBroadcastProvider,
         nsClientProvider,
         clientControlActionDispatcherProvider,
