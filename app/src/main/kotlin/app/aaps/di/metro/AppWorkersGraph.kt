@@ -27,7 +27,7 @@ import app.aaps.implementation.scenes.SceneExecutor
 import app.aaps.implementation.scenes.SceneExpiryWorker
 import app.aaps.implementation.scenes.SceneRepository
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryJob
-import app.aaps.workers.RunningModeExpiryWorker
+import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryWorker
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ClassKey
 import dev.zacsweers.metro.DependencyGraph
@@ -43,7 +43,8 @@ import kotlin.reflect.KClass
  * call and only hands over a class name at runtime. The answer is the map below - a real compile-time
  * `@IntoMap` multibinding keyed by worker class, which [MetroWorkerFactory] looks up.
  *
- * Two workers are wired here on purpose. [RunningModeExpiryWorker] is small and lives in `:app`.
+ * Two workers are wired here on purpose. [RunningModeExpiryWorker] is small and now lives in the
+ * multiplatform module that owns its job, which Dagger could not have done.
  * [KeepAliveWorker] takes nineteen dependencies, lives in another module, and runs every fifteen
  * minutes - so it both stresses the wiring and reports on itself from the device log.
  *

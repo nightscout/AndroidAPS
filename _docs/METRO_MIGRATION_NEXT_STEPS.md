@@ -17,6 +17,57 @@ every one of them.
 Device state after the last commit: 61 plugins in the list, 61 distinct classes, no duplicates, no
 crash, and the new merge guard reports nothing wrong.
 
+## Answered: Android entry points no longer have to sit in `:app`
+
+They were moved there under Dagger, and the reason is worth separating into two, because only one of
+them was ever real:
+
+1. **Dagger cannot wire anything in a multiplatform module.** It answers `@HiltWorker` and
+   `@AssistedInject` with generated **Java**, and an AGP multiplatform library has no Java compile
+   step - so the annotations produced nothing and the build still passed. This was the real blocker.
+2. **"Android classes cannot live in a multiplatform module."** This was never true. `androidMain`
+   compiles against the Android SDK like any other Android source set, and `LoggingWorker` - a real
+   `ListenableWorker` - has lived in `:core:objects/androidMain` the whole time.
+
+Metro removes blocker 1, because it is a Kotlin compiler plugin and generates no Java. So the exile is
+over.
+
+**Proven, not assumed.** `RunningModeExpiryWorker` was moved from `app/src/main` into
+`plugins/aps/src/androidMain`, beside the `RunningModeExpiryJob` it triggers. It keeps its Metro
+assisted injection. Checks that passed:
+
+- `:app` compiles, `:plugins:aps` unit tests and `:app` unit tests pass.
+- **`:plugins:aps:compileKotlinIosArm64` still compiles** - the Android entry point in `androidMain`
+  does not leak into the shared targets, which is the point of putting it there.
+- The APK's dex carries `app/aaps/plugins/aps/loop/runningMode/RunningModeExpiryWorker` and no longer
+  carries `app/aaps/workers/RunningModeExpiryWorker`, so the class really does ship from the
+  multiplatform module.
+- On device: no crash, 61 plugins, no merge problems, and the APS engine ran (`OpenAPSSMBPlugin`
+  logging), which matters because `:plugins:aps` holds the loop engines and had the Metro compiler
+  plugin applied to it for the first time.
+
+Not triggered at runtime: this particular worker only fires when a temporary running mode expires, and
+that was not forced on the test phone. The mechanism itself - `MetroWorkerFactory` building a worker
+from an assisted factory - is already device-proven by `KeepAliveWorker`.
+
+### What this unlocks
+
+Nine files are still parked in `:app` for the old reason:
+
+```
+app/src/main/kotlin/app/aaps/receivers/  AutoStartReceiver, CarbSuggestionReceiver, DataReceiver,
+                                         SmsReceiver, TimerReminderReceiver
+app/src/main/kotlin/app/aaps/services/   LocationService, LocationServiceControllerImpl,
+                                         ReminderSchedulerImpl
+app/src/main/kotlin/app/aaps/workers/    RunningModeExpiryScheduler
+```
+
+`TimerReminderReceiver` and `LocationService` came from `:plugins:automation` in commit `4957c26eb8`.
+They can go home once that module is on Metro - it already has interop switched on. Each move is
+mechanical now: convert off `DaggerBroadcastReceiver`, add a `@ClassKey` binding, move the file, and
+move the `<receiver>`/`<service>` entry back into that module's manifest. `ManifestComponentsTest`
+covers the manifest half - it already caught one stale class name during this migration.
+
 ## Decisions waiting for you
 
 ### 1. Four `@Reusable` files were deliberately not converted

@@ -23,7 +23,7 @@ import app.aaps.helpers.IntegrationWaits
 import app.aaps.helpers.RxHelper
 import app.aaps.implementation.profile.ProfileFunctionImpl
 import app.aaps.workers.RunningModeExpiryScheduler
-import app.aaps.workers.RunningModeExpiryWorker
+import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryWorker
 import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler
 import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
 import com.google.common.truth.Truth.assertThat

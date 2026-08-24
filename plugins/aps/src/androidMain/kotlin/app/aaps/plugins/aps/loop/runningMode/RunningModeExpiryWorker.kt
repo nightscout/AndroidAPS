@@ -1,11 +1,10 @@
-package app.aaps.workers
+package app.aaps.plugins.aps.loop.runningMode
 
 import android.content.Context
 import androidx.work.WorkerParameters
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.objects.workflow.LoggingWorker
-import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryJob
 import app.aaps.core.objects.workflow.MetroWorkerCreator
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -16,14 +15,14 @@ import kotlinx.coroutines.Dispatchers
  * WorkManager trigger for [RunningModeExpiryJob]. The job holds what happens and why; this holds only
  * when.
  *
- * It lives in :app rather than in :plugins:aps because `@HiltWorker` and `@AssistedInject` are
- * answered with generated Java, which a multiplatform module cannot compile - see
- * `_docs/KMP_IOS_FEASIBILITY.md`, under "Decisions taken". Note that the abstract [LoggingWorker] it
- * extends DOES live in a multiplatform module: it carries no annotations, so nothing has to be
- * generated for it. The line is the annotation, not WorkManager.
+ * It used to live in `:app`, because `@HiltWorker` and `@AssistedInject` are answered with generated
+ * Java and a multiplatform module has no Java compile step - so the annotations produced nothing here
+ * and the build still passed. Metro is a Kotlin compiler plugin and generates no Java, so the worker
+ * can sit beside the job it triggers.
  *
- * There are ~42 of these across the repo. If they are ever unified behind one generic worker
- * dispatching on a job id, this is the shape to unify: a thin envelope over a platform free job.
+ * Note that Android types were never the problem: [LoggingWorker], which this extends, has always
+ * lived in a multiplatform module. `androidMain` compiles against the Android SDK like any other
+ * Android source set. The line was the annotation processor, not WorkManager.
  */
 class RunningModeExpiryWorker @AssistedInject constructor(
     @Assisted context: Context,
@@ -40,7 +39,7 @@ class RunningModeExpiryWorker @AssistedInject constructor(
 
     /**
      * Metro builds the worker through this. WorkManager supplies the context and parameters, the
-     * graph supplies the rest - the same split @HiltWorker expressed, without Hilt.
+     * graph supplies the rest - the same split `@HiltWorker` expressed, without Hilt.
      */
     @AssistedFactory
     fun interface Factory : MetroWorkerCreator {

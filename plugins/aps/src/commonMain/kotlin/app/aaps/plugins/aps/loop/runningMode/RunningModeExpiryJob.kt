@@ -21,7 +21,7 @@ import app.aaps.core.interfaces.utils.DateUtil
  * means we only cancel if there is actually a zero-TBR to clean up.
  *
  * **This holds the decision; the platform holds only the trigger.** On Android the trigger is
- * `RunningModeExpiryWorker`, a `@HiltWorker` in :app, scheduled by `RunningModeExpiryScheduler`.
+ * `RunningModeExpiryWorker` in this module's androidMain, scheduled by `RunningModeExpiryScheduler`.
  * Those cannot live in a multiplatform module because Hilt answers `@HiltWorker`/`@AssistedInject`
  * with generated Java - see `_docs/KMP_IOS_FEASIBILITY.md`, under "Decisions taken". Keeping the
  * decision here means another platform supplies a new trigger, not new behaviour.

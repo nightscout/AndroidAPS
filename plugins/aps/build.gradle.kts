@@ -5,6 +5,10 @@ plugins {
     alias(libs.plugins.android.kmp.library)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.multiplatform)
+    // Metro, so this module can wire its own Android entry points. Dagger could not: it answers
+    // @HiltWorker with generated Java, and a multiplatform module has no Java compile step, which is
+    // why RunningModeExpiryWorker used to sit in :app.
+    alias(libs.plugins.metro)
 }
 
 // Same generator as the other converted plugins, pointed at this module's strings.
