@@ -129,7 +129,7 @@ Two modules already have interop on and cost nothing to flip. The survey ranks t
 |---|---|---|---|
 | done | `plugins/configuration` | none | flipped, compiled first try |
 | done | `plugins/automation` | none | flipped, compiled first try, includes a Dagger `@IntoSet` |
-| 1 | `plugins/constraints` | LOW | qualified `Map` multibinding, 10 `@Binds @IntoMap`, nested qualifier - first real test of qualifiers under interop |
+| done | `plugins/constraints` | none | flipped and **converted**: seven plugins across three qualified buckets |
 | 2 | `plugins/source` | LOW | 12 `@HiltWorker`, 2 `@ContributesAndroidInjector` - first module that needs the worker seam at scale |
 | 3 | `implementation` | MEDIUM | biggest, but half-proven already: both seams were built and device-tested in this module |
 | last | `ui` | looks LOW, is not | 35 `@HiltViewModel`, 2 `DaggerAppCompatActivity`, 6 `@ContributesAndroidInjector`, 3 assisted pairs, a Hilt `@EntryPoint` with 4 `EntryPointAccessors` call sites, and 4 widgets that hand-roll `(context.applicationContext as HasAndroidInjector).androidInjector().inject(this)` |
@@ -137,6 +137,21 @@ Two modules already have interop on and cost nothing to flip. The survey ranks t
 `ui` is the one to be careful with. Hilt `@EntryPoint` and that hand-rolled injector call are not
 `dagger.*` annotations, so `includeDagger()` makes no promise about them, and anything that breaks
 there is immediately visible to users.
+
+### The qualifier hazard, demonstrated
+
+`:plugins:constraints` was the first module whose plugins are split across qualified buckets:
+`@AllConfigs` (3), `@APS` (3), `@NotNSClient` (1). It is now on Metro, and `ConstraintsBucketsTest`
+pins the split.
+
+That test earns its place. Switching interop off and rebuilding, the module **still compiled** and all
+three accessors returned the same seven plugins - 21 bucket entries instead of 7. In a real build that
+means Objectives, the signature verifier and the storage constraint appear in follower builds, with no
+error anywhere. Any module that binds one type into several qualified buckets needs a test like this,
+not just interop switched on.
+
+Verified on device: 61 plugins, 61 distinct, each of the seven present exactly once, all started, loop
+running, and the Objectives screen opens with real data - an `@APS` bucket plugin built by Metro.
 
 ### 3. The structural one: seven root graphs
 

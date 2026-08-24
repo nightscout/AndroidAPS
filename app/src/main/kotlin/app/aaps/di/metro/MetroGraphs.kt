@@ -47,6 +47,7 @@ import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryJob
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
 import app.aaps.plugins.automation.di.AutomationMetroBridge
 import app.aaps.plugins.calibration.di.CalibrationGraph
+import app.aaps.plugins.constraints.di.ConstraintsMetroBridge
 import app.aaps.plugins.sensitivity.di.SensitivityGraph
 import app.aaps.plugins.smoothing.di.SmoothingGraph
 import app.aaps.plugins.sync.di.OpenHumansMetroBridge
@@ -115,6 +116,7 @@ class MetroGraphs @Inject constructor(
     private val receiverStatusStore: Provider<ReceiverStatusStore>,
     private val openHumansMetroBridge: Provider<OpenHumansMetroBridge>,
     private val automationMetroBridge: Provider<AutomationMetroBridge>,
+    private val constraintsMetroBridge: Provider<ConstraintsMetroBridge>,
     private val calculationWorkflow: Provider<CalculationWorkflow>,
     private val decimalFormatter: Provider<DecimalFormatter>,
     private val processedTbrEbData: Provider<ProcessedTbrEbData>,
@@ -290,7 +292,9 @@ class MetroGraphs @Inject constructor(
      * A real `@IntoMap @IntKey(n)` multibinding built this map at compile time - the same annotation
      * shape the Dagger module used, unlike the Koin branch which had to invent a registration object.
      */
-    fun plugins(): Map<Int, PluginBase> = smoothing.plugins + calibration.plugins + sensitivity.plugins
+    fun plugins(): Map<Int, PluginBase> =
+        smoothing.plugins + calibration.plugins + sensitivity.plugins +
+            constraintsMetroBridge.get().allConfigsPlugins
 
     /**
      * Plugins that must NOT appear in an AAPSCLIENT build.
@@ -299,5 +303,14 @@ class MetroGraphs @Inject constructor(
      * qualifier, and `AppModule.providesPlugins` merges that bucket only when the build is not a
      * follower. Merging it unconditionally would quietly add Open Humans to follower builds.
      */
-    fun notNsClientPlugins(): Map<Int, PluginBase> = openHumans.notNsClientPlugins
+    fun notNsClientPlugins(): Map<Int, PluginBase> =
+        openHumans.notNsClientPlugins + constraintsMetroBridge.get().notNsClientPlugins
+
+    /**
+     * Plugins that only belong in a build that runs the loop.
+     *
+     * Same reasoning as [notNsClientPlugins], for the `@APS` qualifier. Objectives, the signature
+     * verifier and the storage constraint have no meaning in a build that never makes a decision.
+     */
+    fun apsPlugins(): Map<Int, PluginBase> = constraintsMetroBridge.get().apsPlugins
 }

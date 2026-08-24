@@ -70,8 +70,10 @@ abstract class AppModule {
                 if (!config.AAPSCLIENT) add(PluginSource("Dagger @NotNSClient", notNsClient.get()))
                 //if (config.isEnabled(ExternalOptions.UNFINISHED_MODE)) add(PluginSource("Dagger unfinished", unfinished.get()))
                 add(PluginSource("Metro", metroGraphs.plugins()))
-                // Metro's @NotNSClient bucket, merged under the same condition as Dagger's above.
-                // Keeping the buckets apart is what stops a converted plugin appearing in follower builds.
+                // Metro's qualified buckets, each merged under the same condition as the matching
+                // Dagger one above. Keeping them apart is what stops a converted plugin appearing in
+                // a build that never had it - a follower showing Objectives, say.
+                if (config.APS) add(PluginSource("Metro @APS", metroGraphs.apsPlugins()))
                 if (!config.AAPSCLIENT) add(PluginSource("Metro @NotNSClient", metroGraphs.notNsClientPlugins()))
             }
 

@@ -2,11 +2,21 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.metro)
     id("android-module-dependencies")
     id("all-open-dependencies")
     id("test-module-dependencies")
     id("compose-test-module-dependencies")
     id("jacoco-module-dependencies")
+}
+
+metro {
+    interop {
+        // Without this Metro ignores javax qualifiers and matches on type alone. This module binds
+        // its plugins into three different qualified buckets, so that would put safety plugins into
+        // the wrong builds - see :plugins:sync for how the failure looks.
+        includeDagger()
+    }
 }
 
 android {
