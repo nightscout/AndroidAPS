@@ -50,6 +50,7 @@ import app.aaps.plugins.calibration.di.CalibrationGraph
 import app.aaps.plugins.constraints.di.ConstraintsMetroBridge
 import app.aaps.plugins.sensitivity.di.SensitivityGraph
 import app.aaps.plugins.smoothing.di.SmoothingGraph
+import app.aaps.plugins.source.di.SourceMetroBridge
 import app.aaps.plugins.sync.di.OpenHumansMetroBridge
 import dev.zacsweers.metro.MembersInjector
 import dev.zacsweers.metro.createGraphFactory
@@ -117,6 +118,7 @@ class MetroGraphs @Inject constructor(
     private val openHumansMetroBridge: Provider<OpenHumansMetroBridge>,
     private val automationMetroBridge: Provider<AutomationMetroBridge>,
     private val constraintsMetroBridge: Provider<ConstraintsMetroBridge>,
+    private val sourceMetroBridge: Provider<SourceMetroBridge>,
     private val calculationWorkflow: Provider<CalculationWorkflow>,
     private val decimalFormatter: Provider<DecimalFormatter>,
     private val processedTbrEbData: Provider<ProcessedTbrEbData>,
@@ -222,7 +224,8 @@ class MetroGraphs @Inject constructor(
     val runningModeExpiryScheduler: RunningModeExpiryScheduler get() = workers.runningModeExpiryScheduler
 
     fun workerCreators(): Map<String, MetroWorkerCreator> =
-        (workers.workerCreators + openHumans.workerCreators).mapKeys { (klass, _) -> klass.java.name }
+        (workers.workerCreators + openHumans.workerCreators + sourceMetroBridge.get().workerCreators)
+            .mapKeys { (klass, _) -> klass.java.name }
 
     private val receivers: AppReceiversGraph by lazy {
         createGraphFactory<AppReceiversGraph.Factory>().create(
@@ -268,6 +271,7 @@ class MetroGraphs @Inject constructor(
         val injector = receivers.memberInjectors[target::class]
             ?: openHumans.memberInjectors[target::class]
             ?: automationMetroBridge.get().memberInjectors[target::class]
+            ?: sourceMetroBridge.get().memberInjectors[target::class]
             ?: return false
         (injector as MembersInjector<Any>).injectMembers(target)
         return true

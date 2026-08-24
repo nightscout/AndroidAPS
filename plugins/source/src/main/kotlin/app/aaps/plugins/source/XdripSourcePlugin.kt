@@ -3,7 +3,6 @@ package app.aaps.plugins.source
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.keys.interfaces.TextRef
@@ -32,8 +31,10 @@ import app.aaps.core.ui.compose.icons.IcXDrip
 import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.core.utils.receivers.Inbox
 import app.aaps.plugins.source.compose.BgSourceComposeContent
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
+import app.aaps.core.objects.workflow.MetroWorkerCreator
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
@@ -67,7 +68,7 @@ class XdripSourcePlugin @Inject constructor(
     override var sensorBatteryLevel = -1
 
     // cannot be inner class because of needed injection
-    @HiltWorker
+
     class XdripSourceWorker @AssistedInject constructor(
         @Assisted context: Context,
         @Assisted params: WorkerParameters,
@@ -79,6 +80,16 @@ class XdripSourcePlugin @Inject constructor(
         private val dateUtil: DateUtil,
         private val dataInbox: DataInbox
     ) : LoggingWorker(context, params, Dispatchers.IO, aapsLogger, fabricPrivacy) {
+
+        /**
+         * Metro builds this worker. The parameter names must match [MetroWorkerCreator],
+         * because Metro matches assisted parameters by name and not only by type.
+         */
+        @AssistedFactory
+        fun interface Factory : MetroWorkerCreator {
+
+            override fun create(context: Context, params: WorkerParameters): XdripSourceWorker
+        }
 
         fun getSensorStartTime(bundle: Bundle): Long? {
             val now = dateUtil.now()

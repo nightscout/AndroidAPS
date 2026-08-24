@@ -2,7 +2,6 @@ package app.aaps.plugins.source
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.keys.interfaces.TextRef
@@ -24,8 +23,10 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.ui.compose.icons.IcPluginMM640G
 import app.aaps.plugins.source.compose.BgSourceComposeContent
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
+import app.aaps.core.objects.workflow.MetroWorkerCreator
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import org.json.JSONArray
 import org.json.JSONException
@@ -55,7 +56,7 @@ class MM640gPlugin @Inject constructor(
 ), BgSource {
 
     // cannot be inner class because of needed injection
-    @HiltWorker
+
     class MM640gWorker @AssistedInject constructor(
         @Assisted context: Context,
         @Assisted params: WorkerParameters,
@@ -65,6 +66,16 @@ class MM640gPlugin @Inject constructor(
         private val dateUtil: DateUtil,
         private val persistenceLayer: PersistenceLayer
     ) : LoggingWorker(context, params, Dispatchers.IO, aapsLogger, fabricPrivacy) {
+
+        /**
+         * Metro builds this worker. The parameter names must match [MetroWorkerCreator],
+         * because Metro matches assisted parameters by name and not only by type.
+         */
+        @AssistedFactory
+        fun interface Factory : MetroWorkerCreator {
+
+            override fun create(context: Context, params: WorkerParameters): MM640gWorker
+        }
 
         @SuppressLint("CheckResult")
         override suspend fun doWorkAndLog(): Result {

@@ -6,11 +6,8 @@ import app.aaps.core.interfaces.source.XDripSource
 import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.NSClientSourcePlugin
 import app.aaps.plugins.source.XdripSourcePlugin
-import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
-import app.aaps.plugins.source.notificationreader.NotificationCollectorService
 import dagger.Binds
 import dagger.Module
-import dagger.android.ContributesAndroidInjector
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
@@ -24,8 +21,9 @@ import dagger.hilt.components.SingletonComponent
 abstract class SourceModule {
 
     // All BG-source workers migrated to @HiltWorker (constructed by HiltWorkerFactory).
-    @ContributesAndroidInjector abstract fun contributesRequestDexcomPermissionActivity(): RequestDexcomPermissionActivity
-    @ContributesAndroidInjector abstract fun contributesNotificationCollectorService(): NotificationCollectorService
+
+    // RequestDexcomPermissionActivity has no injected fields at all, so its injector was generated
+    // and injected nothing. NotificationCollectorService moved to Metro - see SourceMetroGraph.
 
     @Module
     @InstallIn(SingletonComponent::class)
