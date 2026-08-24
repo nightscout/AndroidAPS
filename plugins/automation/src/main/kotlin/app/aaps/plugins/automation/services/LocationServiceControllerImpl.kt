@@ -1,4 +1,4 @@
-package app.aaps.services
+package app.aaps.plugins.automation.services
 
 import android.Manifest
 import android.content.ComponentName

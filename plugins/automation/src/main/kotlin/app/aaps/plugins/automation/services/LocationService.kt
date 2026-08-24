@@ -1,6 +1,6 @@
 @file:Suppress("PrivatePropertyName")
 
-package app.aaps.services
+package app.aaps.plugins.automation.services
 
 import android.Manifest
 import android.content.Intent
@@ -19,11 +19,10 @@ import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.StringKey
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.automation.events.EventLocationChange
-import app.aaps.plugins.automation.services.LastLocationDataContainer
+import app.aaps.core.keys.interfaces.Preferences
 import com.google.android.gms.location.LocationServices
-import dagger.android.DaggerService
+import app.aaps.core.objects.workflow.MetroService
 import app.aaps.core.interfaces.rx.collectResilient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
@@ -32,7 +31,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import javax.inject.Inject
 
-class LocationService : DaggerService() {
+class LocationService : MetroService() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
@@ -115,6 +114,7 @@ class LocationService : DaggerService() {
     }
 
     override fun onCreate() {
+        // MetroService injects from its own onCreate, exactly as DaggerService did.
         super.onCreate()
 
         // Get last location once until we get regular update

@@ -1,6 +1,5 @@
 package app.aaps.implementation.receivers
 
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
@@ -13,7 +12,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore.NetworkStatus
 import app.aaps.core.utils.receivers.StringUtils
-import app.aaps.core.objects.workflow.MetroMemberInjector
+import app.aaps.core.objects.workflow.MetroBroadcastReceiver
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -27,13 +26,13 @@ import kotlinx.coroutines.launch
  * This one is the receiver the proof was run against, because it both logs through an injected field
  * and can be triggered from a shell, so a working injection and a broken one look different.
  */
-class NetworkChangeReceiver : BroadcastReceiver() {
+class NetworkChangeReceiver : MetroBroadcastReceiver() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var receiverStatusStore: ReceiverStatusStore
 
     override fun onReceive(context: Context, intent: Intent) {
-        (context.applicationContext as MetroMemberInjector).injectMembers(this)
+        super.onReceive(context, intent)
         CoroutineScope(Dispatchers.IO).launch {
             grabNetworkStatus(context)
         }

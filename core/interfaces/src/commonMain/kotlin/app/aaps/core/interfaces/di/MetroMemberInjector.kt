@@ -1,4 +1,4 @@
-package app.aaps.core.objects.workflow
+package app.aaps.core.interfaces.di
 
 /**
  * How an Android class that the framework constructs asks Metro to fill its `@Inject` fields.

@@ -14,11 +14,21 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
 
-    <!--
-      The location service and the reminder receiver are declared in :app, not here. Both are Android
-      platform entry points, so they cannot carry their dependency-injection annotations once this
-      module becomes multiplatform. Automation reaches them through LocationServiceController and
-      ReminderScheduler instead. The permissions stay here because the location trigger is what asks
-      the user for them.
-    -->
+    <application>
+
+        <!-- The location trigger's service. Declared here, in the module that owns it. It sat in
+             :app while Dagger wired it, because Dagger answers injection with generated Java and a
+             multiplatform module has no Java compile step. Metro generates none, so it came home. -->
+        <service
+            android:name="app.aaps.plugins.automation.services.LocationService"
+            android:exported="false"
+            android:foregroundServiceType="location" />
+
+        <!-- Rings reminders scheduled through ReminderScheduler. Same story as above. -->
+        <receiver
+            android:name="app.aaps.plugins.automation.TimerReminderReceiver"
+            android:exported="false" />
+
+    </application>
+
 </manifest>

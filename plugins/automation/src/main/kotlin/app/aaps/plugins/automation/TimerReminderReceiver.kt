@@ -1,4 +1,4 @@
-package app.aaps.receivers
+package app.aaps.plugins.automation
 
 import android.content.Context
 import android.content.Intent
@@ -8,7 +8,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
-import dagger.android.DaggerBroadcastReceiver
+import app.aaps.core.objects.workflow.MetroBroadcastReceiver
 import javax.inject.Inject
 import app.aaps.core.ui.R as CoreUiR
 
@@ -23,7 +23,7 @@ import app.aaps.core.ui.R as CoreUiR
  * broadcast in the background (idle-exempt via `setAlarmClock`) and [UiInteraction.runAlarm] posts the
  * full-screen-intent alarm without needing a foreground activity, so the reminder now rings regardless of state.
  */
-class TimerReminderReceiver : DaggerBroadcastReceiver() {
+class TimerReminderReceiver : MetroBroadcastReceiver() {
 
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var rh: ResourceHelper
@@ -31,6 +31,8 @@ class TimerReminderReceiver : DaggerBroadcastReceiver() {
     @Inject lateinit var aapsLogger: AAPSLogger
 
     override fun onReceive(context: Context, intent: Intent) {
+        // Was `DaggerBroadcastReceiver`, which did this from its own onReceive. Metro has no base
+        // class for it, so the call is written out - see [MetroMemberInjector].
         super.onReceive(context, intent)
         val text = intent.getStringExtra(EXTRA_TEXT)?.takeIf { it.isNotBlank() } ?: rh.gs(config.appName)
         aapsLogger.debug(LTag.AUTOMATION, "TimerReminderReceiver fired: $text")

@@ -77,7 +77,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.objects.profile.ProfileSealed
-import app.aaps.core.objects.workflow.MetroMemberInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.ui.compose.MetroViewModelFactory
 import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import app.aaps.core.ui.locale.LocaleHelper

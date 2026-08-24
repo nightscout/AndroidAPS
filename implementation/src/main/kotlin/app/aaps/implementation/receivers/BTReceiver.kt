@@ -3,7 +3,6 @@ package app.aaps.implementation.receivers
 import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -12,19 +11,19 @@ import androidx.core.content.ContextCompat
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventBTChange
 import app.aaps.core.utils.extensions.safeGetParcelableExtra
-import app.aaps.core.objects.workflow.MetroMemberInjector
+import app.aaps.core.objects.workflow.MetroBroadcastReceiver
 import dev.zacsweers.metro.Inject
 
 /**
  * Converted off dagger.android to Metro. See [MetroMemberInjector] for why the injection call is
  * written out here instead of coming from a base class.
  */
-class BTReceiver : BroadcastReceiver() {
+class BTReceiver : MetroBroadcastReceiver() {
 
     @Inject lateinit var rxBus: RxBus
 
     override fun onReceive(context: Context, intent: Intent) {
-        (context.applicationContext as MetroMemberInjector).injectMembers(this)
+        super.onReceive(context, intent)
         processIntent(context, intent)
     }
 

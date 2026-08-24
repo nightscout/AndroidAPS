@@ -50,23 +50,46 @@ Not triggered at runtime: this particular worker only fires when a temporary run
 that was not forced on the test phone. The mechanism itself - `MetroWorkerFactory` building a worker
 from an assisted factory - is already device-proven by `KeepAliveWorker`.
 
+### Base classes, so converting is a one word change
+
+Metro ships no equivalent of `DaggerBroadcastReceiver`, being deliberately not an inheritance-based
+framework. Written out by hand, every converted class repeats the same injection call - and repeats
+the chance of calling it too late, after a field has already been read. So these exist:
+
+| dagger.android | Metro | where |
+|---|---|---|
+| `DaggerBroadcastReceiver` | `MetroBroadcastReceiver` | `:core:objects` androidMain |
+| `DaggerService` | `MetroService` | `:core:objects` androidMain |
+| `DaggerAppCompatActivity` | `MetroAppCompatActivity` | `:core:ui` androidMain (AppCompat lives there) |
+
+They copy dagger.android's contract on purpose - inject in the same place, with the same `super` call -
+so converting is a one word change and the class body does not move. That covers **84 of the sites**:
+34 activities, 31 services, 19 receivers.
+
+Two differences from dagger.android, both deliberate:
+
+- **A missing binding fails loudly**, naming the class and what to add. Silently skipping would leave
+  `lateinit` fields unset and surface later as an unrelated crash somewhere else.
+- Three classes cannot use them, because they already extend a framework base of their own
+  (`NotificationListenerService`, `WearableListenerService` twice). They call `MetroMemberInjector`
+  directly, which is all the base classes do anyway.
+
+`MetroMemberInjector` moved to `:core:interfaces` commonMain as part of this. It names no Android type
+- it is a plain Kotlin interface - and putting it there is what lets the activity base live in
+`:core:ui` without a new module dependency.
+
 ### What this unlocks
 
-Nine files are still parked in `:app` for the old reason:
+Automation's four files went home: `TimerReminderReceiver`, `LocationService`,
+`LocationServiceControllerImpl` and `ReminderSchedulerImpl` are back in `:plugins:automation`, with
+their tests, their `<service>` and `<receiver>` entries, and their bindings. `AutomationAndroidModule`
+in `:app` is deleted. `AutomationManifestTest` now guards that module's manifest, because
+`ManifestComponentsTest` only reads `:app`'s.
 
-```
-app/src/main/kotlin/app/aaps/receivers/  AutoStartReceiver, CarbSuggestionReceiver, DataReceiver,
-                                         SmsReceiver, TimerReminderReceiver
-app/src/main/kotlin/app/aaps/services/   LocationService, LocationServiceControllerImpl,
-                                         ReminderSchedulerImpl
-app/src/main/kotlin/app/aaps/workers/    RunningModeExpiryScheduler
-```
-
-`TimerReminderReceiver` and `LocationService` came from `:plugins:automation` in commit `4957c26eb8`.
-They can go home once that module is on Metro - it already has interop switched on. Each move is
-mechanical now: convert off `DaggerBroadcastReceiver`, add a `@ClassKey` binding, move the file, and
-move the `<receiver>`/`<service>` entry back into that module's manifest. `ManifestComponentsTest`
-covers the manifest half - it already caught one stale class name during this migration.
+Still parked in `:app`, and genuinely belonging there: `AutoStartReceiver`, `CarbSuggestionReceiver`,
+`DataReceiver` and `SmsReceiver` were never exiled - they have always lived in `:app`.
+`RunningModeExpiryScheduler` is the one real leftover; it came from `:plugins:aps` and can follow the
+worker home.
 
 ## Decisions waiting for you
 

@@ -1,6 +1,5 @@
 package app.aaps.implementation.receivers
 
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -9,7 +8,7 @@ import androidx.annotation.VisibleForTesting
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore.ChargingStatus
-import app.aaps.core.objects.workflow.MetroMemberInjector
+import app.aaps.core.objects.workflow.MetroBroadcastReceiver
 import dev.zacsweers.metro.Inject
 
 /**
@@ -22,13 +21,13 @@ import dev.zacsweers.metro.Inject
  * time, so a missing binding for this class is a build error rather than a crash when the battery
  * state next changes.
  */
-class ChargingStateReceiver : BroadcastReceiver() {
+class ChargingStateReceiver : MetroBroadcastReceiver() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var receiverStatusStore: ReceiverStatusStore
 
     override fun onReceive(context: Context, intent: Intent) {
-        (context.applicationContext as MetroMemberInjector).injectMembers(this)
+        super.onReceive(context, intent)
         grabChargingState(context)
     }
 

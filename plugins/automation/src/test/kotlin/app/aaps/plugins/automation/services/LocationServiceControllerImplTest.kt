@@ -1,4 +1,4 @@
-package app.aaps.services
+package app.aaps.plugins.automation.services
 
 import android.content.Context
 import app.aaps.core.interfaces.notifications.NotificationHolder

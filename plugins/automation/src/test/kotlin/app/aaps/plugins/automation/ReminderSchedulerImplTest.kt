@@ -1,4 +1,4 @@
-package app.aaps.services
+package app.aaps.plugins.automation
 
 import android.app.AlarmManager
 import android.content.Context

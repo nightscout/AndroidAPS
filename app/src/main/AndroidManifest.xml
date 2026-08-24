@@ -139,18 +139,6 @@
             android:name="app.aaps.receivers.CarbSuggestionReceiver"
             android:exported="false" />
 
-        <!-- Automation's location trigger. Lives here because a Service cannot carry its injection
-             annotations inside a multiplatform module; automation drives it via LocationServiceController. -->
-        <service
-            android:name="app.aaps.services.LocationService"
-            android:exported="false"
-            android:foregroundServiceType="location" />
-
-        <!-- Rings reminders scheduled through ReminderScheduler. Same reason as above. -->
-        <receiver
-            android:name="app.aaps.receivers.TimerReminderReceiver"
-            android:exported="false" />
-
         <!-- Auto start -->
         <receiver
             android:name="app.aaps.receivers.AutoStartReceiver"

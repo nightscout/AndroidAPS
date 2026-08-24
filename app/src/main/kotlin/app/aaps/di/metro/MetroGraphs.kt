@@ -44,6 +44,7 @@ import app.aaps.implementation.scenes.ActiveSceneManager
 import app.aaps.implementation.scenes.SceneExecutor
 import app.aaps.implementation.scenes.SceneRepository
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryJob
+import app.aaps.plugins.automation.di.AutomationMetroBridge
 import app.aaps.plugins.calibration.di.CalibrationGraph
 import app.aaps.plugins.sensitivity.di.SensitivityGraph
 import app.aaps.plugins.smoothing.di.SmoothingGraph
@@ -112,6 +113,7 @@ class MetroGraphs @Inject constructor(
     private val workManager: Provider<WorkManager>,
     private val receiverStatusStore: Provider<ReceiverStatusStore>,
     private val openHumansMetroBridge: Provider<OpenHumansMetroBridge>,
+    private val automationMetroBridge: Provider<AutomationMetroBridge>,
     private val calculationWorkflow: Provider<CalculationWorkflow>,
     private val decimalFormatter: Provider<DecimalFormatter>,
     private val processedTbrEbData: Provider<ProcessedTbrEbData>,
@@ -258,6 +260,7 @@ class MetroGraphs @Inject constructor(
     fun injectMembers(target: Any): Boolean {
         val injector = receivers.memberInjectors[target::class]
             ?: openHumans.memberInjectors[target::class]
+            ?: automationMetroBridge.get().memberInjectors[target::class]
             ?: return false
         (injector as MembersInjector<Any>).injectMembers(target)
         return true

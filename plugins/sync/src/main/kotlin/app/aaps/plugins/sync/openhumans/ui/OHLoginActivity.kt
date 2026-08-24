@@ -22,7 +22,7 @@ import app.aaps.core.ui.compose.dialogs.GlobalSnackbarHost
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.plugins.sync.di.AuthUrl
 import app.aaps.plugins.sync.openhumans.compose.OHLoginScreen
-import app.aaps.core.objects.workflow.MetroMemberInjector
+import app.aaps.core.ui.compose.MetroAppCompatActivity
 import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import dev.zacsweers.metro.Inject
 
@@ -35,7 +35,7 @@ import dev.zacsweers.metro.Inject
  * resolve [OHLoginViewModel] through Hilt's factory. Now the fields come from [MetroMemberInjector]
  * and the view model from [MetroViewModelFactory], both backed by `OpenHumansMetroGraph`.
  */
-class OHLoginActivity : AppCompatActivity() {
+class OHLoginActivity : MetroAppCompatActivity() {
 
     @Inject
     @AuthUrl
@@ -56,9 +56,7 @@ class OHLoginActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Where @AndroidEntryPoint used to inject before super.onCreate. Fields must be filled before
-        // anything below reads them, and before the view model is first touched.
-        (applicationContext as MetroMemberInjector).injectMembers(this)
+        // MetroAppCompatActivity injects before super.onCreate, where @AndroidEntryPoint used to.
         super.onCreate(savedInstanceState)
 
         val code = intent.data?.getQueryParameter("code")

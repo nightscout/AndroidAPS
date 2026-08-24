@@ -1,9 +1,13 @@
 package app.aaps.plugins.automation.di
 
+import app.aaps.core.interfaces.alerts.ReminderScheduler
 import app.aaps.core.interfaces.automation.Automation
+import app.aaps.core.interfaces.location.LocationServiceController
 import app.aaps.core.interfaces.plugin.PermissionProvider
 import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.automation.BtConnectionSource
+import app.aaps.plugins.automation.ReminderSchedulerImpl
+import app.aaps.plugins.automation.services.LocationServiceControllerImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -28,4 +32,8 @@ interface AutomationModule {
     @Binds @IntoSet fun bindAutomationPermissionProvider(automationRuntime: AutomationRuntime): PermissionProvider
 
     @Binds fun bindBtConnectionSource(automationRuntime: AutomationRuntime): BtConnectionSource
+
+    @Binds fun bindLocationServiceController(impl: LocationServiceControllerImpl): LocationServiceController
+
+    @Binds fun bindReminderScheduler(impl: ReminderSchedulerImpl): ReminderScheduler
 }
