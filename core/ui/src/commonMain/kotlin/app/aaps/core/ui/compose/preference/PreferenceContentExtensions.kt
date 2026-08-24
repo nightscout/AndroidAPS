@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -27,7 +26,6 @@ import app.aaps.core.keys.interfaces.LongPreferenceKey
 import app.aaps.core.keys.interfaces.PreferenceKey
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.ui.compose.rememberBringIntoViewOnExpand
-import app.aaps.core.ui.compose.stringResource
 import kotlinx.coroutines.delay
 
 /**
@@ -99,19 +97,6 @@ private fun RenderPreferenceItems(
                         visibilityContext = visibilityContext
                     )
                 }
-            }
-
-            is PreferenceActionItem -> {
-                val summary = item.summary
-                Preference(
-                    title = { Text(stringResource(item.title)) },
-                    summary = if (summary != null) {
-                        { Text(stringResource(summary)) }
-                    } else {
-                        null
-                    },
-                    onClick = item.onAction,
-                )
             }
 
             is PreferenceSubScreenDef -> {

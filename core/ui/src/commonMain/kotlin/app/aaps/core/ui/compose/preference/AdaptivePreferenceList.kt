@@ -5,12 +5,10 @@
 
 package app.aaps.core.ui.compose.preference
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import app.aaps.core.keys.interfaces.PreferenceItem
 import app.aaps.core.keys.interfaces.PreferenceKey
 import app.aaps.core.keys.interfaces.VisibilityContext
-import app.aaps.core.ui.compose.stringResource
 
 /**
  * Renders a list of preference items (keys, subscreens, custom items).
@@ -40,19 +38,6 @@ fun AdaptivePreferenceList(
                     key = item,
                     onShowMessage = onShowMessage,
                     visibilityContext = visibilityContext
-                )
-            }
-
-            is PreferenceActionItem -> {
-                val summary = item.summary
-                Preference(
-                    title = { Text(stringResource(item.title)) },
-                    summary = if (summary != null) {
-                        { Text(stringResource(summary)) }
-                    } else {
-                        null
-                    },
-                    onClick = item.onAction,
                 )
             }
 

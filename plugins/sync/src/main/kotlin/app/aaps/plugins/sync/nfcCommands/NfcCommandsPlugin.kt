@@ -39,11 +39,12 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.keys.interfaces.withClick
 import app.aaps.core.ui.compose.icons.IcPluginNfc
-import app.aaps.core.ui.compose.preference.PreferenceActionItem
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nfcCommands.actions.*
+import app.aaps.plugins.sync.nfcCommands.keys.NfcIntentKey
 import org.json.JSONObject
 import java.nio.charset.StandardCharsets
 import javax.inject.Inject
@@ -133,15 +134,10 @@ class NfcCommandsPlugin @Inject constructor(
         items = listOf(
             BooleanKey.NfcAllowRemoteCommands,
             BooleanKey.NfcForegroundPriority,
-            PreferenceActionItem(
-                key = "nfccommunicator_clear_log",
-                title = TextRef.AndroidRes(R.string.nfccommands_clear_log),
-                summary = TextRef.AndroidRes(R.string.nfccommands_clear_log_summary),
-                onAction = {
-                    nfcTagStore.clearLog()
-                    showToast(rh.gs(R.string.nfccommands_log_cleared))
-                },
-            ),
+            NfcIntentKey.ClearLog.withClick {
+                nfcTagStore.clearLog()
+                showToast(rh.gs(R.string.nfccommands_log_cleared))
+            },
         ),
         icon = pluginDescription.icon,
     )
