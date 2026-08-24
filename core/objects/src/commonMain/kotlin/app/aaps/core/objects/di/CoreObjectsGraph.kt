@@ -22,20 +22,12 @@ import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.objects.wizard.BolusWizard
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
-import dev.zacsweers.metro.GraphExtension
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
-
-/**
- * Scope marker for the shared wizard and running-mode objects.
- *
- * The graph used to be a second root on `AppScope`, which was unsafe: two graphs declaring one scope
- * each get their own copy of anything scoped there, silently. Now it is an extension with a scope of
- * its own, so `AppScope` means exactly one graph.
- */
-abstract class CoreObjectsScope private constructor()
 
 /**
  * Metro wiring for `:core:objects`, the module with the dependency cycle.
@@ -51,20 +43,17 @@ abstract class CoreObjectsScope private constructor()
  * `CryptoUtil` is deliberately absent - its class is in this module's **androidMain**, so it cannot be
  * part of a commonMain graph and stays on Dagger. Source set decides.
  */
-@GraphExtension(CoreObjectsScope::class)
-interface CoreObjectsGraph {
+@BindingContainer
+object CoreObjectsGraph {
 
-    val runningModeGuard: RunningModeGuard
-    val quickWizard: QuickWizard
-    val bolusWizard: BolusWizard
-    @SingleIn(CoreObjectsScope::class)
+    @SingleIn(AppScope::class)
     @Provides
     fun provideRunningModeGuard(loop: Loop, text: TextResolver, bus: RxBus): RunningModeGuard =
         RunningModeGuard(loop, text, bus)
 
     // The cycle. A Metro Provider is a deferred lookup, so the graph accepts it where a direct
     // reference would be a cycle error.
-    @SingleIn(CoreObjectsScope::class)
+    @SingleIn(AppScope::class)
     @Provides
     fun provideQuickWizard(prefs: Preferences, entry: Provider<QuickWizardEntry>): QuickWizard =
         QuickWizard(prefs) { entry() }

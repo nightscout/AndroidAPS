@@ -74,7 +74,6 @@ class MetroGraphs @Inject constructor(
     private val leaves: Provider<AapsLeaves>
 ) {
 
-    private val coreObjects: CoreObjectsGraph get() = root.coreObjectsGraph
 
     /**
      * Workers Metro can build, keyed by class name because that is all WorkManager gives us.
@@ -91,7 +90,7 @@ class MetroGraphs @Inject constructor(
 
     /** The one Metro root. Sub-graphs are extensions of it rather than roots of their own. */
     private val root: AppRootGraph by lazy {
-        createGraphFactory<AppRootGraph.Factory>().create(leaves.get())
+        createGraphFactory<AppRootGraph.Factory>().create(leaves.get(), CoreObjectsGraph)
     }
 
     private val source: SourceMetroGraph get() = root.sourceGraph
@@ -135,9 +134,9 @@ class MetroGraphs @Inject constructor(
     val viewModelFactory: MetroViewModelFactory by lazy { AapsViewModelFactory(root, openHumans) }
 
     /** Handed back to Dagger consumers that have not moved - Dagger delegates, never constructs. */
-    val runningModeGuard: RunningModeGuard get() = coreObjects.runningModeGuard
-    val quickWizard: QuickWizard get() = coreObjects.quickWizard
-    val bolusWizard: BolusWizard get() = coreObjects.bolusWizard
+    val runningModeGuard: RunningModeGuard get() = root.runningModeGuard
+    val quickWizard: QuickWizard get() = root.quickWizard
+    val bolusWizard: BolusWizard get() = root.bolusWizard
 
     /**
      * Plugins contributed by Metro graphs, keyed by order.

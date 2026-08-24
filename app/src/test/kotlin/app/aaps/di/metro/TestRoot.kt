@@ -1,5 +1,6 @@
 package app.aaps.di.metro
 
+import app.aaps.core.objects.di.CoreObjectsGraph
 import dev.zacsweers.metro.createGraphFactory
 import org.mockito.Answers
 import org.mockito.kotlin.mock
@@ -27,5 +28,5 @@ fun testRoot(configure: (AapsLeaves) -> Unit = {}): AppRootGraph {
     // failure lands far away - inside a plugin constructor, as "parameter aapsLogger is null".
     val leaves = mock<AapsLeaves>(defaultAnswer = Answers.RETURNS_MOCKS)
     configure(leaves)
-    return createGraphFactory<AppRootGraph.Factory>().create(leaves)
+    return createGraphFactory<AppRootGraph.Factory>().create(leaves, CoreObjectsGraph)
 }

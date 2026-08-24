@@ -12,6 +12,9 @@ import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.interfaces.di.NotNSClient
 import app.aaps.core.objects.di.CoreObjectsGraph
+import app.aaps.core.objects.runningMode.RunningModeGuard
+import app.aaps.core.objects.wizard.BolusWizard
+import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.plugins.automation.di.AutomationMetroGraph
 import app.aaps.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
 import app.aaps.plugins.constraints.dstHelper.DstHelperPlugin
@@ -79,7 +82,17 @@ interface AppRootGraph : MetroViewModelMultibindings {
      * get a separate copy of anything scoped there, and nothing reports it. As extensions they share
      * this graph's bindings instead of restating them, so their factories take no arguments at all.
      */
-    val coreObjectsGraph: CoreObjectsGraph
+    /**
+     * The shared wizard and running-mode objects, from a binding container in `:core:objects`.
+     *
+     * It used to be a `@GraphExtension`, which put its bindings out of reach: an extension can see its
+     * parent, but the parent cannot see the extension, so anything contributed here could not depend on
+     * a wizard. As a container its bindings are part of this graph, and it still lives in commonMain
+     * where the Apple targets can include it too.
+     */
+    val runningModeGuard: RunningModeGuard
+    val quickWizard: QuickWizard
+    val bolusWizard: BolusWizard
 
     /**
      * Plugins that register themselves with @ContributesIntoMap rather than being listed in a graph.
@@ -162,6 +175,9 @@ interface AppRootGraph : MetroViewModelMultibindings {
          * @Provides functions are called only when something needs that type - so the deferral that
          * DeferredRef used to do by hand is now just the shape of a binding container.
          */
-        fun create(@Includes leaves: AapsLeaves): AppRootGraph
+        fun create(
+            @Includes leaves: AapsLeaves,
+            @Includes coreObjects: CoreObjectsGraph
+        ): AppRootGraph
     }
 }
