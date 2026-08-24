@@ -32,26 +32,24 @@ import javax.inject.Singleton
  * The Metro half of the object graph, beside Dagger. Counterpart of `KoinGraph` on `koin-spike` and
  * `KotlinInjectGraph` on `kotlin-inject-spike`, written the same way so the three can be compared.
  *
- * The graphs are created lazily and each is created ONCE, because Metro graph factories take real
- * instances. That is the same shape as kotlin-inject and it carries the same hazard: creating a graph
- * resolves every Dagger provider immediately, and Dagger reaches back - `Loop` leads to the plugin
- * list, which asks these graphs. On the kotlin-inject branch that cycle across the framework boundary
- * showed up as a StackOverflowError on device, and neither framework can detect it because neither can
- * see the other's graph.
+ * This is now a thin reader. It builds [AppRootGraph] once and hands out what the extensions below it
+ * contain; the only graph it still creates separately is Open Humans, which stays a root for the reason
+ * written up in [OpenHumansMetroBridge].
  *
- * It happened here too - the guess that nothing would touch [coreObjects] until well after startup was
- * simply wrong, and the app died on launch exactly as it did on the kotlin-inject branch. Three
- * frameworks, three identical StackOverflowErrors: this hazard belongs to Dagger-plus-anything
- * coexistence, not to any one framework, and compile-time checking does not help because the cycle is
- * invisible to both sides.
+ * ## The hazard this shape exists to avoid
  *
- * [CoreObjectsGraph] therefore takes [DeferredRef] rather than instances. A plain `() -> T` would be
- * the natural way to defer and is what the kotlin-inject branch uses, but Metro treats a parameterless
- * function type as its own provider type and rejects it as a factory parameter ("may not be intrinsic
- * types"), so an ordinary wrapper class is needed instead.
+ * Creating a graph must not resolve Dagger providers, because Dagger reaches back - `Loop` leads to the
+ * plugin list, which asks these graphs. On the kotlin-inject branch that cycle across the framework
+ * boundary showed up as a StackOverflowError on device; it happened here too, when the guess that
+ * nothing would touch [coreObjects] until well after startup turned out to be wrong. Three frameworks,
+ * three identical StackOverflowErrors: the hazard belongs to Dagger-plus-anything coexistence, not to
+ * any one framework, and compile-time checking does not help because the cycle is invisible to both
+ * sides.
  *
- * The other three graphs take instances because their dependencies are leaves that do not lead back
- * here. That is a judgement, not a guarantee - the same judgement that was wrong once already.
+ * [AapsLeaves] is what breaks it now. Its `@Provides` functions are called only when something asks for
+ * that type, so building the root resolves nothing. [DeferredRef], the wrapper that used to do this by
+ * hand, survives only for Open Humans - a plain `() -> T` cannot be used because Metro treats a
+ * parameterless function type as its own provider type and rejects it as a factory parameter.
  */
 @Singleton
 class MetroGraphs @Inject constructor(

@@ -88,9 +88,11 @@ abstract class ConstraintsScope private constructor()
  *    here while Dagger still injects it there would give two instances, so it moves when that call
  *    does.
  *
- * Everything arrives as [DeferredRef], for the re-entrancy reason written up in `MetroGraphs`. It is
- * not theoretical here: [SafetyPlugin] takes a [ConstraintsChecker], which aggregates the constraint
- * plugins - a loop straight back into this graph, broken by the leaves arriving deferred.
+ * Everything else comes from the parent graph, so this one has no creator. The parent hands its leaves
+ * over as a binding container whose `@Provides` functions run only on demand, which is what keeps
+ * opening this graph from resolving Dagger providers. That matters here and is not theoretical:
+ * [SafetyPlugin] takes a [ConstraintsChecker], which aggregates the constraint plugins - a loop
+ * straight back into this graph.
  */
 // Two scopes on purpose. ConstraintsScope is this extension's own; javax @Singleton is kept because
 // the plugin classes carry it and Dagger still reads it there - retagging them would make Dagger build

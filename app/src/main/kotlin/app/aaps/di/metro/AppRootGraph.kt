@@ -14,7 +14,7 @@ import dev.zacsweers.metro.Includes
 /**
  * The one Metro root. Everything else hangs off it as a graph extension.
  *
- * Before this there were seven independent root graphs, each with its own factory restating the
+ * Before this there were nine independent root graphs, each with its own factory restating the
  * app-wide objects it needed and its own set of one-line functions unwrapping them - around 150 lines
  * of declare-then-unwrap. Worse, it was **unsafe by construction**: two root graphs that both scope the
  * same type get one instance each, silently. `MetroScopingTest` shows exactly that - two roots built
@@ -27,9 +27,9 @@ import dev.zacsweers.metro.Includes
  * instance. An extension that declares its own scope gets its own instances of what it scopes, which is
  * what the history browser needs and what the same test verifies.
  *
- * The app-wide objects still arrive as [DeferredRef] because they still belong to Dagger. The deferral
- * is the re-entrancy guard written up in [MetroGraphs]. When Dagger is gone the factory below goes with
- * it and these become ordinary bindings.
+ * The app-wide objects arrive as one [AapsLeaves] container because they still belong to Dagger. Its
+ * `@Provides` functions run only on demand, which is the re-entrancy guard written up in [MetroGraphs].
+ * When Dagger is gone the factory below goes with it and these become ordinary bindings.
  */
 @DependencyGraph(AppScope::class)
 interface AppRootGraph {
