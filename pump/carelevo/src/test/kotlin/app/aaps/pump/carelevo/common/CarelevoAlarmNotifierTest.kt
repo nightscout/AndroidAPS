@@ -11,7 +11,6 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.carelevo.common.keys.CarelevoIntPreferenceKey
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
 import app.aaps.pump.carelevo.domain.type.AlarmCause
@@ -120,19 +119,16 @@ class CarelevoAlarmNotifierTest {
 
     // ---- helpers ------------------------------------------------------------------------------
 
-    /** Verify one post() to the mocked AAPS NotificationManager (the 8-arg date/validTo overload). */
-    private fun verifyPosted(level: NotificationLevel, critical: Boolean, count: Int = 1) {
-        if (critical) {
-            verify(notificationManager, times(count)).post(
-                eq(NotificationId.CARELEVO_PATCH_ALERT), any<String>(), eq(level),
-                any<Long>(), any<Long>(), eq(CoreUiR.raw.error), any<List<NotificationAction>>(), anyOrNull()
-            )
-        } else {
-            verify(notificationManager, times(count)).post(
-                eq(NotificationId.CARELEVO_PATCH_ALERT), any<String>(), eq(level),
-                any<Long>(), any<Long>(), isNull(), any<List<NotificationAction>>(), anyOrNull()
-            )
-        }
+    /**
+     * Verify one post() to the mocked AAPS NotificationManager (the 8-arg date/validTo overload).
+     * `soundRes` is always null — see the class KDoc on why [showTopNotification] never posts at
+     * [NotificationLevel.URGENT] (NotificationManagerImpl's own alarm/sound tier).
+     */
+    private fun verifyPosted(level: NotificationLevel, count: Int = 1) {
+        verify(notificationManager, times(count)).post(
+            eq(NotificationId.CARELEVO_PATCH_ALERT), any<String>(), eq(level),
+            any<Long>(), any<Long>(), isNull(), any<List<NotificationAction>>(), anyOrNull()
+        )
     }
 
     /** Capture the `text` argument of the single post() to the AAPS NotificationManager. */
@@ -162,15 +158,6 @@ class CarelevoAlarmNotifierTest {
     }
 
     @Test
-    fun `alarmHostActive defaults to false and is settable`() {
-        assertThat(sut.alarmHostActive).isFalse()
-        sut.alarmHostActive = true
-        assertThat(sut.alarmHostActive).isTrue()
-        sut.alarmHostActive = false
-        assertThat(sut.alarmHostActive).isFalse()
-    }
-
-    @Test
     fun `isInForeground can be read without crashing`() {
         // ProcessLifecycleOwner resolves under Robolectric; the exact foreground state depends on the
         // Robolectric process-lifecycle setup, so only assert the accessor returns a Boolean, no throw.
@@ -197,24 +184,24 @@ class CarelevoAlarmNotifierTest {
     }
 
     @Test
-    fun `showTopNotification for a critical WARNING posts URGENT with the alarm sound`() {
+    fun `showTopNotification for a critical WARNING posts IMPORTANT, never URGENT, and silent`() {
         sut.showTopNotification(listOf(alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED)))
 
-        verifyPosted(NotificationLevel.URGENT, critical = true)
+        verifyPosted(NotificationLevel.IMPORTANT)
     }
 
     @Test
-    fun `showTopNotification for a critical ALERT posts URGENT with the alarm sound`() {
+    fun `showTopNotification for a critical ALERT posts IMPORTANT, never URGENT, and silent`() {
         sut.showTopNotification(listOf(alarm(AlarmCause.ALARM_ALERT_OUT_OF_INSULIN)))
 
-        verifyPosted(NotificationLevel.URGENT, critical = true)
+        verifyPosted(NotificationLevel.IMPORTANT)
     }
 
     @Test
     fun `showTopNotification for a non-critical NOTICE posts NORMAL and silent`() {
         sut.showTopNotification(listOf(alarm(AlarmCause.ALARM_NOTICE_LGS_START)))
 
-        verifyPosted(NotificationLevel.NORMAL, critical = false)
+        verifyPosted(NotificationLevel.NORMAL)
     }
 
     @Test
@@ -263,7 +250,7 @@ class CarelevoAlarmNotifierTest {
         sut.showTopNotification(listOf(alarm(AlarmCause.ALARM_NOTICE_LOW_INSULIN)))
 
         verify(sp).getInt(eq(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_EXPIRATION_REMINDER_HOURS.key), eq(30))
-        verifyPosted(NotificationLevel.NORMAL, critical = false)
+        verifyPosted(NotificationLevel.NORMAL)
     }
 
     @Test
@@ -274,7 +261,7 @@ class CarelevoAlarmNotifierTest {
         sut.showTopNotification(listOf(alarm(AlarmCause.ALARM_ALERT_OUT_OF_INSULIN)))
 
         verify(sp).getInt(eq(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_EXPIRATION_REMINDER_HOURS.key), eq(30))
-        verifyPosted(NotificationLevel.URGENT, critical = true)
+        verifyPosted(NotificationLevel.IMPORTANT)
     }
 
     @Test
@@ -300,7 +287,7 @@ class CarelevoAlarmNotifierTest {
         val text = capturePostedText()
         assertThat(text).contains("2")
         assertThat(text).contains("5")
-        verifyPosted(NotificationLevel.NORMAL, critical = false)
+        verifyPosted(NotificationLevel.NORMAL)
     }
 
     @Test
@@ -309,7 +296,7 @@ class CarelevoAlarmNotifierTest {
         sut.showTopNotification(listOf(alarm(AlarmCause.ALARM_NOTICE_BG_CHECK, value = 120)))
 
         assertThat(capturePostedText()).contains("2")
-        verifyPosted(NotificationLevel.NORMAL, critical = false)
+        verifyPosted(NotificationLevel.NORMAL)
     }
 
     @Test
@@ -318,7 +305,7 @@ class CarelevoAlarmNotifierTest {
         sut.showTopNotification(listOf(alarm(AlarmCause.ALARM_NOTICE_BG_CHECK, value = 45)))
 
         assertThat(capturePostedText()).contains("45")
-        verifyPosted(NotificationLevel.NORMAL, critical = false)
+        verifyPosted(NotificationLevel.NORMAL)
     }
 
     @Test
@@ -326,7 +313,7 @@ class CarelevoAlarmNotifierTest {
         sut.showTopNotification(listOf(alarm(AlarmCause.ALARM_WARNING_NEEDLE_INSERTION_ERROR)))
 
         verify(sp, never()).getInt(any<String>(), any())
-        verifyPosted(NotificationLevel.URGENT, critical = true)
+        verifyPosted(NotificationLevel.IMPORTANT)
     }
 
     // ---- startObserving / stopObserving / channel ---------------------------------------------

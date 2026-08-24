@@ -20,6 +20,7 @@ import app.aaps.pump.carelevo.domain.type.AlarmCause
 import app.aaps.pump.carelevo.domain.usecase.alarm.CarelevoAlarmInfoUseCase
 import app.aaps.pump.carelevo.domain.usecase.infusion.CarelevoInfusionInfoMonitorUseCase
 import app.aaps.pump.carelevo.domain.usecase.infusion.CarelevoPumpResumeUseCase
+import app.aaps.pump.carelevo.domain.usecase.infusion.CarelevoPumpStopUseCase
 import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchInfoMonitorUseCase
 import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchRptInfusionInfoProcessUseCase
 import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoCreateUserSettingInfoUseCase
@@ -65,6 +66,8 @@ internal class CarelevoPatchTest {
     @Mock lateinit var createUserSettingInfoUseCase: CarelevoCreateUserSettingInfoUseCase
     @Mock lateinit var carelevoAlarmInfoUseCase: CarelevoAlarmInfoUseCase
     @Mock lateinit var pumpResumeUseCase: CarelevoPumpResumeUseCase
+    @Mock lateinit var pumpStopUseCase: CarelevoPumpStopUseCase
+    @Mock lateinit var activeAlarmSnapshotAlarmMapper: ActiveAlarmSnapshotAlarmMapper
 
     private lateinit var sut: CarelevoPatch
 
@@ -96,6 +99,8 @@ internal class CarelevoPatchTest {
         whenever(infusionInfoMonitorUseCase.execute()).thenReturn(Observable.never())
         whenever(userSettingInfoMonitorUseCase.execute()).thenReturn(Observable.never())
         whenever(carelevoAlarmInfoUseCase.upsertAlarm(any())).thenReturn(Completable.complete())
+        whenever(pumpResumeUseCase.persistResumed()).thenReturn(true)
+        whenever(pumpStopUseCase.persistStopped(any())).thenReturn(true)
 
         sut = CarelevoPatch(
             transport = transport,
@@ -110,7 +115,9 @@ internal class CarelevoPatchTest {
             patchRptInfusionInfoProcessUseCase = patchRptInfusionInfoProcessUseCase,
             createUserSettingInfoUseCase = createUserSettingInfoUseCase,
             carelevoAlarmInfoUseCase = carelevoAlarmInfoUseCase,
-            pumpResumeUseCase = pumpResumeUseCase
+            pumpResumeUseCase = pumpResumeUseCase,
+            pumpStopUseCase = pumpStopUseCase,
+            activeAlarmSnapshotAlarmMapper = activeAlarmSnapshotAlarmMapper
         )
     }
 

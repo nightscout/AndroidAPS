@@ -820,7 +820,7 @@ class CarelevoPumpPluginLifecycleTest {
         alarmHandler().invoke(emptyList())
 
         verify(uiInteraction, never()).runAlarm(any(), any(), any())
-        verify(carelevoAlarmNotifier, never()).showTopNotification(any())
+        verify(carelevoAlarmNotifier).showTopNotification(eq(emptyList()))
     }
 
     @Test
@@ -834,41 +834,30 @@ class CarelevoPumpPluginLifecycleTest {
     }
 
     @Test
-    fun `handleAlarms escalates a critical alarm to the global alarm when the compose host is down`() {
-        // A critical patch alarm must NEVER depend on the user having the Carelevo screen open.
-        whenever(carelevoAlarmNotifier.alarmHostActive).thenReturn(false)
+    fun `handleAlarms shows a top notification AND rings the full-screen alarm for a critical alarm`() {
         start()
 
         alarmHandler().invoke(listOf(alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED)))
 
-        verify(uiInteraction).runAlarm(any(), any(), eq(CoreUiR.raw.error))
+        verify(carelevoAlarmNotifier).showTopNotification(any())
+        // Critical (WARNING/ALERT tier) alarms additionally escalate through the shared full-screen
+        // alarm — see handleAlarms KDoc. Sound/full-screen wake-up alone does not clear the alarm;
+        // the top-notification card's own action button does that (CarelevoAlarmNotifier).
+        verify(uiInteraction).runAlarm(any(), any(), any())
     }
 
     @Test
-    fun `handleAlarms escalates a critical ALERT tier too`() {
-        whenever(carelevoAlarmNotifier.alarmHostActive).thenReturn(false)
+    fun `handleAlarms rings the full-screen alarm for a critical ALERT tier too`() {
         start()
 
         alarmHandler().invoke(listOf(alarm(AlarmCause.ALARM_ALERT_OUT_OF_INSULIN)))
 
-        verify(uiInteraction).runAlarm(any(), any(), eq(CoreUiR.raw.error))
+        verify(carelevoAlarmNotifier).showTopNotification(any())
+        verify(uiInteraction).runAlarm(any(), any(), any())
     }
 
     @Test
-    fun `handleAlarms leaves a critical alarm to the compose host when it is mounted`() {
-        // The host presents the full-screen alarm and starts the sound itself; escalating too would
-        // double up the alarm sound.
-        whenever(carelevoAlarmNotifier.alarmHostActive).thenReturn(true)
-        start()
-
-        alarmHandler().invoke(listOf(alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED)))
-
-        verify(uiInteraction, never()).runAlarm(any(), any(), any())
-    }
-
-    @Test
-    fun `handleAlarms does not show a top notification when a critical alarm is present`() {
-        whenever(carelevoAlarmNotifier.alarmHostActive).thenReturn(false)
+    fun `handleAlarms includes both notice and critical alarms in the top notification path`() {
         start()
 
         alarmHandler().invoke(
@@ -878,13 +867,13 @@ class CarelevoPumpPluginLifecycleTest {
             )
         )
 
+        verify(carelevoAlarmNotifier).showTopNotification(any())
+        // Only the critical member rings the shared alarm — still exactly once per call.
         verify(uiInteraction).runAlarm(any(), any(), any())
-        verify(carelevoAlarmNotifier, never()).showTopNotification(any())
     }
 
     @Test
-    fun `handleAlarms does not re-fire the global alarm when the same set is re-emitted`() {
-        whenever(carelevoAlarmNotifier.alarmHostActive).thenReturn(false)
+    fun `handleAlarms re-posts the top notification but rings the full-screen alarm only once for a still-active id`() {
         start()
         val handle = alarmHandler()
         val alarms = listOf(alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED, id = "a"))
@@ -893,12 +882,14 @@ class CarelevoPumpPluginLifecycleTest {
         handle.invoke(alarms)
         handle.invoke(alarms)
 
+        // The card re-posts every time (that's how the user always sees current state)...
+        verify(carelevoAlarmNotifier, times(3)).showTopNotification(eq(alarms))
+        // ...but the same still-active id must not re-ring the shared alarm on every reconnect poll.
         verify(uiInteraction, times(1)).runAlarm(any(), any(), any())
     }
 
     @Test
-    fun `handleAlarms fires once per distinct critical alarm`() {
-        whenever(carelevoAlarmNotifier.alarmHostActive).thenReturn(false)
+    fun `handleAlarms rings the full-screen alarm again for each newly distinct critical id`() {
         start()
         val handle = alarmHandler()
 
@@ -910,15 +901,13 @@ class CarelevoPumpPluginLifecycleTest {
             )
         )
 
-        // "a" is already escalated; only the fresh "b" may ring.
+        verify(carelevoAlarmNotifier, times(2)).showTopNotification(any())
+        // "a" only rings once (already seen); "b" is new on the second call → 2 rings total.
         verify(uiInteraction, times(2)).runAlarm(any(), any(), any())
     }
 
     @Test
-    fun `handleAlarms re-arms an alarm id after it cleared`() {
-        // globallyAlarmedIds is pruned to the active set on every pass, so the same id recurring after
-        // it was cleared is a NEW event and must ring again.
-        whenever(carelevoAlarmNotifier.alarmHostActive).thenReturn(false)
+    fun `handleAlarms rings the full-screen alarm again after an alarm id clears and recurs`() {
         start()
         val handle = alarmHandler()
         val alarms = listOf(alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED, id = "a"))
@@ -927,21 +916,26 @@ class CarelevoPumpPluginLifecycleTest {
         handle.invoke(emptyList())
         handle.invoke(alarms)
 
+        verify(carelevoAlarmNotifier, times(3)).showTopNotification(any())
+        // Dropping out of the incoming set (resolved/acknowledged) clears the dedup id, so the same id
+        // recurring later is treated as new again — rings twice (first appearance + recurrence).
         verify(uiInteraction, times(2)).runAlarm(any(), any(), any())
     }
 
     @Test
-    fun `handleAlarms does not re-fire after the critical set shrinks to other still-active alarms`() {
-        whenever(carelevoAlarmNotifier.alarmHostActive).thenReturn(false)
+    fun `handleAlarms re-posts when the critical set shrinks but does not re-ring an already-seen id`() {
         start()
         val handle = alarmHandler()
         val a = alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED, id = "a")
         val b = alarm(AlarmCause.ALARM_WARNING_PATCH_ERROR, id = "b")
 
         handle.invoke(listOf(a, b))
-        // "b" cleared, "a" still active and still escalated -> silence.
         handle.invoke(listOf(a))
 
+        verify(carelevoAlarmNotifier, times(2)).showTopNotification(any())
+        // Both "a" and "b" are new on the first call, but only ONE ring per handleAlarms invocation
+        // (the first fresh id) — matching EOPatch-style "announce one, the card lists the rest".
+        // The second call has no fresh id ("a" already seen), so no additional ring.
         verify(uiInteraction, times(1)).runAlarm(any(), any(), any())
     }
 

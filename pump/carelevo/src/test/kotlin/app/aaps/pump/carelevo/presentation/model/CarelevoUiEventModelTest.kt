@@ -169,13 +169,10 @@ internal class CarelevoUiEventModelTest {
     fun `AlarmEvent data objects are distinct singletons`() {
         val all: List<AlarmEvent> = listOf(
             AlarmEvent.NoAction,
-            AlarmEvent.RequestBluetoothEnable,
-            AlarmEvent.Mute,
-            AlarmEvent.Mute5min,
-            AlarmEvent.StartAlarm
+            AlarmEvent.RequestBluetoothEnable
         )
         assertThat(all.toSet()).hasSize(all.size)
-        assertThat(AlarmEvent.Mute5min).isSameInstanceAs(AlarmEvent.Mute5min)
+        assertThat(AlarmEvent.NoAction).isSameInstanceAs(AlarmEvent.NoAction)
     }
 
     @Test

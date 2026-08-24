@@ -1,5 +1,7 @@
 package app.aaps.pump.carelevo.emulator
 
+import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotCommand
+import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotTier
 import app.aaps.pump.carelevo.ble.commands.AdditionalPrimingCommand
 import app.aaps.pump.carelevo.ble.commands.AlarmClearCommand
 import app.aaps.pump.carelevo.ble.commands.AlertAlarmSetCommand
@@ -550,6 +552,107 @@ class CarelevoPumpEmulatorTest {
         assertThat(decoded.subId).isEqualTo(5)
         assertThat(decoded.cause).isEqualTo(3)
         assertThat(decoded.resultCode).isEqualTo(4)
+    }
+
+    @Test
+    fun `alarm clear drops the flag from the tier's active alarm snapshot`() {
+        // 162 (0xA2) is the ALERT push-report opcode AlarmClearRequestUseCase.commandAlarmType
+        // sends for an ALERT-severity cause — see CarelevoPumpEmulator.ALARM_TYPE_ALERT.
+        state.advisoryAlarmFlags = state.advisoryAlarmFlags.copy(lowBattery = true)
+        val clearCmd = AlarmClearCommand(alarmType = 162, cause = 0x03)
+        val snapshotCmd = ActiveAlarmSnapshotCommand(ActiveAlarmSnapshotTier.ADVISORY)
+        check(snapshotCmd.decode(emulator.handle(snapshotCmd.encode()).single()).flags.lowBattery)
+
+        emulator.handle(clearCmd.encode())
+
+        val decoded = snapshotCmd.decode(emulator.handle(snapshotCmd.encode()).single())
+        assertThat(decoded.flags.lowBattery).isFalse()
+    }
+
+    @Test
+    fun `alarm clear on one tier leaves the same condition on another tier alone`() {
+        state.criticalAlarmFlags = state.criticalAlarmFlags.copy(lowBattery = true)
+        state.advisoryAlarmFlags = state.advisoryAlarmFlags.copy(lowBattery = true)
+        val clearCmd = AlarmClearCommand(alarmType = 162, cause = 0x03) // ALERT/advisory only
+
+        emulator.handle(clearCmd.encode())
+
+        val criticalCmd = ActiveAlarmSnapshotCommand(ActiveAlarmSnapshotTier.CRITICAL)
+        val advisoryCmd = ActiveAlarmSnapshotCommand(ActiveAlarmSnapshotTier.ADVISORY)
+        assertThat(criticalCmd.decode(emulator.handle(criticalCmd.encode()).single()).flags.lowBattery).isTrue()
+        assertThat(advisoryCmd.decode(emulator.handle(advisoryCmd.encode()).single()).flags.lowBattery).isFalse()
+    }
+
+    // ---- Active alarm snapshot ---------------------------------------------------------------
+
+    @Test
+    fun `active alarm snapshot answers on the tier opcode the request named`() {
+        val cmd = ActiveAlarmSnapshotCommand(ActiveAlarmSnapshotTier.CRITICAL)
+
+        val frames = emulator.handle(cmd.encode())
+
+        assertThat(frames.single()[0]).isEqualTo(ActiveAlarmSnapshotTier.CRITICAL.responseOpcode)
+        assertThat(frames.single()).hasLength(15)
+    }
+
+    @Test
+    fun `active alarm snapshot reports infusing from whether the patch is stopped`() {
+        val cmd = ActiveAlarmSnapshotCommand(ActiveAlarmSnapshotTier.CRITICAL)
+
+        val whileRunning = cmd.decode(emulator.handle(cmd.encode()).single())
+        state.stopped = true
+        val whileStopped = cmd.decode(emulator.handle(cmd.encode()).single())
+
+        assertThat(whileRunning.infusing).isTrue()
+        assertThat(whileStopped.infusing).isFalse()
+    }
+
+    @Test
+    fun `active alarm snapshot round-trip decodes a flag the tier supports`() {
+        state.criticalAlarmFlags = state.criticalAlarmFlags.copy(lowBattery = true, occlusionDetected = true)
+        val cmd = ActiveAlarmSnapshotCommand(ActiveAlarmSnapshotTier.CRITICAL)
+
+        val decoded = cmd.decode(emulator.handle(cmd.encode()).single())
+
+        assertThat(decoded.flags.lowBattery).isTrue()
+        assertThat(decoded.flags.occlusionDetected).isTrue()
+        assertThat(decoded.flags.outOfInsulin).isFalse()
+    }
+
+    @Test
+    fun `active alarm snapshot masks a flag the notification tier does not carry`() {
+        // Low battery is a CRITICAL/ADVISORY field; NOTIFICATION only ever carries operatingLifeExpired
+        // (ActiveAlarmSnapshotTier.supportedFlags) — the client-side decode() masks it back to false
+        // regardless of what the emulator wrote on the wire, same as a real patch's unused bytes.
+        state.notificationAlarmFlags = state.notificationAlarmFlags.copy(lowBattery = true)
+        val cmd = ActiveAlarmSnapshotCommand(ActiveAlarmSnapshotTier.NOTIFICATION)
+
+        val decoded = cmd.decode(emulator.handle(cmd.encode()).single())
+
+        assertThat(decoded.flags.lowBattery).isFalse()
+    }
+
+    @Test
+    fun `active alarm snapshot tiers carry independent flags`() {
+        // Same underlying condition (low battery) on critical vs advisory resolves to a different
+        // AlarmCause severity downstream (WARNING auto-discard vs a plain ALERT to clear) — the
+        // emulator must be able to report one without the other.
+        state.criticalAlarmFlags = state.criticalAlarmFlags.copy(lowBattery = true)
+        val criticalCmd = ActiveAlarmSnapshotCommand(ActiveAlarmSnapshotTier.CRITICAL)
+        val advisoryCmd = ActiveAlarmSnapshotCommand(ActiveAlarmSnapshotTier.ADVISORY)
+
+        val critical = criticalCmd.decode(emulator.handle(criticalCmd.encode()).single())
+        val advisory = advisoryCmd.decode(emulator.handle(advisoryCmd.encode()).single())
+
+        assertThat(critical.flags.lowBattery).isTrue()
+        assertThat(advisory.flags.lowBattery).isFalse()
+    }
+
+    @Test
+    fun `active alarm snapshot with an unrecognized tier byte stays silent`() {
+        val frames = emulator.handle(byteArrayOf(CarelevoPumpEmulator.OP_ACTIVE_ALARM_SNAPSHOT, 0x00))
+
+        assertThat(frames).isEmpty()
     }
 
     @Test

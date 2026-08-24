@@ -2,8 +2,11 @@ package app.aaps.pump.carelevo.ble
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.pump.carelevo.ble.commands.AlertAlarmSetCommand
+import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotCommand
+import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotResponse
+import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotTier
 import app.aaps.pump.carelevo.ble.commands.AdditionalPrimingCommand
+import app.aaps.pump.carelevo.ble.commands.AlertAlarmSetCommand
 import app.aaps.pump.carelevo.ble.commands.AppAuthCommand
 import app.aaps.pump.carelevo.ble.commands.BasalProgramCommand
 import app.aaps.pump.carelevo.ble.commands.InfusionInfoCommand
@@ -144,6 +147,32 @@ class CarelevoBleSession @Inject constructor(
     /** Read Infusion Info (0x31 → 0x91) — the periodic status read (reservoir, totals, pump state). */
     suspend fun readInfusionInfo(address: String): InfusionInfoResponse =
         withSession(address, "infusion info") { it.request(InfusionInfoCommand()) }
+
+    /**
+     * Read reconnect-time active alarm snapshots (0x43 → 0xA4/0xA5/0xA6) on one session. Empty list
+     * means "no answer" (see below) — a real response is always exactly 3 elements (one per tier), even
+     * when every flag in them is false, so the two cases never collide.
+     *
+     * Only newer patch firmware answers 0x43 at all — an older patch just never replies. That case is
+     * swallowed HERE with an inner [withTimeoutOrNull] rather than left to [withSession]'s own timeout:
+     * [withTimeoutOrNull] absorbs its own [TimeoutCancellationException] internally and returns null
+     * instead of letting it escape, so `withSession`'s block simply finishes normally — its
+     * "timeout ⇒ the link is suspect, tear it down" handling (correct for every other op) never even
+     * sees this timeout, and the held link stays up for whatever the queue runs next (temp basal,
+     * bolus, profile update, …). A genuine GATT/write failure (not a mere timeout) still propagates out
+     * normally and tears the link down as before — only "no answer" is treated as harmless. On real
+     * hardware all three tier round-trips together take ~200 ms, so 3 s leaves large margin.
+     */
+    suspend fun readActiveAlarmSnapshots(address: String): List<ActiveAlarmSnapshotResponse> =
+        withSession(address, "active alarm snapshots") { client ->
+            withTimeoutOrNull(ALARM_SNAPSHOT_TIMEOUT_MS.milliseconds) {
+                listOf(
+                    client.request(ActiveAlarmSnapshotCommand(ActiveAlarmSnapshotTier.CRITICAL)),
+                    client.request(ActiveAlarmSnapshotCommand(ActiveAlarmSnapshotTier.ADVISORY)),
+                    client.request(ActiveAlarmSnapshotCommand(ActiveAlarmSnapshotTier.NOTIFICATION))
+                )
+            } ?: emptyList()
+        }
 
     /** Run any single-response [command] (write or read) on a fresh session. */
     suspend fun <R : BleResponse> runSingle(address: String, command: BleCommand<R>, timeoutMs: Long = READ_TIMEOUT_MS): R =
@@ -492,6 +521,9 @@ class CarelevoBleSession @Inject constructor(
         const val CONNECT_TIMEOUT_MS = 20_000L
         const val READ_TIMEOUT_MS = 15_000L
         const val ADDITIONAL_PRIMING_TIMEOUT_MS = 60_000L
+
+        // Real hardware: all three tier round-trips together take ~200 ms — see readActiveAlarmSnapshots.
+        const val ALARM_SNAPSHOT_TIMEOUT_MS = 3_000L
 
         // Safety check streams progress for ~100-210 s before the terminal frame; give it headroom.
         const val SAFETY_CHECK_TIMEOUT_MS = 250_000L

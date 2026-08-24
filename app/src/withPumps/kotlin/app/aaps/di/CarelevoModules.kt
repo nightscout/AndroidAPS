@@ -31,8 +31,23 @@ class CarelevoModules {
     ): CarelevoBleTransport =
         if (config.isEnabled(ExternalOptions.EMULATE_CARELEVO)) {
             aapsLogger.debug(LTag.PUMPEMULATOR, "CareLevo emulator active — real Bluetooth is not used")
+            val emulator = CarelevoPumpEmulator(aapsLogger = aapsLogger)
+            // Debug-only alarm scenarios, each its own marker file next to `emulate_carelevo` itself —
+            // lets an alarm be reproduced on demand (via the emulation-only "re-check alarm snapshot"
+            // button in CarelevoOverviewScreen) without real hardware. Critical and advisory are kept
+            // independent because the same condition resolves to a different severity on each: critical
+            // resolves to a WARNING cause (auto-discards the patch), advisory to the ALERT cause of the
+            // same condition (a plain user-clearable alarm) — see CarelevoPumpState.activeAlarmFlags.
+            emulator.state.criticalAlarmFlags = emulator.state.criticalAlarmFlags.copy(
+                lowBattery = config.isEnabled(ExternalOptions.EMULATE_CARELEVO_LOW_BATTERY),
+                occlusionDetected = config.isEnabled(ExternalOptions.EMULATE_CARELEVO_OCCLUSION)
+            )
+            emulator.state.advisoryAlarmFlags = emulator.state.advisoryAlarmFlags.copy(
+                lowBattery = config.isEnabled(ExternalOptions.EMULATE_CARELEVO_LOW_BATTERY_ALERT),
+                outOfRangeTemperature = config.isEnabled(ExternalOptions.EMULATE_CARELEVO_INVALID_TEMPERATURE)
+            )
             CarelevoEmulatorBleTransport(
-                emulator = CarelevoPumpEmulator(aapsLogger = aapsLogger),
+                emulator = emulator,
                 aapsLogger = aapsLogger
             )
         } else {

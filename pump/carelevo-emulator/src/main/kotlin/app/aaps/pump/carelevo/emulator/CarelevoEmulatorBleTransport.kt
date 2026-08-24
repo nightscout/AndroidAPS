@@ -106,7 +106,11 @@ class CarelevoEmulatorBleTransport(
             if (filter == null) serialNumberProvider?.invoke()?.let { pumpState.serialNumber = it }
             val address = filter ?: macAddressString()
             aapsLogger?.debug(LTag.PUMPEMULATOR, "emulator: scan reporting $address")
-            _scannedDevices.tryEmit(ScannedDevice(name = deviceName(), address = address))
+            // ScannedDevice.rssi defaults to Int.MIN_VALUE — CarelevoPatchConnectViewModel's discovery
+            // scan filters out anything below MIN_SCAN_RSSI (-45), so an emulated device reported at
+            // the default would silently never be selectable. A strong, fixed reading stands in for
+            // "right next to the phone", which is what emulation is meant to simulate.
+            _scannedDevices.tryEmit(ScannedDevice(name = deviceName(), address = address, rssi = EMULATED_RSSI))
         }
 
         override fun stopScan() {}
@@ -159,5 +163,8 @@ class CarelevoEmulatorBleTransport(
     private companion object {
 
         const val DEVICE_NAME_PREFIX = "CareLevo-"
+
+        /** Well above CarelevoPatchConnectViewModel.MIN_SCAN_RSSI (-45) — "right next to the phone". */
+        const val EMULATED_RSSI = -30
     }
 }

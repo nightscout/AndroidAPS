@@ -14,6 +14,9 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.carelevo.ble.CarelevoBleTransport
+import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotFlags
+import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotResponse
+import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotTier
 import app.aaps.pump.carelevo.ble.data.BleState
 import app.aaps.pump.carelevo.ble.data.BondingState
 import app.aaps.pump.carelevo.ble.data.DeviceModuleState
@@ -32,6 +35,7 @@ import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseResponse
 import app.aaps.pump.carelevo.domain.usecase.alarm.CarelevoAlarmInfoUseCase
 import app.aaps.pump.carelevo.domain.usecase.infusion.CarelevoInfusionInfoMonitorUseCase
 import app.aaps.pump.carelevo.domain.usecase.infusion.CarelevoPumpResumeUseCase
+import app.aaps.pump.carelevo.domain.usecase.infusion.CarelevoPumpStopUseCase
 import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchInfoMonitorUseCase
 import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchRptInfusionInfoProcessUseCase
 import app.aaps.pump.carelevo.domain.usecase.patch.model.CarelevoPatchRptInfusionInfoRequestModel
@@ -44,6 +48,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
+import java.util.Optional
 import org.joda.time.DateTime
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -93,7 +98,9 @@ internal class CarelevoPatchMoreTest {
     @Mock lateinit var createUserSettingInfoUseCase: CarelevoCreateUserSettingInfoUseCase
     @Mock lateinit var carelevoAlarmInfoUseCase: CarelevoAlarmInfoUseCase
     @Mock lateinit var pumpResumeUseCase: CarelevoPumpResumeUseCase
+    @Mock lateinit var pumpStopUseCase: CarelevoPumpStopUseCase
     @Mock lateinit var bleAdapter: BleAdapter
+    @Mock lateinit var activeAlarmSnapshotAlarmMapper: ActiveAlarmSnapshotAlarmMapper
 
     private lateinit var sut: CarelevoPatch
 
@@ -117,6 +124,28 @@ internal class CarelevoPatchMoreTest {
             mode = 1
         )
 
+    /** A CRITICAL-tier snapshot with only `outOfInsulin` toggled — everything else unused/false. */
+    private fun outOfInsulinSnapshot(active: Boolean): ActiveAlarmSnapshotResponse =
+        ActiveAlarmSnapshotResponse(
+            tier = ActiveAlarmSnapshotTier.CRITICAL,
+            infusing = true,
+            flags = ActiveAlarmSnapshotFlags(
+                outOfInsulin = active,
+                operatingLifeExpired = false,
+                lowBattery = false,
+                outOfRangeTemperature = false,
+                autoOff = false,
+                unconnectedBle = false,
+                patchAppIncomplete = false,
+                startInsulin = false,
+                selfDiagnosisFailed = false,
+                patchExpired = false,
+                patchError = false,
+                occlusionDetected = false,
+                userForcedTermination = false
+            )
+        )
+
     /** Rebuilds the SUT — call after re-stubbing a monitor use case, the wiring happens in the ctor/initPatch. */
     private fun createPatch(): CarelevoPatch =
         CarelevoPatch(
@@ -132,7 +161,9 @@ internal class CarelevoPatchMoreTest {
             patchRptInfusionInfoProcessUseCase = patchRptInfusionInfoProcessUseCase,
             createUserSettingInfoUseCase = createUserSettingInfoUseCase,
             carelevoAlarmInfoUseCase = carelevoAlarmInfoUseCase,
-            pumpResumeUseCase = pumpResumeUseCase
+            pumpResumeUseCase = pumpResumeUseCase,
+            pumpStopUseCase = pumpStopUseCase,
+            activeAlarmSnapshotAlarmMapper = activeAlarmSnapshotAlarmMapper
         )
 
     private fun profileWith(vararg values: Pair<Int, Double>): Profile {
@@ -157,6 +188,18 @@ internal class CarelevoPatchMoreTest {
         whenever(infusionInfoMonitorUseCase.execute()).thenReturn(Observable.never())
         whenever(userSettingInfoMonitorUseCase.execute()).thenReturn(Observable.never())
         whenever(carelevoAlarmInfoUseCase.upsertAlarm(any())).thenReturn(Completable.complete())
+        // Default: no persisted edge-detection baseline (applyActiveAlarmSnapshots' snapshot-cause
+        // store) — every snapshot poll behaves as a first-ever poll unless a test overrides this
+        // with a real fake (see fakeSnapshotCauseStore) to exercise the persistence across polls.
+        whenever(sp.getString(any<String>(), any<String>())).thenAnswer { it.getArgument<String>(1) }
+        whenever(pumpResumeUseCase.persistResumed()).thenReturn(true)
+        whenever(pumpStopUseCase.persistStopped(any())).thenReturn(true)
+        whenever(activeAlarmSnapshotAlarmMapper.map(any(), any(), any())).thenAnswer { invocation ->
+            val snapshots = invocation.getArgument<List<ActiveAlarmSnapshotResponse>>(0)
+            val currentPatch = invocation.getArgument<CarelevoPatchInfoDomainModel?>(1)
+            val now = invocation.getArgument<String>(2)
+            ActiveAlarmSnapshotAlarmMapper().map(snapshots, currentPatch, now)
+        }
         whenever(patchRptInfusionInfoProcessUseCase.execute(any()))
             .thenReturn(Single.just(ResponseResult.Success<CarelevoUseCaseResponse>(null)))
         whenever(createUserSettingInfoUseCase.execute(any()))
@@ -431,6 +474,163 @@ internal class CarelevoPatchMoreTest {
         val captor = argumentCaptor<CarelevoAlarmInfo>()
         verify(carelevoAlarmInfoUseCase).upsertAlarm(captor.capture())
         assertThat(captor.firstValue.value).isNull()
+    }
+
+    @Test
+    fun `applyActiveAlarmSnapshots de-duplicates lower tier alarms and syncs stopped state from infusing flag`() {
+        whenever(patchInfoMonitorUseCase.execute())
+            .thenReturn(Observable.just(ResponseResult.Success(patchInfo().copy(isStopped = false, mode = 1))))
+        sut = createPatch()
+        sut.initPatch()
+
+        sut.applyActiveAlarmSnapshots(
+            listOf(
+                ActiveAlarmSnapshotResponse(
+                    tier = ActiveAlarmSnapshotTier.CRITICAL,
+                    infusing = false,
+                    flags = ActiveAlarmSnapshotFlags(
+                        outOfInsulin = true,
+                        operatingLifeExpired = false,
+                        lowBattery = false,
+                        outOfRangeTemperature = false,
+                        autoOff = false,
+                        unconnectedBle = false,
+                        patchAppIncomplete = false,
+                        startInsulin = false,
+                        selfDiagnosisFailed = false,
+                        patchExpired = false,
+                        patchError = false,
+                        occlusionDetected = false,
+                        userForcedTermination = false
+                    )
+                ),
+                ActiveAlarmSnapshotResponse(
+                    tier = ActiveAlarmSnapshotTier.ADVISORY,
+                    infusing = false,
+                    flags = ActiveAlarmSnapshotFlags(
+                        outOfInsulin = true,
+                        operatingLifeExpired = false,
+                        lowBattery = false,
+                        outOfRangeTemperature = false,
+                        autoOff = false,
+                        unconnectedBle = false,
+                        patchAppIncomplete = false,
+                        startInsulin = false,
+                        selfDiagnosisFailed = false,
+                        patchExpired = false,
+                        patchError = false,
+                        occlusionDetected = false,
+                        userForcedTermination = false
+                    )
+                )
+            )
+        )
+
+        // First-ever snapshot poll: no previous baseline, so the single de-duped cause is "newly raised".
+        val captor = argumentCaptor<CarelevoAlarmInfo>()
+        verify(carelevoAlarmInfoUseCase).upsertAlarm(captor.capture())
+        // CRITICAL tier resolves as a live 0xA1 report would: (AlarmType.WARNING, CAUSE 0x01).
+        assertThat(captor.firstValue.cause).isEqualTo(AlarmCause.ALARM_WARNING_LOW_INSULIN)
+        verify(pumpStopUseCase).persistStopped(0)
+        assertThat(sut.patchInfo.value?.get()?.isStopped).isTrue()
+        assertThat(sut.patchInfo.value?.get()?.mode).isEqualTo(0)
+    }
+
+    /** Minimal fake backing [sp] so the edge-detection baseline actually persists across calls. */
+    private fun fakeSnapshotCauseStore() {
+        val store = mutableMapOf<String, String>()
+        whenever(sp.getString(any<String>(), any<String>())).thenAnswer { inv ->
+            store[inv.getArgument<String>(0)] ?: inv.getArgument(1)
+        }
+        whenever(sp.putString(any<String>(), any<String>())).thenAnswer { inv ->
+            store[inv.getArgument<String>(0)] = inv.getArgument(1)
+        }
+    }
+
+    @Test
+    fun `applyActiveAlarmSnapshots does not re-raise a cause still active on the previous poll`() {
+        fakeSnapshotCauseStore()
+        sut.initPatch()
+
+        sut.applyActiveAlarmSnapshots(listOf(outOfInsulinSnapshot(active = true)))
+        sut.applyActiveAlarmSnapshots(listOf(outOfInsulinSnapshot(active = true)))
+
+        // Only the first poll's edge (off -> on) raises the alarm. The second poll finds the same
+        // condition still true and must NOT resurrect an alarm the user may have already confirmed —
+        // this is the "확인을 눌렀는데 클리어가 안되네" regression.
+        verify(carelevoAlarmInfoUseCase, times(1)).upsertAlarm(any())
+    }
+
+    @Test
+    fun `applyActiveAlarmSnapshots clears a cause the patch no longer reports`() {
+        fakeSnapshotCauseStore()
+        sut.initPatch()
+        val stale = CarelevoAlarmInfo(
+            alarmId = "stale-1",
+            alarmType = AlarmCause.ALARM_WARNING_LOW_INSULIN.alarmType,
+            cause = AlarmCause.ALARM_WARNING_LOW_INSULIN,
+            value = 40,
+            createdAt = "now",
+            updatedAt = "now",
+            isAcknowledged = false
+        )
+        whenever(carelevoAlarmInfoUseCase.getAlarmsOnce()).thenReturn(Single.just(Optional.of(listOf(stale))))
+        whenever(carelevoAlarmInfoUseCase.acknowledgeAlarm(any())).thenReturn(Completable.complete())
+
+        sut.applyActiveAlarmSnapshots(listOf(outOfInsulinSnapshot(active = true)))
+        sut.applyActiveAlarmSnapshots(listOf(outOfInsulinSnapshot(active = false)))
+
+        // The second poll no longer reports OUT_OF_INSULIN — the patch has confirmed it resolved, so
+        // it is dropped locally even though nobody pressed "확인".
+        verify(carelevoAlarmInfoUseCase).acknowledgeAlarm("stale-1")
+    }
+
+    @Test
+    fun `applyActiveAlarmSnapshots routes infusing true through resume reconciliation`() {
+        whenever(patchInfoMonitorUseCase.execute())
+            .thenReturn(
+                Observable.just(
+                    ResponseResult.Success(
+                        patchInfo().copy(
+                            isStopped = true,
+                            stopMinutes = 30,
+                            stopMode = 0,
+                            isForceStopped = false,
+                            mode = 0
+                        )
+                    )
+                )
+            )
+        sut = createPatch()
+        sut.initPatch()
+
+        sut.applyActiveAlarmSnapshots(
+            listOf(
+                ActiveAlarmSnapshotResponse(
+                    tier = ActiveAlarmSnapshotTier.CRITICAL,
+                    infusing = true,
+                    flags = ActiveAlarmSnapshotFlags(
+                        outOfInsulin = false,
+                        operatingLifeExpired = false,
+                        lowBattery = false,
+                        outOfRangeTemperature = false,
+                        autoOff = false,
+                        unconnectedBle = false,
+                        patchAppIncomplete = false,
+                        startInsulin = false,
+                        selfDiagnosisFailed = false,
+                        patchExpired = false,
+                        patchError = false,
+                        occlusionDetected = false,
+                        userForcedTermination = false
+                    )
+                )
+            )
+        )
+
+        verify(pumpResumeUseCase).persistResumed()
+        assertThat(sut.patchInfo.value?.get()?.isStopped).isFalse()
+        assertThat(sut.patchInfo.value?.get()?.mode).isEqualTo(1)
     }
 
     // ---------------------------------------------------------------------------------------------

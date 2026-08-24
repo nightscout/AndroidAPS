@@ -168,8 +168,6 @@ class CarelevoComposeContent(
 
             CarelevoAlarmHost(
                 aapsLogger = aapsLogger,
-                carelevoAlarmNotifier = carelevoAlarmNotifier,
-                iconsProvider = iconsProvider,
                 snackbarHostState = snackbarHostState
             )
         }

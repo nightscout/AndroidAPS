@@ -237,6 +237,17 @@ class CarelevoEmulatorTransportTest {
         assertThat(device.address).isEqualTo(FILTER_ADDRESS)
     }
 
+    @Test
+    fun `a scanned device reports a strong rssi, not the ScannedDevice default`() {
+        // ScannedDevice.rssi defaults to Int.MIN_VALUE — CarelevoPatchConnectViewModel's discovery
+        // scan drops anything below MIN_SCAN_RSSI (-45), so an emulated device left at that default
+        // would never be selectable and the whole pairing wizard would appear to find nothing.
+        transport.scanner.startScan()
+        val device = runBlocking { transport.scanner.scannedDevices.first() }
+
+        assertThat(device.rssi).isGreaterThan(-45)
+    }
+
     // ---- Adapter identity --------------------------------------------------------------------
 
     @Test
