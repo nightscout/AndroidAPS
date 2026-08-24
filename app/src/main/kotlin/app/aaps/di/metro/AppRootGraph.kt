@@ -1,9 +1,16 @@
 package app.aaps.di.metro
 
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.di.APS
+import app.aaps.core.interfaces.di.NotNSClient
 import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.plugins.automation.di.AutomationMetroGraph
+import app.aaps.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
 import app.aaps.plugins.constraints.di.ConstraintsMetroGraph
+import app.aaps.plugins.constraints.dstHelper.DstHelperPlugin
+import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
+import app.aaps.plugins.constraints.objectives.objectives.Objective
+import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.NSClientSourcePlugin
 import app.aaps.plugins.source.XdripSourcePlugin
@@ -11,6 +18,7 @@ import app.aaps.plugins.source.di.SourceMetroGraph
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Includes
+import dev.zacsweers.metro.Provides
 
 /**
  * The one Metro root. Everything else hangs off it as a graph extension.
@@ -64,6 +72,37 @@ interface AppRootGraph {
      * class, so those modules have no DI file at all. As other modules follow, their entries land here.
      */
     val contributedPlugins: Map<Int, PluginBase>
+
+    /**
+     * Contributed plugins that only belong in a build that runs the loop.
+     *
+     * The qualifier is the whole point: `:app` merges this bucket only when `config.APS`. Objectives,
+     * the signature verifier and the storage constraint have no meaning in a build that never makes a
+     * decision, and a plugin in the wrong bucket fails silently - a plugin list is just a list.
+     */
+    @APS
+    val contributedApsPlugins: Map<Int, PluginBase>
+
+    /** Contributed plugins that must NOT appear in a follower build. */
+    @NotNSClient
+    val contributedNotNsClientPlugins: Map<Int, PluginBase>
+
+    /**
+     * The ten objectives, in order. `ObjectivesPlugin` takes this list and is built here, so the
+     * objectives are contributed to this graph too.
+     */
+    @Provides
+    fun objectivesList(objectives: Map<Int, Objective>): List<Objective> =
+        objectives.toList().sortedBy { it.first }.map { it.second }
+
+    /**
+     * Constraint plugins that are also bound to an interface, or injected directly. Dagger delegates
+     * to these instances in `CoreObjectsModule` rather than building its own.
+     */
+    val bgQualityCheckPlugin: BgQualityCheckPlugin
+    val dstHelperPlugin: DstHelperPlugin
+    val objectivesPlugin: ObjectivesPlugin
+    val signatureVerifierPlugin: SignatureVerifierPlugin
 
     /**
      * Source plugins that are also bound to an interface for other callers.

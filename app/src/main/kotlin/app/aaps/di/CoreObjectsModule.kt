@@ -27,6 +27,7 @@ import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.dst.DstHelper
 import app.aaps.di.metro.MetroGraphs
+import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.objects.wizard.BolusWizard
@@ -95,6 +96,14 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideDstHelper(graphs: MetroGraphs): DstHelper = graphs.dstHelper
 
     @Provides @Singleton fun provideObjectives(graphs: MetroGraphs): Objectives = graphs.objectives
+
+    /*
+     * The signature verifier is asked for by class, not by interface: `MainApp` injects it for one
+     * `shortHashes()` call and `PluginsConstraintsModule` reads `definition.json` through it. Metro
+     * builds it now, so this delegate is what keeps those two from getting a second copy.
+     */
+    @Provides @Singleton fun provideSignatureVerifierPlugin(graphs: MetroGraphs): SignatureVerifierPlugin =
+        graphs.signatureVerifier
 
     /*
      * The three BG-source plugins that are also bound to an interface. Same reasoning as above, and

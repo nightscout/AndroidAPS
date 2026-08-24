@@ -51,7 +51,6 @@ import app.aaps.implementation.scenes.SceneRepository
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryJob
 import app.aaps.plugins.automation.services.LastLocationDataContainer
 import app.aaps.plugins.constraints.objectives.SntpClient
-import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import app.aaps.ui.compose.overview.OverviewDataCacheFactory
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.Provides
@@ -138,8 +137,7 @@ class AapsLeaves @Inject constructor(
     private val hardLimitsProvider: Provider<HardLimits>,
     private val versionCheckerUtilsProvider: Provider<VersionCheckerUtils>,
     private val passwordCheckProvider: Provider<PasswordCheck>,
-    private val sntpClientProvider: Provider<SntpClient>,
-    private val signatureVerifierProvider: Provider<SignatureVerifierPlugin>
+    private val sntpClientProvider: Provider<SntpClient>
 ) {
 
     @Provides fun aapsLogger(): AAPSLogger = aapsLoggerProvider.get()
@@ -202,5 +200,4 @@ class AapsLeaves @Inject constructor(
     @Provides fun versionCheckerUtils(): VersionCheckerUtils = versionCheckerUtilsProvider.get()
     @Provides fun passwordCheck(): PasswordCheck = passwordCheckProvider.get()
     @Provides fun sntpClient(): SntpClient = sntpClientProvider.get()
-    @Provides fun signatureVerifier(): SignatureVerifierPlugin = signatureVerifierProvider.get()
 }

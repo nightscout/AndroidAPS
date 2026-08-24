@@ -36,8 +36,39 @@ class ContributedPluginsTest {
             // smoothing
             600, 610, 620, 630,
             // calibration
-            700, 710
+            700, 710,
+            // constraints, every-build bucket only
+            800, 850, 860
         )
+    }
+
+    @Test
+    fun `only a looping build gets storage, signature verifier and objectives`() {
+        assertThat(testRoot().contributedApsPlugins.keys).containsExactly(820, 830, 840)
+    }
+
+    @Test
+    fun `only a non-follower build gets the version checker`() {
+        assertThat(testRoot().contributedNotNsClientPlugins.keys).containsExactly(810)
+    }
+
+    @Test
+    fun `the three buckets do not overlap`() {
+        // Summing the sizes and comparing to the union is what catches a plugin contributed twice, or
+        // one that landed in a bucket it does not belong in as well as its own.
+        val root = testRoot()
+        val all = root.contributedPlugins.keys + root.contributedApsPlugins.keys +
+            root.contributedNotNsClientPlugins.keys
+        val total = root.contributedPlugins.size + root.contributedApsPlugins.size +
+            root.contributedNotNsClientPlugins.size
+        assertThat(total).isEqualTo(all.size)
+    }
+
+    @Test
+    fun `the ten objectives are contributed in order`() {
+        // ObjectivesPlugin takes List<Objective> and the order is the objective number, so a lost or
+        // reordered entry would change which objective the user is asked to complete next.
+        assertThat(testRoot().objectivesPlugin.objectives).hasSize(10)
     }
 
     @Test

@@ -20,6 +20,7 @@ import app.aaps.core.ui.compose.MetroViewModelFactory
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
 import app.aaps.plugins.automation.di.AutomationMetroGraph
 import app.aaps.plugins.constraints.di.ConstraintsMetroGraph
+import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import app.aaps.plugins.source.di.SourceMetroGraph
 import app.aaps.plugins.sync.di.OpenHumansMetroBridge
 import dev.zacsweers.metro.MembersInjector
@@ -133,8 +134,7 @@ class MetroGraphs @Inject constructor(
      * shape the Dagger module used, unlike the Koin branch which had to invent a registration object.
      */
     fun plugins(): Map<Int, PluginBase> =
-        root.contributedPlugins +
-            constraints.allConfigsPlugins
+        root.contributedPlugins
 
     /**
      * Plugins that must NOT appear in an AAPSCLIENT build.
@@ -144,7 +144,7 @@ class MetroGraphs @Inject constructor(
      * follower. Merging it unconditionally would quietly add Open Humans to follower builds.
      */
     fun notNsClientPlugins(): Map<Int, PluginBase> =
-        openHumans.notNsClientPlugins + constraints.notNsClientPlugins
+        openHumans.notNsClientPlugins + root.contributedNotNsClientPlugins
 
     /**
      * Plugins that only belong in a build that runs the loop.
@@ -152,7 +152,7 @@ class MetroGraphs @Inject constructor(
      * Same reasoning as [notNsClientPlugins], for the `@APS` qualifier. Objectives, the signature
      * verifier and the storage constraint have no meaning in a build that never makes a decision.
      */
-    fun apsPlugins(): Map<Int, PluginBase> = constraints.apsPlugins
+    fun apsPlugins(): Map<Int, PluginBase> = root.contributedApsPlugins
 
     /**
      * Constraint plugins that are also bound to an interface, handed to Dagger in `CoreObjectsModule`.
@@ -163,7 +163,8 @@ class MetroGraphs @Inject constructor(
     val xDripSource: XDripSource get() = root.xdripSourcePlugin
     val nsClientSource: NSClientSource get() = root.nsClientSourcePlugin
     val dexcomBoyda: DexcomBoyda get() = root.dexcomPlugin
-    val bgQualityCheck: BgQualityCheck get() = constraints.bgQualityCheckPlugin
-    val dstHelper: DstHelper get() = constraints.dstHelperPlugin
-    val objectives: Objectives get() = constraints.objectivesPlugin
+    val bgQualityCheck: BgQualityCheck get() = root.bgQualityCheckPlugin
+    val dstHelper: DstHelper get() = root.dstHelperPlugin
+    val objectives: Objectives get() = root.objectivesPlugin
+    val signatureVerifier: SignatureVerifierPlugin get() = root.signatureVerifierPlugin
 }
