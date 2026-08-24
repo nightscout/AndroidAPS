@@ -4,6 +4,9 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.plugins.automation.di.AutomationMetroGraph
 import app.aaps.plugins.constraints.di.ConstraintsMetroGraph
+import app.aaps.plugins.source.DexcomPlugin
+import app.aaps.plugins.source.NSClientSourcePlugin
+import app.aaps.plugins.source.XdripSourcePlugin
 import app.aaps.plugins.source.di.SourceMetroGraph
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
@@ -61,6 +64,15 @@ interface AppRootGraph {
      * class, so those modules have no DI file at all. As other modules follow, their entries land here.
      */
     val contributedPlugins: Map<Int, PluginBase>
+
+    /**
+     * Source plugins that are also bound to an interface for other callers.
+     *
+     * Metro builds these, so Dagger must delegate rather than construct - see `CoreObjectsModule`.
+     */
+    val xdripSourcePlugin: XdripSourcePlugin
+    val nsClientSourcePlugin: NSClientSourcePlugin
+    val dexcomPlugin: DexcomPlugin
 
     val sourceGraph: SourceMetroGraph
     val automationGraph: AutomationMetroGraph

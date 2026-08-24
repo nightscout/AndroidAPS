@@ -18,6 +18,9 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.source.DexcomBoyda
+import app.aaps.core.interfaces.source.NSClientSource
+import app.aaps.core.interfaces.source.XDripSource
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
@@ -92,4 +95,15 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideDstHelper(graphs: MetroGraphs): DstHelper = graphs.dstHelper
 
     @Provides @Singleton fun provideObjectives(graphs: MetroGraphs): Objectives = graphs.objectives
+
+    /*
+     * The three BG-source plugins that are also bound to an interface. Same reasoning as above, and
+     * these replace the `@Binds` that used to sit in `SourceModule` inside `:plugins:source` - that
+     * module is gone now, because every source plugin registers itself with `@ContributesIntoMap`.
+     */
+    @Provides @Singleton fun provideXDripSource(graphs: MetroGraphs): XDripSource = graphs.xDripSource
+
+    @Provides @Singleton fun provideNSClientSource(graphs: MetroGraphs): NSClientSource = graphs.nsClientSource
+
+    @Provides @Singleton fun provideDexcomBoyda(graphs: MetroGraphs): DexcomBoyda = graphs.dexcomBoyda
 }

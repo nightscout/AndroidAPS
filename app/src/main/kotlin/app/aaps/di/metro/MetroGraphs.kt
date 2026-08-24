@@ -8,6 +8,9 @@ import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.dst.DstHelper
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.source.DexcomBoyda
+import app.aaps.core.interfaces.source.NSClientSource
+import app.aaps.core.interfaces.source.XDripSource
 import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.objects.workflow.MetroWorkerCreator
@@ -157,6 +160,9 @@ class MetroGraphs @Inject constructor(
      * Metro builds these, so Dagger must delegate rather than construct - see there for what goes
      * wrong otherwise.
      */
+    val xDripSource: XDripSource get() = root.xdripSourcePlugin
+    val nsClientSource: NSClientSource get() = root.nsClientSourcePlugin
+    val dexcomBoyda: DexcomBoyda get() = root.dexcomPlugin
     val bgQualityCheck: BgQualityCheck get() = constraints.bgQualityCheckPlugin
     val dstHelper: DstHelper get() = constraints.dstHelperPlugin
     val objectives: Objectives get() = constraints.objectivesPlugin

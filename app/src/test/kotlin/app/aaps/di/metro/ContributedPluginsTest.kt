@@ -29,9 +29,9 @@ class ContributedPluginsTest {
         assertThat(plugins.keys).containsExactly(
             // sensitivity
             100, 110, 120,
-            // source. 400 xDrip, 410 NSClient and 440 Dexcom are absent on purpose: those three are
-            // still bound to an interface by Dagger, so Dagger still builds them.
-            420, 430, 450, 460, 470, 480, 490, 500, 510, 520, 530, 540, 550,
+            // source - all sixteen. 400, 410 and 440 are also bound to an interface; Dagger delegates
+            // to these instances in CoreObjectsModule rather than building its own.
+            400, 410, 420, 430, 440, 450, 460, 470, 480, 490, 500, 510, 520, 530, 540, 550,
             // smoothing
             600, 610, 620, 630,
             // calibration

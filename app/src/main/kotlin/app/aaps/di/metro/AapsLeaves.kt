@@ -52,8 +52,6 @@ import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryJob
 import app.aaps.plugins.automation.services.LastLocationDataContainer
 import app.aaps.plugins.constraints.objectives.SntpClient
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
-import app.aaps.plugins.source.DexcomPlugin
-import app.aaps.plugins.source.XdripSourcePlugin
 import app.aaps.ui.compose.overview.OverviewDataCacheFactory
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.Provides
@@ -132,8 +130,6 @@ class AapsLeaves @Inject constructor(
     // Source plugins, still built by Dagger. They live here rather than in their own module because a
     // graph extension is generated in the parent's module, so Metro cannot read a container from the
     // module the extension is declared in.
-    private val dexcomProvider: Provider<DexcomPlugin>,
-    private val xdripProvider: Provider<XdripSourcePlugin>,
     // Automation.
     private val uiInteractionProvider: Provider<UiInteraction>,
     private val notificationHolderProvider: Provider<NotificationHolder>,
@@ -197,8 +193,6 @@ class AapsLeaves @Inject constructor(
     @Provides fun context(): Context = contextProvider.get()
     @Provides fun virtualPump(): VirtualPump = virtualPumpProvider.get()
 
-    @Provides fun dexcom(): DexcomPlugin = dexcomProvider.get()
-    @Provides fun xdrip(): XdripSourcePlugin = xdripProvider.get()
 
     @Provides fun uiInteraction(): UiInteraction = uiInteractionProvider.get()
     @Provides fun notificationHolder(): NotificationHolder = notificationHolderProvider.get()
