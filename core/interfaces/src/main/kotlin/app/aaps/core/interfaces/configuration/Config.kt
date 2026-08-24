@@ -36,6 +36,12 @@ enum class ExternalOptions(val filename: String) {
     EMULATE_DANA_R_KOREAN("emulate_dana_r_korean"),
     EMULATE_DANA_R_V2("emulate_dana_r_v2"),
     EMULATE_CARELEVO("emulate_carelevo"),
+    // Critical tier — the driver resolves these to a WARNING-severity cause and auto-discards the patch.
+    EMULATE_CARELEVO_LOW_BATTERY("emulate_carelevo_low_battery"),
+    EMULATE_CARELEVO_OCCLUSION("emulate_carelevo_occlusion"),
+    // Advisory tier — resolves to the ALERT-severity cause of the same condition, a plain user-clearable alarm.
+    EMULATE_CARELEVO_LOW_BATTERY_ALERT("emulate_carelevo_low_battery_alert"),
+    EMULATE_CARELEVO_INVALID_TEMPERATURE("emulate_carelevo_invalid_temperature"),
     ENABLE_OMNIPOD_DRIFT_COMPENSATION("omnipod_drift_compensation"),
 }
 
