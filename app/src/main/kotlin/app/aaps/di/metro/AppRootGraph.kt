@@ -1,5 +1,12 @@
 package app.aaps.di.metro
 
+import app.aaps.core.objects.di.CoreObjectsGraph
+import app.aaps.plugins.automation.di.AutomationMetroGraph
+import app.aaps.plugins.calibration.di.CalibrationGraph
+import app.aaps.plugins.constraints.di.ConstraintsMetroGraph
+import app.aaps.plugins.sensitivity.di.SensitivityGraph
+import app.aaps.plugins.smoothing.di.SmoothingGraph
+import app.aaps.plugins.source.di.SourceMetroGraph
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Includes
@@ -38,6 +45,23 @@ interface AppRootGraph {
      * separate scope with its own calculation objects - see [HistoryWindowGraph].
      */
     val historyWindowFactory: HistoryWindowGraph.Factory
+
+    /**
+     * Feature modules, as extensions rather than roots of their own.
+     *
+     * Each of these used to be a second `@DependencyGraph(AppScope::class)`, built by `MetroGraphs`
+     * with its own list of leaves. That was safe only by accident: two graphs both declaring `AppScope`
+     * get a separate copy of anything scoped there, and nothing reports it. As extensions they share
+     * this graph's bindings instead of restating them, so their factories take no arguments at all.
+     */
+    val smoothingGraph: SmoothingGraph
+    val sensitivityGraph: SensitivityGraph
+    val calibrationGraph: CalibrationGraph
+    val coreObjectsGraph: CoreObjectsGraph
+
+    val sourceGraph: SourceMetroGraph
+    val automationGraph: AutomationMetroGraph
+    val constraintsGraph: ConstraintsMetroGraph
 
     @DependencyGraph.Factory
     fun interface Factory {

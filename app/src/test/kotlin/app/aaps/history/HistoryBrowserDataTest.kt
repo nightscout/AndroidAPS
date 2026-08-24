@@ -5,16 +5,14 @@ import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.workflow.CalculationSignals
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.objects.workflow.CalculationSignalsImpl
-import app.aaps.di.metro.AapsLeaves
-import app.aaps.di.metro.AppRootGraph
 import app.aaps.di.metro.HistoryWindowGraph
+import app.aaps.di.metro.testRoot
 import app.aaps.implementation.overview.OverviewDataImpl
 import app.aaps.plugins.main.iob.iobCobCalculator.IobCobCalculatorPlugin
 import app.aaps.shared.tests.TestBaseWithProfile
 import app.aaps.ui.compose.overview.OverviewDataCacheFactory
 import app.aaps.ui.compose.overview.OverviewDataCacheImpl
 import com.google.common.truth.Truth.assertThat
-import dev.zacsweers.metro.createGraphFactory
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -24,7 +22,6 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import javax.inject.Provider
 
 /**
  * The History Browser must not share calculation objects with the running loop.
@@ -50,60 +47,27 @@ class HistoryBrowserDataTest : TestBaseWithProfile() {
     }
 
     /**
-     * A leaf this test must never need. It throws instead of returning a mock, so that a binding the
-     * window graph should not touch cannot pass unnoticed.
-     */
-    private fun <T : Any> unused(): Provider<T> = Provider { error("must not be resolved") }
-
-    /**
-     * The leaves the app-wide graph is given. Named, so adding or reordering a leaf cannot silently
-     * shift every argument by one - which the old positional list of thirty-five could.
-     */
-    private fun leaves() = AapsLeaves(
-        aapsLoggerProvider = Provider { aapsLogger },
-        receiverStatusStoreProvider = unused(),
-        rxBusProvider = Provider { rxBus },
-        activePluginProvider = Provider { activePlugin },
-        appScopeProvider = unused(),
-        fabricPrivacyProvider = unused(),
-        runningModeExpiryJobProvider = unused(),
-        localAlertUtilsProvider = unused(),
-        persistenceLayerProvider = Provider { persistenceLayer },
-        configProvider = unused(),
-        iobCobCalculatorProvider = unused(),
-        loopProvider = unused(),
-        dateUtilProvider = Provider { dateUtil },
-        profileFunctionProvider = Provider { profileFunction },
-        profileUtilProvider = unused(),
-        commandQueueProvider = unused(),
-        maintenanceProvider = unused(),
-        rhProvider = Provider { rh },
-        preferencesProvider = Provider { preferences },
-        dstHelperProvider = unused(),
-        workManagerProvider = unused(),
-        concentrationHelperProvider = unused(),
-        notificationManagerProvider = unused(),
-        activeSceneManagerProvider = unused(),
-        sceneExecutorProvider = unused(),
-        sceneRepositoryProvider = unused(),
-        fileListProviderProvider = unused(),
-        storageProvider = unused(),
-        userEntryPresentationHelperProvider = unused(),
-        dataInboxProvider = unused(),
-        cloudStorageManagerProvider = unused(),
-        calculationWorkflowProvider = Provider { calculationWorkflow },
-        decimalFormatterProvider = Provider { decimalFormatter },
-        processedTbrEbDataProvider = Provider { processedTbrEbData },
-        overviewDataCacheFactoryProvider = Provider { overviewDataCacheFactory }
-    )
-
-    /**
      * Builds the real root and opens windows from it, rather than building a window directly. That is
      * the point of the check now: the root binds the app-wide IobCobCalculator, the window binds its
      * own, and the window must win. If the extension quietly resolved the parent's calculator instead,
      * history browsing would compute into the running loop's state.
+     *
+     * Only the leaves this test really needs are stubbed - see [testRoot].
      */
-    private fun root() = createGraphFactory<AppRootGraph.Factory>().create(leaves())
+    private fun root() = testRoot { leaves ->
+        whenever(leaves.aapsLogger()).thenReturn(aapsLogger)
+        whenever(leaves.rxBus()).thenReturn(rxBus)
+        whenever(leaves.activePlugin()).thenReturn(activePlugin)
+        whenever(leaves.persistenceLayer()).thenReturn(persistenceLayer)
+        whenever(leaves.dateUtil()).thenReturn(dateUtil)
+        whenever(leaves.profileFunction()).thenReturn(profileFunction)
+        whenever(leaves.rh()).thenReturn(rh)
+        whenever(leaves.preferences()).thenReturn(preferences)
+        whenever(leaves.calculationWorkflow()).thenReturn(calculationWorkflow)
+        whenever(leaves.decimalFormatter()).thenReturn(decimalFormatter)
+        whenever(leaves.processedTbrEbData()).thenReturn(processedTbrEbData)
+        whenever(leaves.overviewDataCacheFactory()).thenReturn(overviewDataCacheFactory)
+    }
 
     private fun createSut(): HistoryWindowGraph = root().historyWindowFactory.create()
 

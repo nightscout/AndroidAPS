@@ -1,65 +1,29 @@
 package app.aaps.di.metro
 
 import androidx.work.WorkManager
-import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.aps.Loop
-import app.aaps.core.interfaces.automation.Automation
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
-import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.db.ProcessedTbrEbData
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.di.DeferredRef
-import app.aaps.core.interfaces.dst.DstHelper
-import app.aaps.core.interfaces.insulin.ConcentrationHelper
-import app.aaps.core.interfaces.iob.GlucoseStatusProvider
-import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.maintenance.Maintenance
-import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
+import app.aaps.core.interfaces.constraints.Objectives
+import app.aaps.core.interfaces.dst.DstHelper
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.receivers.ReceiverStatusStore
-import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.interfaces.workflow.CalculationWorkflow
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.core.objects.runningMode.RunningModeGuard
-import app.aaps.core.interfaces.maintenance.FileListProvider
-import app.aaps.core.interfaces.storage.Storage
-import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
 import app.aaps.core.objects.workflow.MetroWorkerCreator
-import app.aaps.core.utils.receivers.DataInbox
-import app.aaps.implementation.maintenance.cloud.CloudStorageManager
 import app.aaps.core.objects.wizard.BolusWizard
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.ui.compose.MetroViewModelFactory
-import app.aaps.ui.compose.overview.OverviewDataCacheFactory
-import app.aaps.implementation.scenes.ActiveSceneManager
-import app.aaps.implementation.scenes.SceneExecutor
-import app.aaps.implementation.scenes.SceneRepository
-import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryJob
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
-import app.aaps.plugins.automation.di.AutomationMetroBridge
+import app.aaps.plugins.automation.di.AutomationMetroGraph
 import app.aaps.plugins.calibration.di.CalibrationGraph
-import app.aaps.plugins.constraints.di.ConstraintsMetroBridge
+import app.aaps.plugins.constraints.di.ConstraintsMetroGraph
 import app.aaps.plugins.sensitivity.di.SensitivityGraph
 import app.aaps.plugins.smoothing.di.SmoothingGraph
-import app.aaps.plugins.source.di.SourceMetroBridge
+import app.aaps.plugins.source.di.SourceMetroGraph
 import app.aaps.plugins.sync.di.OpenHumansMetroBridge
 import dev.zacsweers.metro.MembersInjector
 import dev.zacsweers.metro.createGraphFactory
-import kotlinx.coroutines.CoroutineScope
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -91,110 +55,18 @@ import javax.inject.Singleton
  */
 @Singleton
 class MetroGraphs @Inject constructor(
-    private val aapsLogger: Provider<AAPSLogger>,
-    private val rh: Provider<ResourceHelper>,
-    private val preferences: Provider<Preferences>,
-    private val persistenceLayer: Provider<PersistenceLayer>,
-    private val rxBus: Provider<RxBus>,
-    private val profileFunction: Provider<ProfileFunction>,
-    private val profileUtil: Provider<ProfileUtil>,
-    private val constraintsChecker: Provider<ConstraintsChecker>,
-    private val loop: Provider<Loop>,
-    private val iobCobCalculator: Provider<IobCobCalculator>,
-    private val dateUtil: Provider<DateUtil>,
-    private val config: Provider<Config>,
-    private val uel: Provider<UserEntryLogger>,
-    private val automation: Provider<Automation>,
-    private val glucoseStatusProvider: Provider<GlucoseStatusProvider>,
-    private val processedDeviceStatusData: Provider<ProcessedDeviceStatusData>,
-    private val concentrationHelper: Provider<ConcentrationHelper>,
-    private val wizardBolusExecutor: Provider<WizardBolusExecutor>,
-    @ApplicationScope private val appScope: Provider<CoroutineScope>,
-    private val notificationManager: Provider<NotificationManager>,
-    private val activePlugin: Provider<ActivePlugin>,
-    private val fabricPrivacy: Provider<FabricPrivacy>,
-    private val runningModeExpiryJob: Provider<RunningModeExpiryJob>,
-    private val localAlertUtils: Provider<LocalAlertUtils>,
-    private val commandQueue: Provider<CommandQueue>,
-    private val maintenance: Provider<Maintenance>,
-    private val dstHelper: Provider<DstHelper>,
-    private val workManager: Provider<WorkManager>,
-    private val receiverStatusStore: Provider<ReceiverStatusStore>,
+
     private val openHumansMetroBridge: Provider<OpenHumansMetroBridge>,
-    private val automationMetroBridge: Provider<AutomationMetroBridge>,
-    private val constraintsMetroBridge: Provider<ConstraintsMetroBridge>,
-    private val sourceMetroBridge: Provider<SourceMetroBridge>,
-    private val leaves: Provider<AapsLeaves>,
-    private val calculationWorkflow: Provider<CalculationWorkflow>,
-    private val decimalFormatter: Provider<DecimalFormatter>,
-    private val processedTbrEbData: Provider<ProcessedTbrEbData>,
-    private val overviewDataCacheFactory: Provider<OverviewDataCacheFactory>,
-    private val activeSceneManager: Provider<ActiveSceneManager>,
-    private val sceneExecutor: Provider<SceneExecutor>,
-    private val sceneRepository: Provider<SceneRepository>,
-    private val fileListProvider: Provider<FileListProvider>,
-    private val storage: Provider<Storage>,
-    private val userEntryPresentationHelper: Provider<UserEntryPresentationHelper>,
-    private val dataInbox: Provider<DataInbox>,
-    private val cloudStorageManager: Provider<CloudStorageManager>
+    private val leaves: Provider<AapsLeaves>
 ) {
 
-    private val smoothing: SmoothingGraph by lazy {
-        createGraphFactory<SmoothingGraph.Factory>().create(
-            aapsLogger = aapsLogger.get(),
-            // ResourceHelper is the Android implementation of the multiplatform TextResolver.
-            rh = rh.get(),
-            preferences = preferences.get(),
-            persistenceLayer = persistenceLayer.get()
-        )
-    }
+    private val smoothing: SmoothingGraph get() = root.smoothingGraph
 
-    private val coreObjects: CoreObjectsGraph by lazy {
-        createGraphFactory<CoreObjectsGraph.Factory>().create(
-            DeferredRef { aapsLogger.get() },
-            DeferredRef { rh.get() },
-            DeferredRef { rxBus.get() },
-            DeferredRef { preferences.get() },
-            DeferredRef { profileFunction.get() },
-            DeferredRef { profileUtil.get() },
-            DeferredRef { constraintsChecker.get() },
-            DeferredRef { loop.get() },
-            DeferredRef { iobCobCalculator.get() },
-            DeferredRef { dateUtil.get() },
-            DeferredRef { config.get() },
-            DeferredRef { uel.get() },
-            DeferredRef { automation.get() },
-            DeferredRef { glucoseStatusProvider.get() },
-            DeferredRef { persistenceLayer.get() },
-            DeferredRef { processedDeviceStatusData.get() },
-            DeferredRef { concentrationHelper.get() },
-            DeferredRef { wizardBolusExecutor.get() },
-            DeferredRef { appScope.get() }
-        )
-    }
+    private val coreObjects: CoreObjectsGraph get() = root.coreObjectsGraph
 
-    private val calibration: CalibrationGraph by lazy {
-        createGraphFactory<CalibrationGraph.Factory>().create(
-            aapsLogger = aapsLogger.get(),
-            rh = rh.get(),
-            dateUtil = dateUtil.get(),
-            persistenceLayer = persistenceLayer.get(),
-            notificationManager = notificationManager.get(),
-            glucoseStatusProvider = glucoseStatusProvider.get(),
-            rxBus = rxBus.get(),
-            profileUtil = profileUtil.get()
-        )
-    }
+    private val calibration: CalibrationGraph get() = root.calibrationGraph
 
-    private val sensitivity: SensitivityGraph by lazy {
-        createGraphFactory<SensitivityGraph.Factory>().create(
-            aapsLogger = aapsLogger.get(),
-            rh = rh.get(),
-            preferences = preferences.get(),
-            dateUtil = dateUtil.get(),
-            activePlugin = activePlugin.get()
-        )
-    }
+    private val sensitivity: SensitivityGraph get() = root.sensitivityGraph
 
     /**
      * Workers Metro can build, keyed by class name because that is all WorkManager gives us.
@@ -206,7 +78,7 @@ class MetroGraphs @Inject constructor(
     val runningModeExpiryScheduler: RunningModeExpiryScheduler get() = workers.runningModeExpiryScheduler
 
     fun workerCreators(): Map<String, MetroWorkerCreator> =
-        (workers.workerCreators + openHumans.workerCreators + sourceMetroBridge.get().workerCreators)
+        (workers.workerCreators + openHumans.workerCreators + source.workerCreators)
             .mapKeys { (klass, _) -> klass.java.name }
 
     /** The one Metro root. Sub-graphs are extensions of it rather than roots of their own. */
@@ -214,11 +86,15 @@ class MetroGraphs @Inject constructor(
         createGraphFactory<AppRootGraph.Factory>().create(leaves.get())
     }
 
+    private val source: SourceMetroGraph get() = root.sourceGraph
+
     private val receivers: AppReceiversGraph get() = root.receiversGraph
     private val workers: AppWorkersGraph get() = root.workersGraph
 
     // The module owns its own bridge, because its DI qualifiers are internal to it.
     private val openHumans: OpenHumansMetroBridge get() = openHumansMetroBridge.get()
+    private val automation: AutomationMetroGraph get() = root.automationGraph
+    private val constraints: ConstraintsMetroGraph get() = root.constraintsGraph
 
     /**
      * Builds one history browsing window, with its own calculation objects.
@@ -238,8 +114,8 @@ class MetroGraphs @Inject constructor(
     fun injectMembers(target: Any): Boolean {
         val injector = receivers.memberInjectors[target::class]
             ?: openHumans.memberInjectors[target::class]
-            ?: automationMetroBridge.get().memberInjectors[target::class]
-            ?: sourceMetroBridge.get().memberInjectors[target::class]
+            ?: automation.memberInjectors[target::class]
+            ?: source.memberInjectors[target::class]
             ?: return false
         (injector as MembersInjector<Any>).injectMembers(target)
         return true
@@ -250,7 +126,7 @@ class MetroGraphs @Inject constructor(
      * models - one map, the same way Hilt presents one factory for the whole app.
      */
     val viewModelFactory: MetroViewModelFactory by lazy {
-        MetroViewModelFactory(openHumans.viewModelCreators + constraintsMetroBridge.get().viewModelCreators)
+        MetroViewModelFactory(openHumans.viewModelCreators + constraints.viewModelCreators)
     }
 
     /** Handed back to Dagger consumers that have not moved - Dagger delegates, never constructs. */
@@ -266,7 +142,7 @@ class MetroGraphs @Inject constructor(
      */
     fun plugins(): Map<Int, PluginBase> =
         smoothing.plugins + calibration.plugins + sensitivity.plugins +
-            constraintsMetroBridge.get().allConfigsPlugins
+            constraints.allConfigsPlugins
 
     /**
      * Plugins that must NOT appear in an AAPSCLIENT build.
@@ -276,7 +152,7 @@ class MetroGraphs @Inject constructor(
      * follower. Merging it unconditionally would quietly add Open Humans to follower builds.
      */
     fun notNsClientPlugins(): Map<Int, PluginBase> =
-        openHumans.notNsClientPlugins + constraintsMetroBridge.get().notNsClientPlugins
+        openHumans.notNsClientPlugins + constraints.notNsClientPlugins
 
     /**
      * Plugins that only belong in a build that runs the loop.
@@ -284,5 +160,15 @@ class MetroGraphs @Inject constructor(
      * Same reasoning as [notNsClientPlugins], for the `@APS` qualifier. Objectives, the signature
      * verifier and the storage constraint have no meaning in a build that never makes a decision.
      */
-    fun apsPlugins(): Map<Int, PluginBase> = constraintsMetroBridge.get().apsPlugins
+    fun apsPlugins(): Map<Int, PluginBase> = constraints.apsPlugins
+
+    /**
+     * Constraint plugins that are also bound to an interface, handed to Dagger in `CoreObjectsModule`.
+     *
+     * Metro builds these, so Dagger must delegate rather than construct - see there for what goes
+     * wrong otherwise.
+     */
+    val bgQualityCheck: BgQualityCheck get() = constraints.bgQualityCheckPlugin
+    val dstHelper: DstHelper get() = constraints.dstHelperPlugin
+    val objectives: Objectives get() = constraints.objectivesPlugin
 }

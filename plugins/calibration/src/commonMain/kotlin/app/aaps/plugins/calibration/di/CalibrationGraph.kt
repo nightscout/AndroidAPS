@@ -12,15 +12,23 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.plugins.calibration.LinearCalibrationPlugin
 import app.aaps.plugins.calibration.NoCalibrationPlugin
 import app.aaps.plugins.calibration.compose.CalibrationViewModel
-import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
-import dev.zacsweers.metro.DependencyGraph
+import dev.zacsweers.metro.GraphExtension
 import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.IntoMap
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
+
+/**
+ * Scope marker for this module's calibration objects.
+ *
+ * The graph used to be a second root on `AppScope`, which was unsafe: two graphs declaring one scope
+ * each get their own copy of anything scoped there, silently. Now it is an extension with a scope of
+ * its own, so `AppScope` means exactly one graph.
+ */
+abstract class CalibrationScope private constructor()
 
 /**
  * The Metro counterpart of `CalibrationPluginsModule`, the Dagger module that used to live in `:app`.
@@ -48,7 +56,7 @@ import dev.zacsweers.metro.SingleIn
  * `Map<Int, PluginBase>`; re-qualifying that map into the global `@AllConfigs` map stays in `:app`,
  * exactly as it does for the smoothing graph.
  */
-@DependencyGraph(AppScope::class)
+@GraphExtension(CalibrationScope::class)
 interface CalibrationGraph {
 
     val plugins: Map<Int, PluginBase>
@@ -63,26 +71,7 @@ interface CalibrationGraph {
     /** The assisted factory itself is the binding you take from the graph, not the probe. */
     val assistedProbeFactory: AssistedProbe.Factory
 
-    @DependencyGraph.Factory
-    fun interface Factory {
-
-        /**
-         * The bridge. Every dependency the module does not own is a checked parameter here, so a
-         * missing one is a compile error rather than a crash on first use.
-         */
-        fun create(
-            @Provides aapsLogger: AAPSLogger,
-            @Provides rh: TextResolver,
-            @Provides dateUtil: DateUtil,
-            @Provides persistenceLayer: PersistenceLayer,
-            @Provides notificationManager: NotificationManager,
-            @Provides glucoseStatusProvider: GlucoseStatusProvider,
-            @Provides rxBus: RxBus,
-            @Provides profileUtil: ProfileUtil
-        ): CalibrationGraph
-    }
-
-    @SingleIn(AppScope::class)
+    @SingleIn(CalibrationScope::class)
     @Provides
     fun provideNoCalibrationPlugin(
         aapsLogger: AAPSLogger,
@@ -92,7 +81,7 @@ interface CalibrationGraph {
         rh = rh
     )
 
-    @SingleIn(AppScope::class)
+    @SingleIn(CalibrationScope::class)
     @Provides
     fun provideLinearCalibrationPlugin(
         aapsLogger: AAPSLogger,

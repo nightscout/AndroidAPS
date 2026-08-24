@@ -8,11 +8,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.AppScope
+import app.aaps.plugins.sync.di.OpenHumansScope
 import dev.zacsweers.metro.SingleIn
 import kotlin.reflect.KProperty
 
-@SingleIn(AppScope::class)
+@SingleIn(OpenHumansScope::class)
 internal class OHStateDelegate @Inject internal constructor(
     private val preferences: Preferences
 ) {

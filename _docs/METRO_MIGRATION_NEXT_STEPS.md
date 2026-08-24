@@ -153,17 +153,28 @@ not just interop switched on.
 Verified on device: 61 plugins, 61 distinct, each of the seven present exactly once, all started, loop
 running, and the Objectives screen opens with real data - an `@APS` bucket plugin built by Metro.
 
-### 3. The structural one: seven root graphs
+### 3. RESOLVED: nine root graphs became one
 
-The bridge currently creates seven independent Metro root graphs. That is safe **only** because every
-object they share is still Dagger's, so Dagger keeps it single. The first time two Metro graphs both
-scope the same type, they will silently get one instance each - proven in `MetroScopingTest`, where two
+There used to be nine `@DependencyGraph(AppScope::class)`. That was safe **only** because every object
+they shared was still Dagger's, so Dagger kept it single. The first `@SingleIn(AppScope::class)` binding
+to appear in two of them would have been a silent duplicate - proven in `MetroScopingTest`, where two
 root graphs from the same factory share nothing at all.
 
-So as modules move, the roots have to converge on **one** root graph with `@GraphExtension`s hanging
-off it. This gets more expensive the longer it waits. It is the biggest open design decision.
+Now there is one graph per scope:
 
-## Binding containers, and where they hit a Metro bug
+- `AppRootGraph` is the only `AppScope` graph.
+- Seven feature graphs are `@GraphExtension`s of it, each with its own scope marker. Six need **no
+  creator at all** - they take their leaves from the parent - and the seventh, the history window, has
+  a factory only because each window is deliberately a fresh scope.
+- `OpenHumansMetroGraph` stays a root, on `OpenHumansScope`. An extension must be public, because it is
+  generated in the parent's module, and this one exposes view models whose own types are `internal`;
+  making them public cascades through the module. A scope of its own buys the property that mattered.
+
+That was the precondition for `@ContributesIntoMap` / `@ContributesBinding` - the thing that makes the
+official sample so much shorter than our wiring. Contributions are scope-keyed, so they were unusable
+while five graphs answered to `AppScope`. Adopting them is the next step, and it is now unblocked.
+
+## Binding containers, and two Metro limits
 
 The graphs used to name every leaf four times: a constructor parameter on the bridge, a `DeferredRef`
 argument, a factory parameter on the graph, and a one-line function unwrapping it. `AapsLeaves` replaces
@@ -176,21 +187,32 @@ when something asks for that type, so building the graph resolves nothing. The r
 `DeferredRef` was hand-rolling (`Loop` leads to the plugin list, which asks these graphs) is handled by
 the shape of the binding instead of by a wrapper around the value.
 
-**The same change fails to compile in `:plugins:constraints`.** Metro 1.4.2 throws
-`IllegalStateException: Transforming after locked!` from `BindingContainerTransformer` while
-`IrBindingContainerResolver` resolves the included container for `ConstraintsMetroGraph`. Three
-hypotheses were tested and all ruled out:
+### Two Metro 1.4.2 limitations found the hard way
 
-- **Not** the container and the `createGraphFactory` caller being the same class - splitting them into
-  `ConstraintsLeaves` and `ConstraintsMetroBridge` changed nothing.
-- **Not** the javax `@Singleton` on the container - removing it changed nothing.
-- **Not** a `@Provides` in the graph body alongside `@Includes` - adding one to `AppRootGraph` compiles
-  fine.
+**A `@BindingContainer` and Dagger interop cannot live in the same module.** Metro throws
+`IllegalStateException: Transforming after locked!` from `BindingContainerTransformer` when a graph in
+that module resolves an included container. Three data points isolate it:
 
-What still differs: the constraints graph is `internal`, and the classes Metro builds from the
-container's leaves live in that same graph rather than in an extension of it. Neither has been tested.
-Until this is understood, that module keeps `DeferredRef` and its long factory - it works, it is just
-verbose. Worth reporting upstream with a reducer.
+| module | container | `includeDagger()` | result |
+|---|---|---|---|
+| `:app` | yes | no | compiles |
+| `:plugins:constraints` | yes | yes | locked |
+| `:app` | yes | yes | locked |
+
+Ruled out along the way: the container being the same class that calls `createGraphFactory`; a javax
+`@Singleton` on the container; a `@Provides` in the graph body next to `@Includes`. Worth reporting
+upstream with a reducer.
+
+This is why `:app` has **no** `metro { interop { } }` block, and why `@AllConfigs`, `@APS` and
+`@NotNSClient` carry Metro's `@Qualifier` **as well as** the javax one. Without interop, Metro in `:app`
+does not read a javax qualifier - and `:app` is the module that has to read it, because a graph
+extension is generated in the parent's module. `ConstraintsBucketsTest` caught exactly that: with the
+qualifiers unread, all seven constraint plugins landed in all three buckets and the build still passed.
+
+**A binding container cannot cross the extension boundary.** A container declared in the same module as
+a `@GraphExtension` fails with `Metro/UnprocessedUpstreamDeclaration`, because the extension is
+generated in the parent's module and Metro cannot read the container from there. So anything Dagger
+still builds for a feature graph is listed in `AapsLeaves` in `:app`, not in the feature's own module.
 
 ## Notes for whoever continues
 

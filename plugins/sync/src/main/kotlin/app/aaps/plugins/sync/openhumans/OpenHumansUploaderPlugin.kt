@@ -59,12 +59,12 @@ import java.util.concurrent.TimeUnit
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.AppScope
+import app.aaps.plugins.sync.di.OpenHumansScope
 import dev.zacsweers.metro.SingleIn
 import kotlin.time.Duration.Companion.hours
 import app.aaps.core.ui.R as CoreUiR
 
-@SingleIn(AppScope::class)
+@SingleIn(OpenHumansScope::class)
 class OpenHumansUploaderPlugin @Inject internal constructor(
     override val rh: ResourceHelper,
     aapsLogger: AAPSLogger,

@@ -20,6 +20,9 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
+import app.aaps.core.interfaces.constraints.Objectives
+import app.aaps.core.interfaces.dst.DstHelper
 import app.aaps.di.metro.MetroGraphs
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.objects.runningMode.RunningModeGuard
@@ -73,4 +76,20 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideQuickWizard(graphs: MetroGraphs): QuickWizard = graphs.quickWizard
 
     @Provides fun provideBolusWizard(graphs: MetroGraphs): BolusWizard = graphs.bolusWizard
+
+    /*
+     * Three constraint plugins that are also bound to an interface. These delegates used to live in
+     * `PluginsConstraintsModule`, inside `:plugins:constraints`; they moved here because that graph is
+     * a `@GraphExtension` now and can only be opened from the root graph, which lives in this module.
+     *
+     * They must stay delegates rather than becoming a Dagger `@Binds`. A plugin behind an interface is
+     * easy to miss when checking who still builds it - it does not look like an injection site - and
+     * the result is two instances: the one in the plugin list, which is enabled and started, and an
+     * unstarted twin handed to everyone who asks for the interface. That bug shipped once already.
+     */
+    @Provides @Singleton fun provideBgQualityCheck(graphs: MetroGraphs): BgQualityCheck = graphs.bgQualityCheck
+
+    @Provides @Singleton fun provideDstHelper(graphs: MetroGraphs): DstHelper = graphs.dstHelper
+
+    @Provides @Singleton fun provideObjectives(graphs: MetroGraphs): Objectives = graphs.objectives
 }

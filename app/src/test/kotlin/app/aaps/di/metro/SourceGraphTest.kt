@@ -1,6 +1,6 @@
-package app.aaps.plugins.source.di
+package app.aaps.di.metro
 
-import app.aaps.core.interfaces.di.DeferredRef
+import app.aaps.plugins.source.di.SourceMetroGraph
 import app.aaps.plugins.source.AidexPlugin
 import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.GlimpPlugin
@@ -15,7 +15,6 @@ import app.aaps.plugins.source.instara.InstaraPlugin
 import app.aaps.plugins.source.instara.InstaraStaleCheckWorker
 import app.aaps.plugins.source.notificationreader.NotificationCollectorService
 import com.google.common.truth.Truth.assertThat
-import dev.zacsweers.metro.createGraphFactory
 import org.junit.jupiter.api.Test
 
 /**
@@ -27,19 +26,14 @@ import org.junit.jupiter.api.Test
  * moment a CGM delivers a reading - the worst possible time for a glucose source to stop working.
  *
  * Nothing is dereferenced here on purpose. Reading the map only builds the assisted factories, not the
- * workers, so the dependencies can be handles that would throw. That keeps the test about the wiring
- * and means it does not need a mock for every plugin.
+ * workers, so no leaf has to be stubbed at all - see [testRoot].
+ *
+ * The graph is opened from the root rather than built directly, because it is a `@GraphExtension` and
+ * that is the only way to reach one.
  */
-class SourceMetroGraphTest {
+class SourceGraphTest {
 
-    private fun <T : Any> unused(): DeferredRef<T> = DeferredRef { error("must not be resolved") }
-
-    private fun graph(): SourceMetroGraph =
-        createGraphFactory<SourceMetroGraph.Factory>().create(
-            unused(), unused(), unused(), unused(), unused(), unused(), unused(), unused(),
-            unused(), unused(), unused(), unused(), unused(), unused(), unused(), unused(),
-            unused(), unused(), unused(), unused(), unused(), unused(), unused(), unused()
-        )
+    private fun graph(): SourceMetroGraph = testRoot().sourceGraph
 
     @Test
     fun `all twelve source workers are registered`() {

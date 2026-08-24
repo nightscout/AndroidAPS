@@ -9,12 +9,20 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.sensitivity.SensitivityAAPSPlugin
 import app.aaps.plugins.sensitivity.SensitivityOref1Plugin
 import app.aaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.DependencyGraph
+import dev.zacsweers.metro.GraphExtension
 import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.IntoMap
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
+
+/**
+ * Scope marker for this module's three sensitivity plugins.
+ *
+ * The graph used to be a second root on `AppScope`, which was unsafe: two graphs declaring one scope
+ * each get their own copy of anything scoped there, silently. Now it is an extension with a scope of
+ * its own, so `AppScope` means exactly one graph.
+ */
+abstract class SensitivityScope private constructor()
 
 /**
  * The Metro counterpart of `SensitivityPluginsModule` (Dagger, in :app). Same three plugins, same
@@ -40,28 +48,12 @@ import dev.zacsweers.metro.SingleIn
  * so without it every read would build a new plugin and the sensitivity state would be duplicated.
  * All three providers were `@Singleton` in the Dagger module, so all three are scoped.
  */
-@DependencyGraph(AppScope::class)
+@GraphExtension(SensitivityScope::class)
 interface SensitivityGraph {
 
     val plugins: Map<Int, PluginBase>
 
-    @DependencyGraph.Factory
-    fun interface Factory {
-
-        /**
-         * The bridge. Every dependency the module does not own is a checked parameter here, so a
-         * missing one is a compile error rather than a crash on first use.
-         */
-        fun create(
-            @Provides aapsLogger: AAPSLogger,
-            @Provides rh: TextResolver,
-            @Provides preferences: Preferences,
-            @Provides dateUtil: DateUtil,
-            @Provides activePlugin: ActivePlugin
-        ): SensitivityGraph
-    }
-
-    @SingleIn(AppScope::class)
+    @SingleIn(SensitivityScope::class)
     @Provides
     fun provideSensitivityAAPSPlugin(
         aapsLogger: AAPSLogger,
@@ -77,7 +69,7 @@ interface SensitivityGraph {
         activePlugin = activePlugin
     )
 
-    @SingleIn(AppScope::class)
+    @SingleIn(SensitivityScope::class)
     @Provides
     fun provideSensitivityWeightedAveragePlugin(
         aapsLogger: AAPSLogger,
@@ -94,7 +86,7 @@ interface SensitivityGraph {
     )
 
     // No activePlugin here. The real constructor takes four parameters, not five.
-    @SingleIn(AppScope::class)
+    @SingleIn(SensitivityScope::class)
     @Provides
     fun provideSensitivityOref1Plugin(
         aapsLogger: AAPSLogger,

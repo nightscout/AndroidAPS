@@ -1,11 +1,8 @@
-package app.aaps.plugins.constraints.di
+package app.aaps.di.metro
 
-import app.aaps.core.interfaces.di.DeferredRef
-import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
+import app.aaps.plugins.constraints.di.ConstraintsMetroGraph
 import com.google.common.truth.Truth.assertThat
-import dev.zacsweers.metro.createGraphFactory
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.mock
 
 /**
  * Each plugin must land in exactly one build bucket, and in the right one.
@@ -19,16 +16,12 @@ import org.mockito.kotlin.mock
  */
 class ConstraintsBucketsTest {
 
-    /** A mocked leaf. Five of the plugins are really constructed now, so these must be usable. */
-    private inline fun <reified T : Any> leaf(): DeferredRef<T> = DeferredRef { mock<T>() }
-
-    private fun graph(): ConstraintsMetroGraph =
-        createGraphFactory<ConstraintsMetroGraph.Factory>().create(
-            DeferredRef { mock<SignatureVerifierPlugin>() },
-            leaf(), leaf(), leaf(), leaf(), leaf(), leaf(), leaf(), leaf(),
-            leaf(), leaf(), leaf(), leaf(), leaf(), leaf(), leaf(), leaf(),
-            leaf(), leaf(), leaf(), leaf(), leaf(), leaf()
-        )
+    /**
+     * The graph is opened from the root, because it is a `@GraphExtension` now and that is the only
+     * way to reach one. Five of the seven plugins are really constructed here, so every leaf they ask
+     * for has to answer - which the mocked container does, on demand and only for what is asked.
+     */
+    private fun graph(): ConstraintsMetroGraph = testRoot().constraintsGraph
 
     @Test
     fun `every build gets safety, DST helper and BG quality check`() {

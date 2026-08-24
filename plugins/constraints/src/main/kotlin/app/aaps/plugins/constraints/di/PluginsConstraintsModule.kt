@@ -43,17 +43,9 @@ open class PluginsConstraintsModule {
         @Binds fun bindsConstraintChecker(constraintsCheckerImpl: ConstraintsCheckerImpl): ConstraintsChecker
     }
 
-    @Provides
-    @Singleton
-    fun providesBgQualityCheck(bridge: ConstraintsMetroBridge): BgQualityCheck = bridge.bgQualityCheckPlugin
-
-    @Provides
-    @Singleton
-    fun providesDstHelper(bridge: ConstraintsMetroBridge): DstHelper = bridge.dstHelperPlugin
-
-    @Provides
-    @Singleton
-    fun providesObjectives(bridge: ConstraintsMetroBridge): Objectives = bridge.objectivesPlugin
+    // The BgQualityCheck, DstHelper and Objectives delegates moved to `MetroBridgeModule` in `:app`.
+    // The graph is a `@GraphExtension` now, so it can only be opened from the root graph, and the root
+    // graph lives there. See that file for the duplicate-instance hazard these delegates prevent.
 
     @Provides
     @Singleton

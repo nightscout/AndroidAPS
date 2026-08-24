@@ -4,11 +4,11 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.sync.openhumans.keys.OhStringKey
 import java.util.UUID
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.AppScope
+import app.aaps.plugins.sync.di.OpenHumansScope
 import dev.zacsweers.metro.SingleIn
 import kotlin.reflect.KProperty
 
-@SingleIn(AppScope::class)
+@SingleIn(OpenHumansScope::class)
 internal class OHAppIDDelegate @Inject internal constructor(
     private val preferences: Preferences
 ) {

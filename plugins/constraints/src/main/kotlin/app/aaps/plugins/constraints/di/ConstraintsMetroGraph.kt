@@ -7,7 +7,6 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.di.APS
 import app.aaps.core.interfaces.di.AllConfigs
-import app.aaps.core.interfaces.di.DeferredRef
 import app.aaps.core.interfaces.di.NotNSClient
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -47,15 +46,23 @@ import app.aaps.plugins.constraints.safety.SafetyPlugin
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import app.aaps.plugins.constraints.storage.StorageConstraintPlugin
 import app.aaps.plugins.constraints.versionChecker.VersionCheckerPlugin
-import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ClassKey
-import dev.zacsweers.metro.DependencyGraph
+import dev.zacsweers.metro.GraphExtension
+import javax.inject.Singleton
 import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.IntoMap
 import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.Provides
-import javax.inject.Singleton
 import kotlin.reflect.KClass
+
+/**
+ * Scope marker for this module's seven constraint plugins.
+ *
+ * The graph used to be a second root on `AppScope`, which was unsafe: two graphs declaring one scope
+ * each get their own copy of anything scoped there, silently. Now it is an extension with a scope of
+ * its own, so `AppScope` means exactly one graph.
+ */
+abstract class ConstraintsScope private constructor()
 
 /**
  * Metro wiring for this module's seven plugins, replacing `ConstraintsPluginsListModule`.
@@ -85,11 +92,12 @@ import kotlin.reflect.KClass
  * not theoretical here: [SafetyPlugin] takes a [ConstraintsChecker], which aggregates the constraint
  * plugins - a loop straight back into this graph, broken by the leaves arriving deferred.
  */
-// Scoped with javax @Singleton, not Metro's @SingleIn: the plugins carry @Singleton on the class and
-// interop reads it as their scope, so the graph has to declare the same one to hold them.
+// Two scopes on purpose. ConstraintsScope is this extension's own; javax @Singleton is kept because
+// the plugin classes carry it and Dagger still reads it there - retagging them would make Dagger build
+// a fresh instance at every injection site.
 @Singleton
-@DependencyGraph(AppScope::class)
-internal interface ConstraintsMetroGraph {
+@GraphExtension(ConstraintsScope::class)
+interface ConstraintsMetroGraph {
 
     /** Present in every build. */
     @AllConfigs
@@ -118,62 +126,6 @@ internal interface ConstraintsMetroGraph {
     val dstHelperPlugin: DstHelperPlugin
     val objectivesPlugin: ObjectivesPlugin
 
-    @DependencyGraph.Factory
-    fun interface Factory {
-
-        @Suppress("LongParameterList")
-        fun create(
-            // Still built by Dagger - see the note above.
-            @Provides signatureVerifierRef: DeferredRef<SignatureVerifierPlugin>,
-            // App-wide leaves, from which the other five plugins and the view model are built.
-            @Provides aapsLoggerRef: DeferredRef<AAPSLogger>,
-            @Provides rxBusRef: DeferredRef<RxBus>,
-            @Provides rhRef: DeferredRef<ResourceHelper>,
-            @Provides dateUtilRef: DeferredRef<DateUtil>,
-            @Provides sntpClientRef: DeferredRef<SntpClient>,
-            @Provides receiverStatusStoreRef: DeferredRef<ReceiverStatusStore>,
-            @Provides uelRef: DeferredRef<UserEntryLogger>,
-            @Provides preferencesRef: DeferredRef<Preferences>,
-            @Provides constraintsCheckerRef: DeferredRef<ConstraintsChecker>,
-            @Provides activePluginRef: DeferredRef<ActivePlugin>,
-            @Provides hardLimitsRef: DeferredRef<HardLimits>,
-            @Provides configRef: DeferredRef<Config>,
-            @Provides persistenceLayerRef: DeferredRef<PersistenceLayer>,
-            @Provides notificationManagerRef: DeferredRef<NotificationManager>,
-            @Provides decimalFormatterRef: DeferredRef<DecimalFormatter>,
-            @Provides versionCheckerUtilsRef: DeferredRef<VersionCheckerUtils>,
-            @Provides loopRef: DeferredRef<Loop>,
-            @Provides profileFunctionRef: DeferredRef<ProfileFunction>,
-            @Provides iobCobCalculatorRef: DeferredRef<IobCobCalculator>,
-            @Provides contextRef: DeferredRef<Context>,
-            @Provides virtualPumpRef: DeferredRef<VirtualPump>,
-            @Provides passwordCheckRef: DeferredRef<PasswordCheck>
-        ): ConstraintsMetroGraph
-    }
-
-    @Provides fun signatureVerifier(r: DeferredRef<SignatureVerifierPlugin>): SignatureVerifierPlugin = r.get()
-    @Provides fun aapsLogger(r: DeferredRef<AAPSLogger>): AAPSLogger = r.get()
-    @Provides fun rxBus(r: DeferredRef<RxBus>): RxBus = r.get()
-    @Provides fun rh(r: DeferredRef<ResourceHelper>): ResourceHelper = r.get()
-    @Provides fun dateUtil(r: DeferredRef<DateUtil>): DateUtil = r.get()
-    @Provides fun sntpClient(r: DeferredRef<SntpClient>): SntpClient = r.get()
-    @Provides fun receiverStatusStore(r: DeferredRef<ReceiverStatusStore>): ReceiverStatusStore = r.get()
-    @Provides fun uel(r: DeferredRef<UserEntryLogger>): UserEntryLogger = r.get()
-    @Provides fun preferences(r: DeferredRef<Preferences>): Preferences = r.get()
-    @Provides fun constraintsChecker(r: DeferredRef<ConstraintsChecker>): ConstraintsChecker = r.get()
-    @Provides fun activePlugin(r: DeferredRef<ActivePlugin>): ActivePlugin = r.get()
-    @Provides fun hardLimits(r: DeferredRef<HardLimits>): HardLimits = r.get()
-    @Provides fun config(r: DeferredRef<Config>): Config = r.get()
-    @Provides fun persistenceLayer(r: DeferredRef<PersistenceLayer>): PersistenceLayer = r.get()
-    @Provides fun notificationManager(r: DeferredRef<NotificationManager>): NotificationManager = r.get()
-    @Provides fun decimalFormatter(r: DeferredRef<DecimalFormatter>): DecimalFormatter = r.get()
-    @Provides fun versionCheckerUtils(r: DeferredRef<VersionCheckerUtils>): VersionCheckerUtils = r.get()
-    @Provides fun loop(r: DeferredRef<Loop>): Loop = r.get()
-    @Provides fun profileFunction(r: DeferredRef<ProfileFunction>): ProfileFunction = r.get()
-    @Provides fun iobCobCalculator(r: DeferredRef<IobCobCalculator>): IobCobCalculator = r.get()
-    @Provides fun context(r: DeferredRef<Context>): Context = r.get()
-    @Provides fun virtualPump(r: DeferredRef<VirtualPump>): VirtualPump = r.get()
-    @Provides fun passwordCheck(r: DeferredRef<PasswordCheck>): PasswordCheck = r.get()
 
     // A plugin is one object for the app's lifetime: it holds its enabled state and, for several of
     // these, a notification it has raised. Two instances would mean one of them silently ignored.

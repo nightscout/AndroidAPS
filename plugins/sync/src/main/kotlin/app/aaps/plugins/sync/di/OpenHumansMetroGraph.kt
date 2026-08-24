@@ -20,7 +20,6 @@ import app.aaps.plugins.sync.openhumans.compose.OHViewModel
 import app.aaps.plugins.sync.openhumans.OpenHumansWorker
 import app.aaps.plugins.sync.openhumans.ui.OHLoginActivity
 import app.aaps.plugins.sync.openhumans.ui.OHLoginViewModel
-import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ClassKey
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.IntKey
@@ -29,6 +28,22 @@ import dev.zacsweers.metro.MembersInjector
 import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.Provides
 import kotlin.reflect.KClass
+
+/**
+ * Scope marker for the Open Humans uploader.
+ *
+ * This graph is still a root rather than an extension of `AppRootGraph`, and that is deliberate. A
+ * graph extension is generated in the **parent's** module, so its interface must be public - and this
+ * one exposes view models whose own types are `internal` to this module. Making them public to satisfy
+ * the injector would widen the module's API surface for no other reason, and the exposure cascades:
+ * the view model drags its state delegate, which drags its state class.
+ *
+ * Declaring a scope of its own gets the property that mattered anyway. The danger was never "more than
+ * one graph", it was **two graphs declaring the same scope**, which silently gives each its own copy of
+ * everything scoped there. `AppScope` now means exactly one graph, so contributed bindings have one
+ * unambiguous home.
+ */
+abstract class OpenHumansScope private constructor()
 
 /**
  * All of Open Humans, on Metro.
@@ -48,7 +63,7 @@ import kotlin.reflect.KClass
  * ([OpenHumansWorker]), a member-injected activity ([OHLoginActivity], including a qualified
  * `String`), a view model ([OHLoginViewModel]) and a plugin ([OpenHumansUploaderPlugin]).
  */
-@DependencyGraph(AppScope::class)
+@DependencyGraph(OpenHumansScope::class)
 internal interface OpenHumansMetroGraph {
 
     /**

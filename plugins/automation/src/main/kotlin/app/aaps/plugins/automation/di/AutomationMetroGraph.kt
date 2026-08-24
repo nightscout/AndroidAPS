@@ -1,7 +1,6 @@
 package app.aaps.plugins.automation.di
 
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.di.DeferredRef
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -12,13 +11,21 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.automation.TimerReminderReceiver
 import app.aaps.plugins.automation.services.LastLocationDataContainer
 import app.aaps.plugins.automation.services.LocationService
-import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ClassKey
-import dev.zacsweers.metro.DependencyGraph
+import dev.zacsweers.metro.GraphExtension
 import dev.zacsweers.metro.IntoMap
 import dev.zacsweers.metro.MembersInjector
 import dev.zacsweers.metro.Provides
 import kotlin.reflect.KClass
+
+/**
+ * Scope marker for this module's automation wiring.
+ *
+ * The graph used to be a second root on `AppScope`, which was unsafe: two graphs declaring one scope
+ * each get their own copy of anything scoped there, silently. Now it is an extension with a scope of
+ * its own, so `AppScope` means exactly one graph.
+ */
+abstract class AutomationScope private constructor()
 
 /**
  * Metro wiring for automation's two Android entry points.
@@ -35,38 +42,12 @@ import kotlin.reflect.KClass
  * implementations without touching plugin code. That part of the earlier design was right and is
  * kept.
  */
-@DependencyGraph(AppScope::class)
-internal interface AutomationMetroGraph {
+@GraphExtension(AutomationScope::class)
+interface AutomationMetroGraph {
 
     /** Fills the fields of the two entry points - the `@ContributesAndroidInjector` replacement. */
     val memberInjectors: Map<KClass<*>, MembersInjector<*>>
 
-    @DependencyGraph.Factory
-    fun interface Factory {
-
-        @Suppress("LongParameterList")
-        fun create(
-            @Provides aapsLoggerRef: DeferredRef<AAPSLogger>,
-            @Provides rhRef: DeferredRef<ResourceHelper>,
-            @Provides configRef: DeferredRef<Config>,
-            @Provides uiInteractionRef: DeferredRef<UiInteraction>,
-            @Provides rxBusRef: DeferredRef<RxBus>,
-            @Provides preferencesRef: DeferredRef<Preferences>,
-            @Provides fabricPrivacyRef: DeferredRef<FabricPrivacy>,
-            @Provides notificationHolderRef: DeferredRef<NotificationHolder>,
-            @Provides lastLocationDataContainerRef: DeferredRef<LastLocationDataContainer>
-        ): AutomationMetroGraph
-    }
-
-    @Provides fun aapsLogger(r: DeferredRef<AAPSLogger>): AAPSLogger = r.get()
-    @Provides fun rh(r: DeferredRef<ResourceHelper>): ResourceHelper = r.get()
-    @Provides fun config(r: DeferredRef<Config>): Config = r.get()
-    @Provides fun uiInteraction(r: DeferredRef<UiInteraction>): UiInteraction = r.get()
-    @Provides fun rxBus(r: DeferredRef<RxBus>): RxBus = r.get()
-    @Provides fun preferences(r: DeferredRef<Preferences>): Preferences = r.get()
-    @Provides fun fabricPrivacy(r: DeferredRef<FabricPrivacy>): FabricPrivacy = r.get()
-    @Provides fun notificationHolder(r: DeferredRef<NotificationHolder>): NotificationHolder = r.get()
-    @Provides fun lastLocationDataContainer(r: DeferredRef<LastLocationDataContainer>): LastLocationDataContainer = r.get()
 
     @Provides
     @IntoMap

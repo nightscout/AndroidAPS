@@ -1,32 +1,46 @@
 package app.aaps.di.metro
 
+import android.content.Context
+
 import androidx.work.WorkManager
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.automation.Automation
+import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.dst.DstHelper
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
+import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.maintenance.Maintenance
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.notifications.NotificationHolder
+import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.protection.PasswordCheck
+import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.storage.Storage
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.receivers.DataInbox
@@ -35,6 +49,21 @@ import app.aaps.implementation.scenes.ActiveSceneManager
 import app.aaps.implementation.scenes.SceneExecutor
 import app.aaps.implementation.scenes.SceneRepository
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryJob
+import app.aaps.plugins.automation.services.LastLocationDataContainer
+import app.aaps.plugins.constraints.objectives.SntpClient
+import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
+import app.aaps.plugins.source.AidexPlugin
+import app.aaps.plugins.source.DexcomPlugin
+import app.aaps.plugins.source.GlimpPlugin
+import app.aaps.plugins.source.MM640gPlugin
+import app.aaps.plugins.source.NotificationReaderPlugin
+import app.aaps.plugins.source.PatchedSiAppPlugin
+import app.aaps.plugins.source.PatchedSinoAppPlugin
+import app.aaps.plugins.source.PoctechPlugin
+import app.aaps.plugins.source.SyaiPlugin
+import app.aaps.plugins.source.TomatoPlugin
+import app.aaps.plugins.source.XdripSourcePlugin
+import app.aaps.plugins.source.instara.InstaraPlugin
 import app.aaps.ui.compose.overview.OverviewDataCacheFactory
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.Provides
@@ -100,7 +129,41 @@ class AapsLeaves @Inject constructor(
     private val calculationWorkflowProvider: Provider<CalculationWorkflow>,
     private val decimalFormatterProvider: Provider<DecimalFormatter>,
     private val processedTbrEbDataProvider: Provider<ProcessedTbrEbData>,
-    private val overviewDataCacheFactoryProvider: Provider<OverviewDataCacheFactory>
+    private val overviewDataCacheFactoryProvider: Provider<OverviewDataCacheFactory>,
+    // Needed by the feature extensions below the root, which no longer carry their own leaf lists.
+    private val constraintsCheckerProvider: Provider<ConstraintsChecker>,
+    private val uelProvider: Provider<UserEntryLogger>,
+    private val automationProvider: Provider<Automation>,
+    private val glucoseStatusProvider: Provider<GlucoseStatusProvider>,
+    private val processedDeviceStatusDataProvider: Provider<ProcessedDeviceStatusData>,
+    private val wizardBolusExecutorProvider: Provider<WizardBolusExecutor>,
+    private val contextProvider: Provider<Context>,
+    private val virtualPumpProvider: Provider<VirtualPump>,
+    // Source plugins, still built by Dagger. They live here rather than in their own module because a
+    // graph extension is generated in the parent's module, so Metro cannot read a container from the
+    // module the extension is declared in.
+    private val aidexProvider: Provider<AidexPlugin>,
+    private val dexcomProvider: Provider<DexcomPlugin>,
+    private val glimpProvider: Provider<GlimpPlugin>,
+    private val instaraProvider: Provider<InstaraPlugin>,
+    private val mm640gProvider: Provider<MM640gPlugin>,
+    private val patchedSiAppProvider: Provider<PatchedSiAppPlugin>,
+    private val patchedSinoAppProvider: Provider<PatchedSinoAppPlugin>,
+    private val poctechProvider: Provider<PoctechPlugin>,
+    private val syaiProvider: Provider<SyaiPlugin>,
+    private val tomatoProvider: Provider<TomatoPlugin>,
+    private val xdripProvider: Provider<XdripSourcePlugin>,
+    private val notificationReaderProvider: Provider<NotificationReaderPlugin>,
+    // Automation.
+    private val uiInteractionProvider: Provider<UiInteraction>,
+    private val notificationHolderProvider: Provider<NotificationHolder>,
+    private val lastLocationDataContainerProvider: Provider<LastLocationDataContainer>,
+    // Constraints.
+    private val hardLimitsProvider: Provider<HardLimits>,
+    private val versionCheckerUtilsProvider: Provider<VersionCheckerUtils>,
+    private val passwordCheckProvider: Provider<PasswordCheck>,
+    private val sntpClientProvider: Provider<SntpClient>,
+    private val signatureVerifierProvider: Provider<SignatureVerifierPlugin>
 ) {
 
     @Provides fun aapsLogger(): AAPSLogger = aapsLoggerProvider.get()
@@ -145,4 +208,35 @@ class AapsLeaves @Inject constructor(
     @Provides fun decimalFormatter(): DecimalFormatter = decimalFormatterProvider.get()
     @Provides fun processedTbrEbData(): ProcessedTbrEbData = processedTbrEbDataProvider.get()
     @Provides fun overviewDataCacheFactory(): OverviewDataCacheFactory = overviewDataCacheFactoryProvider.get()
+    @Provides fun constraintsChecker(): ConstraintsChecker = constraintsCheckerProvider.get()
+    @Provides fun uel(): UserEntryLogger = uelProvider.get()
+    @Provides fun automation(): Automation = automationProvider.get()
+    @Provides fun glucoseStatus(): GlucoseStatusProvider = glucoseStatusProvider.get()
+    @Provides fun processedDeviceStatusData(): ProcessedDeviceStatusData = processedDeviceStatusDataProvider.get()
+    @Provides fun wizardBolusExecutor(): WizardBolusExecutor = wizardBolusExecutorProvider.get()
+    @Provides fun context(): Context = contextProvider.get()
+    @Provides fun virtualPump(): VirtualPump = virtualPumpProvider.get()
+
+    @Provides fun aidex(): AidexPlugin = aidexProvider.get()
+    @Provides fun dexcom(): DexcomPlugin = dexcomProvider.get()
+    @Provides fun glimp(): GlimpPlugin = glimpProvider.get()
+    @Provides fun instara(): InstaraPlugin = instaraProvider.get()
+    @Provides fun mm640g(): MM640gPlugin = mm640gProvider.get()
+    @Provides fun patchedSiApp(): PatchedSiAppPlugin = patchedSiAppProvider.get()
+    @Provides fun patchedSinoApp(): PatchedSinoAppPlugin = patchedSinoAppProvider.get()
+    @Provides fun poctech(): PoctechPlugin = poctechProvider.get()
+    @Provides fun syai(): SyaiPlugin = syaiProvider.get()
+    @Provides fun tomato(): TomatoPlugin = tomatoProvider.get()
+    @Provides fun xdrip(): XdripSourcePlugin = xdripProvider.get()
+    @Provides fun notificationReader(): NotificationReaderPlugin = notificationReaderProvider.get()
+
+    @Provides fun uiInteraction(): UiInteraction = uiInteractionProvider.get()
+    @Provides fun notificationHolder(): NotificationHolder = notificationHolderProvider.get()
+    @Provides fun lastLocationDataContainer(): LastLocationDataContainer = lastLocationDataContainerProvider.get()
+
+    @Provides fun hardLimits(): HardLimits = hardLimitsProvider.get()
+    @Provides fun versionCheckerUtils(): VersionCheckerUtils = versionCheckerUtilsProvider.get()
+    @Provides fun passwordCheck(): PasswordCheck = passwordCheckProvider.get()
+    @Provides fun sntpClient(): SntpClient = sntpClientProvider.get()
+    @Provides fun signatureVerifier(): SignatureVerifierPlugin = signatureVerifierProvider.get()
 }
