@@ -1,5 +1,11 @@
 package app.aaps.di.metro
 
+import app.aaps.core.interfaces.scenes.ActiveSceneSync
+import app.aaps.core.interfaces.scenes.SceneChainResolver
+import app.aaps.core.interfaces.scenes.SceneStore
+import app.aaps.core.interfaces.scenes.Scenes
+import app.aaps.core.interfaces.scenes.SceneActions
+import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.di.APS
 import app.aaps.core.interfaces.profile.ProfileRepository
@@ -29,6 +35,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Includes
 import dev.zacsweers.metro.Provides
+import javax.inject.Singleton
 import dev.zacsweers.metrox.viewmodel.MetroViewModelMultibindings
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.interfaces.protection.ProtectionCheck
@@ -59,6 +66,11 @@ import app.aaps.core.interfaces.insulin.InsulinManager
  * `@Provides` functions run only on demand, which is the re-entrancy guard written up in [MetroGraphs].
  * When Dagger is gone the factory below goes with it and these become ordinary bindings.
  */
+// Two scopes on purpose. AppScope is Metro's own; javax @Singleton is declared as well because, with
+// Dagger interop on, Metro READS the javax scope on classes from other modules. Without this the graph
+// refuses any @Singleton class with "may not reference bindings from different scopes" - and with it,
+// an existing class can be contributed without retagging its scope annotation at all.
+@Singleton
 @DependencyGraph(AppScope::class)
 interface AppRootGraph : MetroViewModelMultibindings {
 
@@ -133,6 +145,12 @@ interface AppRootGraph : MetroViewModelMultibindings {
      * `CoreObjectsModule`; Dagger must never construct its own, or there would be two.
      */
     val trendCalculator: TrendCalculator
+    val activeSceneSync: ActiveSceneSync
+    val sceneChainResolver: SceneChainResolver
+    val sceneStore: SceneStore
+    val scenes: Scenes
+    val sceneActions: SceneActions
+    val sceneAutomationApi: SceneAutomationApi
     val decimalFormatter: DecimalFormatter
     val profileUtil: ProfileUtil
     val hardLimits: HardLimits

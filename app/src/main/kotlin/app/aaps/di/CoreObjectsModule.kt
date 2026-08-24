@@ -2,8 +2,15 @@ package app.aaps.di
 
 import android.content.Context
 import android.telephony.SmsManager
+import app.aaps.core.interfaces.scenes.ActiveSceneSync
+import app.aaps.core.interfaces.scenes.SceneChainResolver
+import app.aaps.core.interfaces.scenes.SceneStore
+import app.aaps.core.interfaces.scenes.Scenes
+import app.aaps.core.interfaces.scenes.SceneActions
+import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
+import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -26,6 +33,7 @@ import app.aaps.core.interfaces.source.XDripSource
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.storage.Storage
+import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.TrendCalculator
@@ -163,6 +171,12 @@ class CoreObjectsModule {
      * delegate is what stops Dagger building a second one.
      */
     @Provides @Singleton fun provideTrendCalculator(graphs: MetroGraphs): TrendCalculator = graphs.trendCalculator
+    @Provides @Singleton fun provideActiveSceneSync(graphs: MetroGraphs): ActiveSceneSync = graphs.activeSceneSync
+    @Provides @Singleton fun provideSceneChainResolver(graphs: MetroGraphs): SceneChainResolver = graphs.sceneChainResolver
+    @Provides @Singleton fun provideSceneStore(graphs: MetroGraphs): SceneStore = graphs.sceneStore
+    @Provides @Singleton fun provideScenes(graphs: MetroGraphs): Scenes = graphs.scenes
+    @Provides @Singleton fun provideSceneActions(graphs: MetroGraphs): SceneActions = graphs.sceneActions
+    @Provides @Singleton fun provideSceneAutomationApi(graphs: MetroGraphs): SceneAutomationApi = graphs.sceneAutomationApi
 
     @Provides @Singleton fun provideDecimalFormatter(graphs: MetroGraphs): DecimalFormatter = graphs.decimalFormatter
 
@@ -242,6 +256,8 @@ class CoreObjectsModule {
         lastLocationDataContainerProvider: Provider<LastLocationDataContainer>,
         versionCheckerUtilsProvider: Provider<VersionCheckerUtils>,
         passwordCheckProvider: Provider<PasswordCheck>,
+        nsClientProvider: Provider<NsClient>,
+        clientControlActionDispatcherProvider: Provider<ClientControlActionDispatcher>,
         sntpClientProvider: Provider<SntpClient>
     ): AapsLeaves = AapsLeaves(
         aapsLoggerProvider,
@@ -288,6 +304,8 @@ class CoreObjectsModule {
         lastLocationDataContainerProvider,
         versionCheckerUtilsProvider,
         passwordCheckProvider,
+        nsClientProvider,
+        clientControlActionDispatcherProvider,
         sntpClientProvider
     )
 }

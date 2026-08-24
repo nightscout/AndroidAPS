@@ -1,6 +1,12 @@
 package app.aaps.di.metro
 
 import androidx.work.WorkManager
+import app.aaps.core.interfaces.scenes.ActiveSceneSync
+import app.aaps.core.interfaces.scenes.SceneChainResolver
+import app.aaps.core.interfaces.scenes.SceneStore
+import app.aaps.core.interfaces.scenes.Scenes
+import app.aaps.core.interfaces.scenes.SceneActions
+import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.di.DeferredRef
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -179,6 +185,12 @@ class MetroGraphs @Inject constructor(
     val objectives: Objectives get() = root.objectivesPlugin
     val signatureVerifier: SignatureVerifierPlugin get() = root.signatureVerifierPlugin
     val trendCalculator: TrendCalculator get() = root.trendCalculator
+    val activeSceneSync: ActiveSceneSync get() = root.activeSceneSync
+    val sceneChainResolver: SceneChainResolver get() = root.sceneChainResolver
+    val sceneStore: SceneStore get() = root.sceneStore
+    val scenes: Scenes get() = root.scenes
+    val sceneActions: SceneActions get() = root.sceneActions
+    val sceneAutomationApi: SceneAutomationApi get() = root.sceneAutomationApi
     val decimalFormatter: DecimalFormatter get() = root.decimalFormatter
     val profileUtil: ProfileUtil get() = root.profileUtil
     val hardLimits: HardLimits get() = root.hardLimits

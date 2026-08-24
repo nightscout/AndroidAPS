@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
@@ -34,6 +35,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.storage.Storage
+import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
 import app.aaps.core.interfaces.utils.DateUtil
@@ -129,6 +131,9 @@ class AapsLeaves(
     // Constraints.
     private val versionCheckerUtilsProvider: Provider<VersionCheckerUtils>,
     private val passwordCheckProvider: Provider<PasswordCheck>,
+    // Still Dagger-owned, and needed by the scene classes that moved to Metro.
+    private val nsClientProvider: Provider<NsClient>,
+    private val clientControlActionDispatcherProvider: Provider<ClientControlActionDispatcher>,
     private val sntpClientProvider: Provider<SntpClient>
 ) {
 
@@ -199,4 +204,6 @@ class AapsLeaves(
     @Provides fun versionCheckerUtils(): VersionCheckerUtils = versionCheckerUtilsProvider.get()
     @Provides fun passwordCheck(): PasswordCheck = passwordCheckProvider.get()
     @Provides fun sntpClient(): SntpClient = sntpClientProvider.get()
+    @Provides fun nsClient(): NsClient = nsClientProvider.get()
+    @Provides fun clientControlActionDispatcher(): ClientControlActionDispatcher = clientControlActionDispatcherProvider.get()
 }

@@ -11,7 +11,9 @@ import app.aaps.core.interfaces.scenes.SceneAutomationResult
 import app.aaps.core.ui.R
 import app.aaps.implementation.bolus.RoleBranch
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 
 /**
  * [SceneActions] implementation. Scene START is the two-step master-controlled flow (the master authors the
@@ -19,7 +21,10 @@ import javax.inject.Singleton
  * prepare/commit plumbing as bolus/batch. Scene STOP stays single-step via [ClientControlActionDispatcher.execute]
  * (already master-authoritative — no preview to review). [validateActivation] is a pure query, untouched.
  */
-@Singleton
+// Metro builds this; Dagger receives it via a @Provides delegate in `:app`. Metro's @SingleIn,
+// not javax @Singleton, because the graph is generated in `:app`.
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class SceneActionsImpl @Inject constructor(
     private val dispatcher: ClientControlActionDispatcher,
     private val roleBranch: RoleBranch,
