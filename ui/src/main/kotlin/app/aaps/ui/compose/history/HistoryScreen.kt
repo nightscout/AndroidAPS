@@ -140,7 +140,10 @@ fun HistoryScreen(
             GraphsSection(
                 graphViewModel = graphViewModel,
                 isSimpleMode = false,
-                modifier = Modifier.padding(horizontal = 8.dp)
+                modifier = Modifier.padding(horizontal = 8.dp),
+                // Open on the whole selected day. The overview default is the last six hours, which
+                // here would be that day's late evening - and for today, hours still to come.
+                fitWholeWindow = true
             )
         }
     }

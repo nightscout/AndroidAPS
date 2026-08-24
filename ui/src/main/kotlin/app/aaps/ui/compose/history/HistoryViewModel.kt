@@ -37,7 +37,7 @@ class HistoryViewModel @Inject constructor(
 
     /** Creates the per-scope graph VM. Called by [HistoryScreen] via `viewModel(factory = …)`. */
     fun createGraphViewModel(): GraphViewModel =
-        graphViewModelFactory.create(historyScope.cache)
+        graphViewModelFactory.create(historyScope.cache, fullWindow = true)
 
     fun previousWindow() {
         adjustTimeRange(historyScope.overviewData.fromTime - WINDOW_MS)
