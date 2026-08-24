@@ -1,5 +1,9 @@
 package app.aaps.di.metro
 
+import app.aaps.core.interfaces.bolus.BatchExecutor
+import app.aaps.core.interfaces.bolus.WizardExecutor
+import app.aaps.core.interfaces.configuration.ConfigBuilder
+import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.interfaces.scenes.ActiveSceneSync
 import app.aaps.core.interfaces.scenes.SceneChainResolver
 import app.aaps.core.interfaces.scenes.SceneStore
@@ -145,6 +149,10 @@ interface AppRootGraph : MetroViewModelMultibindings {
      * `CoreObjectsModule`; Dagger must never construct its own, or there would be two.
      */
     val trendCalculator: TrendCalculator
+    val batchExecutor: BatchExecutor
+    val wizardExecutor: WizardExecutor
+    val configBuilder: ConfigBuilder
+    val dataSyncSelectorXdrip: DataSyncSelectorXdrip
     val activeSceneSync: ActiveSceneSync
     val sceneChainResolver: SceneChainResolver
     val sceneStore: SceneStore

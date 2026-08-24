@@ -36,6 +36,7 @@ import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.storage.Storage
 import app.aaps.core.interfaces.sync.NsClient
+import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
 import app.aaps.core.interfaces.utils.DateUtil
@@ -132,6 +133,9 @@ class AapsLeaves(
     private val versionCheckerUtilsProvider: Provider<VersionCheckerUtils>,
     private val passwordCheckProvider: Provider<PasswordCheck>,
     // Still Dagger-owned, and needed by the scene classes that moved to Metro.
+    // Dagger-owned on purpose: it is bound from XdripPlugin, which is still in the Dagger plugin list.
+    // Contributing it would have Metro build a second copy of that plugin.
+    private val xDripBroadcastProvider: Provider<XDripBroadcast>,
     private val nsClientProvider: Provider<NsClient>,
     private val clientControlActionDispatcherProvider: Provider<ClientControlActionDispatcher>,
     private val sntpClientProvider: Provider<SntpClient>
@@ -204,6 +208,7 @@ class AapsLeaves(
     @Provides fun versionCheckerUtils(): VersionCheckerUtils = versionCheckerUtilsProvider.get()
     @Provides fun passwordCheck(): PasswordCheck = passwordCheckProvider.get()
     @Provides fun sntpClient(): SntpClient = sntpClientProvider.get()
+    @Provides fun xDripBroadcast(): XDripBroadcast = xDripBroadcastProvider.get()
     @Provides fun nsClient(): NsClient = nsClientProvider.get()
     @Provides fun clientControlActionDispatcher(): ClientControlActionDispatcher = clientControlActionDispatcherProvider.get()
 }

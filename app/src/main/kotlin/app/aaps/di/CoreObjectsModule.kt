@@ -2,6 +2,10 @@ package app.aaps.di
 
 import android.content.Context
 import android.telephony.SmsManager
+import app.aaps.core.interfaces.bolus.BatchExecutor
+import app.aaps.core.interfaces.bolus.WizardExecutor
+import app.aaps.core.interfaces.configuration.ConfigBuilder
+import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.interfaces.scenes.ActiveSceneSync
 import app.aaps.core.interfaces.scenes.SceneChainResolver
 import app.aaps.core.interfaces.scenes.SceneStore
@@ -34,6 +38,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.storage.Storage
 import app.aaps.core.interfaces.sync.NsClient
+import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.TrendCalculator
@@ -171,6 +176,10 @@ class CoreObjectsModule {
      * delegate is what stops Dagger building a second one.
      */
     @Provides @Singleton fun provideTrendCalculator(graphs: MetroGraphs): TrendCalculator = graphs.trendCalculator
+    @Provides @Singleton fun provideBatchExecutor(graphs: MetroGraphs): BatchExecutor = graphs.batchExecutor
+    @Provides @Singleton fun provideWizardExecutor(graphs: MetroGraphs): WizardExecutor = graphs.wizardExecutor
+    @Provides @Singleton fun provideConfigBuilder(graphs: MetroGraphs): ConfigBuilder = graphs.configBuilder
+    @Provides @Singleton fun provideDataSyncSelectorXdrip(graphs: MetroGraphs): DataSyncSelectorXdrip = graphs.dataSyncSelectorXdrip
     @Provides @Singleton fun provideActiveSceneSync(graphs: MetroGraphs): ActiveSceneSync = graphs.activeSceneSync
     @Provides @Singleton fun provideSceneChainResolver(graphs: MetroGraphs): SceneChainResolver = graphs.sceneChainResolver
     @Provides @Singleton fun provideSceneStore(graphs: MetroGraphs): SceneStore = graphs.sceneStore
@@ -256,6 +265,7 @@ class CoreObjectsModule {
         lastLocationDataContainerProvider: Provider<LastLocationDataContainer>,
         versionCheckerUtilsProvider: Provider<VersionCheckerUtils>,
         passwordCheckProvider: Provider<PasswordCheck>,
+        xDripBroadcastProvider: Provider<XDripBroadcast>,
         nsClientProvider: Provider<NsClient>,
         clientControlActionDispatcherProvider: Provider<ClientControlActionDispatcher>,
         sntpClientProvider: Provider<SntpClient>
@@ -304,6 +314,7 @@ class CoreObjectsModule {
         lastLocationDataContainerProvider,
         versionCheckerUtilsProvider,
         passwordCheckProvider,
+        xDripBroadcastProvider,
         nsClientProvider,
         clientControlActionDispatcherProvider,
         sntpClientProvider

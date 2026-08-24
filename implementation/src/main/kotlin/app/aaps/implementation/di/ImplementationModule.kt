@@ -57,7 +57,6 @@ import app.aaps.implementation.alerts.LocalAlertUtilsImpl
 import app.aaps.implementation.androidNotification.AlarmSoundPlayerImpl
 import app.aaps.implementation.androidNotification.NotificationHolderImpl
 import app.aaps.implementation.aps.DetermineBasalResult
-import app.aaps.implementation.bolus.BatchExecutorImpl
 import app.aaps.implementation.db.ProcessedTbrEbDataImpl
 import app.aaps.implementation.insulin.ConcentrationHelperImpl
 import app.aaps.implementation.iob.AutosensDataObject
@@ -144,7 +143,6 @@ class ImplementationModule {
         @Binds fun bindOverviewData(overviewData: OverviewDataImpl): OverviewData
         @Binds fun bindProcessedTbrEbData(pProcessedTbrEbData: ProcessedTbrEbDataImpl): ProcessedTbrEbData
         @Binds fun bindUserEntryLogger(userEntryLoggerImpl: UserEntryLoggerImpl): UserEntryLogger
-        @Binds fun bindBatchExecutor(impl: BatchExecutorImpl): BatchExecutor
         @Binds fun bindConcentrationHelper(concentrationHelperImpl: ConcentrationHelperImpl): ConcentrationHelper
         @Binds fun bindDetailedBolusInfoStorage(detailedBolusInfoStorageImpl: DetailedBolusInfoStorageImpl): DetailedBolusInfoStorage
         @Binds fun bindTemporaryBasalStorage(temporaryBasalStorageImpl: TemporaryBasalStorageImpl): TemporaryBasalStorage
