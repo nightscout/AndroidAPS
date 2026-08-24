@@ -34,5 +34,20 @@ class ContributedBindingsTest {
         assertThat(root.hardLimits).isSameInstanceAs(root.hardLimits)
         assertThat(root.storage).isSameInstanceAs(root.storage)
         assertThat(root.receiverStatusStore).isSameInstanceAs(root.receiverStatusStore)
+        assertThat(root.translator).isSameInstanceAs(root.translator)
+        assertThat(root.protectionCheck).isSameInstanceAs(root.protectionCheck)
+        assertThat(root.tddCalculator).isSameInstanceAs(root.tddCalculator)
+        assertThat(root.tirCalculator).isSameInstanceAs(root.tirCalculator)
+        assertThat(root.dexcomTirCalculator).isSameInstanceAs(root.dexcomTirCalculator)
+        assertThat(root.iconsProvider).isSameInstanceAs(root.iconsProvider)
+        assertThat(root.insulinManager).isSameInstanceAs(root.insulinManager)
+    }
+
+    @Test
+    fun `PumpSync stays UNSCOPED, as it was under Dagger`() {
+        // The @Binds it replaced had no @Singleton, so every injection site got its own. Scoping it now
+        // would be a silent behaviour change in a class that talks to the pump.
+        val root = testRoot()
+        assertThat(root.pumpSync).isNotSameInstanceAs(root.pumpSync)
     }
 }

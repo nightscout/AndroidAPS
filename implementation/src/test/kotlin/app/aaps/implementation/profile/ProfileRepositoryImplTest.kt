@@ -12,7 +12,7 @@ import app.aaps.core.objects.extensions.singleTargetBlock
 import app.aaps.core.objects.extensions.toJSONArray
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import dagger.Lazy
+import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -59,8 +59,8 @@ class ProfileRepositoryImplTest : TestBaseWithProfile() {
         whenever(preferences.get(StringNonKey.LocalProfileData)).thenReturn(storedPayload)
         whenever(preferences.observe(StringNonKey.LocalProfileData)).thenReturn(syncedPayloads)
         return ProfileRepositoryImpl(
-            aapsLogger, rh, preferences, Lazy { profileFunction }, profileUtil, activePlugin,
-            hardLimits, dateUtil, config, profileStoreProvider, notificationManager,
+            aapsLogger, rh, preferences, Provider { profileFunction }, profileUtil, activePlugin,
+            hardLimits, dateUtil, config, Provider { profileStoreProvider.get() }, notificationManager,
             CoroutineScope(UnconfinedTestDispatcher())
         )
     }

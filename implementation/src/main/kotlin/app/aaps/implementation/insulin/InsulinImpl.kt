@@ -30,13 +30,19 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Created by Philoul on 29.12.2024.
  */
 
-@Singleton
+// Metro builds this now; Dagger gets it through a @Provides delegate in `:app`. Scoped with Metro's
+// @SingleIn, not javax @Singleton - the graph is generated in `:app`, which has no Dagger interop, so
+// a javax scope there is ignored and every read would build a new one.
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class InsulinImpl @Inject constructor(
     private val preferences: Preferences,
     val rh: ResourceHelper,

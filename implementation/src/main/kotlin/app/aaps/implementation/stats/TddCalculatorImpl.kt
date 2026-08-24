@@ -18,7 +18,9 @@ import app.aaps.core.interfaces.utils.MidnightTime
 import java.time.Instant
 import java.time.ZoneId
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Implementation of Total Daily Dose (TDD) calculator for insulin usage statistics.
@@ -62,7 +64,11 @@ import javax.inject.Singleton
  * @see app.aaps.core.data.model.TDD
  * @see app.aaps.core.data.aps.AverageTDD
  */
-@Singleton
+// Metro builds this now; Dagger gets it through a @Provides delegate in `:app`. Scoped with Metro's
+// @SingleIn, not javax @Singleton - the graph is generated in `:app`, which has no Dagger interop, so
+// a javax scope there is ignored and every read would build a new one.
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class TddCalculatorImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val activePlugin: ActivePlugin,

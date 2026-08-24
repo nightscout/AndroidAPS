@@ -2,6 +2,8 @@ package app.aaps.di.metro
 
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.di.APS
+import app.aaps.core.interfaces.profile.ProfileRepository
+import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.storage.Storage
@@ -25,6 +27,14 @@ import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Includes
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metrox.viewmodel.MetroViewModelMultibindings
+import app.aaps.core.interfaces.utils.Translator
+import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.interfaces.stats.TddCalculator
+import app.aaps.core.interfaces.stats.TirCalculator
+import app.aaps.core.interfaces.stats.DexcomTirCalculator
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.ui.IconsProvider
+import app.aaps.core.interfaces.insulin.InsulinManager
 
 /**
  * The one Metro root. Everything else hangs off it as a graph extension.
@@ -115,6 +125,17 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val hardLimits: HardLimits
     val storage: Storage
     val receiverStatusStore: ReceiverStatusStore
+
+    val translator: Translator
+    val protectionCheck: ProtectionCheck
+    val tddCalculator: TddCalculator
+    val tirCalculator: TirCalculator
+    val dexcomTirCalculator: DexcomTirCalculator
+    val pumpSync: PumpSync
+    val iconsProvider: IconsProvider
+    val insulinManager: InsulinManager
+    val profileRepository: ProfileRepository
+    val profileStore: ProfileStore
 
     val bgQualityCheckPlugin: BgQualityCheckPlugin
     val dstHelperPlugin: DstHelperPlugin

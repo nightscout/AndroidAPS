@@ -15,6 +15,8 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileRepository
+import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -46,6 +48,14 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import javax.inject.Provider
 import javax.inject.Singleton
+import app.aaps.core.interfaces.utils.Translator
+import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.interfaces.stats.TddCalculator
+import app.aaps.core.interfaces.stats.TirCalculator
+import app.aaps.core.interfaces.stats.DexcomTirCalculator
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.ui.IconsProvider
+import app.aaps.core.interfaces.insulin.InsulinManager
 
 /**
  * Constructs the :core:objects classes.
@@ -137,4 +147,17 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideStorage(graphs: MetroGraphs): Storage = graphs.storage
 
     @Provides @Singleton fun provideReceiverStatusStore(graphs: MetroGraphs): ReceiverStatusStore = graphs.receiverStatusStore
+
+    @Provides @Singleton fun provideTranslator(graphs: MetroGraphs): Translator = graphs.translator
+    @Provides @Singleton fun provideProtectionCheck(graphs: MetroGraphs): ProtectionCheck = graphs.protectionCheck
+    @Provides @Singleton fun provideTddCalculator(graphs: MetroGraphs): TddCalculator = graphs.tddCalculator
+    @Provides @Singleton fun provideTirCalculator(graphs: MetroGraphs): TirCalculator = graphs.tirCalculator
+    @Provides @Singleton fun provideDexcomTirCalculator(graphs: MetroGraphs): DexcomTirCalculator = graphs.dexcomTirCalculator
+    @Provides fun providePumpSync(graphs: MetroGraphs): PumpSync = graphs.pumpSync
+    @Provides @Singleton fun provideIconsProvider(graphs: MetroGraphs): IconsProvider = graphs.iconsProvider
+    @Provides @Singleton fun provideInsulinManager(graphs: MetroGraphs): InsulinManager = graphs.insulinManager
+    @Provides @Singleton fun provideProfileRepository(graphs: MetroGraphs): ProfileRepository = graphs.profileRepository
+
+    // Unscoped, as its Dagger @Binds was: a profile store is a value object built per caller.
+    @Provides fun provideProfileStore(graphs: MetroGraphs): ProfileStore = graphs.profileStore
 }

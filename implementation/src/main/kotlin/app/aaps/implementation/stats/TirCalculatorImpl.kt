@@ -7,7 +7,9 @@ import app.aaps.core.interfaces.stats.TirCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Implementation of Time In Range (TIR) statistics calculator.
@@ -46,7 +48,11 @@ import javax.inject.Singleton
  * @see TirImpl
  * @see DexcomTirCalculatorImpl
  */
-@Singleton
+// Metro builds this now; Dagger gets it through a @Provides delegate in `:app`. Scoped with Metro's
+// @SingleIn, not javax @Singleton - the graph is generated in `:app`, which has no Dagger interop, so
+// a javax scope there is ignored and every read would build a new one.
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class TirCalculatorImpl @Inject constructor(
     private val dateUtil: DateUtil,
     private val persistenceLayer: PersistenceLayer

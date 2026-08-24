@@ -11,6 +11,8 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.source.XDripSource
+import app.aaps.core.interfaces.profile.ProfileRepository
+import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.storage.Storage
@@ -33,6 +35,14 @@ import dev.zacsweers.metro.createGraphFactory
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
+import app.aaps.core.interfaces.utils.Translator
+import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.interfaces.stats.TddCalculator
+import app.aaps.core.interfaces.stats.TirCalculator
+import app.aaps.core.interfaces.stats.DexcomTirCalculator
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.ui.IconsProvider
+import app.aaps.core.interfaces.insulin.InsulinManager
 
 /**
  * The Metro half of the object graph, beside Dagger. Counterpart of `KoinGraph` on `koin-spike` and
@@ -175,4 +185,15 @@ class MetroGraphs @Inject constructor(
     val hardLimits: HardLimits get() = root.hardLimits
     val storage: Storage get() = root.storage
     val receiverStatusStore: ReceiverStatusStore get() = root.receiverStatusStore
+
+    val translator: Translator get() = root.translator
+    val protectionCheck: ProtectionCheck get() = root.protectionCheck
+    val tddCalculator: TddCalculator get() = root.tddCalculator
+    val tirCalculator: TirCalculator get() = root.tirCalculator
+    val dexcomTirCalculator: DexcomTirCalculator get() = root.dexcomTirCalculator
+    val pumpSync: PumpSync get() = root.pumpSync
+    val iconsProvider: IconsProvider get() = root.iconsProvider
+    val insulinManager: InsulinManager get() = root.insulinManager
+    val profileRepository: ProfileRepository get() = root.profileRepository
+    val profileStore: ProfileStore get() = root.profileStore
 }
