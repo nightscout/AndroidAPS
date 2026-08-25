@@ -14,7 +14,7 @@ import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntKey
 import dagger.multibindings.IntoMap
 
-@Module(includes = [MedtrumCommModule::class])
+@Module
 @InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class MedtrumModule {

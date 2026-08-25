@@ -14,7 +14,6 @@ import dagger.multibindings.IntoMap
 
 @Module(
     includes = [
-        DanaRCommModule::class,
         DanaRServicesModule::class
     ]
 )
