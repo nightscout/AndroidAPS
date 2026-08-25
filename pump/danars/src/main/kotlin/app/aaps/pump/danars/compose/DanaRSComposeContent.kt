@@ -172,12 +172,12 @@ class DanaRSComposeContent(
             }
 
             DanaScreen.HISTORY      -> {
-                val historyViewModel: DanaHistoryViewModel = hiltViewModel()
+                val historyViewModel: DanaHistoryViewModel = metroViewModel()
                 DanaHistoryScreen(viewModel = historyViewModel)
             }
 
             DanaScreen.USER_OPTIONS -> {
-                val userOptionsViewModel: DanaUserOptionsViewModel = hiltViewModel()
+                val userOptionsViewModel: DanaUserOptionsViewModel = metroViewModel()
 
                 LaunchedEffect(userOptionsViewModel) {
                     userOptionsViewModel.events.collect { event ->

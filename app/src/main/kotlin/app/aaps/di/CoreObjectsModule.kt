@@ -2,6 +2,7 @@ package app.aaps.di
 
 import android.content.Context
 import android.telephony.SmsManager
+import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
@@ -291,6 +292,8 @@ class CoreObjectsModule {
         versionCheckerUtilsProvider: Provider<VersionCheckerUtils>,
         passwordCheckProvider: Provider<PasswordCheck>,
         searchableProvidersProvider: Provider<Set<SearchableProvider>>,
+        aapsSchedulersProvider: Provider<AapsSchedulers>,
+        spProvider: Provider<SP>,
         bolusProgressDataProvider: Provider<BolusProgressData>,
         pumpEnactResultProvider: Provider<PumpEnactResult>,
         historyScopeProvider: Provider<HistoryScope>,
@@ -350,6 +353,8 @@ class CoreObjectsModule {
         versionCheckerUtilsProvider,
         passwordCheckProvider,
         searchableProvidersProvider,
+        aapsSchedulersProvider,
+        spProvider,
         bolusProgressDataProvider,
         pumpEnactResultProvider,
         historyScopeProvider,

@@ -1,11 +1,15 @@
 package app.aaps.pump.medtrum.comm.packets
 
+import dev.zacsweers.metro.HasMemberInjections
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import dagger.android.HasAndroidInjector
 import app.aaps.pump.medtrum.extension.toInt
 import javax.inject.Inject
 
+// Metro reads this class now that interop is on for the module. It is subclassable, so it has to
+// say its injected fields are meant to be filled - Metro will not infer that for an open type.
+@HasMemberInjections
 open class MedtrumPacket(protected var injector: HasAndroidInjector) {
 
     @Inject lateinit var aapsLogger: AAPSLogger

@@ -14,7 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.protection.ProtectionCheck
@@ -47,7 +47,7 @@ class EquilComposeContent(
     ) {
         LocalContext.current
         val snackbarHostState = LocalSnackbarHostState.current
-        val overviewViewModel: EquilOverviewViewModel = hiltViewModel()
+        val overviewViewModel: EquilOverviewViewModel = metroViewModel()
 
         // Navigation state
         var showHistory by remember { mutableStateOf(false) }
@@ -106,7 +106,7 @@ class EquilComposeContent(
         }
 
         if (showHistory) {
-            val historyViewModel: EquilHistoryViewModel = hiltViewModel()
+            val historyViewModel: EquilHistoryViewModel = metroViewModel()
             EquilHistoryScreen(
                 viewModel = historyViewModel,
                 onNavigateBack = { showHistory = false }
@@ -131,7 +131,7 @@ class EquilComposeContent(
 
             if (bleReady) {
                 // Create WizardViewModel scoped to the workflow
-                val wizardViewModel: EquilWizardViewModel = hiltViewModel()
+                val wizardViewModel: EquilWizardViewModel = metroViewModel()
                 // Initialize with the start workflow
                 LaunchedEffect(startWorkflow) {
                     startWorkflow?.let { workflow ->

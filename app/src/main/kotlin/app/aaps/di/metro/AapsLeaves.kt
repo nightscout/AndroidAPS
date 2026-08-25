@@ -3,6 +3,7 @@ package app.aaps.di.metro
 import android.content.Context
 
 import androidx.work.WorkManager
+import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.ui.compose.history.HistoryScope
@@ -170,6 +171,8 @@ class AapsLeaves(
      * window is what keeps history browsing off the live loop's calculation objects, so an app-scoped
      * view model reading it is fine.
      */
+    private val aapsSchedulersProvider: Provider<AapsSchedulers>,
+    private val spProvider: Provider<SP>,
     private val bolusProgressDataProvider: Provider<BolusProgressData>,
     private val pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val historyScopeProvider: Provider<HistoryScope>,
@@ -255,6 +258,8 @@ class AapsLeaves(
     @Provides fun sntpClient(): SntpClient = sntpClientProvider.get()
     @Provides fun xDripBroadcast(): XDripBroadcast = xDripBroadcastProvider.get()
     @Provides fun l(): L = lProvider.get()
+    @Provides fun aapsSchedulers(): AapsSchedulers = aapsSchedulersProvider.get()
+    @Provides fun sp(): SP = spProvider.get()
     @Provides fun bolusProgressData(): BolusProgressData = bolusProgressDataProvider.get()
 
     /** A value object: unscoped, as its Dagger binding is. */

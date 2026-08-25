@@ -1,5 +1,6 @@
 package app.aaps.pump.diaconn.packet
 
+import dev.zacsweers.metro.HasMemberInjections
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.pump.diaconn.DiaconnG8Pump
@@ -9,6 +10,9 @@ import javax.inject.Inject
 /**
  * TempBasalInquireResponsePacket
  */
+// Metro reads this class now that interop is on for the module. It is subclassable, so it has to
+// say its injected fields are meant to be filled - Metro will not infer that for an open type.
+@HasMemberInjections
 open class TempBasalInquireResponsePacket(
     injector: HasAndroidInjector
 ) : DiaconnG8Packet(injector) {

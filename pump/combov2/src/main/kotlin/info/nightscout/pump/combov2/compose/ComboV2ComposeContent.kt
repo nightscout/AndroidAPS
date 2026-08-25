@@ -14,7 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
@@ -34,8 +34,8 @@ class ComboV2ComposeContent(
         onNavigateBack: () -> Unit,
         onSettings: (() -> Unit)?
     ) {
-        val overviewViewModel: ComboV2OverviewViewModel = hiltViewModel()
-        val wizardViewModel: ComboV2PairWizardViewModel = hiltViewModel()
+        val overviewViewModel: ComboV2OverviewViewModel = metroViewModel()
+        val wizardViewModel: ComboV2PairWizardViewModel = metroViewModel()
 
         var currentScreen by remember { mutableStateOf(ComboScreen.OVERVIEW) }
         var showUnpairDialog by remember { mutableStateOf(false) }
