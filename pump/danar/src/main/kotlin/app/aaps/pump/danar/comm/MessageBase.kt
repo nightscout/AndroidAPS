@@ -23,7 +23,7 @@ import app.aaps.pump.danar.comm.MessageOriginalNames.getName
 import app.aaps.pump.danarkorean.DanaRKoreanPlugin
 import app.aaps.pump.danarv2.DanaRv2Plugin
 import app.aaps.pump.utils.CRC.getCrc16
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import dev.zacsweers.metro.HasMemberInjections
 import kotlinx.coroutines.CoroutineScope
 import org.joda.time.DateTime
@@ -41,7 +41,7 @@ import javax.inject.Inject
 // Metro reads this class now that interop is on. It is subclassable, so it must declare that its
 // injected fields are meant to be filled.
 @HasMemberInjections
-open class MessageBase(injector: HasAndroidInjector) {
+open class MessageBase(injector: MetroMemberInjector) {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var dateUtil: DateUtil
@@ -64,7 +64,7 @@ open class MessageBase(injector: HasAndroidInjector) {
     @Inject lateinit var bolusProgressData: BolusProgressData
     @Inject @ApplicationScope lateinit var appScope: CoroutineScope
 
-    var injector: HasAndroidInjector
+    var injector: MetroMemberInjector
     var buffer = ByteArray(512)
     private var position = 6
     // Written by the reader thread (SerialIOThread.run) once the reply is processed, read by the
@@ -231,7 +231,8 @@ open class MessageBase(injector: HasAndroidInjector) {
 
     init {
         @Suppress("LeakingThis")
-        injector.androidInjector().inject(this)
+        // Loud on a missing entry - same check as DiaconnG8Packet and MedtrumPacket.
+        check(injector.injectMembers(this)) { "No member injector for ${this::class.java.name}" }
         this.injector = injector
     }
 }

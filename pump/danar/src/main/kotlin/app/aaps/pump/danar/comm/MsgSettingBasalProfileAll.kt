@@ -1,7 +1,7 @@
 package app.aaps.pump.danar.comm
 
 import app.aaps.core.interfaces.logging.LTag
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import java.util.Locale
 
 /**
@@ -13,7 +13,7 @@ import java.util.Locale
  * THIS IS BROKEN IN PUMP... SENDING ONLY 1 PROFILE
  */
 class MsgSettingBasalProfileAll(
-    injector: HasAndroidInjector
+    injector: MetroMemberInjector
 ) : MessageBase(injector) {
 
     override fun handleMessage(bytes: ByteArray) {

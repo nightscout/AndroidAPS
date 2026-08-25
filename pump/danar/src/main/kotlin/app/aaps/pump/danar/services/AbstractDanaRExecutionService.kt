@@ -48,7 +48,7 @@ import app.aaps.pump.danar.comm.MsgHistorySuspend
 import app.aaps.pump.danar.comm.MsgPCCommStart
 import app.aaps.pump.danar.comm.MsgPCCommStop
 import dagger.android.DaggerService
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import dev.zacsweers.metro.HasMemberInjections
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
@@ -69,7 +69,9 @@ import kotlin.math.min
 @HasMemberInjections
 abstract class AbstractDanaRExecutionService : DaggerService() {
 
-    @Inject lateinit var injector: HasAndroidInjector
+    // The messages this service builds fill their own fields from Metro's map now. The service itself is
+    // still a dagger.android service - Android constructs it, which is a separate problem.
+    @Inject lateinit var injector: MetroMemberInjector
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var preferences: Preferences
