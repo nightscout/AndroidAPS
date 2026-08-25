@@ -153,7 +153,7 @@ com-caverock-androidsvg = { group = "com.caverock", name = "androidsvg", version
 net-danlew-android-joda = { group = "net.danlew", name = "android.joda", version = "2.14.2.1" }
 joda-time = { group = "joda-time", name = "joda-time", version = "2.14.3" }
 org-skyscreamer-jsonassert = { group = "org.skyscreamer", name = "jsonassert", version = "1.5.3" }
-com-eatthepath-java-otp = { group = "com.eatthepath", name = "java-otp", version = "0.4.0" }
+com-eatthepath-java-otp = { group = "com.eatthepath", name = "java-otp", version = "1.0.0" }
 com-github-bumptech-glide-compose = { group = "com.github.bumptech.glide", name = "compose", version = "1.0.0-beta10" } # do not update to 4.xx
 com-github-kenglxn-qrgen-android = { group = "com.github.kenglxn.QRGen", name = "android", version = "3.0.1" }
 com-google-zxing-core = { group = "com.google.zxing", name = "core", version = "3.5.4" }
