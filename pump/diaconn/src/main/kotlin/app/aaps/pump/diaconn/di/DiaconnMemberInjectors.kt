@@ -41,6 +41,8 @@ import app.aaps.pump.diaconn.packet.InjectionCancelSettingResponsePacket
 import app.aaps.pump.diaconn.packet.InjectionExtendedBolusResultReportPacket
 import app.aaps.pump.diaconn.packet.InjectionExtendedBolusSettingPacket
 import app.aaps.pump.diaconn.packet.InjectionExtendedBolusSettingResponsePacket
+import app.aaps.pump.diaconn.packet.InjectionMealSettingPacket
+import app.aaps.pump.diaconn.packet.InjectionMealSettingResponsePacket
 import app.aaps.pump.diaconn.packet.InjectionProgressReportPacket
 import app.aaps.pump.diaconn.packet.InjectionSnackInquirePacket
 import app.aaps.pump.diaconn.packet.InjectionSnackInquireResponsePacket
@@ -347,6 +349,18 @@ object DiaconnMemberInjectors {
     @IntoMap
     @ClassKey(InjectionExtendedBolusSettingResponsePacket::class)
     fun bindInjectionExtendedBolusSettingResponsePacket(injector: MembersInjector<InjectionExtendedBolusSettingResponsePacket>): MembersInjector<*> = injector
+
+    @Provides
+    @FeatureMemberInjectors
+    @IntoMap
+    @ClassKey(InjectionMealSettingPacket::class)
+    fun bindInjectionMealSettingPacket(injector: MembersInjector<InjectionMealSettingPacket>): MembersInjector<*> = injector
+
+    @Provides
+    @FeatureMemberInjectors
+    @IntoMap
+    @ClassKey(InjectionMealSettingResponsePacket::class)
+    fun bindInjectionMealSettingResponsePacket(injector: MembersInjector<InjectionMealSettingResponsePacket>): MembersInjector<*> = injector
 
     @Provides
     @FeatureMemberInjectors

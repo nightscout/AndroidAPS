@@ -58,6 +58,9 @@ import app.aaps.pump.danarkorean.comm.MsgInitConnStatusBasicK
 import app.aaps.pump.danarkorean.comm.MsgInitConnStatusBolusK
 import app.aaps.pump.danarkorean.comm.MsgInitConnStatusTimeK
 import app.aaps.pump.danarkorean.comm.MsgSettingBasalProfileAllK
+import app.aaps.pump.danarkorean.comm.MsgSettingBasal_k
+import app.aaps.pump.danarkorean.comm.MsgStatusBasic_k
+import app.aaps.pump.danarkorean.comm.MsgStatus_k
 import app.aaps.pump.danarv2.comm.MsgCheckValueV2
 import app.aaps.pump.danarv2.comm.MsgHistoryEventsV2
 import app.aaps.pump.danarv2.comm.MsgSetAPSTempBasalStartV2
@@ -377,6 +380,24 @@ object DanaRMemberInjectors {
     @IntoMap
     @ClassKey(MsgSettingBasalProfileAllK::class)
     fun bindMsgSettingBasalProfileAllK(injector: MembersInjector<MsgSettingBasalProfileAllK>): MembersInjector<*> = injector
+
+    @Provides
+    @FeatureMemberInjectors
+    @IntoMap
+    @ClassKey(MsgSettingBasal_k::class)
+    fun bindMsgSettingBasalK(injector: MembersInjector<MsgSettingBasal_k>): MembersInjector<*> = injector
+
+    @Provides
+    @FeatureMemberInjectors
+    @IntoMap
+    @ClassKey(MsgStatusBasic_k::class)
+    fun bindMsgStatusBasicK(injector: MembersInjector<MsgStatusBasic_k>): MembersInjector<*> = injector
+
+    @Provides
+    @FeatureMemberInjectors
+    @IntoMap
+    @ClassKey(MsgStatus_k::class)
+    fun bindMsgStatusK(injector: MembersInjector<MsgStatus_k>): MembersInjector<*> = injector
 
     @Provides
     @FeatureMemberInjectors
