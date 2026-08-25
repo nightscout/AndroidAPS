@@ -4,6 +4,9 @@ import app.aaps.implementation.receivers.BTReceiver
 import app.aaps.implementation.receivers.ChargingStateReceiver
 import app.aaps.implementation.receivers.NetworkChangeReceiver
 import app.aaps.implementation.receivers.TimeDateOrTZChangeReceiver
+import app.aaps.receivers.AutoStartReceiver
+import app.aaps.receivers.DataReceiver
+import app.aaps.receivers.SmsReceiver
 import dev.zacsweers.metro.ClassKey
 import dev.zacsweers.metro.GraphExtension
 import dev.zacsweers.metro.IntoMap
@@ -49,6 +52,23 @@ interface AppReceiversGraph {
     @IntoMap
     @ClassKey(BTReceiver::class)
     fun bindBTReceiver(injector: MembersInjector<BTReceiver>): MembersInjector<*> = injector
+
+    @Provides
+    @IntoMap
+    @ClassKey(AutoStartReceiver::class)
+    fun bindAutoStartReceiver(injector: MembersInjector<AutoStartReceiver>): MembersInjector<*> = injector
+
+    @Provides
+    @IntoMap
+    @ClassKey(DataReceiver::class)
+    fun bindDataReceiver(injector: MembersInjector<DataReceiver>): MembersInjector<*> = injector
+
+    /** SmsReceiver subclasses DataReceiver and adds no fields, but the map is keyed on the RUNTIME
+     * class, so it needs its own entry or nothing fills it. */
+    @Provides
+    @IntoMap
+    @ClassKey(SmsReceiver::class)
+    fun bindSmsReceiver(injector: MembersInjector<SmsReceiver>): MembersInjector<*> = injector
 
     @Provides
     @IntoMap
