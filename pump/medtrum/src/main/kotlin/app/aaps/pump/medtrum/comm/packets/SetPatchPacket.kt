@@ -5,11 +5,11 @@ import app.aaps.pump.medtrum.comm.enums.AlarmSetting
 import app.aaps.pump.medtrum.comm.enums.CommandType.SET_PATCH
 import app.aaps.pump.medtrum.extension.toByte
 import app.aaps.pump.medtrum.extension.toByteArray
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import javax.inject.Inject
 import kotlin.math.round
 
-class SetPatchPacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {
+class SetPatchPacket(injector: MetroMemberInjector) : MedtrumPacket(injector) {
 
     @Inject lateinit var medtrumPump: MedtrumPump
 

@@ -34,28 +34,4 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 abstract class MedtrumCommModule {
 
-    @ContributesAndroidInjector abstract fun contributesActivatePacket(): ActivatePacket
-    @ContributesAndroidInjector abstract fun contributesAuthorizePacket(): AuthorizePacket
-    @ContributesAndroidInjector abstract fun contributesCancelBolusPacket(): CancelBolusPacket
-    @ContributesAndroidInjector abstract fun contributesCancelTempBasalPacket(): CancelTempBasalPacket
-    @ContributesAndroidInjector abstract fun contributesClearPumpAlarmPacket(): ClearPumpAlarmPacket
-    @ContributesAndroidInjector abstract fun contributesGetDeviceTypePacket(): GetDeviceTypePacket
-    @ContributesAndroidInjector abstract fun contributesGetRecordPacket(): GetRecordPacket
-    @ContributesAndroidInjector abstract fun contributesGetTimePacket(): GetTimePacket
-    @ContributesAndroidInjector abstract fun contributesMedtrumPacket(): MedtrumPacket
-    @ContributesAndroidInjector abstract fun contributesNotificationPacket(): NotificationPacket
-    @ContributesAndroidInjector abstract fun contributesPollPatchPacket(): PollPatchPacket
-    @ContributesAndroidInjector abstract fun contributesPrimePacket(): PrimePacket
-    @ContributesAndroidInjector abstract fun contributesReadBolusStatePacket(): ReadBolusStatePacket
-    @ContributesAndroidInjector abstract fun contributesResumePumpPacket(): ResumePumpPacket
-    @ContributesAndroidInjector abstract fun contributesSetBasalProfilePacket(): SetBasalProfilePacket
-    @ContributesAndroidInjector abstract fun contributesSetBolusMotorPacket(): SetBolusMotorPacket
-    @ContributesAndroidInjector abstract fun contributesSetBolusPacket(): SetBolusPacket
-    @ContributesAndroidInjector abstract fun contributesSetPatchPacket(): SetPatchPacket
-    @ContributesAndroidInjector abstract fun contributesSetTempBasalPacket(): SetTempBasalPacket
-    @ContributesAndroidInjector abstract fun contributesSetTimePacket(): SetTimePacket
-    @ContributesAndroidInjector abstract fun contributesSetTimeZonePacket(): SetTimeZonePacket
-    @ContributesAndroidInjector abstract fun contributesStopPatchPacket(): StopPatchPacket
-    @ContributesAndroidInjector abstract fun contributesSubscribePacket(): SubscribePacket
-    @ContributesAndroidInjector abstract fun contributesSynchronizePacket(): SynchronizePacket
 }

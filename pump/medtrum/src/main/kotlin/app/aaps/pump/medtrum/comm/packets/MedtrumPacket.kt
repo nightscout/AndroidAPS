@@ -3,14 +3,14 @@ package app.aaps.pump.medtrum.comm.packets
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.medtrum.extension.toInt
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import dev.zacsweers.metro.HasMemberInjections
 import javax.inject.Inject
 
 // Metro reads this class now that interop is on for the module. It is subclassable, so it has to
 // say its injected fields are meant to be filled - Metro will not infer that for an open type.
 @HasMemberInjections
-open class MedtrumPacket(protected var injector: HasAndroidInjector) {
+open class MedtrumPacket(protected var injector: MetroMemberInjector) {
 
     @Inject lateinit var aapsLogger: AAPSLogger
 
@@ -30,7 +30,8 @@ open class MedtrumPacket(protected var injector: HasAndroidInjector) {
 
     init {
         @Suppress("LeakingThis")
-        injector.androidInjector().inject(this)
+        // Loud on a missing entry - see the same check in DiaconnG8Packet.
+        check(injector.injectMembers(this)) { "No member injector for ${this::class.java.name}" }
     }
 
     open fun getRequest(): ByteArray {

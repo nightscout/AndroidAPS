@@ -3,9 +3,9 @@ package app.aaps.pump.medtrum.comm.packets
 import app.aaps.pump.medtrum.comm.enums.CommandType.GET_DEVICE_TYPE
 import app.aaps.pump.medtrum.extension.toInt
 import app.aaps.pump.medtrum.extension.toLong
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 
-class GetDeviceTypePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {
+class GetDeviceTypePacket(injector: MetroMemberInjector) : MedtrumPacket(injector) {
 
     var deviceType: Int = 0
     var deviceSN: Long = 0

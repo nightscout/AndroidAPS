@@ -2,10 +2,10 @@ package app.aaps.pump.medtrum.comm.packets
 
 import app.aaps.pump.medtrum.comm.enums.CommandType.SET_BOLUS
 import app.aaps.pump.medtrum.extension.toByteArray
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import kotlin.math.round
 
-class SetBolusPacket(injector: HasAndroidInjector, private val insulin: Double) : MedtrumPacket(injector) {
+class SetBolusPacket(injector: MetroMemberInjector, private val insulin: Double) : MedtrumPacket(injector) {
 
     init {
         opCode = SET_BOLUS.code

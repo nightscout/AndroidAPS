@@ -1,9 +1,9 @@
 package app.aaps.pump.medtrum.comm.packets
 
 import app.aaps.pump.medtrum.comm.enums.CommandType.READ_BOLUS_STATE
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 
-class ReadBolusStatePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {
+class ReadBolusStatePacket(injector: MetroMemberInjector) : MedtrumPacket(injector) {
     // UNUSED
     // Bolus sync is currently done by getting the records and syncing then with AAPS pumpSync there
 

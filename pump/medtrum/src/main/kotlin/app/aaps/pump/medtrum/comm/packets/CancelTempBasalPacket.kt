@@ -7,10 +7,10 @@ import app.aaps.pump.medtrum.comm.enums.CommandType.CANCEL_TEMP_BASAL
 import app.aaps.pump.medtrum.extension.toInt
 import app.aaps.pump.medtrum.extension.toLong
 import app.aaps.pump.medtrum.util.MedtrumTimeUtil
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import javax.inject.Inject
 
-class CancelTempBasalPacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {
+class CancelTempBasalPacket(injector: MetroMemberInjector) : MedtrumPacket(injector) {
 
     @Inject lateinit var medtrumPump: MedtrumPump
     @Inject lateinit var dateUtil: DateUtil

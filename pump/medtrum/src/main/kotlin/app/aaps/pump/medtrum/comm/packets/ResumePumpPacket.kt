@@ -1,9 +1,9 @@
 package app.aaps.pump.medtrum.comm.packets
 
 import app.aaps.pump.medtrum.comm.enums.CommandType.RESUME_PUMP
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 
-class ResumePumpPacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {
+class ResumePumpPacket(injector: MetroMemberInjector) : MedtrumPacket(injector) {
 
     init {
         opCode = RESUME_PUMP.code

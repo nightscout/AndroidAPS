@@ -2,21 +2,19 @@ package app.aaps.pump.medtrum.comm.packets
 
 import app.aaps.pump.medtrum.MedtrumTestBase
 import com.google.common.truth.Truth.assertThat
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import org.junit.jupiter.api.Test
 
 class StopPatchPacketTest : MedtrumTestBase() {
 
     /** Test packet specific behavior */
 
-    private val packetInjector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is StopPatchPacket) {
+    private val packetInjector = MetroMemberInjector {
+        if (it is StopPatchPacket) {
                 it.aapsLogger = aapsLogger
                 it.medtrumPump = medtrumPump
-            }
         }
+        true
     }
 
     @Test fun getRequestGivenPacketWhenCalledThenReturnOpCode() {
