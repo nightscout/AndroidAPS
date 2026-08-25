@@ -16,12 +16,28 @@ import javax.inject.Singleton
 @Singleton
 class RunningModeSource @Inject constructor(private val context: Context, private val sp: SP) : TileSource {
 
+    // The tile has only 4 slots: drop LOOP_DISABLE when LOOP_USER_SUSPEND is also offered and cap
+    // at 4. This filter lives here (not on the phone) so the running-mode picker can show every entry.
     override fun getSelectedActions(): List<Action> {
-        val actions = mutableListOf<Action>()
         val states = getRunningModes(sp)
+        val tileStates = if (states.states.any { it.state == RunningMode.LOOP_USER_SUSPEND })
+            states.states.filter { it.state != RunningMode.LOOP_DISABLE }
+        else states.states
+        return buildActions(states, tileStates).take(4)
+    }
 
-        for (state in states.states) {
-            if (actions.size == 4) break
+    /**
+     * Build the launchable actions for the FULL [states] list, one per entry, aligned by index.
+     * Used by the running-mode complication picker, which passes a freshly received
+     * [EventData.RunningModeList] instead of the SP-cached one and shows every entry.
+     */
+    fun getSelectedActions(states: EventData.RunningModeList): List<Action> = buildActions(states, states.states)
+
+    /** [subset] entries must come from [states]`.states` — the action index is looked up there. */
+    private fun buildActions(states: EventData.RunningModeList, subset: List<EventData.RunningModeList.AvailableRunningMode>): List<Action> {
+        val actions = mutableListOf<Action>()
+
+        for (state in subset) {
             val index = states.states.indexOf(state)
             actions.add(
                 Action(
@@ -60,6 +76,9 @@ class RunningModeSource @Inject constructor(private val context: Context, privat
     }
 
     override fun getValidFor(): Long? = null
+
+    /** Latest mode list received from the phone (SP-cached). */
+    fun currentModes(): EventData.RunningModeList = getRunningModes(sp)
 
     private fun getRunningModes(sp: SP): EventData.RunningModeList =
         EventData.deserialize(sp.getString(R.string.key_running_mode_data, EventData.RunningModeList(0, arrayListOf()).serialize())) as EventData.RunningModeList

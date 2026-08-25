@@ -1,5 +1,6 @@
 package app.aaps.wear.interaction.actions
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -30,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.rotary.onRotaryScrollEvent
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -42,6 +44,7 @@ import androidx.wear.compose.material3.Icon
 import androidx.wear.compose.material3.Text
 import androidx.wear.compose.material3.curvedText
 import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.interfaces.rx.weardata.LoopStatusData
 import app.aaps.wear.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -62,6 +65,9 @@ internal val TempTargetYellow       = Color(0xFFF4D700)
 internal val LoopClosedColor        = Color(0xFF00C03E)
 internal val LoopOpenColor          = Color(0xFF4983D7)
 internal val LoopLgsColor           = Color(0xFF800080)
+// Suspend TEXT color (status header, confirm lines, belt graph) — yellow keeps suspended
+// distinguishable from disabled red in text. Suspend ICONS are red like ic_loop_paused;
+// icon surfaces (tile, complication, picker) must NOT use this constant.
 internal val LoopSuspendedColor     = Color(0xFFFFFF13)
 internal val LoopDisabledColor      = Color(0xFFFF1313)
 internal val LoopDisconnectedColor  = Color(0xFF939393)
@@ -353,13 +359,33 @@ internal fun CurvedTitle(title: String) {
     }
 }
 
+/**
+ * Mode name TEXT color, shared by the loop status screen and the running-mode picker subtitle
+ * so the two cannot drift apart. Text keeps suspended yellow vs disabled red; icons are red.
+ */
+internal fun LoopStatusData.LoopMode.toTextColor(): Color = when (this) {
+    LoopStatusData.LoopMode.CLOSED         -> LoopClosedColor
+    LoopStatusData.LoopMode.OPEN           -> LoopOpenColor
+    LoopStatusData.LoopMode.LGS            -> LoopLgsColor
+    LoopStatusData.LoopMode.DISABLED       -> LoopDisabledColor
+    LoopStatusData.LoopMode.SUSPENDED      -> LoopSuspendedColor
+    LoopStatusData.LoopMode.PUMP_SUSPENDED -> LoopDisabledColor
+    LoopStatusData.LoopMode.DST_SUSPENDED  -> LoopDisabledColor
+    LoopStatusData.LoopMode.DISCONNECTED   -> LoopDisconnectedColor
+    LoopStatusData.LoopMode.SUPERBOLUS     -> LoopSuperbolusColor
+    LoopStatusData.LoopMode.UNKNOWN        -> LoopUnknownColor
+}
+
 @Composable
-internal fun formatDurationMinutes(totalMinutes: Int): String {
+internal fun formatDurationMinutes(totalMinutes: Int): String = formatDurationMinutes(LocalContext.current, totalMinutes)
+
+/** Non-composable variant for callers outside a composition (e.g. the running-mode picker subtitle). */
+internal fun formatDurationMinutes(context: Context, totalMinutes: Int): String {
     val hours = totalMinutes / 60
     val mins = totalMinutes % 60
     return when {
-        hours == 0 -> stringResource(R.string.action_minutes_format, totalMinutes)
-        mins == 0  -> stringResource(R.string.action_duration_hours_format, hours)
-        else       -> stringResource(R.string.action_duration_hours_minutes_format, hours, mins)
+        hours == 0 -> context.getString(R.string.action_minutes_format, totalMinutes)
+        mins == 0  -> context.getString(R.string.action_duration_hours_format, hours)
+        else       -> context.getString(R.string.action_duration_hours_minutes_format, hours, mins)
     }
 }

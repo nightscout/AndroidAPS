@@ -403,18 +403,7 @@ class DataHandlerMobile @Inject constructor(
 
         // Map loop mode
         val runningModeRecord = loop.runningModeRecord()
-        val loopMode = when (runningModeRecord.mode) {
-            RM.Mode.CLOSED_LOOP       -> LoopStatusData.LoopMode.CLOSED
-            RM.Mode.OPEN_LOOP         -> LoopStatusData.LoopMode.OPEN
-            RM.Mode.CLOSED_LOOP_LGS   -> LoopStatusData.LoopMode.LGS
-            RM.Mode.DISABLED_LOOP     -> LoopStatusData.LoopMode.DISABLED
-            RM.Mode.SUSPENDED_BY_USER -> LoopStatusData.LoopMode.SUSPENDED
-            RM.Mode.SUSPENDED_BY_PUMP -> LoopStatusData.LoopMode.PUMP_SUSPENDED
-            RM.Mode.SUSPENDED_BY_DST  -> LoopStatusData.LoopMode.DST_SUSPENDED
-            RM.Mode.DISCONNECTED_PUMP -> LoopStatusData.LoopMode.DISCONNECTED
-            RM.Mode.SUPER_BOLUS       -> LoopStatusData.LoopMode.SUPERBOLUS
-            else                      -> LoopStatusData.LoopMode.UNKNOWN
-        }
+        val loopMode = runningModeRecord.mode.toLoopMode()
         // End time of a temporary mode (suspend/disconnect/superbolus) so the watch can show remaining duration
         val modeEndTime = if (runningModeRecord.isTemporary()) runningModeRecord.timestamp + runningModeRecord.duration else null
 
@@ -999,11 +988,9 @@ class DataHandlerMobile @Inject constructor(
                     AvailableRunningMode(AvailableRunningMode.RunningMode.LOOP_RESUME)
             }
 
-        val allStates = loop.allowedNextModes().mapNotNull { mapMode(it) }
-        // LOOP_DISABLE is dropped when LOOP_USER_SUSPEND is present to fit within 4 tile slots.
-        val states = if (allStates.any { it.state == AvailableRunningMode.RunningMode.LOOP_USER_SUSPEND })
-            allStates.filter { it.state != AvailableRunningMode.RunningMode.LOOP_DISABLE }
-        else allStates
+        // Send the FULL list. The 4-slot tile drops LOOP_DISABLE on the watch side
+        // (RunningModeSource); the running-mode picker shows every entry.
+        val states = loop.allowedNextModes().mapNotNull { mapMode(it) }
         // Only rotate the timestamp when available modes actually change.
         // Keeping the old TS when modes are identical lets in-flight tile taps (e.g. from a
         // just-woken watch) succeed without a "Please try again" race against onTileEnterEvent.
@@ -1014,6 +1001,20 @@ class DataHandlerMobile @Inject constructor(
         sendToWear(
             EventData.RunningModeList(lastAuthorizedRunningModeChangeTS!!, states)
         )
+    }
+
+    /** Domain [RM.Mode] → wear wire mode used by the loop status screen and the running-mode complication. */
+    private fun RM.Mode.toLoopMode(): LoopStatusData.LoopMode = when (this) {
+        RM.Mode.CLOSED_LOOP       -> LoopStatusData.LoopMode.CLOSED
+        RM.Mode.OPEN_LOOP         -> LoopStatusData.LoopMode.OPEN
+        RM.Mode.CLOSED_LOOP_LGS   -> LoopStatusData.LoopMode.LGS
+        RM.Mode.DISABLED_LOOP     -> LoopStatusData.LoopMode.DISABLED
+        RM.Mode.SUSPENDED_BY_USER -> LoopStatusData.LoopMode.SUSPENDED
+        RM.Mode.SUSPENDED_BY_PUMP -> LoopStatusData.LoopMode.PUMP_SUSPENDED
+        RM.Mode.SUSPENDED_BY_DST  -> LoopStatusData.LoopMode.DST_SUSPENDED
+        RM.Mode.DISCONNECTED_PUMP -> LoopStatusData.LoopMode.DISCONNECTED
+        RM.Mode.SUPER_BOLUS       -> LoopStatusData.LoopMode.SUPERBOLUS
+        else                      -> LoopStatusData.LoopMode.UNKNOWN
     }
 
     /** Wire (wear-tile) running mode → domain [RM.Mode]; null for the non-user-selectable states (gated out anyway). */
@@ -1378,6 +1379,9 @@ class DataHandlerMobile @Inject constructor(
             else                   -> 0
         }
 
+        // Current running mode (+ end time of a temporary one) for the running-mode complication and picker
+        val runningModeRecord = loop.runningModeRecord()
+
         sendToWear(
             EventData.Status(
                 dataset = 0,
@@ -1398,7 +1402,9 @@ class DataHandlerMobile @Inject constructor(
                 tempTargetDuration = tempTargetDuration,
                 reservoirString = reservoirString,
                 reservoir = reservoir,
-                reservoirLevel = reservoirLevel
+                reservoirLevel = reservoirLevel,
+                loopMode = runningModeRecord.mode.toLoopMode(),
+                modeEndTime = if (runningModeRecord.isTemporary()) runningModeRecord.timestamp + runningModeRecord.duration else null
             )
         )
     }

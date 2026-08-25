@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.wear.activity.ConfirmationActivity
@@ -40,6 +41,7 @@ import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
+import app.aaps.core.interfaces.rx.weardata.EventData.RunningModeList.AvailableRunningMode.RunningMode
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.wear.R
 import app.aaps.wear.comm.DataLayerListenerServiceWear
@@ -60,6 +62,19 @@ class RunningModeTimedActivity : DaggerAppCompatActivity() {
             ?.let { EventData.deserialize(it) as? EventData.RunningModePreSelect }
             ?: run { finish(); return }
         eventData = data
+
+        // Mode text color for the confirm page (suspend yellow / disconnect gray) - resolved from
+        // the SP-cached list by index; white when the list is stale or the entry is missing
+        val modeColor = runCatching {
+            (EventData.deserialize(sp.getString(R.string.key_running_mode_data, "")) as? EventData.RunningModeList)
+                ?.states?.getOrNull(data.stateIndex)?.state
+        }.getOrNull().let { state ->
+            when (state) {
+                RunningMode.LOOP_USER_SUSPEND -> LoopSuspendedColor
+                RunningMode.PUMP_DISCONNECT   -> LoopDisconnectedColor
+                else                          -> Color.White
+            }
+        }
 
         val fineStep = (data.durations.firstOrNull() ?: 60).toDouble()
         val min = fineStep
@@ -92,6 +107,8 @@ class RunningModeTimedActivity : DaggerAppCompatActivity() {
                                 title = activityTitle,
                             )
                             else -> RunningModeConfirmScreen(
+                                title = activityTitle,
+                                titleColor = modeColor,
                                 duration = duration.toInt(),
                                 onConfirm = {
                                     confirmRunningMode(data.stateIndex, duration.toInt())
@@ -126,7 +143,7 @@ class RunningModeTimedActivity : DaggerAppCompatActivity() {
 }
 
 @Composable
-private fun RunningModeConfirmScreen(duration: Int, onConfirm: () -> Unit) {
+private fun RunningModeConfirmScreen(title: String?, titleColor: Color, duration: Int, onConfirm: () -> Unit) {
     val haptic = LocalHapticFeedback.current
     var confirmationSent by remember { mutableStateOf(false) }
 
@@ -163,11 +180,25 @@ private fun RunningModeConfirmScreen(duration: Int, onConfirm: () -> Unit) {
             )
         }
         Spacer(Modifier.height(4.dp))
+        // Same layout as the temp target confirm page: the requested value (here the mode name)
+        // colored and bold, the duration below in secondary gray
+        if (title != null) {
+            // Centered: a translated mode name wraps to two lines, and the second line would
+            // otherwise hang on the left instead of sitting under the first
+            Text(
+                text = title,
+                color = titleColor,
+                fontSize = 17.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+        }
         Text(
             text = formatDurationMinutes(duration),
             color = WearSecondaryText,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center
         )
     }
 }

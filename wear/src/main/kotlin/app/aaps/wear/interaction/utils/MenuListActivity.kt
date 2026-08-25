@@ -4,10 +4,12 @@ import android.graphics.Canvas
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
@@ -23,7 +25,9 @@ import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.createBitmap
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
@@ -54,6 +58,16 @@ abstract class MenuListActivity : DaggerAppCompatActivity() {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     private var elements by mutableStateOf<List<MenuItem>>(emptyList())
+
+    /** Optional secondary line under the title (e.g. the current running mode); null hides it */
+    protected var subtitle by mutableStateOf<String?>(null)
+
+    /** Optional color for [subtitle] (e.g. the running mode text color); null uses the secondary gray */
+    protected var subtitleColor by mutableStateOf<Color?>(null)
+
+    /** Optional third line in secondary gray under [subtitle] (e.g. "1 h 20 min remaining"); null hides it */
+    protected var subtitleSecondary by mutableStateOf<String?>(null)
+
     private val disposable = CompositeDisposable()
 
     protected abstract fun provideElements(): List<MenuItem>
@@ -79,6 +93,9 @@ abstract class MenuListActivity : DaggerAppCompatActivity() {
                 MenuListScreen(
                     title = menuTitle,
                     titleIcon = titleIcon,
+                    subtitle = subtitle,
+                    subtitleColor = subtitleColor,
+                    subtitleSecondary = subtitleSecondary,
                     elements = elements,
                     onAction = { doAction(it) }
                 )
@@ -91,7 +108,8 @@ abstract class MenuListActivity : DaggerAppCompatActivity() {
         super.onDestroy()
     }
 
-    class MenuItem(val actionIcon: Int, val actionItem: String)
+    /** [iconTint] (ARGB) overrides the drawable's own colors; null draws the icon as-is. */
+    class MenuItem(val actionIcon: Int, val actionItem: String, val iconTint: Int? = null)
 }
 
 private val MenuItemBg = Color.White.copy(alpha = 0.15f)
@@ -100,6 +118,9 @@ private val MenuItemBg = Color.White.copy(alpha = 0.15f)
 private fun MenuListScreen(
     title: String,
     titleIcon: Int?,
+    subtitle: String?,
+    subtitleColor: Color?,
+    subtitleSecondary: String?,
     elements: List<MenuListActivity.MenuItem>,
     onAction: (String) -> Unit
 ) {
@@ -110,19 +131,39 @@ private fun MenuListScreen(
             modifier = Modifier.fillMaxSize()
         ) {
             item {
-                ListHeader {
-                    if (titleIcon != null) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                painter = painterResource(titleIcon),
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp)
+                // One item for title + subtitle lines, so the list's auto-centering still targets
+                // the first real menu row. With a subtitle the header is rendered compactly WITHOUT
+                // ListHeader: its min-height and padding would both open a large gap under the title
+                // and push the title above the top edge. Menus without subtitle keep the standard
+                // ListHeader so their look does not change.
+                if (subtitle == null) {
+                    ListHeader { MenuTitle(title, titleIcon) }
+                } else {
+                    // Horizontal padding is on us here: ListHeader would have supplied it, and the
+                    // screen is round - text at the top edge needs room or it runs outside the circle
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                    ) {
+                        MenuTitle(title, titleIcon)
+                        Text(
+                            text = subtitle,
+                            color = subtitleColor ?: Color.White.copy(alpha = 0.6f),
+                            fontSize = 13.sp,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(top = 6.dp)
+                        )
+                        if (subtitleSecondary != null) {
+                            Text(
+                                text = subtitleSecondary,
+                                color = Color.White.copy(alpha = 0.6f),
+                                fontSize = 11.sp,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.padding(top = 2.dp)
                             )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(title)
                         }
-                    } else {
-                        Text(title)
                     }
                 }
             }
@@ -138,26 +179,53 @@ private fun MenuListScreen(
                     icon = {
                         MenuIcon(
                             iconRes = item.actionIcon,
-                            contentDescription = item.actionItem
+                            contentDescription = item.actionItem,
+                            tintArgb = item.iconTint
                         )
                     }
                 )
             }
         }
-        ScrollIndicator(
-            state = listState,
-            modifier = Modifier.align(Alignment.CenterEnd)
-        )
+        // Only show the indicator when there is something to scroll (short lists fit the screen)
+        if (listState.canScrollForward || listState.canScrollBackward) {
+            ScrollIndicator(
+                state = listState,
+                modifier = Modifier.align(Alignment.CenterEnd)
+            )
+        }
+    }
+}
+
+/**
+ * Menu title row (optional icon + text) - shared by the ListHeader and the compact subtitle header.
+ * Centered: a long translated title wraps, and without this the wrapped lines start at the left edge
+ * of the square canvas, which on a round screen is outside the visible circle.
+ */
+@Composable
+private fun MenuTitle(title: String, titleIcon: Int?) {
+    if (titleIcon != null) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                painter = painterResource(titleIcon),
+                contentDescription = null,
+                modifier = Modifier.size(16.dp)
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Text(title, style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center)
+        }
+    } else {
+        Text(title, style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center)
     }
 }
 
 @Composable
-private fun MenuIcon(iconRes: Int, contentDescription: String) {
+private fun MenuIcon(iconRes: Int, contentDescription: String, tintArgb: Int? = null) {
     val context = LocalContext.current
     val density = LocalDensity.current
     val sizePx = with(density) { 35.dp.toPx() }.toInt()
-    val painter = remember(iconRes, sizePx) {
-        val drawable = ContextCompat.getDrawable(context, iconRes)!!
+    val painter = remember(iconRes, sizePx, tintArgb) {
+        val drawable = ContextCompat.getDrawable(context, iconRes)!!.mutate()
+        if (tintArgb != null) drawable.setTint(tintArgb)
         val bitmap = createBitmap(sizePx, sizePx)
         drawable.setBounds(0, 0, sizePx, sizePx)
         drawable.draw(Canvas(bitmap))
