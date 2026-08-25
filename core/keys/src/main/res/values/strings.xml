@@ -37,7 +37,6 @@
     <string name="pref_title_alert_override_dnd">Override Do Not Disturb mode</string>
     <string name="pref_summary_alert_override_dnd">When enabled, AAPS alarms play through silent and Do Not Disturb modes (alarm stream). When disabled, alarms respect silent/DND (notification stream).</string>
     <string name="pref_title_notification_show_bg_on_icon">Show glucose value on notification icon</string>
-    <string name="pref_summary_notification_show_bg_on_icon">Draw the current glucose value into the ongoing notification status bar icon instead of the app icon.</string>
 
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Upload BG data to NS</string>
