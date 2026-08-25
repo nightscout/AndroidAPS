@@ -44,6 +44,7 @@ import app.aaps.core.objects.wizard.QuickWizard
 import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
 import app.aaps.plugins.automation.di.AutomationMetroGraph
+import app.aaps.implementation.scenes.ActiveSceneManager
 import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import app.aaps.plugins.source.di.SourceMetroGraph
@@ -217,6 +218,9 @@ class MetroGraphs @Inject constructor(
     val sceneStore: SceneStore get() = root.sceneStore
     val scenes: Scenes get() = root.scenes
     val sceneActions: SceneActions get() = root.sceneActions
+
+    /** Metro's one scene state holder, for the Dagger-built classes that ask for the concrete type. */
+    val activeSceneManager: ActiveSceneManager get() = root.activeSceneManager
     val sceneAutomationApi: SceneAutomationApi get() = root.sceneAutomationApi
     val decimalFormatter: DecimalFormatter get() = root.decimalFormatter
     val profileUtil: ProfileUtil get() = root.profileUtil

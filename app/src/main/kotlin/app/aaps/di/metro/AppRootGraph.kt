@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.interfaces.scenes.ActiveSceneSync
+import app.aaps.implementation.scenes.ActiveSceneManager
 import app.aaps.core.interfaces.scenes.SceneChainResolver
 import app.aaps.core.interfaces.scenes.SceneStore
 import app.aaps.core.interfaces.scenes.Scenes
@@ -170,6 +171,15 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val configBuilder: ConfigBuilder
     val dataSyncSelectorXdrip: DataSyncSelectorXdrip
     val activeSceneSync: ActiveSceneSync
+
+    /**
+     * The same object as [activeSceneSync], by class.
+     *
+     * `SceneExecutor`, `SceneAutomationApiImpl` and `SceneExpiryWorker` all ask for the concrete type and
+     * are built by Dagger, so without this they got a copy of their own - and an unscoped one, since the
+     * class carries only Metro's `@SingleIn`. The scene then activated on an object no screen was reading.
+     */
+    val activeSceneManager: ActiveSceneManager
     val sceneChainResolver: SceneChainResolver
     val sceneStore: SceneStore
     val scenes: Scenes

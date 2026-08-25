@@ -64,7 +64,6 @@ import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.implementation.maintenance.cloud.CloudStorageManager
 import app.aaps.implementation.scenes.ActiveSceneManager
 import app.aaps.implementation.scenes.SceneExecutor
-import app.aaps.implementation.scenes.SceneRepository
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryJob
 import app.aaps.plugins.automation.services.LastLocationDataContainer
 import app.aaps.plugins.constraints.objectives.SntpClient
@@ -118,9 +117,7 @@ class AapsLeaves(
     private val workManagerProvider: Provider<WorkManager>,
     private val concentrationHelperProvider: Provider<ConcentrationHelper>,
     private val notificationManagerProvider: Provider<NotificationManager>,
-    private val activeSceneManagerProvider: Provider<ActiveSceneManager>,
     private val sceneExecutorProvider: Provider<SceneExecutor>,
-    private val sceneRepositoryProvider: Provider<SceneRepository>,
     private val fileListProviderProvider: Provider<FileListProvider>,
     private val userEntryPresentationHelperProvider: Provider<UserEntryPresentationHelper>,
     private val dataInboxProvider: Provider<DataInbox>,
@@ -229,9 +226,13 @@ class AapsLeaves(
     @Provides fun workManager(): WorkManager = workManagerProvider.get()
     @Provides fun concentrationHelper(): ConcentrationHelper = concentrationHelperProvider.get()
     @Provides fun notificationManager(): NotificationManager = notificationManagerProvider.get()
-    @Provides fun activeSceneManager(): ActiveSceneManager = activeSceneManagerProvider.get()
+    // No activeSceneManager() here on purpose: Metro owns it (@SingleIn on the class), so this leaf would
+    // push a SECOND one in from Dagger - and an unscoped one, because the class carries no javax scope, so
+    // every call built another. `CoreObjectsModule.provideActiveSceneManager` hands Metro's instance the
+    // other way, which is the direction the class itself documents.
     @Provides fun sceneExecutor(): SceneExecutor = sceneExecutorProvider.get()
-    @Provides fun sceneRepository(): SceneRepository = sceneRepositoryProvider.get()
+    // No sceneRepository() either, same reason as activeSceneManager above: Metro owns it (@SingleIn +
+    // two @ContributesBinding), so this leaf pushed an unscoped Dagger copy back in.
     @Provides fun fileListProvider(): FileListProvider = fileListProviderProvider.get()
     @Provides fun userEntryPresentationHelper(): UserEntryPresentationHelper = userEntryPresentationHelperProvider.get()
     @Provides fun dataInbox(): DataInbox = dataInboxProvider.get()

@@ -110,7 +110,6 @@ import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryJob
 import app.aaps.implementation.scenes.SceneExecutor
-import app.aaps.implementation.scenes.SceneRepository
 import app.aaps.plugins.constraints.objectives.SntpClient
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
@@ -222,6 +221,18 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideSceneStore(graphs: MetroGraphs): SceneStore = graphs.sceneStore
     @Provides @Singleton fun provideScenes(graphs: MetroGraphs): Scenes = graphs.scenes
     @Provides @Singleton fun provideSceneActions(graphs: MetroGraphs): SceneActions = graphs.sceneActions
+
+    /*
+     * The scene state holder, by class, from Metro.
+     *
+     * `SceneExecutor`, `SceneAutomationApiImpl` and `SceneExpiryWorker` are built by Dagger and ask for
+     * `ActiveSceneManager` itself. The class carries Metro's `@SingleIn` and no javax scope, so without
+     * this Dagger built its own - a NEW one per injection point, since an unscoped `@Inject` constructor
+     * is not shared. Activating a scene then wrote to an object nothing was reading, and the overview
+     * never showed the active scene. `@Singleton` here keeps Dagger's side to the one Metro built.
+     */
+    @Provides @Singleton fun provideActiveSceneManager(graphs: MetroGraphs): ActiveSceneManager =
+        graphs.activeSceneManager
     @Provides @Singleton fun provideSceneAutomationApi(graphs: MetroGraphs): SceneAutomationApi = graphs.sceneAutomationApi
 
     @Provides @Singleton fun provideDecimalFormatter(graphs: MetroGraphs): DecimalFormatter = graphs.decimalFormatter
@@ -279,9 +290,7 @@ class CoreObjectsModule {
         workManagerProvider: Provider<WorkManager>,
         concentrationHelperProvider: Provider<ConcentrationHelper>,
         notificationManagerProvider: Provider<NotificationManager>,
-        activeSceneManagerProvider: Provider<ActiveSceneManager>,
         sceneExecutorProvider: Provider<SceneExecutor>,
-        sceneRepositoryProvider: Provider<SceneRepository>,
         fileListProviderProvider: Provider<FileListProvider>,
         userEntryPresentationHelperProvider: Provider<UserEntryPresentationHelper>,
         dataInboxProvider: Provider<DataInbox>,
@@ -340,9 +349,7 @@ class CoreObjectsModule {
         workManagerProvider,
         concentrationHelperProvider,
         notificationManagerProvider,
-        activeSceneManagerProvider,
         sceneExecutorProvider,
-        sceneRepositoryProvider,
         fileListProviderProvider,
         userEntryPresentationHelperProvider,
         dataInboxProvider,
