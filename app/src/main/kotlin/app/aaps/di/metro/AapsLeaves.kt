@@ -35,6 +35,7 @@ import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
+import app.aaps.core.interfaces.logging.LoggerUtils
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -116,6 +117,8 @@ class AapsLeaves(
     private val profilerProvider: Provider<Profiler>,
     // Dagger owns this one; LoopPlugin needs it and Metro builds LoopPlugin now.
     private val pumpStatusProviderProvider: Provider<PumpStatusProvider>,
+    // Dagger @Binds in ImplementationModule; AutotunePlugin needs it and Metro builds that now.
+    private val loggerUtilsProvider: Provider<LoggerUtils>,
     private val dateUtilProvider: Provider<DateUtil>,
     private val profileFunctionProvider: Provider<ProfileFunction>,
     private val commandQueueProvider: Provider<CommandQueue>,
@@ -226,6 +229,7 @@ class AapsLeaves(
     // No loop() leaf any more: Metro builds LoopPlugin, so Loop travels the other way, through
     // `CoreObjectsModule.provideLoop`.
     @Provides fun pumpStatusProvider(): PumpStatusProvider = pumpStatusProviderProvider.get()
+    @Provides fun loggerUtils(): LoggerUtils = loggerUtilsProvider.get()
     @Provides fun dateUtil(): DateUtil = dateUtilProvider.get()
     @Provides fun profileFunction(): ProfileFunction = profileFunctionProvider.get()
     @Provides fun commandQueue(): CommandQueue = commandQueueProvider.get()

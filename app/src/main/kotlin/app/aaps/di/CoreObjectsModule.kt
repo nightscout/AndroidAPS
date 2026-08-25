@@ -33,6 +33,7 @@ import app.aaps.core.interfaces.scenes.SceneActions
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.profiling.Profiler
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
@@ -52,6 +53,7 @@ import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
+import app.aaps.core.interfaces.logging.LoggerUtils
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -253,6 +255,9 @@ class CoreObjectsModule {
      */
     @Provides @Singleton fun provideLoop(graphs: MetroGraphs): Loop = graphs.loop
 
+    /** Autotune, same story: Metro builds the plugin, the automation actions are still Dagger-built. */
+    @Provides @Singleton fun provideAutotune(graphs: MetroGraphs): Autotune = graphs.autotune
+
     /*
      * openAPS pieces, from Metro, which builds them in `:plugins:aps` commonMain.
      *
@@ -339,6 +344,7 @@ class CoreObjectsModule {
         apsResultProvider: Provider<APSResult>,
         profilerProvider: Provider<Profiler>,
         pumpStatusProviderProvider: Provider<PumpStatusProvider>,
+        loggerUtilsProvider: Provider<LoggerUtils>,
         dateUtilProvider: Provider<DateUtil>,
         profileFunctionProvider: Provider<ProfileFunction>,
         commandQueueProvider: Provider<CommandQueue>,
@@ -399,6 +405,7 @@ class CoreObjectsModule {
         apsResultProvider,
         profilerProvider,
         pumpStatusProviderProvider,
+        loggerUtilsProvider,
         dateUtilProvider,
         profileFunctionProvider,
         commandQueueProvider,

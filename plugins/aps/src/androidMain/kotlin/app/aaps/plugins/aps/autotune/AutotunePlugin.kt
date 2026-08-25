@@ -2,6 +2,11 @@
 
 package app.aaps.plugins.aps.autotune
 
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.IntKey as MetroIntKey
+import dev.zacsweers.metro.binding
 import android.view.View
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.ICfg
@@ -17,6 +22,7 @@ import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
@@ -68,6 +74,9 @@ import javax.inject.Singleton
  * TODO: replace Thread by Worker
  */
 
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@MetroIntKey(240)
+@ContributesBinding(AppScope::class, binding = binding<Autotune>())
 @Singleton
 class AutotunePlugin @Inject constructor(
     aapsLogger: AAPSLogger,

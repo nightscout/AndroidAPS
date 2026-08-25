@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.plugins.aps.openAPS.DeltaCalculator
 import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAMA
@@ -220,6 +221,9 @@ interface AppRootGraph : MetroViewModelMultibindings {
 
     /** The loop. Built here now; Dagger receives it through `CoreObjectsModule.provideLoop`. */
     val loop: Loop
+
+    /** Autotune, for the automation actions Dagger still builds. */
+    val autotune: Autotune
 
     /**
      * openAPS pieces Metro builds, for the Dagger side to borrow.

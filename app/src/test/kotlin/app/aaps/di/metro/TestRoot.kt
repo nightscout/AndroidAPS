@@ -3,7 +3,11 @@ package app.aaps.di.metro
 import app.aaps.core.objects.di.CoreObjectsGraph
 import dev.zacsweers.metro.createGraphFactory
 import org.mockito.Answers
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 
 /**
  * Builds a real [AppRootGraph] for tests, with everything Dagger owns mocked.
@@ -27,6 +31,13 @@ fun testRoot(configure: (AapsLeaves) -> Unit = {}): AppRootGraph {
     // RETURNS_MOCKS, not the default: an unstubbed @Provides would otherwise hand back null, and the
     // failure lands far away - inside a plugin constructor, as "parameter aapsLogger is null".
     val leaves = mock<AapsLeaves>(defaultAnswer = Answers.RETURNS_MOCKS)
+    // A real scope, because a mocked one is not merely inert here. Plugins that Metro builds now touch it
+    // while being constructed - `appScope.coroutineContext[Job]` - and a mock returns a mock Element,
+    // which fails as `ClassCastException ... cannot be cast to Job` from inside the graph. Unconfined so
+    // anything launched runs on the calling thread and no test has to wait for it.
+    val scope = CoroutineScope(Dispatchers.Unconfined + SupervisorJob())
+    whenever(leaves.appScope()).thenReturn(scope)
+    whenever(leaves.unqualifiedAppScope()).thenReturn(scope)
     configure(leaves)
     // PumpLeaves is mocked like AapsLeaves: the test source set compiles against the `full` flavour, so
     // this is the pump-bearing copy, and no test needs a real BLE transport.

@@ -210,45 +210,9 @@ class ApsPluginsModule {
         aapsLogger = aapsLogger
     )
 
-    @Provides
-    @Singleton
-    fun provideAutotunePlugin(
-        aapsLogger: AAPSLogger,
-        rh: ResourceHelper,
-        preferences: Preferences,
-        rxBus: RxBus,
-        profileFunction: ProfileFunction,
-        profileUtil: ProfileUtil,
-        dateUtil: DateUtil,
-        profileRepository: ProfileRepository,
-        autotuneFS: AutotuneFS,
-        autotuneIob: AutotuneIob,
-        autotunePrep: AutotunePrep,
-        autotuneCore: AutotuneCore,
-        config: Config,
-        uel: UserEntryLogger,
-        loop: Loop,
-        profileStoreProvider: Provider<ProfileStore>,
-        atProfileProvider: Provider<ATProfile>
-    ): AutotunePlugin = AutotunePlugin(
-        aapsLogger = aapsLogger,
-        rh = rh,
-        preferences = preferences,
-        rxBus = rxBus,
-        profileFunction = profileFunction,
-        profileUtil = profileUtil,
-        dateUtil = dateUtil,
-        profileRepository = profileRepository,
-        autotuneFS = autotuneFS,
-        autotuneIob = autotuneIob,
-        autotunePrep = autotunePrep,
-        autotuneCore = autotuneCore,
-        config = config,
-        uel = uel,
-        loop = loop,
-        profileStoreProvider = profileStoreProvider,
-        atProfileProvider = atProfileProvider
-    )
+    // AutotunePlugin builds itself now too - same shape as LoopPlugin: javax annotations read through
+    // this module's interop, Metro contribution annotations on the class, key 240.
+
 
     @Module
     @InstallIn(SingletonComponent::class)
@@ -256,16 +220,10 @@ class ApsPluginsModule {
     abstract class Bindings {
 
 
-        @Binds abstract fun bindAutotune(plugin: AutotunePlugin): Autotune
 
         // @IntKey block 200-240, step 10 - taken from the deleted ApsPluginsListModule, NOT inferred.
         // These decide plugin order; a wrong value here reorders the list silently.
 
 
-        @Binds
-        @AllConfigs
-        @IntoMap
-        @IntKey(240)
-        abstract fun bindAutotunePlugin(plugin: AutotunePlugin): PluginBase
     }
 }
