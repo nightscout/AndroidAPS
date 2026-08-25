@@ -1,5 +1,9 @@
 package app.aaps.plugins.aps.openAPSAutoISF
 
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.SingleIn
 import androidx.collection.LongSparseArray
 import androidx.collection.forEach
 import app.aaps.core.ui.UiStrings
@@ -76,7 +80,8 @@ import kotlin.math.min
 import kotlin.math.pow
 
 
-open class OpenAPSAutoISFPlugin constructor(
+@SingleIn(AppScope::class)
+open class OpenAPSAutoISFPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val constraintsChecker: ConstraintsChecker,

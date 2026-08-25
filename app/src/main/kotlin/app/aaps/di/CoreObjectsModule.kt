@@ -31,7 +31,9 @@ import app.aaps.core.interfaces.scenes.SceneStore
 import app.aaps.core.interfaces.scenes.Scenes
 import app.aaps.core.interfaces.scenes.SceneActions
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
+import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.profiling.Profiler
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.configuration.Config
@@ -323,6 +325,8 @@ class CoreObjectsModule {
         persistenceLayerProvider: Provider<PersistenceLayer>,
         configProvider: Provider<Config>,
         calculationSignalsEmitterProvider: Provider<CalculationSignalsEmitter>,
+        apsResultProvider: Provider<APSResult>,
+        profilerProvider: Provider<Profiler>,
         loopProvider: Provider<Loop>,
         dateUtilProvider: Provider<DateUtil>,
         profileFunctionProvider: Provider<ProfileFunction>,
@@ -381,6 +385,8 @@ class CoreObjectsModule {
         persistenceLayerProvider,
         configProvider,
         calculationSignalsEmitterProvider,
+        apsResultProvider,
+        profilerProvider,
         loopProvider,
         dateUtilProvider,
         profileFunctionProvider,

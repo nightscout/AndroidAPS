@@ -6,7 +6,6 @@ import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.IntKey
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 import kotlinx.coroutines.delay
@@ -95,10 +94,11 @@ open class VirtualPumpPlugin @Inject constructor(
     private val config: Config,
     private val dateUtil: DateUtil,
     private val persistenceLayer: PersistenceLayer,
-    // Metro's Provider, not a `() -> PumpEnactResult`: it is multiplatform just the same, and Metro reads
-    // a parameterless function type as its own provider type and refuses it as a parameter. Call sites do
-    // not change - Metro's Provider is invoked, not `.get()`.
-    private val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    // A plain lambda, which is what Metro wants here: it reads a parameterless function type as its own
+    // provider form, and warns that `Provider<T>` is the discouraged spelling. (The rule that a `() -> T`
+    // is refused applies to graph FACTORY parameters, not to an injected constructor - a distinction
+    // worth keeping straight, because it decides whether a class needs its signature changed at all.)
+    private val pumpEnactResultProvider: () -> PumpEnactResult,
     private val ch: ConcentrationHelper,
     private val profileFunction: ProfileFunction,
     private val bolusProgressData: BolusProgressData,

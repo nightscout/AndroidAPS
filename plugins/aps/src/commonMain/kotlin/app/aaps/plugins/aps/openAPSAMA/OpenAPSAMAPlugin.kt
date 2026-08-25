@@ -1,5 +1,9 @@
 package app.aaps.plugins.aps.openAPSAMA
 
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.SingleIn
 import app.aaps.core.ui.UiStrings
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.plugins.aps.ApsStrings
@@ -58,7 +62,8 @@ import kotlin.math.floor
 import kotlin.math.min
 
 
-class OpenAPSAMAPlugin constructor(
+@SingleIn(AppScope::class)
+class OpenAPSAMAPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val constraintsChecker: ConstraintsChecker,

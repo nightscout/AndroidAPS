@@ -1,5 +1,9 @@
 package app.aaps.plugins.aps.openAPSSMB
 
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.SingleIn
 import androidx.collection.LongSparseArray
 import androidx.collection.forEach
 import app.aaps.core.ui.UiStrings
@@ -77,7 +81,8 @@ import kotlin.math.floor
 import kotlin.math.ln
 
 
-open class OpenAPSSMBPlugin constructor(
+@SingleIn(AppScope::class)
+open class OpenAPSSMBPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val constraintsChecker: ConstraintsChecker,

@@ -17,7 +17,9 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.protection.SecureEncrypt
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
+import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.profiling.Profiler
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -107,6 +109,10 @@ class AapsLeaves(
     // Dagger owns the app-wide emitter - `WorkflowModule.provideMainSignalsEmitter`. A history window
     // has its own, built in `HistoryWindowGraph`, which is why this one is not simply contributed.
     private val calculationSignalsEmitterProvider: Provider<CalculationSignalsEmitter>,
+    // Both are Dagger @Binds in ImplementationModule, and the openAPS plugins need them now that Metro
+    // builds those. APSResult is asked for through a Provider - one result object per loop run.
+    private val apsResultProvider: Provider<APSResult>,
+    private val profilerProvider: Provider<Profiler>,
     private val loopProvider: Provider<Loop>,
     private val dateUtilProvider: Provider<DateUtil>,
     private val profileFunctionProvider: Provider<ProfileFunction>,
@@ -213,6 +219,8 @@ class AapsLeaves(
     // No iobCobCalculator() any more: Metro builds it now, in `MainPluginsBindings`, and Dagger receives
     // it through `CoreObjectsModule.provideIobCobCalculator`.
     @Provides fun calculationSignalsEmitter(): CalculationSignalsEmitter = calculationSignalsEmitterProvider.get()
+    @Provides fun apsResult(): APSResult = apsResultProvider.get()
+    @Provides fun profiler(): Profiler = profilerProvider.get()
     @Provides fun loop(): Loop = loopProvider.get()
     @Provides fun dateUtil(): DateUtil = dateUtilProvider.get()
     @Provides fun profileFunction(): ProfileFunction = profileFunctionProvider.get()

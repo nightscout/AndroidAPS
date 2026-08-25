@@ -26,6 +26,7 @@ import app.aaps.core.interfaces.scenes.Scenes
 import app.aaps.core.interfaces.scenes.SceneActions
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.di.APS
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileStore
@@ -247,6 +248,9 @@ interface AppRootGraph : MetroViewModelMultibindings {
      * because the instance is the plugin - binding it any other way would make a second one.
      */
     @Provides fun dexcomBoyda(plugin: DexcomPlugin): DexcomBoyda = plugin
+
+    /** Metro already builds the plugin; the openAPS plugins ask for the interface. */
+    @Provides fun bgQualityCheck(plugin: BgQualityCheckPlugin): BgQualityCheck = plugin
 
     @Provides fun xDripSource(plugin: XdripSourcePlugin): XDripSource = plugin
 
