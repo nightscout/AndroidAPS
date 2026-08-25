@@ -2,6 +2,7 @@ package app.aaps.di
 
 import android.content.Context
 import android.telephony.SmsManager
+import app.aaps.ui.compose.history.HistoryScope
 import app.aaps.core.ui.search.SearchableProvider
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
@@ -282,6 +283,7 @@ class CoreObjectsModule {
         versionCheckerUtilsProvider: Provider<VersionCheckerUtils>,
         passwordCheckProvider: Provider<PasswordCheck>,
         searchableProvidersProvider: Provider<Set<SearchableProvider>>,
+        historyScopeProvider: Provider<HistoryScope>,
         importExportPrefsProvider: Provider<ImportExportPrefs>,
         overviewDataProvider: Provider<OverviewData>,
         overviewDataCacheProvider: Provider<OverviewDataCache>,
@@ -338,6 +340,7 @@ class CoreObjectsModule {
         versionCheckerUtilsProvider,
         passwordCheckProvider,
         searchableProvidersProvider,
+        historyScopeProvider,
         importExportPrefsProvider,
         overviewDataProvider,
         overviewDataCacheProvider,

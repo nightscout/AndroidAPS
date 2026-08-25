@@ -3,6 +3,7 @@ package app.aaps.di.metro
 import android.content.Context
 
 import androidx.work.WorkManager
+import app.aaps.ui.compose.history.HistoryScope
 import app.aaps.core.ui.search.SearchableProvider
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
@@ -157,6 +158,17 @@ class AapsLeaves(
     // A Dagger @IntoSet multibinding, handed over already assembled. Metro receives the Set as one
     // binding rather than re-declaring the multibinding on this side.
     private val searchableProvidersProvider: Provider<Set<SearchableProvider>>,
+    /**
+     * The history browser scope.
+     *
+     * A leaf rather than a contribution: `HistoryBrowserData` takes `MetroGraphs` to open its window,
+     * so letting Metro build it would be a cycle back into the graph that builds it.
+     *
+     * There is one of these for the app lifetime, and it wraps its own `HistoryWindowGraph`. That
+     * window is what keeps history browsing off the live loop's calculation objects, so an app-scoped
+     * view model reading it is fine.
+     */
+    private val historyScopeProvider: Provider<HistoryScope>,
     private val importExportPrefsProvider: Provider<ImportExportPrefs>,
     private val overviewDataProvider: Provider<OverviewData>,
     private val overviewDataCacheProvider: Provider<OverviewDataCache>,
@@ -239,6 +251,7 @@ class AapsLeaves(
     @Provides fun sntpClient(): SntpClient = sntpClientProvider.get()
     @Provides fun xDripBroadcast(): XDripBroadcast = xDripBroadcastProvider.get()
     @Provides fun l(): L = lProvider.get()
+    @Provides fun historyScope(): HistoryScope = historyScopeProvider.get()
     @Provides fun importExportPrefs(): ImportExportPrefs = importExportPrefsProvider.get()
     @Provides fun searchableProviders(): Set<SearchableProvider> = searchableProvidersProvider.get()
     @Provides fun overviewData(): OverviewData = overviewDataProvider.get()
