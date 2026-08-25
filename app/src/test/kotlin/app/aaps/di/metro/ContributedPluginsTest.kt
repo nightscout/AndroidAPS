@@ -40,7 +40,11 @@ class ContributedPluginsTest {
             // calibration
             700, 710,
             // constraints, every-build bucket only
-            800, 850, 860
+            800, 850, 860,
+            // virtual pump. Contributed from commonMain in :pump:virtual, unqualified on purpose: the
+            // Dagger binding carried @AllConfigs, but nothing reads a Metro @AllConfigs map, and :app
+            // merges this bucket unconditionally anyway.
+            1000
         )
     }
 

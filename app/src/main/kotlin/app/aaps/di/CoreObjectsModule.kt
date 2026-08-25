@@ -114,7 +114,6 @@ import app.aaps.plugins.constraints.objectives.SntpClient
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
-import app.aaps.core.interfaces.pump.VirtualPump
 import androidx.work.WorkManager
 
 /**
@@ -305,7 +304,6 @@ class CoreObjectsModule {
         processedDeviceStatusDataProvider: Provider<ProcessedDeviceStatusData>,
         wizardBolusExecutorProvider: Provider<WizardBolusExecutor>,
         contextProvider: Provider<Context>,
-        virtualPumpProvider: Provider<VirtualPump>,
         uiInteractionProvider: Provider<UiInteraction>,
         notificationHolderProvider: Provider<NotificationHolder>,
         lastLocationDataContainerProvider: Provider<LastLocationDataContainer>,
@@ -364,7 +362,6 @@ class CoreObjectsModule {
         processedDeviceStatusDataProvider,
         wizardBolusExecutorProvider,
         contextProvider,
-        virtualPumpProvider,
         uiInteractionProvider,
         notificationHolderProvider,
         lastLocationDataContainerProvider,

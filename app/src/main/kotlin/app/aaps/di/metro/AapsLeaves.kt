@@ -42,7 +42,6 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.PasswordCheck
-import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -133,7 +132,6 @@ class AapsLeaves(
     private val processedDeviceStatusDataProvider: Provider<ProcessedDeviceStatusData>,
     private val wizardBolusExecutorProvider: Provider<WizardBolusExecutor>,
     private val contextProvider: Provider<Context>,
-    private val virtualPumpProvider: Provider<VirtualPump>,
     // Source plugins, still built by Dagger. They live here rather than in their own module because a
     // graph extension is generated in the parent's module, so Metro cannot read a container from the
     // module the extension is declared in.
@@ -247,7 +245,6 @@ class AapsLeaves(
     @Provides fun processedDeviceStatusData(): ProcessedDeviceStatusData = processedDeviceStatusDataProvider.get()
     @Provides fun wizardBolusExecutor(): WizardBolusExecutor = wizardBolusExecutorProvider.get()
     @Provides fun context(): Context = contextProvider.get()
-    @Provides fun virtualPump(): VirtualPump = virtualPumpProvider.get()
 
 
     @Provides fun uiInteraction(): UiInteraction = uiInteractionProvider.get()

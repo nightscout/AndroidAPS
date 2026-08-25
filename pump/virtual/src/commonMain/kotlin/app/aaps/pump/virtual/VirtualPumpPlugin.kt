@@ -1,5 +1,14 @@
 package app.aaps.pump.virtual
 
+import app.aaps.core.interfaces.plugin.PluginBase
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 import kotlinx.coroutines.delay
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
@@ -56,7 +65,26 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 
-open class VirtualPumpPlugin(
+/*
+ * Built AND registered by the graph, from common code.
+ *
+ * Every annotation here is Metro's, and Metro's are multiplatform, so this file still compiles for iOS.
+ * That is the whole point: `:app` used to construct this plugin by hand in `VirtualPumpModule` and bind
+ * it there, for the single reason that one Dagger annotation in a KMP module would have pinned it to the
+ * JVM. Nothing about this plugin lives in `:app` any more.
+ *
+ * No `@AllConfigs` qualifier on the map entry, even though the Dagger binding had one. `:app` merges the
+ * unqualified Metro bucket unconditionally - see `PluginSource("Metro", ...)` in `AppModule` - which is
+ * exactly what `@AllConfigs` meant. Using the qualifier would have been worse than redundant: nothing
+ * reads a Metro `@AllConfigs` map, so the plugin would have vanished from the list without an error.
+ *
+ * Key 1000 is virtual pump's own. Real pump drivers use the `@PumpDriver` map from 1010 up.
+ */
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@IntKey(1000)
+@ContributesBinding(AppScope::class, binding = binding<VirtualPump>())
+@SingleIn(AppScope::class)
+open class VirtualPumpPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     override val rh: TextResolver,
@@ -66,7 +94,10 @@ open class VirtualPumpPlugin(
     private val config: Config,
     private val dateUtil: DateUtil,
     private val persistenceLayer: PersistenceLayer,
-    private val pumpEnactResultProvider: () -> PumpEnactResult,
+    // Metro's Provider, not a `() -> PumpEnactResult`: it is multiplatform just the same, and Metro reads
+    // a parameterless function type as its own provider type and refuses it as a parameter. Call sites do
+    // not change - Metro's Provider is invoked, not `.get()`.
+    private val pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val ch: ConcentrationHelper,
     private val profileFunction: ProfileFunction,
     private val bolusProgressData: BolusProgressData,
