@@ -51,6 +51,7 @@ import app.aaps.core.ui.compose.icons.IcPluginVirtualPump
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.pump.virtual.extensions.toText
 import app.aaps.pump.virtual.keys.VirtualBooleanNonPreferenceKey
+import app.aaps.pump.virtual.keys.VirtualStringNonPreferenceKey
 import kotlinx.coroutines.CoroutineScope
 import app.aaps.core.ui.UiStrings
 import kotlin.time.Clock
@@ -411,7 +412,20 @@ open class VirtualPumpPlugin @Inject constructor(
 
     override fun manufacturer(): ManufacturerType = pumpDescription.pumpType.manufacturer()
     override fun model(): PumpType = pumpDescription.pumpType
-    override fun serialNumber(): String = virtualPumpSerialNumber()
+    /**
+     * Generated on the first read and kept from then on.
+     *
+     * `by lazy` rather than a check in [serialNumber]: this is read on every `pumpSync` entry, and the
+     * plugin is a singleton, so one synchronised initialisation is both cheaper and free of the race
+     * where two callers each draw a code and one of them wins the write.
+     */
+    private val serial: String by lazy {
+        preferences.get(VirtualStringNonPreferenceKey.SerialNumber).ifBlank {
+            generateVirtualPumpSerial().also { preferences.put(VirtualStringNonPreferenceKey.SerialNumber, it) }
+        }
+    }
+
+    override fun serialNumber(): String = serial
     override fun canHandleDST(): Boolean = true
 
     fun refreshConfiguration() {
