@@ -43,7 +43,8 @@ import app.aaps.core.keys.interfaces.withClick
 import app.aaps.core.ui.compose.icons.IcPluginNfc
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.plugins.sync.R
-import app.aaps.plugins.sync.nfcCommands.actions.*
+import app.aaps.plugins.sync.nfcCommands.actions.NfcAction
+import app.aaps.plugins.sync.nfcCommands.actions.pumpBasalDurationStep
 import app.aaps.plugins.sync.nfcCommands.keys.NfcIntentKey
 import org.json.JSONObject
 import java.nio.charset.StandardCharsets
