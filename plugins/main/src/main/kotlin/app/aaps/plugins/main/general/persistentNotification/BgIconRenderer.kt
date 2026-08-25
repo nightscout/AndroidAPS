@@ -20,7 +20,12 @@ class BgIconRenderer @Inject constructor() {
         const val MIN_TEXT_SIZE_PX = 8f
     }
 
+    private var cachedText: String? = null
+    private var cachedIcon: IconCompat? = null
+
+    @Synchronized
     fun render(text: String): IconCompat {
+        cachedIcon?.let { if (text == cachedText) return it }
         val bitmap = Bitmap.createBitmap(SIZE_PX, SIZE_PX, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -33,7 +38,10 @@ class BgIconRenderer @Inject constructor() {
         val x = SIZE_PX / 2f
         val y = SIZE_PX / 2f - bounds.exactCenterY()
         canvas.drawText(text, x, y, paint)
-        return IconCompat.createWithBitmap(bitmap)
+        val icon = IconCompat.createWithBitmap(bitmap)
+        cachedText = text
+        cachedIcon = icon
+        return icon
     }
 
     private fun fitTextSize(paint: Paint, text: String, bounds: Rect): Float {
