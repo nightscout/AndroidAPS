@@ -2,8 +2,18 @@ package app.aaps.di.metro
 
 import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.core.interfaces.pump.rfcomm.RfcommTransport
+import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.database.DanaHistoryDatabase
+import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danars.comm.DanaRSPacket
+import app.aaps.pump.danars.services.BLEComm
+import app.aaps.pump.diaconn.DiaconnG8Pump
+import app.aaps.pump.equil.EquilPumpPlugin
+import app.aaps.pump.equil.manager.EquilManager
+import app.aaps.pump.medtrum.MedtrumPlugin
+import app.aaps.pump.medtrum.MedtrumPump
+import app.aaps.pump.omnipod.dash.OmnipodDashPumpPlugin
+import info.nightscout.pump.combov2.ComboV2Plugin
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.Provides
 import javax.inject.Provider
@@ -53,7 +63,18 @@ class PumpLeaves(
     private val omnipodDashManagerProvider: Provider<OmnipodDashManager>,
     private val omnipodDashPodStateManagerProvider: Provider<OmnipodDashPodStateManager>,
     private val danaHistoryDatabaseProvider: Provider<DanaHistoryDatabase>,
-    private val danaRSPacketsProvider: Provider<Set<DanaRSPacket>>
+    private val danaRSPacketsProvider: Provider<Set<DanaRSPacket>>,
+    // The pump state holders and driver plugins - see the note above their @Provides below.
+    private val bleCommProvider: Provider<BLEComm>,
+    private val comboV2PluginProvider: Provider<ComboV2Plugin>,
+    private val danaPumpProvider: Provider<DanaPump>,
+    private val danaRSPluginProvider: Provider<DanaRSPlugin>,
+    private val diaconnG8PumpProvider: Provider<DiaconnG8Pump>,
+    private val equilManagerProvider: Provider<EquilManager>,
+    private val equilPumpPluginProvider: Provider<EquilPumpPlugin>,
+    private val medtrumPluginProvider: Provider<MedtrumPlugin>,
+    private val medtrumPumpProvider: Provider<MedtrumPump>,
+    private val omnipodDashPumpPluginProvider: Provider<OmnipodDashPumpPlugin>
 ) {
 
     @Provides fun bleTransport(): BleTransport = bleTransportProvider.get()
@@ -75,4 +96,32 @@ class PumpLeaves(
 
     /** The command set, already assembled by Dagger's @IntoSet multibinding in `DanaRSModule`. */
     @Provides fun danaRSPackets(): Set<DanaRSPacket> = danaRSPacketsProvider.get()
+
+    /*
+     * Pump state holders and driver plugins, handed over from Dagger so there is exactly ONE of each.
+     *
+     * These carry a javax `@Singleton` and an `@Inject` constructor, and nothing else. That is enough for
+     * Dagger to build them for the pump services (`DanaRSService` is still a `DaggerService`) and for the
+     * command queue - and, because `:app` runs Metro with Dagger interop, it is also enough for Metro to
+     * build its OWN copy for anything in its graph, which now means every pump Compose view model.
+     *
+     * Two instances of a pump's state is not a slow screen, it is a screen watching an object the pump
+     * never writes to: the service fills Dagger's `DanaPump` while `DanaRSOverviewViewModel` reads Metro's.
+     * That is what turned CI shards A and C red - "Pump never reported initialized", "Command queue never
+     * went idle" - while shard B, which drives the transport with no UI, stayed green.
+     *
+     * A javax scope does not cross the two frameworks, so the only fix is to name the owner. Dagger owns
+     * them, because the services do; this hands its instance to Metro. `PumpLeavesTest` fails if a new
+     * one is added to a view model without being listed here.
+     */
+    @Provides fun bleComm(): BLEComm = bleCommProvider.get()
+    @Provides fun comboV2Plugin(): ComboV2Plugin = comboV2PluginProvider.get()
+    @Provides fun danaPump(): DanaPump = danaPumpProvider.get()
+    @Provides fun danaRSPlugin(): DanaRSPlugin = danaRSPluginProvider.get()
+    @Provides fun diaconnG8Pump(): DiaconnG8Pump = diaconnG8PumpProvider.get()
+    @Provides fun equilManager(): EquilManager = equilManagerProvider.get()
+    @Provides fun equilPumpPlugin(): EquilPumpPlugin = equilPumpPluginProvider.get()
+    @Provides fun medtrumPlugin(): MedtrumPlugin = medtrumPluginProvider.get()
+    @Provides fun medtrumPump(): MedtrumPump = medtrumPumpProvider.get()
+    @Provides fun omnipodDashPumpPlugin(): OmnipodDashPumpPlugin = omnipodDashPumpPluginProvider.get()
 }

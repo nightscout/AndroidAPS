@@ -2,8 +2,18 @@ package app.aaps.di.metro
 
 import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.core.interfaces.pump.rfcomm.RfcommTransport
+import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.database.DanaHistoryDatabase
+import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danars.comm.DanaRSPacket
+import app.aaps.pump.danars.services.BLEComm
+import app.aaps.pump.diaconn.DiaconnG8Pump
+import app.aaps.pump.equil.EquilPumpPlugin
+import app.aaps.pump.equil.manager.EquilManager
+import app.aaps.pump.medtrum.MedtrumPlugin
+import app.aaps.pump.medtrum.MedtrumPump
+import app.aaps.pump.omnipod.dash.OmnipodDashPumpPlugin
+import info.nightscout.pump.combov2.ComboV2Plugin
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -49,6 +59,22 @@ class PumpLeavesModule {
         omnipodDashManager: Provider<OmnipodDashManager>,
         omnipodDashPodStateManager: Provider<OmnipodDashPodStateManager>,
         danaHistoryDatabase: Provider<DanaHistoryDatabase>,
-        danaRSPackets: Provider<Set<DanaRSPacket>>
-    ): PumpLeaves = PumpLeaves(bleTransport, rfcommTransport, danaHistoryRecordDao, diaconnHistoryRecordDao, equilBleTransport, equilHistoryPumpDao, equilHistoryRecordDao, dashHistoryDatabase, historyMapper, historyRecordDao, medtrumBleTransport, omnipodDashManager, omnipodDashPodStateManager, danaHistoryDatabase, danaRSPackets)
+        danaRSPackets: Provider<Set<DanaRSPacket>>,
+        bleComm: Provider<BLEComm>,
+        comboV2Plugin: Provider<ComboV2Plugin>,
+        danaPump: Provider<DanaPump>,
+        danaRSPlugin: Provider<DanaRSPlugin>,
+        diaconnG8Pump: Provider<DiaconnG8Pump>,
+        equilManager: Provider<EquilManager>,
+        equilPumpPlugin: Provider<EquilPumpPlugin>,
+        medtrumPlugin: Provider<MedtrumPlugin>,
+        medtrumPump: Provider<MedtrumPump>,
+        omnipodDashPumpPlugin: Provider<OmnipodDashPumpPlugin>
+    ): PumpLeaves = PumpLeaves(
+        bleTransport, rfcommTransport, danaHistoryRecordDao, diaconnHistoryRecordDao, equilBleTransport,
+        equilHistoryPumpDao, equilHistoryRecordDao, dashHistoryDatabase, historyMapper, historyRecordDao,
+        medtrumBleTransport, omnipodDashManager, omnipodDashPodStateManager, danaHistoryDatabase, danaRSPackets,
+        bleComm, comboV2Plugin, danaPump, danaRSPlugin, diaconnG8Pump, equilManager, equilPumpPlugin,
+        medtrumPlugin, medtrumPump, omnipodDashPumpPlugin
+    )
 }
