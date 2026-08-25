@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 
-package app.aaps.plugins.sync.nfcCommands
+package app.aaps.plugins.sync.nfcCommands.compose
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
@@ -66,6 +66,12 @@ import org.json.JSONObject
 import java.text.DateFormat
 import app.aaps.plugins.sync.R
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.plugins.sync.nfcCommands.NfcCommandCode
+import app.aaps.plugins.sync.nfcCommands.NfcCommandsPlugin
+import app.aaps.plugins.sync.nfcCommands.NfcCreatedTag
+import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
+import app.aaps.plugins.sync.nfcCommands.NfcLogEntry
+import app.aaps.plugins.sync.nfcCommands.NfcTagStore
 
 private sealed class NfcRoute {
     object Main : NfcRoute()

@@ -1,4 +1,4 @@
-package app.aaps.plugins.sync.nfcCommands
+package app.aaps.plugins.sync.nfcCommands.compose
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,6 +29,10 @@ import app.aaps.core.ui.compose.icons.IcPluginNfc
 import app.aaps.core.ui.compose.navigation.color
 import org.json.JSONObject
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.plugins.sync.nfcCommands.NfcCommandCode
+import app.aaps.plugins.sync.nfcCommands.NfcCommandsPlugin
+import app.aaps.plugins.sync.nfcCommands.NfcCreatedTag
+import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
 
 @Composable
 fun NfcExecutionConfirmationDialog(

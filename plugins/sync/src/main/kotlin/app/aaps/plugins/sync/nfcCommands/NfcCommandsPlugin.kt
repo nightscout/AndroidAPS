@@ -45,6 +45,7 @@ import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nfcCommands.actions.NfcAction
 import app.aaps.plugins.sync.nfcCommands.actions.pumpBasalDurationStep
+import app.aaps.plugins.sync.nfcCommands.compose.NfcCommandsComposeContent
 import app.aaps.plugins.sync.nfcCommands.keys.NfcIntentKey
 import org.json.JSONObject
 import java.nio.charset.StandardCharsets

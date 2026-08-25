@@ -1,4 +1,6 @@
 package app.aaps.plugins.sync.nfcCommands
+import app.aaps.plugins.sync.nfcCommands.compose.WriteOutcome
+import app.aaps.plugins.sync.nfcCommands.compose.resolveWriteOutcome
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test

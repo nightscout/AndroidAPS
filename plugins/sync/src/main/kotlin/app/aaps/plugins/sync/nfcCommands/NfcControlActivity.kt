@@ -37,6 +37,7 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.ui.compose.dialogs.GlobalSnackbarHost
 import app.aaps.core.ui.compose.pump.PumpActivityDialog
 import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
+import app.aaps.plugins.sync.nfcCommands.compose.NfcExecutionConfirmationDialog
 import dagger.android.AndroidInjection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

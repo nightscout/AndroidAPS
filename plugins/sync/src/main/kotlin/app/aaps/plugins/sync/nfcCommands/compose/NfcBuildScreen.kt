@@ -1,4 +1,4 @@
-package app.aaps.plugins.sync.nfcCommands
+package app.aaps.plugins.sync.nfcCommands.compose
 
 import android.app.Activity
 import android.nfc.NdefMessage
@@ -102,6 +102,15 @@ import app.aaps.core.ui.compose.icons.IcTtManual
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.plugins.sync.R
+import app.aaps.plugins.sync.nfcCommands.ArgType
+import app.aaps.plugins.sync.nfcCommands.NfcCategories
+import app.aaps.plugins.sync.nfcCommands.NfcCommandCode
+import app.aaps.plugins.sync.nfcCommands.NfcCommandsPlugin
+import app.aaps.plugins.sync.nfcCommands.NfcCreatedTag
+import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
+import app.aaps.plugins.sync.nfcCommands.NfcLogEntry
+import app.aaps.plugins.sync.nfcCommands.NfcTagStore
+import app.aaps.plugins.sync.nfcCommands.NfcUiCategory
 import app.aaps.plugins.sync.nfcCommands.actions.NfcAction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
