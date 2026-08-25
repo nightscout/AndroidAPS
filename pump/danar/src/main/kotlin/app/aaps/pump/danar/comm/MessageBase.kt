@@ -1,5 +1,6 @@
 package app.aaps.pump.danar.comm
 
+import dev.zacsweers.metro.HasMemberInjections
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
@@ -37,6 +38,9 @@ import javax.inject.Inject
  *
  *  7E  7E  len  F1  CMD  SUB data CRC CRC 2E  2E
  */
+// Metro reads this class now that interop is on. It is subclassable, so it must declare that its
+// injected fields are meant to be filled.
+@HasMemberInjections
 open class MessageBase(injector: HasAndroidInjector) {
 
     @Inject lateinit var aapsLogger: AAPSLogger

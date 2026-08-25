@@ -11,18 +11,18 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.Firebase
-import dagger.Reusable
 import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.io.ObjectInputStream
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Some users do not wish to be tracked, Fabric Answers and Crashlytics do not provide an easy way
  * to disable them and make calls from a potentially invalid singleton reference. This wrapper
  * emulates the methods but ignores the request if the instance is null or invalid.
  */
-@Reusable
+@Singleton
 class FabricPrivacyImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sharedPreferences: SharedPreferences // Injecting Preferences is causing circular dependencies

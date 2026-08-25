@@ -9,7 +9,11 @@ import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 import androidx.work.testing.SynchronousExecutor
 import androidx.work.testing.WorkManagerTestInitHelper
+import app.aaps.core.interfaces.di.MetroMemberInjector
+import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
+import app.aaps.di.metro.MetroGraphs
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
@@ -31,7 +35,7 @@ import dagger.hilt.components.SingletonComponent
  * after the rule has built the component. [androidInjector] resolves the injector freshly per call (no
  * caching) so it always targets the current test's component.
  */
-open class BaseTestApp : Application(), HasAndroidInjector {
+open class BaseTestApp : Application(), HasAndroidInjector, MetroMemberInjector, MetroViewModelFactoryOwner {
 
     override fun onCreate() {
         super.onCreate()
@@ -81,8 +85,44 @@ open class BaseTestApp : Application(), HasAndroidInjector {
         fun hiltWorkerFactory(): HiltWorkerFactory
     }
 
+    /**
+     * The Metro half of the bridge, resolved lazily for the same reason as [WorkerFactoryEntryPoint]:
+     * the singleton component is built per test by `HiltAndroidRule`, so it does not exist in
+     * [onCreate]. `MetroGraphs` is `@Singleton`, so every call here returns the current test's one root.
+     */
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface MetroBridgeEntryPoint {
+
+        fun metroGraphs(): MetroGraphs
+    }
+
     override fun androidInjector(): AndroidInjector<Any> =
         EntryPointAccessors.fromApplication(this, TestAppEntryPoint::class.java).androidInjector()
+
+    private fun metroGraphs(): MetroGraphs =
+        EntryPointAccessors.fromApplication(this, MetroBridgeEntryPoint::class.java).metroGraphs()
+
+    // Mirrors MainApp. Without these, anything Metro injects crashes the moment the system creates it
+    // outside a test - a started service or a broadcast receiver - because the application it looks at
+    // is this one, not MainApp. `DummyService` did exactly that and took the whole run down with it.
+    override fun injectMembers(target: Any): Boolean {
+        val graphs = try {
+            metroGraphs()
+        } catch (_: IllegalStateException) {
+            // No component yet, so no test is running - `HiltAndroidRule` builds one per test. The
+            // system can still deliver a broadcast at such a moment: MY_PACKAGE_REPLACED arrives right
+            // after `adb install -r`, and it reached AutoStartReceiver here. In production
+            // `injectMetroMembers` rightly kills the process for a target it cannot inject, but doing
+            // that here fails a whole run over a broadcast no test asked for. Report success instead
+            // and leave the fields unset: nothing is running that could read them.
+            return true
+        }
+        // A genuine missing binding inside a test still fails loudly, which is the point of the check.
+        return graphs.injectMembers(target)
+    }
+
+    override val metroViewModelFactory: MetroViewModelFactory get() = metroGraphs().viewModelFactory
 }
 
 @CustomTestApplication(BaseTestApp::class)

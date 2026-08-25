@@ -24,8 +24,9 @@ abstract class MedtrumModule {
     @ContributesAndroidInjector
     abstract fun contributesMedtrumService(): MedtrumService
 
+    // Scope on the implementation, not the binding: Metro reads this module now that interop is on for
+    // the module, and it rejects a scoped @Binds. The class carries @Singleton itself.
     @Binds
-    @Singleton
     abstract fun bindMedtrumBleTransport(impl: MedtrumBleTransportImpl): MedtrumBleTransport
 
     // Pump plugin registration — @IntKey range 1000–1200, see PluginsListModule for overview

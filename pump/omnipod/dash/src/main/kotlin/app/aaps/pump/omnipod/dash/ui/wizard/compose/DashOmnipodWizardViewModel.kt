@@ -2,6 +2,7 @@ package app.aaps.pump.omnipod.dash.ui.wizard.compose
 
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Stable
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
@@ -43,7 +44,10 @@ import app.aaps.pump.omnipod.dash.history.data.ResolvedResult
 import app.aaps.pump.omnipod.dash.util.Constants
 import app.aaps.pump.omnipod.dash.util.I8n
 import app.aaps.pump.omnipod.dash.util.mapProfileToBasalProgram
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -57,7 +61,10 @@ import javax.inject.Provider
 import app.aaps.pump.omnipod.common.R as CommonR
 
 @Stable
-@HiltViewModel
+// Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
+// unscoped so each screen gets its own.
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 class DashOmnipodWizardViewModel @Inject constructor(
     private val omnipodManager: OmnipodDashManager,
     private val podStateManager: OmnipodDashPodStateManager,

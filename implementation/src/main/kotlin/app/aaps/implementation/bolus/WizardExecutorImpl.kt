@@ -6,7 +6,9 @@ import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 
 /**
  * [WizardExecutor] implementation — the RECOMPUTE bolus path (QuickWizard WIZARD-mode + manual Bolus Wizard). It
@@ -16,7 +18,10 @@ import javax.inject.Singleton
  * [BatchExecutorImpl]. The compute/deliver logic lives once in the executor, so a client's request lands in that
  * same executor on the master and both roles render the master's identical lines.
  */
-@Singleton
+// Metro builds this; Dagger receives it via a @Provides delegate in `:app`. Metro's @SingleIn,
+// not javax @Singleton, because the graph is generated in `:app`.
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class WizardExecutorImpl @Inject constructor(
     private val roleBranch: RoleBranch,
     private val wizardBolusExecutor: WizardBolusExecutor

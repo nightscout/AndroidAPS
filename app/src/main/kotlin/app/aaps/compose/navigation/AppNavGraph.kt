@@ -23,7 +23,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import app.aaps.core.ui.compose.metroViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
@@ -66,6 +66,7 @@ import app.aaps.plugins.configuration.setupwizard.SWDefinition
 import app.aaps.plugins.configuration.setupwizard.SetupWizardScreen
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.compose.AuthorizedClientsScreen
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.compose.PairWithMasterScreen
+import app.aaps.ui.compose.foodManagement.FoodManagementViewModel
 import app.aaps.ui.compose.calibrationDialog.CalibrationDialogScreen
 import app.aaps.ui.compose.carbsDialog.CarbsDialogScreen
 import app.aaps.ui.compose.careDialog.CareDialogScreen
@@ -543,7 +544,7 @@ fun NavGraphBuilder.appNavGraph(
     }
 
     composable(AppRoute.QuickLaunchConfig.route) {
-        val quickLaunchConfigViewModel: QuickLaunchConfigViewModel = hiltViewModel()
+        val quickLaunchConfigViewModel: QuickLaunchConfigViewModel = metroViewModel()
         QuickLauchConfigScreen(
             viewModel = quickLaunchConfigViewModel,
             onNavigateBack = { navController.safePopBackStack() }
@@ -706,7 +707,7 @@ fun NavGraphBuilder.appNavGraph(
     }
 
     composable(AppRoute.FoodManagement.route) {
-        val foodManagementViewModel: app.aaps.ui.compose.foodManagement.FoodManagementViewModel = hiltViewModel()
+        val foodManagementViewModel: FoodManagementViewModel = metroViewModel()
         app.aaps.ui.compose.foodManagement.FoodManagementScreen(
             viewModel = foodManagementViewModel,
             onNavigateBack = { navController.safePopBackStack() },

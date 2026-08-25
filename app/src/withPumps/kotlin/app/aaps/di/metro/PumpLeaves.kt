@@ -1,0 +1,127 @@
+package app.aaps.di.metro
+
+import app.aaps.core.interfaces.pump.ble.BleTransport
+import app.aaps.core.interfaces.pump.rfcomm.RfcommTransport
+import app.aaps.pump.dana.DanaPump
+import app.aaps.pump.dana.database.DanaHistoryDatabase
+import app.aaps.pump.danars.DanaRSPlugin
+import app.aaps.pump.danars.comm.DanaRSPacket
+import app.aaps.pump.danars.services.BLEComm
+import app.aaps.pump.diaconn.DiaconnG8Pump
+import app.aaps.pump.equil.EquilPumpPlugin
+import app.aaps.pump.equil.manager.EquilManager
+import app.aaps.pump.medtrum.MedtrumPlugin
+import app.aaps.pump.medtrum.MedtrumPump
+import app.aaps.pump.omnipod.dash.OmnipodDashPumpPlugin
+import info.nightscout.pump.combov2.ComboV2Plugin
+import dev.zacsweers.metro.BindingContainer
+import dev.zacsweers.metro.Provides
+import javax.inject.Provider
+import app.aaps.pump.dana.database.DanaHistoryRecordDao
+import app.aaps.pump.diaconn.database.DiaconnHistoryRecordDao
+import app.aaps.pump.equil.ble.EquilBleTransport
+import app.aaps.pump.equil.database.EquilHistoryPumpDao
+import app.aaps.pump.equil.database.EquilHistoryRecordDao
+import app.aaps.pump.omnipod.dash.history.database.DashHistoryDatabase
+import app.aaps.pump.omnipod.dash.history.mapper.HistoryMapper
+import app.aaps.pump.omnipod.dash.history.database.HistoryRecordDao
+import app.aaps.pump.medtrum.ble.MedtrumBleTransport
+import app.aaps.pump.omnipod.dash.driver.OmnipodDashManager
+import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
+
+/**
+ * Pump-only objects Dagger still owns, offered to the root graph as one container.
+ *
+ * There is a copy of this class in `src/aapsclient` with the same name and no bindings. Only one is
+ * compiled into any build, so `AppRootGraph` can name it from `src/main` while the contents differ per
+ * flavour - the same trick `PumpDriversModule` already uses.
+ *
+ * That split is the whole reason this file exists. [BleTransport] is chosen at runtime by
+ * `DanaModules.provideBleTransport`, which swaps in `EmulatorBleTransport` when an emulator option is
+ * on. It therefore cannot be contributed by either implementation, and it cannot go in `AapsLeaves`
+ * either: that class lives in `src/main` and is compiled for the follower builds too, where no pump
+ * module is on the classpath at all.
+ *
+ * Deliberately no `@Inject` constructor. A binding container that Metro can also construct crashes the
+ * compiler when Dagger interop is on - see the note in `CoreObjectsModule` and
+ * https://github.com/ZacSweers/metro/issues/2727.
+ */
+@BindingContainer
+class PumpLeaves(
+    private val bleTransportProvider: Provider<BleTransport>,
+    // Same emulator seam as BleTransport: DanaModules picks EmulatorRfcommTransport by config.
+    private val rfcommTransportProvider: Provider<RfcommTransport>,
+    private val danaHistoryRecordDaoProvider: Provider<DanaHistoryRecordDao>,
+    private val diaconnHistoryRecordDaoProvider: Provider<DiaconnHistoryRecordDao>,
+    private val equilBleTransportProvider: Provider<EquilBleTransport>,
+    private val equilHistoryPumpDaoProvider: Provider<EquilHistoryPumpDao>,
+    private val equilHistoryRecordDaoProvider: Provider<EquilHistoryRecordDao>,
+    private val dashHistoryDatabaseProvider: Provider<DashHistoryDatabase>,
+    private val historyMapperProvider: Provider<HistoryMapper>,
+    private val historyRecordDaoProvider: Provider<HistoryRecordDao>,
+    private val medtrumBleTransportProvider: Provider<MedtrumBleTransport>,
+    private val omnipodDashManagerProvider: Provider<OmnipodDashManager>,
+    private val omnipodDashPodStateManagerProvider: Provider<OmnipodDashPodStateManager>,
+    private val danaHistoryDatabaseProvider: Provider<DanaHistoryDatabase>,
+    private val danaRSPacketsProvider: Provider<Set<DanaRSPacket>>,
+    // The pump state holders and driver plugins - see the note above their @Provides below.
+    private val bleCommProvider: Provider<BLEComm>,
+    private val comboV2PluginProvider: Provider<ComboV2Plugin>,
+    private val danaPumpProvider: Provider<DanaPump>,
+    private val danaRSPluginProvider: Provider<DanaRSPlugin>,
+    private val diaconnG8PumpProvider: Provider<DiaconnG8Pump>,
+    private val equilManagerProvider: Provider<EquilManager>,
+    private val equilPumpPluginProvider: Provider<EquilPumpPlugin>,
+    private val medtrumPluginProvider: Provider<MedtrumPlugin>,
+    private val medtrumPumpProvider: Provider<MedtrumPump>,
+    private val omnipodDashPumpPluginProvider: Provider<OmnipodDashPumpPlugin>
+) {
+
+    @Provides fun bleTransport(): BleTransport = bleTransportProvider.get()
+    @Provides fun rfcommTransport(): RfcommTransport = rfcommTransportProvider.get()
+    @Provides fun danaHistoryRecordDao(): DanaHistoryRecordDao = danaHistoryRecordDaoProvider.get()
+    @Provides fun diaconnHistoryRecordDao(): DiaconnHistoryRecordDao = diaconnHistoryRecordDaoProvider.get()
+    @Provides fun equilBleTransport(): EquilBleTransport = equilBleTransportProvider.get()
+    @Provides fun equilHistoryPumpDao(): EquilHistoryPumpDao = equilHistoryPumpDaoProvider.get()
+    @Provides fun equilHistoryRecordDao(): EquilHistoryRecordDao = equilHistoryRecordDaoProvider.get()
+    @Provides fun dashHistoryDatabase(): DashHistoryDatabase = dashHistoryDatabaseProvider.get()
+    @Provides fun historyMapper(): HistoryMapper = historyMapperProvider.get()
+    @Provides fun historyRecordDao(): HistoryRecordDao = historyRecordDaoProvider.get()
+    @Provides fun medtrumBleTransport(): MedtrumBleTransport = medtrumBleTransportProvider.get()
+    @Provides fun omnipodDashManager(): OmnipodDashManager = omnipodDashManagerProvider.get()
+    @Provides fun omnipodDashPodStateManager(): OmnipodDashPodStateManager = omnipodDashPodStateManagerProvider.get()
+
+
+    @Provides fun danaHistoryDatabase(): DanaHistoryDatabase = danaHistoryDatabaseProvider.get()
+
+    /** The command set, already assembled by Dagger's @IntoSet multibinding in `DanaRSModule`. */
+    @Provides fun danaRSPackets(): Set<DanaRSPacket> = danaRSPacketsProvider.get()
+
+    /*
+     * Pump state holders and driver plugins, handed over from Dagger so there is exactly ONE of each.
+     *
+     * These carry a javax `@Singleton` and an `@Inject` constructor, and nothing else. That is enough for
+     * Dagger to build them for the pump services (`DanaRSService` is still a `DaggerService`) and for the
+     * command queue - and, because `:app` runs Metro with Dagger interop, it is also enough for Metro to
+     * build its OWN copy for anything in its graph, which now means every pump Compose view model.
+     *
+     * Two instances of a pump's state is not a slow screen, it is a screen watching an object the pump
+     * never writes to: the service fills Dagger's `DanaPump` while `DanaRSOverviewViewModel` reads Metro's.
+     * That is what turned CI shards A and C red - "Pump never reported initialized", "Command queue never
+     * went idle" - while shard B, which drives the transport with no UI, stayed green.
+     *
+     * A javax scope does not cross the two frameworks, so the only fix is to name the owner. Dagger owns
+     * them, because the services do; this hands its instance to Metro. `PumpLeavesTest` fails if a new
+     * one is added to a view model without being listed here.
+     */
+    @Provides fun bleComm(): BLEComm = bleCommProvider.get()
+    @Provides fun comboV2Plugin(): ComboV2Plugin = comboV2PluginProvider.get()
+    @Provides fun danaPump(): DanaPump = danaPumpProvider.get()
+    @Provides fun danaRSPlugin(): DanaRSPlugin = danaRSPluginProvider.get()
+    @Provides fun diaconnG8Pump(): DiaconnG8Pump = diaconnG8PumpProvider.get()
+    @Provides fun equilManager(): EquilManager = equilManagerProvider.get()
+    @Provides fun equilPumpPlugin(): EquilPumpPlugin = equilPumpPluginProvider.get()
+    @Provides fun medtrumPlugin(): MedtrumPlugin = medtrumPluginProvider.get()
+    @Provides fun medtrumPump(): MedtrumPump = medtrumPumpProvider.get()
+    @Provides fun omnipodDashPumpPlugin(): OmnipodDashPumpPlugin = omnipodDashPumpPluginProvider.get()
+}

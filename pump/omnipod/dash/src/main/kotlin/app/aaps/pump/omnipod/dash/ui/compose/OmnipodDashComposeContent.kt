@@ -14,7 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import app.aaps.core.ui.compose.metroViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.BlePreCheck
@@ -43,7 +43,7 @@ class OmnipodDashComposeContent(
         onNavigateBack: () -> Unit,
         onSettings: (() -> Unit)?
     ) {
-        val overviewViewModel: DashOverviewViewModel = hiltViewModel()
+        val overviewViewModel: DashOverviewViewModel = metroViewModel()
         val context = LocalContext.current
 
         // Workflow state
@@ -161,7 +161,7 @@ class OmnipodDashComposeContent(
                     onFailed = { showWizard = false }
                 )
 
-                val wizardViewModel: DashOmnipodWizardViewModel = hiltViewModel()
+                val wizardViewModel: DashOmnipodWizardViewModel = metroViewModel()
                 val wizardReady by wizardViewModel.ready.collectAsStateWithLifecycle()
                 LaunchedEffect(wizardReady, isDeactivation, wizardActivationType) {
                     if (!wizardReady) return@LaunchedEffect
@@ -180,7 +180,7 @@ class OmnipodDashComposeContent(
             }
 
             showHistory -> {
-                val historyViewModel: DashPodHistoryViewModel = hiltViewModel()
+                val historyViewModel: DashPodHistoryViewModel = metroViewModel()
                 val records by historyViewModel.records.collectAsStateWithLifecycle()
 
                 // Set toolbar with back arrow for history

@@ -2,7 +2,6 @@ package app.aaps.plugins.source.instara
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.keys.interfaces.TextRef
@@ -17,6 +16,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -30,16 +30,28 @@ import app.aaps.core.ui.compose.icons.IcGenericCgm
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.plugins.source.AbstractBgSourcePlugin
 import app.aaps.plugins.source.compose.BgSourceComposeContent
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
+import app.aaps.core.objects.workflow.MetroWorkerCreator
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 
-@Singleton
+// Registers itself into the plugin list. Scoped with Metro's own @SingleIn, NOT javax @Singleton: the
+// graph that builds a contributed class is generated in `:app`, which has no Dagger interop, so a javax
+// scope there is silently ignored and every read builds a new plugin.
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@IntKey(540)
+@SingleIn(AppScope::class)
 class InstaraPlugin @Inject constructor(
     private val context: Context,
     rh: ResourceHelper,
@@ -90,7 +102,7 @@ class InstaraPlugin @Inject constructor(
         super.onStop()
     }
 
-    @HiltWorker
+
     class InstaraWorker @AssistedInject constructor(
         @Assisted context: Context,
         @Assisted params: WorkerParameters,
@@ -103,6 +115,16 @@ class InstaraPlugin @Inject constructor(
         // Persist per-device Instara meta into preferences
         private val preferences: Preferences
     ) : LoggingWorker(context, params, Dispatchers.IO, aapsLogger, fabricPrivacy) {
+
+        /**
+         * Metro builds this worker. The parameter names must match [MetroWorkerCreator],
+         * because Metro matches assisted parameters by name and not only by type.
+         */
+        @AssistedFactory
+        fun interface Factory : MetroWorkerCreator {
+
+            override fun create(context: Context, params: WorkerParameters): InstaraWorker
+        }
 
         @Suppress("SameParameterValue")
         private fun readDouble(json: JSONObject, vararg keys: String): Double {

@@ -1,5 +1,6 @@
 package app.aaps.pump.danar.services
 
+import dev.zacsweers.metro.HasMemberInjections
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
@@ -63,6 +64,9 @@ import kotlin.math.min
 /**
  * Created by mike on 28.01.2018.
  */
+// Metro reads this class now that interop is on. It is subclassable, so it must declare that its
+// injected fields are meant to be filled.
+@HasMemberInjections
 abstract class AbstractDanaRExecutionService : DaggerService() {
 
     @Inject lateinit var injector: HasAndroidInjector

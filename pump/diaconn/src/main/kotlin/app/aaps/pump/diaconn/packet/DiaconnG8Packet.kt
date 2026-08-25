@@ -1,5 +1,6 @@
 package app.aaps.pump.diaconn.packet
 
+import dev.zacsweers.metro.HasMemberInjections
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
@@ -10,6 +11,9 @@ import java.nio.ByteOrder
 import javax.inject.Inject
 
 @Suppress("SpellCheckingInspection")
+// Metro reads this class now that interop is on for the module. It is subclassable, so it has to
+// say its injected fields are meant to be filled - Metro will not infer that for an open type.
+@HasMemberInjections
 open class DiaconnG8Packet(protected val injector: HasAndroidInjector) {
 
     @Inject lateinit var aapsLogger: AAPSLogger

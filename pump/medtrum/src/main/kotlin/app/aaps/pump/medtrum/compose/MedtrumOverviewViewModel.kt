@@ -43,7 +43,10 @@ import app.aaps.pump.medtrum.comm.enums.BasalType
 import app.aaps.pump.medtrum.comm.enums.MedtrumPumpState
 import app.aaps.pump.medtrum.comm.enums.ModelType
 import app.aaps.pump.medtrum.keys.MedtrumStringNonKey
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -66,7 +69,10 @@ sealed class MedtrumOverviewEvent {
     data object ConfirmUnpair : MedtrumOverviewEvent()
 }
 
-@HiltViewModel
+// Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
+// unscoped so each screen gets its own.
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 @Stable
 class MedtrumOverviewViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,

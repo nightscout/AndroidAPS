@@ -7,7 +7,9 @@ import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 
 /**
  * [BatchExecutor] implementation — the FIXED/capped multi-action path. It only supplies the client command to
@@ -16,7 +18,10 @@ import javax.inject.Singleton
  * [WizardExecutorImpl]. The prepare/deliver logic lives once in the executor, so a client's batch lands in that
  * same executor on the master and both roles render the master's identical confirmation.
  */
-@Singleton
+// Metro builds this; Dagger receives it via a @Provides delegate in `:app`. Metro's @SingleIn,
+// not javax @Singleton, because the graph is generated in `:app`.
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class BatchExecutorImpl @Inject constructor(
     private val roleBranch: RoleBranch,
     private val wizardBolusExecutor: WizardBolusExecutor

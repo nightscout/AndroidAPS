@@ -4,24 +4,26 @@ import android.content.Context
 import android.content.Intent
 import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.pump.defs.TimeChangeType
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.utils.receivers.BundleLogger
-import dagger.android.DaggerBroadcastReceiver
+import app.aaps.core.objects.workflow.MetroBroadcastReceiver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.Date
 import java.util.TimeZone
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
-class TimeDateOrTZChangeReceiver : DaggerBroadcastReceiver() {
+class TimeDateOrTZChangeReceiver : MetroBroadcastReceiver() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject @ApplicationScope lateinit var appScope: CoroutineScope
+    // The graph binds the application scope here. The @ApplicationScope qualifier is gone because
+    // this module has no Dagger interop yet, so Metro would ignore it - and the graph holds exactly
+    // one CoroutineScope, so there is nothing to disambiguate.
+    @Inject lateinit var appScope: CoroutineScope
 
     private var isDST = calculateDST()
 

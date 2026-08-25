@@ -130,7 +130,6 @@ import app.aaps.database.transactions.UpdateNsIdTemporaryTargetTransaction
 import app.aaps.database.transactions.UpdateNsIdTherapyEventTransaction
 import app.aaps.database.transactions.UserEntryTransaction
 import app.aaps.database.transactions.VersionChangeTransaction
-import dagger.Reusable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -139,11 +138,12 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.util.Collections.emptyList
 import javax.inject.Inject
+import javax.inject.Singleton
 import javax.inject.Provider
 import kotlin.reflect.KClass
 import kotlin.time.Duration.Companion.milliseconds
 
-@Reusable
+@Singleton
 class PersistenceLayerImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val repository: AppRepository,

@@ -85,10 +85,10 @@ import app.aaps.core.ui.compose.icons.IcTbrHigh
 import app.aaps.core.ui.compose.icons.IcTtHigh
 import app.aaps.core.ui.compose.icons.IcXDrip
 import app.aaps.core.ui.compose.navigation.color
-import dagger.Reusable
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@Reusable
+@Singleton
 class UserEntryPresentationHelperImpl @Inject constructor(
     private val translator: Translator,
     private val profileUtil: ProfileUtil,

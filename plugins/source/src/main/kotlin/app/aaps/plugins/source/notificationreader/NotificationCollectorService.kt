@@ -17,7 +17,7 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.source.NotificationReaderPlugin
-import dagger.android.AndroidInjection
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -39,7 +39,9 @@ class NotificationCollectorService : NotificationListenerService() {
 
     override fun onCreate() {
         super.onCreate()
-        AndroidInjection.inject(this)
+        // NotificationListenerService is its own framework base class, so this cannot use MetroService.
+        // Calling the injector directly is what MetroService does anyway.
+        (applicationContext as MetroMemberInjector).injectMembers(this)
         parser = NotificationParser(notificationReaderPlugin.packageConfig)
         deduplicator = GlucoseDeduplicator(
             packageConfig = notificationReaderPlugin.packageConfig,

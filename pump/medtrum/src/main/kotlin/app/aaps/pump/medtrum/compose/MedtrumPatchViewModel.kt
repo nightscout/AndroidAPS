@@ -34,7 +34,10 @@ import app.aaps.pump.medtrum.comm.enums.MedtrumPumpState
 import app.aaps.pump.medtrum.encryption.Crypt
 import app.aaps.pump.medtrum.keys.MedtrumStringNonKey
 import app.aaps.pump.medtrum.services.MedtrumService
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -61,7 +64,10 @@ enum class WizardPage {
     RETRY_ACTIVATION
 }
 
-@HiltViewModel
+// Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
+// unscoped so each screen gets its own.
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 @Stable
 class MedtrumPatchViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,

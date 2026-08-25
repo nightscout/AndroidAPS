@@ -20,7 +20,10 @@ import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.scenes.SceneActions
 import app.aaps.core.interfaces.scenes.SceneStore
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -61,7 +64,10 @@ data class ScenesUiState(
     val sceneItems: List<SceneSheetItem> = emptyList()
 )
 
-@HiltViewModel
+// Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
+// unscoped so each screen gets its own.
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 @Stable
 class ScenesViewModel @Inject constructor(
     private val automation: Automation,

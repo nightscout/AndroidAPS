@@ -47,7 +47,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import app.aaps.core.ui.compose.metroViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.ICfg
@@ -77,7 +77,7 @@ import app.aaps.core.interfaces.R as InterfacesR
 
 @Composable
 fun InsulinDialogScreen(
-    viewModel: InsulinDialogViewModel = hiltViewModel(),
+    viewModel: InsulinDialogViewModel = metroViewModel(),
     insulinButtonsDef: PreferenceSubScreenDef,
     bgInfoState: StateFlow<BgInfoUiState>,
     iobUiState: StateFlow<IobUiState>,

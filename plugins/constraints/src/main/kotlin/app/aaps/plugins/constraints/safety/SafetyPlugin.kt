@@ -35,8 +35,18 @@ import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.plugins.constraints.R
 import javax.inject.Inject
 import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.IntKey as MetroIntKey
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 
-@Singleton
+// Registers itself into the plugin list. Scoped with Metro's @SingleIn, not javax @Singleton: a
+// contributed class is built by the graph generated in `:app`, which has no Dagger interop, so a javax
+// scope there is ignored and every read would build a new plugin.
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@MetroIntKey(800)
+@SingleIn(AppScope::class)
 class SafetyPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,

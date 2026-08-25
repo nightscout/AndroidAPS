@@ -37,8 +37,20 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.math.abs
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 
 
+@Inject
+@SingleIn(AppScope::class)
+// Bound as PluginBase, not implicitly: the class has more than one supertype, so Metro cannot pick
+// one. The plugin list wants PluginBase.
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@IntKey(710)
 class LinearCalibrationPlugin(
     aapsLogger: AAPSLogger,
     override val rh: TextResolver,

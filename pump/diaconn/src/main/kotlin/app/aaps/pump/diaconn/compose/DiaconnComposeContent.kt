@@ -15,7 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
@@ -44,7 +44,7 @@ class DiaconnComposeContent(
         onNavigateBack: () -> Unit,
         onSettings: (() -> Unit)?
     ) {
-        val overviewViewModel: DiaconnOverviewViewModel = hiltViewModel()
+        val overviewViewModel: DiaconnOverviewViewModel = metroViewModel()
 
         // Navigation state
         var currentScreen by remember { mutableStateOf(DiaconnScreen.OVERVIEW) }
@@ -139,7 +139,7 @@ class DiaconnComposeContent(
                     onFailed = { currentScreen = DiaconnScreen.OVERVIEW }
                 )
 
-                val wizardViewModel: DiaconnPairWizardViewModel = hiltViewModel()
+                val wizardViewModel: DiaconnPairWizardViewModel = metroViewModel()
 
                 LaunchedEffect(wizardViewModel) {
                     wizardViewModel.events.collect { event ->
@@ -160,12 +160,12 @@ class DiaconnComposeContent(
             }
 
             DiaconnScreen.HISTORY      -> {
-                val historyViewModel: DiaconnHistoryViewModel = hiltViewModel()
+                val historyViewModel: DiaconnHistoryViewModel = metroViewModel()
                 DiaconnHistoryScreen(viewModel = historyViewModel)
             }
 
             DiaconnScreen.USER_OPTIONS -> {
-                val userOptionsViewModel: DiaconnUserOptionsViewModel = hiltViewModel()
+                val userOptionsViewModel: DiaconnUserOptionsViewModel = metroViewModel()
 
                 LaunchedEffect(userOptionsViewModel) {
                     userOptionsViewModel.events.collect { event ->

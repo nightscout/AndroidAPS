@@ -6,6 +6,7 @@ import app.aaps.implementation.plugin.PluginStore
 import app.aaps.e2e.RetryRule
 import app.aaps.plugins.aps.utils.StaticInjector
 import dagger.hilt.android.testing.HiltAndroidRule
+import dev.zacsweers.metro.HasMemberInjections
 import org.junit.Before
 import org.junit.Rule
 import org.junit.rules.RuleChain
@@ -27,6 +28,10 @@ import javax.inject.Inject
  * assume this in-process retry already happened — before this rule that assumption was false for every
  * subclass of this base, which is why a single flaky assertion turned the whole job red.
  */
+// Hilt injects these fields, not Metro. The annotation is only here because Metro's Dagger interop
+// reads this source set too, and it refuses an open class with @Inject fields unless it is told the
+// class really is a member-injection target.
+@HasMemberInjections
 abstract class HiltInstrumentedTest {
 
     val hiltRule = HiltAndroidRule(this)

@@ -23,7 +23,10 @@ import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.core.ui.compose.pump.PumpOverviewUiState
 import app.aaps.core.ui.compose.pump.StatusBanner
 import app.aaps.core.ui.compose.pump.tickerFlow
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import dagger.hilt.android.qualifiers.ApplicationContext
 import info.nightscout.comboctl.base.DisplayFrame
 import info.nightscout.comboctl.base.NullDisplayFrame
@@ -61,7 +64,10 @@ data class ComboV2OverviewUiState(
     val currentActivityProgress: Float = 0f
 )
 
-@HiltViewModel
+// Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
+// unscoped so each screen gets its own.
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 class ComboV2OverviewViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,

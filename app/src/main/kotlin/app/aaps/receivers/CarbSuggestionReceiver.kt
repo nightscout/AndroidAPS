@@ -7,9 +7,11 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.ui.CarbSuggestionActions
-import dagger.android.DaggerBroadcastReceiver
+import app.aaps.core.objects.workflow.MetroBroadcastReceiver
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Moved here from :plugins:aps so that module could become multiplatform.
@@ -19,7 +21,7 @@ import javax.inject.Singleton
  * a multiplatform module has no Java compilation step, so the file would be generated and silently
  * dropped. See `_docs/KMP_IOS_FEASIBILITY.md`, under "Decisions taken".
  */
-class CarbSuggestionReceiver : DaggerBroadcastReceiver() {
+class CarbSuggestionReceiver : MetroBroadcastReceiver() {
 
     @Inject lateinit var loop: Loop
     @Inject lateinit var aapsLogger: AAPSLogger
@@ -41,7 +43,9 @@ class CarbSuggestionReceiver : DaggerBroadcastReceiver() {
  * Builds the intents for [CarbSuggestionReceiver], so LoopPlugin does not have to name a class that
  * no longer lives in its module.
  */
-@Singleton
+// Metro builds this; the @Binds in PersistentNotificationModule is gone.
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class CarbSuggestionActionsImpl @Inject constructor(
     private val context: Context
 ) : CarbSuggestionActions {

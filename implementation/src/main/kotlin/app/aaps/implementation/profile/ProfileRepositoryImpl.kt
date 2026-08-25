@@ -43,7 +43,8 @@ import app.aaps.core.objects.extensions.toJsonArray
 import app.aaps.core.objects.extensions.toPureProfile
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
-import dagger.Lazy
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -61,9 +62,9 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.TimeZone
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Single source of truth for the local profile list.
@@ -81,12 +82,19 @@ import javax.inject.Singleton
  * Exceptions from JSON / preferences I/O are surfaced via [Result.failure] so callers can
  * render them as UI feedback rather than receiving an uncaught coroutine failure.
  */
-@Singleton
+// Metro annotations throughout, no javax and no Dagger. Dagger does not build this class any more -
+// it gets the instance from a @Provides delegate in `:app` - so nothing here needs to be readable by
+// Dagger, and Metro reads its own annotations without interop wherever the graph is generated.
+//
+// `Provider` replaces Dagger's `Lazy`: both defer, and ProfileFunction is a singleton, so the caching
+// difference between them cannot be observed here.
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class ProfileRepositoryImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val preferences: Preferences,
-    private val profileFunction: Lazy<ProfileFunction>,
+    private val profileFunction: Provider<ProfileFunction>,
     private val profileUtil: ProfileUtil,
     private val activePlugin: ActivePlugin,
     private val hardLimits: HardLimits,
@@ -347,7 +355,7 @@ class ProfileRepositoryImpl @Inject constructor(
         val free = (1..10000).firstOrNull { Constants.LOCAL_PROFILE + it !in existingNames } ?: 0
         return SingleProfile(
             name = Constants.LOCAL_PROFILE + free,
-            mgdl = profileFunction.get().getUnits() == GlucoseUnit.MGDL,
+            mgdl = profileFunction().getUnits() == GlucoseUnit.MGDL,
             ic = singleBlock(0.0),
             isf = singleBlock(0.0),
             basal = singleBlock(0.0),
@@ -601,7 +609,7 @@ class ProfileRepositoryImpl @Inject constructor(
     private fun addNewProfileInternal() {
         val existingNames = profilesList.mapTo(HashSet()) { it.name }
         val free = (1..10000).firstOrNull { Constants.LOCAL_PROFILE + it !in existingNames } ?: 0
-        val isMgdl = profileFunction.get().getUnits() == GlucoseUnit.MGDL
+        val isMgdl = profileFunction().getUnits() == GlucoseUnit.MGDL
         // Seed a new profile with conservative, hard-limit-valid placeholders rather than zeros, so a
         // freshly added profile is valid out of the box. A zero-seeded profile is semantically invalid
         // and would silently block the whole profile-store sync until edited (see #4872). ISF and the
@@ -628,7 +636,7 @@ class ProfileRepositoryImpl @Inject constructor(
      */
     private fun createAndStoreConvertedProfile() {
         val startDate = preferences.getIfExists(LongNonKey.LocalProfileLastChange) ?: dateUtil.now()
-        rawProfile = profileStoreProvider.get().with(
+        rawProfile = profileStoreProvider().with(
             buildJsonObject {
                 // First profile is the stable "default" for the serialised store. Activation
                 // decisions live in ProfileFunction (EPS-based); this field is purely cosmetic

@@ -58,12 +58,13 @@ import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import app.aaps.plugins.sync.di.OpenHumansScope
+import dev.zacsweers.metro.SingleIn
 import kotlin.time.Duration.Companion.hours
 import app.aaps.core.ui.R as CoreUiR
 
-@Singleton
+@SingleIn(OpenHumansScope::class)
 class OpenHumansUploaderPlugin @Inject internal constructor(
     override val rh: ResourceHelper,
     aapsLogger: AAPSLogger,

@@ -2,11 +2,25 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
+    // Metro beside Dagger in the same ordinary Android library module. This module is not
+    // multiplatform and never will be, so Metro is here only to take over the Android entry points
+    // Hilt answers today - the precondition for removing Dagger at all.
+    alias(libs.plugins.metro)
     id("android-module-dependencies")
     id("all-open-dependencies")
     id("test-module-dependencies")
     id("compose-test-module-dependencies")
     id("jacoco-module-dependencies")
+}
+
+metro {
+    interop {
+        // Lets Metro read the javax and Dagger annotations already on this module's classes, so a
+        // class only has to move its wiring, not rewrite its annotations. This could not be switched
+        // on until the last @Reusable was gone: Metro does not support @Reusable at all, and interop
+        // is what makes it look at those annotations in the first place.
+        includeDagger()
+    }
 }
 
 android {

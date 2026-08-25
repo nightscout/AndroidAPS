@@ -12,7 +12,10 @@ import app.aaps.ui.plugin.HardwarePumpConfirmation
 import app.aaps.ui.plugin.PluginSwitchConfirmation
 import app.aaps.ui.plugin.PluginSwitchDialogs
 import app.aaps.ui.plugin.PluginSwitchHandler
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.async
@@ -32,7 +35,10 @@ import javax.inject.Inject
  * Handles search state, debounced queries, and results.
  * Runs local search and wiki search in parallel.
  */
-@HiltViewModel
+// Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
+// unscoped so each screen gets its own.
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 @Stable
 class SearchViewModel @Inject constructor(
     private val searchIndexBuilder: SearchIndexBuilder,

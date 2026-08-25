@@ -5,10 +5,10 @@ import android.content.Context
 import android.content.Intent
 import androidx.annotation.VisibleForTesting
 import app.aaps.persistentNotification.DummyServiceHelper
-import dagger.android.DaggerBroadcastReceiver
+import app.aaps.core.objects.workflow.MetroBroadcastReceiver
 import javax.inject.Inject
 
-class AutoStartReceiver : DaggerBroadcastReceiver() {
+class AutoStartReceiver : MetroBroadcastReceiver() {
 
     @Inject lateinit var dummyServiceHelper: DummyServiceHelper
 

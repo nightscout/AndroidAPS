@@ -13,7 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.pump.BlePreCheck
@@ -39,8 +39,8 @@ class MedtrumComposeContent(
         onNavigateBack: () -> Unit,
         onSettings: (() -> Unit)?
     ) {
-        val overviewViewModel: MedtrumOverviewViewModel = hiltViewModel()
-        val patchViewModel: MedtrumPatchViewModel = hiltViewModel()
+        val overviewViewModel: MedtrumOverviewViewModel = metroViewModel()
+        val patchViewModel: MedtrumPatchViewModel = metroViewModel()
 
         // Patch workflow state
         var showPatchWorkflow by remember { mutableStateOf(false) }

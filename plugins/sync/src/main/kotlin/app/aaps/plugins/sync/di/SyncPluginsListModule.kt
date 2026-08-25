@@ -5,7 +5,6 @@ import app.aaps.core.interfaces.di.NotNSClient
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.plugins.sync.garmin.GarminPlugin
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
-import app.aaps.plugins.sync.openhumans.OpenHumansUploaderPlugin
 import app.aaps.plugins.sync.smsCommunicator.SmsCommunicatorPlugin
 import app.aaps.plugins.sync.tidepool.TidepoolPlugin
 import app.aaps.plugins.sync.tizen.TizenPlugin
@@ -20,7 +19,9 @@ import dagger.multibindings.IntoMap
 
 /**
  * Self-registration of :plugins:sync plugins into the plugin maps (@IntKey block 300–370, step 10).
- * SmsCommunicator/Tidepool/OpenHumans are @NotNSClient; NSClientV3/Xdrip/Wear/Tizen/Garmin are @AllConfigs.
+ * SmsCommunicator/Tidepool are @NotNSClient; NSClientV3/Xdrip/Wear/Tizen/Garmin are @AllConfigs.
+ * OpenHumans moved to Metro - see OpenHumansMetroGraph, which contributes it under the same
+ * @NotNSClient qualifier and the same @IntKey(340).
  * Including :plugins:sync in settings.gradle is enough — no central list edit needed.
  * See PluginsListModule for the overall @IntKey ordering overview.
  */
@@ -52,12 +53,6 @@ abstract class SyncPluginsListModule {
     @IntoMap
     @IntKey(330)
     abstract fun bindXdripPlugin(plugin: XdripPlugin): PluginBase
-
-    @Binds
-    @NotNSClient
-    @IntoMap
-    @IntKey(340)
-    abstract fun bindsOpenHumansPlugin(plugin: OpenHumansUploaderPlugin): PluginBase
 
     @Binds
     @AllConfigs

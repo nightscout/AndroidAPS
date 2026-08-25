@@ -1,5 +1,6 @@
 package app.aaps.pump.danar.comm
 
+import dev.zacsweers.metro.HasMemberInjections
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.dana.comm.RecordTypes
@@ -9,6 +10,9 @@ import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.runBlocking
 
 @Suppress("SpellCheckingInspection")
+// Metro reads this class now that interop is on. It is subclassable, or extends one that is, so it
+// must declare that its injected fields are meant to be filled.
+@HasMemberInjections
 open class MsgHistoryAll(
     injector: HasAndroidInjector
 ) : MessageBase(injector) {

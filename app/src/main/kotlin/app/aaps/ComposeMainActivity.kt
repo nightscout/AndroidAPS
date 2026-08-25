@@ -15,6 +15,8 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -222,7 +224,18 @@ class ComposeMainActivity : AppCompatActivity() {
     private var requestMultiplePermissions: ActivityResultLauncher<Array<String>>? = null
     private var onPermissionResultDenied: ((List<String>) -> Unit)? = null
 
-    // ViewModels (Hilt-provided via @HiltViewModel)
+    /**
+     * The factory `by viewModels()` uses.
+     *
+     * Without this override the delegate asks Hilt, which no longer knows these classes and falls back
+     * to `NewInstanceFactory` - that wants a no-arg constructor and throws
+     * "Cannot create an instance of class ...". It fails in `onResume`, not at startup, so a cold launch
+     * looks fine.
+     */
+    override val defaultViewModelProviderFactory: ViewModelProvider.Factory
+        get() = (applicationContext as MetroViewModelFactoryOwner).metroViewModelFactory
+
+    // View models, built by Metro - each carries @ContributesIntoMap and @ViewModelKey.
     private val mainViewModel: MainViewModel by viewModels()
     private val manageViewModel: ManageViewModel by viewModels()
     private val maintenanceViewModel: MaintenanceViewModel by viewModels()
@@ -231,7 +244,7 @@ class ComposeMainActivity : AppCompatActivity() {
     private val scenesViewModel: ScenesViewModel by viewModels()
     private val loopActionViewModel: LoopActionViewModel by viewModels()
     private val graphViewModel: GraphViewModel by viewModels {
-        viewModelFactory { initializer { graphViewModelFactory.create(overviewDataCache) } }
+        viewModelFactory { initializer { graphViewModelFactory.create(overviewDataCache, fullWindow = false) } }
     }
     private val chipsViewModel: ChipsViewModel by viewModels {
         viewModelFactory { initializer { chipsViewModelFactory.create(overviewDataCache) } }

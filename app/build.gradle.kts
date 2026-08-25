@@ -11,6 +11,25 @@ plugins {
     id("android-app-dependencies")
     id("test-app-dependencies")
     id("jacoco-app-dependencies")
+    // Metro must be applied here too: createGraphFactory is a compiler intrinsic, not a library call, so
+    // the module that CREATES a graph needs the plugin. Koin needed no such thing (koinApplication is
+    // an ordinary function) and kotlin-inject only needed the generated create() on the classpath.
+    // It must come AFTER the plugin that registers the kotlin extension, or it fails to apply.
+    alias(libs.plugins.metro)
+}
+
+metro {
+    interop {
+        // Lets Metro read the javax and Dagger annotations on classes from other modules. Without this,
+        // a graph generated here silently ignores a javax @Singleton (so a contributed class is rebuilt
+        // on every read) and cannot read a javax Provider or a Dagger Lazy at all.
+        //
+        // This could not be switched on while `AapsLeaves` had a javax @Inject constructor: interop
+        // makes Metro see the binding container as something it can also construct, and the compiler
+        // crashes with "Transforming after locked!". The container is built by hand in
+        // `CoreObjectsModule` for exactly that reason.
+        includeDagger()
+    }
 }
 
 repositories {

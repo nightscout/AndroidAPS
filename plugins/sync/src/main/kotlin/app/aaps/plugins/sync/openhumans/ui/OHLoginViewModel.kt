@@ -3,14 +3,20 @@ package app.aaps.plugins.sync.openhumans.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.plugins.sync.openhumans.OpenHumansUploaderPlugin
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import app.aaps.plugins.sync.di.OpenHumansScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 
-@HiltViewModel
+// Contributed to OpenHumansScope, not AppScope: this class is internal to the module, and a
+// contribution to AppScope would have to be nameable from `:app` where the root graph is generated.
+@ContributesIntoMap(OpenHumansScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 internal class OHLoginViewModel @Inject constructor(
     private val plugin: OpenHumansUploaderPlugin
 ) : ViewModel() {

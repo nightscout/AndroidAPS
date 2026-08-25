@@ -11,12 +11,18 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.R
-import dagger.Reusable
 import java.util.Locale
 import javax.inject.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 import kotlin.math.roundToInt
 
-@Reusable
+// Metro builds this now; Dagger gets it through a @Provides delegate in `:app`. Scoped with Metro's
+// @SingleIn, not javax @Singleton - the graph is generated in `:app`, which has no Dagger interop, so
+// a javax scope there is ignored and every read would build a new one.
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class ProfileUtilImpl @Inject constructor(
     private val preferences: Preferences,
     private val decimalFormatter: DecimalFormatter,

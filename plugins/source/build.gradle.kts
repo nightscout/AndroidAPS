@@ -3,10 +3,20 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.metro)
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("compose-test-module-dependencies")
     id("jacoco-module-dependencies")
+}
+
+metro {
+    interop {
+        // Lets Metro read the javax and Dagger annotations already on these classes, so converting a
+        // worker or a plugin means moving its wiring, not rewriting its annotations. Also required
+        // here because RequestDexcomPermissionActivity extends a dagger.android base class.
+        includeDagger()
+    }
 }
 
 android {

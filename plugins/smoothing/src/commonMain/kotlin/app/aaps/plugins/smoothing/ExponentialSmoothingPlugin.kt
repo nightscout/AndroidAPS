@@ -11,10 +11,22 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.smoothing.Smoothing
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 import kotlin.math.max
 import kotlin.math.round
 
 
+@Inject
+@SingleIn(AppScope::class)
+// Bound as PluginBase, not implicitly: these classes have two supertypes (PluginBase and Smoothing),
+// so Metro cannot pick one. The plugin list wants PluginBase.
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@IntKey(610)
 class ExponentialSmoothingPlugin(
     aapsLogger: AAPSLogger,
     rh: TextResolver

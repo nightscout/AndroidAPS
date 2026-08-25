@@ -30,7 +30,10 @@ import app.aaps.core.ui.R
 import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.ui.compose.main.QuickWizardItem
 import app.aaps.ui.compose.navigation.ElementAvailability
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -44,7 +47,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.abs
 
-@HiltViewModel
+// Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
+// unscoped so each screen gets its own.
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 @Stable
 class TreatmentViewModel @Inject constructor(
     private val rh: ResourceHelper,

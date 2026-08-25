@@ -21,6 +21,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -42,8 +43,18 @@ import javax.inject.Singleton
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.IntKey as MetroIntKey
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 
-@Singleton
+// Registers itself into the plugin list. Scoped with Metro's own @SingleIn, NOT javax @Singleton: the
+// graph that builds a contributed class is generated in `:app`, which has no Dagger interop, so a javax
+// scope there is silently ignored and every read builds a new plugin.
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@MetroIntKey(550)
+@SingleIn(AppScope::class)
 class RandomBgPlugin @Inject constructor(
     private val context: Context,
     rh: ResourceHelper,

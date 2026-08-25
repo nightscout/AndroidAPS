@@ -25,12 +25,14 @@ abstract class MaintenanceImplModule {
 
     // CsvExportWorker and ApsResultExportWorker migrated to @HiltWorker (constructed by HiltWorkerFactory).
     @ContributesAndroidInjector abstract fun encryptedPrefsFormatInjector(): EncryptedPrefsFormat
-    @ContributesAndroidInjector abstract fun prefImportListProviderInjector(): FileListProvider
+
+    // Not contributed to Metro: it takes a nullable `Provider<SecureEncrypt?>`, and Metro 1.4.2 crashes
+    // in codegen on a nullable provider key - "No expected binding found for key
+    // Provider<SecureEncrypt?>". Worth retrying when that is fixed upstream.
+    @Binds abstract fun bindImportExportPrefsInterface(impl: ImportExportPrefsImpl): ImportExportPrefs
 
     @Binds abstract fun bindPrefFileListProvider(impl: FileListProviderImpl): FileListProvider
-    @Binds abstract fun bindImportExportPrefsInterface(impl: ImportExportPrefsImpl): ImportExportPrefs
     @Binds abstract fun bindMaintenanceInterface(impl: MaintenanceImpl): Maintenance
-    @Binds abstract fun bindCloudDirectoryManager(impl: CloudDirectoryManagerImpl): CloudDirectoryManager
 
     @Binds @IntoSet abstract fun bindGoogleDriveProvider(provider: GoogleDriveProvider): CloudStorageProvider
 }

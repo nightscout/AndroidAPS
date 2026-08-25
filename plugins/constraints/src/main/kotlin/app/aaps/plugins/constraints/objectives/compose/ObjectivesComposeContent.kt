@@ -4,7 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
+import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.LocalSnackbarHostState
@@ -20,7 +22,11 @@ class ObjectivesComposeContent : ComposablePluginContent {
         onNavigateBack: () -> Unit,
         onSettings: (() -> Unit)?
     ) {
-        val viewModel: ObjectivesViewModel = hiltViewModel()
+        // hiltViewModel() only worked because the host activity is @AndroidEntryPoint. The Metro factory
+        // is reached through the Application, the same way member injection is.
+        val viewModel: ObjectivesViewModel = viewModel(
+            factory = (LocalContext.current.applicationContext as MetroViewModelFactoryOwner).metroViewModelFactory
+        )
 
         val state by viewModel.uiState.collectAsStateWithLifecycle()
         val scrollToIndex by viewModel.scrollToIndex.collectAsStateWithLifecycle()

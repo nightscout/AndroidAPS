@@ -23,14 +23,14 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.implementation.androidNotification.AlarmNotificationManager
 import app.aaps.ui.activities.ErrorActivity
-import dagger.Reusable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Singleton
 import javax.inject.Provider
 import kotlin.reflect.KClass
 
-@Reusable
+@Singleton
 class UiInteractionImpl @Inject constructor(
     private val context: Context,
     private val alarmNotificationManager: AlarmNotificationManager,

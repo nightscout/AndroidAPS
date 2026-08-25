@@ -3,10 +3,20 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.metro)
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("compose-test-module-dependencies")
     id("jacoco-module-dependencies")
+}
+
+metro {
+    interop {
+        // Metro reads javax.inject and Dagger annotations, so classes in this module do not have to be
+        // rewritten to Metro's own annotations before a Metro graph can build them. Without this,
+        // Metro ignores javax qualifiers and matches on type alone, which fails silently.
+        includeDagger()
+    }
 }
 
 android {

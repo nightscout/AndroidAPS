@@ -15,6 +15,8 @@ import app.aaps.core.interfaces.constraints.Objectives.Companion.SMB_OBJECTIVE
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
+import app.aaps.core.interfaces.di.APS
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.BooleanNonKey
@@ -28,8 +30,19 @@ import app.aaps.plugins.constraints.objectives.keys.ObjectivesLongComposedKey
 import app.aaps.plugins.constraints.objectives.objectives.Objective
 import javax.inject.Inject
 import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 
-@Singleton
+// Registers itself into the plugin list. Scoped with Metro's @SingleIn, not javax @Singleton: a
+// contributed class is built by the graph generated in `:app`, which has no Dagger interop, so a javax
+// scope there is ignored and every read would build a new plugin.
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@APS
+@IntKey(840)
+@SingleIn(AppScope::class)
 class ObjectivesPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,

@@ -22,7 +22,7 @@ import org.json.JSONObject
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.coroutines.resumeWithException
 
 class OpenHumansAPI @Inject constructor(

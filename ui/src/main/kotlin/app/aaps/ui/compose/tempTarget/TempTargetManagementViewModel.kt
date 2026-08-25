@@ -34,7 +34,10 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.icon
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
@@ -60,7 +63,10 @@ import kotlin.math.roundToInt
 /**
  * ViewModel for TempTargetManagementScreen managing TT presets and activation.
  */
-@HiltViewModel
+// Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
+// unscoped so each screen gets its own.
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 @Stable
 class TempTargetManagementViewModel @Inject constructor(
     private val persistenceLayer: PersistenceLayer,

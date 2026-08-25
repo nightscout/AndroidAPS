@@ -1,0 +1,80 @@
+package app.aaps.di.metro
+
+import app.aaps.core.interfaces.pump.ble.BleTransport
+import app.aaps.core.interfaces.pump.rfcomm.RfcommTransport
+import app.aaps.pump.dana.DanaPump
+import app.aaps.pump.dana.database.DanaHistoryDatabase
+import app.aaps.pump.danars.DanaRSPlugin
+import app.aaps.pump.danars.comm.DanaRSPacket
+import app.aaps.pump.danars.services.BLEComm
+import app.aaps.pump.diaconn.DiaconnG8Pump
+import app.aaps.pump.equil.EquilPumpPlugin
+import app.aaps.pump.equil.manager.EquilManager
+import app.aaps.pump.medtrum.MedtrumPlugin
+import app.aaps.pump.medtrum.MedtrumPump
+import app.aaps.pump.omnipod.dash.OmnipodDashPumpPlugin
+import info.nightscout.pump.combov2.ComboV2Plugin
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Provider
+import javax.inject.Singleton
+import app.aaps.pump.dana.database.DanaHistoryRecordDao
+import app.aaps.pump.diaconn.database.DiaconnHistoryRecordDao
+import app.aaps.pump.equil.ble.EquilBleTransport
+import app.aaps.pump.equil.database.EquilHistoryPumpDao
+import app.aaps.pump.equil.database.EquilHistoryRecordDao
+import app.aaps.pump.omnipod.dash.history.database.DashHistoryDatabase
+import app.aaps.pump.omnipod.dash.history.mapper.HistoryMapper
+import app.aaps.pump.omnipod.dash.history.database.HistoryRecordDao
+import app.aaps.pump.medtrum.ble.MedtrumBleTransport
+import app.aaps.pump.omnipod.dash.driver.OmnipodDashManager
+import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
+
+/**
+ * Builds [PumpLeaves] for a build that has pump drivers.
+ *
+ * Constructed by hand rather than injected: a binding container with an `@Inject` constructor crashes
+ * the Metro compiler under Dagger interop, the same reason `AapsLeaves` is built this way.
+ */
+@Module
+@InstallIn(SingletonComponent::class)
+class PumpLeavesModule {
+
+    @Provides
+    @Singleton
+    fun providePumpLeaves(
+        bleTransport: Provider<BleTransport>,
+        rfcommTransport: Provider<RfcommTransport>,
+        danaHistoryRecordDao: Provider<DanaHistoryRecordDao>,
+        diaconnHistoryRecordDao: Provider<DiaconnHistoryRecordDao>,
+        equilBleTransport: Provider<EquilBleTransport>,
+        equilHistoryPumpDao: Provider<EquilHistoryPumpDao>,
+        equilHistoryRecordDao: Provider<EquilHistoryRecordDao>,
+        dashHistoryDatabase: Provider<DashHistoryDatabase>,
+        historyMapper: Provider<HistoryMapper>,
+        historyRecordDao: Provider<HistoryRecordDao>,
+        medtrumBleTransport: Provider<MedtrumBleTransport>,
+        omnipodDashManager: Provider<OmnipodDashManager>,
+        omnipodDashPodStateManager: Provider<OmnipodDashPodStateManager>,
+        danaHistoryDatabase: Provider<DanaHistoryDatabase>,
+        danaRSPackets: Provider<Set<DanaRSPacket>>,
+        bleComm: Provider<BLEComm>,
+        comboV2Plugin: Provider<ComboV2Plugin>,
+        danaPump: Provider<DanaPump>,
+        danaRSPlugin: Provider<DanaRSPlugin>,
+        diaconnG8Pump: Provider<DiaconnG8Pump>,
+        equilManager: Provider<EquilManager>,
+        equilPumpPlugin: Provider<EquilPumpPlugin>,
+        medtrumPlugin: Provider<MedtrumPlugin>,
+        medtrumPump: Provider<MedtrumPump>,
+        omnipodDashPumpPlugin: Provider<OmnipodDashPumpPlugin>
+    ): PumpLeaves = PumpLeaves(
+        bleTransport, rfcommTransport, danaHistoryRecordDao, diaconnHistoryRecordDao, equilBleTransport,
+        equilHistoryPumpDao, equilHistoryRecordDao, dashHistoryDatabase, historyMapper, historyRecordDao,
+        medtrumBleTransport, omnipodDashManager, omnipodDashPodStateManager, danaHistoryDatabase, danaRSPackets,
+        bleComm, comboV2Plugin, danaPump, danaRSPlugin, diaconnG8Pump, equilManager, equilPumpPlugin,
+        medtrumPlugin, medtrumPump, omnipodDashPumpPlugin
+    )
+}

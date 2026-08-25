@@ -8,7 +8,11 @@ import app.aaps.core.interfaces.di.AllConfigs
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.di.NotNSClient
 import app.aaps.core.interfaces.di.PumpDriver
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.di.metro.MetroGraphs
+import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.history.HistoryBrowserData
 import app.aaps.implementations.ConfigImpl
@@ -18,7 +22,6 @@ import dagger.Binds
 import dagger.Lazy
 import dagger.Module
 import dagger.Provides
-import dagger.Reusable
 import dagger.android.AndroidInjectionModule
 import dagger.android.HasAndroidInjector
 import dagger.hilt.InstallIn
@@ -51,15 +54,36 @@ abstract class AppModule {
             @PumpDriver pumpDrivers: Lazy<Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>>,
             @NotNSClient notNsClient: Lazy<Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>>,
             @APS aps: Lazy<Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>>,
+            metroGraphs: MetroGraphs,
+            aapsLogger: AAPSLogger,
             //@PluginsListModule.Unfinished unfinished: Lazy<Map<@JvmSuppressWildcards Int,  @JvmSuppressWildcards PluginBase>>
         )
             : List<@JvmSuppressWildcards PluginBase> {
-            val plugins = allConfigs.toMutableMap()
-            if (config.PUMPDRIVERS) plugins += pumpDrivers.get()
-            if (config.APS) plugins += aps.get()
-            if (!config.AAPSCLIENT) plugins += notNsClient.get()
-            //if (config.isEnabled(ExternalOptions.UNFINISHED_MODE)) plugins += unfinished.get()
-            return plugins.toList().sortedBy { it.first }.map { it.second }
+            // Sources are listed rather than merged directly, so mergePlugins can see which one a
+            // plugin came from and report a clash by name. Modules migrated to Metro contribute a
+            // compile-time @IntoMap multibinding of the same shape, on the same Int order, so modules
+            // can move one at a time.
+            val sources = buildList {
+                add(PluginSource("Dagger @AllConfigs", allConfigs))
+                if (config.PUMPDRIVERS) add(PluginSource("Dagger @PumpDriver", pumpDrivers.get()))
+                if (config.APS) add(PluginSource("Dagger @APS", aps.get()))
+                if (!config.AAPSCLIENT) add(PluginSource("Dagger @NotNSClient", notNsClient.get()))
+                //if (config.isEnabled(ExternalOptions.UNFINISHED_MODE)) add(PluginSource("Dagger unfinished", unfinished.get()))
+                add(PluginSource("Metro", metroGraphs.plugins()))
+                // Metro's qualified buckets, each merged under the same condition as the matching
+                // Dagger one above. Keeping them apart is what stops a converted plugin appearing in
+                // a build that never had it - a follower showing Objectives, say.
+                if (config.APS) add(PluginSource("Metro @APS", metroGraphs.apsPlugins()))
+                if (!config.AAPSCLIENT) add(PluginSource("Metro @NotNSClient", metroGraphs.notNsClientPlugins()))
+            }
+
+            val (plugins, problems) = mergePlugins(sources)
+            // While Dagger and Metro both contribute, a plugin can be lost or doubled without either
+            // framework noticing. Logged rather than thrown: a wrong plugin list must not stop the app
+            // from starting, and this is loud enough to find in a log.
+            problems.forEach { aapsLogger.error(LTag.CORE, "PLUGIN LIST: $it") }
+
+            return plugins
         }
 
         @Provides
@@ -68,10 +92,20 @@ abstract class AppModule {
         fun provideApplicationScope(): CoroutineScope =
             CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
-        @Reusable
+        @Singleton
         @Provides
         fun providesDefaultSharedPreferences(context: Context): SharedPreferences =
             context.getSharedPreferences("${context.packageName}_preferences", Context.MODE_PRIVATE)
+
+        /**
+         * Built by Metro, in the multiplatform module that owns the worker it schedules. Dagger
+         * delegates rather than constructs: building it on both sides would give two schedulers,
+         * each posting its own expiry work.
+         */
+        @Provides
+        @Singleton
+        fun provideRunningModeExpiryScheduler(metroGraphs: MetroGraphs): RunningModeExpiryScheduler =
+            metroGraphs.runningModeExpiryScheduler
 
         @Provides
         fun provideContext(@ApplicationContext context: Context): Context = context
@@ -89,7 +123,10 @@ abstract class AppModule {
 
         @Binds fun bindActivityNames(activityNames: UiInteractionImpl): UiInteraction
 
-        @Binds @Singleton fun bindHistoryScope(impl: HistoryBrowserData): HistoryScope
+        // Scope on the implementation, not on the binding: Metro reads this module now that interop is
+        // on for `:app`, and it rejects a scoped @Binds. `HistoryBrowserData` carries @Singleton itself,
+        // so the instance is still single.
+        @Binds fun bindHistoryScope(impl: HistoryBrowserData): HistoryScope
     }
 }
 

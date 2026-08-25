@@ -1,7 +1,7 @@
 package app.aaps.plugins.source.compose
 
 import androidx.compose.runtime.Composable
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
 
@@ -20,7 +20,7 @@ internal class BgSourceComposeContent(
         onNavigateBack: () -> Unit,
         onSettings: (() -> Unit)?
     ) {
-        val viewModel: BgSourceViewModel = hiltViewModel()
+        val viewModel: BgSourceViewModel = metroViewModel()
 
         BgSourceScreen(
             viewModel = viewModel,

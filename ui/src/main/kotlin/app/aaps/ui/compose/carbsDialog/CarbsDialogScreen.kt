@@ -50,7 +50,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import app.aaps.core.ui.compose.metroViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.ui.ConfirmationLine
@@ -79,7 +79,7 @@ import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 fun CarbsDialogScreen(
-    viewModel: CarbsDialogViewModel = hiltViewModel(),
+    viewModel: CarbsDialogViewModel = metroViewModel(),
     carbsButtonsDef: PreferenceSubScreenDef,
     bgInfoState: StateFlow<BgInfoUiState>,
     iobUiState: StateFlow<IobUiState>,

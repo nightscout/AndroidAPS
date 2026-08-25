@@ -22,7 +22,10 @@ import app.aaps.pump.diaconn.R
 import app.aaps.pump.diaconn.common.RecordTypes
 import app.aaps.pump.diaconn.database.DiaconnHistoryRecord
 import app.aaps.pump.diaconn.database.DiaconnHistoryRecordDao
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -33,7 +36,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
+// Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
+// unscoped so each screen gets its own.
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 @Stable
 class DiaconnHistoryViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,

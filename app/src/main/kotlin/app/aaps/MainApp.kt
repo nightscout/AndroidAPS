@@ -77,8 +77,13 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.objects.profile.ProfileSealed
+import app.aaps.core.interfaces.di.MetroMemberInjector
+import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
+import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.database.AppRepository
+import app.aaps.di.metro.MetroGraphs
+import app.aaps.di.metro.MetroWorkerFactory
 import app.aaps.implementation.lifecycle.ProcessLifecycleListener
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.implementation.profile.ProfileSwitchExpiryScheduler
@@ -87,7 +92,7 @@ import app.aaps.implementation.receivers.ChargingStateReceiver
 import app.aaps.implementation.receivers.KeepAliveWorker
 import app.aaps.implementation.receivers.NetworkChangeReceiver
 import app.aaps.implementation.receivers.TimeDateOrTZChangeReceiver
-import app.aaps.workers.RunningModeExpiryScheduler
+import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
 import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler
 import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.calibration.CalibrationStringIds
@@ -129,19 +134,28 @@ import kotlin.reflect.full.declaredMemberProperties
 import kotlin.time.Duration.Companion.milliseconds
 
 @HiltAndroidApp
-class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
+class MainApp : Application(), HasAndroidInjector, MetroMemberInjector, MetroViewModelFactoryOwner, Configuration.Provider {
 
     @Inject lateinit var androidInjector: DispatchingAndroidInjector<Any>
     override fun androidInjector(): AndroidInjector<Any> = androidInjector
 
-    // WorkManager on-demand initialization. HiltWorkerFactory constructs @HiltWorker workers via
-    // assisted injection; workers not yet migrated return null from it and fall back to WorkManager's
-    // default reflective factory (which self-injects through HasAndroidInjector). The default
-    // androidx.startup WorkManagerInitializer is removed in AndroidManifest.xml so this config wins.
+    // The Metro side of the same job. Classes already converted are filled by Metro; anything else is
+    // still dagger.android's, so a converted and an unconverted receiver can sit side by side.
+    override fun injectMembers(target: Any): Boolean = metroGraphs.injectMembers(target)
+
+    // The @HiltViewModel replacement, reached by activities the same way.
+    override val metroViewModelFactory: MetroViewModelFactory get() = metroGraphs.viewModelFactory
+
+    // WorkManager on-demand initialization. MetroWorkerFactory builds workers already moved to Metro
+    // and hands the rest to HiltWorkerFactory, which constructs @HiltWorker workers via assisted
+    // injection; workers on neither return null from it and fall back to WorkManager's default
+    // reflective factory (which self-injects through HasAndroidInjector). The default androidx.startup
+    // WorkManagerInitializer is removed in AndroidManifest.xml so this config wins.
     @Inject lateinit var hiltWorkerFactory: HiltWorkerFactory
+    @Inject lateinit var metroGraphs: MetroGraphs
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder()
-            .setWorkerFactory(hiltWorkerFactory)
+            .setWorkerFactory(MetroWorkerFactory(metroGraphs, hiltWorkerFactory))
             .build()
 
     @Inject lateinit var pluginStore: PluginStore

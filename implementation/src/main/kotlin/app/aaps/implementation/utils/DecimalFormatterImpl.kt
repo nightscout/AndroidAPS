@@ -4,10 +4,16 @@ import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import dagger.Reusable
 import javax.inject.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 
-@Reusable
+// Metro builds this now; Dagger gets it through a @Provides delegate in `:app`. Scoped with Metro's
+// @SingleIn, not javax @Singleton - the graph is generated in `:app`, which has no Dagger interop, so
+// a javax scope there is ignored and every read would build a new one.
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class DecimalFormatterImpl @Inject constructor(
     private val rh: ResourceHelper
 ) : DecimalFormatter {

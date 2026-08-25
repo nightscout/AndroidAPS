@@ -8,12 +8,12 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.utils.DateUtil
-import dagger.Reusable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@Reusable
+@Singleton
 class UserEntryLoggerImpl @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil,

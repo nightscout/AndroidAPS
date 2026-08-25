@@ -24,7 +24,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Manages the currently active scene state.
@@ -40,7 +42,10 @@ import javax.inject.Singleton
  * have only one half populated; chips that depend on the local Room id fade in once it
  * arrives.
  */
-@Singleton
+// Metro builds this; Dagger receives it via a @Provides delegate in `:app`. Metro's @SingleIn,
+// not javax @Singleton, because the graph is generated in `:app`.
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class ActiveSceneManager @Inject constructor(
     private val preferences: Preferences,
     private val sceneRepository: SceneRepository,

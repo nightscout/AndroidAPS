@@ -46,7 +46,10 @@ import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.icons.IcProfile
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -81,7 +84,10 @@ import javax.inject.Inject
  *  - [uiState] is a `combine` over profiles + selection + EPS changes + screen mode
  *  - Mutations route through the repo, returning [Result]; failures surface via snackbar
  */
-@HiltViewModel
+// Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
+// unscoped so each screen gets its own.
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 @Stable
 class ProfileManagementViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,

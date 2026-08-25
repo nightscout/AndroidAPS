@@ -2,7 +2,6 @@ package app.aaps.plugins.source
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.keys.interfaces.TextRef
@@ -15,6 +14,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
@@ -23,15 +23,27 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.ui.compose.icons.IcGenericCgm
 import app.aaps.plugins.source.compose.BgSourceComposeContent
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
+import app.aaps.core.objects.workflow.MetroWorkerCreator
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import org.json.JSONArray
 import org.json.JSONException
 import javax.inject.Inject
 import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 
-@Singleton
+// Registers itself into the plugin list. Scoped with Metro's own @SingleIn, NOT javax @Singleton: the
+// graph that builds a contributed class is generated in `:app`, which has no Dagger interop, so a javax
+// scope there is silently ignored and every read builds a new plugin.
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@IntKey(510)
+@SingleIn(AppScope::class)
 class PatchedSiAppPlugin @Inject constructor(
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
@@ -53,7 +65,7 @@ class PatchedSiAppPlugin @Inject constructor(
     aapsLogger, rh, preferences, config
 ), BgSource {
 
-    @HiltWorker
+
     class PatchedSiAppWorker @AssistedInject constructor(
         @Assisted context: Context,
         @Assisted params: WorkerParameters,
@@ -62,6 +74,16 @@ class PatchedSiAppPlugin @Inject constructor(
         private val patchedSIAppPlugin: PatchedSiAppPlugin,
         private val persistenceLayer: PersistenceLayer
     ) : LoggingWorker(context, params, Dispatchers.IO, aapsLogger, fabricPrivacy) {
+
+        /**
+         * Metro builds this worker. The parameter names must match [MetroWorkerCreator],
+         * because Metro matches assisted parameters by name and not only by type.
+         */
+        @AssistedFactory
+        fun interface Factory : MetroWorkerCreator {
+
+            override fun create(context: Context, params: WorkerParameters): PatchedSiAppWorker
+        }
 
         @SuppressLint("CheckResult")
         override suspend fun doWorkAndLog(): Result {

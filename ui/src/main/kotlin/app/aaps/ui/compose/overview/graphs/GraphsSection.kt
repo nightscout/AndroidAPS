@@ -96,7 +96,8 @@ private val CONFIGURABLE_SERIES = SeriesType.entries.filter {
 fun GraphsSection(
     graphViewModel: GraphViewModel,
     isSimpleMode: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    fitWholeWindow: Boolean = false
 ) {
     val savedGraphConfig by graphViewModel.graphConfigFlow.collectAsStateWithLifecycle()
     // In simple mode: fixed layout (BG, IOB+BAS, COB — no overlays, no editing)
@@ -111,10 +112,19 @@ fun GraphsSection(
     val bgMinZoom = remember { Zoom.x(Constants.GRAPH_TIME_RANGE_HOURS * 60.0) }
     val bgMaxZoom = remember { Zoom.x(MIN_GRAPH_ZOOM_MINUTES) }
 
+    // Where the graphs start. The overview is a live view, so the last six hours anchored at the
+    // right edge is what the user wants. The history browser shows one chosen day, and its window
+    // ends at that day's midnight - the same six hours would be the late evening only, and for
+    // today it would be hours that have not happened yet, which reads as an empty graph. There it
+    // starts fully zoomed out, which is exactly the day, because the view model spans the axis over
+    // the whole window in that mode. Both pick one of the zoom objects above rather than allocating
+    // a new one - see the note above on why a fresh Zoom instance tears the state down.
+    val startZoom = if (fitWholeWindow) bgMinZoom else defaultZoom
+
     // BG graph - primary interactive.
     // Wrapped in key(bgViewportResetTrigger) so bumping the trigger tears down and recreates both
     // states from scratch, snapping them back to their initial values (Scroll.Absolute.End /
-    // defaultZoom = 6h). This is deliberate: VicoZoomState.zoom(Zoom) is pinch-gesture-oriented
+    // startZoom). This is deliberate: VicoZoomState.zoom(Zoom) is pinch-gesture-oriented
     // (it applies a ratio anchored on the current canvas center via an async pendingScroll flow)
     // and produced a wrong end state when used to "reset to a fixed default" — recreating the
     // state objects is simpler and matches the exact positioning Vico itself already uses on first
@@ -132,7 +142,7 @@ fun GraphsSection(
             initialScroll = Scroll.Absolute.End
         ) to rememberVicoZoomState(
             zoomEnabled = true,
-            initialZoom = defaultZoom,
+            initialZoom = startZoom,
             minZoom = bgMinZoom,
             maxZoom = bgMaxZoom
         )
@@ -141,15 +151,15 @@ fun GraphsSection(
     // Pre-allocate secondary graph scroll/zoom states (up to MAX_SECONDARY_GRAPHS)
     // These are always created to keep Compose's remember slots stable
     val sec0scroll = rememberVicoScrollState(scrollEnabled = false, initialScroll = Scroll.Absolute.End)
-    val sec0zoom = rememberVicoZoomState(zoomEnabled = false, initialZoom = defaultZoom)
+    val sec0zoom = rememberVicoZoomState(zoomEnabled = false, initialZoom = startZoom)
     val sec1scroll = rememberVicoScrollState(scrollEnabled = false, initialScroll = Scroll.Absolute.End)
-    val sec1zoom = rememberVicoZoomState(zoomEnabled = false, initialZoom = defaultZoom)
+    val sec1zoom = rememberVicoZoomState(zoomEnabled = false, initialZoom = startZoom)
     val sec2scroll = rememberVicoScrollState(scrollEnabled = false, initialScroll = Scroll.Absolute.End)
-    val sec2zoom = rememberVicoZoomState(zoomEnabled = false, initialZoom = defaultZoom)
+    val sec2zoom = rememberVicoZoomState(zoomEnabled = false, initialZoom = startZoom)
     val sec3scroll = rememberVicoScrollState(scrollEnabled = false, initialScroll = Scroll.Absolute.End)
-    val sec3zoom = rememberVicoZoomState(zoomEnabled = false, initialZoom = defaultZoom)
+    val sec3zoom = rememberVicoZoomState(zoomEnabled = false, initialZoom = startZoom)
     val sec4scroll = rememberVicoScrollState(scrollEnabled = false, initialScroll = Scroll.Absolute.End)
-    val sec4zoom = rememberVicoZoomState(zoomEnabled = false, initialZoom = defaultZoom)
+    val sec4zoom = rememberVicoZoomState(zoomEnabled = false, initialZoom = startZoom)
 
     // Collect nowTimestamp ONCE so all graphs use the same value (avoids separate recompositions every 30s)
     val nowTimestamp by graphViewModel.nowTimestamp.collectAsStateWithLifecycle()
@@ -192,12 +202,12 @@ fun GraphsSection(
     )
     val beltZoomState = rememberVicoZoomState(
         zoomEnabled = false,
-        initialZoom = defaultZoom
+        initialZoom = startZoom
     )
 
     // Fixed IOB graph - non-interactive, synced from BG
     val iobScrollState = rememberVicoScrollState(scrollEnabled = false, initialScroll = Scroll.Absolute.End)
-    val iobZoomState = rememberVicoZoomState(zoomEnabled = false, initialZoom = defaultZoom)
+    val iobZoomState = rememberVicoZoomState(zoomEnabled = false, initialZoom = startZoom)
 
     // Active graph count — rememberUpdatedState so coroutines always read the latest value
     // without writing to state during composition. Unattached states are no-ops for

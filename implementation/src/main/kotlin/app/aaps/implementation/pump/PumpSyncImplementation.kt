@@ -33,8 +33,13 @@ import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
 import app.aaps.implementation.extensions.toUeSource
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import javax.inject.Inject
 
+// Deliberately NOT scoped, matching the Dagger @Binds this replaces: there was no @Singleton on the
+// class, so every injection site got its own. Adding a scope here would be a behaviour change.
+@ContributesBinding(AppScope::class)
 class PumpSyncImplementation @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,

@@ -55,10 +55,18 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 
 @Suppress("PrivatePropertyName", "DEPRECATION")
-@Singleton
+// Registers itself into the every-build plugin bucket at order 0, replacing the @Binds @IntKey(0) in
+// PersistentNotificationModule.
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@IntKey(0)
+@SingleIn(AppScope::class)
 class PersistentNotificationPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,

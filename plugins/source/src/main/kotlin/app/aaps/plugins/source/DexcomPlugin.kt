@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.core.content.ContextCompat
-import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.data.model.GV
@@ -21,6 +20,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PermissionGroup
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -37,15 +37,26 @@ import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.core.utils.receivers.Inbox
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
 import app.aaps.plugins.source.compose.BgSourceComposeContent
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
+import app.aaps.core.objects.workflow.MetroWorkerCreator
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.math.abs
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 
-@Singleton
+// Registers itself into the plugin list. Scoped with Metro's own @SingleIn, not javax @Singleton - see
+// the note on the other source plugins. It is also bound to an interface, and that binding is a
+// @Provides delegate in `:app` rather than a Dagger @Binds, so Dagger hands out THIS instance.
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@IntKey(440)
+@SingleIn(AppScope::class)
 class DexcomPlugin @Inject constructor(
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
@@ -103,7 +114,7 @@ class DexcomPlugin @Inject constructor(
     }
 
     // cannot be inner class because of needed injection
-    @HiltWorker
+
     class DexcomWorker @AssistedInject constructor(
         @Assisted context: Context,
         @Assisted params: WorkerParameters,
@@ -116,6 +127,16 @@ class DexcomPlugin @Inject constructor(
         private val persistenceLayer: PersistenceLayer,
         private val profileUtil: ProfileUtil
     ) : LoggingWorker(context, params, Dispatchers.IO, aapsLogger, fabricPrivacy) {
+
+        /**
+         * Metro builds this worker. The parameter names must match [MetroWorkerCreator],
+         * because Metro matches assisted parameters by name and not only by type.
+         */
+        @AssistedFactory
+        fun interface Factory : MetroWorkerCreator {
+
+            override fun create(context: Context, params: WorkerParameters): DexcomWorker
+        }
 
         @SuppressLint("CheckResult")
         override suspend fun doWorkAndLog(): Result {

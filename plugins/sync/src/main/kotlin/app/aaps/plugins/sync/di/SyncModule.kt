@@ -22,12 +22,11 @@ import app.aaps.plugins.sync.smsCommunicator.SmsCommunicatorPlugin
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowIn
 import app.aaps.plugins.sync.wear.receivers.WearDataReceiver
 import app.aaps.plugins.sync.wear.wearintegration.DataLayerListenerServiceMobile
-import app.aaps.plugins.sync.xdrip.DataSyncSelectorXdripImpl
 import app.aaps.plugins.sync.xdrip.XdripPlugin
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import dagger.Reusable
+import javax.inject.Singleton
 import dagger.android.ContributesAndroidInjector
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
@@ -54,9 +53,12 @@ abstract class SyncModule {
     @InstallIn(SingletonComponent::class)
     open class Provide {
 
-        @Reusable
+        // Was @Reusable. Metro does not support it, and this module turns on Dagger interop so Metro
+        // validates every Dagger annotation here. WorkManager.getInstance already returns one
+        // instance, so @Singleton is the same behaviour.
+        @Singleton
         @Provides
-        fun providesWorkManager(context: Context) = WorkManager.getInstance(context)
+        fun providesWorkManager(context: Context): WorkManager = WorkManager.getInstance(context)
     }
 
     @Module
@@ -64,7 +66,6 @@ abstract class SyncModule {
     interface Binding {
 
         @Binds fun bindProcessedDeviceStatusData(processedDeviceStatusDataImpl: ProcessedDeviceStatusDataImpl): ProcessedDeviceStatusData
-        @Binds fun bindDataSyncSelectorXdripInterface(dataSyncSelectorXdripImpl: DataSyncSelectorXdripImpl): DataSyncSelectorXdrip
         @Binds fun bindStoreDataForDb(storeDataForDbImpl: StoreDataForDbImpl): StoreDataForDb
         @Binds fun bindSmsCommunicator(smsCommunicatorPlugin: SmsCommunicatorPlugin): SmsCommunicator
         @Binds fun bindXDripBroadcastInterface(xDripBroadcastImpl: XdripPlugin): XDripBroadcast

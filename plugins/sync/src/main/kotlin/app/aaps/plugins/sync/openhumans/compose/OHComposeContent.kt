@@ -3,7 +3,8 @@ package app.aaps.plugins.sync.openhumans.compose
 import android.content.Context
 import android.content.Intent
 import androidx.compose.runtime.Composable
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.plugins.sync.openhumans.OpenHumansUploaderPlugin
@@ -20,7 +21,11 @@ internal class OHComposeContent(
         onNavigateBack: () -> Unit,
         onSettings: (() -> Unit)?
     ) {
-        val viewModel: OHViewModel = hiltViewModel()
+        // hiltViewModel() only worked because the host activity is @AndroidEntryPoint. The Metro
+        // factory is reached the same way member injection is - through the Application.
+        val viewModel: OHViewModel = viewModel(
+            factory = (context.applicationContext as MetroViewModelFactoryOwner).metroViewModelFactory
+        )
 
         OHScreen(
             viewModel = viewModel,

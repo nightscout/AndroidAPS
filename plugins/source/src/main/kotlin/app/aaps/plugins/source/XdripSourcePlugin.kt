@@ -3,7 +3,6 @@ package app.aaps.plugins.source
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.keys.interfaces.TextRef
@@ -18,6 +17,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.receivers.Intents
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -32,16 +32,27 @@ import app.aaps.core.ui.compose.icons.IcXDrip
 import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.core.utils.receivers.Inbox
 import app.aaps.plugins.source.compose.BgSourceComposeContent
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
+import app.aaps.core.objects.workflow.MetroWorkerCreator
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.math.abs
 import kotlin.math.round
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 
-@Singleton
+// Registers itself into the plugin list. Scoped with Metro's own @SingleIn, not javax @Singleton - see
+// the note on the other source plugins. It is also bound to an interface, and that binding is a
+// @Provides delegate in `:app` rather than a Dagger @Binds, so Dagger hands out THIS instance.
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@IntKey(400)
+@SingleIn(AppScope::class)
 class XdripSourcePlugin @Inject constructor(
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
@@ -67,7 +78,7 @@ class XdripSourcePlugin @Inject constructor(
     override var sensorBatteryLevel = -1
 
     // cannot be inner class because of needed injection
-    @HiltWorker
+
     class XdripSourceWorker @AssistedInject constructor(
         @Assisted context: Context,
         @Assisted params: WorkerParameters,
@@ -79,6 +90,16 @@ class XdripSourcePlugin @Inject constructor(
         private val dateUtil: DateUtil,
         private val dataInbox: DataInbox
     ) : LoggingWorker(context, params, Dispatchers.IO, aapsLogger, fabricPrivacy) {
+
+        /**
+         * Metro builds this worker. The parameter names must match [MetroWorkerCreator],
+         * because Metro matches assisted parameters by name and not only by type.
+         */
+        @AssistedFactory
+        fun interface Factory : MetroWorkerCreator {
+
+            override fun create(context: Context, params: WorkerParameters): XdripSourceWorker
+        }
 
         fun getSensorStartTime(bundle: Bundle): Long? {
             val now = dateUtil.now()

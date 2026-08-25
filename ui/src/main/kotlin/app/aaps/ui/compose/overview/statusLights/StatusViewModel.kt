@@ -30,7 +30,10 @@ import app.aaps.core.ui.compose.icons.IcPatchPump
 import app.aaps.core.ui.compose.icons.IcPumpBattery
 import app.aaps.core.ui.compose.icons.IcPumpCartridge
 import app.aaps.core.ui.compose.pump.tickerFlow
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -42,7 +45,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-@HiltViewModel
+// Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
+// unscoped so each screen gets its own.
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 @Stable
 class StatusViewModel @Inject constructor(
     private val rh: ResourceHelper,

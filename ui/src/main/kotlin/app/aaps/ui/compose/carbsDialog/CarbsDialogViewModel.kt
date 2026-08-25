@@ -31,7 +31,10 @@ import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -45,7 +48,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.max
 
-@HiltViewModel
+// Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
+// unscoped so each screen gets its own.
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 @Stable
 class CarbsDialogViewModel @Inject constructor(
     private val constraintChecker: ConstraintsChecker,
