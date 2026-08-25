@@ -1,6 +1,5 @@
 package app.aaps.pump.virtual
 
-import app.aaps.core.ui.UiStrings
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.pump.defs.PumpType
@@ -13,6 +12,7 @@ import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.keys.StringKey
+import app.aaps.core.ui.UiStrings
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope

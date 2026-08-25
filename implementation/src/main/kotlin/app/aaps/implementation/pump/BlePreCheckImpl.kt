@@ -15,10 +15,10 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.utils.extensions.safeEnable
-import javax.inject.Inject
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
+import javax.inject.Inject
 
 // Metro builds this; Dagger receives it via a @Provides delegate in `:app`. Metro's @SingleIn,
 // not javax @Singleton, because the graph is generated in `:app`.

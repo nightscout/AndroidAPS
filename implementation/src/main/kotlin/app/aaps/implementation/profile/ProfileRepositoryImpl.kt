@@ -1,6 +1,5 @@
 package app.aaps.implementation.profile
 
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.data.Block
@@ -30,6 +29,7 @@ import app.aaps.core.keys.ProfileComposedStringKey
 import app.aaps.core.keys.ProfileIntKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.extensions.blockFromJsonArray
 import app.aaps.core.objects.extensions.highToJSONArray
 import app.aaps.core.objects.extensions.highToJsonArray
@@ -45,6 +45,9 @@ import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -62,9 +65,6 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.TimeZone
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
-import dev.zacsweers.metro.SingleIn
 
 /**
  * Single source of truth for the local profile list.

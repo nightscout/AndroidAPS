@@ -1,9 +1,5 @@
 package app.aaps.pump.medtrum.di
 
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import app.aaps.pump.medtrum.comm.packets.ActivatePacket
 import app.aaps.pump.medtrum.comm.packets.AuthorizePacket
 import app.aaps.pump.medtrum.comm.packets.CancelBolusPacket
@@ -28,6 +24,10 @@ import app.aaps.pump.medtrum.comm.packets.SetTimeZonePacket
 import app.aaps.pump.medtrum.comm.packets.StopPatchPacket
 import app.aaps.pump.medtrum.comm.packets.SubscribePacket
 import app.aaps.pump.medtrum.comm.packets.SynchronizePacket
+import dagger.Module
+import dagger.android.ContributesAndroidInjector
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
 @Suppress("unused")
 @Module

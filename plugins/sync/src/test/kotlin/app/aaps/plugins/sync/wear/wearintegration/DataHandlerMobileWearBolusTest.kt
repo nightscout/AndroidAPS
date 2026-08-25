@@ -1,5 +1,4 @@
 package app.aaps.plugins.sync.wear.wearintegration
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TT
@@ -29,6 +28,7 @@ import app.aaps.core.interfaces.rx.weardata.EventData.RunningModeList.AvailableR
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
@@ -54,6 +54,7 @@ import org.mockito.kotlin.timeout
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
+
 /**
  * Tests for the unified wear **manual-bolus** ([DataHandlerMobile.handleBolusPreCheck]) and
  * **eCarbs** ([DataHandlerMobile.handleECarbsPreCheck]) precheck handlers.

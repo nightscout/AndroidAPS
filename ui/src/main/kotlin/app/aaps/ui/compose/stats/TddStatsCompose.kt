@@ -18,9 +18,9 @@ import androidx.compose.ui.unit.dp
 import app.aaps.core.data.aps.AverageTDD
 import app.aaps.core.data.model.TDD
 import app.aaps.core.ui.R
-import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.compose.LocalDateUtil
 import java.util.Locale
+import app.aaps.core.interfaces.R as InterfacesR
 
 /**
  * Data class containing TDD (Total Daily Dose) statistics for profile calculations.

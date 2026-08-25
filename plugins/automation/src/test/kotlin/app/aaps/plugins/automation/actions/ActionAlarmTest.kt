@@ -1,17 +1,17 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.core.interfaces.alerts.ReminderScheduler
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputString
-import app.aaps.core.interfaces.alerts.ReminderScheduler
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.mock
 import org.mockito.ArgumentMatchers
 import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
 

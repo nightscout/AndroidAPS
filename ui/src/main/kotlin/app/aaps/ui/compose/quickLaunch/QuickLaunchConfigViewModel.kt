@@ -1,6 +1,5 @@
 package app.aaps.ui.compose.quickLaunch
 
-import app.aaps.core.keys.interfaces.TextRef
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
@@ -8,14 +7,15 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileRepository
+import app.aaps.core.interfaces.scenes.SceneStore
 import app.aaps.core.interfaces.tempTargets.toTTPresets
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.objects.extensions.profileNames
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.ui.compose.pluginCategoryTitle
-import app.aaps.core.interfaces.scenes.SceneStore
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding

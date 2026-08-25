@@ -1,8 +1,8 @@
 package app.aaps.pump.diaconn.packet
 
 import app.aaps.core.interfaces.logging.LTag
-import dagger.android.HasAndroidInjector
 import app.aaps.pump.diaconn.DiaconnG8Pump
+import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
 /**

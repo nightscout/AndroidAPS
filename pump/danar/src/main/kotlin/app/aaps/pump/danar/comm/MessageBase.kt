@@ -1,6 +1,5 @@
 package app.aaps.pump.danar.comm
 
-import dev.zacsweers.metro.HasMemberInjections
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
@@ -25,6 +24,7 @@ import app.aaps.pump.danarkorean.DanaRKoreanPlugin
 import app.aaps.pump.danarv2.DanaRv2Plugin
 import app.aaps.pump.utils.CRC.getCrc16
 import dagger.android.HasAndroidInjector
+import dev.zacsweers.metro.HasMemberInjections
 import kotlinx.coroutines.CoroutineScope
 import org.joda.time.DateTime
 import org.joda.time.IllegalInstantException

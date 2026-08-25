@@ -24,7 +24,6 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.ui.R
-import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.compose.icons.IcAaps
 import app.aaps.core.ui.compose.icons.IcAction
 import app.aaps.core.ui.compose.icons.IcActivity
@@ -87,6 +86,7 @@ import app.aaps.core.ui.compose.icons.IcXDrip
 import app.aaps.core.ui.compose.navigation.color
 import javax.inject.Inject
 import javax.inject.Singleton
+import app.aaps.core.interfaces.R as InterfacesR
 
 @Singleton
 class UserEntryPresentationHelperImpl @Inject constructor(

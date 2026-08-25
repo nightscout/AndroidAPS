@@ -2,10 +2,10 @@ package app.aaps.pump.medtronic.comm.history.pump
 
 import app.aaps.core.utils.StringUtil
 import app.aaps.core.utils.pump.ByteUtil
-import com.google.gson.annotations.Expose
 import app.aaps.pump.medtronic.comm.history.MedtronicHistoryEntry
 import app.aaps.pump.medtronic.data.dto.BolusDTO
 import app.aaps.pump.medtronic.defs.MedtronicDeviceType
+import com.google.gson.annotations.Expose
 import java.util.Objects
 
 /**

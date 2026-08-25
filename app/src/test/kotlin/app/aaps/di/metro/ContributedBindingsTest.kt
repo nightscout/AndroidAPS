@@ -1,6 +1,5 @@
 package app.aaps.di.metro
 
-import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.implementation.utils.TrendCalculatorImpl
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test

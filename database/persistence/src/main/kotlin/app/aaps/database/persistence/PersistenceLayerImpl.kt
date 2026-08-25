@@ -138,8 +138,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.util.Collections.emptyList
 import javax.inject.Inject
-import javax.inject.Singleton
 import javax.inject.Provider
+import javax.inject.Singleton
 import kotlin.reflect.KClass
 import kotlin.time.Duration.Companion.milliseconds
 

@@ -60,8 +60,8 @@ import kotlin.math.max
 import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.interfaces.R as InterfacesR
+import app.aaps.core.ui.R as CoreUiR
 
 sealed class EopatchOverviewEvent {
     data class StartPatchWorkflow(

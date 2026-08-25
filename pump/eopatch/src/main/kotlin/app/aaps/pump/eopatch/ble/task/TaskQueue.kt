@@ -3,7 +3,6 @@ package app.aaps.pump.eopatch.ble.task
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.AapsSchedulers
-import app.aaps.pump.eopatch.ble.task.TaskQueue.PatchTask
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.functions.Action
 import io.reactivex.rxjava3.functions.Consumer

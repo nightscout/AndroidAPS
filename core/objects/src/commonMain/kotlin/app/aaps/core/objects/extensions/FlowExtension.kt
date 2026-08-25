@@ -1,6 +1,5 @@
 package app.aaps.core.objects.extensions
 
-import kotlin.time.Clock
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -9,6 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
+import kotlin.time.Clock
 
 /**
  * Periodic `Unit` emitter — emits once immediately, then again every [periodMs]. The "emit

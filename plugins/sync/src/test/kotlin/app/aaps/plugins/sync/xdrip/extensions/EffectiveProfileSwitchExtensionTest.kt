@@ -9,7 +9,6 @@ import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.whenever
 
 /** Covers the xdrip [EPS] toJson: the original* field mapping, embedded profileJson, notes and pump ids. */
 internal class EffectiveProfileSwitchExtensionTest : TestBaseWithProfile() {

@@ -1,9 +1,9 @@
 package app.aaps.ui.compose.configuration
 
-import app.aaps.core.keys.interfaces.TextRef
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.ConfigPluginUiModel
 
 /**

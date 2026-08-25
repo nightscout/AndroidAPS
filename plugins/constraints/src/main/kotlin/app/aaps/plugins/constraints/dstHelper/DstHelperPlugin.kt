@@ -13,8 +13,8 @@ import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -22,15 +22,14 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.plugins.constraints.R
 import app.aaps.plugins.constraints.dstHelper.keys.DstHelperLongKey
-import kotlinx.coroutines.runBlocking
-import java.util.Calendar
-import javax.inject.Inject
-import javax.inject.Singleton
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
+import kotlinx.coroutines.runBlocking
+import java.util.Calendar
+import javax.inject.Inject
 
 // Registers itself into the plugin list. Scoped with Metro's @SingleIn, not javax @Singleton: a
 // contributed class is built by the graph generated in `:app`, which has no Dagger interop, so a javax

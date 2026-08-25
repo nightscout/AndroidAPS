@@ -1,10 +1,8 @@
 package app.aaps.implementation.profile
 
-import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import kotlin.test.assertIs
 

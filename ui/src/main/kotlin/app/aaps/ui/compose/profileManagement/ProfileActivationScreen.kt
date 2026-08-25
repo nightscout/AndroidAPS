@@ -53,7 +53,6 @@ import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.DateTimeSection
 import app.aaps.core.ui.compose.EventTimeRow
@@ -67,6 +66,7 @@ import app.aaps.core.ui.compose.dialogs.TimePickerModal
 import app.aaps.core.ui.compose.rememberBringIntoViewOnExpand
 import app.aaps.ui.R
 import java.util.Calendar
+import app.aaps.core.ui.R as CoreUiR
 
 /**
  * Full screen for activating a profile with optional percentage, timeshift, and duration.

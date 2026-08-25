@@ -4,7 +4,6 @@ import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.stats.DexcomTIR
 import java.util.Calendar
 import kotlin.math.pow
-import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
 /**

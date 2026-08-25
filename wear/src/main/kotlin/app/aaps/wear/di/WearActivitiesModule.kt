@@ -3,19 +3,15 @@ package app.aaps.wear.di
 import app.aaps.wear.complications.ComplicationTapActivity
 import app.aaps.wear.interaction.ConfigurationActivity
 import app.aaps.wear.interaction.WatchfaceConfigurationActivity
-import app.aaps.wear.tile.ActionsTileSettingsActivity
-import app.aaps.wear.tile.BgGraphTileSettingsActivity
-import app.aaps.wear.tile.SceneTileSettingsActivity
-import app.aaps.wear.tile.TempTargetTileSettingsActivity
 import app.aaps.wear.interaction.actions.AcceptActivity
 import app.aaps.wear.interaction.actions.BackgroundActionActivity
 import app.aaps.wear.interaction.actions.BolusActivity
 import app.aaps.wear.interaction.actions.CarbActivity
 import app.aaps.wear.interaction.actions.ECarbActivity
 import app.aaps.wear.interaction.actions.FillActivity
-import app.aaps.wear.interaction.actions.RunningModeTimedActivity
 import app.aaps.wear.interaction.actions.ProfileSwitchActivity
 import app.aaps.wear.interaction.actions.QuickSnoozeActivity
+import app.aaps.wear.interaction.actions.RunningModeTimedActivity
 import app.aaps.wear.interaction.actions.TempTargetActivity
 import app.aaps.wear.interaction.actions.TreatmentActivity
 import app.aaps.wear.interaction.actions.WizardActivity
@@ -26,6 +22,10 @@ import app.aaps.wear.interaction.menus.MainMenuActivity
 import app.aaps.wear.interaction.menus.PreferenceMenuActivity
 import app.aaps.wear.interaction.menus.StatusMenuActivity
 import app.aaps.wear.interaction.menus.TileMenuActivity
+import app.aaps.wear.tile.ActionsTileSettingsActivity
+import app.aaps.wear.tile.BgGraphTileSettingsActivity
+import app.aaps.wear.tile.SceneTileSettingsActivity
+import app.aaps.wear.tile.TempTargetTileSettingsActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

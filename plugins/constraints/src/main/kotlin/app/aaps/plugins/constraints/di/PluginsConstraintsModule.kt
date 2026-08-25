@@ -1,16 +1,10 @@
 package app.aaps.plugins.constraints.di
 
 import android.content.Context
-import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.constraints.Objectives
-import app.aaps.core.interfaces.dst.DstHelper
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.interfaces.versionChecker.VersionDefinition
 import app.aaps.plugins.constraints.ConstraintsCheckerImpl
-import app.aaps.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
-import app.aaps.plugins.constraints.dstHelper.DstHelperPlugin
-import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import app.aaps.plugins.constraints.versionChecker.VersionCheckerUtilsImpl
 import dagger.Binds

@@ -5,10 +5,10 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.plugins.aps.openAPS.APSResultObject
 import dagger.android.HasAndroidInjector
-import org.json.JSONException
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
+import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
 

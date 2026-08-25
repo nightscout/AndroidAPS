@@ -12,8 +12,6 @@ import app.aaps.pump.eopatch.vo.PatchConfig
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.functions.Consumer
-import java.lang.Exception
-import java.util.HashMap
 import javax.inject.Inject
 import javax.inject.Singleton
 

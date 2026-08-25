@@ -11,12 +11,12 @@ import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.di.metro.MetroGraphs
-import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.di.metro.MetroGraphs
 import app.aaps.history.HistoryBrowserData
 import app.aaps.implementations.ConfigImpl
 import app.aaps.implementations.UiInteractionImpl
+import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
 import app.aaps.ui.compose.history.HistoryScope
 import dagger.Binds
 import dagger.Lazy

@@ -6,10 +6,10 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.scenes.SceneChainResolver
-import javax.inject.Inject
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
+import javax.inject.Inject
 
 /**
  * Single source of truth for the "can we chain to a follow-up scene right now?" policy.

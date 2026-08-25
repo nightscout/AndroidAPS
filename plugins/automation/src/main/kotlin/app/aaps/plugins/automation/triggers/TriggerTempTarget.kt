@@ -1,8 +1,8 @@
 package app.aaps.plugins.automation.triggers
 
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.ui.compose.icons.IcTtManual
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.ui.compose.icons.IcTtManual
 import app.aaps.core.utils.lenientStringOrNull
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.ComparatorExists

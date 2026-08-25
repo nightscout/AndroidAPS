@@ -30,9 +30,9 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileRepository
-import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.objects.extensions.profileNames
@@ -41,13 +41,13 @@ import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.masterEditingEnabled
 import app.aaps.plugins.automation.AutomationEventFactory
 import app.aaps.plugins.automation.AutomationRuntime
-import app.aaps.plugins.automation.actions.ActionFactory
 import app.aaps.plugins.automation.R
+import app.aaps.plugins.automation.actions.ActionFactory
 import app.aaps.plugins.automation.compose.actions.ActionOption
 import app.aaps.plugins.automation.compose.actions.ChooseActionSheet
-import app.aaps.plugins.automation.triggers.TriggerFactory
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.triggers.TriggerConnector
+import app.aaps.plugins.automation.triggers.TriggerFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

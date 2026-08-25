@@ -1,7 +1,7 @@
 package app.aaps.pump.medtrum.comm.packets
 
-import dagger.android.HasAndroidInjector
 import app.aaps.pump.medtrum.comm.enums.CommandType.READ_BOLUS_STATE
+import dagger.android.HasAndroidInjector
 
 class ReadBolusStatePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {
     // UNUSED

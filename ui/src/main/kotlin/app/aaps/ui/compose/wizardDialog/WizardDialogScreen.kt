@@ -1,6 +1,5 @@
 package app.aaps.ui.compose.wizardDialog
 
-import app.aaps.core.ui.compose.stringResourceOrNull
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -97,10 +96,11 @@ import app.aaps.core.ui.compose.navigation.label
 import app.aaps.core.ui.compose.preference.PreferenceSheetContent
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.rememberBringIntoViewOnExpand
+import app.aaps.core.ui.compose.stringResourceOrNull
 import app.aaps.ui.R
 import kotlinx.coroutines.launch
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.interfaces.R as InterfacesR
+import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 fun WizardDialogScreen(

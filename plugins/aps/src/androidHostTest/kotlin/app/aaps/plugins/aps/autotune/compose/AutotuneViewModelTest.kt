@@ -8,17 +8,16 @@ import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.elements.WeekDay
 import app.aaps.plugins.aps.autotune.AutotuneFS
 import app.aaps.plugins.aps.autotune.AutotunePlugin
 import app.aaps.plugins.aps.autotune.data.ATProfile
-import app.aaps.core.interfaces.rx.events.EventShowDialog
-import app.aaps.core.keys.BooleanKey
-import app.aaps.core.ui.elements.WeekDay
 import app.aaps.plugins.aps.autotune.events.EventAutotuneUpdateGui
 import com.google.common.truth.Truth.assertThat
-import javax.inject.Provider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -44,6 +43,7 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
+import javax.inject.Provider
 
 /**
  * Unit test for the SHARED, synchronous state logic of [AutotuneViewModel].

@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.core.keys.BooleanComposedKey
+import app.aaps.e2e.DanaRsEmulatorUiTest.Companion.MAX_DAILY_UNITS
 import app.aaps.pump.dana.emulator.ReviewRecordCodes
 import app.aaps.pump.dana.keys.DanaStringComposedKey
 import app.aaps.pump.dana.keys.DanaStringNonKey
@@ -20,8 +21,8 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
-import org.junit.rules.RuleChain
 import org.junit.Test
+import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import java.util.Base64
 import javax.inject.Inject

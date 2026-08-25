@@ -1,12 +1,12 @@
 package app.aaps.pump.medtrum.comm.packets
 
 import app.aaps.core.interfaces.logging.LTag
-import dagger.android.HasAndroidInjector
 import app.aaps.pump.medtrum.MedtrumPump
 import app.aaps.pump.medtrum.comm.enums.CommandType.SYNCHRONIZE
 import app.aaps.pump.medtrum.comm.enums.MedtrumPumpState
 import app.aaps.pump.medtrum.extension.toByteArray
 import app.aaps.pump.medtrum.extension.toInt
+import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
 class SynchronizePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {

@@ -8,13 +8,13 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.Pump
-import app.aaps.core.utils.receivers.BundleLogger
 import app.aaps.core.objects.workflow.MetroBroadcastReceiver
+import app.aaps.core.utils.receivers.BundleLogger
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.Date
 import java.util.TimeZone
-import dev.zacsweers.metro.Inject
 
 class TimeDateOrTZChangeReceiver : MetroBroadcastReceiver() {
 

@@ -13,8 +13,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelChildren
 import java.util.concurrent.atomic.AtomicBoolean
-import kotlin.reflect.KClass
 import javax.inject.Inject
+import kotlin.reflect.KClass
 
 /**
  * Allow waiting for RX event

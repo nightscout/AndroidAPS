@@ -1,10 +1,10 @@
 package app.aaps.pump.medtronic.util
 
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.utils.pump.ByteUtil
 import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange
 import app.aaps.pump.common.hw.rileylink.RileyLinkUtil

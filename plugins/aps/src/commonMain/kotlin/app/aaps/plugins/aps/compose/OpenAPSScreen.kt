@@ -25,12 +25,12 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import app.aaps.plugins.aps.ApsStrings
 import app.aaps.core.ui.compose.AapsCard
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.plugins.aps.ApsStrings
 
 @Composable
 fun OpenAPSScreen(

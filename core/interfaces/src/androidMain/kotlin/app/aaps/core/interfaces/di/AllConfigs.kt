@@ -1,7 +1,7 @@
 package app.aaps.core.interfaces.di
 
-import dev.zacsweers.metro.Qualifier as MetroQualifier
 import javax.inject.Qualifier
+import dev.zacsweers.metro.Qualifier as MetroQualifier
 
 /**
  * Multibinding qualifier for plugins that are present in every build config.

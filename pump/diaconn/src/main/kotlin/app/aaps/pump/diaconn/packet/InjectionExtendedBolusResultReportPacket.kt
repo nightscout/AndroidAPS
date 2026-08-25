@@ -3,8 +3,8 @@ package app.aaps.pump.diaconn.packet
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import dagger.android.HasAndroidInjector
 import app.aaps.pump.diaconn.DiaconnG8Pump
+import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
 /**

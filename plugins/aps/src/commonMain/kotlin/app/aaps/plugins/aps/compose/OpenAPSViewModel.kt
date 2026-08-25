@@ -1,9 +1,6 @@
 package app.aaps.plugins.aps.compose
 
 import androidx.compose.runtime.Immutable
-import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.UiStrings
-import app.aaps.plugins.aps.ApsStrings
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
@@ -16,6 +13,9 @@ import app.aaps.core.interfaces.aps.RT
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.UiStrings
+import app.aaps.plugins.aps.ApsStrings
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
 import kotlinx.coroutines.CoroutineScope

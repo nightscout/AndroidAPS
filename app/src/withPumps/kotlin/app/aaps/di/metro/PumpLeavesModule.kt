@@ -4,33 +4,33 @@ import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.core.interfaces.pump.rfcomm.RfcommTransport
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.database.DanaHistoryDatabase
+import app.aaps.pump.dana.database.DanaHistoryRecordDao
 import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danars.comm.DanaRSPacket
 import app.aaps.pump.danars.services.BLEComm
 import app.aaps.pump.diaconn.DiaconnG8Pump
+import app.aaps.pump.diaconn.database.DiaconnHistoryRecordDao
 import app.aaps.pump.equil.EquilPumpPlugin
+import app.aaps.pump.equil.ble.EquilBleTransport
+import app.aaps.pump.equil.database.EquilHistoryPumpDao
+import app.aaps.pump.equil.database.EquilHistoryRecordDao
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.medtrum.MedtrumPlugin
 import app.aaps.pump.medtrum.MedtrumPump
+import app.aaps.pump.medtrum.ble.MedtrumBleTransport
+import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
 import app.aaps.pump.omnipod.dash.OmnipodDashPumpPlugin
-import info.nightscout.pump.combov2.ComboV2Plugin
+import app.aaps.pump.omnipod.dash.driver.OmnipodDashManager
+import app.aaps.pump.omnipod.dash.history.database.DashHistoryDatabase
+import app.aaps.pump.omnipod.dash.history.database.HistoryRecordDao
+import app.aaps.pump.omnipod.dash.history.mapper.HistoryMapper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import info.nightscout.pump.combov2.ComboV2Plugin
 import javax.inject.Provider
 import javax.inject.Singleton
-import app.aaps.pump.dana.database.DanaHistoryRecordDao
-import app.aaps.pump.diaconn.database.DiaconnHistoryRecordDao
-import app.aaps.pump.equil.ble.EquilBleTransport
-import app.aaps.pump.equil.database.EquilHistoryPumpDao
-import app.aaps.pump.equil.database.EquilHistoryRecordDao
-import app.aaps.pump.omnipod.dash.history.database.DashHistoryDatabase
-import app.aaps.pump.omnipod.dash.history.mapper.HistoryMapper
-import app.aaps.pump.omnipod.dash.history.database.HistoryRecordDao
-import app.aaps.pump.medtrum.ble.MedtrumBleTransport
-import app.aaps.pump.omnipod.dash.driver.OmnipodDashManager
-import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
 
 /**
  * Builds [PumpLeaves] for a build that has pump drivers.

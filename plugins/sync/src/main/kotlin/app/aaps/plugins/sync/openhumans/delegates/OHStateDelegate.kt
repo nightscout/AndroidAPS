@@ -1,15 +1,15 @@
 package app.aaps.plugins.sync.openhumans.delegates
 
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.plugins.sync.di.OpenHumansScope
 import app.aaps.plugins.sync.openhumans.OpenHumansState
 import app.aaps.plugins.sync.openhumans.keys.OhLongKey
 import app.aaps.plugins.sync.openhumans.keys.OhStringKey
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import dev.zacsweers.metro.Inject
-import app.aaps.plugins.sync.di.OpenHumansScope
-import dev.zacsweers.metro.SingleIn
 import kotlin.reflect.KProperty
 
 @SingleIn(OpenHumansScope::class)

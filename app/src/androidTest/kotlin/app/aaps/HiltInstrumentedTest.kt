@@ -2,8 +2,8 @@ package app.aaps
 
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.implementation.plugin.PluginStore
 import app.aaps.e2e.RetryRule
+import app.aaps.implementation.plugin.PluginStore
 import app.aaps.plugins.aps.utils.StaticInjector
 import dagger.hilt.android.testing.HiltAndroidRule
 import dev.zacsweers.metro.HasMemberInjections

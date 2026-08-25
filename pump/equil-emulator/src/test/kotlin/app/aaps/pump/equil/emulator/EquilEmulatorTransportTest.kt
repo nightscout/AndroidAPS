@@ -5,7 +5,6 @@ import app.aaps.pump.equil.manager.AESUtil
 import app.aaps.pump.equil.manager.EquilPacketCodec
 import app.aaps.pump.equil.manager.Utils
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach

@@ -33,13 +33,12 @@ import app.aaps.core.keys.interfaces.withEntries
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.plugins.constraints.R
-import javax.inject.Inject
-import javax.inject.Singleton
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
-import dev.zacsweers.metro.IntKey as MetroIntKey
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
+import javax.inject.Inject
+import dev.zacsweers.metro.IntKey as MetroIntKey
 
 // Registers itself into the plugin list. Scoped with Metro's @SingleIn, not javax @Singleton: a
 // contributed class is built by the graph generated in `:app`, which has no Dagger interop, so a javax

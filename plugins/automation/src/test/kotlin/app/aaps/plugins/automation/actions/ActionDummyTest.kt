@@ -1,8 +1,8 @@
 package app.aaps.plugins.automation.actions
 
-import kotlin.test.assertIs
 import app.aaps.plugins.automation.asJsonObject
 import org.junit.jupiter.api.Test
+import kotlin.test.assertIs
 
 class ActionDummyTest : ActionsTestBase() {
 

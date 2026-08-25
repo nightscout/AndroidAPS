@@ -2,9 +2,9 @@ package app.aaps.plugins.automation
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
+import org.w3c.dom.Element
 import java.io.File
 import javax.xml.parsers.DocumentBuilderFactory
-import org.w3c.dom.Element
 
 /**
  * Every component this module declares must name a class that exists.

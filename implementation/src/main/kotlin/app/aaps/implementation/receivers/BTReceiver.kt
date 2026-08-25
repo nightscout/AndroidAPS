@@ -10,8 +10,8 @@ import androidx.annotation.VisibleForTesting
 import androidx.core.content.ContextCompat
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventBTChange
-import app.aaps.core.utils.extensions.safeGetParcelableExtra
 import app.aaps.core.objects.workflow.MetroBroadcastReceiver
+import app.aaps.core.utils.extensions.safeGetParcelableExtra
 import dev.zacsweers.metro.Inject
 
 /**

@@ -1,6 +1,7 @@
 package app.aaps.plugins.sync.di
 
 import android.content.Context
+import androidx.lifecycle.ViewModel
 import androidx.work.ListenableWorker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.di.DeferredRef
@@ -12,11 +13,10 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.MetroWorkerCreator
-import androidx.lifecycle.ViewModel
-import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
-import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactory
 import dev.zacsweers.metro.MembersInjector
 import dev.zacsweers.metro.createGraphFactory
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
+import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactory
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton

@@ -1,9 +1,9 @@
 package app.aaps.plugins.configuration.setupwizard
 
 import androidx.compose.runtime.Composable
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.plugins.configuration.setupwizard.elements.SWItem
 import javax.inject.Inject
 

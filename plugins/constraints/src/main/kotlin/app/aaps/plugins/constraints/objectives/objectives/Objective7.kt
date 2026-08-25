@@ -5,12 +5,12 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.constraints.R
-import javax.inject.Inject
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
+import javax.inject.Inject
 
 // Contributed rather than listed in a graph. ObjectivesPlugin takes List<Objective> and is itself
 // contributed to AppScope, so the objectives have to be reachable from the same graph.

@@ -22,7 +22,6 @@ import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.ui.R
-import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.compose.SelectableListToolbar
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.ui.compose.treatments.MealLink
@@ -39,6 +38,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import app.aaps.core.interfaces.R as InterfacesR
 
 /**
  * ViewModel for BolusCarbsScreen managing bolus, carbs, and calculator result state and business logic.

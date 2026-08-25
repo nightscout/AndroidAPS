@@ -13,7 +13,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntKey
 import dagger.multibindings.IntoMap
-import javax.inject.Singleton
 
 @Module(includes = [MedtrumCommModule::class])
 @InstallIn(SingletonComponent::class)

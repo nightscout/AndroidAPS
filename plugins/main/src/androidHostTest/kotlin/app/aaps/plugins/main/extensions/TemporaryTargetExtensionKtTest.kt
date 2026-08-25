@@ -3,9 +3,9 @@ package app.aaps.plugins.main.extensions
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.TT
+import app.aaps.core.objects.extensions.target
 import app.aaps.core.ui.extensions.highValueToUnitsToString
 import app.aaps.core.ui.extensions.lowValueToUnitsToString
-import app.aaps.core.objects.extensions.target
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test

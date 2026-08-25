@@ -1,7 +1,7 @@
 package app.aaps.pump.medtrum.comm.packets
 
-import dagger.android.HasAndroidInjector
 import app.aaps.pump.medtrum.comm.enums.CommandType.PRIME
+import dagger.android.HasAndroidInjector
 
 class PrimePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {
 

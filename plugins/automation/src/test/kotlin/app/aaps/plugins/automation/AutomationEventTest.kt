@@ -1,26 +1,24 @@
 package app.aaps.plugins.automation
 
-import org.mockito.kotlin.mock
-import app.aaps.plugins.automation.actions.ActionFactory
-import javax.inject.Provider
-import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.lenientBoolean
 import app.aaps.core.utils.lenientString
-import app.aaps.plugins.automation.actions.Action
+import app.aaps.plugins.automation.actions.ActionFactory
 import app.aaps.plugins.automation.actions.ActionSMBChange
 import app.aaps.plugins.automation.actions.ActionStopProcessing
 import app.aaps.plugins.automation.triggers.TriggerConnector
 import app.aaps.plugins.automation.triggers.TriggerConnectorTest
-import app.aaps.plugins.automation.triggers.TriggerDummy
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
+import org.mockito.kotlin.mock
 import org.skyscreamer.jsonassert.JSONAssert
+import javax.inject.Provider
 
 class AutomationEventTest : TestBase() {
 

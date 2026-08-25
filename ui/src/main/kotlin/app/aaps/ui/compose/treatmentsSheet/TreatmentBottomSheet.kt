@@ -1,7 +1,5 @@
 package app.aaps.ui.compose.treatmentsSheet
 
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.ui.compose.stringResourceOrNull
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -47,6 +45,8 @@ import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.label
 import app.aaps.core.ui.compose.preference.PreferenceSheetContent
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.compose.stringResourceOrNull
 import app.aaps.ui.compose.main.QuickWizardItem
 import app.aaps.core.ui.R as CoreUiR
 

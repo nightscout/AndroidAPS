@@ -1,9 +1,9 @@
 package app.aaps.plugins.automation.actions
 
-import javax.inject.Provider
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.resources.ResourceHelper
+import javax.inject.Provider
 
 // Used for instantiation of other actions only
 class ActionDummy(

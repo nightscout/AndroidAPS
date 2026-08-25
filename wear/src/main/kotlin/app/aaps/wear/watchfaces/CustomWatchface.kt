@@ -38,7 +38,6 @@ import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.rx.weardata.ResData
 import app.aaps.core.interfaces.rx.weardata.ResFormat
 import app.aaps.core.interfaces.rx.weardata.isEquals
-import app.aaps.wear.utils.toVisibility
 import app.aaps.shared.impl.weardata.JsonKeyValues
 import app.aaps.shared.impl.weardata.JsonKeys
 import app.aaps.shared.impl.weardata.ResFileMap
@@ -48,6 +47,7 @@ import app.aaps.shared.impl.weardata.toDrawable
 import app.aaps.shared.impl.weardata.toTypeface
 import app.aaps.wear.R
 import app.aaps.wear.databinding.ActivityCustomBinding
+import app.aaps.wear.utils.toVisibility
 import app.aaps.wear.watchfaces.utils.BaseWatchFace
 import app.aaps.wear.watchfaces.utils.WatchfaceViewAdapter.Companion.SelectedWatchFace
 import kotlinx.coroutines.runBlocking
@@ -57,7 +57,6 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.temporal.WeekFields
 import javax.inject.Inject
-import kotlin.collections.get
 import kotlin.math.floor
 
 @SuppressLint("Deprecated")

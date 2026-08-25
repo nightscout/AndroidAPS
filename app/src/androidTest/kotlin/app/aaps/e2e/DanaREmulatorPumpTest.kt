@@ -22,22 +22,22 @@ import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.comm.RecordTypes
 import app.aaps.pump.dana.database.DanaHistoryRecordDao
 import app.aaps.pump.dana.keys.DanaStringNonKey
-import app.aaps.pump.danarkorean.DanaRKoreanPlugin
 import app.aaps.pump.danar.DanaRPlugin
 import app.aaps.pump.danar.emulator.EmulatorRfcommTransport
+import app.aaps.pump.danarkorean.DanaRKoreanPlugin
 import app.aaps.pump.danarv2.DanaRv2Plugin
 import app.aaps.testcategories.ShardB
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.runBlocking
-import javax.inject.Provider
 import org.junit.After
 import org.junit.Rule
-import org.junit.rules.RuleChain
 import org.junit.Test
+import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import javax.inject.Inject
+import javax.inject.Provider
 
 /**
  * Drives the **DanaR family drivers** against the in-tree pump emulator, with no Bluetooth hardware:

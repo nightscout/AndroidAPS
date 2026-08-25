@@ -2,15 +2,14 @@ package app.aaps.plugins.automation
 
 import android.content.Context
 import android.content.Intent
-import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.objects.workflow.MetroBroadcastReceiver
 import javax.inject.Inject
-import app.aaps.core.ui.R as CoreUiR
 
 /**
  * Rings the AAPS full-screen alarm for a reminder previously scheduled by

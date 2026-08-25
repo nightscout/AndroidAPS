@@ -2,6 +2,7 @@ package app.aaps.plugins.aps.openAPSAMA
 
 import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.getPassedDurationToTimeInMinutes
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.DetermineBasalAdapter
 import app.aaps.core.interfaces.aps.GlucoseStatus
@@ -19,7 +20,6 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.convertToJSONArray
 import app.aaps.core.objects.extensions.convertedToAbsolute
-import app.aaps.core.data.model.getPassedDurationToTimeInMinutes
 import app.aaps.core.objects.extensions.plannedRemainingMinutes
 import app.aaps.plugins.aps.logger.LoggerCallback
 import app.aaps.plugins.aps.utils.ScriptReader

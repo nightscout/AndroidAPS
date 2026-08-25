@@ -4,8 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import androidx.annotation.VisibleForTesting
-import app.aaps.persistentNotification.DummyServiceHelper
 import app.aaps.core.objects.workflow.MetroBroadcastReceiver
+import app.aaps.persistentNotification.DummyServiceHelper
 import javax.inject.Inject
 
 class AutoStartReceiver : MetroBroadcastReceiver() {

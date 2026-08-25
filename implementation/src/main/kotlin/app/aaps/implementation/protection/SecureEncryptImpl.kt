@@ -1,15 +1,14 @@
 package app.aaps.implementation.protection
 
 // Core
-import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.protection.SecureEncrypt
-import javax.inject.Inject
 
 // Android KeyStore
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.security.keystore.StrongBoxUnavailableException
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.protection.SecureEncrypt
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.utils.hexStringToByteArray
 import java.io.IOException
@@ -23,6 +22,7 @@ import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
+import javax.inject.Inject
 import javax.inject.Singleton
 
 /***

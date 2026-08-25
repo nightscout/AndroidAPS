@@ -1,15 +1,6 @@
 package app.aaps.plugins.automation.di
 
-import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.notifications.NotificationHolder
-import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.automation.TimerReminderReceiver
-import app.aaps.plugins.automation.services.LastLocationDataContainer
 import app.aaps.plugins.automation.services.LocationService
 import dev.zacsweers.metro.ClassKey
 import dev.zacsweers.metro.GraphExtension

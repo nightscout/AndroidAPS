@@ -1,11 +1,10 @@
 package app.aaps.plugins.aps.compose
 
-import app.aaps.core.ui.UiStrings
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.ui.R
+import app.aaps.core.ui.UiStrings
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
 import com.google.common.truth.Truth.assertThat

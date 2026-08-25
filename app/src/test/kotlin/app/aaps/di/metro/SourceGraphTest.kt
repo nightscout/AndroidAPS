@@ -1,6 +1,5 @@
 package app.aaps.di.metro
 
-import app.aaps.plugins.source.di.SourceMetroGraph
 import app.aaps.plugins.source.AidexPlugin
 import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.GlimpPlugin
@@ -11,6 +10,7 @@ import app.aaps.plugins.source.PoctechPlugin
 import app.aaps.plugins.source.SyaiPlugin
 import app.aaps.plugins.source.TomatoPlugin
 import app.aaps.plugins.source.XdripSourcePlugin
+import app.aaps.plugins.source.di.SourceMetroGraph
 import app.aaps.plugins.source.instara.InstaraPlugin
 import app.aaps.plugins.source.instara.InstaraStaleCheckWorker
 import app.aaps.plugins.source.notificationreader.NotificationCollectorService

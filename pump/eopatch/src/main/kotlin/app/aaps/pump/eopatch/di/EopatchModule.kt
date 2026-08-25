@@ -9,11 +9,11 @@ import app.aaps.pump.eopatch.alarm.AlarmRegistry
 import app.aaps.pump.eopatch.alarm.IAlarmManager
 import app.aaps.pump.eopatch.alarm.IAlarmRegistry
 import app.aaps.pump.eopatch.ble.IPatchManager
-import app.aaps.pump.eopatch.core.Patch
-import app.aaps.pump.eopatch.core.scan.IBleDevice
 import app.aaps.pump.eopatch.ble.PatchManager
 import app.aaps.pump.eopatch.ble.PreferenceManager
 import app.aaps.pump.eopatch.ble.PreferenceManagerImpl
+import app.aaps.pump.eopatch.core.Patch
+import app.aaps.pump.eopatch.core.scan.IBleDevice
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector

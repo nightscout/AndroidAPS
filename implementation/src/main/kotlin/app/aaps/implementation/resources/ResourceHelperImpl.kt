@@ -6,10 +6,10 @@ import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.resources.TextRefIdRegistry
-import app.aaps.core.ui.UiStringIds
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.UiStringIds
 import app.aaps.core.ui.locale.LocaleHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

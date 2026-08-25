@@ -1,8 +1,8 @@
 package app.aaps.core.objects.extensions
 
 import app.aaps.core.data.model.BS
-import app.aaps.core.data.time.T
 import app.aaps.core.data.model.iobCalc
+import app.aaps.core.data.time.T
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test

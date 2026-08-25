@@ -1,10 +1,10 @@
 package app.aaps.pump.medtrum.comm.packets
 
+import app.aaps.pump.medtrum.MedtrumTestBase
+import app.aaps.pump.medtrum.extension.toByteArray
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import app.aaps.pump.medtrum.MedtrumTestBase
-import app.aaps.pump.medtrum.extension.toByteArray
 import org.junit.jupiter.api.Test
 
 class MedtrumPacketTest : MedtrumTestBase() {

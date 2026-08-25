@@ -1,7 +1,7 @@
 package app.aaps.pump.medtrum.comm.packets
 
-import dagger.android.HasAndroidInjector
 import app.aaps.pump.medtrum.comm.enums.CommandType.SET_BOLUS_MOTOR
+import dagger.android.HasAndroidInjector
 
 class SetBolusMotorPacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {
 

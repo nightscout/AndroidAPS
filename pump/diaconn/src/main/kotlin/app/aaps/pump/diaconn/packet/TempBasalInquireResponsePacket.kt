@@ -1,10 +1,10 @@
 package app.aaps.pump.diaconn.packet
 
-import dev.zacsweers.metro.HasMemberInjections
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.pump.diaconn.DiaconnG8Pump
 import dagger.android.HasAndroidInjector
+import dev.zacsweers.metro.HasMemberInjections
 import javax.inject.Inject
 
 /**

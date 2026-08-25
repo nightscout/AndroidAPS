@@ -1,7 +1,6 @@
 package app.aaps.implementation.di
 
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
-import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.implementation.bolus.WizardBolusExecutorImpl
 import dagger.Binds
 import dagger.Module

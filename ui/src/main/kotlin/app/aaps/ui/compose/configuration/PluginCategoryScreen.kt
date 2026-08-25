@@ -1,6 +1,5 @@
 package app.aaps.ui.compose.configuration
 
-import app.aaps.core.ui.compose.stringResource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,6 +29,7 @@ import app.aaps.core.ui.compose.SelectionMode
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.masterEditingEnabled
 import app.aaps.core.ui.compose.navigation.NavigationRequest
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.plugin.HardwarePumpConfirmation
 import app.aaps.ui.plugin.PluginSwitchConfirmation
 

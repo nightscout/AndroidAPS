@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.max
-import kotlin.math.min
 import kotlin.math.roundToInt
 
 @Singleton

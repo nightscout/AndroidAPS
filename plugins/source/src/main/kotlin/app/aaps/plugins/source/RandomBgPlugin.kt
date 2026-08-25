@@ -7,7 +7,6 @@ import android.os.HandlerThread
 import android.os.PowerManager
 import android.os.SystemClock
 import androidx.annotation.VisibleForTesting
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.CA
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.IDs
@@ -29,25 +28,25 @@ import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.icons.IcPluginRandomBg
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.utils.isRunningTest
 import app.aaps.plugins.source.compose.BgSourceComposeContent
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.runBlocking
 import java.security.SecureRandom
 import java.util.Calendar
 import java.util.GregorianCalendar
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.IntKey as MetroIntKey
-import dev.zacsweers.metro.SingleIn
-import dev.zacsweers.metro.binding
 
 // Registers itself into the plugin list. Scoped with Metro's own @SingleIn, NOT javax @Singleton: the
 // graph that builds a contributed class is generated in `:app`, which has no Dagger interop, so a javax

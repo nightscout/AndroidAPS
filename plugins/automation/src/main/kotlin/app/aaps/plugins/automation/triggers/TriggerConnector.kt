@@ -3,8 +3,8 @@ package app.aaps.plugins.automation.triggers
 import androidx.annotation.StringRes
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.plugins.automation.R
 import app.aaps.core.utils.lenientString
+import app.aaps.plugins.automation.R
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive

@@ -7,7 +7,6 @@ import android.os.Handler
 import android.os.HandlerThread
 import androidx.annotation.VisibleForTesting
 import androidx.core.net.toUri
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
@@ -27,18 +26,18 @@ import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.icons.IcPluginGlunovo
 import app.aaps.plugins.source.compose.BgSourceComposeContent
 import app.aaps.plugins.source.keys.GlunovoLongKey
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
-import javax.inject.Singleton
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
 
 // Registers itself into the plugin list. Scoped with Metro's own @SingleIn, NOT javax @Singleton: the
 // graph that builds a contributed class is generated in `:app`, which has no Dagger interop, so a javax

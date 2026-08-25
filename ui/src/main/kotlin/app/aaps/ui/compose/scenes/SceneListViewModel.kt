@@ -9,7 +9,6 @@ import app.aaps.core.data.model.Scene
 import app.aaps.core.data.model.SceneAction
 import app.aaps.core.data.model.SceneEndAction
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
-import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.profile.ProfileRepository
@@ -28,6 +27,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.extensions.profileNames
 import app.aaps.core.objects.extensions.toScenes
 import app.aaps.core.ui.R
+import app.aaps.core.ui.clientcontrol.failText
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding

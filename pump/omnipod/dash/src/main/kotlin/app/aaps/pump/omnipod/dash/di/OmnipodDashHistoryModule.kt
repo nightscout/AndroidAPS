@@ -8,7 +8,6 @@ import app.aaps.pump.omnipod.dash.history.database.HistoryRecordDao
 import app.aaps.pump.omnipod.dash.history.mapper.HistoryMapper
 import dagger.Module
 import dagger.Provides
-import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton

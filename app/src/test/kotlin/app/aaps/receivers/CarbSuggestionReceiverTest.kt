@@ -2,16 +2,16 @@ package app.aaps.receivers
 
 import android.content.Intent
 import app.aaps.core.interfaces.aps.Loop
-import app.aaps.shared.tests.TestBase
 import app.aaps.core.interfaces.di.MetroMemberInjector
+import app.aaps.shared.tests.TestBase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
+import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 
 class CarbSuggestionReceiverTest : TestBase() {

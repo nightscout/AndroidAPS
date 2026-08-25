@@ -1,7 +1,6 @@
 package app.aaps.ui.di
 
 import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.core.interfaces.overview.graph.GraphConfigRepository
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.scenes.SceneIconResolver
 import app.aaps.core.interfaces.widget.WidgetUpdater
@@ -10,7 +9,6 @@ import app.aaps.core.ui.search.SearchableProvider
 import app.aaps.ui.activities.ErrorActivity
 import app.aaps.ui.compose.overview.OverviewDataCacheFactory
 import app.aaps.ui.compose.scenes.SceneIconResolverImpl
-
 import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.ui.search.DialogSearchables
 import app.aaps.ui.widget.BgGraphWidget

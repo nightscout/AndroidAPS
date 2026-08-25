@@ -1,6 +1,5 @@
 package app.aaps.plugins.calibration
 
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.calibration.AddEntryResult
@@ -17,7 +16,6 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
-
 
 @Inject
 @SingleIn(AppScope::class)

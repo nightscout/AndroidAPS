@@ -9,11 +9,11 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.ui.R
-import app.aaps.core.interfaces.R as InterfacesR
-import javax.inject.Inject
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
+import javax.inject.Inject
+import app.aaps.core.interfaces.R as InterfacesR
 
 // Metro builds this now; Dagger gets it through a @Provides delegate in `:app`. Scoped with Metro's
 // @SingleIn, not javax @Singleton - the graph is generated in `:app`, which has no Dagger interop, so

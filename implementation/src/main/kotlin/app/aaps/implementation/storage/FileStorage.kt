@@ -3,14 +3,14 @@ package app.aaps.implementation.storage
 import android.content.ContentResolver
 import androidx.documentfile.provider.DocumentFile
 import app.aaps.core.interfaces.storage.Storage
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStreamReader
 import javax.inject.Inject
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesBinding
-import dev.zacsweers.metro.SingleIn
 
 // Metro builds this now; Dagger gets it through a @Provides delegate in `:app`. Scoped with Metro's
 // @SingleIn, not javax @Singleton - the graph is generated in `:app`, which has no Dagger interop, so

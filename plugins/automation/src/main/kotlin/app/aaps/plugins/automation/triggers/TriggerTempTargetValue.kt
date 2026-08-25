@@ -2,8 +2,8 @@ package app.aaps.plugins.automation.triggers
 
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.ui.compose.icons.IcTtManual
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.ui.compose.icons.IcTtManual
 import app.aaps.core.utils.lenientDouble
 import app.aaps.core.utils.lenientString
 import app.aaps.core.utils.lenientStringOrNull

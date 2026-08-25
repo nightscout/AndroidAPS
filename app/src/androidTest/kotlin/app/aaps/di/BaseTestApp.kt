@@ -13,7 +13,6 @@ import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import app.aaps.di.metro.MetroGraphs
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
@@ -22,6 +21,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.android.testing.CustomTestApplication
 import dagger.hilt.components.SingletonComponent
+import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
 
 /**
  * Base application for instrumented tests. Mirrors [app.aaps.MainApp]'s dagger-android bridge so that

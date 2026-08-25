@@ -2,7 +2,6 @@ package app.aaps.plugins.smoothing
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Timeline
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.plugin.PluginType
@@ -20,7 +19,6 @@ import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 import kotlin.math.abs
-
 
 @Inject
 @SingleIn(AppScope::class)

@@ -8,10 +8,10 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.ui.CarbSuggestionActions
 import app.aaps.core.objects.workflow.MetroBroadcastReceiver
-import javax.inject.Inject
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
+import javax.inject.Inject
 
 /**
  * Moved here from :plugins:aps so that module could become multiplatform.

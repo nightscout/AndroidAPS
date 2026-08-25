@@ -3,7 +3,6 @@ package app.aaps.plugins.aps.loop.runningMode
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
-import kotlin.reflect.KClass
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
@@ -25,6 +24,7 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import kotlin.reflect.KClass
 
 class RunningModeExpirySchedulerTest : TestBase() {
 

@@ -2,10 +2,10 @@ package app.aaps.di.metro
 
 import app.aaps.core.objects.di.CoreObjectsGraph
 import dev.zacsweers.metro.createGraphFactory
-import org.mockito.Answers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import org.mockito.Answers
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 

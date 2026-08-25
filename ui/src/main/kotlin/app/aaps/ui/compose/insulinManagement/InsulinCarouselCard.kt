@@ -17,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -25,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.interfaces.insulin.ConcentrationType
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.R as CoreUiR
 
 /**

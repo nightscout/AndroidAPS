@@ -15,9 +15,9 @@ import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.utils.JsonHelper.safeGetJSONObject
 import app.aaps.core.utils.JsonHelper.safeGetString
 import app.aaps.core.utils.JsonHelper.safeGetStringAllowNull
-import kotlinx.serialization.json.JsonObject
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
+import kotlinx.serialization.json.JsonObject
 import javax.inject.Inject
 
 // Unscoped, matching the Dagger @Binds it replaces: a profile store is a value object and each caller

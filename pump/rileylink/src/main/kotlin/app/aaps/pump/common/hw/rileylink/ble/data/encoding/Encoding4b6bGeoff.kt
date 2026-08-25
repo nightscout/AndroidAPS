@@ -7,8 +7,6 @@ import app.aaps.core.utils.pump.ByteUtil.getListFromByteArray
 import app.aaps.core.utils.pump.ByteUtil.shortHexString
 import app.aaps.pump.common.hw.rileylink.ble.RileyLinkCommunicationException
 import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkBLEError
-import java.lang.StringBuilder
-import java.util.ArrayList
 import java.util.Locale
 
 /**

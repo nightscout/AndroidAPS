@@ -2,6 +2,8 @@ package app.aaps.plugins.sync.nsclientV3.clientcontrol
 
 import android.util.Base64
 import androidx.annotation.VisibleForTesting
+import app.aaps.core.data.json.OrgJsonCompat.optJsonObjectCompat
+import app.aaps.core.data.json.OrgJsonCompat.optStringCompat
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
@@ -9,8 +11,6 @@ import app.aaps.core.nssdk.localmodel.clientcontrol.PairingOffer
 import app.aaps.core.nssdk.localmodel.clientcontrol.PairingPayload
 import app.aaps.core.nssdk.utils.ClientControlPairingCrypto
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
-import app.aaps.core.data.json.OrgJsonCompat.optJsonObjectCompat
-import app.aaps.core.data.json.OrgJsonCompat.optStringCompat
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

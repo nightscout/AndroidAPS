@@ -1,7 +1,6 @@
 package app.aaps.plugins.sync.smsCommunicator
 
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smsCommunicator.Sms

@@ -7,10 +7,10 @@ import android.content.Intent
 import android.content.IntentFilter
 import info.nightscout.comboctl.base.BluetoothAddress
 import info.nightscout.comboctl.base.BluetoothDevice
-import info.nightscout.comboctl.base.BluetoothNotEnabledException
 import info.nightscout.comboctl.base.BluetoothException
 import info.nightscout.comboctl.base.BluetoothInterface
 import info.nightscout.comboctl.base.BluetoothNotAvailableException
+import info.nightscout.comboctl.base.BluetoothNotEnabledException
 import info.nightscout.comboctl.base.LogLevel
 import info.nightscout.comboctl.base.Logger
 import info.nightscout.comboctl.base.toBluetoothAddress

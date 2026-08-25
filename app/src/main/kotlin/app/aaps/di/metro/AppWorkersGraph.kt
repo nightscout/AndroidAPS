@@ -1,15 +1,13 @@
 package app.aaps.di.metro
 
-import androidx.work.WorkManager
 import androidx.work.ListenableWorker
 import app.aaps.core.objects.workflow.MetroWorkerCreator
 import app.aaps.core.objects.workflow.WorkerKey
-import app.aaps.implementation.receivers.KeepAliveWorker
 import app.aaps.implementation.maintenance.ImportExportPrefsImpl
+import app.aaps.implementation.receivers.KeepAliveWorker
 import app.aaps.implementation.scenes.SceneExpiryWorker
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryWorker
-import dev.zacsweers.metro.ClassKey
 import dev.zacsweers.metro.GraphExtension
 import dev.zacsweers.metro.IntoMap
 import dev.zacsweers.metro.Provides

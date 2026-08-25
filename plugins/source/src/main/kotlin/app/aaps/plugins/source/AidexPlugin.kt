@@ -5,7 +5,6 @@ import android.content.Context
 import androidx.annotation.VisibleForTesting
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
@@ -28,21 +27,21 @@ import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.workflow.LoggingWorker
+import app.aaps.core.objects.workflow.MetroWorkerCreator
 import app.aaps.core.ui.compose.icons.IcGenericCgm
 import app.aaps.plugins.source.compose.BgSourceComposeContent
-import app.aaps.core.objects.workflow.MetroWorkerCreator
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
-import kotlinx.coroutines.Dispatchers
-import javax.inject.Inject
-import javax.inject.Singleton
-import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
+import kotlinx.coroutines.Dispatchers
+import javax.inject.Inject
 
 // Registers itself into the plugin list. Scoped with Metro's own @SingleIn, NOT javax @Singleton: the
 // graph that builds a contributed class is generated in `:app`, which has no Dagger interop, so a javax

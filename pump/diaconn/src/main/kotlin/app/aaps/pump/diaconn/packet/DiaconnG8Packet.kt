@@ -1,11 +1,10 @@
 package app.aaps.pump.diaconn.packet
 
-import dev.zacsweers.metro.HasMemberInjections
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
 import dagger.android.HasAndroidInjector
-import java.lang.StringBuilder
+import dev.zacsweers.metro.HasMemberInjections
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import javax.inject.Inject

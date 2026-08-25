@@ -1,6 +1,5 @@
 package app.aaps.plugins.configuration.di
 
-import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.configuration.RunningConfigurationKeys
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.plugins.configuration.configBuilder.RunningConfigurationImpl

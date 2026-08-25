@@ -4,13 +4,13 @@ import android.content.Context
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
-import app.aaps.plugins.automation.BtConnectionSource
 import app.aaps.core.utils.lenientString
+import app.aaps.plugins.automation.BtConnectionSource
 import kotlinx.serialization.json.JsonObject
 import javax.inject.Inject
 import javax.inject.Provider
-import kotlin.reflect.full.primaryConstructor
 import javax.inject.Singleton
+import kotlin.reflect.full.primaryConstructor
 
 /**
  * Builds [Trigger]s from their stored JSON.

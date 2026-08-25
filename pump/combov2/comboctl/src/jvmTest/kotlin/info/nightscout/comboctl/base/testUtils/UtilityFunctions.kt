@@ -5,9 +5,9 @@ import info.nightscout.comboctl.base.ComboException
 import info.nightscout.comboctl.base.Nonce
 import info.nightscout.comboctl.base.TransportLayer
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.coroutines.CoroutineContext

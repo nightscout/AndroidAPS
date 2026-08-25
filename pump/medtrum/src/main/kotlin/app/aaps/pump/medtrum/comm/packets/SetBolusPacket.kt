@@ -1,8 +1,8 @@
 package app.aaps.pump.medtrum.comm.packets
 
-import dagger.android.HasAndroidInjector
 import app.aaps.pump.medtrum.comm.enums.CommandType.SET_BOLUS
 import app.aaps.pump.medtrum.extension.toByteArray
+import dagger.android.HasAndroidInjector
 import kotlin.math.round
 
 class SetBolusPacket(injector: HasAndroidInjector, private val insulin: Double) : MedtrumPacket(injector) {

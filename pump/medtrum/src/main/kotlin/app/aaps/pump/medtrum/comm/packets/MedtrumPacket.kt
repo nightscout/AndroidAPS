@@ -1,10 +1,10 @@
 package app.aaps.pump.medtrum.comm.packets
 
-import dev.zacsweers.metro.HasMemberInjections
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import dagger.android.HasAndroidInjector
 import app.aaps.pump.medtrum.extension.toInt
+import dagger.android.HasAndroidInjector
+import dev.zacsweers.metro.HasMemberInjections
 import javax.inject.Inject
 
 // Metro reads this class now that interop is on for the module. It is subclassable, so it has to

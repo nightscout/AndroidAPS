@@ -1,9 +1,9 @@
 package app.aaps.plugins.source.compose
 
 import androidx.compose.runtime.Composable
-import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
+import app.aaps.core.ui.compose.metroViewModel
 
 /**
  * Compose content provider for BG Source plugins.

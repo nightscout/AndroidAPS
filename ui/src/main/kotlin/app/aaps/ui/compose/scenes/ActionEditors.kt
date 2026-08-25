@@ -43,9 +43,9 @@ import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TTPreset
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.R
-import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.NumberInputRow
+import app.aaps.core.interfaces.R as InterfacesR
 
 // --- Helpers ---
 

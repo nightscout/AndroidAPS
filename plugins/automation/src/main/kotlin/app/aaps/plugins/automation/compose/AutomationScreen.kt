@@ -44,7 +44,6 @@ import app.aaps.core.ui.compose.AapsFab
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.MasterOfflineBanner
 import app.aaps.core.ui.compose.icons.IcAutomation
-import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.plugins.automation.R
 import sh.calvin.reorderable.ReorderableItem

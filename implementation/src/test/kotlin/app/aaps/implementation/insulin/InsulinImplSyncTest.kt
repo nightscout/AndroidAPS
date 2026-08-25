@@ -1,6 +1,5 @@
 package app.aaps.implementation.insulin
 
-import kotlin.reflect.KClass
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -23,6 +22,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.whenever
+import kotlin.reflect.KClass
 
 /**
  * Verifies the generic-channel client behavior for insulin after the verbatim-load migration:

@@ -23,7 +23,6 @@ import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.IntoMap
 import dev.zacsweers.metro.MembersInjector
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metrox.viewmodel.MetroViewModelMultibindings
 import kotlin.reflect.KClass

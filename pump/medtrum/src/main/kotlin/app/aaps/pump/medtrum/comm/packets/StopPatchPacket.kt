@@ -1,10 +1,10 @@
 package app.aaps.pump.medtrum.comm.packets
 
-import dagger.android.HasAndroidInjector
 import app.aaps.pump.medtrum.MedtrumPump
 import app.aaps.pump.medtrum.comm.enums.CommandType.STOP_PATCH
 import app.aaps.pump.medtrum.extension.toInt
 import app.aaps.pump.medtrum.extension.toLong
+import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
 class StopPatchPacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {

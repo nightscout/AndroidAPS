@@ -1,6 +1,5 @@
 package app.aaps.core.objects.wizard
 
-import kotlin.time.Clock
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.BolusWizardData
@@ -14,6 +13,7 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.data.ui.ConfirmationRole
 import app.aaps.core.data.ui.confirmationLines
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
@@ -32,7 +32,6 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
-import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
@@ -50,6 +49,7 @@ import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.time.Clock
 
 class BolusWizard(
     private val aapsLogger: AAPSLogger,

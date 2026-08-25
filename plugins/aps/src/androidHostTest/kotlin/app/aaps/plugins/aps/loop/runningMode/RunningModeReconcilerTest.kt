@@ -1,6 +1,5 @@
 package app.aaps.plugins.aps.loop.runningMode
 
-import kotlin.reflect.KClass
 import app.aaps.core.data.model.EB
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TB
@@ -8,7 +7,6 @@ import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.pump.PumpSync
-
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.shared.tests.TestBaseWithProfile
 import kotlinx.coroutines.CoroutineScope
@@ -30,6 +28,7 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import kotlin.reflect.KClass
 
 class RunningModeReconcilerTest : TestBaseWithProfile() {
 

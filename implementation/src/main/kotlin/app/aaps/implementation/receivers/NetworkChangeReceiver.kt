@@ -11,8 +11,8 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore.NetworkStatus
-import app.aaps.core.utils.receivers.StringUtils
 import app.aaps.core.objects.workflow.MetroBroadcastReceiver
+import app.aaps.core.utils.receivers.StringUtils
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

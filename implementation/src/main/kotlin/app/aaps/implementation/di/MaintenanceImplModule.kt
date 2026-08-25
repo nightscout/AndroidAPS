@@ -1,6 +1,5 @@
 package app.aaps.implementation.di
 
-import app.aaps.core.interfaces.maintenance.CloudDirectoryManager
 import app.aaps.core.interfaces.maintenance.CloudStorageProvider
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
@@ -8,7 +7,6 @@ import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.implementation.maintenance.FileListProviderImpl
 import app.aaps.implementation.maintenance.ImportExportPrefsImpl
 import app.aaps.implementation.maintenance.MaintenanceImpl
-import app.aaps.implementation.maintenance.cloud.CloudDirectoryManagerImpl
 import app.aaps.implementation.maintenance.cloud.providers.googledrive.GoogleDriveProvider
 import app.aaps.implementation.maintenance.formats.EncryptedPrefsFormat
 import dagger.Binds

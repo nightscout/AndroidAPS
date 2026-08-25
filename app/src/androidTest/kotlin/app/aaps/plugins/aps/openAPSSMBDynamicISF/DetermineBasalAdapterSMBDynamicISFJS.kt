@@ -3,6 +3,7 @@ package app.aaps.plugins.aps.openAPSSMBDynamicISF
 import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.getPassedDurationToTimeInMinutes
 import app.aaps.core.interfaces.aps.DetermineBasalAdapter
 import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.aps.IobTotal
@@ -23,7 +24,6 @@ import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.convertToJSONArray
 import app.aaps.core.objects.extensions.convertedToAbsolute
-import app.aaps.core.data.model.getPassedDurationToTimeInMinutes
 import app.aaps.core.objects.extensions.plannedRemainingMinutes
 import app.aaps.plugins.aps.logger.LoggerCallback
 import app.aaps.plugins.aps.openAPSSMB.DetermineBasalResultSMBFromJS

@@ -1,9 +1,9 @@
 package app.aaps.plugins.sync.openhumans.delegates
 
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.plugins.sync.di.OpenHumansScope
 import app.aaps.plugins.sync.openhumans.keys.OhLongKey
 import dev.zacsweers.metro.Inject
-import app.aaps.plugins.sync.di.OpenHumansScope
 import dev.zacsweers.metro.SingleIn
 import kotlin.reflect.KProperty
 

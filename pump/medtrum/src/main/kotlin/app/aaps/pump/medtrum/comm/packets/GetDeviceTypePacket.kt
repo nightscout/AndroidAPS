@@ -1,9 +1,9 @@
 package app.aaps.pump.medtrum.comm.packets
 
-import dagger.android.HasAndroidInjector
 import app.aaps.pump.medtrum.comm.enums.CommandType.GET_DEVICE_TYPE
 import app.aaps.pump.medtrum.extension.toInt
 import app.aaps.pump.medtrum.extension.toLong
+import dagger.android.HasAndroidInjector
 
 class GetDeviceTypePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {
 

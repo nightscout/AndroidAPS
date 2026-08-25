@@ -24,12 +24,12 @@ import app.aaps.core.keys.BooleanComposedKey
 import app.aaps.core.keys.IntComposedKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.apsAdjustedTargetMgdl
-import app.aaps.core.ui.extensions.displayText
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.compose.DarkGeneralColors
 import app.aaps.core.ui.compose.loopColor
 import app.aaps.core.ui.compose.ttReasonColor
+import app.aaps.core.ui.extensions.displayText
 import app.aaps.ui.R
 import app.aaps.ui.widget.directionToDrawableRes
 import javax.inject.Inject

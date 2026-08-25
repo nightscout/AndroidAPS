@@ -1,10 +1,10 @@
 package app.aaps.pump.diaconn.di
 
+import app.aaps.pump.diaconn.service.DiaconnG8Service
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import app.aaps.pump.diaconn.service.DiaconnG8Service
 
 @Module
 @InstallIn(SingletonComponent::class)

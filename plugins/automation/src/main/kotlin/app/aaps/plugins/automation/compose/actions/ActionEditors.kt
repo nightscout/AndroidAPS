@@ -13,7 +13,6 @@ import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.Scene
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.actions.Action
@@ -36,6 +35,7 @@ import app.aaps.plugins.automation.compose.elements.InputStringEditor
 import app.aaps.plugins.automation.compose.elements.InputWeekDayEditor
 import app.aaps.plugins.automation.compose.elements.LabelWithElementRow
 import app.aaps.plugins.automation.elements.InputPercent
+import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 fun ActionEditor(
