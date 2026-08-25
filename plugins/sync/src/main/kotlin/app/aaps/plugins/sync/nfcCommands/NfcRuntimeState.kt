@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.nfcCommands
 
+import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -9,9 +10,6 @@ import javax.inject.Singleton
  *
  * Both members used to sit on `NfcCommandsPlugin`, which meant every action had to be handed the whole
  * plugin to reach them. They are here so an action can ask for this and nothing else.
- *
- * The action state map is deliberately still `Any` typed - a sealed type for it is its own change, kept
- * separate from moving it out of the plugin.
  */
 @Singleton
 class NfcRuntimeState @Inject constructor() {
@@ -23,17 +21,22 @@ class NfcRuntimeState @Inject constructor() {
      */
     var lastRemoteBolusTime: Long = 0
 
-    /** Values handed from one phase of an action to the next, for example a wizard calculation. */
-    private val actionStates = mutableMapOf<String, Any>()
+    /**
+     * The dose the bolus wizard previewed, parked between the confirmation dialog and execution so
+     * that execution commits the exact dose that was shown, by id, rather than recalculating it.
+     *
+     * Keyed by the action's parameters, because one tag may carry more than one wizard command.
+     */
+    private val wizardPreviews = mutableMapOf<String, WizardBolusExecutor.PrepareResult.Preview>()
 
-    fun setActionState(key: String, state: Any) {
-        actionStates[key] = state
+    fun setWizardPreview(key: String, preview: WizardBolusExecutor.PrepareResult.Preview) {
+        wizardPreviews[key] = preview
     }
 
-    fun getActionState(key: String): Any? = actionStates[key]
+    fun getWizardPreview(key: String): WizardBolusExecutor.PrepareResult.Preview? = wizardPreviews[key]
 
     /** Called before a chain starts and after it finishes, so nothing leaks between scans. */
-    fun clearActionStates() {
-        actionStates.clear()
+    fun clearWizardPreviews() {
+        wizardPreviews.clear()
     }
 }

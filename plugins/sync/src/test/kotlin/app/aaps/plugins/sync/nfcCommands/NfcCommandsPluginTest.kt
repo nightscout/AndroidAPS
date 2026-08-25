@@ -568,7 +568,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
             .put(NfcJsonKeys.PERCENT, 100)
         
         val prepared = WizardBolusExecutor.PrepareResult.Preview(insulin = 1.5, carbs = 20, bolusId = 123L)
-        runtimeState.setActionState(params.toString(), prepared)
+        runtimeState.setWizardPreview(params.toString(), prepared)
         runTest { 
             whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP)
             whenever(wizardBolusExecutor.confirm(eq(123L), any(), any(), any(), any())).thenReturn(WizardBolusExecutor.ConfirmResult.Delivered)
@@ -599,7 +599,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
         assertThat(result).contains("Going to deliver")
         verify(wizardBolusExecutor).prepareWizard(any())
-        assertThat(runtimeState.getActionState(params.toString())).isEqualTo(prepared)
+        assertThat(runtimeState.getWizardPreview(params.toString())).isEqualTo(prepared)
     }
 
     // ── processProfile tests ───────────────────────────────────────────────────

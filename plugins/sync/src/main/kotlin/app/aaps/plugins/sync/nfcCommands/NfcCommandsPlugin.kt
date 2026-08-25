@@ -119,9 +119,6 @@ class NfcCommandsPlugin @Inject constructor(
     rh,
     preferences,
 ) {
-    /** Cleared before a chain starts and after it finishes. State itself lives in [NfcRuntimeState]. */
-    private fun clearActionStates() = runtimeState.clearActionStates()
-
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
         key = "nfccommunicator_settings",
         titleResId = R.string.nfccommands,
@@ -142,7 +139,7 @@ class NfcCommandsPlugin @Inject constructor(
      * Prepares a tag for execution by checking plugin status and registration.
      */
     fun prepareExecution(tagUid: String): NfcPrepareResult {
-        clearActionStates()
+        runtimeState.clearWizardPreviews()
         if (!isEnabled()) return NfcPrepareResult.Error(rh.gs(R.string.nfccommands_plugin_disabled))
         
         val tag = nfcTagStore.findTagByUid(tagUid)
@@ -173,7 +170,7 @@ class NfcCommandsPlugin @Inject constructor(
      */
     suspend fun executeWithFeedback(commands: List<String>, tagName: String, action: String = "READ"): NfcExecutionResult {
         val result = executeCascade(commands)
-        clearActionStates()
+        runtimeState.clearWizardPreviews()
         nfcTagStore.appendLogEntry(
             NfcLogEntry(
                 timestamp = System.currentTimeMillis(),

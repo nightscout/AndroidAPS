@@ -78,7 +78,7 @@ class BolusWizardAction(
                 // Park the SAME preview (bolusId + computed insulin) the confirm dialog just displayed —
                 // execute() commits it by id through the shared WizardBolusExecutor (identical to wear /
                 // client-control), instead of re-driving a shared/leftover BolusWizard instance.
-                runtimeState.setActionState(params.toString(), prepared)
+                runtimeState.setWizardPreview(params.toString(), prepared)
                 val base = rh.gs(CoreUiR.string.goingtodeliver, prepared.insulin)
                 val carbs = rh.gs(InterfacesR.string.format_carbs, amount)
                 "$base ($carbs)"
@@ -99,7 +99,7 @@ class BolusWizardAction(
             return NfcExecutionResult(false, rh.gs(InterfacesR.string.pumpsuspended))
         }
 
-        val prepared = runtimeState.getActionState(params.toString()) as? WizardBolusExecutor.PrepareResult.Preview
+        val prepared = runtimeState.getWizardPreview(params.toString())
         if (prepared == null) {
             aapsLogger.debug(LTag.NFC, "BolusWizard state not found. Key: ${params}")
             return commandNotPossible()
