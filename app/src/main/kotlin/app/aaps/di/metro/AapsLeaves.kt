@@ -18,6 +18,10 @@ import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.LoggerUtils
+import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
+import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
+import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
+import app.aaps.core.interfaces.widget.WidgetUpdater
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
@@ -106,6 +110,12 @@ class AapsLeaves(
     private val pumpStatusProviderProvider: Provider<PumpStatusProvider>,
     // Dagger @Binds in ImplementationModule; AutotunePlugin needs it and Metro builds that now.
     private val loggerUtilsProvider: Provider<LoggerUtils>,
+    // Dagger @Binds in ImplementationModule; ErrorActivity needs it and Metro injects that now.
+    private val alarmSoundPlayerProvider: Provider<AlarmSoundPlayer>,
+    // The activities this app injects need these; all three are Dagger @Binds in their own modules.
+    private val widgetUpdaterProvider: Provider<WidgetUpdater>,
+    private val authFlowOutProvider: Provider<AuthFlowOut>,
+    private val tidepoolUploaderProvider: Provider<TidepoolUploader>,
     private val dateUtilProvider: Provider<DateUtil>,
     private val profileFunctionProvider: Provider<ProfileFunction>,
     private val commandQueueProvider: Provider<CommandQueue>,
@@ -218,6 +228,10 @@ class AapsLeaves(
     // `CoreObjectsModule.provideLoop`.
     @Provides fun pumpStatusProvider(): PumpStatusProvider = pumpStatusProviderProvider.get()
     @Provides fun loggerUtils(): LoggerUtils = loggerUtilsProvider.get()
+    @Provides fun alarmSoundPlayer(): AlarmSoundPlayer = alarmSoundPlayerProvider.get()
+    @Provides fun widgetUpdater(): WidgetUpdater = widgetUpdaterProvider.get()
+    @Provides fun authFlowOut(): AuthFlowOut = authFlowOutProvider.get()
+    @Provides fun tidepoolUploader(): TidepoolUploader = tidepoolUploaderProvider.get()
     @Provides fun dateUtil(): DateUtil = dateUtilProvider.get()
     @Provides fun profileFunction(): ProfileFunction = profileFunctionProvider.get()
     @Provides fun commandQueue(): CommandQueue = commandQueueProvider.get()

@@ -29,6 +29,10 @@ import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.LoggerUtils
+import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
+import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
+import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
+import app.aaps.core.interfaces.widget.WidgetUpdater
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.maintenance.CloudDirectoryManager
 import app.aaps.core.interfaces.maintenance.FileListProvider
@@ -368,6 +372,10 @@ class CoreObjectsModule {
         profilerProvider: Provider<Profiler>,
         pumpStatusProviderProvider: Provider<PumpStatusProvider>,
         loggerUtilsProvider: Provider<LoggerUtils>,
+        alarmSoundPlayerProvider: Provider<AlarmSoundPlayer>,
+        widgetUpdaterProvider: Provider<WidgetUpdater>,
+        authFlowOutProvider: Provider<AuthFlowOut>,
+        tidepoolUploaderProvider: Provider<TidepoolUploader>,
         dateUtilProvider: Provider<DateUtil>,
         profileFunctionProvider: Provider<ProfileFunction>,
         commandQueueProvider: Provider<CommandQueue>,
@@ -428,6 +436,10 @@ class CoreObjectsModule {
         profilerProvider,
         pumpStatusProviderProvider,
         loggerUtilsProvider,
+        alarmSoundPlayerProvider,
+        widgetUpdaterProvider,
+        authFlowOutProvider,
+        tidepoolUploaderProvider,
         dateUtilProvider,
         profileFunctionProvider,
         commandQueueProvider,

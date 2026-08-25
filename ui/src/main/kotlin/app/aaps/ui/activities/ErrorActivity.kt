@@ -40,7 +40,7 @@ import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.dialogs.GlobalSnackbarHost
-import dagger.android.support.DaggerAppCompatActivity
+import app.aaps.core.ui.compose.MetroAppCompatActivity
 import javax.inject.Inject
 
 /**
@@ -48,7 +48,7 @@ import javax.inject.Inject
  * [AlarmSoundPlayer] singleton so the internal-notification alarm path can reuse it; this activity
  * only drives play/stop in response to user actions.
  */
-class ErrorActivity : DaggerAppCompatActivity() {
+class ErrorActivity : MetroAppCompatActivity() {
 
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var rxBus: RxBus

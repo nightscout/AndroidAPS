@@ -62,7 +62,5 @@ abstract class UiModule {
     @ContributesAndroidInjector abstract fun contributesBgGraphWidget(): BgGraphWidget
     @ContributesAndroidInjector abstract fun contributesCompactBgWidget(): CompactBgWidget
     @ContributesAndroidInjector abstract fun contributesSmallWidget(): SmallWidget
-    @ContributesAndroidInjector abstract fun contributesWidgetConfigureActivity(): WidgetConfigureActivity
 
-    @ContributesAndroidInjector abstract fun contributeErrorActivity(): ErrorActivity
 }

@@ -10,7 +10,7 @@ import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
 import app.aaps.plugins.sync.tidepool.events.EventTidepoolStatus
 import app.aaps.plugins.sync.tidepool.keys.TidepoolStringNonKey
 import app.aaps.plugins.sync.tidepool.messages.AuthReplyMessage
-import dagger.android.support.DaggerAppCompatActivity
+import app.aaps.core.ui.compose.MetroAppCompatActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -27,7 +27,7 @@ import javax.inject.Inject
  *
  * Handle aaps://callback/tidepool
  */
-class AuthFlowIn : DaggerAppCompatActivity() {
+class AuthFlowIn : MetroAppCompatActivity() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var authFlowOut: AuthFlowOut

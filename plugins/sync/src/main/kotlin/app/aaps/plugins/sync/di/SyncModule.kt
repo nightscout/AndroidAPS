@@ -44,7 +44,6 @@ abstract class SyncModule {
     @ContributesAndroidInjector abstract fun contributesNSClientV3Service(): NSClientV3Service
 
     // NSClient / NSClientV3 / Xdrip sync workers migrated to @HiltWorker (constructed by HiltWorkerFactory).
-    @ContributesAndroidInjector abstract fun contributesAuthFlowInActivity(): AuthFlowIn
     @ContributesAndroidInjector abstract fun contributesWearDataReceiver(): WearDataReceiver
     @ContributesAndroidInjector abstract fun contributesWatchUpdaterService(): DataLayerListenerServiceMobile
 

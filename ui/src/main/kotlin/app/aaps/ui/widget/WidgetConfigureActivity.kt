@@ -20,10 +20,10 @@ import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.dialogs.GlobalSnackbarHost
-import dagger.android.support.DaggerAppCompatActivity
+import app.aaps.core.ui.compose.MetroAppCompatActivity
 import javax.inject.Inject
 
-class WidgetConfigureActivity : DaggerAppCompatActivity() {
+class WidgetConfigureActivity : MetroAppCompatActivity() {
 
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var widgetUpdater: WidgetUpdater
