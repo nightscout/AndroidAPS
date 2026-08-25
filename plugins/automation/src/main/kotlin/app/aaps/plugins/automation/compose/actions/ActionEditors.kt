@@ -25,6 +25,7 @@ import app.aaps.plugins.automation.actions.ActionProfileSwitchPercent
 import app.aaps.plugins.automation.actions.ActionRunAutotune
 import app.aaps.plugins.automation.actions.ActionRunScene
 import app.aaps.plugins.automation.actions.ActionSMBChange
+import app.aaps.plugins.automation.actions.ActionSMBMaxMinutesChangeBase
 import app.aaps.plugins.automation.actions.ActionSendSMS
 import app.aaps.plugins.automation.actions.ActionSettingsExport
 import app.aaps.plugins.automation.actions.ActionStartTempTarget
@@ -67,6 +68,7 @@ fun ActionEditor(
             is ActionSettingsExport       -> ActionSettingsExportEditor(action, onChange)
             is ActionCarePortalEvent      -> ActionCarePortalEventEditor(action, tick, onChange)
             is ActionSMBChange            -> ActionSMBChangeEditor(action, onChange)
+            is ActionSMBMaxMinutesChangeBase -> ActionSMBMaxMinutesChangeEditor(action, tick, onChange)
             is ActionProfileSwitch        -> ActionProfileSwitchEditor(action, profileNames, onChange)
             is ActionProfileSwitchPercent -> ActionProfileSwitchPercentEditor(action, tick, onChange)
             is ActionRunAutotune          -> ActionRunAutotuneEditor(action, profileNames, tick, onChange)
@@ -165,6 +167,19 @@ fun ActionSMBChangeEditor(a: ActionSMBChange, onChange: () -> Unit) {
             onValueChange = { a.smbState.setValue(it); onChange() }
         )
     }
+}
+
+@Composable
+fun ActionSMBMaxMinutesChangeEditor(a: ActionSMBMaxMinutesChangeBase, tick: Int = 0, onChange: () -> Unit) {
+    @Suppress("UNUSED_EXPRESSION") tick
+    NumberInputRow(
+        labelResId = a.key.titleResId,
+        value = a.minutes.value.toDouble(),
+        onValueChange = { a.minutes.value = it.toInt(); onChange() },
+        valueRange = a.key.min.toDouble()..a.key.max.toDouble(),
+        step = 5.0,
+        unitLabelResId = KeysR.string.units_min
+    )
 }
 
 @Composable

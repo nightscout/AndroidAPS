@@ -70,6 +70,8 @@ abstract class Action(val injector: HasAndroidInjector) {
                 ActionDummy::class.java.simpleName                -> ActionDummy(injector).fromJSON(data.toString())
                 ActionEnableScene::class.java.simpleName          -> ActionEnableScene(injector).fromJSON(data.toString())
                 ActionSMBChange::class.java.simpleName            -> ActionSMBChange(injector).fromJSON(data.toString())
+                ActionSMBMaxMinutesChange::class.java.simpleName  -> ActionSMBMaxMinutesChange(injector).fromJSON(data.toString())
+                ActionUAMSMBMaxMinutesChange::class.java.simpleName -> ActionUAMSMBMaxMinutesChange(injector).fromJSON(data.toString())
                 ActionNotification::class.java.simpleName         -> ActionNotification(injector).fromJSON(data.toString())
                 ActionProfileSwitch::class.java.simpleName        -> ActionProfileSwitch(injector).fromJSON(data.toString())
                 ActionProfileSwitchPercent::class.java.simpleName -> ActionProfileSwitchPercent(injector).fromJSON(data.toString())

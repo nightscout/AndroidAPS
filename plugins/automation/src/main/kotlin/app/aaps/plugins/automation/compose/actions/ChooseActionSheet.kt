@@ -37,11 +37,13 @@ import app.aaps.plugins.automation.actions.ActionProfileSwitchPercent
 import app.aaps.plugins.automation.actions.ActionRunAutotune
 import app.aaps.plugins.automation.actions.ActionRunScene
 import app.aaps.plugins.automation.actions.ActionSMBChange
+import app.aaps.plugins.automation.actions.ActionSMBMaxMinutesChange
 import app.aaps.plugins.automation.actions.ActionSendSMS
 import app.aaps.plugins.automation.actions.ActionSettingsExport
 import app.aaps.plugins.automation.actions.ActionStartTempTarget
 import app.aaps.plugins.automation.actions.ActionStopProcessing
 import app.aaps.plugins.automation.actions.ActionStopTempTarget
+import app.aaps.plugins.automation.actions.ActionUAMSMBMaxMinutesChange
 
 enum class ActionCategory(val labelResId: Int) {
     Targets(R.string.automation_category_targets),
@@ -61,6 +63,8 @@ private fun actionCategoryOf(cls: Class<*>): ActionCategory = when (cls) {
     ActionProfileSwitchPercent::class.java -> ActionCategory.Profile
 
     ActionSMBChange::class.java,
+    ActionSMBMaxMinutesChange::class.java,
+    ActionUAMSMBMaxMinutesChange::class.java,
     ActionStopProcessing::class.java,
     ActionRunAutotune::class.java -> ActionCategory.Loop
 

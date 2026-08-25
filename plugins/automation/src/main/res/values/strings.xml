@@ -155,6 +155,12 @@
     <string name="on">ON</string>
     <string name="off">OFF</string>
 
+    <!--    SMB max minutes-->
+    <string name="changeSmbMaxMinutes">Change SMB max minutes</string>
+    <string name="changeSmbMaxMinutesTo" comment="%1$d=minutes of basal to limit SMB. Example: Change SMB max minutes to 30 min">Change SMB max minutes to %1$d min</string>
+    <string name="changeUamSmbMaxMinutes">Change UAM SMB max minutes</string>
+    <string name="changeUamSmbMaxMinutesTo" comment="%1$d=minutes of basal to limit UAM SMB. Example: Change UAM SMB max minutes to 30 min">Change UAM SMB max minutes to %1$d min</string>
+
     <!--    Map Picker (OpenStreetMap)-->
     <string name="pick_from_map">Pick from map</string>
     <string name="tap_to_select_location">Tap on the map to select a location</string>

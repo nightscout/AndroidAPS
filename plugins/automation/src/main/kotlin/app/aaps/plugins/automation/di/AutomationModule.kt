@@ -17,11 +17,13 @@ import app.aaps.plugins.automation.actions.ActionProfileSwitchPercent
 import app.aaps.plugins.automation.actions.ActionRunAutotune
 import app.aaps.plugins.automation.actions.ActionRunScene
 import app.aaps.plugins.automation.actions.ActionSMBChange
+import app.aaps.plugins.automation.actions.ActionSMBMaxMinutesChange
 import app.aaps.plugins.automation.actions.ActionSendSMS
 import app.aaps.plugins.automation.actions.ActionSettingsExport
 import app.aaps.plugins.automation.actions.ActionStartTempTarget
 import app.aaps.plugins.automation.actions.ActionStopProcessing
 import app.aaps.plugins.automation.actions.ActionStopTempTarget
+import app.aaps.plugins.automation.actions.ActionUAMSMBMaxMinutesChange
 import app.aaps.plugins.automation.TimerReminderReceiver
 import app.aaps.plugins.automation.services.LocationService
 import app.aaps.plugins.automation.triggers.Trigger
@@ -103,6 +105,8 @@ abstract class AutomationModule {
 
     @ContributesAndroidInjector abstract fun actionInjector(): Action
     @ContributesAndroidInjector abstract fun actionSMBChangeInjector(): ActionSMBChange
+    @ContributesAndroidInjector abstract fun actionSMBMaxMinutesChangeInjector(): ActionSMBMaxMinutesChange
+    @ContributesAndroidInjector abstract fun actionUAMSMBMaxMinutesChangeInjector(): ActionUAMSMBMaxMinutesChange
     @ContributesAndroidInjector abstract fun actionStopProcessingInjector(): ActionStopProcessing
     @ContributesAndroidInjector abstract fun actionNotificationInjector(): ActionNotification
     @ContributesAndroidInjector abstract fun actionAlarmInjector(): ActionAlarm
