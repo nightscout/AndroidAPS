@@ -1,5 +1,8 @@
 package app.aaps.plugins.aps.openAPS
 
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -7,7 +10,8 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.DurationUnit
 
 
-class DeltaCalculator constructor(
+@SingleIn(AppScope::class)
+class DeltaCalculator @Inject constructor(
     private val aapsLogger: AAPSLogger
 ) {
 

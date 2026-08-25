@@ -1,5 +1,8 @@
 package app.aaps.plugins.aps.openAPSSMB
 
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.aps.APSResult
@@ -25,7 +28,8 @@ import kotlin.math.pow
 import kotlin.math.roundToInt
 
 
-class DetermineBasalSMB constructor(
+@SingleIn(AppScope::class)
+class DetermineBasalSMB @Inject constructor(
     private val profileUtil: ProfileUtil,
     private val fabricPrivacy: FabricPrivacy
 ) {

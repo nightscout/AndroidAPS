@@ -41,6 +41,12 @@ import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.plugins.aps.openAPS.DeltaCalculator
+import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAMA
+import app.aaps.plugins.aps.openAPSAutoISF.DetermineBasalAutoISF
+import app.aaps.plugins.aps.openAPSAutoISF.GlucoseStatusCalculatorAutoIsf
+import app.aaps.plugins.aps.openAPSSMB.DetermineBasalSMB
+import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
@@ -233,6 +239,32 @@ class CoreObjectsModule {
      * `HistoryWindowGraph` and reaches its consumers through `HistoryBrowserData`, never through here.
      */
     @Provides @Singleton fun provideIobCobCalculator(graphs: MetroGraphs): IobCobCalculator = graphs.iobCobCalculator
+
+    /*
+     * openAPS pieces, from Metro, which builds them in `:plugins:aps` commonMain.
+     *
+     * All six, because Dagger asks for all six. Two groups do: the instrumented APS tests
+     * (`TestOpenAPSSMBPlugin`, `TestOpenAPSAMAPlugin`, `ReplayApsResultsTest`), which Hilt builds; and
+     * the APS plugin providers still left in `ApsPluginsModule`, which take them as parameters. The
+     * second group is easy to miss - they sit in the same file the providers were deleted from.
+     *
+     * Without these, interop would let Dagger build its own from the `@Inject` constructors and the loop
+     * would score a decision with a different calculator than the one the app holds.
+     */
+    @Provides @Singleton fun provideGlucoseStatusCalculatorSMB(graphs: MetroGraphs): GlucoseStatusCalculatorSMB =
+        graphs.glucoseStatusCalculatorSMB
+
+    @Provides @Singleton fun provideDetermineBasalSMB(graphs: MetroGraphs): DetermineBasalSMB = graphs.determineBasalSMB
+
+    @Provides @Singleton fun provideDetermineBasalAMA(graphs: MetroGraphs): DetermineBasalAMA = graphs.determineBasalAMA
+
+    @Provides @Singleton fun provideDetermineBasalAutoISF(graphs: MetroGraphs): DetermineBasalAutoISF =
+        graphs.determineBasalAutoISF
+
+    @Provides @Singleton fun provideGlucoseStatusCalculatorAutoIsf(graphs: MetroGraphs): GlucoseStatusCalculatorAutoIsf =
+        graphs.glucoseStatusCalculatorAutoIsf
+
+    @Provides @Singleton fun provideDeltaCalculator(graphs: MetroGraphs): DeltaCalculator = graphs.deltaCalculator
 
     /*
      * The scene state holder, by class, from Metro.

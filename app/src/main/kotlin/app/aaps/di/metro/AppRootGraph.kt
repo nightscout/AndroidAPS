@@ -12,6 +12,12 @@ import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.plugins.aps.openAPS.DeltaCalculator
+import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAMA
+import app.aaps.plugins.aps.openAPSAutoISF.DetermineBasalAutoISF
+import app.aaps.plugins.aps.openAPSAutoISF.GlucoseStatusCalculatorAutoIsf
+import app.aaps.plugins.aps.openAPSSMB.DetermineBasalSMB
+import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
 import app.aaps.core.interfaces.scenes.ActiveSceneSync
 import app.aaps.implementation.scenes.ActiveSceneManager
 import app.aaps.core.interfaces.scenes.SceneChainResolver
@@ -209,6 +215,19 @@ interface AppRootGraph : MetroViewModelMultibindings {
 
     /** The live loop's calculator. A history window has its own, at `HistoryWindowScope`. */
     val iobCobCalculator: IobCobCalculator
+
+    /**
+     * openAPS pieces Metro builds, for the Dagger side to borrow.
+     *
+     * Only the four the instrumented APS tests inject. `DeltaCalculator` and the AutoISF glucose status
+     * calculator are reached through these, so nothing outside Metro ever asks for them by name.
+     */
+    val glucoseStatusCalculatorSMB: GlucoseStatusCalculatorSMB
+    val determineBasalSMB: DetermineBasalSMB
+    val determineBasalAMA: DetermineBasalAMA
+    val determineBasalAutoISF: DetermineBasalAutoISF
+    val glucoseStatusCalculatorAutoIsf: GlucoseStatusCalculatorAutoIsf
+    val deltaCalculator: DeltaCalculator
     val signatureVerifierPlugin: SignatureVerifierPlugin
 
     /**

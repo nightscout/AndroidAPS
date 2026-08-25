@@ -24,6 +24,12 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.plugins.aps.openAPS.DeltaCalculator
+import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAMA
+import app.aaps.plugins.aps.openAPSAutoISF.DetermineBasalAutoISF
+import app.aaps.plugins.aps.openAPSAutoISF.GlucoseStatusCalculatorAutoIsf
+import app.aaps.plugins.aps.openAPSSMB.DetermineBasalSMB
+import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
 import app.aaps.core.interfaces.dst.DstHelper
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.source.DexcomBoyda
@@ -204,6 +210,14 @@ class MetroGraphs @Inject constructor(
 
     /** The live loop's calculator, for the Dagger consumers - not the history browser's. */
     val iobCobCalculator: IobCobCalculator get() = root.iobCobCalculator
+
+    /** openAPS pieces Metro builds; only those the instrumented APS tests inject through Dagger. */
+    val glucoseStatusCalculatorSMB: GlucoseStatusCalculatorSMB get() = root.glucoseStatusCalculatorSMB
+    val determineBasalSMB: DetermineBasalSMB get() = root.determineBasalSMB
+    val determineBasalAMA: DetermineBasalAMA get() = root.determineBasalAMA
+    val determineBasalAutoISF: DetermineBasalAutoISF get() = root.determineBasalAutoISF
+    val glucoseStatusCalculatorAutoIsf: GlucoseStatusCalculatorAutoIsf get() = root.glucoseStatusCalculatorAutoIsf
+    val deltaCalculator: DeltaCalculator get() = root.deltaCalculator
     val signatureVerifier: SignatureVerifierPlugin get() = root.signatureVerifierPlugin
     val trendCalculator: TrendCalculator get() = root.trendCalculator
     val carbSuggestionActions: CarbSuggestionActions get() = root.carbSuggestionActions

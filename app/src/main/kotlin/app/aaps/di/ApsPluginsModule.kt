@@ -88,59 +88,10 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class ApsPluginsModule {
 
-    // ---- openAPS shared pieces -------------------------------------------------------------
-
-    @Provides
-    @Singleton
-    fun provideDeltaCalculator(aapsLogger: AAPSLogger): DeltaCalculator =
-        DeltaCalculator(aapsLogger = aapsLogger)
-
-    @Provides
-    @Singleton
-    fun provideGlucoseStatusCalculatorSMB(
-        aapsLogger: AAPSLogger,
-        iobCobCalculator: IobCobCalculator,
-        dateUtil: DateUtil,
-        decimalFormatter: DecimalFormatter,
-        deltaCalculator: DeltaCalculator
-    ): GlucoseStatusCalculatorSMB = GlucoseStatusCalculatorSMB(
-        aapsLogger = aapsLogger,
-        iobCobCalculator = iobCobCalculator,
-        dateUtil = dateUtil,
-        decimalFormatter = decimalFormatter,
-        deltaCalculator = deltaCalculator
-    )
-
-    @Provides
-    @Singleton
-    fun provideGlucoseStatusCalculatorAutoIsf(
-        aapsLogger: AAPSLogger,
-        iobCobCalculator: IobCobCalculator,
-        dateUtil: DateUtil,
-        decimalFormatter: DecimalFormatter,
-        deltaCalculator: DeltaCalculator
-    ): GlucoseStatusCalculatorAutoIsf = GlucoseStatusCalculatorAutoIsf(
-        aapsLogger = aapsLogger,
-        iobCobCalculator = iobCobCalculator,
-        dateUtil = dateUtil,
-        decimalFormatter = decimalFormatter,
-        deltaCalculator = deltaCalculator
-    )
-
-    @Provides
-    @Singleton
-    fun provideDetermineBasalSMB(profileUtil: ProfileUtil, fabricPrivacy: FabricPrivacy): DetermineBasalSMB =
-        DetermineBasalSMB(profileUtil = profileUtil, fabricPrivacy = fabricPrivacy)
-
-    @Provides
-    @Singleton
-    fun provideDetermineBasalAMA(profileUtil: ProfileUtil): DetermineBasalAMA =
-        DetermineBasalAMA(profileUtil = profileUtil)
-
-    @Provides
-    @Singleton
-    fun provideDetermineBasalAutoISF(profileUtil: ProfileUtil): DetermineBasalAutoISF =
-        DetermineBasalAutoISF(profileUtil = profileUtil)
+    // The openAPS shared pieces are gone from here: DeltaCalculator, both GlucoseStatusCalculators and
+    // the three DetermineBasal classes now carry Metro's @Inject and @SingleIn in :plugins:aps, which is
+    // commonMain and so compiles for iOS too. `CoreObjectsModule` hands the four Dagger still asks for -
+    // the instrumented APS tests inject them - back to that side.
 
     // ---- APS plugins ------------------------------------------------------------------------
 

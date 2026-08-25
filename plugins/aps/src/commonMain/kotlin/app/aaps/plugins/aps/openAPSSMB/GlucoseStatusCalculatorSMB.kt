@@ -1,5 +1,8 @@
 package app.aaps.plugins.aps.openAPSSMB
 
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.aps.GlucoseStatusSMB
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
@@ -13,7 +16,8 @@ import app.aaps.plugins.aps.openAPSSMB.extensions.asRounded
 import app.aaps.plugins.aps.openAPSSMB.extensions.log
 
 
-class GlucoseStatusCalculatorSMB constructor(
+@SingleIn(AppScope::class)
+class GlucoseStatusCalculatorSMB @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val iobCobCalculator: IobCobCalculator,
     private val dateUtil: DateUtil,

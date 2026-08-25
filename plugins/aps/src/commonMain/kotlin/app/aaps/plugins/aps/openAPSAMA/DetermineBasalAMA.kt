@@ -1,5 +1,8 @@
 package app.aaps.plugins.aps.openAPSAMA
 
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensResult
@@ -18,7 +21,8 @@ import kotlin.math.pow
 import kotlin.math.roundToInt
 
 
-class DetermineBasalAMA constructor(
+@SingleIn(AppScope::class)
+class DetermineBasalAMA @Inject constructor(
     private val profileUtil: ProfileUtil
 ) {
 
