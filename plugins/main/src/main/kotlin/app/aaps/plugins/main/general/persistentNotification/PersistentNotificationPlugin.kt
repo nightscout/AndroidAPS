@@ -35,6 +35,8 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.apsAdjustedTargetMgdl
 import app.aaps.core.objects.extensions.generateCOBString
 import app.aaps.core.objects.extensions.round
@@ -74,7 +76,9 @@ class PersistentNotificationPlugin @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val processedDeviceStatusData: ProcessedDeviceStatusData,
     private val dateUtil: DateUtil,
-    private val trendCalculator: TrendCalculator
+    private val trendCalculator: TrendCalculator,
+    private val preferences: Preferences,
+    private val bgIconRenderer: BgIconRenderer
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -144,6 +148,7 @@ class PersistentNotificationPlugin @Inject constructor(
         var line1: String?
         var line2: String? = null
         var line3: String? = null
+        var iconBgText: String? = null
         var unreadConversationBuilder: NotificationCompat.CarExtender.UnreadConversation.Builder? = null
         if (profileFunction.isProfileValid("Notification")) {
             val lastBG = iobCobCalculator.ads.lastBg()
@@ -151,7 +156,8 @@ class PersistentNotificationPlugin @Inject constructor(
             if (lastBG != null) {
                 val trendSymbol = (trendCalculator.getTrendArrow(iobCobCalculator.ads)
                     ?.takeIf { it != TrendArrow.NONE } ?: TrendArrow.FLAT).symbol
-                line1 = profileUtil.fromMgdlToStringInUnits(lastBG.recalculated) + " " + trendSymbol
+                iconBgText = profileUtil.fromMgdlToStringInUnits(lastBG.recalculated)
+                line1 = iconBgText + " " + trendSymbol
                 if (glucoseStatus != null) {
                     line1 += " " + profileUtil.fromMgdlToSignedStringInUnits(glucoseStatus.delta)
                 } else {
@@ -239,7 +245,12 @@ class PersistentNotificationPlugin @Inject constructor(
         builder.setOngoing(true)
         builder.setOnlyAlertOnce(true)
         builder.setCategory(NotificationCompat.CATEGORY_STATUS)
-        builder.setSmallIcon(iconsProvider.getNotificationIcon())
+        val bgText = iconBgText
+        if (preferences.get(BooleanKey.NotificationShowBgOnIcon) && bgText != null) {
+            builder.setSmallIcon(bgIconRenderer.render(bgText))
+        } else {
+            builder.setSmallIcon(iconsProvider.getNotificationIcon())
+        }
         builder.setContentTitle(line1)
         if (line2 != null) builder.setContentText(line2)
         if (line3 != null) builder.setSubText(line3)

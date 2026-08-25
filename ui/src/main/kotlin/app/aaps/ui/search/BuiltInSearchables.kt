@@ -183,7 +183,8 @@ class BuiltInSearchables @Inject constructor(
             BooleanKey.AlertCarbsRequired,
             BooleanKey.AlertUrgentAsAndroidNotification,
             BooleanKey.AlertIncreaseVolume,
-            BooleanKey.AlertOverrideDoNotDisturb
+            BooleanKey.AlertOverrideDoNotDisturb,
+            BooleanKey.NotificationShowBgOnIcon
         ),
         icon = Icons.Default.Notifications
     )

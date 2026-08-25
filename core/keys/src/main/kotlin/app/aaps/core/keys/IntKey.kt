@@ -433,7 +433,7 @@ enum class IntKey(
         }
     ),
 
-    BgSourceRandomInterval(key = "randombg_interval_min", defaultValue = 5, min = 1, max = 15, titleResId = R.string.pref_title_random_bg_interval, defaultedBySM = true, unitType = UnitType.MIN),
+    BgSourceRandomInterval(key = "randombg_interval_min", defaultValue = 1, min = 1, max = 15, titleResId = R.string.pref_title_random_bg_interval, defaultedBySM = true, unitType = UnitType.MIN),
     NsClientAlarmStaleData(key = "ns_alarm_stale_data_value", defaultValue = 16, min = 15, max = 120, titleResId = R.string.pref_title_alarm_stale_data, unitType = UnitType.MIN),
     NsClientUrgentAlarmStaleData(key = "ns_alarm_urgent_stale_data_value", defaultValue = 31, min = 30, max = 180, titleResId = R.string.pref_title_urgent_alarm_stale_data, unitType = UnitType.MIN),
 
