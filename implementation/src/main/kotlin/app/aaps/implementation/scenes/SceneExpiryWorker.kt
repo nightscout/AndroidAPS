@@ -49,52 +49,39 @@ class SceneExpiryWorker @AssistedInject constructor(
             return Result.retry()
         }
         val sceneName = inputData.getString(KEY_SCENE_NAME) ?: "Scene"
-        aapsLogger.info(LTag.UI, "XXXX SceneExpiryWorker fired for '$sceneName'")
         val activeState = activeSceneManager.getActiveState()
         if (activeState == null) {
-            aapsLogger.info(LTag.UI, "XXXX no active state — worker exiting")
             return Result.success()
         }
         // If a previous run already expired this scene (e.g. WorkManager retried
         // after we returned Result.retry from the init gate), skip — re-running
         // onExpiry could double-activate a chained scene.
         if (activeSceneManager.isExpired()) {
-            aapsLogger.info(LTag.UI, "XXXX scene already expired — worker exiting")
             return Result.success()
         }
-        aapsLogger.info(LTag.UI, "XXXX active=${activeState.scene.name} id=${activeState.scene.id} endAction=${activeState.scene.endAction}")
 
         val endAction = activeState.scene.endAction
-        aapsLogger.info(LTag.UI, "XXXX calling onExpiry() — reverting non-duration actions")
         sceneExecutor.onExpiry()
-        aapsLogger.info(LTag.UI, "XXXX onExpiry() returned; activeState now=${activeSceneManager.getActiveState()?.scene?.name} expired=${activeSceneManager.isActive()}")
 
         if (endAction is SceneEndAction.ChainScene) {
-            aapsLogger.info(LTag.UI, "XXXX endAction is ChainScene → targetId=${endAction.sceneId}")
             runChain(sceneName, endAction.sceneId)
         } else {
-            aapsLogger.info(LTag.UI, "XXXX no chain configured (endAction=$endAction) → posting ended notification")
             postEndedNotification(sceneName)
         }
 
-        aapsLogger.info(LTag.UI, "XXXX SceneExpiryWorker finishing; final activeState=${activeSceneManager.getActiveState()?.scene?.name}")
         return Result.success()
     }
 
     private suspend fun runChain(endedName: String, targetId: String) {
-        aapsLogger.info(LTag.UI, "XXXX runChain from '$endedName' to targetId=$targetId")
         val target = sceneRepository.getScene(targetId)
         if (target == null) {
-            aapsLogger.info(LTag.UI, "XXXX target $targetId NOT FOUND in repository — skipping")
             postEndedWithSkip(endedName, rh.gs(R.string.scene_chain_skipped_deleted))
             return
         }
-        aapsLogger.info(LTag.UI, "XXXX target resolved: name='${target.name}' enabled=${target.isEnabled} actions=${target.actions.size} duration=${target.defaultDurationMinutes}min")
 
         val loopSuspended = loop.runningMode().pausesLoopExecution()
         val pumpInit = activePlugin.activePump.isInitialized()
         val profile = profileFunction.getProfile()
-        aapsLogger.info(LTag.UI, "XXXX preconditions: loopSuspended=$loopSuspended pumpInit=$pumpInit profile=${profile != null}")
 
         val skipReason: String? = when {
             !target.isEnabled            -> rh.gs(R.string.scene_chain_skipped_disabled, target.name)
@@ -104,21 +91,11 @@ class SceneExpiryWorker @AssistedInject constructor(
         }
 
         if (skipReason != null) {
-            aapsLogger.info(LTag.UI, "XXXX chain SKIPPED: $skipReason")
             postEndedWithSkip(endedName, skipReason)
             return
         }
 
-        aapsLogger.info(LTag.UI, "XXXX calling sceneExecutor.activate('${target.name}')")
-        val result = try {
-            sceneExecutor.activate(target)
-        } catch (e: Throwable) {
-            aapsLogger.error(LTag.UI, "XXXX sceneExecutor.activate('${target.name}') THREW", e)
-            throw e
-        }
-        aapsLogger.info(LTag.UI, "XXXX activate() returned: success=${result.success} error=${result.errorMessage}")
-        aapsLogger.info(LTag.UI, "XXXX actionResults: ${result.actionResults.joinToString { "${it.action::class.simpleName}=${it.success}${it.errorMessage?.let { e -> "($e)" } ?: ""}" }}")
-        aapsLogger.info(LTag.UI, "XXXX post-activate activeState=${activeSceneManager.getActiveState()?.scene?.name}")
+        val result = sceneExecutor.activate(target)
 
         if (result.success) {
             postChainSuccess(endedName, target.name)
@@ -127,7 +104,7 @@ class SceneExpiryWorker @AssistedInject constructor(
             val details = failed.joinToString("; ") {
                 "${it.action::class.simpleName}${it.errorMessage?.let { e -> ": $e" } ?: ""}"
             }
-            aapsLogger.error(LTag.UI, "XXXX chain '$endedName' → '${target.name}' partial failure — ${failed.size}/${result.actionResults.size} actions failed: $details")
+            aapsLogger.error(LTag.UI, "Scene chain '$endedName' → '${target.name}' partial failure — ${failed.size}/${result.actionResults.size} actions failed: $details")
             postChainError(endedName, target.name, failed.size, result.actionResults.size, details)
         }
     }
