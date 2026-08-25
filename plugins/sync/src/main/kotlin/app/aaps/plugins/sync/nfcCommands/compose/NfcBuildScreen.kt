@@ -142,33 +142,14 @@ fun NfcBuildScreen(
         plugin.sceneAutomationApi.getScenes().map { it.id to it.name }
     }
 
-    val chain = remember { mutableStateListOf<NfcUiAction>() }
-    var tagName by remember { mutableStateOf("") }
-    var isWritingMode by remember { mutableStateOf(false) }
-    var showBlankNameDialog by remember { mutableStateOf(false) }
-    var showActionPicker by remember { mutableStateOf(false) }
-    var showDiscardConfirm by remember { mutableStateOf(false) }
-    var showOverwriteConfirm by remember { mutableStateOf(false) }
-    var overwriteUid by remember { mutableStateOf("") }
-    var overwriteExistingName by remember { mutableStateOf("") }
-
-    // Track initial state for "dirty" check
-    var initialCommandsSnap by remember { mutableStateOf<List<String>>(emptyList()) }
-    var initialTagNameSnap by remember { mutableStateOf("") }
-    var isInitialized by remember { mutableStateOf(false) }
-
-    val currentCommands = chain.map { action ->
-        val p = action.getParams()
-        NfcTagStore.buildCommand(action.command, p.apply { put(NfcJsonKeys.TAG_NAME, tagName) })
-    }
-    val isDirty = isInitialized && (tagName != initialTagNameSnap || currentCommands != initialCommandsSnap)
+    val state = rememberNfcBuildState()
 
     val isEditMode = initialTag != null
 
     LaunchedEffect(initialTagUid, initialTag) {
         if (initialTag != null) {
-            tagName = initialTag.name
-            chain.clear()
+            state.tagName = initialTag.name
+            state.chain.clear()
             initialTag.commands.forEach { cmdJson ->
                 runCatching { JSONObject(cmdJson) }.onSuccess { json ->
                     val codeName = json.optString(NfcJsonKeys.CODE)
@@ -177,28 +158,28 @@ fun NfcBuildScreen(
                     if (code != null) {
                         val action = createNfcUiAction(plugin, code, plugin.pumpBasalDurationStep())
                         action.applyParams(params)
-                        chain.add(action)
+                        state.chain.add(action)
                     }
                 }
             }
-            initialTagNameSnap = initialTag.name
-            initialCommandsSnap = chain.map { action ->
+            state.initialTagNameSnap = initialTag.name
+            state.initialCommandsSnap = state.chain.map { action ->
                 val p = action.getParams()
                 NfcTagStore.buildCommand(action.command, p.apply { put(NfcJsonKeys.TAG_NAME, initialTag.name) })
             }
-            isInitialized = true
+            state.isInitialized = true
         } else if (initialTagUid != null) {
             val tag = plugin.nfcTagStore.findTagByUid(initialTagUid)
             if (tag != null) {
-                tagName = tag.name
+                state.tagName = tag.name
             }
-            initialTagNameSnap = tagName
-            initialCommandsSnap = emptyList()
-            isInitialized = true
+            state.initialTagNameSnap = state.tagName
+            state.initialCommandsSnap = emptyList()
+            state.isInitialized = true
         } else {
-            initialTagNameSnap = ""
-            initialCommandsSnap = emptyList()
-            isInitialized = true
+            state.initialTagNameSnap = ""
+            state.initialCommandsSnap = emptyList()
+            state.isInitialized = true
         }
     }
 
@@ -209,11 +190,11 @@ fun NfcBuildScreen(
     val onSave: () -> Unit = {
         if (initialTag != null) {
             val uid = initialTag.tagUid
-            val commands = chain.map { 
+            val commands = state.chain.map { 
                 it.meta.params = it.getParams()
-                it.meta.buildCommand(it.command, tagName)
+                it.meta.buildCommand(it.command, state.tagName)
             }
-            val name = tagName
+            val name = state.tagName
             plugin.nfcTagStore.saveCreatedTag(
                 NfcCreatedTag(
                     tagUid = uid,
@@ -228,12 +209,12 @@ fun NfcBuildScreen(
     }
 
     val attemptClose: () -> Unit = {
-        if (isDirty) showDiscardConfirm = true else onBack()
+        if (state.isDirty) state.showDiscardConfirm = true else onBack()
     }
 
     BackHandler { attemptClose() }
 
-    LaunchedEffect(title, isDirty, chain.size) {
+    LaunchedEffect(title, state.isDirty, state.chain.size) {
         setToolbarConfig(
             ToolbarConfig(
                 title = title,
@@ -249,7 +230,7 @@ fun NfcBuildScreen(
                                 focusManager.clearFocus()
                                 onSave()
                             },
-                            enabled = isDirty && chain.isNotEmpty()
+                            enabled = state.isDirty && state.chain.isNotEmpty()
                         ) {
                             Icon(Icons.Default.Save, contentDescription = saveDesc)
                         }
@@ -259,25 +240,25 @@ fun NfcBuildScreen(
         )
     }
 
-    if (showDiscardConfirm) {
+    if (state.showDiscardConfirm) {
         AlertDialog(
-            onDismissRequest = { showDiscardConfirm = false },
+            onDismissRequest = { state.showDiscardConfirm = false },
             title = { Text(stringResource(R.string.nfccommands_discard_title)) },
             text = { Text(stringResource(R.string.nfccommands_discard_message)) },
             confirmButton = {
                 Row {
                     TextButton(onClick = {
-                        showDiscardConfirm = false
+                        state.showDiscardConfirm = false
                         onBack()
                     }) { Text(stringResource(CoreUiR.string.confirm)) }
                     TextButton(onClick = {
-                        showDiscardConfirm = false
+                        state.showDiscardConfirm = false
                         onSave()
                     }) { Text(stringResource(CoreUiR.string.save)) }
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showDiscardConfirm = false }) {
+                TextButton(onClick = { state.showDiscardConfirm = false }) {
                     Text(stringResource(R.string.cancel))
                 }
             },
@@ -293,14 +274,14 @@ fun NfcBuildScreen(
 
         val callback =
             NfcAdapter.ReaderCallback { tag ->
-                if (!isWritingMode) {
+                if (!state.isWritingMode) {
                     plugin.aapsLogger.debug(LTag.NFC, "Inhibiting NFC scan in build screen (not in writing mode)")
                     return@ReaderCallback
                 }
 
                 val uid = NfcTagStore.tagUidHex(tag.id) ?: return@ReaderCallback
-                val name = tagName
-            val commands = chain.toList().map { action ->
+                val name = state.tagName
+            val commands = state.chain.toList().map { action ->
                 val p = action.getParams()
                 NfcTagStore.buildCommand(action.command, p.apply { put(NfcJsonKeys.TAG_NAME, name) })
             }
@@ -308,10 +289,10 @@ fun NfcBuildScreen(
                 val existingTag = plugin.nfcTagStore.findTagByUid(uid)
                 if (existingTag != null) {
                     coroutineScope.launch(Dispatchers.Main) {
-                        isWritingMode = false
-                        overwriteUid = uid
-                        overwriteExistingName = existingTag.name
-                        showOverwriteConfirm = true
+                        state.isWritingMode = false
+                        state.overwriteUid = uid
+                        state.overwriteExistingName = existingTag.name
+                        state.showOverwriteConfirm = true
                     }
                 } else {
                     val ndefWritten = buildAndWriteNdef(tag, plugin)
@@ -340,11 +321,11 @@ fun NfcBuildScreen(
                     )
                     plugin.nfcTagStore.markJustWritten(uid)
                     coroutineScope.launch(Dispatchers.Main) {
-                        isWritingMode = false
+                        state.isWritingMode = false
                         if (outcome == WriteOutcome.GENERIC_ASSIGNED) {
                             Toast.makeText(context, message, Toast.LENGTH_LONG).show()
                         }
-                        chain.clear()
+                        state.chain.clear()
                         onTagWritten()
                     }
                 }
@@ -359,37 +340,37 @@ fun NfcBuildScreen(
         onDispose { nfcAdapter.disableReaderMode(activity) }
     }
 
-    if (showBlankNameDialog) {
+    if (state.showBlankNameDialog) {
         AlertDialog(
-            onDismissRequest = { showBlankNameDialog = false },
+            onDismissRequest = { state.showBlankNameDialog = false },
             title = { Text(stringResource(R.string.nfccommands_blank_name_confirm_title)) },
             text = { Text(stringResource(R.string.nfccommands_blank_name_confirm_message)) },
             confirmButton = {
                 TextButton(onClick = {
-                    showBlankNameDialog = false
-                    isWritingMode = true
+                    state.showBlankNameDialog = false
+                    state.isWritingMode = true
                 }) { Text(stringResource(R.string.nfccommands_blank_name_confirm_write_anyway)) }
             },
             dismissButton = {
-                TextButton(onClick = { showBlankNameDialog = false }) {
+                TextButton(onClick = { state.showBlankNameDialog = false }) {
                     Text(stringResource(R.string.cancel))
                 }
             },
         )
     }
 
-    if (showOverwriteConfirm) {
+    if (state.showOverwriteConfirm) {
         AlertDialog(
-            onDismissRequest = { showOverwriteConfirm = false },
+            onDismissRequest = { state.showOverwriteConfirm = false },
             title = { Text(stringResource(R.string.nfccommands_tag_already_registered_title)) },
             text = {
-                val newName = tagName.ifBlank {
-                    chain.firstOrNull()?.meta?.labelResId?.let { stringResource(it) } ?: ""
+                val newName = state.tagName.ifBlank {
+                    state.chain.firstOrNull()?.meta?.labelResId?.let { stringResource(it) } ?: ""
                 }
                 Text(
                     stringResource(
                         R.string.nfccommands_tag_already_registered_message,
-                        overwriteExistingName,
+                        state.overwriteExistingName,
                         newName
                     )
                 )
@@ -397,27 +378,27 @@ fun NfcBuildScreen(
             confirmButton = {
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     TextButton(onClick = {
-                        showOverwriteConfirm = false
+                        state.showOverwriteConfirm = false
                         onBack()
                     }) {
                         Text(stringResource(R.string.nfccommands_discard_and_exit))
                     }
                     TextButton(onClick = {
-                        showOverwriteConfirm = false
-                        val name = tagName
-                        val commands = chain.toList().map { action ->
+                        state.showOverwriteConfirm = false
+                        val name = state.tagName
+                        val commands = state.chain.toList().map { action ->
                             val p = action.getParams()
                             NfcTagStore.buildCommand(action.command, p.apply { put(NfcJsonKeys.TAG_NAME, name) })
                         }
                         plugin.nfcTagStore.saveCreatedTag(
                             NfcCreatedTag(
-                                tagUid = overwriteUid,
+                                tagUid = state.overwriteUid,
                                 name = name,
                                 commands = commands,
                                 createdAtMillis = System.currentTimeMillis(),
                             ),
                         )
-                        plugin.nfcTagStore.markJustWritten(overwriteUid)
+                        plugin.nfcTagStore.markJustWritten(state.overwriteUid)
                         plugin.nfcTagStore.appendLogEntry(
                             NfcLogEntry(
                                 timestamp = System.currentTimeMillis(),
@@ -427,7 +408,7 @@ fun NfcBuildScreen(
                                 message = plugin.rh.gs(R.string.nfccommands_tag_reassigned),
                             ),
                         )
-                        chain.clear()
+                        state.chain.clear()
                         onTagWritten()
                     }) {
                         Text(stringResource(R.string.nfccommands_overwrite))
@@ -435,18 +416,18 @@ fun NfcBuildScreen(
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showOverwriteConfirm = false }) {
+                TextButton(onClick = { state.showOverwriteConfirm = false }) {
                     Text(stringResource(R.string.nfccommands_cancel_scan))
                 }
             },
         )
     }
 
-    if (isWritingMode) {
-        NfcWriteDialog(chain = chain.map { it.command.name }, onCancel = { isWritingMode = false })
+    if (state.isWritingMode) {
+        NfcWriteDialog(chain = state.chain.map { it.command.name }, onCancel = { state.isWritingMode = false })
     }
 
-    if (showActionPicker) {
+    if (state.showActionPicker) {
         ChooseActionSheet(
             plugin = plugin,
             categories = categories,
@@ -454,10 +435,10 @@ fun NfcBuildScreen(
                 coroutineScope.launch {
                     val action = createNfcUiAction(plugin, code, plugin.pumpBasalDurationStep())
                     action.applyParams(plugin.getAction(code).getDefaultParams())
-                    chain.add(action)
+                    state.chain.add(action)
                 }
             },
-            onDismiss = { showActionPicker = false }
+            onDismiss = { state.showActionPicker = false }
         )
     }
 
@@ -471,9 +452,9 @@ fun NfcBuildScreen(
     ) {
         // Section 1: Tag name
         OutlinedTextField(
-            value = tagName,
+            value = state.tagName,
             onValueChange = { 
-                tagName = it
+                state.tagName = it
             },
             label = { Text(stringResource(R.string.nfccommands_tag_name_hint)) },
             singleLine = true,
@@ -500,8 +481,8 @@ fun NfcBuildScreen(
 
         SectionDivider(label = stringResource(R.string.nfccommands_chain_title))
 
-        // Section 2: Command chain (Editable list)
-        if (chain.isEmpty()) {
+        // Section 2: Command state.chain (Editable list)
+        if (state.chain.isEmpty()) {
             Text(
                 text = stringResource(R.string.nfccommands_cascade_empty),
                 style = MaterialTheme.typography.bodyMedium,
@@ -513,13 +494,13 @@ fun NfcBuildScreen(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                chain.forEachIndexed { index, action ->
+                state.chain.forEachIndexed { index, action ->
                     InlineActionCard(
                         plugin = plugin,
                         action = action,
                         profileNames = profileNames,
                         sceneNames = sceneNames,
-                        onRemove = { chain.removeAt(index) }
+                        onRemove = { state.chain.removeAt(index) }
                     )
                 }
             }
@@ -527,7 +508,7 @@ fun NfcBuildScreen(
 
         // Section 3: Add Action Button
         OutlinedButton(
-            onClick = { showActionPicker = true },
+            onClick = { state.showActionPicker = true },
             modifier = Modifier.fillMaxWidth()
         ) {
             Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(18.dp))
@@ -541,9 +522,9 @@ fun NfcBuildScreen(
         if (!isEditMode) {
             Button(
                 onClick = {
-                    if (tagName.isBlank()) showBlankNameDialog = true else isWritingMode = true
+                    if (state.tagName.isBlank()) state.showBlankNameDialog = true else state.isWritingMode = true
                 },
-                enabled = chain.isNotEmpty(),
+                enabled = state.chain.isNotEmpty(),
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 Text(stringResource(R.string.nfccommands_write_tag))
