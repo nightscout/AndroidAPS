@@ -19,6 +19,7 @@ import app.aaps.plugins.automation.actions.ActionRunScene
 import app.aaps.plugins.automation.actions.ActionSMBChange
 import app.aaps.plugins.automation.actions.ActionSendSMS
 import app.aaps.plugins.automation.actions.ActionSettingsExport
+import app.aaps.plugins.automation.actions.ActionSmoothingChange
 import app.aaps.plugins.automation.actions.ActionStartTempTarget
 import app.aaps.plugins.automation.actions.ActionStopProcessing
 import app.aaps.plugins.automation.actions.ActionStopTempTarget
@@ -46,6 +47,7 @@ import app.aaps.plugins.automation.triggers.TriggerPumpLastConnection
 import app.aaps.plugins.automation.triggers.TriggerRecurringTime
 import app.aaps.plugins.automation.triggers.TriggerReservoirLevel
 import app.aaps.plugins.automation.triggers.TriggerSceneActive
+import app.aaps.plugins.automation.triggers.TriggerSelectedSmoothingNotActive
 import app.aaps.plugins.automation.triggers.TriggerSensorAge
 import app.aaps.plugins.automation.triggers.TriggerStepsCount
 import app.aaps.plugins.automation.triggers.TriggerTempTarget
@@ -94,6 +96,7 @@ abstract class AutomationModule {
     @ContributesAndroidInjector abstract fun triggerBTDeviceInjector(): TriggerBTDevice
     @ContributesAndroidInjector abstract fun triggerRecurringTimeInjector(): TriggerRecurringTime
     @ContributesAndroidInjector abstract fun triggerSceneActiveInjector(): TriggerSceneActive
+    @ContributesAndroidInjector abstract fun triggerSelectedSmoothingNotActiveInjector(): TriggerSelectedSmoothingNotActive
     @ContributesAndroidInjector abstract fun triggerTempTargetInjector(): TriggerTempTarget
     @ContributesAndroidInjector abstract fun triggerTempTargetValueInjector(): TriggerTempTargetValue
     @ContributesAndroidInjector abstract fun triggerTime(): TriggerTime
@@ -103,6 +106,7 @@ abstract class AutomationModule {
 
     @ContributesAndroidInjector abstract fun actionInjector(): Action
     @ContributesAndroidInjector abstract fun actionSMBChangeInjector(): ActionSMBChange
+    @ContributesAndroidInjector abstract fun actionSmoothingChangeInjector(): ActionSmoothingChange
     @ContributesAndroidInjector abstract fun actionStopProcessingInjector(): ActionStopProcessing
     @ContributesAndroidInjector abstract fun actionNotificationInjector(): ActionNotification
     @ContributesAndroidInjector abstract fun actionAlarmInjector(): ActionAlarm

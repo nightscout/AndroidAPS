@@ -27,6 +27,7 @@ import app.aaps.plugins.automation.actions.ActionRunScene
 import app.aaps.plugins.automation.actions.ActionSMBChange
 import app.aaps.plugins.automation.actions.ActionSendSMS
 import app.aaps.plugins.automation.actions.ActionSettingsExport
+import app.aaps.plugins.automation.actions.ActionSmoothingChange
 import app.aaps.plugins.automation.actions.ActionStartTempTarget
 import app.aaps.plugins.automation.compose.elements.AutomationDropdown
 import app.aaps.plugins.automation.compose.elements.InputDropdownOnOffEditor
@@ -66,14 +67,15 @@ fun ActionEditor(
             is ActionSendSMS              -> ActionSendSMSEditor(action, onChange)
             is ActionSettingsExport       -> ActionSettingsExportEditor(action, onChange)
             is ActionCarePortalEvent      -> ActionCarePortalEventEditor(action, tick, onChange)
-            is ActionSMBChange            -> ActionSMBChangeEditor(action, onChange)
-            is ActionProfileSwitch        -> ActionProfileSwitchEditor(action, profileNames, onChange)
+            is ActionSMBChange            -> ActionSMBChangeEditor(action, tick, onChange)
+            is ActionSmoothingChange      -> ActionSmoothingChangeEditor(action, tick, onChange)
+            is ActionProfileSwitch        -> ActionProfileSwitchEditor(action, profileNames, tick, onChange)
             is ActionProfileSwitchPercent -> ActionProfileSwitchPercentEditor(action, tick, onChange)
             is ActionRunAutotune          -> ActionRunAutotuneEditor(action, profileNames, tick, onChange)
             is ActionStartTempTarget      -> ActionStartTempTargetEditor(action, tick, onChange)
-            is ActionRunScene             -> ActionRunSceneEditor(action, sceneOptions, onChange)
-            is ActionEnableScene          -> ActionEnableSceneEditor(action, sceneOptions, onChange)
-            is ActionDisableScene         -> ActionDisableSceneEditor(action, sceneOptions, onChange)
+            is ActionRunScene             -> ActionRunSceneEditor(action, sceneOptions, tick, onChange)
+            is ActionEnableScene          -> ActionEnableSceneEditor(action, sceneOptions, tick, onChange)
+            is ActionDisableScene         -> ActionDisableSceneEditor(action, sceneOptions, tick, onChange)
             else                          -> Text(action.javaClass.simpleName)
         }
     }
@@ -158,7 +160,8 @@ fun ActionCarePortalEventEditor(a: ActionCarePortalEvent, tick: Int = 0, onChang
 }
 
 @Composable
-fun ActionSMBChangeEditor(a: ActionSMBChange, onChange: () -> Unit) {
+fun ActionSMBChangeEditor(a: ActionSMBChange, tick: Int = 0, onChange: () -> Unit) {
+    @Suppress("UNUSED_EXPRESSION") tick
     LabelWithElementRow(textPre = stringResource(R.string.newSmbMode)) {
         InputDropdownOnOffEditor(
             on = a.smbState.value,
@@ -168,11 +171,33 @@ fun ActionSMBChangeEditor(a: ActionSMBChange, onChange: () -> Unit) {
 }
 
 @Composable
+fun ActionSmoothingChangeEditor(a: ActionSmoothingChange, tick: Int = 0, onChange: () -> Unit) {
+    @Suppress("UNUSED_EXPRESSION") tick
+    val options = a.smoothingOptions()
+    // Show the stored plugin only if it is still installed; otherwise the field
+    // stays empty and the user must pick one.
+    val selectedName = options.firstOrNull { it.pluginId == a.smoothingPlugin.value }?.name ?: ""
+    AutomationDropdown(
+        value = selectedName,
+        options = options.map { it.name },
+        onValueChange = { picked ->
+            options.firstOrNull { it.name == picked }?.let {
+                a.smoothingPlugin.value = it.pluginId
+                onChange()
+            }
+        },
+        label = stringResource(R.string.smoothing_label)
+    )
+}
+
+@Composable
 fun ActionProfileSwitchEditor(
     a: ActionProfileSwitch,
     profileNames: List<String>,
+    tick: Int = 0,
     onChange: () -> Unit
 ) {
+    @Suppress("UNUSED_EXPRESSION") tick
     // Show the stored value only if it still exists in the profile list;
     // otherwise render an empty field so the user must explicitly pick one.
     val displayValue = if (a.inputProfileName.value in profileNames) a.inputProfileName.value else ""
@@ -302,7 +327,8 @@ private fun ScenePicker(
 }
 
 @Composable
-fun ActionRunSceneEditor(a: ActionRunScene, sceneOptions: List<Scene>, onChange: () -> Unit) {
+fun ActionRunSceneEditor(a: ActionRunScene, sceneOptions: List<Scene>, tick: Int = 0, onChange: () -> Unit) {
+    @Suppress("UNUSED_EXPRESSION") tick
     ScenePicker(
         selectedId = a.scene.value,
         sceneOptions = sceneOptions,
@@ -311,7 +337,8 @@ fun ActionRunSceneEditor(a: ActionRunScene, sceneOptions: List<Scene>, onChange:
 }
 
 @Composable
-fun ActionEnableSceneEditor(a: ActionEnableScene, sceneOptions: List<Scene>, onChange: () -> Unit) {
+fun ActionEnableSceneEditor(a: ActionEnableScene, sceneOptions: List<Scene>, tick: Int = 0, onChange: () -> Unit) {
+    @Suppress("UNUSED_EXPRESSION") tick
     ScenePicker(
         selectedId = a.scene.value,
         sceneOptions = sceneOptions,
@@ -320,7 +347,8 @@ fun ActionEnableSceneEditor(a: ActionEnableScene, sceneOptions: List<Scene>, onC
 }
 
 @Composable
-fun ActionDisableSceneEditor(a: ActionDisableScene, sceneOptions: List<Scene>, onChange: () -> Unit) {
+fun ActionDisableSceneEditor(a: ActionDisableScene, sceneOptions: List<Scene>, tick: Int = 0, onChange: () -> Unit) {
+    @Suppress("UNUSED_EXPRESSION") tick
     ScenePicker(
         selectedId = a.scene.value,
         sceneOptions = sceneOptions,

@@ -2,6 +2,7 @@ package app.aaps.plugins.automation.actions
 
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.db.PersistenceLayer
 
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
@@ -22,6 +23,7 @@ ActionsTestBase : TestBaseWithProfile() {
     @Mock lateinit var loop: Loop
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var sceneApi: SceneAutomationApi
+    @Mock lateinit var configBuilder: ConfigBuilder
 
     init {
         addInjector {
@@ -59,6 +61,10 @@ ActionsTestBase : TestBaseWithProfile() {
                 it.dateUtil = dateUtil
                 it.preferences = preferences
             }
+            if (it is ActionSmoothingChange) {
+                it.activePlugin = activePlugin
+                it.configBuilder = configBuilder
+            }
             if (it is ActionCarePortalEvent) {
                 it.persistenceLayer = persistenceLayer
                 it.dateUtil = dateUtil
@@ -74,8 +80,10 @@ ActionsTestBase : TestBaseWithProfile() {
                 it.sceneApi = sceneApi
             }
             if (it is Trigger) {
+                it.aapsLogger = aapsLogger
                 it.rh = rh
                 it.profileFunction = profileFunction
+                it.activePlugin = activePlugin
             }
         }
     }
