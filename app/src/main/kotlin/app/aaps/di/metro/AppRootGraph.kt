@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.di.APS
 import app.aaps.core.interfaces.di.NotNSClient
+import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.maintenance.CloudDirectoryManager
@@ -68,6 +69,7 @@ import app.aaps.plugins.source.di.SourceMetroGraph
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Includes
+import dev.zacsweers.metro.Multibinds
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metrox.viewmodel.MetroViewModelMultibindings
 import javax.inject.Singleton
@@ -153,6 +155,22 @@ interface AppRootGraph : MetroViewModelMultibindings {
     /** Contributed plugins that must NOT appear in a follower build. */
     @NotNSClient
     val contributedNotNsClientPlugins: Map<Int, PluginBase>
+
+    /**
+     * Pump drivers, which only a build with pump support merges.
+     *
+     * Safe to declare here even though this file is compiled for follower builds: the map is keyed on
+     * `Int` and holds [PluginBase], so no pump type is named. A follower has no pump module on its
+     * classpath, nothing contributes, and the map is empty - which is the correct answer for a follower.
+     *
+     * `@Multibinds(allowEmpty = true)` is what makes that legal. Without it Metro reports "no binding
+     * found" for the follower flavours, because a map with no contributions has no binding at all. The
+     * Dagger side says the same thing in `PluginsListModule`, which declares these maps so they may be
+     * empty; this is that declaration, for the other framework.
+     */
+    @Multibinds(allowEmpty = true)
+    @PumpDriver
+    val contributedPumpDriverPlugins: Map<Int, PluginBase>
 
     /**
      * The ten objectives, in order. `ObjectivesPlugin` takes this list and is built here, so the

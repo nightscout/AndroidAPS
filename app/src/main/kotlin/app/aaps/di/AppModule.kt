@@ -74,6 +74,7 @@ abstract class AppModule {
                 // Dagger one above. Keeping them apart is what stops a converted plugin appearing in
                 // a build that never had it - a follower showing Objectives, say.
                 if (config.APS) add(PluginSource("Metro @APS", metroGraphs.apsPlugins()))
+                if (config.PUMPDRIVERS) add(PluginSource("Metro @PumpDriver", metroGraphs.pumpDriverPlugins()))
                 if (!config.AAPSCLIENT) add(PluginSource("Metro @NotNSClient", metroGraphs.notNsClientPlugins()))
             }
 

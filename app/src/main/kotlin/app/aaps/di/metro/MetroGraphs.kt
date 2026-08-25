@@ -195,6 +195,14 @@ class MetroGraphs @Inject constructor(
     fun apsPlugins(): Map<Int, PluginBase> = root.contributedApsPlugins
 
     /**
+     * Pump drivers, merged only by a build that has them.
+     *
+     * Empty in a follower, because no pump module is on that classpath to contribute - so the caller can
+     * merge this under the same `config.PUMPDRIVERS` condition as the Dagger bucket beside it.
+     */
+    fun pumpDriverPlugins(): Map<Int, PluginBase> = root.contributedPumpDriverPlugins
+
+    /**
      * Constraint plugins that are also bound to an interface, handed to Dagger in `CoreObjectsModule`.
      *
      * Metro builds these, so Dagger must delegate rather than construct - see there for what goes
