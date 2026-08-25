@@ -38,7 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import app.aaps.core.ui.compose.metroViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.Scene
 import app.aaps.core.data.model.SceneEndAction
@@ -58,7 +58,7 @@ fun SceneListScreen(
     onNavigateToWizard: () -> Unit,
     onNavigateToEditor: (sceneId: String) -> Unit,
     onNavigateBack: () -> Unit,
-    viewModel: SceneListViewModel = hiltViewModel()
+    viewModel: SceneListViewModel = metroViewModel()
 ) {
     val scenes by viewModel.scenes.collectAsStateWithLifecycle()
     val activeState by viewModel.activeSceneState.collectAsStateWithLifecycle()

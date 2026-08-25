@@ -2,6 +2,11 @@ package app.aaps.di
 
 import android.content.Context
 import android.telephony.SmsManager
+import app.aaps.core.ui.search.SearchableProvider
+import app.aaps.core.interfaces.maintenance.ImportExportPrefs
+import app.aaps.core.interfaces.overview.graph.OverviewDataCache
+import app.aaps.core.interfaces.plugin.PluginPermissions
+import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.protection.SecureEncrypt
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
@@ -276,6 +281,11 @@ class CoreObjectsModule {
         lastLocationDataContainerProvider: Provider<LastLocationDataContainer>,
         versionCheckerUtilsProvider: Provider<VersionCheckerUtils>,
         passwordCheckProvider: Provider<PasswordCheck>,
+        searchableProvidersProvider: Provider<Set<SearchableProvider>>,
+        importExportPrefsProvider: Provider<ImportExportPrefs>,
+        overviewDataProvider: Provider<OverviewData>,
+        overviewDataCacheProvider: Provider<OverviewDataCache>,
+        pluginPermissionsProvider: Provider<PluginPermissions>,
         lProvider: Provider<L>,
         @ApplicationContext appContextProvider: Provider<Context>,
         xDripBroadcastProvider: Provider<XDripBroadcast>,
@@ -327,6 +337,11 @@ class CoreObjectsModule {
         lastLocationDataContainerProvider,
         versionCheckerUtilsProvider,
         passwordCheckProvider,
+        searchableProvidersProvider,
+        importExportPrefsProvider,
+        overviewDataProvider,
+        overviewDataCacheProvider,
+        pluginPermissionsProvider,
         lProvider,
         appContextProvider,
         xDripBroadcastProvider,

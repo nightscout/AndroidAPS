@@ -42,7 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import app.aaps.core.ui.compose.metroViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.calibration.AddEntryResult
@@ -60,7 +60,7 @@ import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 fun CalibrationDialogScreen(
-    viewModel: CalibrationDialogViewModel = hiltViewModel(),
+    viewModel: CalibrationDialogViewModel = metroViewModel(),
     onNavigateBack: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()

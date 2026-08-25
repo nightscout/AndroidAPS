@@ -3,6 +3,11 @@ package app.aaps.di.metro
 import android.content.Context
 
 import androidx.work.WorkManager
+import app.aaps.core.ui.search.SearchableProvider
+import app.aaps.core.interfaces.maintenance.ImportExportPrefs
+import app.aaps.core.interfaces.overview.graph.OverviewDataCache
+import app.aaps.core.interfaces.plugin.PluginPermissions
+import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.protection.SecureEncrypt
@@ -141,6 +146,22 @@ class AapsLeaves(
     // Still Dagger-owned, and needed by the scene classes that moved to Metro.
     // Dagger-owned on purpose: it is bound from XdripPlugin, which is still in the Dagger plugin list.
     // Contributing it would have Metro build a second copy of that plugin.
+    /**
+     * The APP-level overview data and cache.
+     *
+     * `HistoryWindowGraph` binds its own pair scoped to the window, and an extension's binding shadows
+     * the parent's, so a history window still gets its own. That separation is what keeps history
+     * browsing from computing into the running loop, and `HistoryBrowserDataTest` checks it.
+     */
+    // Dagger keeps building this one - see the note in MaintenanceImplModule.
+    // A Dagger @IntoSet multibinding, handed over already assembled. Metro receives the Set as one
+    // binding rather than re-declaring the multibinding on this side.
+    private val searchableProvidersProvider: Provider<Set<SearchableProvider>>,
+    private val importExportPrefsProvider: Provider<ImportExportPrefs>,
+    private val overviewDataProvider: Provider<OverviewData>,
+    private val overviewDataCacheProvider: Provider<OverviewDataCache>,
+    // Same object as ActivePlugin above (PluginStore), under its other interface.
+    private val pluginPermissionsProvider: Provider<PluginPermissions>,
     private val lProvider: Provider<L>,
     @ApplicationContext private val appContextProvider: Provider<Context>,
     private val xDripBroadcastProvider: Provider<XDripBroadcast>,
@@ -218,6 +239,11 @@ class AapsLeaves(
     @Provides fun sntpClient(): SntpClient = sntpClientProvider.get()
     @Provides fun xDripBroadcast(): XDripBroadcast = xDripBroadcastProvider.get()
     @Provides fun l(): L = lProvider.get()
+    @Provides fun importExportPrefs(): ImportExportPrefs = importExportPrefsProvider.get()
+    @Provides fun searchableProviders(): Set<SearchableProvider> = searchableProvidersProvider.get()
+    @Provides fun overviewData(): OverviewData = overviewDataProvider.get()
+    @Provides fun overviewDataCache(): OverviewDataCache = overviewDataCacheProvider.get()
+    @Provides fun pluginPermissions(): PluginPermissions = pluginPermissionsProvider.get()
 
     /** Hilt's qualifier, read now that interop is on. Same Context as the unqualified binding. */
     @Provides @ApplicationContext fun appContext(): Context = appContextProvider.get()
