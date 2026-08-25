@@ -10,6 +10,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.test.StandardTestDispatcher
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
@@ -56,12 +57,21 @@ class ResilientCollectStartTest {
     @Test
     fun `the default start has not subscribed yet when the call returns`() {
         val bus = busLikeFlow()
+        // A queuing dispatcher rather than the shared [scope], which runs on Dispatchers.Default: with a
+        // real thread pool the collector can reach the subscribe before the assertion below runs, so on
+        // a busy machine this asserted a race and failed at random (it cost a CI run). StandardTestDispatcher
+        // only runs what is queued when the test asks it to, which turns "not yet" into a guarantee - the
+        // same reason the first test in this class refuses to assert that an event is lost.
+        val queuedScope = CoroutineScope(StandardTestDispatcher() + SupervisorJob())
+        try {
+            bus.collectResilient(queuedScope, aapsLogger, LTag.CORE) { }
 
-        bus.collectResilient(scope, aapsLogger, LTag.CORE) { }
-
-        // Nothing is collecting yet, so a replay-0 source would drop anything emitted right now. This
-        // is why the bus subscriptions ask for UNDISPATCHED and a StateFlow collector need not.
-        assertThat(bus.subscriptionCount.value).isEqualTo(0)
+            // Nothing is collecting yet, so a replay-0 source would drop anything emitted right now. This
+            // is why the bus subscriptions ask for UNDISPATCHED and a StateFlow collector need not.
+            assertThat(bus.subscriptionCount.value).isEqualTo(0)
+        } finally {
+            queuedScope.cancel()
+        }
     }
 
     @Test
