@@ -1,6 +1,9 @@
 package app.aaps.di.metro
 
 import com.google.common.truth.Truth.assertThat
+import app.aaps.pump.danars.DanaRSPlugin
+import app.aaps.pump.equil.EquilPumpPlugin
+import app.aaps.pump.medtrum.MedtrumPlugin
 import info.nightscout.pump.combov2.ComboV2Plugin
 import org.junit.jupiter.api.Test
 
@@ -18,17 +21,22 @@ import org.junit.jupiter.api.Test
 class PumpDriverBucketTest {
 
     @Test
-    fun `combov2 is registered as a pump driver`() {
-        val root = testRoot()
+    fun `every converted pump driver is in the pump bucket, under its own key`() {
+        val drivers = testRoot().contributedPumpDriverPlugins
 
-        assertThat(root.contributedPumpDriverPlugins.keys).contains(1060)
-        assertThat(root.contributedPumpDriverPlugins[1060]).isInstanceOf(ComboV2Plugin::class.java)
+        assertThat(drivers[1040]).isInstanceOf(DanaRSPlugin::class.java)
+        assertThat(drivers[1060]).isInstanceOf(ComboV2Plugin::class.java)
+        assertThat(drivers[1120]).isInstanceOf(MedtrumPlugin::class.java)
+        assertThat(drivers[1130]).isInstanceOf(EquilPumpPlugin::class.java)
     }
 
     @Test
-    fun `a pump driver is not in the every-build bucket`() {
-        val root = testRoot()
+    fun `no pump driver leaks into the every-build bucket`() {
+        // Where a wrong qualifier would put them. `:app` merges the every-build bucket unconditionally,
+        // so a driver landing there would appear in a follower that has no pump at all - and nothing
+        // would report it.
+        val everyBuild = testRoot().contributedPlugins.keys
 
-        assertThat(root.contributedPlugins.keys).doesNotContain(1060)
+        assertThat(everyBuild).containsNoneOf(1040, 1060, 1120, 1130)
     }
 }

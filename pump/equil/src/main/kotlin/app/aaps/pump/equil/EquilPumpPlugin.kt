@@ -1,5 +1,11 @@
 package app.aaps.pump.equil
 
+import app.aaps.core.interfaces.di.PumpDriver
+import app.aaps.core.interfaces.plugin.PluginBase
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.IntKey as MetroIntKey
+import dev.zacsweers.metro.binding
 import android.content.Context
 import android.os.SystemClock
 import app.aaps.core.data.plugin.PluginType
@@ -76,6 +82,9 @@ import javax.inject.Provider
 import javax.inject.Singleton
 import kotlin.math.max
 
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@PumpDriver
+@MetroIntKey(1130)
 @Singleton
 class EquilPumpPlugin @Inject constructor(
     aapsLogger: AAPSLogger,

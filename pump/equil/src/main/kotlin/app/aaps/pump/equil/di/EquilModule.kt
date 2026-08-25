@@ -20,10 +20,4 @@ import dagger.multibindings.IntoMap
 @Suppress("unused")
 abstract class EquilModule {
 
-    // Pump plugin registration — @IntKey range 1000–1200, see PluginsListModule for overview
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @IntKey(1130)
-    abstract fun bindEquilPumpPlugin(plugin: EquilPumpPlugin): PluginBase
 }

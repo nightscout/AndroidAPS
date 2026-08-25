@@ -1,5 +1,11 @@
 package app.aaps.pump.medtrum
 
+import app.aaps.core.interfaces.di.PumpDriver
+import app.aaps.core.interfaces.plugin.PluginBase
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.IntKey as MetroIntKey
+import dev.zacsweers.metro.binding
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -65,6 +71,9 @@ import javax.inject.Singleton
 import kotlin.math.abs
 import kotlin.math.min
 
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@PumpDriver
+@MetroIntKey(1120)
 @Singleton
 class MedtrumPlugin @Inject constructor(
     aapsLogger: AAPSLogger,

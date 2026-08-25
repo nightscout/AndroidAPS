@@ -28,10 +28,4 @@ abstract class MedtrumModule {
     @Binds
     abstract fun bindMedtrumBleTransport(impl: MedtrumBleTransportImpl): MedtrumBleTransport
 
-    // Pump plugin registration — @IntKey range 1000–1200, see PluginsListModule for overview
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @IntKey(1120)
-    abstract fun bindMedtrumPlugin(plugin: MedtrumPlugin): PluginBase
 }
