@@ -1,7 +1,6 @@
 package app.aaps.plugins.sync.nfcCommands
 
 import androidx.annotation.StringRes
-import app.aaps.plugins.sync.nfcCommands.actions.*
 import app.aaps.plugins.sync.R
 import app.aaps.core.ui.R as CoreUiR
 
@@ -47,52 +46,53 @@ data class NfcUiCategory(
 )
 
 /**
- * Registry of all available NFC commands and their factory methods.
- * Each entry maps a command code to its corresponding [NfcAction] implementation and [NfcCategory].
+ * Registry of all available NFC commands.
+ *
+ * The code-to-action mapping lives in [NfcActionFactory], not here, so this enum names no action class
+ * and needs none of their dependencies.
  */
 enum class NfcCommandCode(
-    val category: NfcCategory,
-    val createAction: (NfcCommandsPlugin) -> NfcAction
+    val category: NfcCategory
 ) {
     // Loop Management
-    LOOP_STOP(NfcCategory.LOOP, ::LoopStopAction),
-    LOOP_RESUME(NfcCategory.LOOP, ::LoopResumeAction),
-    LOOP_SUSPEND(NfcCategory.LOOP, ::LoopSuspendAction),
-    LOOP_CLOSED(NfcCategory.LOOP, ::LoopClosedAction),
-    LOOP_LGS(NfcCategory.LOOP, ::LoopLgsAction),
+    LOOP_STOP(NfcCategory.LOOP),
+    LOOP_RESUME(NfcCategory.LOOP),
+    LOOP_SUSPEND(NfcCategory.LOOP),
+    LOOP_CLOSED(NfcCategory.LOOP),
+    LOOP_LGS(NfcCategory.LOOP),
     
     // Pump Control
-    PUMP_CONNECT(NfcCategory.PUMP, ::PumpConnectAction),
-    PUMP_DISCONNECT(NfcCategory.PUMP, ::PumpDisconnectAction),
+    PUMP_CONNECT(NfcCategory.PUMP),
+    PUMP_DISCONNECT(NfcCategory.PUMP),
     
     // Basal Rate
-    BASAL_STOP(NfcCategory.BASAL, ::BasalCancelAction),
-    BASAL_ABS(NfcCategory.BASAL, ::TempBasalAbsoluteAction),
-    BASAL_PCT(NfcCategory.BASAL, ::TempBasalPercentAction),
+    BASAL_STOP(NfcCategory.BASAL),
+    BASAL_ABS(NfcCategory.BASAL),
+    BASAL_PCT(NfcCategory.BASAL),
     
     // Treatments
-    BOLUS(NfcCategory.TREATMENTS, ::BolusAction),
-    CARBS(NfcCategory.TREATMENTS, ::CarbsAction),
-    BOLUS_WIZARD(NfcCategory.TREATMENTS, ::BolusWizardAction),
-    EXTENDED_STOP(NfcCategory.TREATMENTS, ::ExtendedCancelAction),
-    EXTENDED_SET(NfcCategory.TREATMENTS, ::ExtendedSetAction),
+    BOLUS(NfcCategory.TREATMENTS),
+    CARBS(NfcCategory.TREATMENTS),
+    BOLUS_WIZARD(NfcCategory.TREATMENTS),
+    EXTENDED_STOP(NfcCategory.TREATMENTS),
+    EXTENDED_SET(NfcCategory.TREATMENTS),
     
     // Profile
-    PROFILE_SWITCH(NfcCategory.PROFILE, ::ProfileSwitchAction),
+    PROFILE_SWITCH(NfcCategory.PROFILE),
     
     // Scenes
-    RUN_SCENE(NfcCategory.SCENES, ::RunSceneAction),
+    RUN_SCENE(NfcCategory.SCENES),
     
     // Temporary Targets
-    TARGET_MEAL(NfcCategory.TARGETS, ::TempTargetMealAction),
-    TARGET_ACTIVITY(NfcCategory.TARGETS, ::TempTargetActivityAction),
-    TARGET_HYPO(NfcCategory.TARGETS, ::TempTargetHypoAction),
-    TARGET_MANUAL(NfcCategory.TARGETS, ::TempTargetManualAction),
-    TARGET_STOP(NfcCategory.TARGETS, ::TempTargetCancelAction),
+    TARGET_MEAL(NfcCategory.TARGETS),
+    TARGET_ACTIVITY(NfcCategory.TARGETS),
+    TARGET_HYPO(NfcCategory.TARGETS),
+    TARGET_MANUAL(NfcCategory.TARGETS),
+    TARGET_STOP(NfcCategory.TARGETS),
     
     // Maintenance
-    //AAPSCLIENT_RESTART(NfcCategory.SYSTEM, ::AapsClientRestartAction),
-    //RESTART(NfcCategory.SYSTEM, ::RestartAction);
+    //AAPSCLIENT_RESTART(NfcCategory.SYSTEM),
+    //RESTART(NfcCategory.SYSTEM);
 }
 
 /**
@@ -103,9 +103,9 @@ object NfcCategories {
      * Scans all [NfcCommandCode]s and returns only those supported by the current hardware/configuration,
      * grouped by their [NfcCategory].
      */
-    fun build(plugin: NfcCommandsPlugin): List<NfcUiCategory> {
+    fun build(actionFactory: NfcActionFactory): List<NfcUiCategory> {
         return NfcCommandCode.entries
-            .map { it to it.createAction(plugin) }
+            .map { it to actionFactory.create(it) }
             .filter { it.second.isSupported() }
             .groupBy { it.first.category }
             .map { (cat, pairs) ->

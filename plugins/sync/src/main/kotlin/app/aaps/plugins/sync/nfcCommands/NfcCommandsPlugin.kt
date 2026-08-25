@@ -83,6 +83,8 @@ class NfcCommandsPlugin @Inject constructor(
     override val rh: ResourceHelper,
     preferences: Preferences,
     val nfcTagStore: NfcTagStore,
+    val actionFactory: NfcActionFactory,
+    val runtimeState: NfcRuntimeState,
     val constraintChecker: ConstraintsChecker,
     val profileFunction: ProfileFunction,
     val profileUtil: ProfileUtil,
@@ -115,18 +117,8 @@ class NfcCommandsPlugin @Inject constructor(
     rh,
     preferences,
 ) {
-    /** Cooldown tracker for remote boluses to prevent double-scanning issues. */
-    var lastRemoteBolusTime: Long = 0
-        private set
-
-    /** Temporary state storage for actions that need to pass data between phases (e.g. Wizard calculation to execution). */
-    private val actionStates = mutableMapOf<String, Any>()
-
-    fun setActionState(key: String, state: Any) { actionStates[key] = state }
-    fun getActionState(key: String): Any? = actionStates[key]
-    fun clearActionStates() { actionStates.clear() }
-
-    fun setLastRemoteBolusTime(time: Long) { lastRemoteBolusTime = time }
+    /** Cleared before a chain starts and after it finishes. State itself lives in [NfcRuntimeState]. */
+    private fun clearActionStates() = runtimeState.clearActionStates()
 
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
         key = "nfccommunicator_settings",
@@ -214,9 +206,8 @@ class NfcCommandsPlugin @Inject constructor(
         }
     }
 
-    /** Returns the pump's temporary basal duration step in minutes. */
-    fun pumpBasalDurationStep(): Int =
-        activePlugin.activePump.model().tbrSettings()?.durationStep ?: 60
+    /** Returns the pump's temporary basal duration step in minutes. Used by the build screen. */
+    fun pumpBasalDurationStep(): Int = pumpBasalDurationStep(activePlugin)
 
     /**
      * Parses and executes a single serialized command string.
@@ -236,7 +227,7 @@ class NfcCommandsPlugin @Inject constructor(
         return NfcExecutionResult(false, rh.gs(R.string.nfccommands_unknown_command))
     }
 
-    fun getAction(code: NfcCommandCode): NfcAction = code.createAction(this)
+    fun getAction(code: NfcCommandCode): NfcAction = actionFactory.create(code)
 
     private suspend fun routeAction(code: NfcCommandCode, params: JSONObject): NfcExecutionResult {
         return requireRemoteCommands {
@@ -253,13 +244,6 @@ class NfcCommandsPlugin @Inject constructor(
         }
         return block()
     }
-
-    /**
-     * Rounds a duration value UP to the next valid pump step multiple.
-     * Ensures compatibility when a tag written for one pump is used on another.
-     */
-    fun roundUpToStep(value: Int, step: Int): Int =
-        if (value % step == 0) value else ((value / step) + 1) * step
 
     /**
      * Entry point for processing Android NFC Intents.

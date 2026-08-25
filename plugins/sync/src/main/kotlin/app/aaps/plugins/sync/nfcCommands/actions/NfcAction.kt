@@ -8,9 +8,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.ui.compose.icons.IcAaps
-import app.aaps.plugins.sync.nfcCommands.NfcCommandsPlugin
 import app.aaps.plugins.sync.nfcCommands.NfcCommandCode
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
 import app.aaps.plugins.sync.R
@@ -22,10 +24,19 @@ import org.json.JSONObject
 /**
  * Base class for all NFC-triggered actions.
  * Encapsulates execution logic, UI metadata, and parameter validation.
+ *
+ * Actions are built from the JSON stored on a tag, so they can never come out of a DI graph. They used
+ * to be handed the whole plugin and reach through it, which hid what each one actually depends on.
+ * Dependencies now arrive through the constructor, supplied by `NfcActionFactory`, which owns the
+ * command-code-to-constructor mapping. The three below are used by every action; anything else a
+ * specific action needs is on its own constructor, where it is visible.
  */
-abstract class NfcAction(protected val plugin: NfcCommandsPlugin) {
+abstract class NfcAction(
+    protected val aapsLogger: AAPSLogger,
+    protected val rh: ResourceHelper,
+    protected val uel: UserEntryLogger
+) {
 
-    protected val uel = plugin.uel
     protected val source = Sources.NfcCommands
     
     /** Parameters for this action instance. Uses Compose State to trigger UI updates. */
@@ -84,9 +95,9 @@ abstract class NfcAction(protected val plugin: NfcCommandsPlugin) {
 
     /** Helper for reporting invalid parameter formats. */
     protected fun invalidFormat(): NfcExecutionResult =
-        NfcExecutionResult(false, plugin.rh.gs(R.string.wrong_format))
+        NfcExecutionResult(false, rh.gs(R.string.wrong_format))
 
     /** Helper for reporting that a command cannot be executed in the current state. */
     protected fun commandNotPossible(): NfcExecutionResult =
-        NfcExecutionResult(false, plugin.rh.gs(R.string.nfccommands_remote_command_not_possible))
+        NfcExecutionResult(false, rh.gs(R.string.nfccommands_remote_command_not_possible))
 }

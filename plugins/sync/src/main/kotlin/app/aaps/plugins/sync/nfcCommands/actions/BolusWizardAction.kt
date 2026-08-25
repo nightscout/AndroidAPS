@@ -3,23 +3,46 @@ package app.aaps.plugins.sync.nfcCommands.actions
 import androidx.annotation.StringRes
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.iob.GlucoseStatusProvider
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.plugins.sync.nfcCommands.ArgType
-import app.aaps.plugins.sync.nfcCommands.NfcCommandsPlugin
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
 import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
 import app.aaps.plugins.sync.R
 import org.json.JSONObject
 import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.plugins.sync.nfcCommands.NfcRuntimeState
 
-class BolusWizardAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
+class BolusWizardAction(
+    aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    uel: UserEntryLogger,
+    private val commandQueue: CommandQueue,
+    private val dateUtil: DateUtil,
+    private val glucoseStatusProvider: GlucoseStatusProvider,
+    private val loop: Loop,
+    private val persistenceLayer: PersistenceLayer,
+    private val preferences: Preferences,
+    private val profileUtil: ProfileUtil,
+    private val runtimeState: NfcRuntimeState,
+    private val wizardBolusExecutor: WizardBolusExecutor
+) : NfcAction(aapsLogger, rh, uel) {
     @StringRes override val labelResId = CoreUiR.string.boluswizard
     override val elementType = ElementType.BOLUS_WIZARD
     override val argType = listOf(ArgType.BOLUS_WIZARD_OPTIONS, ArgType.AMOUNT_GRAMS, ArgType.PERCENT)
@@ -27,13 +50,13 @@ class BolusWizardAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
         get() = elementType.icon()
 
     override suspend fun getDefaultParams(): JSONObject {
-        val useTrend = plugin.preferences.get(BooleanNonKey.WizardIncludeTrend)
-        val useCOB = plugin.preferences.get(BooleanNonKey.WizardIncludeCob)
-        var percentage = plugin.preferences.get(IntKey.OverviewBolusPercentage)
-        val time = plugin.preferences.get(IntKey.OverviewResetBolusPercentageTime).toLong()
-        plugin.persistenceLayer.getLastGlucoseValue().let {
+        val useTrend = preferences.get(BooleanNonKey.WizardIncludeTrend)
+        val useCOB = preferences.get(BooleanNonKey.WizardIncludeCob)
+        var percentage = preferences.get(IntKey.OverviewBolusPercentage)
+        val time = preferences.get(IntKey.OverviewResetBolusPercentageTime).toLong()
+        persistenceLayer.getLastGlucoseValue().let {
             if (it != null) {
-                if (it.timestamp < plugin.dateUtil.now() - T.mins(time).msecs())
+                if (it.timestamp < dateUtil.now() - T.mins(time).msecs())
                     percentage = 100
             } else percentage = 100
         }
@@ -55,9 +78,9 @@ class BolusWizardAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
                 // Park the SAME preview (bolusId + computed insulin) the confirm dialog just displayed —
                 // execute() commits it by id through the shared WizardBolusExecutor (identical to wear /
                 // client-control), instead of re-driving a shared/leftover BolusWizard instance.
-                plugin.setActionState(params.toString(), prepared)
-                val base = plugin.rh.gs(CoreUiR.string.goingtodeliver, prepared.insulin)
-                val carbs = plugin.rh.gs(InterfacesR.string.format_carbs, amount)
+                runtimeState.setActionState(params.toString(), prepared)
+                val base = rh.gs(CoreUiR.string.goingtodeliver, prepared.insulin)
+                val carbs = rh.gs(InterfacesR.string.format_carbs, amount)
                 "$base ($carbs)"
             }
             is WizardBolusExecutor.PrepareResult.Error   -> prepared.message
@@ -66,37 +89,37 @@ class BolusWizardAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
     }
 
     override suspend fun execute(): NfcExecutionResult {
-        if (plugin.commandQueue.bolusInQueue()) {
-            return NfcExecutionResult(false, plugin.rh.gs(R.string.nfccommands_another_bolus_in_queue))
+        if (commandQueue.bolusInQueue()) {
+            return NfcExecutionResult(false, rh.gs(R.string.nfccommands_another_bolus_in_queue))
         }
-        if (plugin.dateUtil.now() - plugin.lastRemoteBolusTime < Constants.REMOTE_BOLUS_MIN_DISTANCE) {
-            return NfcExecutionResult(false, plugin.rh.gs(R.string.nfccommands_remote_bolus_not_allowed))
+        if (dateUtil.now() - runtimeState.lastRemoteBolusTime < Constants.REMOTE_BOLUS_MIN_DISTANCE) {
+            return NfcExecutionResult(false, rh.gs(R.string.nfccommands_remote_bolus_not_allowed))
         }
-        if (plugin.loop.runningMode().pausesLoopExecution()) {
-            return NfcExecutionResult(false, plugin.rh.gs(InterfacesR.string.pumpsuspended))
+        if (loop.runningMode().pausesLoopExecution()) {
+            return NfcExecutionResult(false, rh.gs(InterfacesR.string.pumpsuspended))
         }
 
-        val prepared = plugin.getActionState(params.toString()) as? WizardBolusExecutor.PrepareResult.Preview
+        val prepared = runtimeState.getActionState(params.toString()) as? WizardBolusExecutor.PrepareResult.Preview
         if (prepared == null) {
-            plugin.aapsLogger.debug(LTag.NFC, "BolusWizard state not found. Key: ${params}")
+            aapsLogger.debug(LTag.NFC, "BolusWizard state not found. Key: ${params}")
             return commandNotPossible()
         }
 
         // Commit the parked dose by id — the SAME consume-once relay wear/client-control use
         // (WizardBolusExecutor.confirm). A stale/already-consumed id returns NoPending instead of
         // silently re-delivering or no-op'ing without telling the caller.
-        val result = plugin.wizardBolusExecutor.confirm(
+        val result = wizardBolusExecutor.confirm(
             bolusId = prepared.bolusId,
             source = source,
-            onError = { plugin.aapsLogger.error(LTag.NFC, "Calculator bolus failed: $it") }
+            onError = { aapsLogger.error(LTag.NFC, "Calculator bolus failed: $it") }
         )
         if (result is WizardBolusExecutor.ConfirmResult.NoPending) {
-            plugin.aapsLogger.debug(LTag.NFC, "BolusWizard confirm: no pending dose for id ${prepared.bolusId}")
+            aapsLogger.debug(LTag.NFC, "BolusWizard confirm: no pending dose for id ${prepared.bolusId}")
             return commandNotPossible()
         }
 
-        plugin.setLastRemoteBolusTime(plugin.dateUtil.now())
-        return NfcExecutionResult(true, plugin.rh.gs(R.string.smscommunicator_bolus_delivered, prepared.insulin))
+        runtimeState.lastRemoteBolusTime = dateUtil.now()
+        return NfcExecutionResult(true, rh.gs(R.string.smscommunicator_bolus_delivered, prepared.insulin))
     }
 
     /**
@@ -113,11 +136,11 @@ class BolusWizardAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
         val useTrend = params.optBoolean(NfcJsonKeys.USE_TREND, true)
         val useIOB = params.optBoolean(NfcJsonKeys.USE_IOB, true)
         val useCOB = params.optBoolean(NfcJsonKeys.USE_COB, true)
-        val bgMgdl = plugin.glucoseStatusProvider.glucoseStatusData?.glucose ?: 0.0
+        val bgMgdl = glucoseStatusProvider.glucoseStatusData?.glucose ?: 0.0
 
-        return plugin.wizardBolusExecutor.prepareWizard(
+        return wizardBolusExecutor.prepareWizard(
             WizardBolusExecutor.WizardInputs(
-                bg = plugin.profileUtil.fromMgdlToUnits(bgMgdl),
+                bg = profileUtil.fromMgdlToUnits(bgMgdl),
                 carbs = carbs,
                 percentage = percentage,
                 directCorrection = 0.0,

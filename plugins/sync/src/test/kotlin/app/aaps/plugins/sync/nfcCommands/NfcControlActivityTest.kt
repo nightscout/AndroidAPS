@@ -53,6 +53,29 @@ class NfcControlActivityTest : TestBaseWithProfile() {
             glucoseStatusProvider = mock(),
             sceneAutomationApi = mock(),
             sceneIconResolver = mock(),
+            runtimeState = runtimeState,
+            actionFactory = NfcActionFactory(
+                aapsLogger = mock(),
+                activePlugin = mock(),
+                bolusProgressData = mock(),
+                commandQueue = mock(),
+                constraintChecker = mock(),
+                dateUtil = mock(),
+                decimalFormatter = mock(),
+                glucoseStatusProvider = mock(),
+                loop = mock(),
+                persistenceLayer = mock(),
+                preferences = mock(),
+                profileFunction = mock(),
+                profileRepository = mock(),
+                profileUtil = mock(),
+                rh = mock(),
+                runtimeState = runtimeState,
+                sceneAutomationApi = mock(),
+                sceneIconResolver = mock(),
+                uel = mock(),
+                wizardBolusExecutor = mock()
+            ),
         )
         pluginUnderTest.setPluginEnabledBlocking(app.aaps.core.data.plugin.PluginType.SYNC, true)
         whenever(rh.gs(any<Int>())).thenReturn("Mock String")
@@ -60,6 +83,8 @@ class NfcControlActivityTest : TestBaseWithProfile() {
         whenever(rh.gsNotLocalised(any<Int>())).thenReturn("Mock String")
         whenever(rh.gsNotLocalised(any<Int>(), any())).thenReturn("Mock String")
     }
+
+    private val runtimeState = NfcRuntimeState()
 
     private val fakeUid = byteArrayOf(0xAA.toByte(), 0xBB.toByte(), 0xCC.toByte(), 0xDD.toByte())
 

@@ -52,6 +52,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     @Mock lateinit var sceneIconResolver: SceneIconResolver
 
     private val tagUid = "aabbccdd"
+    private val runtimeState = NfcRuntimeState()
     private lateinit var plugin: NfcCommandsPlugin
 
     @BeforeEach
@@ -82,6 +83,29 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
                 glucoseStatusProvider = glucoseStatusProvider,
                 sceneAutomationApi = sceneAutomationApi,
                 sceneIconResolver = sceneIconResolver,
+                runtimeState = runtimeState,
+                actionFactory = NfcActionFactory(
+                    aapsLogger = aapsLogger,
+                    activePlugin = activePlugin,
+                    bolusProgressData = bolusProgressData,
+                    commandQueue = commandQueue,
+                    constraintChecker = constraintsChecker,
+                    dateUtil = dateUtil,
+                    decimalFormatter = decimalFormatter,
+                    glucoseStatusProvider = glucoseStatusProvider,
+                    loop = loop,
+                    persistenceLayer = persistenceLayer,
+                    preferences = preferences,
+                    profileFunction = profileFunction,
+                    profileRepository = profileRepository,
+                    profileUtil = profileUtil,
+                    rh = rh,
+                    runtimeState = runtimeState,
+                    sceneAutomationApi = sceneAutomationApi,
+                    sceneIconResolver = sceneIconResolver,
+                    uel = uel,
+                    wizardBolusExecutor = wizardBolusExecutor
+                ),
             )
         plugin.setPluginEnabledBlocking(PluginType.SYNC, true)
 
@@ -117,7 +141,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(sceneAutomationApi.getScenes()).thenReturn(listOf(mock()))
         testPumpPlugin.pumpDescription.bolusStep = 0.1
 
-        val categories = NfcCategories.build(plugin)
+        val categories = NfcCategories.build(plugin.actionFactory)
 
         assertThat(categories.any { it.labelResId == CoreUiR.string.scenes }).isTrue()
         
@@ -544,7 +568,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
             .put(NfcJsonKeys.PERCENT, 100)
         
         val prepared = WizardBolusExecutor.PrepareResult.Preview(insulin = 1.5, carbs = 20, bolusId = 123L)
-        plugin.setActionState(params.toString(), prepared)
+        runtimeState.setActionState(params.toString(), prepared)
         runTest { 
             whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP)
             whenever(wizardBolusExecutor.confirm(eq(123L), any(), any(), any(), any())).thenReturn(WizardBolusExecutor.ConfirmResult.Delivered)
@@ -575,7 +599,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
         assertThat(result).contains("Going to deliver")
         verify(wizardBolusExecutor).prepareWizard(any())
-        assertThat(plugin.getActionState(params.toString())).isEqualTo(prepared)
+        assertThat(runtimeState.getActionState(params.toString())).isEqualTo(prepared)
     }
 
     // ── processProfile tests ───────────────────────────────────────────────────
@@ -629,7 +653,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(rh.gs(R.string.nfccommands_remote_bolus_not_allowed)).thenReturn("Remote bolus not allowed")
         val now = Constants.REMOTE_BOLUS_MIN_DISTANCE * 2
         whenever(dateUtil.now()).thenReturn(now)
-        plugin.setLastRemoteBolusTime(now)
+        runtimeState.lastRemoteBolusTime = now
 
         val result = execute(NfcCommandCode.BOLUS, JSONObject().put(NfcJsonKeys.AMOUNT, 1.0).put(NfcJsonKeys.IS_MEAL, true))
 

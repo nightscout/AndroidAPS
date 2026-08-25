@@ -7,17 +7,29 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileRepository
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nfcCommands.ArgType
-import app.aaps.plugins.sync.nfcCommands.NfcCommandsPlugin
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
 import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
 import org.json.JSONObject
 import app.aaps.core.ui.R as CoreUiR
 
-class ProfileSwitchAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
+class ProfileSwitchAction(
+    aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    uel: UserEntryLogger,
+    private val dateUtil: DateUtil,
+    private val profileFunction: ProfileFunction,
+    private val profileRepository: ProfileRepository
+) : NfcAction(aapsLogger, rh, uel) {
     @StringRes override val labelResId = CoreUiR.string.careportal_profileswitch
     override val elementType = ElementType.PROFILE_MANAGEMENT
     override val argType = listOf(ArgType.PROFILE_NAME, ArgType.PERCENT)
@@ -28,7 +40,7 @@ class ProfileSwitchAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
     }
 
     override suspend fun getDefaultParams(): JSONObject {
-        val profileName = plugin.profileFunction.getOriginalProfileName()
+        val profileName = profileFunction.getOriginalProfileName()
         return JSONObject().put(NfcJsonKeys.PROFILE_NAME, profileName).put(NfcJsonKeys.PERCENT, 100)
     }
 
@@ -43,22 +55,22 @@ class ProfileSwitchAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
         if (profileName.isNullOrBlank()) return invalidFormat()
         val percentage = params.optInt(NfcJsonKeys.PERCENT, 100).coerceIn(10, 500)
         
-        val profileStore = plugin.profileRepository.profile.value ?: return NfcExecutionResult(false, plugin.rh.gs(CoreUiR.string.notconfigured))
+        val profileStore = profileRepository.profile.value ?: return NfcExecutionResult(false, rh.gs(CoreUiR.string.notconfigured))
         
-        val iCfg = plugin.profileFunction.getRunningOrRequestedICfg()
-            ?: return NfcExecutionResult(false, plugin.rh.gs(CoreUiR.string.profile_switch_no_insulin))
+        val iCfg = profileFunction.getRunningOrRequestedICfg()
+            ?: return NfcExecutionResult(false, rh.gs(CoreUiR.string.profile_switch_no_insulin))
 
-        val created = plugin.profileFunction.createProfileSwitch(
+        val created = profileFunction.createProfileSwitch(
             profileStore = profileStore,
             profileName = profileName,
             durationInMinutes = 0,
             percentage = percentage,
             timeShiftInHours = 0,
-            timestamp = plugin.dateUtil.now(),
+            timestamp = dateUtil.now(),
             action = Action.PROFILE_SWITCH,
             source = source,
-            note = plugin.rh.gs(R.string.nfccommands_profile_switch_created),
-            listValues = listOf(ValueWithUnit.SimpleString(plugin.rh.gsNotLocalised(R.string.nfccommands_profile_switch_created))),
+            note = rh.gs(R.string.nfccommands_profile_switch_created),
+            listValues = listOf(ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.nfccommands_profile_switch_created))),
             iCfg = iCfg,
         )
         return if (created != null) {
@@ -74,7 +86,7 @@ class ProfileSwitchAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
             )
             NfcExecutionResult(true, resultMessage)
         } else {
-            NfcExecutionResult(false, plugin.rh.gs(CoreUiR.string.invalid_profile))
+            NfcExecutionResult(false, rh.gs(CoreUiR.string.invalid_profile))
         }
     }
 }

@@ -9,26 +9,52 @@ import app.aaps.core.data.model.TT
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.tempTargets.ttDurationMinutes
 import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.compose.icons.IcTtEatingSoon
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nfcCommands.ArgType
-import app.aaps.plugins.sync.nfcCommands.NfcCommandsPlugin
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
 import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
 import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.plugins.sync.nfcCommands.NfcRuntimeState
 
-class BolusAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
+class BolusAction(
+    aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    uel: UserEntryLogger,
+    private val bolusProgressData: BolusProgressData,
+    private val commandQueue: CommandQueue,
+    private val constraintChecker: ConstraintsChecker,
+    private val dateUtil: DateUtil,
+    private val loop: Loop,
+    private val persistenceLayer: PersistenceLayer,
+    private val preferences: Preferences,
+    private val profileFunction: ProfileFunction,
+    private val profileUtil: ProfileUtil,
+    private val runtimeState: NfcRuntimeState
+) : NfcAction(aapsLogger, rh, uel) {
     @StringRes override val labelResId = InterfacesR.string.bolus
     override val elementType = ElementType.INSULIN
     override val argType = listOf(ArgType.INSULIN, ArgType.MEAL_CHECK)
@@ -49,23 +75,23 @@ class BolusAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
     override suspend fun formatParams(): String {
         val amount = params.optDouble(NfcJsonKeys.AMOUNT, 0.0)
         val isMeal = params.optBoolean(NfcJsonKeys.IS_MEAL, false)
-        val base = plugin.rh.gs(CoreUiR.string.goingtodeliver, amount)
+        val base = rh.gs(CoreUiR.string.goingtodeliver, amount)
         return if (isMeal) {
-            plugin.rh.gs(CoreUiR.string.text_with_detail, base, plugin.rh.gs(CoreUiR.string.eatingsoon))
+            rh.gs(CoreUiR.string.text_with_detail, base, rh.gs(CoreUiR.string.eatingsoon))
         } else {
             base
         }
     }
 
     override suspend fun execute(): NfcExecutionResult {
-        if (plugin.commandQueue.bolusInQueue()) {
-            return NfcExecutionResult(false, plugin.rh.gs(R.string.nfccommands_another_bolus_in_queue))
+        if (commandQueue.bolusInQueue()) {
+            return NfcExecutionResult(false, rh.gs(R.string.nfccommands_another_bolus_in_queue))
         }
-        if (plugin.dateUtil.now() - plugin.lastRemoteBolusTime < Constants.REMOTE_BOLUS_MIN_DISTANCE) {
-            return NfcExecutionResult(false, plugin.rh.gs(R.string.nfccommands_remote_bolus_not_allowed))
+        if (dateUtil.now() - runtimeState.lastRemoteBolusTime < Constants.REMOTE_BOLUS_MIN_DISTANCE) {
+            return NfcExecutionResult(false, rh.gs(R.string.nfccommands_remote_bolus_not_allowed))
         }
-        if (plugin.loop.runningMode().pausesLoopExecution()) {
-            return NfcExecutionResult(false, plugin.rh.gs(InterfacesR.string.pumpsuspended))
+        if (loop.runningMode().pausesLoopExecution()) {
+            return NfcExecutionResult(false, rh.gs(InterfacesR.string.pumpsuspended))
         }
         
         var bolus = params.optDouble(NfcJsonKeys.AMOUNT, 0.0)
@@ -73,14 +99,14 @@ class BolusAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
         
         if (bolus <= 0.0) return invalidFormat()
         
-        bolus = plugin.constraintChecker.applyBolusConstraints(ConstraintObject(bolus, plugin.aapsLogger)).value()
+        bolus = constraintChecker.applyBolusConstraints(ConstraintObject(bolus, aapsLogger)).value()
         
         val detailedBolusInfo = DetailedBolusInfo().apply { insulin = bolus }
-        val result = plugin.commandQueue.bolus(detailedBolusInfo)
+        val result = commandQueue.bolus(detailedBolusInfo)
         
-        val userStop = plugin.bolusProgressData.isStopPressed
+        val userStop = bolusProgressData.isStopPressed
         if (!result.success && !userStop) {
-            plugin.aapsLogger.error(LTag.NFC, "bolus failed: ${result.comment}")
+            aapsLogger.error(LTag.NFC, "bolus failed: ${result.comment}")
             return commandNotPossible()
         }
 
@@ -94,26 +120,26 @@ class BolusAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
             )
         )
 
-        plugin.setLastRemoteBolusTime(plugin.dateUtil.now())
+        runtimeState.lastRemoteBolusTime = dateUtil.now()
         
         if (isMeal && !userStop) {
-            plugin.profileFunction.getProfile()?.let {
-                val eatingSoonTTDuration = plugin.preferences.ttDurationMinutes(TT.Reason.EATING_SOON)
-                val eatingSoonTT = plugin.profileUtil.fromMgdlToUnits(plugin.preferences.ttTargetMgdl(TT.Reason.EATING_SOON), plugin.profileUtil.units)
-                plugin.persistenceLayer.insertAndCancelCurrentTemporaryTarget(
+            profileFunction.getProfile()?.let {
+                val eatingSoonTTDuration = preferences.ttDurationMinutes(TT.Reason.EATING_SOON)
+                val eatingSoonTT = profileUtil.fromMgdlToUnits(preferences.ttTargetMgdl(TT.Reason.EATING_SOON), profileUtil.units)
+                persistenceLayer.insertAndCancelCurrentTemporaryTarget(
                     temporaryTarget = TT(
-                        timestamp = plugin.dateUtil.now(),
+                        timestamp = dateUtil.now(),
                         duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
                         reason = TT.Reason.EATING_SOON,
-                        lowTarget = plugin.profileUtil.convertToMgdl(eatingSoonTT, plugin.profileUtil.units),
-                        highTarget = plugin.profileUtil.convertToMgdl(eatingSoonTT, plugin.profileUtil.units),
+                        lowTarget = profileUtil.convertToMgdl(eatingSoonTT, profileUtil.units),
+                        highTarget = profileUtil.convertToMgdl(eatingSoonTT, profileUtil.units),
                     ),
                     action = Action.TT,
                     source = Sources.NfcCommands,
                     note = null,
                     listValues = listOf(
                         ValueWithUnit.TETTReason(TT.Reason.EATING_SOON),
-                        ValueWithUnit.Mgdl(plugin.profileUtil.convertToMgdl(eatingSoonTT, plugin.profileUtil.units)),
+                        ValueWithUnit.Mgdl(profileUtil.convertToMgdl(eatingSoonTT, profileUtil.units)),
                         ValueWithUnit.Minute(eatingSoonTTDuration),
                     ),
                 )
@@ -124,6 +150,6 @@ class BolusAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
         else if (isMeal) R.string.smscommunicator_meal_bolus_delivered
         else R.string.smscommunicator_bolus_delivered
         
-        return NfcExecutionResult(true, plugin.rh.gs(resId, delivered))
+        return NfcExecutionResult(true, rh.gs(resId, delivered))
     }
 }

@@ -3,19 +3,31 @@ package app.aaps.plugins.sync.nfcCommands.actions
 import androidx.annotation.StringRes
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.plugins.sync.nfcCommands.ArgType
-import app.aaps.plugins.sync.nfcCommands.NfcCommandsPlugin
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
 import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
 import app.aaps.plugins.sync.R
 import org.json.JSONObject
 import app.aaps.core.ui.R as CoreUiR
 
-class ExtendedSetAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
+class ExtendedSetAction(
+    aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    uel: UserEntryLogger,
+    private val commandQueue: CommandQueue,
+    private val constraintChecker: ConstraintsChecker,
+    private val decimalFormatter: DecimalFormatter
+) : NfcAction(aapsLogger, rh, uel) {
     @StringRes override val labelResId = CoreUiR.string.extended_bolus
     override val elementType = ElementType.EXTENDED_BOLUS
     override val argType = listOf(ArgType.INSULIN, ArgType.DURATION)
@@ -31,9 +43,9 @@ class ExtendedSetAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
         
         if (amount <= 0.0 || duration <= 0) return invalidFormat()
         
-        amount = plugin.constraintChecker.applyExtendedBolusConstraints(ConstraintObject(amount, plugin.aapsLogger)).value()
+        amount = constraintChecker.applyExtendedBolusConstraints(ConstraintObject(amount, aapsLogger)).value()
         
-        val result = plugin.commandQueue.extendedBolus(amount, duration)
+        val result = commandQueue.extendedBolus(amount, duration)
         if (result.success) {
             uel.log(
                 action = Action.EXTENDED_BOLUS,
@@ -44,10 +56,10 @@ class ExtendedSetAction(plugin: NfcCommandsPlugin) : NfcAction(plugin) {
                     ValueWithUnit.Minute(duration)
                 )
             )
-            val amountString = plugin.decimalFormatter.to2Decimal(amount)
-            return NfcExecutionResult(true, plugin.rh.gs(R.string.nfccommands_extended_set, amountString, duration))
+            val amountString = decimalFormatter.to2Decimal(amount)
+            return NfcExecutionResult(true, rh.gs(R.string.nfccommands_extended_set, amountString, duration))
         } else {
-            plugin.aapsLogger.error(LTag.NFC, "extendedBolus failed: ${result.comment}")
+            aapsLogger.error(LTag.NFC, "extendedBolus failed: ${result.comment}")
             return commandNotPossible()
         }
     }

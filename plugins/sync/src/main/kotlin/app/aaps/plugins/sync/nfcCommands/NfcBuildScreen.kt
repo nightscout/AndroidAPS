@@ -121,7 +121,7 @@ fun NfcBuildScreen(
 ) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
-    val categories = remember { NfcCategories.build(plugin) }
+    val categories = remember { NfcCategories.build(plugin.actionFactory) }
     
     val profileStore by plugin.profileRepository.profile.collectAsStateWithLifecycle()
     val profileNames = remember(profileStore) {
@@ -962,7 +962,7 @@ class GenericNfcUiAction(
                     ArgType.RATE -> RateInputRow(rate) { rate = it; onChange() }
                     ArgType.PERCENT -> {
                         val range = if (command == NfcCommandCode.PROFILE_SWITCH) 10.0..500.0 else 0.0..200.0
-                        val step = if (command == NfcCommandCode.PROFILE_SWITCH) 5.0 else 10.0
+                        val step = 5.0
                         PercentInputRow(percent.toDouble(), range, step) { percent = it.toInt(); onChange() }
                     }
                     ArgType.MEAL_CHECK -> MealCheckRow(meal) { meal = it; onChange() }
