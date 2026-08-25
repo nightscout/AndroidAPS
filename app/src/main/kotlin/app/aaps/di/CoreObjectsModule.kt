@@ -2,6 +2,7 @@ package app.aaps.di
 
 import android.content.Context
 import android.telephony.SmsManager
+import app.aaps.core.interfaces.ui.CarbSuggestionActions
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.BolusProgressData
@@ -196,6 +197,7 @@ class CoreObjectsModule {
      * delegate is what stops Dagger building a second one.
      */
     @Provides @Singleton fun provideTrendCalculator(graphs: MetroGraphs): TrendCalculator = graphs.trendCalculator
+    @Provides @Singleton fun provideCarbSuggestionActions(graphs: MetroGraphs): CarbSuggestionActions = graphs.carbSuggestionActions
     @Provides @Singleton fun provideTemporaryBasalStorage(graphs: MetroGraphs): TemporaryBasalStorage = graphs.temporaryBasalStorage
     @Provides @Singleton fun provideDetailedBolusInfoStorage(graphs: MetroGraphs): DetailedBolusInfoStorage = graphs.detailedBolusInfoStorage
     @Provides @Singleton fun provideBlePreCheck(graphs: MetroGraphs): BlePreCheck = graphs.blePreCheck

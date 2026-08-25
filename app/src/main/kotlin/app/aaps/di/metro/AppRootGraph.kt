@@ -1,5 +1,6 @@
 package app.aaps.di.metro
 
+import app.aaps.core.interfaces.ui.CarbSuggestionActions
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.BlePreCheck
@@ -157,6 +158,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
      * `CoreObjectsModule`; Dagger must never construct its own, or there would be two.
      */
     val trendCalculator: TrendCalculator
+    val carbSuggestionActions: CarbSuggestionActions
     val temporaryBasalStorage: TemporaryBasalStorage
     val detailedBolusInfoStorage: DetailedBolusInfoStorage
     val blePreCheck: BlePreCheck

@@ -1,6 +1,7 @@
 package app.aaps.di.metro
 
 import androidx.work.WorkManager
+import app.aaps.core.interfaces.ui.CarbSuggestionActions
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.BlePreCheck
@@ -196,6 +197,7 @@ class MetroGraphs @Inject constructor(
     val objectives: Objectives get() = root.objectivesPlugin
     val signatureVerifier: SignatureVerifierPlugin get() = root.signatureVerifierPlugin
     val trendCalculator: TrendCalculator get() = root.trendCalculator
+    val carbSuggestionActions: CarbSuggestionActions get() = root.carbSuggestionActions
     val temporaryBasalStorage: TemporaryBasalStorage get() = root.temporaryBasalStorage
     val detailedBolusInfoStorage: DetailedBolusInfoStorage get() = root.detailedBolusInfoStorage
     val blePreCheck: BlePreCheck get() = root.blePreCheck

@@ -4,7 +4,9 @@ import app.aaps.implementation.receivers.BTReceiver
 import app.aaps.implementation.receivers.ChargingStateReceiver
 import app.aaps.implementation.receivers.NetworkChangeReceiver
 import app.aaps.implementation.receivers.TimeDateOrTZChangeReceiver
+import app.aaps.persistentNotification.DummyService
 import app.aaps.receivers.AutoStartReceiver
+import app.aaps.receivers.CarbSuggestionReceiver
 import app.aaps.receivers.DataReceiver
 import app.aaps.receivers.SmsReceiver
 import dev.zacsweers.metro.ClassKey
@@ -52,6 +54,18 @@ interface AppReceiversGraph {
     @IntoMap
     @ClassKey(BTReceiver::class)
     fun bindBTReceiver(injector: MembersInjector<BTReceiver>): MembersInjector<*> = injector
+
+    @Provides
+    @IntoMap
+    @ClassKey(CarbSuggestionReceiver::class)
+    fun bindCarbSuggestionReceiver(injector: MembersInjector<CarbSuggestionReceiver>): MembersInjector<*> = injector
+
+    /** A Service, not a receiver - but the map is just class-keyed, and `MetroService` looks it up the
+     * same way. */
+    @Provides
+    @IntoMap
+    @ClassKey(DummyService::class)
+    fun bindDummyService(injector: MembersInjector<DummyService>): MembersInjector<*> = injector
 
     @Provides
     @IntoMap

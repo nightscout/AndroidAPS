@@ -28,6 +28,8 @@ class ContributedPluginsTest {
     @Test
     fun `every contributed plugin appears under its order key`() {
         assertThat(plugins.keys).containsExactly(
+            // persistent notification
+            0,
             // sensitivity
             100, 110, 120,
             // source - all sixteen. 400, 410 and 440 are also bound to an interface; Dagger delegates

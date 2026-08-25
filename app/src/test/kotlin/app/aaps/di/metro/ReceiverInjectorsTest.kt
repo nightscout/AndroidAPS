@@ -1,6 +1,8 @@
 package app.aaps.di.metro
 
+import app.aaps.persistentNotification.DummyService
 import app.aaps.receivers.AutoStartReceiver
+import app.aaps.receivers.CarbSuggestionReceiver
 import app.aaps.receivers.DataReceiver
 import app.aaps.receivers.SmsReceiver
 import com.google.common.truth.Truth.assertThat
@@ -28,6 +30,14 @@ class ReceiverInjectorsTest {
             DataReceiver::class,
             SmsReceiver::class
         )
+    }
+
+    @Test
+    fun `the persistent notification service and receiver have injectors`() {
+        // DummyService is a Service, not a receiver. It reaches the same class-keyed map through
+        // `MetroService`, and a missing entry would only show as a crash when the foreground
+        // notification starts.
+        assertThat(injectors.keys).containsAtLeast(DummyService::class, CarbSuggestionReceiver::class)
     }
 
     @Test
