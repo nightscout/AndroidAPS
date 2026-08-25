@@ -1,5 +1,8 @@
 package app.aaps.plugins.aps.loop.runningMode
 
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import androidx.annotation.VisibleForTesting
 import app.aaps.core.ui.UiStrings
 import app.aaps.plugins.aps.ApsStrings
@@ -39,7 +42,8 @@ import kotlinx.coroutines.launch
  * drifted from DB state" case.
  */
 
-class RunningModeReconciler(
+@SingleIn(AppScope::class)
+class RunningModeReconciler @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val processedTbrEbData: ProcessedTbrEbData,
     private val activePlugin: ActivePlugin,

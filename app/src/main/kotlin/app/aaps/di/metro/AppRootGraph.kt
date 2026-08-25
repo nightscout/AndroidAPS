@@ -13,6 +13,8 @@ import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.autotune.Autotune
+import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryJob
+import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.plugins.aps.openAPS.DeltaCalculator
 import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAMA
@@ -224,6 +226,10 @@ interface AppRootGraph : MetroViewModelMultibindings {
 
     /** Autotune, for the automation actions Dagger still builds. */
     val autotune: Autotune
+
+    /** Running-mode helpers, from commonMain - `MainApp` still injects the reconciler through Dagger. */
+    val runningModeReconciler: RunningModeReconciler
+    val runningModeExpiryJob: RunningModeExpiryJob
 
     /**
      * openAPS pieces Metro builds, for the Dagger side to borrow.

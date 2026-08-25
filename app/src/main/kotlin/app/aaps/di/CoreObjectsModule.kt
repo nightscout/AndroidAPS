@@ -34,6 +34,8 @@ import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.autotune.Autotune
+import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryJob
+import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler
 import app.aaps.core.interfaces.profiling.Profiler
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
@@ -120,7 +122,6 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.ui.compose.overview.OverviewDataCacheFactory
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
-import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryJob
 import app.aaps.implementation.scenes.SceneExecutor
 import app.aaps.plugins.constraints.objectives.SntpClient
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -259,6 +260,19 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideAutotune(graphs: MetroGraphs): Autotune = graphs.autotune
 
     /*
+     * The running-mode helpers, from Metro.
+     *
+     * They live in `:plugins:aps` commonMain, so they could not keep javax annotations - Metro's own are
+     * the only ones that compile there. `MainApp` injects the reconciler through Dagger, so it needs the
+     * delegate; the expiry job used to be an `AapsLeaves` leaf and now travels the other way.
+     */
+    @Provides @Singleton fun provideRunningModeReconciler(graphs: MetroGraphs): RunningModeReconciler =
+        graphs.runningModeReconciler
+
+    @Provides @Singleton fun provideRunningModeExpiryJob(graphs: MetroGraphs): RunningModeExpiryJob =
+        graphs.runningModeExpiryJob
+
+    /*
      * openAPS pieces, from Metro, which builds them in `:plugins:aps` commonMain.
      *
      * All six, because Dagger asks for all six. Two groups do: the instrumented APS tests
@@ -336,7 +350,6 @@ class CoreObjectsModule {
         activePluginProvider: Provider<ActivePlugin>,
         @ApplicationScope appScopeProvider: Provider<CoroutineScope>,
         fabricPrivacyProvider: Provider<FabricPrivacy>,
-        runningModeExpiryJobProvider: Provider<RunningModeExpiryJob>,
         localAlertUtilsProvider: Provider<LocalAlertUtils>,
         persistenceLayerProvider: Provider<PersistenceLayer>,
         configProvider: Provider<Config>,
@@ -397,7 +410,6 @@ class CoreObjectsModule {
         activePluginProvider,
         appScopeProvider,
         fabricPrivacyProvider,
-        runningModeExpiryJobProvider,
         localAlertUtilsProvider,
         persistenceLayerProvider,
         configProvider,

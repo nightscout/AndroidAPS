@@ -20,6 +20,8 @@ import app.aaps.core.interfaces.scenes.SceneActions
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.autotune.Autotune
+import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryJob
+import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler
 import app.aaps.core.interfaces.di.DeferredRef
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
@@ -215,6 +217,8 @@ class MetroGraphs @Inject constructor(
     /** The loop, for the Dagger half. */
     val loop: Loop get() = root.loop
     val autotune: Autotune get() = root.autotune
+    val runningModeReconciler: RunningModeReconciler get() = root.runningModeReconciler
+    val runningModeExpiryJob: RunningModeExpiryJob get() = root.runningModeExpiryJob
 
     /** openAPS pieces Metro builds; only those the instrumented APS tests inject through Dagger. */
     val glucoseStatusCalculatorSMB: GlucoseStatusCalculatorSMB get() = root.glucoseStatusCalculatorSMB

@@ -1,5 +1,8 @@
 package app.aaps.plugins.aps.loop.runningMode
 
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import app.aaps.core.data.model.TB
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
@@ -30,7 +33,8 @@ import app.aaps.core.interfaces.utils.DateUtil
  * under its constraints. `BGTaskScheduler` on iOS is best effort and may decline to run at all, so
  * the safety net is weaker there - that gap is real and is not closed by sharing this class.
  */
-class RunningModeExpiryJob(
+@SingleIn(AppScope::class)
+class RunningModeExpiryJob @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val config: Config,
     private val dateUtil: DateUtil,
