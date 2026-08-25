@@ -144,61 +144,10 @@ class ApsPluginsModule {
         commandQueue = commandQueue
     )
 
-    @Provides
-    @Singleton
-    fun provideLoopPlugin(
-        aapsLogger: AAPSLogger,
-        rxBus: RxBus,
-        preferences: Preferences,
-        config: Config,
-        constraintChecker: ConstraintsChecker,
-        rh: ResourceHelper,
-        profileFunction: ProfileFunction,
-        context: Context,
-        commandQueue: CommandQueue,
-        activePlugin: ActivePlugin,
-        processedTbrEbData: ProcessedTbrEbData,
-        receiverStatusStore: ReceiverStatusStore,
-        fabricPrivacy: FabricPrivacy,
-        dateUtil: DateUtil,
-        uel: UserEntryLogger,
-        persistenceLayer: PersistenceLayer,
-        uiInteraction: UiInteraction,
-        notificationManager: NotificationManager,
-        pumpEnactResultProvider: Provider<PumpEnactResult>,
-        processedDeviceStatusData: ProcessedDeviceStatusData,
-        pumpStatusProvider: PumpStatusProvider,
-        decimalFormatter: DecimalFormatter,
-        ch: ConcentrationHelper,
-        carbSuggestionActions: CarbSuggestionActions,
-        @ApplicationScope appScope: CoroutineScope
-    ): LoopPlugin = LoopPlugin(
-        aapsLogger = aapsLogger,
-        rxBus = rxBus,
-        preferences = preferences,
-        config = config,
-        constraintChecker = constraintChecker,
-        rh = rh,
-        profileFunction = profileFunction,
-        context = context,
-        commandQueue = commandQueue,
-        activePlugin = activePlugin,
-        processedTbrEbData = processedTbrEbData,
-        receiverStatusStore = receiverStatusStore,
-        fabricPrivacy = fabricPrivacy,
-        dateUtil = dateUtil,
-        uel = uel,
-        persistenceLayer = persistenceLayer,
-        uiInteraction = uiInteraction,
-        notificationManager = notificationManager,
-        pumpEnactResultProvider = pumpEnactResultProvider,
-        processedDeviceStatusData = processedDeviceStatusData,
-        pumpStatusProvider = pumpStatusProvider,
-        decimalFormatter = decimalFormatter,
-        ch = ch,
-        carbSuggestionActions = carbSuggestionActions,
-        appScope = appScope
-    )
+    // LoopPlugin builds itself now: Metro reads its javax @Inject and @Singleton through this module's
+    // Dagger interop, and the class contributes itself at key 200 and binds the Loop interface.
+    // `CoreObjectsModule.provideLoop` carries it back to the Dagger half.
+
 
     // ---- Autotune ----------------------------------------------------------------------------
 
@@ -306,17 +255,11 @@ class ApsPluginsModule {
     @Suppress("unused")
     abstract class Bindings {
 
-        @Binds abstract fun bindLoop(plugin: LoopPlugin): Loop
 
         @Binds abstract fun bindAutotune(plugin: AutotunePlugin): Autotune
 
         // @IntKey block 200-240, step 10 - taken from the deleted ApsPluginsListModule, NOT inferred.
         // These decide plugin order; a wrong value here reorders the list silently.
-        @Binds
-        @AllConfigs
-        @IntoMap
-        @IntKey(200)
-        abstract fun bindLoopPlugin(plugin: LoopPlugin): PluginBase
 
 
         @Binds

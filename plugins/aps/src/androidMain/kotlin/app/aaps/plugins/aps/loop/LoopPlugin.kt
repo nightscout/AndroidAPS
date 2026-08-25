@@ -1,5 +1,10 @@
 package app.aaps.plugins.aps.loop
 
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.IntKey as MetroIntKey
+import dev.zacsweers.metro.binding
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.PendingIntent
@@ -105,6 +110,9 @@ import javax.inject.Singleton
 import kotlin.math.abs
 import android.app.NotificationManager as AndroidNotificationManager
 
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@MetroIntKey(200)
+@ContributesBinding(AppScope::class, binding = binding<Loop>())
 @Singleton
 class LoopPlugin @Inject constructor(
     aapsLogger: AAPSLogger,

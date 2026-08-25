@@ -11,6 +11,20 @@ plugins {
     alias(libs.plugins.metro)
 }
 
+metro {
+    interop {
+        // Only for the Android side of this module. `LoopPlugin` asks for `@ApplicationScope
+        // CoroutineScope`, and that qualifier is javax - Metro ignores it without this, so the parameter
+        // resolves to nothing and arrives null at construction. The same switch is already on in
+        // :implementation, :plugins:constraints, :plugins:source, :plugins:automation and
+        // :plugins:configuration.
+        //
+        // It changes nothing for commonMain: no javax annotation can appear there anyway, which is why
+        // the openAPS calculators and plugins in this module carry Metro's own annotations.
+        includeDagger()
+    }
+}
+
 // Same generator as the other converted plugins, pointed at this module's strings.
 val generateApsStrings = tasks.register<GenerateKeyStringsTask>("generateApsStrings") {
     resDir.set(layout.projectDirectory.dir("src/androidMain/res"))

@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.work.WorkManager
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.ui.compose.history.HistoryScope
 import app.aaps.core.ui.search.SearchableProvider
@@ -113,7 +114,8 @@ class AapsLeaves(
     // builds those. APSResult is asked for through a Provider - one result object per loop run.
     private val apsResultProvider: Provider<APSResult>,
     private val profilerProvider: Provider<Profiler>,
-    private val loopProvider: Provider<Loop>,
+    // Dagger owns this one; LoopPlugin needs it and Metro builds LoopPlugin now.
+    private val pumpStatusProviderProvider: Provider<PumpStatusProvider>,
     private val dateUtilProvider: Provider<DateUtil>,
     private val profileFunctionProvider: Provider<ProfileFunction>,
     private val commandQueueProvider: Provider<CommandQueue>,
@@ -221,7 +223,9 @@ class AapsLeaves(
     @Provides fun calculationSignalsEmitter(): CalculationSignalsEmitter = calculationSignalsEmitterProvider.get()
     @Provides fun apsResult(): APSResult = apsResultProvider.get()
     @Provides fun profiler(): Profiler = profilerProvider.get()
-    @Provides fun loop(): Loop = loopProvider.get()
+    // No loop() leaf any more: Metro builds LoopPlugin, so Loop travels the other way, through
+    // `CoreObjectsModule.provideLoop`.
+    @Provides fun pumpStatusProvider(): PumpStatusProvider = pumpStatusProviderProvider.get()
     @Provides fun dateUtil(): DateUtil = dateUtilProvider.get()
     @Provides fun profileFunction(): ProfileFunction = profileFunctionProvider.get()
     @Provides fun commandQueue(): CommandQueue = commandQueueProvider.get()

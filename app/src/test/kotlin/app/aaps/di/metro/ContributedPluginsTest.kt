@@ -35,9 +35,10 @@ class ContributedPluginsTest {
             10,
             // sensitivity
             100, 110, 120,
-            // the three openAPS algorithms. Unqualified, matching the @AllConfigs bucket the Dagger
-            // binds used - NOT @APS, despite the module they came from being called ApsPluginsModule.
-            210, 220, 230,
+            // the loop itself, and the three openAPS algorithms. Unqualified, matching the @AllConfigs
+            // bucket the Dagger binds used - NOT @APS, despite the module they came from being called
+            // ApsPluginsModule.
+            200, 210, 220, 230,
             // source - all sixteen. 400, 410 and 440 are also bound to an interface; Dagger delegates
             // to these instances in CoreObjectsModule rather than building its own.
             400, 410, 420, 430, 440, 450, 460, 470, 480, 490, 500, 510, 520, 530, 540, 550,

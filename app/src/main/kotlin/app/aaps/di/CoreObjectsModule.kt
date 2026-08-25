@@ -97,6 +97,7 @@ import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.stats.TirCalculator
 import app.aaps.core.interfaces.stats.DexcomTirCalculator
+import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.insulin.InsulinManager
@@ -243,6 +244,16 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideIobCobCalculator(graphs: MetroGraphs): IobCobCalculator = graphs.iobCobCalculator
 
     /*
+     * The loop, from Metro.
+     *
+     * A reversal rather than a new delegate: `Loop` used to travel Dagger -> Metro through `AapsLeaves`,
+     * because Dagger built `LoopPlugin`. Metro builds it now, so it travels the other way. Around fifty
+     * classes ask for `Loop` and most are still Dagger-built, so the direction has to be right - two
+     * loops would not fail anything, they would just both run.
+     */
+    @Provides @Singleton fun provideLoop(graphs: MetroGraphs): Loop = graphs.loop
+
+    /*
      * openAPS pieces, from Metro, which builds them in `:plugins:aps` commonMain.
      *
      * All six, because Dagger asks for all six. Two groups do: the instrumented APS tests
@@ -327,7 +338,7 @@ class CoreObjectsModule {
         calculationSignalsEmitterProvider: Provider<CalculationSignalsEmitter>,
         apsResultProvider: Provider<APSResult>,
         profilerProvider: Provider<Profiler>,
-        loopProvider: Provider<Loop>,
+        pumpStatusProviderProvider: Provider<PumpStatusProvider>,
         dateUtilProvider: Provider<DateUtil>,
         profileFunctionProvider: Provider<ProfileFunction>,
         commandQueueProvider: Provider<CommandQueue>,
@@ -387,7 +398,7 @@ class CoreObjectsModule {
         calculationSignalsEmitterProvider,
         apsResultProvider,
         profilerProvider,
-        loopProvider,
+        pumpStatusProviderProvider,
         dateUtilProvider,
         profileFunctionProvider,
         commandQueueProvider,

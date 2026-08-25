@@ -211,6 +211,9 @@ class MetroGraphs @Inject constructor(
     /** The live loop's calculator, for the Dagger consumers - not the history browser's. */
     val iobCobCalculator: IobCobCalculator get() = root.iobCobCalculator
 
+    /** The loop, for the Dagger half. */
+    val loop: Loop get() = root.loop
+
     /** openAPS pieces Metro builds; only those the instrumented APS tests inject through Dagger. */
     val glucoseStatusCalculatorSMB: GlucoseStatusCalculatorSMB get() = root.glucoseStatusCalculatorSMB
     val determineBasalSMB: DetermineBasalSMB get() = root.determineBasalSMB

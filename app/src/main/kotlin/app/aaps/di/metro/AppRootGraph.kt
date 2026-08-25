@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
+import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.plugins.aps.openAPS.DeltaCalculator
 import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAMA
@@ -216,6 +217,9 @@ interface AppRootGraph : MetroViewModelMultibindings {
 
     /** The live loop's calculator. A history window has its own, at `HistoryWindowScope`. */
     val iobCobCalculator: IobCobCalculator
+
+    /** The loop. Built here now; Dagger receives it through `CoreObjectsModule.provideLoop`. */
+    val loop: Loop
 
     /**
      * openAPS pieces Metro builds, for the Dagger side to borrow.
