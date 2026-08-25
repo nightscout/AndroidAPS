@@ -1,6 +1,9 @@
 package app.aaps.di.metro
 
 import androidx.work.WorkManager
+import app.aaps.core.interfaces.pump.TemporaryBasalStorage
+import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
+import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.interfaces.maintenance.CloudDirectoryManager
 import app.aaps.core.interfaces.overview.graph.GraphConfigRepository
@@ -84,7 +87,8 @@ import app.aaps.core.interfaces.insulin.InsulinManager
 class MetroGraphs @Inject constructor(
 
     private val openHumansMetroBridge: Provider<OpenHumansMetroBridge>,
-    private val leaves: Provider<AapsLeaves>
+    private val leaves: Provider<AapsLeaves>,
+    private val pumpLeaves: Provider<PumpLeaves>
 ) {
 
 
@@ -103,7 +107,7 @@ class MetroGraphs @Inject constructor(
 
     /** The one Metro root. Sub-graphs are extensions of it rather than roots of their own. */
     private val root: AppRootGraph by lazy {
-        createGraphFactory<AppRootGraph.Factory>().create(leaves.get(), CoreObjectsGraph)
+        createGraphFactory<AppRootGraph.Factory>().create(leaves.get(), CoreObjectsGraph, pumpLeaves.get())
     }
 
     private val source: SourceMetroGraph get() = root.sourceGraph
@@ -192,6 +196,9 @@ class MetroGraphs @Inject constructor(
     val objectives: Objectives get() = root.objectivesPlugin
     val signatureVerifier: SignatureVerifierPlugin get() = root.signatureVerifierPlugin
     val trendCalculator: TrendCalculator get() = root.trendCalculator
+    val temporaryBasalStorage: TemporaryBasalStorage get() = root.temporaryBasalStorage
+    val detailedBolusInfoStorage: DetailedBolusInfoStorage get() = root.detailedBolusInfoStorage
+    val blePreCheck: BlePreCheck get() = root.blePreCheck
     val visibilityContext: VisibilityContext get() = root.visibilityContext
     val cloudDirectoryManager: CloudDirectoryManager get() = root.cloudDirectoryManager
     val graphConfigRepository: GraphConfigRepository get() = root.graphConfigRepository

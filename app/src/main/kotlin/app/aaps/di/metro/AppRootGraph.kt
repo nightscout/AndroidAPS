@@ -1,5 +1,8 @@
 package app.aaps.di.metro
 
+import app.aaps.core.interfaces.pump.TemporaryBasalStorage
+import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
+import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.interfaces.maintenance.CloudDirectoryManager
 import app.aaps.core.interfaces.overview.graph.GraphConfigRepository
@@ -154,6 +157,9 @@ interface AppRootGraph : MetroViewModelMultibindings {
      * `CoreObjectsModule`; Dagger must never construct its own, or there would be two.
      */
     val trendCalculator: TrendCalculator
+    val temporaryBasalStorage: TemporaryBasalStorage
+    val detailedBolusInfoStorage: DetailedBolusInfoStorage
+    val blePreCheck: BlePreCheck
     val visibilityContext: VisibilityContext
     val cloudDirectoryManager: CloudDirectoryManager
     val graphConfigRepository: GraphConfigRepository
@@ -219,7 +225,8 @@ interface AppRootGraph : MetroViewModelMultibindings {
          */
         fun create(
             @Includes leaves: AapsLeaves,
-            @Includes coreObjects: CoreObjectsGraph
+            @Includes coreObjects: CoreObjectsGraph,
+            @Includes pumpLeaves: PumpLeaves
         ): AppRootGraph
     }
 }

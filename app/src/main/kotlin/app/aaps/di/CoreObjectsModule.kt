@@ -2,6 +2,11 @@ package app.aaps.di
 
 import android.content.Context
 import android.telephony.SmsManager
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.pump.TemporaryBasalStorage
+import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
+import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.ui.compose.history.HistoryScope
 import app.aaps.core.ui.search.SearchableProvider
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
@@ -190,6 +195,9 @@ class CoreObjectsModule {
      * delegate is what stops Dagger building a second one.
      */
     @Provides @Singleton fun provideTrendCalculator(graphs: MetroGraphs): TrendCalculator = graphs.trendCalculator
+    @Provides @Singleton fun provideTemporaryBasalStorage(graphs: MetroGraphs): TemporaryBasalStorage = graphs.temporaryBasalStorage
+    @Provides @Singleton fun provideDetailedBolusInfoStorage(graphs: MetroGraphs): DetailedBolusInfoStorage = graphs.detailedBolusInfoStorage
+    @Provides @Singleton fun provideBlePreCheck(graphs: MetroGraphs): BlePreCheck = graphs.blePreCheck
     @Provides @Singleton fun provideVisibilityContext(graphs: MetroGraphs): VisibilityContext = graphs.visibilityContext
     @Provides @Singleton fun provideCloudDirectoryManager(graphs: MetroGraphs): CloudDirectoryManager = graphs.cloudDirectoryManager
     @Provides @Singleton fun provideGraphConfigRepository(graphs: MetroGraphs): GraphConfigRepository = graphs.graphConfigRepository
@@ -283,6 +291,8 @@ class CoreObjectsModule {
         versionCheckerUtilsProvider: Provider<VersionCheckerUtils>,
         passwordCheckProvider: Provider<PasswordCheck>,
         searchableProvidersProvider: Provider<Set<SearchableProvider>>,
+        bolusProgressDataProvider: Provider<BolusProgressData>,
+        pumpEnactResultProvider: Provider<PumpEnactResult>,
         historyScopeProvider: Provider<HistoryScope>,
         importExportPrefsProvider: Provider<ImportExportPrefs>,
         overviewDataProvider: Provider<OverviewData>,
@@ -340,6 +350,8 @@ class CoreObjectsModule {
         versionCheckerUtilsProvider,
         passwordCheckProvider,
         searchableProvidersProvider,
+        bolusProgressDataProvider,
+        pumpEnactResultProvider,
         historyScopeProvider,
         importExportPrefsProvider,
         overviewDataProvider,

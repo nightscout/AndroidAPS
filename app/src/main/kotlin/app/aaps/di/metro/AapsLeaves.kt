@@ -3,6 +3,8 @@ package app.aaps.di.metro
 import android.content.Context
 
 import androidx.work.WorkManager
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.ui.compose.history.HistoryScope
 import app.aaps.core.ui.search.SearchableProvider
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
@@ -168,6 +170,8 @@ class AapsLeaves(
      * window is what keeps history browsing off the live loop's calculation objects, so an app-scoped
      * view model reading it is fine.
      */
+    private val bolusProgressDataProvider: Provider<BolusProgressData>,
+    private val pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val historyScopeProvider: Provider<HistoryScope>,
     private val importExportPrefsProvider: Provider<ImportExportPrefs>,
     private val overviewDataProvider: Provider<OverviewData>,
@@ -251,6 +255,10 @@ class AapsLeaves(
     @Provides fun sntpClient(): SntpClient = sntpClientProvider.get()
     @Provides fun xDripBroadcast(): XDripBroadcast = xDripBroadcastProvider.get()
     @Provides fun l(): L = lProvider.get()
+    @Provides fun bolusProgressData(): BolusProgressData = bolusProgressDataProvider.get()
+
+    /** A value object: unscoped, as its Dagger binding is. */
+    @Provides fun pumpEnactResult(): PumpEnactResult = pumpEnactResultProvider.get()
     @Provides fun historyScope(): HistoryScope = historyScopeProvider.get()
     @Provides fun importExportPrefs(): ImportExportPrefs = importExportPrefsProvider.get()
     @Provides fun searchableProviders(): Set<SearchableProvider> = searchableProvidersProvider.get()

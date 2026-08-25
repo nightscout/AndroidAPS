@@ -73,13 +73,10 @@ import app.aaps.implementation.profiling.ProfilerImpl
 import app.aaps.implementation.protection.ExportPasswordDataStoreImpl
 import app.aaps.implementation.protection.PasswordCheckImpl
 import app.aaps.implementation.protection.SecureEncryptImpl
-import app.aaps.implementation.pump.BlePreCheckImpl
-import app.aaps.implementation.pump.DetailedBolusInfoStorageImpl
 import app.aaps.implementation.pump.PumpEnactResultObject
 import app.aaps.implementation.pump.PumpStatusProviderImpl
 import app.aaps.implementation.pump.PumpSyncImplementation
 import app.aaps.implementation.pump.PumpWithConcentrationImpl
-import app.aaps.implementation.pump.TemporaryBasalStorageImpl
 import app.aaps.implementation.resources.ResourceHelperImpl
 import app.aaps.implementation.sharedPreferences.PreferencesImpl
 import app.aaps.implementation.userEntry.UserEntryPresentationHelperImpl
@@ -141,15 +138,12 @@ class ImplementationModule {
         @Binds fun bindProcessedTbrEbData(pProcessedTbrEbData: ProcessedTbrEbDataImpl): ProcessedTbrEbData
         @Binds fun bindUserEntryLogger(userEntryLoggerImpl: UserEntryLoggerImpl): UserEntryLogger
         @Binds fun bindConcentrationHelper(concentrationHelperImpl: ConcentrationHelperImpl): ConcentrationHelper
-        @Binds fun bindDetailedBolusInfoStorage(detailedBolusInfoStorageImpl: DetailedBolusInfoStorageImpl): DetailedBolusInfoStorage
-        @Binds fun bindTemporaryBasalStorage(temporaryBasalStorageImpl: TemporaryBasalStorageImpl): TemporaryBasalStorage
         @Binds fun bindPasswordCheck(passwordCheckImpl: PasswordCheckImpl): PasswordCheck
         @Binds fun bindExportPasswordCheck(exportPasswordDataStoreImpl: ExportPasswordDataStoreImpl): ExportPasswordDataStore
         @Binds fun bindSecureEncrypt(secureEncryptImpl: SecureEncryptImpl): SecureEncrypt
         @Binds fun bindLoggerUtils(loggerUtilsImpl: LoggerUtilsImpl): LoggerUtils
         @Binds fun bindProfiler(profilerImpl: ProfilerImpl): Profiler
         @Binds fun bindResourceHelper(resourceHelperImpl: ResourceHelperImpl): ResourceHelper
-        @Binds fun bindBlePreCheck(blePreCheckImpl: BlePreCheckImpl): BlePreCheck
         @Binds fun bindLocaleDependentSetting(localeDependentSettingImpl: LocaleDependentSettingImpl): LocaleDependentSetting
         @Binds fun bindPumpWithConcentration(pumpWithConcentrationImpl: PumpWithConcentrationImpl): PumpWithConcentration
         @Binds fun bindPumpStatusGenerator(pumpStatusGeneratorImpl: PumpStatusProviderImpl): PumpStatusProvider

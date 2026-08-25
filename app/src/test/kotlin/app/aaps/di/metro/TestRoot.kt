@@ -28,5 +28,8 @@ fun testRoot(configure: (AapsLeaves) -> Unit = {}): AppRootGraph {
     // failure lands far away - inside a plugin constructor, as "parameter aapsLogger is null".
     val leaves = mock<AapsLeaves>(defaultAnswer = Answers.RETURNS_MOCKS)
     configure(leaves)
-    return createGraphFactory<AppRootGraph.Factory>().create(leaves, CoreObjectsGraph)
+    // PumpLeaves is mocked like AapsLeaves: the test source set compiles against the `full` flavour, so
+    // this is the pump-bearing copy, and no test needs a real BLE transport.
+    return createGraphFactory<AppRootGraph.Factory>()
+        .create(leaves, CoreObjectsGraph, mock<PumpLeaves>(defaultAnswer = Answers.RETURNS_MOCKS))
 }

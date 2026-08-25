@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
@@ -52,8 +53,8 @@ class DanaRSComposeContent(
         onNavigateBack: () -> Unit,
         onSettings: (() -> Unit)?
     ) {
-        val overviewViewModel: DanaRSOverviewViewModel = hiltViewModel()
-        val wizardViewModel: DanaRSPairWizardViewModel = hiltViewModel()
+        val overviewViewModel: DanaRSOverviewViewModel = metroViewModel()
+        val wizardViewModel: DanaRSPairWizardViewModel = metroViewModel()
 
         // Navigation state
         var currentScreen by remember { mutableStateOf(DanaScreen.OVERVIEW) }
