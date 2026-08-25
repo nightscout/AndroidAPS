@@ -20,6 +20,7 @@ import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.di.ApplicationScope
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.dst.DstHelper
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.insulin.InsulinManager
@@ -252,6 +253,18 @@ class CoreObjectsModule {
      * loops would not fail anything, they would just both run.
      */
     @Provides @Singleton fun provideLoop(graphs: MetroGraphs): Loop = graphs.loop
+
+    /*
+     * The member injector, for classes Dagger builds that construct Metro-injected objects by hand.
+     *
+     * The Diaconn services are the first: they are still `DaggerService`s, but the packets they create
+     * fill their fields from Metro's map now. `MainApp` implements this interface the same way for the
+     * Android entry points; this is the same dispatch, reached through Dagger.
+     */
+    @Provides @Singleton fun provideMetroMemberInjector(graphs: MetroGraphs): MetroMemberInjector =
+        object : MetroMemberInjector {
+            override fun injectMembers(target: Any): Boolean = graphs.injectMembers(target)
+        }
 
     /** Autotune, same story: Metro builds the plugin, the automation actions are still Dagger-built. */
     @Provides @Singleton fun provideAutotune(graphs: MetroGraphs): Autotune = graphs.autotune

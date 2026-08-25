@@ -4,8 +4,7 @@ import app.aaps.pump.diaconn.DiaconnG8Pump
 import app.aaps.pump.diaconn.keys.DiaconnStringNonKey
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.verify
@@ -14,16 +13,15 @@ class SerialNumInquireResponsePacketTest : TestBaseWithProfile() {
 
     private lateinit var diaconnG8Pump: DiaconnG8Pump
 
-    private val packetInjector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is SerialNumInquireResponsePacket) {
+    private val packetInjector = MetroMemberInjector {
+        if (it is SerialNumInquireResponsePacket) {
                 it.aapsLogger = aapsLogger
                 it.dateUtil = dateUtil
                 it.diaconnG8Pump = diaconnG8Pump
                 it.preferences = preferences
                 it.rh = rh
-            }
         }
+        true
     }
 
     @BeforeEach

@@ -151,6 +151,9 @@ class MetroGraphs @Inject constructor(
             ?: openHumans.memberInjectors[target::class]
             ?: automation.memberInjectors[target::class]
             ?: source.memberInjectors[target::class]
+            // Contributed straight into the root, which is how a pump module reaches this map without
+            // MetroGraphs naming it - see `contributedMemberInjectors`.
+            ?: root.contributedMemberInjectors[target::class]
             ?: return false
         (injector as MembersInjector<Any>).injectMembers(target)
         return true

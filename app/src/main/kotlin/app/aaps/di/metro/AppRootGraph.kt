@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.di.APS
+import app.aaps.core.interfaces.di.FeatureMemberInjectors
 import app.aaps.core.interfaces.di.NotNSClient
 import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.insulin.InsulinManager
@@ -69,10 +70,12 @@ import app.aaps.plugins.source.di.SourceMetroGraph
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Includes
+import dev.zacsweers.metro.MembersInjector
 import dev.zacsweers.metro.Multibinds
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metrox.viewmodel.MetroViewModelMultibindings
 import javax.inject.Singleton
+import kotlin.reflect.KClass
 
 /**
  * The one Metro root. Everything else hangs off it as a graph extension.
@@ -171,6 +174,21 @@ interface AppRootGraph : MetroViewModelMultibindings {
     @Multibinds(allowEmpty = true)
     @PumpDriver
     val contributedPumpDriverPlugins: Map<Int, PluginBase>
+
+    /**
+     * Member injectors contributed by feature modules, for classes the app constructs by hand.
+     *
+     * The four extensions below the root each carry their own such map, but an extension has to be named
+     * by [MetroGraphs] to be read - and that file is compiled for follower builds, where no pump module
+     * exists. A map declared here instead can be filled from anywhere with `@ContributesTo`, and nothing
+     * pump-specific appears in its type, so a follower simply sees fewer entries.
+     *
+     * This is what replaces `dagger.android`'s `HasAndroidInjector` for the pump protocol classes: a
+     * packet is built with `new`, then fills its own fields from this map.
+     */
+    @Multibinds(allowEmpty = true)
+    @FeatureMemberInjectors
+    val contributedMemberInjectors: Map<KClass<*>, MembersInjector<*>>
 
     /**
      * The ten objectives, in order. `ObjectivesPlugin` takes this list and is built here, so the

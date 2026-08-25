@@ -2,7 +2,7 @@ package app.aaps.pump.diaconn.packet
 
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.diaconn.DiaconnG8Pump
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import javax.inject.Inject
 
 /**
@@ -10,7 +10,7 @@ import javax.inject.Inject
  */
 @Suppress("SpellCheckingInspection")
 class SoundSettingPacket(
-    injector: HasAndroidInjector,
+    injector: MetroMemberInjector,
     private var type: Int, //
     private var intensity: Int //
 ) : DiaconnG8Packet(injector) {

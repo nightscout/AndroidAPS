@@ -35,7 +35,7 @@ import app.aaps.pump.diaconn.packet.DiaconnG8ResponseMessageHashTable
 import app.aaps.pump.diaconn.packet.DiaconnG8SettingResponseMessageHashTable
 import app.aaps.pump.diaconn.packet.InjectionBlockReportPacket
 import app.aaps.pump.diaconn.packet.InsulinLackReportPacket
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import java.util.UUID
 import java.util.concurrent.ScheduledFuture
 import javax.inject.Inject
@@ -44,7 +44,7 @@ import javax.inject.Singleton
 @Suppress("SpellCheckingInspection")
 @Singleton
 class BLECommonService @Inject internal constructor(
-    private val injector: HasAndroidInjector,
+    private val injector: MetroMemberInjector,
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val context: Context,

@@ -9,8 +9,7 @@ import app.aaps.pump.diaconn.database.DiaconnHistoryRecordDao
 import app.aaps.pump.diaconn.keys.DiaconnBooleanKey
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
@@ -31,9 +30,8 @@ class BigLogInquireResponsePacketTest : TestBaseWithProfile() {
 
     private lateinit var diaconnG8Pump: DiaconnG8Pump
 
-    private val packetInjector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is BigLogInquireResponsePacket) {
+    private val packetInjector = MetroMemberInjector {
+        if (it is BigLogInquireResponsePacket) {
                 it.aapsLogger = aapsLogger
                 it.dateUtil = dateUtil
                 it.rxBus = rxBus
@@ -47,8 +45,8 @@ class BigLogInquireResponsePacketTest : TestBaseWithProfile() {
                 it.diaconnHistoryRecordDao = diaconnHistoryRecordDao
                 it.diaconnLogUploader = diaconnLogUploader
                 it.context = context
-            }
         }
+        true
     }
 
     @BeforeEach

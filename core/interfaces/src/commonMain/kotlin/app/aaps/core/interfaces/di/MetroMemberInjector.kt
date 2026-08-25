@@ -12,7 +12,8 @@ package app.aaps.core.interfaces.di
  * `MembersInjector`, built at compile time. dagger.android resolves the same thing reflectively at
  * runtime, which is why a missing entry there is a crash rather than a build failure.
  */
-interface MetroMemberInjector {
+// A `fun interface` so a test can supply one as a lambda, the way `HasAndroidInjector` allowed.
+fun interface MetroMemberInjector {
 
     /**
      * Fills the `@Inject` fields of [target].

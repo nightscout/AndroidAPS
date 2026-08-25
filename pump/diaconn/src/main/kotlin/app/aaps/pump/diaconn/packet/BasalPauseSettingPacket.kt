@@ -2,14 +2,14 @@ package app.aaps.pump.diaconn.packet
 
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.diaconn.DiaconnG8Pump
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import javax.inject.Inject
 
 /**
  * Basal Pause Setting Packet
  */
 class BasalPauseSettingPacket(
-    injector: HasAndroidInjector,
+    injector: MetroMemberInjector,
     private var status: Int //(1:pause, 2: cancel pause)
 ) : DiaconnG8Packet(injector) {
 

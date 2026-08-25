@@ -2,7 +2,7 @@ package app.aaps.pump.diaconn.packet
 
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.diaconn.DiaconnG8Pump
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import javax.inject.Inject
 
 /**
@@ -10,7 +10,7 @@ import javax.inject.Inject
  */
 @Suppress("SpellCheckingInspection")
 class TempBasalSettingPacket(
-    injector: HasAndroidInjector,
+    injector: MetroMemberInjector,
     private var status: Int, // (1:tempbasal running, 2:tempbasal dismissed)
     private var time: Int,  //hour group (1=00~05, 2=06~11, 3=12~17, 4=18~23)
     private var injectRateRatio: Int

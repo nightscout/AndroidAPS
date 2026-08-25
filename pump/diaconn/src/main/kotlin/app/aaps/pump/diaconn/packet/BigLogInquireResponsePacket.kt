@@ -57,7 +57,7 @@ import app.aaps.pump.diaconn.pumplog.LogTbStartV3
 import app.aaps.pump.diaconn.pumplog.LogTbStopV3
 import app.aaps.pump.diaconn.pumplog.PumpLogUtil
 import app.aaps.shared.impl.extensions.safeGetPackageInfo
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import kotlinx.coroutines.runBlocking
 import org.apache.commons.lang3.time.DateUtils
 import org.joda.time.DateTime
@@ -70,7 +70,7 @@ import javax.inject.Inject
  * BigLogInquireResponsePacket
  */
 class BigLogInquireResponsePacket(
-    injector: HasAndroidInjector
+    injector: MetroMemberInjector
 ) : DiaconnG8Packet(injector) {
 
     @Inject lateinit var rxBus: RxBus

@@ -75,7 +75,7 @@ import app.aaps.pump.diaconn.packet.TimeInquirePacket
 import app.aaps.pump.diaconn.packet.TimeSettingPacket
 import app.aaps.pump.diaconn.pumplog.PumpLogUtil
 import dagger.android.DaggerService
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
@@ -97,7 +97,7 @@ import kotlin.time.Duration.Companion.milliseconds
 
 class DiaconnG8Service : DaggerService() {
 
-    @Inject lateinit var injector: HasAndroidInjector
+    @Inject lateinit var injector: MetroMemberInjector
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var preferences: Preferences
