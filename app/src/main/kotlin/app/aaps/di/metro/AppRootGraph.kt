@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
+import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.scenes.ActiveSceneSync
 import app.aaps.implementation.scenes.ActiveSceneManager
 import app.aaps.core.interfaces.scenes.SceneChainResolver
@@ -205,6 +206,9 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val bgQualityCheckPlugin: BgQualityCheckPlugin
     val dstHelperPlugin: DstHelperPlugin
     val objectivesPlugin: ObjectivesPlugin
+
+    /** The live loop's calculator. A history window has its own, at `HistoryWindowScope`. */
+    val iobCobCalculator: IobCobCalculator
     val signatureVerifierPlugin: SignatureVerifierPlugin
 
     /**

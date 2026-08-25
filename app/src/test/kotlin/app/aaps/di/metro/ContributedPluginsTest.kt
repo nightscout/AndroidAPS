@@ -30,6 +30,9 @@ class ContributedPluginsTest {
         assertThat(plugins.keys).containsExactly(
             // persistent notification
             0,
+            // iob/cob calculator, built in MainPluginsBindings. The history browser's second one is
+            // scoped to a window and deliberately never reaches this map.
+            10,
             // sensitivity
             100, 110, 120,
             // source - all sixteen. 400, 410 and 440 are also bound to an interface; Dagger delegates
@@ -46,6 +49,27 @@ class ContributedPluginsTest {
             // merges this bucket unconditionally anyway.
             1000
         )
+    }
+
+    @Test
+    fun `a history window calculates with its own calculator, not the loop's`() {
+        // The inverse of every other instance-identity test here, and the reason `MainPluginsBindings`
+        // does not just annotate the class: the window extension hangs off a root that now binds
+        // IobCobCalculator too, so an extension binding that failed to shadow the parent's would hand
+        // the browser the live loop's calculator. Nothing would crash - the browser would quietly
+        // recalculate the running loop's autosens data over whatever day the user opened.
+        val root = testRoot()
+        val window = root.historyWindowFactory.create()
+
+        assertThat(window.iobCobCalculator).isNotSameInstanceAs(root.iobCobCalculator)
+    }
+
+    @Test
+    fun `two history windows do not share a calculator`() {
+        val root = testRoot()
+
+        assertThat(root.historyWindowFactory.create().iobCobCalculator)
+            .isNotSameInstanceAs(root.historyWindowFactory.create().iobCobCalculator)
     }
 
     @Test

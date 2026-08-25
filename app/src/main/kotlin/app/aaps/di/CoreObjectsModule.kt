@@ -41,6 +41,7 @@ import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -222,6 +223,18 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideSceneActions(graphs: MetroGraphs): SceneActions = graphs.sceneActions
 
     /*
+     * The live loop's calculator, from Metro, which builds it in `MainPluginsBindings`.
+     *
+     * Around fifty classes ask for this, plenty of them still Dagger-built - the instrumented tests
+     * inject it directly. Without this they would get a second calculator, working from its own
+     * autosens data while the loop used another.
+     *
+     * Note this is NOT the history browser's calculator. That one is scoped to a window in
+     * `HistoryWindowGraph` and reaches its consumers through `HistoryBrowserData`, never through here.
+     */
+    @Provides @Singleton fun provideIobCobCalculator(graphs: MetroGraphs): IobCobCalculator = graphs.iobCobCalculator
+
+    /*
      * The scene state holder, by class, from Metro.
      *
      * `SceneExecutor`, `SceneAutomationApiImpl` and `SceneExpiryWorker` are built by Dagger and ask for
@@ -277,7 +290,7 @@ class CoreObjectsModule {
         localAlertUtilsProvider: Provider<LocalAlertUtils>,
         persistenceLayerProvider: Provider<PersistenceLayer>,
         configProvider: Provider<Config>,
-        iobCobCalculatorProvider: Provider<IobCobCalculator>,
+        calculationSignalsEmitterProvider: Provider<CalculationSignalsEmitter>,
         loopProvider: Provider<Loop>,
         dateUtilProvider: Provider<DateUtil>,
         profileFunctionProvider: Provider<ProfileFunction>,
@@ -335,7 +348,7 @@ class CoreObjectsModule {
         localAlertUtilsProvider,
         persistenceLayerProvider,
         configProvider,
-        iobCobCalculatorProvider,
+        calculationSignalsEmitterProvider,
         loopProvider,
         dateUtilProvider,
         profileFunctionProvider,

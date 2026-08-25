@@ -23,6 +23,7 @@ import app.aaps.core.interfaces.di.DeferredRef
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.constraints.Objectives
+import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.dst.DstHelper
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.source.DexcomBoyda
@@ -200,6 +201,9 @@ class MetroGraphs @Inject constructor(
 
     /** Same plugin as [objectives], by class. The instrumented tests ask for the concrete type. */
     val objectivesPlugin: ObjectivesPlugin get() = root.objectivesPlugin
+
+    /** The live loop's calculator, for the Dagger consumers - not the history browser's. */
+    val iobCobCalculator: IobCobCalculator get() = root.iobCobCalculator
     val signatureVerifier: SignatureVerifierPlugin get() = root.signatureVerifierPlugin
     val trendCalculator: TrendCalculator get() = root.trendCalculator
     val carbSuggestionActions: CarbSuggestionActions get() = root.carbSuggestionActions

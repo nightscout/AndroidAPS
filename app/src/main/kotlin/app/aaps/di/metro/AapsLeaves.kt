@@ -29,7 +29,7 @@ import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.dst.DstHelper
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
-import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.maintenance.FileListProvider
@@ -104,7 +104,9 @@ class AapsLeaves(
     private val localAlertUtilsProvider: Provider<LocalAlertUtils>,
     private val persistenceLayerProvider: Provider<PersistenceLayer>,
     private val configProvider: Provider<Config>,
-    private val iobCobCalculatorProvider: Provider<IobCobCalculator>,
+    // Dagger owns the app-wide emitter - `WorkflowModule.provideMainSignalsEmitter`. A history window
+    // has its own, built in `HistoryWindowGraph`, which is why this one is not simply contributed.
+    private val calculationSignalsEmitterProvider: Provider<CalculationSignalsEmitter>,
     private val loopProvider: Provider<Loop>,
     private val dateUtilProvider: Provider<DateUtil>,
     private val profileFunctionProvider: Provider<ProfileFunction>,
@@ -208,7 +210,9 @@ class AapsLeaves(
     @Provides fun localAlertUtils(): LocalAlertUtils = localAlertUtilsProvider.get()
     @Provides fun persistenceLayer(): PersistenceLayer = persistenceLayerProvider.get()
     @Provides fun config(): Config = configProvider.get()
-    @Provides fun iobCobCalculator(): IobCobCalculator = iobCobCalculatorProvider.get()
+    // No iobCobCalculator() any more: Metro builds it now, in `MainPluginsBindings`, and Dagger receives
+    // it through `CoreObjectsModule.provideIobCobCalculator`.
+    @Provides fun calculationSignalsEmitter(): CalculationSignalsEmitter = calculationSignalsEmitterProvider.get()
     @Provides fun loop(): Loop = loopProvider.get()
     @Provides fun dateUtil(): DateUtil = dateUtilProvider.get()
     @Provides fun profileFunction(): ProfileFunction = profileFunctionProvider.get()
