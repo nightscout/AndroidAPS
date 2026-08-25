@@ -29,6 +29,48 @@
 - When spawning agents that use Bash, ALWAYS include this rule in the agent prompt
 - See `.claude/CLAUDE_COMMANDS.md` for platform-specific working commands
 
+## macOS Machine (used for iOS builds)
+
+Everything above assumes the Windows machine. The same repo is also checked out on a Mac, which
+is the only place the iOS side can be linked and tested. Check `uname` if you are not sure which
+machine you are on. On macOS these rules replace the Windows ones:
+
+- **Use `./gradlew`, never `./gradlew.bat`.** Stop daemons with `./gradlew --stop`.
+- **`which` works, `where` does not.** This is the opposite of the Windows rule.
+- **There is no `powershell.exe`.** `sort` and `uniq` are normal commands here, so the Windows
+  workaround of wrapping them in PowerShell does not apply.
+- **`chmod` exists and is a normal command**, but you should almost never need it. `gradlew`
+  already has the exec bit.
+- **Use the scratchpad directory for screenshots and temporary files**, not `%TEMP%`.
+- The pipe-hides-the-exit-code warning still holds. Redirect to a log file and grep it.
+- Do not install Xcode, Homebrew or CocoaPods. The Mac is already set up (Xcode 26.6, iOS SDK and
+  simulator runtime, JDK 21, Android SDK, Kotlin/Native in `~/.konan`). No module uses a
+  `cocoapods` block, so CocoaPods is not needed at all.
+
+### What each machine can run
+
+Kotlin/Native cross compiles klibs for every target from either host, so `compileKotlinIosArm64`
+and `compileKotlinMingwX64` both work everywhere. Only the tests are limited, and the two hosts
+are exact mirrors of each other:
+
+| Test task | Windows | macOS |
+|---|---|---|
+| `jvmTest`, `testFullDebugUnitTest` | runs | runs |
+| `mingwX64Test` | runs | SKIPPED |
+| `iosSimulatorArm64Test` | SKIPPED | runs |
+
+This means `runtests.sh` (which calls `allTests`) never covers all native targets on one machine.
+Before claiming that native code is fully tested, the same commit has to be run on both.
+
+Useful commands on the Mac:
+
+- Compile the iOS device target for every KMP module: `./gradlew compileKotlinIosArm64 --no-daemon`
+- Run the iOS simulator tests: `./gradlew iosSimulatorArm64Test --no-daemon`
+
+Note that today only `:core:data` has a `commonTest` source set, so it is the only module whose
+tests actually run on the simulator. The other KMP modules keep their tests in `androidHostTest`,
+and their `linkDebugTestIosSimulatorArm64` task reports `NO-SOURCE`.
+
 ## Token Usage Reduction (Delay Conversation Compaction)
 
 - **Use Task agents for exploration instead of direct Glob/Grep:**
