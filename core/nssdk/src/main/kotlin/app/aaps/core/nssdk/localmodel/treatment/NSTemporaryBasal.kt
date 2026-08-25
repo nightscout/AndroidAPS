@@ -1,7 +1,11 @@
 package app.aaps.core.nssdk.localmodel.treatment
 
 import app.aaps.core.nssdk.localmodel.entry.NsUnits
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
+@SerialName("NSTemporaryBasal")
 data class NSTemporaryBasal(
     override var date: Long?,
     override val device: String? = null,

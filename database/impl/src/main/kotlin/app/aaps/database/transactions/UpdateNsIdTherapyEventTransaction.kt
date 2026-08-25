@@ -5,7 +5,7 @@ import app.aaps.database.entities.TherapyEvent
 class UpdateNsIdTherapyEventTransaction(val therapyEvents: List<TherapyEvent>) : Transaction<UpdateNsIdTherapyEventTransaction.TransactionResult>() {
 
     val result = TransactionResult()
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         for (therapyEvent in therapyEvents) {
             val current = database.therapyEventDao.findById(therapyEvent.id)
             if (current != null && current.interfaceIDs.nightscoutId != therapyEvent.interfaceIDs.nightscoutId) {

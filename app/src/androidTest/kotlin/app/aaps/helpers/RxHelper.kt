@@ -83,6 +83,27 @@ class RxHelper @Inject constructor(
         eventHashMap.remove(clazz)
     }
 
+    /**
+     * Wait until condition is met by polling
+     *
+     * @param comment Description for logging
+     * @param maxSeconds max waiting time in seconds
+     * @param condition Condition to check
+     */
+    fun waitUntil(comment: String = "", maxSeconds: Long = 40, condition: () -> Boolean): Boolean {
+        val start = dateUtil.now()
+        while (!condition()) {
+            if (start + T.secs(maxSeconds).msecs() < dateUtil.now()) {
+                aapsLogger.error("Condition not met: $comment")
+                return false
+            }
+            Thread.sleep(100)
+            aapsLogger.debug("Waiting for condition: $comment")
+        }
+        aapsLogger.info(LTag.EVENTS, "Condition met: $comment")
+        return true
+    }
+
     fun clear() {
         disposable.clear()
     }

@@ -11,6 +11,7 @@ import app.aaps.pump.medtrum.extension.toInt
 import app.aaps.pump.medtrum.extension.toLong
 import app.aaps.pump.medtrum.util.MedtrumTimeUtil
 import dagger.android.HasAndroidInjector
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import kotlin.math.round
 
@@ -73,7 +74,7 @@ class ActivatePacket(injector: HasAndroidInjector, private val basalProfile: Byt
 
         val hourlyMaxInsulin: Int = round(medtrumPump.desiredHourlyMaxInsulin / 0.05).toInt()
         val dailyMaxInsulin: Int = round(medtrumPump.desiredDailyMaxInsulin / 0.05).toInt()
-        val currentTDD: Double = tddCalculator.calculateToday()?.totalAmount?.div(0.05) ?: 0.0
+        val currentTDD: Double = runBlocking { tddCalculator.calculateToday() }?.totalAmount?.div(0.05) ?: 0.0
 
         return byteArrayOf(opCode) + autoSuspendEnable + autoSuspendTime + patchExpiration + alarmSetting + lowSuspend + predictiveLowSuspend + predictiveLowSuspendRange + hourlyMaxInsulin.toByteArray(
             2

@@ -7,6 +7,7 @@ import app.aaps.database.entities.data.GlucoseUnit
 import app.aaps.database.entities.embedments.InsulinConfiguration
 import app.aaps.database.entities.embedments.InterfaceIDs
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.never
@@ -28,7 +29,7 @@ class UpdateNsIdEffectiveProfileSwitchTransactionTest {
     }
 
     @Test
-    fun `updates NS ID when different`() {
+    fun `updates NS ID when different`() = runTest {
         val newNsId = "new-ns-123"
         val current = createEffectiveProfileSwitch(id = 1, nsId = "old-ns")
         val update = createEffectiveProfileSwitch(id = 1, nsId = newNsId)
@@ -46,7 +47,7 @@ class UpdateNsIdEffectiveProfileSwitchTransactionTest {
     }
 
     @Test
-    fun `does not update when NS ID is same`() {
+    fun `does not update when NS ID is same`() = runTest {
         val sameNsId = "same-ns"
         val current = createEffectiveProfileSwitch(id = 1, nsId = sameNsId)
         val update = createEffectiveProfileSwitch(id = 1, nsId = sameNsId)
@@ -63,7 +64,7 @@ class UpdateNsIdEffectiveProfileSwitchTransactionTest {
     }
 
     @Test
-    fun `skips when effective profile switch not found`() {
+    fun `skips when effective profile switch not found`() = runTest {
         val update = createEffectiveProfileSwitch(id = 999, nsId = "new-ns")
 
         whenever(effectiveProfileSwitchDao.findById(999)).thenReturn(null)
@@ -93,7 +94,7 @@ class UpdateNsIdEffectiveProfileSwitchTransactionTest {
         originalPercentage = 100,
         originalDuration = 0,
         originalEnd = 0,
-        insulinConfiguration = InsulinConfiguration("some", 600000L, 60000L),
+        insulinConfiguration = InsulinConfiguration("some", 600000L, 60000L, 1.0),
         interfaceIDs_backing = InterfaceIDs(nightscoutId = nsId)
     ).also { it.id = id }
 }

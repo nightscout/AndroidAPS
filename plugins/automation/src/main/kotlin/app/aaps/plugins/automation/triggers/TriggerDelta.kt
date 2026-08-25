@@ -1,20 +1,17 @@
 package app.aaps.plugins.automation.triggers
 
-import android.widget.LinearLayout
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.ui.compose.icons.IcDelta
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDelta
 import app.aaps.plugins.automation.elements.InputDelta.DeltaType
-import app.aaps.plugins.automation.elements.LabelWithElement
-import app.aaps.plugins.automation.elements.LayoutBuilder
-import app.aaps.plugins.automation.elements.StaticLabel
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
-import java.text.DecimalFormat
-import java.util.Optional
 
 class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
 
@@ -30,8 +27,8 @@ class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
 
     init {
         units = profileFunction.getUnits()
-        delta = if (units == GlucoseUnit.MMOL) InputDelta(rh, 0.0, (-MMOL_MAX), MMOL_MAX, 0.1, DecimalFormat("0.1"), DeltaType.DELTA)
-        else InputDelta(rh, 0.0, (-MGDL_MAX), MGDL_MAX, 1.0, DecimalFormat("1"), DeltaType.DELTA)
+        delta = if (units == GlucoseUnit.MMOL) InputDelta(rh, 0.0, (-MMOL_MAX), MMOL_MAX, 0.1, NumberFormat.DECIMAL_1, DeltaType.DELTA)
+        else InputDelta(rh, 0.0, (-MGDL_MAX), MGDL_MAX, 1.0, NumberFormat.INTEGER, DeltaType.DELTA)
     }
 
     constructor(injector: HasAndroidInjector, inputDelta: InputDelta, units: GlucoseUnit, comparator: Comparator.Compare) : this(injector) {
@@ -62,7 +59,7 @@ class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
         return this
     }
 
-    override fun shouldRun(): Boolean {
+    override suspend fun shouldRun(): Boolean {
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
             ?: return if (comparator.value == Comparator.Compare.IS_NOT_AVAILABLE) {
                 aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
@@ -97,8 +94,8 @@ class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
         val type = DeltaType.valueOf(JsonHelper.safeGetString(d, "deltaType", ""))
         val value = JsonHelper.safeGetDouble(d, "value")
         delta =
-            if (units == GlucoseUnit.MMOL) InputDelta(rh, value, (-MMOL_MAX), MMOL_MAX, 0.1, DecimalFormat("0.1"), type)
-            else InputDelta(rh, value, (-MGDL_MAX), MGDL_MAX, 1.0, DecimalFormat("1"), type)
+            if (units == GlucoseUnit.MMOL) InputDelta(rh, value, (-MMOL_MAX), MMOL_MAX, 0.1, NumberFormat.DECIMAL_1, type)
+            else InputDelta(rh, value, (-MGDL_MAX), MGDL_MAX, 1.0, NumberFormat.INTEGER, type)
         comparator.setValue(Comparator.Compare.valueOf(JsonHelper.safeGetString(d, "comparator")!!))
         return this
     }
@@ -108,15 +105,9 @@ class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyDescription(): String =
         rh.gs(R.string.deltacompared, rh.gs(comparator.value.stringRes), delta.value, rh.gs(delta.deltaType.stringRes))
 
-    override fun icon(): Optional<Int> = Optional.of(R.drawable.ic_auto_delta)
+    override fun composeIcon() = IcDelta
+    override fun elementType() = ElementType.AUTOMATION
 
     override fun duplicate(): Trigger = TriggerDelta(injector, this)
 
-    override fun generateDialog(root: LinearLayout) {
-        LayoutBuilder()
-            .add(StaticLabel(rh, R.string.deltalabel, this))
-            .add(comparator)
-            .add(LabelWithElement(rh, rh.gs(R.string.deltalabel_u, units) + ": ", "", delta))
-            .build(root)
-    }
 }

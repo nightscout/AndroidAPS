@@ -6,7 +6,7 @@ import app.aaps.database.entities.ExtendedBolus
 import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.database.entities.interfaces.end
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Maybe
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.verify
@@ -26,7 +26,7 @@ class SyncPumpExtendedBolusTransactionTest {
     }
 
     @Test
-    fun `inserts new extended bolus when not found by pump ids`() {
+    fun `inserts new extended bolus when not found by pump ids`() = runTest {
         val eb = createExtendedBolus(pumpId = 100L, timestamp = 1000L, amount = 5.0, duration = 60_000L)
 
         whenever(extendedBolusDao.findByPumpIds(100L, InterfaceIDs.PumpType.DANA_I, "ABC123")).thenReturn(null)
@@ -42,7 +42,7 @@ class SyncPumpExtendedBolusTransactionTest {
     }
 
     @Test
-    fun `updates existing extended bolus when found by pump ids`() {
+    fun `updates existing extended bolus when found by pump ids`() = runTest {
         val eb = createExtendedBolus(pumpId = 100L, timestamp = 2000L, amount = 7.0, duration = 30_000L)
         val existing = createExtendedBolus(pumpId = 100L, timestamp = 1000L, amount = 5.0, duration = 60_000L)
 
@@ -61,7 +61,7 @@ class SyncPumpExtendedBolusTransactionTest {
     }
 
     @Test
-    fun `does not update when values are same`() {
+    fun `does not update when values are same`() = runTest {
         val eb = createExtendedBolus(pumpId = 100L, timestamp = 1000L, amount = 5.0, duration = 60_000L)
         val existing = createExtendedBolus(pumpId = 100L, timestamp = 1000L, amount = 5.0, duration = 60_000L)
 
@@ -76,7 +76,7 @@ class SyncPumpExtendedBolusTransactionTest {
     }
 
     @Test
-    fun `does not update when existing has end id`() {
+    fun `does not update when existing has end id`() = runTest {
         val eb = createExtendedBolus(pumpId = 100L, timestamp = 2000L, amount = 7.0, duration = 30_000L)
         val existing = createExtendedBolus(pumpId = 100L, timestamp = 1000L, amount = 5.0, duration = 60_000L, endId = 200L)
 
@@ -91,7 +91,7 @@ class SyncPumpExtendedBolusTransactionTest {
     }
 
     @Test
-    fun `ends running extended bolus and inserts new when not found by pump id`() {
+    fun `ends running extended bolus and inserts new when not found by pump id`() = runTest {
         val eb = createExtendedBolus(pumpId = 100L, timestamp = 31_000L, amount = 5.0, duration = 60_000L)
         val running = createExtendedBolus(pumpId = 50L, timestamp = 1000L, amount = 6.0, duration = 60_000L)
 

@@ -7,28 +7,13 @@
     <string name="pump_status_active">Aktyvi</string>
     <string name="pump_status_error_comm">Ryšio klaida</string>
     <string name="pump_status_timeout_comm">Ryšiui skirtas laikas baigėsi</string>
-    <string name="pump_status_pump_unreachable">Pompa nepasiekiama</string>
     <string name="pump_status_invalid_config">Neteisinga konfigūracija</string>
     <!-- RL BLE Config -->
-    <string name="riley_link_ble_config_button_scan_start">Skanuoti</string>
-    <string name="riley_link_ble_config_scan_stop">Stop</string>
-    <string name="riley_link_ble_config_scan_selected">Parinkta</string>
-    <string name="riley_link_ble_config_scan_title">RileyLink skanavimas</string>
     <string name="riley_link_ble_config_scan_scanning">Skanuojama</string>
-    <string name="riley_link_ble_config_scan_finished">Skanavimas baigtas</string>
-    <string name="riley_link_ble_config_scan_error">Skanavimo klaida: %1$d</string>
     <string name="riley_link_ble_config_connected_never">Niekada</string>
-    <string name="riley_link_ble_config_scan_currently_selected_riley_link">Šiuo metu pasirinktas RileyLink</string>
-    <string name="riley_link_ble_config_remove_riley_link">Pašalinti</string>
-    <string name="riley_link_ble_config_remove_riley_link_confirmation">Ar tikrai norite pašalinti savo RileyLink?</string>
-    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">Pašalinti RileyLink</string>
-    <string name="riley_link_ble_config_no_riley_link_selected">Nepasirinktas RileyLink</string>
     <!-- RL Status Page -->
-    <string name="rileylink_settings_tab1">Nustatymai</string>
-    <string name="rileylink_settings_tab2">Istorija</string>
     <string name="rileylink_status">RileyLink statusas</string>
     <string name="medtronic_pump_status">Pompos statusas</string>
-    <string name="title_activity_rileylink_settings">RileyLink parametrai</string>
     <string name="rileylink_title">RileyLink</string>
     <string name="rileylink_address">Adresas:</string>
     <string name="rileylink_name">Vardas:</string>
@@ -65,7 +50,6 @@
     <string name="rileylink_error_bt_disabled">Bluetooth išjungtas</string>
     <string name="rileylink_error_no_bt_adapter">Nėra Bluetooth adapterio</string>
     <string name="rileylink_error_tuneup_failed">TuneUp klaida</string>
-    <string name="rileylink_error_pump_unreachable">Pompa nepasiekiama</string>
     <string name="rileylink_error_pod_unreachable">Pod nepasiekiamas</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Pompa Medtronic</string>
@@ -87,5 +71,4 @@
     </plurals>
     <string name="orange_use_scanning_level">Atlikti skanavimą</string>
     <string name="orange_use_scanning_level_summary">Prieš suporuodami su OrangeLink, naudokite skanavimą, tai turėtų pagerinti ryšio kokybę (jei reikia, galite jį naudoti ir kituose RileyLink klonuose)</string>
-    <string name="rileylink_configuration">RileyLink konfigūravimas</string>
 </resources>

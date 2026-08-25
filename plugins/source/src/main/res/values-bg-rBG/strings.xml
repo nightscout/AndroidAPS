@@ -5,6 +5,7 @@
     <string name="ns_client_bg_short">NS КЗ</string>
     <string name="description_source_ns_client">Изтегля стойности на КЗ от Nightscout</string>
     <string name="source_xdrip">КЗ от xDrip+</string>
+    <string name="description_source_xdrip">Получава захари от xDrip+ или съвместими апове (Juggluco и др.).</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Да получава данни за КЗ от модифицираното приложение на Dexcom BYODA.</string>
@@ -24,8 +25,35 @@
     <string name="random_bg">Произволна КЗ</string>
     <string name="description_source_random_bg">Генерира произволни захари(демо режим)</string>
     <string name="random_bg_short">КЗ</string>
-    <string name="direction">Посока</string>
     <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai</string>
+    <string name="description_source_patched_syai_tag_app">Получаване на захари от Syai/Ottai.</string>
     <!-- Patched SI App -->
+    <string name="patched_si_app">SI App</string>
+    <string name="description_source_patched_si_app">Получаване на захари от пачнат Sibionic SI App.</string>
     <!-- Patched Sino App -->
+    <string name="patched_sino_app">Sino App</string>
+    <string name="description_source_patched_sino_app">Получаване на захари от пачнат Sino App.</string>
+    <!-- Instara App -->
+    <string name="instara_app">Instara</string>
+    <string name="description_source_instara_app">Получаване на захари от Instara App.</string>
+    <!-- Instara preferences -->
+    <string name="pref_title_instara_history_request">Иска Instara история</string>
+    <string name="pref_summary_instara_history_request">Получава липсващите данни във фонов режим</string>
+    <!-- Notification Reader -->
+    <string name="notification_reader">Четец на Нотификации</string>
+    <string name="description_source_notification_reader">Взима захарите от нотификациите на официалните апове  (Dexcom, Medtronic, Eversense, др.).</string>
+    <!-- Permission rationales -->
+    <string name="permission_dexcom_title">Dexcom CGM</string>
+    <string name="permission_dexcom_description">Трябва разрешение да получава данни от Dexcom app</string>
+    <string name="permission_notification_listener_title">Достъп до Нотификации</string>
+    <string name="permission_notification_listener_description">Нужно за прочитане на данни за КЗ от други апове</string>
+    <string name="aidex">MicroTech CGM App</string>
+    <string name="aidex_short">CGM ап</string>
+    <string name="description_source_aidex">Получаване на данни за захари от  LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 и др.</string>
+    <string name="aidex_sensor_expired">Сензърът е изтекъл, сменете го с нов</string>
+    <string name="aidex_sensor_error">Грешка в сензора, проверете неговият статус</string>
+    <string name="aidex_sensor_stabilizing">Сензорът се стабилизира, изчакване…</string>
+    <string name="aidex_sensor_replace">Трябва да смените сензора! Моля сложете нов скоро</string>
+    <string name="aidex_signal_lost">Няма връзка със сензора, моля проверете връзката</string>
 </resources>

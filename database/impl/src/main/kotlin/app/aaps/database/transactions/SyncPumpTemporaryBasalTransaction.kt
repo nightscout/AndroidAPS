@@ -11,7 +11,7 @@ class SyncPumpTemporaryBasalTransaction(
     private val type: TemporaryBasal.Type? // extra parameter because field is not nullable in TemporaryBasal.class
 ) : Transaction<SyncPumpTemporaryBasalTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         temporaryBasal.interfaceIDs.pumpId ?: temporaryBasal.interfaceIDs.pumpType
         ?: temporaryBasal.interfaceIDs.pumpSerial
         ?: throw IllegalStateException("Some pump ID is null")

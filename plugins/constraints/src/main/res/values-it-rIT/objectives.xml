@@ -38,13 +38,12 @@
     <string name="objectives_usage_objective">Impara a controllare AAPS</string>
     <string name="objectives_usage_gate">Esegui varie azioni in AAPS</string>
     <string name="objectives_usage_learned">Hai imparato come gestire le basi di AAPS. I controlli principali sono nella schermata Panoramica accessibile con un click o un click lungo. Ci sono controlli aggiuntivi nella schermata Azioni. Dovresti sapere come mettere la schermata di un plugin nel menu scorrevole in alto o lasciare che il plugin sia visualizzato nell\'elenco dei plugin attivati in alto a sinistra.</string>
-    <string name="objectives_useprofileswitch">Imposta il profilo \"90%\" per 10 min (premi a lungo sul nome profilo nella sezione Panoramica)</string>
-    <string name="objectives_usedisconnectpump">Simula la doccia. Disconnetti il micro per 1h (premi a lungo su Loop aperto)</string>
+    <string name="objectives_useprofileswitch">Imposta profilo al 90% per 10 min</string>
+    <string name="objectives_usedisconnectpump">Simula doccia. Scollega il micro per 1h</string>
     <string name="objectives_usereconnectpump">... e riconnetti allo stesso modo</string>
-    <string name="objectives_usetemptarget">Crea un target temporaneo personalizzato con una durata di 10 min (premi a lungo sul tuo target corrente)</string>
-    <string name="objectives_useactions">Nel Configuratore strutturale attiva il plugin Azioni, rendilo visibile e visualizzane i contenuti tramite il menu in alto</string>
+    <string name="objectives_usetemptarget">Crea un obiettivo temporaneo personalizzato con una durata di 10 min</string>
     <string name="objectives_useloop">Visualizza il contenuto del plugin Loop</string>
-    <string name="objectives_usescale">Usa la funzione di ridimensionamento premendo a lungo sul grafico delle glicemie</string>
+    <string name="objectives_usescale">Usa scorrimento o zoom sul grafico della glicemia</string>
     <string name="objectives_exam_objective">Dai prova della tua conoscenza</string>
     <string name="objectives_exam_gate">Studia, leggi le domande e rifletti. Ti vengono fornite quattro possibili risposte per ogni domanda. Ci può essere più di una risposta corretta. Seleziona tutte quelle che sono corrette e poi vai su VERIFICA.</string>
     <string name="objectives_exam_learned_prerequisites">Non hai bisogno di essere uno sviluppatore, ma hai bisogno di NS per superare gli obiettivi, micro e computer compatibili per costruire AAPS per la prima volta e per ogni aggiornamento.</string>
@@ -71,6 +70,9 @@
     <string name="objectives_exam_learned_breadgrams">Sono ammessi solo grammi per l\'inserimento di carboidrati.</string>
     <string name="objectives_exam_learned_ecarbs">E-carbs è un sostituto del bolo esteso nel mondo dei microinfusori.</string>
     <string name="objectives_exam_learned_nsclient">Monitoraggio e controllo remoto sono possibili, ma non tutte le funzionalità devono essere disponibili da remoto.</string>
+    <string name="objectives_exam_learned_concentration1">L\'uso di insulina U200 con un profilo 50% richiederà una conversione permanente: per boli esterni con penne, e tutti i rapporti standard forniti da AAPS o NS diventeranno sbagliati e dovranno essere convertiti in UI per il team sanitario.</string>
+    <string name="objectives_exam_learned_concentration2">Passando da U200 con un profilo 50% a U200 con la funzione di concentrazione di insulina sarà necessario creare un nuovo profilo più forte, disattivare DynISF una settimana e addestrare il cervello a pensare in Unità Internazionali.</string>
+    <string name="objectives_exam_learned_concentration3">La concentrazione di insulina può essere modificata solo quando viene modificata l’insulina o il cerotto. Ma soprattutto, soprattutto per i micro a tubo, non utilizzare mai l\'interfaccia utente del micro per erogare boli direttamente. </string>
     <string name="answerdisabledto">Risposta disabilitata fino a: %1$s</string>
     <string name="wronganswer">Risposta errata!</string>
     <string name="unfinshed_button">Prossimo N.C.</string>
@@ -85,4 +87,14 @@
     <string name="requirementnotmet">Requisiti obiettivo non soddisfatti</string>
     <string name="what_i_ve_learned">Cosa ho imparato:</string>
     <string name="verify_master_password">Verifica che tu sappia la password principale</string>
+    <string name="objectives_collapse">Meno</string>
+    <string name="objectives_expand">Di Più</string>
+    <string name="objectives_no_learned">Nessuna lezione registrata per questo obiettivo.</string>
+    <string name="objectives_open_exam">Esame aperto</string>
+    <string name="objectives_exam_question_progress">Domanda %1$d di %2$d</string>
+    <string name="objectives_exam_reset">Reset</string>
+    <string name="objectives_exam_previous">Precedente</string>
+    <string name="objectives_exam_next">Successivo</string>
+    <string name="objectives_exam_next_unanswered">Prossima non risposta</string>
+    <string name="objectives_show_hint">Suggerimento</string>
 </resources>

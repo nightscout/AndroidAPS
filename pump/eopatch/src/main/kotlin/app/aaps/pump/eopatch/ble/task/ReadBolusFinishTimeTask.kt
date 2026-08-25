@@ -14,11 +14,11 @@ import javax.inject.Singleton
 @Singleton
 class ReadBolusFinishTimeTask @Inject constructor() : BolusTask(TaskFunc.READ_BOLUS_FINISH_TIME) {
 
-    private val BOLUS_FINISH_TIME_GET: BolusFinishTimeGet = BolusFinishTimeGet()
+    @Inject lateinit var bolusFinishTimeGet: BolusFinishTimeGet
 
     fun read(): Single<BolusFinishTimeResponse> {
         return isReady()
-            .concatMapSingle<BolusFinishTimeResponse>(Function { BOLUS_FINISH_TIME_GET.get() })
+            .concatMapSingle<BolusFinishTimeResponse>(Function { bolusFinishTimeGet.get() })
             .firstOrError()
             .doOnSuccess(Consumer { response: BolusFinishTimeResponse -> this.checkResponse(response) })
             .doOnSuccess(Consumer { response: BolusFinishTimeResponse -> this.onResponse(response) })

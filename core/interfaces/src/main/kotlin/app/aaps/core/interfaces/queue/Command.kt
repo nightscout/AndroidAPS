@@ -1,9 +1,13 @@
 package app.aaps.core.interfaces.queue
 
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import javax.inject.Provider
+
 interface Command {
 
     val commandType: CommandType
     val callback: Callback?
+    val pumpEnactResultProvider: Provider<PumpEnactResult>
 
     enum class CommandType {
         BOLUS,
@@ -26,8 +30,21 @@ interface Command {
         CUSTOM_COMMAND
     }
 
-    fun execute()
+    suspend fun execute(): PumpEnactResult = error("Not implemented")
+    suspend fun executeWithCallback() {
+        callback?.result(execute())?.run()
+    }
     fun status(): String
     fun log(): String
-    fun cancel()
+
+    /**
+     * Invoked when the queue drops this command without executing it (queue cleared,
+     * superseded by a newer same-type command, etc.). Resumes any caller waiting on the
+     * command's [callback] with a failure result carrying [commentResId] as the reason.
+     * Override to add side-effects (e.g. clearing progress UI).
+     * Return success = true to avoid command failed dialog
+     */
+    fun cancel(commentResId: Int, success: Boolean = true) {
+        callback?.result(pumpEnactResultProvider.get().success(success).comment(commentResId))?.run()
+    }
 }

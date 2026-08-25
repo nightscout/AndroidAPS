@@ -1,7 +1,6 @@
 package app.aaps.core.data.model
 
 data class NE(
-    //val apsResults: List<APSResult>,
     val bolusCalculatorResults: List<BCR>,
     val boluses: List<BS>,
     val carbs: List<CA>,

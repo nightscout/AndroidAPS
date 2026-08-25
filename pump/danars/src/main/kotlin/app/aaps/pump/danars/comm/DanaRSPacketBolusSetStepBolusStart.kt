@@ -1,17 +1,14 @@
 package app.aaps.pump.danars.comm
 
-import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danars.encryption.BleEncryption
 import javax.inject.Inject
 
 class DanaRSPacketBolusSetStepBolusStart @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val danaPump: DanaPump,
-    private val constraintChecker: ConstraintsChecker
+    private val danaPump: DanaPump
 ) : DanaRSPacket() {
 
     private var amount: Double = 0.0
@@ -25,8 +22,6 @@ class DanaRSPacketBolusSetStepBolusStart @Inject constructor(
         it.amount = amount
         it.speed = speed
         // Speed 0 => 12 sec/U, 1 => 30 sec/U, 2 => 60 sec/U
-        // HARDCODED LIMIT - if there is one that could be created
-        it.amount = constraintChecker.applyBolusConstraints(ConstraintObject(it.amount, aapsLogger)).value()
         aapsLogger.debug(LTag.PUMPCOMM, "Bolus start : ${it.amount} speed: $speed")
     }
 

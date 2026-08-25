@@ -11,7 +11,7 @@ data class EPS(
     override var isValid: Boolean = true,
     override var referenceId: Long? = null,
     override var ids: IDs = IDs(),
-    var timestamp: Long,
+    override var timestamp: Long,
     var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
     var basalBlocks: List<Block>,
     var isfBlocks: List<Block>,
@@ -25,8 +25,11 @@ data class EPS(
     var originalPercentage: Int, // 1 ~ XXX [%]
     var originalDuration: Long, // [milliseconds]
     var originalEnd: Long, // not used (calculated from duration)
+    /** ID of the ProfileSwitch that triggered this EPS (null for legacy/synced records) */
+    var originalPsId: Long? = null,
+    /** Applied insulin configuration */
     var iCfg: ICfg
-) : HasIDs {
+) : HasIDs, TimeStamped {
 
     fun contentEqualsTo(other: EPS): Boolean =
         isValid == other.isValid &&
@@ -42,7 +45,9 @@ data class EPS(
             originalTimeshift == other.originalTimeshift &&
             originalPercentage == other.originalPercentage &&
             originalDuration == other.originalDuration &&
-            originalEnd == other.originalEnd
+            originalEnd == other.originalEnd &&
+            originalPsId == other.originalPsId &&
+            iCfg == other.iCfg
 
     fun onlyNsIdAdded(previous: EPS): Boolean =
         previous.id != id &&

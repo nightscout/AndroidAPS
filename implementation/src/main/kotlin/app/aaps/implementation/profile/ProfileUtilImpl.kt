@@ -1,21 +1,26 @@
 package app.aaps.implementation.profile
 
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.R
 import dagger.Reusable
 import java.util.Locale
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 @Reusable
 class ProfileUtilImpl @Inject constructor(
     private val preferences: Preferences,
-    private val decimalFormatter: DecimalFormatter
+    private val decimalFormatter: DecimalFormatter,
+    private val rh: ResourceHelper
 ) : ProfileUtil {
 
     override val units: GlucoseUnit
@@ -23,18 +28,27 @@ class ProfileUtilImpl @Inject constructor(
             if (preferences.get(StringKey.GeneralUnits) == GlucoseUnit.MGDL.asText) GlucoseUnit.MGDL
             else GlucoseUnit.MMOL
 
+    override val unitLabel: String
+        get() = rh.gs(if (units == GlucoseUnit.MGDL) R.string.mgdl else R.string.mmol)
+
+    override fun fromMgdlToStringWithUnits(valueInMgdl: Double?): String =
+        valueInMgdl?.let {
+            if (units == GlucoseUnit.MGDL) rh.gs(R.string.bg_mgdl, it.roundToInt())
+            else rh.gs(R.string.bg_mmol, it * Constants.MGDL_TO_MMOLL)
+        } ?: ""
+
     override fun fromMgdlToUnits(valueInMgdl: Double, targetUnits: GlucoseUnit): Double =
-        if (targetUnits == GlucoseUnit.MGDL) valueInMgdl else valueInMgdl * GlucoseUnit.MGDL_TO_MMOLL
+        if (targetUnits == GlucoseUnit.MGDL) valueInMgdl else valueInMgdl * Constants.MGDL_TO_MMOLL
 
     override fun fromMmolToUnits(value: Double, targetUnits: GlucoseUnit): Double =
-        if (targetUnits == GlucoseUnit.MMOL) value else value * GlucoseUnit.MMOLL_TO_MGDL
+        if (targetUnits == GlucoseUnit.MMOL) value else value * Constants.MMOLL_TO_MGDL
 
     override fun valueInCurrentUnitsDetect(anyBg: Double): Double =
         if (isMmol(anyBg)) fromMmolToUnits(anyBg, units)
         else fromMgdlToUnits(anyBg, units)
 
     override fun stringInCurrentUnitsDetect(anyBg: Double): String =
-        if (isMmol(anyBg)) toUnitsString(anyBg * GlucoseUnit.MMOLL_TO_MGDL, units)
+        if (isMmol(anyBg)) toUnitsString(anyBg * Constants.MMOLL_TO_MGDL, units)
         else toUnitsString(anyBg, units)
 
     override fun fromMgdlToStringInUnits(valueInMgdl: Double?, targetUnits: GlucoseUnit): String =
@@ -42,7 +56,7 @@ class ProfileUtilImpl @Inject constructor(
 
     override fun fromMgdlToSignedStringInUnits(valueInMgdl: Double, targetUnits: GlucoseUnit): String =
         if (targetUnits == GlucoseUnit.MGDL) (if (valueInMgdl > 0) "+" else "") + decimalFormatter.to0Decimal(valueInMgdl)
-        else (if (valueInMgdl > 0) "+" else "") + decimalFormatter.to1Decimal(valueInMgdl * GlucoseUnit.MGDL_TO_MMOLL)
+        else (if (valueInMgdl > 0) "+" else "") + decimalFormatter.to1Decimal(valueInMgdl * Constants.MGDL_TO_MMOLL)
 
     override fun isMgdl(anyBg: Double) = anyBg >= 36
     override fun isMmol(anyBg: Double) = anyBg < 36
@@ -53,17 +67,17 @@ class ProfileUtilImpl @Inject constructor(
         else fromMgdlToUnits(anyBg, targetUnits)
 
     override fun stringInUnitsDetect(anyBg: Double, targetUnits: GlucoseUnit): String =
-        if (isMmol(anyBg)) toUnitsString(anyBg * GlucoseUnit.MMOLL_TO_MGDL, targetUnits)
+        if (isMmol(anyBg)) toUnitsString(anyBg * Constants.MMOLL_TO_MGDL, targetUnits)
         else toUnitsString(anyBg, targetUnits)
 
     override fun convertToMgdlDetect(anyBg: Double): Double =
-        if (isMgdl(anyBg)) anyBg else anyBg * GlucoseUnit.MMOLL_TO_MGDL
+        if (isMgdl(anyBg)) anyBg else anyBg * Constants.MMOLL_TO_MGDL
 
     override fun convertToMgdl(value: Double, sourceUnits: GlucoseUnit): Double =
-        if (sourceUnits == GlucoseUnit.MGDL) value else value * GlucoseUnit.MMOLL_TO_MGDL
+        if (sourceUnits == GlucoseUnit.MGDL) value else value * Constants.MMOLL_TO_MGDL
 
     override fun convertToMmol(value: Double, sourceUnits: GlucoseUnit): Double =
-        if (sourceUnits == GlucoseUnit.MGDL) value * GlucoseUnit.MGDL_TO_MMOLL else value
+        if (sourceUnits == GlucoseUnit.MGDL) value * Constants.MGDL_TO_MMOLL else value
 
     override fun toTargetRangeString(low: Double, high: Double, sourceUnits: GlucoseUnit, targetUnits: GlucoseUnit): String {
         val lowMgdl = convertToMgdl(low, sourceUnits)
@@ -73,7 +87,7 @@ class ProfileUtilImpl @Inject constructor(
     }
 
     private fun toUnitsString(valueInMgdl: Double, targetUnits: GlucoseUnit): String =
-        if (targetUnits == GlucoseUnit.MGDL) decimalFormatter.to0Decimal(valueInMgdl) else decimalFormatter.to1Decimal(valueInMgdl * GlucoseUnit.MGDL_TO_MMOLL)
+        if (targetUnits == GlucoseUnit.MGDL) decimalFormatter.to0Decimal(valueInMgdl) else decimalFormatter.to1Decimal(valueInMgdl * Constants.MGDL_TO_MMOLL)
 
     override fun getBasalProfilesDisplayable(profiles: Array<Profile.ProfileValue>, pumpType: PumpType): String {
         val stringBuilder = StringBuilder()

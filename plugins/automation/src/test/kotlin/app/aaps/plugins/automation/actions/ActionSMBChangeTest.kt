@@ -1,10 +1,10 @@
 package app.aaps.plugins.automation.actions
 
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputDropdownOnOffMenu
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyBoolean
@@ -29,40 +29,33 @@ class ActionSMBChangeTest : ActionsTestBase() {
         sut = ActionSMBChange(injector)
     }
 
-    @Test fun friendlyName() {
+    @Test fun friendlyName() = runTest {
         assertThat(sut.friendlyName()).isEqualTo(R.string.changeSmbState)
     }
 
-    @Test fun shortDescriptionTest() {
+    @Test fun shortDescriptionTest() = runTest {
         assertThat(sut.shortDescription()).isEqualTo("Change SMB to ON")
     }
 
-    @Test fun doAction() {
+    @Test fun doAction() = runTest {
         sut.smbState = InputDropdownOnOffMenu(rh, true)
-        sut.doAction(object : Callback() {
-            override fun run() {
-                assertThat(result.success).isTrue()
-                assertThat(result.comment).isEqualTo("OK")
-                verify(preferences, times(1)).put(any<BooleanPreferenceKey>(), anyBoolean())
-            }
-        })
+        val result = sut.doAction()
+        assertThat(result.success).isTrue()
+        assertThat(result.comment).isEqualTo("OK")
+        verify(preferences, times(1)).put(any<BooleanPreferenceKey>(), anyBoolean())
     }
 
-    @Test fun hasDialogTest() {
+    @Test fun hasDialogTest() = runTest {
         assertThat(sut.hasDialog()).isTrue()
     }
 
-    @Test fun toJSONTest() {
+    @Test fun toJSONTest() = runTest {
         sut.smbState = InputDropdownOnOffMenu(rh, true)
         JSONAssert.assertEquals(STRING_JSON, sut.toJSON(), true)
     }
 
-    @Test fun fromJSONTest() {
+    @Test fun fromJSONTest() = runTest {
         sut.fromJSON("""{"smbState":"false"}""")
         assertThat(sut.smbState.value).isEqualTo(false)
-    }
-
-    @Test fun iconTest() {
-        assertThat(sut.icon()).isEqualTo(app.aaps.core.ui.R.drawable.ic_running_mode)
     }
 }

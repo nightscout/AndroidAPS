@@ -15,7 +15,9 @@ class PodScanner(private val logger: AAPSLogger, private val bluetoothAdapter: B
 
     @Throws(InterruptedException::class, ScanException::class)
     override fun scanForPod(serviceUUID: String?, podID: Long): app.aaps.pump.omnipod.common.bledriver.comm.interfaces.scan.BleDiscoveredDevice {
+        // bluetoothLeScanner is null when Bluetooth is off / the adapter is unavailable (nullable since compileSdk 37).
         val scanner = bluetoothAdapter.bluetoothLeScanner
+            ?: throw ScanException("BluetoothLeScanner unavailable (is Bluetooth enabled?)")
         val filter = ScanFilter.Builder()
             .setServiceUuid(ParcelUuid.fromString(serviceUUID))
             .build()

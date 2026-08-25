@@ -1,9 +1,12 @@
 package app.aaps.plugins.sync.nsclientV3.workers
 
+import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkContinuation
 import androidx.work.WorkManager
+import androidx.work.WorkerFactory
+import androidx.work.WorkerParameters
 import androidx.work.testing.TestListenableWorkerBuilder
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.IDs
@@ -11,20 +14,24 @@ import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.L
+import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.source.NSClientSource
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.remotemodel.LastModified
-import app.aaps.core.utils.receivers.DataWorkerStorage
-import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
-import app.aaps.plugins.sync.nsclient.ReceiverDelegate
 import app.aaps.plugins.sync.nsclientV3.DataSyncSelectorV3
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
+import app.aaps.plugins.sync.nsclientV3.ReceiverDelegate
 import app.aaps.plugins.sync.nsclientV3.extensions.toNSSvgV3
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -34,6 +41,7 @@ import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import kotlin.test.assertIs
 import kotlin.time.Duration.Companion.seconds
@@ -50,45 +58,44 @@ internal class LoadBgWorkerTest : TestBaseWithProfile() {
     @Mock lateinit var storeDataForDb: StoreDataForDb
     @Mock lateinit var l: L
     @Mock lateinit var nsIncomingDataProcessor: NsIncomingDataProcessor
+    @Mock lateinit var nsClientRepository: NSClientRepository
+    @Mock lateinit var uiInteraction: UiInteraction
+    @Mock lateinit var uel: UserEntryLogger
 
     private lateinit var nsClientV3Plugin: NSClientV3Plugin
     private lateinit var receiverDelegate: ReceiverDelegate
-    private lateinit var dataWorkerStorage: DataWorkerStorage
     private lateinit var sut: LoadBgWorker
 
-    init {
-        addInjector {
-            if (it is LoadBgWorker) {
-                it.aapsLogger = aapsLogger
-                it.fabricPrivacy = fabricPrivacy
-                it.preferences = preferences
-                it.rxBus = rxBus
-                it.context = context
-                it.dateUtil = dateUtil
-                it.nsClientV3Plugin = nsClientV3Plugin
-                it.nsClientSource = nsClientSource
-                it.storeDataForDb = storeDataForDb
-                it.nsIncomingDataProcessor = nsIncomingDataProcessor
-            }
-        }
-    }
+    private fun buildSut(): LoadBgWorker =
+        TestListenableWorkerBuilder<LoadBgWorker>(context)
+            .setWorkerFactory(object : WorkerFactory() {
+                override fun createWorker(appContext: Context, workerClassName: String, workerParameters: WorkerParameters) =
+                    LoadBgWorker(
+                        appContext, workerParameters, aapsLogger, fabricPrivacy, preferences, dateUtil,
+                        nsClientV3Plugin, nsClientSource, nsIncomingDataProcessor, storeDataForDb, nsClientRepository
+                    )
+            })
+            .build()
 
     @BeforeEach
     fun setUp() {
         whenever(nsClientSource.isEnabled()).thenReturn(true)
-        dataWorkerStorage = DataWorkerStorage(context)
-        receiverDelegate = ReceiverDelegate(rxBus, rh, preferences, receiverStatusStore, aapsSchedulers, fabricPrivacy)
+        whenever(persistenceLayer.observeChanges(anyOrNull<Class<*>>())).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeAnyChange()).thenReturn(emptyFlow())
+        whenever(receiverStatusStore.networkStatusFlow).thenReturn(MutableStateFlow(null))
+        whenever(receiverStatusStore.chargingStatusFlow).thenReturn(MutableStateFlow(null))
+        receiverDelegate = ReceiverDelegate(rh, preferences, receiverStatusStore)
         nsClientV3Plugin = NSClientV3Plugin(
-            aapsLogger, rh, preferences, aapsSchedulers, rxBus, context, fabricPrivacy,
+            aapsLogger, rh, preferences, rxBus, context,
             receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
-            nsClientSource, storeDataForDb, decimalFormatter, l
+            nsClientSource, storeDataForDb, decimalFormatter, l, nsClientRepository, uel, mock(), mock(), mock(), mock(), mock(), mock(), profileRepository
         )
         nsClientV3Plugin.newestDataOnServer = LastModified(LastModified.Collections())
     }
 
     @Test
     fun notInitializedAndroidClient() = runTest(timeout = 30.seconds) {
-        sut = TestListenableWorkerBuilder<LoadBgWorker>(context).build()
+        sut = buildSut()
 
         val result = sut.doWorkAndLog()
         assertIs<ListenableWorker.Result.Failure>(result)
@@ -96,7 +103,7 @@ internal class LoadBgWorkerTest : TestBaseWithProfile() {
 
     @Test
     fun notEnabledNSClientSource() = runTest(timeout = 30.seconds) {
-        sut = TestListenableWorkerBuilder<LoadBgWorker>(context).build()
+        sut = buildSut()
         whenever(nsClientSource.isEnabled()).thenReturn(false)
         whenever(preferences.get(BooleanKey.NsClientAcceptCgmData)).thenReturn(false)
 
@@ -112,7 +119,7 @@ internal class LoadBgWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.entries = 0L // first load
         nsClientV3Plugin.firstLoadContinueTimestamp.collections.entries = now - 1000
-        sut = TestListenableWorkerBuilder<LoadBgWorker>(context).build()
+        sut = buildSut()
         whenever(nsAndroidClient.getSgvsNewerThan(anyLong(), anyInt())).thenReturn(NSAndroidClient.ReadResponse(200, 0, emptyList()))
 
         val result = sut.doWorkAndLog()
@@ -141,7 +148,7 @@ internal class LoadBgWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.entries = 0L // first load
         nsClientV3Plugin.firstLoadContinueTimestamp.collections.entries = now - 1000
-        sut = TestListenableWorkerBuilder<LoadBgWorker>(context).build()
+        sut = buildSut()
         whenever(nsAndroidClient.getSgvsNewerThan(anyLong(), anyInt())).thenReturn(NSAndroidClient.ReadResponse(200, 0, listOf(glucoseValue.toNSSvgV3())))
 
         val result = sut.doWorkAndLog()
@@ -155,7 +162,7 @@ internal class LoadBgWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.firstLoadContinueTimestamp.collections.entries = now - 1000
         nsClientV3Plugin.newestDataOnServer?.collections?.entries = now - 2000
-        sut = TestListenableWorkerBuilder<LoadBgWorker>(context).build()
+        sut = buildSut()
         whenever(nsAndroidClient.getSgvsNewerThan(anyLong(), anyInt())).thenReturn(NSAndroidClient.ReadResponse(200, 0, emptyList()))
 
         val result = sut.doWorkAndLog()
@@ -181,7 +188,7 @@ internal class LoadBgWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.entries = now - 2000 // Not first load
         nsClientV3Plugin.newestDataOnServer?.collections?.entries = now
-        sut = TestListenableWorkerBuilder<LoadBgWorker>(context).build()
+        sut = buildSut()
         whenever(nsAndroidClient.getSgvsModifiedSince(anyLong(), anyInt()))
             .thenReturn(NSAndroidClient.ReadResponse(200, now - 1000, listOf(glucoseValue.toNSSvgV3())))
 
@@ -198,7 +205,7 @@ internal class LoadBgWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.entries = now - 2000 // Not first load
         nsClientV3Plugin.newestDataOnServer?.collections?.entries = now
-        sut = TestListenableWorkerBuilder<LoadBgWorker>(context).build()
+        sut = buildSut()
         whenever(nsAndroidClient.getSgvsModifiedSince(anyLong(), anyInt()))
             .thenReturn(NSAndroidClient.ReadResponse(200, now - 1000, emptyList()))
 
@@ -215,7 +222,7 @@ internal class LoadBgWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.lastLoadedSrvModified.collections.entries = 0L
         nsClientV3Plugin.firstLoadContinueTimestamp.collections.entries = now - 1000
         nsClientV3Plugin.newestDataOnServer?.collections?.entries = Long.MAX_VALUE
-        sut = TestListenableWorkerBuilder<LoadBgWorker>(context).build()
+        sut = buildSut()
         val errorMessage = "Network error"
         whenever(nsAndroidClient.getSgvsNewerThan(anyLong(), anyInt()))
             .thenThrow(RuntimeException(errorMessage))
@@ -235,7 +242,7 @@ internal class LoadBgWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.lastLoadedSrvModified.collections.entries = 0L
         nsClientV3Plugin.firstLoadContinueTimestamp.collections.entries = now - 1000
         nsClientV3Plugin.lastOperationError = "Previous error"
-        sut = TestListenableWorkerBuilder<LoadBgWorker>(context).build()
+        sut = buildSut()
         whenever(nsAndroidClient.getSgvsNewerThan(anyLong(), anyInt()))
             .thenReturn(NSAndroidClient.ReadResponse(200, 0, emptyList()))
 
@@ -249,7 +256,7 @@ internal class LoadBgWorkerTest : TestBaseWithProfile() {
     fun testLoadEnabledWhenAcceptCgmDataIsTrue() = runTest(timeout = 30.seconds) {
         whenever(workManager.beginUniqueWork(anyString(), anyOrNull(), anyOrNull<OneTimeWorkRequest>())).thenReturn(workContinuation)
         whenever(workContinuation.then(any<OneTimeWorkRequest>())).thenReturn(workContinuation)
-        sut = TestListenableWorkerBuilder<LoadBgWorker>(context).build()
+        sut = buildSut()
         whenever(nsClientSource.isEnabled()).thenReturn(false)
         whenever(preferences.get(BooleanKey.NsClientAcceptCgmData)).thenReturn(true)
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
@@ -269,7 +276,7 @@ internal class LoadBgWorkerTest : TestBaseWithProfile() {
     fun testLoadEnabledDuringFullSync() = runTest(timeout = 30.seconds) {
         whenever(workManager.beginUniqueWork(anyString(), anyOrNull(), anyOrNull<OneTimeWorkRequest>())).thenReturn(workContinuation)
         whenever(workContinuation.then(any<OneTimeWorkRequest>())).thenReturn(workContinuation)
-        sut = TestListenableWorkerBuilder<LoadBgWorker>(context).build()
+        sut = buildSut()
         whenever(nsClientSource.isEnabled()).thenReturn(false)
         whenever(preferences.get(BooleanKey.NsClientAcceptCgmData)).thenReturn(false)
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
@@ -293,7 +300,7 @@ internal class LoadBgWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.entries = 0L
         nsClientV3Plugin.firstLoadContinueTimestamp.collections.entries = now - 1000
-        sut = TestListenableWorkerBuilder<LoadBgWorker>(context).build()
+        sut = buildSut()
         whenever(nsAndroidClient.getSgvsNewerThan(anyLong(), anyInt()))
             .thenReturn(NSAndroidClient.ReadResponse(200, 0, emptyList()))
 
@@ -321,7 +328,7 @@ internal class LoadBgWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.entries = now - 2000
         nsClientV3Plugin.newestDataOnServer?.collections?.entries = now
-        sut = TestListenableWorkerBuilder<LoadBgWorker>(context).build()
+        sut = buildSut()
         // 304 = Not Modified response
         whenever(nsAndroidClient.getSgvsModifiedSince(anyLong(), anyInt()))
             .thenReturn(NSAndroidClient.ReadResponse(304, now - 1000, listOf(glucoseValue.toNSSvgV3())))

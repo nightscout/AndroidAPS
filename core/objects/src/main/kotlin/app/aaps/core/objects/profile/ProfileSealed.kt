@@ -1,5 +1,7 @@
 package app.aaps.core.objects.profile
 
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.IDs
@@ -8,16 +10,17 @@ import app.aaps.core.data.model.data.TargetBlock
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.Profile.ProfileValue
 import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.pump.Pump
+import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventNewNotification
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.objects.extensions.blockValueBySeconds
@@ -26,11 +29,11 @@ import app.aaps.core.objects.extensions.lowTargetBlockValueBySeconds
 import app.aaps.core.objects.extensions.shiftBlock
 import app.aaps.core.objects.extensions.shiftTargetBlock
 import app.aaps.core.objects.extensions.targetBlockValueBySeconds
+import app.aaps.core.objects.extensions.toJson
 import app.aaps.core.ui.R
 import app.aaps.core.utils.MidnightUtils
 import org.json.JSONArray
 import org.json.JSONObject
-import java.text.DecimalFormat
 import java.util.TimeZone
 
 sealed class ProfileSealed(
@@ -46,7 +49,6 @@ sealed class ProfileSealed(
     var duration: Long?, // [milliseconds]
     var ts: Int, // timeshift [hours]
     var pct: Int,
-    var iCfg: ICfg,
     val utcOffset: Long,
     val aps: APS?
 ) : Profile {
@@ -69,10 +71,12 @@ sealed class ProfileSealed(
         value.duration,
         T.msecs(value.timeshift).hours().toInt(),
         value.percentage,
-        value.iCfg,
         value.utcOffset,
         activePlugin?.activeAPS
-    )
+    ), EffectiveProfile {
+
+        override val iCfg: ICfg = value.iCfg
+    }
 
     /**
      * Profile interface created from EffectiveProfileSwitch
@@ -92,10 +96,12 @@ sealed class ProfileSealed(
         null, // already converted to non customized
         0, // already converted to non customized
         100, // already converted to non customized
-        value.iCfg,
         value.utcOffset,
         activePlugin?.activeAPS
-    )
+    ), EffectiveProfile {
+
+        override val iCfg: ICfg = value.iCfg
+    }
 
     /**
      * Profile interface created from PureProfile ie. without customization
@@ -115,63 +121,77 @@ sealed class ProfileSealed(
         null,
         0,
         100,
-        ICfg("", (value.dia * 3600 * 1000).toLong(), 0),
         value.timeZone.rawOffset.toLong(),
         activePlugin?.activeAPS
-    )
+    ) {
 
-    override fun isValid(from: String, pump: Pump, config: Config, rh: ResourceHelper, rxBus: RxBus, hardLimits: HardLimits, sendNotifications: Boolean): Profile.ValidityCheck {
+        override var iCfg: ICfg? = null
+    }
+
+    /**
+     * This class represents concentrated Profile synchronised within the pump.
+     *
+     * Example: when using U20 insulin within the Pump,
+     * if EffectiveProfile define a basal rate of 0.6U/h, pump should deliver 0.6 * (100 / 20) = 3.0U/h
+     * In this case pump must use a rate of 3.0U/hour
+     */
+    class PP(val value: PureProfile, val activePlugin: ActivePlugin?) : ProfileSealed(
+        0,
+        true,
+        null,
+        0,
+        value.basalBlocks,
+        value.isfBlocks,
+        value.icBlocks,
+        value.targetBlocks,
+        "",
+        null,
+        0,
+        100,
+        value.timeZone.rawOffset.toLong(),
+        null
+    ), PumpProfile {
+
+        override val iCfg = null
+    }
+
+    override fun isValid(from: String, pump: Pump, config: Config, rh: ResourceHelper, notificationManager: NotificationManager, hardLimits: HardLimits, sendNotifications: Boolean): Profile.ValidityCheck {
+        // Full validity = semantic (pump-independent) AND pump compatibility. Activating a profile
+        // on the pump requires both; editing, local storage and Nightscout sync only require
+        // [validateSemantic] (a profile that's merely incompatible with the *current* pump is still
+        // valid data worth keeping and uploading).
+        val semantic = validateSemantic(rh, hardLimits)
+        val pumpCheck = validatePump(from, pump, config, rh, notificationManager, sendNotifications)
+        return Profile.ValidityCheck(semantic.isValid && pumpCheck.isValid).also {
+            it.reasons.addAll(semantic.reasons)
+            it.reasons.addAll(pumpCheck.reasons)
+        }
+    }
+
+    /**
+     * Pump-independent ("semantic") validity: every value within the global hard limits. This is
+     * the gate for editing, local storage and Nightscout sync — independent of the active pump, so
+     * switching pumps never silently blocks profile sync.
+     */
+    fun validateSemantic(rh: ResourceHelper, hardLimits: HardLimits): Profile.ValidityCheck {
         val validityCheck = Profile.ValidityCheck()
-        val description = pump.pumpDescription
-
         for (basal in basalBlocks) {
             val basalAmount = basal.amount * percentage / 100.0
-            if (!description.is30minBasalRatesCapable) {
-                // Check for hours alignment
-                val duration: Long = basal.duration
-                if (duration % 3600000 != 0L) {
-                    if (sendNotifications && config.APS) {
-                        val notification = Notification(
-                            Notification.BASAL_PROFILE_NOT_ALIGNED_TO_HOURS,
-                            rh.gs(R.string.basalprofilenotaligned, from),
-                            Notification.NORMAL
-                        )
-                        rxBus.send(EventNewNotification(notification))
-                    }
-                    validityCheck.isValid = false
-                    validityCheck.reasons.add(
-                        rh.gs(R.string.basalprofilenotaligned, from)
-                    )
-                    break
-                }
-            }
-            if (!hardLimits.isInRange(basalAmount, 0.01, hardLimits.maxBasal())) {
+            if (basalAmount !in 0.01..hardLimits.maxBasal()) {
                 validityCheck.isValid = false
                 validityCheck.reasons.add(rh.gs(R.string.value_out_of_hard_limits, rh.gs(R.string.basal_value), basalAmount))
                 break
             }
-            // Check for minimal basal value
-            if (basalAmount < description.basalMinimumRate) {
-                basal.amount = description.basalMinimumRate
-                if (sendNotifications) sendBelowMinimumNotification(from, rxBus, rh)
+        }
+        iCfg?.let {
+            // Todo, add check for peak and concentration, (or delegate iCfg validity check to insulinPlugin which will have this function)
+            if (it.dia !in hardLimits.diaRange()) {
                 validityCheck.isValid = false
-                validityCheck.reasons.add(rh.gs(R.string.minimalbasalvaluereplaced, from))
-                break
-            } else if (basalAmount > description.basalMaximumRate) {
-                basal.amount = description.basalMaximumRate
-                if (sendNotifications) sendAboveMaximumNotification(from, rxBus, rh)
-                validityCheck.isValid = false
-                validityCheck.reasons.add(rh.gs(R.string.maximumbasalvaluereplaced, from))
-                break
+                validityCheck.reasons.add(rh.gs(R.string.value_out_of_hard_limits, rh.gs(R.string.profile_dia), it.dia))
             }
         }
-
-        if (!hardLimits.isInRange(dia, hardLimits.minDia(), hardLimits.maxDia())) {
-            validityCheck.isValid = false
-            validityCheck.reasons.add(rh.gs(R.string.value_out_of_hard_limits, rh.gs(R.string.profile_dia), dia))
-        }
         for (ic in icBlocks)
-            if (!hardLimits.isInRange(ic.amount * 100.0 / percentage, hardLimits.minIC(), hardLimits.maxIC())) {
+            if (ic.amount * 100.0 / percentage !in hardLimits.icRange()) {
                 validityCheck.isValid = false
                 validityCheck.reasons.add(
                     rh.gs(
@@ -183,7 +203,7 @@ sealed class ProfileSealed(
                 break
             }
         for (isf in isfBlocks)
-            if (!hardLimits.isInRange(toMgdl(isf.amount * 100.0 / percentage, units), HardLimits.MIN_ISF, HardLimits.MAX_ISF)) {
+            if (toMgdl(isf.amount * 100.0 / percentage, units) !in HardLimits.LIMIT_ISF) {
                 validityCheck.isValid = false
                 validityCheck.reasons.add(
                     rh.gs(
@@ -195,22 +215,12 @@ sealed class ProfileSealed(
                 break
             }
         for (target in targetBlocks) {
-            if (!hardLimits.isInRange(
-                    toMgdl(target.lowTarget, units),
-                    HardLimits.LIMIT_MIN_BG[0],
-                    HardLimits.LIMIT_MIN_BG[1]
-                )
-            ) {
+            if (toMgdl(target.lowTarget, units) !in HardLimits.LIMIT_MIN_BG) {
                 validityCheck.isValid = false
                 validityCheck.reasons.add(rh.gs(R.string.value_out_of_hard_limits, rh.gs(R.string.profile_low_target), target.lowTarget))
                 break
             }
-            if (!hardLimits.isInRange(
-                    toMgdl(target.highTarget, units),
-                    HardLimits.LIMIT_MAX_BG[0],
-                    HardLimits.LIMIT_MAX_BG[1]
-                )
-            ) {
+            if (toMgdl(target.highTarget, units) !in HardLimits.LIMIT_MAX_BG) {
                 validityCheck.isValid = false
                 validityCheck.reasons.add(rh.gs(R.string.value_out_of_hard_limits, rh.gs(R.string.profile_high_target), target.highTarget))
                 break
@@ -219,12 +229,56 @@ sealed class ProfileSealed(
         return validityCheck
     }
 
-    protected open fun sendBelowMinimumNotification(from: String, rxBus: RxBus, rh: ResourceHelper) {
-        rxBus.send(EventNewNotification(Notification(Notification.MINIMAL_BASAL_VALUE_REPLACED, rh.gs(R.string.minimalbasalvaluereplaced, from), Notification.NORMAL)))
+    /**
+     * Pump-compatibility validity: only the basal block is pump-dependent. Checks that each basal
+     * rate is deliverable by the active pump (minimum/maximum rate) and that the schedule fits the
+     * pump's time granularity (30-min vs full-hour). This gates profile *activation* and drives the
+     * non-blocking "won't run on this pump" warning shown while editing/viewing — it never blocks
+     * editing, storage or sync.
+     */
+    fun validatePump(from: String, pump: Pump, config: Config, rh: ResourceHelper, notificationManager: NotificationManager, sendNotifications: Boolean): Profile.ValidityCheck {
+        val validityCheck = Profile.ValidityCheck()
+        val description = pump.pumpDescription
+        for (basal in basalBlocks) {
+            val basalAmount = basal.amount * percentage / 100.0
+            if (!description.is30minBasalRatesCapable) {
+                // Check for hours alignment
+                val duration: Long = basal.duration
+                if (duration % 3600000 != 0L) {
+                    if (sendNotifications && config.APS) {
+                        notificationManager.post(NotificationId.BASAL_PROFILE_NOT_ALIGNED_TO_HOURS, R.string.basalprofilenotaligned, from)
+                    }
+                    validityCheck.isValid = false
+                    validityCheck.reasons.add(
+                        rh.gs(R.string.basalprofilenotaligned, from)
+                    )
+                    break
+                }
+            }
+            // Check for minimal basal value
+            if (basalAmount < description.basalMinimumRate) {
+                basal.amount = description.basalMinimumRate
+                if (sendNotifications) sendBelowMinimumNotification(from, notificationManager, rh)
+                validityCheck.isValid = false
+                validityCheck.reasons.add(rh.gs(R.string.minimalbasalvaluereplaced, from))
+                break
+            } else if (basalAmount > description.basalMaximumRate) {
+                basal.amount = description.basalMaximumRate
+                if (sendNotifications) sendAboveMaximumNotification(from, notificationManager, rh)
+                validityCheck.isValid = false
+                validityCheck.reasons.add(rh.gs(R.string.maximumbasalvaluereplaced, from))
+                break
+            }
+        }
+        return validityCheck
     }
 
-    protected open fun sendAboveMaximumNotification(from: String, rxBus: RxBus, rh: ResourceHelper) {
-        rxBus.send(EventNewNotification(Notification(Notification.MAXIMUM_BASAL_VALUE_REPLACED, rh.gs(R.string.maximumbasalvaluereplaced, from), Notification.NORMAL)))
+    protected open fun sendBelowMinimumNotification(from: String, notificationManager: NotificationManager, rh: ResourceHelper) {
+        notificationManager.post(NotificationId.MINIMAL_BASAL_VALUE_REPLACED, R.string.minimalbasalvaluereplaced, from)
+    }
+
+    protected open fun sendAboveMaximumNotification(from: String, notificationManager: NotificationManager, rh: ResourceHelper) {
+        notificationManager.post(NotificationId.MAXIMUM_BASAL_VALUE_REPLACED, R.string.maximumbasalvaluereplaced, from)
     }
 
     override val units: GlucoseUnit
@@ -232,14 +286,13 @@ sealed class ProfileSealed(
             is PS   -> value.glucoseUnit
             is EPS  -> value.glucoseUnit
             is Pure -> value.glucoseUnit
+            is PP   -> value.glucoseUnit
         }
-    override val dia: Double
-        get() = iCfg.insulinEndTime / 1000.0 / 60.0 / 60.0
 
     override val timeshift: Int
         get() = ts
 
-    override fun isEqual(profile: Profile): Boolean {
+    override fun isEqual(profile: Profile, ignoreName: Boolean): Boolean {
         for (hour in 0..23) {
             val seconds = T.hours(hour.toLong()).secs().toInt()
             if (getBasalTimeFromMidnight(seconds) != profile.getBasalTimeFromMidnight(seconds)) return false
@@ -248,7 +301,10 @@ sealed class ProfileSealed(
             if (getTargetLowMgdlTimeFromMidnight(seconds) != profile.getTargetLowMgdlTimeFromMidnight(seconds)) return false
             if (getTargetHighMgdlTimeFromMidnight(seconds) != profile.getTargetHighMgdlTimeFromMidnight(seconds)) return false
         }
-        if (dia != profile.dia) return false
+        iCfg?.let { // if EffectiveProfile including iCfg, check iCfg
+            if (!it.isEqual(profile.iCfg)) return false
+        }
+        if (ignoreName) return true
         return !((profile is EPS) && profileName != profile.value.originalProfileName) // handle profile name change too
     }
 
@@ -271,7 +327,7 @@ sealed class ProfileSealed(
         toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(), 100.0 / percentage, timeshift), units)
 
     override fun getIsfMgdl(caller: String): Double =
-        if (aps?.supportsDynamicIsf() ?: error("APS not defined"))
+        if (aps?.usingDynamicIsf() ?: error("APS not defined"))
             aps.getIsfMgdl(this, caller) ?: toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(), 100.0 / percentage, timeshift), units)
         else getProfileIsfMgdl()
 
@@ -279,11 +335,10 @@ sealed class ProfileSealed(
         if (config.AAPSCLIENT) {
             processedDeviceStatusData.getAPSResult()?.isfMgdlForCarbs ?: toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift), units)
         } else {
-            if (aps?.supportsDynamicIsf() ?: error("APS not defined"))
+            if (aps?.usingDynamicIsf() ?: error("APS not defined"))
                 aps.getAverageIsfMgdl(timestamp, caller) ?: toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift), units)
             else toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift), units)
         }
-
 
     override fun getTargetMgdl(): Double = toMgdl(targetBlocks.targetBlockValueBySeconds(MidnightUtils.secondsFromMidnight(), timeshift), units)
     override fun getTargetLowMgdl(): Double = toMgdl(targetBlocks.lowTargetBlockValueBySeconds(MidnightUtils.secondsFromMidnight(), timeshift), units)
@@ -300,15 +355,15 @@ sealed class ProfileSealed(
     override fun getTargetHighMgdlTimeFromMidnight(timeAsSeconds: Int): Double = toMgdl(targetBlocks.highTargetBlockValueBySeconds(timeAsSeconds, timeshift), units)
 
     override fun getIcList(rh: ResourceHelper, dateUtil: DateUtil): String =
-        getValuesList(icBlocks, 100.0 / percentage, DecimalFormat("0.0"), rh.gs(R.string.profile_carbs_per_unit), dateUtil)
+        getValuesList(icBlocks, 100.0 / percentage, NumberFormat.DECIMAL_1, rh.gs(R.string.profile_carbs_per_unit), dateUtil)
 
     override fun getIsfList(rh: ResourceHelper, dateUtil: DateUtil): String =
-        getValuesList(isfBlocks, 100.0 / percentage, DecimalFormat("0.0"), units.asText + rh.gs(R.string.profile_per_unit), dateUtil)
+        getValuesList(isfBlocks, 100.0 / percentage, NumberFormat.DECIMAL_1, rh.gs(if (units == GlucoseUnit.MGDL) R.string.profile_isf_units_mgdl else R.string.profile_isf_units_mmol), dateUtil)
 
     override fun getBasalList(rh: ResourceHelper, dateUtil: DateUtil): String =
-        getValuesList(basalBlocks, percentage / 100.0, DecimalFormat("0.00"), rh.gs(R.string.profile_ins_units_per_hour), dateUtil)
+        getValuesList(basalBlocks, percentage / 100.0, NumberFormat.DECIMAL_2, rh.gs(R.string.profile_ins_units_per_hour), dateUtil)
 
-    override fun getTargetList(rh: ResourceHelper, dateUtil: DateUtil): String = getTargetValuesList(targetBlocks, DecimalFormat("0.0"), units.asText, dateUtil)
+    override fun getTargetList(rh: ResourceHelper, dateUtil: DateUtil): String = getTargetValuesList(targetBlocks, NumberFormat.DECIMAL_1, units.displayLabel, dateUtil)
 
     override fun convertToNonCustomizedProfile(dateUtil: DateUtil): PureProfile =
         PureProfile(
@@ -318,18 +373,14 @@ sealed class ProfileSealed(
             icBlocks = icBlocks.shiftBlock(100.0 / percentage, timeshift),
             targetBlocks = targetBlocks.shiftTargetBlock(timeshift),
             glucoseUnit = units,
-            dia = when (this) {
-                is PS   -> this.value.iCfg.insulinEndTime / 3600.0 / 1000.0
-                is EPS  -> this.value.iCfg.insulinEndTime / 3600.0 / 1000.0
-                is Pure -> this.value.dia
-            },
+            iCfg = iCfg,
             timeZone = TimeZone.getDefault()
         )
 
     override fun toPureNsJson(dateUtil: DateUtil): JSONObject {
         val o = JSONObject()
         o.put("units", units.asText)
-        o.put("dia", dia)
+        iCfg?.let { o.put("iCfg", it.toJson()) }
         o.put("timezone", dateUtil.timeZoneByOffset(utcOffset))
         // SENS
         val sens = JSONArray()
@@ -337,7 +388,7 @@ sealed class ProfileSealed(
         isfBlocks.forEach {
             sens.put(
                 JSONObject()
-                    .put("time", DecimalFormat("00").format(elapsedHours) + ":00")
+                    .put("time", NumberFormat.INTEGER_2_DIGITS.format(elapsedHours) + ":00")
                     .put("timeAsSeconds", T.hours(elapsedHours).secs())
                     .put("value", getIsfTimeFromMidnight(T.hours(elapsedHours).secs().toInt()))
             )
@@ -349,7 +400,7 @@ sealed class ProfileSealed(
         icBlocks.forEach {
             carbratio.put(
                 JSONObject()
-                    .put("time", DecimalFormat("00").format(elapsedHours) + ":00")
+                    .put("time", NumberFormat.INTEGER_2_DIGITS.format(elapsedHours) + ":00")
                     .put("timeAsSeconds", T.hours(elapsedHours).secs())
                     .put("value", getIcTimeFromMidnight(T.hours(elapsedHours).secs().toInt()))
             )
@@ -361,7 +412,7 @@ sealed class ProfileSealed(
         basalBlocks.forEach {
             basal.put(
                 JSONObject()
-                    .put("time", DecimalFormat("00").format(elapsedHours) + ":00")
+                    .put("time", NumberFormat.INTEGER_2_DIGITS.format(elapsedHours) + ":00")
                     .put("timeAsSeconds", T.hours(elapsedHours).secs())
                     .put("value", getBasalTimeFromMidnight(T.hours(elapsedHours).secs().toInt()))
             )
@@ -374,13 +425,13 @@ sealed class ProfileSealed(
         targetBlocks.forEach {
             targetLow.put(
                 JSONObject()
-                    .put("time", DecimalFormat("00").format(elapsedHours) + ":00")
+                    .put("time", NumberFormat.INTEGER_2_DIGITS.format(elapsedHours) + ":00")
                     .put("timeAsSeconds", T.hours(elapsedHours).secs())
                     .put("value", getTargetLowTimeFromMidnight(T.hours(elapsedHours).secs().toInt()))
             )
             targetHigh.put(
                 JSONObject()
-                    .put("time", DecimalFormat("00").format(elapsedHours) + ":00")
+                    .put("time", NumberFormat.INTEGER_2_DIGITS.format(elapsedHours) + ":00")
                     .put("timeAsSeconds", T.hours(elapsedHours).secs())
                     .put("value", getTargetHighTimeFromMidnight(T.hours(elapsedHours).secs().toInt()))
             )
@@ -441,7 +492,32 @@ sealed class ProfileSealed(
         return ret
     }
 
-    private fun getValuesList(array: List<Block>, multiplier: Double, format: DecimalFormat, units: String, dateUtil: DateUtil): String =
+    /**
+     * Convert EffectiveProfile to Concentrated using iCfg.concentration value
+     *
+     * if another concentration is put within the Pump (i.e. U200) iCfg.concentration should be set to 2.0
+     * the EffectiveProfile (set in U100) should be converted to a "Concentrated Profile" to deliver the right rate in International Units
+     *
+     * @return PumpProfile
+     **/
+
+    fun toPump(): PumpProfile =
+        if (this is EffectiveProfile)
+            PP(
+                PureProfile(
+                    jsonObject = JSONObject(),
+                    basalBlocks = basalBlocks.shiftBlock(percentage / 100.0 / iCfg.concentration, timeshift),
+                    isfBlocks = isfBlocks.shiftBlock(100.0 / percentage * iCfg.concentration, timeshift),
+                    icBlocks = icBlocks.shiftBlock(100.0 / percentage * iCfg.concentration, timeshift),
+                    targetBlocks = targetBlocks.shiftTargetBlock(timeshift),
+                    glucoseUnit = units,
+                    timeZone = TimeZone.getDefault()
+                ),
+                null
+            )
+        else error("Conversion allowed only from EffectiveProfile")
+
+    private fun getValuesList(array: List<Block>, multiplier: Double, format: NumberFormat, units: String, dateUtil: DateUtil): String =
         StringBuilder().also { sb ->
             var elapsedSec = 0
             array.shiftBlock(multiplier, timeshift).forEach {
@@ -454,7 +530,7 @@ sealed class ProfileSealed(
             }
         }.toString()
 
-    private fun getTargetValuesList(array: List<TargetBlock>, format: DecimalFormat, units: String, dateUtil: DateUtil): String =
+    private fun getTargetValuesList(array: List<TargetBlock>, format: NumberFormat, units: String, dateUtil: DateUtil): String =
         StringBuilder().also { sb ->
             var elapsedSec = 0
             array.shiftTargetBlock(timeshift).forEach {
@@ -468,10 +544,6 @@ sealed class ProfileSealed(
                 elapsedSec += T.msecs(it.duration).secs().toInt()
             }
         }.toString()
-
-    fun isInProgress(dateUtil: DateUtil): Boolean =
-        dateUtil.now() in timestamp..timestamp + (duration ?: 0L)
-
     private fun toMgdl(value: Double, units: GlucoseUnit): Double =
-        if (units == GlucoseUnit.MGDL) value else value * GlucoseUnit.MMOLL_TO_MGDL
+        if (units == GlucoseUnit.MGDL) value else value * Constants.MMOLL_TO_MGDL
 }

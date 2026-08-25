@@ -26,11 +26,6 @@
     <string name="description_source_random_bg">Generate random BG data (Demo mode only)</string>
     <string name="random_bg_short">BG</string>
 
-    <string name="bgsource_settings">BG source settings</string>
-    <string name="bgsource_log_sensor_change_title">Accept sensor start</string>
-    <string name="bgsource_log_sensor_change_summary">Create event \"CGM Sensor Insert\" in Careportal automatically on received sensor start from BG source local broadcast</string>
-    <string name="direction">direction</string>
-    <string name="bg_generation_interval_minutes">BG generation interval minutes</string>
     <!-- Patched Syai Tag App -->
     <string name="syai_tag_app">Syai</string>
     <string name="description_source_patched_syai_tag_app">Receive glucose data from Syai/Ottai App.</string>
@@ -40,4 +35,32 @@
     <!-- Patched Sino App -->
     <string name="patched_sino_app">Sino App</string>
     <string name="description_source_patched_sino_app">Receive glucose data from Patched Sino App.</string>
+
+    <!-- Instara App -->
+    <string name="instara_app">Instara</string>
+    <string name="description_source_instara_app">Receive BG values from the Instara App.</string>
+    <!-- Instara preferences -->
+    <string name="pref_title_instara_history_request">Instara historical data request</string>
+    <string name="pref_summary_instara_history_request">Request possible missing historical data in background</string>
+
+    <!-- Notification Reader -->
+    <string name="notification_reader">Notification Reader</string>
+    <string name="description_source_notification_reader">Read glucose values from notifications posted by official CGM apps (Dexcom, Medtronic, Eversense, etc.).</string>
+    <!-- Permission rationales -->
+    <string name="permission_dexcom_title">Dexcom CGM</string>
+    <string name="permission_dexcom_description">Application needs permission to receive CGM data from Dexcom app</string>
+    <string name="permission_notification_listener_title">Notification Access</string>
+    <string name="permission_notification_listener_description">Required to read glucose values from CGM app notifications</string>
+
+    <string name="aidex">MicroTech CGM App</string>
+    <string name="aidex_short">CGM App</string>
+    <string name="description_source_aidex">Receive CGM values from LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 etc.</string>
+
+    <string name="aidex_sensor_expired">Sensor expired, please replace with a new sensor</string>
+    <string name="aidex_sensor_error">Sensor error, please check the sensor status</string>
+    <string name="aidex_sensor_stabilizing">The sensor is stabilizing, please wait…</string>
+
+    <string name="aidex_sensor_replace">Sensor replacement required, please replace with a new sensor as soon as possible</string>
+    <string name="aidex_signal_lost">Sensor signal lost, please check the connection</string>
+
 </resources>

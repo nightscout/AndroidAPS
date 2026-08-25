@@ -3,13 +3,14 @@ package app.aaps.pump.medtrum
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
-import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.pump.medtrum.comm.enums.BasalType
 import app.aaps.pump.medtrum.comm.enums.ModelType
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.anyOrNull
@@ -120,6 +121,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         val bolusType = 0
         val bolusCompleted = false
         val amount = 1.4
+        bolusProgressData.start(insulin = 2.0, isSMB = false)
 
         // Call
         medtrumPump.handleBolusStatusUpdate(bolusType, bolusCompleted, amount)
@@ -127,10 +129,10 @@ class MedtrumPumpTest : MedtrumTestBase() {
         // Expected values
         assertThat(medtrumPump.bolusDone).isEqualTo(bolusCompleted)
         assertThat(medtrumPump.bolusAmountDeliveredFlow.value).isWithin(0.01).of(amount)
-        assertThat(BolusProgressData.delivered).isWithin(0.01).of(amount)
+        assertThat(bolusProgressData.state.value?.delivered?.cU ?: 0.0).isWithin(0.01).of(amount)
     }
 
-    @Test fun handleBasalStatusUpdateWhenBasalTypeIsAbsoluteTempAndTemporaryBasalInfoThenExpectNewData() {
+    @Test fun handleBasalStatusUpdateWhenBasalTypeIsAbsoluteTempAndTemporaryBasalInfoThenExpectNewData() = runTest {
         // Inputs
         val basalType = BasalType.ABSOLUTE_TEMP
         val basalRate = 0.5
@@ -166,7 +168,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         // Expected values
         verify(pumpSync).syncTemporaryBasalWithPumpId(
             timestamp = basalStartTime,
-            rate = basalRate,
+            rate = PumpRate(basalRate),
             duration = duration,
             isAbsolute = true,
             type = temporaryBasalInfo.type,
@@ -183,7 +185,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         assertThat(medtrumPump.lastBasalStartTime).isEqualTo(basalStartTime)
     }
 
-    @Test fun handleBasalStatusUpdateWhenBasalTypeIsAbsoluteTempAndSameExpectedTemporaryBasalInfoThenExpectNoPumpSync() {
+    @Test fun handleBasalStatusUpdateWhenBasalTypeIsAbsoluteTempAndSameExpectedTemporaryBasalInfoThenExpectNoPumpSync() = runTest {
         // Inputs
         val basalType = BasalType.ABSOLUTE_TEMP
         val basalRate = 0.5
@@ -232,7 +234,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         assertThat(medtrumPump.lastBasalStartTime).isEqualTo(basalStartTime)
     }
 
-    @Test fun handleBasalStatusUpdateWhenBasalTypeIsAbsoluteTempAndNoTemporaryBasalInfoThenExpectNewData() {
+    @Test fun handleBasalStatusUpdateWhenBasalTypeIsAbsoluteTempAndNoTemporaryBasalInfoThenExpectNewData() = runTest {
         // Inputs
         val basalType = BasalType.ABSOLUTE_TEMP
         val basalRate = 0.5
@@ -266,7 +268,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         // Expected values
         verify(pumpSync).syncTemporaryBasalWithPumpId(
             timestamp = basalStartTime,
-            rate = basalRate,
+            rate = PumpRate(basalRate),
             duration = T.mins(4800L).msecs(),
             isAbsolute = true,
             type = null,
@@ -283,7 +285,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         assertThat(medtrumPump.lastBasalStartTime).isEqualTo(basalStartTime)
     }
 
-    @Test fun handleBasalStatusUpdateWhenBasalTypeIsRelativeTempAndTemporaryBasalInfoThenExpectNewData() {
+    @Test fun handleBasalStatusUpdateWhenBasalTypeIsRelativeTempAndTemporaryBasalInfoThenExpectNewData() = runTest {
         // Inputs
         val basalType = BasalType.RELATIVE_TEMP
         val basalRate = 0.5
@@ -321,7 +323,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         val adjustedBasalRate = (basalRate / medtrumPump.baseBasalRate) * 100
         verify(pumpSync).syncTemporaryBasalWithPumpId(
             timestamp = basalStartTime,
-            rate = adjustedBasalRate,
+            rate = PumpRate(adjustedBasalRate),
             duration = duration,
             isAbsolute = false,
             type = temporaryBasalInfo.type,
@@ -338,7 +340,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         assertThat(medtrumPump.lastBasalStartTime).isEqualTo(basalStartTime)
     }
 
-    @Test fun handleBasalStatusUpdateWhenBasalTypeIsSuspendedThenExpectNewData() {
+    @Test fun handleBasalStatusUpdateWhenBasalTypeIsSuspendedThenExpectNewData() = runTest {
         // Inputs
         val basalType = BasalType.SUSPEND_MORE_THAN_MAX_PER_DAY
         val basalRate = 0.0
@@ -370,7 +372,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         // Expected values
         verify(pumpSync).syncTemporaryBasalWithPumpId(
             timestamp = basalStartTime,
-            rate = basalRate,
+            rate = PumpRate(basalRate),
             duration = T.mins(4800L).msecs(),
             isAbsolute = true,
             type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
@@ -387,7 +389,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         assertThat(medtrumPump.lastBasalStartTime).isEqualTo(basalStartTime)
     }
 
-    @Test fun handleBasalStatusUpdateWhenBasalTypeIsATypeIsSuspendedAndSameExpectedTemporaryBasalInfoThenExpectNoPumpSync() {
+    @Test fun handleBasalStatusUpdateWhenBasalTypeIsATypeIsSuspendedAndSameExpectedTemporaryBasalInfoThenExpectNoPumpSync() = runTest {
         // Inputs
         val basalType = BasalType.SUSPEND_MORE_THAN_MAX_PER_DAY
         val basalRate = 0.0
@@ -433,7 +435,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         assertThat(medtrumPump.lastBasalStartTime).isEqualTo(basalStartTime)
     }
 
-    @Test fun handleBasalStatusUpdateWhenBasalTypeIsSuspendedAndNewerFakeTBRThenExpectInvalidateAndNewData() {
+    @Test fun handleBasalStatusUpdateWhenBasalTypeIsSuspendedAndNewerFakeTBRThenExpectInvalidateAndNewData() = runTest {
         // Inputs
         val basalType = BasalType.SUSPEND_MORE_THAN_MAX_PER_DAY
         val basalRate = 0.0
@@ -467,7 +469,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         // Expected values
         verify(pumpSync).syncTemporaryBasalWithPumpId(
             timestamp = basalStartTime,
-            rate = basalRate,
+            rate = PumpRate(basalRate),
             duration = T.mins(4800L).msecs(),
             isAbsolute = true,
             type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
@@ -484,7 +486,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         assertThat(medtrumPump.lastBasalStartTime).isEqualTo(basalStartTime)
     }
 
-    @Test fun handleBasalStatusUpdateWhenBasalTypeIsNoneAndThenExpectFakeTBR() {
+    @Test fun handleBasalStatusUpdateWhenBasalTypeIsNoneAndThenExpectFakeTBR() = runTest {
         // Inputs
         val basalType = BasalType.NONE
         val basalRate = 0.0
@@ -512,7 +514,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         // Expected values
         verify(pumpSync).syncTemporaryBasalWithPumpId(
             timestamp = dateUtil.now(),
-            rate = basalRate,
+            rate = PumpRate(basalRate),
             duration = T.mins(4800L).msecs(),
             isAbsolute = true,
             type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
@@ -529,7 +531,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         assertThat(medtrumPump.lastBasalStartTime).isEqualTo(basalStartTime)
     }
 
-    @Test fun handleBasalStatusUpdateWhenBasalTypeIsStandardAndTempBasalExpectedThenExpectSyncStop() {
+    @Test fun handleBasalStatusUpdateWhenBasalTypeIsStandardAndTempBasalExpectedThenExpectSyncStop() = runTest {
         // Inputs
         val basalType = BasalType.STANDARD
         val basalRate = 0.0
@@ -573,7 +575,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         assertThat(medtrumPump.lastBasalStartTime).isEqualTo(basalStartTime)
     }
 
-    @Test fun handleBasalStatusUpdateWhenBasalTypeIsStandardAndNoTempBasalExpectedThenExpectNoSyncStop() {
+    @Test fun handleBasalStatusUpdateWhenBasalTypeIsStandardAndNoTempBasalExpectedThenExpectNoSyncStop() = runTest {
         // Inputs
         val basalType = BasalType.STANDARD
         val basalRate = 0.0
@@ -650,7 +652,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         assertThat(medtrumPump.currentSequenceNumber).isEqualTo(sequence)
     }
 
-    @Test fun setFakeTBRIfNotSetWhenNoFakeTBRAlreadyRunningExpectPumpSync() {
+    @Test fun setFakeTBRIfNotSetWhenNoFakeTBRAlreadyRunningExpectPumpSync() = runTest {
         // Inputs
         medtrumPump.deviceType = ModelType.MD8301.value
 
@@ -674,7 +676,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         // Expected values
         verify(pumpSync).syncTemporaryBasalWithPumpId(
             timestamp = dateUtil.now(),
-            rate = 0.0,
+            rate = PumpRate(0.0),
             duration = T.mins(4800L).msecs(),
             isAbsolute = true,
             type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
@@ -684,7 +686,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         )
     }
 
-    @Test fun setFakeTBRIfNotSetWhenFakeTBRAlreadyRunningExpectNoPumpSync() {
+    @Test fun setFakeTBRIfNotSetWhenFakeTBRAlreadyRunningExpectNoPumpSync() = runTest {
         // Inputs
         medtrumPump.deviceType = ModelType.MD8301.value
 
@@ -718,7 +720,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         )
     }
 
-    @Test fun handleNewPatchCalledWhenSequenceNumberThenExpectPumpSyncCalled() {
+    @Test fun handleNewPatchCalledWhenSequenceNumberThenExpectPumpSyncCalled() = runTest {
         // Inputs
         medtrumPump.currentSequenceNumber = 100
         medtrumPump.syncedSequenceNumber = 99

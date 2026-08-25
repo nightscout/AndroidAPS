@@ -16,4 +16,5 @@ interface UnitDoublePreferenceKey : PreferenceKey {
      *  Maximal allowed value
      */
     val maxMgdl: Int
+
 }

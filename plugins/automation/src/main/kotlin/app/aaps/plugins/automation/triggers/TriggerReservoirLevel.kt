@@ -1,23 +1,20 @@
 package app.aaps.plugins.automation.triggers
 
-import android.widget.LinearLayout
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.ui.compose.icons.IcPumpCartridge
 import app.aaps.core.utils.JsonHelper
 import app.aaps.core.utils.JsonHelper.safeGetDouble
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
-import app.aaps.plugins.automation.elements.LabelWithElement
-import app.aaps.plugins.automation.elements.LayoutBuilder
-import app.aaps.plugins.automation.elements.StaticLabel
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
-import java.text.DecimalFormat
-import java.util.Optional
 
 class TriggerReservoirLevel(injector: HasAndroidInjector) : Trigger(injector) {
 
-    var reservoirLevel: InputDouble = InputDouble(0.0, 0.0, 800.0, 1.0, DecimalFormat("1"))
+    var reservoirLevel: InputDouble = InputDouble(0.0, 0.0, 800.0, 1.0, NumberFormat.INTEGER)
     var comparator: Comparator = Comparator(rh)
 
     private constructor(injector: HasAndroidInjector, triggerReservoirLevel: TriggerReservoirLevel) : this(injector) {
@@ -35,8 +32,15 @@ class TriggerReservoirLevel(injector: HasAndroidInjector) : Trigger(injector) {
         return this
     }
 
-    override fun shouldRun(): Boolean {
-        val actualReservoirLevel = activePlugin.activePump.reservoirLevel
+    override suspend fun shouldRun(): Boolean {
+        // The reservoir reading is converted with the insulin's concentration, so the wrong insulin misreads it by
+        // the concentration ratio (U200 vs U100 = 2x) and fires — or fails to fire — at the wrong level. With nothing
+        // in force there is no correct conversion, so don't run rather than guess.
+        val iCfg = profileFunction.getRunningOrRequestedICfg() ?: run {
+            aapsLogger.debug(LTag.AUTOMATION, "NOT ready for execution, no insulin in use: " + friendlyDescription())
+            return false
+        }
+        val actualReservoirLevel = activePlugin.activePump.reservoirLevel.value.iU(iCfg.concentration)
         if (comparator.value.check(actualReservoirLevel, reservoirLevel.value)) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true
@@ -63,15 +67,9 @@ class TriggerReservoirLevel(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyDescription(): String =
         rh.gs(R.string.triggerReservoirLevelDesc, rh.gs(comparator.value.stringRes), reservoirLevel.value)
 
-    override fun icon(): Optional<Int> = Optional.of(app.aaps.core.objects.R.drawable.ic_cp_age_insulin)
+    override fun composeIcon() = IcPumpCartridge
+    override fun elementType() = ElementType.FILL
 
     override fun duplicate(): Trigger = TriggerReservoirLevel(injector, this)
 
-    override fun generateDialog(root: LinearLayout) {
-        LayoutBuilder()
-            .add(StaticLabel(rh, R.string.triggerReservoirLevelLabel, this))
-            .add(comparator)
-            .add(LabelWithElement(rh, rh.gs(R.string.triggerReservoirLevelLabel) + ": ", rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname), reservoirLevel))
-            .build(root)
-    }
 }

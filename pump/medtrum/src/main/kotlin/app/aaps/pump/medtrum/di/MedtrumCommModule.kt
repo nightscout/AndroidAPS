@@ -2,6 +2,8 @@ package app.aaps.pump.medtrum.di
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import app.aaps.pump.medtrum.comm.packets.ActivatePacket
 import app.aaps.pump.medtrum.comm.packets.AuthorizePacket
 import app.aaps.pump.medtrum.comm.packets.CancelBolusPacket
@@ -29,6 +31,7 @@ import app.aaps.pump.medtrum.comm.packets.SynchronizePacket
 
 @Suppress("unused")
 @Module
+@InstallIn(SingletonComponent::class)
 abstract class MedtrumCommModule {
 
     @ContributesAndroidInjector abstract fun contributesActivatePacket(): ActivatePacket

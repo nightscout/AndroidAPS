@@ -3,6 +3,7 @@ package app.aaps.pump.omnipod.common.bledriver.pod.state
 import android.os.SystemClock
 import app.aaps.core.data.model.BS
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -48,12 +49,18 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     private val config: Config
 ) : OmnipodDashPodStateManager {
 
-    /** Internal (rather than private) to allow unit testing within this module. */
-    internal var podState: PodState
+    private val gson = Gson()
 
-    init {
-        podState = load()
-    }
+    private var _podState: PodState? = null
+
+    /** Internal (rather than private) to allow unit testing within this module.
+     *  Lazily deserialized on first access to keep Gson reflection off the main thread
+     *  during app startup (Dagger constructs this @Singleton eagerly). */
+    internal var podState: PodState
+        get() = _podState ?: synchronized(this) { _podState ?: load().also { _podState = it } }
+        set(value) {
+            synchronized(this) { _podState = value }
+        }
 
     override var activationProgress: ActivationProgress
         get() = podState.activationProgress
@@ -344,7 +351,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     }
 
     override fun needsBasalCorrection(): Boolean {
-        if (!config.enableOmnipodDriftCompensation()) return false  // Semaphore file check
+        if (!config.isEnabled(ExternalOptions.ENABLE_OMNIPOD_DRIFT_COMPENSATION)) return false  // Semaphore file check
 
         val correctionThreshold = -PodConstants.POD_PULSE_BOLUS_UNITS / 2  // -0.025U
         
@@ -762,7 +769,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     }
 
     override fun onStart() {
-        logger.info(LTag.PUMP, "Omnipod Dash drift compensation: ${if (config.enableOmnipodDriftCompensation()) "enabled" else "disabled"}")
+        logger.info(LTag.PUMP, "Omnipod Dash drift compensation: ${if (config.isEnabled(ExternalOptions.ENABLE_OMNIPOD_DRIFT_COMPENSATION)) "enabled" else "disabled"}")
         when (getCommandConfirmationFromState()) {
             CommandConfirmationSuccess, CommandConfirmationDenied -> {
                 val now = SystemClock.elapsedRealtime()
@@ -983,9 +990,9 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     private fun store() {
         try {
             val cleanPodState = podState.copy(ltk = byteArrayOf()) // do not log ltk
-            logger.debug(LTag.PUMPCOMM, "Storing Pod state: ${Gson().toJson(cleanPodState)}")
+            logger.debug(LTag.PUMPCOMM, "Storing Pod state: ${gson.toJson(cleanPodState)}")
 
-            val serialized = Gson().toJson(podState)
+            val serialized = gson.toJson(podState)
             preferences.put(DashStringNonPreferenceKey.PodState, serialized)
         } catch (ex: Exception) {
             logger.error(LTag.PUMPCOMM, "Failed to store Pod state", ex)
@@ -995,7 +1002,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     private fun load(): PodState {
         if (preferences.getIfExists(DashStringNonPreferenceKey.PodState) != null) {
             try {
-                return Gson().fromJson(preferences.get(DashStringNonPreferenceKey.PodState), PodState::class.java)
+                return gson.fromJson(preferences.get(DashStringNonPreferenceKey.PodState), PodState::class.java)
             } catch (ex: Exception) {
                 logger.error(LTag.PUMPCOMM, "Failed to deserialize Pod state", ex)
             }

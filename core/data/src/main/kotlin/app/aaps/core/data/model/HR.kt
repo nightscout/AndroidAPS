@@ -2,14 +2,14 @@ package app.aaps.core.data.model
 
 import java.util.TimeZone
 
-/** Heart rate values measured by a user smart watch or the like. */
+/** Heart rate values measured by a user smartwatch or the like. */
 data class HR(
     var id: Long = 0,
     /** Duration milliseconds */
     var duration: Long,
     /** Milliseconds since the epoch. End of the sampling period, i.e. the value is
      *  sampled from timestamp-duration to timestamp. */
-    var timestamp: Long,
+    override var timestamp: Long,
     var beatsPerMinute: Double,
     /** Source device that measured the heart rate. */
     var device: String,
@@ -19,7 +19,7 @@ data class HR(
     var isValid: Boolean = true,
     var referenceId: Long? = null,
     var ids: IDs = IDs()
-) {
+) : TimeStamped {
 
     fun contentEqualsTo(other: HR): Boolean {
         return this === other || (

@@ -16,6 +16,7 @@ fun TotalDailyDose.fromDb(): TDD =
         bolusAmount = this.bolusAmount,
         totalAmount = this.totalAmount,
         carbs = this.carbs,
+        carbInsulin = this.carbInsulin,
         ids = this.interfaceIDs.fromDb()
     )
 
@@ -32,5 +33,6 @@ fun TDD.toDb(): TotalDailyDose =
         bolusAmount = this.bolusAmount,
         totalAmount = this.totalAmount,
         carbs = this.carbs,
+        carbInsulin = this.carbInsulin,
         interfaceIDs_backing = this.ids.toDb()
     )

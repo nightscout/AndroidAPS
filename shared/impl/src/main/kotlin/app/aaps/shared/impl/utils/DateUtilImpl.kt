@@ -2,13 +2,13 @@ package app.aaps.shared.impl.utils
 
 import android.content.Context
 import androidx.collection.LongSparseArray
+import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.data.format.NumberFormatPlatform
 import app.aaps.core.interfaces.R
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.SafeParse
 import java.security.SecureRandom
-import java.text.DecimalFormat
-import java.text.DecimalFormatSymbols
 import java.time.Clock
 import java.time.Instant
 import java.time.LocalDate
@@ -27,6 +27,7 @@ import javax.inject.Singleton
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.floor
+import kotlin.math.max
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
@@ -114,9 +115,9 @@ class DateUtilImpl @Inject constructor(
         val startOfTodayMillis = beginOfDay(nowMillis)
         return if (mills < nowMillis) { // Past
             when {
-                mills > startOfTodayMillis                                  -> rh.gs(R.string.today)
-                mills > startOfTodayMillis - 1.days.inWholeMilliseconds -> rh.gs(R.string.yesterday)
-                mills > startOfTodayMillis - 7.days.inWholeMilliseconds -> dayAgo(mills, rh, true)
+                mills > startOfTodayMillis                                  -> "${rh.gs(R.string.today)} - ${dateString(mills)}"
+                mills > startOfTodayMillis - 1.days.inWholeMilliseconds -> "${rh.gs(R.string.yesterday)} - ${dateString(mills)}"
+                mills > startOfTodayMillis - 7.days.inWholeMilliseconds -> "${dayAgo(mills, rh, true)} - ${dateString(mills)}"
                 else                                                        -> dateString(mills)
             }
         } else { // Future
@@ -218,6 +219,15 @@ class DateUtilImpl @Inject constructor(
         }
     }
 
+    override fun minOrSec(rh: ResourceHelper, durationMs: Long): String {
+        if (durationMs < 0) return ""
+        val duration = durationMs.milliseconds
+        return when {
+            duration.inWholeMinutes >= 2 -> rh.gs(R.string.min_plus, duration.inWholeMinutes.toInt())
+            else                         -> rh.gs(R.string.sec_plus, duration.inWholeSeconds.toInt())
+        }
+    }
+
     override fun minAgoShort(time: Long?): String {
         if (time == null) return ""
         val duration = (time - now()).milliseconds
@@ -271,20 +281,29 @@ class DateUtilImpl @Inject constructor(
         return t
     }
 
-    override fun timeFrameString(timeInMillis: Long, rh: ResourceHelper): String {
+    override fun timeFrameString(timeInMillis: Long, rh: ResourceHelper, withParentheses: Boolean): String {
         val duration = timeInMillis.milliseconds
         val totalHours = duration.inWholeHours
         val remainingMinutes = (duration - totalHours.hours).inWholeMinutes
         val hoursPart = if (totalHours > 0) "$totalHours${rh.gs(R.string.shorthour)} " else ""
-        return "($hoursPart$remainingMinutes')"
+        val body = "$hoursPart$remainingMinutes'"
+        return if (withParentheses) "($body)" else body
     }
 
     override fun sinceString(timestamp: Long, rh: ResourceHelper): String =
         timeFrameString(now() - timestamp, rh)
 
-    override fun untilString(timestamp: Long, rh: ResourceHelper): String {
+    override fun untilString(timestamp: Long, rh: ResourceHelper, withParentheses: Boolean): String {
         val durationMillis = timestamp - now()
-        return timeFrameString(durationMillis, rh)
+        return timeFrameString(durationMillis, rh, withParentheses)
+    }
+
+    override fun timeRemainingString(timeInMillis: Long, rh: ResourceHelper): String {
+        val duration = timeInMillis.milliseconds
+        val totalHours = duration.inWholeHours.toInt()
+        val remainingMinutes = (duration - totalHours.hours).inWholeMinutes.toInt()
+        return if (totalHours > 0) rh.gs(R.string.time_remaining_h_m, totalHours, remainingMinutes)
+        else rh.gs(R.string.time_remaining_m, remainingMinutes)
     }
 
     override fun now(): Long = clock.millis()
@@ -408,7 +427,6 @@ class DateUtilImpl @Inject constructor(
     }
 
     override fun qs(x: Double, numDigits: Int): String {
-        val formatter = decimalFormatter.get()
         var digits = numDigits
         if (digits == -1) {
             digits = 0
@@ -420,12 +438,17 @@ class DateUtilImpl @Inject constructor(
                 }
             }
         }
-        // Use maximumFractionDigits to replicate the original behavior
-        // of not showing trailing zeros (e.g., 12.0 -> "12").
-        formatter!!.maximumFractionDigits = digits
-        // We must also set the minimum to 0 to allow for truncation.
-        formatter.minimumFractionDigits = 0
-        return formatter.format(x)
+        // maxFractionDigits with minFractionDigits = 0 keeps the original behaviour of
+        // not showing trailing zeros (12.0 -> "12").
+        // The separator is always a dot, as it was before. Grouping is off: the old code used
+        // DecimalFormat() which groups by default, and since only the decimal separator was
+        // overridden the grouping separator stayed locale dependent. On a German device that
+        // turned 1234.5 into "1.234.5", and on a Czech one into "1<nbsp>234.5".
+        // max(0, ...) keeps the old behaviour for a numDigits below -1: DecimalFormat clamped
+        // a negative maximumFractionDigits to 0, so the value was printed as a whole number.
+        // Without it NumberFormat would throw, because maxFractionDigits may not be negative.
+        return NumberFormat(minFractionDigits = 0, maxFractionDigits = max(0, digits))
+            .format(x, NumberFormatPlatform.SEPARATOR_DOT)
     }
 
     override fun formatHHMM(timeAsSeconds: Int): String {
@@ -488,15 +511,5 @@ class DateUtilImpl @Inject constructor(
         private val timeStrings = LongSparseArray<String>()
         private var seconds: Int = (SecureRandom().nextDouble() * 59.0).toInt()
 
-        val decimalFormatter = object : ThreadLocal<DecimalFormat>() {
-            override fun initialValue(): DecimalFormat {
-                // Each thread gets its own DecimalFormat instance, configured once.
-                return DecimalFormat().apply {
-                    decimalFormatSymbols = DecimalFormatSymbols().apply {
-                        decimalSeparator = '.'
-                    }
-                }
-            }
-        }
     }
 }

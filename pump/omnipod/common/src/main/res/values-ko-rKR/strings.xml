@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod - Pod Management -->
-    <string name="omnipod_common_pod_management_title">Pod 관리</string>
-    <string name="omnipod_common_pod_management_heading_actions">실행</string>
-    <string name="omnipod_common_pod_management_heading_tools">도구</string>
     <string name="omnipod_common_pod_management_button_activate_pod">Pod 활성화</string>
     <string name="omnipod_common_pod_management_button_deactivate_pod">Pod 비활성화</string>
     <string name="omnipod_common_pod_management_button_discard_pod">Pod 폐기</string>
     <string name="omnipod_common_pod_management_discard_pod_confirmation">Pod를 폐기하면, 더이상 해당 pod와 연결할 수 없습니다. Pod와의 모든 연결이 계속해서 실패할 경우에만 이를 수행하십시오. 만약 Pod와 연결이 아직 가능하다면 <b>Pod 비활성화</b>을 사용하십시오.\n\n계속해서 진행하고 싶은 경우, 반드시 Pod를 몸에서 제거하십시오!</string>
     <string name="omnipod_common_pod_management_button_play_test_beep">테스트 신호음 작동</string>
-    <string name="omnipod_common_pod_management_button_playing_test_beep">테스트 신호음 작동 중...</string>
     <string name="omnipod_common_pod_management_button_pod_history">Pod 이력</string>
     <!-- Omnipod - Error -->
     <string name="omnipod_common_error_pod_not_attached">활성화된 Pod 없음</string>
@@ -33,17 +29,12 @@
     <string name="omnipod_common_error_time_out_of_sync">Pod의 시간이 맞지 않습니다. Omnipod 탭에서 시간을 업데이트 하십시오.</string>
     <string name="omnipod_common_error_unexpected_exception">예상치 못한 오류가 발생하였습니다. 보고 부탁드립니다! (%1$s: %2$s)</string>
     <!-- Omnipod - Confirmation -->
-    <string name="omnipod_common_confirmation">확인</string>
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Pod에서 경고 설정 업데이트 됨</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">Pod에서 시간 업데이트 됨</string>
-    <string name="omnipod_common_confirmation_suspended_delivery">인슐린 주입이 중지됨</string>
-    <string name="omnipod_common_confirmation_silenced_alerts">활성화된 경고가 음소거 됨</string>
-    <string name="omnipod_common_confirmation_delivery_resumed">인슐린 주입이 재시작됨</string>
     <!-- Omnipod - Overview -->
     <string name="omnipod_common_overview_button_set_time">시간 설정</string>
     <string name="omnipod_common_overview_button_suspend_delivery">중지</string>
     <string name="omnipod_common_overview_button_resume_delivery">주입 재시작</string>
-    <string name="omnipod_common_overview_button_pod_management">Pod 관리</string>
     <string name="omnipod_common_overview_button_silence_alerts">경고 음소거</string>
     <string name="omnipod_common_overview_pod_status">Pod 상태</string>
     <string name="omnipod_common_overview_total_delivered">모두 주입됨</string>
@@ -55,21 +46,11 @@
     <string name="omnipod_common_overview_last_bolus">마지막 Bolus</string>
     <string name="omnipod_common_overview_temp_basal_rate">임시 basal 양</string>
     <string name="omnipod_common_overview_base_basal_rate">기본 basal 양</string>
-    <string name="omnipod_common_overview_reservoir">인슐린 잔량</string>
     <string name="omnipod_common_overview_pod_active_alerts">Pod 경고 활성화</string>
     <string name="omnipod_common_overview_firmware_version">펌웨어 버전</string>
     <string name="omnipod_common_overview_time_on_pod">Pod 시간</string>
-    <string name="omnipod_common_overview_temp_basal_value">%1$.2fU/h @%2$s (%3$d/%4$d 분)</string>
-    <string name="omnipod_common_overview_reservoir_value">%1$.2f U 남음</string>
-    <string name="omnipod_common_overview_reservoir_value_over50">50 U 이상 남음</string>
-    <string name="omnipod_common_overview_errors">에러</string>
     <!-- Omnipod - Wizard Base -->
-    <string name="omnipod_common_wizard_button_cancel">취소</string>
-    <string name="omnipod_common_wizard_button_finish">종료</string>
-    <string name="omnipod_common_wizard_button_next">다음</string>
-    <string name="omnipod_common_wizard_button_retry">재시도</string>
     <string name="omnipod_common_wizard_button_deactivate_pod">Pod 비활성화</string>
-    <string name="omnipod_common_wizard_button_discard_pod">Pod 폐기</string>
     <string name="omnipod_common_wizard_exit_confirmation_text">모든 단계를 아직 완료하지 않았습니다. 정말 나가기를 원하십니까?</string>
     <string name="omnipod_common_wizard_exit_confirmation_title">종료</string>
     <!-- Omnipod - Pod Activation Wizard -->
@@ -119,44 +100,32 @@
     <string name="omnipod_common_pod_status_pod_fault">Pod 결함</string>
     <string name="omnipod_common_pod_status_inactive">비활성화됨</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Pod 결함: %1$03d %2$s</string>
-    <!-- Omnipod - Commands -->
-    <string name="omnipod_common_cmd_deactivate_pod">Pod 비활성화</string>
-    <string name="omnipod_common_cmd_discard_pod">Pod 폐기</string>
-    <string name="omnipod_common_cmd_set_bolus">Bolus설정</string>
-    <string name="omnipod_common_cmd_cancel_bolus">Bolus 취소</string>
-    <string name="omnipod_common_cmd_set_tbr">임시 Basal 설정</string>
-    <string name="omnipod_common_cmd_cancel_tbr_by_driver">(드라이버에서 내부적으로) 임시 basal 취소</string>
-    <string name="omnipod_common_cmd_cancel_tbr">임시 basal 취소</string>
-    <string name="omnipod_common_cmd_set_basal_schedule">Basal 스케쥴 설정</string>
-    <string name="omnipod_common_cmd_get_pod_status">Pod 상태 가져오기</string>
-    <string name="omnipod_common_cmd_get_pod_info">Pod 정보 가져오기</string>
-    <string name="omnipod_common_cmd_set_time">시간 설정</string>
-    <string name="omnipod_common_cmd_configure_alerts">경고 설정</string>
-    <string name="omnipod_common_cmd_silence_alerts">경고 음소거</string>
-    <string name="omnipod_common_cmd_suspend_delivery">주입 중지</string>
-    <string name="omnipod_common_cmd_resume_delivery">주입 재시작</string>
-    <string name="omnipod_common_cmd_unknown_entry">알려지지 않은 항목</string>
-    <string name="omnipod_common_cmd_initialize_pod">Pod 초기화</string>
-    <string name="omnipod_common_cmd_insert_cannula">캐뉼라 삽입</string>
-    <string name="omnipod_common_cmd_read_pulse_log">Pulse 로그 확인</string>
-    <string name="omnipod_common_cmd_set_fake_suspended_tbr">Pod가 중지되어 속임수 임시 basal 설정하기</string>
-    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Pod가 중지되어 만들었던 속임수 임시 basal 취소하기</string>
-    <string name="omnipod_common_cmd_split_tbr">취소 중 명확하지 않은 실패로 인하여 임시 basal 나누기</string>
-    <string name="omnipod_common_cmd_play_test_beep">테스트 신호음 작동</string>
     <!-- Omnipod - Alerts -->
-    <string name="omnipod_common_alert_finish_pairing_reminder">연동 알림 종료</string>
-    <string name="omnipod_common_alert_finish_setup_reminder_reminder">설정 알림 종료</string>
     <string name="omnipod_common_alert_expiration">Pod가 곧 만료됩니다.</string>
     <string name="omnipod_common_alert_expiration_advisory">Pod가 곧 만료됩니다.</string>
     <string name="omnipod_common_alert_shutdown_imminent">종료가 임박했습니다.</string>
     <string name="omnipod_common_alert_low_reservoir">인슐린 부족</string>
     <string name="omnipod_common_alert_unknown_alert">알 수 없는 경고</string>
+    <!-- Omnipod - Commands -->
+    <string name="omnipod_common_cmd_initialize_pod">Pod 초기화</string>
+    <string name="omnipod_common_cmd_insert_cannula">캐뉼라 삽입</string>
+    <string name="omnipod_common_cmd_deactivate_pod">Pod 비활성화</string>
+    <string name="omnipod_common_cmd_set_basal_schedule">Basal 스케쥴 설정</string>
+    <string name="omnipod_common_cmd_set_bolus">Bolus설정</string>
+    <string name="omnipod_common_cmd_cancel_bolus">Bolus 취소</string>
+    <string name="omnipod_common_cmd_discard_pod">Pod 폐기</string>
+    <string name="omnipod_common_cmd_get_pod_status">Pod 상태 가져오기</string>
+    <string name="omnipod_common_cmd_set_time">시간 설정</string>
+    <string name="omnipod_common_cmd_configure_alerts">경고 설정</string>
+    <string name="omnipod_common_cmd_silence_alerts">경고 음소거</string>
+    <string name="omnipod_common_cmd_read_pulse_log">Pulse 로그 확인</string>
+    <string name="omnipod_common_cmd_suspend_delivery">주입 중지</string>
+    <string name="omnipod_common_cmd_resume_delivery">주입 재시작</string>
+    <string name="omnipod_common_cmd_get_pod_info">Pod 정보 가져오기</string>
+    <string name="omnipod_common_cmd_play_test_beep">테스트 신호음 작동</string>
+    <string name="omnipod_common_cmd_unknown_entry">알려지지 않은 항목</string>
+    <!-- Omnipod - Alerts -->
     <!-- Omnipod - Other -->
-    <string name="omnipod_common_yes">네</string>
-    <string name="omnipod_common_no">아니오</string>
-    <string name="omnipod_common_ok">네</string>
-    <string name="omnipod_common_cancel">취소</string>
-    <string name="omnipod_common_warning">경고</string>
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">방금 전</string>
     <string name="omnipod_common_less_than_a_minute_ago">1분 이내</string>

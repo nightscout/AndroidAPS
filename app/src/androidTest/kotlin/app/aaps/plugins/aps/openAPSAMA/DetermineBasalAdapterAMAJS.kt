@@ -24,6 +24,7 @@ import app.aaps.core.objects.extensions.plannedRemainingMinutes
 import app.aaps.plugins.aps.logger.LoggerCallback
 import app.aaps.plugins.aps.utils.ScriptReader
 import dagger.android.HasAndroidInjector
+import kotlinx.coroutines.runBlocking
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -183,7 +184,7 @@ class DetermineBasalAdapterAMAJS(private val scriptReader: ScriptReader, private
     ) {
         this.profile = JSONObject()
         this.profile.put("max_iob", maxIob)
-        this.profile.put("dia", min(profile.dia, 3.0))
+        this.profile.put("dia", min(profile.iCfg?.dia ?: 3.0, 3.0))
         this.profile.put("type", "current")
         this.profile.put("max_daily_basal", profile.getMaxDailyBasal())
         this.profile.put("max_basal", maxBasal)
@@ -208,7 +209,7 @@ class DetermineBasalAdapterAMAJS(private val scriptReader: ScriptReader, private
             this.profile.put("out_units", "mmol/L")
         }
         val now = System.currentTimeMillis()
-        val tb = processedTbrEbData.getTempBasalIncludingConvertedExtended(now)
+        val tb = runBlocking { processedTbrEbData.getTempBasalIncludingConvertedExtended(now) }
         currentTemp = JSONObject()
         currentTemp.put("temp", "absolute")
         currentTemp.put("duration", tb?.plannedRemainingMinutes ?: 0)

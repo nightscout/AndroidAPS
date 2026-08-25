@@ -1,10 +1,15 @@
 package app.aaps.pump.insight.utils
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Alarm
+import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.Warning
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.pump.insight.R
 import app.aaps.pump.insight.descriptors.AlertCategory
 import app.aaps.pump.insight.descriptors.AlertType
-import java.text.DecimalFormat
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -74,7 +79,7 @@ class AlertUtils @Inject constructor(private val rh: ResourceHelper) {
     )
 
     fun getAlertDescription(alert: app.aaps.pump.insight.descriptors.Alert): String? {
-        val decimalFormat = DecimalFormat("##0.00")
+        val decimalFormat = NumberFormat.DECIMAL_2
         val hours = alert.tBRDuration / 60
         val minutes = alert.tBRDuration - hours * 60
         return when (alert.alertType) {
@@ -82,12 +87,12 @@ class AlertUtils @Inject constructor(private val rh: ResourceHelper) {
             AlertType.REMINDER_02    -> null
             AlertType.REMINDER_03    -> null
             AlertType.REMINDER_04    -> null
-            AlertType.REMINDER_07    -> rh.gs(R.string.alert_r7_description, alert.tBRAmount, DecimalFormat("#0").format(hours.toLong()) + ":" + DecimalFormat("00").format(minutes.toLong()))
+            AlertType.REMINDER_07    -> rh.gs(R.string.alert_r7_description, alert.tBRAmount, NumberFormat.INTEGER.format(hours.toLong()) + ":" + NumberFormat.INTEGER_2_DIGITS.format(minutes.toLong()))
             AlertType.WARNING_31     -> rh.gs(R.string.alert_w31_description, decimalFormat.format(alert.cartridgeAmount))
             AlertType.WARNING_32     -> rh.gs(R.string.alert_w32_description)
             AlertType.WARNING_33     -> rh.gs(R.string.alert_w33_description)
             AlertType.WARNING_34     -> rh.gs(R.string.alert_w34_description)
-            AlertType.WARNING_36     -> rh.gs(R.string.alert_w36_description, alert.tBRAmount, DecimalFormat("#0").format(hours.toLong()) + ":" + DecimalFormat("00").format(minutes.toLong()))
+            AlertType.WARNING_36     -> rh.gs(R.string.alert_w36_description, alert.tBRAmount, NumberFormat.INTEGER.format(hours.toLong()) + ":" + NumberFormat.INTEGER_2_DIGITS.format(minutes.toLong()))
             AlertType.WARNING_38     -> rh.gs(R.string.alert_w38_description, decimalFormat.format(alert.programmedBolusAmount), decimalFormat.format(alert.deliveredBolusAmount))
             AlertType.WARNING_39     -> null
             AlertType.MAINTENANCE_20 -> rh.gs(R.string.alert_m20_description)
@@ -109,9 +114,9 @@ class AlertUtils @Inject constructor(private val rh: ResourceHelper) {
     }
 
     fun getAlertIcon(alertCategory: AlertCategory) = when (alertCategory) {
-        AlertCategory.ERROR       -> R.drawable.ic_error
-        AlertCategory.MAINTENANCE -> app.aaps.core.ui.R.drawable.ic_maintenance
-        AlertCategory.WARNING     -> R.drawable.ic_warning
-        AlertCategory.REMINDER    -> R.drawable.ic_reminder
+        AlertCategory.ERROR       -> Icons.Default.Error
+        AlertCategory.MAINTENANCE -> Icons.Default.Build
+        AlertCategory.WARNING     -> Icons.Default.Warning
+        AlertCategory.REMINDER    -> Icons.Default.Alarm
     }
 }

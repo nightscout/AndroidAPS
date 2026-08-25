@@ -1,5 +1,6 @@
 package app.aaps.plugins.source
 
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.shared.tests.TestBase
@@ -14,13 +15,15 @@ class SyaiPluginTest : TestBase() {
 
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var preferences: Preferences
+    @Mock lateinit var config: Config
 
     @BeforeEach
     fun setup() {
-        syaiPlugin = SyaiPlugin(rh, aapsLogger, preferences)
+        syaiPlugin = SyaiPlugin(rh, aapsLogger, preferences, config)
     }
 
-    @Test fun advancedFilteringSupported() {
-        assertThat(syaiPlugin.advancedFilteringSupported()).isTrue()
+    @Test
+    fun `plugin is created`() {
+        assertThat(syaiPlugin).isNotNull()
     }
 }

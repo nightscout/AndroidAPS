@@ -23,6 +23,9 @@ class AutosensDataStoreObject : AutosensDataStore {
     companion object {
 
         const val IRREGULAR_DATA_SEC = 30L
+
+        // Autosens/COB data (table or stored fallback) older than this is treated as stale and not handed out.
+        val MAX_AUTOSENS_AGE_MS = T.mins(11).msecs()
     }
 
     // we need to make sure that bucketed_data will always have the same timestamp for correct use of cached values
@@ -126,13 +129,18 @@ class AutosensDataStoreObject : AutosensDataStore {
     // So let save last value after every calculation and use it
     // if autosensDataTable is not available
     var storedLastAutosensResult: AutosensData? = null
-        get() = field?.let { if (it.time < System.currentTimeMillis() - 11 * 60 * 1000) it else null }
+
+    // The stored fallback is only trustworthy while it is recent; hand out null once it ages past the window.
+    // Uses the injected clock (not System.currentTimeMillis) so it stays consistent with the table freshness
+    // check below and is actually testable.
+    private fun freshStoredResult(dateUtil: DateUtil): AutosensData? =
+        storedLastAutosensResult?.takeIf { it.time >= dateUtil.now() - MAX_AUTOSENS_AGE_MS }
 
     override fun getLastAutosensData(reason: String, aapsLogger: AAPSLogger, dateUtil: DateUtil): AutosensData? {
         synchronized(dataLock) {
             if (autosensDataTable.size() < 1) {
                 aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA null: autosensDataTable empty ($reason)")
-                return storedLastAutosensResult
+                return freshStoredResult(dateUtil)
             }
             val data: AutosensData = try {
                 autosensDataTable.valueAt(autosensDataTable.size() - 1)
@@ -141,11 +149,11 @@ class AutosensDataStoreObject : AutosensDataStore {
                 // in this rare case better return null and do not block UI
                 // APS plugin should use getLastAutosensDataSynchronized where the blocking is not an issue
                 aapsLogger.error("AUTOSENSDATA null: Exception caught ($reason)")
-                return storedLastAutosensResult
+                return freshStoredResult(dateUtil)
             }
-            return if (data.time < dateUtil.now() - 11 * 60 * 1000) {
+            return if (data.time < dateUtil.now() - MAX_AUTOSENS_AGE_MS) {
                 aapsLogger.debug(LTag.AUTOSENS) { "AUTOSENSDATA null: data is old ($reason) size()=${autosensDataTable.size()} lastData=${dateUtil.dateAndTimeAndSecondsString(data.time)}" }
-                storedLastAutosensResult
+                freshStoredResult(dateUtil)
             } else {
                 aapsLogger.debug(LTag.AUTOSENS) { "AUTOSENSDATA ($reason) $data" }
                 storedLastAutosensResult = data

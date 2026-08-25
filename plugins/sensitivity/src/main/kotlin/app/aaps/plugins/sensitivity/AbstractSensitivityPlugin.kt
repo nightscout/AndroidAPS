@@ -1,5 +1,9 @@
 package app.aaps.plugins.sensitivity
 
+import androidx.collection.LongSparseArray
+import app.aaps.core.data.model.PS
+import app.aaps.core.data.model.TE
+import app.aaps.core.interfaces.aps.AutosensData
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.Sensitivity
@@ -7,6 +11,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.keys.DoubleKey
@@ -18,10 +23,17 @@ abstract class AbstractSensitivityPlugin(
     pluginDescription: PluginDescription,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
-    val preferences: Preferences
+    protected val preferences: Preferences
 ) : PluginBase(pluginDescription, aapsLogger, rh), Sensitivity {
 
-    abstract override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult
+    abstract override fun detectSensitivity(
+        ads: AutosensDataStore,
+        fromTime: Long,
+        toTime: Long,
+        profile: EffectiveProfile?,
+        siteChanges: List<TE>,
+        profileSwitches: List<PS>
+    ): AutosensResult
 
     fun fillResult(
         ratio: Double, carbsAbsorbed: Double, pastSensitivity: String,
@@ -68,5 +80,15 @@ abstract class AbstractSensitivityPlugin(
         output.ratioLimit = ratioLimit
         output.sensResult = sensResult
         return output
+    }
+
+    /**
+     * First index in the time-sorted [table] whose time is at or after [time], using the
+     * LongSparseArray binary search. Lets a scan start at the detection window instead of walking
+     * the whole table on every call.
+     */
+    protected fun firstIndexAtOrAfter(table: LongSparseArray<AutosensData>, time: Long): Int {
+        val i = table.indexOfKey(time)
+        return if (i >= 0) i else i.inv()
     }
 }

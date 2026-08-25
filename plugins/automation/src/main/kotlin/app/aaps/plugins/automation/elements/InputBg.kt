@@ -1,20 +1,17 @@
 package app.aaps.plugins.automation.elements
 
-import android.view.Gravity
-import android.widget.LinearLayout
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.ui.elements.NumberPicker
-import java.text.DecimalFormat
 
-class InputBg(profileFunction: ProfileFunction) : Element {
+class InputBg(profileFunction: ProfileFunction) {
 
     var units = GlucoseUnit.MGDL
     var value = 0.0
     var minValue = 0.0
     private var maxValue = 0.0
     private var step = 0.0
-    private var decimalFormat: DecimalFormat? = null
+    private var decimalFormat: NumberFormat? = null
 
     constructor(profileFunction: ProfileFunction, value: Double, units: GlucoseUnit) : this(profileFunction) {
         setUnits(units)
@@ -23,15 +20,6 @@ class InputBg(profileFunction: ProfileFunction) : Element {
 
     init {
         setUnits(profileFunction.getUnits())
-    }
-
-    override fun addToLayout(root: LinearLayout) {
-        root.addView(
-            NumberPicker(root.context, null).also {
-                it.setParams(value, minValue, maxValue, step, decimalFormat, false, root.findViewById(app.aaps.core.ui.R.id.ok))
-                it.setOnValueChangedListener { v: Double -> value = v }
-                it.gravity = Gravity.CENTER_HORIZONTAL
-            })
     }
 
     fun setValue(value: Double): InputBg {
@@ -44,12 +32,12 @@ class InputBg(profileFunction: ProfileFunction) : Element {
             minValue = MMOL_MIN
             maxValue = MMOL_MAX
             step = 0.1
-            decimalFormat = DecimalFormat("0.0")
+            decimalFormat = NumberFormat.DECIMAL_1
         } else {
             minValue = MGDL_MIN
             maxValue = MGDL_MAX
             step = 1.0
-            decimalFormat = DecimalFormat("0")
+            decimalFormat = NumberFormat.INTEGER
         }
         this.units = units
         return this

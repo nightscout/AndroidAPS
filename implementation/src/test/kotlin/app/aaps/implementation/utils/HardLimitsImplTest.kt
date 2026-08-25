@@ -1,39 +1,46 @@
 package app.aaps.implementation.utils
 
-import android.content.Context
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.notifications.NotificationAction
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationLevel
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 class HardLimitsImplTest : TestBase() {
 
-    @Mock lateinit var uiInteraction: UiInteraction
+    @Mock lateinit var notificationManager: NotificationManager
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var rh: ResourceHelper
-    @Mock lateinit var context: Context
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var dateUtil: DateUtil
 
+    private val testScope = CoroutineScope(Dispatchers.Unconfined)
     private lateinit var hardLimits: HardLimitsImpl
 
     @BeforeEach
     fun setup() {
-        hardLimits = HardLimitsImpl(aapsLogger, uiInteraction, preferences, rh, context, persistenceLayer, dateUtil)
+        hardLimits = HardLimitsImpl(aapsLogger, notificationManager, preferences, rh, persistenceLayer, dateUtil, rxBus, testScope)
         whenever(dateUtil.now()).thenReturn(1000L)
-        whenever(persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(any(), any(), any(), any(), any(), any())).thenReturn(Single.just(PersistenceLayer.TransactionResult()))
+        runTest {
+            whenever(persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(any(), any(), any(), any(), any(), any())).thenReturn(PersistenceLayer.TransactionResult())
+        }
         whenever(rh.gs(any())).thenReturn("")
         whenever(rh.gs(any(), any())).thenReturn("")
     }
@@ -129,52 +136,35 @@ class HardLimitsImplTest : TestBase() {
     }
 
     @Test
-    fun `minDia returns correct values for all ages`() {
+    fun `diaRange returns correct values for all ages`() {
         whenever(preferences.get(StringKey.SafetyAge)).thenReturn("child")
-        assertThat(hardLimits.minDia()).isEqualTo(5.0)
+        assertThat(hardLimits.diaRange()).isEqualTo(5.0..9.0)
 
         whenever(preferences.get(StringKey.SafetyAge)).thenReturn("pregnant")
-        assertThat(hardLimits.minDia()).isEqualTo(5.0)
+        assertThat(hardLimits.diaRange()).isEqualTo(5.0..10.0)
     }
 
     @Test
-    fun `maxDia returns correct values for all ages`() {
+    fun `icRange returns correct values for all ages`() {
         whenever(preferences.get(StringKey.SafetyAge)).thenReturn("child")
-        assertThat(hardLimits.maxDia()).isEqualTo(9.0)
+        assertThat(hardLimits.icRange()).isEqualTo(2.0..100.0)
 
         whenever(preferences.get(StringKey.SafetyAge)).thenReturn("pregnant")
-        assertThat(hardLimits.maxDia()).isEqualTo(10.0)
+        assertThat(hardLimits.icRange()).isEqualTo(0.3..100.0)
     }
 
     @Test
-    fun `minIC returns correct values for all ages`() {
-        whenever(preferences.get(StringKey.SafetyAge)).thenReturn("child")
-        assertThat(hardLimits.minIC()).isEqualTo(2.0)
-
-        whenever(preferences.get(StringKey.SafetyAge)).thenReturn("pregnant")
-        assertThat(hardLimits.minIC()).isEqualTo(0.3)
+    fun `an unknown age falls back to adult`() {
+        whenever(preferences.get(StringKey.SafetyAge)).thenReturn("nonsense")
+        assertThat(hardLimits.maxBolus()).isEqualTo(HardLimits.MAX_BOLUS.getValue(HardLimits.AgeType.ADULT))
+        assertThat(hardLimits.diaRange()).isEqualTo(HardLimits.LIMIT_DIA.getValue(HardLimits.AgeType.ADULT))
     }
 
     @Test
-    fun `maxIC returns correct values for all ages`() {
-        whenever(preferences.get(StringKey.SafetyAge)).thenReturn("child")
-        assertThat(hardLimits.maxIC()).isEqualTo(100.0)
-
-        whenever(preferences.get(StringKey.SafetyAge)).thenReturn("pregnant")
-        assertThat(hardLimits.maxIC()).isEqualTo(100.0)
-    }
-
-    @Test
-    fun `isInRange returns true when value is within range`() {
-        assertThat(hardLimits.isInRange(5.0, 0.0, 10.0)).isTrue()
-        assertThat(hardLimits.isInRange(0.0, 0.0, 10.0)).isTrue()
-        assertThat(hardLimits.isInRange(10.0, 0.0, 10.0)).isTrue()
-    }
-
-    @Test
-    fun `isInRange returns false when value is outside range`() {
-        assertThat(hardLimits.isInRange(-0.1, 0.0, 10.0)).isFalse()
-        assertThat(hardLimits.isInRange(10.1, 0.0, 10.0)).isFalse()
+    fun `verifyHardLimits with a range clamps the same way as with two bounds`() {
+        assertThat(hardLimits.verifyHardLimits(5.0, app.aaps.core.ui.R.string.bolus, 0.0..10.0)).isEqualTo(5.0)
+        assertThat(hardLimits.verifyHardLimits(-5.0, app.aaps.core.ui.R.string.bolus, 0.0..10.0)).isEqualTo(0.0)
+        assertThat(hardLimits.verifyHardLimits(15.0, app.aaps.core.ui.R.string.bolus, 0.0..10.0)).isEqualTo(10.0)
     }
 
     @Test
@@ -214,8 +204,10 @@ class HardLimitsImplTest : TestBase() {
     fun `verifyHardLimits logs error and shows notification when value is out of range`() {
         hardLimits.verifyHardLimits(15.0, app.aaps.core.ui.R.string.bolus, 0.0, 10.0)
 
-        verify(uiInteraction).showToastAndNotification(any(), any(), any())
-        verify(persistenceLayer).insertPumpTherapyEventIfNewByTimestamp(any(), any(), any(), any(), any(), any())
+        verify(notificationManager).post(any<NotificationId>(), any<String>(), any<NotificationLevel>(), any<Int>(), anyOrNull(), any<List<NotificationAction>>(), anyOrNull())
+        runTest {
+            verify(persistenceLayer).insertPumpTherapyEventIfNewByTimestamp(any(), any(), any(), any(), any(), any())
+        }
     }
 
     @Test

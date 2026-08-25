@@ -7,7 +7,7 @@ import app.aaps.database.entities.GlucoseValue
  */
 class InvalidateGlucoseValueTransaction(val id: Long) : Transaction<InvalidateGlucoseValueTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         val result = TransactionResult()
         val glucoseValue = database.glucoseValueDao.findById(id)
             ?: throw IllegalArgumentException("There is no such GlucoseValue with the specified ID.")

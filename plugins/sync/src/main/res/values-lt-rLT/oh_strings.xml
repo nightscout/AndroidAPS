@@ -8,8 +8,6 @@
     <string name="setup_completed_info">Open Humans buvo nustatytas. Jei norite sustabdyti įkėlimą, spustelėkite „Atsijungti“.</string>
     <string name="not_setup_info">Open Humans neaktyvus. Norėdami pradėti duomenų įkėlimą, spustelėkite „Sąranka\".</string>
     <string name="project_member_id">Projekto nario ID: %1$s</string>
-    <string name="only_upload_if_connected_to_wifi">Tik įkelti, jei prijungta prie WiFi</string>
-    <string name="only_upload_if_charging">Įkelti tik akumuliatoriaus įkrovimo metu</string>
     <string name="open_humans_uploading">Įkeliama į Open Humans…</string>
     <string name="open_humans_notifications">Open Humans Pranešimai</string>
     <string name="uploading_to_open_humans">AAPS įkelia duomenis į Open Humans. Tai gali šiek tiek užtrukti.</string>

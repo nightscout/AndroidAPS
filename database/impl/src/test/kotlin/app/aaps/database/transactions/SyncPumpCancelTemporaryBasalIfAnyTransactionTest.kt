@@ -6,7 +6,7 @@ import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.database.entities.interfaces.end
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Maybe
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.never
@@ -28,13 +28,13 @@ class SyncPumpCancelTemporaryBasalIfAnyTransactionTest {
     }
 
     @Test
-    fun `cancels running temporary basal`() {
+    fun `cancels running temporary basal`() = runTest {
         val timestamp = 31_000L
         val endPumpId = 200L
         val running = createTemporaryBasal(timestamp = 1000L, duration = 60_000L, endId = null)
 
         whenever(temporaryBasalDao.findByPumpEndIds(200L, InterfaceIDs.PumpType.DANA_I, "ABC123")).thenReturn(null)
-        whenever(temporaryBasalDao.getTemporaryBasalActiveAt(31_000L)).thenReturn(Maybe.just(running))
+        whenever(temporaryBasalDao.getTemporaryBasalActiveAt(31_000L)).thenReturn(running)
 
         val transaction = SyncPumpCancelTemporaryBasalIfAnyTransaction(
             timestamp, endPumpId, InterfaceIDs.PumpType.DANA_I, "ABC123"
@@ -50,7 +50,7 @@ class SyncPumpCancelTemporaryBasalIfAnyTransactionTest {
     }
 
     @Test
-    fun `does not cancel if already cancelled by end id`() {
+    fun `does not cancel if already cancelled by end id`() = runTest {
         val timestamp = 31_000L
         val endPumpId = 200L
 
@@ -70,12 +70,12 @@ class SyncPumpCancelTemporaryBasalIfAnyTransactionTest {
     }
 
     @Test
-    fun `does not cancel if no running temporary basal`() {
+    fun `does not cancel if no running temporary basal`() = runTest {
         val timestamp = 31_000L
         val endPumpId = 200L
 
         whenever(temporaryBasalDao.findByPumpEndIds(200L, InterfaceIDs.PumpType.DANA_I, "ABC123")).thenReturn(null)
-        whenever(temporaryBasalDao.getTemporaryBasalActiveAt(31_000L)).thenReturn(Maybe.empty())
+        whenever(temporaryBasalDao.getTemporaryBasalActiveAt(31_000L)).thenReturn(null)
 
         val transaction = SyncPumpCancelTemporaryBasalIfAnyTransaction(
             timestamp, endPumpId, InterfaceIDs.PumpType.DANA_I, "ABC123"
@@ -89,13 +89,13 @@ class SyncPumpCancelTemporaryBasalIfAnyTransactionTest {
     }
 
     @Test
-    fun `sets duration to 1 when timestamp equals start`() {
+    fun `sets duration to 1 when timestamp equals start`() = runTest {
         val timestamp = 1000L
         val endPumpId = 200L
         val running = createTemporaryBasal(timestamp = 1000L, duration = 60_000L, endId = null)
 
         whenever(temporaryBasalDao.findByPumpEndIds(200L, InterfaceIDs.PumpType.DANA_I, "ABC123")).thenReturn(null)
-        whenever(temporaryBasalDao.getTemporaryBasalActiveAt(1000L)).thenReturn(Maybe.just(running))
+        whenever(temporaryBasalDao.getTemporaryBasalActiveAt(1000L)).thenReturn(running)
 
         val transaction = SyncPumpCancelTemporaryBasalIfAnyTransaction(
             timestamp, endPumpId, InterfaceIDs.PumpType.DANA_I, "ABC123"

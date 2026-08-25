@@ -1,0 +1,303 @@
+package app.aaps.pump.danars.emulator
+
+import app.aaps.pump.danars.encryption.BleEncryption
+import app.aaps.core.interfaces.pump.ble.BleTransportListener
+import com.google.common.truth.Truth.assertThat
+import java.util.Collections
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+
+/**
+ * Tests EmulatorBleTransport + BleEncryption handshake and command round-trips.
+ *
+ * Uses two BleEncryption instances:
+ * - appEncryption: simulates the app side (what BLEComm normally uses)
+ * - pumpEncryption: inside EmulatorBleTransport (pump side)
+ *
+ * Tests the full encrypted byte flow without BLEComm or Android dependencies.
+ */
+class EmulatorBleTransportTest {
+
+    private lateinit var transport: EmulatorBleTransport
+    private lateinit var appEncryption: BleEncryption
+    private val deviceName = "UHH00002TI"
+    // onCharacteristicChanged can fire from a background thread (the deferred v1 pairing key) concurrently
+    // with a synchronous response on the test thread, so the sink must be thread-safe — a plain ArrayList
+    // could drop an element or throw during a racing add.
+    private val responses = Collections.synchronizedList(mutableListOf<ByteArray>())
+
+    private var descriptorWrittenCount = 0
+
+    private val listener = object : BleTransportListener {
+        override fun onConnectionStateChanged(connected: Boolean) {}
+        override fun onServicesDiscovered(success: Boolean) {}
+        override fun onDescriptorWritten() {
+            descriptorWrittenCount++
+        }
+
+        override fun onCharacteristicChanged(data: ByteArray) {
+            responses.add(data)
+        }
+
+        override fun onCharacteristicWritten() {}
+    }
+
+    @BeforeEach
+    fun setup() {
+        transport = EmulatorBleTransport(deviceName = deviceName)
+        transport.setListener(listener)
+        appEncryption = BleEncryption()
+        responses.clear()
+        descriptorWrittenCount = 0
+    }
+
+    /**
+     * BLEComm enables notifications twice per connection — eagerly in `connect()`, then again after service
+     * discovery. On hardware only the second completes: before discovery `uartRead` is null, so BleTransportImpl
+     * fabricates a bare characteristic whose CCCD lookup returns null and no `writeDescriptor` is issued. The
+     * emulator must match that, or the extra callback drives the pair wizard off its PIN step and hangs RSv3 pairing.
+     */
+    @Test
+    fun enableNotificationsBeforeDiscovery_doesNotCallBack() {
+        transport.gatt.connect("00:00:00:00:00:00")
+
+        transport.gatt.enableNotifications()
+
+        assertThat(descriptorWrittenCount).isEqualTo(0)
+    }
+
+    @Test
+    fun oneConnection_yieldsExactlyOneDescriptorWritten() {
+        transport.gatt.connect("00:00:00:00:00:00")
+
+        transport.gatt.enableNotifications()          // BLEComm.connect(), pre-discovery — no-op on hardware
+        transport.gatt.discoverServices()
+        transport.gatt.findCharacteristics()
+        transport.gatt.enableNotifications()          // findCharacteristic(), post-discovery — the real one
+
+        assertThat(descriptorWrittenCount).isEqualTo(1)
+    }
+
+    @Test
+    fun reconnect_registersNotificationsAgain() {
+        transport.gatt.connect("00:00:00:00:00:00")
+        transport.gatt.findCharacteristics()
+        transport.gatt.enableNotifications()
+        transport.gatt.disconnect()
+
+        // A new connection must discover again before notifications register, exactly like the first.
+        transport.gatt.connect("00:00:00:00:00:00")
+        transport.gatt.enableNotifications()
+        assertThat(descriptorWrittenCount).isEqualTo(1)
+
+        transport.gatt.findCharacteristics()
+        transport.gatt.enableNotifications()
+        assertThat(descriptorWrittenCount).isEqualTo(2)
+    }
+
+    @Test
+    fun testPumpCheckHandshake() {
+        // App sends PUMP_CHECK with device name
+        val pumpCheck = appEncryption.getEncryptedPacket(
+            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PUMP_CHECK,
+            null,
+            deviceName
+        )
+
+        transport.gatt.writeCharacteristic(pumpCheck)
+
+        assertThat(responses).hasSize(1)
+
+        // App decrypts response
+        val decrypted = appEncryption.getDecryptedPacket(responses[0])
+        assertThat(decrypted).isNotNull()
+        // Should be encryption response type
+        assertThat(decrypted!![0].toInt() and 0xFF).isEqualTo(BleEncryption.DANAR_PACKET__TYPE_ENCRYPTION_RESPONSE.toInt())
+        // Opcode should be PUMP_CHECK
+        assertThat(decrypted[1].toInt() and 0xFF).isEqualTo(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PUMP_CHECK)
+        // Should contain "OK"
+        assertThat(decrypted[2]).isEqualTo('O'.code.toByte())
+        assertThat(decrypted[3]).isEqualTo('K'.code.toByte())
+    }
+
+    @Test
+    fun testFullV1Handshake() {
+        // Step 1: PUMP_CHECK
+        val pumpCheck = appEncryption.getEncryptedPacket(
+            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PUMP_CHECK,
+            null,
+            deviceName
+        )
+        transport.gatt.writeCharacteristic(pumpCheck)
+        assertThat(responses).hasSize(1)
+        val pumpCheckResponse = appEncryption.getDecryptedPacket(responses[0])
+        assertThat(pumpCheckResponse).isNotNull()
+        // Verify v1 OK response (4 bytes: TYPE, OPCODE, 'O', 'K')
+        assertThat(pumpCheckResponse!!.size).isEqualTo(4)
+        responses.clear()
+
+        // Step 2: CHECK_PASSKEY
+        val passkey = byteArrayOf(0xAB.toByte(), 0xCD.toByte())
+        val passkeyCheck = appEncryption.getEncryptedPacket(
+            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__CHECK_PASSKEY,
+            passkey,
+            null
+        )
+        transport.gatt.writeCharacteristic(passkeyCheck)
+        assertThat(responses).hasSize(1)
+        val passkeyResponse = appEncryption.getDecryptedPacket(responses[0])
+        assertThat(passkeyResponse).isNotNull()
+        // Passkey OK = 0x00
+        assertThat(passkeyResponse!![2]).isEqualTo(0x00.toByte())
+        responses.clear()
+
+        // Step 3: TIME_INFORMATION
+        val timeInfo = appEncryption.getEncryptedPacket(
+            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__TIME_INFORMATION,
+            null,
+            null
+        )
+        transport.gatt.writeCharacteristic(timeInfo)
+        assertThat(responses).hasSize(1)
+        val timeResponse = appEncryption.getDecryptedPacket(responses[0])
+        assertThat(timeResponse).isNotNull()
+        // Response should contain time info + encoded password (at least 8 bytes: type + opcode + 6 time + 2 password)
+        assertThat(timeResponse!!.size).isAtLeast(8)
+    }
+
+    /**
+     * The v1 pairing key is sent from its own thread after a delay, so a disconnect can happen while
+     * it is in flight. It must then be dropped: `BLEComm` has torn its connection down and parsing a
+     * packet against it throws "Null decryptedInputBuffer" — from a thread nobody owns, so it takes
+     * down whatever is running at the time. That is what happened in CI build 40261, where the key
+     * from one test surfaced as a failure in the *next* one.
+     *
+     * The delay is deliberate, and long enough that the disconnect always wins: it makes the race
+     * the bug needed happen every run, rather than once in a while on a loaded CI box.
+     */
+    @Test
+    fun deferredPairingKeyIsDroppedWhenTheConnectionEndedFirst() {
+        transport.pairingDelayMs = 300
+        requestPairing()
+        // The immediate acknowledgement; the key itself is still pending on its thread.
+        assertThat(responses).hasSize(1)
+        responses.clear()
+
+        transport.gatt.disconnect()
+        transport.awaitPendingCallbacks()
+
+        assertThat(responses).isEmpty()
+    }
+
+    /** The same key must still arrive on a connection that is alive — the guard is not a mute. */
+    @Test
+    fun deferredPairingKeyIsDeliveredWhileConnected() {
+        transport.pairingDelayMs = 0
+        requestPairing()
+        transport.awaitPendingCallbacks()
+
+        // Both the acknowledgement and the deferred key arrive. With a zero pairing delay the key thread
+        // and the synchronous ack race to append, so their order in `responses` is not fixed — assert the
+        // key is present by opcode rather than by position (the flake was the key landing at [0] and the
+        // ack, opcode PASSKEY_REQUEST=0xD1, at [1]).
+        assertThat(responses).hasSize(2)
+        val key = responses.mapNotNull { appEncryption.getDecryptedPacket(it) }
+            .singleOrNull { it[1] == BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_RETURN.toByte() }
+        assertThat(key).isNotNull()
+    }
+
+    /**
+     * Connect and ask to pair, leaving only the deferred key outstanding. PUMP_CHECK first, or the
+     * request is never decrypted — the app-side encryption has no session to send it under.
+     */
+    private fun requestPairing() {
+        transport.gatt.connect("00:00:00:00:00:00")
+        transport.gatt.writeCharacteristic(
+            appEncryption.getEncryptedPacket(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PUMP_CHECK, null, deviceName)
+        )
+        appEncryption.getDecryptedPacket(responses.last())
+        responses.clear()
+
+        transport.gatt.writeCharacteristic(
+            appEncryption.getEncryptedPacket(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_REQUEST, null, null)
+        )
+    }
+
+    @Test
+    fun testCommandRoundTrip() {
+        // First complete handshake (simplified - just set encryption state)
+        completeHandshake()
+
+        // Now send a regular command: GET_PROFILE_NUMBER
+        transport.pumpState.activeProfileNumber = 2
+
+        val encrypted = appEncryption.getEncryptedPacket(
+            BleEncryption.DANAR_PACKET__OPCODE_BASAL__GET_PROFILE_NUMBER,
+            ByteArray(0),
+            null
+        )
+        responses.clear()
+        transport.gatt.writeCharacteristic(encrypted)
+
+        assertThat(responses).hasSize(1)
+
+        val decrypted = appEncryption.getDecryptedPacket(responses[0])
+        assertThat(decrypted).isNotNull()
+        // Type should be RESPONSE
+        assertThat(decrypted!![0].toInt() and 0xFF).isEqualTo(BleEncryption.DANAR_PACKET__TYPE_RESPONSE)
+        // OpCode should match
+        assertThat(decrypted[1].toInt() and 0xFF).isEqualTo(BleEncryption.DANAR_PACKET__OPCODE_BASAL__GET_PROFILE_NUMBER)
+        // Data: active profile number = 2
+        assertThat(decrypted[2].toInt() and 0xFF).isEqualTo(2)
+    }
+
+    @Test
+    fun testSetTempBasalRoundTrip() {
+        completeHandshake()
+
+        // Send APS_SET_TEMPORARY_BASAL: 150%, 15min duration
+        val params = byteArrayOf(150.toByte(), 0x00, 150.toByte()) // 150 = PARAM15MIN
+        val encrypted = appEncryption.getEncryptedPacket(
+            BleEncryption.DANAR_PACKET__OPCODE_BASAL__APS_SET_TEMPORARY_BASAL,
+            params,
+            null
+        )
+        responses.clear()
+        transport.gatt.writeCharacteristic(encrypted)
+
+        assertThat(responses).hasSize(1)
+        val decrypted = appEncryption.getDecryptedPacket(responses[0])
+        assertThat(decrypted).isNotNull()
+        // Result = 0x00 (OK)
+        assertThat(decrypted!![2]).isEqualTo(0x00.toByte())
+
+        // Verify pump state changed
+        assertThat(transport.pumpState.isTempBasalRunning).isTrue()
+        assertThat(transport.pumpState.tempBasalPercent).isEqualTo(150)
+    }
+
+    /**
+     * Run through the v1 encryption handshake to set both encryption instances to connected state.
+     */
+    private fun completeHandshake() {
+        // PUMP_CHECK
+        transport.gatt.writeCharacteristic(
+            appEncryption.getEncryptedPacket(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PUMP_CHECK, null, deviceName)
+        )
+        appEncryption.getDecryptedPacket(responses.last())
+
+        // CHECK_PASSKEY
+        transport.gatt.writeCharacteristic(
+            appEncryption.getEncryptedPacket(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__CHECK_PASSKEY, byteArrayOf(0xAB.toByte(), 0xCD.toByte()), null)
+        )
+        appEncryption.getDecryptedPacket(responses.last())
+
+        // TIME_INFORMATION
+        transport.gatt.writeCharacteristic(
+            appEncryption.getEncryptedPacket(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__TIME_INFORMATION, null, null)
+        )
+        appEncryption.getDecryptedPacket(responses.last())
+
+        responses.clear()
+    }
+}

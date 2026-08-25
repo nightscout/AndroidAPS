@@ -27,6 +27,8 @@ import app.aaps.shared.tests.SharedPreferencesMock
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import dagger.Lazy
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -52,7 +54,7 @@ class ObjectivesPluginTest : TestBaseWithProfile() {
 
         val objectives = listOf(
             Objective0(emulatedPreferences, rh, dateUtil, activePlugin, virtualPumpPlugin, persistenceLayer, loop, iobCobCalculator, passwordCheck),
-            Objective1(emulatedPreferences, rh, dateUtil, activePlugin),
+            Objective1(emulatedPreferences, rh, dateUtil),
             Objective2(emulatedPreferences, rh, dateUtil),
             Objective3(emulatedPreferences, rh, dateUtil),
             Objective4(emulatedPreferences, rh, dateUtil, profileFunction),
@@ -63,7 +65,7 @@ class ObjectivesPluginTest : TestBaseWithProfile() {
             Objective9(emulatedPreferences, rh, dateUtil)
         )
         objectivesPlugin = ObjectivesPlugin(aapsLogger, rh, emulatedPreferences, config, objectives)
-        objectivesPlugin.onStart()
+        runBlocking { objectivesPlugin.onStart() }
         whenever(rh.gs(R.string.objectivenotstarted)).thenReturn("Objective %1\$d not started")
         whenever(rh.gs(R.string.objectivenotfinished)).thenReturn("Objective %1\$d not finished")
     }
@@ -84,7 +86,7 @@ class ObjectivesPluginTest : TestBaseWithProfile() {
         assertThat(c.value()).isTrue()
     }
 
-    @Test fun notStartedObjective6ShouldLimitClosedLoop() {
+    @Test fun notStartedObjective6ShouldLimitClosedLoop() = runTest {
         objectivesPlugin.objectives[Objectives.CLOSED_LOOP_OBJECTIVE].startedOn = 0
         val c = objectivesPlugin.isClosedLoopAllowed(ConstraintObject(true, aapsLogger))
         assertThat(c.getReasons()).contains("Objective 7 not started")
@@ -98,7 +100,7 @@ class ObjectivesPluginTest : TestBaseWithProfile() {
         assertThat(c.value()).isFalse()
     }
 
-    @Test fun notStartedObjective10ShouldLimitSMBMode() {
+    @Test fun notStartedObjective10ShouldLimitSMBMode() = runTest {
         objectivesPlugin.objectives[Objectives.SMB_OBJECTIVE].startedOn = 0
         val c = objectivesPlugin.isSMBModeEnabled(ConstraintObject(true, aapsLogger))
         assertThat(c.getReasons()).contains("Objective 9 not started")

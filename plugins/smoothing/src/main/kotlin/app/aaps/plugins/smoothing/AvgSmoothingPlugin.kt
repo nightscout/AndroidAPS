@@ -1,5 +1,7 @@
 package app.aaps.plugins.smoothing
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Timeline
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.plugin.PluginType
@@ -21,7 +23,7 @@ class AvgSmoothingPlugin @Inject constructor(
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.SMOOTHING)
-        .pluginIcon(app.aaps.core.ui.R.drawable.ic_timeline_24)
+        .icon(Icons.Default.Timeline)
         .pluginName(R.string.avg_smoothing_name)
         .shortName(R.string.smoothing_shortname)
         .description(R.string.description_avg_smoothing),
@@ -41,7 +43,7 @@ class AvgSmoothingPlugin @Inject constructor(
                 && abs(data[i].timestamp - data[i - 1].timestamp - (data[i + 1].timestamp - data[i].timestamp)) < T.secs(30).msecs()
             ) {
                 // We could further improve this by adding a weight to the neighbours, for simplicity this is not done.
-                data[i].smoothed = ((data[i - 1].value + data[i].value + data[i + 1].value) / 3.0)
+                data[i].smoothed = ((data[i - 1].calibratedOrValue + data[i].calibratedOrValue + data[i + 1].calibratedOrValue) / 3.0)
                 data[i].trendArrow = TrendArrow.NONE
             } else {
                 // data[i].smoothed = data[i].value

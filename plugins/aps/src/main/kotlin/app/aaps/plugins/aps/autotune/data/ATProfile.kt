@@ -1,12 +1,13 @@
 package app.aaps.plugins.aps.autotune.data
 
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.data.Block
 import app.aaps.core.data.time.T
-import app.aaps.core.interfaces.insulin.Insulin
+import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -15,7 +16,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.keys.DoubleKey
-import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.blockValueBySeconds
 import app.aaps.core.objects.extensions.pureProfileFromJson
@@ -25,14 +25,12 @@ import app.aaps.plugins.aps.R
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import java.text.DecimalFormat
 import java.util.TimeZone
 import javax.inject.Inject
 import javax.inject.Provider
 import kotlin.math.min
 
 class ATProfile @Inject constructor(
-    private val activePlugin: ActivePlugin,
     private val preferences: Preferences,
     private val profileUtil: ProfileUtil,
     private val dateUtil: DateUtil,
@@ -42,7 +40,7 @@ class ATProfile @Inject constructor(
 ) {
 
     lateinit var profile: ProfileSealed
-    lateinit var localInsulin: LocalInsulin
+    lateinit var iCfg: ICfg
     lateinit var circadianProfile: ProfileSealed
     private lateinit var pumpProfile: ProfileSealed
     var profileName: String = ""
@@ -66,9 +64,9 @@ class ATProfile @Inject constructor(
     private val avgIC: Double
         get() = if (profile.getIcsValues().size == 1) profile.getIcsValues()[0].value else Round.roundTo(averageProfileValue(profile.getIcsValues()), 0.01)
 
-    fun with(profile: Profile, localInsulin: LocalInsulin): ATProfile {
+    fun with(profile: Profile, iCfg: ICfg): ATProfile {
         this.profile = profile as ProfileSealed
-        this.localInsulin = localInsulin
+        this.iCfg = iCfg
 
         circadianProfile = profile
         isValid = profile.isValid
@@ -87,14 +85,14 @@ class ATProfile @Inject constructor(
             pumpProfileAvgIC = avgIC
             pumpProfileAvgISF = avgISF
         }
-        dia = localInsulin.dia
-        peak = localInsulin.peak
+        dia = iCfg.dia
+        peak = iCfg.peak
         return this
     }
 
     fun getBasal(timestamp: Long): Double = basal[MidnightUtils.secondsFromMidnight(timestamp) / 3600]
 
-    // for localProfilePlugin Synchronisation
+    // for local profile synchronisation
     fun basal() = jsonArray(basal)
     fun ic(circadian: Boolean = false): JSONArray {
         if (circadian)
@@ -125,20 +123,17 @@ class ATProfile @Inject constructor(
     fun profileToOrefJSON(): String {
         var jsonString = ""
         val json = JSONObject()
-        val insulinInterface: Insulin = activePlugin.activeInsulin
+        val insulinType = InsulinType.fromPeak(iCfg.peak * 60000L)
         try {
             json.put("name", profileName)
             json.put("min_5m_carbimpact", preferences.get(DoubleKey.ApsAmaMin5MinCarbsImpact))
             json.put("dia", dia)
-            if (insulinInterface.id === Insulin.InsulinType.OREF_ULTRA_RAPID_ACTING) json.put(
-                "curve",
-                "ultra-rapid"
-            ) else if (insulinInterface.id === Insulin.InsulinType.OREF_RAPID_ACTING) json.put("curve", "rapid-acting") else if (insulinInterface.id === Insulin.InsulinType.OREF_LYUMJEV) {
+            if (insulinType == InsulinType.OREF_ULTRA_RAPID_ACTING)
                 json.put("curve", "ultra-rapid")
-                json.put("useCustomPeakTime", true)
-                json.put("insulinPeakTime", 45)
-            } else if (insulinInterface.id === Insulin.InsulinType.OREF_FREE_PEAK) {
-                val peakTime: Int = preferences.get(IntKey.InsulinOrefPeak)
+            else if (insulinType == InsulinType.OREF_RAPID_ACTING)
+                json.put("curve", "rapid-acting")
+            else {
+                val peakTime: Int = iCfg.peak
                 json.put("curve", if (peakTime > 50) "rapid-acting" else "ultra-rapid")
                 json.put("useCustomPeakTime", true)
                 json.put("insulinPeakTime", peakTime)
@@ -146,7 +141,7 @@ class ATProfile @Inject constructor(
             val basals = JSONArray()
             for (h in 0..23) {
                 val secondFromMidnight = h * 60 * 60
-                val time: String = DecimalFormat("00").format(h) + ":00:00"
+                val time: String = NumberFormat.INTEGER_2_DIGITS.format(h) + ":00:00"
                 basals.put(
                     JSONObject()
                         .put("start", time)
@@ -181,7 +176,6 @@ class ATProfile @Inject constructor(
     fun data(circadian: Boolean = false): PureProfile? {
         val json: JSONObject = profile.toPureNsJson(dateUtil)
         try {
-            json.put("dia", dia)
             if (circadian) {
                 json.put("sens", jsonArray(pumpProfile.isfBlocks, avgISF / pumpProfileAvgISF))
                 json.put("carbratio", jsonArray(pumpProfile.icBlocks, avgIC / pumpProfileAvgIC))
@@ -219,7 +213,7 @@ class ATProfile @Inject constructor(
         val json = JSONArray()
         for (h in 0..23) {
             val secondFromMidnight = h * 60 * 60
-            val df = DecimalFormat("00")
+            val df = NumberFormat.INTEGER_2_DIGITS
             val time = df.format(h.toLong()) + ":00"
             json.put(
                 JSONObject()
@@ -246,7 +240,7 @@ class ATProfile @Inject constructor(
             val value = values.blockValueBySeconds(T.hours(elapsedHours).secs().toInt(), multiplier, 0)
             json.put(
                 JSONObject()
-                    .put("time", DecimalFormat("00").format(elapsedHours) + ":00")
+                    .put("time", NumberFormat.INTEGER_2_DIGITS.format(elapsedHours) + ":00")
                     .put("timeAsSeconds", T.hours(elapsedHours).secs())
                     .put("value", value)
             )

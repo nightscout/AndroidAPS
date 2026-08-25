@@ -2,6 +2,7 @@ package app.aaps.pump.equil.manager.command
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.utils.notifyAll
 import app.aaps.pump.equil.data.AlarmMode
 import app.aaps.pump.equil.database.EquilHistoryRecord
 import app.aaps.pump.equil.manager.EquilManager
@@ -34,20 +35,16 @@ class CmdAlarmSet(
     override fun decodeConfirmData(data: ByteArray) {
         synchronized(this) {
             cmdSuccess = true
-            (this as Object).notifyAll()
+            notifyAll()
         }
     }
 
-    override fun getEventType(): EquilHistoryRecord.EventType? {
-        if (mode == AlarmMode.MUTE.command) {
-            return EquilHistoryRecord.EventType.SET_ALARM_MUTE
-        } else if (mode == AlarmMode.TONE.command) {
-            return EquilHistoryRecord.EventType.SET_ALARM_TONE
-        } else if (mode == AlarmMode.TONE_AND_SHAKE.command) {
-            return EquilHistoryRecord.EventType.SET_ALARM_TONE_AND_SHAK
-        } else if (mode == AlarmMode.SHAKE.command) {
-            return EquilHistoryRecord.EventType.SET_ALARM_SHAKE
+    override fun getEventType(): EquilHistoryRecord.EventType? =
+        when (mode) {
+            AlarmMode.MUTE.command           -> EquilHistoryRecord.EventType.SET_ALARM_MUTE
+            AlarmMode.TONE.command           -> EquilHistoryRecord.EventType.SET_ALARM_TONE
+            AlarmMode.TONE_AND_SHAKE.command -> EquilHistoryRecord.EventType.SET_ALARM_TONE_AND_SHAK
+            AlarmMode.SHAKE.command          -> EquilHistoryRecord.EventType.SET_ALARM_SHAKE
+            else                             -> null
         }
-        return null
-    }
 }

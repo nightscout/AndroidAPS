@@ -6,10 +6,16 @@ import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.keys.StringNonKey
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.json.JSONArray
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.clearInvocations
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import javax.inject.Provider
 
@@ -19,6 +25,7 @@ class QuickWizardTest : TestBaseWithProfile() {
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Mock lateinit var bolusWizardProvider: Provider<BolusWizard>
+    @Mock lateinit var quickWizardProvider: Provider<QuickWizard>
 
     private val data1 = "{\"buttonText\":\"Meal\",\"carbs\":36,\"validFrom\":0,\"validTo\":18000," +
         "\"useBG\":0,\"useCOB\":0,\"useBolusIOB\":0,\"useBasalIOB\":0,\"useTrend\":0,\"useSuperBolus\":0,\"useTemptarget\":0}"
@@ -37,7 +44,8 @@ class QuickWizardTest : TestBaseWithProfile() {
     @BeforeEach
     fun setup() {
         whenever(preferences.get(StringNonKey.QuickWizard)).thenReturn("[]")
-        val quickWizardEntry = QuickWizardEntry(aapsLogger, preferences, profileFunction, loop, iobCobCalculator, persistenceLayer, dateUtil, glucoseStatusProvider, bolusWizardProvider)
+        whenever(preferences.observe(StringNonKey.QuickWizard)).thenReturn(MutableStateFlow("[]"))
+        val quickWizardEntry = QuickWizardEntry(aapsLogger, preferences, profileFunction, loop, iobCobCalculator, persistenceLayer, dateUtil, glucoseStatusProvider, bolusWizardProvider, quickWizardProvider)
         quickWizardEntry.time = mockedTime
         val quickWizardEntryProvider = Provider { quickWizardEntry }
         quickWizard = QuickWizard(preferences, quickWizardEntryProvider)
@@ -87,5 +95,44 @@ class QuickWizardTest : TestBaseWithProfile() {
         quickWizard.setData(array)
         quickWizard.remove(0)
         assertThat(quickWizard.size()).isEqualTo(1)
+    }
+
+    private val data3 = "{\"buttonText\":\"Dinner\",\"carbs\":24,\"validFrom\":0,\"validTo\":18000," +
+        "\"useBG\":0,\"useCOB\":0,\"useBolusIOB\":0,\"useBasalIOB\":0,\"useTrend\":0,\"useSuperBolus\":0,\"useTemptarget\":0}"
+
+    private fun buttonTexts() = (0 until quickWizard.size()).map { quickWizard[it].buttonText() }
+
+    @Test
+    fun reorderAppliesThePermutation() {
+        quickWizard.setData(JSONArray("[$data1,$data2,$data3]"))
+
+        // order[newIndex] == oldIndex, so this reads "Dinner, Meal, Lunch".
+        assertThat(quickWizard.reorder(listOf(2, 0, 1))).isTrue()
+
+        assertThat(buttonTexts()).containsExactly("Dinner", "Meal", "Lunch").inOrder()
+    }
+
+    @Test
+    fun reorderWithTheIdentityOrderDoesNotWrite() {
+        quickWizard.setData(JSONArray("[$data1,$data2]"))
+        clearInvocations(preferences)
+
+        assertThat(quickWizard.reorder(listOf(0, 1))).isTrue()
+
+        assertThat(buttonTexts()).containsExactly("Meal", "Lunch").inOrder()
+        // The entries ride a bidirectionally synced preference, so a pointless write would be a full
+        // round trip to the paired device.
+        verify(preferences, never()).put(eq(StringNonKey.QuickWizard), any<String>())
+    }
+
+    @Test
+    fun reorderRejectsAnOrderThatIsNotAPermutation() {
+        quickWizard.setData(JSONArray("[$data1,$data2,$data3]"))
+
+        assertThat(quickWizard.reorder(listOf(0, 1))).isFalse()          // too short
+        assertThat(quickWizard.reorder(listOf(0, 1, 1))).isFalse()       // duplicate
+        assertThat(quickWizard.reorder(listOf(0, 1, 5))).isFalse()       // out of range
+
+        assertThat(buttonTexts()).containsExactly("Meal", "Lunch", "Dinner").inOrder()
     }
 }

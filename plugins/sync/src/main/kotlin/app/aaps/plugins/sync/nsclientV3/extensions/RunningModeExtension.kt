@@ -15,6 +15,8 @@ fun NSOfflineEvent.toRunningMode(): RM =
         utcOffset = T.mins(utcOffset ?: 0L).msecs(),
         duration = originalDuration ?: duration,
         mode = mode.toMode(),
+        autoForced = autoForced,
+        reasons = reasons,
         ids = IDs(nightscoutId = identifier, pumpId = pumpId, pumpType = PumpType.fromString(pumpType), pumpSerial = pumpSerial, endId = endId)
     )
 
@@ -44,7 +46,33 @@ fun RM.toNSOfflineEvent(): NSOfflineEvent =
                 endId = ids.endId
             )
 
-        RM.Mode.DISABLED_LOOP,
+        // DISABLED_LOOP can be open-ended either as "user permanent" (duration == 0) or as
+        // "auto-forced by constraint" (duration == Long.MAX_VALUE — see LoopPlugin.runningModePreCheck).
+        // NS only renders an offline window when treatment.duration > 0, so substitute a long-but-finite
+        // wire duration. originalDuration is normalized to 0 for both open-ended cases — Long.MAX_VALUE
+        // does not round-trip through JSON cleanly (exceeds JS Number precision at 2^53), so giving the
+        // AAPSCLIENT a clean 0 is both safer and sufficient (autoForced is carried separately).
+        RM.Mode.DISABLED_LOOP     -> {
+            val isOpenEnded = duration == 0L || duration == Long.MAX_VALUE
+            NSOfflineEvent(
+                eventType = EventType.APS_OFFLINE,
+                isValid = isValid,
+                date = timestamp,
+                utcOffset = T.msecs(utcOffset).mins(),
+                duration = if (isOpenEnded) T.days(365L * 10).msecs() else duration,
+                originalDuration = if (isOpenEnded) 0L else duration,
+                reason = NSOfflineEvent.Reason.OTHER, // Unused
+                mode = mode.toMode(),
+                autoForced = autoForced,
+                reasons = reasons,
+                identifier = ids.nightscoutId,
+                pumpId = ids.pumpId,
+                pumpType = ids.pumpType?.name,
+                pumpSerial = ids.pumpSerial,
+                endId = ids.endId
+            )
+        }
+
         RM.Mode.SUPER_BOLUS,
         RM.Mode.DISCONNECTED_PUMP,
         RM.Mode.SUSPENDED_BY_PUMP,

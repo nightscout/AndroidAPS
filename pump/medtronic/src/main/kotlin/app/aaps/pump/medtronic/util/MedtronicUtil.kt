@@ -2,11 +2,10 @@ package app.aaps.pump.medtronic.util
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventDismissNotification
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.utils.pump.ByteUtil
+import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange
 import app.aaps.pump.common.hw.rileylink.RileyLinkUtil
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData
 import app.aaps.pump.medtronic.data.dto.ClockDTO
@@ -18,7 +17,6 @@ import app.aaps.pump.medtronic.defs.MedtronicNotificationType
 import app.aaps.pump.medtronic.driver.MedtronicPumpStatus
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.security.InvalidParameterException
@@ -37,7 +35,7 @@ class MedtronicUtil @Inject constructor(
     private val rxBus: RxBus,
     private val rileyLinkUtil: RileyLinkUtil,
     private val medtronicPumpStatus: MedtronicPumpStatus,
-    private val uiInteraction: UiInteraction
+    private val notificationManager: NotificationManager
 ) {
 
     @Suppress("PrivatePropertyName")
@@ -99,24 +97,12 @@ class MedtronicUtil @Inject constructor(
     //     return ByteUtil.concat(input.size.toByte(), input)
     // }
 
-    // fun sendNotification(notificationType: MedtronicNotificationType, rh: ResourceHelper) {
-    //     uiInteraction.addNotification(
-    //         notificationType.notificationType,
-    //         rh.gs(notificationType.resourceId),
-    //         notificationType.notificationUrgency
-    //     )
-    // }
-
-    fun sendNotification(notificationType: MedtronicNotificationType, rh: ResourceHelper, vararg parameters: Any?) {
-        uiInteraction.addNotification(
-            notificationType.notificationType,
-            rh.gs(notificationType.resourceId, *parameters),
-            notificationType.notificationUrgency
-        )
+    fun sendNotification(notificationType: MedtronicNotificationType, vararg parameters: Any?) {
+        notificationManager.post(notificationType.notificationId, notificationType.resourceId, *parameters, level = notificationType.notificationLevel)
     }
 
-    fun dismissNotification(notificationType: MedtronicNotificationType, rxBus: RxBus) {
-        rxBus.send(EventDismissNotification(notificationType.notificationType))
+    fun dismissNotification(notificationType: MedtronicNotificationType) {
+        notificationManager.dismiss(notificationType.notificationId)
     }
 
     fun buildCommandPayload(rileyLinkServiceData: RileyLinkServiceData, commandType: MedtronicCommandType, parameters: ByteArray?): ByteArray {

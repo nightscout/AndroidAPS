@@ -11,7 +11,7 @@ abstract class Transaction<T> {
     /**
      * Executes the Transaction
      */
-    internal abstract fun run(): T
+    internal abstract suspend fun run(): T
 
     internal lateinit var database: DelegatedAppDatabase
 

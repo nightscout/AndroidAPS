@@ -5,6 +5,7 @@ import app.aaps.database.daos.CarbsDao
 import app.aaps.database.entities.Carbs
 import app.aaps.database.entities.embedments.InterfaceIDs
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.never
@@ -26,7 +27,7 @@ class InsertOrUpdateCarbsTransactionTest {
     }
 
     @Test
-    fun `inserts new carbs when id not found`() {
+    fun `inserts new carbs when id not found`() = runTest {
         val carbs = createCarbs(id = 1, amount = 50.0)
 
         whenever(carbsDao.findById(1)).thenReturn(null)
@@ -44,7 +45,7 @@ class InsertOrUpdateCarbsTransactionTest {
     }
 
     @Test
-    fun `updates existing carbs when id found`() {
+    fun `updates existing carbs when id found`() = runTest {
         val carbs = createCarbs(id = 1, amount = 50.0)
         val existing = createCarbs(id = 1, amount = 30.0)
 
@@ -63,7 +64,7 @@ class InsertOrUpdateCarbsTransactionTest {
     }
 
     @Test
-    fun `handles carbs with zero amount`() {
+    fun `handles carbs with zero amount`() = runTest {
         val carbs = createCarbs(id = 1, amount = 0.0)
 
         whenever(carbsDao.findById(1)).thenReturn(null)
@@ -77,7 +78,7 @@ class InsertOrUpdateCarbsTransactionTest {
     }
 
     @Test
-    fun `handles carbs with extended duration`() {
+    fun `handles carbs with extended duration`() = runTest {
         val carbs = createCarbs(id = 1, amount = 50.0, duration = 120_000L)
 
         whenever(carbsDao.findById(1)).thenReturn(null)
@@ -91,7 +92,7 @@ class InsertOrUpdateCarbsTransactionTest {
     }
 
     @Test
-    fun `handles carbs without duration`() {
+    fun `handles carbs without duration`() = runTest {
         val carbs = createCarbs(id = 1, amount = 50.0, duration = 0L)
 
         whenever(carbsDao.findById(1)).thenReturn(null)
@@ -105,7 +106,7 @@ class InsertOrUpdateCarbsTransactionTest {
     }
 
     @Test
-    fun `updates invalid carbs`() {
+    fun `updates invalid carbs`() = runTest {
         val carbs = createCarbs(id = 1, amount = 50.0, isValid = false)
         val existing = createCarbs(id = 1, amount = 30.0, isValid = true)
 
@@ -120,7 +121,7 @@ class InsertOrUpdateCarbsTransactionTest {
     }
 
     @Test
-    fun `transaction result has correct structure`() {
+    fun `transaction result has correct structure`() = runTest {
         val result = InsertOrUpdateCarbsTransaction.TransactionResult()
 
         assertThat(result.inserted).isEmpty()
@@ -130,7 +131,7 @@ class InsertOrUpdateCarbsTransactionTest {
     }
 
     @Test
-    fun `preserves carbs timestamp on update`() {
+    fun `preserves carbs timestamp on update`() = runTest {
         val timestamp = 123456789L
         val carbs = createCarbs(id = 1, amount = 50.0, timestamp = timestamp)
         val existing = createCarbs(id = 1, amount = 30.0, timestamp = timestamp)
@@ -145,7 +146,7 @@ class InsertOrUpdateCarbsTransactionTest {
     }
 
     @Test
-    fun `inserts carbs with notes`() {
+    fun `inserts carbs with notes`() = runTest {
         val carbs = createCarbs(id = 1, amount = 50.0, notes = "Test meal")
 
         whenever(carbsDao.findById(1)).thenReturn(null)
@@ -159,7 +160,7 @@ class InsertOrUpdateCarbsTransactionTest {
     }
 
     @Test
-    fun `updates carbs with different amounts`() {
+    fun `updates carbs with different amounts`() = runTest {
         val existing = createCarbs(id = 1, amount = 30.0)
         val updated = createCarbs(id = 1, amount = 75.0)
 

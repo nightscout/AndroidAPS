@@ -1,27 +1,24 @@
 package app.aaps.plugins.automation.triggers
 
-import android.widget.LinearLayout
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.keys.DoubleKey
+import app.aaps.core.ui.compose.icons.IcAs
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.JsonHelper.safeGetDouble
 import app.aaps.core.utils.JsonHelper.safeGetString
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
-import app.aaps.plugins.automation.elements.LabelWithElement
-import app.aaps.plugins.automation.elements.LayoutBuilder
-import app.aaps.plugins.automation.elements.StaticLabel
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
-import java.text.DecimalFormat
-import java.util.Optional
 
 class TriggerAutosensValue(injector: HasAndroidInjector) : Trigger(injector) {
 
     private val minValue = (preferences.get(DoubleKey.AutosensMin) * 100).toInt()
     private val maxValue = (preferences.get(DoubleKey.AutosensMax) * 100).toInt()
     private val step = 1.0
-    private val decimalFormat = DecimalFormat("1")
+    private val decimalFormat = NumberFormat.INTEGER
     var autosens: InputDouble = InputDouble(100.0, minValue.toDouble(), maxValue.toDouble(), step, decimalFormat)
 
     var comparator: Comparator = Comparator(rh)
@@ -31,7 +28,7 @@ class TriggerAutosensValue(injector: HasAndroidInjector) : Trigger(injector) {
         comparator = Comparator(rh, triggerAutosensValue.comparator.value)
     }
 
-    override fun shouldRun(): Boolean {
+    override suspend fun shouldRun(): Boolean {
         val autosensData = iobCobCalculator.ads.getLastAutosensData("Automation trigger", aapsLogger, dateUtil)
             ?: return if (comparator.value == Comparator.Compare.IS_NOT_AVAILABLE) {
                 aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
@@ -65,15 +62,9 @@ class TriggerAutosensValue(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyDescription(): String =
         rh.gs(R.string.autosenscompared, rh.gs(comparator.value.stringRes), autosens.value)
 
-    override fun icon(): Optional<Int> = Optional.of(R.drawable.ic_as)
+    override fun composeIcon() = IcAs
+    override fun elementType() = ElementType.SENSITIVITY
 
     override fun duplicate(): Trigger = TriggerAutosensValue(injector, this)
 
-    override fun generateDialog(root: LinearLayout) {
-        LayoutBuilder()
-            .add(StaticLabel(rh, R.string.autosenslabel, this))
-            .add(comparator)
-            .add(LabelWithElement(rh, rh.gs(R.string.autosenslabel) + ": ", "", autosens))
-            .build(root)
-    }
 }

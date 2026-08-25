@@ -63,8 +63,8 @@ class OpenHumansAPI @Inject constructor(
             .post(body)
             .build()
         val response = request.await()
-        val json = response.body?.let { JSONObject(it.string()) }
-        if (json == null || !response.isSuccessful) throw OHHttpException(response.code, response.message, json?.getString("error"))
+        val json = response.body.let { JSONObject(it.string()) }
+        if (!response.isSuccessful) throw OHHttpException(response.code, response.message, json.getString("error"))
         val accessToken = json.getString("access_token") ?: throw OHProtocolViolationException("access_token missing")
         val refreshToken = json.getString("refresh_token") ?: throw OHProtocolViolationException("refresh_token missing")
         if (!json.has("expires_in")) throw OHProtocolViolationException("expires_in missing")
@@ -78,8 +78,8 @@ class OpenHumansAPI @Inject constructor(
             .get()
             .build()
         val response = request.await()
-        val json = response.body?.let { JSONObject(it.string()) }
-        if (json == null || !response.isSuccessful) throw OHHttpException(response.code, response.message, json?.getString("detail"))
+        val json = response.body.let { JSONObject(it.string()) }
+        if (!response.isSuccessful) throw OHHttpException(response.code, response.message, json.getString("detail"))
         return json.getString("project_member_id") ?: throw OHProtocolViolationException("project_member_id missing")
     }
 
@@ -94,8 +94,8 @@ class OpenHumansAPI @Inject constructor(
             )
             .build()
         val response = request.await()
-        val json = response.body?.let { JSONObject(it.string()) }
-        if (json == null || !response.isSuccessful) throw OHHttpException(response.code, response.message, json?.getString("detail"))
+        val json = response.body.let { JSONObject(it.string()) }
+        if (!response.isSuccessful) throw OHHttpException(response.code, response.message, json.getString("detail"))
         return PreparedUpload(
             fileId = json.getString("id") ?: throw OHProtocolViolationException("id missing"),
             uploadURL = json.getString("url") ?: throw OHProtocolViolationException("url missing")
@@ -142,7 +142,7 @@ class OpenHumansAPI @Inject constructor(
                 }
 
                 override fun onResponse(call: Call, response: Response) {
-                    it.resume(response) { cause, _, _ -> ; }
+                    it.resume(response) { _, _, _ -> ; }
                 }
             })
             it.invokeOnCancellation { call.cancel() }

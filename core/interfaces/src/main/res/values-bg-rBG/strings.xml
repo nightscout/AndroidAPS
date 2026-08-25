@@ -1,12 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Dialogs-->
+    <string name="confirmation">Потвърждение</string>
     <!--    Events-->
+    <string name="bolus_delivering">Пускам %1$.2fЕ</string>
+    <string name="bolus_delivered_so_far">%1$.2fЕ / %2$.2fЕ пуснати</string>
+    <string name="bolus_delivered_successfully">Болус от %1$.2fЕд доставен успешно</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Драйверът на помпата е променен.</string>
     <!--    DateUtil-->
+    <string name="minago">преди %1$dмин</string>
+    <string name="secago">преди %1$dсек</string>
+    <string name="min_plus">(+%1$dмин)</string>
+    <string name="sec_plus">(+%1$dсек)</string>
     <string name="minago_long">Преди %1$d минути</string>
+    <string name="hoursago">преди %1$.1fч</string>
     <string name="days_ago">преди %1$.1f дни</string>
     <string name="days_ago_round">преди %1$.0f дни</string>
+    <plurals name="plurals_day_hour_ago">
+        <item quantity="one">преди %1$s дни и %2$s часа</item>
+        <item quantity="other">преди %1$s дни и %2$s часа</item>
+    </plurals>
+    <plurals name="plurals_hour_ago">
+        <item quantity="one">преди %1$s часа</item>
+        <item quantity="other">преди %1$s часа</item>
+    </plurals>
+    <plurals name="plurals_minute_ago">
+        <item quantity="one">преди %1$s минути</item>
+        <item quantity="other">преди %1$s минути</item>
+    </plurals>
+    <string name="seconds_ago">секунди преди</string>
     <string name="in_days">за %1$.0f дни</string>
     <string name="in_days_round">за %1$.0f дни</string>
     <string name="shorthour">ч</string>
@@ -24,6 +47,8 @@
     <string name="unit_weeks">седмици</string>
     <string name="shortminute">м</string>
     <string name="shortday">д</string>
+    <string name="time_remaining_h_m">%1$dч %2$dмин остават</string>
+    <string name="time_remaining_m">%1$dмин остават</string>
     <string name="later_today">По-късно днес</string>
     <string name="tomorrow">Утре</string>
     <string name="today">Днес</string>
@@ -32,6 +57,7 @@
     <string name="connecting_for">Свързване %1$d сек</string>
     <string name="handshaking">Сдвояване</string>
     <string name="connected">Свързана</string>
+    <string name="authorized">Оторизиран</string>
     <string name="disconnecting">Разкачане</string>
     <string name="waiting_for_disconnection">Изчакване за разкачане</string>
     <!-- Custom Watchface -->
@@ -62,5 +88,31 @@
     <string name="pref_show_date">Покажи дата</string>
     <string name="pref_show_seconds">Покажи секунди</string>
     <string name="default_custom_watchface_comment">Watchface по подразбиране, можете да изберете бутон ЕКСПОРТИРАНЕ НА WATCHFACE за създаване на шаблон</string>
+    <string name="default_custom_watchface_external_comment">Циферблат по подразбиране вкл такива за последователи. Натиснете ЕКСПОРТ бутона за да се генерира темплейт</string>
     <string name="wear_default_watchface">Watchface по подразбиране</string>
+    <string name="wear_more_watchfaces">Още циферблати</string>
+    <string name="temp_basal_absolute_rate">%1$.2f Е/ч в %2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% в %2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_extended_bolus">Уд болус %1$.2f Е/ч в %2$s %3$d/%4$d мин</string>
+    <string name="forever">Вечно</string>
+    <!-- Permission rationales (used by PumpPluginBase) -->
+    <string name="permission_bluetooth_title">Bluetooth</string>
+    <string name="permission_bluetooth_description">Приложението се нуждае от bluetooth достъп за свързване с помпа</string>
+    <!-- Insulin -->
+    <string name="unknown">Непознат</string>
+    <string name="rapid_acting_oref">Novorapid</string>
+    <string name="lyumjev">Lyumjev</string>
+    <string name="free_peak_oref">Free-Peak Oref</string>
+    <string name="ultra_rapid_oref">Fiasp</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
+    <string name="insulin_peak_time">Пик [мин]</string>
+    <!-- Concentration -->
+    <string name="u10">U10</string>
+    <string name="u40">U40</string>
+    <string name="u50">U50</string>
+    <string name="u100">U100</string>
+    <string name="u200">U200</string>
+    <string name="u300">U300</string>
+    <string name="u500">U500</string>
 </resources>

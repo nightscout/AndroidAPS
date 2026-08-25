@@ -5,7 +5,21 @@ package app.aaps.core.data.plugin
  *
  * set by [app.aaps.core.interfaces.plugin.PluginDescription.mainType]
  */
-enum class PluginType {
+enum class PluginType(
+    /** One active plugin per category (radio) vs. multi-select (checkbox). */
+    val singleSelect: Boolean = false,
+    /** The active selection syncs master↔client (drives the ActivePlugin* keys + client visibility). */
+    val selectionSyncs: Boolean = false
+) {
 
-    GENERAL, SENSITIVITY, PROFILE, APS, PUMP, CONSTRAINTS, LOOP, BGSOURCE, INSULIN, SYNC, SMOOTHING
+    GENERAL,
+    SENSITIVITY(singleSelect = true, selectionSyncs = true),
+    APS(singleSelect = true, selectionSyncs = true),
+    PUMP(singleSelect = true),
+    CONSTRAINTS,
+    LOOP,
+    BGSOURCE(singleSelect = true),
+    SYNC,
+    SMOOTHING(singleSelect = true, selectionSyncs = true),
+    CALIBRATION(singleSelect = true, selectionSyncs = true)
 }

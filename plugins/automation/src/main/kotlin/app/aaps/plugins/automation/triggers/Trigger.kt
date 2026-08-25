@@ -1,12 +1,6 @@
 package app.aaps.plugins.automation.triggers
 
-import android.content.Context
-import android.content.ContextWrapper
-import android.view.Gravity
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
@@ -19,15 +13,11 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.plugins.automation.R
-import app.aaps.plugins.automation.dialogs.ChooseTriggerDialog
-import app.aaps.plugins.automation.events.EventTriggerChanged
-import app.aaps.plugins.automation.events.EventTriggerClone
-import app.aaps.plugins.automation.events.EventTriggerRemove
+import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.plugins.automation.services.LastLocationDataContainer
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
-import java.util.Optional
 import javax.inject.Inject
 
 abstract class Trigger(val injector: HasAndroidInjector) {
@@ -50,29 +40,23 @@ abstract class Trigger(val injector: HasAndroidInjector) {
         injector.androidInjector().inject(this)
     }
 
-    abstract fun shouldRun(): Boolean
+    abstract suspend fun shouldRun(): Boolean
     abstract fun dataJSON(): JSONObject
     abstract fun fromJSON(data: String): Trigger
 
     abstract fun friendlyName(): Int
     abstract fun friendlyDescription(): String
-    abstract fun icon(): Optional<Int>
+
+    /**
+     * Compose-native icon. Override in leaf triggers to return a Material-Icons
+     * [ImageVector] or a project `Ic*`. Default: null (connector / dummy).
+     */
+    open fun composeIcon(): ImageVector = elementType().icon()
+
+    /** Semantic UI type for this trigger. Used to resolve theme-aware colors and icons. */
+    open fun elementType(): ElementType = ElementType.AUTOMATION
+
     abstract fun duplicate(): Trigger
-
-    fun scanForActivity(cont: Context?): AppCompatActivity? {
-        return when (cont) {
-            null                 -> null
-            is AppCompatActivity -> cont
-            is ContextWrapper    -> scanForActivity(cont.baseContext)
-            else                 -> null
-        }
-    }
-
-    open fun generateDialog(root: LinearLayout) {
-        val title = TextView(root.context)
-        title.setText(friendlyName())
-        root.addView(title)
-    }
 
     fun toJSON(): String =
         JSONObject()
@@ -109,6 +93,7 @@ abstract class Trigger(val injector: HasAndroidInjector) {
                 TriggerProfilePercent::class.java.simpleName     -> TriggerProfilePercent(injector).fromJSON(data.toString())
                 TriggerPumpLastConnection::class.java.simpleName -> TriggerPumpLastConnection(injector).fromJSON(data.toString())
                 TriggerRecurringTime::class.java.simpleName      -> TriggerRecurringTime(injector).fromJSON(data.toString())
+                TriggerSceneActive::class.java.simpleName        -> TriggerSceneActive(injector).fromJSON(data.toString())
                 TriggerTempTarget::class.java.simpleName         -> TriggerTempTarget(injector).fromJSON(data.toString())
                 TriggerTempTargetValue::class.java.simpleName    -> TriggerTempTargetValue(injector).fromJSON(data.toString())
                 TriggerTime::class.java.simpleName               -> TriggerTime(injector).fromJSON(data.toString())
@@ -124,52 +109,4 @@ abstract class Trigger(val injector: HasAndroidInjector) {
         return TriggerConnector(injector)
     }
 
-    fun createAddButton(context: Context, trigger: TriggerConnector): ImageButton =
-        // Button [+]
-        ImageButton(context).apply {
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
-                gravity = Gravity.CENTER
-            }
-            setImageResource(app.aaps.core.objects.R.drawable.ic_add)
-            contentDescription = rh.gs(R.string.add_short)
-            setOnClickListener {
-                scanForActivity(context)?.supportFragmentManager?.let {
-                    val dialog = ChooseTriggerDialog()
-                    dialog.show(it, "ChooseTriggerDialog")
-                    dialog.setOnClickListener(object : ChooseTriggerDialog.OnClickListener {
-                        override fun onClick(newTriggerObject: Trigger) {
-                            trigger.list.add(newTriggerObject)
-                            rxBus.send(EventTriggerChanged())
-                        }
-                    })
-                }
-            }
-        }
-
-    fun createDeleteButton(context: Context, trigger: Trigger): ImageButton =
-        // Button [-]
-        ImageButton(context).apply {
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
-                gravity = Gravity.CENTER
-            }
-            setImageResource(app.aaps.core.objects.R.drawable.ic_remove)
-            contentDescription = rh.gs(R.string.delete_short)
-            setOnClickListener {
-                rxBus.send(EventTriggerRemove(trigger))
-            }
-        }
-
-    fun createCloneButton(context: Context, trigger: Trigger): ImageButton =
-        // Button [*]
-        ImageButton(context).apply {
-            val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
-                gravity = Gravity.CENTER
-            }
-            layoutParams = params
-            setImageResource(app.aaps.core.objects.R.drawable.ic_clone)
-            contentDescription = rh.gs(R.string.copy_short)
-            setOnClickListener {
-                rxBus.send(EventTriggerClone(trigger))
-            }
-        }
 }

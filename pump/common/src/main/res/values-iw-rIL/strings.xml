@@ -36,38 +36,5 @@
     <string name="time_last_4_days">ב-4 הימים האחרונים</string>
     <string name="time_last_week">בשבוע שעבר</string>
     <string name="time_last_month">בחודש שעבר</string>
-    <!-- BLE Config -->
-    <string name="ble_config_button_scan_start">סריקה</string>
-    <string name="ble_config_scan_stop">עצור</string>
-    <string name="ble_config_scan_selected">נבחר</string>
-    <string name="ble_config_scan_scanning">סורק</string>
-    <string name="ble_config_scan_finished">הסריקה הושלמה</string>
-    <string name="ble_config_scan_error">שגיאת סריקה: %1$d</string>
-    <string name="ble_config_remove">הסרה</string>
     <!-- Pump History -->
-    <string name="pump_history_type">סוג:</string>
-    <plurals name="duration_days">
-        <item quantity="one">יום %1$d</item>
-        <item quantity="two">יומיים</item>
-        <item quantity="many">%1$d ימים</item>
-        <item quantity="other">%1$d ימים</item>
-    </plurals>
-    <plurals name="duration_hours">
-        <item quantity="one">שעה</item>
-        <item quantity="two">שעתיים</item>
-        <item quantity="many">%1$d שעות</item>
-        <item quantity="other">%1$d שעות</item>
-    </plurals>
-    <plurals name="hoursago">
-        <item quantity="one">לפני שעה</item>
-        <item quantity="two">לפני שעתיים</item>
-        <item quantity="many">לפני %1$d שעות</item>
-        <item quantity="other">לפני %1$d שעות</item>
-    </plurals>
-    <plurals name="daysago">
-        <item quantity="one">לפני יום אחד</item>
-        <item quantity="two">לפני יומיים</item>
-        <item quantity="many">לפני %1$d ימים</item>
-        <item quantity="other">לפני %1$d ימים</item>
-    </plurals>
 </resources>

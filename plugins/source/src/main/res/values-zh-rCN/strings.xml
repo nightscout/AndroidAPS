@@ -1,20 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Source -->
+    <string name="ns_client_bg">NSClient 血糖</string>
+    <string name="ns_client_bg_short">NS 血糖</string>
     <string name="description_source_ns_client">从 Nightscout 下载 血糖数据</string>
+    <string name="source_xdrip">xDrip+ 血糖</string>
+    <string name="description_source_xdrip">从 xDrip+ 和兼容的应用程序（Juggluco 等）接收血糖值。</string>
     <string name="dexcom_app_patched">BYODA德康补丁版(构建你自己的德康应用Build Your Own Dexcom App)</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">从德康补丁版接收血糖数据(Build Your Own Dexcom App)。</string>
+    <string name="glimp">Glimp</string>
     <string name="description_source_glimp">从 Glimp 接收血糖值。</string>
+    <string name="mm640g">美敦力640g</string>
     <string name="description_source_mm640g">从美敦力600Series 的AndroidUploader 接收血糖值。</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">从 Poctech app 接收血糖值。</string>
     <string name="glunovo">Glunovo</string>
     <string name="description_source_glunovo">从Glunovo应用接收血糖数据。</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">从 Intelligo 应用接收值</string>
     <string name="tomato">番茄（喵喵）</string>
     <string name="tomato_short">番茄</string>
     <string name="description_source_tomato">从番茄app(喵喵设备) 接收血糖值</string>
+    <string name="random_bg">随机血糖</string>
+    <string name="description_source_random_bg">生成随机血糖数据（仅限demo演示模式）</string>
+    <string name="random_bg_short">血糖</string>
     <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai</string>
+    <string name="description_source_patched_syai_tag_app">从 Syai/欧态 App 接收血糖数据。</string>
     <!-- Patched SI App -->
+    <string name="patched_si_app">SI App</string>
+    <string name="description_source_patched_si_app">从补丁 Sibionic SI 应用接收血糖数据。</string>
     <!-- Patched Sino App -->
+    <string name="patched_sino_app">Sino App</string>
+    <string name="description_source_patched_sino_app">从补丁 Sino App 应用接收血糖数据。</string>
+    <!-- Instara App -->
+    <string name="instara_app">Instara</string>
+    <string name="description_source_instara_app">从 Instara 应用中接收血糖值。</string>
+    <!-- Instara preferences -->
+    <string name="pref_title_instara_history_request">Instara 历史数据请求</string>
+    <string name="pref_summary_instara_history_request">请求后台可能丢失的历史数据</string>
+    <!-- Notification Reader -->
+    <string name="notification_reader">通知读取器</string>
+    <string name="description_source_notification_reader">读取官方 CGM 应用程序（Dexcom、Medtronic、Eversense 等）发布的通知中的血糖值。</string>
+    <!-- Permission rationales -->
+    <string name="permission_dexcom_title">Dexcom CGM</string>
+    <string name="permission_dexcom_description">应用程序需要权限才能从 Dexcom 应用程序接收CGM 数据</string>
+    <string name="permission_notification_listener_title">通知权限</string>
+    <string name="permission_notification_listener_description">需要从 CGM 应用通知读取血糖值</string>
+    <string name="aidex">微泰 CGM 应用</string>
+    <string name="aidex_short">CGM 应用</string>
+    <string name="description_source_aidex">从 LinX、LinX vista、Equil G. Smart 2、Diaexpert 2 等设备接收动态血糖值。</string>
+    <string name="aidex_sensor_expired">传感器已过期，请替换为新传感器</string>
+    <string name="aidex_sensor_error">传感器错误，请检查传感器状态</string>
+    <string name="aidex_sensor_stabilizing">传感器正在稳定中，请稍候…</string>
+    <string name="aidex_sensor_replace">需要更换传感器，请尽快替换新传感器</string>
+    <string name="aidex_signal_lost">传感器信号丢失，请检查连接</string>
 </resources>

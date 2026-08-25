@@ -1,9 +1,8 @@
 package app.aaps.core.interfaces.aps
 
-import app.aaps.core.interfaces.configuration.ConfigExportImport
 import app.aaps.core.interfaces.profile.Profile
 
-interface APS : ConfigExportImport {
+interface APS {
 
     /**
      * Algorithm used
@@ -21,10 +20,18 @@ interface APS : ConfigExportImport {
     val lastAPSRun: Long
 
     /**
-     * Is APS providing variable ISF calculation?
+     * Is APS actually using variable ISF calculation?
      * @return true if yes
      */
-    fun supportsDynamicIsf(): Boolean = false
+    fun usingDynamicIsf(): Boolean = false
+
+    /**
+     * Does this algorithm offer the "Use dynamic sensitivity" option at all
+     * (static capability, independent of the preference value)?
+     * Unlike [usingDynamicIsf] this does not depend on whether the user enabled it.
+     * @return true if yes
+     */
+    fun offersDynamicSensitivity(): Boolean = false
 
     /**
      * Is APS providing variable IC calculation?
@@ -84,7 +91,7 @@ interface APS : ConfigExportImport {
      * @param initiator caller
      * @param tempBasalFallback if true previous enact of SMB failed. Try calculation without SMB
      */
-    fun invoke(initiator: String, tempBasalFallback: Boolean)
+    suspend fun invoke(initiator: String, tempBasalFallback: Boolean)
 
     /**
      * Provide glucose status calculation

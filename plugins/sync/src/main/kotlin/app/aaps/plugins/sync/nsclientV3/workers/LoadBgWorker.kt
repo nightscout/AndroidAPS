@@ -1,38 +1,43 @@
 package app.aaps.plugins.sync.nsclientV3.workers
 
 import android.content.Context
+import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.localmodel.entry.NSSgvV3
 import app.aaps.core.objects.workflow.LoggingWorker
-import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
-import javax.inject.Inject
 import kotlin.math.max
 
-class LoadBgWorker(
-    context: Context, params: WorkerParameters
-) : LoggingWorker(context, params, Dispatchers.IO) {
-
-    @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var preferences: Preferences
-    @Inject lateinit var context: Context
-    @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var nsClientV3Plugin: NSClientV3Plugin
-    @Inject lateinit var nsClientSource: NSClientSource
-    @Inject lateinit var nsIncomingDataProcessor: NsIncomingDataProcessor
-    @Inject lateinit var storeDataForDb: StoreDataForDb
+@HiltWorker
+class LoadBgWorker @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted params: WorkerParameters,
+    aapsLogger: AAPSLogger,
+    fabricPrivacy: FabricPrivacy,
+    private val preferences: Preferences,
+    private val dateUtil: DateUtil,
+    private val nsClientV3Plugin: NSClientV3Plugin,
+    private val nsClientSource: NSClientSource,
+    private val nsIncomingDataProcessor: NsIncomingDataProcessor,
+    private val storeDataForDb: StoreDataForDb,
+    private val nsClientRepository: NSClientRepository
+) : LoggingWorker(context, params, Dispatchers.IO, aapsLogger, fabricPrivacy) {
 
     override suspend fun doWorkAndLog(): Result {
         if (!nsClientSource.isEnabled() && !preferences.get(BooleanKey.NsClientAcceptCgmData) && !nsClientV3Plugin.doingFullSync)
@@ -58,10 +63,16 @@ class LoadBgWorker(
                         nsClientV3Plugin.scheduleIrregularExecution() // Idea is to run after 5 min after last BG
                     }
                     sgvs = response.values
+                    // Calibration mbg entries ride the same entries fetch + cursor; ingest them
+                    // regardless of whether there were any sgvs in this page.
+                    if (response.calibrations.isNotEmpty()) {
+                        nsClientRepository.addLog("◄ RCV", "${response.calibrations.size} calibrations from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}")
+                        nsIncomingDataProcessor.processCalibrations(response.calibrations, nsClientV3Plugin.doingFullSync)
+                    }
                     aapsLogger.debug(LTag.NSCLIENT, "SGVS: $sgvs")
                     if (sgvs.isNotEmpty()) {
                         val action = if (isFirstLoad) "RCV-F" else "RCV"
-                        rxBus.send(EventNSClientNewLog("◄ $action", "${sgvs.size} SVGs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
+                        nsClientRepository.addLog("◄ $action", "${sgvs.size} SVGs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}")
                         // Schedule processing of fetched data and continue of loading
                         continueLoading = response.code != 304 && nsIncomingDataProcessor.processSgvs(sgvs, nsClientV3Plugin.doingFullSync)
                     } else {
@@ -70,7 +81,7 @@ class LoadBgWorker(
                             nsClientV3Plugin.lastLoadedSrvModified.collections.entries = lastLoaded
                             nsClientV3Plugin.storeLastLoadedSrvModified()
                         }
-                        rxBus.send(EventNSClientNewLog("◄ RCV BG END", "No data from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
+                        nsClientRepository.addLog("◄ RCV BG END", "No data from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}")
                         continueLoading = false
                     }
                 } else {
@@ -79,18 +90,19 @@ class LoadBgWorker(
                         nsClientV3Plugin.lastLoadedSrvModified.collections.entries = lastLoaded
                         nsClientV3Plugin.storeLastLoadedSrvModified()
                     }
-                    rxBus.send(EventNSClientNewLog("◄ RCV BG END", "No new data from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
+                    nsClientRepository.addLog("◄ RCV BG END", "No new data from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}")
                     continueLoading = false
                 }
             }
         } catch (error: Exception) {
             aapsLogger.error("Error: ", error)
-            rxBus.send(EventNSClientNewLog("◄ ERROR", error.localizedMessage))
+            nsClientRepository.addLog("◄ ERROR", error.localizedMessage)
             nsClientV3Plugin.lastOperationError = error.localizedMessage
             return Result.failure(workDataOf("Error" to error.localizedMessage))
         }
 
         storeDataForDb.storeGlucoseValuesToDb()
+        storeDataForDb.storeCalibrationEntriesToDb()
         nsClientV3Plugin.lastOperationError = null
         return Result.success()
     }

@@ -1,0 +1,272 @@
+# Project Preferences
+
+## CRITICAL: Bash Command Rules (applies to ALL agents too)
+
+- **NEVER use `cd && command` or `cd; command` in Bash calls** — triggers security approval prompts
+  on Windows. Use absolute paths or `git -C` instead:
+    - ✅ `git -C E:/GitHub/AndroidAPS diff HEAD -- path/to/file`
+    - ✅ `git diff HEAD -- path/to/file` (CWD is already project root)
+    - ❌ `cd E:/GitHub/AndroidAPS && git diff HEAD`
+    - ❌ `cd /path; git status`
+- **NEVER start a command with these — they are NOT in the allowlist and WILL trigger confirmation:
+  **
+    - ❌ `awk`, `cut`, `tr` → use `sed` or the Grep/Read tools instead
+    - ❌ `sort`, `uniq` → wrap in `powershell.exe -Command "..."` or use tools
+    - ❌ `diff` (standalone) → use `git diff` which IS allowed
+    - ❌ `which` → use `where` instead (Windows equivalent, is allowed)
+    - ❌ `chmod`, `chown` → not needed on Windows
+    - ❌ `tar`, `gzip` → use `unzip` (allowed) or `powershell.exe -Command "..."`
+    - ❌ `pip`, `npm`, `yarn` → use `python -m pip`, `node ...`, or `powershell.exe`
+    - ❌ `gradlew.bat` without `./` prefix → always use `./gradlew.bat`
+    - ❌ Starting a command with a file path (e.g., `E:/Github/.../gradlew.bat build`) → use
+      `powershell.exe -Command "..."` wrapper instead
+    - ❌ Compound commands with `&&`, `||`, or `;` as the top-level operator between separate
+      commands → each command must start with an allowed prefix
+- **Safe patterns that ARE allowed:** `git`, `gh`, `./gradlew.bat`, `powershell.exe`,
+  `powershell`, `cmd`, `adb`, `curl`, `python`, `java`, `node`, `wsl`, `where`, `grep`, `find`,
+  `echo`, `head`, `tail`, `sed`, `rm`, `del`, `ls`, `wc`, `tee`, `xargs`, `cat`, `mkdir`, `cp`,
+  `mv`, `touch`, `unzip`, `jar`, `export`
+- When spawning agents that use Bash, ALWAYS include this rule in the agent prompt
+- See `.claude/CLAUDE_COMMANDS.md` for platform-specific working commands
+
+## Token Usage Reduction (Delay Conversation Compaction)
+
+- **Use Task agents for exploration instead of direct Glob/Grep:**
+    - `Task tool with subagent_type=Explore` summarizes findings
+    - Direct Glob/Grep returns raw content which consumes more tokens
+- **Limit file reads:**
+    - Use `limit` parameter (100-200 lines) for large files
+    - Use `offset` to target specific sections you need
+    - Don't re-read files already seen in conversation
+- **Use efficient Grep modes:**
+    - `output_mode: "files_with_matches"` (default) - just file paths
+    - `output_mode: "count"` - just counts
+    - Only use `"content"` when you need actual line content
+    - Use `head_limit` to cap number of results
+- **Suppress verbose Bash output:**
+    - Use `--quiet` flag for gradle: `.\gradlew.bat assembleFullDebug --quiet --no-daemon`
+    - Pipe to `tail -50` only when you just need to *read* output — ⚠️ a pipe makes the reported exit
+      code the **pipe's** (e.g. `tail`'s), NOT gradle's, so a FAILED build/test looks like it passed.
+      For pass/fail, redirect instead: `./gradlew.bat … --no-daemon > build.log 2>&1` then grep the log
+      (`^e: ` for Kotlin errors, `BUILD FAILED`/`BUILD SUCCESSFUL`).
+    - Avoid commands that dump entire logs
+- **Be specific in searches:**
+    - Narrow glob patterns: `src/**/specific/*.kt` instead of `**/*.kt`
+    - Precise regex patterns to reduce false matches
+- **Avoid redundant operations:**
+    - Reference line numbers from memory instead of re-reading
+    - Don't explore same directories multiple times
+    - Combine related searches when possible
+
+## User Preferences
+
+- **NEVER make code changes without user confirmation** — When the user describes a problem or
+  preference, propose the change first and wait for approval before editing code. Do NOT immediately
+  edit files based on user feedback. The only exception is when the user explicitly says "do it",
+  "fix it", "go ahead", or similar direct instruction.
+- **NEVER commit until the user explicitly asks** — Editing files is fine (subject to the rule above),
+  but do NOT run `git commit` (or `git push`) until the user directly asks for it. "Fix it" / "do it"
+  authorizes the code change, NOT a commit. Leave the work in the working tree and let the user review
+  it first; only commit when they say "commit", "push", or similar.
+- **Use simple "school english" everywhere** — In code (identifiers, comments, KDoc), commit messages,
+  PR text, UI strings and chat, write plain, simple English. Many readers and contributors are
+  non-native speakers. Prefer short common words and short sentences; avoid idioms, slang, rare
+  vocabulary, and needlessly complex phrasing. Clear over clever.
+- **Think critically, don't just agree** — Before implementing, evaluate whether the agreed approach
+  is actually the best solution. Challenge assumptions, point out potential issues, suggest better
+  alternatives. The user may miss something too. Ask "Is this the best way?" before writing code.
+  Being a good collaborator means pushing back when you see a better path.
+- **Implement EVERYTHING that was agreed upon** — Before writing code, review the plan/agreement
+  and list all the steps. After user confirms, implement ALL of them completely. Do NOT implement
+  half and skip the rest. If a feature was discussed and agreed (e.g., "unpair should clear keys +
+  remove MAC + disconnect"), implement every part, not just one call. After implementing, mentally
+  diff against the agreement to verify nothing was missed.
+- **Do NOT mark anything as "fully functional" or "complete" without user confirmation:**
+    - Always wait for user to test and confirm before claiming something works
+    - Build success ≠ feature complete - user must verify runtime behavior
+    - Never update PLAN.md or documentation to say something is "working" until user confirms
+- **When user says "ALL":**
+    - Do NOT optimize, batch, summarize, or take shortcuts
+    - Create a todo item for EVERY item/file to be processed
+    - Process each item individually and mark complete only after fully done
+    - After each batch, state how many remain and continue until zero remain
+    - Do NOT stop early or claim "done" until truly everything is processed
+    - User WILL verify results - assume accountability
+- **Always use explicit imports (no exceptions):**
+    - Never use fully qualified names inline (e.g., `kotlin.math.abs`,
+      `app.aaps.core.ui.compose.icons.IcFoo`, `androidx.compose.ui.graphics.vector.ImageVector`)
+    - Always add proper `import` statements at the top of the file and use short names in code
+    - Applies to type parameters, parameter types, return types, constructor calls, property
+      delegates, `remember { mutableStateOf<Type>() }`, etc.
+    - Applies when adding new code to existing files — add the import even if only referenced once
+    - ❌ BAD: `fun composeIcon() = app.aaps.core.ui.compose.icons.IcProfile`
+    - ✅ GOOD: `import app.aaps.core.ui.compose.icons.IcProfile` at top, then
+      `fun composeIcon() = IcProfile`
+    - ❌ BAD: `mutableListOf<androidx.compose.ui.graphics.vector.ImageVector>()`
+    - ✅ GOOD: `import androidx.compose.ui.graphics.vector.ImageVector` then
+      `mutableListOf<ImageVector>()`
+    - Only exception: when two different classes with the same simple name would collide — then one
+      can stay fully qualified at use site (rare)
+- **KDoc `[symbol]` references must resolve, or use backticks:** The IDE lint
+  (`KDocUnresolvedReference`) flags any `[Xxx]` link in a `/** */` block that can't be resolved from
+  the current file. A `[Xxx]` link only resolves if `Xxx` is importable here — imported, in the same
+  package, or written as a fully-qualified name whose module is on **this** module's main classpath.
+  When touching a file that has such a warning, fix it (don't mass-fix untouched files):
+    - **Prefer a clickable link.** If a resolvable symbol exists, link it — use an **interface** in a
+      `core:interfaces` (or similar already-depended-on) module rather than a concrete impl in another
+      module. A fully-qualified link is fine when the short name isn't imported:
+      `[app.aaps.core.interfaces.aps.Loop.invoke]`.
+    - **NEVER add a module dependency just to make a doc link resolve.** If the only matching symbol
+      is `private`, or lives in a module this one doesn't depend on (or only as `testImplementation`),
+      it can't be linked.
+    - **Then fall back to backticks.** Wrap the unresolvable reference in backticks so it's a plain
+      code span, not a checked link — lint has nothing to resolve, and it still renders as monospace:
+      `` `LoopPlugin.applySMBRequest` ``.
+    - Do NOT use `@Suppress("KDocUnresolvedReference")` — it's unreliable on the enclosing
+      declaration and hides real breakage of any *other* link in the same doc block. Backticks are the
+      fix.
+    - ❌ BAD: `* handled in [LoopPlugin.applySMBRequest].` (private, cross-module → unresolved)
+    - ✅ GOOD: `` * handled in [app.aaps.core.interfaces.aps.Loop.invoke] and `LoopPlugin.applySMBRequest`. ``
+- **Use centralized theme/styling:**
+    - For Compose UI: Always use theme values instead of hardcoded dp/padding/colors. If proper
+      setting doesn't exist, discuss it before creating hardcoded values.
+    - If hardcoded values exist, consider moving them to theme for consistency and maintainability
+- **NEVER use Android attrs in Compose code:**
+    - ❌ BAD: `rh.gac(context, R.attr.highColor)` - Android attribute resolution doesn't work well
+      with Compose
+    - ✅ GOOD: Define colors in Compose theme and use them (e.g., `AapsTheme.colors.bgHigh`)
+    - Domain models should NOT contain `@ColorInt` - use enums/sealed classes for classification
+    - Map classification to theme colors in UI layer (Composables)
+- **Type safety principles:**
+    - Prefer specific types over `Any?` whenever possible
+    - Document why `Any?` is used if it's truly necessary (e.g., module boundary constraints)
+- **Systematic cleanup after migrations:**
+    - Remove unused functions, parameters, and extensions
+    - Delete deprecated code and escape hatches
+    - Compile frequently to verify nothing breaks
+- **Use TodoWrite for complex multi-step work:**
+    - Create specific, actionable todo items (not vague descriptions)
+    - Mark todos in_progress before starting, completed immediately after finishing
+    - Keep exactly ONE todo in_progress at a time
+    - Break down large tasks into smaller items for tracking
+- On KSP error during compilation just compile again. Do not clean build.
+- On file locked error stop gradle daemons (`gradlew.bat --stop`)
+- Never install app automatically
+- **NEVER run Android instrumented tests (connectedAndroidTest) without explicit user permission** —
+  they uninstall the app from the device
+- Use %TEMP% directory for screenshots
+- Can edit files and run commands freely without asking for permission
+- Can use internet/web search as needed
+- For compilation do not use gradle daemon
+- Do not decompile libraries, look for sources locally or ask first (especially Vico lib)
+- **Skip compilation for trivial changes** — Don't run a build to verify simple edits like changing
+  a number, string, color value, or dp size. Only compile when structural changes (new
+  imports, API changes, type changes, new files) could cause errors.
+- Avoid duplication while writing new code and resources. Prefer moving to another module. Elaborate
+  if you think, it's necessary
+- When resource strings are affected, change only english version. Ignore translations
+- **Never manipulate localized strings programmatically** - Using patterns like
+  `.replace(",", ".")`,
+  `.removeSuffix(":")`, or stripping characters from resource strings breaks localization. Different
+  languages have different punctuation and formatting rules. If a string needs different formats,
+  create separate resource strings instead.
+- **Never build user-facing text by concatenating strings in code** - Joining pieces like
+  `rh.gs(label) + ": " + value`, `value + " " + unit`, or `"$a/$b h"` is NOT translatable and breaks
+  RTL languages (the translator can't control the separator, order, or direction). Instead use a
+  **format-string resource template** with positional placeholders and let the value carry its own
+  unit:
+    - ❌ BAD: `rh.gs(R.string.bolus) + ": " + decimalFormatter.toPumpSupportedBolus(v, step)`
+    - ✅ GOOD:
+      `rh.gs(R.string.confirmation_line, rh.gs(R.string.bolus), decimalFormatter.toPumpSupportedBolusWithUnits(v, step))`
+      where `confirmation_line` is `"%1$s: %2$s"` — and prefer value+unit templates
+      (`format_insulin_units`, `format_carbs`, `pump_base_basal_rate`, `format_mins`,
+      `ProfileUtil.fromMgdlToStringWithUnits`) over a bare number. Most such templates already exist
+      in
+      `:core:ui`; reuse them before adding a new one.
+- **Add a `comment="..."` translator note ONLY when a new string genuinely needs it for correct
+  translation** — i.e. it has placeholders, is short/ambiguous out of context, carries units, or has
+  order-sensitive parts. Do NOT add comments blanket to every string; a plain, self-explanatory
+  sentence needs none. When you do add one, use the `comment="..."` attribute (not an XML comment) and
+  explain each placeholder with an example, mirroring existing strings:
+    - ✅ needs it (placeholders + units):
+      `<string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=min, %4$s=max. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>`
+    - ❌ does NOT need it (plain, unambiguous sentence — no comment):
+      `<string name="master_control_disabled_banner">Master has disabled remote control. Editing is disabled until it is re-enabled on the master.</string>`
+- **In Compose code, use `stringResource()` not `ResourceHelper`** - Compose has built-in
+  `stringResource(R.string.xyz)` function. Only use `ResourceHelper` (rh) in non-Composable contexts
+  (ViewModels, regular functions). This keeps Compose code cleaner and more idiomatic.
+- **Clear focus on tap outside text fields** - Compose does NOT auto-clear focus like Android Views.
+  For screens with text fields, use the shared `clearFocusOnTap` modifier:
+  ```kotlin
+  val focusManager = LocalFocusManager.current
+  Column(modifier = Modifier.clearFocusOnTap(focusManager)) {
+      // Content with text fields
+  }
+  ```
+  The modifier is in `app.aaps.core.ui.compose.clearFocusOnTap`.
+- **Snackbar pattern (Compose)** - `LocalSnackbarHostState` exists for legacy reasons but is an
+  anti-pattern (hidden dependency, was silently failing before we fixed the default to `error()`).
+  **Do not add new `LocalSnackbarHostState.current` consumers.** Prefer either:
+    1. **Event hoisting from ViewModel / utility class** (preferred for non-Composables):
+       ```kotlin
+       // In ViewModel / domain class
+       private val _snackbarEvents = MutableSharedFlow<String>()
+       val snackbarEvents = _snackbarEvents.asSharedFlow()
+
+       // In the Composable
+       LaunchedEffect(Unit) {
+           viewModel.snackbarEvents.collect { snackbarHostState.showSnackbar(it) }
+       }
+       ```
+    2. **Parameter passing** (for child composables that need to snack):
+       ```kotlin
+       fun MyScreen(onShowMessage: (String) -> Unit) { ... }
+       ```
+  Existing `LocalSnackbarHostState.current` usages can stay as-is until touched for other reasons —
+  no forced migration. Only when refactoring a file anyway, move toward the preferred patterns.
+  **Note for Toast→Snackbar migrations:** services, workers, and background plugins cannot render
+  snackbars (no active Compose tree). For those, use Android Notifications for important messages,
+  keep Toast as low-priority fallback, or drop the message entirely if non-critical.
+- **Avoid adding new inter-module (project) dependencies** - Adding
+  `implementation(project(":other:module"))`
+  between modules can significantly slow down compilation time. Always discuss before adding these.
+  Prefer alternatives:
+    - Inline constants instead of importing from another module
+    - Move shared code to existing common modules
+    - Use interfaces defined in core modules
+    - Note: Adding external library dependencies via `api(libs.xxx)` or `implementation(libs.xxx)`
+      is fine.
+
+## Migration Procedures
+
+- **For migrations**: Follow procedures in `.claude/procedures/migration.md`
+
+## When Stuck
+
+- If compilation fails twice with the same error: **stop and show the error** to the user, don't
+  keep retrying
+- If a search finds nothing after 2 attempts: **ask the user** rather than guessing file locations
+- If unsure about architecture or where code should go: **ask before implementing**
+- If a tool call is denied: **ask why**, don't retry the same call
+- If an approach requires more than 3 workarounds: **step back and reconsider the approach**
+- If you realize you're about to repeat a mistake from memory: **stop and follow the correct pattern
+  **
+
+## On-Device Testing (ONLY on explicit request)
+
+Default stays **"Never install app automatically"** — only build / install / drive devices when the
+user explicitly asks. That request overrides the no-install rule; `connectedAndroidTest` still needs
+its own permission (it wipes the app). When asked:
+
+- Master runs the `full` flavor, a client runs an `aapsclient` flavor — build the needed APK(s) and
+  `adb install -r` (keep data; **never uninstall/wipe** the setup). Find devices via `adb devices -l`.
+- Drive the UI with **`uiautomator`** (dump hierarchy → tap by element `bounds`), not screenshots.
+- Verify behaviour from **`logcat`** (clear before the action, dump after, grep the relevant markers).
+- Use redirect-not-pipe for any gradle build/test so the real exit code shows (see caveat above).
+- Ask connected devices are test devices.
+
+## Project Info
+
+- Android project (AndroidAPS - open source artificial pancreas system)
+- Main branch: `master`
+- Development branch: `dev`

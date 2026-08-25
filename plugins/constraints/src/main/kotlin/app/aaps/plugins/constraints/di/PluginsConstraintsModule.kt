@@ -4,16 +4,20 @@ import android.content.Context
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.constraints.Objectives
+import app.aaps.core.interfaces.dst.DstHelper
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.interfaces.versionChecker.VersionDefinition
 import app.aaps.plugins.constraints.ConstraintsCheckerImpl
 import app.aaps.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
+import app.aaps.plugins.constraints.dstHelper.DstHelperPlugin
 import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import app.aaps.plugins.constraints.versionChecker.VersionCheckerUtilsImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import org.json.JSONObject
 import javax.inject.Singleton
 
@@ -23,15 +27,17 @@ import javax.inject.Singleton
         ObjectivesModule::class
     ]
 )
-
+@InstallIn(SingletonComponent::class)
 @Suppress("unused")
 open class PluginsConstraintsModule {
 
     @Module
+    @InstallIn(SingletonComponent::class)
     interface Bindings {
 
         @Binds fun bindVersionCheckerUtils(versionCheckerUtils: VersionCheckerUtilsImpl): VersionCheckerUtils
         @Binds fun bindBgQualityCheck(bgQualityCheck: BgQualityCheckPlugin): BgQualityCheck
+        @Binds fun bindDstHelper(dstHelperPlugin: DstHelperPlugin): DstHelper
         @Binds fun bindsConstraintChecker(constraintsCheckerImpl: ConstraintsCheckerImpl): ConstraintsChecker
         @Binds fun bindsObjectives(objectivesPlugin: ObjectivesPlugin): Objectives
     }

@@ -7,7 +7,7 @@ import app.aaps.database.entities.ProfileSwitch
  */
 class SyncNsProfileSwitchTransaction(private val profileSwitches: List<ProfileSwitch>) : Transaction<SyncNsProfileSwitchTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         val result = TransactionResult()
 
         for (profileSwitch in profileSwitches) {
@@ -22,6 +22,18 @@ class SyncNsProfileSwitchTransaction(private val profileSwitches: List<ProfileSw
                     current.isValid = false
                     database.profileSwitchDao.updateExistingEntry(current)
                     result.invalidated.add(current)
+                }
+                // Allow update duration to shorter only.
+                // duration == 0 means "permanent/indefinite" for PS, so it must compare as
+                // infinite — otherwise a permanent→finite cut (incoming > 0, current == 0)
+                // would be wrongly rejected as "longer". Incoming 0 (lengthening to permanent)
+                // stays rejected.
+                val isCut = profileSwitch.duration > 0 &&
+                    (current.duration == 0L || profileSwitch.duration < current.duration)
+                if (current.duration != profileSwitch.duration && isCut) {
+                    current.duration = profileSwitch.duration
+                    database.profileSwitchDao.updateExistingEntry(current)
+                    result.updatedDuration.add(current)
                 }
                 continue
             }
@@ -47,5 +59,6 @@ class SyncNsProfileSwitchTransaction(private val profileSwitches: List<ProfileSw
         val updatedNsId = mutableListOf<ProfileSwitch>()
         val inserted = mutableListOf<ProfileSwitch>()
         val invalidated = mutableListOf<ProfileSwitch>()
+        val updatedDuration = mutableListOf<ProfileSwitch>()
     }
 }

@@ -28,9 +28,9 @@
     <string name="objectives_smb_objective">Aktiver ekstra funksjoner for bruk på dagtid, slik som SMB (Super Micro Bolus)</string>
     <string name="objectives_smb_gate">Du må lese wiki og øke din maxIOB for å få SMB til å fungere. Et godt utgangspunkt er å sette maxIOB til gjennomsnittlig måltidsbolus + 3x max daglig basaldose</string>
     <string name="objectives_smb_learned">Bruk av SMB er en målsetting. Oref1 algoritmen ble designet for å hjelpe deg med dine bolusdoseringer. Det anbefales å ikke gi full bolusdose for måltider, men bare en del av den, og la AAPS styre resten om nødvendig. På denne måten får du større fleksibilitet med hensyn på feilberegnede KH. Visste du at du kan angi en prosentandel for boluskalkulatoren som resulterer i redusert bolusstørrelse?</string>
-    <string name="objectives_auto_objective">Aktiver Automatisering</string>
-    <string name="objectives_auto_gate">Les dokumentasjonen om hvordan Automatisering virker. La din første regel være enkel. I stedet for å utføre en behandling kan du få AAPS til å vise en melding i stedet når den aktiveres. Da får du kontrollert at Automatisering aktiveres korrekt og du kan erstatte meldingsvarselet med en behandlingskommando. (https://wiki.aaps.app/en/latest/DailyLifeWithAaps/Automations.html)</string>
-    <string name="objectives_auto_learned">Automatisering kan være en god tjener, men en dårlig herre. Ikke overdriv bruken. Ikke forsøk å erstatte den underliggende algoritmen. Test regelen med bare en melding først. Rekkefølgen har betydning.</string>
+    <string name="objectives_auto_objective">Aktiver automasjon</string>
+    <string name="objectives_auto_gate">Les dokumentasjonen om hvordan Automasjon virker. La din første regel være enkel. I stedet for å utføre en behandling kan du få AAPS til å vise en melding i stedet når den aktiveres. Da får du kontrollert at Automasjon aktiveres korrekt og du kan erstatte meldingsvarselet med en behandlingskommando. (https://wiki.aaps.app/en/latest/DailyLifeWithAaps/Automations.html)</string>
+    <string name="objectives_auto_learned">Automasjon kan være en god tjener, men en dårlig herre. Ikke overdriv bruken. Ikke forsøk å erstatte den underliggende algoritmen. Test regelen med bare en melding først. Rekkefølgen har betydning.</string>
     <string name="objectives_bgavailableinns">BS tilgjengelig i NS og Tidepool</string>
     <string name="objectives_pumpstatusavailableinns">Pumpestatus tilgjengelig i NS og Tidepool</string>
     <string name="objectives_manualenacts">Manuell kommando</string>
@@ -38,13 +38,12 @@
     <string name="objectives_usage_objective">Lær hvordan du kontrollerer AAPS</string>
     <string name="objectives_usage_gate">Utfør forskjellige handlinger i AAPS</string>
     <string name="objectives_usage_learned">Du har lært hvordan du skal håndtere det grunnleggende ved AAPS. Hovedkontrollene er på oversikt-skjermen som er tilgjengelig ved klikk eller lang-klikk, og flere kontroller er på handlinger-skjermen. Du bør vite hvordan du legger inn skjermen til en plugin på menylinjen i toppen eller lar den vises i liste over aktiverte plugins øverst til venstre ved å trykke på hamburgermeny.</string>
-    <string name="objectives_useprofileswitch">Angi profil 90% for 10 min (langt-trykk på profilnavn i Oversikt)</string>
-    <string name="objectives_usedisconnectpump">Simuler dusjing. Frakoble pumpen i 1t (langt trykk på Åpen Loop)</string>
+    <string name="objectives_useprofileswitch">Angi profil 90% for 10 min</string>
+    <string name="objectives_usedisconnectpump">Simuler dusj. Koble fra pumpen i 1 time.</string>
     <string name="objectives_usereconnectpump">... og koble til igjen på samme måte</string>
-    <string name="objectives_usetemptarget">Opprett egendefinerte midlertidige mål med 10 min varighet (langt-trykk på gjeldende mål)</string>
-    <string name="objectives_useactions">I Konfigurasjonsverktøyet aktiverer du Handlinger-plugin, og gjør det synlig og viser innholdet fra menyen i øverste linje</string>
+    <string name="objectives_usetemptarget">Opprett et egendefinert midlertidig mål med en varighet på 10 minutter</string>
     <string name="objectives_useloop">Vis innholdet i Loop plugin</string>
-    <string name="objectives_usescale">Test skaleringsfunksjonen ved et langt trykk på BS grafen</string>
+    <string name="objectives_usescale">Bruk scroll eller zoom på BS-diagrammet</string>
     <string name="objectives_exam_objective">Bevis kunnskapen din</string>
     <string name="objectives_exam_gate">Studer spørsmålene. Hvert spørsmål har fire svaralternativer. Det kan være flere enn ett riktig svar. Marker alle riktige svar og velg KONTROLLER.</string>
     <string name="objectives_exam_learned_prerequisites">Du trenger ikke være en utvikler, men du trenger NS for å bestå læringsmålene, kompatibel pumpe og datamaskin til å bygge AAPS første gang og ved hver oppdatering.</string>
@@ -59,7 +58,7 @@
     <string name="objectives_exam_learned_profileswitch4">Redigering av profilen er ikke tilstrekkelig til å gjøre en endring. Du må fremdeles fysisk aktivere et profil bytte for å registrere endringene.</string>
     <string name="objectives_exam_learned_exercise">Du bør redusere mengden insulin i kroppen minst 1 time før du starter treningen ved å velge profil under 100 %.</string>
     <string name="objectives_exam_learned_exercise2">Ved å sette høyere midlertidig mål minst 1 time før trening så vil det bidra til å redusere mengden med insulin i kroppen.</string>
-    <string name="objectives_exam_learned_noisycgm">Hvis du ikke stoler på CGM-verdier bør du ikke bruke loop uten tilsyn.</string>
+    <string name="objectives_exam_learned_noisycgm">Hvis du ikke stoler på sensor-verdier bør du ikke bruke loop uten tilsyn.</string>
     <string name="objectives_exam_learned_pumpdisconnect">AAPS må vite at pumpen ikke er tilkoblet for å beregne IOB riktig.</string>
     <string name="objectives_exam_learned_insulin">Å vite hvilken type insulin som er i pumpen er nødvendig for å beregne IOB korrekt.</string>
     <string name="objectives_exam_learned_sensitivity">Sensitivitetsdeteksjon er en del av algoritmen som gir mulighet for å tilpasse insulindoseringen til ulike situasjoner.</string>
@@ -71,6 +70,9 @@
     <string name="objectives_exam_learned_breadgrams">Kun gram er tillatt for angivelse av karbohydrater.</string>
     <string name="objectives_exam_learned_ecarbs">E-karbohydrater er en erstatning for forlenget bolus i en pumpeverden.</string>
     <string name="objectives_exam_learned_nsclient">Fjernovervåking og kontroll er mulig, men ikke alle funksjoner må være tilgjengelig eksternt.</string>
+    <string name="objectives_exam_learned_concentration1">Ved bruk av U200 insulin med en profil 50 % vil det kreves permanent omregning: for ekstern bolus med penn, og alle standardrapporter fra AAPS eller NS vil bli feil og skal konverteres til IE for helseteam.</string>
+    <string name="objectives_exam_learned_concentration2">Ved å bytte fra U200 med en 50 %-profil til U200 med insulinkonsentrasjon-funksjonen må man lage en ny sterkere profil, deaktivere DynISF en uke og omstille seg for å tenke i Internasjonale Enheter.</string>
+    <string name="objectives_exam_learned_concentration3">Insulinkonsentrasjon kan kun endres når insulin eller plaster/Pod skiftes. Men viktigst, spesielt for slange-pumper, må man aldri bruker pumpens brukergrensesnitt til å levere bolus direkte fra pumpen.</string>
     <string name="answerdisabledto">Besvarelser deaktivert til: %1$s</string>
     <string name="wronganswer">Feil svar!</string>
     <string name="unfinshed_button">Neste ubesvarte</string>
@@ -85,4 +87,14 @@
     <string name="requirementnotmet">Læringmålets krav er ikke oppfylt</string>
     <string name="what_i_ve_learned">Jeg har lært:</string>
     <string name="verify_master_password">Verifiser at du kjenner hovedpassordet</string>
+    <string name="objectives_collapse">Mindre</string>
+    <string name="objectives_expand">Mer</string>
+    <string name="objectives_no_learned">Ingen leksjoner registrert for dette målet.</string>
+    <string name="objectives_open_exam">Åpen eksamen</string>
+    <string name="objectives_exam_question_progress">Spørsmål %1$d av %2$d</string>
+    <string name="objectives_exam_reset">Tilbakestill</string>
+    <string name="objectives_exam_previous">Forrige</string>
+    <string name="objectives_exam_next">Neste</string>
+    <string name="objectives_exam_next_unanswered">Neste ubesvarte</string>
+    <string name="objectives_show_hint">Hint</string>
 </resources>

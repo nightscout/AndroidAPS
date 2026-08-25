@@ -4,7 +4,7 @@ import app.aaps.database.entities.TherapyEvent
 
 class InvalidateTherapyEventsWithNoteTransaction(private val note: String) : Transaction<InvalidateTherapyEventsWithNoteTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         val result = TransactionResult()
         val therapyEvents = database.therapyEventDao.getValidByType(TherapyEvent.Type.NOTE)
         for (event in therapyEvents) {

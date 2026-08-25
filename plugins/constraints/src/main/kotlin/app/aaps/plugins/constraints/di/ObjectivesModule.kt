@@ -1,8 +1,5 @@
 package app.aaps.plugins.constraints.di
 
-import app.aaps.plugins.constraints.objectives.ObjectivesFragment
-import app.aaps.plugins.constraints.objectives.activities.ObjectivesExamDialog
-import app.aaps.plugins.constraints.objectives.dialogs.NtpProgressDialog
 import app.aaps.plugins.constraints.objectives.objectives.Objective
 import app.aaps.plugins.constraints.objectives.objectives.Objective0
 import app.aaps.plugins.constraints.objectives.objectives.Objective1
@@ -17,7 +14,8 @@ import app.aaps.plugins.constraints.objectives.objectives.Objective9
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import dagger.android.ContributesAndroidInjector
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntKey
 import dagger.multibindings.IntoMap
 import javax.inject.Qualifier
@@ -28,14 +26,12 @@ import javax.inject.Qualifier
         ObjectivesModule.ObjectivesListModule::class
     ]
 )
+@InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class ObjectivesModule {
 
-    @ContributesAndroidInjector abstract fun contributesObjectivesFragment(): ObjectivesFragment
-    @ContributesAndroidInjector abstract fun contributesObjectivesExamDialog(): ObjectivesExamDialog
-    @ContributesAndroidInjector abstract fun contributesNtpProgressDialog(): NtpProgressDialog
-
     @Module
+    @InstallIn(SingletonComponent::class)
     open class Provide {
 
         @Provides
@@ -44,6 +40,7 @@ abstract class ObjectivesModule {
     }
 
     @Module
+    @InstallIn(SingletonComponent::class)
     interface ObjectivesListModule {
 
         @Binds

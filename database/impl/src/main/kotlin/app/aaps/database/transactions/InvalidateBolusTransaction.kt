@@ -2,7 +2,7 @@ package app.aaps.database.transactions
 
 class InvalidateBolusTransaction(val id: Long) : Transaction<InvalidateBolusTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         val result = TransactionResult()
         val bolus = database.bolusDao.findById(id)
             ?: throw IllegalArgumentException("There is no such Bolus with the specified ID.")

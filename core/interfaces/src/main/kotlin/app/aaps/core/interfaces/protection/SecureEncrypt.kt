@@ -22,4 +22,10 @@ interface SecureEncrypt {
      */
     fun isValidDataString(data: String?): Boolean
 
+    /***
+     * Delete a key from the Android KeyStore by alias. No-op if alias is absent.
+     * Intended for removing orphaned legacy aliases after a migration to a new alias.
+     */
+    fun deleteKey(keystoreAlias: String)
+
 }

@@ -1,6 +1,5 @@
 plugins {
     id("com.android.test")
-    id("kotlin-android")
 }
 
 android {
@@ -32,6 +31,7 @@ android {
         create("pumpcontrol") { dimension = "standard" }
         create("aapsclient") { dimension = "standard" }
         create("aapsclient2") { dimension = "standard" }
+        create("aapsclient3") { dimension = "standard" }
     }
 
     compileOptions {
@@ -45,8 +45,6 @@ android {
 
 dependencies {
     implementation(libs.androidx.junit)
-    implementation(libs.androidx.espresso.core)
-    implementation(libs.androidx.uiautomator)
     implementation(libs.androidx.benchmark.macro.junit4)
 }
 

@@ -8,26 +8,26 @@ import app.aaps.pump.eopatch.core.response.PatchBooleanResponse
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
-import java.lang.Exception
 import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
+import kotlin.time.Duration.Companion.milliseconds
 
 @Suppress("unused", "PrivatePropertyName")
 @Singleton
 class SetGlobalTimeTask @Inject constructor() : TaskBase(TaskFunc.SET_GLOBAL_TIME) {
 
-    private val SET_GLOBAL_TIME: SetGlobalTime = SetGlobalTime()
-    private val GET_GLOBAL_TIME: GetGlobalTime = GetGlobalTime()
+    @Inject lateinit var setGlobalTime: SetGlobalTime
+    @Inject lateinit var getGlobalTime: GetGlobalTime
 
     fun set(): Single<PatchBooleanResponse> {
         return isReady()
-            .concatMapSingle<GlobalTimeResponse>(Function { GET_GLOBAL_TIME.get(false) })
+            .concatMapSingle<GlobalTimeResponse>(Function { getGlobalTime.get(false) })
             .doOnNext(Consumer { response: GlobalTimeResponse -> this.checkResponse(response) })
             .doOnNext(Consumer { response: GlobalTimeResponse -> this.checkPatchTime(response) })
-            .concatMapSingle<PatchBooleanResponse>(Function { SET_GLOBAL_TIME.set() })
+            .concatMapSingle<PatchBooleanResponse>(Function { setGlobalTime.set() })
             .doOnNext(Consumer { response: PatchBooleanResponse -> this.checkResponse(response) })
             .firstOrError()
             .doOnSuccess(Consumer { onSuccess() })
@@ -39,7 +39,7 @@ class SetGlobalTimeTask @Inject constructor() : TaskBase(TaskFunc.SET_GLOBAL_TIM
         val oldMilli = response.globalTimeInMilli
         val oldOffset = response.timeZoneOffset.toLong()
         val offset = TimeZone.getDefault().getOffset(newMilli)
-        val minutes = TimeUnit.MILLISECONDS.toMinutes(offset.toLong()).toInt()
+        val minutes = offset.toLong().milliseconds.inWholeMinutes.toInt()
         val newOffset = minutes / 15
 
         val diff: Long = abs(oldMilli - newMilli)

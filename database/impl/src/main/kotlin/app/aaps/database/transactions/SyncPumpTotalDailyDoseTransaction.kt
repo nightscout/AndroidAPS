@@ -9,7 +9,7 @@ class SyncPumpTotalDailyDoseTransaction(
     private val tdd: TotalDailyDose
 ) : Transaction<SyncPumpTotalDailyDoseTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         tdd.interfaceIDs.pumpType ?: tdd.interfaceIDs.pumpSerial
         ?: throw IllegalStateException("Some pump ID is null")
 

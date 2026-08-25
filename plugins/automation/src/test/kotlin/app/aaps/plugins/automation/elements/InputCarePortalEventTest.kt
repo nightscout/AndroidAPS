@@ -13,7 +13,7 @@ class InputCarePortalEventTest : TriggerTestBase() {
 
     @Test
     fun setValueTest() {
-        val cp = InputCarePortalMenu(rh, InputCarePortalMenu.EventType.EXERCISE)
+        val cp = InputCarePortalMenu(InputCarePortalMenu.EventType.EXERCISE)
         assertThat(cp.value).isEqualTo(InputCarePortalMenu.EventType.EXERCISE)
     }
 }

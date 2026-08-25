@@ -11,4 +11,5 @@ enum class BooleanComposedKey(
 
     Log("log_", "%s", false),
     WidgetUseBlack("appwidget_use_black_", "%d", false),
+    ConfigBuilderEnabled("ConfigBuilder_Enabled_", "%s", false),
 }

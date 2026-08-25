@@ -16,7 +16,7 @@ class ProcessedTbrEbDataImpl @Inject constructor(
     private val profileFunction: ProfileFunction
 ) : ProcessedTbrEbData {
 
-    private fun getConvertedExtended(timestamp: Long): TB? {
+    private suspend fun getConvertedExtended(timestamp: Long): TB? {
         if (activePlugin.activePump.isFakingTempsByExtendedBoluses) {
             val eb = persistenceLayer.getExtendedBolusActiveAt(timestamp)
             val profile = profileFunction.getProfile(timestamp) ?: return null
@@ -25,17 +25,6 @@ class ProcessedTbrEbDataImpl @Inject constructor(
         return null
     }
 
-    override fun getTempBasalIncludingConvertedExtended(timestamp: Long): TB? =
+    override suspend fun getTempBasalIncludingConvertedExtended(timestamp: Long): TB? =
         persistenceLayer.getTemporaryBasalActiveAt(timestamp) ?: getConvertedExtended(timestamp)
-
-    override fun getTempBasalIncludingConvertedExtendedForRange(startTime: Long, endTime: Long, calculationStep: Long): Map<Long, TB?> {
-        val tempBasals = HashMap<Long, TB?>()
-        val tbs = persistenceLayer.getTemporaryBasalsActiveBetweenTimeAndTime(startTime, endTime)
-        for (t in startTime until endTime step calculationStep) {
-            val tb = tbs.firstOrNull { basal -> basal.timestamp <= t && (basal.timestamp + basal.duration) > t }
-            tempBasals[t] = tb ?: getConvertedExtended(t)
-        }
-        return tempBasals
-    }
-
 }

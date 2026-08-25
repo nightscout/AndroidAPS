@@ -28,7 +28,6 @@ class VersionCheckerPlugin @Inject constructor(
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
-        .neverVisible(true)
         .alwaysEnabled(true)
         .showInList { false }
         .pluginName(R.string.version_checker),
@@ -36,7 +35,7 @@ class VersionCheckerPlugin @Inject constructor(
     aapsLogger, rh, preferences
 ), PluginConstraints {
 
-    override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
+    override suspend fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
         versionCheckerUtils.triggerCheckVersion()
         val endDate = preferences.get(LongComposedKey.AppExpiration, config.VERSION_NAME)
         return if (endDate != 0L && dateUtil.now() > endDate)

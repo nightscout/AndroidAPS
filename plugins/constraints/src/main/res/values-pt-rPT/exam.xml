@@ -2,7 +2,6 @@
 <resources>
     <string name="dia_whatmeansdia">O que é verdade sobre a DAI?</string>
     <string name="dia_label_exam">Duração da Acção da Insulina (DAI)</string>
-    <string name="dia_profile">Deve definir o valor da DAI no seu perfil.</string>
     <string name="dia_minimumis5h">O valor mínimo permitido são 5 horas.</string>
     <string name="dia_meaningisequaltodiapump">Se estiver satisfeito com o valor da DAI que utilizava na bomba antes da AndroidAPS e que funcionava bem, não há necessidade de o alterar quando iniciar o loop.</string>
     <string name="dia_valuemustbedetermined">Deve determinar para o seu valor adequado para a DAI.</string>
@@ -64,9 +63,7 @@
     <string name="prerequisites2_internet">AAPS requer uma ligação à internet para ser executada em loop fechado.</string>
     <string name="prerequisites2_supportedcgm">Um CGM suportado e app apropriada para receber valores da glicose no sangue no telemóvel/dispositivo.</string>
     <string name="update_label">A atualizar AAPS</string>
-    <string name="update_git">Precisa ter Git instalado e configurado no computador.</string>
     <string name="update_asap">Quando versões atualizadas da AAPS são lançadas, as versões anteriores podem ser remotamente limitadas após um tempo especificado.</string>
-    <string name="update_keys">Deve guardar e anotar a localização da sua keystore e utilizar a mesma chave de assinatura para actualizações como para a instalação anterior.</string>
     <string name="update_askfriend">Se tiver dificuldade em construir o apk, pode instalar um apk que foi construído por um amigo.</string>
     <string name="troubleshooting_label">Resolução de Problemas</string>
     <string name="troubleshooting_wheretoask">Onde pode procurar ajuda para a AndroidAPS?</string>

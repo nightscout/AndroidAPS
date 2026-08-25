@@ -10,10 +10,12 @@ import app.aaps.core.nssdk.exceptions.UnsuccessfulNightscoutException
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.localmodel.Status
 import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
+import app.aaps.core.nssdk.localmodel.entry.NSMbgV3
 import app.aaps.core.nssdk.localmodel.entry.NSSgvV3
 import app.aaps.core.nssdk.localmodel.food.NSFood
 import app.aaps.core.nssdk.localmodel.treatment.CreateUpdateResponse
 import app.aaps.core.nssdk.localmodel.treatment.NSTreatment
+import app.aaps.core.nssdk.mapper.toCalibrationMbg
 import app.aaps.core.nssdk.mapper.toLocal
 import app.aaps.core.nssdk.mapper.toNSDeviceStatus
 import app.aaps.core.nssdk.mapper.toNSFood
@@ -122,6 +124,7 @@ class NSAndroidClientImpl(
                 code = response.raw().networkResponse?.code ?: response.code(),
                 lastServerModified = 0,
                 values = response.body()?.result?.map(RemoteEntry::toSgv).toNotNull()
+                // no calibrations: this endpoint is server-filtered to type=sgv
             )
         } else if (response.code() in 400..499)
             throw InvalidParameterNightscoutException(response.errorBody()?.string() ?: response.message())
@@ -138,7 +141,8 @@ class NSAndroidClientImpl(
             return@callWrapper NSAndroidClient.ReadResponse(
                 code = response.raw().networkResponse?.code ?: response.code(),
                 lastServerModified = eTag,
-                values = response.body()?.result?.map(RemoteEntry::toSgv).toNotNull()
+                values = response.body()?.result?.map(RemoteEntry::toSgv).toNotNull(),
+                calibrations = response.body()?.result?.mapNotNull(RemoteEntry::toCalibrationMbg) ?: emptyList()
             )
         } else if (response.code() in 400..499)
             throw InvalidParameterNightscoutException(response.errorBody()?.string() ?: response.message())
@@ -153,7 +157,8 @@ class NSAndroidClientImpl(
             return@callWrapper NSAndroidClient.ReadResponse(
                 code = response.raw().networkResponse?.code ?: response.code(),
                 lastServerModified = 0,
-                values = response.body()?.result?.map(RemoteEntry::toSgv).toNotNull()
+                values = response.body()?.result?.map(RemoteEntry::toSgv).toNotNull(),
+                calibrations = response.body()?.result?.mapNotNull(RemoteEntry::toCalibrationMbg) ?: emptyList()
             )
         } else if (response.code() in 400..499)
             throw InvalidParameterNightscoutException(response.errorBody()?.string() ?: response.message())
@@ -208,6 +213,69 @@ class NSAndroidClientImpl(
         val identifier = remoteEntry.identifier ?: throw InvalidFormatNightscoutException("Invalid format")
         val response =
             if (nsSgvV3.isValid) api.updateEntry(remoteEntry, identifier)
+            else api.deleteEntry(identifier)
+        if (response.isSuccessful || response.code() == 404) { // OK or not found
+            return@callWrapper CreateUpdateResponse(
+                response = response.code(),
+                identifier = null,
+                isDeduplication = false,
+                deduplicatedIdentifier = null,
+                lastModified = null
+            )
+        } else if (response.code() in 400..499) {
+            return@callWrapper CreateUpdateResponse(
+                response = response.code(),
+                identifier = null,
+                errorResponse = response.errorBody()?.string() ?: response.message()
+            )
+        } else
+            throw UnsuccessfulNightscoutException(response.errorBody()?.string() ?: response.message())
+    }
+
+    override suspend fun createCalibration(nsMbgV3: NSMbgV3): CreateUpdateResponse = callWrapper(dispatcher) {
+
+        val remoteEntry = nsMbgV3.toRemoteEntry()
+        remoteEntry.app = "AAPS"
+        val response = api.createEntry(remoteEntry)
+        val responseBody = response.body()
+        val errorResponse = response.errorBody()?.string()
+        if (response.code() == 200 || response.code() == 201) {
+            return@callWrapper CreateUpdateResponse(
+                response = response.code(),
+                identifier = responseBody?.identifier,
+                isDeduplication = responseBody?.isDeduplication == true,
+                deduplicatedIdentifier = responseBody?.deduplicatedIdentifier,
+                lastModified = responseBody?.lastModified
+            )
+        } else if (response.code() == 400 && errorResponse?.contains("Bad or missing utcOffset field") == true && nsMbgV3.utcOffset != 0L) {
+            nsMbgV3.utcOffset = 0
+            return@callWrapper createCalibration(nsMbgV3)
+        } else if (response.code() == 400 && errorResponse?.contains("cannot be modified by the client") == true) {
+            // there is different field to field in AAPS, not possible to upload
+            return@callWrapper CreateUpdateResponse(
+                response = response.code(),
+                identifier = null,
+                errorResponse = errorResponse
+            )
+        } else if (response.code() in 400..499) {
+            return@callWrapper CreateUpdateResponse(
+                response = response.code(),
+                identifier = null,
+                errorResponse = errorResponse ?: response.message()
+            )
+        } else
+            throw UnsuccessfulNightscoutException(errorResponse ?: response.message())
+    }
+
+    override suspend fun updateCalibration(nsMbgV3: NSMbgV3): CreateUpdateResponse = callWrapper(dispatcher) {
+
+        // following cannot be updated
+        nsMbgV3.utcOffset = null
+        nsMbgV3.date = null
+        val remoteEntry = nsMbgV3.toRemoteEntry()
+        val identifier = remoteEntry.identifier ?: throw InvalidFormatNightscoutException("Invalid format")
+        val response =
+            if (nsMbgV3.isValid) api.updateEntry(remoteEntry, identifier)
             else api.deleteEntry(identifier)
         if (response.isSuccessful || response.code() == 404) { // OK or not found
             return@callWrapper CreateUpdateResponse(
@@ -480,6 +548,159 @@ class NSAndroidClientImpl(
             throw InvalidParameterNightscoutException(response.errorBody()?.string() ?: response.message())
         else
             throw UnsuccessfulNightscoutException("Unsuccessful")
+    }
+
+    override suspend fun getSettings(identifier: String): NSAndroidClient.ReadResponse<JSONObject?> = callWrapper(dispatcher) {
+
+        val response = api.getSetting(identifier)
+        if (response.isSuccessful) {
+            val eTagString = response.headers()["ETag"]
+            val eTag = eTagString?.substring(3, eTagString.length - 1)?.toLong()
+            return@callWrapper NSAndroidClient.ReadResponse(
+                code = response.raw().networkResponse?.code ?: response.code(),
+                lastServerModified = eTag,
+                values = response.body()?.result
+            )
+        } else if (response.code() == 404) {
+            return@callWrapper NSAndroidClient.ReadResponse(code = 404, lastServerModified = null, values = null)
+        } else if (response.code() in 400..499)
+            throw InvalidParameterNightscoutException(response.errorBody()?.string() ?: response.message())
+        else
+            throw UnsuccessfulNightscoutException("Unsuccessful")
+    }
+
+    override suspend fun getSettingsModifiedSince(from: Long, limit: Int): NSAndroidClient.ReadResponse<List<JSONObject>> = callWrapper(dispatcher) {
+
+        val response = api.getSettingsModifiedSince(from, limit)
+        if (response.isSuccessful) {
+            val eTagString = response.headers()["ETag"]
+            val eTag = eTagString?.substring(3, eTagString.length - 1)?.toLong()
+            return@callWrapper NSAndroidClient.ReadResponse(
+                code = response.raw().networkResponse?.code ?: response.code(),
+                lastServerModified = eTag,
+                values = response.body()?.result.toNotNull()
+            )
+        } else if (response.code() in 400..499)
+            throw InvalidParameterNightscoutException(response.errorBody()?.string() ?: response.message())
+        else
+            throw UnsuccessfulNightscoutException("Unsuccessful")
+    }
+
+    override suspend fun searchSettings(limit: Int): NSAndroidClient.ReadResponse<List<JSONObject>> = callWrapper(dispatcher) {
+
+        val response = api.searchSettings(limit)
+        if (response.isSuccessful) {
+            val eTagString = response.headers()["ETag"]
+            val eTag = eTagString?.substring(3, eTagString.length - 1)?.toLong()
+            return@callWrapper NSAndroidClient.ReadResponse(
+                code = response.raw().networkResponse?.code ?: response.code(),
+                lastServerModified = eTag,
+                values = response.body()?.result.toNotNull()
+            )
+        } else if (response.code() in 400..499)
+            throw InvalidParameterNightscoutException(response.errorBody()?.string() ?: response.message())
+        else
+            throw UnsuccessfulNightscoutException("Unsuccessful")
+    }
+
+    override suspend fun createSettings(settings: JSONObject): CreateUpdateResponse = callWrapper(dispatcher) {
+
+        settings.put("app", "AAPS")
+        val response = api.createSetting(JsonParser.parseString(settings.toString()).asJsonObject)
+        if (response.isSuccessful) {
+            if (response.code() == 200 || response.code() == 201) {
+                return@callWrapper CreateUpdateResponse(
+                    response = response.code(),
+                    identifier = response.body()?.identifier,
+                    isDeduplication = response.body()?.isDeduplication,
+                    deduplicatedIdentifier = response.body()?.deduplicatedIdentifier,
+                    lastModified = response.body()?.lastModified
+                )
+            } else throw UnsuccessfulNightscoutException("Unsuccessful")
+        } else if (response.code() in 400..499) {
+            return@callWrapper CreateUpdateResponse(
+                response = response.code(),
+                identifier = null,
+                errorResponse = response.errorBody()?.string() ?: response.message()
+            )
+        } else
+            throw UnsuccessfulNightscoutException(response.errorBody()?.string() ?: response.message())
+    }
+
+    override suspend fun patchSettings(identifier: String, settings: JSONObject): CreateUpdateResponse = callWrapper(dispatcher) {
+
+        val response = api.patchSetting(JsonParser.parseString(settings.toString()).asJsonObject, identifier)
+        if (response.code() == 404) {
+            return@callWrapper CreateUpdateResponse(
+                response = 404,
+                identifier = null,
+                isDeduplication = false,
+                deduplicatedIdentifier = null,
+                lastModified = null
+            )
+        } else if (response.isSuccessful) {
+            return@callWrapper CreateUpdateResponse(
+                response = response.code(),
+                identifier = response.body()?.identifier,
+                isDeduplication = response.body()?.isDeduplication == true,
+                deduplicatedIdentifier = response.body()?.deduplicatedIdentifier,
+                lastModified = response.body()?.lastModified
+            )
+        } else if (response.code() in 400..499) {
+            return@callWrapper CreateUpdateResponse(
+                response = response.code(),
+                identifier = null,
+                errorResponse = response.errorBody()?.string() ?: response.message()
+            )
+        } else
+            throw UnsuccessfulNightscoutException(response.errorBody()?.string() ?: response.message())
+    }
+
+    override suspend fun updateSettings(identifier: String, settings: JSONObject): CreateUpdateResponse = callWrapper(dispatcher) {
+
+        val response = api.updateSetting(JsonParser.parseString(settings.toString()).asJsonObject, identifier)
+        if (response.isSuccessful) {
+            return@callWrapper CreateUpdateResponse(
+                response = response.code(),
+                identifier = response.body()?.identifier,
+                isDeduplication = response.body()?.isDeduplication == true,
+                deduplicatedIdentifier = response.body()?.deduplicatedIdentifier,
+                lastModified = response.body()?.lastModified
+            )
+        } else if (response.code() in 400..499) {
+            return@callWrapper CreateUpdateResponse(
+                response = response.code(),
+                identifier = null,
+                errorResponse = response.errorBody()?.string() ?: response.message()
+            )
+        } else
+            throw UnsuccessfulNightscoutException(response.errorBody()?.string() ?: response.message())
+    }
+
+    override suspend fun deleteSettings(identifier: String): CreateUpdateResponse = deleteSettingsInternal(identifier, permanent = false)
+
+    /** Hard delete (`?permanent=true`): actually removes the doc instead of soft-deleting (tombstoning) it. */
+    override suspend fun deleteSettingsPermanent(identifier: String): CreateUpdateResponse = deleteSettingsInternal(identifier, permanent = true)
+
+    private suspend fun deleteSettingsInternal(identifier: String, permanent: Boolean): CreateUpdateResponse = callWrapper(dispatcher) {
+
+        val response = api.deleteSetting(identifier, if (permanent) true else null)
+        if (response.isSuccessful || response.code() == 404) {
+            return@callWrapper CreateUpdateResponse(
+                response = response.code(),
+                identifier = null,
+                isDeduplication = false,
+                deduplicatedIdentifier = null,
+                lastModified = null
+            )
+        } else if (response.code() in 400..499) {
+            return@callWrapper CreateUpdateResponse(
+                response = response.code(),
+                identifier = null,
+                errorResponse = response.errorBody()?.string() ?: response.message()
+            )
+        } else
+            throw UnsuccessfulNightscoutException(response.errorBody()?.string() ?: response.message())
     }
 
     private suspend fun <T> callWrapper(dispatcher: CoroutineDispatcher, block: suspend () -> T): T =

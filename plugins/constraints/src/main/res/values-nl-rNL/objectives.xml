@@ -39,13 +39,8 @@
     <string name="objectives_usage_objective">Leer hoe AndroidAPS te gebruiken</string>
     <string name="objectives_usage_gate">Voer verschillende acties uit in AndroidAPS</string>
     <string name="objectives_usage_learned">Je hebt geleerd hoe je met basisprincipes van AAPS moet omgaan. Hoofdbesturingselementen zijn beschikbaar op het Overzicht tabblad dat toegankelijk is via een klik of lange klik, meer acties zijn te vinden op het Actie tabblad. U hoort te weten hoe u een scherm van een plugin in de tabbladen plaatst of naar de lijst linksboven onder het hamburger menu van de ingeschakelde plug-ins verhuist.</string>
-    <string name="objectives_useprofileswitch">Stel profiel in op 90% voor 10 min (houd profielnaam lang ingedrukt op Overzicht scherm)</string>
-    <string name="objectives_usedisconnectpump">Simuleer douchen. Ontkoppel de pomp voor 1u (houd Open Loop lang ingedrukt)</string>
     <string name="objectives_usereconnectpump">... en op dezelfde manier weer aankoppelen</string>
-    <string name="objectives_usetemptarget">Stel een aangepast tijdelijk doel in met een duur van 10 min (houd huidige doel lang ingedrukt)</string>
-    <string name="objectives_useactions">Schakel in Configurator de Acties plugin in zodat deze zichtbaar wordt en de inhoud ervan via de menubar bovenaan kan worden ingezien</string>
     <string name="objectives_useloop">Inhoud van loop plugin weergeven</string>
-    <string name="objectives_usescale">Gebruik de schaalfunctie: houd de BG grafiek lang ingedrukt</string>
     <string name="objectives_exam_objective">Bewijs je kennis</string>
     <string name="objectives_exam_gate">Beantwoord de vragen.  Bij elke vraag worden vier antwoordmogelijkheden gegeven. Het kan zijn dat er meer dan één antwoord moet worden aangevinkt. Vink alle antwoorden aan die jij denkt dat juist zijn en kies VERIFIEER.</string>
     <string name="objectives_exam_learned_prerequisites">U hoeft geen ontwikkelaar te zijn, maar u heeft NS en een geschikte pomp nodig om doelen te behalen. U heeft een computer nodig om AAPS voor de eerste keer en voor iedere update te bouwen.</string>

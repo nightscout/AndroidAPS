@@ -16,7 +16,7 @@ fun NSBolusWizard.toBolusCalculatorResult(): BCR? =
                 it.ids.nightscoutId = identifier
                 it.version = 0
             }
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         null
     }
 

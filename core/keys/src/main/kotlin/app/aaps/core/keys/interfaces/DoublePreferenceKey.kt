@@ -21,4 +21,5 @@ interface DoublePreferenceKey : PreferenceKey, DoubleNonPreferenceKey {
      *  Value with calculation in simple mode
      */
     val calculatedBySM: Boolean
+
 }

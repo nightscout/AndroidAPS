@@ -12,11 +12,10 @@ import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Suppress("PrivatePropertyName")
 @Singleton
 class StartCalcBolusTask @Inject constructor() : BolusTask(TaskFunc.START_CALC_BOLUS) {
 
-    private val NOW_BOLUS_START: BolusStart = BolusStart()
+    @Inject lateinit var nowBolusStart: BolusStart
 
     fun start(detailedBolusInfo: DetailedBolusInfo): Single<out BolusResponse> {
         return isReady().concatMapSingle(Function { startBolusImpl(detailedBolusInfo.insulin.toFloat()) })
@@ -27,7 +26,7 @@ class StartCalcBolusTask @Inject constructor() : BolusTask(TaskFunc.START_CALC_B
     }
 
     private fun startBolusImpl(nowDoseU: Float): Single<out BolusResponse> {
-        return NOW_BOLUS_START.start(nowDoseU)
+        return nowBolusStart.start(nowDoseU)
     }
 
     private fun onSuccess(nowDoseU: Float) {

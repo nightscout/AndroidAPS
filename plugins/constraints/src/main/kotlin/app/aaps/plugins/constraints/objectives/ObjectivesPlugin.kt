@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.constraints.Objectives.Companion.AUTOSENS_OBJECTIVE
 import app.aaps.core.interfaces.constraints.Objectives.Companion.AUTO_OBJECTIVE
 import app.aaps.core.interfaces.constraints.Objectives.Companion.CLOSED_LOOP_OBJECTIVE
+import app.aaps.core.interfaces.constraints.Objectives.Companion.EXAM_OBJECTIVE
 import app.aaps.core.interfaces.constraints.Objectives.Companion.FIRST_OBJECTIVE
 import app.aaps.core.interfaces.constraints.Objectives.Companion.LGS_OBJECTIVE
 import app.aaps.core.interfaces.constraints.Objectives.Companion.SMB_OBJECTIVE
@@ -18,7 +19,9 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.icons.IcPluginObjectives
 import app.aaps.plugins.constraints.R
+import app.aaps.plugins.constraints.objectives.compose.ObjectivesComposeContent
 import app.aaps.plugins.constraints.objectives.keys.ObjectivesBooleanComposedKey
 import app.aaps.plugins.constraints.objectives.keys.ObjectivesLongComposedKey
 import app.aaps.plugins.constraints.objectives.objectives.Objective
@@ -35,8 +38,8 @@ class ObjectivesPlugin @Inject constructor(
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
-        .fragmentClass(ObjectivesFragment::class.qualifiedName)
-        .pluginIcon(app.aaps.core.ui.R.drawable.ic_graduation)
+        .composeContent { ObjectivesComposeContent() }
+        .icon(IcPluginObjectives)
         .pluginName(app.aaps.core.ui.R.string.objectives)
         .shortName(R.string.objectives_shortname)
         .enableByDefault(config.APS)
@@ -57,7 +60,6 @@ class ObjectivesPlugin @Inject constructor(
         preferences.put(BooleanNonKey.ObjectivesDisconnectUsed, false)
         preferences.put(BooleanNonKey.ObjectivesReconnectUsed, false)
         preferences.put(BooleanNonKey.ObjectivesTempTargetUsed, false)
-        preferences.put(BooleanNonKey.ObjectivesActionsUsed, false)
         preferences.put(BooleanNonKey.ObjectivesLoopUsed, false)
         preferences.put(BooleanNonKey.ObjectivesScaleUsed, false)
     }
@@ -89,7 +91,7 @@ class ObjectivesPlugin @Inject constructor(
         return value
     }
 
-    override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
+    override suspend fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         // Check if initialized
         if (objectives.isEmpty()) return value
         if (!objectives[CLOSED_LOOP_OBJECTIVE].isStarted)
@@ -105,7 +107,7 @@ class ObjectivesPlugin @Inject constructor(
         return value
     }
 
-    override fun isSMBModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
+    override suspend fun isSMBModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         // Check if initialized
         if (objectives.isEmpty()) return value
         if (!objectives[SMB_OBJECTIVE].isStarted)
@@ -120,6 +122,17 @@ class ObjectivesPlugin @Inject constructor(
             value.set(false, rh.gs(R.string.objectivenotstarted, AUTO_OBJECTIVE + 1), this)
         return value
     }
+
+    override fun isConcentrationEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
+        if (objectives.isEmpty()) return value
+        if (!objectives[EXAM_OBJECTIVE].isAccomplished) {
+            value.set(false, rh.gs(R.string.objectivenotfinished, EXAM_OBJECTIVE + 1), this)
+        }
+        return value
+    }
+
+    override val size: Int get() = objectives.size
+    override val accomplishedCount: Int get() = objectives.count { it.isAccomplished }
 
     override fun isAccomplished(index: Int) = objectives[index].isAccomplished
     override fun isStarted(index: Int): Boolean = objectives[index].isStarted

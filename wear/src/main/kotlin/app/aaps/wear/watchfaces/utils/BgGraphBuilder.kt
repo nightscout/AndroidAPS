@@ -7,19 +7,17 @@ import app.aaps.core.interfaces.rx.weardata.EventData.TreatmentData.Basal
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.wear.R
-import lecho.lib.hellocharts.model.Axis
-import lecho.lib.hellocharts.model.AxisValue
-import lecho.lib.hellocharts.model.Line
-import lecho.lib.hellocharts.model.LineChartData
-import lecho.lib.hellocharts.model.PointValue
-import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
+import lecho.lib.hellocharts.model.Axis
+import lecho.lib.hellocharts.model.AxisValue
+import lecho.lib.hellocharts.model.Line
+import lecho.lib.hellocharts.model.LineChartData
+import lecho.lib.hellocharts.model.PointValue
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -409,8 +407,8 @@ class BgGraphBuilder(
 
         //get the time-tick at the full hour after start_time
         val tz = TimeZone.currentSystemDefault()
-        val startLocal = Instant.fromEpochMilliseconds(startingTime).toLocalDateTime(tz)
-        val truncatedHour = LocalDateTime(startLocal.year, startLocal.month, startLocal.dayOfMonth, startLocal.hour, 0)
+        val startLocal = kotlin.time.Instant.fromEpochMilliseconds(startingTime).toLocalDateTime(tz)
+        val truncatedHour = LocalDateTime(startLocal.year, startLocal.month, startLocal.day, startLocal.hour, 0)
         var hourInstant = truncatedHour.toInstant(tz).plus(1, DateTimeUnit.HOUR, tz)
 
         //Display current time on the graph

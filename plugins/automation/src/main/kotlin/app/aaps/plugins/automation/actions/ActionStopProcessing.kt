@@ -1,7 +1,9 @@
 package app.aaps.plugins.automation.actions
 
-import androidx.annotation.DrawableRes
-import app.aaps.core.interfaces.queue.Callback
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Stop
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.plugins.automation.R
 import com.google.gson.JsonObject
 import dagger.android.HasAndroidInjector
@@ -11,12 +13,13 @@ class ActionStopProcessing(injector: HasAndroidInjector) : Action(injector) {
 
     override fun friendlyName(): Int = R.string.stop_processing
     override fun shortDescription(): String = rh.gs(R.string.stop_processing)
-    @DrawableRes override fun icon(): Int = R.drawable.ic_stop_24dp
+    override fun composeIcon() = Icons.Filled.Stop
+    override fun elementType() = ElementType.BG_CHECK
 
     override fun isValid(): Boolean = true
 
-    override fun doAction(callback: Callback) {
-        callback.result(pumpEnactResultProvider.get().success(true).comment(app.aaps.core.ui.R.string.ok)).run()
+    override suspend fun doAction(): PumpEnactResult {
+        return pumpEnactResultProvider.get().success(true).comment(app.aaps.core.ui.R.string.ok)
     }
 
     override fun toJSON(): String {

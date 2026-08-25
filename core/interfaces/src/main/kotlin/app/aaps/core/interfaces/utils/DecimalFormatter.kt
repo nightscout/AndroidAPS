@@ -1,6 +1,7 @@
 package app.aaps.core.interfaces.utils
 
-import java.text.DecimalFormat
+import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.interfaces.pump.PumpInsulin
 
 /**
  * Format double values to strings
@@ -17,5 +18,6 @@ interface DecimalFormatter {
     fun to3Decimal(value: Double, unit: String): String
     fun toPumpSupportedBolus(value: Double, bolusStep: Double): String
     fun toPumpSupportedBolusWithUnits(value: Double, bolusStep: Double): String
-    fun pumpSupportedBolusFormat(bolusStep: Double): DecimalFormat
+    fun toPumpSupportedBolusWithUnits(value: PumpInsulin, bolusStep: Double): String
+    fun pumpSupportedBolusFormat(bolusStep: Double): NumberFormat
 }

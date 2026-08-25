@@ -54,6 +54,7 @@ fun UserEntry.Action.fromDb(): Action =
         UserEntry.Action.TT_NS_REFRESH                   -> Action.TT_NS_REFRESH
         UserEntry.Action.AUTOMATION_REMOVED              -> Action.AUTOMATION_REMOVED
         UserEntry.Action.BG_REMOVED                      -> Action.BG_REMOVED
+        UserEntry.Action.CALIBRATION_REMOVED             -> Action.CALIBRATION_REMOVED
         UserEntry.Action.CAREPORTAL_REMOVED              -> Action.CAREPORTAL_REMOVED
         UserEntry.Action.EXTENDED_BOLUS_REMOVED          -> Action.EXTENDED_BOLUS_REMOVED
         UserEntry.Action.FOOD_REMOVED                    -> Action.FOOD_REMOVED
@@ -99,6 +100,14 @@ fun UserEntry.Action.fromDb(): Action =
         UserEntry.Action.RUNNING_MODE                    -> Action.RUNNING_MODE
         UserEntry.Action.RUNNING_MODE_REMOVED            -> Action.RUNNING_MODE_REMOVED
         UserEntry.Action.RUNNING_MODE_UPDATED            -> Action.RUNNING_MODE_UPDATED
+        UserEntry.Action.NEW_INSULIN                     -> Action.NEW_INSULIN
+        UserEntry.Action.STORE_INSULIN                   -> Action.STORE_INSULIN
+        UserEntry.Action.INSULIN_REMOVED                 -> Action.INSULIN_REMOVED
+        UserEntry.Action.CHANGE_PUMP_INSULIN             -> Action.CHANGE_PUMP_INSULIN
+        UserEntry.Action.CHANGE_INSULIN_CONCENTRATION    -> Action.CHANGE_INSULIN_CONCENTRATION
+        UserEntry.Action.SCENE_ACTIVATED                 -> Action.SCENE_ACTIVATED
+        UserEntry.Action.SCENE_DEACTIVATED               -> Action.SCENE_DEACTIVATED
+        UserEntry.Action.REMOTE_CONFIG_CHANGED           -> Action.REMOTE_CONFIG_CHANGED
     }
 
 fun Action.toDb(): UserEntry.Action =
@@ -152,6 +161,7 @@ fun Action.toDb(): UserEntry.Action =
         Action.TT_NS_REFRESH                   -> UserEntry.Action.TT_NS_REFRESH
         Action.AUTOMATION_REMOVED              -> UserEntry.Action.AUTOMATION_REMOVED
         Action.BG_REMOVED                      -> UserEntry.Action.BG_REMOVED
+        Action.CALIBRATION_REMOVED             -> UserEntry.Action.CALIBRATION_REMOVED
         Action.CAREPORTAL_REMOVED              -> UserEntry.Action.CAREPORTAL_REMOVED
         Action.EXTENDED_BOLUS_REMOVED          -> UserEntry.Action.EXTENDED_BOLUS_REMOVED
         Action.FOOD_REMOVED                    -> UserEntry.Action.FOOD_REMOVED
@@ -194,8 +204,16 @@ fun Action.toDb(): UserEntry.Action =
         Action.PLUGIN_ENABLED                  -> UserEntry.Action.PLUGIN_ENABLED
         Action.PLUGIN_DISABLED                 -> UserEntry.Action.PLUGIN_DISABLED
         Action.UNKNOWN                         -> UserEntry.Action.UNKNOWN
-        Action.RUNNING_MODE         -> UserEntry.Action.RUNNING_MODE
-        Action.RUNNING_MODE_REMOVED -> UserEntry.Action.RUNNING_MODE_REMOVED
-        Action.RUNNING_MODE_UPDATED -> UserEntry.Action.RUNNING_MODE_UPDATED
+        Action.RUNNING_MODE                    -> UserEntry.Action.RUNNING_MODE
+        Action.RUNNING_MODE_REMOVED            -> UserEntry.Action.RUNNING_MODE_REMOVED
+        Action.RUNNING_MODE_UPDATED            -> UserEntry.Action.RUNNING_MODE_UPDATED
+        Action.NEW_INSULIN                     -> UserEntry.Action.NEW_INSULIN
+        Action.STORE_INSULIN                   -> UserEntry.Action.STORE_INSULIN
+        Action.INSULIN_REMOVED                 -> UserEntry.Action.INSULIN_REMOVED
+        Action.CHANGE_PUMP_INSULIN             -> UserEntry.Action.CHANGE_PUMP_INSULIN
+        Action.CHANGE_INSULIN_CONCENTRATION    -> UserEntry.Action.CHANGE_INSULIN_CONCENTRATION
+        Action.SCENE_ACTIVATED                 -> UserEntry.Action.SCENE_ACTIVATED
+        Action.SCENE_DEACTIVATED               -> UserEntry.Action.SCENE_DEACTIVATED
+        Action.REMOTE_CONFIG_CHANGED           -> UserEntry.Action.REMOTE_CONFIG_CHANGED
     }
 

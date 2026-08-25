@@ -8,6 +8,7 @@ import app.aaps.pump.common.hw.rileylink.ble.data.encoding.Encoding4b6b
 import app.aaps.pump.common.hw.rileylink.ble.data.encoding.Encoding4b6bGeoff
 import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType
 import app.aaps.pump.common.hw.rileylink.data.RLHistoryItem
+import java.util.concurrent.CopyOnWriteArrayList
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -20,7 +21,7 @@ class RileyLinkUtil @Inject constructor(
     private val context: Context
 ) {
 
-    val rileyLinkHistory: MutableList<RLHistoryItem> = ArrayList()
+    val rileyLinkHistory: MutableList<RLHistoryItem> = CopyOnWriteArrayList()
     var encoding: RileyLinkEncodingType? = null
         set(value) {
             field = value

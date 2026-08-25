@@ -8,7 +8,7 @@ import app.aaps.database.entities.BolusCalculatorResult
 class SyncNsBolusCalculatorResultTransaction(private val bolusCalculatorResults: List<BolusCalculatorResult>) :
     Transaction<SyncNsBolusCalculatorResultTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         val result = TransactionResult()
 
         for (bolusCalculatorResult in bolusCalculatorResults) {
