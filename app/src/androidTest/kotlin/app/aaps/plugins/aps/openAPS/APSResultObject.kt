@@ -30,6 +30,7 @@ import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.convertedToPercent
 import app.aaps.core.ui.R
 import dagger.android.HasAndroidInjector
+import dev.zacsweers.metro.HasMemberInjections
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
@@ -41,6 +42,8 @@ import kotlin.math.max
 /**
  * Created by mike on 09.06.2016.
  */
+// Injected by the old dagger.android path through `injector`; the annotation is for Metro's interop.
+@HasMemberInjections
 open class APSResultObject(protected val injector: HasAndroidInjector) : APSResult {
 
     @Inject lateinit var aapsLogger: AAPSLogger

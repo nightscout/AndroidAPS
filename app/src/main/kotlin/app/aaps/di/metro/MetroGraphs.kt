@@ -44,6 +44,7 @@ import app.aaps.core.objects.wizard.QuickWizard
 import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
 import app.aaps.plugins.automation.di.AutomationMetroGraph
+import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import app.aaps.plugins.source.di.SourceMetroGraph
 import app.aaps.plugins.sync.di.OpenHumansMetroBridge
@@ -195,6 +196,9 @@ class MetroGraphs @Inject constructor(
     val bgQualityCheck: BgQualityCheck get() = root.bgQualityCheckPlugin
     val dstHelper: DstHelper get() = root.dstHelperPlugin
     val objectives: Objectives get() = root.objectivesPlugin
+
+    /** Same plugin as [objectives], by class. The instrumented tests ask for the concrete type. */
+    val objectivesPlugin: ObjectivesPlugin get() = root.objectivesPlugin
     val signatureVerifier: SignatureVerifierPlugin get() = root.signatureVerifierPlugin
     val trendCalculator: TrendCalculator get() = root.trendCalculator
     val carbSuggestionActions: CarbSuggestionActions get() = root.carbSuggestionActions

@@ -67,6 +67,7 @@ import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.dst.DstHelper
 import app.aaps.di.metro.MetroGraphs
+import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.objects.runningMode.RunningModeGuard
@@ -171,6 +172,14 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideDstHelper(graphs: MetroGraphs): DstHelper = graphs.dstHelper
 
     @Provides @Singleton fun provideObjectives(graphs: MetroGraphs): Objectives = graphs.objectives
+
+    /*
+     * By class as well as by interface, for the same reason as the signature verifier below: the
+     * instrumented tests inject `ObjectivesPlugin` itself. Without this, Dagger sees the javax
+     * `@Inject` constructor through interop and builds a second plugin - one the running app never
+     * uses - so a test would set up objectives on an instance nothing reads.
+     */
+    @Provides @Singleton fun provideObjectivesPlugin(graphs: MetroGraphs): ObjectivesPlugin = graphs.objectivesPlugin
 
     /*
      * The signature verifier is asked for by class, not by interface: `MainApp` injects it for one
