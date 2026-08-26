@@ -4,12 +4,13 @@ import app.aaps.pump.danar.services.DanaRExecutionService
 import app.aaps.pump.danarkorean.services.DanaRKoreanExecutionService
 import app.aaps.pump.danarv2.services.DanaRv2ExecutionService
 import app.aaps.pump.diaconn.service.DiaconnG8Service
+import app.aaps.pump.insight.app_layer.activities.InsightAlertActivity
 import app.aaps.pump.medtrum.services.MedtrumService
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
 /**
- * The pump execution services Android constructs must have a member injector entry.
+ * The pump entry points Android constructs must have a member injector entry.
  *
  * Same failure mode as the receivers, and the same reason it needs a test: a missing entry is not a
  * build error. `MetroService.onCreate` looks the injector up by `target::class`, throws when it is not
@@ -21,7 +22,7 @@ import org.junit.jupiter.api.Test
  * base's entry would never be found. That is the trap `ReceiverInjectorsTest` spells out for
  * `SmsReceiver`, and it applies here three times over.
  */
-class PumpServiceInjectorsTest {
+class PumpEntryPointInjectorsTest {
 
     @Test
     fun `each DanaR execution service has its own injector`() {
@@ -39,6 +40,13 @@ class PumpServiceInjectorsTest {
         val injectors = testRoot().contributedMemberInjectors
 
         assertThat(injectors.keys).containsAtLeast(MedtrumService::class, DiaconnG8Service::class)
+    }
+
+    @Test
+    fun `the insight alert activity has an injector`() {
+        val injectors = testRoot().contributedMemberInjectors
+
+        assertThat(injectors.keys).contains(InsightAlertActivity::class)
     }
 
     @Test

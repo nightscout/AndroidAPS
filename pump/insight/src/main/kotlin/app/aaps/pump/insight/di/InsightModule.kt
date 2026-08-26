@@ -13,7 +13,6 @@ import dagger.multibindings.IntoMap
 @Module(
     includes = [
         InsightCommModule::class,
-        InsightActivitiesModule::class,
         InsightServicesModule::class,
         InsightDatabaseModule::class
     ]
