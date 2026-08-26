@@ -40,3 +40,6 @@ wear/watchfacepush/pumpcontrol/*
 .claude/settings.local.json
 .claude/CLAUDE_COMMANDS.md
 tmpclaude-*
+ios/app/Signing.local.xcconfig
+ios/app/build*/
+**/xcuserdata/
