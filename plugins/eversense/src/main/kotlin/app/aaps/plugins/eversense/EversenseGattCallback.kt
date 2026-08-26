@@ -766,18 +766,22 @@ EversenseLogger.info(TAG, "365 transmitter ready — notifying watchers")
             EversenseLogger.error(TAG, "[365] authV2 failed: $exception")
             exception.printStackTrace()
 
-            // After first successful auth, never call DMS server again.
-            // DMS login only happens on fresh install, app update, or phone reboot
-            // (all of which clear SharedPreferences and reset canUseShortcut to false).
-            // On shortcut failure just log and retry — do NOT fall back to DMS.
+            // After first successful auth, avoid calling the DMS server on every reconnect -
+            // a single transient shortcut failure (e.g. one dropped BLE write) just retries the
+            // shortcut on the next connect. But if the transmitter's session genuinely doesn't
+            // accept our cached shortcut credentials (observed: AuthStart gets rejected with a
+            // WhoAmI-shaped response every attempt), retrying the same shortcut forever never
+            // recovers - only a fresh WhoAmI + DMS login + fleet certificate handshake can. Force
+            // that fallback once SHORTCUT_FAIL_THRESHOLD consecutive failures confirm it's not
+            // just a one-off glitch.
             if (cryptoUtil.canUseShortcut()) {
                 shortcutFailCount++
-                EversenseLogger.warning(TAG, "Shortcut auth failed () — will retry shortcut on next connect (no DMS re-auth)")
-                // Reset counter after threshold but keep canUseShortcut=true
-                // so DMS is never called again after first successful auth
                 if (shortcutFailCount >= SHORTCUT_FAIL_THRESHOLD) {
-                    EversenseLogger.warning(TAG, "Shortcut fail threshold reached — resetting counter, keeping shortcut enabled")
+                    EversenseLogger.warning(TAG, "Shortcut fail threshold reached — forcing full re-auth (WhoAmI + DMS login) on next connect")
                     shortcutFailCount = 0
+                    cryptoUtil.disallowUseShortcut()
+                } else {
+                    EversenseLogger.warning(TAG, "Shortcut auth failed ($shortcutFailCount/$SHORTCUT_FAIL_THRESHOLD) — will retry shortcut on next connect (no DMS re-auth)")
                 }
             }
         bluetoothGatt?.disconnect()
