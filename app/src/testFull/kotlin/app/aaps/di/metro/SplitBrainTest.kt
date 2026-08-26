@@ -1,8 +1,30 @@
 package app.aaps.di.metro
 
-import app.aaps.implementation.plugin.PluginStore
 import app.aaps.plugins.sync.tidepool.TidepoolPlugin
 import app.aaps.pump.medtronic.MedtronicPumpPlugin
+import app.aaps.implementation.androidNotification.AlarmSoundPlayerImpl
+import app.aaps.plugins.aps.autotune.AutotunePlugin
+import app.aaps.plugins.automation.services.LastLocationDataContainer
+import app.aaps.plugins.calibration.LinearCalibrationPlugin
+import app.aaps.plugins.configuration.configBuilder.ConfigBuilderImpl
+import app.aaps.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
+import app.aaps.plugins.sensitivity.SensitivityAAPSPlugin
+import app.aaps.plugins.smoothing.AvgSmoothingPlugin
+import app.aaps.plugins.source.AidexPlugin
+import app.aaps.pump.common.compose.RileyLinkPairWizardViewModel
+import app.aaps.pump.dana.compose.DanaHistoryViewModel
+import app.aaps.pump.danar.compose.DanaRPairWizardViewModel
+import app.aaps.pump.danars.compose.DanaRSOverviewViewModel
+import app.aaps.pump.diaconn.compose.DiaconnHistoryViewModel
+import app.aaps.pump.eopatch.compose.EopatchOverviewViewModel
+import app.aaps.pump.equil.compose.EquilHistoryViewModel
+import app.aaps.pump.insight.InsightPlugin
+import app.aaps.pump.medtrum.compose.MedtrumOverviewViewModel
+import app.aaps.pump.omnipod.dash.OmnipodDashPumpPlugin
+import app.aaps.pump.virtual.VirtualPumpPlugin
+import app.aaps.ui.compose.calibrationDialog.CalibrationDialogViewModel
+import app.aaps.workflow.CalculationWorkflowImpl
+import info.nightscout.pump.combov2.ComboV2Plugin
 import app.aaps.shared.tests.unbridgedSingletons
 import com.google.common.truth.Truth.assertWithMessage
 import org.junit.jupiter.api.Test
@@ -30,7 +52,7 @@ class SplitBrainTest {
     @Test
     fun `nothing javax-scoped is rebuilt by Metro`() {
         val reports = unbridgedSingletons(anchors = ANCHORS, daggerOwned = daggerOwnedTypes())
-            .filterNot { report -> STATELESS.any { report.startsWith(it) } }
+            .filterNot { report -> (STATELESS + AUTOTUNE).any { report.startsWith(it) } }
 
         assertWithMessage(
             "These are javax @Singleton, so exactly one was intended, but Metro builds its own copy. " +
@@ -39,13 +61,15 @@ class SplitBrainTest {
     }
 
     /**
-     * Classes a second copy of does no harm, each checked to hold no mutable field: they take their
-     * dependencies in the constructor and compute, so two instances behave identically.
+     * Classes a second copy of does no harm, each read before being listed: they take their dependencies
+     * in the constructor and compute, or hold only a cache or a constant table, so two instances behave
+     * the same.
      *
      * A duplicate is still a wasted allocation, so this is a tolerance rather than an endorsement - but
      * scoping them would add a delegate that carries no meaning. **Only add an entry after reading the
-     * class**: the whole point of this test is that "looks harmless" is exactly how the three real ones
-     * got through.
+     * class**: "looks harmless" is exactly how the three real ones got through, and a script that tried
+     * to decide this automatically reported every one of these as stateless including the two below that
+     * are not.
      */
     private val STATELESS = listOf(
         // Branches on config and forwards to the dispatcher. No fields.
@@ -55,19 +79,74 @@ class SplitBrainTest {
         // Builds upload payloads from its arguments. No fields.
         "app.aaps.plugins.sync.tidepool.comm.UploadChunk",
         // Holds one Intent built from Context in its constructor; two are interchangeable.
-        "app.aaps.persistentNotification.DummyServiceHelper"
+        "app.aaps.persistentNotification.DummyServiceHelper",
+        // Pure calculation over its arguments. No fields.
+        "app.aaps.plugins.aps.autotune.AutotuneCore",
+        "app.aaps.plugins.aps.autotune.AutotunePrep",
+        "app.aaps.ui.compose.navigation.ElementAvailability",
+        "app.aaps.ui.compose.quickLaunch.QuickLaunchResolver",
+        "app.aaps.ui.search.WikiSearchRepository",
+        // Its only `var` is a constructor parameter, not state.
+        "app.aaps.ui.activityMonitor.ActivityMonitor",
+        // Constant lookup tables, filled the same way in every instance.
+        "app.aaps.ui.compose.profileHelper.defaultProfile.DefaultProfile",
+        "app.aaps.ui.compose.profileHelper.defaultProfile.DefaultProfileDPV",
+        // Caches the built index. A second copy rebuilds it - wasteful, not wrong.
+        "app.aaps.ui.search.SearchIndexBuilder"
     )
 
     /**
-     * One class per compiled output to scan. A module contributes nothing unless something in it is
-     * named here, so add an anchor when a new module starts contributing to the graph.
+     * **Known issue, not a tolerance.** These two are genuinely stateful and genuinely duplicated:
+     * `AutotuneIob` holds the data autotune runs on (including `lateinit var glucose` and
+     * `lateinit var tempBasals`), and `AutotuneFS` holds `lateinit var autotunePath`,
+     * `lateinit var autotuneSettings` and an accumulating log. Metro builds a separate one of each for
+     * `AutotunePlugin`, `AutotunePrep` and `AutotuneFS`, so whichever instance is populated may not be
+     * the one read - wrong tuning output, or an uninitialised-property crash.
+     *
+     * This predates the Metro work in this file and is listed so the rest of the guard can run. It is
+     * being looked at on its own; do not extend this list to make a new report go away.
+     */
+    private val AUTOTUNE = listOf(
+        "app.aaps.plugins.aps.autotune.AutotuneIob",
+        "app.aaps.plugins.aps.autotune.AutotuneFS"
+    )
+
+    /**
+     * One class per compiled output to scan - a module is invisible to this test unless something in it
+     * is named here, so **add an anchor when a new module starts contributing to the graph**. Which class
+     * does not matter; it is only used to find that module's compiled output.
+     *
+     * Every module that carries a Metro contribution is listed. The scan itself filters to `app.aaps.*`
+     * and `info.nightscout.*`, so pulling in a module costs only the walk over its own classes.
      */
     private val ANCHORS
         get() = listOf(
-            AapsLeaves::class.java,          // :app
-            PluginStore::class.java,         // :implementation
-            TidepoolPlugin::class.java,      // :plugins:sync
-            MedtronicPumpPlugin::class.java  // :pump:medtronic
+            AapsLeaves::class.java,                          // :app
+            AlarmSoundPlayerImpl::class.java,                // :implementation
+            CalibrationDialogViewModel::class.java,          // :ui
+            TidepoolPlugin::class.java,                      // :plugins:sync
+            BgQualityCheckPlugin::class.java,                // :plugins:constraints
+            AidexPlugin::class.java,                         // :plugins:source
+            AutotunePlugin::class.java,                      // :plugins:aps
+            AvgSmoothingPlugin::class.java,                  // :plugins:smoothing
+            SensitivityAAPSPlugin::class.java,               // :plugins:sensitivity
+            LinearCalibrationPlugin::class.java,             // :plugins:calibration
+            ConfigBuilderImpl::class.java,                   // :plugins:configuration
+            LastLocationDataContainer::class.java,           // :plugins:automation
+            CalculationWorkflowImpl::class.java,             // :workflow
+            VirtualPumpPlugin::class.java,                   // :pump:virtual
+            MedtronicPumpPlugin::class.java,                 // :pump:medtronic
+            RileyLinkPairWizardViewModel::class.java,        // :pump:rileylink
+            EopatchOverviewViewModel::class.java,            // :pump:eopatch
+            InsightPlugin::class.java,                       // :pump:insight
+            OmnipodDashPumpPlugin::class.java,               // :pump:omnipod:dash
+            DiaconnHistoryViewModel::class.java,             // :pump:diaconn
+            EquilHistoryViewModel::class.java,               // :pump:equil
+            MedtrumOverviewViewModel::class.java,            // :pump:medtrum
+            ComboV2Plugin::class.java,                       // :pump:combov2
+            DanaHistoryViewModel::class.java,                // :pump:dana
+            DanaRPairWizardViewModel::class.java,            // :pump:danar
+            DanaRSOverviewViewModel::class.java              // :pump:danars
         )
 
     /**
