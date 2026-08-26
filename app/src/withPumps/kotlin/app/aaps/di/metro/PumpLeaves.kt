@@ -9,6 +9,7 @@ import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danars.comm.DanaRSPacket
 import app.aaps.pump.danars.services.BLEComm
 import app.aaps.pump.diaconn.DiaconnG8Pump
+import app.aaps.pump.diaconn.database.DiaconnHistoryDatabase
 import app.aaps.pump.diaconn.database.DiaconnHistoryRecordDao
 import app.aaps.pump.equil.EquilPumpPlugin
 import app.aaps.pump.equil.ble.EquilBleTransport
@@ -53,6 +54,7 @@ class PumpLeaves(
     private val rfcommTransportProvider: Provider<RfcommTransport>,
     private val danaHistoryRecordDaoProvider: Provider<DanaHistoryRecordDao>,
     private val diaconnHistoryRecordDaoProvider: Provider<DiaconnHistoryRecordDao>,
+    private val diaconnHistoryDatabaseProvider: Provider<DiaconnHistoryDatabase>,
     private val equilBleTransportProvider: Provider<EquilBleTransport>,
     private val equilHistoryPumpDaoProvider: Provider<EquilHistoryPumpDao>,
     private val equilHistoryRecordDaoProvider: Provider<EquilHistoryRecordDao>,
@@ -81,6 +83,7 @@ class PumpLeaves(
     @Provides fun rfcommTransport(): RfcommTransport = rfcommTransportProvider.get()
     @Provides fun danaHistoryRecordDao(): DanaHistoryRecordDao = danaHistoryRecordDaoProvider.get()
     @Provides fun diaconnHistoryRecordDao(): DiaconnHistoryRecordDao = diaconnHistoryRecordDaoProvider.get()
+    @Provides fun diaconnHistoryDatabase(): DiaconnHistoryDatabase = diaconnHistoryDatabaseProvider.get()
     @Provides fun equilBleTransport(): EquilBleTransport = equilBleTransportProvider.get()
     @Provides fun equilHistoryPumpDao(): EquilHistoryPumpDao = equilHistoryPumpDaoProvider.get()
     @Provides fun equilHistoryRecordDao(): EquilHistoryRecordDao = equilHistoryRecordDaoProvider.get()

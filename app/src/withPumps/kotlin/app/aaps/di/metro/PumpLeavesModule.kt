@@ -9,6 +9,7 @@ import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danars.comm.DanaRSPacket
 import app.aaps.pump.danars.services.BLEComm
 import app.aaps.pump.diaconn.DiaconnG8Pump
+import app.aaps.pump.diaconn.database.DiaconnHistoryDatabase
 import app.aaps.pump.diaconn.database.DiaconnHistoryRecordDao
 import app.aaps.pump.equil.EquilPumpPlugin
 import app.aaps.pump.equil.ble.EquilBleTransport
@@ -49,6 +50,7 @@ class PumpLeavesModule {
         rfcommTransport: Provider<RfcommTransport>,
         danaHistoryRecordDao: Provider<DanaHistoryRecordDao>,
         diaconnHistoryRecordDao: Provider<DiaconnHistoryRecordDao>,
+        diaconnHistoryDatabase: Provider<DiaconnHistoryDatabase>,
         equilBleTransport: Provider<EquilBleTransport>,
         equilHistoryPumpDao: Provider<EquilHistoryPumpDao>,
         equilHistoryRecordDao: Provider<EquilHistoryRecordDao>,
@@ -71,8 +73,8 @@ class PumpLeavesModule {
         medtrumPump: Provider<MedtrumPump>,
         omnipodDashPumpPlugin: Provider<OmnipodDashPumpPlugin>
     ): PumpLeaves = PumpLeaves(
-        bleTransport, rfcommTransport, danaHistoryRecordDao, diaconnHistoryRecordDao, equilBleTransport,
-        equilHistoryPumpDao, equilHistoryRecordDao, dashHistoryDatabase, historyMapper, historyRecordDao,
+        bleTransport, rfcommTransport, danaHistoryRecordDao, diaconnHistoryRecordDao, diaconnHistoryDatabase,
+        equilBleTransport, equilHistoryPumpDao, equilHistoryRecordDao, dashHistoryDatabase, historyMapper, historyRecordDao,
         medtrumBleTransport, omnipodDashManager, omnipodDashPodStateManager, danaHistoryDatabase, danaRSPackets,
         bleComm, comboV2Plugin, danaPump, danaRSPlugin, diaconnG8Pump, equilManager, equilPumpPlugin,
         medtrumPlugin, medtrumPump, omnipodDashPumpPlugin

@@ -25,6 +25,7 @@ import app.aaps.pump.medtrum.comm.packets.StopPatchPacket
 import app.aaps.pump.medtrum.comm.packets.SubscribePacket
 import app.aaps.pump.medtrum.comm.packets.SynchronizePacket
 import app.aaps.core.interfaces.di.FeatureMemberInjectors
+import app.aaps.pump.medtrum.services.MedtrumService
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ClassKey
@@ -187,4 +188,10 @@ object MedtrumMemberInjectors {
     @IntoMap
     @ClassKey(SynchronizePacket::class)
     fun bindSynchronizePacket(injector: MembersInjector<SynchronizePacket>): MembersInjector<*> = injector
+
+    @Provides
+    @FeatureMemberInjectors
+    @IntoMap
+    @ClassKey(MedtrumService::class)
+    fun bindMedtrumService(injector: MembersInjector<MedtrumService>): MembersInjector<*> = injector
 }

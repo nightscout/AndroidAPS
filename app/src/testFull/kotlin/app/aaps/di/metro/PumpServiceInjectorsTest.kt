@@ -3,6 +3,8 @@ package app.aaps.di.metro
 import app.aaps.pump.danar.services.DanaRExecutionService
 import app.aaps.pump.danarkorean.services.DanaRKoreanExecutionService
 import app.aaps.pump.danarv2.services.DanaRv2ExecutionService
+import app.aaps.pump.diaconn.service.DiaconnG8Service
+import app.aaps.pump.medtrum.services.MedtrumService
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
@@ -30,6 +32,13 @@ class PumpServiceInjectorsTest {
             DanaRKoreanExecutionService::class,
             DanaRv2ExecutionService::class
         )
+    }
+
+    @Test
+    fun `the other converted pump services have injectors`() {
+        val injectors = testRoot().contributedMemberInjectors
+
+        assertThat(injectors.keys).containsAtLeast(MedtrumService::class, DiaconnG8Service::class)
     }
 
     @Test

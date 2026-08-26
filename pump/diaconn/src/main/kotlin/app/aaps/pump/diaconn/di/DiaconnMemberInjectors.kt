@@ -76,6 +76,7 @@ import app.aaps.pump.diaconn.packet.TimeReportPacket
 import app.aaps.pump.diaconn.packet.TimeSettingPacket
 import app.aaps.pump.diaconn.packet.TimeSettingResponsePacket
 import app.aaps.core.interfaces.di.FeatureMemberInjectors
+import app.aaps.pump.diaconn.service.DiaconnG8Service
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ClassKey
@@ -553,4 +554,10 @@ object DiaconnMemberInjectors {
     @IntoMap
     @ClassKey(TimeSettingResponsePacket::class)
     fun bindTimeSettingResponsePacket(injector: MembersInjector<TimeSettingResponsePacket>): MembersInjector<*> = injector
+
+    @Provides
+    @FeatureMemberInjectors
+    @IntoMap
+    @ClassKey(DiaconnG8Service::class)
+    fun bindDiaconnG8Service(injector: MembersInjector<DiaconnG8Service>): MembersInjector<*> = injector
 }
