@@ -1,5 +1,7 @@
 plugins {
     kotlin("multiplatform")
+    // Metro, because this module does not only link the migrated code, it builds a graph from it.
+    alias(libs.plugins.metro)
 }
 
 // A framework that links every module already migrated to Kotlin Multiplatform.

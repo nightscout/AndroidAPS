@@ -35,6 +35,14 @@ struct ShellView: View {
             Text(info.localTime())
                 .font(.footnote.monospaced())
                 .foregroundStyle(.secondary)
+
+            Divider().padding(.vertical, 4)
+
+            // Built by Metro on the Kotlin side. Shown rather than asserted, so a failure is
+            // readable on the phone instead of only in a log.
+            Text(info.checkDi())
+                .font(.caption.monospaced())
+                .multilineTextAlignment(.leading)
         }
         .padding()
     }
