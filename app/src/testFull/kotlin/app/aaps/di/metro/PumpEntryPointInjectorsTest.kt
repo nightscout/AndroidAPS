@@ -4,7 +4,9 @@ import app.aaps.pump.danar.services.DanaRExecutionService
 import app.aaps.pump.danarkorean.services.DanaRKoreanExecutionService
 import app.aaps.pump.danarv2.services.DanaRv2ExecutionService
 import app.aaps.pump.diaconn.service.DiaconnG8Service
+import app.aaps.pump.insight.InsightAlertService
 import app.aaps.pump.insight.app_layer.activities.InsightAlertActivity
+import app.aaps.pump.insight.connection_service.InsightConnectionService
 import app.aaps.pump.medtrum.services.MedtrumService
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
@@ -43,10 +45,14 @@ class PumpEntryPointInjectorsTest {
     }
 
     @Test
-    fun `the insight alert activity has an injector`() {
+    fun `the insight entry points have injectors`() {
         val injectors = testRoot().contributedMemberInjectors
 
-        assertThat(injectors.keys).contains(InsightAlertActivity::class)
+        assertThat(injectors.keys).containsAtLeast(
+            InsightAlertActivity::class,
+            InsightAlertService::class,
+            InsightConnectionService::class
+        )
     }
 
     @Test
