@@ -1,8 +1,9 @@
 package app.aaps.plugins.sync.nfcCommands
 
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * State that outlives a single [app.aaps.plugins.sync.nfcCommands.actions.NfcAction] but belongs to no
@@ -11,7 +12,7 @@ import javax.inject.Singleton
  * Both members used to sit on `NfcCommandsPlugin`, which meant every action had to be handed the whole
  * plugin to reach them. They are here so an action can ask for this and nothing else.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class NfcRuntimeState @Inject constructor() {
 
     /**

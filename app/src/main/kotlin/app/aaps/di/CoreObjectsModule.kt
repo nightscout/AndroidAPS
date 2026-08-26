@@ -34,7 +34,6 @@ import app.aaps.core.interfaces.overview.LastBgData
 import app.aaps.core.interfaces.local.LocaleDependentSetting
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
-import app.aaps.plugins.sync.nfcCommands.NfcCommandsPlugin
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
 import app.aaps.core.interfaces.widget.WidgetUpdater
@@ -472,7 +471,6 @@ class CoreObjectsModule {
         calculationSignalsEmitterProvider: Provider<CalculationSignalsEmitter>,
         authFlowOutProvider: Provider<AuthFlowOut>,
         tidepoolUploaderProvider: Provider<TidepoolUploader>,
-        nfcCommandsPluginProvider: Provider<NfcCommandsPlugin>,
         profileFunctionProvider: Provider<ProfileFunction>,
         rhProvider: Provider<ResourceHelper>,
         dstHelperProvider: Provider<DstHelper>,
@@ -514,7 +512,6 @@ class CoreObjectsModule {
         calculationSignalsEmitterProvider,
         authFlowOutProvider,
         tidepoolUploaderProvider,
-        nfcCommandsPluginProvider,
         profileFunctionProvider,
         rhProvider,
         dstHelperProvider,

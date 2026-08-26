@@ -42,8 +42,9 @@ import app.aaps.plugins.sync.nfcCommands.actions.TempTargetCancelAction
 import app.aaps.plugins.sync.nfcCommands.actions.TempTargetHypoAction
 import app.aaps.plugins.sync.nfcCommands.actions.TempTargetManualAction
 import app.aaps.plugins.sync.nfcCommands.actions.TempTargetMealAction
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Builds an [NfcAction] for a [NfcCommandCode].
@@ -59,7 +60,7 @@ import javax.inject.Singleton
  * Written with Dagger because the rest of `:plugins:sync` still is. It converts to Metro with the
  * module - see section 1a of `_docs/NFC_KMP_MIGRATION.md`.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class NfcActionFactory @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val activePlugin: ActivePlugin,

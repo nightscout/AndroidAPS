@@ -14,7 +14,6 @@ import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.dst.DstHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
-import app.aaps.plugins.sync.nfcCommands.NfcCommandsPlugin
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
 import app.aaps.core.interfaces.widget.WidgetUpdater
@@ -111,10 +110,6 @@ class AapsLeaves(
     // The activities this app injects need these; all three are Dagger @Binds in their own modules.
     private val authFlowOutProvider: Provider<AuthFlowOut>,
     private val tidepoolUploaderProvider: Provider<TidepoolUploader>,
-    // The plugin list is Dagger's, and this @Singleton plugin is in it. Without this leaf Metro would
-    // build a second one for NfcControlActivity, and the screen would act on a different object than the
-    // list holds - and drag the plugin's whole dependency tree into the root graph on the way.
-    private val nfcCommandsPluginProvider: Provider<NfcCommandsPlugin>,
     private val profileFunctionProvider: Provider<ProfileFunction>,
     private val rhProvider: Provider<ResourceHelper>,
     private val dstHelperProvider: Provider<DstHelper>,
@@ -205,7 +200,6 @@ class AapsLeaves(
     // `CoreObjectsModule.provideLoop`.
     @Provides fun authFlowOut(): AuthFlowOut = authFlowOutProvider.get()
     @Provides fun tidepoolUploader(): TidepoolUploader = tidepoolUploaderProvider.get()
-    @Provides fun nfcCommandsPlugin(): NfcCommandsPlugin = nfcCommandsPluginProvider.get()
     @Provides fun profileFunction(): ProfileFunction = profileFunctionProvider.get()
     @Provides fun rh(): ResourceHelper = rhProvider.get()
 

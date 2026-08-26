@@ -11,8 +11,9 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonArray
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * A tag the user has registered, and the commands it runs.
@@ -39,7 +40,7 @@ data class NfcLogEntry(
     val message: String,
 )
 
-@Singleton
+@SingleIn(AppScope::class)
 class NfcTagStore @Inject constructor(
     private val preferences: Preferences,
     private val aapsLogger: AAPSLogger

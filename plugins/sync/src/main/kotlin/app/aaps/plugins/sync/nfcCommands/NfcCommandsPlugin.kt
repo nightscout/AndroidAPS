@@ -24,6 +24,8 @@ import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.di.NotNSClient
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -48,8 +50,12 @@ import app.aaps.plugins.sync.nfcCommands.actions.pumpBasalDurationStep
 import app.aaps.plugins.sync.nfcCommands.compose.NfcCommandsComposeContent
 import app.aaps.plugins.sync.nfcCommands.keys.NfcIntentKey
 import java.nio.charset.StandardCharsets
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Result of the pre-execution phase when an NFC tag is detected.
@@ -75,7 +81,10 @@ data class NfcExecutionResult(
  * Main plugin class for NFC Command execution.
  * Handles the lifecycle of NFC tag scanning, command routing, and feedback.
  */
-@Singleton
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@NotNSClient
+@IntKey(380)
+@SingleIn(AppScope::class)
 class NfcCommandsPlugin @Inject constructor(
     private val context: Context,
     aapsLogger: AAPSLogger,
