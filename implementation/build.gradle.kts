@@ -53,7 +53,25 @@ kotlin {
         }
     }
 
+    // Apple klibs cross compile on Windows. Linking and running still need a Mac, and those tasks
+    // report SKIPPED rather than failing. Keeping the targets is what stops an Android only import
+    // from quietly reaching commonMain later.
+    iosArm64()
+    iosSimulatorArm64()
+
+    // commonMain is small on purpose. Most of this module reaches Android directly, and most of the
+    // rest formats user text through ResourceHelper and app.aaps.core.ui.R - the twenty command queue
+    // classes are otherwise portable and fail only on that. They can follow once they take a
+    // TextResolver and a TextRef instead, the same move :core:keys already made.
     sourceSets {
+        commonMain {
+            dependencies {
+                implementation(project(":core:data"))
+                implementation(project(":core:interfaces"))
+                implementation(project(":core:keys"))
+            }
+        }
+
         androidMain {
             dependencies {
                 implementation(project(":core:data"))
