@@ -8,12 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		AA0000000000000000000005 /* AapsIosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000004 /* AapsIosApp.swift */; };
+		AA0000000000000000000016 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000015 /* Assets.xcassets */; };
 		AA0000000000000000000010 /* AapsShared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA000000000000000000000F /* AapsShared.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		AA0000000000000000000003 /* AapsIos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AapsIos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA0000000000000000000004 /* AapsIosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AapsIosApp.swift; sourceTree = "<group>"; };
+		AA0000000000000000000015 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA0000000000000000000013 /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.xcconfig; sourceTree = "<group>"; };
 		AA000000000000000000000F /* AapsShared.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AapsShared.framework; path = ../shell/build/bin/iosSimulatorArm64/debugFramework/AapsShared.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -52,6 +54,7 @@
 			isa = PBXGroup;
 			children = (
 				AA0000000000000000000004 /* AapsIosApp.swift */,
+				AA0000000000000000000015 /* Assets.xcassets */,
 			);
 			path = AapsIos;
 			sourceTree = "<group>";
@@ -110,6 +113,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA0000000000000000000016 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -171,6 +175,7 @@
 				"CODE_SIGNING_ALLOWED[sdk=iphonesimulator*]" = NO;
 				"CODE_SIGNING_REQUIRED[sdk=iphonesimulator*]" = NO;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
