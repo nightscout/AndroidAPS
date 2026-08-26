@@ -13,8 +13,7 @@ import dagger.multibindings.IntoMap
 @Module(
     includes = [
         DiaconnG8ActivitiesModule::class,
-        DiaconnHistoryModule::class,
-        DiaconnLogUploaderModule::class
+        DiaconnHistoryModule::class
     ]
 )
 @InstallIn(SingletonComponent::class)

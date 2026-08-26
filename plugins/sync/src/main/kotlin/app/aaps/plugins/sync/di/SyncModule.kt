@@ -31,8 +31,7 @@ import javax.inject.Singleton
 @Module(
     includes = [
         SyncModule.Binding::class,
-        SyncModule.Provide::class,
-        SMSCommunicatorModule::class
+        SyncModule.Provide::class
     ]
 )
 @InstallIn(SingletonComponent::class)
