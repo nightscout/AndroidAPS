@@ -27,15 +27,15 @@ val migratedModules = listOf(
 
 // Whether the migrated API is written into the framework header for Swift to call.
 //
-// Off, because it does not compile yet. Exporting generates an Objective-C header for every public
-// declaration, and `QuickWizardEntry.Companion` has `const val YES` and `const val NO`. In
-// Objective-C those two names are macros, so the header comes out as `int32_t __objc_no` and clang
-// rejects it. That is a real thing to fix before Swift can use these modules, but it is a separate
-// problem from whether the code links, and renaming those constants would change shared code.
+// On. Exporting generates an Objective-C header for every public declaration, which is a stricter
+// check than linking: a name that is legal in Kotlin can still be illegal in Objective-C. It caught
+// `QuickWizardEntry.YES` and `NO`, since both are macros there, and the header came out as
+// `int32_t __objc_no`. Those are now ALWAYS and NEVER.
 //
-// With this off the modules are still `api` dependencies, so all of them are still linked into the
-// binary. Only the generated header shrinks to this module's own API.
-val exportMigratedApi = false
+// Swift callers see every exported name at once, so a Kotlin class can shadow a system type. AAPS
+// has a `Scene`, which hides SwiftUI's, and the app writes `SwiftUI.Scene` to say which it means. A
+// real app would export a smaller, chosen surface instead of all fourteen modules.
+val exportMigratedApi = true
 
 kotlin {
     listOf(

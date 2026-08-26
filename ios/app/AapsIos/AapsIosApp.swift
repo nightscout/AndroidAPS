@@ -8,7 +8,7 @@ import AapsShared
 @main
 struct AapsIosApp: App {
 
-    var body: some Scene {
+    var body: some SwiftUI.Scene {
         WindowGroup {
             ShellView()
         }
