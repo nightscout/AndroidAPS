@@ -290,7 +290,6 @@ class CoreObjectsModule {
     @Provides fun provideAutosensData(graphs: MetroGraphs): AutosensData = graphs.autosensData
     @Provides @Singleton fun provideCommandQueue(graphs: MetroGraphs): CommandQueue = graphs.commandQueue
     @Provides @Singleton fun provideLocalAlertUtils(graphs: MetroGraphs): LocalAlertUtils = graphs.localAlertUtils
-    @Provides @Singleton fun provideConfig(graphs: MetroGraphs): Config = graphs.config
     @Provides @Singleton fun provideBolusProgressData(graphs: MetroGraphs): BolusProgressData = graphs.bolusProgressData
     @Provides @Singleton fun providePersistenceLayer(graphs: MetroGraphs): PersistenceLayer = graphs.persistenceLayer
     @Provides @Singleton fun provideCloudStorageProviders(graphs: MetroGraphs): Set<CloudStorageProvider> = graphs.cloudStorageProviders
@@ -467,6 +466,7 @@ class CoreObjectsModule {
         nsClientSourceProvider: Provider<NSClientSource>,
         @ApplicationScope appScopeProvider: Provider<CoroutineScope>,
         fabricPrivacyProvider: Provider<FabricPrivacy>,
+        configProvider: Provider<Config>,
         appRepositoryProvider: Provider<AppRepository>,
         calculationSignalsEmitterProvider: Provider<CalculationSignalsEmitter>,
         authFlowOutProvider: Provider<AuthFlowOut>,
@@ -507,6 +507,7 @@ class CoreObjectsModule {
         nsClientSourceProvider,
         appScopeProvider,
         fabricPrivacyProvider,
+        configProvider,
         appRepositoryProvider,
         calculationSignalsEmitterProvider,
         authFlowOutProvider,

@@ -299,7 +299,6 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val autosensData: AutosensData
     val commandQueue: CommandQueue
     val localAlertUtils: LocalAlertUtils
-    val config: Config
     val bolusProgressData: BolusProgressData
     val persistenceLayer: PersistenceLayer
     val cloudStorageProviders: Set<CloudStorageProvider>

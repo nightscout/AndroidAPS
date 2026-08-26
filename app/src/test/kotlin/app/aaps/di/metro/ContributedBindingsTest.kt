@@ -96,7 +96,6 @@ class ContributedBindingsTest {
         // accept commands that the copy the pump driver reads never sees.
         assertThat(root.commandQueue).isSameInstanceAs(root.commandQueue)
         assertThat(root.localAlertUtils).isSameInstanceAs(root.localAlertUtils)
-        assertThat(root.config).isSameInstanceAs(root.config)
         assertThat(root.bolusProgressData).isSameInstanceAs(root.bolusProgressData)
         assertThat(root.persistenceLayer).isSameInstanceAs(root.persistenceLayer)
         // A multibinding hands out a fresh Set each read; what has to be shared is the provider in it.

@@ -329,7 +329,6 @@ class MetroGraphs @Inject constructor(
     val autosensData: AutosensData get() = root.autosensData
     val commandQueue: CommandQueue get() = root.commandQueue
     val localAlertUtils: LocalAlertUtils get() = root.localAlertUtils
-    val config: Config get() = root.config
     val bolusProgressData: BolusProgressData get() = root.bolusProgressData
     val persistenceLayer: PersistenceLayer get() = root.persistenceLayer
     val cloudStorageProviders: Set<CloudStorageProvider> get() = root.cloudStorageProviders
