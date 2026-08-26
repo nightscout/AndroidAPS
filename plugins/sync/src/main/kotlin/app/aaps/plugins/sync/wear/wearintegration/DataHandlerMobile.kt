@@ -711,7 +711,7 @@ class DataHandlerMobile @Inject constructor(
             ) { bolusId -> EventData.ActionBolusConfirmed(bolusId) }
 
             QuickWizardMode.CARBS   -> {
-                val hasEcarbs = entry.useEcarbs() == QuickWizardEntry.YES
+                val hasEcarbs = entry.useEcarbs() == QuickWizardEntry.ALWAYS
                 sendBatchPreCheck(
                     BatchAction.Bolus(
                         insulin = 0.0, carbs = entry.carbs(), carbsTimeOffsetMinutes = 0, carbsDurationHours = 0,
