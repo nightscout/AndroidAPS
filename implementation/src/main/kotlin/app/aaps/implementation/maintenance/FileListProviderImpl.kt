@@ -25,26 +25,30 @@ import app.aaps.implementation.R
 import app.aaps.implementation.maintenance.data.PrefsStatusImpl
 import app.aaps.implementation.maintenance.formats.EncryptedPrefsFormat
 import app.aaps.shared.impl.weardata.ZipWatchfaceFormat
-import dagger.Lazy
 import org.joda.time.DateTime
 import org.joda.time.Days
 import org.joda.time.Hours
 import org.joda.time.LocalDateTime
 import org.joda.time.format.DateTimeFormat
 import java.io.File
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.math.abs
 
 @Suppress("SpellCheckingInspection")
-@Singleton
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class FileListProviderImpl @Inject constructor(
     private val rh: ResourceHelper,
-    private val config: Lazy<Config>,
+    // A plain factory, not dagger.Lazy: that type is Dagger vocabulary. Both of these are @Singleton, so
+    // calling through each time returns the same instance - Lazy's caching bought nothing here.
+    private val config: () -> Config,
     private val encryptedPrefsFormat: EncryptedPrefsFormat,
     private val storage: Storage,
     private val versionCheckerUtils: VersionCheckerUtils,
-    private val preferences: Lazy<Preferences>,
+    private val preferences: () -> Preferences,
     private val context: Context,
     private val rxBus: RxBus
 ) : FileListProvider {
@@ -95,7 +99,7 @@ class FileListProviderImpl @Inject constructor(
 
     override fun listCustomWatchfaceFiles(): MutableList<CwfFile> {
         val customWatchfaceFiles = mutableListOf<CwfFile>()
-        val customWatchfaceAuthorization = preferences.get().get(BooleanKey.WearCustomWatchfaceAuthorization)
+        val customWatchfaceAuthorization = preferences().get(BooleanKey.WearCustomWatchfaceAuthorization)
 
         ensureExportDirExists()?.listFiles()?.filter { it.isFile && it.name?.endsWith(ZipWatchfaceFormat.CWF_EXTENSION) == true }?.forEach {
             try {
@@ -134,7 +138,7 @@ class FileListProviderImpl @Inject constructor(
         checkMetadata(encryptedPrefsFormat.loadMetadata(contents))
 
     override fun ensurePreferenceDirExists(): DocumentFile? {
-        val prefUri = preferences.get().getIfExists(StringKey.AapsDirectoryUri) ?: return null
+        val prefUri = preferences().getIfExists(StringKey.AapsDirectoryUri) ?: return null
         val uri = Uri.parse(prefUri)
         val baseDir = DocumentFile.fromTreeUri(context, uri)
         val files = baseDir?.listFiles()
@@ -142,7 +146,7 @@ class FileListProviderImpl @Inject constructor(
     }
 
     override fun ensureExportDirExists(): DocumentFile? {
-        val prefUri = preferences.get().getIfExists(StringKey.AapsDirectoryUri) ?: return null
+        val prefUri = preferences().getIfExists(StringKey.AapsDirectoryUri) ?: return null
         val uri = prefUri.toUri()
         val baseDir = DocumentFile.fromTreeUri(context, uri)
         val files = baseDir?.listFiles()
@@ -150,7 +154,7 @@ class FileListProviderImpl @Inject constructor(
     }
 
     override fun ensureTempDirExists(): DocumentFile? {
-        val prefUri = preferences.get().getIfExists(StringKey.AapsDirectoryUri) ?: return null
+        val prefUri = preferences().getIfExists(StringKey.AapsDirectoryUri) ?: return null
         val uri = prefUri.toUri()
         val baseDir = DocumentFile.fromTreeUri(context, uri)
         val files = baseDir?.listFiles()
@@ -158,7 +162,7 @@ class FileListProviderImpl @Inject constructor(
     }
 
     override fun ensureExtraDirExists(): DocumentFile? {
-        val prefUri = preferences.get().getIfExists(StringKey.AapsDirectoryUri) ?: return null
+        val prefUri = preferences().getIfExists(StringKey.AapsDirectoryUri) ?: return null
         val uri = prefUri.toUri()
         val baseDir = DocumentFile.fromTreeUri(context, uri)
         val files = baseDir?.listFiles()
@@ -175,7 +179,7 @@ class FileListProviderImpl @Inject constructor(
     override fun newPreferenceFile(): DocumentFile? {
         val timeLocal = LocalDateTime.now().toString(DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
         val dir = ensurePreferenceDirExists()
-        return dir?.createFile("application/json", timeLocal + "_" + config.get().FLAVOR)
+        return dir?.createFile("application/json", timeLocal + "_" + config().FLAVOR)
     }
 
     override fun newExportCsvFile(): DocumentFile? {
@@ -201,14 +205,14 @@ class FileListProviderImpl @Inject constructor(
 
         meta[PrefsMetadataKeyImpl.AAPS_FLAVOUR]?.let { flavour ->
             val flavourOfPrefs = flavour.value
-            if (flavour.value != config.get().FLAVOR) {
+            if (flavour.value != config().FLAVOR) {
                 flavour.status = PrefsStatusImpl.WARN
-                flavour.info = rh.gs(R.string.metadata_warning_different_flavour, flavourOfPrefs, config.get().FLAVOR)
+                flavour.info = rh.gs(R.string.metadata_warning_different_flavour, flavourOfPrefs, config().FLAVOR)
             }
         }
 
         meta[PrefsMetadataKeyImpl.DEVICE_MODEL]?.let { model ->
-            if (model.value != config.get().currentDeviceModelString) {
+            if (model.value != config().currentDeviceModelString) {
                 model.status = PrefsStatusImpl.WARN
                 model.info = rh.gs(R.string.metadata_warning_different_device)
             }
@@ -232,7 +236,7 @@ class FileListProviderImpl @Inject constructor(
         }
 
         meta[PrefsMetadataKeyImpl.AAPS_VERSION]?.let { version ->
-            val currentAppVer = versionCheckerUtils.versionDigits(config.get().VERSION_NAME)
+            val currentAppVer = versionCheckerUtils.versionDigits(config().VERSION_NAME)
             val metadataVer = versionCheckerUtils.versionDigits(version.value)
 
             if ((currentAppVer.size >= 2) && (metadataVer.size >= 2) && (abs(currentAppVer[1] - metadataVer[1]) > 1)) {
@@ -267,7 +271,7 @@ class FileListProviderImpl @Inject constructor(
     }
 
     override fun isDirectoryAccessGranted(): Boolean {
-        val uriString = preferences.get().getIfExists(StringKey.AapsDirectoryUri)
+        val uriString = preferences().getIfExists(StringKey.AapsDirectoryUri)
         if (uriString.isNullOrEmpty()) return false
         val uri = uriString.toUri()
         return context.contentResolver.persistedUriPermissions.any {

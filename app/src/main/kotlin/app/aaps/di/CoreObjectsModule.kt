@@ -239,6 +239,9 @@ class CoreObjectsModule {
         graphs.wizardBolusExecutor
 
     @Provides @Singleton fun provideLoggerUtils(graphs: MetroGraphs): LoggerUtils = graphs.loggerUtils
+    @Provides @Singleton fun provideImportExportPrefsBinding(graphs: MetroGraphs): ImportExportPrefs = graphs.importExportPrefs
+    @Provides @Singleton fun provideMaintenanceBinding(graphs: MetroGraphs): Maintenance = graphs.maintenance
+    @Provides @Singleton fun provideFileListProviderBinding(graphs: MetroGraphs): FileListProvider = graphs.fileListProvider
     @Provides @Singleton fun provideLastBgDataBinding(graphs: MetroGraphs): LastBgData = graphs.lastBgData
     @Provides @Singleton fun provideLocaleDependentSettingBinding(graphs: MetroGraphs): LocaleDependentSetting = graphs.localeDependentSetting
     @Provides @Singleton fun providePumpStatusProviderBinding(graphs: MetroGraphs): PumpStatusProvider = graphs.pumpStatusProvider
@@ -409,14 +412,12 @@ class CoreObjectsModule {
         dateUtilProvider: Provider<DateUtil>,
         profileFunctionProvider: Provider<ProfileFunction>,
         commandQueueProvider: Provider<CommandQueue>,
-        maintenanceProvider: Provider<Maintenance>,
         rhProvider: Provider<ResourceHelper>,
         preferencesProvider: Provider<Preferences>,
         dstHelperProvider: Provider<DstHelper>,
         workManagerProvider: Provider<WorkManager>,
         notificationManagerProvider: Provider<NotificationManager>,
         sceneExecutorProvider: Provider<SceneExecutor>,
-        fileListProviderProvider: Provider<FileListProvider>,
         dataInboxProvider: Provider<DataInbox>,
         cloudStorageManagerProvider: Provider<CloudStorageManager>,
         calculationWorkflowProvider: Provider<CalculationWorkflow>,
@@ -434,7 +435,6 @@ class CoreObjectsModule {
         bolusProgressDataProvider: Provider<BolusProgressData>,
         pumpEnactResultProvider: Provider<PumpEnactResult>,
         historyScopeProvider: Provider<HistoryScope>,
-        importExportPrefsProvider: Provider<ImportExportPrefs>,
         overviewDataCacheProvider: Provider<OverviewDataCache>,
         pluginPermissionsProvider: Provider<PluginPermissions>,
         lProvider: Provider<L>,
@@ -466,14 +466,12 @@ class CoreObjectsModule {
         dateUtilProvider,
         profileFunctionProvider,
         commandQueueProvider,
-        maintenanceProvider,
         rhProvider,
         preferencesProvider,
         dstHelperProvider,
         workManagerProvider,
         notificationManagerProvider,
         sceneExecutorProvider,
-        fileListProviderProvider,
         dataInboxProvider,
         cloudStorageManagerProvider,
         calculationWorkflowProvider,
@@ -491,7 +489,6 @@ class CoreObjectsModule {
         bolusProgressDataProvider,
         pumpEnactResultProvider,
         historyScopeProvider,
-        importExportPrefsProvider,
         overviewDataCacheProvider,
         pluginPermissionsProvider,
         lProvider,

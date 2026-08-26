@@ -59,6 +59,9 @@ class ContributedBindingsTest {
         assertThat(root.processedTbrEbData).isSameInstanceAs(root.processedTbrEbData)
         assertThat(root.userEntryLogger).isSameInstanceAs(root.userEntryLogger)
         assertThat(root.glucoseStatusProvider).isSameInstanceAs(root.glucoseStatusProvider)
+        assertThat(root.fileListProvider).isSameInstanceAs(root.fileListProvider)
+        assertThat(root.maintenance).isSameInstanceAs(root.maintenance)
+        assertThat(root.importExportPrefs).isSameInstanceAs(root.importExportPrefs)
     }
 
     @Test

@@ -17,9 +17,6 @@ import app.aaps.core.interfaces.logging.L
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
 import app.aaps.core.interfaces.widget.WidgetUpdater
-import app.aaps.core.interfaces.maintenance.FileListProvider
-import app.aaps.core.interfaces.maintenance.ImportExportPrefs
-import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.configuration.RunningConfigurationKeys
 import app.aaps.core.interfaces.source.NSClientSource
@@ -112,14 +109,12 @@ class AapsLeaves(
     private val dateUtilProvider: Provider<DateUtil>,
     private val profileFunctionProvider: Provider<ProfileFunction>,
     private val commandQueueProvider: Provider<CommandQueue>,
-    private val maintenanceProvider: Provider<Maintenance>,
     private val rhProvider: Provider<ResourceHelper>,
     private val preferencesProvider: Provider<Preferences>,
     private val dstHelperProvider: Provider<DstHelper>,
     private val workManagerProvider: Provider<WorkManager>,
     private val notificationManagerProvider: Provider<NotificationManager>,
     private val sceneExecutorProvider: Provider<SceneExecutor>,
-    private val fileListProviderProvider: Provider<FileListProvider>,
     private val dataInboxProvider: Provider<DataInbox>,
     private val cloudStorageManagerProvider: Provider<CloudStorageManager>,
     private val calculationWorkflowProvider: Provider<CalculationWorkflow>,
@@ -166,7 +161,6 @@ class AapsLeaves(
     private val bolusProgressDataProvider: Provider<BolusProgressData>,
     private val pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val historyScopeProvider: Provider<HistoryScope>,
-    private val importExportPrefsProvider: Provider<ImportExportPrefs>,
     private val overviewDataCacheProvider: Provider<OverviewDataCache>,
     // Same object as ActivePlugin above (PluginStore), under its other interface.
     private val pluginPermissionsProvider: Provider<PluginPermissions>,
@@ -215,7 +209,6 @@ class AapsLeaves(
     @Provides fun dateUtil(): DateUtil = dateUtilProvider.get()
     @Provides fun profileFunction(): ProfileFunction = profileFunctionProvider.get()
     @Provides fun commandQueue(): CommandQueue = commandQueueProvider.get()
-    @Provides fun maintenance(): Maintenance = maintenanceProvider.get()
     @Provides fun rh(): ResourceHelper = rhProvider.get()
 
     /** `ResourceHelper` is the Android implementation of the multiplatform [TextResolver]. */
@@ -232,7 +225,6 @@ class AapsLeaves(
     @Provides fun sceneExecutor(): SceneExecutor = sceneExecutorProvider.get()
     // No sceneRepository() either, same reason as activeSceneManager above: Metro owns it (@SingleIn +
     // two @ContributesBinding), so this leaf pushed an unscoped Dagger copy back in.
-    @Provides fun fileListProvider(): FileListProvider = fileListProviderProvider.get()
     @Provides fun dataInbox(): DataInbox = dataInboxProvider.get()
     @Provides fun cloudStorageManager(): CloudStorageManager = cloudStorageManagerProvider.get()
     @Provides fun calculationWorkflow(): CalculationWorkflow = calculationWorkflowProvider.get()
@@ -257,7 +249,6 @@ class AapsLeaves(
     /** A value object: unscoped, as its Dagger binding is. */
     @Provides fun pumpEnactResult(): PumpEnactResult = pumpEnactResultProvider.get()
     @Provides fun historyScope(): HistoryScope = historyScopeProvider.get()
-    @Provides fun importExportPrefs(): ImportExportPrefs = importExportPrefsProvider.get()
     @Provides fun searchableProviders(): Set<SearchableProvider> = searchableProvidersProvider.get()
     @Provides fun overviewDataCache(): OverviewDataCache = overviewDataCacheProvider.get()
     @Provides fun pluginPermissions(): PluginPermissions = pluginPermissionsProvider.get()

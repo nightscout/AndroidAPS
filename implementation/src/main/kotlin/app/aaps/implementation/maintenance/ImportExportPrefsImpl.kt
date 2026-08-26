@@ -76,8 +76,10 @@ import java.io.FileNotFoundException
 import java.io.IOException
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Created by mike on 03.07.2016.
@@ -86,7 +88,8 @@ import javax.inject.Singleton
 private fun filenameTimestamp(): String =
     LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HHmmss"))
 
-@Singleton
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class ImportExportPrefsImpl @Inject constructor(
     private var aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
