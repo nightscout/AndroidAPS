@@ -1,4 +1,4 @@
-package app.aaps.implementation.di
+package app.aaps.di
 
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PermissionProvider
@@ -17,7 +17,7 @@ import dagger.multibindings.Multibinds
 
 /**
  * What is left of this module after the Metro migration. Everything else in `:implementation` is
- * either a Metro contribution on the class or a `@Provides` in [ImplementationBindings].
+ * either a Metro contribution on the class or a `@Provides` in `ImplementationBindings`.
  *
  * The four classes below stay on Dagger because building them touches Android at construction time
  * (`LocaleHelper.currentLocale`, `createNotificationChannel`, `persistenceLayer.observeChanges`,

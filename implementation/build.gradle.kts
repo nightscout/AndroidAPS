@@ -58,8 +58,4 @@ dependencies {
     // Compose
     api(platform(libs.androidx.compose.bom))
     api(libs.androidx.compose.runtime)
-
-    ksp(libs.com.google.dagger.compiler)
-    ksp(libs.com.google.dagger.hilt.compiler)
-    ksp(libs.com.google.dagger.android.processor)
 }
