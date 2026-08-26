@@ -77,6 +77,9 @@ class ContributedBindingsTest {
         assertThat(root.sceneIconResolver).isSameInstanceAs(root.sceneIconResolver)
         assertThat(root.processedDeviceStatusData).isSameInstanceAs(root.processedDeviceStatusData)
         assertThat(root.lastLocationDataContainer).isSameInstanceAs(root.lastLocationDataContainer)
+        // Its init starts six channel consumers on the app scope; a second copy would consume the same
+        // requests twice and write every incoming NS record to the database twice.
+        assertThat(root.storeDataForDb).isSameInstanceAs(root.storeDataForDb)
     }
 
     @Test

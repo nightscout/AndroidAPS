@@ -263,6 +263,7 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideSceneIconResolver(graphs: MetroGraphs): SceneIconResolver = graphs.sceneIconResolver
     @Provides @Singleton fun provideProcessedDeviceStatusData(graphs: MetroGraphs): ProcessedDeviceStatusData = graphs.processedDeviceStatusData
     @Provides @Singleton fun provideLastLocationDataContainer(graphs: MetroGraphs): LastLocationDataContainer = graphs.lastLocationDataContainer
+    @Provides @Singleton fun provideStoreDataForDb(graphs: MetroGraphs): StoreDataForDb = graphs.storeDataForDb
     @Provides @Singleton fun provideMaintenanceBinding(graphs: MetroGraphs): Maintenance = graphs.maintenance
     @Provides @Singleton fun provideFileListProviderBinding(graphs: MetroGraphs): FileListProvider = graphs.fileListProvider
     @Provides @Singleton fun provideLastBgDataBinding(graphs: MetroGraphs): LastBgData = graphs.lastBgData
@@ -415,7 +416,6 @@ class CoreObjectsModule {
     fun provideAapsLeaves(
         metroMemberInjectorProvider: Provider<MetroMemberInjector>,
         nsClientRepositoryProvider: Provider<NSClientRepository>,
-        storeDataForDbProvider: Provider<StoreDataForDb>,
         runningConfigurationProvider: Provider<RunningConfiguration>,
         nsClientSourceProvider: Provider<NSClientSource>,
         runningConfigurationKeysProvider: Provider<RunningConfigurationKeys>,
@@ -458,7 +458,6 @@ class CoreObjectsModule {
     ): AapsLeaves = AapsLeaves(
         metroMemberInjectorProvider,
         nsClientRepositoryProvider,
-        storeDataForDbProvider,
         runningConfigurationProvider,
         nsClientSourceProvider,
         runningConfigurationKeysProvider,

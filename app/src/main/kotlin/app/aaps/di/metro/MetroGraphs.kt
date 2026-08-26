@@ -21,6 +21,7 @@ import app.aaps.core.interfaces.widget.WidgetUpdater
 import app.aaps.core.interfaces.scenes.SceneIconResolver
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.plugins.automation.services.LastLocationDataContainer
+import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.workflow.WorkflowChainData
 import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.maintenance.FileListProvider
@@ -302,6 +303,7 @@ class MetroGraphs @Inject constructor(
     val sceneIconResolver: SceneIconResolver get() = root.sceneIconResolver
     val processedDeviceStatusData: ProcessedDeviceStatusData get() = root.processedDeviceStatusData
     val lastLocationDataContainer: LastLocationDataContainer get() = root.lastLocationDataContainer
+    val storeDataForDb: StoreDataForDb get() = root.storeDataForDb
     val maintenance: Maintenance get() = root.maintenance
     val fileListProvider: FileListProvider get() = root.fileListProvider
     val lastBgData: LastBgData get() = root.lastBgData
