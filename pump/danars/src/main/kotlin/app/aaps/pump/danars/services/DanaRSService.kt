@@ -1,5 +1,6 @@
 package app.aaps.pump.danars.services
 
+import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Binder
@@ -7,6 +8,7 @@ import android.os.IBinder
 import android.os.SystemClock
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -80,7 +82,6 @@ import app.aaps.pump.danars.comm.DanaRSPacketOptionGetUserOption
 import app.aaps.pump.danars.comm.DanaRSPacketOptionSetPumpTime
 import app.aaps.pump.danars.comm.DanaRSPacketOptionSetPumpUTCAndTimeZone
 import app.aaps.pump.danars.comm.DanaRSPacketOptionSetUserOption
-import app.aaps.core.objects.workflow.MetroService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
@@ -95,7 +96,7 @@ import kotlin.math.abs
 import kotlin.math.min
 import kotlin.time.Duration.Companion.milliseconds
 
-class DanaRSService : MetroService() {
+class DanaRSService : Service() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
@@ -160,6 +161,9 @@ class DanaRSService : MetroService() {
     private var lastApproachingDailyLimit: Long = 0
 
     override fun onCreate() {
+        // What MetroService does. Inline rather than extending it, because :pump:danars-emulator uses this
+        // class in a test and does not depend on :core:objects, where that base class lives.
+        injectMetroMembers(this)
         super.onCreate()
         // IO like the io scheduler used before, cancelled in onDestroy like the CompositeDisposable
         // was cleared. UNDISPATCHED because RxBus has no replay, so a scheduled collector could miss
