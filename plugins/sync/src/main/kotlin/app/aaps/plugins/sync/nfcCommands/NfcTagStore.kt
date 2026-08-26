@@ -1,14 +1,27 @@
 package app.aaps.plugins.sync.nfcCommands
 
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import org.json.JSONArray
-import org.json.JSONObject
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonArray
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/**
+ * A tag the user has registered, and the commands it runs.
+ *
+ * [commands] are encoded [NfcCommand]s, kept as strings here because this is storage - the store does
+ * not care what a command means, and a command that no longer decodes must not stop the tag itself
+ * from being listed and edited.
+ */
+@Serializable
 data class NfcCreatedTag(
     val tagUid: String,
     val name: String,
@@ -17,6 +30,7 @@ data class NfcCreatedTag(
     val lastScannedAtMillis: Long? = null,
 )
 
+@Serializable
 data class NfcLogEntry(
     val timestamp: Long,
     val tagName: String,
@@ -26,13 +40,22 @@ data class NfcLogEntry(
 )
 
 @Singleton
-class NfcTagStore @Inject constructor(private val preferences: Preferences) {
+class NfcTagStore @Inject constructor(
+    private val preferences: Preferences,
+    private val aapsLogger: AAPSLogger
+) {
 
     companion object {
+
         const val MIME_TYPE: String = "application/vnd.app.aaps.command"
         private const val LOG_MAX_ENTRIES = 100
 
         fun tagUidHex(id: ByteArray?): String? = id?.joinToString("") { "%02x".format(it) }
+
+        private val json = Json {
+            ignoreUnknownKeys = true
+            encodeDefaults = false
+        }
     }
 
     private val _logUpdates = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
@@ -54,36 +77,39 @@ class NfcTagStore @Inject constructor(private val preferences: Preferences) {
         recentlyWrittenUids.clear()
     }
 
+    /**
+     * Reads a stored list one entry at a time.
+     *
+     * Decoding the list in one go would mean a single bad entry throwing away every other entry, which
+     * is what the previous `catch (Exception) { emptyList() }` did - a user's whole tag list or history
+     * disappearing with no error and no log line. Each element is decoded on its own instead, so a bad
+     * one is dropped and named while the rest survive.
+     */
+    private fun <T> loadList(raw: String, serializer: KSerializer<T>, what: String): List<T> {
+        if (raw.isBlank()) return emptyList()
+        val elements = runCatching { json.parseToJsonElement(raw).jsonArray }.getOrElse {
+            aapsLogger.error(LTag.NFC, "Stored $what is not a JSON array, ignoring it: ${it.message}")
+            return emptyList()
+        }
+        return elements.mapIndexedNotNull { index, element ->
+            runCatching { json.decodeFromJsonElement(serializer, element) }.getOrElse {
+                aapsLogger.error(LTag.NFC, "Dropping $what entry $index, it did not decode: ${it.message}")
+                null
+            }
+        }
+    }
+
+    private fun <T> saveList(key: StringNonKey, values: List<T>, serializer: KSerializer<T>) {
+        preferences.put(key, json.encodeToString(ListSerializer(serializer), values))
+    }
+
     fun findTagByUid(uid: String): NfcCreatedTag? =
         loadCreatedTags().find { it.tagUid.equals(uid, ignoreCase = true) }
 
-    fun loadCreatedTags(): List<NfcCreatedTag> {
-        val raw = preferences.get(StringNonKey.NfcCreatedTags)
-        val tags = mutableListOf<NfcCreatedTag>()
-        val array = runCatching { JSONArray(raw) }.getOrElse { JSONArray() }
-        for (index in 0 until array.length()) {
-            val item = array.optJSONObject(index) ?: continue
-            val commandsJson = item.optJSONArray("commands") ?: JSONArray()
-            val commands = (0 until commandsJson.length())
-                .asSequence()
-                .map { commandsJson.optString(it) }
-                .filter { it.isNotBlank() }
-                .toList()
-            if (commands.isEmpty()) continue
-            val tagUid = item.optString("tagUid")
-            if (tagUid.isBlank()) continue
-            tags.add(
-                NfcCreatedTag(
-                    tagUid = tagUid,
-                    name = item.optString("name"),
-                    commands = commands,
-                    createdAtMillis = item.optLong("createdAtMillis"),
-                    lastScannedAtMillis = item.optLong("lastScannedAtMillis", 0L).takeIf { it > 0 },
-                ),
-            )
-        }
-        return tags.sortedByDescending { it.createdAtMillis }
-    }
+    fun loadCreatedTags(): List<NfcCreatedTag> =
+        loadList(preferences.get(StringNonKey.NfcCreatedTags), NfcCreatedTag.serializer(), "tag list")
+            .filter { it.tagUid.isNotBlank() && it.commands.any { command -> command.isNotBlank() } }
+            .sortedByDescending { it.createdAtMillis }
 
     fun saveCreatedTag(tag: NfcCreatedTag) {
         val updated = loadCreatedTags().filterNot { it.tagUid.equals(tag.tagUid, ignoreCase = true) }.toMutableList()
@@ -102,60 +128,20 @@ class NfcTagStore @Inject constructor(private val preferences: Preferences) {
     }
 
     private fun saveCreatedTagList(tags: List<NfcCreatedTag>) {
-        val array = JSONArray()
-        tags.forEach { current ->
-            val cmdsArray = JSONArray()
-            current.commands.forEach { cmdsArray.put(it) }
-            val obj = JSONObject()
-                .put("tagUid", current.tagUid)
-                .put("name", current.name)
-                .put("commands", cmdsArray)
-                .put("createdAtMillis", current.createdAtMillis)
-            current.lastScannedAtMillis?.let { obj.put("lastScannedAtMillis", it) }
-            array.put(obj)
-        }
-        preferences.put(StringNonKey.NfcCreatedTags, array.toString())
+        saveList(StringNonKey.NfcCreatedTags, tags, NfcCreatedTag.serializer())
     }
 
     fun appendLogEntry(entry: NfcLogEntry) {
-        val existing = loadLog().toMutableList()
-        existing.add(0, entry)
-        val pruned = existing.take(LOG_MAX_ENTRIES)
-        val array = JSONArray()
-        pruned.forEach { e ->
-            array.put(
-                JSONObject()
-                    .put("timestamp", e.timestamp)
-                    .put("tagName", e.tagName)
-                    .put("action", e.action)
-                    .put("success", e.success)
-                    .put("message", e.message),
-            )
-        }
-        preferences.put(StringNonKey.NfcLog, array.toString())
+        val pruned = (listOf(entry) + loadLog()).take(LOG_MAX_ENTRIES)
+        saveList(StringNonKey.NfcLog, pruned, NfcLogEntry.serializer())
         _logUpdates.tryEmit(Unit)
     }
 
     fun loadLog(): List<NfcLogEntry> =
-        try {
-            val array = JSONArray(preferences.get(StringNonKey.NfcLog))
-            List(array.length()) { i ->
-                val o = array.getJSONObject(i)
-                NfcLogEntry(
-                    timestamp = o.getLong("timestamp"),
-                    tagName = o.getString("tagName"),
-                    action = o.getString("action"),
-                    success = o.getBoolean("success"),
-                    message = o.getString("message"),
-                )
-            }
-        } catch (_: Exception) {
-            emptyList()
-        }
+        loadList(preferences.get(StringNonKey.NfcLog), NfcLogEntry.serializer(), "log")
 
     fun clearLog() {
         preferences.remove(StringNonKey.NfcLog)
         _logUpdates.tryEmit(Unit)
     }
-
 }

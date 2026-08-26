@@ -64,7 +64,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
                 aapsLogger = aapsLogger,
                 rh = rh,
                 preferences = preferences,
-                nfcTagStore = NfcTagStore(TestNfcPreferences().preferences),
+                nfcTagStore = NfcTagStore(TestNfcPreferences().preferences, aapsLogger),
                 constraintChecker = constraintsChecker,
                 profileFunction = profileFunction,
                 profileUtil = profileUtil,

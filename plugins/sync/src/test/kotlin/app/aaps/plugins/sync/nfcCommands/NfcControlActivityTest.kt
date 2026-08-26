@@ -25,7 +25,7 @@ class NfcControlActivityTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun setup() {
-        nfcTagStore = NfcTagStore(TestNfcPreferences().preferences)
+        nfcTagStore = NfcTagStore(TestNfcPreferences().preferences, aapsLogger)
         nfcTagStore.clearJustWrittenForTest()
         
         pluginUnderTest = NfcCommandsPlugin(

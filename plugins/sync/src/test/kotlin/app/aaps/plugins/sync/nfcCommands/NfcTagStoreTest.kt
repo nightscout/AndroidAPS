@@ -1,12 +1,14 @@
 package app.aaps.plugins.sync.nfcCommands
 
 import app.aaps.core.keys.StringNonKey
+import app.aaps.shared.tests.AAPSLoggerTest
 import app.aaps.plugins.sync.nfcCommands.NfcCommand
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class NfcTagStoreTest {
+    private val aapsLogger = AAPSLoggerTest()
     private lateinit var testPreferences: TestNfcPreferences
     private lateinit var store: NfcTagStore
     private val now = 1_700_000_000_000L
@@ -15,7 +17,7 @@ class NfcTagStoreTest {
     @BeforeEach
     fun setup() {
         testPreferences = TestNfcPreferences()
-        store = NfcTagStore(testPreferences.preferences)
+        store = NfcTagStore(testPreferences.preferences, aapsLogger)
     }
 
     private fun makeTag(
@@ -30,6 +32,60 @@ class NfcTagStoreTest {
         )
 
     // ── saveCreatedTag / loadCreatedTags ──────────────────────────────────────
+
+    // ── one bad entry must not discard the rest ───────────────────────────────
+
+    @Test
+    fun `loadCreatedTags keeps the good entries when one does not decode`() {
+        // second entry has createdAtMillis as a string, so only that one fails to decode
+        testPreferences.preferences.put(
+            StringNonKey.NfcCreatedTags,
+            """[{"tagUid":"aa","name":"Good","commands":["{}"],"createdAtMillis":2},""" +
+                """{"tagUid":"bb","name":"Bad","commands":["{}"],"createdAtMillis":"oops"},""" +
+                """{"tagUid":"cc","name":"AlsoGood","commands":["{}"],"createdAtMillis":1}]"""
+        )
+
+        val loaded = store.loadCreatedTags()
+
+        assertThat(loaded.map { it.tagUid }).containsExactly("aa", "cc").inOrder()
+    }
+
+    @Test
+    fun `loadLog keeps the good entries when one does not decode`() {
+        testPreferences.preferences.put(
+            StringNonKey.NfcLog,
+            """[{"timestamp":1,"tagName":"a","action":"READ","success":true,"message":"m"},""" +
+                """{"timestamp":"nope","tagName":"b","action":"READ","success":true,"message":"m"},""" +
+                """{"timestamp":3,"tagName":"c","action":"READ","success":true,"message":"m"}]"""
+        )
+
+        val loaded = store.loadLog()
+
+        assertThat(loaded.map { it.tagName }).containsExactly("a", "c").inOrder()
+    }
+
+    @Test
+    fun `loadLog returns empty when the whole blob is not an array`() {
+        testPreferences.preferences.put(StringNonKey.NfcLog, "not json at all")
+
+        assertThat(store.loadLog()).isEmpty()
+    }
+
+    @Test
+    fun `a tag whose command no longer decodes is still listed`() {
+        // what happens to a tag written before the command format changed
+        testPreferences.preferences.put(
+            StringNonKey.NfcCreatedTags,
+            """[{"tagUid":"aa","name":"Old tag","commands":["BASAL_ABS 0.75 30"],"createdAtMillis":1}]"""
+        )
+
+        val loaded = store.loadCreatedTags()
+
+        assertThat(loaded).hasSize(1)
+        assertThat(loaded.first().name).isEqualTo("Old tag")
+        assertThat(NfcCommand.decode(loaded.first().commands.first())).isNull()
+    }
+
 
     @Test
     fun `saveCreatedTag and loadCreatedTags round-trips correctly`() {
