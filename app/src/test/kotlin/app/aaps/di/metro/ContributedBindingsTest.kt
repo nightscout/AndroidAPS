@@ -46,6 +46,10 @@ class ContributedBindingsTest {
         assertThat(root.notificationHolder).isSameInstanceAs(root.notificationHolder)
         assertThat(root.userEntryPresentationHelper).isSameInstanceAs(root.userEntryPresentationHelper)
         assertThat(root.profiler).isSameInstanceAs(root.profiler)
+        assertThat(root.concentrationHelper).isSameInstanceAs(root.concentrationHelper)
+        assertThat(root.processedTbrEbData).isSameInstanceAs(root.processedTbrEbData)
+        assertThat(root.userEntryLogger).isSameInstanceAs(root.userEntryLogger)
+        assertThat(root.glucoseStatusProvider).isSameInstanceAs(root.glucoseStatusProvider)
     }
 
     @Test

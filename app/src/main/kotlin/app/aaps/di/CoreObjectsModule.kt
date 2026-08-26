@@ -237,6 +237,10 @@ class CoreObjectsModule {
         graphs.wizardBolusExecutor
 
     @Provides @Singleton fun provideLoggerUtils(graphs: MetroGraphs): LoggerUtils = graphs.loggerUtils
+    @Provides @Singleton fun provideConcentrationHelperBinding(graphs: MetroGraphs): ConcentrationHelper = graphs.concentrationHelper
+    @Provides @Singleton fun provideProcessedTbrEbDataBinding(graphs: MetroGraphs): ProcessedTbrEbData = graphs.processedTbrEbData
+    @Provides @Singleton fun provideUserEntryLoggerBinding(graphs: MetroGraphs): UserEntryLogger = graphs.userEntryLogger
+    @Provides @Singleton fun provideGlucoseStatusProviderBinding(graphs: MetroGraphs): GlucoseStatusProvider = graphs.glucoseStatusProvider
     @Provides @Singleton fun provideUserEntryPresentationHelperBinding(graphs: MetroGraphs): UserEntryPresentationHelper = graphs.userEntryPresentationHelper
     @Provides @Singleton fun provideNotificationHolderBinding(graphs: MetroGraphs): NotificationHolder = graphs.notificationHolder
     @Provides @Singleton fun provideAlarmSoundPlayerBinding(graphs: MetroGraphs): AlarmSoundPlayer = graphs.alarmSoundPlayer
@@ -402,19 +406,15 @@ class CoreObjectsModule {
         preferencesProvider: Provider<Preferences>,
         dstHelperProvider: Provider<DstHelper>,
         workManagerProvider: Provider<WorkManager>,
-        concentrationHelperProvider: Provider<ConcentrationHelper>,
         notificationManagerProvider: Provider<NotificationManager>,
         sceneExecutorProvider: Provider<SceneExecutor>,
         fileListProviderProvider: Provider<FileListProvider>,
         dataInboxProvider: Provider<DataInbox>,
         cloudStorageManagerProvider: Provider<CloudStorageManager>,
         calculationWorkflowProvider: Provider<CalculationWorkflow>,
-        processedTbrEbDataProvider: Provider<ProcessedTbrEbData>,
         overviewDataCacheFactoryProvider: Provider<OverviewDataCacheFactory>,
         constraintsCheckerProvider: Provider<ConstraintsChecker>,
-        uelProvider: Provider<UserEntryLogger>,
         automationProvider: Provider<Automation>,
-        glucoseStatusProvider: Provider<GlucoseStatusProvider>,
         processedDeviceStatusDataProvider: Provider<ProcessedDeviceStatusData>,
         contextProvider: Provider<Context>,
         uiInteractionProvider: Provider<UiInteraction>,
@@ -467,19 +467,15 @@ class CoreObjectsModule {
         preferencesProvider,
         dstHelperProvider,
         workManagerProvider,
-        concentrationHelperProvider,
         notificationManagerProvider,
         sceneExecutorProvider,
         fileListProviderProvider,
         dataInboxProvider,
         cloudStorageManagerProvider,
         calculationWorkflowProvider,
-        processedTbrEbDataProvider,
         overviewDataCacheFactoryProvider,
         constraintsCheckerProvider,
-        uelProvider,
         automationProvider,
-        glucoseStatusProvider,
         processedDeviceStatusDataProvider,
         contextProvider,
         uiInteractionProvider,

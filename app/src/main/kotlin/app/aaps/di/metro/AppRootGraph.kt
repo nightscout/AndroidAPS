@@ -6,6 +6,10 @@ import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.logging.LoggerUtils
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
+import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.protection.PasswordCheck
@@ -226,6 +230,10 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val batchExecutor: BatchExecutor
     val wizardBolusExecutor: WizardBolusExecutor
     val loggerUtils: LoggerUtils
+    val concentrationHelper: ConcentrationHelper
+    val processedTbrEbData: ProcessedTbrEbData
+    val userEntryLogger: UserEntryLogger
+    val glucoseStatusProvider: GlucoseStatusProvider
     val notificationHolder: NotificationHolder
     val userEntryPresentationHelper: UserEntryPresentationHelper
     val profiler: Profiler

@@ -9,18 +9,14 @@ import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.dst.DstHelper
-import app.aaps.core.interfaces.insulin.ConcentrationHelper
-import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
 import app.aaps.core.interfaces.widget.WidgetUpdater
-import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.maintenance.Maintenance
@@ -127,20 +123,16 @@ class AapsLeaves(
     private val preferencesProvider: Provider<Preferences>,
     private val dstHelperProvider: Provider<DstHelper>,
     private val workManagerProvider: Provider<WorkManager>,
-    private val concentrationHelperProvider: Provider<ConcentrationHelper>,
     private val notificationManagerProvider: Provider<NotificationManager>,
     private val sceneExecutorProvider: Provider<SceneExecutor>,
     private val fileListProviderProvider: Provider<FileListProvider>,
     private val dataInboxProvider: Provider<DataInbox>,
     private val cloudStorageManagerProvider: Provider<CloudStorageManager>,
     private val calculationWorkflowProvider: Provider<CalculationWorkflow>,
-    private val processedTbrEbDataProvider: Provider<ProcessedTbrEbData>,
     private val overviewDataCacheFactoryProvider: Provider<OverviewDataCacheFactory>,
     // Needed by the feature extensions below the root, which no longer carry their own leaf lists.
     private val constraintsCheckerProvider: Provider<ConstraintsChecker>,
-    private val uelProvider: Provider<UserEntryLogger>,
     private val automationProvider: Provider<Automation>,
-    private val glucoseStatusProvider: Provider<GlucoseStatusProvider>,
     private val processedDeviceStatusDataProvider: Provider<ProcessedDeviceStatusData>,
     private val contextProvider: Provider<Context>,
     // Source plugins, still built by Dagger. They live here rather than in their own module because a
@@ -241,7 +233,6 @@ class AapsLeaves(
     @Provides fun preferences(): Preferences = preferencesProvider.get()
     @Provides fun dstHelper(): DstHelper = dstHelperProvider.get()
     @Provides fun workManager(): WorkManager = workManagerProvider.get()
-    @Provides fun concentrationHelper(): ConcentrationHelper = concentrationHelperProvider.get()
     @Provides fun notificationManager(): NotificationManager = notificationManagerProvider.get()
     // No activeSceneManager() here on purpose: Metro owns it (@SingleIn on the class), so this leaf would
     // push a SECOND one in from Dagger - and an unscoped one, because the class carries no javax scope, so
@@ -254,12 +245,9 @@ class AapsLeaves(
     @Provides fun dataInbox(): DataInbox = dataInboxProvider.get()
     @Provides fun cloudStorageManager(): CloudStorageManager = cloudStorageManagerProvider.get()
     @Provides fun calculationWorkflow(): CalculationWorkflow = calculationWorkflowProvider.get()
-    @Provides fun processedTbrEbData(): ProcessedTbrEbData = processedTbrEbDataProvider.get()
     @Provides fun overviewDataCacheFactory(): OverviewDataCacheFactory = overviewDataCacheFactoryProvider.get()
     @Provides fun constraintsChecker(): ConstraintsChecker = constraintsCheckerProvider.get()
-    @Provides fun uel(): UserEntryLogger = uelProvider.get()
     @Provides fun automation(): Automation = automationProvider.get()
-    @Provides fun glucoseStatus(): GlucoseStatusProvider = glucoseStatusProvider.get()
     @Provides fun processedDeviceStatusData(): ProcessedDeviceStatusData = processedDeviceStatusDataProvider.get()
     @Provides fun context(): Context = contextProvider.get()
 

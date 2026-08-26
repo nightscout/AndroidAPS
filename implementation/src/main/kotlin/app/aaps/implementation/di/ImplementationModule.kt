@@ -112,9 +112,6 @@ class ImplementationModule {
 
         @Binds fun bindLastBgData(lastBgData: LastBgDataImpl): LastBgData
         @Binds fun bindOverviewData(overviewData: OverviewDataImpl): OverviewData
-        @Binds fun bindProcessedTbrEbData(pProcessedTbrEbData: ProcessedTbrEbDataImpl): ProcessedTbrEbData
-        @Binds fun bindUserEntryLogger(userEntryLoggerImpl: UserEntryLoggerImpl): UserEntryLogger
-        @Binds fun bindConcentrationHelper(concentrationHelperImpl: ConcentrationHelperImpl): ConcentrationHelper
         @Binds fun bindPasswordCheck(passwordCheckImpl: PasswordCheckImpl): PasswordCheck
         @Binds fun bindExportPasswordCheck(exportPasswordDataStoreImpl: ExportPasswordDataStoreImpl): ExportPasswordDataStore
         @Binds fun bindSecureEncrypt(secureEncryptImpl: SecureEncryptImpl): SecureEncrypt
@@ -126,7 +123,6 @@ class ImplementationModule {
         @Binds fun bindLocalAlertUtilsInterface(localAlertUtils: LocalAlertUtilsImpl): LocalAlertUtils
         @Binds fun bindNotificationManager(notificationManagerImpl: NotificationManagerImpl): NotificationManager
         @Binds fun bindsProfileFunction(profileFunctionImpl: ProfileFunctionImpl): ProfileFunction
-        @Binds fun bindsGlucoseStatusProvider(glucoseStatusProviderImpl: GlucoseStatusProviderImpl): GlucoseStatusProvider
         @Binds fun bindsAutosensData(autosensDataObject: AutosensDataObject): AutosensData
         @Binds fun bindsAPSResult(determineBasalResult: DetermineBasalResult): APSResult
         @Binds fun bindsPumpEnactResult(pumpEnactResultObject: PumpEnactResultObject): PumpEnactResult

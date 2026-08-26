@@ -6,6 +6,10 @@ import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.logging.LoggerUtils
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
+import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.protection.PasswordCheck
@@ -258,6 +262,10 @@ class MetroGraphs @Inject constructor(
     val batchExecutor: BatchExecutor get() = root.batchExecutor
     val wizardBolusExecutor: WizardBolusExecutor get() = root.wizardBolusExecutor
     val loggerUtils: LoggerUtils get() = root.loggerUtils
+    val concentrationHelper: ConcentrationHelper get() = root.concentrationHelper
+    val processedTbrEbData: ProcessedTbrEbData get() = root.processedTbrEbData
+    val userEntryLogger: UserEntryLogger get() = root.userEntryLogger
+    val glucoseStatusProvider: GlucoseStatusProvider get() = root.glucoseStatusProvider
     val notificationHolder: NotificationHolder get() = root.notificationHolder
     val userEntryPresentationHelper: UserEntryPresentationHelper get() = root.userEntryPresentationHelper
     val profiler: Profiler get() = root.profiler
