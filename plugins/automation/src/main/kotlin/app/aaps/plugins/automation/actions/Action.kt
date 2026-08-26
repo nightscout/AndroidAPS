@@ -2,12 +2,12 @@ package app.aaps.plugins.automation.actions
 
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.icon
-import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.core.utils.lenientString
+import app.aaps.plugins.automation.triggers.Trigger
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject

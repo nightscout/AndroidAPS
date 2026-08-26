@@ -6,6 +6,14 @@ plugins {
     id("compose-test-module-dependencies")
     id("jacoco-module-dependencies")
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.metro)
+}
+
+metro {
+    interop {
+        // See :plugins:configuration for why interop rather than rewriting annotations.
+        includeDagger()
+    }
 }
 
 android {

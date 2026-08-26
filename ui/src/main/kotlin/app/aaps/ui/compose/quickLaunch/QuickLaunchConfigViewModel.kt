@@ -1,6 +1,5 @@
 package app.aaps.ui.compose.quickLaunch
 
-import app.aaps.core.keys.interfaces.TextRef
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
@@ -8,15 +7,19 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileRepository
+import app.aaps.core.interfaces.scenes.SceneStore
 import app.aaps.core.interfaces.tempTargets.toTTPresets
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.objects.extensions.profileNames
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.ui.compose.pluginCategoryTitle
-import app.aaps.core.interfaces.scenes.SceneStore
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -42,7 +45,10 @@ data class PluginGroup(
     val items: List<ResolvedQuickLaunchItem>
 )
 
-@HiltViewModel
+// Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
+// unscoped so each screen gets its own.
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 @Stable
 class QuickLaunchConfigViewModel @Inject constructor(
     private val preferences: Preferences,

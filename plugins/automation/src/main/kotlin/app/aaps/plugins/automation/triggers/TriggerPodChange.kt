@@ -2,8 +2,8 @@ package app.aaps.plugins.automation.triggers
 
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.ui.compose.icons.IcPatchPump
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.ui.compose.icons.IcPatchPump
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import kotlinx.serialization.json.JsonObject

@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PermissionGroup
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
@@ -15,11 +16,20 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.icons.IcPluginByoda
 import app.aaps.plugins.source.compose.BgSourceComposeContent
 import app.aaps.plugins.source.notificationreader.PackageConfig
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 import java.net.URL
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+// Registers itself into the plugin list. Scoped with Metro's own @SingleIn, NOT javax @Singleton: the
+// graph that builds a contributed class is generated in `:app`, which has no Dagger interop, so a javax
+// scope there is silently ignored and every read builds a new plugin.
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@IntKey(530)
+@SingleIn(AppScope::class)
 class NotificationReaderPlugin @Inject constructor(
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,

@@ -15,9 +15,9 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.SystemClock
 import androidx.core.app.ActivityCompat
-import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
@@ -35,7 +35,7 @@ import app.aaps.pump.diaconn.packet.DiaconnG8ResponseMessageHashTable
 import app.aaps.pump.diaconn.packet.DiaconnG8SettingResponseMessageHashTable
 import app.aaps.pump.diaconn.packet.InjectionBlockReportPacket
 import app.aaps.pump.diaconn.packet.InsulinLackReportPacket
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import java.util.UUID
 import java.util.concurrent.ScheduledFuture
 import javax.inject.Inject
@@ -44,7 +44,7 @@ import javax.inject.Singleton
 @Suppress("SpellCheckingInspection")
 @Singleton
 class BLECommonService @Inject internal constructor(
-    private val injector: HasAndroidInjector,
+    private val injector: MetroMemberInjector,
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val context: Context,

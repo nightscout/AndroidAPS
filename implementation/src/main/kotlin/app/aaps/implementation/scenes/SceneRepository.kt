@@ -4,12 +4,15 @@ import app.aaps.core.data.model.Scene
 import app.aaps.core.interfaces.scenes.SceneStore
 import app.aaps.core.interfaces.scenes.Scenes
 import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.toJson
 import app.aaps.core.objects.extensions.toScenes
-import app.aaps.core.keys.interfaces.Preferences
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Repository for scene definitions. Reads/writes the scene list from SharedPreferences via
@@ -17,7 +20,11 @@ import javax.inject.Singleton
  * (Bidirectional). No in-memory cache — [scenesFlow] is a [StateFlow] backed by preferences,
  * so external writes (incl. a master push) propagate automatically.
  */
-@Singleton
+// Two interfaces from one object, so @ContributesBinding is repeated with an explicit bound type.
+// Both must resolve to the SAME instance - the repository holds the scene list.
+@ContributesBinding(AppScope::class, binding = binding<Scenes>())
+@ContributesBinding(AppScope::class, binding = binding<SceneStore>())
+@SingleIn(AppScope::class)
 class SceneRepository @Inject constructor(
     private val preferences: Preferences
 ) : Scenes, SceneStore {

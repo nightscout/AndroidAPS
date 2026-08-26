@@ -1,6 +1,5 @@
 package app.aaps.ui.compose.profileHelper
 
-import app.aaps.core.ui.compose.stringResourceOrNull
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -60,15 +59,16 @@ import app.aaps.core.graph.profile.buildTargetRows
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.profile.ProfileSealed
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.navigation.label
+import app.aaps.core.ui.compose.stringResourceOrNull
 import app.aaps.ui.R
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileHelperViewModel
 import app.aaps.ui.compose.stats.TddStatsCompose
+import app.aaps.core.ui.R as CoreUiR
 
 /**
  * Enumeration of available profile calculation/source types.

@@ -1,6 +1,5 @@
 package app.aaps.plugins.automation.compose.triggers
 
-import app.aaps.core.keys.interfaces.TextRef
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,7 +11,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
-import app.aaps.core.ui.R as CoreUiR
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.compose.elements.AutomationDropdown
@@ -56,6 +55,7 @@ import app.aaps.plugins.automation.triggers.TriggerTempTargetValue
 import app.aaps.plugins.automation.triggers.TriggerTime
 import app.aaps.plugins.automation.triggers.TriggerTimeRange
 import app.aaps.plugins.automation.triggers.TriggerWifiSsid
+import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 fun TriggerEditor(

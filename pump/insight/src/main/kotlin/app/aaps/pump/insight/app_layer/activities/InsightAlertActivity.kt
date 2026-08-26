@@ -27,10 +27,10 @@ import app.aaps.pump.insight.compose.InsightAlertScreen
 import app.aaps.pump.insight.compose.InsightAlertUiState
 import app.aaps.pump.insight.descriptors.Alert
 import app.aaps.pump.insight.utils.AlertUtils
-import dagger.android.support.DaggerAppCompatActivity
+import app.aaps.core.ui.compose.MetroAppCompatActivity
 import javax.inject.Inject
 
-class InsightAlertActivity : DaggerAppCompatActivity() {
+class InsightAlertActivity : MetroAppCompatActivity() {
 
     @Inject lateinit var alertUtils: AlertUtils
     @Inject lateinit var rxBus: RxBus

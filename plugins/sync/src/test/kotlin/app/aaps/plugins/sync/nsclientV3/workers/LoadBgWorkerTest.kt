@@ -8,7 +8,6 @@ import androidx.work.WorkManager
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 import androidx.work.testing.TestListenableWorkerBuilder
-import kotlin.reflect.KClass
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.SourceSensor
@@ -44,6 +43,7 @@ import org.mockito.Mock
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
+import kotlin.reflect.KClass
 import kotlin.test.assertIs
 import kotlin.time.Duration.Companion.seconds
 

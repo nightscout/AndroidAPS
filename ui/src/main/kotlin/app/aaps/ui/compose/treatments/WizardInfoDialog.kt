@@ -20,8 +20,8 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.LocalProfileUtil
 import kotlin.math.abs
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.interfaces.R as InterfacesR
+import app.aaps.core.ui.R as CoreUiR
 
 /**
  * Compose dialog showing the calculation breakdown of a Bolus Calculator Result.

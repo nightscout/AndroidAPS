@@ -1,9 +1,9 @@
 package app.aaps.plugins.automation.actions
 
-import javax.inject.Provider
-import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.autotune.Autotune
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpEnactResult
@@ -12,7 +12,6 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.icons.IcPluginAutotune
-import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.elements.WeekDay
 import app.aaps.core.utils.lenientBoolean
 import app.aaps.core.utils.lenientInt
@@ -26,6 +25,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+import javax.inject.Provider
 
 class ActionRunAutotune(
     aapsLogger: AAPSLogger,

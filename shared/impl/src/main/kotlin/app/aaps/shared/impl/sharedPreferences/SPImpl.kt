@@ -3,7 +3,6 @@ package app.aaps.shared.impl.sharedPreferences
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.annotation.StringRes
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.SafeParse
 import javax.inject.Inject

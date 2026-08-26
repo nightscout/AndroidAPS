@@ -3,11 +3,13 @@ package app.aaps.wear.tile
 import android.graphics.Bitmap
 import android.graphics.Paint
 import androidx.compose.ui.geometry.Size
-import androidx.core.content.ContextCompat
 import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.drawscope.CanvasDrawScope
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.createBitmap
+import androidx.core.graphics.withTranslation
 import androidx.wear.protolayout.ActionBuilders
 import androidx.wear.protolayout.DimensionBuilders
 import androidx.wear.protolayout.LayoutElementBuilders
@@ -18,11 +20,11 @@ import androidx.wear.tiles.RequestBuilders.TileRequest
 import androidx.wear.tiles.ResourceBuilders
 import androidx.wear.tiles.TileBuilders.Tile
 import androidx.wear.tiles.TileService
+import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.wear.BuildConfig
 import app.aaps.wear.R
 import app.aaps.wear.data.ComplicationData
 import app.aaps.wear.data.ComplicationDataRepository
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.wear.interaction.activities.BgGraphActivity
 import app.aaps.wear.interaction.activities.LoopStatusActivity
 import app.aaps.wear.interaction.activities.formatTtDuration
@@ -45,8 +47,6 @@ import java.io.ByteArrayOutputStream
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
-import androidx.core.graphics.createBitmap
-import androidx.core.graphics.withTranslation
 
 class BgGraphTileService : TileService() {
 

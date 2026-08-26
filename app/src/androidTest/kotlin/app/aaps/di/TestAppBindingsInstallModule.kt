@@ -63,7 +63,9 @@ abstract class TestAppBindingsInstallModule {
 
     @Binds abstract fun bindActivityNames(activityNames: UiInteractionImpl): UiInteraction
 
-    @Binds @Singleton abstract fun bindHistoryScope(impl: HistoryBrowserData): HistoryScope
+    // No @Singleton here: Metro rejects a scope on @Binds, and it was always redundant - the scope that
+    // matters is on `HistoryBrowserData` itself, so the interface still resolves to that one instance.
+    @Binds abstract fun bindHistoryScope(impl: HistoryBrowserData): HistoryScope
 
     companion object {
 

@@ -1,8 +1,6 @@
 package app.aaps.plugins.aps.loop.runningMode
 
 import androidx.annotation.VisibleForTesting
-import app.aaps.core.ui.UiStrings
-import app.aaps.plugins.aps.ApsStrings
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -20,6 +18,10 @@ import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.ui.UiStrings
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -39,7 +41,8 @@ import kotlinx.coroutines.launch
  * drifted from DB state" case.
  */
 
-class RunningModeReconciler(
+@SingleIn(AppScope::class)
+class RunningModeReconciler @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val processedTbrEbData: ProcessedTbrEbData,
     private val activePlugin: ActivePlugin,

@@ -36,10 +36,4 @@ abstract class DanaRSModule {
         fun providesBluetoothAdapter(context: Context): BluetoothAdapter? = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
     }
 
-    // Pump plugin registration — @IntKey range 1000–1200, see PluginsListModule for overview
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @IntKey(1040)
-    abstract fun bindDanaRSPlugin(plugin: DanaRSPlugin): PluginBase
 }

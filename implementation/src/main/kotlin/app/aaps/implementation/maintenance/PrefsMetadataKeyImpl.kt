@@ -1,6 +1,5 @@
 package app.aaps.implementation.maintenance
 
-import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Badge
@@ -11,8 +10,8 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.PhoneAndroid
 import androidx.compose.material.icons.filled.Style
 import androidx.compose.ui.graphics.vector.ImageVector
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.implementation.R
 import app.aaps.implementation.maintenance.data.PrefsFormat
 

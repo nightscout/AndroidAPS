@@ -6,11 +6,11 @@ import app.aaps.plugins.automation.asJsonObject
 import app.aaps.plugins.automation.elements.InputLocationMode
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
-import org.skyscreamer.jsonassert.JSONAssert
 import org.json.JSONException
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
+import org.skyscreamer.jsonassert.JSONAssert
 
 class TriggerLocationTest : TriggerTestBase() {
 

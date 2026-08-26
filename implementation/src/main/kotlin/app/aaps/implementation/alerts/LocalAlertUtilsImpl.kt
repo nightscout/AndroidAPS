@@ -1,6 +1,5 @@
 package app.aaps.implementation.alerts
 
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
@@ -23,6 +22,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.core.ui.R
 import app.aaps.implementation.alerts.keys.LocalAlertLongKey

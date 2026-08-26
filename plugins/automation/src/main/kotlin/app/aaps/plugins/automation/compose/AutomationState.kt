@@ -1,7 +1,7 @@
 package app.aaps.plugins.automation.compose
 
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.AnnotatedString
 import app.aaps.core.interfaces.navigation.ElementType
 
 sealed interface AutomationRoute {

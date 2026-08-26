@@ -1,6 +1,5 @@
 package app.aaps.helpers
 
-import kotlin.reflect.KClass
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -13,6 +12,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import javax.inject.Inject
+import kotlin.reflect.KClass
 
 /**
  * Suspend-first waiting helpers for integration tests.

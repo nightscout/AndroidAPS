@@ -92,9 +92,11 @@ class MedtronicCommunicationManager @Inject constructor(
     private val debugSetCommands = false
     private var doWakeUpBeforeCommand = true
 
-    @Inject
-    fun onInit() {
-        // we can't do this in the constructor, as sp only gets injected after the constructor has returned
+    // Was an @Inject fun, which is Dagger method injection - Metro does not support it and crashes the
+    // compiler on it (ZacSweers/metro#2735). The old comment here said this could not run in the
+    // constructor because preferences arrived later; it is a constructor parameter now, passed straight to
+    // the superclass, so it is set before this runs.
+    init {
         medtronicPumpStatus.previousConnection = preferences.get(RileyLinkLongKey.LastGoodDeviceCommunicationTime)
     }
 

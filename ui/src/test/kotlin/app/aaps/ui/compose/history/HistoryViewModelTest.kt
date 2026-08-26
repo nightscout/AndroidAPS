@@ -1,6 +1,7 @@
 package app.aaps.ui.compose.history
 
 import app.aaps.core.interfaces.overview.OverviewData
+import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
@@ -18,6 +19,9 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.clearInvocations
+import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -30,6 +34,7 @@ internal class HistoryViewModelTest {
     @Mock private lateinit var graphViewModelFactory: GraphViewModel.Factory
     @Mock private lateinit var signals: CalculationSignalsEmitter
     @Mock private lateinit var overviewData: OverviewData
+    @Mock private lateinit var cache: OverviewDataCache
 
     private lateinit var sut: HistoryViewModel
 
@@ -43,6 +48,8 @@ internal class HistoryViewModelTest {
         whenever(historyScope.signals).thenReturn(signals)
         whenever(signals.progress).thenReturn(MutableStateFlow(0))
         whenever(historyScope.overviewData).thenReturn(overviewData)
+        // runCalculation() clears the cache first, so the old window is not drawn under the new date.
+        whenever(historyScope.cache).thenReturn(cache)
         sut = HistoryViewModel(historyScope, calculationWorkflow, dateUtil, graphViewModelFactory)
     }
 
@@ -70,5 +77,31 @@ internal class HistoryViewModelTest {
         whenever(dateUtil.getTimestampWithCurrentTimeOfDay(any())).thenReturn(999L)
 
         assertThat(sut.selectedDateMillis()).isEqualTo(999L)
+    }
+
+    @Test
+    fun `changing the window clears the cache before recalculating`() {
+        // The worker refills the cache one series at a time and blood glucose comes last, so without
+        // the clear the graph shows the previous day's readings under the new date for several
+        // seconds. Order matters: clearing after starting the calculation could wipe fresh results.
+        clearInvocations(cache, calculationWorkflow)
+
+        sut.previousWindow()
+
+        val order = inOrder(cache, calculationWorkflow)
+        order.verify(cache).reset()
+        order.verify(calculationWorkflow).runCalculation(
+            job = any(), iobCobCalculator = anyOrNull(), overviewData = any(), cache = any(),
+            signals = any(), reason = any(), end = any(), bgDataReload = any(), triggeredByNewBG = any()
+        )
+    }
+
+    @Test
+    fun `jumping to now also clears the cache`() {
+        clearInvocations(cache)
+
+        sut.jumpToNow()
+
+        verify(cache).reset()
     }
 }

@@ -13,10 +13,10 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.extensions.fromGv
-import kotlin.time.Clock
 import kotlin.math.abs
 import kotlin.math.min
 import kotlin.math.roundToLong
+import kotlin.time.Clock
 
 /**
  * In memory store for BG readings, bucketed data and the autosens table.

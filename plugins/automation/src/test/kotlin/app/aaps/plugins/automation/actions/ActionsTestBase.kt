@@ -1,6 +1,7 @@
 package app.aaps.plugins.automation.actions
 
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.interfaces.alerts.ReminderScheduler
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -10,7 +11,6 @@ import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.scenes.SceneIconResolver
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
-import app.aaps.core.interfaces.alerts.ReminderScheduler
 import app.aaps.shared.tests.TestBaseWithProfile
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach

@@ -2,11 +2,11 @@ package app.aaps.pump.danar.comm
 
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.keys.interfaces.TextRef
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import kotlinx.coroutines.runBlocking
 
 class MsgError(
-    injector: HasAndroidInjector
+    injector: MetroMemberInjector
 ) : MessageBase(injector) {
 
     init {

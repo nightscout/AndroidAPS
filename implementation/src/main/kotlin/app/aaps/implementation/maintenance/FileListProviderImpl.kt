@@ -26,7 +26,6 @@ import app.aaps.implementation.maintenance.data.PrefsStatusImpl
 import app.aaps.implementation.maintenance.formats.EncryptedPrefsFormat
 import app.aaps.shared.impl.weardata.ZipWatchfaceFormat
 import dagger.Lazy
-import dagger.Reusable
 import org.joda.time.DateTime
 import org.joda.time.Days
 import org.joda.time.Hours
@@ -34,10 +33,11 @@ import org.joda.time.LocalDateTime
 import org.joda.time.format.DateTimeFormat
 import java.io.File
 import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.math.abs
 
 @Suppress("SpellCheckingInspection")
-@Reusable
+@Singleton
 class FileListProviderImpl @Inject constructor(
     private val rh: ResourceHelper,
     private val config: Lazy<Config>,

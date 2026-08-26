@@ -1,6 +1,5 @@
 package app.aaps.ui.compose.manageSheet
 
-import app.aaps.core.ui.compose.stringResourceOrNull
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -58,6 +57,7 @@ import app.aaps.core.ui.compose.navigation.description
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.label
 import app.aaps.core.ui.compose.rememberBringIntoViewOnExpand
+import app.aaps.core.ui.compose.stringResourceOrNull
 import app.aaps.core.ui.R as CoreUiR
 
 @OptIn(ExperimentalMaterial3Api::class)

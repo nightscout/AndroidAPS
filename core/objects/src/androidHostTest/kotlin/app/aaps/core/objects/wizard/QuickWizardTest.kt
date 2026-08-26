@@ -18,7 +18,6 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import javax.inject.Provider
 
 class QuickWizardTest : TestBaseWithProfile() {
 

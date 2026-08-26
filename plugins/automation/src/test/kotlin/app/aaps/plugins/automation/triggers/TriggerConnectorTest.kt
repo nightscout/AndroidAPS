@@ -3,9 +3,9 @@ package app.aaps.plugins.automation.triggers
 import app.aaps.plugins.automation.asJsonObject
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
-import org.skyscreamer.jsonassert.JSONAssert
 import org.json.JSONException
 import org.junit.jupiter.api.Test
+import org.skyscreamer.jsonassert.JSONAssert
 import kotlin.test.assertIs
 
 class TriggerConnectorTest : TriggerTestBase() {

@@ -1,7 +1,5 @@
 package app.aaps.ui.compose.clientcontrol
 
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.keys.interfaces.TextRef
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,8 +18,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.FailureReason
-import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.core.interfaces.clientcontrol.PendingAction
+import app.aaps.core.ui.clientcontrol.failText
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.R
 import app.aaps.core.ui.R as CoreUiR
 

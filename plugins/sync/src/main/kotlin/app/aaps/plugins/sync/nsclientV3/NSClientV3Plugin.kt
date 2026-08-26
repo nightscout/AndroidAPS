@@ -13,7 +13,6 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.HR
 import app.aaps.core.data.model.HasIDs
 import app.aaps.core.data.model.SC
@@ -51,6 +50,7 @@ import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.nssdk.NSAndroidClientImpl
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientState
@@ -79,7 +79,6 @@ import app.aaps.plugins.sync.nsclientV3.extensions.toNSSvgV3
 import app.aaps.plugins.sync.nsclientV3.extensions.toNSTemporaryBasal
 import app.aaps.plugins.sync.nsclientV3.extensions.toNSTemporaryTarget
 import app.aaps.plugins.sync.nsclientV3.extensions.toNSTherapyEvent
-import app.aaps.plugins.sync.nsclientV3.json.JsonBridge.toKotlinxJson
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientLongKey
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientStringKey

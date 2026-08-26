@@ -1,6 +1,5 @@
 package app.aaps.ui.compose.quickLaunch
 
-import app.aaps.core.ui.compose.stringResource
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -48,14 +47,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.navigation.ElementCategory
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.TonalIcon
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.R
 import kotlinx.coroutines.launch
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
+import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 fun QuickLauchConfigScreen(

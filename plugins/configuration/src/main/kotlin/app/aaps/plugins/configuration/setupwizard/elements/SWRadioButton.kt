@@ -7,7 +7,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringPreferenceKey
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.preference.InlineStringListPreferenceItem
 import app.aaps.core.ui.compose.stringResource
 import javax.inject.Inject

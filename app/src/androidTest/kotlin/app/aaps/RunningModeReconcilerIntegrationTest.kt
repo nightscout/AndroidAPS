@@ -22,10 +22,11 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.helpers.IntegrationWaits
 import app.aaps.helpers.RxHelper
 import app.aaps.implementation.profile.ProfileFunctionImpl
-import app.aaps.workers.RunningModeExpiryScheduler
-import app.aaps.workers.RunningModeExpiryWorker
+import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
+import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryWorker
 import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler
 import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
+import app.aaps.testcategories.ShardB
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.launch
@@ -38,7 +39,6 @@ import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
-import app.aaps.testcategories.ShardB
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.minutes
 

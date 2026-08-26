@@ -5,8 +5,7 @@ import app.aaps.pump.medtrum.comm.enums.BasalType
 import app.aaps.pump.medtrum.comm.enums.MedtrumPumpState
 import app.aaps.pump.medtrum.util.MedtrumTimeUtil
 import com.google.common.truth.Truth.assertThat
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import org.junit.jupiter.api.Test
 
 class NotificationPacketTest : MedtrumTestBase() {
@@ -15,14 +14,13 @@ class NotificationPacketTest : MedtrumTestBase() {
 
     /** Test base behavior of the Notification packet  */
 
-    private val packetInjector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is NotificationPacket) {
+    private val packetInjector = MetroMemberInjector {
+        if (it is NotificationPacket) {
                 it.aapsLogger = aapsLogger
                 it.medtrumPump = medtrumPump
                 it.medtrumTimeUtil = medtrumTimeUtil
-            }
         }
+        true
     }
 
     @Test fun handleNotificationGivenStatusAndDataThenStateSaved() {

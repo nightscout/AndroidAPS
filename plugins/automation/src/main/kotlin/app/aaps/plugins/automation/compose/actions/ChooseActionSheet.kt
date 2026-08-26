@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.actions.Action
-import app.aaps.plugins.automation.compose.iconColor
 import app.aaps.plugins.automation.actions.ActionAlarm
 import app.aaps.plugins.automation.actions.ActionCarePortalEvent
 import app.aaps.plugins.automation.actions.ActionDisableScene
@@ -42,6 +41,7 @@ import app.aaps.plugins.automation.actions.ActionSettingsExport
 import app.aaps.plugins.automation.actions.ActionStartTempTarget
 import app.aaps.plugins.automation.actions.ActionStopProcessing
 import app.aaps.plugins.automation.actions.ActionStopTempTarget
+import app.aaps.plugins.automation.compose.iconColor
 
 enum class ActionCategory(val labelResId: Int) {
     Targets(R.string.automation_category_targets),

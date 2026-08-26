@@ -1,6 +1,5 @@
 package app.aaps.plugins.sync.tidepool
 
-import kotlin.reflect.KClass
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -26,6 +25,7 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import kotlin.reflect.KClass
 
 class TidepoolPluginTest : TestBaseWithProfile() {
 

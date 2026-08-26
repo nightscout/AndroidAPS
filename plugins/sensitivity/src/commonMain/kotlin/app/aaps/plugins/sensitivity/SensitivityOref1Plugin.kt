@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.resources.TextResolver
@@ -23,8 +24,20 @@ import app.aaps.core.utils.MidnightUtils
 import app.aaps.core.utils.Percentile
 import app.aaps.plugins.sensitivity.extensions.isPSEvent5minBack
 import app.aaps.plugins.sensitivity.extensions.isTherapyEventEvent5minBack
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 import kotlin.math.roundToInt
+import dev.zacsweers.metro.IntKey as MetroIntKey
 
+@Inject
+@SingleIn(AppScope::class)
+// Bound as PluginBase, not implicitly: the class has more than one supertype, so Metro cannot pick
+// one. The plugin list wants PluginBase.
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@MetroIntKey(120)
 class SensitivityOref1Plugin(
     aapsLogger: AAPSLogger,
     override val rh: TextResolver,

@@ -37,6 +37,14 @@
         android:label="@string/app_name"
         android:theme="@android:style/Theme.DeviceDefault">
 
+        <!-- androidx.wear.watchfacepush declares the wear-sdk platform library as required, which
+             blocks install on watches older than Wear OS 4 (INSTALL_FAILED_MISSING_SHARED_LIBRARY).
+             Make it optional: all Watch Face Push usage is guarded by SDK checks (Wear OS 6+). -->
+        <uses-library
+            android:name="wear-sdk"
+            android:required="false"
+            tools:node="replace" />
+
         <meta-data
             android:name="com.google.android.wearable.standalone"
             android:value="false" />

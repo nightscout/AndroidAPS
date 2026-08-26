@@ -21,10 +21,10 @@ import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.wear.R
 import app.aaps.wear.interaction.activities.renderBgGraph
-import androidx.compose.ui.graphics.Canvas as ComposeCanvas
-import app.aaps.wear.data.ComplicationData as ComplicationStore
 import javax.inject.Inject
 import kotlin.math.sin
+import androidx.compose.ui.graphics.Canvas as ComposeCanvas
+import app.aaps.wear.data.ComplicationData as ComplicationStore
 
 /**
  * BG Graph Complication

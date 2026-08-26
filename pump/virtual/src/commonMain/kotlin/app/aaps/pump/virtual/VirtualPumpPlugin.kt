@@ -1,6 +1,5 @@
 package app.aaps.pump.virtual
 
-import kotlinx.coroutines.delay
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -15,6 +14,7 @@ import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PermissionGroup
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.BolusProgressData
@@ -38,25 +38,52 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.withEntries
+import app.aaps.core.ui.UiStrings
 import app.aaps.core.ui.compose.icons.IcPluginVirtualPump
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.pump.virtual.extensions.toText
 import app.aaps.pump.virtual.keys.VirtualBooleanNonPreferenceKey
+import app.aaps.pump.virtual.keys.VirtualStringNonPreferenceKey
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 import kotlinx.coroutines.CoroutineScope
-import app.aaps.core.ui.UiStrings
-import kotlin.time.Clock
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlin.time.Clock
 
-
-open class VirtualPumpPlugin(
+/*
+ * Built AND registered by the graph, from common code.
+ *
+ * Every annotation here is Metro's, and Metro's are multiplatform, so this file still compiles for iOS.
+ * That is the whole point: `:app` used to construct this plugin by hand in `VirtualPumpModule` and bind
+ * it there, for the single reason that one Dagger annotation in a KMP module would have pinned it to the
+ * JVM. Nothing about this plugin lives in `:app` any more.
+ *
+ * No `@AllConfigs` qualifier on the map entry, even though the Dagger binding had one. `:app` merges the
+ * unqualified Metro bucket unconditionally - see `PluginSource("Metro", ...)` in `AppModule` - which is
+ * exactly what `@AllConfigs` meant. Using the qualifier would have been worse than redundant: nothing
+ * reads a Metro `@AllConfigs` map, so the plugin would have vanished from the list without an error.
+ *
+ * Key 1000 is virtual pump's own. Real pump drivers use the `@PumpDriver` map from 1010 up.
+ */
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@IntKey(1000)
+@ContributesBinding(AppScope::class, binding = binding<VirtualPump>())
+@SingleIn(AppScope::class)
+open class VirtualPumpPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     override val rh: TextResolver,
@@ -66,6 +93,10 @@ open class VirtualPumpPlugin(
     private val config: Config,
     private val dateUtil: DateUtil,
     private val persistenceLayer: PersistenceLayer,
+    // A plain lambda, which is what Metro wants here: it reads a parameterless function type as its own
+    // provider form, and warns that `Provider<T>` is the discouraged spelling. (The rule that a `() -> T`
+    // is refused applies to graph FACTORY parameters, not to an injected constructor - a distinction
+    // worth keeping straight, because it decides whether a class needs its signature changed at all.)
     private val pumpEnactResultProvider: () -> PumpEnactResult,
     private val ch: ConcentrationHelper,
     private val profileFunction: ProfileFunction,
@@ -380,7 +411,20 @@ open class VirtualPumpPlugin(
 
     override fun manufacturer(): ManufacturerType = pumpDescription.pumpType.manufacturer()
     override fun model(): PumpType = pumpDescription.pumpType
-    override fun serialNumber(): String = virtualPumpSerialNumber()
+    /**
+     * Generated on the first read and kept from then on.
+     *
+     * `by lazy` rather than a check in [serialNumber]: this is read on every `pumpSync` entry, and the
+     * plugin is a singleton, so one synchronised initialisation is both cheaper and free of the race
+     * where two callers each draw a code and one of them wins the write.
+     */
+    private val serial: String by lazy {
+        preferences.get(VirtualStringNonPreferenceKey.SerialNumber).ifBlank {
+            generateVirtualPumpSerial().also { preferences.put(VirtualStringNonPreferenceKey.SerialNumber, it) }
+        }
+    }
+
+    override fun serialNumber(): String = serial
     override fun canHandleDST(): Boolean = true
 
     fun refreshConfiguration() {

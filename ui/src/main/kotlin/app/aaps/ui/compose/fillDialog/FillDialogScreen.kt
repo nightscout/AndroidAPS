@@ -1,6 +1,5 @@
 package app.aaps.ui.compose.fillDialog
 
-import app.aaps.core.ui.compose.stringResourceOrNull
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -69,6 +68,7 @@ import app.aaps.core.ui.compose.navigation.label
 import app.aaps.core.ui.compose.preference.PreferenceSheetContent
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.siteRotation.SiteLocationSummary
+import app.aaps.core.ui.compose.stringResourceOrNull
 import app.aaps.ui.R
 import app.aaps.ui.compose.EventDatePicker
 import app.aaps.ui.compose.EventTimePicker

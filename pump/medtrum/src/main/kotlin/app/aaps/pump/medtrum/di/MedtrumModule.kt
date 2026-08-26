@@ -5,33 +5,21 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.pump.medtrum.MedtrumPlugin
 import app.aaps.pump.medtrum.ble.MedtrumBleTransport
 import app.aaps.pump.medtrum.ble.MedtrumBleTransportImpl
-import app.aaps.pump.medtrum.services.MedtrumService
 import dagger.Binds
 import dagger.Module
-import dagger.android.ContributesAndroidInjector
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntKey
 import dagger.multibindings.IntoMap
-import javax.inject.Singleton
 
-@Module(includes = [MedtrumCommModule::class])
+@Module
 @InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class MedtrumModule {
 
-    // SERVICE
-    @ContributesAndroidInjector
-    abstract fun contributesMedtrumService(): MedtrumService
-
+    // Scope on the implementation, not the binding: Metro reads this module now that interop is on for
+    // the module, and it rejects a scoped @Binds. The class carries @Singleton itself.
     @Binds
-    @Singleton
     abstract fun bindMedtrumBleTransport(impl: MedtrumBleTransportImpl): MedtrumBleTransport
 
-    // Pump plugin registration — @IntKey range 1000–1200, see PluginsListModule for overview
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @IntKey(1120)
-    abstract fun bindMedtrumPlugin(plugin: MedtrumPlugin): PluginBase
 }

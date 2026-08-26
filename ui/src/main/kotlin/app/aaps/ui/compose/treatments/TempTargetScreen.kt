@@ -35,9 +35,6 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Translator
-import app.aaps.core.ui.extensions.highValueToUnitsToString
-import app.aaps.core.ui.extensions.lowValueToUnitsToString
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDateUtil
@@ -45,8 +42,11 @@ import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.icons.Ns
+import app.aaps.core.ui.extensions.highValueToUnitsToString
+import app.aaps.core.ui.extensions.lowValueToUnitsToString
 import app.aaps.ui.compose.components.ContentContainer
 import app.aaps.ui.compose.treatments.viewmodels.TempTargetViewModel
+import app.aaps.core.ui.R as CoreUiR
 
 /**
  * Composable screen displaying temporary targets with delete and show hidden functionality.

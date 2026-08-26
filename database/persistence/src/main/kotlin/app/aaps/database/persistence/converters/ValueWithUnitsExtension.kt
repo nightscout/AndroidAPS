@@ -1,6 +1,5 @@
 package app.aaps.database.persistence.converters
 
-import app.aaps.core.data.model.TE
 import app.aaps.core.data.ue.ValueWithUnit
 
 fun app.aaps.database.entities.ValueWithUnit.fromDb(): app.aaps.core.data.ue.ValueWithUnit =

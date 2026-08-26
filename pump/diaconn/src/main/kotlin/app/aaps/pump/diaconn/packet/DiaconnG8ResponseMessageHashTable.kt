@@ -1,12 +1,12 @@
 package app.aaps.pump.diaconn.packet
 
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class DiaconnG8ResponseMessageHashTable @Inject constructor(
-    private val injector: HasAndroidInjector
+    private val injector: MetroMemberInjector
 ) {
 
     var messages: HashMap<Int, DiaconnG8Packet> = HashMap()

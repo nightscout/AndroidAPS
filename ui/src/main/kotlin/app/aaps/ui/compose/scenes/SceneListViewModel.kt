@@ -9,7 +9,6 @@ import app.aaps.core.data.model.Scene
 import app.aaps.core.data.model.SceneAction
 import app.aaps.core.data.model.SceneEndAction
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
-import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.profile.ProfileRepository
@@ -28,7 +27,11 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.extensions.profileNames
 import app.aaps.core.objects.extensions.toScenes
 import app.aaps.core.ui.R
-import dagger.hilt.android.lifecycle.HiltViewModel
+import app.aaps.core.ui.clientcontrol.failText
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -42,7 +45,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
+// Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
+// unscoped so each screen gets its own.
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 @Stable
 class SceneListViewModel @Inject constructor(
     private val sceneRepository: SceneStore,

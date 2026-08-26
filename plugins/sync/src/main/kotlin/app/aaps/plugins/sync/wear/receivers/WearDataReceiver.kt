@@ -9,11 +9,15 @@ import app.aaps.core.interfaces.receivers.Intents
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.weardata.EventData
+import app.aaps.core.objects.workflow.MetroBroadcastReceiver
 import app.aaps.core.utils.receivers.BundleLogger
-import dagger.android.DaggerBroadcastReceiver
+import dev.zacsweers.metro.HasMemberInjections
 import javax.inject.Inject
 
-open class WearDataReceiver : DaggerBroadcastReceiver() {
+// The annotation is Metro's requirement for a non-final class with injected fields. Nothing subclasses
+// this today, but if something does it needs its own map entry - the lookup uses the runtime class.
+@HasMemberInjections
+open class WearDataReceiver : MetroBroadcastReceiver() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var config: Config

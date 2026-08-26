@@ -1,6 +1,7 @@
 package app.aaps.plugins.automation.actions
 
 import android.content.Context
+import app.aaps.core.interfaces.alerts.ReminderScheduler
 import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -21,9 +22,8 @@ import app.aaps.core.interfaces.scenes.SceneIconResolver
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.interfaces.alerts.ReminderScheduler
-import app.aaps.plugins.automation.triggers.TriggerDeps
 import app.aaps.core.utils.lenientString
+import app.aaps.plugins.automation.triggers.TriggerDeps
 import kotlinx.serialization.json.JsonObject
 import javax.inject.Inject
 import javax.inject.Provider

@@ -6,10 +6,10 @@ import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.format.NumberFormatPlatform
 import app.aaps.core.interfaces.R
 import app.aaps.core.interfaces.resources.TextResolver
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.interfaces.utils.TimeDiff
+import app.aaps.core.keys.interfaces.TextRef
 import java.security.SecureRandom
 import java.time.Clock
 import java.time.Instant

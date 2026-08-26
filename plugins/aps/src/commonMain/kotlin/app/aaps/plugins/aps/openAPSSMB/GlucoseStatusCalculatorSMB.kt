@@ -11,9 +11,12 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.plugins.aps.openAPS.DeltaCalculator
 import app.aaps.plugins.aps.openAPSSMB.extensions.asRounded
 import app.aaps.plugins.aps.openAPSSMB.extensions.log
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 
-
-class GlucoseStatusCalculatorSMB constructor(
+@SingleIn(AppScope::class)
+class GlucoseStatusCalculatorSMB @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val iobCobCalculator: IobCobCalculator,
     private val dateUtil: DateUtil,

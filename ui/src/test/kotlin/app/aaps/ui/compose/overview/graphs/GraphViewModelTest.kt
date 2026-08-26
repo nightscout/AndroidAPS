@@ -45,7 +45,8 @@ internal class GraphViewModelTest {
         // init{} builds a cold flow chain (.drop(1)...) on each observed key — must be non-null.
         whenever(preferences.observe(UnitDoubleKey.OverviewHighMark)).thenReturn(MutableStateFlow(180.0))
         whenever(preferences.observe(UnitDoubleKey.OverviewLowMark)).thenReturn(MutableStateFlow(72.0))
-        sut = GraphViewModel(cache, graphConfigRepository, aapsLogger, preferences, dateUtil, rh)
+        // fullWindow = false: the overview behaviour, where the axis hugs the data.
+        sut = GraphViewModel(cache, false, graphConfigRepository, aapsLogger, preferences, dateUtil, rh)
     }
 
     @AfterEach

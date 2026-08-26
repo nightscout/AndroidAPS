@@ -2,7 +2,6 @@ package app.aaps.plugins.source.instara
 
 import android.content.Context
 import android.content.Intent
-import androidx.hilt.work.HiltWorker
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
@@ -14,8 +13,10 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
+import app.aaps.core.objects.workflow.MetroWorkerCreator
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
@@ -24,15 +25,25 @@ import java.util.Locale
 import java.util.concurrent.TimeUnit
 import kotlin.time.Duration.Companion.minutes
 
-@HiltWorker
+
 class InstaraStaleCheckWorker @AssistedInject constructor(
-    @Assisted ctx: Context,
+    @Assisted context: Context,
     @Assisted params: WorkerParameters,
     aapsLogger: AAPSLogger,
     fabricPrivacy: FabricPrivacy,
     private val persistenceLayer: PersistenceLayer,
     private val preferences: Preferences
-) : LoggingWorker(ctx, params, Dispatchers.Default, aapsLogger, fabricPrivacy) {
+) : LoggingWorker(context, params, Dispatchers.Default, aapsLogger, fabricPrivacy) {
+
+    /**
+     * Metro builds this worker. The parameter names must match [MetroWorkerCreator],
+     * because Metro matches assisted parameters by name and not only by type.
+     */
+    @AssistedFactory
+    fun interface Factory : MetroWorkerCreator {
+
+        override fun create(context: Context, params: WorkerParameters): InstaraStaleCheckWorker
+    }
 
     override suspend fun doWorkAndLog(): Result = withContext(Dispatchers.IO) {
         val enabledNow = preferences.get(InstaraBooleanKey.HistoryRequestEnabled)

@@ -9,12 +9,15 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.plugins.aps.openAPS.DeltaCalculator
 import app.aaps.plugins.aps.openAPSAutoISF.extensions.asRounded
 import app.aaps.plugins.aps.openAPSAutoISF.extensions.log
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlin.math.pow
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 
-
-class GlucoseStatusCalculatorAutoIsf constructor(
+@SingleIn(AppScope::class)
+class GlucoseStatusCalculatorAutoIsf @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val iobCobCalculator: IobCobCalculator,
     private val dateUtil: DateUtil,

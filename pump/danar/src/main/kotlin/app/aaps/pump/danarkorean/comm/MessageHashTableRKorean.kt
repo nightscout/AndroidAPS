@@ -31,13 +31,13 @@ import app.aaps.pump.danar.comm.MsgSettingShippingInfo
 import app.aaps.pump.danar.comm.MsgStatusBolusExtended
 import app.aaps.pump.danar.comm.MsgStatusProfile
 import app.aaps.pump.danar.comm.MsgStatusTempBasal
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class MessageHashTableRKorean @Inject constructor(
-    private val injector: HasAndroidInjector
+    private val injector: MetroMemberInjector
 ) : MessageHashTableBase {
 
     private var messages: HashMap<Int, MessageBase> = HashMap()

@@ -1,6 +1,5 @@
 package app.aaps.ui.compose.configuration
 
-import app.aaps.core.ui.compose.stringResource
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,6 +31,7 @@ import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.preference.SyncBadge
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.plugin.HardwarePumpConfirmation
 
 @Composable

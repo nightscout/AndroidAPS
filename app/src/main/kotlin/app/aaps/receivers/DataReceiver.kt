@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.receivers.Intents
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.objects.workflow.MetroBroadcastReceiver
 import app.aaps.core.utils.extensions.copyBoolean
 import app.aaps.core.utils.extensions.copyDouble
 import app.aaps.core.utils.extensions.copyLong
@@ -32,10 +33,13 @@ import app.aaps.plugins.source.TomatoPlugin
 import app.aaps.plugins.source.XdripInbox
 import app.aaps.plugins.source.instara.InstaraPlugin
 import app.aaps.plugins.sync.smsCommunicator.SmsInbox
-import dagger.android.DaggerBroadcastReceiver
+import dev.zacsweers.metro.HasMemberInjections
 import javax.inject.Inject
 
-open class DataReceiver : DaggerBroadcastReceiver() {
+// Metro reads this class now that interop is on for `:app`. It is `open`, so it has to say its injected
+// fields are meant to be filled - Metro will not infer that for a subclassable type.
+@HasMemberInjections
+open class DataReceiver : MetroBroadcastReceiver() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var dataInbox: DataInbox

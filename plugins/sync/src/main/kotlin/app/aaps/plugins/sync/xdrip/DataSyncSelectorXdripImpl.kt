@@ -16,11 +16,16 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
 import app.aaps.plugins.sync.xdrip.keys.XdripLongKey
 import dagger.Lazy
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Inject
-import javax.inject.Singleton
 
 @Suppress("unused")
-@Singleton
+// Metro builds this; Dagger receives it via a @Provides delegate in `:app`. Metro's @SingleIn,
+// not javax @Singleton, because the graph is generated in `:app`.
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class DataSyncSelectorXdripImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,

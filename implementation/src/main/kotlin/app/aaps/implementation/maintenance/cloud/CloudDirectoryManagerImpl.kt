@@ -9,10 +9,14 @@ import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.icons.IcGoogleDrive
 import app.aaps.implementation.R
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+// Metro builds this; Dagger receives it via a @Provides delegate in `:app`.
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class CloudDirectoryManagerImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,

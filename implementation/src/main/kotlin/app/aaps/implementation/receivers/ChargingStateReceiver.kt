@@ -8,10 +8,20 @@ import androidx.annotation.VisibleForTesting
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore.ChargingStatus
-import dagger.android.DaggerBroadcastReceiver
-import javax.inject.Inject
+import app.aaps.core.objects.workflow.MetroBroadcastReceiver
+import dev.zacsweers.metro.Inject
 
-class ChargingStateReceiver : DaggerBroadcastReceiver() {
+/**
+ * Converted off dagger.android to Metro, as the proof that `@ContributesAndroidInjector` can be
+ * replaced.
+ *
+ * `DaggerBroadcastReceiver` used to call `AndroidInjection.inject(this, context)` from its `onReceive`.
+ * The call below does the same job through [MetroMemberInjector], which the `Application` implements.
+ * The difference is invisible here and important one layer down: Metro built the injector at compile
+ * time, so a missing binding for this class is a build error rather than a crash when the battery
+ * state next changes.
+ */
+class ChargingStateReceiver : MetroBroadcastReceiver() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var receiverStatusStore: ReceiverStatusStore

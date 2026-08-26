@@ -6,7 +6,10 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.ui.compose.overview.graphs.GraphViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,7 +17,10 @@ import java.util.Calendar
 import java.util.GregorianCalendar
 import javax.inject.Inject
 
-@HiltViewModel
+// Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
+// unscoped so each screen gets its own.
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 class HistoryViewModel @Inject constructor(
     private val historyScope: HistoryScope,
     private val calculationWorkflow: CalculationWorkflow,
@@ -37,7 +43,7 @@ class HistoryViewModel @Inject constructor(
 
     /** Creates the per-scope graph VM. Called by [HistoryScreen] via `viewModel(factory = …)`. */
     fun createGraphViewModel(): GraphViewModel =
-        graphViewModelFactory.create(historyScope.cache)
+        graphViewModelFactory.create(historyScope.cache, fullWindow = true)
 
     fun previousWindow() {
         adjustTimeRange(historyScope.overviewData.fromTime - WINDOW_MS)
@@ -96,6 +102,11 @@ class HistoryViewModel @Inject constructor(
     }
 
     private fun runCalculation(from: String) {
+        // Clear the old window before recalculating. The worker fills the cache one series at a time
+        // and BG comes last, so without this the graph shows the new date over the previous day's
+        // blood glucose for the several seconds the calculation takes - insulin and BG history that
+        // never belonged to the day on the label. The progress bar already tells the user to wait.
+        historyScope.cache.reset()
         calculationWorkflow.runCalculation(
             job = CalculationWorkflow.HISTORY_CALCULATION,
             iobCobCalculator = historyScope.iobCobCalculator,

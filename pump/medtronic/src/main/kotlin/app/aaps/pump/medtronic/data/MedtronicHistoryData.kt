@@ -1,6 +1,5 @@
 package app.aaps.pump.medtronic.data
 
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -14,6 +13,7 @@ import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.keys.interfaces.LongNonPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.utils.DateTimeUtil
 import app.aaps.core.utils.StringUtil
 import app.aaps.pump.common.sync.PumpDbEntry

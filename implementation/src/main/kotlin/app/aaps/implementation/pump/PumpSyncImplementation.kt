@@ -1,6 +1,5 @@
 package app.aaps.implementation.pump
 
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
 import app.aaps.core.data.model.EB
@@ -29,12 +28,18 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
 import app.aaps.implementation.extensions.toUeSource
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import javax.inject.Inject
 
+// Deliberately NOT scoped, matching the Dagger @Binds this replaces: there was no @Singleton on the
+// class, so every injection site got its own. Adding a scope here would be a behaviour change.
+@ContributesBinding(AppScope::class)
 class PumpSyncImplementation @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,

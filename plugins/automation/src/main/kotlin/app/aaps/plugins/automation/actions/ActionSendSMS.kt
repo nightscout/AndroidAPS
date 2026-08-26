@@ -1,17 +1,17 @@
 package app.aaps.plugins.automation.actions
 
-import javax.inject.Provider
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.ui.compose.icons.IcPluginSms
-import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.lenientString
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputString
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+import javax.inject.Provider
 
 class ActionSendSMS(
     aapsLogger: AAPSLogger,

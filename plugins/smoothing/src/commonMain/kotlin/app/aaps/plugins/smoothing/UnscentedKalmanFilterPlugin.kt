@@ -2,7 +2,8 @@ package app.aaps.plugins.smoothing
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Timeline
-import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.data.format.NumberFormatPlatform
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TrendArrow
@@ -10,6 +11,7 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.TextResolver
@@ -18,7 +20,12 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.smoothing.keys.UkfDoubleNonKey
 import app.aaps.plugins.smoothing.keys.UkfIntNonKey
 import app.aaps.plugins.smoothing.keys.UkfLongNonKey
-import kotlin.time.Clock
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -26,8 +33,6 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import app.aaps.core.data.format.NumberFormat
-import app.aaps.core.data.format.NumberFormatPlatform
 import kotlin.concurrent.atomics.AtomicBoolean
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.math.abs
@@ -35,6 +40,7 @@ import kotlin.math.exp
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sqrt
+import kotlin.time.Clock
 
 /**
  * Adaptive Unscented Kalman Filter with RTS smoothing.
@@ -62,6 +68,12 @@ import kotlin.math.sqrt
  */
 
 @OptIn(ExperimentalAtomicApi::class)
+@Inject
+@SingleIn(AppScope::class)
+// Bound as PluginBase, not implicitly: these classes have two supertypes (PluginBase and Smoothing),
+// so Metro cannot pick one. The plugin list wants PluginBase.
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@IntKey(630)
 class UnscentedKalmanFilterPlugin(
     aapsLogger: AAPSLogger,
     rh: TextResolver,

@@ -1,8 +1,8 @@
 package app.aaps.plugins.sync.smsCommunicator
 
 import android.telephony.SmsMessage
-import app.aaps.core.interfaces.smsCommunicator.smsFromMessage
 import app.aaps.core.interfaces.smsCommunicator.Sms
+import app.aaps.core.interfaces.smsCommunicator.smsFromMessage
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test

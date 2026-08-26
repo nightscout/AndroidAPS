@@ -1,5 +1,11 @@
 package info.nightscout.pump.combov2
 
+import app.aaps.core.interfaces.di.PumpDriver
+import app.aaps.core.interfaces.plugin.PluginBase
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.IntKey as MetroIntKey
+import dev.zacsweers.metro.binding
 import android.content.Context
 import android.content.Intent
 import app.aaps.core.data.model.BS
@@ -113,6 +119,9 @@ import info.nightscout.comboctl.main.PumpManager as ComboCtlPumpManager
 
 internal const val PUMP_ERROR_TIMEOUT_INTERVAL_MSECS = 1000L * 60 * 5
 
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@PumpDriver
+@MetroIntKey(1060)
 @Singleton
 class ComboV2Plugin @Inject constructor(
     aapsLogger: AAPSLogger,

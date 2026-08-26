@@ -38,7 +38,6 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
 import app.aaps.core.keys.interfaces.withEntries
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.icons.IcPluginEopatch
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.pump.eopatch.alarm.IAlarmManager
@@ -73,6 +72,7 @@ import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
 import kotlin.math.abs
+import app.aaps.core.ui.R as CoreUiR
 
 @Singleton
 class EopatchPumpPlugin @Inject constructor(

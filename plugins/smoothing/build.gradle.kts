@@ -5,6 +5,9 @@ plugins {
     alias(libs.plugins.android.kmp.library)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.multiplatform)
+    // Metro is a Kotlin COMPILER plugin, not KSP. It is pinned to the Kotlin version, so the first
+    // question is simply whether a build exists for the Kotlin this repo uses.
+    alias(libs.plugins.metro)
 }
 
 // Same generator as :core:ui and :pump:virtual, pointed at this module's strings. The strings

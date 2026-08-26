@@ -2,7 +2,6 @@ import com.android.build.api.variant.ApplicationAndroidComponentsExtension
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.Date
-import javax.inject.Inject
 
 plugins {
     alias(libs.plugins.ksp)

@@ -10,8 +10,7 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.pump.medtrum.MedtrumTestBase
 import app.aaps.pump.medtrum.util.MedtrumTimeUtil
 import com.google.common.truth.Truth.assertThat
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -28,17 +27,16 @@ class GetRecordPacketTest : MedtrumTestBase() {
 
     @Mock private lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
 
-    private val packetInjector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is GetRecordPacket) {
+    private val packetInjector = MetroMemberInjector {
+        if (it is GetRecordPacket) {
                 it.aapsLogger = aapsLogger
                 it.medtrumPump = medtrumPump
                 it.pumpSync = pumpSync
                 it.detailedBolusInfoStorage = detailedBolusInfoStorage
                 it.dateUtil = dateUtil
                 it.medtrumTimeUtil = medtrumTimeUtil
-            }
         }
+        true
     }
 
     @Test fun getRequestGivenPacketWhenCalledThenReturnOpCode() {

@@ -6,8 +6,10 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.scenes.SceneChainResolver
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Single source of truth for the "can we chain to a follow-up scene right now?" policy.
@@ -29,7 +31,10 @@ import javax.inject.Singleton
  * conservative on AAPSClient is the safe direction — never offers a chain that would later
  * fail at execution.
  */
-@Singleton
+// Metro builds this; Dagger receives it via a @Provides delegate in `:app`. Metro's @SingleIn,
+// not javax @Singleton, because the graph is generated in `:app`.
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class SceneChainTargetResolver @Inject constructor(
     private val loop: Loop,
     private val activePlugin: ActivePlugin,

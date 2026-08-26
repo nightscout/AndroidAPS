@@ -51,7 +51,6 @@ import app.aaps.core.objects.wizard.BolusWizard
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.core.ui.R
-import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.compose.formatMinutesAsDuration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -62,6 +61,7 @@ import javax.inject.Provider
 import javax.inject.Singleton
 import kotlin.math.abs
 import kotlin.math.ceil
+import app.aaps.core.interfaces.R as InterfacesR
 
 /**
  * [WizardBolusExecutor] implementation. The `BolusWizard`/`QuickWizardEntry` compute objects stay

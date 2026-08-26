@@ -1,6 +1,5 @@
 package app.aaps.plugins.calibration
 
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.CAL
 import app.aaps.core.data.model.GV
@@ -21,6 +20,7 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest

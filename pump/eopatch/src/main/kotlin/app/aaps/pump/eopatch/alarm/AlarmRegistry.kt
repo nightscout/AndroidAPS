@@ -28,25 +28,32 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.time.Duration.Companion.hours
 
+/**
+ * These were `@Inject lateinit var` fields filled after construction, with the setup below in an
+ * `@Inject fun onInit()`. That is Dagger method injection, which Metro does not support - it crashes the
+ * compiler on it (ZacSweers/metro#2735). Constructor parameters give the same objects at the same point
+ * and let the setup move into `init`, where the fields are guaranteed to be there.
+ *
+ * Nothing outside this class read those fields; callers only use the [IAlarmRegistry] methods.
+ */
 @Singleton
-class AlarmRegistry @Inject constructor() : IAlarmRegistry {
+class AlarmRegistry @Inject constructor(
+    private val mContext: Context,
+    private val pm: PreferenceManager,
+    private val patchConfig: PatchConfig,
+    private val rxBus: RxBus,
+    private val notificationManager: NotificationManager,
+    private val aapsLogger: AAPSLogger,
+    private val aapsSchedulers: AapsSchedulers,
+    private val dateUtil: DateUtil,
+    private val alarms: Alarms
+) : IAlarmRegistry {
 
-    @Inject lateinit var mContext: Context
-    @Inject lateinit var pm: PreferenceManager
-    @Inject lateinit var patchConfig: PatchConfig
-    @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var notificationManager: NotificationManager
-    @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var alarms: Alarms
-
-    private lateinit var mOsAlarmManager: AlarmManager
+    private val mOsAlarmManager: AlarmManager = mContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     private var mDisposable: Disposable? = null
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
 
-    @Inject fun onInit() {
-        mOsAlarmManager = mContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    init {
         mDisposable = pm.observePatchLifeCycle()
             .observeOn(aapsSchedulers.main)
             .subscribe {

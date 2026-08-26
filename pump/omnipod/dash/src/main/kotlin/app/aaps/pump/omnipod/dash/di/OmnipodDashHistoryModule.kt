@@ -8,7 +8,6 @@ import app.aaps.pump.omnipod.dash.history.database.HistoryRecordDao
 import app.aaps.pump.omnipod.dash.history.mapper.HistoryMapper
 import dagger.Module
 import dagger.Provides
-import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
@@ -26,12 +25,14 @@ class OmnipodDashHistoryModule {
     internal fun provideHistoryRecordDao(dashHistoryDatabase: DashHistoryDatabase): HistoryRecordDao =
         dashHistoryDatabase.historyRecordDao()
 
+    // Was @Reusable, which Metro does not support. HistoryMapper holds no state, so @Singleton is the
+    // safe replacement: one instance instead of "one or more", never fewer.
     @Provides
-    @Reusable // no state, let system decide when to reuse or create new.
-    internal fun provideHistoryMapper() = HistoryMapper()
+    @Singleton
+    internal fun provideHistoryMapper(): HistoryMapper = HistoryMapper()
 
     @Provides
     @Singleton
-    internal fun provideDashHistory(dao: HistoryRecordDao, historyMapper: HistoryMapper, logger: AAPSLogger) =
+    internal fun provideDashHistory(dao: HistoryRecordDao, historyMapper: HistoryMapper, logger: AAPSLogger): DashHistory =
         DashHistory(dao, historyMapper, logger)
 }

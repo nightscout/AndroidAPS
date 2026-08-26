@@ -1,6 +1,5 @@
 package app.aaps.ui.compose.scenes
 
-import app.aaps.core.ui.compose.stringResourceOrNull
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -38,7 +37,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.Scene
 import app.aaps.core.data.model.SceneEndAction
@@ -50,7 +48,9 @@ import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.MasterOfflineBanner
 import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.dialogs.ThreeButtonDialog
+import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.navigation.label
+import app.aaps.core.ui.compose.stringResourceOrNull
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,7 +58,7 @@ fun SceneListScreen(
     onNavigateToWizard: () -> Unit,
     onNavigateToEditor: (sceneId: String) -> Unit,
     onNavigateBack: () -> Unit,
-    viewModel: SceneListViewModel = hiltViewModel()
+    viewModel: SceneListViewModel = metroViewModel()
 ) {
     val scenes by viewModel.scenes.collectAsStateWithLifecycle()
     val activeState by viewModel.activeSceneState.collectAsStateWithLifecycle()

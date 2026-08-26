@@ -7,6 +7,9 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.utils.DateUtil
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 
 /**
  * What happens when a temporary running mode reaches its declared end.
@@ -21,7 +24,7 @@ import app.aaps.core.interfaces.utils.DateUtil
  * means we only cancel if there is actually a zero-TBR to clean up.
  *
  * **This holds the decision; the platform holds only the trigger.** On Android the trigger is
- * `RunningModeExpiryWorker`, a `@HiltWorker` in :app, scheduled by `RunningModeExpiryScheduler`.
+ * `RunningModeExpiryWorker` in this module's androidMain, scheduled by `RunningModeExpiryScheduler`.
  * Those cannot live in a multiplatform module because Hilt answers `@HiltWorker`/`@AssistedInject`
  * with generated Java - see `_docs/KMP_IOS_FEASIBILITY.md`, under "Decisions taken". Keeping the
  * decision here means another platform supplies a new trigger, not new behaviour.
@@ -30,7 +33,8 @@ import app.aaps.core.interfaces.utils.DateUtil
  * under its constraints. `BGTaskScheduler` on iOS is best effort and may decline to run at all, so
  * the safety net is weaker there - that gap is real and is not closed by sharing this class.
  */
-class RunningModeExpiryJob(
+@SingleIn(AppScope::class)
+class RunningModeExpiryJob @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val config: Config,
     private val dateUtil: DateUtil,

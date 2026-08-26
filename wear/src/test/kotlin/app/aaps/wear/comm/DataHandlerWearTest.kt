@@ -24,7 +24,6 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.timeout
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
 
 /**
  * Drives [DataHandlerWear]'s message handlers through a REAL [RxBusImpl]. Handlers run on the

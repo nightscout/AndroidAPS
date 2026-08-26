@@ -66,6 +66,7 @@ data class BgInfoUiState(
 @Stable
 class GraphViewModel @AssistedInject constructor(
     @Assisted cache: OverviewDataCache,
+    @Assisted private val fullWindow: Boolean,
     private val graphConfigRepository: GraphConfigRepository,
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
@@ -76,7 +77,14 @@ class GraphViewModel @AssistedInject constructor(
     @AssistedFactory
     interface Factory {
 
-        fun create(cache: OverviewDataCache): GraphViewModel
+        /**
+         * @param fullWindow span the x-axis over the whole calculated window rather than over the
+         *   data in it. The overview wants the data hugged, so the axis does not reserve empty space
+         *   around a gap in readings. The history browser wants the whole chosen day, so that a day
+         *   whose readings start late still draws as a day, and today draws as a day with the
+         *   remaining hours empty.
+         */
+        fun create(cache: OverviewDataCache, fullWindow: Boolean): GraphViewModel
     }
 
     // Chart config - updates when high/low mark preferences change
@@ -180,7 +188,11 @@ class GraphViewModel @AssistedInject constructor(
         val effectivePredictions = if (showPredictions) predictions else emptyList()
         val allTimestamps = (bgReadings + bucketedData + effectivePredictions).map { it.timestamp }
 
-        if (allTimestamps.isEmpty()) {
+        // fullWindow takes the same branch as "no data at all": the axis is the calculated window,
+        // not the extent of what happens to be in it. Without this a day whose readings start in the
+        // evening gets an axis only as wide as those readings, and zooming out to the whole day then
+        // leaves the readings squashed into a corner instead of filling the day.
+        if (allTimestamps.isEmpty() || fullWindow) {
             cacheTimeRange?.let {
                 val upper = if (showPredictions) it.endTime else it.toTime
                 Pair(it.fromTime, upper)

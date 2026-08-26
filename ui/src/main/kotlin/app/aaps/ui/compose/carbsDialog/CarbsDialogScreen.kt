@@ -1,6 +1,5 @@
 package app.aaps.ui.compose.carbsDialog
 
-import app.aaps.core.ui.compose.stringResourceOrNull
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -50,7 +49,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.ui.ConfirmationLine
@@ -64,9 +62,11 @@ import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
+import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.navigation.label
 import app.aaps.core.ui.compose.preference.PreferenceSheetContent
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
+import app.aaps.core.ui.compose.stringResourceOrNull
 import app.aaps.ui.compose.EventDatePicker
 import app.aaps.ui.compose.EventTimePicker
 import app.aaps.ui.compose.components.DialogStatusBar
@@ -79,7 +79,7 @@ import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 fun CarbsDialogScreen(
-    viewModel: CarbsDialogViewModel = hiltViewModel(),
+    viewModel: CarbsDialogViewModel = metroViewModel(),
     carbsButtonsDef: PreferenceSubScreenDef,
     bgInfoState: StateFlow<BgInfoUiState>,
     iobUiState: StateFlow<IobUiState>,

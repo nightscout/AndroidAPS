@@ -1,8 +1,8 @@
 package app.aaps.pump.diaconn.packet
 
 import app.aaps.core.interfaces.logging.LTag
-import dagger.android.HasAndroidInjector
 import app.aaps.pump.diaconn.DiaconnG8Pump
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import javax.inject.Inject
 
 /**
@@ -10,7 +10,7 @@ import javax.inject.Inject
  */
 @Suppress("SpellCheckingInspection")
 class AppCancelSettingPacket(
-    injector: HasAndroidInjector,
+    injector: MetroMemberInjector,
     private var reqMsgType: Byte,
 ) : DiaconnG8Packet(injector) {
 

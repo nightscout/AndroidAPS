@@ -1,8 +1,8 @@
 package app.aaps.plugins.automation.triggers
 
 import app.aaps.plugins.automation.asJsonObject
-import kotlin.test.assertIs
 import org.junit.jupiter.api.Test
+import kotlin.test.assertIs
 
 class TriggerDummyTest : TriggerTestBase() {
 

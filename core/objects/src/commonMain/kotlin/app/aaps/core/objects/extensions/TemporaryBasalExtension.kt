@@ -1,6 +1,5 @@
 package app.aaps.core.objects.extensions
 
-import kotlin.time.Clock
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.TB
@@ -14,6 +13,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.round
+import kotlin.time.Clock
 
 /**
  * True while the temporary basal is running.

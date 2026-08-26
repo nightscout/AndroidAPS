@@ -2,7 +2,6 @@ package app.aaps.database.persistence.converters
 
 import app.aaps.core.data.model.HR
 import app.aaps.core.data.model.IDs
-import app.aaps.database.entities.HeartRate
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 

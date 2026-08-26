@@ -8,10 +8,10 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import dagger.android.DaggerService
-import app.aaps.core.interfaces.rx.collectResilient
+import app.aaps.core.objects.workflow.MetroService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +22,7 @@ import javax.inject.Inject
 /**
  * Keeps AndroidAPS in foreground state, so it won't be terminated by Android nor get restricted by the background execution limits
  */
-class DummyService : DaggerService() {
+class DummyService : MetroService() {
 
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsLogger: AAPSLogger

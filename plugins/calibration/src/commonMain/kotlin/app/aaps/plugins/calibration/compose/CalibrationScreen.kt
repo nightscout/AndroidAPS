@@ -1,7 +1,5 @@
 package app.aaps.plugins.calibration.compose
 
-import app.aaps.plugins.calibration.CalibrationStrings
-import app.aaps.core.ui.UiStrings
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,20 +35,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.data.model.CAL
 import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.data.model.CAL
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.ui.UiStrings
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.navigation.LocalPluginNavigationRequest
 import app.aaps.core.ui.compose.navigation.NavigationRequest
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.plugins.calibration.CalibrationStrings
 import app.aaps.plugins.calibration.FitMode
 import kotlin.math.roundToInt
 

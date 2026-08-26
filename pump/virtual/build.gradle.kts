@@ -5,6 +5,11 @@ plugins {
     alias(libs.plugins.android.kmp.library)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.multiplatform)
+    // No `metro { interop { includeDagger() } }` here, unlike the Android-only pump modules: nothing in
+    // this module carries a javax annotation, and it must stay that way - javax is JVM only, so a single
+    // one would keep commonMain from ever compiling for iOS. Metro's own @Inject is multiplatform, which
+    // is the whole reason this module can be built by the graph instead of by hand in :app.
+    alias(libs.plugins.metro)
 }
 
 // Same generator as :core:ui and :core:interfaces, pointed at this module's strings. The strings

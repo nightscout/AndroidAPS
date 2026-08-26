@@ -24,12 +24,6 @@ import app.aaps.plugins.sync.tidepool.elements.WizardElement
 import app.aaps.plugins.sync.tidepool.events.EventTidepoolStatus
 import app.aaps.plugins.sync.tidepool.keys.TidepoolLongNonKey
 import app.aaps.plugins.sync.tidepool.utils.GsonInstance
-import java.util.LinkedList
-import javax.inject.Inject
-import javax.inject.Singleton
-import kotlin.math.max
-import kotlin.math.min
-import kotlin.time.Instant
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -38,6 +32,12 @@ import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
+import java.util.LinkedList
+import javax.inject.Inject
+import javax.inject.Singleton
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.time.Instant
 
 @Singleton
 class UploadChunk @Inject constructor(

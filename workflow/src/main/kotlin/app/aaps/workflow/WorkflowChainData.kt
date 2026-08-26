@@ -5,6 +5,8 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.HISTORY_CALCULATION
 import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.MAIN_CALCULATION
 import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.UPDATE_PREDICTIONS
+import app.aaps.workflow.WorkflowChainData.Companion.GEN_KEY
+import app.aaps.workflow.WorkflowChainData.Companion.JOB_KEY
 import java.util.concurrent.atomic.AtomicLong
 import javax.inject.Inject
 import javax.inject.Singleton

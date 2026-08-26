@@ -2,14 +2,14 @@ package app.aaps.implementation.logging
 
 import app.aaps.core.interfaces.logging.LoggerUtils
 import ch.qos.logback.classic.LoggerContext
-import dagger.Reusable
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * This class provides several methods for log-handling (eg. sending logs as emails).
  */
-@Reusable
+@Singleton
 class LoggerUtilsImpl @Inject constructor() : LoggerUtils {
 
     override var suffix = ".log"

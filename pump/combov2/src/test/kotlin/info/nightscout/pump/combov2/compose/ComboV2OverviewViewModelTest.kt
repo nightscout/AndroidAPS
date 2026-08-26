@@ -16,9 +16,9 @@ import info.nightscout.comboctl.parser.BatteryState
 import info.nightscout.pump.combov2.ComboV2Plugin
 import info.nightscout.pump.combov2.R
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch

@@ -30,7 +30,6 @@ import app.aaps.core.interfaces.notifications.NotificationCategory
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.R
-import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.icons.IcCgmInsert
@@ -40,6 +39,7 @@ import app.aaps.core.ui.compose.icons.IcPluginMaintenance
 import app.aaps.core.ui.compose.icons.IcPluginNsClient
 import app.aaps.core.ui.compose.icons.IcPluginVirtualPump
 import app.aaps.core.ui.compose.icons.IcProfile
+import app.aaps.core.ui.compose.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -1,5 +1,7 @@
 package app.aaps.core.objects.wizard
 
+import app.aaps.core.objects.wizard.QuickWizardEntryData.Companion.DEVICE_ALL
+import app.aaps.core.objects.wizard.QuickWizardEntryData.Companion.fromJsonObject
 import app.aaps.core.utils.lenientDouble
 import app.aaps.core.utils.lenientInt
 import app.aaps.core.utils.lenientLong

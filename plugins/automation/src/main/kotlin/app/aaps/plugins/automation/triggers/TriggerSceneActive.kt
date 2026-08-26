@@ -3,15 +3,14 @@ package app.aaps.plugins.automation.triggers
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.utils.lenientStringOrNull
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.ComparatorExists
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
-import javax.inject.Inject
 
 /**
  * Triggers based on whether any scene is currently active.

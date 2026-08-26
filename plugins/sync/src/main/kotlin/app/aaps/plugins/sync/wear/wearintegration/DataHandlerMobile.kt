@@ -85,9 +85,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.apsAdjustedTargetMgdl
 import app.aaps.core.objects.extensions.convertedToAbsolute
-import app.aaps.core.ui.extensions.generateCOBString
 import app.aaps.core.objects.extensions.round
-import app.aaps.core.ui.extensions.toStringShort
 import app.aaps.core.objects.extensions.valueToUnits
 import app.aaps.core.objects.runningMode.PumpCommandGate
 import app.aaps.core.objects.runningMode.RunningModeGuard
@@ -97,6 +95,8 @@ import app.aaps.core.objects.wizard.QuickWizardMode
 import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.core.ui.compose.DarkGeneralColors
 import app.aaps.core.ui.compose.LightGeneralColors
+import app.aaps.core.ui.extensions.generateCOBString
+import app.aaps.core.ui.extensions.toStringShort
 import app.aaps.plugins.sync.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart

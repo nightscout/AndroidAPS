@@ -57,6 +57,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.net.toUri
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.initializer
@@ -87,8 +88,8 @@ import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.plugin.PluginPermissions
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginPermissions
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.protection.PasswordCheck
@@ -118,6 +119,7 @@ import app.aaps.core.ui.compose.LocalMasterReachable
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.LocalSnackbarHostState
+import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import app.aaps.core.ui.compose.ProtectionHost
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.dialogs.GlobalDialogHost
@@ -225,7 +227,18 @@ class ComposeMainActivity : AppCompatActivity() {
 
     private val nfcForegroundDispatch by lazy { NfcForegroundDispatch(this, preferences) }
 
-    // ViewModels (Hilt-provided via @HiltViewModel)
+    /**
+     * The factory `by viewModels()` uses.
+     *
+     * Without this override the delegate asks Hilt, which no longer knows these classes and falls back
+     * to `NewInstanceFactory` - that wants a no-arg constructor and throws
+     * "Cannot create an instance of class ...". It fails in `onResume`, not at startup, so a cold launch
+     * looks fine.
+     */
+    override val defaultViewModelProviderFactory: ViewModelProvider.Factory
+        get() = (applicationContext as MetroViewModelFactoryOwner).metroViewModelFactory
+
+    // View models, built by Metro - each carries @ContributesIntoMap and @ViewModelKey.
     private val mainViewModel: MainViewModel by viewModels()
     private val manageViewModel: ManageViewModel by viewModels()
     private val maintenanceViewModel: MaintenanceViewModel by viewModels()
@@ -234,7 +247,7 @@ class ComposeMainActivity : AppCompatActivity() {
     private val scenesViewModel: ScenesViewModel by viewModels()
     private val loopActionViewModel: LoopActionViewModel by viewModels()
     private val graphViewModel: GraphViewModel by viewModels {
-        viewModelFactory { initializer { graphViewModelFactory.create(overviewDataCache) } }
+        viewModelFactory { initializer { graphViewModelFactory.create(overviewDataCache, fullWindow = false) } }
     }
     private val chipsViewModel: ChipsViewModel by viewModels {
         viewModelFactory { initializer { chipsViewModelFactory.create(overviewDataCache) } }

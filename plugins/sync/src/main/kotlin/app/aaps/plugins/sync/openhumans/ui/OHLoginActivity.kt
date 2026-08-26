@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.SnackbarHostState
@@ -18,15 +17,24 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalSnackbarHostState
+import app.aaps.core.ui.compose.MetroAppCompatActivity
+import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import app.aaps.core.ui.compose.dialogs.GlobalSnackbarHost
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.plugins.sync.di.AuthUrl
 import app.aaps.plugins.sync.openhumans.compose.OHLoginScreen
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
-@AndroidEntryPoint
-class OHLoginActivity : AppCompatActivity() {
+/**
+ * Converted off Hilt to Metro, as the proof that `@AndroidEntryPoint` and `@HiltViewModel` can both be
+ * replaced.
+ *
+ * This activity needed both at once, which is why it was chosen. `@AndroidEntryPoint` filled the three
+ * fields below - including [authUrl], which is qualified - and it is also what made `by viewModels()`
+ * resolve [OHLoginViewModel] through Hilt's factory. Now the fields come from [MetroMemberInjector]
+ * and the view model from [MetroViewModelFactory], both backed by `OpenHumansMetroGraph`.
+ */
+class OHLoginActivity : MetroAppCompatActivity() {
 
     @Inject
     @AuthUrl
@@ -38,13 +46,16 @@ class OHLoginActivity : AppCompatActivity() {
     @Inject
     lateinit var rxBus: RxBus
 
-    private val viewModel by viewModels<OHLoginViewModel>()
+    private val viewModel by viewModels<OHLoginViewModel> {
+        (applicationContext as MetroViewModelFactoryOwner).metroViewModelFactory
+    }
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // MetroAppCompatActivity injects before super.onCreate, where @AndroidEntryPoint used to.
         super.onCreate(savedInstanceState)
 
         val code = intent.data?.getQueryParameter("code")

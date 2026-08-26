@@ -133,7 +133,10 @@ class PatchManagerExecutor @Inject constructor(
 
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
-    @Inject fun onInit() {
+    // Was an @Inject fun, which is Dagger method injection - Metro does not support it and crashes the
+    // compiler on it (ZacSweers/metro#2735). Everything below is a constructor parameter, so it can run
+    // here instead. The injected task fields are not touched, by this or by monitorPatchNotification.
+    init {
         patch.init(context)
         patch.setSeq(patchConfig.seq15)
 

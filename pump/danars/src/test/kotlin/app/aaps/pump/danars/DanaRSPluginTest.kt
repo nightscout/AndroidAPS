@@ -9,8 +9,8 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.pump.dana.DanaPump
-import app.aaps.pump.dana.database.DanaHistoryDatabase
 import app.aaps.pump.dana.comm.RecordTypes
+import app.aaps.pump.dana.database.DanaHistoryDatabase
 import app.aaps.pump.dana.keys.DanaStringComposedKey
 import app.aaps.pump.dana.keys.DanaStringNonKey
 import com.google.common.truth.Truth.assertThat

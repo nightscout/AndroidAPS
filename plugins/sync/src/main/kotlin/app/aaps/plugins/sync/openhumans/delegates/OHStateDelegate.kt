@@ -1,17 +1,18 @@
 package app.aaps.plugins.sync.openhumans.delegates
 
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.plugins.sync.di.OpenHumansScope
 import app.aaps.plugins.sync.openhumans.OpenHumansState
 import app.aaps.plugins.sync.openhumans.keys.OhLongKey
 import app.aaps.plugins.sync.openhumans.keys.OhStringKey
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.reflect.KProperty
 
-@Singleton
+@SingleIn(OpenHumansScope::class)
 internal class OHStateDelegate @Inject internal constructor(
     private val preferences: Preferences
 ) {

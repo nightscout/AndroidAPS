@@ -1,7 +1,6 @@
 package app.aaps.plugins.aps.openAPSSMB
 
 import android.content.Context
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.APS
@@ -36,6 +35,7 @@ import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.target
 import app.aaps.core.utils.MidnightUtils

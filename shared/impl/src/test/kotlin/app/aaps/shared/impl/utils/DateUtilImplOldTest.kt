@@ -2,9 +2,9 @@ package app.aaps.shared.impl.utils
 
 import android.content.Context
 import app.aaps.core.data.time.T
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.R
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.keys.interfaces.TextRef
 import com.google.common.truth.Truth
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeEach

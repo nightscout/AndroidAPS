@@ -5,8 +5,9 @@ plugins {
     // NOT com.android.library. AGP 9 refuses that plugin together with the multiplatform plugin.
     alias(libs.plugins.android.kmp.library)
     kotlin("plugin.allopen")
-    // No KSP and no kotlin-parcelize: this module runs no annotation processor since its DI moved
-    // to :app, and nothing here is @Parcelize.
+    // Metro, a Kotlin compiler plugin - no KSP, no generated sources. The comment below was written
+    // when this module's DI had to live in :app because Dagger cannot run in a multiplatform module.
+    alias(libs.plugins.metro)
 }
 
 // Restated from all-open-dependencies, which applies com.android.library and cannot be used here.

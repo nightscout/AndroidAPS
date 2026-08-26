@@ -1,8 +1,8 @@
 package app.aaps.pump.common.events
 
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.pump.defs.PumpDeviceState
 import app.aaps.core.interfaces.rx.events.EventStatus
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkError
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkTargetDevice

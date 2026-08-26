@@ -1,12 +1,11 @@
 package app.aaps.plugins.automation.actions
 
-import javax.inject.Provider
-import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.logging.AAPSLogger
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.scenes.SceneAutomationResult
 import app.aaps.core.interfaces.scenes.SceneIconResolver
@@ -15,6 +14,7 @@ import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputSceneName
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+import javax.inject.Provider
 
 class ActionEnableScene(
     aapsLogger: AAPSLogger,

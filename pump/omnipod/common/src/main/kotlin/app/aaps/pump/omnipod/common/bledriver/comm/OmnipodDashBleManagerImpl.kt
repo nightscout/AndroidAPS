@@ -11,10 +11,10 @@ import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.FailedToConnectExc
 import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.MessageIOException
 import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.NotConnectedException
 import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.SessionEstablishmentException
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.device.BleDeviceManager
 import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.scan.PodScanner
 import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.session.BleConnection
 import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.session.BleConnectionFactory
-import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.device.BleDeviceManager
 import app.aaps.pump.omnipod.common.bledriver.comm.pair.LTKExchanger
 import app.aaps.pump.omnipod.common.bledriver.comm.session.CommandAckError
 import app.aaps.pump.omnipod.common.bledriver.comm.session.CommandReceiveError

@@ -1,13 +1,13 @@
 package app.aaps.plugins.automation
 
-import org.mockito.kotlin.mock
-import app.aaps.plugins.automation.triggers.TriggerDeps
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.triggers.TriggerConnector
+import app.aaps.plugins.automation.triggers.TriggerDeps
 import app.aaps.plugins.automation.triggers.TriggerDummy
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.mock
 
 class ComposeTriggerTest : TestBase() {
 

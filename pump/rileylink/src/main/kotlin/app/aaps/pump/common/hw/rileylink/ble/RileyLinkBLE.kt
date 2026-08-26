@@ -71,11 +71,6 @@ class RileyLinkBLE @Inject constructor(
     var isConnected = false
         private set
 
-    @Inject fun onInit() {
-        //aapsLogger.debug(LTag.PUMPBTCOMM, "BT Adapter: " + this.bluetoothAdapter);
-        orangeLink.rileyLinkBLE = this
-    }
-
     private fun isAnyRileyLinkServiceFound(service: BluetoothGattService): Boolean {
         val found = GattAttributes.isRileyLink(service.uuid)
         if (found) return true
@@ -341,7 +336,6 @@ class RileyLinkBLE @Inject constructor(
         }
 
     init {
-        //orangeLink.rileyLinkBLE = this;
         bluetoothGattCallback = object : BluetoothGattCallback() {
             @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
             override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic) {

@@ -86,7 +86,6 @@ import app.aaps.core.objects.extensions.fromGv
 import app.aaps.core.objects.extensions.target
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
-import app.aaps.core.interfaces.R as InterfacesR
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineScope
@@ -109,6 +108,7 @@ import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
+import app.aaps.core.interfaces.R as InterfacesR
 
 /**
  * Implementation of OverviewDataCache using MutableStateFlow.

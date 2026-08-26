@@ -3,19 +3,19 @@ package app.aaps.ui.compose.quickLaunch
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Extension
 import androidx.compose.ui.graphics.vector.ImageVector
+import app.aaps.core.data.model.TT
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.scenes.SceneStore
 import app.aaps.core.interfaces.tempTargets.toTTPresets
-import app.aaps.core.ui.compose.formatMinutesAsDuration
-import app.aaps.ui.compose.tempTarget.toTTPresetsWithNameRes
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardMode
-import app.aaps.core.data.model.TT
+import app.aaps.core.ui.compose.formatMinutesAsDuration
 import app.aaps.core.ui.compose.icons.IcBolus
 import app.aaps.core.ui.compose.icons.IcCarbs
 import app.aaps.core.ui.compose.icons.IcTtActivity
@@ -27,7 +27,7 @@ import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.label
 import app.aaps.ui.compose.navigation.ElementAvailability
 import app.aaps.ui.compose.scenes.SceneIcons
-import app.aaps.core.interfaces.scenes.SceneStore
+import app.aaps.ui.compose.tempTarget.toTTPresetsWithNameRes
 import javax.inject.Inject
 import javax.inject.Singleton
 

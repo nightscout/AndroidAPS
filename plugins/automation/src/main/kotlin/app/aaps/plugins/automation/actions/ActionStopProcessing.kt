@@ -1,15 +1,15 @@
 package app.aaps.plugins.automation.actions
 
-import javax.inject.Provider
-import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.logging.AAPSLogger
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Stop
-import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.plugins.automation.R
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+import javax.inject.Provider
 
 class ActionStopProcessing(
     aapsLogger: AAPSLogger,

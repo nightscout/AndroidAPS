@@ -21,7 +21,10 @@ import app.aaps.pump.equil.driver.definition.EquilHistoryEntryGroup
 import app.aaps.pump.equil.events.EventEquilDataChanged
 import app.aaps.pump.equil.manager.Utils
 import app.aaps.pump.equil.manager.command.PumpEvent
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,7 +39,10 @@ import java.util.Calendar
 import javax.inject.Inject
 import kotlin.math.abs
 
-@HiltViewModel
+// Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
+// unscoped so each screen gets its own.
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 @Stable
 class EquilHistoryViewModel @Inject constructor(
     private val equilHistoryRecordDao: EquilHistoryRecordDao,
