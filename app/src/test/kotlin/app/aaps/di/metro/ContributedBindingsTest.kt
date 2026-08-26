@@ -118,5 +118,8 @@ class ContributedBindingsTest {
         assertThat(root.pumpSync).isNotSameInstanceAs(root.pumpSync)
         assertThat(root.pumpWithConcentration).isNotSameInstanceAs(root.pumpWithConcentration)
         assertThat(root.widgetUpdater).isNotSameInstanceAs(root.widgetUpdater)
+        // Result objects: a fresh one per call is the point.
+        assertThat(root.apsResult).isNotSameInstanceAs(root.apsResult)
+        assertThat(root.pumpEnactResult).isNotSameInstanceAs(root.pumpEnactResult)
     }
 }

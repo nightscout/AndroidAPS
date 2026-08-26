@@ -29,6 +29,8 @@ import app.aaps.core.interfaces.plugin.PluginPermissions
 import app.aaps.core.interfaces.aps.AutosensData
 import app.aaps.core.interfaces.configuration.RunningConfigurationKeys
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
+import app.aaps.core.interfaces.aps.APSResult
+import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.implementation.plugin.PluginStore
@@ -290,6 +292,8 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val autosensData: AutosensData
     val commandQueue: CommandQueue
     val localAlertUtils: LocalAlertUtils
+    val apsResult: APSResult
+    val pumpEnactResult: PumpEnactResult
     val profileSwitchSilentGate: ProfileSwitchSilentGate
     val runningConfiguration: RunningConfiguration
     val runningConfigurationKeys: RunningConfigurationKeys

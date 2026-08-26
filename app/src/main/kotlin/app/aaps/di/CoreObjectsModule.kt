@@ -287,6 +287,9 @@ class CoreObjectsModule {
     @Provides fun provideAutosensData(graphs: MetroGraphs): AutosensData = graphs.autosensData
     @Provides @Singleton fun provideCommandQueue(graphs: MetroGraphs): CommandQueue = graphs.commandQueue
     @Provides @Singleton fun provideLocalAlertUtils(graphs: MetroGraphs): LocalAlertUtils = graphs.localAlertUtils
+    // Unscoped on purpose - result objects, one per call, as the @Binds they replace were.
+    @Provides fun provideAPSResult(graphs: MetroGraphs): APSResult = graphs.apsResult
+    @Provides fun providePumpEnactResult(graphs: MetroGraphs): PumpEnactResult = graphs.pumpEnactResult
     // One flag, two frameworks: SceneExecutor (Metro) marks it, CommandQueueImplementation (Dagger)
     // consumes it. Without this they get one each and the mark is never seen.
     @Provides @Singleton fun provideProfileSwitchSilentGate(graphs: MetroGraphs): ProfileSwitchSilentGate = graphs.profileSwitchSilentGate
@@ -457,7 +460,6 @@ class CoreObjectsModule {
         persistenceLayerProvider: Provider<PersistenceLayer>,
         configProvider: Provider<Config>,
         calculationSignalsEmitterProvider: Provider<CalculationSignalsEmitter>,
-        apsResultProvider: Provider<APSResult>,
         authFlowOutProvider: Provider<AuthFlowOut>,
         tidepoolUploaderProvider: Provider<TidepoolUploader>,
         profileFunctionProvider: Provider<ProfileFunction>,
@@ -488,7 +490,6 @@ class CoreObjectsModule {
         receiverDelegateProvider: Provider<ReceiverDelegate>,
         rateLimitProvider: Provider<RateLimit>,
         bolusProgressDataProvider: Provider<BolusProgressData>,
-        pumpEnactResultProvider: Provider<PumpEnactResult>,
         historyScopeProvider: Provider<HistoryScope>,
         overviewDataCacheProvider: Provider<OverviewDataCache>,
         @ApplicationContext appContextProvider: Provider<Context>,
@@ -504,7 +505,6 @@ class CoreObjectsModule {
         persistenceLayerProvider,
         configProvider,
         calculationSignalsEmitterProvider,
-        apsResultProvider,
         authFlowOutProvider,
         tidepoolUploaderProvider,
         profileFunctionProvider,
@@ -535,7 +535,6 @@ class CoreObjectsModule {
         receiverDelegateProvider,
         rateLimitProvider,
         bolusProgressDataProvider,
-        pumpEnactResultProvider,
         historyScopeProvider,
         overviewDataCacheProvider,
         appContextProvider,

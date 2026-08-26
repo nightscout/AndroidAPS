@@ -107,7 +107,5 @@ class ImplementationModule {
         @Binds fun bindResourceHelper(resourceHelperImpl: ResourceHelperImpl): ResourceHelper
         @Binds fun bindNotificationManager(notificationManagerImpl: NotificationManagerImpl): NotificationManager
         @Binds fun bindsProfileFunction(profileFunctionImpl: ProfileFunctionImpl): ProfileFunction
-        @Binds fun bindsAPSResult(determineBasalResult: DetermineBasalResult): APSResult
-        @Binds fun bindsPumpEnactResult(pumpEnactResultObject: PumpEnactResultObject): PumpEnactResult
     }
 }

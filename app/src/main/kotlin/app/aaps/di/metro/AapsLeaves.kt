@@ -107,7 +107,6 @@ class AapsLeaves(
     private val calculationSignalsEmitterProvider: Provider<CalculationSignalsEmitter>,
     // Both are Dagger @Binds in ImplementationModule, and the openAPS plugins need them now that Metro
     // builds those. APSResult is asked for through a Provider - one result object per loop run.
-    private val apsResultProvider: Provider<APSResult>,
     // Dagger owns this one; LoopPlugin needs it and Metro builds LoopPlugin now.
     // The activities this app injects need these; all three are Dagger @Binds in their own modules.
     private val authFlowOutProvider: Provider<AuthFlowOut>,
@@ -169,7 +168,6 @@ class AapsLeaves(
      * view model reading it is fine.
      */
     private val bolusProgressDataProvider: Provider<BolusProgressData>,
-    private val pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val historyScopeProvider: Provider<HistoryScope>,
     private val overviewDataCacheProvider: Provider<OverviewDataCache>,
     // Same object as ActivePlugin above (PluginStore), under its other interface.
@@ -202,7 +200,6 @@ class AapsLeaves(
     // No iobCobCalculator() any more: Metro builds it now, in `MainPluginsBindings`, and Dagger receives
     // it through `CoreObjectsModule.provideIobCobCalculator`.
     @Provides fun calculationSignalsEmitter(): CalculationSignalsEmitter = calculationSignalsEmitterProvider.get()
-    @Provides fun apsResult(): APSResult = apsResultProvider.get()
     // No loop() leaf any more: Metro builds LoopPlugin, so Loop travels the other way, through
     // `CoreObjectsModule.provideLoop`.
     @Provides fun authFlowOut(): AuthFlowOut = authFlowOutProvider.get()
@@ -235,7 +232,6 @@ class AapsLeaves(
     @Provides fun bolusProgressData(): BolusProgressData = bolusProgressDataProvider.get()
 
     /** A value object: unscoped, as its Dagger binding is. */
-    @Provides fun pumpEnactResult(): PumpEnactResult = pumpEnactResultProvider.get()
     @Provides fun historyScope(): HistoryScope = historyScopeProvider.get()
     @Provides fun searchableProviders(): Set<SearchableProvider> = searchableProvidersProvider.get()
     // Still Dagger-owned: the only contributor, AutomationRuntime, needs SmsCommunicator,

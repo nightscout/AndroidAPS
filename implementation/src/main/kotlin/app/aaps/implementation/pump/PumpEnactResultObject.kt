@@ -2,8 +2,13 @@ package app.aaps.implementation.pump
 
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.resources.ResourceHelper
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import javax.inject.Inject
 
+// Deliberately NOT @SingleIn: the @Binds this replaces had no scope. It is a result object, built
+// fresh for each call and handed back to the caller.
+@ContributesBinding(AppScope::class)
 class PumpEnactResultObject @Inject constructor(private val rh: ResourceHelper) : PumpEnactResult {
 
     override var success = false // request was processed successfully (but possible no change was needed)
