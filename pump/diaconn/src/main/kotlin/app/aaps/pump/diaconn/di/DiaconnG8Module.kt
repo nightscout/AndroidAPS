@@ -12,7 +12,6 @@ import dagger.multibindings.IntoMap
 
 @Module(
     includes = [
-        DiaconnG8ActivitiesModule::class,
         DiaconnHistoryModule::class
     ]
 )

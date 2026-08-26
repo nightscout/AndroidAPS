@@ -11,8 +11,7 @@ import dagger.hilt.components.SingletonComponent
 @Suppress("unused")
 @Module(
     includes = [
-        ConfigurationModule.Bindings::class,
-        SetupWizardModule::class
+        ConfigurationModule.Bindings::class
     ]
 )
 @InstallIn(SingletonComponent::class)
