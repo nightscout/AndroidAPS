@@ -6,7 +6,7 @@ import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.objects.workflow.injectMetroMembers
+import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.ui.widget.glance.AapsGlanceWidget
 import javax.inject.Inject
 

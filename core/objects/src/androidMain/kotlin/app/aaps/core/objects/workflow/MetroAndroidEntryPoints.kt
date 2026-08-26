@@ -4,7 +4,7 @@ import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import app.aaps.core.interfaces.di.MetroMemberInjector
+import app.aaps.core.interfaces.di.injectMetroMembers
 
 /**
  * Base classes for Android entry points that Metro injects, mirroring `dagger.android`.
@@ -22,24 +22,14 @@ import app.aaps.core.interfaces.di.MetroMemberInjector
  * There are 84 such classes in this tree: 34 activities, 31 services, 19 receivers. The activity base
  * is `MetroAppCompatActivity` in `:core:ui`, which is where the AppCompat dependency lives.
  *
- * Three classes cannot use these, because they already extend a framework base of their own
- * (`NotificationListenerService`, `WearableListenerService`). Those call [MetroMemberInjector]
- * directly, which is all these base classes do anyway.
+ * Some classes cannot use these, because they already extend a framework base of their own - a
+ * `WearableListenerService`, an `AppWidgetProvider`, or a pump service in a module that does not depend
+ * on `:core:objects`. Those call [injectMetroMembers] directly, which is all these base classes do
+ * anyway. That function lives in `:core:interfaces` beside the injector interface, so calling it needs
+ * no dependency on this module.
  *
- * Unlike `dagger.android`, a missing binding **fails loudly**. Silently skipping would leave
- * `lateinit` fields unset, and that surfaces later as an unrelated crash somewhere else.
+ * Metro's answer to `DaggerBroadcastReceiver`. Subclasses must call `super.onReceive(...)` first.
  */
-fun Context.injectMetroMembers(target: Any) {
-    val application = applicationContext
-    check(application is MetroMemberInjector) {
-        "Application does not implement MetroMemberInjector, so ${target::class.java.name} cannot be injected"
-    }
-    check(application.injectMembers(target)) {
-        "No Metro binding for ${target::class.java.name}. Add a @Provides @IntoMap @ClassKey entry for it."
-    }
-}
-
-/** Metro's answer to `DaggerBroadcastReceiver`. Subclasses must call `super.onReceive(...)` first. */
 abstract class MetroBroadcastReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {

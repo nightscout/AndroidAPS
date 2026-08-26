@@ -336,11 +336,6 @@ class RileyLinkBLE @Inject constructor(
         }
 
     init {
-        // Was an @Inject fun, which is Dagger method injection - Metro does not support it and crashes
-        // the compiler on it (ZacSweers/metro#2735). orangeLink only stores the reference for later, so
-        // handing it over here rather than just after construction changes nothing that matters.
-        @Suppress("LeakingThis")
-        orangeLink.rileyLinkBLE = this
         bluetoothGattCallback = object : BluetoothGattCallback() {
             @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
             override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic) {

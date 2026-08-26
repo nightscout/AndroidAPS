@@ -18,15 +18,20 @@ import app.aaps.pump.common.hw.rileylink.ble.operations.BLECommOperationResult
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData
 import java.util.UUID
 import javax.inject.Inject
+import javax.inject.Provider
 import javax.inject.Singleton
 
 @Singleton
 class OrangeLinkImpl @Inject constructor(
     var aapsLogger: AAPSLogger,
-    var rileyLinkServiceData: RileyLinkServiceData
+    var rileyLinkServiceData: RileyLinkServiceData,
+    // A Provider, not the object: RileyLinkBLE takes this class in its own constructor, so asking for it
+    // directly would be a dependency cycle. A Provider is resolved on use rather than on construction,
+    // which breaks it. Both classes are @Singleton, so this hands back the same instance every time.
+    private val rileyLinkBLEProvider: Provider<RileyLinkBLE>
 ) {
 
-    lateinit var rileyLinkBLE: RileyLinkBLE
+    private val rileyLinkBLE: RileyLinkBLE get() = rileyLinkBLEProvider.get()
 
     fun onCharacteristicChanged(characteristic: BluetoothGattCharacteristic, data: ByteArray) {
         if (characteristic.uuid.toString() == GattAttributes.CHARA_NOTIFICATION_ORANGE) {

@@ -10,7 +10,7 @@ import android.view.View
 import android.widget.RemoteViews
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.objects.workflow.injectMetroMembers
+import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.ui.R
 import app.aaps.ui.widget.glance.WidgetDependencies
 import app.aaps.ui.widget.glance.resolveClientColor

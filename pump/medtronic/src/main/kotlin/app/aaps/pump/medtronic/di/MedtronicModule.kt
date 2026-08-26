@@ -3,9 +3,6 @@ package app.aaps.pump.medtronic.di
 import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.pump.medtronic.MedtronicPumpPlugin
-import app.aaps.pump.medtronic.comm.MedtronicCommunicationManager
-import app.aaps.pump.medtronic.comm.ui.MedtronicUIComm
-import app.aaps.pump.medtronic.comm.ui.MedtronicUITask
 import app.aaps.pump.medtronic.service.RileyLinkMedtronicService
 import dagger.Binds
 import dagger.Module
@@ -20,13 +17,10 @@ import dagger.multibindings.IntoMap
 @Suppress("unused")
 abstract class MedtronicModule {
 
+    // Still dagger.android: member injecting it trips a Metro codegen bug - the fields it inherits from
+    // RileyLinkService reach graph built objects. See https://github.com/ZacSweers/metro/issues/2731.
     @ContributesAndroidInjector
     abstract fun contributesRileyLinkMedtronicService(): RileyLinkMedtronicService
-
-    @ContributesAndroidInjector
-    abstract fun medtronicCommunicationManagerProvider(): MedtronicCommunicationManager
-    @ContributesAndroidInjector abstract fun medtronicUITaskProvider(): MedtronicUITask
-    @ContributesAndroidInjector abstract fun medtronicUICommProvider(): MedtronicUIComm
 
     // Pump plugin registration — @IntKey range 1000–1200, see PluginsListModule for overview
     @Binds
