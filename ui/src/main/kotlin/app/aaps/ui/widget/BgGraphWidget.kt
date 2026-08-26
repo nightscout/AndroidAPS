@@ -6,8 +6,8 @@ import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.objects.workflow.injectMetroMembers
 import app.aaps.ui.widget.glance.BgGraphGlanceWidget
-import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
 /**
@@ -22,7 +22,7 @@ class BgGraphWidget : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = BgGraphGlanceWidget()
 
     override fun onReceive(context: Context, intent: Intent) {
-        (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
+        context.injectMetroMembers(this)
         aapsLogger.debug(LTag.WIDGET, "BgGraphWidget onReceive ${intent.action}")
         super.onReceive(context, intent)
     }

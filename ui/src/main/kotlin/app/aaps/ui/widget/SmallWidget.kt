@@ -10,10 +10,10 @@ import android.view.View
 import android.widget.RemoteViews
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.objects.workflow.injectMetroMembers
 import app.aaps.ui.R
 import app.aaps.ui.widget.glance.WidgetDependencies
 import app.aaps.ui.widget.glance.resolveClientColor
-import dagger.android.HasAndroidInjector
 import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -36,7 +36,7 @@ class SmallWidget : AppWidgetProvider() {
     @Inject lateinit var aapsLogger: AAPSLogger
 
     override fun onReceive(context: Context, intent: Intent) {
-        (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
+        context.injectMetroMembers(this)
         aapsLogger.debug(LTag.WIDGET, "SmallWidget onReceive ${intent.action}")
         super.onReceive(context, intent)
     }
