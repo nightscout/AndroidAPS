@@ -107,6 +107,7 @@ import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
+import app.aaps.core.interfaces.workflow.CalculationSignals
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.keys.interfaces.Preferences
@@ -293,6 +294,9 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideLocalAlertUtils(graphs: MetroGraphs): LocalAlertUtils = graphs.localAlertUtils
     @Provides @Singleton fun provideBolusProgressData(graphs: MetroGraphs): BolusProgressData = graphs.bolusProgressData
     @Provides @Singleton fun providePersistenceLayer(graphs: MetroGraphs): PersistenceLayer = graphs.persistenceLayer
+    @Provides @Singleton fun provideOverviewDataCache(graphs: MetroGraphs): OverviewDataCache = graphs.overviewDataCache
+    @Provides @Singleton fun provideCalculationSignals(graphs: MetroGraphs): CalculationSignals = graphs.calculationSignals
+    @Provides @Singleton fun provideCalculationSignalsEmitter(graphs: MetroGraphs): CalculationSignalsEmitter = graphs.calculationSignalsEmitter
     @Provides @Singleton fun provideAppRepository(graphs: MetroGraphs): AppRepository = graphs.appRepository
     @Provides @Singleton fun provideCloudStorageProviders(graphs: MetroGraphs): Set<CloudStorageProvider> = graphs.cloudStorageProviders
     @Provides @Singleton fun provideConstraintsChecker(graphs: MetroGraphs): ConstraintsChecker = graphs.constraintsChecker
@@ -470,7 +474,6 @@ class CoreObjectsModule {
         fabricPrivacyProvider: Provider<FabricPrivacy>,
         configProvider: Provider<Config>,
         databaseConfigProvider: Provider<DatabaseConfig>,
-        calculationSignalsEmitterProvider: Provider<CalculationSignalsEmitter>,
         authFlowOutProvider: Provider<AuthFlowOut>,
         tidepoolUploaderProvider: Provider<TidepoolUploader>,
         profileFunctionProvider: Provider<ProfileFunction>,
@@ -499,7 +502,6 @@ class CoreObjectsModule {
         receiverDelegateProvider: Provider<ReceiverDelegate>,
         rateLimitProvider: Provider<RateLimit>,
         historyScopeProvider: Provider<HistoryScope>,
-        overviewDataCacheProvider: Provider<OverviewDataCache>,
         @ApplicationContext appContextProvider: Provider<Context>,
         nsClientProvider: Provider<NsClient>,
         clientControlActionDispatcherProvider: Provider<ClientControlActionDispatcher>,
@@ -511,7 +513,6 @@ class CoreObjectsModule {
         fabricPrivacyProvider,
         configProvider,
         databaseConfigProvider,
-        calculationSignalsEmitterProvider,
         authFlowOutProvider,
         tidepoolUploaderProvider,
         profileFunctionProvider,
@@ -540,7 +541,6 @@ class CoreObjectsModule {
         receiverDelegateProvider,
         rateLimitProvider,
         historyScopeProvider,
-        overviewDataCacheProvider,
         appContextProvider,
         nsClientProvider,
         clientControlActionDispatcherProvider,

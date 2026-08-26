@@ -101,9 +101,6 @@ class AapsLeaves(
     private val fabricPrivacyProvider: Provider<FabricPrivacy>,
     private val configProvider: Provider<Config>,
     private val databaseConfigProvider: Provider<DatabaseConfig>,
-    // Dagger owns the app-wide emitter - `WorkflowModule.provideMainSignalsEmitter`. A history window
-    // has its own, built in `HistoryWindowGraph`, which is why this one is not simply contributed.
-    private val calculationSignalsEmitterProvider: Provider<CalculationSignalsEmitter>,
     // Both are Dagger @Binds in ImplementationModule, and the openAPS plugins need them now that Metro
     // builds those. APSResult is asked for through a Provider - one result object per loop run.
     // Dagger owns this one; LoopPlugin needs it and Metro builds LoopPlugin now.
@@ -165,7 +162,6 @@ class AapsLeaves(
      * view model reading it is fine.
      */
     private val historyScopeProvider: Provider<HistoryScope>,
-    private val overviewDataCacheProvider: Provider<OverviewDataCache>,
     // Same object as ActivePlugin above (PluginStore), under its other interface.
     @ApplicationContext private val appContextProvider: Provider<Context>,
     private val nsClientProvider: Provider<NsClient>,
@@ -195,7 +191,6 @@ class AapsLeaves(
     @Provides fun databaseConfig(): DatabaseConfig = databaseConfigProvider.get()
     // No iobCobCalculator() any more: Metro builds it now, in `MainPluginsBindings`, and Dagger receives
     // it through `CoreObjectsModule.provideIobCobCalculator`.
-    @Provides fun calculationSignalsEmitter(): CalculationSignalsEmitter = calculationSignalsEmitterProvider.get()
     // No loop() leaf any more: Metro builds LoopPlugin, so Loop travels the other way, through
     // `CoreObjectsModule.provideLoop`.
     @Provides fun authFlowOut(): AuthFlowOut = authFlowOutProvider.get()
@@ -257,7 +252,6 @@ class AapsLeaves(
     // TidepoolPlugin reading a gate nobody updates and a rate limiter that never limits.
     @Provides fun receiverDelegate(): ReceiverDelegate = receiverDelegateProvider.get()
     @Provides fun rateLimit(): RateLimit = rateLimitProvider.get()
-    @Provides fun overviewDataCache(): OverviewDataCache = overviewDataCacheProvider.get()
 
     /** Hilt's qualifier, read now that interop is on. Same Context as the unqualified binding. */
     @Provides @ApplicationContext fun appContext(): Context = appContextProvider.get()

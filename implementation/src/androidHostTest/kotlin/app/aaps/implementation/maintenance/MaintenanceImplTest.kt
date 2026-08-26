@@ -24,7 +24,7 @@ class MaintenanceImplTest : TestBaseWithProfile() {
     fun mock() {
         sut = MaintenanceImpl(context, rh, preferences, nsClient, aapsLogger, config, fileListProvider, loggerUtils, cloudStorageManager)
         whenever(loggerUtils.suffix).thenReturn(".log.zip")
-        whenever(loggerUtils.logDirectory).thenReturn("src/test/assets/logger")
+        whenever(loggerUtils.logDirectory).thenReturn("src/androidHostTest/assets/logger")
     }
 
     @Test fun logFilesTest() {

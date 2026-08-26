@@ -98,6 +98,10 @@ class ContributedBindingsTest {
         assertThat(root.localAlertUtils).isSameInstanceAs(root.localAlertUtils)
         assertThat(root.bolusProgressData).isSameInstanceAs(root.bolusProgressData)
         assertThat(root.persistenceLayer).isSameInstanceAs(root.persistenceLayer)
+        assertThat(root.overviewDataCache).isSameInstanceAs(root.overviewDataCache)
+        assertThat(root.calculationSignals).isSameInstanceAs(root.calculationSignals)
+        assertThat(root.calculationSignalsEmitter).isSameInstanceAs(root.calculationSignalsEmitter)
+        assertThat(root.calculationSignals).isSameInstanceAs(root.calculationSignalsEmitter)
         // A multibinding hands out a fresh Set each read; what has to be shared is the provider in it.
         assertThat(root.cloudStorageProviders.single()).isSameInstanceAs(root.cloudStorageProviders.single())
         assertThat(root.constraintsChecker).isSameInstanceAs(root.constraintsChecker)

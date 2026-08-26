@@ -2,6 +2,8 @@ package app.aaps.di.metro
 
 import app.aaps.plugins.sync.tidepool.TidepoolPlugin
 import app.aaps.pump.medtronic.MedtronicPumpPlugin
+import app.aaps.database.AppRepository
+import app.aaps.database.persistence.PersistenceLayerImpl
 import app.aaps.implementation.androidNotification.AlarmSoundPlayerImpl
 import app.aaps.plugins.aps.autotune.AutotunePlugin
 import app.aaps.plugins.automation.services.LastLocationDataContainer
@@ -105,6 +107,8 @@ class SplitBrainTest {
         get() = listOf(
             AapsLeaves::class.java,                          // :app
             AlarmSoundPlayerImpl::class.java,                // :implementation
+            PersistenceLayerImpl::class.java,               // :database:persistence
+            AppRepository::class.java,                      // :database:impl
             CalibrationDialogViewModel::class.java,          // :ui
             TidepoolPlugin::class.java,                      // :plugins:sync
             BgQualityCheckPlugin::class.java,                // :plugins:constraints
