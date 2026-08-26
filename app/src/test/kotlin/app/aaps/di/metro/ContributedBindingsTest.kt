@@ -66,6 +66,14 @@ class ContributedBindingsTest {
         assertThat(root.calculationWorkflow).isSameInstanceAs(root.calculationWorkflow)
         // Holds the chain generation counter, so a second copy would silently break the race guard.
         assertThat(root.workflowChainData).isSameInstanceAs(root.workflowChainData)
+        // Moved off :shared:impl's Dagger modules, which :wear still uses. RxBus especially: a second
+        // bus means events posted on one half are never seen by the other.
+        assertThat(root.aapsLogger).isSameInstanceAs(root.aapsLogger)
+        assertThat(root.rxBus).isSameInstanceAs(root.rxBus)
+        assertThat(root.dateUtil).isSameInstanceAs(root.dateUtil)
+        assertThat(root.l).isSameInstanceAs(root.l)
+        assertThat(root.aapsSchedulers).isSameInstanceAs(root.aapsSchedulers)
+        assertThat(root.sp).isSameInstanceAs(root.sp)
     }
 
     @Test

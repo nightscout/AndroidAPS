@@ -5,26 +5,25 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.LogElement
 import app.aaps.core.keys.BooleanComposedKey
 import app.aaps.core.keys.interfaces.Preferences
-import dagger.Lazy
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class LImpl @Inject constructor(
-    private val preferences: Lazy<Preferences>
+// Built explicitly by both DI frameworks - SharedImplModule for :wear, SharedImplBindings for the
+// phone - so it carries no scope of its own. A plain factory, not dagger.Lazy: the phone side is Metro
+// now and that type is Dagger vocabulary. Still deferred, because Preferences reads log settings back.
+class LImpl(
+    private val preferences: () -> Preferences
 ) : L {
 
     private var _logElements: List<LogElement>? = null
 
     override fun logElements(): List<LogElement> {
         if (_logElements == null) {
-            _logElements = LTag.entries.map { LogElementImpl(it, preferences.get()) }
+            _logElements = LTag.entries.map { LogElementImpl(it, preferences()) }
         }
         return _logElements!!
     }
 
     override fun findByName(name: String): LogElement =
-        logElements().find { it.name == name } ?: LogElementImpl(false, preferences.get())
+        logElements().find { it.name == name } ?: LogElementImpl(false, preferences())
 
     override fun resetToDefaults() {
         logElements().forEach { it.resetToDefault() }

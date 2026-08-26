@@ -11,6 +11,12 @@ import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.L
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.workflow.WorkflowChainData
 import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.maintenance.FileListProvider
@@ -250,6 +256,12 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val pumpWithConcentration: PumpWithConcentration
     val calculationWorkflow: CalculationWorkflow
     val workflowChainData: WorkflowChainData
+    val aapsLogger: AAPSLogger
+    val rxBus: RxBus
+    val dateUtil: DateUtil
+    val l: L
+    val aapsSchedulers: AapsSchedulers
+    val sp: SP
     val maintenance: Maintenance
     val fileListProvider: FileListProvider
     val lastBgData: LastBgData

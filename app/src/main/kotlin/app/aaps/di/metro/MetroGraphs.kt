@@ -11,6 +11,12 @@ import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.L
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.workflow.WorkflowChainData
 import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.maintenance.FileListProvider
@@ -282,6 +288,12 @@ class MetroGraphs @Inject constructor(
     val pumpWithConcentration: PumpWithConcentration get() = root.pumpWithConcentration
     val calculationWorkflow: CalculationWorkflow get() = root.calculationWorkflow
     val workflowChainData: WorkflowChainData get() = root.workflowChainData
+    val aapsLogger: AAPSLogger get() = root.aapsLogger
+    val rxBus: RxBus get() = root.rxBus
+    val dateUtil: DateUtil get() = root.dateUtil
+    val l: L get() = root.l
+    val aapsSchedulers: AapsSchedulers get() = root.aapsSchedulers
+    val sp: SP get() = root.sp
     val maintenance: Maintenance get() = root.maintenance
     val fileListProvider: FileListProvider get() = root.fileListProvider
     val lastBgData: LastBgData get() = root.lastBgData

@@ -248,6 +248,15 @@ class CoreObjectsModule {
     // The @HiltWorkers in :workflow inject this concrete class, so Dagger must get Metro's instance -
     // it holds the chain generation counter, and a second copy would silently break the race guard.
     @Provides @Singleton fun provideWorkflowChainData(graphs: MetroGraphs): WorkflowChainData = graphs.workflowChainData
+
+    // Was SharedImplModule + LoggerModule, which used to be auto-installed into both :app and :wear.
+    // Metro owns them on the phone now; these hand Dagger the very same instances.
+    @Provides @Singleton fun provideAAPSLogger(graphs: MetroGraphs): AAPSLogger = graphs.aapsLogger
+    @Provides @Singleton fun provideRxBus(graphs: MetroGraphs): RxBus = graphs.rxBus
+    @Provides @Singleton fun provideDateUtil(graphs: MetroGraphs): DateUtil = graphs.dateUtil
+    @Provides @Singleton fun provideL(graphs: MetroGraphs): L = graphs.l
+    @Provides @Singleton fun provideAapsSchedulers(graphs: MetroGraphs): AapsSchedulers = graphs.aapsSchedulers
+    @Provides @Singleton fun provideSP(graphs: MetroGraphs): SP = graphs.sp
     @Provides @Singleton fun provideMaintenanceBinding(graphs: MetroGraphs): Maintenance = graphs.maintenance
     @Provides @Singleton fun provideFileListProviderBinding(graphs: MetroGraphs): FileListProvider = graphs.fileListProvider
     @Provides @Singleton fun provideLastBgDataBinding(graphs: MetroGraphs): LastBgData = graphs.lastBgData
@@ -404,8 +413,6 @@ class CoreObjectsModule {
         runningConfigurationProvider: Provider<RunningConfiguration>,
         nsClientSourceProvider: Provider<NSClientSource>,
         runningConfigurationKeysProvider: Provider<RunningConfigurationKeys>,
-        aapsLoggerProvider: Provider<AAPSLogger>,
-        rxBusProvider: Provider<RxBus>,
         activePluginProvider: Provider<ActivePlugin>,
         @ApplicationScope appScopeProvider: Provider<CoroutineScope>,
         fabricPrivacyProvider: Provider<FabricPrivacy>,
@@ -417,7 +424,6 @@ class CoreObjectsModule {
         widgetUpdaterProvider: Provider<WidgetUpdater>,
         authFlowOutProvider: Provider<AuthFlowOut>,
         tidepoolUploaderProvider: Provider<TidepoolUploader>,
-        dateUtilProvider: Provider<DateUtil>,
         profileFunctionProvider: Provider<ProfileFunction>,
         commandQueueProvider: Provider<CommandQueue>,
         rhProvider: Provider<ResourceHelper>,
@@ -436,14 +442,11 @@ class CoreObjectsModule {
         lastLocationDataContainerProvider: Provider<LastLocationDataContainer>,
         versionCheckerUtilsProvider: Provider<VersionCheckerUtils>,
         searchableProvidersProvider: Provider<Set<SearchableProvider>>,
-        aapsSchedulersProvider: Provider<AapsSchedulers>,
-        spProvider: Provider<SP>,
         bolusProgressDataProvider: Provider<BolusProgressData>,
         pumpEnactResultProvider: Provider<PumpEnactResult>,
         historyScopeProvider: Provider<HistoryScope>,
         overviewDataCacheProvider: Provider<OverviewDataCache>,
         pluginPermissionsProvider: Provider<PluginPermissions>,
-        lProvider: Provider<L>,
         @ApplicationContext appContextProvider: Provider<Context>,
         xDripBroadcastProvider: Provider<XDripBroadcast>,
         nsClientProvider: Provider<NsClient>,
@@ -456,8 +459,6 @@ class CoreObjectsModule {
         runningConfigurationProvider,
         nsClientSourceProvider,
         runningConfigurationKeysProvider,
-        aapsLoggerProvider,
-        rxBusProvider,
         activePluginProvider,
         appScopeProvider,
         fabricPrivacyProvider,
@@ -469,7 +470,6 @@ class CoreObjectsModule {
         widgetUpdaterProvider,
         authFlowOutProvider,
         tidepoolUploaderProvider,
-        dateUtilProvider,
         profileFunctionProvider,
         commandQueueProvider,
         rhProvider,
@@ -488,14 +488,11 @@ class CoreObjectsModule {
         lastLocationDataContainerProvider,
         versionCheckerUtilsProvider,
         searchableProvidersProvider,
-        aapsSchedulersProvider,
-        spProvider,
         bolusProgressDataProvider,
         pumpEnactResultProvider,
         historyScopeProvider,
         overviewDataCacheProvider,
         pluginPermissionsProvider,
-        lProvider,
         appContextProvider,
         xDripBroadcastProvider,
         nsClientProvider,

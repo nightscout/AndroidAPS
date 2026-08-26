@@ -3,7 +3,6 @@ package app.aaps.shared.impl.logging
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.keys.interfaces.Preferences
 import com.google.common.truth.Truth.assertThat
-import dagger.Lazy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -24,8 +23,7 @@ class LImplTest {
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        val lazyPreferences: Lazy<Preferences> = Lazy { preferences }
-        sut = LImpl(lazyPreferences)
+        sut = LImpl { preferences }
     }
 
     @Test

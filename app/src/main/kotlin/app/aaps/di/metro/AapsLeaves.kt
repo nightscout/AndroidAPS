@@ -87,8 +87,6 @@ class AapsLeaves(
     private val runningConfigurationProvider: Provider<RunningConfiguration>,
     private val nsClientSourceProvider: Provider<NSClientSource>,
     private val runningConfigurationKeysProvider: Provider<RunningConfigurationKeys>,
-    private val aapsLoggerProvider: Provider<AAPSLogger>,
-    private val rxBusProvider: Provider<RxBus>,
     private val activePluginProvider: Provider<ActivePlugin>,
     @ApplicationScope private val appScopeProvider: Provider<CoroutineScope>,
     private val fabricPrivacyProvider: Provider<FabricPrivacy>,
@@ -106,7 +104,6 @@ class AapsLeaves(
     private val widgetUpdaterProvider: Provider<WidgetUpdater>,
     private val authFlowOutProvider: Provider<AuthFlowOut>,
     private val tidepoolUploaderProvider: Provider<TidepoolUploader>,
-    private val dateUtilProvider: Provider<DateUtil>,
     private val profileFunctionProvider: Provider<ProfileFunction>,
     private val commandQueueProvider: Provider<CommandQueue>,
     private val rhProvider: Provider<ResourceHelper>,
@@ -154,24 +151,18 @@ class AapsLeaves(
      * window is what keeps history browsing off the live loop's calculation objects, so an app-scoped
      * view model reading it is fine.
      */
-    private val aapsSchedulersProvider: Provider<AapsSchedulers>,
-    private val spProvider: Provider<SP>,
     private val bolusProgressDataProvider: Provider<BolusProgressData>,
     private val pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val historyScopeProvider: Provider<HistoryScope>,
     private val overviewDataCacheProvider: Provider<OverviewDataCache>,
     // Same object as ActivePlugin above (PluginStore), under its other interface.
     private val pluginPermissionsProvider: Provider<PluginPermissions>,
-    private val lProvider: Provider<L>,
     @ApplicationContext private val appContextProvider: Provider<Context>,
     private val xDripBroadcastProvider: Provider<XDripBroadcast>,
     private val nsClientProvider: Provider<NsClient>,
     private val clientControlActionDispatcherProvider: Provider<ClientControlActionDispatcher>,
     private val sntpClientProvider: Provider<SntpClient>
 ) {
-
-    @Provides fun aapsLogger(): AAPSLogger = aapsLoggerProvider.get()
-    @Provides fun rxBus(): RxBus = rxBusProvider.get()
     @Provides fun activePlugin(): ActivePlugin = activePluginProvider.get()
 
     /**
@@ -204,7 +195,6 @@ class AapsLeaves(
     @Provides fun widgetUpdater(): WidgetUpdater = widgetUpdaterProvider.get()
     @Provides fun authFlowOut(): AuthFlowOut = authFlowOutProvider.get()
     @Provides fun tidepoolUploader(): TidepoolUploader = tidepoolUploaderProvider.get()
-    @Provides fun dateUtil(): DateUtil = dateUtilProvider.get()
     @Provides fun profileFunction(): ProfileFunction = profileFunctionProvider.get()
     @Provides fun commandQueue(): CommandQueue = commandQueueProvider.get()
     @Provides fun rh(): ResourceHelper = rhProvider.get()
@@ -236,9 +226,6 @@ class AapsLeaves(
     @Provides fun versionCheckerUtils(): VersionCheckerUtils = versionCheckerUtilsProvider.get()
     @Provides fun sntpClient(): SntpClient = sntpClientProvider.get()
     @Provides fun xDripBroadcast(): XDripBroadcast = xDripBroadcastProvider.get()
-    @Provides fun l(): L = lProvider.get()
-    @Provides fun aapsSchedulers(): AapsSchedulers = aapsSchedulersProvider.get()
-    @Provides fun sp(): SP = spProvider.get()
     @Provides fun bolusProgressData(): BolusProgressData = bolusProgressDataProvider.get()
 
     /** A value object: unscoped, as its Dagger binding is. */

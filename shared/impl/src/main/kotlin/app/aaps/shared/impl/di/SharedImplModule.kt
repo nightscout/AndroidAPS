@@ -16,15 +16,16 @@ import app.aaps.shared.impl.utils.DateUtilImpl
 import dagger.Lazy
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import dagger.hilt.migration.DisableInstallInCheck
 import javax.inject.Singleton
 
-@Module(
-    includes = [
-    ]
-)
-@InstallIn(SingletonComponent::class)
+/**
+ * The shared-implementation wiring for **:wear only**. See [LoggerModule] for why `@InstallIn` is gone:
+ * the phone builds all five of these in Metro now (`SharedImplBindings`), and wear keeps them here
+ * through its own `includes`.
+ */
+@Module
+@DisableInstallInCheck
 open class SharedImplModule {
 
     @Provides
@@ -34,7 +35,7 @@ open class SharedImplModule {
 
     @Provides
     @Singleton
-    fun provideL(preferences: Lazy<Preferences>): L = LImpl(preferences)
+    fun provideL(preferences: Lazy<Preferences>): L = LImpl { preferences.get() }
 
     @Provides
     @Singleton
