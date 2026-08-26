@@ -78,14 +78,16 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.withTimeoutOrNull
 import java.util.LinkedList
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
 import kotlin.reflect.KClass
 import kotlin.time.Duration.Companion.milliseconds
 
 @OpenForTesting
-@Singleton
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class CommandQueueImplementation @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
@@ -99,13 +101,13 @@ class CommandQueueImplementation @Inject constructor(
     private val notificationManager: NotificationManager,
     private val persistenceLayer: PersistenceLayer,
     private val decimalFormatter: DecimalFormatter,
-    private val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val pumpEnactResultProvider: () -> PumpEnactResult,
     private val pumpSync: PumpSync,
     private val preferences: Preferences,
     private val profileSwitchSilentGate: ProfileSwitchSilentGate,
-    private val localAlertUtils: Provider<LocalAlertUtils>,
-    private val smsCommunicator: Provider<SmsCommunicator>,
-    private val commandExecutor: Provider<CommandExecutor>,
+    private val localAlertUtils: () -> LocalAlertUtils,
+    private val smsCommunicator: () -> SmsCommunicator,
+    private val commandExecutor: () -> CommandExecutor,
     @ApplicationScope private val appScope: CoroutineScope,
     private val bolusProgressData: BolusProgressData
 ) : CommandQueue {
@@ -225,7 +227,7 @@ class CommandQueueImplementation @Inject constructor(
     }
 
     private fun executingNowError(): PumpEnactResult =
-        pumpEnactResultProvider.get().success(false).enacted(false).comment(R.string.executing_right_now)
+        pumpEnactResultProvider().success(false).enacted(false).comment(R.string.executing_right_now)
 
     /**
      * Running-mode gate: reject commands that contradict the currently active running mode.
@@ -253,7 +255,7 @@ class CommandQueueImplementation @Inject constructor(
                 LTag.PUMPQUEUE,
                 "Command rejected by running-mode gate: mode=$mode, kind=$kind, reason=${decision.reason}"
             )
-            return pumpEnactResultProvider.get().success(false).enacted(false).comment(commentRes)
+            return pumpEnactResultProvider().success(false).enacted(false).comment(commentRes)
         }
         return null
     }
@@ -331,7 +333,7 @@ class CommandQueueImplementation @Inject constructor(
         synchronized(queue) {
             for (i in queue.indices) {
                 queue[i].callback?.result(
-                    pumpEnactResultProvider.get().success(true).enacted(false).comment(commentResId)
+                    pumpEnactResultProvider().success(true).enacted(false).comment(commentResId)
                 )?.run()
             }
             queue.clear()
@@ -350,7 +352,7 @@ class CommandQueueImplementation @Inject constructor(
     // started on demand (idempotent) and drains the queue to completion; a signal while it is busy is a
     // conflated no-op. Returns Boolean so CommandQueueMocked can override this to a no-op in tests.
     fun notifyAboutNewCommand(): Boolean {
-        commandExecutor.get().signal()
+        commandExecutor().signal()
         return true
     }
 
@@ -378,10 +380,10 @@ class CommandQueueImplementation @Inject constructor(
                     action = Action.CARBS,
                     source = Sources.Database
                 )
-                pumpEnactResultProvider.get().enacted(false).success(true)
+                pumpEnactResultProvider().enacted(false).success(true)
             } catch (e: Exception) {
                 aapsLogger.error(LTag.PUMPQUEUE, "Failed to store carbs", e)
-                pumpEnactResultProvider.get().enacted(false).success(false)
+                pumpEnactResultProvider().enacted(false).success(false)
             }
         }
         // Bolus + carbs path: drop carbs from the queued command and persist them after the bolus succeeds.
@@ -404,11 +406,11 @@ class CommandQueueImplementation @Inject constructor(
             if (type == CommandType.SMB_BOLUS) {
                 if (bolusInQueue()) {
                     aapsLogger.debug(LTag.PUMPQUEUE, "Rejecting SMB since a bolus is queue/running")
-                    return pumpEnactResultProvider.get().enacted(false).success(false)
+                    return pumpEnactResultProvider().enacted(false).success(false)
                 }
                 if (detailedBolusInfo.lastKnownBolusTime < lastBolusTime) {
                     aapsLogger.debug(LTag.PUMPQUEUE, "Rejecting bolus, another bolus was issued since request time")
-                    return pumpEnactResultProvider.get().enacted(false).success(false)
+                    return pumpEnactResultProvider().enacted(false).success(false)
                 }
                 removeAll(CommandType.SMB_BOLUS)
             }
@@ -418,9 +420,9 @@ class CommandQueueImplementation @Inject constructor(
             detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
             val bolusGeneration = bolusProgressData.start(detailedBolusInfo.insulin, isSMB = detailedBolusInfo.bolusType === BS.Type.SMB, isPriming = detailedBolusInfo.bolusType == BS.Type.PRIMING)
             if (detailedBolusInfo.bolusType == BS.Type.SMB) {
-                add(CommandSMBBolus(aapsLogger, rh, dateUtil, activePlugin, persistenceLayer, preferences, bolusProgressData, pumpEnactResultProvider::get, detailedBolusInfo, cb, bolusGeneration))
+                add(CommandSMBBolus(aapsLogger, rh, dateUtil, activePlugin, persistenceLayer, preferences, bolusProgressData, pumpEnactResultProvider, detailedBolusInfo, cb, bolusGeneration))
             } else {
-                add(CommandBolus(aapsLogger, rh, activePlugin, pumpEnactResultProvider::get, bolusProgressData, detailedBolusInfo, cb, type, bolusGeneration))
+                add(CommandBolus(aapsLogger, rh, activePlugin, pumpEnactResultProvider, bolusProgressData, detailedBolusInfo, cb, type, bolusGeneration))
                 if (type == CommandType.BOLUS) { // Notify Wear about upcoming bolus
                     rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = 0, status = rh.gs(app.aaps.core.ui.R.string.goingtodeliver, detailedBolusInfo.insulin))))
                 }
@@ -450,7 +452,7 @@ class CommandQueueImplementation @Inject constructor(
 
     override suspend fun stopPump(): PumpEnactResult {
         val deferred = CompletableDeferred<PumpEnactResult>()
-        add(CommandStopPump(aapsLogger, rh, activePlugin, pumpEnactResultProvider::get, object : Callback() {
+        add(CommandStopPump(aapsLogger, rh, activePlugin, pumpEnactResultProvider, object : Callback() {
             override fun run() {
                 deferred.complete(result)
             }
@@ -461,7 +463,7 @@ class CommandQueueImplementation @Inject constructor(
 
     override suspend fun startPump(): PumpEnactResult {
         val deferred = CompletableDeferred<PumpEnactResult>()
-        add(CommandStartPump(aapsLogger, rh, activePlugin, pumpEnactResultProvider::get, object : Callback() {
+        add(CommandStartPump(aapsLogger, rh, activePlugin, pumpEnactResultProvider, object : Callback() {
             override fun run() {
                 deferred.complete(result)
             }
@@ -472,7 +474,7 @@ class CommandQueueImplementation @Inject constructor(
 
     override suspend fun setTBROverNotification(enable: Boolean): PumpEnactResult {
         val deferred = CompletableDeferred<PumpEnactResult>()
-        add(CommandInsightSetTBROverNotification(aapsLogger, rh, activePlugin, pumpEnactResultProvider::get, enable, object : Callback() {
+        add(CommandInsightSetTBROverNotification(aapsLogger, rh, activePlugin, pumpEnactResultProvider, enable, object : Callback() {
             override fun run() {
                 deferred.complete(result)
             }
@@ -502,7 +504,7 @@ class CommandQueueImplementation @Inject constructor(
             if (!enforceNew && isRunning(CommandType.TEMPBASAL)) return executingNowError()
             removeAll(CommandType.TEMPBASAL)
             val rateAfterConstraints = constraintChecker.applyBasalConstraints(ConstraintObject(absoluteRate, aapsLogger), profile).value()
-            add(CommandTempBasalAbsolute(aapsLogger, rh, activePlugin, pumpEnactResultProvider::get, rateAfterConstraints, durationInMinutes, enforceNew, tbrType, object : Callback() {
+            add(CommandTempBasalAbsolute(aapsLogger, rh, activePlugin, pumpEnactResultProvider, rateAfterConstraints, durationInMinutes, enforceNew, tbrType, object : Callback() {
                 override fun run() {
                     deferred.complete(result)
                 }
@@ -520,7 +522,7 @@ class CommandQueueImplementation @Inject constructor(
             if (!enforceNew && isRunning(CommandType.TEMPBASAL)) return executingNowError()
             removeAll(CommandType.TEMPBASAL)
             val percentAfterConstraints = constraintChecker.applyBasalPercentConstraints(ConstraintObject(percent, aapsLogger), profile).value()
-            add(CommandTempBasalPercent(aapsLogger, rh, activePlugin, pumpEnactResultProvider::get, percentAfterConstraints, durationInMinutes, enforceNew, tbrType, object : Callback() {
+            add(CommandTempBasalPercent(aapsLogger, rh, activePlugin, pumpEnactResultProvider, percentAfterConstraints, durationInMinutes, enforceNew, tbrType, object : Callback() {
                 override fun run() {
                     deferred.complete(result)
                 }
@@ -537,7 +539,7 @@ class CommandQueueImplementation @Inject constructor(
             if (isRunning(CommandType.EXTENDEDBOLUS)) return executingNowError()
             val rateAfterConstraints = constraintChecker.applyExtendedBolusConstraints(ConstraintObject(insulin, aapsLogger)).value()
             removeAll(CommandType.EXTENDEDBOLUS)
-            add(CommandExtendedBolus(aapsLogger, rh, activePlugin, pumpEnactResultProvider::get, rateAfterConstraints, durationInMinutes, object : Callback() {
+            add(CommandExtendedBolus(aapsLogger, rh, activePlugin, pumpEnactResultProvider, rateAfterConstraints, durationInMinutes, object : Callback() {
                 override fun run() {
                     deferred.complete(result)
                 }
@@ -552,7 +554,7 @@ class CommandQueueImplementation @Inject constructor(
         synchronized(enqueueLock) {
             if (!enforceNew && isRunning(CommandType.TEMPBASAL)) return executingNowError()
             removeAll(CommandType.TEMPBASAL)
-            add(CommandCancelTempBasal(aapsLogger, rh, activePlugin, pumpSync, dateUtil, pumpEnactResultProvider::get, enforceNew, autoForced, object : Callback() {
+            add(CommandCancelTempBasal(aapsLogger, rh, activePlugin, pumpSync, dateUtil, pumpEnactResultProvider, enforceNew, autoForced, object : Callback() {
                 override fun run() {
                     deferred.complete(result)
                 }
@@ -567,7 +569,7 @@ class CommandQueueImplementation @Inject constructor(
         synchronized(enqueueLock) {
             if (isRunning(CommandType.EXTENDEDBOLUS)) return executingNowError()
             removeAll(CommandType.EXTENDEDBOLUS)
-            add(CommandCancelExtendedBolus(aapsLogger, rh, activePlugin, pumpEnactResultProvider::get, object : Callback() {
+            add(CommandCancelExtendedBolus(aapsLogger, rh, activePlugin, pumpEnactResultProvider, object : Callback() {
                 override fun run() {
                     deferred.complete(result)
                 }
@@ -580,18 +582,18 @@ class CommandQueueImplementation @Inject constructor(
     suspend fun setProfile(profile: EffectiveProfile, hasNsId: Boolean): PumpEnactResult {
         if (isRunning(CommandType.BASAL_PROFILE)) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Command is already executed")
-            return pumpEnactResultProvider.get().success(true).enacted(false)
+            return pumpEnactResultProvider().success(true).enacted(false)
         }
         if (isThisProfileSet(profile) && persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now()) != null) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Correct profile already set")
-            return pumpEnactResultProvider.get().success(true).enacted(false)
+            return pumpEnactResultProvider().success(true).enacted(false)
         }
         // Compare with pump limits
         val basalValues = profile.getBasalValues()
         for (basalValue in basalValues) {
             if (basalValue.value < activePlugin.activePump.pumpDescription.basalMinimumRate) {
                 notificationManager.post(NotificationId.BASAL_VALUE_BELOW_MINIMUM, TextRef.AndroidRes(R.string.basal_value_below_minimum))
-                return pumpEnactResultProvider.get().success(false).enacted(false).comment(R.string.basal_value_below_minimum)
+                return pumpEnactResultProvider().success(false).enacted(false).comment(R.string.basal_value_below_minimum)
             }
         }
         notificationManager.dismiss(NotificationId.BASAL_VALUE_BELOW_MINIMUM)
@@ -599,7 +601,7 @@ class CommandQueueImplementation @Inject constructor(
         val deferred = CompletableDeferred<PumpEnactResult>()
         add(
             CommandSetProfile(
-                aapsLogger, rh, smsCommunicator.get(), activePlugin, dateUtil, this, config, persistenceLayer, pumpEnactResultProvider::get,
+                aapsLogger, rh, smsCommunicator(), activePlugin, dateUtil, this, config, persistenceLayer, pumpEnactResultProvider,
                 profile, hasNsId, object : Callback() {
                     override fun run() {
                         deferred.complete(result)
@@ -616,7 +618,7 @@ class CommandQueueImplementation @Inject constructor(
             return executingNowError()
         }
         val deferred = CompletableDeferred<PumpEnactResult>()
-        add(CommandReadStatus(aapsLogger, rh, activePlugin, localAlertUtils.get(), pumpEnactResultProvider::get, reason, object : Callback() {
+        add(CommandReadStatus(aapsLogger, rh, activePlugin, localAlertUtils(), pumpEnactResultProvider, reason, object : Callback() {
             override fun run() {
                 deferred.complete(result)
             }
@@ -642,7 +644,7 @@ class CommandQueueImplementation @Inject constructor(
         if (isRunning(CommandType.LOAD_HISTORY)) return executingNowError()
         removeAll(CommandType.LOAD_HISTORY)
         val deferred = CompletableDeferred<PumpEnactResult>()
-        add(CommandLoadHistory(aapsLogger, rh, activePlugin, pumpEnactResultProvider::get, type, object : Callback() {
+        add(CommandLoadHistory(aapsLogger, rh, activePlugin, pumpEnactResultProvider, type, object : Callback() {
             override fun run() {
                 deferred.complete(result)
             }
@@ -655,7 +657,7 @@ class CommandQueueImplementation @Inject constructor(
         if (isRunning(CommandType.SET_USER_SETTINGS)) return executingNowError()
         removeAll(CommandType.SET_USER_SETTINGS)
         val deferred = CompletableDeferred<PumpEnactResult>()
-        add(CommandSetUserSettings(aapsLogger, rh, activePlugin, pumpEnactResultProvider::get, object : Callback() {
+        add(CommandSetUserSettings(aapsLogger, rh, activePlugin, pumpEnactResultProvider, object : Callback() {
             override fun run() {
                 deferred.complete(result)
             }
@@ -668,7 +670,7 @@ class CommandQueueImplementation @Inject constructor(
         if (isRunning(CommandType.LOAD_TDD)) return executingNowError()
         removeAll(CommandType.LOAD_TDD)
         val deferred = CompletableDeferred<PumpEnactResult>()
-        add(CommandLoadTDDs(aapsLogger, rh, activePlugin, pumpEnactResultProvider::get, object : Callback() {
+        add(CommandLoadTDDs(aapsLogger, rh, activePlugin, pumpEnactResultProvider, object : Callback() {
             override fun run() {
                 deferred.complete(result)
             }
@@ -681,7 +683,7 @@ class CommandQueueImplementation @Inject constructor(
         if (isRunning(CommandType.LOAD_EVENTS)) return executingNowError()
         removeAll(CommandType.LOAD_EVENTS)
         val deferred = CompletableDeferred<PumpEnactResult>()
-        add(CommandLoadEvents(aapsLogger, rh, activePlugin, pumpEnactResultProvider::get, object : Callback() {
+        add(CommandLoadEvents(aapsLogger, rh, activePlugin, pumpEnactResultProvider, object : Callback() {
             override fun run() {
                 deferred.complete(result)
             }
@@ -694,7 +696,7 @@ class CommandQueueImplementation @Inject constructor(
         if (isRunning(CommandType.CLEAR_ALARMS)) return executingNowError()
         removeAll(CommandType.CLEAR_ALARMS)
         val deferred = CompletableDeferred<PumpEnactResult>()
-        add(CommandClearAlarms(aapsLogger, rh, activePlugin, pumpEnactResultProvider::get, object : Callback() {
+        add(CommandClearAlarms(aapsLogger, rh, activePlugin, pumpEnactResultProvider, object : Callback() {
             override fun run() {
                 deferred.complete(result)
             }
@@ -707,7 +709,7 @@ class CommandQueueImplementation @Inject constructor(
         if (isRunning(CommandType.DEACTIVATE)) return executingNowError()
         removeAll(CommandType.DEACTIVATE)
         val deferred = CompletableDeferred<PumpEnactResult>()
-        add(CommandDeactivate(aapsLogger, rh, activePlugin, pumpEnactResultProvider::get, object : Callback() {
+        add(CommandDeactivate(aapsLogger, rh, activePlugin, pumpEnactResultProvider, object : Callback() {
             override fun run() {
                 deferred.complete(result)
             }
@@ -720,7 +722,7 @@ class CommandQueueImplementation @Inject constructor(
         if (isRunning(CommandType.UPDATE_TIME)) return executingNowError()
         removeAll(CommandType.UPDATE_TIME)
         val deferred = CompletableDeferred<PumpEnactResult>()
-        add(CommandUpdateTime(aapsLogger, rh, activePlugin, pumpEnactResultProvider::get, object : Callback() {
+        add(CommandUpdateTime(aapsLogger, rh, activePlugin, pumpEnactResultProvider, object : Callback() {
             override fun run() {
                 deferred.complete(result)
             }
@@ -732,7 +734,7 @@ class CommandQueueImplementation @Inject constructor(
     override suspend fun customCommand(customCommand: CustomCommand): PumpEnactResult {
         if (isCustomCommandInQueue(customCommand::class)) return executingNowError()
         val deferred = CompletableDeferred<PumpEnactResult>()
-        add(CommandCustomCommand(aapsLogger, activePlugin, pumpEnactResultProvider::get, customCommand, object : Callback() {
+        add(CommandCustomCommand(aapsLogger, activePlugin, pumpEnactResultProvider, customCommand, object : Callback() {
             override fun run() {
                 deferred.complete(result)
             }

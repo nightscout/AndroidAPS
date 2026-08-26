@@ -92,6 +92,9 @@ class ContributedBindingsTest {
         // instances means the mark is never seen and a scene profile switch shows the notification the
         // gate exists to suppress - which is exactly what happened when SceneExecutor moved to Metro.
         assertThat(root.profileSwitchSilentGate).isSameInstanceAs(root.profileSwitchSilentGate)
+        // Holds the queue of pending pump commands and the one being performed. A second copy would
+        // accept commands that the copy the pump driver reads never sees.
+        assertThat(root.commandQueue).isSameInstanceAs(root.commandQueue)
     }
 
     @Test

@@ -114,7 +114,6 @@ class AapsLeaves(
     private val authFlowOutProvider: Provider<AuthFlowOut>,
     private val tidepoolUploaderProvider: Provider<TidepoolUploader>,
     private val profileFunctionProvider: Provider<ProfileFunction>,
-    private val commandQueueProvider: Provider<CommandQueue>,
     private val rhProvider: Provider<ResourceHelper>,
     private val dstHelperProvider: Provider<DstHelper>,
     private val workManagerProvider: Provider<WorkManager>,
@@ -211,7 +210,6 @@ class AapsLeaves(
     @Provides fun authFlowOut(): AuthFlowOut = authFlowOutProvider.get()
     @Provides fun tidepoolUploader(): TidepoolUploader = tidepoolUploaderProvider.get()
     @Provides fun profileFunction(): ProfileFunction = profileFunctionProvider.get()
-    @Provides fun commandQueue(): CommandQueue = commandQueueProvider.get()
     @Provides fun rh(): ResourceHelper = rhProvider.get()
 
     /** `ResourceHelper` is the Android implementation of the multiplatform [TextResolver]. */

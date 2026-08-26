@@ -285,6 +285,7 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideDataInbox(graphs: MetroGraphs): DataInbox = graphs.dataInbox
     // Unscoped on purpose - a fresh value object per caller, as the @Binds it replaces was.
     @Provides fun provideAutosensData(graphs: MetroGraphs): AutosensData = graphs.autosensData
+    @Provides @Singleton fun provideCommandQueue(graphs: MetroGraphs): CommandQueue = graphs.commandQueue
     // One flag, two frameworks: SceneExecutor (Metro) marks it, CommandQueueImplementation (Dagger)
     // consumes it. Without this they get one each and the mark is never seen.
     @Provides @Singleton fun provideProfileSwitchSilentGate(graphs: MetroGraphs): ProfileSwitchSilentGate = graphs.profileSwitchSilentGate
@@ -460,7 +461,6 @@ class CoreObjectsModule {
         authFlowOutProvider: Provider<AuthFlowOut>,
         tidepoolUploaderProvider: Provider<TidepoolUploader>,
         profileFunctionProvider: Provider<ProfileFunction>,
-        commandQueueProvider: Provider<CommandQueue>,
         rhProvider: Provider<ResourceHelper>,
         dstHelperProvider: Provider<DstHelper>,
         workManagerProvider: Provider<WorkManager>,
@@ -509,7 +509,6 @@ class CoreObjectsModule {
         authFlowOutProvider,
         tidepoolUploaderProvider,
         profileFunctionProvider,
-        commandQueueProvider,
         rhProvider,
         dstHelperProvider,
         workManagerProvider,

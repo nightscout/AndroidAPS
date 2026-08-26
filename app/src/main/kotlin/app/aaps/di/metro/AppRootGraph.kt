@@ -29,6 +29,7 @@ import app.aaps.core.interfaces.plugin.PluginPermissions
 import app.aaps.core.interfaces.aps.AutosensData
 import app.aaps.core.interfaces.configuration.RunningConfigurationKeys
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
+import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.implementation.profile.ProfileSwitchSilentGate
@@ -287,6 +288,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val sceneExecutor: SceneExecutor
     val dataInbox: DataInbox
     val autosensData: AutosensData
+    val commandQueue: CommandQueue
     val profileSwitchSilentGate: ProfileSwitchSilentGate
     val runningConfiguration: RunningConfiguration
     val runningConfigurationKeys: RunningConfigurationKeys

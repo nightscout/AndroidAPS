@@ -70,7 +70,6 @@ import javax.inject.Singleton
 @Module(
     includes = [
         ImplementationModule.Bindings::class,
-        CommandQueueModule::class,
         MaintenanceImplModule::class
     ]
 )

@@ -54,7 +54,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.util.Calendar
-import javax.inject.Provider
 import kotlin.reflect.KClass
 
 class CommandQueueImplementationTest : TestBaseWithProfile() {
@@ -64,11 +63,11 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var localAlertUtils: LocalAlertUtils
-    private val localAlertUtilsProvider: Provider<LocalAlertUtils> by lazy { Provider { localAlertUtils } }
+    private val localAlertUtilsProvider: () -> LocalAlertUtils by lazy { { localAlertUtils } }
     @Mock lateinit var smsCommunicator: SmsCommunicator
-    private val smsCommunicatorProvider: Provider<SmsCommunicator> by lazy { Provider { smsCommunicator } }
+    private val smsCommunicatorProvider: () -> SmsCommunicator by lazy { { smsCommunicator } }
     @Mock lateinit var commandExecutor: CommandExecutor
-    private val commandExecutorProvider: Provider<CommandExecutor> by lazy { Provider { commandExecutor } }
+    private val commandExecutorProvider: () -> CommandExecutor by lazy { { commandExecutor } }
 
     private val testScope = CoroutineScope(Dispatchers.Unconfined)
     private val bolusProgressData by lazy { BolusProgressData(ch, testScope) }
@@ -87,13 +86,13 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         notificationManager: NotificationManager,
         persistenceLayer: PersistenceLayer,
         decimalFormatter: DecimalFormatter,
-        pumpEnactResultProvider: Provider<PumpEnactResult>,
+        pumpEnactResultProvider: () -> PumpEnactResult,
         pumpSync: PumpSync,
         preferences: Preferences,
         profileSwitchSilentGate: ProfileSwitchSilentGate,
-        localAlertUtils: Provider<LocalAlertUtils>,
-        smsCommunicator: Provider<SmsCommunicator>,
-        commandExecutor: Provider<CommandExecutor>,
+        localAlertUtils: () -> LocalAlertUtils,
+        smsCommunicator: () -> SmsCommunicator,
+        commandExecutor: () -> CommandExecutor,
         appScope: CoroutineScope,
         bolusProgressData: BolusProgressData
     ) : CommandQueueImplementation(
@@ -125,7 +124,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
                 notificationManager,
                 persistenceLayer,
                 decimalFormatter,
-                pumpEnactResultProvider,
+                { pumpEnactResultProvider.get() },
                 pumpSync,
                 preferences,
                 profileSwitchSilentGate,
@@ -173,9 +172,9 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         lateinit var executor: CommandExecutor
         commandQueue = CommandQueueImplementation(
             aapsLogger, rxBus, rh, constraintChecker, profileFunction, activePlugin, config, dateUtil,
-            fabricPrivacy, notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider,
+            fabricPrivacy, notificationManager, persistenceLayer, decimalFormatter, { pumpEnactResultProvider.get() },
             pumpSync, preferences, profileSwitchSilentGate, localAlertUtilsProvider, smsCommunicatorProvider,
-            Provider { executor }, testScope, bolusProgressData
+            { executor }, testScope, bolusProgressData
         )
         // Real executor sharing this queue: notifyAboutNewCommand() signals it and it drains on its own thread.
         executor = CommandExecutor(
@@ -204,9 +203,9 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         lateinit var executor: CommandExecutor
         commandQueue = CommandQueueImplementation(
             aapsLogger, rxBus, rh, constraintChecker, profileFunction, activePlugin, config, dateUtil,
-            fabricPrivacy, notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider,
+            fabricPrivacy, notificationManager, persistenceLayer, decimalFormatter, { pumpEnactResultProvider.get() },
             pumpSync, preferences, profileSwitchSilentGate, localAlertUtilsProvider, smsCommunicatorProvider,
-            Provider { executor }, testScope, bolusProgressData
+            { executor }, testScope, bolusProgressData
         )
         executor = CommandExecutor(
             aapsLogger, fabricPrivacy, commandQueue, rxBus, activePlugin, rh, preferences, config, bolusProgressData, context
