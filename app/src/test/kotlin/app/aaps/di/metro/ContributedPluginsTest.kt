@@ -42,6 +42,9 @@ class ContributedPluginsTest {
             // source - all sixteen. 400, 410 and 440 are also bound to an interface; Dagger delegates
             // to these instances in CoreObjectsModule rather than building its own.
             400, 410, 420, 430, 440, 450, 460, 470, 480, 490, 500, 510, 520, 530, 540, 550,
+            // sync - the every-build part of the 300 block. SmsCommunicator 300 and NSClientV3 310 are
+            // still Dagger, and Tidepool 320 is @NotNSClient, so only these three are here.
+            330, 360, 370,
             // smoothing
             600, 610, 620, 630,
             // calibration
@@ -53,6 +56,16 @@ class ContributedPluginsTest {
             // merges this bucket unconditionally anyway.
             1000
         )
+    }
+
+    @Test
+    fun `the xdrip plugin and the XDripBroadcast binding are the same object`() {
+        // XdripPlugin carries two contributions: into the plugin map, and as XDripBroadcast. Under
+        // Dagger these were two @Binds to the same @Singleton class, so callers shared one object.
+        // Two separate instances would look fine at every call site and quietly broadcast from a
+        // plugin that is not the one in the list.
+        val root = testRoot()
+        assertThat(root.xDripBroadcast).isSameInstanceAs(root.contributedPlugins[330])
     }
 
     @Test
@@ -82,8 +95,10 @@ class ContributedPluginsTest {
     }
 
     @Test
-    fun `only a non-follower build gets the version checker`() {
-        assertThat(testRoot().contributedNotNsClientPlugins.keys).containsExactly(810)
+    fun `only a non-follower build gets the version checker and Tidepool`() {
+        // 340 (OpenHumans) is also @NotNSClient but comes from its own graph extension, so it joins
+        // this bucket in MetroGraphs.notNsClientPlugins() rather than appearing here.
+        assertThat(testRoot().contributedNotNsClientPlugins.keys).containsExactly(320, 810)
     }
 
     @Test

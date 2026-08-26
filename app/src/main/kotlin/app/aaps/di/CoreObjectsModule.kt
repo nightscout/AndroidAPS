@@ -266,6 +266,7 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideStoreDataForDb(graphs: MetroGraphs): StoreDataForDb = graphs.storeDataForDb
     @Provides @Singleton fun provideSceneExecutor(graphs: MetroGraphs): SceneExecutor = graphs.sceneExecutor
     @Provides @Singleton fun provideDataInbox(graphs: MetroGraphs): DataInbox = graphs.dataInbox
+    @Provides @Singleton fun provideXDripBroadcast(graphs: MetroGraphs): XDripBroadcast = graphs.xDripBroadcast
     @Provides @Singleton fun provideMaintenanceBinding(graphs: MetroGraphs): Maintenance = graphs.maintenance
     @Provides @Singleton fun provideFileListProviderBinding(graphs: MetroGraphs): FileListProvider = graphs.fileListProvider
     @Provides @Singleton fun provideLastBgDataBinding(graphs: MetroGraphs): LastBgData = graphs.lastBgData
@@ -451,7 +452,6 @@ class CoreObjectsModule {
         overviewDataCacheProvider: Provider<OverviewDataCache>,
         pluginPermissionsProvider: Provider<PluginPermissions>,
         @ApplicationContext appContextProvider: Provider<Context>,
-        xDripBroadcastProvider: Provider<XDripBroadcast>,
         nsClientProvider: Provider<NsClient>,
         clientControlActionDispatcherProvider: Provider<ClientControlActionDispatcher>,
         sntpClientProvider: Provider<SntpClient>
@@ -491,7 +491,6 @@ class CoreObjectsModule {
         overviewDataCacheProvider,
         pluginPermissionsProvider,
         appContextProvider,
-        xDripBroadcastProvider,
         nsClientProvider,
         clientControlActionDispatcherProvider,
         sntpClientProvider

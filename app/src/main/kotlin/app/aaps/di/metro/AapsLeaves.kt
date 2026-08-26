@@ -152,7 +152,6 @@ class AapsLeaves(
     // Same object as ActivePlugin above (PluginStore), under its other interface.
     private val pluginPermissionsProvider: Provider<PluginPermissions>,
     @ApplicationContext private val appContextProvider: Provider<Context>,
-    private val xDripBroadcastProvider: Provider<XDripBroadcast>,
     private val nsClientProvider: Provider<NsClient>,
     private val clientControlActionDispatcherProvider: Provider<ClientControlActionDispatcher>,
     private val sntpClientProvider: Provider<SntpClient>
@@ -214,7 +213,6 @@ class AapsLeaves(
 
     @Provides fun versionCheckerUtils(): VersionCheckerUtils = versionCheckerUtilsProvider.get()
     @Provides fun sntpClient(): SntpClient = sntpClientProvider.get()
-    @Provides fun xDripBroadcast(): XDripBroadcast = xDripBroadcastProvider.get()
     @Provides fun bolusProgressData(): BolusProgressData = bolusProgressDataProvider.get()
 
     /** A value object: unscoped, as its Dagger binding is. */

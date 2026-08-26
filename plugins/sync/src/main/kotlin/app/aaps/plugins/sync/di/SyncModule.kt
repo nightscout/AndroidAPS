@@ -53,8 +53,6 @@ abstract class SyncModule {
     @InstallIn(SingletonComponent::class)
     interface Binding {
         @Binds fun bindSmsCommunicator(smsCommunicatorPlugin: SmsCommunicatorPlugin): SmsCommunicator
-        @Binds fun bindXDripBroadcastInterface(xDripBroadcastImpl: XdripPlugin): XDripBroadcast
-        @Binds fun bindLoopHub(loopHub: LoopHubImpl): LoopHub
         @Binds fun bindNsClient(nsClientV3Plugin: NSClientV3Plugin): NsClient
 
         @Binds fun bindNSClientRepository(nsClientRepositoryImpl: NSClientRepositoryImpl): NSClientRepository
