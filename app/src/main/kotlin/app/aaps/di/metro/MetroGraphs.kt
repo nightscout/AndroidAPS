@@ -17,6 +17,10 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.widget.WidgetUpdater
+import app.aaps.core.interfaces.scenes.SceneIconResolver
+import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.plugins.automation.services.LastLocationDataContainer
 import app.aaps.workflow.WorkflowChainData
 import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.maintenance.FileListProvider
@@ -294,6 +298,10 @@ class MetroGraphs @Inject constructor(
     val l: L get() = root.l
     val aapsSchedulers: AapsSchedulers get() = root.aapsSchedulers
     val sp: SP get() = root.sp
+    val widgetUpdater: WidgetUpdater get() = root.widgetUpdater
+    val sceneIconResolver: SceneIconResolver get() = root.sceneIconResolver
+    val processedDeviceStatusData: ProcessedDeviceStatusData get() = root.processedDeviceStatusData
+    val lastLocationDataContainer: LastLocationDataContainer get() = root.lastLocationDataContainer
     val maintenance: Maintenance get() = root.maintenance
     val fileListProvider: FileListProvider get() = root.fileListProvider
     val lastBgData: LastBgData get() = root.lastBgData

@@ -17,6 +17,10 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.widget.WidgetUpdater
+import app.aaps.core.interfaces.scenes.SceneIconResolver
+import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.plugins.automation.services.LastLocationDataContainer
 import app.aaps.workflow.WorkflowChainData
 import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.maintenance.FileListProvider
@@ -262,6 +266,10 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val l: L
     val aapsSchedulers: AapsSchedulers
     val sp: SP
+    val widgetUpdater: WidgetUpdater
+    val sceneIconResolver: SceneIconResolver
+    val processedDeviceStatusData: ProcessedDeviceStatusData
+    val lastLocationDataContainer: LastLocationDataContainer
     val maintenance: Maintenance
     val fileListProvider: FileListProvider
     val lastBgData: LastBgData

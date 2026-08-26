@@ -29,11 +29,8 @@ abstract class UiModule {
     @InstallIn(SingletonComponent::class)
     interface Bindings {
 
-        @Binds fun bindWidgetUpdater(impl: WidgetUpdaterImpl): WidgetUpdater
-
         // Scene icon resolution stays in :ui (the SceneIcons catalog lives here). The rest of the scene
         // engine + its DI bindings moved to :implementation (SceneModule).
-        @Binds fun bindSceneIconResolver(impl: SceneIconResolverImpl): SceneIconResolver
 
         @Binds @IntoSet fun bindBuiltInSearchables(impl: BuiltInSearchables): SearchableProvider
         @Binds @IntoSet fun bindDialogSearchables(impl: DialogSearchables): SearchableProvider

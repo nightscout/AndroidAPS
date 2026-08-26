@@ -2,13 +2,15 @@ package app.aaps.plugins.sync.nsclientV3.data
 
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
 
-@Singleton
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class ProcessedDeviceStatusDataImpl @Inject constructor(
-    private val apsResultProvider: Provider<APSResult>
+    private val apsResultProvider: () -> APSResult
 ) : ProcessedDeviceStatusData {
 
     override var pumpData: ProcessedDeviceStatusData.PumpData? = null
@@ -23,7 +25,7 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
         get() = if (openAPSData.clockSuggested != 0L) openAPSData.clockSuggested else -1
 
     override fun getAPSResult(): APSResult? =
-        openAPSData.suggested?.let { apsResultProvider.get().with(it) }
+        openAPSData.suggested?.let { apsResultProvider().with(it) }
 
     override val uploaderStatus: String
         get() {

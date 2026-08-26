@@ -74,14 +74,19 @@ class ContributedBindingsTest {
         assertThat(root.l).isSameInstanceAs(root.l)
         assertThat(root.aapsSchedulers).isSameInstanceAs(root.aapsSchedulers)
         assertThat(root.sp).isSameInstanceAs(root.sp)
+        assertThat(root.sceneIconResolver).isSameInstanceAs(root.sceneIconResolver)
+        assertThat(root.processedDeviceStatusData).isSameInstanceAs(root.processedDeviceStatusData)
+        assertThat(root.lastLocationDataContainer).isSameInstanceAs(root.lastLocationDataContainer)
     }
 
     @Test
-    fun `PumpSync and PumpWithConcentration stay UNSCOPED, as they were under Dagger`() {
+    fun `the unscoped bindings stay UNSCOPED, as they were under Dagger`() {
         // The @Binds they replaced had no @Singleton, so every injection site got its own. Scoping them
-        // now would be a silent behaviour change in classes that talk to the pump.
+        // now would be a silent behaviour change - and for the two pump ones, in classes that talk to
+        // the pump.
         val root = testRoot()
         assertThat(root.pumpSync).isNotSameInstanceAs(root.pumpSync)
         assertThat(root.pumpWithConcentration).isNotSameInstanceAs(root.pumpWithConcentration)
+        assertThat(root.widgetUpdater).isNotSameInstanceAs(root.widgetUpdater)
     }
 }

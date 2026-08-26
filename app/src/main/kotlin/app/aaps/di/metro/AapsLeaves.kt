@@ -101,7 +101,6 @@ class AapsLeaves(
     private val apsResultProvider: Provider<APSResult>,
     // Dagger owns this one; LoopPlugin needs it and Metro builds LoopPlugin now.
     // The activities this app injects need these; all three are Dagger @Binds in their own modules.
-    private val widgetUpdaterProvider: Provider<WidgetUpdater>,
     private val authFlowOutProvider: Provider<AuthFlowOut>,
     private val tidepoolUploaderProvider: Provider<TidepoolUploader>,
     private val profileFunctionProvider: Provider<ProfileFunction>,
@@ -117,14 +116,12 @@ class AapsLeaves(
     // Needed by the feature extensions below the root, which no longer carry their own leaf lists.
     private val constraintsCheckerProvider: Provider<ConstraintsChecker>,
     private val automationProvider: Provider<Automation>,
-    private val processedDeviceStatusDataProvider: Provider<ProcessedDeviceStatusData>,
     private val contextProvider: Provider<Context>,
     // Source plugins, still built by Dagger. They live here rather than in their own module because a
     // graph extension is generated in the parent's module, so Metro cannot read a container from the
     // module the extension is declared in.
     // Automation.
     private val uiInteractionProvider: Provider<UiInteraction>,
-    private val lastLocationDataContainerProvider: Provider<LastLocationDataContainer>,
     // Constraints.
     private val versionCheckerUtilsProvider: Provider<VersionCheckerUtils>,
     // Still Dagger-owned, and needed by the scene classes that moved to Metro.
@@ -192,7 +189,6 @@ class AapsLeaves(
     @Provides fun apsResult(): APSResult = apsResultProvider.get()
     // No loop() leaf any more: Metro builds LoopPlugin, so Loop travels the other way, through
     // `CoreObjectsModule.provideLoop`.
-    @Provides fun widgetUpdater(): WidgetUpdater = widgetUpdaterProvider.get()
     @Provides fun authFlowOut(): AuthFlowOut = authFlowOutProvider.get()
     @Provides fun tidepoolUploader(): TidepoolUploader = tidepoolUploaderProvider.get()
     @Provides fun profileFunction(): ProfileFunction = profileFunctionProvider.get()
@@ -216,12 +212,10 @@ class AapsLeaves(
     @Provides fun overviewDataCacheFactory(): OverviewDataCacheFactory = overviewDataCacheFactoryProvider.get()
     @Provides fun constraintsChecker(): ConstraintsChecker = constraintsCheckerProvider.get()
     @Provides fun automation(): Automation = automationProvider.get()
-    @Provides fun processedDeviceStatusData(): ProcessedDeviceStatusData = processedDeviceStatusDataProvider.get()
     @Provides fun context(): Context = contextProvider.get()
 
 
     @Provides fun uiInteraction(): UiInteraction = uiInteractionProvider.get()
-    @Provides fun lastLocationDataContainer(): LastLocationDataContainer = lastLocationDataContainerProvider.get()
 
     @Provides fun versionCheckerUtils(): VersionCheckerUtils = versionCheckerUtilsProvider.get()
     @Provides fun sntpClient(): SntpClient = sntpClientProvider.get()

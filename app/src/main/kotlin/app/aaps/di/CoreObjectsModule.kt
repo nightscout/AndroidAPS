@@ -105,6 +105,7 @@ import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.interfaces.scenes.SceneIconResolver
 import app.aaps.workflow.WorkflowChainData
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.keys.interfaces.VisibilityContext
@@ -257,6 +258,11 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideL(graphs: MetroGraphs): L = graphs.l
     @Provides @Singleton fun provideAapsSchedulers(graphs: MetroGraphs): AapsSchedulers = graphs.aapsSchedulers
     @Provides @Singleton fun provideSP(graphs: MetroGraphs): SP = graphs.sp
+
+    @Provides fun provideWidgetUpdater(graphs: MetroGraphs): WidgetUpdater = graphs.widgetUpdater
+    @Provides @Singleton fun provideSceneIconResolver(graphs: MetroGraphs): SceneIconResolver = graphs.sceneIconResolver
+    @Provides @Singleton fun provideProcessedDeviceStatusData(graphs: MetroGraphs): ProcessedDeviceStatusData = graphs.processedDeviceStatusData
+    @Provides @Singleton fun provideLastLocationDataContainer(graphs: MetroGraphs): LastLocationDataContainer = graphs.lastLocationDataContainer
     @Provides @Singleton fun provideMaintenanceBinding(graphs: MetroGraphs): Maintenance = graphs.maintenance
     @Provides @Singleton fun provideFileListProviderBinding(graphs: MetroGraphs): FileListProvider = graphs.fileListProvider
     @Provides @Singleton fun provideLastBgDataBinding(graphs: MetroGraphs): LastBgData = graphs.lastBgData
@@ -421,7 +427,6 @@ class CoreObjectsModule {
         configProvider: Provider<Config>,
         calculationSignalsEmitterProvider: Provider<CalculationSignalsEmitter>,
         apsResultProvider: Provider<APSResult>,
-        widgetUpdaterProvider: Provider<WidgetUpdater>,
         authFlowOutProvider: Provider<AuthFlowOut>,
         tidepoolUploaderProvider: Provider<TidepoolUploader>,
         profileFunctionProvider: Provider<ProfileFunction>,
@@ -436,10 +441,8 @@ class CoreObjectsModule {
         overviewDataCacheFactoryProvider: Provider<OverviewDataCacheFactory>,
         constraintsCheckerProvider: Provider<ConstraintsChecker>,
         automationProvider: Provider<Automation>,
-        processedDeviceStatusDataProvider: Provider<ProcessedDeviceStatusData>,
         contextProvider: Provider<Context>,
         uiInteractionProvider: Provider<UiInteraction>,
-        lastLocationDataContainerProvider: Provider<LastLocationDataContainer>,
         versionCheckerUtilsProvider: Provider<VersionCheckerUtils>,
         searchableProvidersProvider: Provider<Set<SearchableProvider>>,
         bolusProgressDataProvider: Provider<BolusProgressData>,
@@ -467,7 +470,6 @@ class CoreObjectsModule {
         configProvider,
         calculationSignalsEmitterProvider,
         apsResultProvider,
-        widgetUpdaterProvider,
         authFlowOutProvider,
         tidepoolUploaderProvider,
         profileFunctionProvider,
@@ -482,10 +484,8 @@ class CoreObjectsModule {
         overviewDataCacheFactoryProvider,
         constraintsCheckerProvider,
         automationProvider,
-        processedDeviceStatusDataProvider,
         contextProvider,
         uiInteractionProvider,
-        lastLocationDataContainerProvider,
         versionCheckerUtilsProvider,
         searchableProvidersProvider,
         bolusProgressDataProvider,
