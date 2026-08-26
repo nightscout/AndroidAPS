@@ -291,6 +291,7 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideCommandQueue(graphs: MetroGraphs): CommandQueue = graphs.commandQueue
     @Provides @Singleton fun provideLocalAlertUtils(graphs: MetroGraphs): LocalAlertUtils = graphs.localAlertUtils
     @Provides @Singleton fun provideConfig(graphs: MetroGraphs): Config = graphs.config
+    @Provides @Singleton fun provideBolusProgressData(graphs: MetroGraphs): BolusProgressData = graphs.bolusProgressData
     @Provides @Singleton fun providePersistenceLayer(graphs: MetroGraphs): PersistenceLayer = graphs.persistenceLayer
     @Provides @Singleton fun provideCloudStorageProviders(graphs: MetroGraphs): Set<CloudStorageProvider> = graphs.cloudStorageProviders
     @Provides @Singleton fun provideConstraintsChecker(graphs: MetroGraphs): ConstraintsChecker = graphs.constraintsChecker
@@ -495,7 +496,6 @@ class CoreObjectsModule {
         xdripMvvmRepositoryProvider: Provider<XdripMvvmRepository>,
         receiverDelegateProvider: Provider<ReceiverDelegate>,
         rateLimitProvider: Provider<RateLimit>,
-        bolusProgressDataProvider: Provider<BolusProgressData>,
         historyScopeProvider: Provider<HistoryScope>,
         overviewDataCacheProvider: Provider<OverviewDataCache>,
         @ApplicationContext appContextProvider: Provider<Context>,
@@ -536,7 +536,6 @@ class CoreObjectsModule {
         xdripMvvmRepositoryProvider,
         receiverDelegateProvider,
         rateLimitProvider,
-        bolusProgressDataProvider,
         historyScopeProvider,
         overviewDataCacheProvider,
         appContextProvider,

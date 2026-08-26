@@ -163,7 +163,6 @@ class AapsLeaves(
      * window is what keeps history browsing off the live loop's calculation objects, so an app-scoped
      * view model reading it is fine.
      */
-    private val bolusProgressDataProvider: Provider<BolusProgressData>,
     private val historyScopeProvider: Provider<HistoryScope>,
     private val overviewDataCacheProvider: Provider<OverviewDataCache>,
     // Same object as ActivePlugin above (PluginStore), under its other interface.
@@ -223,7 +222,6 @@ class AapsLeaves(
 
     @Provides fun versionCheckerUtils(): VersionCheckerUtils = versionCheckerUtilsProvider.get()
     @Provides fun sntpClient(): SntpClient = sntpClientProvider.get()
-    @Provides fun bolusProgressData(): BolusProgressData = bolusProgressDataProvider.get()
 
     /** A value object: unscoped, as its Dagger binding is. */
     @Provides fun historyScope(): HistoryScope = historyScopeProvider.get()
