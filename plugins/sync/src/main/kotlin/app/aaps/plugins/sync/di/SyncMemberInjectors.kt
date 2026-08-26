@@ -1,6 +1,7 @@
 package app.aaps.plugins.sync.di
 
 import app.aaps.core.interfaces.di.FeatureMemberInjectors
+import app.aaps.plugins.sync.nsclientV3.services.NSClientV3Service
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowIn
 import app.aaps.plugins.sync.wear.receivers.WearDataReceiver
 import app.aaps.plugins.sync.wear.wearintegration.DataLayerListenerServiceMobile
@@ -41,4 +42,10 @@ object SyncMemberInjectors {
     fun bindDataLayerListenerServiceMobile(
         injector: MembersInjector<DataLayerListenerServiceMobile>
     ): MembersInjector<*> = injector
+
+    @Provides
+    @FeatureMemberInjectors
+    @IntoMap
+    @ClassKey(NSClientV3Service::class)
+    fun bindNSClientV3Service(injector: MembersInjector<NSClientV3Service>): MembersInjector<*> = injector
 }

@@ -16,13 +16,11 @@ import app.aaps.plugins.sync.nsclientV3.StoreDataForDbImpl
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlRoundTrip
 import app.aaps.plugins.sync.nsclientV3.compose.NSClientRepositoryImpl
 import app.aaps.plugins.sync.nsclientV3.data.ProcessedDeviceStatusDataImpl
-import app.aaps.plugins.sync.nsclientV3.services.NSClientV3Service
 import app.aaps.plugins.sync.smsCommunicator.SmsCommunicatorPlugin
 import app.aaps.plugins.sync.xdrip.XdripPlugin
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import dagger.android.ContributesAndroidInjector
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
@@ -38,9 +36,6 @@ import javax.inject.Singleton
 abstract class SyncModule {
 
     // NSClient / NSClientV3 / Xdrip sync workers migrated to @HiltWorker (constructed by HiltWorkerFactory).
-    // These two stay on dagger.android: both hit a Metro codegen bug when member injected, because each
-    // needs a Metro built plugin - see https://github.com/ZacSweers/metro/issues/2731.
-    @ContributesAndroidInjector abstract fun contributesNSClientV3Service(): NSClientV3Service
 
     @Module
     @InstallIn(SingletonComponent::class)

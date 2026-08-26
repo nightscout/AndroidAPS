@@ -1,5 +1,6 @@
 package app.aaps.di.metro
 
+import app.aaps.plugins.sync.nsclientV3.services.NSClientV3Service
 import app.aaps.plugins.sync.wear.receivers.WearDataReceiver
 import app.aaps.plugins.sync.wear.wearintegration.DataLayerListenerServiceMobile
 import com.google.common.truth.Truth.assertThat
@@ -26,5 +27,10 @@ class SyncEntryPointInjectorsTest {
             WearDataReceiver::class,
             DataLayerListenerServiceMobile::class
         )
+    }
+
+    @Test
+    fun `the nsclient service has an injector`() {
+        assertThat(injectors.keys).contains(NSClientV3Service::class)
     }
 }

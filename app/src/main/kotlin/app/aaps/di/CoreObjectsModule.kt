@@ -40,7 +40,11 @@ import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.configuration.RunningConfigurationKeys
+import app.aaps.core.interfaces.protection.SecureEncrypt
+import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.graph.GraphConfigRepository
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
@@ -96,6 +100,7 @@ import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.objects.runningMode.RunningModeGuard
@@ -360,6 +365,12 @@ class CoreObjectsModule {
     @Suppress("LongParameterList")
     fun provideAapsLeaves(
         metroMemberInjectorProvider: Provider<MetroMemberInjector>,
+        nsClientRepositoryProvider: Provider<NSClientRepository>,
+        storeDataForDbProvider: Provider<StoreDataForDb>,
+        runningConfigurationProvider: Provider<RunningConfiguration>,
+        nsClientSourceProvider: Provider<NSClientSource>,
+        runningConfigurationKeysProvider: Provider<RunningConfigurationKeys>,
+        secureEncryptProvider: Provider<SecureEncrypt>,
         aapsLoggerProvider: Provider<AAPSLogger>,
         rxBusProvider: Provider<RxBus>,
         activePluginProvider: Provider<ActivePlugin>,
@@ -425,6 +436,12 @@ class CoreObjectsModule {
         sntpClientProvider: Provider<SntpClient>
     ): AapsLeaves = AapsLeaves(
         metroMemberInjectorProvider,
+        nsClientRepositoryProvider,
+        storeDataForDbProvider,
+        runningConfigurationProvider,
+        nsClientSourceProvider,
+        runningConfigurationKeysProvider,
+        secureEncryptProvider,
         aapsLoggerProvider,
         rxBusProvider,
         activePluginProvider,

@@ -29,7 +29,12 @@ import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.configuration.RunningConfigurationKeys
+import app.aaps.core.interfaces.protection.SecureEncrypt
+import app.aaps.core.interfaces.source.NSClientSource
+import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -56,6 +61,7 @@ import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.ui.search.SearchableProvider
 import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.implementation.maintenance.cloud.CloudStorageManager
@@ -93,6 +99,12 @@ import javax.inject.Provider
 @BindingContainer
 class AapsLeaves(
     private val metroMemberInjectorProvider: Provider<MetroMemberInjector>,
+    private val nsClientRepositoryProvider: Provider<NSClientRepository>,
+    private val storeDataForDbProvider: Provider<StoreDataForDb>,
+    private val runningConfigurationProvider: Provider<RunningConfiguration>,
+    private val nsClientSourceProvider: Provider<NSClientSource>,
+    private val runningConfigurationKeysProvider: Provider<RunningConfigurationKeys>,
+    private val secureEncryptProvider: Provider<SecureEncrypt>,
     private val aapsLoggerProvider: Provider<AAPSLogger>,
     private val rxBusProvider: Provider<RxBus>,
     private val activePluginProvider: Provider<ActivePlugin>,
@@ -305,5 +317,13 @@ class AapsLeaves(
     @Provides fun metroMemberInjector(): MetroMemberInjector = metroMemberInjectorProvider.get()
 
     @Provides fun nsClient(): NsClient = nsClientProvider.get()
+
+    // What NSClientV3Service needs beyond the usual leaves. All three are Dagger @Binds in :plugins:sync.
+    @Provides fun nsClientRepository(): NSClientRepository = nsClientRepositoryProvider.get()
+    @Provides fun storeDataForDb(): StoreDataForDb = storeDataForDbProvider.get()
+    @Provides fun runningConfiguration(): RunningConfiguration = runningConfigurationProvider.get()
+    @Provides fun nsClientSource(): NSClientSource = nsClientSourceProvider.get()
+    @Provides fun runningConfigurationKeys(): RunningConfigurationKeys = runningConfigurationKeysProvider.get()
+    @Provides fun secureEncrypt(): SecureEncrypt = secureEncryptProvider.get()
     @Provides fun clientControlActionDispatcher(): ClientControlActionDispatcher = clientControlActionDispatcherProvider.get()
 }

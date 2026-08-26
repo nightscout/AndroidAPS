@@ -41,7 +41,7 @@ import app.aaps.plugins.sync.nsclientV3.data.NSDeviceStatusHandler
 import app.aaps.plugins.sync.nsclientV3.extensions.toRunningConfiguration
 import app.aaps.plugins.sync.nsclientV3.json.JsonBridge.toKotlinxJson
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
-import dagger.android.DaggerService
+import app.aaps.core.objects.workflow.MetroService
 import io.socket.client.Ack
 import io.socket.client.IO
 import io.socket.client.Socket
@@ -55,7 +55,7 @@ import java.net.URISyntaxException
 import javax.inject.Inject
 
 @Suppress("SpellCheckingInspection")
-class NSClientV3Service : DaggerService() {
+class NSClientV3Service : MetroService() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var preferences: Preferences
