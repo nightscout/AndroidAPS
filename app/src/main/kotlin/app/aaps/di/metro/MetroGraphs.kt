@@ -275,7 +275,7 @@ class MetroGraphs @Inject constructor(
      * wrong otherwise.
      */
     val xDripSource: XDripSource get() = root.xdripSourcePlugin
-    val nsClientSource: NSClientSource get() = root.nsClientSourcePlugin
+    val nsClientSource: NSClientSource get() = root.nsClientSource
     val dexcomBoyda: DexcomBoyda get() = root.dexcomPlugin
     val bgQualityCheck: BgQualityCheck get() = root.bgQualityCheckPlugin
     val dstHelper: DstHelper get() = root.dstHelper

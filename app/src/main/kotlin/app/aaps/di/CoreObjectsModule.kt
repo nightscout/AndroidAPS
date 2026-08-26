@@ -469,7 +469,6 @@ class CoreObjectsModule {
     @Suppress("LongParameterList")
     fun provideAapsLeaves(
         metroMemberInjectorProvider: Provider<MetroMemberInjector>,
-        nsClientSourceProvider: Provider<NSClientSource>,
         @ApplicationScope appScopeProvider: Provider<CoroutineScope>,
         fabricPrivacyProvider: Provider<FabricPrivacy>,
         configProvider: Provider<Config>,
@@ -507,7 +506,6 @@ class CoreObjectsModule {
         sntpClientProvider: Provider<SntpClient>
     ): AapsLeaves = AapsLeaves(
         metroMemberInjectorProvider,
-        nsClientSourceProvider,
         appScopeProvider,
         fabricPrivacyProvider,
         configProvider,

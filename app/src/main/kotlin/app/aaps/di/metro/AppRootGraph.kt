@@ -42,6 +42,7 @@ import app.aaps.core.interfaces.workflow.CalculationSignals
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.dst.DstHelper
+import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.core.utils.receivers.DataInbox
@@ -416,6 +417,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
      */
     val xdripSourcePlugin: XdripSourcePlugin
     val nsClientSourcePlugin: NSClientSourcePlugin
+    val nsClientSource: NSClientSource
     val dexcomPlugin: DexcomPlugin
 
     val sourceGraph: SourceMetroGraph

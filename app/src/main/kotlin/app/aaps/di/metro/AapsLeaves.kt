@@ -18,7 +18,6 @@ import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
 import app.aaps.core.interfaces.widget.WidgetUpdater
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.configuration.RunningConfigurationKeys
-import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
@@ -95,7 +94,6 @@ import javax.inject.Provider
 @BindingContainer
 class AapsLeaves(
     private val metroMemberInjectorProvider: Provider<MetroMemberInjector>,
-    private val nsClientSourceProvider: Provider<NSClientSource>,
     @ApplicationScope private val appScopeProvider: Provider<CoroutineScope>,
     private val fabricPrivacyProvider: Provider<FabricPrivacy>,
     private val configProvider: Provider<Config>,
@@ -264,6 +262,5 @@ class AapsLeaves(
     @Provides fun nsClient(): NsClient = nsClientProvider.get()
 
     // What NSClientV3Service needs beyond the usual leaves. All three are Dagger @Binds in :plugins:sync.
-    @Provides fun nsClientSource(): NSClientSource = nsClientSourceProvider.get()
     @Provides fun clientControlActionDispatcher(): ClientControlActionDispatcher = clientControlActionDispatcherProvider.get()
 }
