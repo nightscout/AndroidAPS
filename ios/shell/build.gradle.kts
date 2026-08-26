@@ -19,6 +19,7 @@ val migratedModules = listOf(
     ":core:objects",
     ":core:ui",
     ":core:utils",
+    ":implementation",
     ":plugins:aps",
     ":plugins:calibration",
     ":plugins:main",
@@ -38,6 +39,45 @@ val migratedModules = listOf(
 // has a `Scene`, which hides SwiftUI's, and the app writes `SwiftUI.Scene` to say which it means. A
 // real app would export a smaller, chosen surface instead of all fourteen modules.
 val exportMigratedApi = true
+
+// Fails the build when a module gains iOS targets and is not listed above.
+//
+// The list is written by hand, which is fine for reviewing but useless for noticing. When
+// :implementation became multiplatform, this framework carried on linking fourteen modules and
+// reported success, so a passing build quietly meant less than it had the day before. That is the
+// failure this catches: not a broken build, a shrinking one.
+//
+// It reads the sibling build files as text rather than inspecting other Gradle projects, because
+// inspecting them would couple this module's configuration to theirs and cost project isolation.
+val checkMigratedModules = tasks.register("checkMigratedModules") {
+    val listed = migratedModules.toSet()
+    val buildFiles = rootProject.projectDir.walkTopDown()
+        .onEnter { it.name != "build" && it.name != ".git" }
+        .filter { it.name == "build.gradle.kts" }
+        .toList()
+    val rootDir = rootProject.projectDir
+
+    doLast {
+        val withIosTargets = buildFiles
+            .filter { it.readText().contains("iosArm64()") }
+            .map { ":" + it.parentFile.relativeTo(rootDir).invariantSeparatorsPath.replace('/', ':') }
+            .filterNot { it == ":ios:shell" }
+            .toSet()
+
+        val missing = withIosTargets - listed
+        val stale = listed - withIosTargets
+        check(missing.isEmpty() && stale.isEmpty()) {
+            buildString {
+                appendLine("ios/shell no longer covers every module that builds for iOS.")
+                if (missing.isNotEmpty()) appendLine("  add to migratedModules:    " + missing.sorted().joinToString())
+                if (stale.isNotEmpty()) appendLine("  no longer builds for iOS:  " + stale.sorted().joinToString())
+                append("Keep ShellInfo.LINKED_MODULES in step as well.")
+            }
+        }
+    }
+}
+
+tasks.matching { it.name.startsWith("linkDebugFramework") }.configureEach { dependsOn(checkMigratedModules) }
 
 kotlin {
     listOf(
