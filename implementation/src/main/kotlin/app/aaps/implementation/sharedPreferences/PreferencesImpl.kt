@@ -46,7 +46,6 @@ import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.keys.interfaces.SyncDirection
 import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
-import dagger.Lazy
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -54,17 +53,23 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.ConcurrentHashMap
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.math.max
 import kotlin.math.min
 
-@Singleton
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class PreferencesImpl @Inject constructor(
     private val sp: SP,
-    private val profileUtil: Lazy<ProfileUtil>,
-    private val profileFunction: Lazy<ProfileFunction>,
-    private val hardLimits: Lazy<HardLimits>,
+    // Plain factories, not dagger.Lazy: that type is Dagger vocabulary. These three are only reached
+    // through a lambda to break the cycle back to Preferences - all three are singletons, so calling
+    // through each time returns the same instance and Lazy's caching bought nothing.
+    private val profileUtil: () -> ProfileUtil,
+    private val profileFunction: () -> ProfileFunction,
+    private val hardLimits: () -> HardLimits,
     private val persistenceLayer: PersistenceLayer,
     private val config: Config,
     private val dateUtil: DateUtil,
@@ -237,11 +242,11 @@ class PreferencesImpl @Inject constructor(
     }
 
     override fun get(key: UnitDoublePreferenceKey): Double =
-        if (simpleMode && key.defaultedBySM) profileUtil.get().valueInCurrentUnitsDetect(key.defaultValue)
-        else profileUtil.get().valueInCurrentUnitsDetect(sp.getDouble(key.key, key.defaultValue))
+        if (simpleMode && key.defaultedBySM) profileUtil().valueInCurrentUnitsDetect(key.defaultValue)
+        else profileUtil().valueInCurrentUnitsDetect(sp.getDouble(key.key, key.defaultValue))
 
     override fun getIfExists(key: UnitDoublePreferenceKey): Double? =
-        if (sp.contains(key.key)) profileUtil.get().valueInCurrentUnitsDetect(sp.getDouble(key.key, key.defaultValue)) else null
+        if (sp.contains(key.key)) profileUtil().valueInCurrentUnitsDetect(sp.getDouble(key.key, key.defaultValue)) else null
 
     override fun put(key: UnitDoublePreferenceKey, value: Double) {
         sp.putDouble(key.key, value)
@@ -459,8 +464,8 @@ class PreferencesImpl @Inject constructor(
             when (key) {
                 IntKey.AutosensPeriod ->
                     when (get(StringKey.SafetyAge)) {
-                        hardLimits.get().ageEntryValues()[HardLimits.AgeType.TEENAGE.ordinal] -> 4
-                        hardLimits.get().ageEntryValues()[HardLimits.AgeType.CHILD.ordinal]   -> 4
+                        hardLimits().ageEntryValues()[HardLimits.AgeType.TEENAGE.ordinal] -> 4
+                        hardLimits().ageEntryValues()[HardLimits.AgeType.CHILD.ordinal]   -> 4
                         else                                                                  -> 24
                     }
 
@@ -492,9 +497,9 @@ class PreferencesImpl @Inject constructor(
     private fun calculatePreference(key: DoublePreferenceKey): Double =
         limit(
             key, when (key) {
-                DoubleKey.ApsMaxBasal  -> runBlocking { profileFunction.get().getProfile() }?.getMaxDailyBasal()?.let { it * 3 } ?: key.defaultValue
-                DoubleKey.ApsSmbMaxIob -> recentMaxBolus() + (runBlocking { profileFunction.get().getProfile() }?.getMaxDailyBasal()?.let { it * 3 } ?: key.defaultValue)
-                DoubleKey.ApsAmaMaxIob -> runBlocking { profileFunction.get().getProfile() }?.getMaxDailyBasal()?.let { it * 3 } ?: key.defaultValue
+                DoubleKey.ApsMaxBasal  -> runBlocking { profileFunction().getProfile() }?.getMaxDailyBasal()?.let { it * 3 } ?: key.defaultValue
+                DoubleKey.ApsSmbMaxIob -> recentMaxBolus() + (runBlocking { profileFunction().getProfile() }?.getMaxDailyBasal()?.let { it * 3 } ?: key.defaultValue)
+                DoubleKey.ApsAmaMaxIob -> runBlocking { profileFunction().getProfile() }?.getMaxDailyBasal()?.let { it * 3 } ?: key.defaultValue
                 else                   -> error("Unsupported key calculation")
             })
 
@@ -504,7 +509,7 @@ class PreferencesImpl @Inject constructor(
             persistenceLayer
                 .getBolusesFromTime(dateUtil.now() - T.days(7).msecs(), true)
                 .maxOfOrNull { it.amount }
-                ?: hardLimits.get().maxBolus()
+                ?: hardLimits().maxBolus()
         }
 
     override fun getAllPreferenceKeys(): List<PreferenceKey> =

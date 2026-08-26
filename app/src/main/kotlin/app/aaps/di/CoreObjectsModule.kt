@@ -41,6 +41,7 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.maintenance.CloudDirectoryManager
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
+import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -240,6 +241,8 @@ class CoreObjectsModule {
 
     @Provides @Singleton fun provideLoggerUtils(graphs: MetroGraphs): LoggerUtils = graphs.loggerUtils
     @Provides @Singleton fun provideImportExportPrefsBinding(graphs: MetroGraphs): ImportExportPrefs = graphs.importExportPrefs
+    @Provides @Singleton fun providePreferencesBinding(graphs: MetroGraphs): Preferences = graphs.preferences
+    @Provides fun providePumpWithConcentrationBinding(graphs: MetroGraphs): PumpWithConcentration = graphs.pumpWithConcentration
     @Provides @Singleton fun provideMaintenanceBinding(graphs: MetroGraphs): Maintenance = graphs.maintenance
     @Provides @Singleton fun provideFileListProviderBinding(graphs: MetroGraphs): FileListProvider = graphs.fileListProvider
     @Provides @Singleton fun provideLastBgDataBinding(graphs: MetroGraphs): LastBgData = graphs.lastBgData
@@ -413,7 +416,6 @@ class CoreObjectsModule {
         profileFunctionProvider: Provider<ProfileFunction>,
         commandQueueProvider: Provider<CommandQueue>,
         rhProvider: Provider<ResourceHelper>,
-        preferencesProvider: Provider<Preferences>,
         dstHelperProvider: Provider<DstHelper>,
         workManagerProvider: Provider<WorkManager>,
         notificationManagerProvider: Provider<NotificationManager>,
@@ -467,7 +469,6 @@ class CoreObjectsModule {
         profileFunctionProvider,
         commandQueueProvider,
         rhProvider,
-        preferencesProvider,
         dstHelperProvider,
         workManagerProvider,
         notificationManagerProvider,

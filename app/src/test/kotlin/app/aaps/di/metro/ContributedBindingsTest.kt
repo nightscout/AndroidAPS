@@ -62,13 +62,15 @@ class ContributedBindingsTest {
         assertThat(root.fileListProvider).isSameInstanceAs(root.fileListProvider)
         assertThat(root.maintenance).isSameInstanceAs(root.maintenance)
         assertThat(root.importExportPrefs).isSameInstanceAs(root.importExportPrefs)
+        assertThat(root.preferences).isSameInstanceAs(root.preferences)
     }
 
     @Test
-    fun `PumpSync stays UNSCOPED, as it was under Dagger`() {
-        // The @Binds it replaced had no @Singleton, so every injection site got its own. Scoping it now
-        // would be a silent behaviour change in a class that talks to the pump.
+    fun `PumpSync and PumpWithConcentration stay UNSCOPED, as they were under Dagger`() {
+        // The @Binds they replaced had no @Singleton, so every injection site got its own. Scoping them
+        // now would be a silent behaviour change in classes that talk to the pump.
         val root = testRoot()
         assertThat(root.pumpSync).isNotSameInstanceAs(root.pumpSync)
+        assertThat(root.pumpWithConcentration).isNotSameInstanceAs(root.pumpWithConcentration)
     }
 }

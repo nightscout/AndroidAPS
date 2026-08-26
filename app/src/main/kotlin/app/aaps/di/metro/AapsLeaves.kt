@@ -110,7 +110,6 @@ class AapsLeaves(
     private val profileFunctionProvider: Provider<ProfileFunction>,
     private val commandQueueProvider: Provider<CommandQueue>,
     private val rhProvider: Provider<ResourceHelper>,
-    private val preferencesProvider: Provider<Preferences>,
     private val dstHelperProvider: Provider<DstHelper>,
     private val workManagerProvider: Provider<WorkManager>,
     private val notificationManagerProvider: Provider<NotificationManager>,
@@ -213,8 +212,6 @@ class AapsLeaves(
 
     /** `ResourceHelper` is the Android implementation of the multiplatform [TextResolver]. */
     @Provides fun textResolver(rh: ResourceHelper): TextResolver = rh
-
-    @Provides fun preferences(): Preferences = preferencesProvider.get()
     @Provides fun dstHelper(): DstHelper = dstHelperProvider.get()
     @Provides fun workManager(): WorkManager = workManagerProvider.get()
     @Provides fun notificationManager(): NotificationManager = notificationManagerProvider.get()

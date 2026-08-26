@@ -8,6 +8,8 @@ import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.logging.LoggerUtils
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
+import app.aaps.core.interfaces.pump.PumpWithConcentration
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.overview.LastBgData
@@ -274,6 +276,8 @@ class MetroGraphs @Inject constructor(
     val wizardBolusExecutor: WizardBolusExecutor get() = root.wizardBolusExecutor
     val loggerUtils: LoggerUtils get() = root.loggerUtils
     val importExportPrefs: ImportExportPrefs get() = root.importExportPrefs
+    val preferences: Preferences get() = root.preferences
+    val pumpWithConcentration: PumpWithConcentration get() = root.pumpWithConcentration
     val maintenance: Maintenance get() = root.maintenance
     val fileListProvider: FileListProvider get() = root.fileListProvider
     val lastBgData: LastBgData get() = root.lastBgData

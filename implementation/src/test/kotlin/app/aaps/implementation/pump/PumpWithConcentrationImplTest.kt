@@ -30,7 +30,6 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import javax.inject.Provider
 
 class PumpWithConcentrationImplTest : TestBase() {
 
@@ -53,7 +52,7 @@ class PumpWithConcentrationImplTest : TestBase() {
         // Feature-2 last-resort guard queries the overall max; default to no effective cap.
         whenever(constraintsChecker.getMaxBolusAllowed()).thenReturn(ConstraintObject(Double.MAX_VALUE, aapsLogger))
         whenever(constraintsChecker.getMaxExtendedBolusAllowed()).thenReturn(ConstraintObject(Double.MAX_VALUE, aapsLogger))
-        sut = PumpWithConcentrationImpl(aapsLogger, activePlugin, profileFunction, constraintsChecker, Provider { pumpEnactResult })
+        sut = PumpWithConcentrationImpl(aapsLogger, activePlugin, profileFunction, constraintsChecker, { pumpEnactResult })
     }
 
     private suspend fun setupConcentration(concentration: Double) {

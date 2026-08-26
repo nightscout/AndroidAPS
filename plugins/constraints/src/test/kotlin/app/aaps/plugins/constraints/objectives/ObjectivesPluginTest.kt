@@ -26,7 +26,6 @@ import app.aaps.shared.impl.sharedPreferences.SPImpl
 import app.aaps.shared.tests.SharedPreferencesMock
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import dagger.Lazy
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
@@ -40,9 +39,9 @@ class ObjectivesPluginTest : TestBaseWithProfile() {
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var loop: Loop
     @Mock lateinit var passwordCheck: PasswordCheck
-    @Mock lateinit var profileUtilLazy: Lazy<ProfileUtil>
-    @Mock lateinit var profileFunctionLazy: Lazy<ProfileFunction>
-    @Mock lateinit var hardLimitsLazy: Lazy<HardLimits>
+    @Mock lateinit var profileUtilMock: ProfileUtil
+    @Mock lateinit var profileFunctionMock: ProfileFunction
+    @Mock lateinit var hardLimitsMock: HardLimits
 
     private lateinit var objectivesPlugin: ObjectivesPlugin
     private lateinit var emulatedPreferences: Preferences
@@ -50,7 +49,7 @@ class ObjectivesPluginTest : TestBaseWithProfile() {
     @BeforeEach
     fun setupMock() {
         val sp = SPImpl(SharedPreferencesMock(), context)
-        emulatedPreferences = PreferencesImpl(sp, profileUtilLazy, profileFunctionLazy, hardLimitsLazy, persistenceLayer, config, dateUtil)
+        emulatedPreferences = PreferencesImpl(sp, { profileUtilMock }, { profileFunctionMock }, { hardLimitsMock }, persistenceLayer, config, dateUtil)
 
         val objectives = listOf(
             Objective0(emulatedPreferences, rh, dateUtil, activePlugin, virtualPumpPlugin, persistenceLayer, loop, iobCobCalculator, passwordCheck),
