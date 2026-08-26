@@ -30,6 +30,7 @@ import app.aaps.core.interfaces.configuration.RunningConfigurationKeys
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.implementation.plugin.PluginStore
+import app.aaps.implementation.profile.ProfileSwitchSilentGate
 import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.workflow.WorkflowChainData
 import app.aaps.core.interfaces.maintenance.Maintenance
@@ -316,6 +317,7 @@ class MetroGraphs @Inject constructor(
     val sceneExecutor: SceneExecutor get() = root.sceneExecutor
     val dataInbox: DataInbox get() = root.dataInbox
     val autosensData: AutosensData get() = root.autosensData
+    val profileSwitchSilentGate: ProfileSwitchSilentGate get() = root.profileSwitchSilentGate
     val runningConfiguration: RunningConfiguration get() = root.runningConfiguration
     val runningConfigurationKeys: RunningConfigurationKeys get() = root.runningConfigurationKeys
     val activePlugin: ActivePlugin get() = root.activePlugin

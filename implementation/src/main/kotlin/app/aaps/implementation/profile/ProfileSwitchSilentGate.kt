@@ -1,8 +1,9 @@
 package app.aaps.implementation.profile
 
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * One-shot flag used to suppress the central "Basal profile in pump updated" ([app.aaps.core.interfaces.notifications.NotificationId.PROFILE_SET_OK])
@@ -16,7 +17,17 @@ import javax.inject.Singleton
  * consumes it. Serialized profile processing (collectResilient) makes the window between mark and consume tiny; a
  * lost race only mis-shows/mis-hides one informational notification — never a dosing or safety effect.
  */
-@Singleton
+/*
+ * Scoped with Metro's `@SingleIn`, not javax `@Singleton`, and handed to Dagger through
+ * `CoreObjectsModule.provideProfileSwitchSilentGate`.
+ *
+ * The two halves of the flag live in different frameworks: `SceneExecutor` sets it and is built by
+ * Metro, `CommandQueueImplementation` consumes it and is built by Dagger. A javax scope does not cross
+ * the two - the graph in `:app` runs without Dagger interop and ignores it - so each framework built its
+ * own gate and the scene's mark was never the one the queue read. The flag then did nothing: a scene
+ * profile switch showed the notification it exists to suppress. There must be exactly one of these.
+ */
+@SingleIn(AppScope::class)
 class ProfileSwitchSilentGate @Inject constructor() {
 
     private val silentNext = AtomicBoolean(false)
