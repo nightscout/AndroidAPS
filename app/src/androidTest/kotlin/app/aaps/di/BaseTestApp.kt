@@ -12,6 +12,8 @@ import androidx.work.testing.WorkManagerTestInitHelper
 import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import app.aaps.di.metro.MetroGraphs
+import com.google.firebase.Firebase
+import com.google.firebase.analytics.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -46,6 +48,12 @@ open class BaseTestApp : Application(), HasAndroidInjector, MetroMemberInjector,
         // FabricPrivacyImpl normally gates collection, but it only runs once injected, which is too late
         // for (and unrelated to) test crashes. Disable collection here so test noise never reaches the dashboard.
         FirebaseCrashlytics.getInstance().isCrashlyticsCollectionEnabled = false
+        // Analytics has exactly the same exposure and was missed above: it is on by default after the
+        // auto-init, and the only thing that ever turns it off is FabricPrivacyImpl's init - which runs
+        // when that class is injected, far too late here and often not at all. Every CI run therefore
+        // registered the emulator as a real user of the production app id, which is why a dev build
+        // showed dozens of "users" in the console.
+        Firebase.analytics.setAnalyticsCollectionEnabled(false)
         // Production WorkManager init lives in MainApp (Configuration.Provider) + the default
         // androidx.startup initializer is removed from the manifest. Neither applies under the Hilt
         // test application, so initialize a test WorkManager here — otherwise building the Hilt graph
