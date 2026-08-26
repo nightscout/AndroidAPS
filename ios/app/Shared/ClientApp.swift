@@ -43,6 +43,13 @@ struct ShellView: View {
             Text(info.checkDi())
                 .font(.caption.monospaced())
                 .multilineTextAlignment(.leading)
+
+            Divider().padding(.vertical, 4)
+
+            // NSUserDefaults behind the AAPS preference store.
+            Text(info.checkPrefs())
+                .font(.caption.monospaced())
+                .multilineTextAlignment(.leading)
         }
         .padding()
     }

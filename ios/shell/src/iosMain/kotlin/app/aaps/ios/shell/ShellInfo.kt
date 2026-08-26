@@ -3,6 +3,7 @@ package app.aaps.ios.shell
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.ios.shell.di.IosProbeGraph
 import app.aaps.ios.shell.di.ProbeLogger
+import app.aaps.ios.shell.prefs.IosSp
 import dev.zacsweers.metro.createGraphFactory
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -78,5 +79,51 @@ object ShellInfo {
         ).joinToString("\n")
     } catch (e: Throwable) {
         "DI FAILED: ${e::class.simpleName}: ${e.message}"
+    }
+
+    /**
+     * Exercises the NSUserDefaults backed store.
+     *
+     * The reason this is a runtime check and not a unit test yet is the failure it is looking for.
+     * `NSUserDefaults` answers a missing key with a zero value rather than saying it is missing, so
+     * a store written the obvious way returns `false` and `0.0` instead of the caller's defaults.
+     * That version compiles, links, runs, and quietly replaces every AAPS default with zero. So the
+     * first case below is the important one.
+     *
+     * @return one line per check, or the failure.
+     */
+    fun checkPrefs(): String = try {
+        val sp = IosSp()
+        val key = "aaps.ios.probe"
+        sp.remove(key)
+
+        // The trap: absent key must give the caller's default, not NSUserDefaults' zero.
+        val absentBool = sp.getBoolean(key, defaultValue = true)
+        val absentDouble = sp.getDouble(key, defaultValue = 5.5)
+        val absentInt = sp.getInt(key, defaultValue = 42)
+
+        sp.putDouble(key, 7.25)
+        val roundTrip = sp.getDouble(key, defaultValue = 0.0)
+        val present = sp.contains(key)
+
+        sp.putInt("$key.count", 1)
+        sp.incInt("$key.count")
+        val counted = sp.getInt("$key.count", defaultValue = 0)
+
+        sp.edit { putString("$key.text", "ok") }
+        val edited = sp.getString("$key.text", defaultValue = "")
+
+        sp.remove(key); sp.remove("$key.count"); sp.remove("$key.text")
+        val cleaned = !sp.contains(key)
+
+        listOf(
+            "defaults kept: " + (absentBool && absentDouble == 5.5 && absentInt == 42),
+            "round trip: " + (roundTrip == 7.25 && present),
+            "increment: " + (counted == 2),
+            "edit block: " + (edited == "ok"),
+            "remove: $cleaned"
+        ).joinToString("\n")
+    } catch (e: Throwable) {
+        "PREFS FAILED: ${e::class.simpleName}: ${e.message}"
     }
 }
