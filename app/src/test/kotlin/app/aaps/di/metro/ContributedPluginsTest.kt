@@ -59,6 +59,16 @@ class ContributedPluginsTest {
     }
 
     @Test
+    fun `only a build with pump drivers gets the pump plugins`() {
+        // Nothing asserted this bucket until Insight, Dash and Diaconn moved into it. VirtualPump is
+        // NOT here: it is contributed unqualified, on purpose - see the 1000 entry above.
+        // Still on Dagger and so absent: DanaR 1010, DanaRKorean 1020, DanaRv2 1030, Medtronic 1090,
+        // Eopatch 1110.
+        assertThat(testRoot().contributedPumpDriverPlugins.keys)
+            .containsExactly(1040, 1050, 1060, 1080, 1100, 1120, 1130)
+    }
+
+    @Test
     fun `the xdrip plugin and the XDripBroadcast binding are the same object`() {
         // XdripPlugin carries two contributions: into the plugin map, and as XDripBroadcast. Under
         // Dagger these were two @Binds to the same @Singleton class, so callers shared one object.
