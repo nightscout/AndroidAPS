@@ -48,7 +48,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-open class NfcControlActivity : FragmentActivity() {
+class NfcControlActivity : FragmentActivity() {
 
     @Inject lateinit var nfcPlugin: NfcCommandsPlugin
     @Inject lateinit var aapsLogger: AAPSLogger
