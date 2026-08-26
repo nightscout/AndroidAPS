@@ -32,13 +32,13 @@ import androidx.compose.ui.Alignment
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
+import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.ui.compose.dialogs.GlobalSnackbarHost
 import app.aaps.core.ui.compose.pump.PumpActivityDialog
 import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.plugins.sync.nfcCommands.compose.NfcExecutionConfirmationDialog
-import dagger.android.AndroidInjection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -48,6 +48,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+/**
+ * The screen a scanned tag opens.
+ *
+ * It injects itself through [injectMetroMembers] rather than extending `MetroAppCompatActivity`,
+ * because it is declared with `Theme.Translucent.NoTitleBar` - an AppCompat activity needs an
+ * AppCompat theme and would throw at start up. The base class does nothing else, so calling the same
+ * function directly costs nothing.
+ */
 class NfcControlActivity : FragmentActivity() {
 
     @Inject lateinit var nfcPlugin: NfcCommandsPlugin
@@ -75,7 +83,7 @@ class NfcControlActivity : FragmentActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
+        injectMetroMembers(this)
         super.onCreate(savedInstanceState)
 
         setContent {

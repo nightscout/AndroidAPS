@@ -20,6 +20,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.LoggerUtils
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
+import app.aaps.plugins.sync.nfcCommands.NfcCommandsPlugin
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
 import app.aaps.core.interfaces.widget.WidgetUpdater
@@ -118,6 +119,10 @@ class AapsLeaves(
     private val widgetUpdaterProvider: Provider<WidgetUpdater>,
     private val authFlowOutProvider: Provider<AuthFlowOut>,
     private val tidepoolUploaderProvider: Provider<TidepoolUploader>,
+    // The plugin list is Dagger's, and this @Singleton plugin is in it. Without this leaf Metro would
+    // build a second one for NfcControlActivity, and the screen would act on a different object than the
+    // list holds - and drag the plugin's whole dependency tree into the root graph on the way.
+    private val nfcCommandsPluginProvider: Provider<NfcCommandsPlugin>,
     private val dateUtilProvider: Provider<DateUtil>,
     private val profileFunctionProvider: Provider<ProfileFunction>,
     private val commandQueueProvider: Provider<CommandQueue>,
@@ -234,6 +239,7 @@ class AapsLeaves(
     @Provides fun widgetUpdater(): WidgetUpdater = widgetUpdaterProvider.get()
     @Provides fun authFlowOut(): AuthFlowOut = authFlowOutProvider.get()
     @Provides fun tidepoolUploader(): TidepoolUploader = tidepoolUploaderProvider.get()
+    @Provides fun nfcCommandsPlugin(): NfcCommandsPlugin = nfcCommandsPluginProvider.get()
     @Provides fun dateUtil(): DateUtil = dateUtilProvider.get()
     @Provides fun profileFunction(): ProfileFunction = profileFunctionProvider.get()
     @Provides fun commandQueue(): CommandQueue = commandQueueProvider.get()

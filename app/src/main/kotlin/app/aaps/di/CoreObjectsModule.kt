@@ -30,6 +30,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.LoggerUtils
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
+import app.aaps.plugins.sync.nfcCommands.NfcCommandsPlugin
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
 import app.aaps.core.interfaces.widget.WidgetUpdater
@@ -377,6 +378,7 @@ class CoreObjectsModule {
         widgetUpdaterProvider: Provider<WidgetUpdater>,
         authFlowOutProvider: Provider<AuthFlowOut>,
         tidepoolUploaderProvider: Provider<TidepoolUploader>,
+        nfcCommandsPluginProvider: Provider<NfcCommandsPlugin>,
         dateUtilProvider: Provider<DateUtil>,
         profileFunctionProvider: Provider<ProfileFunction>,
         commandQueueProvider: Provider<CommandQueue>,
@@ -442,6 +444,7 @@ class CoreObjectsModule {
         widgetUpdaterProvider,
         authFlowOutProvider,
         tidepoolUploaderProvider,
+        nfcCommandsPluginProvider,
         dateUtilProvider,
         profileFunctionProvider,
         commandQueueProvider,
