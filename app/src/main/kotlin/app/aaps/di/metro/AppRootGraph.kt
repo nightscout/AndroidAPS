@@ -31,6 +31,7 @@ import app.aaps.core.interfaces.configuration.RunningConfigurationKeys
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.implementation.plugin.PluginStore
+import app.aaps.implementation.profile.ProfileSwitchSilentGate
 import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.workflow.WorkflowChainData
 import app.aaps.core.interfaces.maintenance.Maintenance
@@ -286,6 +287,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val sceneExecutor: SceneExecutor
     val dataInbox: DataInbox
     val autosensData: AutosensData
+    val profileSwitchSilentGate: ProfileSwitchSilentGate
     val runningConfiguration: RunningConfiguration
     val runningConfigurationKeys: RunningConfigurationKeys
     val activePlugin: ActivePlugin

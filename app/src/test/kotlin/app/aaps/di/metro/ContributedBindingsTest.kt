@@ -88,6 +88,10 @@ class ContributedBindingsTest {
         // One object bound to two interfaces, as the two @Binds were. It holds the config it read from
         // Nightscout, so a second copy would answer from an empty one.
         assertThat(root.runningConfigurationKeys).isSameInstanceAs(root.runningConfiguration)
+        // SceneExecutor (Metro) marks the flag, CommandQueueImplementation (Dagger) consumes it. Two
+        // instances means the mark is never seen and a scene profile switch shows the notification the
+        // gate exists to suppress - which is exactly what happened when SceneExecutor moved to Metro.
+        assertThat(root.profileSwitchSilentGate).isSameInstanceAs(root.profileSwitchSilentGate)
     }
 
     @Test

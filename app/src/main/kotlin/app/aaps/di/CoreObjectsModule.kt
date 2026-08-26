@@ -129,6 +129,7 @@ import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.smsCommunicator.SmsCommunicatorPlugin
 import app.aaps.implementation.plugin.PluginStore
+import app.aaps.implementation.profile.ProfileSwitchSilentGate
 import app.aaps.di.metro.AapsLeaves
 import app.aaps.di.metro.MetroGraphs
 import app.aaps.implementation.maintenance.cloud.CloudStorageManager
@@ -282,6 +283,9 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideDataInbox(graphs: MetroGraphs): DataInbox = graphs.dataInbox
     // Unscoped on purpose - a fresh value object per caller, as the @Binds it replaces was.
     @Provides fun provideAutosensData(graphs: MetroGraphs): AutosensData = graphs.autosensData
+    // One flag, two frameworks: SceneExecutor (Metro) marks it, CommandQueueImplementation (Dagger)
+    // consumes it. Without this they get one each and the mark is never seen.
+    @Provides @Singleton fun provideProfileSwitchSilentGate(graphs: MetroGraphs): ProfileSwitchSilentGate = graphs.profileSwitchSilentGate
     @Provides @Singleton fun provideRunningConfiguration(graphs: MetroGraphs): RunningConfiguration = graphs.runningConfiguration
     @Provides @Singleton fun provideRunningConfigurationKeys(graphs: MetroGraphs): RunningConfigurationKeys = graphs.runningConfigurationKeys
     @Provides @Singleton fun provideActivePlugin(graphs: MetroGraphs): ActivePlugin = graphs.activePlugin
