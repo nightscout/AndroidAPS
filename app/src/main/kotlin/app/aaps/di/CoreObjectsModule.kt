@@ -126,6 +126,8 @@ import app.aaps.plugins.sync.nsclientV3.clientcontrol.PairingOfferFetcher
 import app.aaps.plugins.sync.smsCommunicator.compose.SmsCommunicatorRepository
 import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
 import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
+import app.aaps.plugins.sync.nsclientV3.ReceiverDelegate
+import app.aaps.plugins.sync.tidepool.utils.RateLimit
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.smsCommunicator.SmsCommunicatorPlugin
 import app.aaps.implementation.plugin.PluginStore
@@ -483,6 +485,8 @@ class CoreObjectsModule {
         smsCommunicatorRepositoryProvider: Provider<SmsCommunicatorRepository>,
         tidepoolRepositoryProvider: Provider<TidepoolRepository>,
         xdripMvvmRepositoryProvider: Provider<XdripMvvmRepository>,
+        receiverDelegateProvider: Provider<ReceiverDelegate>,
+        rateLimitProvider: Provider<RateLimit>,
         bolusProgressDataProvider: Provider<BolusProgressData>,
         pumpEnactResultProvider: Provider<PumpEnactResult>,
         historyScopeProvider: Provider<HistoryScope>,
@@ -530,6 +534,8 @@ class CoreObjectsModule {
         smsCommunicatorRepositoryProvider,
         tidepoolRepositoryProvider,
         xdripMvvmRepositoryProvider,
+        receiverDelegateProvider,
+        rateLimitProvider,
         bolusProgressDataProvider,
         pumpEnactResultProvider,
         historyScopeProvider,
