@@ -92,14 +92,33 @@ class EquilManager @Inject constructor(
     var equilState: EquilState? = null
         private set
 
+    /** Guards the one-time read in [init]. */
+    private var podStateLoaded = false
+
     val lastConnectionFlow = MutableStateFlow(0L)
     val lastBolusTimeFlow = MutableStateFlow<Long?>(null)
     val lastBolusAmountFlow = MutableStateFlow<Double?>(null)
     val reservoirFlow = MutableStateFlow(0.0)
     val batteryFlow = MutableStateFlow<Int?>(null)
 
+    /**
+     * Called from `EquilPumpPlugin.onStart`, which can run more than once per process - the plugin is
+     * started again whenever it is re-enabled.
+     *
+     * The pod state is only read from preferences the **first** time. Every change to [equilState] is
+     * written through to preferences immediately, so memory is never older than disk: a second load can
+     * only replace newer in-memory state with whatever happens to be persisted. That is not theoretical
+     * - `onStart` runs on a background coroutine, so a re-enable landing during pod activation reset an
+     * activation that was already in progress, and the wizard then waited forever for a COMPLETED it had
+     * already reached (#5040).
+     *
+     * [equilBLE] still initialises on every start; only the read is once.
+     */
     fun init() {
-        loadPodState()
+        if (!podStateLoaded) {
+            loadPodState()
+            podStateLoaded = true
+        }
         equilBLE.init(this)
     }
 
@@ -451,23 +470,32 @@ class EquilManager @Inject constructor(
         return preferences.get(EquilStringKey.State)
     }
 
+    /**
+     * Reads the persisted pod state into memory.
+     *
+     * The new state is built in a local and published in one assignment. It used to null [equilState]
+     * first and fill it in afterwards, which left a window where every concurrent reader saw no pod:
+     * `hasPodState()` false, `getActivationProgress()` NONE. This object is a singleton read by the
+     * overview screen, the wizard and the command queue while the BLE threads write to it, so that
+     * window was reachable - it is what made `activatedPod_...` fail as "expected to be true" (#5040).
+     */
     fun loadPodState() {
-        equilState = null
-
         val storedPodState = readPodState()
 
-        if (StringUtils.isEmpty(storedPodState)) {
-            equilState = EquilState()
+        val loaded = if (StringUtils.isEmpty(storedPodState)) {
             aapsLogger.info(LTag.PUMP, "loadPodState: no Pod state was provided")
+            EquilState()
         } else {
             aapsLogger.info(LTag.PUMP, "loadPodState: serialized Pod state was provided: $storedPodState")
             try {
-                equilState = gsonInstance.fromJson(storedPodState, EquilState::class.java)
+                gsonInstance.fromJson(storedPodState, EquilState::class.java) ?: EquilState()
             } catch (ex: Exception) {
-                equilState = EquilState()
                 aapsLogger.error(LTag.PUMP, "loadPodState: could not deserialize PodState: $storedPodState", ex)
+                EquilState()
             }
         }
+
+        equilState = loaded
         syncOverviewFlows()
     }
 

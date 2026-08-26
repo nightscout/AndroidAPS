@@ -174,12 +174,14 @@ class EquilEmulatorActivationTest {
 
         // EquilManager is @Singleton, so its in-memory equilState survives across @Test methods: a pod
         // activated by a prior method leaves activationProgress = COMPLETED behind. Reset it explicitly and
-        // synchronously here. Use clearPodState() (write-through) NOT loadPodState() (read-only): the plugin's
-        // real onStart runs loadPodState() on a background worker, and a lingering storePodState() from the
-        // prior test can re-persist the still-COMPLETED singleton to prefs AFTER clearAllSharedPrefs() — a
-        // read-only reset then reads that COMPLETED back, and so does the racing background onStart, flaking
-        // activatePod()'s isActivationCompleted()==false precondition under CI load (shard C, #5040). Writing
-        // an empty state to prefs makes every subsequent (racing) loadPodState() read clean.
+        // synchronously here. Use clearPodState() (write-through) NOT loadPodState() (read-only), so the
+        // reset reaches preferences as well as memory.
+        //
+        // This used to be the whole story and it was not enough: the plugin's real onStart runs on a
+        // background coroutine and called loadPodState() again, which raced this reset and flaked shard C
+        // both ways - a stale COMPLETED surviving, or a finished activation being reset so the wizard
+        // waited forever (#5040). That is fixed in EquilManager itself now: the state is read once per
+        // process and published in a single assignment. See EquilManagerStateTest.
         equilManager.clearPodState()
 
         // A profile must be active before activation: setProfile() programs the basal schedule from it,
