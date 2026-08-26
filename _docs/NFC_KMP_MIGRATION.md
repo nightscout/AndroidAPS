@@ -23,14 +23,14 @@ preparation work can happen without disturbing the main NFC line.
 
 | Step                                                       | State                                                                       |
 |------------------------------------------------------------|-----------------------------------------------------------------------------|
-| Merge `Nightscout/kmp` into the branch                     | **done twice** - `966e187d8b`, then `7bdab8c8b5`                              |
+| Merge `Nightscout/kmp` into the branch                     | **done three times** - `966e187d8b`, `7bdab8c8b5`, `2fed15e79b`               |
 | Tier 1, the changes needed to compile at all (section 3)    | **done** - `9cd204b8da` "NFC Fix build after kmp merge"                        |
 | Architecture alignment (section 9)                         | **9.1 to 9.4, 9.6 and 9.7 done**. Only 9.5 remains, and it is not standalone   |
 | The command format and the store blobs (section 5)          | **done** - `28305e0af6` and `ff1916852f`. No `org.json` left in the plugin      |
-| Metro DI and the plugin's own manifest (section 1a)         | **done** - `ba1cdbd518`, `009f4087ca`. No `dagger.android` left in the plugin   |
+| Metro DI and the plugin's own manifest (section 1a)         | **done** - `ba1cdbd518`, `009f4087ca`, `42ea9bbad2`. Metro owns the plugin now  |
 | Tier 2, needed only for a multiplatform module (section 4)  | **not started** apart from the `org.json` row, which sections 5 and 9.7 did    |
-| Build verification                                         | **green** - `:plugins:sync` and `:app` compile, 88 NFC tests pass               |
-| `Nightscout/kmp` freshness                                 | merged 2026-08-26 at `c9ca405f39`. Still not in `dev` - a third merge is due    |
+| Build verification                                         | **green** - compile clean, 88 NFC tests and 50 app DI tests pass                |
+| `Nightscout/kmp` freshness                                 | merged 2026-08-27 at `6dc5c57898`. Still not in `dev` - more merges are due     |
 
 Sections 3.7 to 3.12 are six breaks that only a compiler found, after an import-derived list had
 missed them. The lesson is recorded there because it will repeat on the next merge: **grepping imports
@@ -60,6 +60,8 @@ anything was pushed, so that each one builds on its own:
 | `ec7f230935`  | fix build after merge 2 - 1 file, one word                    | mechanical, **builds**                   |
 | `ba1cdbd518`  | section 1a - Metro member injection, 6 files                  | the DI change, **builds**                |
 | `009f4087ca`  | section 1a - manifest and resource into the plugin, 3 files    | pure move, **builds**                    |
+| `2fed15e79b`  | **merge 3**, 56 upstream commits, 4 conflicts                 | leaves the plugin registered nowhere     |
+| `42ea9bbad2`  | fix build after merge 3 - the plugin registers itself, 7 files | one DI change, **builds**                |
 
 Keeping these apart matters for review: the fix-build commit only has to answer "did the merge really
 force this?", and the alignment commit carries its own rationale. `f9e51ec06c` is also the one that
@@ -181,7 +183,12 @@ left, and it goes away when Dagger does.
 
 **The general rule: any Metro-injected class that reaches a Dagger-owned singleton must get it through
 `AapsLeaves`, not let Metro construct it.** A missing binding error is the first sign, and it names a
-type from deep inside the subtree rather than the singleton itself. Nine modules
+type from deep inside the subtree rather than the singleton itself.
+
+*The NFC leaf itself is gone again as of `42ea9bbad2`* - merge 3 deleted the Dagger module that made the
+plugin Dagger-owned in the first place, so Metro owns it outright and there is nothing to hand over. The
+rule above still holds wherever Dagger is still the owner; see the merge 3 notes in section 10 for what
+replaced it, and for the scoping bug that came with it. Nine modules
 now have a `*MemberInjectors.kt` of this shape, and `shared/tests` carries a `MemberInjectorCoverage`
 helper that guards the maps with a test.
 
@@ -887,6 +894,42 @@ the Metro compiler plugin, and Metro refuses a **non-final** class with `@Inject
 annotated `@HasMemberInjections`, because the injector is looked up by runtime class. `NfcControlActivity`
 was `open` for no reason - nothing subclasses it - so it became final, which is also its end state after
 the Metro conversion.
+
+### Merge 3 outcome, for reference
+
+Commit `2fed15e79b`, 56 upstream commits, taken early on purpose: upstream was reworking the very DI the
+two commits before it had touched, and waiting only makes the same conflicts bigger. Rename detection
+completed. `nfcCommands/` was untouched again. **Four** conflicts, all DI:
+
+| File | Resolution |
+|---|---|
+| `plugins/sync di/SyncMemberInjectors.kt` | both sides added entries - kept both |
+| `app di/metro/AapsLeaves.kt` and `app di/CoreObjectsModule.kt` | upstream deleted the lines **around** ours, having moved `dateUtil`, `loggerUtils` and `alarmSoundPlayer` into Metro proper. Our leaf kept here so the merge drops nothing of ours, then removed in `42ea9bbad2` for a better reason |
+| `plugins/sync di/SyncPluginsListModule.kt` (modify/delete) | **deleted upstream**, and our `@IntKey(380)` entry was the only thing we had in it. Deletion accepted, so the plugin was in no list until the next commit |
+
+**The plugin now registers itself.** Upstream has two shapes: a plugin with a Dagger-built consumer is
+registered from `SyncPluginsBindings` in `:app` so Dagger keeps ownership, and one without carries its
+own annotations. NFC has no Dagger-built consumer left - the only field injection was
+`NfcControlActivity`, converted in `ba1cdbd518` - so it follows Tidepool, Xdrip, Tizen and Garmin:
+`@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())`, `@NotNSClient`, `@IntKey(380)`,
+`@SingleIn(AppScope::class)`. **The `AapsLeaves` leaf from `ba1cdbd518` is therefore gone**: it existed to
+stop Metro building a second plugin beside Dagger's, and Dagger no longer builds one.
+
+**`SplitBrainTest` caught a real bug this introduced, and it is the lesson to carry forward.** Metro does
+**not** treat javax `@Singleton` as a scope. The moment Metro built the plugin it also built its
+dependencies, and `NfcActionFactory`, `NfcRuntimeState` and `NfcTagStore` were rebuilt **on every read** -
+breaking exactly the things that only work when there is one object: the remote bolus cooldown and the
+parked wizard preview in `NfcRuntimeState`, the just-written cooldown and the log update flow in
+`NfcTagStore`. Nothing outside the NFC subtree injects those three, so `@SingleIn(AppScope::class)`
+replaces `@Singleton` and no leaf is needed. **Rule: when Metro starts building a class, every javax
+`@Singleton` below it has to be re-scoped or handed over - the compiler says nothing.** `SplitBrainTest`,
+`ContributedPluginsTest` and `LeafOwnershipTest` in `app/src/test/.../di/metro/` are the guards; run them
+after any DI change.
+
+One build-state trap, not a source problem: a stale Dagger factory for `PersistenceLayerImpl` survives in
+`database/persistence`'s KSP output from before that class moved to Metro. Nothing regenerates or removes
+it and `javac` still compiles it, so the build fails there until
+`database/persistence/build/generated/ksp/fullDebug/java` is deleted. Recompiling does not help.
 
 One trap worth remembering: **`PreferenceContentExtensions.kt` merged with no conflict while carrying
 our Android-only `androidx.compose.ui.res.stringResource` import into a `commonMain` file.** Git had
