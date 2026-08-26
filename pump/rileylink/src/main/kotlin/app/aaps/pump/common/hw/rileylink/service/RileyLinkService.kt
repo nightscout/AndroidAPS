@@ -1,8 +1,10 @@
 package app.aaps.pump.common.hw.rileylink.service
 
+import android.app.Service
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Intent
+import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -18,7 +20,6 @@ import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkError
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import app.aaps.pump.common.hw.rileylink.keys.RileyLinkDoubleKey
-import dagger.android.DaggerService
 import java.util.Locale
 import dev.zacsweers.metro.HasMemberInjections
 import javax.inject.Inject
@@ -30,7 +31,7 @@ import javax.inject.Inject
 // Metro requires this on a non-final class with injected fields, so it knows subclasses are meant to
 // have those fields filled too. Inert for Dagger.
 @HasMemberInjections
-abstract class RileyLinkService : DaggerService() {
+abstract class RileyLinkService : Service() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var preferences: Preferences
@@ -47,6 +48,7 @@ abstract class RileyLinkService : DaggerService() {
     private var bluetoothStateReceiver: RileyLinkBluetoothStateReceiver? = null
 
     override fun onCreate() {
+        injectMetroMembers(this)
         super.onCreate()
         rileyLinkUtil.encoding = encoding
         initRileyLinkServiceData()

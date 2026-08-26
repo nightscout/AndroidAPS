@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.rx.events.EventMobileToWearWatchface
 import app.aaps.core.interfaces.rx.events.EventWearUpdateGui
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.plugins.sync.wear.WearPlugin
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.CapabilityClient
@@ -25,7 +26,6 @@ import com.google.android.gms.wearable.Node
 import com.google.android.gms.wearable.PutDataMapRequest
 import com.google.android.gms.wearable.Wearable
 import com.google.android.gms.wearable.WearableListenerService
-import dagger.android.AndroidInjection
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
@@ -66,7 +66,7 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
     private val rxWatchfacePath get() = getString(app.aaps.core.interfaces.R.string.path_rx_data_bridge)
 
     override fun onCreate() {
-        AndroidInjection.inject(this)
+        injectMetroMembers(this)
         super.onCreate()
         aapsLogger.debug(LTag.WEAR, "onCreate")
         handler.post { updateTranscriptionCapability() }

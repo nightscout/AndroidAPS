@@ -1,7 +1,6 @@
 package app.aaps.di
 
 import app.aaps.pump.common.di.PumpCommonModule
-import app.aaps.pump.common.di.RileyLinkModule
 import app.aaps.pump.diaconn.di.DiaconnG8Module
 import app.aaps.pump.eopatch.di.EopatchModule
 import app.aaps.pump.equil.di.EquilModule
@@ -24,7 +23,6 @@ import dagger.hilt.components.SingletonComponent
         OmnipodDashModule::class,
         OmnipodErosModule::class,
         PumpCommonModule::class,
-        RileyLinkModule::class,
         MedtrumModule::class,
         EquilModule::class,
         EquilModules::class,

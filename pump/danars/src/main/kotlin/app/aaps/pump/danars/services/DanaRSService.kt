@@ -80,7 +80,7 @@ import app.aaps.pump.danars.comm.DanaRSPacketOptionGetUserOption
 import app.aaps.pump.danars.comm.DanaRSPacketOptionSetPumpTime
 import app.aaps.pump.danars.comm.DanaRSPacketOptionSetPumpUTCAndTimeZone
 import app.aaps.pump.danars.comm.DanaRSPacketOptionSetUserOption
-import dagger.android.DaggerService
+import app.aaps.core.objects.workflow.MetroService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
@@ -95,7 +95,7 @@ import kotlin.math.abs
 import kotlin.math.min
 import kotlin.time.Duration.Companion.milliseconds
 
-class DanaRSService : DaggerService() {
+class DanaRSService : MetroService() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
