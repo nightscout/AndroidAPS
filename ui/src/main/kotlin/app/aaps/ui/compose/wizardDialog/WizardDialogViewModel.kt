@@ -48,6 +48,7 @@ import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactoryKey
 import kotlinx.coroutines.CoroutineScope
@@ -553,7 +554,7 @@ class WizardDialogViewModel @AssistedInject constructor(
      * plain one, so the screen still calls metroViewModel() and nothing at the call site says this
      * view model is built differently.
      */
-    @ContributesIntoMap(AppScope::class)
+    @ContributesIntoMap(AppScope::class, binding = binding<ViewModelAssistedFactory>())
     @ViewModelAssistedFactoryKey(WizardDialogViewModel::class)
     @AssistedFactory
     fun interface Factory : ViewModelAssistedFactory {

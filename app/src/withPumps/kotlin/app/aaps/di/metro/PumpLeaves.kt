@@ -9,6 +9,20 @@ import app.aaps.pump.insight.InsightPlugin
 import app.aaps.pump.medtronic.MedtronicPumpPlugin
 import app.aaps.pump.diaconn.DiaconnG8Plugin
 import app.aaps.pump.eopatch.EopatchPumpPlugin
+import app.aaps.pump.common.hw.rileylink.RileyLinkUtil
+import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData
+import app.aaps.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor
+import app.aaps.pump.medtronic.data.MedtronicHistoryData
+import app.aaps.pump.medtronic.driver.MedtronicPumpStatus
+import app.aaps.pump.medtronic.util.MedtronicUtil
+import app.aaps.pump.eopatch.RxAction
+import app.aaps.pump.eopatch.alarm.IAlarmRegistry
+import app.aaps.pump.eopatch.ble.IPatchManager
+import app.aaps.pump.eopatch.ble.PatchManagerExecutor
+import app.aaps.pump.eopatch.ble.PreferenceManager
+import app.aaps.pump.eopatch.vo.NormalBasalManager
+import app.aaps.pump.eopatch.vo.PatchConfig
+import app.aaps.pump.eopatch.vo.TempBasalManager
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.database.DanaHistoryDatabase
 import app.aaps.pump.dana.database.DanaHistoryRecordDao
@@ -90,6 +104,20 @@ class PumpLeaves(
     private val medtronicPumpPluginProvider: Provider<MedtronicPumpPlugin>,
     private val diaconnG8PluginProvider: Provider<DiaconnG8Plugin>,
     private val eopatchPumpPluginProvider: Provider<EopatchPumpPlugin>,
+    private val rileyLinkUtilProvider: Provider<RileyLinkUtil>,
+    private val rileyLinkServiceDataProvider: Provider<RileyLinkServiceData>,
+    private val serviceTaskExecutorProvider: Provider<ServiceTaskExecutor>,
+    private val medtronicHistoryDataProvider: Provider<MedtronicHistoryData>,
+    private val medtronicPumpStatusProvider: Provider<MedtronicPumpStatus>,
+    private val medtronicUtilProvider: Provider<MedtronicUtil>,
+    private val patchManagerProvider: Provider<IPatchManager>,
+    private val patchManagerExecutorProvider: Provider<PatchManagerExecutor>,
+    private val patchConfigProvider: Provider<PatchConfig>,
+    private val tempBasalManagerProvider: Provider<TempBasalManager>,
+    private val normalBasalManagerProvider: Provider<NormalBasalManager>,
+    private val preferenceManagerProvider: Provider<PreferenceManager>,
+    private val alarmRegistryProvider: Provider<IAlarmRegistry>,
+    private val rxActionProvider: Provider<RxAction>,
     private val omnipodDashPumpPluginProvider: Provider<OmnipodDashPumpPlugin>
 ) {
 
@@ -148,4 +176,18 @@ class PumpLeaves(
     @Provides fun medtronicPumpPlugin(): MedtronicPumpPlugin = medtronicPumpPluginProvider.get()
     @Provides fun diaconnG8Plugin(): DiaconnG8Plugin = diaconnG8PluginProvider.get()
     @Provides fun eopatchPumpPlugin(): EopatchPumpPlugin = eopatchPumpPluginProvider.get()
+    @Provides fun rileyLinkUtil(): RileyLinkUtil = rileyLinkUtilProvider.get()
+    @Provides fun rileyLinkServiceData(): RileyLinkServiceData = rileyLinkServiceDataProvider.get()
+    @Provides fun serviceTaskExecutor(): ServiceTaskExecutor = serviceTaskExecutorProvider.get()
+    @Provides fun medtronicHistoryData(): MedtronicHistoryData = medtronicHistoryDataProvider.get()
+    @Provides fun medtronicPumpStatus(): MedtronicPumpStatus = medtronicPumpStatusProvider.get()
+    @Provides fun medtronicUtil(): MedtronicUtil = medtronicUtilProvider.get()
+    @Provides fun patchManager(): IPatchManager = patchManagerProvider.get()
+    @Provides fun patchManagerExecutor(): PatchManagerExecutor = patchManagerExecutorProvider.get()
+    @Provides fun patchConfig(): PatchConfig = patchConfigProvider.get()
+    @Provides fun tempBasalManager(): TempBasalManager = tempBasalManagerProvider.get()
+    @Provides fun normalBasalManager(): NormalBasalManager = normalBasalManagerProvider.get()
+    @Provides fun preferenceManager(): PreferenceManager = preferenceManagerProvider.get()
+    @Provides fun alarmRegistry(): IAlarmRegistry = alarmRegistryProvider.get()
+    @Provides fun rxAction(): RxAction = rxActionProvider.get()
 }

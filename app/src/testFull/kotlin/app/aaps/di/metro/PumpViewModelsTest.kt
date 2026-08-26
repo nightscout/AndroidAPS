@@ -18,6 +18,12 @@ import app.aaps.pump.medtrum.compose.MedtrumPatchViewModel
 import app.aaps.pump.omnipod.dash.ui.compose.DashOverviewViewModel
 import app.aaps.pump.omnipod.dash.ui.compose.DashPodHistoryViewModel
 import app.aaps.pump.omnipod.dash.ui.wizard.compose.DashOmnipodWizardViewModel
+import app.aaps.pump.common.compose.RileyLinkPairWizardViewModel
+import app.aaps.pump.common.compose.RileyLinkStatusViewModel
+import app.aaps.pump.medtronic.compose.MedtronicOverviewViewModel
+import app.aaps.pump.medtronic.compose.MedtronicHistoryViewModel
+import app.aaps.pump.eopatch.compose.EopatchOverviewViewModel
+import app.aaps.pump.eopatch.compose.EopatchPatchViewModel
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.pump.combov2.compose.ComboV2OverviewViewModel
 import info.nightscout.pump.combov2.compose.ComboV2PairWizardViewModel
@@ -59,7 +65,15 @@ class PumpViewModelsTest {
             EquilOverviewViewModel::class,
             EquilWizardViewModel::class,
             MedtrumOverviewViewModel::class,
-            MedtrumPatchViewModel::class
+            MedtrumPatchViewModel::class,
+            // The last six off Hilt. Their dependencies are Dagger-owned pump state, so PumpLeavesTest
+            // is the other half of this: it checks the graph hands those over instead of rebuilding them.
+            EopatchOverviewViewModel::class,
+            EopatchPatchViewModel::class,
+            MedtronicHistoryViewModel::class,
+            MedtronicOverviewViewModel::class,
+            RileyLinkPairWizardViewModel::class,
+            RileyLinkStatusViewModel::class
         )
         assertThat(contributed).containsAtLeastElementsIn(expected)
     }

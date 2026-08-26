@@ -17,7 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.pump.BlePreCheck
@@ -39,7 +39,7 @@ class EopatchComposeContent(
         onSettings: (() -> Unit)?
     ) {
         val context = LocalContext.current
-        val overviewViewModel: EopatchOverviewViewModel = hiltViewModel()
+        val overviewViewModel: EopatchOverviewViewModel = metroViewModel()
 
         // Patch workflow state
         var showPatchWorkflow by remember { mutableStateOf(false) }
@@ -114,7 +114,7 @@ class EopatchComposeContent(
             )
 
             // Create PatchViewModel scoped to the workflow
-            val patchViewModel: EopatchPatchViewModel = hiltViewModel()
+            val patchViewModel: EopatchPatchViewModel = metroViewModel()
 
             // Reset and initialize with the start step
             LaunchedEffect(startPatchStep) {
