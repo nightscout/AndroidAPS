@@ -41,6 +41,7 @@ import app.aaps.database.AppRepository
 import app.aaps.core.interfaces.workflow.CalculationSignals
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
+import app.aaps.core.interfaces.dst.DstHelper
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.core.utils.receivers.DataInbox
@@ -378,6 +379,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
 
     val bgQualityCheckPlugin: BgQualityCheckPlugin
     val dstHelperPlugin: DstHelperPlugin
+    val dstHelper: DstHelper
     val objectivesPlugin: ObjectivesPlugin
 
     /** The live loop's calculator. A history window has its own, at `HistoryWindowScope`. */

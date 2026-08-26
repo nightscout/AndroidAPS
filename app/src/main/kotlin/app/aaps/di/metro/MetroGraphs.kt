@@ -278,7 +278,7 @@ class MetroGraphs @Inject constructor(
     val nsClientSource: NSClientSource get() = root.nsClientSourcePlugin
     val dexcomBoyda: DexcomBoyda get() = root.dexcomPlugin
     val bgQualityCheck: BgQualityCheck get() = root.bgQualityCheckPlugin
-    val dstHelper: DstHelper get() = root.dstHelperPlugin
+    val dstHelper: DstHelper get() = root.dstHelper
     val objectives: Objectives get() = root.objectivesPlugin
 
     /** Same plugin as [objectives], by class. The instrumented tests ask for the concrete type. */

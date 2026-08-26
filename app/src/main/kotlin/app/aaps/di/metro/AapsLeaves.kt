@@ -11,7 +11,6 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.database.di.DatabaseConfig
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.di.MetroMemberInjector
-import app.aaps.core.interfaces.dst.DstHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
@@ -109,7 +108,6 @@ class AapsLeaves(
     private val tidepoolUploaderProvider: Provider<TidepoolUploader>,
     private val profileFunctionProvider: Provider<ProfileFunction>,
     private val rhProvider: Provider<ResourceHelper>,
-    private val dstHelperProvider: Provider<DstHelper>,
     private val workManagerProvider: Provider<WorkManager>,
     private val notificationManagerProvider: Provider<NotificationManager>,
     private val cloudStorageManagerProvider: Provider<CloudStorageManager>,
@@ -200,7 +198,6 @@ class AapsLeaves(
 
     /** `ResourceHelper` is the Android implementation of the multiplatform [TextResolver]. */
     @Provides fun textResolver(rh: ResourceHelper): TextResolver = rh
-    @Provides fun dstHelper(): DstHelper = dstHelperProvider.get()
     @Provides fun workManager(): WorkManager = workManagerProvider.get()
     @Provides fun notificationManager(): NotificationManager = notificationManagerProvider.get()
     // No activeSceneManager() here on purpose: Metro owns it (@SingleIn on the class), so this leaf would
