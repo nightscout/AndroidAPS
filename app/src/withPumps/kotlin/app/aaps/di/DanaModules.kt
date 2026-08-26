@@ -13,7 +13,6 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.dana.di.DanaHistoryModule
 import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danar.DanaRPlugin
-import app.aaps.pump.danar.di.DanaRModule
 import app.aaps.pump.danar.emulator.DanaRPumpEmulator
 import app.aaps.pump.danar.emulator.DanaRPumpState
 import app.aaps.pump.danar.emulator.DanaRVariant
@@ -35,7 +34,6 @@ import javax.inject.Singleton
 @Module(
     includes = [
         DanaHistoryModule::class,
-        DanaRModule::class,
         DanaRSModule::class,
     ]
 )
