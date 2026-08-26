@@ -22,7 +22,7 @@ import kotlinx.serialization.json.put
  * - `validTo` is 86340, i.e. 23:59, from the seeded template rather than from a reader default.
  * - `device` reads as [DEVICE_ALL] because the template stored the *string* `"all"`,
  *   which `getInt` could not parse, so the per-key default won.
- * - the `use*` flags each keep their own default; they are not uniformly NO.
+ * - the `use*` flags each keep their own default; they are not uniformly NEVER.
  */
 data class QuickWizardEntryData(
     val guid: String = "",
@@ -33,20 +33,20 @@ data class QuickWizardEntryData(
     val carbs: Int = 0,
     val validFrom: Int = 0,
     val validTo: Int = 0,
-    val useBG: Int = YES,
-    val useCOB: Int = NO,
-    val useIOB: Int = YES,
-    val usePositiveIOBOnly: Int = NO,
-    val useTrend: Int = NO,
-    val useSuperBolus: Int = NO,
-    val useTempTarget: Int = NO,
+    val useBG: Int = ALWAYS,
+    val useCOB: Int = NEVER,
+    val useIOB: Int = ALWAYS,
+    val usePositiveIOBOnly: Int = NEVER,
+    val useTrend: Int = NEVER,
+    val useSuperBolus: Int = NEVER,
+    val useTempTarget: Int = NEVER,
     val percentage: Int = 100,
-    val useEcarbs: Int = NO,
+    val useEcarbs: Int = NEVER,
     val carbs2: Int = 0,
     val time: Int = 0,
     val duration: Int = 0,
     val carbTime: Int = 0,
-    val useAlarm: Int = NO,
+    val useAlarm: Int = NEVER,
     val lastUsed: Long = 0
 ) {
 
@@ -54,9 +54,9 @@ data class QuickWizardEntryData(
 
         // The flag values themselves. They live here rather than on `QuickWizardEntry` because that
         // class is still Android only. `QuickWizardEntry` re-exposes each one under the same name, so
-        // the 38 existing call sites that write `QuickWizardEntry.YES` keep working unchanged.
-        const val YES = 0
-        const val NO = 1
+        // the 38 existing call sites that write `QuickWizardEntry.ALWAYS` keep working unchanged.
+        const val ALWAYS = 0
+        const val NEVER = 1
         const val POSITIVE_ONLY = 2
         const val NEGATIVE_ONLY = 3
         const val DEVICE_ALL = 0
@@ -81,20 +81,20 @@ data class QuickWizardEntryData(
                 carbs = json.lenientInt("carbs"),
                 validFrom = json.lenientInt("validFrom"),
                 validTo = json.lenientInt("validTo"),
-                useBG = json.lenientInt("useBG", YES),
-                useCOB = json.lenientInt("useCOB", NO),
-                useIOB = json.lenientInt("useIOB", YES),
-                usePositiveIOBOnly = json.lenientInt("usePositiveIOBOnly", NO),
-                useTrend = json.lenientInt("useTrend", NO),
-                useSuperBolus = json.lenientInt("useSuperBolus", NO),
-                useTempTarget = json.lenientInt("useTempTarget", NO),
+                useBG = json.lenientInt("useBG", ALWAYS),
+                useCOB = json.lenientInt("useCOB", NEVER),
+                useIOB = json.lenientInt("useIOB", ALWAYS),
+                usePositiveIOBOnly = json.lenientInt("usePositiveIOBOnly", NEVER),
+                useTrend = json.lenientInt("useTrend", NEVER),
+                useSuperBolus = json.lenientInt("useSuperBolus", NEVER),
+                useTempTarget = json.lenientInt("useTempTarget", NEVER),
                 percentage = json.lenientInt("percentage", 100),
-                useEcarbs = json.lenientInt("useEcarbs", NO),
+                useEcarbs = json.lenientInt("useEcarbs", NEVER),
                 carbs2 = json.lenientInt("carbs2"),
                 time = json.lenientInt("time"),
                 duration = json.lenientInt("duration"),
                 carbTime = json.lenientInt("carbTime"),
-                useAlarm = json.lenientInt("useAlarm", NO),
+                useAlarm = json.lenientInt("useAlarm", NEVER),
                 lastUsed = json.lenientLong("lastUsed")
             )
     }

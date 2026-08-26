@@ -229,7 +229,7 @@ class WizardBolusExecutorImpl @Inject constructor(
         // Build the master's color-coded confirmation lines here so the client renders the master's EXACT
         // wizard confirmation (shared builder). advisorApplies offers the high-BG "correct now, eat later" fork.
         val advisorApplies = wizard.needsBolusAdvisor()
-        val eCarbsGrams = if (entry.useEcarbs() == QuickWizardEntry.YES) entry.carbs2() else 0
+        val eCarbsGrams = if (entry.useEcarbs() == QuickWizardEntry.ALWAYS) entry.carbs2() else 0
         return WizardBolusExecutor.PrepareResult.Preview(
             insulin = wizard.calculatedTotalInsulin,
             carbs = wizard.carbs,
@@ -242,7 +242,7 @@ class WizardBolusExecutorImpl @Inject constructor(
                 eCarbsDelayMinutes = if (eCarbsGrams > 0) entry.time() else 0,
                 eCarbsDurationHours = if (eCarbsGrams > 0) entry.duration() else 0,
                 carbTimeMinutes = entry.carbTime(),
-                alarm = entry.useAlarm() == QuickWizardEntry.YES && entry.carbTime() > 0,
+                alarm = entry.useAlarm() == QuickWizardEntry.ALWAYS && entry.carbTime() > 0,
                 maxBolus = constraintChecker.getMaxBolusAllowed().value(),
                 bolusStep = pump.pumpDescription.pumpType.determineCorrectBolusStepSize(wizard.insulinAfterConstraints),
             ),
@@ -583,8 +583,8 @@ class WizardBolusExecutorImpl @Inject constructor(
         var eCarbsDelay = 0
         val qwe = p.entry
         if (qwe != null) {
-            useAlarm = qwe.useAlarm() == QuickWizardEntry.YES
-            if (qwe.useEcarbs() == QuickWizardEntry.YES) {
+            useAlarm = qwe.useAlarm() == QuickWizardEntry.ALWAYS
+            if (qwe.useEcarbs() == QuickWizardEntry.ALWAYS) {
                 eCarbsDelay = qwe.time()
                 eventTime += (eCarbsDelay * 60000)
                 carbs2 = qwe.carbs2()
@@ -601,7 +601,7 @@ class WizardBolusExecutorImpl @Inject constructor(
         // Super-bolus (a quick-wizard with useSuperBolus): write the SUPER_BOLUS mode change before the
         // bolus, driven off the CONSUMED entry — never the shared `pending` slot, which a stale unconfirmed
         // wear prepare could leak into an unrelated bolus. Mirrors the phone's executeNormal.
-        if (p.entry?.useSuperBolus() == QuickWizardEntry.YES) {
+        if (p.entry?.useSuperBolus() == QuickWizardEntry.ALWAYS) {
             profileFunction.getProfile()?.let { profile ->
                 if (loop.allowedNextModes().contains(RM.Mode.SUPER_BOLUS))
                     loop.handleRunningModeChange(

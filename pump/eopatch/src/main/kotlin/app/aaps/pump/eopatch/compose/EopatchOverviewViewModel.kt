@@ -40,7 +40,6 @@ import app.aaps.pump.eopatch.extension.takeOne
 import app.aaps.pump.eopatch.vo.NormalBasalManager
 import app.aaps.pump.eopatch.vo.PatchConfig
 import app.aaps.pump.eopatch.vo.TempBasalManager
-import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.CoroutineScope
@@ -55,6 +54,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.roundToInt
@@ -73,7 +76,8 @@ sealed class EopatchOverviewEvent {
     data class ShowToast(val messageResId: Int, val isError: Boolean = false) : EopatchOverviewEvent()
 }
 
-@HiltViewModel
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 @Stable
 class EopatchOverviewViewModel @Inject constructor(
     private val rh: ResourceHelper,

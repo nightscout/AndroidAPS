@@ -536,7 +536,7 @@ class MainViewModel @Inject constructor(
     private suspend fun executeCarbsMode(entry: QuickWizardEntry) {
         val carbs = entry.carbs()
         if (carbs <= 0) return
-        val hasEcarbs = entry.useEcarbs() == QuickWizardEntry.YES
+        val hasEcarbs = entry.useEcarbs() == QuickWizardEntry.ALWAYS
         executeFixedBatch(
             entry,
             listOf(BatchAction.Bolus(
