@@ -4,6 +4,7 @@ import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.pump.defs.PumpDescription
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
@@ -29,7 +30,6 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.convertedToPercent
 import app.aaps.core.ui.R
-import dagger.android.HasAndroidInjector
 import dev.zacsweers.metro.HasMemberInjections
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.JsonObject
@@ -42,9 +42,10 @@ import kotlin.math.max
 /**
  * Created by mike on 09.06.2016.
  */
-// Injected by the old dagger.android path through `injector`; the annotation is for Metro's interop.
+// Built with `new` by the algorithm helpers, so it fills its own fields from `injector`. Open, so Metro
+// needs telling that subclasses are meant to be injected too.
 @HasMemberInjections
-open class APSResultObject(protected val injector: HasAndroidInjector) : APSResult {
+open class APSResultObject(protected val injector: MetroMemberInjector) : APSResult {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var constraintChecker: ConstraintsChecker
@@ -58,7 +59,7 @@ open class APSResultObject(protected val injector: HasAndroidInjector) : APSResu
     override fun with(result: RT): APSResult = this
 
     init {
-        injector.androidInjector().inject(this)
+        injector.injectMembers(this)
     }
 
     override var date: Long = 0

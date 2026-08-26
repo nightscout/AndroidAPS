@@ -1,6 +1,7 @@
 package app.aaps.plugins.aps.openAPSAMA
 
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensResult
@@ -44,7 +45,6 @@ import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
 import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
 import app.aaps.plugins.aps.utils.ScriptReader
-import dagger.android.HasAndroidInjector
 import kotlinx.serialization.json.put
 import org.json.JSONException
 import javax.inject.Inject
@@ -53,7 +53,7 @@ import kotlin.math.floor
 
 @Singleton
 class TestOpenAPSAMAPlugin @Inject constructor(
-    private val injector: HasAndroidInjector,
+    private val injector: MetroMemberInjector,
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val constraintChecker: ConstraintsChecker,

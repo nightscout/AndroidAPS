@@ -2,6 +2,7 @@ package app.aaps.plugins.aps.openAPSSMBDynamicISF
 
 import android.content.Context
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.aps.DetermineBasalAdapter
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.constraints.Constraint
@@ -30,13 +31,12 @@ import app.aaps.plugins.aps.openAPSSMB.DetermineBasalAdapterSMBJS
 import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
 import app.aaps.plugins.aps.openAPSSMB.TestOpenAPSSMBPlugin
 import app.aaps.plugins.aps.utils.ScriptReader
-import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class TestOpenAPSSMBDynamicISFPlugin @Inject constructor(
-    private val injector: HasAndroidInjector,
+    private val injector: MetroMemberInjector,
     aapsLogger: AAPSLogger,
     rxBus: RxBus,
     constraintChecker: ConstraintsChecker,
