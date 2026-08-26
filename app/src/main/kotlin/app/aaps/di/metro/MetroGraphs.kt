@@ -37,6 +37,8 @@ import app.aaps.core.interfaces.maintenance.CloudStorageProvider
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.database.AppRepository
+import app.aaps.core.interfaces.workflow.CalculationSignals
+import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.core.utils.receivers.DataInbox
@@ -332,6 +334,8 @@ class MetroGraphs @Inject constructor(
     val localAlertUtils: LocalAlertUtils get() = root.localAlertUtils
     val bolusProgressData: BolusProgressData get() = root.bolusProgressData
     val persistenceLayer: PersistenceLayer get() = root.persistenceLayer
+    val calculationSignals: CalculationSignals get() = root.calculationSignals
+    val calculationSignalsEmitter: CalculationSignalsEmitter get() = root.calculationSignalsEmitter
     val appRepository: AppRepository get() = root.appRepository
     val cloudStorageProviders: Set<CloudStorageProvider> get() = root.cloudStorageProviders
     val constraintsChecker: ConstraintsChecker get() = root.constraintsChecker

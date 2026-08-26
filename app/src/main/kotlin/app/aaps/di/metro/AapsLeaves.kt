@@ -101,9 +101,6 @@ class AapsLeaves(
     private val fabricPrivacyProvider: Provider<FabricPrivacy>,
     private val configProvider: Provider<Config>,
     private val databaseConfigProvider: Provider<DatabaseConfig>,
-    // Dagger owns the app-wide emitter - `WorkflowModule.provideMainSignalsEmitter`. A history window
-    // has its own, built in `HistoryWindowGraph`, which is why this one is not simply contributed.
-    private val calculationSignalsEmitterProvider: Provider<CalculationSignalsEmitter>,
     // Both are Dagger @Binds in ImplementationModule, and the openAPS plugins need them now that Metro
     // builds those. APSResult is asked for through a Provider - one result object per loop run.
     // Dagger owns this one; LoopPlugin needs it and Metro builds LoopPlugin now.
@@ -195,7 +192,6 @@ class AapsLeaves(
     @Provides fun databaseConfig(): DatabaseConfig = databaseConfigProvider.get()
     // No iobCobCalculator() any more: Metro builds it now, in `MainPluginsBindings`, and Dagger receives
     // it through `CoreObjectsModule.provideIobCobCalculator`.
-    @Provides fun calculationSignalsEmitter(): CalculationSignalsEmitter = calculationSignalsEmitterProvider.get()
     // No loop() leaf any more: Metro builds LoopPlugin, so Loop travels the other way, through
     // `CoreObjectsModule.provideLoop`.
     @Provides fun authFlowOut(): AuthFlowOut = authFlowOutProvider.get()
