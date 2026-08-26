@@ -49,6 +49,14 @@ import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.ui.search.SearchableProvider
 import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.plugins.sync.wear.WearPlugin
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.AuthorizedClientsRepository
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.PairingOfferPublisher
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientPairingRepository
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlPublisher
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.PairingOfferFetcher
+import app.aaps.plugins.sync.smsCommunicator.compose.SmsCommunicatorRepository
+import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
+import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.smsCommunicator.SmsCommunicatorPlugin
 import app.aaps.implementation.maintenance.cloud.CloudStorageManager
@@ -142,6 +150,14 @@ class AapsLeaves(
     private val smsCommunicatorPluginProvider: Provider<SmsCommunicatorPlugin>,
     private val nsClientV3PluginProvider: Provider<NSClientV3Plugin>,
     private val wearPluginProvider: Provider<WearPlugin>,
+    private val authorizedClientsRepositoryProvider: Provider<AuthorizedClientsRepository>,
+    private val pairingOfferPublisherProvider: Provider<PairingOfferPublisher>,
+    private val clientPairingRepositoryProvider: Provider<ClientPairingRepository>,
+    private val clientControlPublisherProvider: Provider<ClientControlPublisher>,
+    private val pairingOfferFetcherProvider: Provider<PairingOfferFetcher>,
+    private val smsCommunicatorRepositoryProvider: Provider<SmsCommunicatorRepository>,
+    private val tidepoolRepositoryProvider: Provider<TidepoolRepository>,
+    private val xdripMvvmRepositoryProvider: Provider<XdripMvvmRepository>,
     /**
      * The history browser scope.
      *
@@ -235,6 +251,18 @@ class AapsLeaves(
     @Provides fun smsCommunicatorPlugin(): SmsCommunicatorPlugin = smsCommunicatorPluginProvider.get()
     @Provides fun nsClientV3Plugin(): NSClientV3Plugin = nsClientV3PluginProvider.get()
     @Provides fun wearPlugin(): WearPlugin = wearPluginProvider.get()
+
+    // The repositories behind the :plugins:sync view models. Dagger-owned for the same reason the
+    // plugins are: SmsCommunicatorPlugin, TidepoolPlugin, XdripPlugin, the xdrip worker and the
+    // client-control receiver all inject them, so Dagger's copy is the one being written to.
+    @Provides fun authorizedClientsRepository(): AuthorizedClientsRepository = authorizedClientsRepositoryProvider.get()
+    @Provides fun pairingOfferPublisher(): PairingOfferPublisher = pairingOfferPublisherProvider.get()
+    @Provides fun clientPairingRepository(): ClientPairingRepository = clientPairingRepositoryProvider.get()
+    @Provides fun clientControlPublisher(): ClientControlPublisher = clientControlPublisherProvider.get()
+    @Provides fun pairingOfferFetcher(): PairingOfferFetcher = pairingOfferFetcherProvider.get()
+    @Provides fun smsCommunicatorRepository(): SmsCommunicatorRepository = smsCommunicatorRepositoryProvider.get()
+    @Provides fun tidepoolRepository(): TidepoolRepository = tidepoolRepositoryProvider.get()
+    @Provides fun xdripMvvmRepository(): XdripMvvmRepository = xdripMvvmRepositoryProvider.get()
     @Provides fun overviewDataCache(): OverviewDataCache = overviewDataCacheProvider.get()
 
     /** Hilt's qualifier, read now that interop is on. Same Context as the unqualified binding. */

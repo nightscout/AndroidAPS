@@ -1,6 +1,13 @@
 package app.aaps.di.metro
 
 import app.aaps.plugins.constraints.objectives.compose.ObjectivesViewModel
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.compose.AuthorizedClientsViewModel
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.compose.PairWithMasterViewModel
+import app.aaps.plugins.sync.nsclientV3.compose.NSClientViewModel
+import app.aaps.plugins.sync.smsCommunicator.compose.SmsCommunicatorViewModel
+import app.aaps.plugins.sync.tidepool.compose.TidepoolViewModel
+import app.aaps.plugins.sync.wear.compose.WearViewModel
+import app.aaps.plugins.sync.xdrip.compose.XdripViewModel
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
@@ -16,6 +23,25 @@ class ContributedViewModelsTest {
     @Test
     fun `the objectives view model is contributed to the root graph`() {
         assertThat(testRoot().viewModelProviders.keys).contains(ObjectivesViewModel::class)
+    }
+
+    @Test
+    fun `every sync view model moved off Hilt reaches the factory`() {
+        // These seven were @HiltViewModel until the move to metrox's factory. The annotation swap and
+        // the call-site swap are separate edits: this covers the first one. The second - a screen still
+        // calling hiltViewModel() for a view model that is no longer @HiltViewModel - is NOT covered
+        // here and fails only when the screen opens, so grep for hiltViewModel() when converting one.
+        val registered = testRoot().viewModelProviders.keys
+
+        assertThat(registered).containsAtLeast(
+            SmsCommunicatorViewModel::class,
+            TidepoolViewModel::class,
+            XdripViewModel::class,
+            NSClientViewModel::class,
+            AuthorizedClientsViewModel::class,
+            PairWithMasterViewModel::class,
+            WearViewModel::class
+        )
     }
 
     @Test

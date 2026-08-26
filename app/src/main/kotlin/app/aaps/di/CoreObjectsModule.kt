@@ -117,6 +117,14 @@ import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.ui.search.SearchableProvider
 import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.plugins.sync.wear.WearPlugin
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.AuthorizedClientsRepository
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.PairingOfferPublisher
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientPairingRepository
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlPublisher
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.PairingOfferFetcher
+import app.aaps.plugins.sync.smsCommunicator.compose.SmsCommunicatorRepository
+import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
+import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.smsCommunicator.SmsCommunicatorPlugin
 import app.aaps.implementation.plugin.PluginStore
@@ -460,6 +468,14 @@ class CoreObjectsModule {
         smsCommunicatorPluginProvider: Provider<SmsCommunicatorPlugin>,
         nsClientV3PluginProvider: Provider<NSClientV3Plugin>,
         wearPluginProvider: Provider<WearPlugin>,
+        authorizedClientsRepositoryProvider: Provider<AuthorizedClientsRepository>,
+        pairingOfferPublisherProvider: Provider<PairingOfferPublisher>,
+        clientPairingRepositoryProvider: Provider<ClientPairingRepository>,
+        clientControlPublisherProvider: Provider<ClientControlPublisher>,
+        pairingOfferFetcherProvider: Provider<PairingOfferFetcher>,
+        smsCommunicatorRepositoryProvider: Provider<SmsCommunicatorRepository>,
+        tidepoolRepositoryProvider: Provider<TidepoolRepository>,
+        xdripMvvmRepositoryProvider: Provider<XdripMvvmRepository>,
         bolusProgressDataProvider: Provider<BolusProgressData>,
         pumpEnactResultProvider: Provider<PumpEnactResult>,
         historyScopeProvider: Provider<HistoryScope>,
@@ -501,6 +517,14 @@ class CoreObjectsModule {
         smsCommunicatorPluginProvider,
         nsClientV3PluginProvider,
         wearPluginProvider,
+        authorizedClientsRepositoryProvider,
+        pairingOfferPublisherProvider,
+        clientPairingRepositoryProvider,
+        clientControlPublisherProvider,
+        pairingOfferFetcherProvider,
+        smsCommunicatorRepositoryProvider,
+        tidepoolRepositoryProvider,
+        xdripMvvmRepositoryProvider,
         bolusProgressDataProvider,
         pumpEnactResultProvider,
         historyScopeProvider,
