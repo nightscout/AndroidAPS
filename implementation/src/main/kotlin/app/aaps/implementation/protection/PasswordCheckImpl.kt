@@ -14,8 +14,10 @@ import app.aaps.core.ui.UiStrings
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Publishes the prompt; `PasswordCheckHost` draws it.
@@ -29,7 +31,8 @@ import javax.inject.Singleton
  */
 // Must be a singleton, not @Reusable: the caller that asks for a password and the host that draws it
 // have to see the same [request] flow.
-@Singleton
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class PasswordCheckImpl @Inject constructor(
     private val preferences: Preferences,
     private val cryptoUtil: CryptoUtil,

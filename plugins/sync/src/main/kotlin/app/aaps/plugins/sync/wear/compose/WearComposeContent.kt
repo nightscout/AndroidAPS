@@ -2,7 +2,7 @@ package app.aaps.plugins.sync.wear.compose
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
 
@@ -14,7 +14,7 @@ internal class WearComposeContent : ComposablePluginContent {
         onNavigateBack: () -> Unit,
         onSettings: (() -> Unit)?
     ) {
-        val viewModel: WearViewModel = hiltViewModel()
+        val viewModel: WearViewModel = metroViewModel()
 
         LaunchedEffect(Unit) {
             viewModel.requestCustomWatchface()

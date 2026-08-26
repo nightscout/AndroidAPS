@@ -42,7 +42,6 @@ dependencies {
     implementation(libs.kotlinx.coroutines.rx3)
 
     implementation(libs.com.google.dagger.hilt.android)
-    implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.compose.ui.tooling.preview)
     debugImplementation(libs.androidx.compose.ui.tooling)
 

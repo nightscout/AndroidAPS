@@ -93,10 +93,6 @@ abstract class AppModule {
         fun provideApplicationScope(): CoroutineScope =
             CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
-        @Singleton
-        @Provides
-        fun providesDefaultSharedPreferences(context: Context): SharedPreferences =
-            context.getSharedPreferences("${context.packageName}_preferences", Context.MODE_PRIVATE)
 
         /**
          * Built by Metro, in the multiplatform module that owns the worker it schedules. Dagger

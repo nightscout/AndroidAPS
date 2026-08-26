@@ -34,8 +34,8 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.clearFocusOnTap
@@ -47,7 +47,7 @@ private const val PIN_LENGTH = 8
 @Composable
 fun PairWithMasterScreen(
     onNavigateBack: () -> Unit,
-    viewModel: PairWithMasterViewModel = hiltViewModel()
+    viewModel: PairWithMasterViewModel = metroViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 

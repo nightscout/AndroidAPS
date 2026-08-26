@@ -2,7 +2,7 @@ package app.aaps.plugins.sync.tidepool.compose
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
@@ -23,7 +23,7 @@ internal class TidepoolComposeContent(
         onNavigateBack: () -> Unit,
         onSettings: (() -> Unit)?
     ) {
-        val viewModel: TidepoolViewModel = hiltViewModel()
+        val viewModel: TidepoolViewModel = metroViewModel()
 
         LaunchedEffect(Unit) {
             viewModel.loadInitialData()

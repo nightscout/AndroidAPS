@@ -1,10 +1,12 @@
 package app.aaps.pump.common.hw.rileylink.service
 
 import android.bluetooth.BluetoothManager
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -19,11 +21,10 @@ import app.aaps.pump.common.hw.rileylink.service.tasks.InitializePumpManagerTask
 import app.aaps.pump.common.hw.rileylink.service.tasks.ServiceTask
 import app.aaps.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor
 import app.aaps.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask
-import dagger.android.DaggerBroadcastReceiver
 import javax.inject.Inject
 import javax.inject.Provider
 
-class RileyLinkBroadcastReceiver : DaggerBroadcastReceiver() {
+class RileyLinkBroadcastReceiver : BroadcastReceiver() {
 
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var aapsLogger: AAPSLogger
@@ -68,7 +69,7 @@ class RileyLinkBroadcastReceiver : DaggerBroadcastReceiver() {
     }
 
     override fun onReceive(context: Context, intent: Intent) {
-        super.onReceive(context, intent)
+        context.injectMetroMembers(this)
         val action = intent.action ?: return
         Thread {
             aapsLogger.debug(LTag.PUMPBTCOMM, "Received Broadcast: $action")

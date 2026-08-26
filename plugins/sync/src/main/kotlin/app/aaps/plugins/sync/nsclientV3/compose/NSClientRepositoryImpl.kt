@@ -11,8 +11,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.serialization.json.JsonElement
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Repository for NSClient UI state management.
@@ -23,7 +25,8 @@ import javax.inject.Singleton
  * Note: Interface [NSClientRepository] is in core:interfaces module
  * to allow cross-module dependency injection.
  */
-@Singleton
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class NSClientRepositoryImpl @Inject constructor(
     private val rxBus: RxBus,
     private val aapsLogger: AAPSLogger

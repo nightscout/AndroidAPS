@@ -43,7 +43,6 @@ dependencies {
     testImplementation(project(":shared:tests"))
 
     api(libs.kotlinx.datetime)
-    implementation(libs.androidx.hilt.navigation.compose)
 
     ksp(libs.com.google.dagger.compiler)
     ksp(libs.com.google.dagger.hilt.compiler)

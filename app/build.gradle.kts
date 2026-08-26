@@ -288,9 +288,6 @@ dependencies {
     implementation(libs.com.google.dagger.hilt.android)
     ksp(libs.com.google.dagger.hilt.compiler)
     // Hilt WorkManager integration: HiltWorkerFactory + @HiltWorker assisted-injection glue.
-    // androidx.hilt:hilt-compiler is a SEPARATE annotation processor from the dagger hilt-compiler above.
-    implementation(libs.androidx.hilt.work)
-    ksp(libs.androidx.hilt.compiler)
     // Hilt instrumentation testing: lets androidTest reuse the production @InstallIn graph
     // (single source of truth) with @TestInstallIn overrides instead of a hand-maintained component.
     androidTestImplementation(libs.com.google.dagger.hilt.android.testing)

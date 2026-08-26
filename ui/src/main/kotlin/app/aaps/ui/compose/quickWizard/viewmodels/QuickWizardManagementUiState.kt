@@ -53,8 +53,8 @@ data class QuickWizardManagementUiState(
  */
 enum class TrendOption {
 
-    NO,             // QuickWizardEntry.NO = 1
-    YES,            // QuickWizardEntry.YES = 0
+    NO,             // QuickWizardEntry.NEVER = 1
+    YES,            // QuickWizardEntry.ALWAYS = 0
     POSITIVE_ONLY,  // QuickWizardEntry.POSITIVE_ONLY = 2
     NEGATIVE_ONLY   // QuickWizardEntry.NEGATIVE_ONLY = 3
 }
@@ -63,8 +63,8 @@ enum class TrendOption {
  * Convert TrendOption enum to QuickWizardEntry constant
  */
 fun TrendOption.toInt(): Int = when (this) {
-    TrendOption.YES           -> QuickWizardEntry.YES
-    TrendOption.NO            -> QuickWizardEntry.NO
+    TrendOption.YES           -> QuickWizardEntry.ALWAYS
+    TrendOption.NO            -> QuickWizardEntry.NEVER
     TrendOption.POSITIVE_ONLY -> QuickWizardEntry.POSITIVE_ONLY
     TrendOption.NEGATIVE_ONLY -> QuickWizardEntry.NEGATIVE_ONLY
 }
@@ -73,7 +73,7 @@ fun TrendOption.toInt(): Int = when (this) {
  * Convert QuickWizardEntry constant to TrendOption enum
  */
 fun Int.toTrendOption(): TrendOption = when (this) {
-    QuickWizardEntry.YES           -> TrendOption.YES
+    QuickWizardEntry.ALWAYS           -> TrendOption.YES
     QuickWizardEntry.POSITIVE_ONLY -> TrendOption.POSITIVE_ONLY
     QuickWizardEntry.NEGATIVE_ONLY -> TrendOption.NEGATIVE_ONLY
     else                           -> TrendOption.NO

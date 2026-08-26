@@ -28,8 +28,6 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":pump:dana"))
 
-    implementation(libs.androidx.hilt.navigation.compose)
-
     testImplementation(project(":shared:tests"))
     testImplementation(project(":core:objects"))
 

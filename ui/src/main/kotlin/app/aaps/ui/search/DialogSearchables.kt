@@ -4,8 +4,11 @@ import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.ui.search.SearchableItem
 import app.aaps.core.ui.search.SearchableProvider
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoSet
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Provides searchable items for dialogs and action screens.
@@ -15,7 +18,8 @@ import javax.inject.Singleton
  * (e.g. client-only "pair with master", master-only "authorized clients") are not
  * discoverable on the wrong build.
  */
-@Singleton
+@ContributesIntoSet(AppScope::class, binding = binding<SearchableProvider>())
+@SingleIn(AppScope::class)
 class DialogSearchables @Inject constructor(
     private val visibilityContext: VisibilityContext
 ) : SearchableProvider {

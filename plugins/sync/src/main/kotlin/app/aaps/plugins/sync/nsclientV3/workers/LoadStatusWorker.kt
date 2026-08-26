@@ -1,7 +1,6 @@
 package app.aaps.plugins.sync.nsclientV3.workers
 
 import android.content.Context
-import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -9,12 +8,13 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.objects.workflow.LoggingWorker
+import app.aaps.core.objects.workflow.WorkerInstanceFactory
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.Dispatchers
 
-@HiltWorker
 class LoadStatusWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
@@ -41,4 +41,8 @@ class LoadStatusWorker @AssistedInject constructor(
         nsClientRepository.updateStatus(nsClientV3Plugin.status)
         return Result.success()
     }
+
+    /** Metro builds the worker through this - WorkManager supplies context and params. */
+    @AssistedFactory
+    abstract class Factory : WorkerInstanceFactory<LoadStatusWorker>()
 }

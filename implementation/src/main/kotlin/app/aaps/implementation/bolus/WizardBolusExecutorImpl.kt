@@ -56,9 +56,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Inject
 import javax.inject.Provider
-import javax.inject.Singleton
 import kotlin.math.abs
 import kotlin.math.ceil
 import app.aaps.core.interfaces.R as InterfacesR
@@ -68,7 +70,10 @@ import app.aaps.core.interfaces.R as InterfacesR
  * **internal** here (`:implementation` sees `core:objects`); the interface exposes only the primitive
  * result, so it can live in `core:interfaces` with no `core:objects` dependency.
  */
-@Singleton
+// Metro builds this; Dagger receives it via a @Provides delegate in `:app`. Metro's @SingleIn, not
+// javax @Singleton, because the graph is generated in `:app` - same as its sibling BatchExecutorImpl.
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class WizardBolusExecutorImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
@@ -224,7 +229,7 @@ class WizardBolusExecutorImpl @Inject constructor(
         // Build the master's color-coded confirmation lines here so the client renders the master's EXACT
         // wizard confirmation (shared builder). advisorApplies offers the high-BG "correct now, eat later" fork.
         val advisorApplies = wizard.needsBolusAdvisor()
-        val eCarbsGrams = if (entry.useEcarbs() == QuickWizardEntry.YES) entry.carbs2() else 0
+        val eCarbsGrams = if (entry.useEcarbs() == QuickWizardEntry.ALWAYS) entry.carbs2() else 0
         return WizardBolusExecutor.PrepareResult.Preview(
             insulin = wizard.calculatedTotalInsulin,
             carbs = wizard.carbs,
@@ -237,7 +242,7 @@ class WizardBolusExecutorImpl @Inject constructor(
                 eCarbsDelayMinutes = if (eCarbsGrams > 0) entry.time() else 0,
                 eCarbsDurationHours = if (eCarbsGrams > 0) entry.duration() else 0,
                 carbTimeMinutes = entry.carbTime(),
-                alarm = entry.useAlarm() == QuickWizardEntry.YES && entry.carbTime() > 0,
+                alarm = entry.useAlarm() == QuickWizardEntry.ALWAYS && entry.carbTime() > 0,
                 maxBolus = constraintChecker.getMaxBolusAllowed().value(),
                 bolusStep = pump.pumpDescription.pumpType.determineCorrectBolusStepSize(wizard.insulinAfterConstraints),
             ),
@@ -578,8 +583,8 @@ class WizardBolusExecutorImpl @Inject constructor(
         var eCarbsDelay = 0
         val qwe = p.entry
         if (qwe != null) {
-            useAlarm = qwe.useAlarm() == QuickWizardEntry.YES
-            if (qwe.useEcarbs() == QuickWizardEntry.YES) {
+            useAlarm = qwe.useAlarm() == QuickWizardEntry.ALWAYS
+            if (qwe.useEcarbs() == QuickWizardEntry.ALWAYS) {
                 eCarbsDelay = qwe.time()
                 eventTime += (eCarbsDelay * 60000)
                 carbs2 = qwe.carbs2()
@@ -596,7 +601,7 @@ class WizardBolusExecutorImpl @Inject constructor(
         // Super-bolus (a quick-wizard with useSuperBolus): write the SUPER_BOLUS mode change before the
         // bolus, driven off the CONSUMED entry — never the shared `pending` slot, which a stale unconfirmed
         // wear prepare could leak into an unrelated bolus. Mirrors the phone's executeNormal.
-        if (p.entry?.useSuperBolus() == QuickWizardEntry.YES) {
+        if (p.entry?.useSuperBolus() == QuickWizardEntry.ALWAYS) {
             profileFunction.getProfile()?.let { profile ->
                 if (loop.allowedNextModes().contains(RM.Mode.SUPER_BOLUS))
                     loop.handleRunningModeChange(

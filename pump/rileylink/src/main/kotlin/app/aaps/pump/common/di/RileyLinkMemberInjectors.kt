@@ -2,6 +2,7 @@ package app.aaps.pump.common.di
 
 import app.aaps.core.interfaces.di.FeatureMemberInjectors
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkBluetoothStateReceiver
+import app.aaps.pump.common.hw.rileylink.service.RileyLinkBroadcastReceiver
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ClassKey
@@ -27,5 +28,13 @@ object RileyLinkMemberInjectors {
     @ClassKey(RileyLinkBluetoothStateReceiver::class)
     fun bindRileyLinkBluetoothStateReceiver(
         injector: MembersInjector<RileyLinkBluetoothStateReceiver>
+    ): MembersInjector<*> = injector
+
+    @Provides
+    @FeatureMemberInjectors
+    @IntoMap
+    @ClassKey(RileyLinkBroadcastReceiver::class)
+    fun bindRileyLinkBroadcastReceiver(
+        injector: MembersInjector<RileyLinkBroadcastReceiver>
     ): MembersInjector<*> = injector
 }

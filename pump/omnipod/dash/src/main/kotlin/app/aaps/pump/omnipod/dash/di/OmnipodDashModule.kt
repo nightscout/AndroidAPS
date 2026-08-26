@@ -34,9 +34,4 @@ abstract class OmnipodDashModule {
     abstract fun bindsOmnipodDashManagerImpl(omnipodManager: OmnipodDashManagerImpl): OmnipodDashManager
 
     // Pump plugin registration — @IntKey range 1000–1200, see PluginsListModule for overview
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @IntKey(1080)
-    abstract fun bindOmnipodDashPumpPlugin(plugin: OmnipodDashPumpPlugin): PluginBase
 }

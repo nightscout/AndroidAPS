@@ -8,7 +8,6 @@ import androidx.room.PrimaryKey
 import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.database.entities.interfaces.DBEntryWithTimeAndDuration
 import app.aaps.database.entities.interfaces.TraceableDBEntry
-import java.util.TimeZone
 
 @Entity(
     tableName = TABLE_TEMPORARY_TARGETS,
@@ -33,7 +32,7 @@ data class TemporaryTarget(
     @Embedded
     override var interfaceIDs_backing: InterfaceIDs? = InterfaceIDs(),
     override var timestamp: Long,
-    override var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
+    override var utcOffset: Long = defaultUtcOffset(timestamp),
     var reason: Reason,
     var highTarget: Double, // in mgdl
     var lowTarget: Double, // in mgdl

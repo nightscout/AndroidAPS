@@ -7,7 +7,6 @@ import androidx.room.PrimaryKey
 import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.database.entities.interfaces.DBEntryWithTimeAndDuration
 import app.aaps.database.entities.interfaces.TraceableDBEntry
-import java.util.TimeZone
 
 /** Heart rate values measured by a user smart watch or the like. */
 @Entity(
@@ -25,7 +24,7 @@ data class HeartRate(
     var beatsPerMinute: Double,
     /** Source device that measured the heart rate. */
     var device: String,
-    override var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
+    override var utcOffset: Long = defaultUtcOffset(timestamp),
     override var version: Int = 0,
     override var dateCreated: Long = -1,
     override var isValid: Boolean = true,

@@ -13,7 +13,6 @@ import app.aaps.plugins.sync.nsclientV3.compose.NSClientRepositoryImpl
 import app.aaps.plugins.sync.nsclientV3.services.NSClientV3Service
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
-import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
@@ -30,14 +29,12 @@ import kotlin.time.Duration.Companion.seconds
 @ExperimentalCoroutinesApi
 internal class DataSyncWorkerTest : TestBase() {
 
-    abstract class ContextWithInjector : Context(), HasAndroidInjector
-
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var dataSyncSelectorV3: DataSyncSelectorV3
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var nsClientV3Plugin: NSClientV3Plugin
     @Mock lateinit var nsClientV3Service: NSClientV3Service
-    @Mock lateinit var context: ContextWithInjector
+    @Mock lateinit var context: Context
 
     private lateinit var nsClientMvvmRepository: NSClientRepositoryImpl
 

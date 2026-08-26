@@ -36,19 +36,24 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.implementation.R
-import dagger.Lazy
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.reflect.KClass
 
-@Singleton
+@ContributesBinding(AppScope::class, binding = binding<ActivePlugin>())
+@ContributesBinding(AppScope::class, binding = binding<PluginPermissions>())
+@SingleIn(AppScope::class)
 class PluginStore @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
-    private val pumpWithConcentration: Lazy<PumpWithConcentration>,
-    // Lazy: a PermissionProvider (e.g. AutomationRuntime) transitively depends on ActivePlugin
-    // (= this PluginStore), so eager injection would form a Dagger dependency cycle.
-    private val permissionProviders: Lazy<Set<@JvmSuppressWildcards PermissionProvider>>
+    private val pumpWithConcentration: () -> PumpWithConcentration,
+    // A factory, not an eager Set: a PermissionProvider (e.g. AutomationRuntime) transitively depends
+    // on ActivePlugin (= this PluginStore), so asking for the set here would close the cycle. Was
+    // dagger.Lazy; a plain lambda defers the same way without naming Dagger.
+    private val permissionProviders: () -> Set<PermissionProvider>
 ) : ActivePlugin, PluginPermissions {
 
     companion object {
@@ -260,7 +265,7 @@ class PluginStore @Inject constructor(
         get() = activeAPSStore
 
     override val activePump: PumpWithConcentration
-        get() = pumpWithConcentration.get()
+        get() = pumpWithConcentration()
 
     /**
      * Points to real pump plugin selected in ConfigBuilder
@@ -338,7 +343,7 @@ class PluginStore @Inject constructor(
         // Non-plugin feature permissions (e.g. standalone Automation). Queried dynamically, so a
         // feature only contributes its permission while it actually needs it. isPermissionMissing
         // handles both standard and special permission identifiers.
-        val providerMissing = permissionProviders.get()
+        val providerMissing = permissionProviders()
             .flatMap { it.requiredPermissions() }
             .filter { group -> group.permissions.any { perm -> isPermissionMissing(context, perm) } }
             .distinctBy { it.permissions.toSet() }
@@ -348,7 +353,7 @@ class PluginStore @Inject constructor(
     override fun collectAllPermissions(context: Context): List<PermissionGroup> =
         (globalPermissions(context) +
             plugins.filter { it.isEnabled() }.flatMap { it.requiredPermissions() } +
-            permissionProviders.get().flatMap { it.requiredPermissions() })
+            permissionProviders().flatMap { it.requiredPermissions() })
             .distinctBy { it.permissions.toSet() }
 
 }

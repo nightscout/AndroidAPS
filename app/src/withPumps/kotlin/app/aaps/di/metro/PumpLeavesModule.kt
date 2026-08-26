@@ -2,6 +2,27 @@ package app.aaps.di.metro
 
 import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.core.interfaces.pump.rfcomm.RfcommTransport
+import app.aaps.pump.danar.DanaRPlugin
+import app.aaps.pump.danarkorean.DanaRKoreanPlugin
+import app.aaps.pump.danarv2.DanaRv2Plugin
+import app.aaps.pump.insight.InsightPlugin
+import app.aaps.pump.medtronic.MedtronicPumpPlugin
+import app.aaps.pump.diaconn.DiaconnG8Plugin
+import app.aaps.pump.eopatch.EopatchPumpPlugin
+import app.aaps.pump.common.hw.rileylink.RileyLinkUtil
+import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData
+import app.aaps.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor
+import app.aaps.pump.medtronic.data.MedtronicHistoryData
+import app.aaps.pump.medtronic.driver.MedtronicPumpStatus
+import app.aaps.pump.medtronic.util.MedtronicUtil
+import app.aaps.pump.eopatch.RxAction
+import app.aaps.pump.eopatch.alarm.IAlarmRegistry
+import app.aaps.pump.eopatch.ble.IPatchManager
+import app.aaps.pump.eopatch.ble.PatchManagerExecutor
+import app.aaps.pump.eopatch.ble.PreferenceManager
+import app.aaps.pump.eopatch.vo.NormalBasalManager
+import app.aaps.pump.eopatch.vo.PatchConfig
+import app.aaps.pump.eopatch.vo.TempBasalManager
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.database.DanaHistoryDatabase
 import app.aaps.pump.dana.database.DanaHistoryRecordDao
@@ -71,12 +92,40 @@ class PumpLeavesModule {
         equilPumpPlugin: Provider<EquilPumpPlugin>,
         medtrumPlugin: Provider<MedtrumPlugin>,
         medtrumPump: Provider<MedtrumPump>,
+        danaRPlugin: Provider<DanaRPlugin>,
+        danaRKoreanPlugin: Provider<DanaRKoreanPlugin>,
+        danaRv2Plugin: Provider<DanaRv2Plugin>,
+        insightPlugin: Provider<InsightPlugin>,
+        medtronicPumpPlugin: Provider<MedtronicPumpPlugin>,
+        diaconnG8Plugin: Provider<DiaconnG8Plugin>,
+        eopatchPumpPlugin: Provider<EopatchPumpPlugin>,
+        rileyLinkUtil: Provider<RileyLinkUtil>,
+        rileyLinkServiceData: Provider<RileyLinkServiceData>,
+        serviceTaskExecutor: Provider<ServiceTaskExecutor>,
+        medtronicHistoryData: Provider<MedtronicHistoryData>,
+        medtronicPumpStatus: Provider<MedtronicPumpStatus>,
+        medtronicUtil: Provider<MedtronicUtil>,
+        patchManager: Provider<IPatchManager>,
+        patchManagerExecutor: Provider<PatchManagerExecutor>,
+        patchConfig: Provider<PatchConfig>,
+        tempBasalManager: Provider<TempBasalManager>,
+        normalBasalManager: Provider<NormalBasalManager>,
+        preferenceManager: Provider<PreferenceManager>,
+        alarmRegistry: Provider<IAlarmRegistry>,
+        rxAction: Provider<RxAction>,
         omnipodDashPumpPlugin: Provider<OmnipodDashPumpPlugin>
     ): PumpLeaves = PumpLeaves(
         bleTransport, rfcommTransport, danaHistoryRecordDao, diaconnHistoryRecordDao, diaconnHistoryDatabase,
         equilBleTransport, equilHistoryPumpDao, equilHistoryRecordDao, dashHistoryDatabase, historyMapper, historyRecordDao,
         medtrumBleTransport, omnipodDashManager, omnipodDashPodStateManager, danaHistoryDatabase, danaRSPackets,
         bleComm, comboV2Plugin, danaPump, danaRSPlugin, diaconnG8Pump, equilManager, equilPumpPlugin,
-        medtrumPlugin, medtrumPump, omnipodDashPumpPlugin
+        medtrumPlugin, medtrumPump,
+        danaRPlugin, danaRKoreanPlugin, danaRv2Plugin, insightPlugin, medtronicPumpPlugin, diaconnG8Plugin,
+        eopatchPumpPlugin,
+        rileyLinkUtil, rileyLinkServiceData,
+        serviceTaskExecutor, medtronicHistoryData, medtronicPumpStatus, medtronicUtil,
+        patchManager, patchManagerExecutor, patchConfig, tempBasalManager, normalBasalManager,
+        preferenceManager, alarmRegistry, rxAction,
+        omnipodDashPumpPlugin
     )
 }

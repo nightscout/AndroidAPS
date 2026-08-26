@@ -43,8 +43,9 @@ import app.aaps.implementation.profile.ProfileSwitchSilentGate
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Inject
-import javax.inject.Singleton
 import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.R as CoreUiR
 
@@ -52,7 +53,7 @@ import app.aaps.core.ui.R as CoreUiR
  * Executes scene activation and deactivation.
  * Captures prior state before activation for revert on deactivation.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class SceneExecutor @Inject constructor(
     @ApplicationContext private val context: Context,
     private val persistenceLayer: PersistenceLayer,

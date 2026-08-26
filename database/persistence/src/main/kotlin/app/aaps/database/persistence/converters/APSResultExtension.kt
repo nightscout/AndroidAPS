@@ -13,7 +13,6 @@ import app.aaps.core.interfaces.aps.RT
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.builtins.ArraySerializer
 import kotlinx.serialization.json.Json
-import javax.inject.Provider
 
 @OptIn(ExperimentalSerializationApi::class)
 private val rtJson = Json {
@@ -21,11 +20,11 @@ private val rtJson = Json {
     ignoreUnknownKeys = true
 }
 
-fun app.aaps.database.entities.APSResult.fromDb(apsResultProvider: Provider<APSResult>): APSResult =
+fun app.aaps.database.entities.APSResult.fromDb(apsResultProvider: () -> APSResult): APSResult =
     when (algorithm) {
         app.aaps.database.entities.APSResult.Algorithm.AMA,
         app.aaps.database.entities.APSResult.Algorithm.SMB      ->
-            apsResultProvider.get().with(rtJson.decodeFromString(this.resultJson)).also { result ->
+            apsResultProvider().with(rtJson.decodeFromString(this.resultJson)).also { result ->
                 result.date = this.timestamp
                 result.glucoseStatus = try {
                     this.glucoseStatusJson?.let { Json.decodeFromString(it) }
@@ -40,7 +39,7 @@ fun app.aaps.database.entities.APSResult.fromDb(apsResultProvider: Provider<APSR
             }
 
         app.aaps.database.entities.APSResult.Algorithm.AUTO_ISF ->
-            apsResultProvider.get().with(rtJson.decodeFromString(this.resultJson)).also { result ->
+            apsResultProvider().with(rtJson.decodeFromString(this.resultJson)).also { result ->
                 result.date = this.timestamp
                 result.glucoseStatus = try {
                     this.glucoseStatusJson?.let { Json.decodeFromString(it) }

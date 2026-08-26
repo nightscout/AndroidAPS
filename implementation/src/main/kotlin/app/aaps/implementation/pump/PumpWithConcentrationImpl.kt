@@ -28,15 +28,19 @@ import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.objects.constraints.ConstraintObject
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.serialization.json.JsonObject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import javax.inject.Inject
-import javax.inject.Provider
 
+// Deliberately NOT @SingleIn: the @Binds this replaces had no scope, so every injection site got its
+// own. Scoping it now would be a silent behaviour change in a class that talks to the pump.
+@ContributesBinding(AppScope::class)
 class PumpWithConcentrationImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val activePlugin: ActivePlugin,
     private val profileFunction: ProfileFunction,
     private val constraintsChecker: ConstraintsChecker,
-    private val pumpEnactResultProvider: Provider<PumpEnactResult>
+    private val pumpEnactResultProvider: () -> PumpEnactResult
 ) : PumpWithConcentration {
 
     @VisibleForTesting val activePumpInternal
@@ -128,7 +132,7 @@ class PumpWithConcentrationImpl @Inject constructor(
             // Short-circuit to a clean "processed, nothing delivered" result instead of calling the pump.
             if (result <= 0.0) {
                 aapsLogger.warn(LTag.PUMP, "Bolus rounds to 0 under concentration $concentration (requested $requestedIu IU, below pump step) → not delivered")
-                return pumpEnactResultProvider.get().success(true).enacted(false).bolusDelivered(0.0)
+                return pumpEnactResultProvider().success(true).enacted(false).bolusDelivered(0.0)
             }
         }
         return activePumpInternal.deliverTreatment(detailedBolusInfo)

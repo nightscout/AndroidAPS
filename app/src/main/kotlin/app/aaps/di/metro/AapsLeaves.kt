@@ -5,42 +5,32 @@ import androidx.work.WorkManager
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.automation.Automation
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.db.ProcessedTbrEbData
+import app.aaps.database.AppRepository
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.dst.DstHelper
-import app.aaps.core.interfaces.insulin.ConcentrationHelper
-import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
-import app.aaps.core.interfaces.logging.LoggerUtils
-import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.plugins.sync.nfcCommands.NfcCommandsPlugin
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
 import app.aaps.core.interfaces.widget.WidgetUpdater
-import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.maintenance.FileListProvider
-import app.aaps.core.interfaces.maintenance.ImportExportPrefs
-import app.aaps.core.interfaces.maintenance.Maintenance
-import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.configuration.RunningConfigurationKeys
+import app.aaps.core.interfaces.source.NSClientSource
+import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
-import app.aaps.core.interfaces.overview.OverviewData
+import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
+import app.aaps.core.interfaces.plugin.PermissionProvider
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginPermissions
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.profiling.Profiler
-import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.resources.TextResolver
@@ -50,15 +40,28 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.ui.search.SearchableProvider
 import app.aaps.core.utils.receivers.DataInbox
+import app.aaps.plugins.sync.wear.WearPlugin
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.AuthorizedClientsRepository
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.PairingOfferPublisher
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientPairingRepository
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlPublisher
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.PairingOfferFetcher
+import app.aaps.plugins.sync.smsCommunicator.compose.SmsCommunicatorRepository
+import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
+import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
+import app.aaps.plugins.sync.nsclientV3.ReceiverDelegate
+import app.aaps.plugins.sync.tidepool.utils.RateLimit
+import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import app.aaps.plugins.sync.smsCommunicator.SmsCommunicatorPlugin
 import app.aaps.implementation.maintenance.cloud.CloudStorageManager
 import app.aaps.implementation.scenes.SceneExecutor
 import app.aaps.plugins.automation.services.LastLocationDataContainer
@@ -94,71 +97,41 @@ import javax.inject.Provider
 @BindingContainer
 class AapsLeaves(
     private val metroMemberInjectorProvider: Provider<MetroMemberInjector>,
-    private val aapsLoggerProvider: Provider<AAPSLogger>,
-    private val rxBusProvider: Provider<RxBus>,
-    private val activePluginProvider: Provider<ActivePlugin>,
+    private val nsClientSourceProvider: Provider<NSClientSource>,
     @ApplicationScope private val appScopeProvider: Provider<CoroutineScope>,
     private val fabricPrivacyProvider: Provider<FabricPrivacy>,
-    private val localAlertUtilsProvider: Provider<LocalAlertUtils>,
-    private val persistenceLayerProvider: Provider<PersistenceLayer>,
     private val configProvider: Provider<Config>,
+    private val appRepositoryProvider: Provider<AppRepository>,
     // Dagger owns the app-wide emitter - `WorkflowModule.provideMainSignalsEmitter`. A history window
     // has its own, built in `HistoryWindowGraph`, which is why this one is not simply contributed.
     private val calculationSignalsEmitterProvider: Provider<CalculationSignalsEmitter>,
     // Both are Dagger @Binds in ImplementationModule, and the openAPS plugins need them now that Metro
     // builds those. APSResult is asked for through a Provider - one result object per loop run.
-    private val apsResultProvider: Provider<APSResult>,
-    private val profilerProvider: Provider<Profiler>,
     // Dagger owns this one; LoopPlugin needs it and Metro builds LoopPlugin now.
-    private val pumpStatusProviderProvider: Provider<PumpStatusProvider>,
-    // Dagger @Binds in ImplementationModule; AutotunePlugin needs it and Metro builds that now.
-    private val loggerUtilsProvider: Provider<LoggerUtils>,
-    // Dagger @Binds in ImplementationModule; ErrorActivity needs it and Metro injects that now.
-    private val alarmSoundPlayerProvider: Provider<AlarmSoundPlayer>,
     // The activities this app injects need these; all three are Dagger @Binds in their own modules.
-    private val widgetUpdaterProvider: Provider<WidgetUpdater>,
     private val authFlowOutProvider: Provider<AuthFlowOut>,
     private val tidepoolUploaderProvider: Provider<TidepoolUploader>,
     // The plugin list is Dagger's, and this @Singleton plugin is in it. Without this leaf Metro would
     // build a second one for NfcControlActivity, and the screen would act on a different object than the
     // list holds - and drag the plugin's whole dependency tree into the root graph on the way.
     private val nfcCommandsPluginProvider: Provider<NfcCommandsPlugin>,
-    private val dateUtilProvider: Provider<DateUtil>,
     private val profileFunctionProvider: Provider<ProfileFunction>,
-    private val commandQueueProvider: Provider<CommandQueue>,
-    private val maintenanceProvider: Provider<Maintenance>,
     private val rhProvider: Provider<ResourceHelper>,
-    private val preferencesProvider: Provider<Preferences>,
     private val dstHelperProvider: Provider<DstHelper>,
     private val workManagerProvider: Provider<WorkManager>,
-    private val concentrationHelperProvider: Provider<ConcentrationHelper>,
     private val notificationManagerProvider: Provider<NotificationManager>,
-    private val sceneExecutorProvider: Provider<SceneExecutor>,
-    private val fileListProviderProvider: Provider<FileListProvider>,
-    private val userEntryPresentationHelperProvider: Provider<UserEntryPresentationHelper>,
-    private val dataInboxProvider: Provider<DataInbox>,
     private val cloudStorageManagerProvider: Provider<CloudStorageManager>,
-    private val calculationWorkflowProvider: Provider<CalculationWorkflow>,
-    private val processedTbrEbDataProvider: Provider<ProcessedTbrEbData>,
     private val overviewDataCacheFactoryProvider: Provider<OverviewDataCacheFactory>,
     // Needed by the feature extensions below the root, which no longer carry their own leaf lists.
-    private val constraintsCheckerProvider: Provider<ConstraintsChecker>,
-    private val uelProvider: Provider<UserEntryLogger>,
     private val automationProvider: Provider<Automation>,
-    private val glucoseStatusProvider: Provider<GlucoseStatusProvider>,
-    private val processedDeviceStatusDataProvider: Provider<ProcessedDeviceStatusData>,
-    private val wizardBolusExecutorProvider: Provider<WizardBolusExecutor>,
     private val contextProvider: Provider<Context>,
     // Source plugins, still built by Dagger. They live here rather than in their own module because a
     // graph extension is generated in the parent's module, so Metro cannot read a container from the
     // module the extension is declared in.
     // Automation.
     private val uiInteractionProvider: Provider<UiInteraction>,
-    private val notificationHolderProvider: Provider<NotificationHolder>,
-    private val lastLocationDataContainerProvider: Provider<LastLocationDataContainer>,
     // Constraints.
     private val versionCheckerUtilsProvider: Provider<VersionCheckerUtils>,
-    private val passwordCheckProvider: Provider<PasswordCheck>,
     // Still Dagger-owned, and needed by the scene classes that moved to Metro.
     // Dagger-owned on purpose: it is bound from XdripPlugin, which is still in the Dagger plugin list.
     // Contributing it would have Metro build a second copy of that plugin.
@@ -172,7 +145,20 @@ class AapsLeaves(
     // Dagger keeps building this one - see the note in MaintenanceImplModule.
     // A Dagger @IntoSet multibinding, handed over already assembled. Metro receives the Set as one
     // binding rather than re-declaring the multibinding on this side.
-    private val searchableProvidersProvider: Provider<Set<SearchableProvider>>,
+    private val permissionProvidersProvider: Provider<Set<PermissionProvider>>,
+    private val smsCommunicatorPluginProvider: Provider<SmsCommunicatorPlugin>,
+    private val nsClientV3PluginProvider: Provider<NSClientV3Plugin>,
+    private val wearPluginProvider: Provider<WearPlugin>,
+    private val authorizedClientsRepositoryProvider: Provider<AuthorizedClientsRepository>,
+    private val pairingOfferPublisherProvider: Provider<PairingOfferPublisher>,
+    private val clientPairingRepositoryProvider: Provider<ClientPairingRepository>,
+    private val clientControlPublisherProvider: Provider<ClientControlPublisher>,
+    private val pairingOfferFetcherProvider: Provider<PairingOfferFetcher>,
+    private val smsCommunicatorRepositoryProvider: Provider<SmsCommunicatorRepository>,
+    private val tidepoolRepositoryProvider: Provider<TidepoolRepository>,
+    private val xdripMvvmRepositoryProvider: Provider<XdripMvvmRepository>,
+    private val receiverDelegateProvider: Provider<ReceiverDelegate>,
+    private val rateLimitProvider: Provider<RateLimit>,
     /**
      * The history browser scope.
      *
@@ -183,27 +169,14 @@ class AapsLeaves(
      * window is what keeps history browsing off the live loop's calculation objects, so an app-scoped
      * view model reading it is fine.
      */
-    private val aapsSchedulersProvider: Provider<AapsSchedulers>,
-    private val spProvider: Provider<SP>,
-    private val bolusProgressDataProvider: Provider<BolusProgressData>,
-    private val pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val historyScopeProvider: Provider<HistoryScope>,
-    private val importExportPrefsProvider: Provider<ImportExportPrefs>,
-    private val overviewDataProvider: Provider<OverviewData>,
     private val overviewDataCacheProvider: Provider<OverviewDataCache>,
     // Same object as ActivePlugin above (PluginStore), under its other interface.
-    private val pluginPermissionsProvider: Provider<PluginPermissions>,
-    private val lProvider: Provider<L>,
     @ApplicationContext private val appContextProvider: Provider<Context>,
-    private val xDripBroadcastProvider: Provider<XDripBroadcast>,
     private val nsClientProvider: Provider<NsClient>,
     private val clientControlActionDispatcherProvider: Provider<ClientControlActionDispatcher>,
     private val sntpClientProvider: Provider<SntpClient>
 ) {
-
-    @Provides fun aapsLogger(): AAPSLogger = aapsLoggerProvider.get()
-    @Provides fun rxBus(): RxBus = rxBusProvider.get()
-    @Provides fun activePlugin(): ActivePlugin = activePluginProvider.get()
 
     /**
      * The application scope, qualified.
@@ -223,81 +196,74 @@ class AapsLeaves(
     @Provides fun fabricPrivacy(): FabricPrivacy = fabricPrivacyProvider.get()
     // No runningModeExpiryJob() leaf: Metro builds it now (commonMain, Metro @Inject), and Dagger gets
     // both running-mode classes from `CoreObjectsModule` instead.
-    @Provides fun localAlertUtils(): LocalAlertUtils = localAlertUtilsProvider.get()
-    @Provides fun persistenceLayer(): PersistenceLayer = persistenceLayerProvider.get()
     @Provides fun config(): Config = configProvider.get()
+    @Provides fun appRepository(): AppRepository = appRepositoryProvider.get()
     // No iobCobCalculator() any more: Metro builds it now, in `MainPluginsBindings`, and Dagger receives
     // it through `CoreObjectsModule.provideIobCobCalculator`.
     @Provides fun calculationSignalsEmitter(): CalculationSignalsEmitter = calculationSignalsEmitterProvider.get()
-    @Provides fun apsResult(): APSResult = apsResultProvider.get()
-    @Provides fun profiler(): Profiler = profilerProvider.get()
     // No loop() leaf any more: Metro builds LoopPlugin, so Loop travels the other way, through
     // `CoreObjectsModule.provideLoop`.
-    @Provides fun pumpStatusProvider(): PumpStatusProvider = pumpStatusProviderProvider.get()
-    @Provides fun loggerUtils(): LoggerUtils = loggerUtilsProvider.get()
-    @Provides fun alarmSoundPlayer(): AlarmSoundPlayer = alarmSoundPlayerProvider.get()
-    @Provides fun widgetUpdater(): WidgetUpdater = widgetUpdaterProvider.get()
     @Provides fun authFlowOut(): AuthFlowOut = authFlowOutProvider.get()
     @Provides fun tidepoolUploader(): TidepoolUploader = tidepoolUploaderProvider.get()
     @Provides fun nfcCommandsPlugin(): NfcCommandsPlugin = nfcCommandsPluginProvider.get()
-    @Provides fun dateUtil(): DateUtil = dateUtilProvider.get()
     @Provides fun profileFunction(): ProfileFunction = profileFunctionProvider.get()
-    @Provides fun commandQueue(): CommandQueue = commandQueueProvider.get()
-    @Provides fun maintenance(): Maintenance = maintenanceProvider.get()
     @Provides fun rh(): ResourceHelper = rhProvider.get()
 
     /** `ResourceHelper` is the Android implementation of the multiplatform [TextResolver]. */
     @Provides fun textResolver(rh: ResourceHelper): TextResolver = rh
-
-    @Provides fun preferences(): Preferences = preferencesProvider.get()
     @Provides fun dstHelper(): DstHelper = dstHelperProvider.get()
     @Provides fun workManager(): WorkManager = workManagerProvider.get()
-    @Provides fun concentrationHelper(): ConcentrationHelper = concentrationHelperProvider.get()
     @Provides fun notificationManager(): NotificationManager = notificationManagerProvider.get()
     // No activeSceneManager() here on purpose: Metro owns it (@SingleIn on the class), so this leaf would
     // push a SECOND one in from Dagger - and an unscoped one, because the class carries no javax scope, so
     // every call built another. `CoreObjectsModule.provideActiveSceneManager` hands Metro's instance the
     // other way, which is the direction the class itself documents.
-    @Provides fun sceneExecutor(): SceneExecutor = sceneExecutorProvider.get()
     // No sceneRepository() either, same reason as activeSceneManager above: Metro owns it (@SingleIn +
     // two @ContributesBinding), so this leaf pushed an unscoped Dagger copy back in.
-    @Provides fun fileListProvider(): FileListProvider = fileListProviderProvider.get()
-    @Provides fun userEntryPresentationHelper(): UserEntryPresentationHelper = userEntryPresentationHelperProvider.get()
-    @Provides fun dataInbox(): DataInbox = dataInboxProvider.get()
     @Provides fun cloudStorageManager(): CloudStorageManager = cloudStorageManagerProvider.get()
-    @Provides fun calculationWorkflow(): CalculationWorkflow = calculationWorkflowProvider.get()
-    @Provides fun processedTbrEbData(): ProcessedTbrEbData = processedTbrEbDataProvider.get()
     @Provides fun overviewDataCacheFactory(): OverviewDataCacheFactory = overviewDataCacheFactoryProvider.get()
-    @Provides fun constraintsChecker(): ConstraintsChecker = constraintsCheckerProvider.get()
-    @Provides fun uel(): UserEntryLogger = uelProvider.get()
     @Provides fun automation(): Automation = automationProvider.get()
-    @Provides fun glucoseStatus(): GlucoseStatusProvider = glucoseStatusProvider.get()
-    @Provides fun processedDeviceStatusData(): ProcessedDeviceStatusData = processedDeviceStatusDataProvider.get()
-    @Provides fun wizardBolusExecutor(): WizardBolusExecutor = wizardBolusExecutorProvider.get()
     @Provides fun context(): Context = contextProvider.get()
 
 
     @Provides fun uiInteraction(): UiInteraction = uiInteractionProvider.get()
-    @Provides fun notificationHolder(): NotificationHolder = notificationHolderProvider.get()
-    @Provides fun lastLocationDataContainer(): LastLocationDataContainer = lastLocationDataContainerProvider.get()
 
     @Provides fun versionCheckerUtils(): VersionCheckerUtils = versionCheckerUtilsProvider.get()
-    @Provides fun passwordCheck(): PasswordCheck = passwordCheckProvider.get()
     @Provides fun sntpClient(): SntpClient = sntpClientProvider.get()
-    @Provides fun xDripBroadcast(): XDripBroadcast = xDripBroadcastProvider.get()
-    @Provides fun l(): L = lProvider.get()
-    @Provides fun aapsSchedulers(): AapsSchedulers = aapsSchedulersProvider.get()
-    @Provides fun sp(): SP = spProvider.get()
-    @Provides fun bolusProgressData(): BolusProgressData = bolusProgressDataProvider.get()
 
     /** A value object: unscoped, as its Dagger binding is. */
-    @Provides fun pumpEnactResult(): PumpEnactResult = pumpEnactResultProvider.get()
     @Provides fun historyScope(): HistoryScope = historyScopeProvider.get()
-    @Provides fun importExportPrefs(): ImportExportPrefs = importExportPrefsProvider.get()
-    @Provides fun searchableProviders(): Set<SearchableProvider> = searchableProvidersProvider.get()
-    @Provides fun overviewData(): OverviewData = overviewDataProvider.get()
+    // Still Dagger-owned: the only contributor, AutomationRuntime, needs SmsCommunicator,
+    // LocationServiceController, ReminderScheduler and BtConnectionSource, none of which the graph
+    // reaches yet. PluginStore takes it through a lambda, so nothing is built until it is asked for.
+    @Provides fun permissionProviders(): Set<PermissionProvider> = permissionProvidersProvider.get()
+
+    // Dagger owns these three, the same way it owns the pump drivers: AuthRequest, the nine
+    // @HiltWorker loaders under nsclientV3 and the wear data layer all inject the concrete class, so
+    // Dagger builds them and Metro borrows. See SyncPluginsBindings for how they reach the plugin map.
+    @Provides fun smsCommunicatorPlugin(): SmsCommunicatorPlugin = smsCommunicatorPluginProvider.get()
+    @Provides fun nsClientV3Plugin(): NSClientV3Plugin = nsClientV3PluginProvider.get()
+    @Provides fun wearPlugin(): WearPlugin = wearPluginProvider.get()
+
+    // The repositories behind the :plugins:sync view models. Dagger-owned for the same reason the
+    // plugins are: SmsCommunicatorPlugin, TidepoolPlugin, XdripPlugin, the xdrip worker and the
+    // client-control receiver all inject them, so Dagger's copy is the one being written to.
+    @Provides fun authorizedClientsRepository(): AuthorizedClientsRepository = authorizedClientsRepositoryProvider.get()
+    @Provides fun pairingOfferPublisher(): PairingOfferPublisher = pairingOfferPublisherProvider.get()
+    @Provides fun clientPairingRepository(): ClientPairingRepository = clientPairingRepositoryProvider.get()
+    @Provides fun clientControlPublisher(): ClientControlPublisher = clientControlPublisherProvider.get()
+    @Provides fun pairingOfferFetcher(): PairingOfferFetcher = pairingOfferFetcherProvider.get()
+    @Provides fun smsCommunicatorRepository(): SmsCommunicatorRepository = smsCommunicatorRepositoryProvider.get()
+    @Provides fun tidepoolRepository(): TidepoolRepository = tidepoolRepositoryProvider.get()
+    @Provides fun xdripMvvmRepository(): XdripMvvmRepository = xdripMvvmRepositoryProvider.get()
+
+    // Dagger-owned for the same reason as the plugins above: NSClientV3Plugin and TidepoolUploader are
+    // built by Dagger and are what actually writes to these. Both hold state - ReceiverDelegate the
+    // charging/network gate, RateLimit its map of last-run times - so a Metro-built second copy left
+    // TidepoolPlugin reading a gate nobody updates and a rate limiter that never limits.
+    @Provides fun receiverDelegate(): ReceiverDelegate = receiverDelegateProvider.get()
+    @Provides fun rateLimit(): RateLimit = rateLimitProvider.get()
     @Provides fun overviewDataCache(): OverviewDataCache = overviewDataCacheProvider.get()
-    @Provides fun pluginPermissions(): PluginPermissions = pluginPermissionsProvider.get()
 
     /** Hilt's qualifier, read now that interop is on. Same Context as the unqualified binding. */
     @Provides @ApplicationContext fun appContext(): Context = appContextProvider.get()
@@ -311,5 +277,8 @@ class AapsLeaves(
     @Provides fun metroMemberInjector(): MetroMemberInjector = metroMemberInjectorProvider.get()
 
     @Provides fun nsClient(): NsClient = nsClientProvider.get()
+
+    // What NSClientV3Service needs beyond the usual leaves. All three are Dagger @Binds in :plugins:sync.
+    @Provides fun nsClientSource(): NSClientSource = nsClientSourceProvider.get()
     @Provides fun clientControlActionDispatcher(): ClientControlActionDispatcher = clientControlActionDispatcherProvider.get()
 }

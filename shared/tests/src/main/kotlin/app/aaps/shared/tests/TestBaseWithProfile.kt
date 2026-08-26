@@ -1,5 +1,6 @@
 package app.aaps.shared.tests
 
+import android.app.Application
 import android.content.res.Resources
 import android.content.res.TypedArray
 import app.aaps.core.data.model.EPS
@@ -48,10 +49,7 @@ import app.aaps.implementation.utils.DecimalFormatterImpl
 import app.aaps.plugins.aps.openAPS.DeltaCalculator
 import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
 import app.aaps.shared.impl.utils.DateUtilImpl
-import dagger.android.DaggerApplication
 import app.aaps.core.interfaces.di.MetroMemberInjector
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
@@ -80,7 +78,7 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var config: Config
-    @Mock lateinit var context: DaggerApplication
+    @Mock lateinit var context: Application
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var constraintsChecker: ConstraintsChecker
     @Mock lateinit var notificationManager: NotificationManager
@@ -119,10 +117,6 @@ open class TestBaseWithProfile : TestBase() {
             true
     }
 
-    // Still needed for the classes that have not moved yet: some read `context.applicationContext as
-    // HasAndroidInjector`. Runs the same list of stub injectors as the Metro one above.
-    val daggerInjector = HasAndroidInjector { AndroidInjector<Any> { target -> injectors.forEach { fn -> fn(target) } } }
-
     private lateinit var validProfileJSON: String
     private lateinit var invalidProfileJSON: String
     lateinit var validProfile: ProfileSealed.Pure
@@ -150,7 +144,6 @@ open class TestBaseWithProfile : TestBase() {
         testPumpPlugin = TestPumpPlugin(rh)
         hardLimits = HardLimitsMock(preferences, rh)
         whenever(context.applicationContext).thenReturn(context)
-        whenever(context.androidInjector()).thenReturn(daggerInjector.androidInjector())
         whenever(context.theme).thenReturn(theme)
         whenever(context.obtainStyledAttributes(anyOrNull(), any(), any(), any())).thenReturn(typedArray)
         whenever(dateUtil.now()).thenReturn(now)
@@ -170,7 +163,7 @@ open class TestBaseWithProfile : TestBase() {
         whenever(profileRepository.revision).thenReturn(MutableStateFlow(0L))
         whenever(profileRepository.profile).thenReturn(MutableStateFlow(getValidProfileStore()))
         deltaCalculator = DeltaCalculator(aapsLogger)
-        apsResultProvider = Provider { DetermineBasalResult(aapsLogger, fabricPrivacy, constraintsChecker, preferences, activePlugin, processedTbrEbData, profileFunction, rh, decimalFormatter, dateUtil, apsResultProvider, ch) }
+        apsResultProvider = Provider { DetermineBasalResult(aapsLogger, fabricPrivacy, constraintsChecker, preferences, activePlugin, processedTbrEbData, profileFunction, rh, decimalFormatter, dateUtil, { apsResultProvider.get() }, ch) }
         validProfile = ProfileSealed.Pure(pureProfileFromJson(validProfileJSON, dateUtil)!!, activePlugin)
         effectiveProfileSwitch = EPS(
             timestamp = dateUtil.now(),

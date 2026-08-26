@@ -56,6 +56,6 @@ class LoggerCallback : ScriptableObject() {
         errorBuffer = StringBuffer()
         logBuffer = StringBuffer()
         @Suppress("DEPRECATION")
-        StaticInjector.getInstance().androidInjector().inject(this)
+        StaticInjector.getInstance().injectMembers(this)
     }
 }

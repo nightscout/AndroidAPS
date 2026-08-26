@@ -34,7 +34,6 @@ open class PluginsConstraintsModule {
         // plugins now, so a @Binds would have Dagger construct a second copy: the plugin list would
         // hold the started one and these interfaces would hand out an unstarted twin. See the
         // @Provides delegates below.
-        @Binds fun bindsConstraintChecker(constraintsCheckerImpl: ConstraintsCheckerImpl): ConstraintsChecker
     }
 
     // The BgQualityCheck, DstHelper and Objectives delegates moved to `MetroBridgeModule` in `:app`.

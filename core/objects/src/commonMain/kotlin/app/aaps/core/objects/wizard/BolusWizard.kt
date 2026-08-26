@@ -433,7 +433,7 @@ class BolusWizard(
 
             if (quickWizardEntry != null) {
                 val eCarbsYesNo = quickWizardEntry.useEcarbs()
-                if (eCarbsYesNo == QuickWizardEntry.YES) {
+                if (eCarbsYesNo == QuickWizardEntry.ALWAYS) {
                     val timeOffset = quickWizardEntry.time()
                     val duration = quickWizardEntry.duration()
                     val carbs2 = quickWizardEntry.carbs2()
@@ -667,7 +667,7 @@ class BolusWizard(
 
     private fun scheduleECarbsFromQuickWizardCompose(quickWizardEntry: QuickWizardEntry, onError: (String) -> Unit, forcedRecordOnly: Boolean = false) {
         val eCarbsYesNo = quickWizardEntry.useEcarbs()
-        if (eCarbsYesNo == QuickWizardEntry.YES) {
+        if (eCarbsYesNo == QuickWizardEntry.ALWAYS) {
             val timeOffset = quickWizardEntry.time()
             val duration = quickWizardEntry.duration()
             val carbs2 = quickWizardEntry.carbs2()

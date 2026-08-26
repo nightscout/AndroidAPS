@@ -27,10 +27,13 @@ import java.io.IOException
 import java.util.Arrays
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class MaintenanceImpl @Inject constructor(
     private val context: Context,
     private val rh: ResourceHelper,

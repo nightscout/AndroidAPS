@@ -17,14 +17,15 @@ import app.aaps.plugins.aps.autotune.data.CRDatum
 import app.aaps.plugins.aps.autotune.data.DiaDeviation
 import app.aaps.plugins.aps.autotune.data.PeakDeviation
 import app.aaps.plugins.aps.autotune.data.PreppedGlucose
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.pow
 import kotlin.math.roundToInt
 
-@Singleton
+@SingleIn(AppScope::class)
 class AutotunePrep @Inject constructor(
     private val preferences: Preferences,
     private val dateUtil: DateUtil,

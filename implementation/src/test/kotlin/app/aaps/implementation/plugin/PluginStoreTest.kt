@@ -9,7 +9,6 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
-import dagger.Lazy
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.mock
@@ -35,10 +34,8 @@ class PluginStoreTest : TestBase() {
     )
 
     private fun store(providers: Set<PermissionProvider>): PluginStore {
-        // dagger.Lazy supplied directly; pump lazy is never dereferenced by the permission paths.
-        val pumpLazy = Lazy<PumpWithConcentration> { mock() }
-        val providerLazy = Lazy { providers }
-        return PluginStore(aapsLogger, preferences, pumpLazy, providerLazy).also {
+        // Plain factories now, not dagger.Lazy; the pump one is never called by the permission paths.
+        return PluginStore(aapsLogger, preferences, { mock() }, { providers }).also {
             it.plugins = emptyList<PluginBase>()
         }
     }

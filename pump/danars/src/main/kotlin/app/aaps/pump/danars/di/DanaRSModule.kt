@@ -17,8 +17,7 @@ import dagger.multibindings.IntoMap
 
 @Module(
     includes = [
-        DanaRSCommModule::class,
-        DanaRSServicesModule::class
+        DanaRSCommModule::class
     ]
 )
 @InstallIn(SingletonComponent::class)

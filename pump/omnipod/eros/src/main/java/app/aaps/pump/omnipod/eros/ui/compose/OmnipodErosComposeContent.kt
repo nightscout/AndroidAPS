@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.ui.compose.ComposablePluginContent
@@ -189,7 +190,7 @@ class OmnipodErosComposeContent(
                         onFailed = { showRileyLinkPairWizard = false }
                     )
                 } else {
-                    val rlWizardViewModel: RileyLinkPairWizardViewModel = hiltViewModel()
+                    val rlWizardViewModel: RileyLinkPairWizardViewModel = metroViewModel()
 
                     LaunchedEffect(rlWizardViewModel) {
                         rlWizardViewModel.events.collect { event ->
@@ -209,7 +210,7 @@ class OmnipodErosComposeContent(
             }
 
             showRileyLinkStats      -> {
-                val rlStatusViewModel: RileyLinkStatusViewModel = hiltViewModel()
+                val rlStatusViewModel: RileyLinkStatusViewModel = metroViewModel()
                 RileyLinkStatusScreen(viewModel = rlStatusViewModel)
             }
 

@@ -14,6 +14,8 @@ import app.aaps.ui.widget.glance.BgGraphGlanceWidget
 import app.aaps.ui.widget.glance.CompactBgGlanceWidget
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import javax.inject.Inject
 
 /**
@@ -22,6 +24,8 @@ import javax.inject.Inject
  * stateless — they resolve their dependencies via Hilt EntryPoint inside
  * `provideGlance`, so this class doesn't need to hold any state-loader refs.
  */
+// Deliberately NOT @SingleIn: the @Binds this replaces had no scope.
+@ContributesBinding(AppScope::class)
 class WidgetUpdaterImpl @Inject constructor(
     private val context: Context,
     private val aapsLogger: AAPSLogger,

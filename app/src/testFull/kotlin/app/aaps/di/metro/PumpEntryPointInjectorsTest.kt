@@ -8,7 +8,10 @@ import app.aaps.pump.insight.InsightAlertService
 import app.aaps.pump.insight.app_layer.activities.InsightAlertActivity
 import app.aaps.pump.insight.connection_service.InsightConnectionService
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkBluetoothStateReceiver
+import app.aaps.pump.common.hw.rileylink.service.RileyLinkBroadcastReceiver
+import app.aaps.pump.danars.services.DanaRSService
 import app.aaps.pump.medtrum.services.MedtrumService
+import app.aaps.pump.medtronic.service.RileyLinkMedtronicService
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
@@ -46,10 +49,23 @@ class PumpEntryPointInjectorsTest {
     }
 
     @Test
-    fun `the rileylink bluetooth state receiver has an injector`() {
+    fun `the rileylink entry points have injectors`() {
         val injectors = testRoot().contributedMemberInjectors
 
-        assertThat(injectors.keys).contains(RileyLinkBluetoothStateReceiver::class)
+        // RileyLinkService is abstract; the entry has to name the concrete subclass, which lives in
+        // :pump:medtronic - the lookup uses the runtime class.
+        assertThat(injectors.keys).containsAtLeast(
+            RileyLinkBluetoothStateReceiver::class,
+            RileyLinkBroadcastReceiver::class,
+            RileyLinkMedtronicService::class
+        )
+    }
+
+    @Test
+    fun `the danars service has an injector`() {
+        val injectors = testRoot().contributedMemberInjectors
+
+        assertThat(injectors.keys).contains(DanaRSService::class)
     }
 
     @Test

@@ -1,9 +1,68 @@
 package app.aaps.di.metro
 
+import android.content.SharedPreferences
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.bolus.BatchExecutor
+import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.logging.LoggerUtils
+import app.aaps.core.interfaces.maintenance.ImportExportPrefs
+import app.aaps.core.interfaces.pump.PumpWithConcentration
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.interfaces.workflow.CalculationWorkflow
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.L
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.widget.WidgetUpdater
+import app.aaps.core.interfaces.scenes.SceneIconResolver
+import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.plugins.automation.services.LastLocationDataContainer
+import app.aaps.core.interfaces.nsclient.StoreDataForDb
+import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
+import app.aaps.implementation.scenes.SceneExecutor
+import app.aaps.core.interfaces.plugin.PluginPermissions
+import app.aaps.core.interfaces.aps.AutosensData
+import app.aaps.core.interfaces.configuration.RunningConfigurationKeys
+import app.aaps.core.nssdk.interfaces.RunningConfiguration
+import app.aaps.core.interfaces.aps.APSResult
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.nsclient.NSClientRepository
+import app.aaps.core.interfaces.maintenance.CloudStorageProvider
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.ui.search.BuiltInSearchables
+import app.aaps.core.utils.receivers.DataInbox
+import app.aaps.implementation.plugin.PluginStore
+import app.aaps.implementation.profile.ProfileSwitchSilentGate
+import app.aaps.core.interfaces.sync.XDripBroadcast
+import app.aaps.workflow.WorkflowChainData
+import app.aaps.core.interfaces.maintenance.Maintenance
+import app.aaps.core.interfaces.maintenance.FileListProvider
+import app.aaps.core.interfaces.overview.LastBgData
+import app.aaps.core.interfaces.local.LocaleDependentSetting
+import app.aaps.core.interfaces.pump.PumpStatusProvider
+import app.aaps.core.interfaces.overview.OverviewData
+import app.aaps.core.interfaces.protection.ExportPasswordDataStore
+import app.aaps.core.interfaces.protection.SecureEncrypt
+import app.aaps.core.objects.crypto.CryptoUtil
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
+import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.iob.GlucoseStatusProvider
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.interfaces.notifications.NotificationHolder
+import app.aaps.core.interfaces.protection.PasswordCheck
+import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
+import app.aaps.core.interfaces.alerts.LocalAlertUtils
+import app.aaps.core.interfaces.profiling.Profiler
+import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.Objectives
@@ -247,6 +306,63 @@ class MetroGraphs @Inject constructor(
     val cloudDirectoryManager: CloudDirectoryManager get() = root.cloudDirectoryManager
     val graphConfigRepository: GraphConfigRepository get() = root.graphConfigRepository
     val batchExecutor: BatchExecutor get() = root.batchExecutor
+    val wizardBolusExecutor: WizardBolusExecutor get() = root.wizardBolusExecutor
+    val loggerUtils: LoggerUtils get() = root.loggerUtils
+    val importExportPrefs: ImportExportPrefs get() = root.importExportPrefs
+    val preferences: Preferences get() = root.preferences
+    val pumpWithConcentration: PumpWithConcentration get() = root.pumpWithConcentration
+    val calculationWorkflow: CalculationWorkflow get() = root.calculationWorkflow
+    val workflowChainData: WorkflowChainData get() = root.workflowChainData
+    val aapsLogger: AAPSLogger get() = root.aapsLogger
+    val rxBus: RxBus get() = root.rxBus
+    val dateUtil: DateUtil get() = root.dateUtil
+    val l: L get() = root.l
+    val aapsSchedulers: AapsSchedulers get() = root.aapsSchedulers
+    val sp: SP get() = root.sp
+    val widgetUpdater: WidgetUpdater get() = root.widgetUpdater
+    val sceneIconResolver: SceneIconResolver get() = root.sceneIconResolver
+    val processedDeviceStatusData: ProcessedDeviceStatusData get() = root.processedDeviceStatusData
+    val lastLocationDataContainer: LastLocationDataContainer get() = root.lastLocationDataContainer
+    val storeDataForDb: StoreDataForDb get() = root.storeDataForDb
+    val sceneExecutor: SceneExecutor get() = root.sceneExecutor
+    val dataInbox: DataInbox get() = root.dataInbox
+    val autosensData: AutosensData get() = root.autosensData
+    val commandQueue: CommandQueue get() = root.commandQueue
+    val localAlertUtils: LocalAlertUtils get() = root.localAlertUtils
+    val bolusProgressData: BolusProgressData get() = root.bolusProgressData
+    val persistenceLayer: PersistenceLayer get() = root.persistenceLayer
+    val cloudStorageProviders: Set<CloudStorageProvider> get() = root.cloudStorageProviders
+    val constraintsChecker: ConstraintsChecker get() = root.constraintsChecker
+    val nsClientRepository: NSClientRepository get() = root.nsClientRepository
+    val builtInSearchables: BuiltInSearchables get() = root.builtInSearchables
+    val apsResult: APSResult get() = root.apsResult
+    val pumpEnactResult: PumpEnactResult get() = root.pumpEnactResult
+    val profileSwitchSilentGate: ProfileSwitchSilentGate get() = root.profileSwitchSilentGate
+    val runningConfiguration: RunningConfiguration get() = root.runningConfiguration
+    val runningConfigurationKeys: RunningConfigurationKeys get() = root.runningConfigurationKeys
+    val activePlugin: ActivePlugin get() = root.activePlugin
+    val pluginPermissions: PluginPermissions get() = root.pluginPermissions
+    val pluginStore: PluginStore get() = root.pluginStore
+    val xDripBroadcast: XDripBroadcast get() = root.xDripBroadcast
+    val maintenance: Maintenance get() = root.maintenance
+    val fileListProvider: FileListProvider get() = root.fileListProvider
+    val lastBgData: LastBgData get() = root.lastBgData
+    val localeDependentSetting: LocaleDependentSetting get() = root.localeDependentSetting
+    val pumpStatusProvider: PumpStatusProvider get() = root.pumpStatusProvider
+    val passwordCheck: PasswordCheck get() = root.passwordCheck
+    val overviewData: OverviewData get() = root.overviewData
+    val sharedPreferences: SharedPreferences get() = root.sharedPreferences
+    val exportPasswordDataStore: ExportPasswordDataStore get() = root.exportPasswordDataStore
+    val secureEncrypt: SecureEncrypt get() = root.secureEncrypt
+    val cryptoUtil: CryptoUtil get() = root.cryptoUtil
+    val concentrationHelper: ConcentrationHelper get() = root.concentrationHelper
+    val processedTbrEbData: ProcessedTbrEbData get() = root.processedTbrEbData
+    val userEntryLogger: UserEntryLogger get() = root.userEntryLogger
+    val glucoseStatusProvider: GlucoseStatusProvider get() = root.glucoseStatusProvider
+    val notificationHolder: NotificationHolder get() = root.notificationHolder
+    val userEntryPresentationHelper: UserEntryPresentationHelper get() = root.userEntryPresentationHelper
+    val profiler: Profiler get() = root.profiler
+    val alarmSoundPlayer: AlarmSoundPlayer get() = root.alarmSoundPlayer
     val wizardExecutor: WizardExecutor get() = root.wizardExecutor
     val configBuilder: ConfigBuilder get() = root.configBuilder
     val dataSyncSelectorXdrip: DataSyncSelectorXdrip get() = root.dataSyncSelectorXdrip

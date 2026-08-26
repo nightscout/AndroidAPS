@@ -3,6 +3,7 @@ package app.aaps
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
@@ -22,6 +23,7 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.JsonHelper
+import app.aaps.plugins.aps.utils.StaticInjector
 import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAMA
 import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAdapterAMAJS
 import app.aaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
@@ -33,7 +35,6 @@ import app.aaps.plugins.aps.openAPSSMBAutoISF.DetermineBasalAdapterAutoISFJS
 import app.aaps.plugins.aps.openAPSSMBDynamicISF.DetermineBasalAdapterSMBDynamicISFJS
 import app.aaps.plugins.aps.utils.ScriptReader
 import com.google.common.truth.Truth.assertThat
-import dagger.android.HasAndroidInjector
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.json.JSONObject
 import org.junit.Test
@@ -54,7 +55,7 @@ class ReplayApsResultsTest : HiltInstrumentedTest() {
     @Inject lateinit var fileListProvider: FileListProvider
     @Inject lateinit var storage: Storage
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var injector: HasAndroidInjector
+    @Inject lateinit var injector: StaticInjector
     @Inject lateinit var determineBasalAMA: DetermineBasalAMA
     @Inject lateinit var determineBasalSMBDynamicISF: DetermineBasalSMB
     @Inject lateinit var determineBasalAutoISF: DetermineBasalAutoISF
@@ -98,7 +99,7 @@ class ReplayApsResultsTest : HiltInstrumentedTest() {
         aapsLogger.info(LTag.CORE, "\n**********\nAMA: $amas\nSMB: $smbs\nDynISFs: $dynisfs\nAutoISFs: $autoisfs\nJS time: $jsTime\nKT time: $ktTime\n**********")
     }
 
-    private fun testOpenAPSSMB(filename: String, input: JSONObject, output: JSONObject, injector: HasAndroidInjector) {
+    private fun testOpenAPSSMB(filename: String, input: JSONObject, output: JSONObject, injector: MetroMemberInjector) {
         val startJs = System.currentTimeMillis()
         val determineBasalResult = DetermineBasalAdapterSMBJS(ScriptReader(), injector)
         determineBasalResult.profile = input.getJSONObject("profile")
@@ -258,7 +259,7 @@ class ReplayApsResultsTest : HiltInstrumentedTest() {
         assertThat(resultKt.IOB ?: Double.NaN).isEqualTo(result?.jsonOrg()?.optDouble("IOB"))
     }
 
-    private fun testOpenAPSSMBDynamicISF(filename: String, input: JSONObject, output: JSONObject, injector: HasAndroidInjector) {
+    private fun testOpenAPSSMBDynamicISF(filename: String, input: JSONObject, output: JSONObject, injector: MetroMemberInjector) {
         val startJs = System.currentTimeMillis()
         val determineBasalResult = DetermineBasalAdapterSMBDynamicISFJS(ScriptReader(), injector)
         determineBasalResult.profile = input.getJSONObject("profile")
@@ -424,7 +425,7 @@ class ReplayApsResultsTest : HiltInstrumentedTest() {
         assertThat(resultKt.variable_sens ?: Double.NaN).isEqualTo(result?.jsonOrg()?.optDouble("variable_sens"))
     }
 
-    private fun testOpenAPSAMA(filename: String, input: JSONObject, output: JSONObject, injector: HasAndroidInjector) {
+    private fun testOpenAPSAMA(filename: String, input: JSONObject, output: JSONObject, injector: MetroMemberInjector) {
 
         val startJs = System.currentTimeMillis()
         val determineBasalResult = DetermineBasalAdapterAMAJS(ScriptReader(), injector)
@@ -578,7 +579,7 @@ class ReplayApsResultsTest : HiltInstrumentedTest() {
         assertThat(resultKt.variable_sens ?: Double.NaN).isEqualTo(result?.jsonOrg()?.optDouble("variable_sens"))
     }
 
-    private fun testOpenAPSSMBAutoISF(filename: String, input: JSONObject, output: JSONObject, injector: HasAndroidInjector) {
+    private fun testOpenAPSSMBAutoISF(filename: String, input: JSONObject, output: JSONObject, injector: MetroMemberInjector) {
         val startJs = System.currentTimeMillis()
         val determineBasalResult = DetermineBasalAdapterAutoISFJS(ScriptReader(), injector)
         determineBasalResult.profile = input.getJSONObject("profile")

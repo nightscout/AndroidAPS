@@ -1,19 +1,19 @@
 package app.aaps.plugins.sync.xdrip.workers
 
 import android.content.Context
-import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.objects.workflow.LoggingWorker
+import app.aaps.core.objects.workflow.WorkerInstanceFactory
 import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.Dispatchers
 
-@HiltWorker
 class XdripDataSyncWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
@@ -31,4 +31,8 @@ class XdripDataSyncWorker @AssistedInject constructor(
         xdripMvvmRepository.updateQueueSize(dataSyncSelector.queueSize())
         return Result.success()
     }
+
+    /** Metro builds the worker through this - WorkManager supplies context and params. */
+    @AssistedFactory
+    abstract class Factory : WorkerInstanceFactory<XdripDataSyncWorker>()
 }

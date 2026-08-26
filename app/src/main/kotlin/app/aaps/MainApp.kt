@@ -9,7 +9,6 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
-import androidx.hilt.work.HiltWorkerFactory
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.work.Configuration
@@ -145,16 +144,15 @@ class MainApp : Application(), HasAndroidInjector, MetroMemberInjector, MetroVie
     // The @HiltViewModel replacement, reached by activities the same way.
     override val metroViewModelFactory: MetroViewModelFactory get() = metroGraphs.viewModelFactory
 
-    // WorkManager on-demand initialization. MetroWorkerFactory builds workers already moved to Metro
-    // and hands the rest to HiltWorkerFactory, which constructs @HiltWorker workers via assisted
-    // injection; workers on neither return null from it and fall back to WorkManager's default
-    // reflective factory (which self-injects through HasAndroidInjector). The default androidx.startup
-    // WorkManagerInitializer is removed in AndroidManifest.xml so this config wins.
-    @Inject lateinit var hiltWorkerFactory: HiltWorkerFactory
+    // WorkManager on-demand initialization. MetroWorkerFactory builds every worker in the app; there is
+    // no HiltWorkerFactory beside it any more, because no @HiltWorker is left. Anything it does not know
+    // returns null and falls back to WorkManager's default reflective factory, which is what builds
+    // WorkManager's own internal workers. The default androidx.startup WorkManagerInitializer is removed
+    // in AndroidManifest.xml so this config wins.
     @Inject lateinit var metroGraphs: MetroGraphs
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder()
-            .setWorkerFactory(MetroWorkerFactory(metroGraphs, hiltWorkerFactory))
+            .setWorkerFactory(MetroWorkerFactory(metroGraphs))
             .build()
 
     @Inject lateinit var pluginStore: PluginStore

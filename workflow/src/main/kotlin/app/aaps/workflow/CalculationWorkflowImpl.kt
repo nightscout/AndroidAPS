@@ -18,23 +18,25 @@ import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.MAIN_CALCULATION
 import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.UPDATE_PREDICTIONS
 import app.aaps.core.utils.worker.then
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
 
-@Singleton
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class CalculationWorkflowImpl @Inject constructor(
     private val context: Context,
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,
     private val workflowChainData: WorkflowChainData,
     private val mainSignals: CalculationSignalsEmitter,
-    // Lazy: breaks Dagger cycle OverviewDataCache → Loop → IobCobCalculator → CalculationWorkflow → OverviewDataCache.
+    // A plain factory, not a Provider: breaks the cycle OverviewDataCache → Loop → IobCobCalculator → CalculationWorkflow → OverviewDataCache.
     // Side methods that use mainCache run at runtime, never during construction.
-    private val mainCacheProvider: Provider<OverviewDataCache>
+    private val mainCacheProvider: () -> OverviewDataCache
 ) : CalculationWorkflow {
 
-    private val mainCache: OverviewDataCache get() = mainCacheProvider.get()
+    private val mainCache: OverviewDataCache get() = mainCacheProvider()
 
     // Held across slot-write + WM enqueue so both systems agree on which call won. Without this,
     // two concurrent runCalculation/runOnReceivedPredictions threads can interleave so the slot

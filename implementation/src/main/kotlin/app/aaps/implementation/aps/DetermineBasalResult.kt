@@ -34,11 +34,15 @@ import app.aaps.core.ui.R
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import javax.inject.Inject
-import javax.inject.Provider
 import kotlin.math.abs
 import kotlin.math.max
 
+// Deliberately NOT @SingleIn: the @Binds this replaces had no scope. It is a result object, built
+// fresh for each call and handed back to the caller.
+@ContributesBinding(AppScope::class)
 class DetermineBasalResult @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val fabricPrivacy: FabricPrivacy,
@@ -50,7 +54,7 @@ class DetermineBasalResult @Inject constructor(
     private val rh: ResourceHelper,
     private val decimalFormatter: DecimalFormatter,
     private val dateUtil: DateUtil,
-    private val apsResultProvider: Provider<APSResult>,
+    private val apsResultProvider: () -> APSResult,
     private val ch: ConcentrationHelper
 ) : APSResult {
 
@@ -142,7 +146,7 @@ class DetermineBasalResult @Inject constructor(
         } else rh.gs(R.string.nochangerequested)
     }
 
-    override fun newAndClone(): APSResult = apsResultProvider.get().with(result)
+    override fun newAndClone(): APSResult = apsResultProvider().with(result)
     override fun json(): JsonObject {
         reportNonFiniteResultFields()
         // Straight to a tree. This used to serialise to text and parse it back with org.json, once per

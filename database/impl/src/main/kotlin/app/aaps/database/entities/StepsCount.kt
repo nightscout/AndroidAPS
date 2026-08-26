@@ -7,7 +7,6 @@ import androidx.room.PrimaryKey
 import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.database.entities.interfaces.DBEntryWithTimeAndDuration
 import app.aaps.database.entities.interfaces.TraceableDBEntry
-import java.util.TimeZone
 
 /** Steps count values measured by a user smart watch or the like. */
 @Entity(
@@ -30,7 +29,7 @@ data class StepsCount(
     var steps180min: Int,
     /** Source device that measured the steps count. */
     var device: String,
-    override var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
+    override var utcOffset: Long = defaultUtcOffset(timestamp),
     override var version: Int = 0,
     override var dateCreated: Long = -1,
     override var isValid: Boolean = true,

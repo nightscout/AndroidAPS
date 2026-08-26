@@ -1,7 +1,6 @@
 package app.aaps.plugins.sync.nsclientV3.workers
 
 import android.content.Context
-import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.data.json.OrgJsonCompat.optLongCompat
@@ -15,12 +14,14 @@ import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.nssdk.localmodel.configuration.NSRunningConfiguration
 import app.aaps.core.objects.workflow.LoggingWorker
+import app.aaps.core.objects.workflow.WorkerInstanceFactory
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.SettingsIdentifiers
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.OrphanDetector
 import app.aaps.plugins.sync.nsclientV3.extensions.toRunningConfiguration
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.Dispatchers
 
 /**
@@ -33,7 +34,6 @@ import kotlinx.coroutines.Dispatchers
  * [RunningConfiguration.apply], advance the settings high-water-mark. Real-time updates
  * after this initial catch-up arrive via the WS `settings` branch in `NSClientV3Service`.
  */
-@HiltWorker
 class LoadSettingsWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
@@ -97,4 +97,8 @@ class LoadSettingsWorker @AssistedInject constructor(
             nsClientRepository.addLog("◄ SETTINGS", "$identifier applied srvModified=$ts")
         } ?: nsClientRepository.addLog("◄ SETTINGS", "$identifier present but missing/invalid runningConfig")
     }
+
+    /** Metro builds the worker through this - WorkManager supplies context and params. */
+    @AssistedFactory
+    abstract class Factory : WorkerInstanceFactory<LoadSettingsWorker>()
 }

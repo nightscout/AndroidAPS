@@ -1,9 +1,69 @@
 package app.aaps.di.metro
 
+import android.content.SharedPreferences
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.bolus.BatchExecutor
+import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.logging.LoggerUtils
+import app.aaps.core.interfaces.maintenance.ImportExportPrefs
+import app.aaps.core.interfaces.pump.PumpWithConcentration
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.interfaces.workflow.CalculationWorkflow
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.L
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.widget.WidgetUpdater
+import app.aaps.core.interfaces.scenes.SceneIconResolver
+import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.plugins.automation.services.LastLocationDataContainer
+import app.aaps.core.interfaces.nsclient.StoreDataForDb
+import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
+import app.aaps.implementation.scenes.SceneExecutor
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.PluginPermissions
+import app.aaps.core.interfaces.aps.AutosensData
+import app.aaps.core.interfaces.configuration.RunningConfigurationKeys
+import app.aaps.core.nssdk.interfaces.RunningConfiguration
+import app.aaps.core.interfaces.aps.APSResult
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.nsclient.NSClientRepository
+import app.aaps.core.interfaces.maintenance.CloudStorageProvider
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.ui.search.BuiltInSearchables
+import app.aaps.core.utils.receivers.DataInbox
+import app.aaps.implementation.plugin.PluginStore
+import app.aaps.implementation.profile.ProfileSwitchSilentGate
+import app.aaps.core.interfaces.sync.XDripBroadcast
+import app.aaps.workflow.WorkflowChainData
+import app.aaps.core.interfaces.maintenance.Maintenance
+import app.aaps.core.interfaces.maintenance.FileListProvider
+import app.aaps.core.interfaces.overview.LastBgData
+import app.aaps.core.interfaces.local.LocaleDependentSetting
+import app.aaps.core.interfaces.pump.PumpStatusProvider
+import app.aaps.core.interfaces.overview.OverviewData
+import app.aaps.core.interfaces.protection.ExportPasswordDataStore
+import app.aaps.core.interfaces.protection.SecureEncrypt
+import app.aaps.core.objects.crypto.CryptoUtil
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
+import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.iob.GlucoseStatusProvider
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.interfaces.notifications.NotificationHolder
+import app.aaps.core.interfaces.protection.PasswordCheck
+import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
+import app.aaps.core.interfaces.alerts.LocalAlertUtils
+import app.aaps.core.interfaces.profiling.Profiler
+import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.di.APS
@@ -14,6 +74,7 @@ import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.maintenance.CloudDirectoryManager
 import app.aaps.core.interfaces.overview.graph.GraphConfigRepository
+import app.aaps.core.interfaces.plugin.PermissionProvider
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileStore
@@ -215,6 +276,63 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val cloudDirectoryManager: CloudDirectoryManager
     val graphConfigRepository: GraphConfigRepository
     val batchExecutor: BatchExecutor
+    val wizardBolusExecutor: WizardBolusExecutor
+    val loggerUtils: LoggerUtils
+    val importExportPrefs: ImportExportPrefs
+    val preferences: Preferences
+    val pumpWithConcentration: PumpWithConcentration
+    val calculationWorkflow: CalculationWorkflow
+    val workflowChainData: WorkflowChainData
+    val aapsLogger: AAPSLogger
+    val rxBus: RxBus
+    val dateUtil: DateUtil
+    val l: L
+    val aapsSchedulers: AapsSchedulers
+    val sp: SP
+    val widgetUpdater: WidgetUpdater
+    val sceneIconResolver: SceneIconResolver
+    val processedDeviceStatusData: ProcessedDeviceStatusData
+    val lastLocationDataContainer: LastLocationDataContainer
+    val storeDataForDb: StoreDataForDb
+    val sceneExecutor: SceneExecutor
+    val dataInbox: DataInbox
+    val autosensData: AutosensData
+    val commandQueue: CommandQueue
+    val localAlertUtils: LocalAlertUtils
+    val bolusProgressData: BolusProgressData
+    val persistenceLayer: PersistenceLayer
+    val cloudStorageProviders: Set<CloudStorageProvider>
+    val constraintsChecker: ConstraintsChecker
+    val nsClientRepository: NSClientRepository
+    val builtInSearchables: BuiltInSearchables
+    val apsResult: APSResult
+    val pumpEnactResult: PumpEnactResult
+    val profileSwitchSilentGate: ProfileSwitchSilentGate
+    val runningConfiguration: RunningConfiguration
+    val runningConfigurationKeys: RunningConfigurationKeys
+    val activePlugin: ActivePlugin
+    val pluginPermissions: PluginPermissions
+    val pluginStore: PluginStore
+    val xDripBroadcast: XDripBroadcast
+    val maintenance: Maintenance
+    val fileListProvider: FileListProvider
+    val lastBgData: LastBgData
+    val localeDependentSetting: LocaleDependentSetting
+    val pumpStatusProvider: PumpStatusProvider
+    val passwordCheck: PasswordCheck
+    val overviewData: OverviewData
+    val sharedPreferences: SharedPreferences
+    val exportPasswordDataStore: ExportPasswordDataStore
+    val secureEncrypt: SecureEncrypt
+    val cryptoUtil: CryptoUtil
+    val concentrationHelper: ConcentrationHelper
+    val processedTbrEbData: ProcessedTbrEbData
+    val userEntryLogger: UserEntryLogger
+    val glucoseStatusProvider: GlucoseStatusProvider
+    val notificationHolder: NotificationHolder
+    val userEntryPresentationHelper: UserEntryPresentationHelper
+    val profiler: Profiler
+    val alarmSoundPlayer: AlarmSoundPlayer
     val wizardExecutor: WizardExecutor
     val configBuilder: ConfigBuilder
     val dataSyncSelectorXdrip: DataSyncSelectorXdrip

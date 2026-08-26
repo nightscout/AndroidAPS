@@ -8,7 +8,6 @@ import androidx.room.PrimaryKey
 import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.database.entities.interfaces.DBEntryWithTime
 import app.aaps.database.entities.interfaces.TraceableDBEntry
-import java.util.TimeZone
 
 @Entity(
     tableName = TABLE_APS_RESULTS,
@@ -29,7 +28,7 @@ data class APSResult(
     @Embedded
     override var interfaceIDs_backing: InterfaceIDs? = null,
     override var timestamp: Long,
-    override var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
+    override var utcOffset: Long = defaultUtcOffset(timestamp),
     var algorithm: Algorithm,
     var glucoseStatusJson: String?,
     var currentTempJson: String?,

@@ -29,7 +29,6 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import javax.inject.Provider
 import kotlin.test.assertIs
 
 class PrepareGraphDataWorkerTest : TestBaseWithProfile() {
@@ -47,7 +46,7 @@ class PrepareGraphDataWorkerTest : TestBaseWithProfile() {
     @Mock lateinit var signals: CalculationSignalsEmitter
     @Mock lateinit var workerParameters: WorkerParameters
 
-    private val autosensDataProvider = Provider { mock<AutosensData>() }
+    private val autosensDataProvider = { mock<AutosensData>() }
 
     private fun worker() =
         PrepareGraphDataWorker(

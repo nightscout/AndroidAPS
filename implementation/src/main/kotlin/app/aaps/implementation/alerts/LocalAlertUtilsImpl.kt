@@ -28,14 +28,17 @@ import app.aaps.core.ui.R
 import app.aaps.implementation.alerts.keys.LocalAlertLongKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.math.min
 
 /**
  * Created by adrian on 17/12/17.
  */
-@Singleton
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class LocalAlertUtilsImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,

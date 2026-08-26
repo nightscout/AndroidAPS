@@ -28,6 +28,24 @@ fun interface MetroWorkerCreator {
 }
 
 /**
+ * What a worker's nested `@AssistedFactory` extends, so it does not have to restate `create`.
+ *
+ * The shape Metro's own Android sample uses. Naming the worker as the type argument is what makes the
+ * return type right by construction - with a bare [MetroWorkerCreator] each factory repeats the
+ * signature and could declare the wrong worker type, which still compiles because the map only asks for
+ * a [ListenableWorker].
+ *
+ * ```kotlin
+ * @AssistedFactory
+ * abstract class Factory : WorkerInstanceFactory<LoadBgWorker>()
+ * ```
+ */
+abstract class WorkerInstanceFactory<T : ListenableWorker> : MetroWorkerCreator {
+
+    abstract override fun create(context: Context, params: WorkerParameters): T
+}
+
+/**
  * The map key for the worker multibinding.
  *
  * A key of its own rather than Metro's general `@ClassKey`, because `@ClassKey` produces a

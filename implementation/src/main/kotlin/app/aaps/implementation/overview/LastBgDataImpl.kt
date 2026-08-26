@@ -13,10 +13,13 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.fromGv
 import app.aaps.core.objects.extensions.valueToUnits
 import kotlinx.coroutines.runBlocking
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class LastBgDataImpl @Inject constructor(
     private val rh: ResourceHelper,
     private val dateUtil: DateUtil,

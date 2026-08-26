@@ -3,13 +3,17 @@ package app.aaps.implementation.logging
 import app.aaps.core.interfaces.logging.LoggerUtils
 import ch.qos.logback.classic.LoggerContext
 import org.slf4j.LoggerFactory
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * This class provides several methods for log-handling (eg. sending logs as emails).
  */
-@Singleton
+// Metro builds this; Dagger consumers (MaintenanceImpl) get it via the @Provides delegate in `:app`.
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class LoggerUtilsImpl @Inject constructor() : LoggerUtils {
 
     override var suffix = ".log"

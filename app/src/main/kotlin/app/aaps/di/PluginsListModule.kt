@@ -19,6 +19,14 @@ import javax.inject.Qualifier
  * :pump:equil EquilModule). Hilt aggregates every @InstallIn(SingletonComponent) module on the app
  * classpath, so adding or removing a plugin is just an include in settings.gradle — no edit here.
  *
+ * A plugin that has moved to Metro registers itself instead, on the class: `@ContributesIntoMap(
+ * AppScope::class, binding = binding<PluginBase>())` plus the same `@IntKey` and the same qualifier,
+ * so the ordering below is the same either way. `@AllConfigs` has no Metro counterpart - that bucket
+ * is simply the unqualified one. **The scope has to move with it:** `@SingleIn(AppScope::class)`, not
+ * javax `@Singleton`, because the graph that builds contributed classes is generated in `:app` and has
+ * no Dagger interop, so a javax scope there is ignored and every read builds a fresh plugin. All of
+ * :plugins:sync (300–370) has moved, which is why it no longer has a module of its own.
+ *
  * Global @IntKey ordering — one contiguous block per feature module, step 10 within a block:
  *   0–10      general (persistent notification, iob)      :plugins:main
  *   100–120   sensitivity                                 :plugins:sensitivity

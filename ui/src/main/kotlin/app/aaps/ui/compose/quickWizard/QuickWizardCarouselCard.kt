@@ -149,7 +149,7 @@ private fun buildCarbsText(entry: QuickWizardEntry): String = when (entry.mode()
     QuickWizardMode.INSULIN -> "${entry.insulin()} U"
     QuickWizardMode.CARBS, QuickWizardMode.WIZARD -> {
         val carbs = entry.carbs()
-        if (entry.useEcarbs() == QuickWizardEntry.YES) {
+        if (entry.useEcarbs() == QuickWizardEntry.ALWAYS) {
             val carbs2 = entry.carbs2()
             val duration = entry.duration()
             val time = entry.time()

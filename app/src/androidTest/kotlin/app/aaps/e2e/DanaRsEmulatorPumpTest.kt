@@ -6,6 +6,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.work.WorkManager
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -43,7 +44,7 @@ import javax.inject.Inject
  * emulator directly, with a mocked `Preferences` and no plugin. It cannot cover what sits above:
  * `DanaRSPlugin.connect` only works once `DanaRSService` is **bound** ([DanaRSPlugin] binds it in
  * `onStart` via `Context.bindService`), and `DanaRSService` is a dagger-android `DaggerService`
- * needing a real Android component + `HasAndroidInjector` — neither of which exists off-device.
+ * needing a real Android component + `MetroMemberInjector` — neither of which exists off-device.
  * So this is the first test of the plugin/service layer at all.
  *
  * ## All three RS handshakes
@@ -123,9 +124,8 @@ class DanaRsEmulatorPumpTest {
         // Loads mDeviceAddress/mDeviceName from the preferences seeded above.
         danaRSPlugin.changePump()
 
-        // bindService is asynchronous: Android creates DanaRSService on the main looper. It is a
-        // dagger-android DaggerService, so its onCreate injects through BaseTestApp.androidInjector
-        // -> the *current test's* Hilt component. If the test method finished first, HiltAndroidRule
+        // bindService is asynchronous: Android creates DanaRSService on the main looper. Its onCreate
+        // injects through BaseTestApp, which routes to the *current test's* graph. If the test method finished first, HiltAndroidRule
         // would already have torn that component down and the service would crash the process with
         // "The component was not created". So block here until the service is actually up, keeping
         // its whole lifetime inside the component's.

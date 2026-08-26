@@ -31,11 +31,12 @@ import app.aaps.plugins.aps.autotune.data.ATProfile
 import kotlinx.coroutines.runBlocking
 import org.json.JSONArray
 import org.json.JSONObject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.math.ceil
 
-@Singleton
+@SingleIn(AppScope::class)
 open class AutotuneIob @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val persistenceLayer: PersistenceLayer,

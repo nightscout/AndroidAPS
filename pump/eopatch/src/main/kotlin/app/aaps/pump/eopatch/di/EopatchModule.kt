@@ -43,9 +43,4 @@ abstract class EopatchModule {
     abstract fun bindPreferenceManager(preferenceManager: PreferenceManagerImpl): PreferenceManager
 
     // Pump plugin registration — @IntKey range 1000–1200, see PluginsListModule for overview
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @IntKey(1110)
-    abstract fun bindEopatchPumpPlugin(plugin: EopatchPumpPlugin): PluginBase
 }

@@ -12,7 +12,6 @@ import dagger.multibindings.IntoMap
 
 @Module(
     includes = [
-        DiaconnG8ActivitiesModule::class,
         DiaconnHistoryModule::class
     ]
 )
@@ -21,9 +20,4 @@ import dagger.multibindings.IntoMap
 abstract class DiaconnG8Module {
 
     // Pump plugin registration — @IntKey range 1000–1200, see PluginsListModule for overview
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @IntKey(1100)
-    abstract fun bindDiaconnG8Plugin(plugin: DiaconnG8Plugin): PluginBase
 }

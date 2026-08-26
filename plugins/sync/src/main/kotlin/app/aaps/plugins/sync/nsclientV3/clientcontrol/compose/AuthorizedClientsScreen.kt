@@ -47,8 +47,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.nssdk.localmodel.clientcontrol.AuthorizedClient
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientState
 import app.aaps.core.ui.compose.AapsSpacing
@@ -61,7 +61,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun AuthorizedClientsScreen(
     onNavigateBack: () -> Unit,
-    viewModel: AuthorizedClientsViewModel = hiltViewModel()
+    viewModel: AuthorizedClientsViewModel = metroViewModel()
 ) {
     val clients by viewModel.clients.collectAsStateWithLifecycle()
     val dialogState by viewModel.dialogState.collectAsStateWithLifecycle()

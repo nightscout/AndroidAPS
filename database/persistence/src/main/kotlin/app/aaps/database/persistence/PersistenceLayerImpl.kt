@@ -137,19 +137,22 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.util.Collections.emptyList
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlin.reflect.KClass
 import kotlin.time.Duration.Companion.milliseconds
 
-@Singleton
-class PersistenceLayerImpl @Inject constructor(
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
+@Inject
+class PersistenceLayerImpl(
     private val aapsLogger: AAPSLogger,
     private val repository: AppRepository,
     private val dateUtil: DateUtil,
     private val config: Config,
-    private val apsResultProvider: Provider<APSResult>,
+    private val apsResultProvider: () -> APSResult,
     private val fabricPrivacy: FabricPrivacy
 ) : PersistenceLayer {
 

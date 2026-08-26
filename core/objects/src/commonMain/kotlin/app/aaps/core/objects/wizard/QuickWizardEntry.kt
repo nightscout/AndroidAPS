@@ -67,9 +67,9 @@ class QuickWizardEntry(
     companion object {
 
         // Defined once in QuickWizardEntryData, which is common code. Re-exposed here so the existing
-        // `QuickWizardEntry.YES` style call sites do not have to change.
-        const val YES = QuickWizardEntryData.YES
-        const val NO = QuickWizardEntryData.NO
+        // `QuickWizardEntry.ALWAYS` style call sites do not have to change.
+        const val ALWAYS = QuickWizardEntryData.ALWAYS
+        const val NEVER = QuickWizardEntryData.NEVER
         const val POSITIVE_ONLY = QuickWizardEntryData.POSITIVE_ONLY
         const val NEGATIVE_ONLY = QuickWizardEntryData.NEGATIVE_ONLY
         const val DEVICE_ALL = QuickWizardEntryData.DEVICE_ALL
@@ -102,33 +102,33 @@ class QuickWizardEntry(
         val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
         //BG
         var bg = 0.0
-        if (useBG() == YES) {
+        if (useBG() == ALWAYS) {
             bg = lastBG.valueToUnits(profileFunction.getUnits())
         }
         // COB
         val cob =
-            if (useCOB() == YES) iobCobCalculator.getCobInfo("QuickWizard COB").displayCob ?: 0.0
+            if (useCOB() == ALWAYS) iobCobCalculator.getCobInfo("QuickWizard COB").displayCob ?: 0.0
             else 0.0
         // IOB
         var uIOB = false
-        if (useIOB() == YES) {
+        if (useIOB() == ALWAYS) {
             uIOB = true
         }
 
         var uPositiveIOBOnly = false
-        if (usePositiveIOBOnly() == YES) {
+        if (usePositiveIOBOnly() == ALWAYS) {
             uPositiveIOBOnly = true
         }
         // SuperBolus
         var superBolus = false
-        if (useSuperBolus() == YES && preferences.get(BooleanKey.OverviewUseSuperBolus)) {
+        if (useSuperBolus() == ALWAYS && preferences.get(BooleanKey.OverviewUseSuperBolus)) {
             superBolus = true
         }
         if (loop.runningMode() == RM.Mode.SUPER_BOLUS) superBolus = false
         // Trend
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
         var trend = false
-        if (useTrend() == YES) {
+        if (useTrend() == ALWAYS) {
             trend = true
         } else if (useTrend() == POSITIVE_ONLY && glucoseStatus != null && glucoseStatus.shortAvgDelta > 0) {
             trend = true
@@ -146,13 +146,13 @@ class QuickWizardEntry(
             0.0,
             percentage,
             true,
-            useCOB() == YES,
+            useCOB() == ALWAYS,
             uIOB, //always use or don't both bolus
             uIOB, // & basal IOB
             superBolus,
-            useTempTarget() == YES,
+            useTempTarget() == ALWAYS,
             trend,
-            useAlarm() == YES,
+            useAlarm() == ALWAYS,
             buttonText(),
             carbTime(),
             positiveIOBOnly = uPositiveIOBOnly,

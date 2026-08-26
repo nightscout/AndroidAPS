@@ -31,7 +31,7 @@ internal class DeviceStatusExtensionKtTest : TestBase() {
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var config: Config
-    @Mock lateinit var apsResultProvider: Provider<APSResult>
+    @Mock lateinit var apsResult: APSResult
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var overviewData: OverviewData
     @Mock lateinit var calculationWorkflow: CalculationWorkflow
@@ -42,7 +42,7 @@ internal class DeviceStatusExtensionKtTest : TestBase() {
 
     @BeforeEach
     fun setup() {
-        processedDeviceStatusData = ProcessedDeviceStatusDataImpl(apsResultProvider)
+        processedDeviceStatusData = ProcessedDeviceStatusDataImpl { apsResult }
         nsDeviceStatusHandler = NSDeviceStatusHandler(
             preferences, config, dateUtil, processedDeviceStatusData, aapsLogger,
             persistenceLayer, overviewData, calculationWorkflow, rxBus, testScope,

@@ -5,7 +5,6 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import app.aaps.database.entities.interfaces.DBEntry
 import app.aaps.database.entities.interfaces.DBEntryWithTime
-import java.util.TimeZone
 
 @Entity(
     tableName = TABLE_USER_ENTRY,
@@ -18,7 +17,7 @@ data class UserEntry(
     @PrimaryKey(autoGenerate = true)
     override var id: Long = 0L,
     override var timestamp: Long,
-    override var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
+    override var utcOffset: Long = defaultUtcOffset(timestamp),
     var action: Action,
     var source: Sources,
     var note: String,
