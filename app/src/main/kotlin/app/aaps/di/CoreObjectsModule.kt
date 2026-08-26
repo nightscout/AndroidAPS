@@ -294,6 +294,7 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideLocalAlertUtils(graphs: MetroGraphs): LocalAlertUtils = graphs.localAlertUtils
     @Provides @Singleton fun provideBolusProgressData(graphs: MetroGraphs): BolusProgressData = graphs.bolusProgressData
     @Provides @Singleton fun providePersistenceLayer(graphs: MetroGraphs): PersistenceLayer = graphs.persistenceLayer
+    @Provides @Singleton fun provideOverviewDataCache(graphs: MetroGraphs): OverviewDataCache = graphs.overviewDataCache
     @Provides @Singleton fun provideCalculationSignals(graphs: MetroGraphs): CalculationSignals = graphs.calculationSignals
     @Provides @Singleton fun provideCalculationSignalsEmitter(graphs: MetroGraphs): CalculationSignalsEmitter = graphs.calculationSignalsEmitter
     @Provides @Singleton fun provideAppRepository(graphs: MetroGraphs): AppRepository = graphs.appRepository
@@ -501,7 +502,6 @@ class CoreObjectsModule {
         receiverDelegateProvider: Provider<ReceiverDelegate>,
         rateLimitProvider: Provider<RateLimit>,
         historyScopeProvider: Provider<HistoryScope>,
-        overviewDataCacheProvider: Provider<OverviewDataCache>,
         @ApplicationContext appContextProvider: Provider<Context>,
         nsClientProvider: Provider<NsClient>,
         clientControlActionDispatcherProvider: Provider<ClientControlActionDispatcher>,
@@ -541,7 +541,6 @@ class CoreObjectsModule {
         receiverDelegateProvider,
         rateLimitProvider,
         historyScopeProvider,
-        overviewDataCacheProvider,
         appContextProvider,
         nsClientProvider,
         clientControlActionDispatcherProvider,

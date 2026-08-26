@@ -162,7 +162,6 @@ class AapsLeaves(
      * view model reading it is fine.
      */
     private val historyScopeProvider: Provider<HistoryScope>,
-    private val overviewDataCacheProvider: Provider<OverviewDataCache>,
     // Same object as ActivePlugin above (PluginStore), under its other interface.
     @ApplicationContext private val appContextProvider: Provider<Context>,
     private val nsClientProvider: Provider<NsClient>,
@@ -253,7 +252,6 @@ class AapsLeaves(
     // TidepoolPlugin reading a gate nobody updates and a rate limiter that never limits.
     @Provides fun receiverDelegate(): ReceiverDelegate = receiverDelegateProvider.get()
     @Provides fun rateLimit(): RateLimit = rateLimitProvider.get()
-    @Provides fun overviewDataCache(): OverviewDataCache = overviewDataCacheProvider.get()
 
     /** Hilt's qualifier, read now that interop is on. Same Context as the unqualified binding. */
     @Provides @ApplicationContext fun appContext(): Context = appContextProvider.get()
