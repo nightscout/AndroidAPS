@@ -25,10 +25,11 @@ preparation work can happen without disturbing the main NFC line.
 |------------------------------------------------------------|-----------------------------------------------------------------------------|
 | Merge `Nightscout/kmp` into the branch                     | **done** - `966e187d8b`                                                      |
 | Tier 1, the changes needed to compile at all (section 3)    | **done** - `9cd204b8da` "NFC Fix build after kmp merge"                        |
-| Architecture alignment (section 9)                         | **9.1 done** - `f9e51ec06c`. 9.2 to 9.7 not started, and are in the plan      |
-| Tier 2, needed only for a multiplatform module (section 4)  | **not started**, and may not be needed - see section 6                       |
+| Architecture alignment (section 9)                         | **9.1 to 9.4, 9.6 and 9.7 done**. Only 9.5 remains, and it is not standalone   |
+| The typed command format (section 5)                        | **done** - `28305e0af6`. `NfcTagStore`'s two blobs are the remainder            |
+| Tier 2, needed only for a multiplatform module (section 4)  | **not started** apart from the `org.json` row, which the typed format did      |
 | Build verification                                         | **green** - compile clean, 84 NFC tests pass                                  |
-| `Nightscout/kmp` freshness                                 | last read 2026-08-25 at `b0d677f3c5`, **94 commits** past our merge - see 1a   |
+| `Nightscout/kmp` freshness                                 | last read 2026-08-26 at `c9ca405f39`, **109 commits** past our merge - see 1a   |
 
 Sections 3.7 to 3.12 are six breaks that only a compiler found, after an import-derived list had
 missed them. The lesson is recorded there because it will repeat on the next merge: **grepping imports
@@ -47,6 +48,12 @@ anything was pushed, so that each one builds on its own:
 | `966e187d8b`  | the merge, with the 8 conflict resolutions                  | does **not** compile, and that is fine  |
 | `9cd204b8da`  | every call site fix the merge forced - 11 files, +40 / -30   | mechanical, no design decisions, **builds** |
 | `f9e51ec06c`  | section 9.1 alignment - 5 files, +46 / -68                   | the finding, self contained, **builds**  |
+| `6e3d819ffd`  | section 9.2 - the action factory, 33 files, +834 / -317      | one architectural change, **builds**     |
+| `1457342316`  | section 9.3 - the last wildcard import, 1 file               | mechanical, **builds**                   |
+| `36e0326ba1`  | section 9.4a - screens into `compose/`, 6 files              | pure move, recorded as renames, **builds** |
+| `115eef6756`  | section 9.4b - the build screen state holder, 2 files        | one refactor, **builds**                 |
+| `67fd617b85`  | section 9.6 - typed wizard state, 4 files                    | removes an unchecked cast, **builds**    |
+| `28305e0af6`  | section 5 - the typed command format, 38 files, +348 / -372   | the format redesign, **builds**          |
 
 Keeping these apart matters for review: the fix-build commit only has to answer "did the merge really
 force this?", and the alignment commit carries its own rationale. `f9e51ec06c` is also the one that
@@ -56,20 +63,22 @@ is cleanly cherry-pickable - see section 10.
 
 ## 1. Where the two branches stand
 
-| Branch                           | HEAD          | Date       | Note                                     |
-|----------------------------------|---------------|------------|------------------------------------------|
-| `nfc/new-nfc-plugin_kmp` (ours)  | `a448af5ab6`  | 2026-08-24 | merged `kmp` at `4957c26eb8`              |
-| `Nightscout/kmp`                 | `b0d677f3c5`  | 2026-08-25 | **94 commits newer** than what we merged  |
-| `Nightscout/dev`                 | `283a184f60`  | 2026-08-25 | `kmp` has **not** landed here yet         |
+| Branch                           | HEAD          | Date       | Note                                      |
+|----------------------------------|---------------|------------|-------------------------------------------|
+| `nfc/new-nfc-plugin_kmp` (ours)  | -             | -          | merged `kmp` at `4957c26eb8`               |
+| `Nightscout/kmp`                 | `c9ca405f39`  | 2026-08-26 | **109 commits newer** than what we merged  |
+| `Nightscout/dev`                 | `283a184f60`  | 2026-08-25 | `kmp` has **not** landed here yet          |
 
 Shared base: `7fc8205e9a7` ("Fix scenes expiration", on `dev`).
 
-Checked on 2026-08-25, `Nightscout/kmp` had **94 new commits** since the one we merged. Two things
-about that, both verified:
+Checked on 2026-08-26, `Nightscout/kmp` had **109 new commits** since the one we merged, **71 of them
+Dagger or Metro** work. Three things, all verified:
 
 - **No rewrite.** `4957c26eb8` is still an ancestor of `Nightscout/kmp`, so our merge stays valid as
   ancestry and the re-merge will be incremental rather than a repeat of the 8 conflicts.
 - **`kmp` is not in `dev` yet**, so the wait in the plan is still a wait.
+- **`nfcCommands/` has never been touched upstream**, which is expected - the plugin is not there - and
+  is why the section 9 and section 5 work has been conflict free.
 
 `KMP_IOS_FEASIBILITY.md` is well behind its own branch: it stops at wave 18 (`:core:interfaces`),
 while `kmp` has since converted `:core:objects`, `:core:graph`, `:core:ui`, `:core:utils`,
@@ -81,7 +90,7 @@ see section 1a.
 
 ## 1a. The Metro decision - this supersedes the Dagger guidance below
 
-About 60 of those 94 commits are one thing: **Dagger is being removed from the whole project and
+**71 of those 109 commits** are one thing: **Dagger is being removed from the whole project and
 replaced by Metro.** Recorded on `kmp` in `_docs/DI_FRAMEWORK_COMPARISON.md` (`cb96f4540b` compares
 Koin, kotlin-inject and Metro; `4383225133` records the decision) and tracked in
 `_docs/METRO_MIGRATION_NEXT_STEPS.md`.
@@ -125,12 +134,29 @@ So the NFC target becomes: `NfcControlActivity` extends `MetroAppCompatActivity`
 plugin's own manifest - the shape `plugins/automation/src/main/AndroidManifest.xml` now has.
 
 **2. "No Dagger annotation anywhere, wiring moves to `app/di/`" is superseded.** The replacement is
-per-module Metro wiring, and `:plugins:sync` already has an example -
-`plugins/sync/src/main/kotlin/app/aaps/plugins/sync/di/OpenHumansMetroBridge.kt` and
-`OpenHumansMetroGraph.kt`.
+per-module Metro wiring, and as of 2026-08-26 `:plugins:sync` has **the exact template `NfcControlActivity`
+needs** - `plugins/sync/src/main/kotlin/app/aaps/plugins/sync/di/SyncMemberInjectors.kt`:
+
+```kotlin
+@ContributesTo(AppScope::class)
+@BindingContainer
+object SyncMemberInjectors {
+    @Provides @FeatureMemberInjectors @IntoMap @ClassKey(WearDataReceiver::class)
+    fun bindWearDataReceiver(injector: MembersInjector<WearDataReceiver>): MembersInjector<*> = injector
+}
+```
+
+Its own comment is the useful part: it *"contributes straight into the app root, so it needs no mention
+in `:app` at all"*. So converting `NfcControlActivity` means extending `MetroAppCompatActivity`, adding
+one entry here, and moving the manifest declaration into the plugin - no `:app` change. Nine modules
+now have a `*MemberInjectors.kt` of this shape, and `shared/tests` carries a `MemberInjectorCoverage`
+helper that guards the maps with a test.
+
+`OpenHumansMetroBridge.kt` / `OpenHumansMetroGraph.kt` in the same package are a *different* pattern -
+a root graph of their own - and are not what NFC should copy.
 
 **3. `:plugins:sync` is still an Android module** (`main` / `test` / `androidTest`) and is now
-*mid-DI-migration*: 14 files touch Metro while 58 still use `javax.inject` and 28 still use Dagger. New
+*mid-DI-migration*: 18 files touch Metro while 58 still use `javax.inject` and 25 still use Dagger. New
 NFC code should keep Dagger for now, consistent with the rest of the module, and be converted with it.
 `ActionFactory` in automation is still `@Singleton @Inject constructor` on `kmp` today.
 
@@ -352,29 +378,112 @@ This cannot move: registering an `ElementType` means touching the registry, and 
 
 ---
 
-## 5. A safety item that is not on anybody's list
+## 5. The command format, and what "robust" means here
 
-The NDEF payload and the two `StringNonKey` preference blobs are a **stored format on physical
-hardware users already carry**. Converting `org.json` to `kotlinx` changes bytes. Wave 18 measured
-exactly this class of bug:
+### There is no deployed data, and that is freedom
 
-- `org.json.optInt` reads a numeric **string** through `Double.intValue()` (saturates) but a real
-  JSON **number** through `Long.intValue()` (truncates). Reading both through `Long.toInt()` looks
-  right and turns `"1785992181588"` into `-714213548`.
-- `org.json` writes a whole numbered double without its fraction (`1.0` -> `1`), rejects non-finite
-  doubles that kotlinx emits as invalid JSON, and accepts malformed input kotlinx rejects.
-- Android's `org.json` and Maven's `org.json:json` are **different implementations**: `optString` of
-  a JSON null gives `"null"` on Android and `""` in the Crockford version. The right test oracle is
-  `com.vaadin.external.google:android-json`, the AOSP implementation repackaged for the JVM.
+**The plugin has never been released.** Two or three people are testing it. There are no tags in the
+wild, so nothing has to stay readable and no migration is owed to anyone. If a change invalidates a
+test tag, the tester writes it again.
 
-Two consequences for NFC:
+An earlier version of this section said the opposite - that the NDEF payload and the two
+`StringNonKey` blobs were "a stored format on physical hardware users already carry" - and concluded
+that characterization tests had to come before any JSON change. That reasoning was imported from the
+profile conversion on `kmp` (`d23b9be3f1a`, `74644c76675`, `419e949a718`), where it is correct because
+profiles really do live on thousands of phones and go to Nightscout. It does not hold here, and the
+step it implied has been dropped from the plan.
 
-1. **A tag written by today's build must still parse after the conversion.** Write characterization
-   tests over real tag payloads *before* touching the JSON, as was done for profiles (`d23b9be3f1a`,
-   `74644c76675`, `419e949a718`).
-2. **`NfcTagStore.loadLog()` reads with strict `getLong` / `getString` inside a blanket
-   `catch (Exception)`.** Under kotlinx one changed field turns the whole log into an empty list with
-   no error and no log line. Use the lenient readers field by field, not a wrapper around the loop.
+What follows from that is the useful part: the format can be **designed** rather than preserved.
+
+### The format has already been redesigned once
+
+| Version | Shape | Fixed |
+|---------|-------|-------|
+| v1, Jens | `"BASAL_ABS 0.75 30"`, split on spaces | - |
+| v2, Philoul `02c25ccc5b` "NFC Improve Plugin Architecture", 2026-06-14 | `{"code":…,"params":{…}}` | values containing spaces - a profile or scene name broke the v1 parser |
+| v3, proposed | `@Serializable` data classes | untyped reads that silently return a default |
+
+Each step removes the failure mode of the one before. **Do not let anyone "simplify" v2 back to a
+delimited string** - that reintroduces the space bug that motivated the change.
+
+### What is still worth fixing, and why it is not about history
+
+Write and read are separated in time: a tag written today is scanned next week, possibly after an app
+update. So the format must round-trip correctly for **any** tag, not only for old ones. Two defects,
+both independent of whether anything shipped:
+
+**1. Untyped reads with silent coercion.** Every parameter is read positionally against a string key:
+
+```kotlin
+val tempBasal = params.optDouble(NfcJsonKeys.RATE, 0.0)
+val rawDuration = params.optInt(NfcJsonKeys.DURATION, durationStep)
+```
+
+A missing key, a mistyped key, or a value of the wrong type does not fail - it returns the default. A
+mismatch between what the build screen writes and what the action reads produces a **silently wrong
+dose**, not an error. Same class of problem as the `as?` cast that section 9.6 removed, spread across
+21 string constants in `NfcJsonKeys`.
+
+This is not a design oversight. It is the only idiom hand-written `org.json` offers; the limitation
+belongs to the library.
+
+**2. Errors swallowed wholesale.** `NfcTagStore.loadLog()` and `loadCreatedTags()` wrap strict
+`getLong` / `getString` / `getBoolean` reads in one blanket `catch (Exception)` returning an empty
+list. A single bad field discards the whole list, with no error and no log line - the user's tag list
+or history simply appears empty.
+
+### v3, the typed command model - DONE
+
+```kotlin
+@Serializable
+data class NfcCommand(val code: NfcCommandCode, val params: NfcParams = NfcParams())
+```
+
+`NfcParams` carries `insulin`, `carbs`, `glucose`, `percent`, `duration`, `rate`, `profileName`,
+`sceneId`, `isMeal`, and the five wizard toggles `useBg` / `useTt` / `useTrend` / `useIob` / `useCob`.
+Values are nullable where "not set" has to be distinguishable from zero.
+
+Keeps everything v2 bought - structure, arbitrary strings, nesting - and removes the silent default:
+decoding now fails as a whole rather than filling in a default. `decode()` returns null instead of
+throwing, because a tag is outside the app's control and a bad one must not take a screen down.
+
+**Two fields changed meaning, not just type.**
+
+- **`amount` was two things.** Insulin units (`Double`) for `BOLUS` and `EXTENDED_SET`, carbs grams
+  (`Int`) for `CARBS` and `BOLUS_WIZARD` - read as `optDouble` in one pair and `optInt` in the other.
+  `GenericNfcUiAction` already kept them apart as `units` and `grams`, so the shared key was only an
+  artefact of flattening the UI state onto JSON. Now `insulin` and `carbs`.
+- **The tag's name left the params.** It was copied into **every** command of a chain and read back at
+  **25 sites**, purely to fill the user entry note, while `NfcCreatedTag.name` was the real source of
+  truth. It is now a parameter: `execute(tagName)`.
+
+`formatParams(tagName)` needed it too, which only the compiler found: the wizard bakes `notes` into
+`WizardInputs` at *prepare* time inside `formatParams`, and `execute` commits by `bolusId` afterwards.
+Leaving the name out would have silently emptied the note on every wizard bolus.
+
+**Also removed:** `NfcJsonKeys` and its 21 constants, `ArgType`'s `jsonKey` indirection, and five hand
+rolled `JSONObject(cmd) -> code + params` parses that are now one `NfcCommand.decode`. This resolves
+section 9.7 - `NfcAction.params` was `org.json` held in Compose state - and the `org.json` row of
+Tier 2.
+
+**Build change:** `kotlin("plugin.serialization")` on `:plugins:sync`, applied the way `wear` does.
+Note this diverges from the automation conversion on `kmp` (`9eb22e76a17`), which used the JSON DOM
+API and kept lenient reads with defaults. The divergence is deliberate: the lenient reads are the
+defect being removed.
+
+### Still to do: the store blobs
+
+`NfcTagStore` keeps `org.json` for the **tag list** and **log** blobs, which are a different format
+from commands. Both still wrap strict `getLong` / `getString` / `getBoolean` reads in one blanket
+`catch (Exception)` returning an empty list, so a single bad field discards the whole list with no error
+and no log line - a user's tag list or history simply appears empty. That is the remaining part of this
+section.
+
+For reference, the `org.json` versus `kotlinx` differences that made the profile conversion delicate
+still matter for that work, as things the new code must get right rather than stay compatible with:
+`optInt` truncates a JSON number but saturates a numeric string; `org.json` writes `1.0` as `1`,
+rejects non-finite doubles that kotlinx emits as invalid JSON, and accepts malformed input kotlinx
+rejects.
 
 ---
 
@@ -431,22 +540,17 @@ One thing may still move: follow-up 3 in the KMP note is `PluginDescription.desc
 | Step | Work                                                                                                                                                             | Depends on           |
 |------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------|
 | 0    | **Ask the owner the section 6 question** - is NFC ever meant to be shared code?                                                                                    | -                    |
-| 1    | **Section 9.2** - replace the plugin god object with an `NfcActionFactory`. Biggest item, and a prerequisite for the Dagger work under either answer to step 0.     | -                    |
-| 2    | **Section 9.3, 9.4, 9.6** - explicit imports, a `compose/` package with a state holder, typed action state.                                                        | -                    |
-| 3    | Write characterization tests over real tag payloads and stored blobs (section 5), against the current `org.json` code.                                              | -                    |
-| 4    | Convert the NFC plugin's DI from Dagger to **Metro**, with the rest of `:plugins:sync`, and move `NfcControlActivity` plus its manifest entry back into the plugin. See section 1a. | step 1, and `kmp` reaching `:plugins:sync` |
-| 5    | Wait for `kmp` to reach `dev`, then re-merge. Tier 1 is already applied; expect a smaller conflict set.                                                             | follow-up 1 on `kmp` |
-| 6    | Only if step 0 says "shared": Tier 2, in the owner's own order - `TimeUnit` / `DateFormat` / `Clock` / hex first, then `org.json`, then `R.string` to `TextRef`, then move the Android entry points. | steps 0, 3     |
-| 7    | Only when `:plugins:sync` is flipped: decide the NFC hardware seam.                                                                                                | step 6               |
+| 1    | **The store blobs** (section 5) - the tag list and log off `org.json`, and stop discarding a whole list when one field fails.                                       | -                    |
+| 2    | Convert the NFC plugin's DI from Dagger to **Metro** and move `NfcControlActivity` plus its manifest entry into the plugin. The template now exists in the module - `SyncMemberInjectors.kt`, see 1a - so this is no longer blocked, only sequenced after the re-merge. | step 3               |
+| 3    | Wait for `kmp` to reach `dev`, then re-merge. Tier 1 is already applied; expect a smaller conflict set.                                                             | follow-up 1 on `kmp` |
+| 4    | Only if step 0 says "shared": Tier 2, in the owner's own order - `TimeUnit` / `DateFormat` / `Clock` / hex first, then `R.string` to `TextRef`. The `org.json` row is already done. | step 0               |
+| 5    | Only when `:plugins:sync` is flipped: decide the NFC hardware seam.                                                                                                | step 4               |
 
-Steps 1, 2 and 3 are worth doing whatever the answer to step 0, and nothing on `kmp` can invalidate
-them.
+Step 1 is worth doing whatever the answer to step 0, and nothing on `kmp` can invalidate it.
 
-Where the rest of section 9 lands: **9.1 is done** (`f9e51ec06c`). **9.5** (Toast, vibration,
-`Handler`) rides with dropping the injected `Context` in step 6, since those three are the only reason
-the plugin needs one. **9.7** (`org.json` as Compose state) is the same work as the `org.json`
-conversion in step 6, so it is not a separate job - but it stays listed because it is also a pattern
-difference from Automation, which keeps typed editor state and serialises only at the boundary.
+Where the rest of section 9 lands: **9.1 to 9.4, 9.6 and 9.7 are done**. Only **9.5** remains and it is
+not standalone - Toast, vibration and the `Handler` post are the only reason `NfcCommandsPlugin` still
+takes a `Context`, so they go when it does, in step 4.
 
 ---
 
@@ -490,7 +594,7 @@ Two side effects worth recording: 2 of the 4 conflicts the next `kmp` merge woul
 are gone, and our whole `:core:ui` footprint is down to the 4 files in section 3 - all of it
 `ElementType.NFC` registration, none of it removable.
 
-### 9.2 Actions receive the whole plugin - 261 reach-through accesses
+### 9.2 Actions received the whole plugin - 261 reach-through accesses - FIXED
 
 `NfcAction(protected val plugin: NfcCommandsPlugin)`, and the 25 actions reach through it:
 
@@ -513,33 +617,93 @@ The NFC variant is worse in one respect: `NfcCommandsPlugin` is a Dagger `@Singl
 action transitively depends on the DI graph**. No NFC action can reach `commonMain` until this is
 undone, which puts it **on the critical path**, not in the cosmetic pile.
 
-Fix: an `NfcActionFactory` mirroring `plugins/automation/.../actions/ActionFactory.kt` - hold the
-dependencies, pass each action exactly what it asks for.
+**Fixed in `6e3d819ffd`** with an `NfcActionFactory` mirroring
+`plugins/automation/.../actions/ActionFactory.kt` - it holds the dependencies and passes each action
+exactly what it asks for. Verified: `:plugins:sync` compiles and all 84 NFC tests pass. Afterwards
+there are **zero** `plugin.x` accesses left in the actions package.
 
-Note the justification shifted with section 1a. The original reason was "Dagger cannot work in a
-multiplatform module", which Metro removes. The factory is still right for the reason Automation's
-own KDoc gives: actions are built from **stored JSON**, so they can never be constructed by a DI
-graph, and reaching back through a god object hides what each action actually depends on. It should
-be written with Dagger today - `@Singleton @Inject constructor`, as `ActionFactory` still is - and
-converted to Metro with the module.
+Note the justification shifted with section 1a. The reason recorded here first was "Dagger cannot work
+in a multiplatform module", which Metro removes. The factory is still right for the reason
+`ActionFactory`'s own KDoc gives: actions are built from **stored JSON**, so the set of them is only
+known when a tag is read and they can never come out of a DI graph. It is written with Dagger
+(`@Singleton @Inject constructor`, as `ActionFactory` still is) and converts to Metro with the module.
 
-### 9.3 Two wildcard imports
+| Before | After |
+|---|---|
+| `NfcAction(plugin: NfcCommandsPlugin)` | `NfcAction(aapsLogger, rh, uel)` - the three every action uses |
+| 261 `plugin.x` accesses in 24 action files | each action's own constructor, e.g. `LoopStopAction(loop, profileFunction)`; `BolusWizardAction` names nine |
+| `NfcCommandCode` held `createAction: (NfcCommandsPlugin) -> NfcAction` | the enum names no action class at all |
+| plugin held `lastRemoteBolusTime` and the action state map | `NfcRuntimeState` |
+| plugin held `pumpBasalDurationStep()` / `roundUpToStep()` | `actions/NfcBasalStep.kt`, internal functions |
+| tests reached through a mocked plugin | tests build a **real** `NfcActionFactory` over the same mocks |
 
+Three of the reach-throughs were not dependencies at all but plugin state or behaviour, which is why
+they needed homes of their own rather than a constructor parameter. The plugin keeps a thin
+`pumpBasalDurationStep()` because `NfcBuildScreen` calls it.
+
+Two things were deliberately left for their own sections: the action state map is still `Any` typed
+(9.6) and `NfcCommandsPlugin` still wildcard-imports the actions package (9.3).
+
+### 9.3 Two wildcard imports - FIXED
+
+`CLAUDE.md`: *"Always use explicit imports (no exceptions)."* There were two, both
+`import app.aaps.plugins.sync.nfcCommands.actions.*`. 9.2 removed the one in `NfcCommandCode.kt` by
+taking the action mapping away from the enum; **`1457342316`** replaced the one in
+`NfcCommandsPlugin.kt` with the two symbols it actually uses - `NfcAction` and
+`pumpBasalDurationStep`. That it shrank to two is itself a check on 9.2: before the factory, the
+plugin constructed all 24 action classes itself.
+
+No wildcard imports remain in the plugin, in `src/main` or `src/test`.
+
+### 9.4 UI files are not in a `compose/` package, and screen state is not hoisted
+
+**This is about a folder name and about state hoisting - not about Compose itself.** An earlier
+heading here read "No `compose/` package", which is easy to misread as "no Compose". The plugin is
+thoroughly Compose: **19 of its 38 files** import `androidx.compose` and it declares **42
+`@Composable` functions**. Nothing in the project is moving away from Compose - the V3 to V4 Compose
+migration is precisely what makes a shared iOS UI plausible at all, because Compose Multiplatform
+publishes `androidx.compose.*` under the same package names.
+
+Two organisational gaps against Automation:
+
+**A `compose/` sub-package.** Automation groups its UI in
+`plugins/automation/.../automation/compose/` - `AutomationScreen.kt`, `AutomationEditScreen.kt`,
+`AutomationComposeContent.kt`, `AutomationColors.kt`, plus `compose/{actions,triggers,elements}/` for
+the per-element editors. NFC keeps `NfcBuildScreen.kt`, `NfcCommandsScreen.kt` and `NfcCommonUi.kt`
+flat in the plugin root, beside `NfcTagStore.kt` and the plugin class. Tidiness only.
+
+**A state holder.** Automation has `AutomationState.kt` and `AutomationStateHolder.kt`, so screen
+state lives in a plain class the UI observes. NFC declares its state inline:
+
+```kotlin
+val chain = remember { mutableStateListOf<NfcUiAction>() }
+var tagName by remember { mutableStateOf("") }
+var isWritingMode by remember { mutableStateOf(false) }
 ```
-NfcCommandCode.kt:4      import app.aaps.plugins.sync.nfcCommands.actions.*
-NfcCommandsPlugin.kt:46  import app.aaps.plugins.sync.nfcCommands.actions.*
-```
 
-`CLAUDE.md`: *"Always use explicit imports (no exceptions)."* Will need doing anyway with 9.2.
+That is ordinary, idiomatic Compose. The objection is scale, not technique: `NfcBuildScreen.kt` is
+**1239 lines** - 2.5x the next largest file in the plugin - holding a dozen pieces of state plus the
+write, read and edit flows in one composable. Hoisting makes it testable without a UI.
 
-### 9.4 No `compose/` package and no state holder
+**Fixed in two commits.**
 
-Automation has `compose/` containing `AutomationState.kt`, `AutomationStateHolder.kt`,
-`AutomationComposeContent.kt`, the screens, and `compose/{actions,triggers,elements}/`. NFC keeps
-**1728 lines** of Compose (`NfcBuildScreen` 1239, `NfcCommandsScreen` 489) flat in the plugin root,
-with state inline in the composables. `NfcBuildScreen` is the largest file in the plugin by 2.5x.
+`36e0326ba1` moved `NfcBuildScreen.kt`, `NfcCommandsScreen.kt` and `NfcCommonUi.kt` into
+`nfcCommands/compose/`, so the plugin now reads `actions/`, `compose/`, `keys/` with the plumbing at
+the root. Git recorded all three as renames, which is the reason it was kept apart from the state
+work. The boundary is narrow both ways: only four symbols leave `compose/` -
+`NfcCommandsComposeContent`, `NfcExecutionConfirmationDialog`, and `WriteOutcome` plus
+`resolveWriteOutcome` for a test.
 
-Fix: mirror Automation's layout - a `compose/` package, state hoisted into a state holder.
+`115eef6756` added `compose/NfcBuildStateHolder.kt` holding all twelve values plus `currentCommands`
+and `isDirty`, so twenty lines of declarations became `val state = rememberNfcBuildState()` and 65
+references now go through it. `isEditMode` stayed in the composable because it derives from a
+parameter, not from remembered state.
+
+Worth knowing if this is ever repeated elsewhere: three **named arguments** shared a name with hoisted
+state - `tagName` in the two `NfcLogEntry` calls and `chain` in the `NfcWriteDialog` call - so a plain
+rename would have produced `state.tagName = name` *inside a constructor call*. `NfcWriteDialog` also
+declares its own `chain` parameter outside the composable. The rename had to be scoped to the function
+body and those three sites left bare.
 
 ### 9.5 Toast, vibration and `Handler(Looper.getMainLooper())`
 
@@ -547,21 +711,36 @@ Fix: mirror Automation's layout - a `compose/` package, state hoisted into a sta
 `VibratorManager`, and a `Handler` post - together these are the only reason `NfcCommandsPlugin`
 needs a `Context` at all (Tier 2).
 
-### 9.6 `Any`-typed action state
+### 9.6 `Any`-typed action state - FIXED
 
 ```kotlin
-fun setActionState(key: String, state: Any) { actionStates[key] = state }
-fun getActionState(key: String): Any? = actionStates[key]
+- fun setActionState(key: String, state: Any)
+- fun getActionState(key: String): Any?
++ fun setWizardPreview(key: String, preview: WizardBolusExecutor.PrepareResult.Preview)
++ fun getWizardPreview(key: String): WizardBolusExecutor.PrepareResult.Preview?
 ```
 
-`CLAUDE.md`: prefer specific types over `Any?`. This is the Bolus Wizard calculation hand-off between
-phases; a small sealed type would express it and remove the unchecked casts at the read sites.
+**Fixed in `67fd617b85`.** `CLAUDE.md` asks for specific types over `Any`, but the **cast mattered more
+than the type**. The single reader did
+`getActionState(...) as? WizardBolusExecutor.PrepareResult.Preview`, and `as?` yields `null` on a
+mismatch rather than failing. `BolusWizardAction` reads `null` as "state not found" and aborts with
+*"Remote command is not possible"* - so a wrongly typed value parked under that key would have reached
+the user as a **silently refused bolus**, with nothing naming the cause. The map cannot hold anything
+else now, so that failure mode is gone.
 
-### 9.7 `org.json` as Compose UI state
+**Deliberately not a sealed type**, which is what this note first suggested. There is one writer, one
+reader and one stored type, so a single-case hierarchy would be speculative generality. Naming the
+member `wizardPreviews` also says what it holds, where "action state" said nothing; a second action
+that needs to park something gets its own typed member.
 
-`NfcAction.params: JSONObject by mutableStateOf(JSONObject())`. Automation keeps typed `elements/`
-for editor state and serialises only at the storage boundary. Overlaps with Tier 2 but is also a
-pattern difference in its own right.
+The plugin's `private fun clearActionStates()` wrapper went too - it only forwarded.
+
+### 9.7 `org.json` as Compose UI state - FIXED
+
+`NfcAction.params` was `JSONObject by mutableStateOf(JSONObject())` - a JSON document used as Compose
+state. It is now `NfcParams by mutableStateOf(NfcParams())`, fixed as part of the typed command model
+in section 5, which is the same work rather than a separate job. The plugin now matches Automation,
+which keeps typed editor state and serialises only at the storage boundary.
 
 ---
 
@@ -612,24 +791,17 @@ Decided and acted on. Reasons, in order of weight:
 
 **Cherry-picking, corrected:** the `:plugins:sync` work *is* cleanly cherry-pickable. The `:core:*`
 work is **not** - those are merge resolutions, not a portable diff, so the same conflicts reappear
-when the main branch merges `dev` after `kmp` lands. The tool for that is `git rerere`, which records
-resolutions and replays them on an identical conflict. It must be enabled **before** the merge to
-record, so it did not capture this one:
+when the main branch merges `dev` after `kmp` lands.
 
-```
-git config rerere.enabled true
-```
+### Rename detection is the hazard to watch on the next merge
 
-### Required git setup for this merge
+There are **1474 renames** between the shared base and `kmp`, because whole modules moved from
+`src/main` to `src/commonMain`. If git's rename detection is truncated, renames degrade into
+add/delete pairs and **edits to a moved file are silently dropped** - the merge reports no conflict and
+the change is simply gone.
 
-| Setting              | Value      | Why                                                                                      |
-|----------------------|------------|------------------------------------------------------------------------------------------|
-| git version          | **>= 2.34** | `merge-ort` becomes the default engine; far better and faster on large rename sets        |
-| `merge.renameLimit`  | 4000       | 1474 renames exceed the default (~1000). If truncated, renames degrade to add/delete pairs and **edits to a moved file are silently dropped** |
-| `diff.renameLimit`   | 4000       | same                                                                                     |
-
-With git 2.55 and those limits the merge produced **8 conflicts and no truncation warning**. Watch for
-`inexact rename detection was skipped` on any future merge.
+The merge recorded here completed detection fully and produced 8 conflicts. On any future merge, check
+the output for `inexact rename detection was skipped`; if it appears, the result cannot be trusted.
 
 ### Merge outcome, for reference
 
@@ -674,15 +846,15 @@ Working tree after the merge and Tier 1, build folders excluded.
 | Files with `androidx.annotation.StringRes` | 26    |
 | `System.currentTimeMillis()` sites         | 9     |
 | `TimeUnit.` sites                          | 5     |
-| `plugin.` reach-through accesses in actions | 261  |
+| `plugin.` reach-through accesses in actions | **0** (was 261, see 9.2) |
 
 Largest files: `NfcBuildScreen.kt` 1239, `NfcCommandsScreen.kt` 489, `NfcCommandsPlugin.kt` ~315,
 `NfcControlActivity.kt` 220, `NfcTagStore.kt` 171, `NfcCommonUi.kt` 142, `NfcCommandCode.kt` 118.
 
-### Reading build output on this Gradle version
+### Reading build output
 
 Two traps that make a failing build look green. Both were hit in this work and produced wrong
-"verified" claims before being caught:
+"verified" claims before being caught. Check them against whatever Gradle the project is on:
 
 - **Kotlin errors are not `e:` lines.** They come as `Problem found: Kotlin compiler error` blocks with
   the message and `Location:` on following lines. Grepping only `^e: ` returns 0 on a build with a
