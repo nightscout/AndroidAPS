@@ -57,6 +57,8 @@ import app.aaps.plugins.sync.nsclientV3.clientcontrol.PairingOfferFetcher
 import app.aaps.plugins.sync.smsCommunicator.compose.SmsCommunicatorRepository
 import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
 import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
+import app.aaps.plugins.sync.nsclientV3.ReceiverDelegate
+import app.aaps.plugins.sync.tidepool.utils.RateLimit
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.smsCommunicator.SmsCommunicatorPlugin
 import app.aaps.implementation.maintenance.cloud.CloudStorageManager
@@ -156,6 +158,8 @@ class AapsLeaves(
     private val smsCommunicatorRepositoryProvider: Provider<SmsCommunicatorRepository>,
     private val tidepoolRepositoryProvider: Provider<TidepoolRepository>,
     private val xdripMvvmRepositoryProvider: Provider<XdripMvvmRepository>,
+    private val receiverDelegateProvider: Provider<ReceiverDelegate>,
+    private val rateLimitProvider: Provider<RateLimit>,
     /**
      * The history browser scope.
      *
@@ -261,6 +265,13 @@ class AapsLeaves(
     @Provides fun smsCommunicatorRepository(): SmsCommunicatorRepository = smsCommunicatorRepositoryProvider.get()
     @Provides fun tidepoolRepository(): TidepoolRepository = tidepoolRepositoryProvider.get()
     @Provides fun xdripMvvmRepository(): XdripMvvmRepository = xdripMvvmRepositoryProvider.get()
+
+    // Dagger-owned for the same reason as the plugins above: NSClientV3Plugin and TidepoolUploader are
+    // built by Dagger and are what actually writes to these. Both hold state - ReceiverDelegate the
+    // charging/network gate, RateLimit its map of last-run times - so a Metro-built second copy left
+    // TidepoolPlugin reading a gate nobody updates and a rate limiter that never limits.
+    @Provides fun receiverDelegate(): ReceiverDelegate = receiverDelegateProvider.get()
+    @Provides fun rateLimit(): RateLimit = rateLimitProvider.get()
     @Provides fun overviewDataCache(): OverviewDataCache = overviewDataCacheProvider.get()
 
     /** Hilt's qualifier, read now that interop is on. Same Context as the unqualified binding. */
