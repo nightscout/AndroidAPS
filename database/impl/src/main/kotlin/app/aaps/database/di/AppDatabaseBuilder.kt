@@ -8,6 +8,7 @@ import androidx.room.migration.Migration
 import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import androidx.sqlite.execSQL
+import androidx.sqlite.db.SupportSQLiteDatabase
 import app.aaps.database.AppDatabase
 import app.aaps.database.entities.TABLE_APS_RESULTS
 import app.aaps.database.entities.TABLE_BOLUSES
@@ -22,24 +23,15 @@ import app.aaps.database.entities.TABLE_TEMPORARY_BASALS
 import app.aaps.database.entities.TABLE_THERAPY_EVENTS
 import app.aaps.database.entities.TABLE_TOTAL_DAILY_DOSES
 import app.aaps.database.entities.TABLE_USER_ENTRY
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Qualifier
-import javax.inject.Singleton
 
-@Module
-@InstallIn(SingletonComponent::class)
-open class DatabaseModule {
+/**
+ * Builds the Room database. Not a DI module any more - `DatabaseBindings` provides the instance and
+ * this class only holds the builder and the migration list, so the instrumented tests in this module
+ * can open a database exactly the way the app does.
+ */
+open class AppDatabaseBuilder {
 
-    @DbFileName
-    @Provides
-    fun dbFileName() = "androidaps.db"
-
-    @Provides
-    @Singleton
-    internal fun provideAppDatabase(context: Context, @DbFileName fileName: String) =
+    internal fun provideAppDatabase(context: Context, fileName: String) =
         Room
             .databaseBuilder(context, AppDatabase::class.java, fileName)
             // Bundled SQLite driver: ships its own SQLite compiled from source instead of the
@@ -59,8 +51,29 @@ open class DatabaseModule {
             .fallbackToDestructiveMigration(false)
             .build()
 
-    @Qualifier
-    annotation class DbFileName
+    /**
+     * In-memory copy of the same database, used by the instrumented tests. Built the way it always
+     * was: no bundled driver, so the SupportSQLiteDatabase overload of onOpen is the one that fires.
+     */
+    internal fun provideInMemoryAppDatabase(context: Context) =
+        Room
+            .inMemoryDatabaseBuilder(context, AppDatabase::class.java)
+            .addCallback(object : Callback() {
+                override fun onOpen(db: SupportSQLiteDatabase) {
+                    super.onOpen(db)
+                    createCustomIndexes(db)
+                }
+            })
+            .fallbackToDestructiveMigration(false)
+            .build()
+
+    private fun createCustomIndexes(database: SupportSQLiteDatabase) {
+        database.execSQL("CREATE INDEX IF NOT EXISTS `index_temporaryBasals_end` ON `temporaryBasals` (`timestamp` + `duration`)")
+        database.execSQL("CREATE INDEX IF NOT EXISTS `index_extendedBoluses_end` ON `extendedBoluses` (`timestamp` + `duration`)")
+        database.execSQL("CREATE INDEX IF NOT EXISTS `index_temporaryTargets_end` ON `temporaryTargets` (`timestamp` + `duration`)")
+        database.execSQL("CREATE INDEX IF NOT EXISTS `index_carbs_end` ON `carbs` (`timestamp` + `duration`)")
+        database.execSQL("CREATE INDEX IF NOT EXISTS `index_runningModes_end` ON `runningModes` (`timestamp` + `duration`)")
+    }
 
     private fun createCustomIndexes(connection: SQLiteConnection) {
         connection.execSQL("CREATE INDEX IF NOT EXISTS `index_temporaryBasals_end` ON `temporaryBasals` (`timestamp` + `duration`)")

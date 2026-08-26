@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.metro)
     kotlin("plugin.allopen")
     id("android-module-dependencies")
     id("test-module-dependencies")
@@ -31,13 +32,7 @@ dependencies {
     api(libs.androidx.room.runtime)
     implementation(libs.androidx.sqlite.bundled)
 
-    api(libs.com.google.dagger.android)
-    api(libs.com.google.dagger.android.support)
-    api(libs.com.google.dagger.hilt.android)
 
     androidTestImplementation(libs.androidx.room.testing)
-
-    ksp(libs.com.google.dagger.compiler)
-    ksp(libs.com.google.dagger.hilt.compiler)
     ksp(libs.androidx.room.compiler)
 }

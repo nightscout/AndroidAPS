@@ -37,6 +37,7 @@ import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.maintenance.CloudStorageProvider
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.database.AppRepository
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.core.utils.receivers.DataInbox
@@ -301,6 +302,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val localAlertUtils: LocalAlertUtils
     val bolusProgressData: BolusProgressData
     val persistenceLayer: PersistenceLayer
+    val appRepository: AppRepository
     val cloudStorageProviders: Set<CloudStorageProvider>
     val constraintsChecker: ConstraintsChecker
     val nsClientRepository: NSClientRepository

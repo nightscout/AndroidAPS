@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.useReaderConnection
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import app.aaps.database.di.DatabaseModule
+import app.aaps.database.di.AppDatabaseBuilder
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert
@@ -13,12 +13,12 @@ import org.junit.runner.RunWith
 
 /**
  * Guards the custom expression indexes (e.g. `index_temporaryBasals_end` on `timestamp + duration`)
- * that Room cannot declare and that are created in [DatabaseModule]'s open callback. With the bundled
+ * that Room cannot declare and that are created in [AppDatabaseBuilder]'s open callback. With the bundled
  * SQLite driver, Room delivers an SQLiteConnection (not a SupportSQLiteConnection), so the callback
  * MUST override the connection overload of onOpen — if it doesn't fire, these indexes silently vanish
  * and range queries like getTemporaryBasalActiveAt degrade to full table scans.
  *
- * Builds the database through the real [DatabaseModule] path (bundled driver + callback), so it
+ * Builds the database through the real [AppDatabaseBuilder] path (bundled driver + callback), so it
  * actually verifies the production wiring rather than a bare test builder. Instrumented because the
  * bundled driver's native library does not load on the host JVM (Robolectric).
  */
@@ -26,7 +26,7 @@ import org.junit.runner.RunWith
 class CustomIndexesTest {
 
     private val context: Context = ApplicationProvider.getApplicationContext()
-    private val db = DatabaseModule().provideAppDatabase(context, TEST_DB_NAME)
+    private val db = AppDatabaseBuilder().provideAppDatabase(context, TEST_DB_NAME)
 
     @After
     fun tearDown() {

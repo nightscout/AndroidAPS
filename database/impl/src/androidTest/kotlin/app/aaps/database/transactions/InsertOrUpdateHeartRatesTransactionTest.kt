@@ -30,7 +30,7 @@ class InsertOrUpdateHeartRatesTransactionTest {
         db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
             .setDriver(BundledSQLiteDriver())
             .build()
-        repo = AppRepository(db)
+        repo = AppRepository { db }
     }
 
     @After

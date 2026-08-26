@@ -10,7 +10,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import app.aaps.database.AppDatabase
-import app.aaps.database.di.DatabaseModule
+import app.aaps.database.di.AppDatabaseBuilder
 import app.aaps.database.entities.HeartRate
 import app.aaps.database.entities.TABLE_HEART_RATE
 import kotlinx.coroutines.test.runTest
@@ -73,7 +73,7 @@ class HeartRateDaoTest {
         // ...then reopen through the production driver so the migration chain runs under the bundled driver.
         Room.databaseBuilder(context, AppDatabase::class.java, TEST_DB_NAME)
             .setDriver(BundledSQLiteDriver())
-            .addMigrations(*DatabaseModule().migrations)
+            .addMigrations(*AppDatabaseBuilder().migrations)
             .build().also { db ->
                 val objects = db.useReaderConnection { connection ->
                     connection.usePrepared("SELECT type, name FROM sqlite_master") { statement ->
@@ -99,7 +99,7 @@ class HeartRateDaoTest {
         // Room.databaseBuilder will use the previously created db file that has version 22.
         Room.databaseBuilder(ApplicationProvider.getApplicationContext(), AppDatabase::class.java, TEST_DB_NAME)
             .setDriver(BundledSQLiteDriver())
-            .addMigrations(*DatabaseModule().migrations)
+            .addMigrations(*AppDatabaseBuilder().migrations)
             .build().also { db ->
                 insertAndFind(db)
                 db.close()

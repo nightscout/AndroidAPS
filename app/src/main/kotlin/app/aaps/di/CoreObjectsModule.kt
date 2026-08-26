@@ -73,6 +73,7 @@ import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.maintenance.CloudStorageProvider
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.database.AppRepository
+import app.aaps.database.di.DatabaseConfig
 import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -292,6 +293,7 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideLocalAlertUtils(graphs: MetroGraphs): LocalAlertUtils = graphs.localAlertUtils
     @Provides @Singleton fun provideBolusProgressData(graphs: MetroGraphs): BolusProgressData = graphs.bolusProgressData
     @Provides @Singleton fun providePersistenceLayer(graphs: MetroGraphs): PersistenceLayer = graphs.persistenceLayer
+    @Provides @Singleton fun provideAppRepository(graphs: MetroGraphs): AppRepository = graphs.appRepository
     @Provides @Singleton fun provideCloudStorageProviders(graphs: MetroGraphs): Set<CloudStorageProvider> = graphs.cloudStorageProviders
     @Provides @Singleton fun provideConstraintsChecker(graphs: MetroGraphs): ConstraintsChecker = graphs.constraintsChecker
     @Provides @Singleton fun provideNSClientRepository(graphs: MetroGraphs): NSClientRepository = graphs.nsClientRepository
@@ -467,7 +469,7 @@ class CoreObjectsModule {
         @ApplicationScope appScopeProvider: Provider<CoroutineScope>,
         fabricPrivacyProvider: Provider<FabricPrivacy>,
         configProvider: Provider<Config>,
-        appRepositoryProvider: Provider<AppRepository>,
+        databaseConfigProvider: Provider<DatabaseConfig>,
         calculationSignalsEmitterProvider: Provider<CalculationSignalsEmitter>,
         authFlowOutProvider: Provider<AuthFlowOut>,
         tidepoolUploaderProvider: Provider<TidepoolUploader>,
@@ -508,7 +510,7 @@ class CoreObjectsModule {
         appScopeProvider,
         fabricPrivacyProvider,
         configProvider,
-        appRepositoryProvider,
+        databaseConfigProvider,
         calculationSignalsEmitterProvider,
         authFlowOutProvider,
         tidepoolUploaderProvider,

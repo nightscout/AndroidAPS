@@ -41,8 +41,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.Closeable
 import java.io.File
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.days
 
@@ -56,10 +54,13 @@ data class DatabaseMaintenanceRaw(
     val report: String
 )
 
-@Singleton
-class AppRepository @Inject internal constructor(
-    internal val database: AppDatabase
+class AppRepository internal constructor(
+    databaseProvider: () -> AppDatabase
 ) : Closeable {
+
+    // Lazily: building the Room database is real work and the graph is resolved on a plain JVM in the
+    // unit tests, where nothing ever queries it. Change observers only read the flow below.
+    internal val database: AppDatabase by lazy(databaseProvider)
 
     /**
      * Coroutine scope for Flow emissions

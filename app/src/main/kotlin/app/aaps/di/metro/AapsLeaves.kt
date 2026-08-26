@@ -8,7 +8,7 @@ import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.database.AppRepository
+import app.aaps.database.di.DatabaseConfig
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.dst.DstHelper
@@ -100,7 +100,7 @@ class AapsLeaves(
     @ApplicationScope private val appScopeProvider: Provider<CoroutineScope>,
     private val fabricPrivacyProvider: Provider<FabricPrivacy>,
     private val configProvider: Provider<Config>,
-    private val appRepositoryProvider: Provider<AppRepository>,
+    private val databaseConfigProvider: Provider<DatabaseConfig>,
     // Dagger owns the app-wide emitter - `WorkflowModule.provideMainSignalsEmitter`. A history window
     // has its own, built in `HistoryWindowGraph`, which is why this one is not simply contributed.
     private val calculationSignalsEmitterProvider: Provider<CalculationSignalsEmitter>,
@@ -192,7 +192,7 @@ class AapsLeaves(
     // No runningModeExpiryJob() leaf: Metro builds it now (commonMain, Metro @Inject), and Dagger gets
     // both running-mode classes from `CoreObjectsModule` instead.
     @Provides fun config(): Config = configProvider.get()
-    @Provides fun appRepository(): AppRepository = appRepositoryProvider.get()
+    @Provides fun databaseConfig(): DatabaseConfig = databaseConfigProvider.get()
     // No iobCobCalculator() any more: Metro builds it now, in `MainPluginsBindings`, and Dagger receives
     // it through `CoreObjectsModule.provideIobCobCalculator`.
     @Provides fun calculationSignalsEmitter(): CalculationSignalsEmitter = calculationSignalsEmitterProvider.get()
