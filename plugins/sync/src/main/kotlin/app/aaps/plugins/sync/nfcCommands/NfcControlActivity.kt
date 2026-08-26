@@ -46,7 +46,6 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.json.JSONObject
 import javax.inject.Inject
 
 open class NfcControlActivity : FragmentActivity() {
@@ -215,7 +214,7 @@ open class NfcControlActivity : FragmentActivity() {
     private fun hasBolusCommand(commands: List<String>): Boolean =
         commands.any { cmd ->
             val code = runCatching {
-                NfcCommandCode.valueOf(JSONObject(cmd).optString(NfcJsonKeys.CODE))
+                NfcCommand.decode(cmd)?.code
             }.getOrNull()
             code == NfcCommandCode.BOLUS || code == NfcCommandCode.BOLUS_WIZARD
         }

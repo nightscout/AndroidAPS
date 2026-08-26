@@ -32,16 +32,6 @@ class NfcTagStore @Inject constructor(private val preferences: Preferences) {
         const val MIME_TYPE: String = "application/vnd.app.aaps.command"
         private const val LOG_MAX_ENTRIES = 100
 
-        fun buildCommand(
-            code: NfcCommandCode,
-            params: JSONObject = JSONObject(),
-        ): String {
-            return JSONObject()
-                .put(NfcJsonKeys.CODE, code.name)
-                .put(NfcJsonKeys.PARAMS, params)
-                .toString()
-        }
-
         fun tagUidHex(id: ByteArray?): String? = id?.joinToString("") { "%02x".format(it) }
     }
 

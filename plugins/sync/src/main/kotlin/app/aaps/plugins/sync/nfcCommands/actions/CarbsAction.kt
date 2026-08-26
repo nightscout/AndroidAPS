@@ -16,10 +16,9 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.plugins.sync.nfcCommands.ArgType
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
-import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
-import org.json.JSONObject
 import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.plugins.sync.nfcCommands.NfcParams
 
 class CarbsAction(
     aapsLogger: AAPSLogger,
@@ -35,16 +34,15 @@ class CarbsAction(
     override val icon
         get() = elementType.icon()
 
-    override suspend fun getDefaultParams(): JSONObject = 
-        JSONObject().put(NfcJsonKeys.AMOUNT, 0)
+    override suspend fun getDefaultParams() = NfcParams(carbs = 0)
 
-    override suspend fun formatParams(): String {
-        val grams = params.optInt(NfcJsonKeys.AMOUNT, 0)
+    override suspend fun formatParams(tagName: String): String {
+        val grams = (params.carbs ?: 0)
         return rh.gs(InterfacesR.string.format_carbs, grams)
     }
 
-    override suspend fun execute(): NfcExecutionResult {
-        var grams = params.optInt(NfcJsonKeys.AMOUNT, 0)
+    override suspend fun execute(tagName: String): NfcExecutionResult {
+        var grams = (params.carbs ?: 0)
         
         if (grams == 0) return invalidFormat()
         
@@ -59,7 +57,7 @@ class CarbsAction(
             uel.log(
                 action = Action.CARBS,
                 source = source,
-                note = params.optString(NfcJsonKeys.TAG_NAME, ""),
+                note = tagName,
                 listValues = listOf(
                     ValueWithUnit.Gram(grams)
                 )

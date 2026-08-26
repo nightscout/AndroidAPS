@@ -16,11 +16,10 @@ import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.icons.IcLoopDisconnected
 import app.aaps.plugins.sync.nfcCommands.ArgType
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
-import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
 import app.aaps.plugins.sync.R
-import org.json.JSONObject
 import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.plugins.sync.nfcCommands.NfcParams
 
 class PumpDisconnectAction(
     aapsLogger: AAPSLogger,
@@ -35,16 +34,15 @@ class PumpDisconnectAction(
     override val icon = IcLoopDisconnected
     override val customIconColor: @Composable () -> Color = { AapsTheme.elementColors.loopDisconnected }
 
-    override suspend fun getDefaultParams(): JSONObject = 
-        JSONObject().put(NfcJsonKeys.DURATION, 30)
+    override suspend fun getDefaultParams() = NfcParams(duration = 30)
 
-    override suspend fun formatParams(): String {
-        val duration = params.optInt(NfcJsonKeys.DURATION, 30).coerceIn(1, 180)
+    override suspend fun formatParams(tagName: String): String {
+        val duration = (params.duration ?: 30).coerceIn(1, 180)
         return rh.gs(CoreUiR.string.format_mins, duration)
     }
 
-    override suspend fun execute(): NfcExecutionResult {
-        val duration = params.optInt(NfcJsonKeys.DURATION, 30).coerceIn(1, 180)
+    override suspend fun execute(tagName: String): NfcExecutionResult {
+        val duration = (params.duration ?: 30).coerceIn(1, 180)
         val profile = profileFunction.getProfile() ?: return NfcExecutionResult(false, rh.gs(CoreUiR.string.noprofile))
 
         val result = loop.handleRunningModeChange(
@@ -56,7 +54,7 @@ class PumpDisconnectAction(
             listValues = listOf(
                 ValueWithUnit.RMMode(RM.Mode.DISCONNECTED_PUMP),
                 ValueWithUnit.Minute(duration),
-                ValueWithUnit.SimpleString(params.optString(NfcJsonKeys.TAG_NAME, ""))
+                ValueWithUnit.SimpleString(tagName)
             )
         )
         val message = if (result) {

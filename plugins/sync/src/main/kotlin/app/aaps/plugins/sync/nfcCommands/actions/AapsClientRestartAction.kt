@@ -10,7 +10,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.ui.compose.icons.IcAaps
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
-import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nfcCommands.ArgType
 
@@ -25,13 +24,13 @@ class AapsClientRestartAction(
     override val argType = listOf<ArgType>()
     override val icon = IcAaps
 
-    override suspend fun execute(): NfcExecutionResult {
+    override suspend fun execute(tagName: String): NfcExecutionResult {
         activePlugin.getSpecificPluginsListByInterface(NsClient::class).forEach {
             (it as? NsClient)?.resend("NFC")
         }
         uel.log(
             action = Action.START_AAPS,
-            note = params.optString(NfcJsonKeys.TAG_NAME, ""),
+            note = tagName,
             source = source,
         )
         return NfcExecutionResult(true, rh.gs(R.string.nfccommands_aapsclient_restart_sent))

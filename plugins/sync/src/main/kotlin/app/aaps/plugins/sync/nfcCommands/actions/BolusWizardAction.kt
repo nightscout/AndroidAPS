@@ -22,11 +22,10 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.plugins.sync.nfcCommands.ArgType
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
-import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
 import app.aaps.plugins.sync.R
-import org.json.JSONObject
 import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.plugins.sync.nfcCommands.NfcParams
 import app.aaps.plugins.sync.nfcCommands.NfcRuntimeState
 
 class BolusWizardAction(
@@ -49,7 +48,7 @@ class BolusWizardAction(
     override val icon
         get() = elementType.icon()
 
-    override suspend fun getDefaultParams(): JSONObject {
+    override suspend fun getDefaultParams(): NfcParams {
         val useTrend = preferences.get(BooleanNonKey.WizardIncludeTrend)
         val useCOB = preferences.get(BooleanNonKey.WizardIncludeCob)
         var percentage = preferences.get(IntKey.OverviewBolusPercentage)
@@ -60,20 +59,20 @@ class BolusWizardAction(
                     percentage = 100
             } else percentage = 100
         }
-        return JSONObject().apply {
-            put(NfcJsonKeys.AMOUNT, 0)
-            put(NfcJsonKeys.PERCENT, percentage)
-            put(NfcJsonKeys.USE_BG, true)
-            put(NfcJsonKeys.USE_TT, true)
-            put(NfcJsonKeys.USE_TREND, useTrend)
-            put(NfcJsonKeys.USE_IOB, true)
-            put(NfcJsonKeys.USE_COB, useCOB)
-        }
+        return NfcParams(
+            carbs = 0,
+            percent = percentage,
+            useBg = true,
+            useTt = true,
+            useTrend = useTrend,
+            useIob = true,
+            useCob = useCOB
+        )
     }
 
-    override suspend fun formatParams(): String? {
-        val amount = params.optInt(NfcJsonKeys.AMOUNT, 0)
-        return when (val prepared = prepareWizard()) {
+    override suspend fun formatParams(tagName: String): String? {
+        val amount = (params.carbs ?: 0)
+        return when (val prepared = prepareWizard(tagName)) {
             is WizardBolusExecutor.PrepareResult.Preview -> {
                 // Park the SAME preview (bolusId + computed insulin) the confirm dialog just displayed —
                 // execute() commits it by id through the shared WizardBolusExecutor (identical to wear /
@@ -88,7 +87,7 @@ class BolusWizardAction(
         }
     }
 
-    override suspend fun execute(): NfcExecutionResult {
+    override suspend fun execute(tagName: String): NfcExecutionResult {
         if (commandQueue.bolusInQueue()) {
             return NfcExecutionResult(false, rh.gs(R.string.nfccommands_another_bolus_in_queue))
         }
@@ -128,14 +127,14 @@ class BolusWizardAction(
      * FRESH BolusWizard internally (via Provider), so the wizard's one-shot `accepted` delivery guard can
      * never leak across NFC scans, unlike the previous design which reused one shared instance forever.
      */
-    private suspend fun prepareWizard(): WizardBolusExecutor.PrepareResult {
-        val carbs = params.optInt(NfcJsonKeys.AMOUNT, 0)
-        val percentage = params.optInt(NfcJsonKeys.PERCENT, 100)
-        val useBg = params.optBoolean(NfcJsonKeys.USE_BG, true)
-        val useTT = params.optBoolean(NfcJsonKeys.USE_TT, true)
-        val useTrend = params.optBoolean(NfcJsonKeys.USE_TREND, true)
-        val useIOB = params.optBoolean(NfcJsonKeys.USE_IOB, true)
-        val useCOB = params.optBoolean(NfcJsonKeys.USE_COB, true)
+    private suspend fun prepareWizard(tagName: String): WizardBolusExecutor.PrepareResult {
+        val carbs = (params.carbs ?: 0)
+        val percentage = (params.percent ?: 100)
+        val useBg = params.useBg
+        val useTT = params.useTt
+        val useTrend = params.useTrend
+        val useIOB = params.useIob
+        val useCOB = params.useCob
         val bgMgdl = glucoseStatusProvider.glucoseStatusData?.glucose ?: 0.0
 
         return wizardBolusExecutor.prepareWizard(
@@ -151,7 +150,7 @@ class BolusWizardAction(
                 useTt = useTT,
                 useTrend = useTrend,
                 alarm = false,
-                notes = params.optString(NfcJsonKeys.TAG_NAME, ""),
+                notes = tagName,
                 source = source
             )
         )

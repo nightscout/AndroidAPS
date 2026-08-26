@@ -18,10 +18,9 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.compose.icons.IcTbrLow
 import app.aaps.plugins.sync.nfcCommands.ArgType
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
-import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
 import app.aaps.plugins.sync.R
-import org.json.JSONObject
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.plugins.sync.nfcCommands.NfcParams
 
 class TempBasalPercentAction(
     aapsLogger: AAPSLogger,
@@ -37,16 +36,16 @@ class TempBasalPercentAction(
     override val argType = listOf(ArgType.PERCENT, ArgType.DURATION)
     override val icon = IcTbrLow
 
-    override suspend fun getDefaultParams(): JSONObject = 
-        JSONObject().put(NfcJsonKeys.PERCENT, 100).put(NfcJsonKeys.DURATION, pumpBasalDurationStep(activePlugin))
+    override suspend fun getDefaultParams() =
+        NfcParams(percent = 100, duration = pumpBasalDurationStep(activePlugin))
 
     override fun isSupported(): Boolean = 
         activePlugin.activePump.pumpDescription.tempBasalStyle == PumpDescription.PERCENT
 
-    override suspend fun formatParams(): String {
-        val tempBasalPct = params.optInt(NfcJsonKeys.PERCENT, 100)
+    override suspend fun formatParams(tagName: String): String {
+        val tempBasalPct = (params.percent ?: 100)
         val durationStep = pumpBasalDurationStep(activePlugin)
-        val rawDuration = params.optInt(NfcJsonKeys.DURATION, durationStep)
+        val rawDuration = (params.duration ?: durationStep)
         val duration = roundUpToStep(rawDuration, durationStep)
 
         val pct = rh.gs(CoreUiR.string.format_percent, tempBasalPct)
@@ -54,11 +53,11 @@ class TempBasalPercentAction(
         return "$pct $mins"
     }
 
-    override suspend fun execute(): NfcExecutionResult {
+    override suspend fun execute(tagName: String): NfcExecutionResult {
         val profile = profileFunction.getProfile() ?: return NfcExecutionResult(false, rh.gs(CoreUiR.string.noprofile))
-        var tempBasalPct = params.optInt(NfcJsonKeys.PERCENT, 100)
+        var tempBasalPct = (params.percent ?: 100)
         val durationStep = pumpBasalDurationStep(activePlugin)
-        val rawDuration = params.optInt(NfcJsonKeys.DURATION, durationStep)
+        val rawDuration = (params.duration ?: durationStep)
         
         if (rawDuration <= 0) return invalidFormat()
         
@@ -75,13 +74,13 @@ class TempBasalPercentAction(
             uel.log(
                 action = Action.TEMP_BASAL,
                 source = source,
-                note = params.optString(NfcJsonKeys.TAG_NAME, ""),
+                note = tagName,
                 listValues = listOf(
                     ValueWithUnit.Percent(tempBasalPct),
                     ValueWithUnit.Minute(duration)
                 )
             )
-            return NfcExecutionResult(true, formatParams())
+            return NfcExecutionResult(true, formatParams(tagName))
         } else {
             aapsLogger.error(LTag.NFC, "tempBasalPercent failed: ${result.comment}")
             return commandNotPossible()

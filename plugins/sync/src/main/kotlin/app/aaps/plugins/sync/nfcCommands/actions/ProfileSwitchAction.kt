@@ -18,9 +18,8 @@ import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nfcCommands.ArgType
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
-import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
-import org.json.JSONObject
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.plugins.sync.nfcCommands.NfcParams
 
 class ProfileSwitchAction(
     aapsLogger: AAPSLogger,
@@ -39,21 +38,19 @@ class ProfileSwitchAction(
         if (MaterialTheme.colorScheme.surface.luminance() > 0.5f) Color.Black else Color.White
     }
 
-    override suspend fun getDefaultParams(): JSONObject {
-        val profileName = profileFunction.getOriginalProfileName()
-        return JSONObject().put(NfcJsonKeys.PROFILE_NAME, profileName).put(NfcJsonKeys.PERCENT, 100)
-    }
+    override suspend fun getDefaultParams() =
+        NfcParams(profileName = profileFunction.getOriginalProfileName(), percent = 100)
 
-    override suspend fun formatParams(): String? {
-        val profileName = params.optString(NfcJsonKeys.PROFILE_NAME)
-        val percentage = params.optInt(NfcJsonKeys.PERCENT, 100)
+    override suspend fun formatParams(tagName: String): String? {
+        val profileName = (params.profileName ?: "")
+        val percentage = (params.percent ?: 100)
         return if (percentage == 100) profileName else "$profileName $percentage%"
     }
 
-    override suspend fun execute(): NfcExecutionResult {
-        val profileName = params.optString(NfcJsonKeys.PROFILE_NAME)
+    override suspend fun execute(tagName: String): NfcExecutionResult {
+        val profileName = (params.profileName ?: "")
         if (profileName.isNullOrBlank()) return invalidFormat()
-        val percentage = params.optInt(NfcJsonKeys.PERCENT, 100).coerceIn(10, 500)
+        val percentage = (params.percent ?: 100).coerceIn(10, 500)
         
         val profileStore = profileRepository.profile.value ?: return NfcExecutionResult(false, rh.gs(CoreUiR.string.notconfigured))
         
@@ -78,7 +75,7 @@ class ProfileSwitchAction(
             uel.log(
                 action = Action.PROFILE_SWITCH,
                 source = source,
-                note = params.optString(NfcJsonKeys.TAG_NAME, ""),
+                note = tagName,
                 listValues = listOf(
                     ValueWithUnit.SimpleString(profileName),
                     ValueWithUnit.Percent(percentage)

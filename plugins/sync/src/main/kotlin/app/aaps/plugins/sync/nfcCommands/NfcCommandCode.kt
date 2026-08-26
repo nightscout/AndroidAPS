@@ -7,19 +7,20 @@ import app.aaps.core.ui.R as CoreUiR
 /**
  * Defines elementary argument types for NFC Actions.
  * These types are used by the UI to dynamically build configuration forms.
- * [jsonKey] indicates which field in the parameters JSON this argument corresponds to.
+ * Which field of [app.aaps.plugins.sync.nfcCommands.NfcParams] an argument fills is decided by the
+ * `when` in `GenericNfcUiAction`, so an argument type carries no key of its own.
  */
-enum class ArgType(val jsonKey: String? = null) {
+enum class ArgType {
     NONE,
-    DURATION(NfcJsonKeys.DURATION),
-    INSULIN(NfcJsonKeys.AMOUNT),
-    RATE(NfcJsonKeys.RATE),
-    PERCENT(NfcJsonKeys.PERCENT),
-    AMOUNT_GRAMS(NfcJsonKeys.AMOUNT),
-    MEAL_CHECK(NfcJsonKeys.IS_MEAL),
-    PROFILE_NAME(NfcJsonKeys.PROFILE_NAME),
-    SCENE_ID(NfcJsonKeys.SCENE_ID),
-    GLUCOSE_TARGET(NfcJsonKeys.GLUCOSE),
+    DURATION,
+    INSULIN,
+    RATE,
+    PERCENT,
+    AMOUNT_GRAMS,
+    MEAL_CHECK,
+    PROFILE_NAME,
+    SCENE_ID,
+    GLUCOSE_TARGET,
     BOLUS_WIZARD_OPTIONS // Special composite type for calculator toggles
 }
 

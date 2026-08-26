@@ -11,7 +11,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.ui.compose.icons.IcTbrCancel
 import app.aaps.plugins.sync.nfcCommands.ArgType
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
-import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
 import app.aaps.core.ui.R as CoreUiR
 
 class BasalCancelAction(
@@ -25,12 +24,12 @@ class BasalCancelAction(
     override val argType = listOf<ArgType>()
     override val icon = IcTbrCancel
 
-    override suspend fun execute(): NfcExecutionResult {
+    override suspend fun execute(tagName: String): NfcExecutionResult {
         val result = commandQueue.cancelTempBasal(enforceNew = true)
         return if (result.success) {
             uel.log(
                 action = Action.CANCEL_TEMP_BASAL,
-                note = params.optString(NfcJsonKeys.TAG_NAME, ""),
+                note = tagName,
                 source = source,
             )
             NfcExecutionResult(true, rh.gs(CoreUiR.string.stoptemptarget))

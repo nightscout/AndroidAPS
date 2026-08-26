@@ -15,7 +15,6 @@ import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.icons.IcTtCancel
 import app.aaps.plugins.sync.nfcCommands.ArgType
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
-import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
 import app.aaps.plugins.sync.R
 import app.aaps.core.ui.R as CoreUiR
 
@@ -32,7 +31,7 @@ class TempTargetCancelAction(
     override val icon = IcTtCancel
     override val customIconColor: @Composable () -> Color = { AapsTheme.elementColors.loopDisabled }
 
-    override suspend fun execute(): NfcExecutionResult {
+    override suspend fun execute(tagName: String): NfcExecutionResult {
         persistenceLayer.cancelCurrentTemporaryTargetIfAny(
             timestamp = dateUtil.now(),
             action = Action.CANCEL_TT,
@@ -43,7 +42,7 @@ class TempTargetCancelAction(
         uel.log(
             action = Action.CANCEL_TT,
             source = source,
-            note = params.optString(NfcJsonKeys.TAG_NAME, "")
+            note = tagName
         )
         return NfcExecutionResult(true, rh.gs(R.string.nfccommands_tt_canceled))
     }

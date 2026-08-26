@@ -1,6 +1,7 @@
 package app.aaps.plugins.sync.nfcCommands
 
 import app.aaps.core.keys.StringNonKey
+import app.aaps.plugins.sync.nfcCommands.NfcCommand
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -24,7 +25,7 @@ class NfcTagStoreTest {
         NfcCreatedTag(
             tagUid = uid,
             name = name,
-            commands = listOf(NfcTagStore.buildCommand(NfcCommandCode.LOOP_STOP)),
+            commands = listOf(NfcCommand(NfcCommandCode.LOOP_STOP).encode()),
             createdAtMillis = now,
         )
 

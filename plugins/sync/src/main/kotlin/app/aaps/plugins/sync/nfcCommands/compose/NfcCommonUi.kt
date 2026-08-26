@@ -27,12 +27,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import app.aaps.core.ui.compose.icons.IcPluginNfc
 import app.aaps.core.ui.compose.navigation.color
-import org.json.JSONObject
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.plugins.sync.nfcCommands.NfcCommand
 import app.aaps.plugins.sync.nfcCommands.NfcCommandCode
 import app.aaps.plugins.sync.nfcCommands.NfcCommandsPlugin
 import app.aaps.plugins.sync.nfcCommands.NfcCreatedTag
-import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
 
 @Composable
 fun NfcExecutionConfirmationDialog(
@@ -64,7 +63,7 @@ fun NfcExecutionConfirmationDialog(
                 horizontalAlignment = Alignment.Start
             ) {
                 tag.commands.forEach { cmdJson ->
-                    NfcCommandDisplay(commandJson = cmdJson, plugin = plugin)
+                    NfcCommandDisplay(commandJson = cmdJson, tagName = tag.name, plugin = plugin)
                 }
             }
         },
@@ -85,29 +84,23 @@ fun NfcExecutionConfirmationDialog(
 @Composable
 fun NfcCommandDisplay(
     commandJson: String,
+    tagName: String,
     plugin: NfcCommandsPlugin
 ) {
-    val json = remember(commandJson) { runCatching { JSONObject(commandJson) }.getOrNull() }
-    if (json == null) {
+    val decoded = remember(commandJson) { NfcCommand.decode(commandJson) }
+    if (decoded == null) {
         Text(text = commandJson, style = MaterialTheme.typography.bodySmall)
         return
     }
-
-    val codeName = json.optString(NfcJsonKeys.CODE)
-    val code = remember(codeName) { runCatching { NfcCommandCode.valueOf(codeName) }.getOrNull() }
-    val params = json.optJSONObject(NfcJsonKeys.PARAMS) ?: JSONObject()
-
-    if (code == null) {
-        Text(text = commandJson, style = MaterialTheme.typography.bodySmall)
-        return
-    }
+    val code = decoded.code
+    val params = decoded.params
 
     val action = remember(code, params) { 
         plugin.getAction(code).apply { this.params = params }
     }
 
     val detail by produceState<String?>(initialValue = null, action) {
-        value = action.formatParams()
+        value = action.formatParams(tagName)
     }
 
     Row(

@@ -15,10 +15,9 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.plugins.sync.nfcCommands.ArgType
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
-import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
 import app.aaps.plugins.sync.R
-import org.json.JSONObject
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.plugins.sync.nfcCommands.NfcParams
 
 class ExtendedSetAction(
     aapsLogger: AAPSLogger,
@@ -34,12 +33,11 @@ class ExtendedSetAction(
     override val icon
         get() = elementType.icon()
 
-    override suspend fun getDefaultParams(): JSONObject = 
-        JSONObject().put(NfcJsonKeys.AMOUNT, 0.0).put(NfcJsonKeys.DURATION, 30)
+    override suspend fun getDefaultParams() = NfcParams(insulin = 0.0, duration = 30)
 
-    override suspend fun execute(): NfcExecutionResult {
-        var amount = params.optDouble(NfcJsonKeys.AMOUNT, 0.0)
-        val duration = params.optInt(NfcJsonKeys.DURATION, 0)
+    override suspend fun execute(tagName: String): NfcExecutionResult {
+        var amount = (params.insulin ?: 0.0)
+        val duration = (params.duration ?: 0)
         
         if (amount <= 0.0 || duration <= 0) return invalidFormat()
         
@@ -50,7 +48,7 @@ class ExtendedSetAction(
             uel.log(
                 action = Action.EXTENDED_BOLUS,
                 source = source,
-                note = params.optString(NfcJsonKeys.TAG_NAME, ""),
+                note = tagName,
                 listValues = listOf(
                     ValueWithUnit.Insulin(amount),
                     ValueWithUnit.Minute(duration)

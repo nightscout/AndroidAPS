@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    kotlin("plugin.serialization")
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("compose-test-module-dependencies")

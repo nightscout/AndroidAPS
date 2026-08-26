@@ -33,11 +33,10 @@ import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nfcCommands.ArgType
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
-import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
-import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.plugins.sync.nfcCommands.NfcParams
 import app.aaps.plugins.sync.nfcCommands.NfcRuntimeState
 
 class BolusAction(
@@ -62,19 +61,18 @@ class BolusAction(
         get() = elementType.icon()
 
     override val secondaryIcon: ImageVector?
-        get() = if (params.optBoolean(NfcJsonKeys.IS_MEAL, false)) IcTtEatingSoon else null
+        get() = if (params.isMeal) IcTtEatingSoon else null
 
     override val secondaryIconColor: (@Composable () -> Color)?
-        get() = if (params.optBoolean(NfcJsonKeys.IS_MEAL, false)) {
+        get() = if (params.isMeal) {
             @Composable { ElementType.TEMP_TARGET_MANAGEMENT.color() }
         } else null
 
-    override suspend fun getDefaultParams(): JSONObject = 
-        JSONObject().put(NfcJsonKeys.AMOUNT, 0.0).put(NfcJsonKeys.IS_MEAL, false)
+    override suspend fun getDefaultParams() = NfcParams(insulin = 0.0, isMeal = false)
 
-    override suspend fun formatParams(): String {
-        val amount = params.optDouble(NfcJsonKeys.AMOUNT, 0.0)
-        val isMeal = params.optBoolean(NfcJsonKeys.IS_MEAL, false)
+    override suspend fun formatParams(tagName: String): String {
+        val amount = (params.insulin ?: 0.0)
+        val isMeal = params.isMeal
         val base = rh.gs(CoreUiR.string.goingtodeliver, amount)
         return if (isMeal) {
             rh.gs(CoreUiR.string.text_with_detail, base, rh.gs(CoreUiR.string.eatingsoon))
@@ -83,7 +81,7 @@ class BolusAction(
         }
     }
 
-    override suspend fun execute(): NfcExecutionResult {
+    override suspend fun execute(tagName: String): NfcExecutionResult {
         if (commandQueue.bolusInQueue()) {
             return NfcExecutionResult(false, rh.gs(R.string.nfccommands_another_bolus_in_queue))
         }
@@ -94,8 +92,8 @@ class BolusAction(
             return NfcExecutionResult(false, rh.gs(InterfacesR.string.pumpsuspended))
         }
         
-        var bolus = params.optDouble(NfcJsonKeys.AMOUNT, 0.0)
-        val isMeal = params.optBoolean(NfcJsonKeys.IS_MEAL, false)
+        var bolus = (params.insulin ?: 0.0)
+        val isMeal = params.isMeal
         
         if (bolus <= 0.0) return invalidFormat()
         
@@ -114,7 +112,7 @@ class BolusAction(
         uel.log(
             action = if (isMeal) Action.TREATMENT else Action.BOLUS,
             source = source,
-            note = params.optString(NfcJsonKeys.TAG_NAME, ""),
+            note = tagName,
             listValues = listOf(
                 ValueWithUnit.Insulin(delivered)
             )

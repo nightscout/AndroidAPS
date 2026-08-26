@@ -11,7 +11,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.ui.compose.icons.IcAaps
 import app.aaps.plugins.sync.nfcCommands.ArgType
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
-import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
 import app.aaps.plugins.sync.R
 
 class RestartAction(
@@ -25,11 +24,11 @@ class RestartAction(
     override val argType = listOf<ArgType>()
     override val icon = IcAaps
 
-    override suspend fun execute(): NfcExecutionResult {
+    override suspend fun execute(tagName: String): NfcExecutionResult {
         uel.log(
             action = Action.EXIT_AAPS,
             source = source,
-            note = params.optString(NfcJsonKeys.TAG_NAME, "")
+            note = tagName
         )
         configBuilder.exitApp("NFC", Sources.NfcCommands, true)
         return NfcExecutionResult(true, rh.gs(R.string.nfccommands_restarting))

@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
+import app.aaps.plugins.sync.nfcCommands.NfcCommand
 import app.aaps.plugins.sync.nfcCommands.NfcTagStore
 
 /**
@@ -46,10 +46,7 @@ class NfcBuildStateHolder {
 
     /** The chain serialised the way it would be written to a tag. */
     val currentCommands: List<String>
-        get() = chain.map { action ->
-            val p = action.getParams()
-            NfcTagStore.buildCommand(action.command, p.apply { put(NfcJsonKeys.TAG_NAME, tagName) })
-        }
+        get() = chain.map { action -> NfcCommand(action.command, action.getParams()).encode() }
 
     /** True when something has changed since the screen loaded. Drives the discard confirmation. */
     val isDirty: Boolean

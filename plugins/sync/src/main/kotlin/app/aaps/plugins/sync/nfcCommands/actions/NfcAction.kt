@@ -13,13 +13,12 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.ui.compose.icons.IcAaps
+import app.aaps.plugins.sync.nfcCommands.NfcCommand
 import app.aaps.plugins.sync.nfcCommands.NfcCommandCode
+import app.aaps.plugins.sync.nfcCommands.NfcParams
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nfcCommands.ArgType
-import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
-import app.aaps.plugins.sync.nfcCommands.NfcTagStore
-import org.json.JSONObject
 
 /**
  * Base class for all NFC-triggered actions.
@@ -40,7 +39,7 @@ abstract class NfcAction(
     protected val source = Sources.NfcCommands
     
     /** Parameters for this action instance. Uses Compose State to trigger UI updates. */
-    var params: JSONObject by mutableStateOf(JSONObject())
+    var params: NfcParams by mutableStateOf(NfcParams())
 
     /** Resource ID for the user-facing label of the action. */
     @StringRes open val labelResId: Int = 0
@@ -65,14 +64,16 @@ abstract class NfcAction(
 
     /**
      * Executes the action using current [params].
+     *
+     * @param tagName the name of the tag that triggered this, for the user entry log.
      * @return Result containing success status and a user message.
      */
-    abstract suspend fun execute(): NfcExecutionResult
+    abstract suspend fun execute(tagName: String): NfcExecutionResult
 
     /**
      * Optional method to format current [params] into a human-readable summary.
      */
-    open suspend fun formatParams(): String? = null
+    open suspend fun formatParams(tagName: String): String? = null
 
     /**
      * Checks if the action is currently supported (e.g., depends on pump capabilities).
@@ -82,16 +83,15 @@ abstract class NfcAction(
     /**
      * Provides initial default parameters for the action configuration UI.
      */
-    open suspend fun getDefaultParams(): JSONObject = JSONObject()
+    open suspend fun getDefaultParams(): NfcParams = NfcParams()
 
     /**
      * Serializes this action and its current parameters into a command string for NDEF storage.
+     *
+     * The tag's name is not part of a command - it belongs to the tag, and reaches an action through
+     * [execute] instead.
      */
-    fun buildCommand(code: NfcCommandCode, tagName: String): String {
-        val p = JSONObject(params.toString()) // copy
-        p.put(NfcJsonKeys.TAG_NAME, tagName)
-        return NfcTagStore.buildCommand(code, p)
-    }
+    fun buildCommand(code: NfcCommandCode): String = NfcCommand(code, params).encode()
 
     /** Helper for reporting invalid parameter formats. */
     protected fun invalidFormat(): NfcExecutionResult =

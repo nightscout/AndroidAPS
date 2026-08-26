@@ -22,7 +22,6 @@ import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.icons.IcTtHypo
 import app.aaps.plugins.sync.nfcCommands.ArgType
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
-import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
 import app.aaps.plugins.sync.R
 import java.util.concurrent.TimeUnit
 import app.aaps.core.ui.R as CoreUiR
@@ -43,7 +42,7 @@ class TempTargetHypoAction(
     override val icon = IcTtHypo
     override val customIconColor: @Composable () -> Color = { AapsTheme.elementColors.loopDisabled }
 
-    override suspend fun formatParams(): String {
+    override suspend fun formatParams(tagName: String): String {
         val units = profileUtil.units
         val ttDuration = preferences.ttDurationMinutes(TT.Reason.HYPOGLYCEMIA)
         val tt = profileUtil.fromMgdlToUnits(preferences.ttTargetMgdl(TT.Reason.HYPOGLYCEMIA), profileUtil.units)
@@ -52,7 +51,7 @@ class TempTargetHypoAction(
         return "$ttString $unitLabel, ${ttDuration}min"
     }
 
-    override suspend fun execute(): NfcExecutionResult {
+    override suspend fun execute(tagName: String): NfcExecutionResult {
         val units = profileUtil.units
         val ttDuration = preferences.ttDurationMinutes(TT.Reason.HYPOGLYCEMIA)
         val tt = profileUtil.fromMgdlToUnits(preferences.ttTargetMgdl(TT.Reason.HYPOGLYCEMIA), profileUtil.units)
@@ -68,7 +67,7 @@ class TempTargetHypoAction(
             ),
             action = Action.TT,
             source = source,
-            note = params.optString(NfcJsonKeys.TAG_NAME, ""),
+            note = tagName,
             listValues = listOf(
                 ValueWithUnit.TETTReason(reason),
                 ValueWithUnit.fromGlucoseUnit(tt, units),

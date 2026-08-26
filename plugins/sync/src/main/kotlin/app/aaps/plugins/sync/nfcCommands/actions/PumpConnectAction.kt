@@ -16,7 +16,6 @@ import app.aaps.core.ui.compose.icons.IcLoopReconnect
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nfcCommands.ArgType
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
-import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
 import app.aaps.core.ui.R as CoreUiR
 
 class PumpConnectAction(
@@ -32,7 +31,7 @@ class PumpConnectAction(
     override val icon = IcLoopReconnect
     override val customIconColor: @Composable () -> Color = { AapsTheme.elementColors.loopClosed }
 
-    override suspend fun execute(): NfcExecutionResult {
+    override suspend fun execute(tagName: String): NfcExecutionResult {
         val profile = profileFunction.getProfile() ?: return NfcExecutionResult(false, rh.gs(CoreUiR.string.noprofile))
         if (!loop.allowedNextModes().contains(RM.Mode.RESUME)) {
             return NfcExecutionResult(true, rh.gs(app.aaps.core.interfaces.R.string.connected))
@@ -47,7 +46,7 @@ class PumpConnectAction(
             uel.log(
                 action = Action.RECONNECT,
                 source = source,
-                note = params.optString(NfcJsonKeys.TAG_NAME, "")
+                note = tagName
             )
         }
         val messageId = if (result) R.string.nfccommands_reconnect else R.string.nfccommands_remote_command_not_possible

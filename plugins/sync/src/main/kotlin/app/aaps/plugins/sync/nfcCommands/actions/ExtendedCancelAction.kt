@@ -11,7 +11,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.ui.compose.icons.IcCancelExtendedBolus
 import app.aaps.plugins.sync.nfcCommands.ArgType
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
-import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
 import app.aaps.plugins.sync.R
 
 class ExtendedCancelAction(
@@ -25,13 +24,13 @@ class ExtendedCancelAction(
     override val argType = listOf<ArgType>()
     override val icon = IcCancelExtendedBolus
 
-    override suspend fun execute(): NfcExecutionResult {
+    override suspend fun execute(tagName: String): NfcExecutionResult {
         val result = commandQueue.cancelExtended()
         return if (result.success) {
             uel.log(
                 action = Action.CANCEL_EXTENDED_BOLUS,
                 source = source,
-                note = params.optString(NfcJsonKeys.TAG_NAME, ""),
+                note = tagName,
             )
             NfcExecutionResult(true, rh.gs(R.string.nfccommands_extended_canceled))
         } else {

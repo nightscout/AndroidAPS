@@ -18,10 +18,9 @@ import app.aaps.core.ui.compose.icons.IcTtManual
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nfcCommands.ArgType
-import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
-import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.plugins.sync.nfcCommands.NfcParams
 
 class TempTargetManualAction(
     aapsLogger: AAPSLogger,
@@ -38,29 +37,27 @@ class TempTargetManualAction(
     override val argType = listOf(ArgType.GLUCOSE_TARGET, ArgType.DURATION)
     override val icon = IcTtManual
     
-    override suspend fun getDefaultParams(): JSONObject = JSONObject().apply {
-        val units = profileUtil.units
-        val profile = profileFunction.getProfile()
-        val defaultTargetMgdl = profile?.getTargetLowMgdl() ?: 100.0
-        val defaultTarget = profileUtil.fromMgdlToUnits(defaultTargetMgdl, units)
-        
-        put(NfcJsonKeys.GLUCOSE, defaultTarget)
-        put(NfcJsonKeys.DURATION, 60)
+    override suspend fun getDefaultParams(): NfcParams {
+        val defaultTargetMgdl = profileFunction.getProfile()?.getTargetLowMgdl() ?: 100.0
+        return NfcParams(
+            glucose = profileUtil.fromMgdlToUnits(defaultTargetMgdl, profileUtil.units),
+            duration = 60
+        )
     }
 
-    override suspend fun formatParams(): String {
+    override suspend fun formatParams(tagName: String): String {
         val units = profileUtil.units
-        val glucose = params.optDouble(NfcJsonKeys.GLUCOSE, 0.0)
-        val duration = params.optInt(NfcJsonKeys.DURATION, 0)
+        val glucose = (params.glucose ?: 0.0)
+        val duration = (params.duration ?: 0)
         val unitLabel = if (units == GlucoseUnit.MMOL) "mmol/l" else "mg/dl"
         val glucoseString = if (units == GlucoseUnit.MMOL) decimalFormatter.to1Decimal(glucose) else decimalFormatter.to0Decimal(glucose)
         return "$glucoseString $unitLabel, ${duration}min"
     }
 
-    override suspend fun execute(): NfcExecutionResult {
+    override suspend fun execute(tagName: String): NfcExecutionResult {
         val units = profileUtil.units
-        val glucose = params.optDouble(NfcJsonKeys.GLUCOSE, 0.0)
-        val durationMinutes = params.optInt(NfcJsonKeys.DURATION, 60)
+        val glucose = (params.glucose ?: 0.0)
+        val durationMinutes = (params.duration ?: 60)
 
         if (glucose <= 0.0 || durationMinutes <= 0) return invalidFormat()
 
@@ -77,7 +74,7 @@ class TempTargetManualAction(
             ),
             action = Action.TT,
             source = source,
-            note = params.optString(NfcJsonKeys.TAG_NAME, ""),
+            note = tagName,
             listValues = listOf(
                 ValueWithUnit.TETTReason(reason),
                 ValueWithUnit.fromGlucoseUnit(glucose, units),

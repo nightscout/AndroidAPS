@@ -47,7 +47,6 @@ import app.aaps.plugins.sync.nfcCommands.actions.NfcAction
 import app.aaps.plugins.sync.nfcCommands.actions.pumpBasalDurationStep
 import app.aaps.plugins.sync.nfcCommands.compose.NfcCommandsComposeContent
 import app.aaps.plugins.sync.nfcCommands.keys.NfcIntentKey
-import org.json.JSONObject
 import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -153,10 +152,10 @@ class NfcCommandsPlugin @Inject constructor(
     /**
      * Executes a list of serialized command strings sequentially.
      */
-    suspend fun executeCascade(commands: List<String>): NfcExecutionResult {
+    suspend fun executeCascade(commands: List<String>, tagName: String = ""): NfcExecutionResult {
         val results = mutableListOf<NfcExecutionResult>()
         for (command in commands) {
-            val result = executeCommand(command)
+            val result = executeCommand(command, tagName)
             results += result
             if (!result.success) break
         }
@@ -169,7 +168,7 @@ class NfcCommandsPlugin @Inject constructor(
      * Executes commands and provides physical (vibration) and visual (toast/log) feedback.
      */
     suspend fun executeWithFeedback(commands: List<String>, tagName: String, action: String = "READ"): NfcExecutionResult {
-        val result = executeCascade(commands)
+        val result = executeCascade(commands, tagName)
         runtimeState.clearWizardPreviews()
         nfcTagStore.appendLogEntry(
             NfcLogEntry(
@@ -211,28 +210,20 @@ class NfcCommandsPlugin @Inject constructor(
     /**
      * Parses and executes a single serialized command string.
      */
-    suspend fun executeCommand(command: String): NfcExecutionResult {
+    suspend fun executeCommand(command: String, tagName: String = ""): NfcExecutionResult {
         aapsLogger.debug(LTag.NFC, "Executing NFC command: $command")
-
-        runCatching { JSONObject(command) }.onSuccess { json ->
-            val codeString = json.optString(NfcJsonKeys.CODE)
-            val code = runCatching { NfcCommandCode.valueOf(codeString) }.getOrNull()
-            val params = json.optJSONObject(NfcJsonKeys.PARAMS) ?: JSONObject()
-            if (code != null) {
-                return routeAction(code, params)
-            }
-        }
-
-        return NfcExecutionResult(false, rh.gs(R.string.nfccommands_unknown_command))
+        val decoded = NfcCommand.decode(command)
+            ?: return NfcExecutionResult(false, rh.gs(R.string.nfccommands_unknown_command))
+        return routeAction(decoded.code, decoded.params, tagName)
     }
 
     fun getAction(code: NfcCommandCode): NfcAction = actionFactory.create(code)
 
-    private suspend fun routeAction(code: NfcCommandCode, params: JSONObject): NfcExecutionResult {
+    private suspend fun routeAction(code: NfcCommandCode, params: NfcParams, tagName: String): NfcExecutionResult {
         return requireRemoteCommands {
             val action = getAction(code)
             action.params = params
-            action.execute()
+            action.execute(tagName)
         }
     }
 

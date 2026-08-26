@@ -104,17 +104,17 @@ import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nfcCommands.ArgType
 import app.aaps.plugins.sync.nfcCommands.NfcCategories
+import app.aaps.plugins.sync.nfcCommands.NfcCommand
 import app.aaps.plugins.sync.nfcCommands.NfcCommandCode
 import app.aaps.plugins.sync.nfcCommands.NfcCommandsPlugin
 import app.aaps.plugins.sync.nfcCommands.NfcCreatedTag
-import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
 import app.aaps.plugins.sync.nfcCommands.NfcLogEntry
+import app.aaps.plugins.sync.nfcCommands.NfcParams
 import app.aaps.plugins.sync.nfcCommands.NfcTagStore
 import app.aaps.plugins.sync.nfcCommands.NfcUiCategory
 import app.aaps.plugins.sync.nfcCommands.actions.NfcAction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.R as CoreUiR
 
@@ -151,11 +151,10 @@ fun NfcBuildScreen(
             state.tagName = initialTag.name
             state.chain.clear()
             initialTag.commands.forEach { cmdJson ->
-                runCatching { JSONObject(cmdJson) }.onSuccess { json ->
-                    val codeName = json.optString(NfcJsonKeys.CODE)
-                    val code = runCatching { NfcCommandCode.valueOf(codeName) }.getOrNull()
-                    val params = json.optJSONObject(NfcJsonKeys.PARAMS) ?: JSONObject()
-                    if (code != null) {
+                NfcCommand.decode(cmdJson)?.let { decoded ->
+                    val code = decoded.code
+                    val params = decoded.params
+                    run {
                         val action = createNfcUiAction(plugin, code, plugin.pumpBasalDurationStep())
                         action.applyParams(params)
                         state.chain.add(action)
@@ -165,7 +164,7 @@ fun NfcBuildScreen(
             state.initialTagNameSnap = initialTag.name
             state.initialCommandsSnap = state.chain.map { action ->
                 val p = action.getParams()
-                NfcTagStore.buildCommand(action.command, p.apply { put(NfcJsonKeys.TAG_NAME, initialTag.name) })
+                NfcCommand(action.command, p).encode()
             }
             state.isInitialized = true
         } else if (initialTagUid != null) {
@@ -192,7 +191,7 @@ fun NfcBuildScreen(
             val uid = initialTag.tagUid
             val commands = state.chain.map { 
                 it.meta.params = it.getParams()
-                it.meta.buildCommand(it.command, state.tagName)
+                it.meta.buildCommand(it.command)
             }
             val name = state.tagName
             plugin.nfcTagStore.saveCreatedTag(
@@ -283,7 +282,7 @@ fun NfcBuildScreen(
                 val name = state.tagName
             val commands = state.chain.toList().map { action ->
                 val p = action.getParams()
-                NfcTagStore.buildCommand(action.command, p.apply { put(NfcJsonKeys.TAG_NAME, name) })
+                NfcCommand(action.command, p).encode()
             }
 
                 val existingTag = plugin.nfcTagStore.findTagByUid(uid)
@@ -388,7 +387,7 @@ fun NfcBuildScreen(
                         val name = state.tagName
                         val commands = state.chain.toList().map { action ->
                             val p = action.getParams()
-                            NfcTagStore.buildCommand(action.command, p.apply { put(NfcJsonKeys.TAG_NAME, name) })
+                            NfcCommand(action.command, p).encode()
                         }
                         plugin.nfcTagStore.saveCreatedTag(
                             NfcCreatedTag(
@@ -811,9 +810,9 @@ interface NfcUiAction {
     @Composable
     fun EditContent(profileNames: List<String>, sceneNames: List<Pair<String, String>>, onChange: () -> Unit)
 
-    fun applyParams(params: JSONObject)
+    fun applyParams(params: NfcParams)
 
-    fun getParams(): JSONObject
+    fun getParams(): NfcParams
 }
 
 private fun createNfcUiAction(plugin: NfcCommandsPlugin, code: NfcCommandCode, durationStep: Int): NfcUiAction {
@@ -853,62 +852,53 @@ class GenericNfcUiAction(
 
     override fun shortDescription() = ""
 
-    /**
-     * Serializes current UI state into a JSONObject using keys defined in [ArgType].
-     */
-    override fun getParams(): JSONObject {
-        val json = JSONObject()
+    /** Current UI state as the parameters this command will carry. */
+    override fun getParams(): NfcParams {
+        var p = NfcParams()
         argTypes.forEach { type ->
-            type.jsonKey?.let { key ->
-                when (type) {
-                    ArgType.INSULIN              -> json.put(key, units)
-                    ArgType.AMOUNT_GRAMS         -> json.put(key, grams)
-                    ArgType.RATE                 -> json.put(key, rate)
-                    ArgType.PERCENT              -> json.put(key, percent)
-                    ArgType.DURATION             -> json.put(key, duration)
-                    ArgType.MEAL_CHECK           -> json.put(key, meal)
-                    ArgType.PROFILE_NAME         -> json.put(key, profileName)
-                    ArgType.SCENE_ID             -> json.put(key, sceneId)
-                    ArgType.GLUCOSE_TARGET       -> json.put(key, glucose)
+            p = when (type) {
+                ArgType.INSULIN              -> p.copy(insulin = units)
+                ArgType.AMOUNT_GRAMS         -> p.copy(carbs = grams)
+                ArgType.RATE                 -> p.copy(rate = rate)
+                ArgType.PERCENT              -> p.copy(percent = percent)
+                ArgType.DURATION             -> p.copy(duration = duration)
+                ArgType.MEAL_CHECK           -> p.copy(isMeal = meal)
+                ArgType.PROFILE_NAME         -> p.copy(profileName = profileName)
+                ArgType.SCENE_ID             -> p.copy(sceneId = sceneId)
+                ArgType.GLUCOSE_TARGET       -> p.copy(glucose = glucose)
+                ArgType.BOLUS_WIZARD_OPTIONS -> p.copy(
+                    useBg = useBg, useTt = useTT, useTrend = useTrend, useIob = useIOB, useCob = useCOB
+                )
 
-                    ArgType.BOLUS_WIZARD_OPTIONS -> {
-                        json.put(NfcJsonKeys.USE_BG, useBg)
-                        json.put(NfcJsonKeys.USE_TT, useTT)
-                        json.put(NfcJsonKeys.USE_TREND, useTrend)
-                        json.put(NfcJsonKeys.USE_IOB, useIOB)
-                        json.put(NfcJsonKeys.USE_COB, useCOB)
-                    }
-
-                    else                         -> {}
-                }
+                else                         -> p
             }
         }
-        return json
+        return p
     }
 
     /**
-     * Restores UI state from a JSONObject.
+     * Restores UI state from stored parameters.
      */
-    override fun applyParams(params: JSONObject) {
+    override fun applyParams(params: NfcParams) {
         argTypes.forEach { type ->
-            type.jsonKey?.let { key ->
+            run {
                 when (type) {
-                    ArgType.INSULIN              -> units = params.optDouble(key, 1.0)
-                    ArgType.AMOUNT_GRAMS         -> grams = params.optInt(key, 20)
-                    ArgType.PERCENT              -> percent = params.optInt(key, 100)
-                    ArgType.RATE                 -> rate = params.optDouble(key, 1.0)
-                    ArgType.DURATION             -> duration = params.optInt(key, 30)
-                    ArgType.MEAL_CHECK           -> meal = params.optBoolean(key, false)
-                    ArgType.PROFILE_NAME         -> profileName = params.optString(key, "")
-                    ArgType.SCENE_ID             -> sceneId = params.optString(key, "")
-                    ArgType.GLUCOSE_TARGET       -> glucose = params.optDouble(key, 100.0)
+                    ArgType.INSULIN              -> units = params.insulin ?: 1.0
+                    ArgType.AMOUNT_GRAMS         -> grams = params.carbs ?: 20
+                    ArgType.PERCENT              -> percent = params.percent ?: 100
+                    ArgType.RATE                 -> rate = params.rate ?: 1.0
+                    ArgType.DURATION             -> duration = params.duration ?: 30
+                    ArgType.MEAL_CHECK           -> meal = params.isMeal
+                    ArgType.PROFILE_NAME         -> profileName = params.profileName ?: ""
+                    ArgType.SCENE_ID             -> sceneId = params.sceneId ?: ""
+                    ArgType.GLUCOSE_TARGET       -> glucose = params.glucose ?: 100.0
 
                     ArgType.BOLUS_WIZARD_OPTIONS -> {
-                        useBg = params.optBoolean(NfcJsonKeys.USE_BG, true)
-                        useTT = params.optBoolean(NfcJsonKeys.USE_TT, true)
-                        useTrend = params.optBoolean(NfcJsonKeys.USE_TREND, true)
-                        useIOB = params.optBoolean(NfcJsonKeys.USE_IOB, true)
-                        useCOB = params.optBoolean(NfcJsonKeys.USE_COB, true)
+                        useBg = params.useBg
+                        useTT = params.useTt
+                        useTrend = params.useTrend
+                        useIOB = params.useIob
+                        useCOB = params.useCob
                     }
 
                     else                         -> {}

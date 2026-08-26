@@ -62,14 +62,14 @@ import app.aaps.core.ui.compose.navigation.color
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.json.JSONObject
 import java.text.DateFormat
 import app.aaps.plugins.sync.R
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.plugins.sync.nfcCommands.NfcCommand
 import app.aaps.plugins.sync.nfcCommands.NfcCommandCode
 import app.aaps.plugins.sync.nfcCommands.NfcCommandsPlugin
+import app.aaps.plugins.sync.nfcCommands.NfcParams
 import app.aaps.plugins.sync.nfcCommands.NfcCreatedTag
-import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
 import app.aaps.plugins.sync.nfcCommands.NfcLogEntry
 import app.aaps.plugins.sync.nfcCommands.NfcTagStore
 
@@ -466,10 +466,9 @@ private fun NfcTagCard(
 
 @Composable
 private fun NfcIconOnlyDisplay(plugin: NfcCommandsPlugin, commandJson: String) {
-    val json = remember(commandJson) { runCatching { JSONObject(commandJson) }.getOrNull() }
-    val codeName = json?.optString(NfcJsonKeys.CODE)
-    val code = remember(codeName) { if (codeName != null) runCatching { NfcCommandCode.valueOf(codeName) }.getOrNull() else null }
-    val params = remember(json) { json?.optJSONObject(NfcJsonKeys.PARAMS) ?: JSONObject() }
+    val decoded = remember(commandJson) { NfcCommand.decode(commandJson) }
+    val code = decoded?.code
+    val params = decoded?.params ?: NfcParams()
 
     if (code != null) {
         val action = remember(code, params) {

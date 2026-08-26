@@ -17,7 +17,6 @@ import app.aaps.core.ui.compose.icons.IcLoopDisabled
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nfcCommands.ArgType
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
-import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
 import app.aaps.core.ui.R as CoreUiR
 
 class LoopStopAction(
@@ -33,7 +32,7 @@ class LoopStopAction(
     override val icon = IcLoopDisabled
     override val customIconColor: @Composable () -> Color = { AapsTheme.elementColors.loopDisabled }
 
-    override suspend fun execute(): NfcExecutionResult {
+    override suspend fun execute(tagName: String): NfcExecutionResult {
         val profile = profileFunction.getProfile() ?: return NfcExecutionResult(false, rh.gs(CoreUiR.string.noprofile))
         if (!loop.allowedNextModes().contains(RM.Mode.DISABLED_LOOP)) {
             return NfcExecutionResult(false, rh.gs(CoreUiR.string.loopisdisabled))
@@ -49,7 +48,7 @@ class LoopStopAction(
             uel.log(
                 action = Action.LOOP_DISABLED,
                 source = source,
-                note = params.optString(NfcJsonKeys.TAG_NAME, ""),
+                note = tagName,
                 listValues = listOf(
                     ValueWithUnit.RMMode(RM.Mode.DISABLED_LOOP)
                 )

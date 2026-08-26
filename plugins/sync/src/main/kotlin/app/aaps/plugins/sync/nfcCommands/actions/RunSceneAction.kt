@@ -14,10 +14,9 @@ import app.aaps.core.interfaces.scenes.SceneIconResolver
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.plugins.sync.nfcCommands.ArgType
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
-import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
-import org.json.JSONObject
 import app.aaps.plugins.sync.R
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.plugins.sync.nfcCommands.NfcParams
 
 class RunSceneAction(
     aapsLogger: AAPSLogger,
@@ -32,24 +31,22 @@ class RunSceneAction(
     override val icon
         get() = elementType.icon()
     override val secondaryIcon: ImageVector?
-        get() = params.optString(NfcJsonKeys.SCENE_ID).let { sceneIconResolver.iconForScene(it) }
+        get() = (params.sceneId ?: "").let { sceneIconResolver.iconForScene(it) }
 
     override fun isSupported(): Boolean {
         return sceneAutomationApi.getScenes().isNotEmpty()
     }
 
-    override suspend fun getDefaultParams(): JSONObject {
-        val firstScene = sceneAutomationApi.getScenes().firstOrNull()
-        return JSONObject().put(NfcJsonKeys.SCENE_ID, firstScene?.id ?: "")
-    }
+    override suspend fun getDefaultParams() =
+        NfcParams(sceneId = sceneAutomationApi.getScenes().firstOrNull()?.id ?: "")
 
-    override suspend fun formatParams(): String? {
-        val sceneId = params.optString(NfcJsonKeys.SCENE_ID)
+    override suspend fun formatParams(tagName: String): String? {
+        val sceneId = (params.sceneId ?: "")
         return sceneAutomationApi.getScene(sceneId)?.name
     }
 
-    override suspend fun execute(): NfcExecutionResult {
-        val sceneId = params.optString(NfcJsonKeys.SCENE_ID)
+    override suspend fun execute(tagName: String): NfcExecutionResult {
+        val sceneId = (params.sceneId ?: "")
         if (sceneId.isNullOrBlank()) return invalidFormat()
         val sceneName = sceneAutomationApi.getScene(sceneId)?.name ?: sceneId
 
@@ -58,7 +55,7 @@ class RunSceneAction(
                 uel.log(
                     action = Action.SCENE_ACTIVATED,
                     source = source,
-                    note = params.optString(NfcJsonKeys.TAG_NAME, ""),
+                    note = tagName,
                     listValues = listOf(ValueWithUnit.SimpleString(sceneName))
                 )
                 NfcExecutionResult(true, sceneName)
@@ -77,7 +74,7 @@ class RunSceneAction(
                 uel.log(
                     action = Action.SCENE_ACTIVATED,
                     source = source,
-                    note = params.optString(NfcJsonKeys.TAG_NAME, ""),
+                    note = tagName,
                     listValues = listOf(ValueWithUnit.SimpleString(sceneName))
                 )
                 NfcExecutionResult(true, sceneName)

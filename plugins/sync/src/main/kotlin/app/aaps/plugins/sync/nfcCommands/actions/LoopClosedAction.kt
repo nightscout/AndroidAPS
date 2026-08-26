@@ -17,7 +17,6 @@ import app.aaps.core.ui.compose.icons.IcLoopClosed
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nfcCommands.ArgType
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
-import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
 import app.aaps.core.ui.R as CoreUiR
 
 class LoopClosedAction(
@@ -33,7 +32,7 @@ class LoopClosedAction(
     override val icon = IcLoopClosed
     override val customIconColor: @Composable () -> Color = { AapsTheme.elementColors.loopClosed }
 
-    override suspend fun execute(): NfcExecutionResult {
+    override suspend fun execute(tagName: String): NfcExecutionResult {
         val profile = profileFunction.getProfile() ?: return NfcExecutionResult(false, rh.gs(CoreUiR.string.noprofile))
         if (!loop.allowedNextModes().contains(RM.Mode.CLOSED_LOOP)) {
             return commandNotPossible()
@@ -48,7 +47,7 @@ class LoopClosedAction(
             uel.log(
                 action = Action.CLOSED_LOOP_MODE,
                 source = source,
-                note = params.optString(NfcJsonKeys.TAG_NAME, ""),
+                note = tagName,
                 listValues = listOf(
                     ValueWithUnit.RMMode(RM.Mode.CLOSED_LOOP)
                 )

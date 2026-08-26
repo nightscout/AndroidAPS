@@ -18,10 +18,9 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.plugins.sync.nfcCommands.ArgType
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
-import app.aaps.plugins.sync.nfcCommands.NfcJsonKeys
 import app.aaps.plugins.sync.R
-import org.json.JSONObject
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.plugins.sync.nfcCommands.NfcParams
 
 class TempBasalAbsoluteAction(
     aapsLogger: AAPSLogger,
@@ -38,16 +37,16 @@ class TempBasalAbsoluteAction(
     override val icon
         get() = elementType.icon()
 
-    override suspend fun getDefaultParams(): JSONObject = 
-        JSONObject().put(NfcJsonKeys.RATE, 0.0).put(NfcJsonKeys.DURATION, pumpBasalDurationStep(activePlugin))
+    override suspend fun getDefaultParams() =
+        NfcParams(rate = 0.0, duration = pumpBasalDurationStep(activePlugin))
 
     override fun isSupported(): Boolean = 
         activePlugin.activePump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE
 
-    override suspend fun formatParams(): String {
-        val tempBasal = params.optDouble(NfcJsonKeys.RATE, 0.0)
+    override suspend fun formatParams(tagName: String): String {
+        val tempBasal = (params.rate ?: 0.0)
         val durationStep = pumpBasalDurationStep(activePlugin)
-        val rawDuration = params.optInt(NfcJsonKeys.DURATION, durationStep)
+        val rawDuration = (params.duration ?: durationStep)
         val duration = roundUpToStep(rawDuration, durationStep)
 
         val rate = rh.gs(CoreUiR.string.pump_base_basal_rate, tempBasal)
@@ -55,11 +54,11 @@ class TempBasalAbsoluteAction(
         return "$rate $mins"
     }
 
-    override suspend fun execute(): NfcExecutionResult {
+    override suspend fun execute(tagName: String): NfcExecutionResult {
         val profile = profileFunction.getProfile() ?: return NfcExecutionResult(false, rh.gs(CoreUiR.string.noprofile))
-        var tempBasal = params.optDouble(NfcJsonKeys.RATE, 0.0)
+        var tempBasal = (params.rate ?: 0.0)
         val durationStep = pumpBasalDurationStep(activePlugin)
-        val rawDuration = params.optInt(NfcJsonKeys.DURATION, durationStep)
+        val rawDuration = (params.duration ?: durationStep)
         
         if (rawDuration <= 0) return invalidFormat()
         
@@ -76,13 +75,13 @@ class TempBasalAbsoluteAction(
             uel.log(
                 action = Action.TEMP_BASAL,
                 source = source,
-                note = params.optString(NfcJsonKeys.TAG_NAME, ""),
+                note = tagName,
                 listValues = listOf(
                     ValueWithUnit.UnitPerHour(tempBasal),
                     ValueWithUnit.Minute(duration)
                 )
             )
-            return NfcExecutionResult(true, formatParams())
+            return NfcExecutionResult(true, formatParams(tagName))
         } else {
             aapsLogger.error(LTag.NFC, "tempBasalAbsolute failed: ${result.comment}")
             return commandNotPossible()

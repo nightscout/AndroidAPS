@@ -20,12 +20,13 @@ import app.aaps.core.interfaces.scenes.SceneIconResolver
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.plugins.sync.R
+import app.aaps.plugins.sync.nfcCommands.NfcCommand
+import app.aaps.plugins.sync.nfcCommands.NfcParams
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
-import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -132,7 +133,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     }
 
     private fun execute(command: String): NfcExecutionResult = runBlocking { plugin.executeCommand(command) }
-    private fun execute(code: NfcCommandCode, params: JSONObject = JSONObject()): NfcExecutionResult = execute(NfcTagStore.buildCommand(code, params))
+    private fun execute(code: NfcCommandCode, params: NfcParams = NfcParams()): NfcExecutionResult = execute(NfcCommand(code, params).encode())
 
     private fun cascade(commands: List<String>): NfcExecutionResult = runBlocking { plugin.executeCascade(commands) }
 
@@ -156,7 +157,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `prepareExecution returns Ready with commands when tag registered`() {
-        val cmd = NfcTagStore.buildCommand(NfcCommandCode.LOOP_STOP)
+        val cmd = NfcCommand(NfcCommandCode.LOOP_STOP).encode()
         val tag = NfcCreatedTag(tagUid = tagUid, name = "Test", commands = listOf(cmd), createdAtMillis = 0L)
         plugin.nfcTagStore.saveCreatedTag(tag)
         whenever(rh.gs(R.string.nfccommands_tag_not_registered)).thenReturn("Not registered")
@@ -229,7 +230,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
         whenever(rh.gs(InterfacesR.string.loopsuspended)).thenReturn("Loop suspended")
 
-        val result = execute(NfcCommandCode.LOOP_SUSPEND, JSONObject().put(NfcJsonKeys.DURATION, 30))
+        val result = execute(NfcCommandCode.LOOP_SUSPEND, NfcParams(duration = 30))
 
         assertThat(result.success).isTrue()
         runTest {
@@ -309,7 +310,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
         whenever(rh.gs(InterfacesR.string.pump_disconnected)).thenReturn("Pump disconnected")
 
-        val result = execute(NfcCommandCode.PUMP_DISCONNECT, JSONObject().put(NfcJsonKeys.DURATION, 180))
+        val result = execute(NfcCommandCode.PUMP_DISCONNECT, NfcParams(duration = 180))
 
         assertThat(result.success).isTrue()
         runTest {
@@ -354,7 +355,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         )
         whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
 
-        val result = execute(NfcCommandCode.BASAL_PCT, JSONObject().put(NfcJsonKeys.PERCENT, 120).put(NfcJsonKeys.DURATION, 30))
+        val result = execute(NfcCommandCode.BASAL_PCT, NfcParams(percent = 120, duration = 30))
 
         assertThat(result.success).isTrue()
         runTest { verify(commandQueue).tempBasalPercent(any(), any(), any(), any(), any()) }
@@ -367,7 +368,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         )
         whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
 
-        val result = execute(NfcCommandCode.BASAL_ABS, JSONObject().put(NfcJsonKeys.RATE, 1.5).put(NfcJsonKeys.DURATION, 30))
+        val result = execute(NfcCommandCode.BASAL_ABS, NfcParams(rate = 1.5, duration = 30))
 
         assertThat(result.success).isTrue()
         runTest { verify(commandQueue).tempBasalAbsolute(any(), any(), any(), any(), any()) }
@@ -392,7 +393,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         )
         whenever(rh.gs(eq(R.string.nfccommands_extended_set), any(), any())).thenReturn("Extended set")
 
-        val result = execute(NfcCommandCode.EXTENDED_SET, JSONObject().put(NfcJsonKeys.AMOUNT, 2.0).put(NfcJsonKeys.DURATION, 60))
+        val result = execute(NfcCommandCode.EXTENDED_SET, NfcParams(insulin = 2.0, duration = 60))
 
         assertThat(result.success).isTrue()
         runTest { verify(commandQueue).extendedBolus(any(), any()) }
@@ -410,7 +411,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
         whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
 
-        val result = execute(NfcCommandCode.BOLUS, JSONObject().put(NfcJsonKeys.AMOUNT, 1.0))
+        val result = execute(NfcCommandCode.BOLUS, NfcParams(insulin = 1.0))
 
         assertThat(result.success).isTrue()
         runTest { verify(commandQueue).bolus(any()) }
@@ -433,7 +434,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         }
         whenever(rh.gs(eq(CoreUiR.string.stop_pressed), any())).thenReturn("Stop pressed")
 
-        val result = execute(NfcCommandCode.BOLUS, JSONObject().put(NfcJsonKeys.AMOUNT, 1.0))
+        val result = execute(NfcCommandCode.BOLUS, NfcParams(insulin = 1.0))
 
         assertThat(result.success).isTrue()
         assertThat(result.message).isEqualTo("Stop pressed")
@@ -454,7 +455,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
                 .thenReturn(PersistenceLayer.TransactionResult())
         }
 
-        val result = execute(NfcCommandCode.BOLUS, JSONObject().put(NfcJsonKeys.AMOUNT, 1.0).put(NfcJsonKeys.IS_MEAL, true))
+        val result = execute(NfcCommandCode.BOLUS, NfcParams(insulin = 1.0, isMeal = true))
 
         assertThat(result.success).isTrue()
         runTest { verify(commandQueue).bolus(any()) }
@@ -470,7 +471,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         )
         whenever(rh.gs(eq(R.string.nfccommands_carbs_set), any())).thenReturn("Carbs set")
 
-        val result = execute(NfcCommandCode.CARBS, JSONObject().put(NfcJsonKeys.AMOUNT, 20))
+        val result = execute(NfcCommandCode.CARBS, NfcParams(carbs = 20))
 
         assertThat(result.success).isTrue()
         runTest { verify(commandQueue).bolus(any()) }
@@ -543,7 +544,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         }
         whenever(rh.gs(eq(R.string.nfccommands_tt_set), any(), any())).thenReturn("Target set")
 
-        val result = execute(NfcCommandCode.TARGET_MANUAL, JSONObject().put(NfcJsonKeys.GLUCOSE, 100.0).put(NfcJsonKeys.DURATION, 30))
+        val result = execute(NfcCommandCode.TARGET_MANUAL, NfcParams(glucose = 100.0, duration = 30))
 
         assertThat(result.success).isTrue()
     }
@@ -555,7 +556,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         }
         whenever(rh.gs(CoreUiR.string.ok)).thenReturn("OK")
 
-        val result = execute(NfcCommandCode.RUN_SCENE, JSONObject().put(NfcJsonKeys.SCENE_ID, "scene1"))
+        val result = execute(NfcCommandCode.RUN_SCENE, NfcParams(sceneId = "scene1"))
 
         assertThat(result.success).isTrue()
         runTest { verify(sceneAutomationApi).runScene(eq("scene1"), anyOrNull()) }
@@ -563,9 +564,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand BOLUS_WIZARD should execute wizard bolus`() {
-        val params = JSONObject()
-            .put(NfcJsonKeys.AMOUNT, 20)
-            .put(NfcJsonKeys.PERCENT, 100)
+        val params = NfcParams(carbs = 20, percent = 100)
         
         val prepared = WizardBolusExecutor.PrepareResult.Preview(insulin = 1.5, carbs = 20, bolusId = 123L)
         runtimeState.setWizardPreview(params.toString(), prepared)
@@ -583,9 +582,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `BolusWizardAction formatParams should perform calculation and store state`() = runTest {
-        val params = JSONObject()
-            .put(NfcJsonKeys.AMOUNT, 20)
-            .put(NfcJsonKeys.PERCENT, 100)
+        val params = NfcParams(carbs = 20, percent = 100)
         val action = plugin.getAction(NfcCommandCode.BOLUS_WIZARD)
         action.params = params
 
@@ -595,7 +592,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(rh.gs(any<Int>(), eq(1.5))).thenReturn("Going to deliver 1.5U")
         whenever(rh.gs(any<Int>(), eq(20))).thenReturn("20g carbs")
 
-        val result = action.formatParams()
+        val result = action.formatParams("Test tag")
 
         assertThat(result).contains("Going to deliver")
         verify(wizardBolusExecutor).prepareWizard(any())
@@ -614,7 +611,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         }
         whenever(rh.gs(R.string.nfccommands_profile_switch_created)).thenReturn("Profile switch created")
 
-        val result = execute(NfcCommandCode.PROFILE_SWITCH, JSONObject().put(NfcJsonKeys.PROFILE_NAME, "Default").put(NfcJsonKeys.PERCENT, 100))
+        val result = execute(NfcCommandCode.PROFILE_SWITCH, NfcParams(profileName = "Default", percent = 100))
 
         assertThat(result.success).isTrue()
         runTest {
@@ -655,7 +652,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(dateUtil.now()).thenReturn(now)
         runtimeState.lastRemoteBolusTime = now
 
-        val result = execute(NfcCommandCode.BOLUS, JSONObject().put(NfcJsonKeys.AMOUNT, 1.0).put(NfcJsonKeys.IS_MEAL, true))
+        val result = execute(NfcCommandCode.BOLUS, NfcParams(insulin = 1.0, isMeal = true))
 
         assertThat(result.success).isFalse()
     }
@@ -681,8 +678,8 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(rh.gs(R.string.nfccommands_loop_has_been_disabled)).thenReturn("Loop disabled")
         whenever(rh.gs(CoreUiR.string.stoptemptarget)).thenReturn("Temp basal canceled")
 
-        val cmd1 = NfcTagStore.buildCommand(NfcCommandCode.LOOP_STOP)
-        val cmd2 = NfcTagStore.buildCommand(NfcCommandCode.BASAL_STOP)
+        val cmd1 = NfcCommand(NfcCommandCode.LOOP_STOP).encode()
+        val cmd2 = NfcCommand(NfcCommandCode.BASAL_STOP).encode()
         val result = cascade(listOf(cmd1, cmd2))
 
         assertThat(result.success).isTrue()
