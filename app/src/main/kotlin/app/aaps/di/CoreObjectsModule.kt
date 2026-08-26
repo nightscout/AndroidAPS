@@ -3,6 +3,7 @@ package app.aaps.di
 import android.content.Context
 import android.telephony.SmsManager
 import androidx.work.WorkManager
+import android.content.SharedPreferences
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.Loop
@@ -236,6 +237,7 @@ class CoreObjectsModule {
         graphs.wizardBolusExecutor
 
     @Provides @Singleton fun provideLoggerUtils(graphs: MetroGraphs): LoggerUtils = graphs.loggerUtils
+    @Provides @Singleton fun provideSharedPreferences(graphs: MetroGraphs): SharedPreferences = graphs.sharedPreferences
     @Provides @Singleton fun provideExportPasswordDataStoreBinding(graphs: MetroGraphs): ExportPasswordDataStore = graphs.exportPasswordDataStore
     @Provides @Singleton fun provideSecureEncryptBinding(graphs: MetroGraphs): SecureEncrypt = graphs.secureEncrypt
     @Provides @Singleton fun provideConcentrationHelperBinding(graphs: MetroGraphs): ConcentrationHelper = graphs.concentrationHelper

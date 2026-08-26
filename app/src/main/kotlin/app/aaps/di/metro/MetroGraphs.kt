@@ -1,5 +1,6 @@
 package app.aaps.di.metro
 
+import android.content.SharedPreferences
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
@@ -265,6 +266,7 @@ class MetroGraphs @Inject constructor(
     val batchExecutor: BatchExecutor get() = root.batchExecutor
     val wizardBolusExecutor: WizardBolusExecutor get() = root.wizardBolusExecutor
     val loggerUtils: LoggerUtils get() = root.loggerUtils
+    val sharedPreferences: SharedPreferences get() = root.sharedPreferences
     val exportPasswordDataStore: ExportPasswordDataStore get() = root.exportPasswordDataStore
     val secureEncrypt: SecureEncrypt get() = root.secureEncrypt
     val cryptoUtil: CryptoUtil get() = root.cryptoUtil

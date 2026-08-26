@@ -1,5 +1,6 @@
 package app.aaps.di.metro
 
+import android.content.SharedPreferences
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
@@ -233,6 +234,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val batchExecutor: BatchExecutor
     val wizardBolusExecutor: WizardBolusExecutor
     val loggerUtils: LoggerUtils
+    val sharedPreferences: SharedPreferences
     val exportPasswordDataStore: ExportPasswordDataStore
     val secureEncrypt: SecureEncrypt
     val cryptoUtil: CryptoUtil
