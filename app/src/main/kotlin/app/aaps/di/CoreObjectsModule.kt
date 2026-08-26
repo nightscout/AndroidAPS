@@ -359,6 +359,7 @@ class CoreObjectsModule {
     @Singleton
     @Suppress("LongParameterList")
     fun provideAapsLeaves(
+        metroMemberInjectorProvider: Provider<MetroMemberInjector>,
         aapsLoggerProvider: Provider<AAPSLogger>,
         rxBusProvider: Provider<RxBus>,
         activePluginProvider: Provider<ActivePlugin>,
@@ -423,6 +424,7 @@ class CoreObjectsModule {
         clientControlActionDispatcherProvider: Provider<ClientControlActionDispatcher>,
         sntpClientProvider: Provider<SntpClient>
     ): AapsLeaves = AapsLeaves(
+        metroMemberInjectorProvider,
         aapsLoggerProvider,
         rxBusProvider,
         activePluginProvider,

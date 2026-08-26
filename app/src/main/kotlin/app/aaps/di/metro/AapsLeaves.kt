@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.di.ApplicationScope
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.dst.DstHelper
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
@@ -91,6 +92,7 @@ import javax.inject.Provider
  */
 @BindingContainer
 class AapsLeaves(
+    private val metroMemberInjectorProvider: Provider<MetroMemberInjector>,
     private val aapsLoggerProvider: Provider<AAPSLogger>,
     private val rxBusProvider: Provider<RxBus>,
     private val activePluginProvider: Provider<ActivePlugin>,
@@ -293,6 +295,15 @@ class AapsLeaves(
 
     /** Hilt's qualifier, read now that interop is on. Same Context as the unqualified binding. */
     @Provides @ApplicationContext fun appContext(): Context = appContextProvider.get()
+    /**
+     * The graph's own member injector, handed back to it.
+     *
+     * A service or receiver that Android constructs fills its own fields from this, and the classes it
+     * builds by hand do the same. The loop is only apparent: `MetroGraphs` holds the graph and the
+     * @Provides functions here run on demand, so nothing is asked for while the graph is being built.
+     */
+    @Provides fun metroMemberInjector(): MetroMemberInjector = metroMemberInjectorProvider.get()
+
     @Provides fun nsClient(): NsClient = nsClientProvider.get()
     @Provides fun clientControlActionDispatcher(): ClientControlActionDispatcher = clientControlActionDispatcherProvider.get()
 }

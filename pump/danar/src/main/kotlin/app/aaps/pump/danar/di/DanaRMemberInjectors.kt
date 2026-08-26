@@ -53,6 +53,7 @@ import app.aaps.pump.danar.comm.MsgStatusBasic
 import app.aaps.pump.danar.comm.MsgStatusBolusExtended
 import app.aaps.pump.danar.comm.MsgStatusProfile
 import app.aaps.pump.danar.comm.MsgStatusTempBasal
+import app.aaps.pump.danar.services.DanaRExecutionService
 import app.aaps.pump.danarkorean.comm.MsgCheckValueK
 import app.aaps.pump.danarkorean.comm.MsgInitConnStatusBasicK
 import app.aaps.pump.danarkorean.comm.MsgInitConnStatusBolusK
@@ -61,11 +62,13 @@ import app.aaps.pump.danarkorean.comm.MsgSettingBasalProfileAllK
 import app.aaps.pump.danarkorean.comm.MsgSettingBasal_k
 import app.aaps.pump.danarkorean.comm.MsgStatusBasic_k
 import app.aaps.pump.danarkorean.comm.MsgStatus_k
+import app.aaps.pump.danarkorean.services.DanaRKoreanExecutionService
 import app.aaps.pump.danarv2.comm.MsgCheckValueV2
 import app.aaps.pump.danarv2.comm.MsgHistoryEventsV2
 import app.aaps.pump.danarv2.comm.MsgSetAPSTempBasalStartV2
 import app.aaps.pump.danarv2.comm.MsgSetHistoryEntryV2
 import app.aaps.pump.danarv2.comm.MsgStatusAPSV2
+import app.aaps.pump.danarv2.services.DanaRv2ExecutionService
 import app.aaps.core.interfaces.di.FeatureMemberInjectors
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
@@ -79,9 +82,12 @@ import dev.zacsweers.metro.Provides
  * Member injectors for the DanaR messages - the `@ContributesAndroidInjector` replacement.
  *
  * Third of these, after Diaconn and Medtrum, and the same shape: `MessageBase` is built with `new` by
- * the execution service, so it fills its own fields from this map. The execution services themselves are
- * still `dagger.android`, in `DanaRServicesModule` - Android constructs those, which is a different
- * problem from a message the app news up.
+ * the execution service, so it fills its own fields from this map.
+ *
+ * The three execution services are in here too. Android constructs those rather than the graph, so
+ * `MetroService` looks them up here in `onCreate` - the same map, reached from the application instead
+ * of from an injector the caller holds. Only the concrete subclasses need an entry; nothing ever builds
+ * the abstract base.
  */
 @ContributesTo(AppScope::class)
 @BindingContainer
@@ -482,4 +488,22 @@ object DanaRMemberInjectors {
     @IntoMap
     @ClassKey(MsgStatusTempBasal::class)
     fun bindMsgStatusTempBasal(injector: MembersInjector<MsgStatusTempBasal>): MembersInjector<*> = injector
+
+    @Provides
+    @FeatureMemberInjectors
+    @IntoMap
+    @ClassKey(DanaRExecutionService::class)
+    fun bindDanaRExecutionService(injector: MembersInjector<DanaRExecutionService>): MembersInjector<*> = injector
+
+    @Provides
+    @FeatureMemberInjectors
+    @IntoMap
+    @ClassKey(DanaRKoreanExecutionService::class)
+    fun bindDanaRKoreanExecutionService(injector: MembersInjector<DanaRKoreanExecutionService>): MembersInjector<*> = injector
+
+    @Provides
+    @FeatureMemberInjectors
+    @IntoMap
+    @ClassKey(DanaRv2ExecutionService::class)
+    fun bindDanaRv2ExecutionService(injector: MembersInjector<DanaRv2ExecutionService>): MembersInjector<*> = injector
 }

@@ -12,11 +12,7 @@ import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntKey
 import dagger.multibindings.IntoMap
 
-@Module(
-    includes = [
-        DanaRServicesModule::class
-    ]
-)
+@Module
 @InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class DanaRModule {

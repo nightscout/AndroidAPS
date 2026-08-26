@@ -47,7 +47,7 @@ import app.aaps.pump.danar.comm.MsgHistoryRefill
 import app.aaps.pump.danar.comm.MsgHistorySuspend
 import app.aaps.pump.danar.comm.MsgPCCommStart
 import app.aaps.pump.danar.comm.MsgPCCommStop
-import dagger.android.DaggerService
+import app.aaps.core.objects.workflow.MetroService
 import app.aaps.core.interfaces.di.MetroMemberInjector
 import dev.zacsweers.metro.HasMemberInjections
 import kotlinx.coroutines.CoroutineScope
@@ -67,10 +67,10 @@ import kotlin.math.min
 // Metro reads this class now that interop is on. It is subclassable, so it must declare that its
 // injected fields are meant to be filled.
 @HasMemberInjections
-abstract class AbstractDanaRExecutionService : DaggerService() {
+abstract class AbstractDanaRExecutionService : MetroService() {
 
-    // The messages this service builds fill their own fields from Metro's map now. The service itself is
-    // still a dagger.android service - Android constructs it, which is a separate problem.
+    // Android constructs this service, so [MetroService] fills these fields in onCreate from the same
+    // map the messages it builds use. A subclass missing from that map fails by name on start.
     @Inject lateinit var injector: MetroMemberInjector
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
