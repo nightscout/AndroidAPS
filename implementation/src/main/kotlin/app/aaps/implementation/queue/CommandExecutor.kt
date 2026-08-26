@@ -41,8 +41,9 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * App-owned host for the pump command loop. Replaces the WorkManager `QueueWorker`.
@@ -62,7 +63,7 @@ import javax.inject.Singleton
  *  2. the queue-empty disconnect tail consumes a pending wake before disconnecting so a command that
  *     arrives during the linger keeps draining instead of forcing a disconnect+reconnect.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class CommandExecutor @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val fabricPrivacy: FabricPrivacy,

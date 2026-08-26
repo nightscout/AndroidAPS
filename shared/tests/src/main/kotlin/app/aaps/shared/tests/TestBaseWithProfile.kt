@@ -163,7 +163,7 @@ open class TestBaseWithProfile : TestBase() {
         whenever(profileRepository.revision).thenReturn(MutableStateFlow(0L))
         whenever(profileRepository.profile).thenReturn(MutableStateFlow(getValidProfileStore()))
         deltaCalculator = DeltaCalculator(aapsLogger)
-        apsResultProvider = Provider { DetermineBasalResult(aapsLogger, fabricPrivacy, constraintsChecker, preferences, activePlugin, processedTbrEbData, profileFunction, rh, decimalFormatter, dateUtil, apsResultProvider, ch) }
+        apsResultProvider = Provider { DetermineBasalResult(aapsLogger, fabricPrivacy, constraintsChecker, preferences, activePlugin, processedTbrEbData, profileFunction, rh, decimalFormatter, dateUtil, { apsResultProvider.get() }, ch) }
         validProfile = ProfileSealed.Pure(pureProfileFromJson(validProfileJSON, dateUtil)!!, activePlugin)
         effectiveProfileSwitch = EPS(
             timestamp = dateUtil.now(),

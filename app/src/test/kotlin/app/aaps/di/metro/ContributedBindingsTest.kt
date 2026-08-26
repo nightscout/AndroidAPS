@@ -92,6 +92,10 @@ class ContributedBindingsTest {
         // instances means the mark is never seen and a scene profile switch shows the notification the
         // gate exists to suppress - which is exactly what happened when SceneExecutor moved to Metro.
         assertThat(root.profileSwitchSilentGate).isSameInstanceAs(root.profileSwitchSilentGate)
+        // Holds the queue of pending pump commands and the one being performed. A second copy would
+        // accept commands that the copy the pump driver reads never sees.
+        assertThat(root.commandQueue).isSameInstanceAs(root.commandQueue)
+        assertThat(root.localAlertUtils).isSameInstanceAs(root.localAlertUtils)
     }
 
     @Test
@@ -114,5 +118,8 @@ class ContributedBindingsTest {
         assertThat(root.pumpSync).isNotSameInstanceAs(root.pumpSync)
         assertThat(root.pumpWithConcentration).isNotSameInstanceAs(root.pumpWithConcentration)
         assertThat(root.widgetUpdater).isNotSameInstanceAs(root.widgetUpdater)
+        // Result objects: a fresh one per call is the point.
+        assertThat(root.apsResult).isNotSameInstanceAs(root.apsResult)
+        assertThat(root.pumpEnactResult).isNotSameInstanceAs(root.pumpEnactResult)
     }
 }

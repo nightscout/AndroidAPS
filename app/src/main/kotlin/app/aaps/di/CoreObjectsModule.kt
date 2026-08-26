@@ -71,6 +71,7 @@ import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -285,6 +286,13 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideDataInbox(graphs: MetroGraphs): DataInbox = graphs.dataInbox
     // Unscoped on purpose - a fresh value object per caller, as the @Binds it replaces was.
     @Provides fun provideAutosensData(graphs: MetroGraphs): AutosensData = graphs.autosensData
+    @Provides @Singleton fun provideCommandQueue(graphs: MetroGraphs): CommandQueue = graphs.commandQueue
+    @Provides @Singleton fun provideLocalAlertUtils(graphs: MetroGraphs): LocalAlertUtils = graphs.localAlertUtils
+    // ComposeMainActivity field-injects the concrete class through Hilt, so Dagger needs Metro's one.
+    @Provides @Singleton fun provideBuiltInSearchables(graphs: MetroGraphs): BuiltInSearchables = graphs.builtInSearchables
+    // Unscoped on purpose - result objects, one per call, as the @Binds they replace were.
+    @Provides fun provideAPSResult(graphs: MetroGraphs): APSResult = graphs.apsResult
+    @Provides fun providePumpEnactResult(graphs: MetroGraphs): PumpEnactResult = graphs.pumpEnactResult
     // One flag, two frameworks: SceneExecutor (Metro) marks it, CommandQueueImplementation (Dagger)
     // consumes it. Without this they get one each and the mark is never seen.
     @Provides @Singleton fun provideProfileSwitchSilentGate(graphs: MetroGraphs): ProfileSwitchSilentGate = graphs.profileSwitchSilentGate
@@ -452,15 +460,12 @@ class CoreObjectsModule {
         nsClientSourceProvider: Provider<NSClientSource>,
         @ApplicationScope appScopeProvider: Provider<CoroutineScope>,
         fabricPrivacyProvider: Provider<FabricPrivacy>,
-        localAlertUtilsProvider: Provider<LocalAlertUtils>,
         persistenceLayerProvider: Provider<PersistenceLayer>,
         configProvider: Provider<Config>,
         calculationSignalsEmitterProvider: Provider<CalculationSignalsEmitter>,
-        apsResultProvider: Provider<APSResult>,
         authFlowOutProvider: Provider<AuthFlowOut>,
         tidepoolUploaderProvider: Provider<TidepoolUploader>,
         profileFunctionProvider: Provider<ProfileFunction>,
-        commandQueueProvider: Provider<CommandQueue>,
         rhProvider: Provider<ResourceHelper>,
         dstHelperProvider: Provider<DstHelper>,
         workManagerProvider: Provider<WorkManager>,
@@ -472,7 +477,6 @@ class CoreObjectsModule {
         contextProvider: Provider<Context>,
         uiInteractionProvider: Provider<UiInteraction>,
         versionCheckerUtilsProvider: Provider<VersionCheckerUtils>,
-        searchableProvidersProvider: Provider<Set<SearchableProvider>>,
         permissionProvidersProvider: Provider<Set<PermissionProvider>>,
         smsCommunicatorPluginProvider: Provider<SmsCommunicatorPlugin>,
         nsClientV3PluginProvider: Provider<NSClientV3Plugin>,
@@ -488,7 +492,6 @@ class CoreObjectsModule {
         receiverDelegateProvider: Provider<ReceiverDelegate>,
         rateLimitProvider: Provider<RateLimit>,
         bolusProgressDataProvider: Provider<BolusProgressData>,
-        pumpEnactResultProvider: Provider<PumpEnactResult>,
         historyScopeProvider: Provider<HistoryScope>,
         overviewDataCacheProvider: Provider<OverviewDataCache>,
         @ApplicationContext appContextProvider: Provider<Context>,
@@ -501,15 +504,12 @@ class CoreObjectsModule {
         nsClientSourceProvider,
         appScopeProvider,
         fabricPrivacyProvider,
-        localAlertUtilsProvider,
         persistenceLayerProvider,
         configProvider,
         calculationSignalsEmitterProvider,
-        apsResultProvider,
         authFlowOutProvider,
         tidepoolUploaderProvider,
         profileFunctionProvider,
-        commandQueueProvider,
         rhProvider,
         dstHelperProvider,
         workManagerProvider,
@@ -521,7 +521,6 @@ class CoreObjectsModule {
         contextProvider,
         uiInteractionProvider,
         versionCheckerUtilsProvider,
-        searchableProvidersProvider,
         permissionProvidersProvider,
         smsCommunicatorPluginProvider,
         nsClientV3PluginProvider,
@@ -537,7 +536,6 @@ class CoreObjectsModule {
         receiverDelegateProvider,
         rateLimitProvider,
         bolusProgressDataProvider,
-        pumpEnactResultProvider,
         historyScopeProvider,
         overviewDataCacheProvider,
         appContextProvider,

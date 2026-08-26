@@ -100,7 +100,6 @@ class AapsLeaves(
     private val nsClientSourceProvider: Provider<NSClientSource>,
     @ApplicationScope private val appScopeProvider: Provider<CoroutineScope>,
     private val fabricPrivacyProvider: Provider<FabricPrivacy>,
-    private val localAlertUtilsProvider: Provider<LocalAlertUtils>,
     private val persistenceLayerProvider: Provider<PersistenceLayer>,
     private val configProvider: Provider<Config>,
     // Dagger owns the app-wide emitter - `WorkflowModule.provideMainSignalsEmitter`. A history window
@@ -108,13 +107,11 @@ class AapsLeaves(
     private val calculationSignalsEmitterProvider: Provider<CalculationSignalsEmitter>,
     // Both are Dagger @Binds in ImplementationModule, and the openAPS plugins need them now that Metro
     // builds those. APSResult is asked for through a Provider - one result object per loop run.
-    private val apsResultProvider: Provider<APSResult>,
     // Dagger owns this one; LoopPlugin needs it and Metro builds LoopPlugin now.
     // The activities this app injects need these; all three are Dagger @Binds in their own modules.
     private val authFlowOutProvider: Provider<AuthFlowOut>,
     private val tidepoolUploaderProvider: Provider<TidepoolUploader>,
     private val profileFunctionProvider: Provider<ProfileFunction>,
-    private val commandQueueProvider: Provider<CommandQueue>,
     private val rhProvider: Provider<ResourceHelper>,
     private val dstHelperProvider: Provider<DstHelper>,
     private val workManagerProvider: Provider<WorkManager>,
@@ -145,7 +142,6 @@ class AapsLeaves(
     // Dagger keeps building this one - see the note in MaintenanceImplModule.
     // A Dagger @IntoSet multibinding, handed over already assembled. Metro receives the Set as one
     // binding rather than re-declaring the multibinding on this side.
-    private val searchableProvidersProvider: Provider<Set<SearchableProvider>>,
     private val permissionProvidersProvider: Provider<Set<PermissionProvider>>,
     private val smsCommunicatorPluginProvider: Provider<SmsCommunicatorPlugin>,
     private val nsClientV3PluginProvider: Provider<NSClientV3Plugin>,
@@ -171,7 +167,6 @@ class AapsLeaves(
      * view model reading it is fine.
      */
     private val bolusProgressDataProvider: Provider<BolusProgressData>,
-    private val pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val historyScopeProvider: Provider<HistoryScope>,
     private val overviewDataCacheProvider: Provider<OverviewDataCache>,
     // Same object as ActivePlugin above (PluginStore), under its other interface.
@@ -199,19 +194,16 @@ class AapsLeaves(
     @Provides fun fabricPrivacy(): FabricPrivacy = fabricPrivacyProvider.get()
     // No runningModeExpiryJob() leaf: Metro builds it now (commonMain, Metro @Inject), and Dagger gets
     // both running-mode classes from `CoreObjectsModule` instead.
-    @Provides fun localAlertUtils(): LocalAlertUtils = localAlertUtilsProvider.get()
     @Provides fun persistenceLayer(): PersistenceLayer = persistenceLayerProvider.get()
     @Provides fun config(): Config = configProvider.get()
     // No iobCobCalculator() any more: Metro builds it now, in `MainPluginsBindings`, and Dagger receives
     // it through `CoreObjectsModule.provideIobCobCalculator`.
     @Provides fun calculationSignalsEmitter(): CalculationSignalsEmitter = calculationSignalsEmitterProvider.get()
-    @Provides fun apsResult(): APSResult = apsResultProvider.get()
     // No loop() leaf any more: Metro builds LoopPlugin, so Loop travels the other way, through
     // `CoreObjectsModule.provideLoop`.
     @Provides fun authFlowOut(): AuthFlowOut = authFlowOutProvider.get()
     @Provides fun tidepoolUploader(): TidepoolUploader = tidepoolUploaderProvider.get()
     @Provides fun profileFunction(): ProfileFunction = profileFunctionProvider.get()
-    @Provides fun commandQueue(): CommandQueue = commandQueueProvider.get()
     @Provides fun rh(): ResourceHelper = rhProvider.get()
 
     /** `ResourceHelper` is the Android implementation of the multiplatform [TextResolver]. */
@@ -239,9 +231,7 @@ class AapsLeaves(
     @Provides fun bolusProgressData(): BolusProgressData = bolusProgressDataProvider.get()
 
     /** A value object: unscoped, as its Dagger binding is. */
-    @Provides fun pumpEnactResult(): PumpEnactResult = pumpEnactResultProvider.get()
     @Provides fun historyScope(): HistoryScope = historyScopeProvider.get()
-    @Provides fun searchableProviders(): Set<SearchableProvider> = searchableProvidersProvider.get()
     // Still Dagger-owned: the only contributor, AutomationRuntime, needs SmsCommunicator,
     // LocationServiceController, ReminderScheduler and BtConnectionSource, none of which the graph
     // reaches yet. PluginStore takes it through a lambda, so nothing is built until it is asked for.

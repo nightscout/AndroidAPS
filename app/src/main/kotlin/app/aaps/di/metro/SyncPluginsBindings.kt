@@ -2,6 +2,7 @@ package app.aaps.di.metro
 
 import app.aaps.core.interfaces.di.NotNSClient
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.smsCommunicator.SmsCommunicatorPlugin
 import app.aaps.plugins.sync.wear.WearPlugin
@@ -53,6 +54,15 @@ object SyncPluginsBindings {
     @NotNSClient
     @IntKey(300)
     fun smsCommunicatorPlugin(plugin: SmsCommunicatorPlugin): PluginBase = plugin
+
+    /**
+     * The same plugin under its interface, mirroring the `@Binds` in `SyncModule` that Dagger consumers
+     * still use. Both resolve through the `smsCommunicatorPlugin` leaf, so the two frameworks hand out
+     * the one object Dagger built - there is no second SmsCommunicator.
+     */
+    @Provides
+    @SingleIn(AppScope::class)
+    fun smsCommunicator(plugin: SmsCommunicatorPlugin): SmsCommunicator = plugin
 
     @Provides
     @SingleIn(AppScope::class)
