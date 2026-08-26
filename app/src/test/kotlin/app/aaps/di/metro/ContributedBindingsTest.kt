@@ -40,6 +40,7 @@ class ContributedBindingsTest {
         assertThat(root.dexcomTirCalculator).isSameInstanceAs(root.dexcomTirCalculator)
         assertThat(root.iconsProvider).isSameInstanceAs(root.iconsProvider)
         assertThat(root.insulinManager).isSameInstanceAs(root.insulinManager)
+        assertThat(root.wizardBolusExecutor).isSameInstanceAs(root.wizardBolusExecutor)
     }
 
     @Test

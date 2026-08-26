@@ -5,7 +5,6 @@ import androidx.work.WorkManager
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.automation.Automation
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -154,7 +153,6 @@ class AapsLeaves(
     private val automationProvider: Provider<Automation>,
     private val glucoseStatusProvider: Provider<GlucoseStatusProvider>,
     private val processedDeviceStatusDataProvider: Provider<ProcessedDeviceStatusData>,
-    private val wizardBolusExecutorProvider: Provider<WizardBolusExecutor>,
     private val contextProvider: Provider<Context>,
     // Source plugins, still built by Dagger. They live here rather than in their own module because a
     // graph extension is generated in the parent's module, so Metro cannot read a container from the
@@ -279,7 +277,6 @@ class AapsLeaves(
     @Provides fun automation(): Automation = automationProvider.get()
     @Provides fun glucoseStatus(): GlucoseStatusProvider = glucoseStatusProvider.get()
     @Provides fun processedDeviceStatusData(): ProcessedDeviceStatusData = processedDeviceStatusDataProvider.get()
-    @Provides fun wizardBolusExecutor(): WizardBolusExecutor = wizardBolusExecutorProvider.get()
     @Provides fun context(): Context = contextProvider.get()
 
 

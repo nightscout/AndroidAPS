@@ -232,6 +232,9 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideCloudDirectoryManager(graphs: MetroGraphs): CloudDirectoryManager = graphs.cloudDirectoryManager
     @Provides @Singleton fun provideGraphConfigRepository(graphs: MetroGraphs): GraphConfigRepository = graphs.graphConfigRepository
     @Provides @Singleton fun provideBatchExecutor(graphs: MetroGraphs): BatchExecutor = graphs.batchExecutor
+
+    @Provides @Singleton fun provideWizardBolusExecutor(graphs: MetroGraphs): WizardBolusExecutor =
+        graphs.wizardBolusExecutor
     @Provides @Singleton fun provideWizardExecutor(graphs: MetroGraphs): WizardExecutor = graphs.wizardExecutor
     @Provides @Singleton fun provideConfigBuilder(graphs: MetroGraphs): ConfigBuilder = graphs.configBuilder
     @Provides @Singleton fun provideDataSyncSelectorXdrip(graphs: MetroGraphs): DataSyncSelectorXdrip = graphs.dataSyncSelectorXdrip
@@ -411,7 +414,6 @@ class CoreObjectsModule {
         automationProvider: Provider<Automation>,
         glucoseStatusProvider: Provider<GlucoseStatusProvider>,
         processedDeviceStatusDataProvider: Provider<ProcessedDeviceStatusData>,
-        wizardBolusExecutorProvider: Provider<WizardBolusExecutor>,
         contextProvider: Provider<Context>,
         uiInteractionProvider: Provider<UiInteraction>,
         notificationHolderProvider: Provider<NotificationHolder>,
@@ -482,7 +484,7 @@ class CoreObjectsModule {
         automationProvider,
         glucoseStatusProvider,
         processedDeviceStatusDataProvider,
-        wizardBolusExecutorProvider,
+        
         contextProvider,
         uiInteractionProvider,
         notificationHolderProvider,

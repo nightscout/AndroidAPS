@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.bolus.BatchExecutor
+import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.di.APS
@@ -215,6 +216,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val cloudDirectoryManager: CloudDirectoryManager
     val graphConfigRepository: GraphConfigRepository
     val batchExecutor: BatchExecutor
+    val wizardBolusExecutor: WizardBolusExecutor
     val wizardExecutor: WizardExecutor
     val configBuilder: ConfigBuilder
     val dataSyncSelectorXdrip: DataSyncSelectorXdrip

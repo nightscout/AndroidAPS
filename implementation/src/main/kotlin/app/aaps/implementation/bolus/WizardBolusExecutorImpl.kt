@@ -56,9 +56,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Inject
 import javax.inject.Provider
-import javax.inject.Singleton
 import kotlin.math.abs
 import kotlin.math.ceil
 import app.aaps.core.interfaces.R as InterfacesR
@@ -68,7 +70,10 @@ import app.aaps.core.interfaces.R as InterfacesR
  * **internal** here (`:implementation` sees `core:objects`); the interface exposes only the primitive
  * result, so it can live in `core:interfaces` with no `core:objects` dependency.
  */
-@Singleton
+// Metro builds this; Dagger receives it via a @Provides delegate in `:app`. Metro's @SingleIn, not
+// javax @Singleton, because the graph is generated in `:app` - same as its sibling BatchExecutorImpl.
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class WizardBolusExecutorImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
