@@ -84,11 +84,14 @@ import app.aaps.core.ui.compose.icons.IcTbrHigh
 import app.aaps.core.ui.compose.icons.IcTtHigh
 import app.aaps.core.ui.compose.icons.IcXDrip
 import app.aaps.core.ui.compose.navigation.color
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Inject
-import javax.inject.Singleton
 import app.aaps.core.interfaces.R as InterfacesR
 
-@Singleton
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class UserEntryPresentationHelperImpl @Inject constructor(
     private val translator: Translator,
     private val profileUtil: ProfileUtil,

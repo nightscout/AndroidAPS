@@ -6,6 +6,13 @@ import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.logging.LoggerUtils
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.interfaces.notifications.NotificationHolder
+import app.aaps.core.interfaces.protection.PasswordCheck
+import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
+import app.aaps.core.interfaces.alerts.LocalAlertUtils
+import app.aaps.core.interfaces.profiling.Profiler
+import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.Objectives
@@ -251,6 +258,10 @@ class MetroGraphs @Inject constructor(
     val batchExecutor: BatchExecutor get() = root.batchExecutor
     val wizardBolusExecutor: WizardBolusExecutor get() = root.wizardBolusExecutor
     val loggerUtils: LoggerUtils get() = root.loggerUtils
+    val notificationHolder: NotificationHolder get() = root.notificationHolder
+    val userEntryPresentationHelper: UserEntryPresentationHelper get() = root.userEntryPresentationHelper
+    val profiler: Profiler get() = root.profiler
+    val alarmSoundPlayer: AlarmSoundPlayer get() = root.alarmSoundPlayer
     val wizardExecutor: WizardExecutor get() = root.wizardExecutor
     val configBuilder: ConfigBuilder get() = root.configBuilder
     val dataSyncSelectorXdrip: DataSyncSelectorXdrip get() = root.dataSyncSelectorXdrip

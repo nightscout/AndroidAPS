@@ -237,6 +237,10 @@ class CoreObjectsModule {
         graphs.wizardBolusExecutor
 
     @Provides @Singleton fun provideLoggerUtils(graphs: MetroGraphs): LoggerUtils = graphs.loggerUtils
+    @Provides @Singleton fun provideUserEntryPresentationHelperBinding(graphs: MetroGraphs): UserEntryPresentationHelper = graphs.userEntryPresentationHelper
+    @Provides @Singleton fun provideNotificationHolderBinding(graphs: MetroGraphs): NotificationHolder = graphs.notificationHolder
+    @Provides @Singleton fun provideAlarmSoundPlayerBinding(graphs: MetroGraphs): AlarmSoundPlayer = graphs.alarmSoundPlayer
+    @Provides @Singleton fun provideProfilerBinding(graphs: MetroGraphs): Profiler = graphs.profiler
     @Provides @Singleton fun provideWizardExecutor(graphs: MetroGraphs): WizardExecutor = graphs.wizardExecutor
     @Provides @Singleton fun provideConfigBuilder(graphs: MetroGraphs): ConfigBuilder = graphs.configBuilder
     @Provides @Singleton fun provideDataSyncSelectorXdrip(graphs: MetroGraphs): DataSyncSelectorXdrip = graphs.dataSyncSelectorXdrip
@@ -386,9 +390,7 @@ class CoreObjectsModule {
         configProvider: Provider<Config>,
         calculationSignalsEmitterProvider: Provider<CalculationSignalsEmitter>,
         apsResultProvider: Provider<APSResult>,
-        profilerProvider: Provider<Profiler>,
         pumpStatusProviderProvider: Provider<PumpStatusProvider>,
-        alarmSoundPlayerProvider: Provider<AlarmSoundPlayer>,
         widgetUpdaterProvider: Provider<WidgetUpdater>,
         authFlowOutProvider: Provider<AuthFlowOut>,
         tidepoolUploaderProvider: Provider<TidepoolUploader>,
@@ -404,7 +406,6 @@ class CoreObjectsModule {
         notificationManagerProvider: Provider<NotificationManager>,
         sceneExecutorProvider: Provider<SceneExecutor>,
         fileListProviderProvider: Provider<FileListProvider>,
-        userEntryPresentationHelperProvider: Provider<UserEntryPresentationHelper>,
         dataInboxProvider: Provider<DataInbox>,
         cloudStorageManagerProvider: Provider<CloudStorageManager>,
         calculationWorkflowProvider: Provider<CalculationWorkflow>,
@@ -417,7 +418,6 @@ class CoreObjectsModule {
         processedDeviceStatusDataProvider: Provider<ProcessedDeviceStatusData>,
         contextProvider: Provider<Context>,
         uiInteractionProvider: Provider<UiInteraction>,
-        notificationHolderProvider: Provider<NotificationHolder>,
         lastLocationDataContainerProvider: Provider<LastLocationDataContainer>,
         versionCheckerUtilsProvider: Provider<VersionCheckerUtils>,
         passwordCheckProvider: Provider<PasswordCheck>,
@@ -455,10 +455,7 @@ class CoreObjectsModule {
         configProvider,
         calculationSignalsEmitterProvider,
         apsResultProvider,
-        profilerProvider,
         pumpStatusProviderProvider,
-        
-        alarmSoundPlayerProvider,
         widgetUpdaterProvider,
         authFlowOutProvider,
         tidepoolUploaderProvider,
@@ -474,7 +471,6 @@ class CoreObjectsModule {
         notificationManagerProvider,
         sceneExecutorProvider,
         fileListProviderProvider,
-        userEntryPresentationHelperProvider,
         dataInboxProvider,
         cloudStorageManagerProvider,
         calculationWorkflowProvider,
@@ -485,10 +481,8 @@ class CoreObjectsModule {
         automationProvider,
         glucoseStatusProvider,
         processedDeviceStatusDataProvider,
-        
         contextProvider,
         uiInteractionProvider,
-        notificationHolderProvider,
         lastLocationDataContainerProvider,
         versionCheckerUtilsProvider,
         passwordCheckProvider,

@@ -13,10 +13,13 @@ import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.ui.UiInteraction
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class NotificationHolderImpl @Inject constructor(
     private val rh: ResourceHelper,
     private val context: Context,

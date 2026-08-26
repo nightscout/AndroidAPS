@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
-import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
 import app.aaps.core.interfaces.widget.WidgetUpdater
@@ -25,7 +24,6 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.maintenance.Maintenance
-import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.configuration.RunningConfigurationKeys
 import app.aaps.core.interfaces.protection.SecureEncrypt
@@ -38,7 +36,6 @@ import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginPermissions
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.profiling.Profiler
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpEnactResult
@@ -52,7 +49,6 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
@@ -117,11 +113,8 @@ class AapsLeaves(
     // Both are Dagger @Binds in ImplementationModule, and the openAPS plugins need them now that Metro
     // builds those. APSResult is asked for through a Provider - one result object per loop run.
     private val apsResultProvider: Provider<APSResult>,
-    private val profilerProvider: Provider<Profiler>,
     // Dagger owns this one; LoopPlugin needs it and Metro builds LoopPlugin now.
     private val pumpStatusProviderProvider: Provider<PumpStatusProvider>,
-    // Dagger @Binds in ImplementationModule; ErrorActivity needs it and Metro injects that now.
-    private val alarmSoundPlayerProvider: Provider<AlarmSoundPlayer>,
     // The activities this app injects need these; all three are Dagger @Binds in their own modules.
     private val widgetUpdaterProvider: Provider<WidgetUpdater>,
     private val authFlowOutProvider: Provider<AuthFlowOut>,
@@ -138,7 +131,6 @@ class AapsLeaves(
     private val notificationManagerProvider: Provider<NotificationManager>,
     private val sceneExecutorProvider: Provider<SceneExecutor>,
     private val fileListProviderProvider: Provider<FileListProvider>,
-    private val userEntryPresentationHelperProvider: Provider<UserEntryPresentationHelper>,
     private val dataInboxProvider: Provider<DataInbox>,
     private val cloudStorageManagerProvider: Provider<CloudStorageManager>,
     private val calculationWorkflowProvider: Provider<CalculationWorkflow>,
@@ -156,7 +148,6 @@ class AapsLeaves(
     // module the extension is declared in.
     // Automation.
     private val uiInteractionProvider: Provider<UiInteraction>,
-    private val notificationHolderProvider: Provider<NotificationHolder>,
     private val lastLocationDataContainerProvider: Provider<LastLocationDataContainer>,
     // Constraints.
     private val versionCheckerUtilsProvider: Provider<VersionCheckerUtils>,
@@ -232,11 +223,9 @@ class AapsLeaves(
     // it through `CoreObjectsModule.provideIobCobCalculator`.
     @Provides fun calculationSignalsEmitter(): CalculationSignalsEmitter = calculationSignalsEmitterProvider.get()
     @Provides fun apsResult(): APSResult = apsResultProvider.get()
-    @Provides fun profiler(): Profiler = profilerProvider.get()
     // No loop() leaf any more: Metro builds LoopPlugin, so Loop travels the other way, through
     // `CoreObjectsModule.provideLoop`.
     @Provides fun pumpStatusProvider(): PumpStatusProvider = pumpStatusProviderProvider.get()
-    @Provides fun alarmSoundPlayer(): AlarmSoundPlayer = alarmSoundPlayerProvider.get()
     @Provides fun widgetUpdater(): WidgetUpdater = widgetUpdaterProvider.get()
     @Provides fun authFlowOut(): AuthFlowOut = authFlowOutProvider.get()
     @Provides fun tidepoolUploader(): TidepoolUploader = tidepoolUploaderProvider.get()
@@ -262,7 +251,6 @@ class AapsLeaves(
     // No sceneRepository() either, same reason as activeSceneManager above: Metro owns it (@SingleIn +
     // two @ContributesBinding), so this leaf pushed an unscoped Dagger copy back in.
     @Provides fun fileListProvider(): FileListProvider = fileListProviderProvider.get()
-    @Provides fun userEntryPresentationHelper(): UserEntryPresentationHelper = userEntryPresentationHelperProvider.get()
     @Provides fun dataInbox(): DataInbox = dataInboxProvider.get()
     @Provides fun cloudStorageManager(): CloudStorageManager = cloudStorageManagerProvider.get()
     @Provides fun calculationWorkflow(): CalculationWorkflow = calculationWorkflowProvider.get()
@@ -277,7 +265,6 @@ class AapsLeaves(
 
 
     @Provides fun uiInteraction(): UiInteraction = uiInteractionProvider.get()
-    @Provides fun notificationHolder(): NotificationHolder = notificationHolderProvider.get()
     @Provides fun lastLocationDataContainer(): LastLocationDataContainer = lastLocationDataContainerProvider.get()
 
     @Provides fun versionCheckerUtils(): VersionCheckerUtils = versionCheckerUtilsProvider.get()

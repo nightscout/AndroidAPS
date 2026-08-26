@@ -6,6 +6,13 @@ import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.logging.LoggerUtils
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.interfaces.notifications.NotificationHolder
+import app.aaps.core.interfaces.protection.PasswordCheck
+import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
+import app.aaps.core.interfaces.alerts.LocalAlertUtils
+import app.aaps.core.interfaces.profiling.Profiler
+import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.di.APS
@@ -219,6 +226,10 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val batchExecutor: BatchExecutor
     val wizardBolusExecutor: WizardBolusExecutor
     val loggerUtils: LoggerUtils
+    val notificationHolder: NotificationHolder
+    val userEntryPresentationHelper: UserEntryPresentationHelper
+    val profiler: Profiler
+    val alarmSoundPlayer: AlarmSoundPlayer
     val wizardExecutor: WizardExecutor
     val configBuilder: ConfigBuilder
     val dataSyncSelectorXdrip: DataSyncSelectorXdrip

@@ -17,8 +17,10 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.rawRes
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.math.ln
 import kotlin.math.pow
 
@@ -32,7 +34,9 @@ import kotlin.math.pow
  * MediaPlayer call + callback runs on that single thread. This makes the player race-free even
  * though [play] may be invoked from any thread (e.g. NotificationManagerImpl's IO dispatcher).
  */
-@Singleton
+// Metro builds this; Dagger consumers get it via the @Provides delegate in `:app`.
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class AlarmSoundPlayerImpl @Inject constructor(
     private val context: Context,
     private val aapsLogger: AAPSLogger,

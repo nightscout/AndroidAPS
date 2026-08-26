@@ -42,6 +42,10 @@ class ContributedBindingsTest {
         assertThat(root.insulinManager).isSameInstanceAs(root.insulinManager)
         assertThat(root.wizardBolusExecutor).isSameInstanceAs(root.wizardBolusExecutor)
         assertThat(root.loggerUtils).isSameInstanceAs(root.loggerUtils)
+        assertThat(root.alarmSoundPlayer).isSameInstanceAs(root.alarmSoundPlayer)
+        assertThat(root.notificationHolder).isSameInstanceAs(root.notificationHolder)
+        assertThat(root.userEntryPresentationHelper).isSameInstanceAs(root.userEntryPresentationHelper)
+        assertThat(root.profiler).isSameInstanceAs(root.profiler)
     }
 
     @Test

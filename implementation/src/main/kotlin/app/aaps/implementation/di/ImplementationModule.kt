@@ -118,18 +118,14 @@ class ImplementationModule {
         @Binds fun bindPasswordCheck(passwordCheckImpl: PasswordCheckImpl): PasswordCheck
         @Binds fun bindExportPasswordCheck(exportPasswordDataStoreImpl: ExportPasswordDataStoreImpl): ExportPasswordDataStore
         @Binds fun bindSecureEncrypt(secureEncryptImpl: SecureEncryptImpl): SecureEncrypt
-        @Binds fun bindProfiler(profilerImpl: ProfilerImpl): Profiler
         @Binds fun bindResourceHelper(resourceHelperImpl: ResourceHelperImpl): ResourceHelper
         @Binds fun bindLocaleDependentSetting(localeDependentSettingImpl: LocaleDependentSettingImpl): LocaleDependentSetting
         @Binds fun bindPumpWithConcentration(pumpWithConcentrationImpl: PumpWithConcentrationImpl): PumpWithConcentration
         @Binds fun bindPumpStatusGenerator(pumpStatusGeneratorImpl: PumpStatusProviderImpl): PumpStatusProvider
 
         @Binds fun bindLocalAlertUtilsInterface(localAlertUtils: LocalAlertUtilsImpl): LocalAlertUtils
-        @Binds fun bindNotificationHolderInterface(notificationHolder: NotificationHolderImpl): NotificationHolder
         @Binds fun bindNotificationManager(notificationManagerImpl: NotificationManagerImpl): NotificationManager
-        @Binds fun bindAlarmSoundPlayer(alarmSoundPlayerImpl: AlarmSoundPlayerImpl): AlarmSoundPlayer
         @Binds fun bindsProfileFunction(profileFunctionImpl: ProfileFunctionImpl): ProfileFunction
-        @Binds fun bindsUserEntryPresentationHelper(userEntryPresentationHelperImpl: UserEntryPresentationHelperImpl): UserEntryPresentationHelper
         @Binds fun bindsGlucoseStatusProvider(glucoseStatusProviderImpl: GlucoseStatusProviderImpl): GlucoseStatusProvider
         @Binds fun bindsAutosensData(autosensDataObject: AutosensDataObject): AutosensData
         @Binds fun bindsAPSResult(determineBasalResult: DetermineBasalResult): APSResult
