@@ -8,6 +8,7 @@ import app.aaps.pump.danarv2.DanaRv2Plugin
 import app.aaps.pump.insight.InsightPlugin
 import app.aaps.pump.medtronic.MedtronicPumpPlugin
 import app.aaps.pump.diaconn.DiaconnG8Plugin
+import app.aaps.pump.eopatch.EopatchPumpPlugin
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.database.DanaHistoryDatabase
 import app.aaps.pump.dana.database.DanaHistoryRecordDao
@@ -83,6 +84,7 @@ class PumpLeavesModule {
         insightPlugin: Provider<InsightPlugin>,
         medtronicPumpPlugin: Provider<MedtronicPumpPlugin>,
         diaconnG8Plugin: Provider<DiaconnG8Plugin>,
+        eopatchPumpPlugin: Provider<EopatchPumpPlugin>,
         omnipodDashPumpPlugin: Provider<OmnipodDashPumpPlugin>
     ): PumpLeaves = PumpLeaves(
         bleTransport, rfcommTransport, danaHistoryRecordDao, diaconnHistoryRecordDao, diaconnHistoryDatabase,
@@ -91,6 +93,7 @@ class PumpLeavesModule {
         bleComm, comboV2Plugin, danaPump, danaRSPlugin, diaconnG8Pump, equilManager, equilPumpPlugin,
         medtrumPlugin, medtrumPump,
         danaRPlugin, danaRKoreanPlugin, danaRv2Plugin, insightPlugin, medtronicPumpPlugin, diaconnG8Plugin,
+        eopatchPumpPlugin,
         omnipodDashPumpPlugin
     )
 }

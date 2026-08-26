@@ -63,10 +63,10 @@ class ContributedPluginsTest {
     fun `only a build with pump drivers gets the pump plugins`() {
         // Nothing asserted this bucket until Insight, Dash and Diaconn moved into it. VirtualPump is
         // NOT here: it is contributed unqualified, on purpose - see the 1000 entry above.
-        // Still on Dagger and so absent: Eopatch 1110, whose plugin needs nine module-internal types
-        // (IPatchManager, IBleDevice, Alarms, ...) that the graph cannot reach yet.
+        // Every pump driver in the tree. Dagger builds them all - see PumpDriverBucketTest for why -
+        // and PumpLeaves hands each one over, so Metro never constructs a pump plugin itself.
         assertThat(testRoot().contributedPumpDriverPlugins.keys)
-            .containsExactly(1010, 1020, 1030, 1040, 1050, 1060, 1080, 1090, 1100, 1120, 1130)
+            .containsExactly(1010, 1020, 1030, 1040, 1050, 1060, 1080, 1090, 1100, 1110, 1120, 1130)
     }
 
     @Test

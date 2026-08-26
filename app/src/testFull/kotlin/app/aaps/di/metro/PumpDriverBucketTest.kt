@@ -6,6 +6,7 @@ import app.aaps.pump.danarkorean.DanaRKoreanPlugin
 import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danarv2.DanaRv2Plugin
 import app.aaps.pump.diaconn.DiaconnG8Plugin
+import app.aaps.pump.eopatch.EopatchPumpPlugin
 import app.aaps.pump.equil.EquilPumpPlugin
 import app.aaps.pump.insight.InsightPlugin
 import app.aaps.pump.medtronic.MedtronicPumpPlugin
@@ -41,6 +42,7 @@ class PumpDriverBucketTest {
         assertThat(drivers[1080]).isInstanceOf(OmnipodDashPumpPlugin::class.java)
         assertThat(drivers[1090]).isInstanceOf(MedtronicPumpPlugin::class.java)
         assertThat(drivers[1100]).isInstanceOf(DiaconnG8Plugin::class.java)
+        assertThat(drivers[1110]).isInstanceOf(EopatchPumpPlugin::class.java)
         assertThat(drivers[1120]).isInstanceOf(MedtrumPlugin::class.java)
         assertThat(drivers[1130]).isInstanceOf(EquilPumpPlugin::class.java)
     }
@@ -71,6 +73,6 @@ class PumpDriverBucketTest {
         // would report it.
         val everyBuild = testRoot().contributedPlugins.keys
 
-        assertThat(everyBuild).containsNoneOf(1010, 1020, 1030, 1040, 1050, 1060, 1080, 1090, 1100, 1120, 1130)
+        assertThat(everyBuild).containsNoneOf(1010, 1020, 1030, 1040, 1050, 1060, 1080, 1090, 1100, 1110, 1120, 1130)
     }
 }

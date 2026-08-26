@@ -8,6 +8,7 @@ import app.aaps.pump.danarv2.DanaRv2Plugin
 import app.aaps.pump.insight.InsightPlugin
 import app.aaps.pump.medtronic.MedtronicPumpPlugin
 import app.aaps.pump.diaconn.DiaconnG8Plugin
+import app.aaps.pump.eopatch.EopatchPumpPlugin
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.database.DanaHistoryDatabase
 import app.aaps.pump.dana.database.DanaHistoryRecordDao
@@ -88,6 +89,7 @@ class PumpLeaves(
     private val insightPluginProvider: Provider<InsightPlugin>,
     private val medtronicPumpPluginProvider: Provider<MedtronicPumpPlugin>,
     private val diaconnG8PluginProvider: Provider<DiaconnG8Plugin>,
+    private val eopatchPumpPluginProvider: Provider<EopatchPumpPlugin>,
     private val omnipodDashPumpPluginProvider: Provider<OmnipodDashPumpPlugin>
 ) {
 
@@ -145,4 +147,5 @@ class PumpLeaves(
     @Provides fun insightPlugin(): InsightPlugin = insightPluginProvider.get()
     @Provides fun medtronicPumpPlugin(): MedtronicPumpPlugin = medtronicPumpPluginProvider.get()
     @Provides fun diaconnG8Plugin(): DiaconnG8Plugin = diaconnG8PluginProvider.get()
+    @Provides fun eopatchPumpPlugin(): EopatchPumpPlugin = eopatchPumpPluginProvider.get()
 }
