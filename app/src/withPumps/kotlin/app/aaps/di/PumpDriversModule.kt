@@ -8,7 +8,6 @@ import app.aaps.pump.insight.di.InsightModule
 import app.aaps.pump.medtronic.di.MedtronicModule
 import app.aaps.pump.medtrum.di.MedtrumModule
 import app.aaps.pump.omnipod.dash.di.OmnipodDashModule
-import app.aaps.pump.omnipod.eros.di.OmnipodErosModule
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
@@ -21,7 +20,6 @@ import dagger.hilt.components.SingletonComponent
         InsightModule::class,
         MedtronicModule::class,
         OmnipodDashModule::class,
-        OmnipodErosModule::class,
         PumpCommonModule::class,
         MedtrumModule::class,
         EquilModule::class,
