@@ -282,6 +282,8 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideDataInbox(graphs: MetroGraphs): DataInbox = graphs.dataInbox
     // Unscoped on purpose - a fresh value object per caller, as the @Binds it replaces was.
     @Provides fun provideAutosensData(graphs: MetroGraphs): AutosensData = graphs.autosensData
+    @Provides @Singleton fun provideRunningConfiguration(graphs: MetroGraphs): RunningConfiguration = graphs.runningConfiguration
+    @Provides @Singleton fun provideRunningConfigurationKeys(graphs: MetroGraphs): RunningConfigurationKeys = graphs.runningConfigurationKeys
     @Provides @Singleton fun provideActivePlugin(graphs: MetroGraphs): ActivePlugin = graphs.activePlugin
     @Provides @Singleton fun providePluginPermissions(graphs: MetroGraphs): PluginPermissions = graphs.pluginPermissions
     // MainApp injects the concrete class to hand it the merged plugin list, and the androidTest
@@ -441,9 +443,7 @@ class CoreObjectsModule {
     fun provideAapsLeaves(
         metroMemberInjectorProvider: Provider<MetroMemberInjector>,
         nsClientRepositoryProvider: Provider<NSClientRepository>,
-        runningConfigurationProvider: Provider<RunningConfiguration>,
         nsClientSourceProvider: Provider<NSClientSource>,
-        runningConfigurationKeysProvider: Provider<RunningConfigurationKeys>,
         @ApplicationScope appScopeProvider: Provider<CoroutineScope>,
         fabricPrivacyProvider: Provider<FabricPrivacy>,
         localAlertUtilsProvider: Provider<LocalAlertUtils>,
@@ -490,9 +490,7 @@ class CoreObjectsModule {
     ): AapsLeaves = AapsLeaves(
         metroMemberInjectorProvider,
         nsClientRepositoryProvider,
-        runningConfigurationProvider,
         nsClientSourceProvider,
-        runningConfigurationKeysProvider,
         appScopeProvider,
         fabricPrivacyProvider,
         localAlertUtilsProvider,

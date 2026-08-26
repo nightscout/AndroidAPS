@@ -84,6 +84,10 @@ class ContributedBindingsTest {
         // The inbox the broadcast receivers hand data to - two of them means dropped readings.
         assertThat(root.dataInbox).isSameInstanceAs(root.dataInbox)
         assertThat(root.activePlugin).isSameInstanceAs(root.activePlugin)
+        assertThat(root.runningConfiguration).isSameInstanceAs(root.runningConfiguration)
+        // One object bound to two interfaces, as the two @Binds were. It holds the config it read from
+        // Nightscout, so a second copy would answer from an empty one.
+        assertThat(root.runningConfigurationKeys).isSameInstanceAs(root.runningConfiguration)
     }
 
     @Test

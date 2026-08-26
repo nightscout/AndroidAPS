@@ -27,6 +27,8 @@ import app.aaps.implementation.scenes.SceneExecutor
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginPermissions
 import app.aaps.core.interfaces.aps.AutosensData
+import app.aaps.core.interfaces.configuration.RunningConfigurationKeys
+import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.core.interfaces.sync.XDripBroadcast
@@ -284,6 +286,8 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val sceneExecutor: SceneExecutor
     val dataInbox: DataInbox
     val autosensData: AutosensData
+    val runningConfiguration: RunningConfiguration
+    val runningConfigurationKeys: RunningConfigurationKeys
     val activePlugin: ActivePlugin
     val pluginPermissions: PluginPermissions
     val pluginStore: PluginStore
