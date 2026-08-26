@@ -8,10 +8,35 @@ plugins {
 // does the migrated code actually LINK into an iOS binary? Compilation only checks each module on
 // its own, while linking resolves the whole graph at once, so it is the step that finds a missing
 // `actual`, a dependency with no Apple artifact, or a symbol nothing provides.
+val migratedModules = listOf(
+    ":core:data",
+    ":core:graph",
+    ":core:interfaces",
+    ":core:keys",
+    ":core:nssdk",
+    ":core:objects",
+    ":core:ui",
+    ":core:utils",
+    ":plugins:aps",
+    ":plugins:calibration",
+    ":plugins:main",
+    ":plugins:sensitivity",
+    ":plugins:smoothing",
+    ":pump:virtual"
+)
+
+// Whether the migrated API is written into the framework header for Swift to call.
 //
-// Every module is `export`ed rather than only depended on. An exported dependency has its API
-// linked in and written into the framework header, so the link covers the real public surface
-// instead of the small part a hand written entry point would happen to touch.
+// Off, because it does not compile yet. Exporting generates an Objective-C header for every public
+// declaration, and `QuickWizardEntry.Companion` has `const val YES` and `const val NO`. In
+// Objective-C those two names are macros, so the header comes out as `int32_t __objc_no` and clang
+// rejects it. That is a real thing to fix before Swift can use these modules, but it is a separate
+// problem from whether the code links, and renaming those constants would change shared code.
+//
+// With this off the modules are still `api` dependencies, so all of them are still linked into the
+// binary. Only the generated header shrinks to this module's own API.
+val exportMigratedApi = false
+
 kotlin {
     listOf(
         iosArm64(),
@@ -23,20 +48,9 @@ kotlin {
             // reports an unresolved symbol as a build error instead of deferring it to app start.
             isStatic = true
 
-            export(project(":core:data"))
-            export(project(":core:graph"))
-            export(project(":core:interfaces"))
-            export(project(":core:keys"))
-            export(project(":core:nssdk"))
-            export(project(":core:objects"))
-            export(project(":core:ui"))
-            export(project(":core:utils"))
-            export(project(":plugins:aps"))
-            export(project(":plugins:calibration"))
-            export(project(":plugins:main"))
-            export(project(":plugins:sensitivity"))
-            export(project(":plugins:smoothing"))
-            export(project(":pump:virtual"))
+            if (exportMigratedApi) {
+                migratedModules.forEach { export(project.dependencies.project(it)) }
+            }
         }
     }
 
@@ -44,21 +58,8 @@ kotlin {
         commonMain {
             dependencies {
                 // `api`, not `implementation`: a module can only be exported to the framework when
-                // it is part of this module's own API.
-                api(project(":core:data"))
-                api(project(":core:graph"))
-                api(project(":core:interfaces"))
-                api(project(":core:keys"))
-                api(project(":core:nssdk"))
-                api(project(":core:objects"))
-                api(project(":core:ui"))
-                api(project(":core:utils"))
-                api(project(":plugins:aps"))
-                api(project(":plugins:calibration"))
-                api(project(":plugins:main"))
-                api(project(":plugins:sensitivity"))
-                api(project(":plugins:smoothing"))
-                api(project(":pump:virtual"))
+                // it is part of this module's own API, and `exportMigratedApi` turns that on.
+                migratedModules.forEach { api(project.dependencies.project(it)) }
             }
         }
     }
