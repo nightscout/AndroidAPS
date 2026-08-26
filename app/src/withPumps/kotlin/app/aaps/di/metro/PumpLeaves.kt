@@ -2,6 +2,12 @@ package app.aaps.di.metro
 
 import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.core.interfaces.pump.rfcomm.RfcommTransport
+import app.aaps.pump.danar.DanaRPlugin
+import app.aaps.pump.danarkorean.DanaRKoreanPlugin
+import app.aaps.pump.danarv2.DanaRv2Plugin
+import app.aaps.pump.insight.InsightPlugin
+import app.aaps.pump.medtronic.MedtronicPumpPlugin
+import app.aaps.pump.diaconn.DiaconnG8Plugin
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.database.DanaHistoryDatabase
 import app.aaps.pump.dana.database.DanaHistoryRecordDao
@@ -76,6 +82,12 @@ class PumpLeaves(
     private val equilPumpPluginProvider: Provider<EquilPumpPlugin>,
     private val medtrumPluginProvider: Provider<MedtrumPlugin>,
     private val medtrumPumpProvider: Provider<MedtrumPump>,
+    private val danaRPluginProvider: Provider<DanaRPlugin>,
+    private val danaRKoreanPluginProvider: Provider<DanaRKoreanPlugin>,
+    private val danaRv2PluginProvider: Provider<DanaRv2Plugin>,
+    private val insightPluginProvider: Provider<InsightPlugin>,
+    private val medtronicPumpPluginProvider: Provider<MedtronicPumpPlugin>,
+    private val diaconnG8PluginProvider: Provider<DiaconnG8Plugin>,
     private val omnipodDashPumpPluginProvider: Provider<OmnipodDashPumpPlugin>
 ) {
 
@@ -127,4 +139,10 @@ class PumpLeaves(
     @Provides fun medtrumPlugin(): MedtrumPlugin = medtrumPluginProvider.get()
     @Provides fun medtrumPump(): MedtrumPump = medtrumPumpProvider.get()
     @Provides fun omnipodDashPumpPlugin(): OmnipodDashPumpPlugin = omnipodDashPumpPluginProvider.get()
+    @Provides fun danaRPlugin(): DanaRPlugin = danaRPluginProvider.get()
+    @Provides fun danaRKoreanPlugin(): DanaRKoreanPlugin = danaRKoreanPluginProvider.get()
+    @Provides fun danaRv2Plugin(): DanaRv2Plugin = danaRv2PluginProvider.get()
+    @Provides fun insightPlugin(): InsightPlugin = insightPluginProvider.get()
+    @Provides fun medtronicPumpPlugin(): MedtronicPumpPlugin = medtronicPumpPluginProvider.get()
+    @Provides fun diaconnG8Plugin(): DiaconnG8Plugin = diaconnG8PluginProvider.get()
 }

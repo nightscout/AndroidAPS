@@ -1,11 +1,19 @@
 package app.aaps.di.metro
 
 import com.google.common.truth.Truth.assertThat
+import app.aaps.pump.danar.DanaRPlugin
+import app.aaps.pump.danarkorean.DanaRKoreanPlugin
 import app.aaps.pump.danars.DanaRSPlugin
+import app.aaps.pump.danarv2.DanaRv2Plugin
+import app.aaps.pump.diaconn.DiaconnG8Plugin
 import app.aaps.pump.equil.EquilPumpPlugin
+import app.aaps.pump.insight.InsightPlugin
+import app.aaps.pump.medtronic.MedtronicPumpPlugin
 import app.aaps.pump.medtrum.MedtrumPlugin
+import app.aaps.pump.omnipod.dash.OmnipodDashPumpPlugin
 import info.nightscout.pump.combov2.ComboV2Plugin
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.mockingDetails
 
 /**
  * Pump drivers reach the `@PumpDriver` bucket, and only that bucket.
@@ -24,10 +32,36 @@ class PumpDriverBucketTest {
     fun `every converted pump driver is in the pump bucket, under its own key`() {
         val drivers = testRoot().contributedPumpDriverPlugins
 
+        assertThat(drivers[1010]).isInstanceOf(DanaRPlugin::class.java)
+        assertThat(drivers[1020]).isInstanceOf(DanaRKoreanPlugin::class.java)
+        assertThat(drivers[1030]).isInstanceOf(DanaRv2Plugin::class.java)
         assertThat(drivers[1040]).isInstanceOf(DanaRSPlugin::class.java)
+        assertThat(drivers[1050]).isInstanceOf(InsightPlugin::class.java)
         assertThat(drivers[1060]).isInstanceOf(ComboV2Plugin::class.java)
+        assertThat(drivers[1080]).isInstanceOf(OmnipodDashPumpPlugin::class.java)
+        assertThat(drivers[1090]).isInstanceOf(MedtronicPumpPlugin::class.java)
+        assertThat(drivers[1100]).isInstanceOf(DiaconnG8Plugin::class.java)
         assertThat(drivers[1120]).isInstanceOf(MedtrumPlugin::class.java)
         assertThat(drivers[1130]).isInstanceOf(EquilPumpPlugin::class.java)
+    }
+
+    @Test
+    fun `no pump driver in the bucket is built by Metro itself`() {
+        // The rule PumpLeaves exists to enforce, applied to the plugins rather than to what a view model
+        // injects: Dagger owns every pump driver, because the pump services are still DaggerServices and
+        // write to Dagger's copy. If Metro builds its own for this map, the list holds an object the pump
+        // never touches - "DanaR pump never reported initialized", which is exactly what this cost on CI.
+        //
+        // `testRoot()` mocks PumpLeaves with RETURNS_MOCKS, so anything handed over comes back a mock and
+        // anything Metro constructed comes back real. That difference is the whole check.
+        //
+        // Getting there needs BOTH halves and neither fails to compile on its own: keep javax @Singleton
+        // on the plugin (never @SingleIn - that tells Metro to own it) AND list it in PumpLeaves.
+        val builtByMetro = testRoot().contributedPumpDriverPlugins
+            .filterValues { !mockingDetails(it).isMock }
+            .map { (key, plugin) -> "$key -> ${plugin.javaClass.simpleName}" }
+
+        assertThat(builtByMetro).isEmpty()
     }
 
     @Test
@@ -37,6 +71,6 @@ class PumpDriverBucketTest {
         // would report it.
         val everyBuild = testRoot().contributedPlugins.keys
 
-        assertThat(everyBuild).containsNoneOf(1040, 1060, 1120, 1130)
+        assertThat(everyBuild).containsNoneOf(1010, 1020, 1030, 1040, 1050, 1060, 1080, 1090, 1100, 1120, 1130)
     }
 }

@@ -134,9 +134,9 @@ import java.util.TimeZone
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.IntKey
-import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 import javax.inject.Inject
+import javax.inject.Singleton
 import javax.inject.Provider
 import kotlin.math.abs
 import kotlin.math.roundToInt
@@ -146,7 +146,7 @@ import android.app.NotificationManager as AndroidNotificationManager
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @PumpDriver
 @IntKey(1050)
-@SingleIn(AppScope::class)
+@Singleton
 class InsightPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,
