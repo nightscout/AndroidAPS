@@ -97,6 +97,9 @@ class ContributedBindingsTest {
         assertThat(root.commandQueue).isSameInstanceAs(root.commandQueue)
         assertThat(root.localAlertUtils).isSameInstanceAs(root.localAlertUtils)
         assertThat(root.config).isSameInstanceAs(root.config)
+        assertThat(root.persistenceLayer).isSameInstanceAs(root.persistenceLayer)
+        // A multibinding hands out a fresh Set each read; what has to be shared is the provider in it.
+        assertThat(root.cloudStorageProviders.single()).isSameInstanceAs(root.cloudStorageProviders.single())
         assertThat(root.constraintsChecker).isSameInstanceAs(root.constraintsChecker)
         assertThat(root.nsClientRepository).isSameInstanceAs(root.nsClientRepository)
     }

@@ -12,8 +12,11 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.icons.IcGoogleDrive
 import app.aaps.implementation.R
 import app.aaps.implementation.maintenance.cloud.StorageTypes
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoSet
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 
 /**
  * Google Drive implementation of CloudStorageProvider.
@@ -21,8 +24,10 @@ import javax.inject.Singleton
  * This class adapts GoogleDriveManager to the CloudStorageProvider interface,
  * enabling the unified cloud storage architecture.
  */
-@Singleton
-class GoogleDriveProvider @Inject constructor(
+@ContributesIntoSet(AppScope::class, binding = binding<CloudStorageProvider>())
+@SingleIn(AppScope::class)
+@Inject
+class GoogleDriveProvider(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val googleDriveManager: GoogleDriveManager

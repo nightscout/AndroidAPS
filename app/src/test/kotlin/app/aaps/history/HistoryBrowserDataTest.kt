@@ -1,6 +1,5 @@
 package app.aaps.history
 
-import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.workflow.CalculationSignals
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
@@ -32,7 +31,6 @@ import org.mockito.kotlin.whenever
  */
 class HistoryBrowserDataTest : TestBaseWithProfile() {
 
-    @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var calculationWorkflow: CalculationWorkflow
     @Mock lateinit var overviewDataCacheFactory: OverviewDataCacheFactory
 
@@ -55,7 +53,6 @@ class HistoryBrowserDataTest : TestBaseWithProfile() {
      * Only the leaves this test really needs are stubbed - see [testRoot].
      */
     private fun root() = testRoot { leaves ->
-        whenever(leaves.persistenceLayer()).thenReturn(persistenceLayer)
         whenever(leaves.profileFunction()).thenReturn(profileFunction)
         whenever(leaves.rh()).thenReturn(rh)
         whenever(leaves.overviewDataCacheFactory()).thenReturn(overviewDataCacheFactory)

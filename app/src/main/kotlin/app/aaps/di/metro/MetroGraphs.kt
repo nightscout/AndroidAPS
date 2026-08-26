@@ -33,6 +33,8 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.nsclient.NSClientRepository
+import app.aaps.core.interfaces.maintenance.CloudStorageProvider
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.core.utils.receivers.DataInbox
@@ -327,6 +329,8 @@ class MetroGraphs @Inject constructor(
     val commandQueue: CommandQueue get() = root.commandQueue
     val localAlertUtils: LocalAlertUtils get() = root.localAlertUtils
     val config: Config get() = root.config
+    val persistenceLayer: PersistenceLayer get() = root.persistenceLayer
+    val cloudStorageProviders: Set<CloudStorageProvider> get() = root.cloudStorageProviders
     val constraintsChecker: ConstraintsChecker get() = root.constraintsChecker
     val nsClientRepository: NSClientRepository get() = root.nsClientRepository
     val builtInSearchables: BuiltInSearchables get() = root.builtInSearchables

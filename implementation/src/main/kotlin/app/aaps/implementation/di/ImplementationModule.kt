@@ -69,8 +69,7 @@ import javax.inject.Singleton
 
 @Module(
     includes = [
-        ImplementationModule.Bindings::class,
-        MaintenanceImplModule::class
+        ImplementationModule.Bindings::class
     ]
 )
 @InstallIn(SingletonComponent::class)

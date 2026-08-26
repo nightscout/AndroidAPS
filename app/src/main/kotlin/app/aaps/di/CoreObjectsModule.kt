@@ -70,7 +70,9 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
+import app.aaps.core.interfaces.maintenance.CloudStorageProvider
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.database.AppRepository
 import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -289,6 +291,8 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideCommandQueue(graphs: MetroGraphs): CommandQueue = graphs.commandQueue
     @Provides @Singleton fun provideLocalAlertUtils(graphs: MetroGraphs): LocalAlertUtils = graphs.localAlertUtils
     @Provides @Singleton fun provideConfig(graphs: MetroGraphs): Config = graphs.config
+    @Provides @Singleton fun providePersistenceLayer(graphs: MetroGraphs): PersistenceLayer = graphs.persistenceLayer
+    @Provides @Singleton fun provideCloudStorageProviders(graphs: MetroGraphs): Set<CloudStorageProvider> = graphs.cloudStorageProviders
     @Provides @Singleton fun provideConstraintsChecker(graphs: MetroGraphs): ConstraintsChecker = graphs.constraintsChecker
     @Provides @Singleton fun provideNSClientRepository(graphs: MetroGraphs): NSClientRepository = graphs.nsClientRepository
     // ComposeMainActivity field-injects the concrete class through Hilt, so Dagger needs Metro's one.
@@ -462,7 +466,7 @@ class CoreObjectsModule {
         nsClientSourceProvider: Provider<NSClientSource>,
         @ApplicationScope appScopeProvider: Provider<CoroutineScope>,
         fabricPrivacyProvider: Provider<FabricPrivacy>,
-        persistenceLayerProvider: Provider<PersistenceLayer>,
+        appRepositoryProvider: Provider<AppRepository>,
         calculationSignalsEmitterProvider: Provider<CalculationSignalsEmitter>,
         authFlowOutProvider: Provider<AuthFlowOut>,
         tidepoolUploaderProvider: Provider<TidepoolUploader>,
@@ -503,7 +507,7 @@ class CoreObjectsModule {
         nsClientSourceProvider,
         appScopeProvider,
         fabricPrivacyProvider,
-        persistenceLayerProvider,
+        appRepositoryProvider,
         calculationSignalsEmitterProvider,
         authFlowOutProvider,
         tidepoolUploaderProvider,
