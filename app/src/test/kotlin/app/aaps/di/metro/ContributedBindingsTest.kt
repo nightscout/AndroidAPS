@@ -80,6 +80,9 @@ class ContributedBindingsTest {
         // Its init starts six channel consumers on the app scope; a second copy would consume the same
         // requests twice and write every incoming NS record to the database twice.
         assertThat(root.storeDataForDb).isSameInstanceAs(root.storeDataForDb)
+        assertThat(root.sceneExecutor).isSameInstanceAs(root.sceneExecutor)
+        // The inbox the broadcast receivers hand data to - two of them means dropped readings.
+        assertThat(root.dataInbox).isSameInstanceAs(root.dataInbox)
     }
 
     @Test

@@ -22,6 +22,9 @@ import app.aaps.core.interfaces.scenes.SceneIconResolver
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.plugins.automation.services.LastLocationDataContainer
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
+import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
+import app.aaps.implementation.scenes.SceneExecutor
+import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.workflow.WorkflowChainData
 import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.maintenance.FileListProvider
@@ -272,6 +275,8 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val processedDeviceStatusData: ProcessedDeviceStatusData
     val lastLocationDataContainer: LastLocationDataContainer
     val storeDataForDb: StoreDataForDb
+    val sceneExecutor: SceneExecutor
+    val dataInbox: DataInbox
     val maintenance: Maintenance
     val fileListProvider: FileListProvider
     val lastBgData: LastBgData

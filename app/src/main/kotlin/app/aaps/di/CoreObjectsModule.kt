@@ -264,6 +264,8 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideProcessedDeviceStatusData(graphs: MetroGraphs): ProcessedDeviceStatusData = graphs.processedDeviceStatusData
     @Provides @Singleton fun provideLastLocationDataContainer(graphs: MetroGraphs): LastLocationDataContainer = graphs.lastLocationDataContainer
     @Provides @Singleton fun provideStoreDataForDb(graphs: MetroGraphs): StoreDataForDb = graphs.storeDataForDb
+    @Provides @Singleton fun provideSceneExecutor(graphs: MetroGraphs): SceneExecutor = graphs.sceneExecutor
+    @Provides @Singleton fun provideDataInbox(graphs: MetroGraphs): DataInbox = graphs.dataInbox
     @Provides @Singleton fun provideMaintenanceBinding(graphs: MetroGraphs): Maintenance = graphs.maintenance
     @Provides @Singleton fun provideFileListProviderBinding(graphs: MetroGraphs): FileListProvider = graphs.fileListProvider
     @Provides @Singleton fun provideLastBgDataBinding(graphs: MetroGraphs): LastBgData = graphs.lastBgData
@@ -435,8 +437,6 @@ class CoreObjectsModule {
         dstHelperProvider: Provider<DstHelper>,
         workManagerProvider: Provider<WorkManager>,
         notificationManagerProvider: Provider<NotificationManager>,
-        sceneExecutorProvider: Provider<SceneExecutor>,
-        dataInboxProvider: Provider<DataInbox>,
         cloudStorageManagerProvider: Provider<CloudStorageManager>,
         overviewDataCacheFactoryProvider: Provider<OverviewDataCacheFactory>,
         constraintsCheckerProvider: Provider<ConstraintsChecker>,
@@ -477,8 +477,6 @@ class CoreObjectsModule {
         dstHelperProvider,
         workManagerProvider,
         notificationManagerProvider,
-        sceneExecutorProvider,
-        dataInboxProvider,
         cloudStorageManagerProvider,
         overviewDataCacheFactoryProvider,
         constraintsCheckerProvider,

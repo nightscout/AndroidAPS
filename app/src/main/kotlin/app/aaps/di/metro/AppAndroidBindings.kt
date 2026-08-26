@@ -2,6 +2,7 @@ package app.aaps.di.metro
 
 import android.content.Context
 import android.content.SharedPreferences
+import app.aaps.core.utils.receivers.DataInbox
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ContributesTo
@@ -28,4 +29,13 @@ object AppAndroidBindings {
     @SingleIn(AppScope::class)
     fun sharedPreferences(context: Context): SharedPreferences =
         context.getSharedPreferences("${context.packageName}_preferences", Context.MODE_PRIVATE)
+
+    /**
+     * Metro would construct this by itself - it has an `@Inject` constructor - but only the scope makes
+     * it a singleton, and it must be one: it is the inbox the broadcast receivers hand data to. It is
+     * declared here rather than annotated in place because `:core:utils` does not run Metro.
+     */
+    @Provides
+    @SingleIn(AppScope::class)
+    fun dataInbox(context: Context): DataInbox = DataInbox(context)
 }

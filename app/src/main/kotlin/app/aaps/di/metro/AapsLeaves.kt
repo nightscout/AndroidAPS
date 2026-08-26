@@ -108,8 +108,6 @@ class AapsLeaves(
     private val dstHelperProvider: Provider<DstHelper>,
     private val workManagerProvider: Provider<WorkManager>,
     private val notificationManagerProvider: Provider<NotificationManager>,
-    private val sceneExecutorProvider: Provider<SceneExecutor>,
-    private val dataInboxProvider: Provider<DataInbox>,
     private val cloudStorageManagerProvider: Provider<CloudStorageManager>,
     private val overviewDataCacheFactoryProvider: Provider<OverviewDataCacheFactory>,
     // Needed by the feature extensions below the root, which no longer carry their own leaf lists.
@@ -203,10 +201,8 @@ class AapsLeaves(
     // push a SECOND one in from Dagger - and an unscoped one, because the class carries no javax scope, so
     // every call built another. `CoreObjectsModule.provideActiveSceneManager` hands Metro's instance the
     // other way, which is the direction the class itself documents.
-    @Provides fun sceneExecutor(): SceneExecutor = sceneExecutorProvider.get()
     // No sceneRepository() either, same reason as activeSceneManager above: Metro owns it (@SingleIn +
     // two @ContributesBinding), so this leaf pushed an unscoped Dagger copy back in.
-    @Provides fun dataInbox(): DataInbox = dataInboxProvider.get()
     @Provides fun cloudStorageManager(): CloudStorageManager = cloudStorageManagerProvider.get()
     @Provides fun overviewDataCacheFactory(): OverviewDataCacheFactory = overviewDataCacheFactoryProvider.get()
     @Provides fun constraintsChecker(): ConstraintsChecker = constraintsCheckerProvider.get()
