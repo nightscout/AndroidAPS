@@ -95,9 +95,7 @@ import javax.inject.Provider
 class AapsLeaves(
     private val metroMemberInjectorProvider: Provider<MetroMemberInjector>,
     private val nsClientRepositoryProvider: Provider<NSClientRepository>,
-    private val runningConfigurationProvider: Provider<RunningConfiguration>,
     private val nsClientSourceProvider: Provider<NSClientSource>,
-    private val runningConfigurationKeysProvider: Provider<RunningConfigurationKeys>,
     @ApplicationScope private val appScopeProvider: Provider<CoroutineScope>,
     private val fabricPrivacyProvider: Provider<FabricPrivacy>,
     private val localAlertUtilsProvider: Provider<LocalAlertUtils>,
@@ -280,8 +278,6 @@ class AapsLeaves(
 
     // What NSClientV3Service needs beyond the usual leaves. All three are Dagger @Binds in :plugins:sync.
     @Provides fun nsClientRepository(): NSClientRepository = nsClientRepositoryProvider.get()
-    @Provides fun runningConfiguration(): RunningConfiguration = runningConfigurationProvider.get()
     @Provides fun nsClientSource(): NSClientSource = nsClientSourceProvider.get()
-    @Provides fun runningConfigurationKeys(): RunningConfigurationKeys = runningConfigurationKeysProvider.get()
     @Provides fun clientControlActionDispatcher(): ClientControlActionDispatcher = clientControlActionDispatcherProvider.get()
 }

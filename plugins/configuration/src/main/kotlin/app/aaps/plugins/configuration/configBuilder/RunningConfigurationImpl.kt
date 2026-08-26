@@ -37,10 +37,15 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@ContributesBinding(AppScope::class, binding = binding<RunningConfiguration>())
+@ContributesBinding(AppScope::class, binding = binding<RunningConfigurationKeys>())
+@SingleIn(AppScope::class)
 class RunningConfigurationImpl @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val activeSceneSync: ActiveSceneSync,
