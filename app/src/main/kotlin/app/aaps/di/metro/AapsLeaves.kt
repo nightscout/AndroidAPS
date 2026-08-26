@@ -48,6 +48,9 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.ui.search.SearchableProvider
 import app.aaps.core.utils.receivers.DataInbox
+import app.aaps.plugins.sync.wear.WearPlugin
+import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import app.aaps.plugins.sync.smsCommunicator.SmsCommunicatorPlugin
 import app.aaps.implementation.maintenance.cloud.CloudStorageManager
 import app.aaps.implementation.scenes.SceneExecutor
 import app.aaps.plugins.automation.services.LastLocationDataContainer
@@ -136,6 +139,9 @@ class AapsLeaves(
     // binding rather than re-declaring the multibinding on this side.
     private val searchableProvidersProvider: Provider<Set<SearchableProvider>>,
     private val permissionProvidersProvider: Provider<Set<PermissionProvider>>,
+    private val smsCommunicatorPluginProvider: Provider<SmsCommunicatorPlugin>,
+    private val nsClientV3PluginProvider: Provider<NSClientV3Plugin>,
+    private val wearPluginProvider: Provider<WearPlugin>,
     /**
      * The history browser scope.
      *
@@ -222,6 +228,13 @@ class AapsLeaves(
     // LocationServiceController, ReminderScheduler and BtConnectionSource, none of which the graph
     // reaches yet. PluginStore takes it through a lambda, so nothing is built until it is asked for.
     @Provides fun permissionProviders(): Set<PermissionProvider> = permissionProvidersProvider.get()
+
+    // Dagger owns these three, the same way it owns the pump drivers: AuthRequest, the nine
+    // @HiltWorker loaders under nsclientV3 and the wear data layer all inject the concrete class, so
+    // Dagger builds them and Metro borrows. See SyncPluginsBindings for how they reach the plugin map.
+    @Provides fun smsCommunicatorPlugin(): SmsCommunicatorPlugin = smsCommunicatorPluginProvider.get()
+    @Provides fun nsClientV3Plugin(): NSClientV3Plugin = nsClientV3PluginProvider.get()
+    @Provides fun wearPlugin(): WearPlugin = wearPluginProvider.get()
     @Provides fun overviewDataCache(): OverviewDataCache = overviewDataCacheProvider.get()
 
     /** Hilt's qualifier, read now that interop is on. Same Context as the unqualified binding. */

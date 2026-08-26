@@ -116,6 +116,9 @@ import app.aaps.core.objects.wizard.BolusWizard
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.ui.search.SearchableProvider
 import app.aaps.core.utils.receivers.DataInbox
+import app.aaps.plugins.sync.wear.WearPlugin
+import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import app.aaps.plugins.sync.smsCommunicator.SmsCommunicatorPlugin
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.di.metro.AapsLeaves
 import app.aaps.di.metro.MetroGraphs
@@ -454,6 +457,9 @@ class CoreObjectsModule {
         versionCheckerUtilsProvider: Provider<VersionCheckerUtils>,
         searchableProvidersProvider: Provider<Set<SearchableProvider>>,
         permissionProvidersProvider: Provider<Set<PermissionProvider>>,
+        smsCommunicatorPluginProvider: Provider<SmsCommunicatorPlugin>,
+        nsClientV3PluginProvider: Provider<NSClientV3Plugin>,
+        wearPluginProvider: Provider<WearPlugin>,
         bolusProgressDataProvider: Provider<BolusProgressData>,
         pumpEnactResultProvider: Provider<PumpEnactResult>,
         historyScopeProvider: Provider<HistoryScope>,
@@ -492,6 +498,9 @@ class CoreObjectsModule {
         versionCheckerUtilsProvider,
         searchableProvidersProvider,
         permissionProvidersProvider,
+        smsCommunicatorPluginProvider,
+        nsClientV3PluginProvider,
+        wearPluginProvider,
         bolusProgressDataProvider,
         pumpEnactResultProvider,
         historyScopeProvider,

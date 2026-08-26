@@ -12,6 +12,7 @@ import app.aaps.plugins.smoothing.UnscentedKalmanFilterPlugin
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.mockingDetails
 
 /**
  * Plugins that register themselves with `@ContributesIntoMap` really reach the root graph.
@@ -42,9 +43,9 @@ class ContributedPluginsTest {
             // source - all sixteen. 400, 410 and 440 are also bound to an interface; Dagger delegates
             // to these instances in CoreObjectsModule rather than building its own.
             400, 410, 420, 430, 440, 450, 460, 470, 480, 490, 500, 510, 520, 530, 540, 550,
-            // sync - the every-build part of the 300 block. SmsCommunicator 300 and NSClientV3 310 are
-            // still Dagger, and Tidepool 320 is @NotNSClient, so only these three are here.
-            330, 360, 370,
+            // sync - the every-build part of the 300 block. SmsCommunicator 300 and Tidepool 320 are
+            // @NotNSClient; 340 (OpenHumans) comes from its own graph extension.
+            310, 330, 350, 360, 370,
             // smoothing
             600, 610, 620, 630,
             // calibration
@@ -66,6 +67,22 @@ class ContributedPluginsTest {
         // (IPatchManager, IBleDevice, Alarms, ...) that the graph cannot reach yet.
         assertThat(testRoot().contributedPumpDriverPlugins.keys)
             .containsExactly(1010, 1020, 1030, 1040, 1050, 1060, 1080, 1090, 1100, 1120, 1130)
+    }
+
+    @Test
+    fun `the three Dagger-owned sync plugins are borrowed, not rebuilt by Metro`() {
+        // Same rule as the pump drivers, and the same check: testRoot() mocks AapsLeaves, so a plugin
+        // handed over by a leaf comes back a mock while one Metro constructed comes back real. These
+        // three must stay Dagger's, because AuthRequest, the nine @HiltWorker loaders and the wear data
+        // layer all inject the concrete class - a second copy would sit in the plugin list unused.
+        val root = testRoot()
+        val borrowed = listOf(
+            300 to root.contributedNotNsClientPlugins[300],
+            310 to root.contributedPlugins[310],
+            350 to root.contributedPlugins[350]
+        )
+
+        assertThat(borrowed.filter { !mockingDetails(it.second).isMock }).isEmpty()
     }
 
     @Test
@@ -108,7 +125,7 @@ class ContributedPluginsTest {
     fun `only a non-follower build gets the version checker and Tidepool`() {
         // 340 (OpenHumans) is also @NotNSClient but comes from its own graph extension, so it joins
         // this bucket in MetroGraphs.notNsClientPlugins() rather than appearing here.
-        assertThat(testRoot().contributedNotNsClientPlugins.keys).containsExactly(320, 810)
+        assertThat(testRoot().contributedNotNsClientPlugins.keys).containsExactly(300, 320, 810)
     }
 
     @Test
