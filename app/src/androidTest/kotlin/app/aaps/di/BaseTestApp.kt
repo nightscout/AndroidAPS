@@ -59,21 +59,23 @@ open class BaseTestApp : Application(), HasAndroidInjector, MetroMemberInjector,
         // test application, so initialize a test WorkManager here — otherwise building the Hilt graph
         // (e.g. SyncModule.providesWorkManager → WorkManager.getInstance) throws "not initialized".
         //
-        // The factory must be the Hilt one: @HiltWorker workers (e.g. QueueWorker) are built via
-        // assisted injection and cannot be instantiated by WorkManager's default reflective factory
-        // ("Could not instantiate ... NoSuchMethodException"), which would leave queued commands
-        // (e.g. CommandSetProfile) forever unexecuted. The Hilt singleton component does not exist yet
-        // at onCreate (HiltAndroidRule builds it per test), so resolve HiltWorkerFactory lazily via an
-        // EntryPoint at worker-creation time — by then the graph is built. Returning its result (null
-        // for non-@HiltWorker workers) lets WorkManager's built-in reflective fallback handle legacy
-        // workers, exactly as MainApp's `setWorkerFactory(hiltWorkerFactory)` does in production.
+        // Every worker is built by assisted injection, so WorkManager's default reflective factory
+        // cannot instantiate any of them ("Could not instantiate ... NoSuchMethodException") - that
+        // would leave queued commands (e.g. CommandSetProfile) forever unexecuted. So the same chain
+        // production uses has to run here: Metro first, Hilt second. It used to be Hilt only, which
+        // was right while workers were @HiltWorker; now that none are, Hilt alone returns null for
+        // every worker and the reflective fallback fails.
+        //
+        // Neither graph exists yet at onCreate (HiltAndroidRule builds the Hilt component per test),
+        // so both are resolved lazily at worker-creation time, by which point they are built.
         val configuration = Configuration.Builder()
             .setExecutor(SynchronousExecutor())
             .setWorkerFactory(object : WorkerFactory() {
                 override fun createWorker(appContext: Context, workerClassName: String, workerParameters: WorkerParameters): ListenableWorker? =
-                    EntryPointAccessors.fromApplication(this@BaseTestApp, WorkerFactoryEntryPoint::class.java)
-                        .hiltWorkerFactory()
-                        .createWorker(appContext, workerClassName, workerParameters)
+                    metroGraphs().workerCreators()[workerClassName]?.create(appContext, workerParameters)
+                        ?: EntryPointAccessors.fromApplication(this@BaseTestApp, WorkerFactoryEntryPoint::class.java)
+                            .hiltWorkerFactory()
+                            .createWorker(appContext, workerClassName, workerParameters)
             })
             .build()
         WorkManagerTestInitHelper.initializeTestWorkManager(this, configuration)

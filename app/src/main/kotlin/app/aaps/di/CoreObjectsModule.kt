@@ -115,6 +115,7 @@ import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.objects.wizard.BolusWizard
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.ui.search.SearchableProvider
+import app.aaps.core.interfaces.aps.AutosensData
 import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.plugins.sync.wear.WearPlugin
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.AuthorizedClientsRepository
@@ -279,6 +280,8 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideStoreDataForDb(graphs: MetroGraphs): StoreDataForDb = graphs.storeDataForDb
     @Provides @Singleton fun provideSceneExecutor(graphs: MetroGraphs): SceneExecutor = graphs.sceneExecutor
     @Provides @Singleton fun provideDataInbox(graphs: MetroGraphs): DataInbox = graphs.dataInbox
+    // Unscoped on purpose - a fresh value object per caller, as the @Binds it replaces was.
+    @Provides fun provideAutosensData(graphs: MetroGraphs): AutosensData = graphs.autosensData
     @Provides @Singleton fun provideActivePlugin(graphs: MetroGraphs): ActivePlugin = graphs.activePlugin
     @Provides @Singleton fun providePluginPermissions(graphs: MetroGraphs): PluginPermissions = graphs.pluginPermissions
     // MainApp injects the concrete class to hand it the merged plugin list, and the androidTest

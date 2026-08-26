@@ -1,7 +1,6 @@
 package app.aaps.plugins.sync.nsclientV3.workers
 
 import android.content.Context
-import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -17,14 +16,15 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.localmodel.entry.NSSgvV3
 import app.aaps.core.objects.workflow.LoggingWorker
+import app.aaps.core.objects.workflow.WorkerInstanceFactory
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlin.math.max
 
-@HiltWorker
 class LoadBgWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
@@ -117,4 +117,8 @@ class LoadBgWorker @AssistedInject constructor(
         nsClientV3Plugin.lastOperationError = null
         return Result.success()
     }
+
+    /** Metro builds the worker through this - WorkManager supplies context and params. */
+    @AssistedFactory
+    abstract class Factory : WorkerInstanceFactory<LoadBgWorker>()
 }

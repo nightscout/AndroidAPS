@@ -8,9 +8,14 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import java.util.Locale
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import javax.inject.Inject
 import kotlin.math.min
 
+// Deliberately NOT @SingleIn: the @Binds this replaces had no scope. AutosensData is a value object
+// computed per run, so each caller is meant to get its own.
+@ContributesBinding(AppScope::class)
 class AutosensDataObject @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,

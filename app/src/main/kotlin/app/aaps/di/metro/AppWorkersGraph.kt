@@ -2,6 +2,19 @@ package app.aaps.di.metro
 
 import androidx.work.ListenableWorker
 import app.aaps.core.objects.workflow.MetroWorkerCreator
+import app.aaps.plugins.sync.smsCommunicator.SmsCommunicatorPlugin
+import app.aaps.plugins.sync.xdrip.workers.XdripDataSyncWorker
+import app.aaps.plugins.sync.nsclientV3.workers.LoadTreatmentsWorker
+import app.aaps.plugins.sync.nsclientV3.workers.LoadStatusWorker
+import app.aaps.plugins.sync.nsclientV3.workers.LoadSettingsWorker
+import app.aaps.plugins.sync.nsclientV3.workers.LoadProfileStoreWorker
+import app.aaps.plugins.sync.nsclientV3.workers.LoadLastModificationWorker
+import app.aaps.plugins.sync.nsclientV3.workers.LoadFoodsWorker
+import app.aaps.plugins.sync.nsclientV3.workers.LoadDeviceStatusWorker
+import app.aaps.plugins.sync.nsclientV3.workers.LoadBgWorker
+import app.aaps.plugins.sync.nsclientV3.workers.DataSyncWorker
+import app.aaps.workflow.PrepareGraphDataWorker
+import app.aaps.workflow.PostCalculationWorker
 import app.aaps.core.objects.workflow.WorkerKey
 import app.aaps.implementation.maintenance.ImportExportPrefsImpl
 import app.aaps.implementation.receivers.KeepAliveWorker
@@ -76,4 +89,69 @@ interface AppWorkersGraph {
     fun bindApsResultExportWorker(
         f: ImportExportPrefsImpl.ApsResultExportWorker.Factory
     ): MetroWorkerCreator = f
+
+    @Provides
+    @IntoMap
+    @WorkerKey(DataSyncWorker::class)
+    fun bindDataSyncWorker(f: DataSyncWorker.Factory): MetroWorkerCreator = f
+
+    @Provides
+    @IntoMap
+    @WorkerKey(LoadBgWorker::class)
+    fun bindLoadBgWorker(f: LoadBgWorker.Factory): MetroWorkerCreator = f
+
+    @Provides
+    @IntoMap
+    @WorkerKey(LoadDeviceStatusWorker::class)
+    fun bindLoadDeviceStatusWorker(f: LoadDeviceStatusWorker.Factory): MetroWorkerCreator = f
+
+    @Provides
+    @IntoMap
+    @WorkerKey(LoadFoodsWorker::class)
+    fun bindLoadFoodsWorker(f: LoadFoodsWorker.Factory): MetroWorkerCreator = f
+
+    @Provides
+    @IntoMap
+    @WorkerKey(LoadLastModificationWorker::class)
+    fun bindLoadLastModificationWorker(f: LoadLastModificationWorker.Factory): MetroWorkerCreator = f
+
+    @Provides
+    @IntoMap
+    @WorkerKey(LoadProfileStoreWorker::class)
+    fun bindLoadProfileStoreWorker(f: LoadProfileStoreWorker.Factory): MetroWorkerCreator = f
+
+    @Provides
+    @IntoMap
+    @WorkerKey(LoadSettingsWorker::class)
+    fun bindLoadSettingsWorker(f: LoadSettingsWorker.Factory): MetroWorkerCreator = f
+
+    @Provides
+    @IntoMap
+    @WorkerKey(LoadStatusWorker::class)
+    fun bindLoadStatusWorker(f: LoadStatusWorker.Factory): MetroWorkerCreator = f
+
+    @Provides
+    @IntoMap
+    @WorkerKey(LoadTreatmentsWorker::class)
+    fun bindLoadTreatmentsWorker(f: LoadTreatmentsWorker.Factory): MetroWorkerCreator = f
+
+    @Provides
+    @IntoMap
+    @WorkerKey(XdripDataSyncWorker::class)
+    fun bindXdripDataSyncWorker(f: XdripDataSyncWorker.Factory): MetroWorkerCreator = f
+
+    @Provides
+    @IntoMap
+    @WorkerKey(PostCalculationWorker::class)
+    fun bindPostCalculationWorker(f: PostCalculationWorker.Factory): MetroWorkerCreator = f
+
+    @Provides
+    @IntoMap
+    @WorkerKey(PrepareGraphDataWorker::class)
+    fun bindPrepareGraphDataWorker(f: PrepareGraphDataWorker.Factory): MetroWorkerCreator = f
+
+    @Provides
+    @IntoMap
+    @WorkerKey(SmsCommunicatorPlugin.SmsCommunicatorWorker::class)
+    fun bindSmsCommunicatorWorker(f: SmsCommunicatorPlugin.SmsCommunicatorWorker.Factory): MetroWorkerCreator = f
 }

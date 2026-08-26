@@ -1,7 +1,6 @@
 package app.aaps.plugins.sync.nsclientV3.workers
 
 import android.content.Context
-import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -12,17 +11,18 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.objects.workflow.LoggingWorker
+import app.aaps.core.objects.workflow.WorkerInstanceFactory
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
 import app.aaps.plugins.sync.nsclientV3.json.JsonBridge.toOrgJson
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.json.JsonObject
 import kotlin.math.max
 
-@HiltWorker
 class LoadProfileStoreWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
@@ -78,4 +78,8 @@ class LoadProfileStoreWorker @AssistedInject constructor(
         return Result.success()
     }
 
+
+    /** Metro builds the worker through this - WorkManager supplies context and params. */
+    @AssistedFactory
+    abstract class Factory : WorkerInstanceFactory<LoadProfileStoreWorker>()
 }

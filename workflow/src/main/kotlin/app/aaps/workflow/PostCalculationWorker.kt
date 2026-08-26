@@ -1,7 +1,6 @@
 package app.aaps.workflow
 
 import android.content.Context
-import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.data.configuration.Constants
@@ -25,8 +24,10 @@ import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
+import app.aaps.core.objects.workflow.WorkerInstanceFactory
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import java.util.Calendar
 import kotlin.math.ceil
@@ -40,7 +41,6 @@ import kotlin.math.min
  * Used by [CalculationWorkflow.runCalculation] (MAIN only, full phases) and by
  * [CalculationWorkflow.runOnReceivedPredictions] (predictions only).
  */
-@HiltWorker
 class PostCalculationWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
@@ -156,4 +156,8 @@ class PostCalculationWorker @AssistedInject constructor(
             data.cache.updateTimeRange(current.copy(endTime = data.overviewData.endTime))
         }
     }
+
+    /** Metro builds the worker through this - WorkManager supplies context and params, the graph the rest. */
+    @AssistedFactory
+    abstract class Factory : WorkerInstanceFactory<PostCalculationWorker>()
 }

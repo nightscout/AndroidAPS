@@ -2,7 +2,6 @@ package app.aaps.workflow
 
 import android.content.Context
 import android.os.SystemClock
-import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.data.aps.SMBDefaults
@@ -58,13 +57,14 @@ import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.combine
 import app.aaps.core.objects.workflow.LoggingWorker
+import app.aaps.core.objects.workflow.WorkerInstanceFactory
 import app.aaps.workflow.iob.fromCarbs
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import java.util.Calendar
 import java.util.GregorianCalendar
-import javax.inject.Provider
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -78,7 +78,6 @@ import kotlin.math.roundToLong
  * [emitFinalProgress] is set when this worker is the last in the chain (HISTORY);
  * otherwise [PostCalculationWorker] emits the final signal.
  */
-@HiltWorker
 class PrepareGraphDataWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
@@ -97,7 +96,7 @@ class PrepareGraphDataWorker @AssistedInject constructor(
     private val rh: ResourceHelper,
     private val decimalFormatter: DecimalFormatter,
     private val processedDeviceStatusData: ProcessedDeviceStatusData,
-    private val autosensDataProvider: Provider<AutosensData>
+    private val autosensDataProvider: () -> AutosensData
 ) : LoggingWorker(context, params, Dispatchers.Default, aapsLogger, fabricPrivacy) {
 
     class PrepareGraphData(
@@ -293,7 +292,7 @@ class PrepareGraphDataWorker @AssistedInject constructor(
                     continue
                 }
                 aapsLogger.debug(LTag.AUTOSENS, "Processing calculation thread: ${data.reason} ($i/${bucketedData.size})")
-                val autosensData = autosensDataProvider.get()
+                val autosensData = autosensDataProvider()
                 autosensData.time = bgTime
                 if (previous != null) autosensData.activeCarbsList = previous.cloneCarbsList() else autosensData.activeCarbsList = ArrayList()
 
@@ -517,7 +516,7 @@ class PrepareGraphDataWorker @AssistedInject constructor(
                     continue
                 }
                 aapsLogger.debug(LTag.AUTOSENS) { "Processing calculation thread: ${data.reason} ($i/${bucketedData.size})" }
-                val autosensData = autosensDataProvider.get()
+                val autosensData = autosensDataProvider()
                 autosensData.time = bgTime
                 if (previous != null) autosensData.activeCarbsList = previous.cloneCarbsList() else autosensData.activeCarbsList = ArrayList()
 
@@ -768,4 +767,8 @@ class PrepareGraphDataWorker @AssistedInject constructor(
 
         data.signals.emitProgress(CalculationWorkflow.ProgressData.PREPARE_IOB_AUTOSENS_DATA, 100)
     }
+
+    /** Metro builds the worker through this - WorkManager supplies context and params, the graph the rest. */
+    @AssistedFactory
+    abstract class Factory : WorkerInstanceFactory<PrepareGraphDataWorker>()
 }
