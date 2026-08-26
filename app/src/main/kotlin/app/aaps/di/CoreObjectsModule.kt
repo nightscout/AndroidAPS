@@ -235,6 +235,8 @@ class CoreObjectsModule {
 
     @Provides @Singleton fun provideWizardBolusExecutor(graphs: MetroGraphs): WizardBolusExecutor =
         graphs.wizardBolusExecutor
+
+    @Provides @Singleton fun provideLoggerUtils(graphs: MetroGraphs): LoggerUtils = graphs.loggerUtils
     @Provides @Singleton fun provideWizardExecutor(graphs: MetroGraphs): WizardExecutor = graphs.wizardExecutor
     @Provides @Singleton fun provideConfigBuilder(graphs: MetroGraphs): ConfigBuilder = graphs.configBuilder
     @Provides @Singleton fun provideDataSyncSelectorXdrip(graphs: MetroGraphs): DataSyncSelectorXdrip = graphs.dataSyncSelectorXdrip
@@ -386,7 +388,6 @@ class CoreObjectsModule {
         apsResultProvider: Provider<APSResult>,
         profilerProvider: Provider<Profiler>,
         pumpStatusProviderProvider: Provider<PumpStatusProvider>,
-        loggerUtilsProvider: Provider<LoggerUtils>,
         alarmSoundPlayerProvider: Provider<AlarmSoundPlayer>,
         widgetUpdaterProvider: Provider<WidgetUpdater>,
         authFlowOutProvider: Provider<AuthFlowOut>,
@@ -456,7 +457,7 @@ class CoreObjectsModule {
         apsResultProvider,
         profilerProvider,
         pumpStatusProviderProvider,
-        loggerUtilsProvider,
+        
         alarmSoundPlayerProvider,
         widgetUpdaterProvider,
         authFlowOutProvider,

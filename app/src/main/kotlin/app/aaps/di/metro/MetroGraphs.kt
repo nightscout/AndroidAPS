@@ -5,6 +5,7 @@ import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.logging.LoggerUtils
 import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.Objectives
@@ -249,6 +250,7 @@ class MetroGraphs @Inject constructor(
     val graphConfigRepository: GraphConfigRepository get() = root.graphConfigRepository
     val batchExecutor: BatchExecutor get() = root.batchExecutor
     val wizardBolusExecutor: WizardBolusExecutor get() = root.wizardBolusExecutor
+    val loggerUtils: LoggerUtils get() = root.loggerUtils
     val wizardExecutor: WizardExecutor get() = root.wizardExecutor
     val configBuilder: ConfigBuilder get() = root.configBuilder
     val dataSyncSelectorXdrip: DataSyncSelectorXdrip get() = root.dataSyncSelectorXdrip

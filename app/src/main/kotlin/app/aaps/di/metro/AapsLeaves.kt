@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
-import app.aaps.core.interfaces.logging.LoggerUtils
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
@@ -121,8 +120,6 @@ class AapsLeaves(
     private val profilerProvider: Provider<Profiler>,
     // Dagger owns this one; LoopPlugin needs it and Metro builds LoopPlugin now.
     private val pumpStatusProviderProvider: Provider<PumpStatusProvider>,
-    // Dagger @Binds in ImplementationModule; AutotunePlugin needs it and Metro builds that now.
-    private val loggerUtilsProvider: Provider<LoggerUtils>,
     // Dagger @Binds in ImplementationModule; ErrorActivity needs it and Metro injects that now.
     private val alarmSoundPlayerProvider: Provider<AlarmSoundPlayer>,
     // The activities this app injects need these; all three are Dagger @Binds in their own modules.
@@ -239,7 +236,6 @@ class AapsLeaves(
     // No loop() leaf any more: Metro builds LoopPlugin, so Loop travels the other way, through
     // `CoreObjectsModule.provideLoop`.
     @Provides fun pumpStatusProvider(): PumpStatusProvider = pumpStatusProviderProvider.get()
-    @Provides fun loggerUtils(): LoggerUtils = loggerUtilsProvider.get()
     @Provides fun alarmSoundPlayer(): AlarmSoundPlayer = alarmSoundPlayerProvider.get()
     @Provides fun widgetUpdater(): WidgetUpdater = widgetUpdaterProvider.get()
     @Provides fun authFlowOut(): AuthFlowOut = authFlowOutProvider.get()

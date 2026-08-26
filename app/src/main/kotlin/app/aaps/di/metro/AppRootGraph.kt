@@ -5,6 +5,7 @@ import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.logging.LoggerUtils
 import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.di.APS
@@ -217,6 +218,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val graphConfigRepository: GraphConfigRepository
     val batchExecutor: BatchExecutor
     val wizardBolusExecutor: WizardBolusExecutor
+    val loggerUtils: LoggerUtils
     val wizardExecutor: WizardExecutor
     val configBuilder: ConfigBuilder
     val dataSyncSelectorXdrip: DataSyncSelectorXdrip

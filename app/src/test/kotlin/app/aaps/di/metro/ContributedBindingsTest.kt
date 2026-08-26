@@ -41,6 +41,7 @@ class ContributedBindingsTest {
         assertThat(root.iconsProvider).isSameInstanceAs(root.iconsProvider)
         assertThat(root.insulinManager).isSameInstanceAs(root.insulinManager)
         assertThat(root.wizardBolusExecutor).isSameInstanceAs(root.wizardBolusExecutor)
+        assertThat(root.loggerUtils).isSameInstanceAs(root.loggerUtils)
     }
 
     @Test
