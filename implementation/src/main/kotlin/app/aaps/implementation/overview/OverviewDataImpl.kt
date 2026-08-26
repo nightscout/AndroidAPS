@@ -9,11 +9,14 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.time.Instant
 
-@Singleton
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class OverviewDataImpl @Inject constructor() : OverviewData {
 
     // Initialize the window anchor so workers reading these fields before the

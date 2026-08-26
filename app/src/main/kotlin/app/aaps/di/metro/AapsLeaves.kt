@@ -26,15 +26,12 @@ import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
-import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginPermissions
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.resources.TextResolver
@@ -108,7 +105,6 @@ class AapsLeaves(
     // builds those. APSResult is asked for through a Provider - one result object per loop run.
     private val apsResultProvider: Provider<APSResult>,
     // Dagger owns this one; LoopPlugin needs it and Metro builds LoopPlugin now.
-    private val pumpStatusProviderProvider: Provider<PumpStatusProvider>,
     // The activities this app injects need these; all three are Dagger @Binds in their own modules.
     private val widgetUpdaterProvider: Provider<WidgetUpdater>,
     private val authFlowOutProvider: Provider<AuthFlowOut>,
@@ -141,7 +137,6 @@ class AapsLeaves(
     private val lastLocationDataContainerProvider: Provider<LastLocationDataContainer>,
     // Constraints.
     private val versionCheckerUtilsProvider: Provider<VersionCheckerUtils>,
-    private val passwordCheckProvider: Provider<PasswordCheck>,
     // Still Dagger-owned, and needed by the scene classes that moved to Metro.
     // Dagger-owned on purpose: it is bound from XdripPlugin, which is still in the Dagger plugin list.
     // Contributing it would have Metro build a second copy of that plugin.
@@ -172,7 +167,6 @@ class AapsLeaves(
     private val pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val historyScopeProvider: Provider<HistoryScope>,
     private val importExportPrefsProvider: Provider<ImportExportPrefs>,
-    private val overviewDataProvider: Provider<OverviewData>,
     private val overviewDataCacheProvider: Provider<OverviewDataCache>,
     // Same object as ActivePlugin above (PluginStore), under its other interface.
     private val pluginPermissionsProvider: Provider<PluginPermissions>,
@@ -215,7 +209,6 @@ class AapsLeaves(
     @Provides fun apsResult(): APSResult = apsResultProvider.get()
     // No loop() leaf any more: Metro builds LoopPlugin, so Loop travels the other way, through
     // `CoreObjectsModule.provideLoop`.
-    @Provides fun pumpStatusProvider(): PumpStatusProvider = pumpStatusProviderProvider.get()
     @Provides fun widgetUpdater(): WidgetUpdater = widgetUpdaterProvider.get()
     @Provides fun authFlowOut(): AuthFlowOut = authFlowOutProvider.get()
     @Provides fun tidepoolUploader(): TidepoolUploader = tidepoolUploaderProvider.get()
@@ -254,7 +247,6 @@ class AapsLeaves(
     @Provides fun lastLocationDataContainer(): LastLocationDataContainer = lastLocationDataContainerProvider.get()
 
     @Provides fun versionCheckerUtils(): VersionCheckerUtils = versionCheckerUtilsProvider.get()
-    @Provides fun passwordCheck(): PasswordCheck = passwordCheckProvider.get()
     @Provides fun sntpClient(): SntpClient = sntpClientProvider.get()
     @Provides fun xDripBroadcast(): XDripBroadcast = xDripBroadcastProvider.get()
     @Provides fun l(): L = lProvider.get()
@@ -267,7 +259,6 @@ class AapsLeaves(
     @Provides fun historyScope(): HistoryScope = historyScopeProvider.get()
     @Provides fun importExportPrefs(): ImportExportPrefs = importExportPrefsProvider.get()
     @Provides fun searchableProviders(): Set<SearchableProvider> = searchableProvidersProvider.get()
-    @Provides fun overviewData(): OverviewData = overviewDataProvider.get()
     @Provides fun overviewDataCache(): OverviewDataCache = overviewDataCacheProvider.get()
     @Provides fun pluginPermissions(): PluginPermissions = pluginPermissionsProvider.get()
 

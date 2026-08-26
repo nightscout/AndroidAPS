@@ -109,14 +109,8 @@ class ImplementationModule {
         // Runtime-permission sources for non-plugin features (e.g. standalone Automation).
         // May be empty; contributors bind via @IntoSet PermissionProvider.
         @Multibinds fun permissionProviders(): Set<PermissionProvider>
-
-        @Binds fun bindLastBgData(lastBgData: LastBgDataImpl): LastBgData
-        @Binds fun bindOverviewData(overviewData: OverviewDataImpl): OverviewData
-        @Binds fun bindPasswordCheck(passwordCheckImpl: PasswordCheckImpl): PasswordCheck
         @Binds fun bindResourceHelper(resourceHelperImpl: ResourceHelperImpl): ResourceHelper
-        @Binds fun bindLocaleDependentSetting(localeDependentSettingImpl: LocaleDependentSettingImpl): LocaleDependentSetting
         @Binds fun bindPumpWithConcentration(pumpWithConcentrationImpl: PumpWithConcentrationImpl): PumpWithConcentration
-        @Binds fun bindPumpStatusGenerator(pumpStatusGeneratorImpl: PumpStatusProviderImpl): PumpStatusProvider
 
         @Binds fun bindLocalAlertUtilsInterface(localAlertUtils: LocalAlertUtilsImpl): LocalAlertUtils
         @Binds fun bindNotificationManager(notificationManagerImpl: NotificationManagerImpl): NotificationManager

@@ -7,6 +7,10 @@ import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.logging.LoggerUtils
+import app.aaps.core.interfaces.overview.LastBgData
+import app.aaps.core.interfaces.local.LocaleDependentSetting
+import app.aaps.core.interfaces.pump.PumpStatusProvider
+import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.protection.SecureEncrypt
 import app.aaps.core.objects.crypto.CryptoUtil
@@ -266,6 +270,11 @@ class MetroGraphs @Inject constructor(
     val batchExecutor: BatchExecutor get() = root.batchExecutor
     val wizardBolusExecutor: WizardBolusExecutor get() = root.wizardBolusExecutor
     val loggerUtils: LoggerUtils get() = root.loggerUtils
+    val lastBgData: LastBgData get() = root.lastBgData
+    val localeDependentSetting: LocaleDependentSetting get() = root.localeDependentSetting
+    val pumpStatusProvider: PumpStatusProvider get() = root.pumpStatusProvider
+    val passwordCheck: PasswordCheck get() = root.passwordCheck
+    val overviewData: OverviewData get() = root.overviewData
     val sharedPreferences: SharedPreferences get() = root.sharedPreferences
     val exportPasswordDataStore: ExportPasswordDataStore get() = root.exportPasswordDataStore
     val secureEncrypt: SecureEncrypt get() = root.secureEncrypt

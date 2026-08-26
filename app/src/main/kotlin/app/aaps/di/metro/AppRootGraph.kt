@@ -7,6 +7,10 @@ import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.logging.LoggerUtils
+import app.aaps.core.interfaces.overview.LastBgData
+import app.aaps.core.interfaces.local.LocaleDependentSetting
+import app.aaps.core.interfaces.pump.PumpStatusProvider
+import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.protection.SecureEncrypt
 import app.aaps.core.objects.crypto.CryptoUtil
@@ -234,6 +238,11 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val batchExecutor: BatchExecutor
     val wizardBolusExecutor: WizardBolusExecutor
     val loggerUtils: LoggerUtils
+    val lastBgData: LastBgData
+    val localeDependentSetting: LocaleDependentSetting
+    val pumpStatusProvider: PumpStatusProvider
+    val passwordCheck: PasswordCheck
+    val overviewData: OverviewData
     val sharedPreferences: SharedPreferences
     val exportPasswordDataStore: ExportPasswordDataStore
     val secureEncrypt: SecureEncrypt

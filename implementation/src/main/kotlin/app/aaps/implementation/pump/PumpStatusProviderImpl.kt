@@ -16,10 +16,13 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonObject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class PumpStatusProviderImpl @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val pumpSync: PumpSync,

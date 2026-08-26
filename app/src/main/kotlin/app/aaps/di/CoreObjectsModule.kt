@@ -30,6 +30,8 @@ import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.LoggerUtils
+import app.aaps.core.interfaces.overview.LastBgData
+import app.aaps.core.interfaces.local.LocaleDependentSetting
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
@@ -237,6 +239,11 @@ class CoreObjectsModule {
         graphs.wizardBolusExecutor
 
     @Provides @Singleton fun provideLoggerUtils(graphs: MetroGraphs): LoggerUtils = graphs.loggerUtils
+    @Provides @Singleton fun provideLastBgDataBinding(graphs: MetroGraphs): LastBgData = graphs.lastBgData
+    @Provides @Singleton fun provideLocaleDependentSettingBinding(graphs: MetroGraphs): LocaleDependentSetting = graphs.localeDependentSetting
+    @Provides @Singleton fun providePumpStatusProviderBinding(graphs: MetroGraphs): PumpStatusProvider = graphs.pumpStatusProvider
+    @Provides @Singleton fun providePasswordCheckBinding(graphs: MetroGraphs): PasswordCheck = graphs.passwordCheck
+    @Provides @Singleton fun provideOverviewDataBinding(graphs: MetroGraphs): OverviewData = graphs.overviewData
     @Provides @Singleton fun provideSharedPreferences(graphs: MetroGraphs): SharedPreferences = graphs.sharedPreferences
     @Provides @Singleton fun provideExportPasswordDataStoreBinding(graphs: MetroGraphs): ExportPasswordDataStore = graphs.exportPasswordDataStore
     @Provides @Singleton fun provideSecureEncryptBinding(graphs: MetroGraphs): SecureEncrypt = graphs.secureEncrypt
@@ -396,7 +403,6 @@ class CoreObjectsModule {
         configProvider: Provider<Config>,
         calculationSignalsEmitterProvider: Provider<CalculationSignalsEmitter>,
         apsResultProvider: Provider<APSResult>,
-        pumpStatusProviderProvider: Provider<PumpStatusProvider>,
         widgetUpdaterProvider: Provider<WidgetUpdater>,
         authFlowOutProvider: Provider<AuthFlowOut>,
         tidepoolUploaderProvider: Provider<TidepoolUploader>,
@@ -422,7 +428,6 @@ class CoreObjectsModule {
         uiInteractionProvider: Provider<UiInteraction>,
         lastLocationDataContainerProvider: Provider<LastLocationDataContainer>,
         versionCheckerUtilsProvider: Provider<VersionCheckerUtils>,
-        passwordCheckProvider: Provider<PasswordCheck>,
         searchableProvidersProvider: Provider<Set<SearchableProvider>>,
         aapsSchedulersProvider: Provider<AapsSchedulers>,
         spProvider: Provider<SP>,
@@ -430,7 +435,6 @@ class CoreObjectsModule {
         pumpEnactResultProvider: Provider<PumpEnactResult>,
         historyScopeProvider: Provider<HistoryScope>,
         importExportPrefsProvider: Provider<ImportExportPrefs>,
-        overviewDataProvider: Provider<OverviewData>,
         overviewDataCacheProvider: Provider<OverviewDataCache>,
         pluginPermissionsProvider: Provider<PluginPermissions>,
         lProvider: Provider<L>,
@@ -456,7 +460,6 @@ class CoreObjectsModule {
         configProvider,
         calculationSignalsEmitterProvider,
         apsResultProvider,
-        pumpStatusProviderProvider,
         widgetUpdaterProvider,
         authFlowOutProvider,
         tidepoolUploaderProvider,
@@ -482,7 +485,6 @@ class CoreObjectsModule {
         uiInteractionProvider,
         lastLocationDataContainerProvider,
         versionCheckerUtilsProvider,
-        passwordCheckProvider,
         searchableProvidersProvider,
         aapsSchedulersProvider,
         spProvider,
@@ -490,7 +492,6 @@ class CoreObjectsModule {
         pumpEnactResultProvider,
         historyScopeProvider,
         importExportPrefsProvider,
-        overviewDataProvider,
         overviewDataCacheProvider,
         pluginPermissionsProvider,
         lProvider,
