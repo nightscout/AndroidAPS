@@ -22,7 +22,6 @@ import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.configuration.RunningConfigurationKeys
-import app.aaps.core.interfaces.protection.SecureEncrypt
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
@@ -94,7 +93,6 @@ class AapsLeaves(
     private val runningConfigurationProvider: Provider<RunningConfiguration>,
     private val nsClientSourceProvider: Provider<NSClientSource>,
     private val runningConfigurationKeysProvider: Provider<RunningConfigurationKeys>,
-    private val secureEncryptProvider: Provider<SecureEncrypt>,
     private val aapsLoggerProvider: Provider<AAPSLogger>,
     private val rxBusProvider: Provider<RxBus>,
     private val activePluginProvider: Provider<ActivePlugin>,
@@ -292,6 +290,5 @@ class AapsLeaves(
     @Provides fun runningConfiguration(): RunningConfiguration = runningConfigurationProvider.get()
     @Provides fun nsClientSource(): NSClientSource = nsClientSourceProvider.get()
     @Provides fun runningConfigurationKeys(): RunningConfigurationKeys = runningConfigurationKeysProvider.get()
-    @Provides fun secureEncrypt(): SecureEncrypt = secureEncryptProvider.get()
     @Provides fun clientControlActionDispatcher(): ClientControlActionDispatcher = clientControlActionDispatcherProvider.get()
 }

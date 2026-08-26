@@ -22,8 +22,10 @@ import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /***
  * Implementation for class SecureEncrypt
@@ -34,7 +36,8 @@ import javax.inject.Singleton
  * remaining non-exportable.
  */
 
-@Singleton
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class SecureEncryptImpl @Inject constructor(
     private var log: AAPSLogger,
     private var cryptoUtil: CryptoUtil

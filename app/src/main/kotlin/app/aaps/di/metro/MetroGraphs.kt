@@ -6,6 +6,9 @@ import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.logging.LoggerUtils
+import app.aaps.core.interfaces.protection.ExportPasswordDataStore
+import app.aaps.core.interfaces.protection.SecureEncrypt
+import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -262,6 +265,9 @@ class MetroGraphs @Inject constructor(
     val batchExecutor: BatchExecutor get() = root.batchExecutor
     val wizardBolusExecutor: WizardBolusExecutor get() = root.wizardBolusExecutor
     val loggerUtils: LoggerUtils get() = root.loggerUtils
+    val exportPasswordDataStore: ExportPasswordDataStore get() = root.exportPasswordDataStore
+    val secureEncrypt: SecureEncrypt get() = root.secureEncrypt
+    val cryptoUtil: CryptoUtil get() = root.cryptoUtil
     val concentrationHelper: ConcentrationHelper get() = root.concentrationHelper
     val processedTbrEbData: ProcessedTbrEbData get() = root.processedTbrEbData
     val userEntryLogger: UserEntryLogger get() = root.userEntryLogger

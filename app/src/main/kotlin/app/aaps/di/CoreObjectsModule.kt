@@ -29,6 +29,7 @@ import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.LoggerUtils
+import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
@@ -160,9 +161,7 @@ class CoreObjectsModule {
     @Provides
     fun smsManager(context: Context): SmsManager? = context.getSystemService(SmsManager::class.java)
 
-    @Provides
-    @Singleton
-    fun provideCryptoUtil(aapsLogger: AAPSLogger): CryptoUtil = CryptoUtil(aapsLogger)
+    @Provides @Singleton fun provideCryptoUtil(graphs: MetroGraphs): CryptoUtil = graphs.cryptoUtil
 
     /*
      * Built by Metro now - see CoreObjectsGraph in :core:objects commonMain, which compiles for iOS.
@@ -237,6 +236,8 @@ class CoreObjectsModule {
         graphs.wizardBolusExecutor
 
     @Provides @Singleton fun provideLoggerUtils(graphs: MetroGraphs): LoggerUtils = graphs.loggerUtils
+    @Provides @Singleton fun provideExportPasswordDataStoreBinding(graphs: MetroGraphs): ExportPasswordDataStore = graphs.exportPasswordDataStore
+    @Provides @Singleton fun provideSecureEncryptBinding(graphs: MetroGraphs): SecureEncrypt = graphs.secureEncrypt
     @Provides @Singleton fun provideConcentrationHelperBinding(graphs: MetroGraphs): ConcentrationHelper = graphs.concentrationHelper
     @Provides @Singleton fun provideProcessedTbrEbDataBinding(graphs: MetroGraphs): ProcessedTbrEbData = graphs.processedTbrEbData
     @Provides @Singleton fun provideUserEntryLoggerBinding(graphs: MetroGraphs): UserEntryLogger = graphs.userEntryLogger
@@ -383,7 +384,6 @@ class CoreObjectsModule {
         runningConfigurationProvider: Provider<RunningConfiguration>,
         nsClientSourceProvider: Provider<NSClientSource>,
         runningConfigurationKeysProvider: Provider<RunningConfigurationKeys>,
-        secureEncryptProvider: Provider<SecureEncrypt>,
         aapsLoggerProvider: Provider<AAPSLogger>,
         rxBusProvider: Provider<RxBus>,
         activePluginProvider: Provider<ActivePlugin>,
@@ -444,7 +444,6 @@ class CoreObjectsModule {
         runningConfigurationProvider,
         nsClientSourceProvider,
         runningConfigurationKeysProvider,
-        secureEncryptProvider,
         aapsLoggerProvider,
         rxBusProvider,
         activePluginProvider,
