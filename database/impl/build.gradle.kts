@@ -25,12 +25,9 @@ dependencies {
     api(libs.kotlin.stdlib.jdk8)
     api(libs.kotlin.reflect)
 
-    api(libs.io.reactivex.rxjava3.rxkotlin) // RxJava base for room-rxjava3
-
     api(libs.com.google.code.gson)
 
     api(libs.androidx.room.runtime)
-    api(libs.androidx.room.rxjava3)
     implementation(libs.androidx.sqlite.bundled)
 
     api(libs.com.google.dagger.android)
