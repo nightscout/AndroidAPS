@@ -294,6 +294,7 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideLocalAlertUtils(graphs: MetroGraphs): LocalAlertUtils = graphs.localAlertUtils
     @Provides @Singleton fun provideBolusProgressData(graphs: MetroGraphs): BolusProgressData = graphs.bolusProgressData
     @Provides @Singleton fun providePersistenceLayer(graphs: MetroGraphs): PersistenceLayer = graphs.persistenceLayer
+    @Provides @Singleton fun provideCloudStorageManager(graphs: MetroGraphs): CloudStorageManager = graphs.cloudStorageManager
     @Provides @Singleton fun provideOverviewDataCache(graphs: MetroGraphs): OverviewDataCache = graphs.overviewDataCache
     @Provides @Singleton fun provideCalculationSignals(graphs: MetroGraphs): CalculationSignals = graphs.calculationSignals
     @Provides @Singleton fun provideCalculationSignalsEmitter(graphs: MetroGraphs): CalculationSignalsEmitter = graphs.calculationSignalsEmitter
@@ -479,7 +480,6 @@ class CoreObjectsModule {
         rhProvider: Provider<ResourceHelper>,
         workManagerProvider: Provider<WorkManager>,
         notificationManagerProvider: Provider<NotificationManager>,
-        cloudStorageManagerProvider: Provider<CloudStorageManager>,
         overviewDataCacheFactoryProvider: Provider<OverviewDataCacheFactory>,
         automationProvider: Provider<Automation>,
         contextProvider: Provider<Context>,
@@ -516,7 +516,6 @@ class CoreObjectsModule {
         rhProvider,
         workManagerProvider,
         notificationManagerProvider,
-        cloudStorageManagerProvider,
         overviewDataCacheFactoryProvider,
         automationProvider,
         contextProvider,

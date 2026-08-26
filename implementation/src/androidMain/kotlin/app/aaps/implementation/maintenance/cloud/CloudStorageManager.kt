@@ -4,8 +4,9 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.CloudStorageProvider
 import app.aaps.core.interfaces.sharedPreferences.SP
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Cloud Storage Manager - Factory class for managing cloud storage providers.
@@ -31,8 +32,9 @@ import javax.inject.Singleton
  * val providers = cloudStorageManager.getAvailableProviders()
  * ```
  */
-@Singleton
-class CloudStorageManager @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class CloudStorageManager(
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
     /**

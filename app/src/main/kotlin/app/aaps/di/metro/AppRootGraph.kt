@@ -44,6 +44,7 @@ import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.dst.DstHelper
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.implementation.maintenance.cloud.CloudStorageManager
 import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.implementation.plugin.PluginStore
@@ -307,6 +308,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val localAlertUtils: LocalAlertUtils
     val bolusProgressData: BolusProgressData
     val persistenceLayer: PersistenceLayer
+    val cloudStorageManager: CloudStorageManager
     val overviewDataCache: OverviewDataCache
     val calculationSignals: CalculationSignals
     val calculationSignalsEmitter: CalculationSignalsEmitter

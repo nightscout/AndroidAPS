@@ -108,7 +108,6 @@ class AapsLeaves(
     private val rhProvider: Provider<ResourceHelper>,
     private val workManagerProvider: Provider<WorkManager>,
     private val notificationManagerProvider: Provider<NotificationManager>,
-    private val cloudStorageManagerProvider: Provider<CloudStorageManager>,
     private val overviewDataCacheFactoryProvider: Provider<OverviewDataCacheFactory>,
     // Needed by the feature extensions below the root, which no longer carry their own leaf lists.
     private val automationProvider: Provider<Automation>,
@@ -204,7 +203,6 @@ class AapsLeaves(
     // other way, which is the direction the class itself documents.
     // No sceneRepository() either, same reason as activeSceneManager above: Metro owns it (@SingleIn +
     // two @ContributesBinding), so this leaf pushed an unscoped Dagger copy back in.
-    @Provides fun cloudStorageManager(): CloudStorageManager = cloudStorageManagerProvider.get()
     @Provides fun overviewDataCacheFactory(): OverviewDataCacheFactory = overviewDataCacheFactoryProvider.get()
     @Provides fun automation(): Automation = automationProvider.get()
     @Provides fun context(): Context = contextProvider.get()
