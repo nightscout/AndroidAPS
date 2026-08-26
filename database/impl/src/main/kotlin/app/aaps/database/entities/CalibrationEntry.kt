@@ -8,7 +8,6 @@ import androidx.room.PrimaryKey
 import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.database.entities.interfaces.DBEntryWithTime
 import app.aaps.database.entities.interfaces.TraceableDBEntry
-import java.util.TimeZone
 
 @Entity(
     tableName = TABLE_CALIBRATION_ENTRIES,
@@ -33,7 +32,7 @@ data class CalibrationEntry(
     @Embedded
     override var interfaceIDs_backing: InterfaceIDs? = InterfaceIDs(),
     override var timestamp: Long,
-    override var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
+    override var utcOffset: Long = defaultUtcOffset(timestamp),
     var fingerstickMgdl: Double,
     var sensorMgdlAtPairing: Double
 ) : TraceableDBEntry, DBEntryWithTime {
