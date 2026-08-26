@@ -126,4 +126,11 @@ object ShellInfo {
     } catch (e: Throwable) {
         "PREFS FAILED: ${e::class.simpleName}: ${e.message}"
     }
+
+    /**
+     * Calls into every `:core` module and reports what each one did.
+     *
+     * See [CoreProbe] for why `expect`/`actual` code is what this goes after.
+     */
+    fun checkCore(): String = CoreProbe.run().joinToString("\n")
 }

@@ -27,7 +27,8 @@ struct ShellView: View {
     }
 
     var body: some View {
-        VStack(spacing: 12) {
+        ScrollView {
+        VStack(alignment: .leading, spacing: 10) {
             Text(productName)
                 .font(.largeTitle.bold())
             Text("\(info.LINKED_MODULES) modules linked")
@@ -50,7 +51,15 @@ struct ShellView: View {
             Text(info.checkPrefs())
                 .font(.caption.monospaced())
                 .multilineTextAlignment(.leading)
+
+            Divider().padding(.vertical, 4)
+
+            // One line per :core module, from real calls into each.
+            Text(info.checkCore())
+                .font(.caption2.monospaced())
+                .multilineTextAlignment(.leading)
         }
         .padding()
+        }
     }
 }
