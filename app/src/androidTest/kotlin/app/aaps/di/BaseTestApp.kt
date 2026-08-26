@@ -2,7 +2,6 @@ package app.aaps.di
 
 import android.app.Application
 import android.content.Context
-import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
@@ -61,21 +60,16 @@ open class BaseTestApp : Application(), HasAndroidInjector, MetroMemberInjector,
         //
         // Every worker is built by assisted injection, so WorkManager's default reflective factory
         // cannot instantiate any of them ("Could not instantiate ... NoSuchMethodException") - that
-        // would leave queued commands (e.g. CommandSetProfile) forever unexecuted. So the same chain
-        // production uses has to run here: Metro first, Hilt second. It used to be Hilt only, which
-        // was right while workers were @HiltWorker; now that none are, Hilt alone returns null for
-        // every worker and the reflective fallback fails.
+        // would leave queued commands (e.g. CommandSetProfile) forever unexecuted. Metro builds them
+        // all now, so this mirrors production's `MetroWorkerFactory` and nothing hands off to Hilt.
         //
-        // Neither graph exists yet at onCreate (HiltAndroidRule builds the Hilt component per test),
-        // so both are resolved lazily at worker-creation time, by which point they are built.
+        // The graph does not exist yet at onCreate (HiltAndroidRule builds the singleton component per
+        // test), so it is resolved lazily at worker-creation time, by which point it is built.
         val configuration = Configuration.Builder()
             .setExecutor(SynchronousExecutor())
             .setWorkerFactory(object : WorkerFactory() {
                 override fun createWorker(appContext: Context, workerClassName: String, workerParameters: WorkerParameters): ListenableWorker? =
                     metroGraphs().workerCreators()[workerClassName]?.create(appContext, workerParameters)
-                        ?: EntryPointAccessors.fromApplication(this@BaseTestApp, WorkerFactoryEntryPoint::class.java)
-                            .hiltWorkerFactory()
-                            .createWorker(appContext, workerClassName, workerParameters)
             })
             .build()
         WorkManagerTestInitHelper.initializeTestWorkManager(this, configuration)
@@ -87,16 +81,9 @@ open class BaseTestApp : Application(), HasAndroidInjector, MetroMemberInjector,
 
         fun androidInjector(): DispatchingAndroidInjector<Any>
     }
-
-    @EntryPoint
-    @InstallIn(SingletonComponent::class)
-    interface WorkerFactoryEntryPoint {
-
-        fun hiltWorkerFactory(): HiltWorkerFactory
-    }
-
+
     /**
-     * The Metro half of the bridge, resolved lazily for the same reason as [WorkerFactoryEntryPoint]:
+     * The Metro half of the bridge, resolved lazily because
      * the singleton component is built per test by `HiltAndroidRule`, so it does not exist in
      * [onCreate]. `MetroGraphs` is `@Singleton`, so every call here returns the current test's one root.
      */

@@ -33,7 +33,6 @@ dependencies {
     implementation(project(":core:ui"))
 
     implementation(libs.kotlinx.datetime)
-    implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.compose.ui.tooling.preview)
     debugImplementation(libs.androidx.compose.ui.tooling)
 
