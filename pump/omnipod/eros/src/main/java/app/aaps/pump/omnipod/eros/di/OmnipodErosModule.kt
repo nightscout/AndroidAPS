@@ -5,7 +5,6 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.pump.omnipod.eros.OmnipodErosPumpPlugin
 import app.aaps.pump.omnipod.eros.driver.manager.ErosPodStateManager
 import app.aaps.pump.omnipod.eros.manager.AapsErosPodStateManager
-import app.aaps.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager
 import app.aaps.pump.omnipod.eros.rileylink.service.RileyLinkOmnipodService
 import dagger.Binds
 import dagger.Module
@@ -22,9 +21,6 @@ import dagger.multibindings.IntoMap
 abstract class OmnipodErosModule {
 
     // SERVICES
-
-    @ContributesAndroidInjector
-    abstract fun contributesOmnipodRileyLinkCommunicationManagerProvider(): OmnipodRileyLinkCommunicationManager
 
     @ContributesAndroidInjector
     abstract fun contributesRileyLinkOmnipodService(): RileyLinkOmnipodService
