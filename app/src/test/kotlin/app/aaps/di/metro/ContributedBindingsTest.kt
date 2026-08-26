@@ -96,6 +96,9 @@ class ContributedBindingsTest {
         // accept commands that the copy the pump driver reads never sees.
         assertThat(root.commandQueue).isSameInstanceAs(root.commandQueue)
         assertThat(root.localAlertUtils).isSameInstanceAs(root.localAlertUtils)
+        assertThat(root.config).isSameInstanceAs(root.config)
+        assertThat(root.constraintsChecker).isSameInstanceAs(root.constraintsChecker)
+        assertThat(root.nsClientRepository).isSameInstanceAs(root.nsClientRepository)
     }
 
     @Test

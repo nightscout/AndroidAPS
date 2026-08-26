@@ -31,6 +31,9 @@ import app.aaps.core.interfaces.configuration.RunningConfigurationKeys
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.core.utils.receivers.DataInbox
@@ -293,6 +296,9 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val autosensData: AutosensData
     val commandQueue: CommandQueue
     val localAlertUtils: LocalAlertUtils
+    val config: Config
+    val constraintsChecker: ConstraintsChecker
+    val nsClientRepository: NSClientRepository
     val builtInSearchables: BuiltInSearchables
     val apsResult: APSResult
     val pumpEnactResult: PumpEnactResult

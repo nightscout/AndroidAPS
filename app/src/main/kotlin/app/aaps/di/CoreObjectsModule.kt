@@ -288,6 +288,9 @@ class CoreObjectsModule {
     @Provides fun provideAutosensData(graphs: MetroGraphs): AutosensData = graphs.autosensData
     @Provides @Singleton fun provideCommandQueue(graphs: MetroGraphs): CommandQueue = graphs.commandQueue
     @Provides @Singleton fun provideLocalAlertUtils(graphs: MetroGraphs): LocalAlertUtils = graphs.localAlertUtils
+    @Provides @Singleton fun provideConfig(graphs: MetroGraphs): Config = graphs.config
+    @Provides @Singleton fun provideConstraintsChecker(graphs: MetroGraphs): ConstraintsChecker = graphs.constraintsChecker
+    @Provides @Singleton fun provideNSClientRepository(graphs: MetroGraphs): NSClientRepository = graphs.nsClientRepository
     // ComposeMainActivity field-injects the concrete class through Hilt, so Dagger needs Metro's one.
     @Provides @Singleton fun provideBuiltInSearchables(graphs: MetroGraphs): BuiltInSearchables = graphs.builtInSearchables
     // Unscoped on purpose - result objects, one per call, as the @Binds they replace were.
@@ -456,12 +459,10 @@ class CoreObjectsModule {
     @Suppress("LongParameterList")
     fun provideAapsLeaves(
         metroMemberInjectorProvider: Provider<MetroMemberInjector>,
-        nsClientRepositoryProvider: Provider<NSClientRepository>,
         nsClientSourceProvider: Provider<NSClientSource>,
         @ApplicationScope appScopeProvider: Provider<CoroutineScope>,
         fabricPrivacyProvider: Provider<FabricPrivacy>,
         persistenceLayerProvider: Provider<PersistenceLayer>,
-        configProvider: Provider<Config>,
         calculationSignalsEmitterProvider: Provider<CalculationSignalsEmitter>,
         authFlowOutProvider: Provider<AuthFlowOut>,
         tidepoolUploaderProvider: Provider<TidepoolUploader>,
@@ -472,7 +473,6 @@ class CoreObjectsModule {
         notificationManagerProvider: Provider<NotificationManager>,
         cloudStorageManagerProvider: Provider<CloudStorageManager>,
         overviewDataCacheFactoryProvider: Provider<OverviewDataCacheFactory>,
-        constraintsCheckerProvider: Provider<ConstraintsChecker>,
         automationProvider: Provider<Automation>,
         contextProvider: Provider<Context>,
         uiInteractionProvider: Provider<UiInteraction>,
@@ -500,12 +500,10 @@ class CoreObjectsModule {
         sntpClientProvider: Provider<SntpClient>
     ): AapsLeaves = AapsLeaves(
         metroMemberInjectorProvider,
-        nsClientRepositoryProvider,
         nsClientSourceProvider,
         appScopeProvider,
         fabricPrivacyProvider,
         persistenceLayerProvider,
-        configProvider,
         calculationSignalsEmitterProvider,
         authFlowOutProvider,
         tidepoolUploaderProvider,
@@ -516,7 +514,6 @@ class CoreObjectsModule {
         notificationManagerProvider,
         cloudStorageManagerProvider,
         overviewDataCacheFactoryProvider,
-        constraintsCheckerProvider,
         automationProvider,
         contextProvider,
         uiInteractionProvider,

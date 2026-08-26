@@ -116,8 +116,6 @@ abstract class AppModule {
     @InstallIn(SingletonComponent::class)
     interface AppBindings {
 
-        @Binds fun bindConfigInterface(config: ConfigImpl): Config
-
         @Binds fun bindActivityNames(activityNames: UiInteractionImpl): UiInteraction
 
         // Scope on the implementation, not on the binding: Metro reads this module now that interop is
