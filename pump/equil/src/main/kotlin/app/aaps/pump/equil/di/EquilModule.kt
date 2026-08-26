@@ -12,7 +12,6 @@ import dagger.multibindings.IntoMap
 
 @Module(
     includes = [
-        EquilServicesModule::class,
         EquilHistoryModule::class
     ]
 )
