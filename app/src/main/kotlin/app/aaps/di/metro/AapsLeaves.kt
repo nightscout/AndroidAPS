@@ -142,7 +142,6 @@ class AapsLeaves(
     // Dagger keeps building this one - see the note in MaintenanceImplModule.
     // A Dagger @IntoSet multibinding, handed over already assembled. Metro receives the Set as one
     // binding rather than re-declaring the multibinding on this side.
-    private val searchableProvidersProvider: Provider<Set<SearchableProvider>>,
     private val permissionProvidersProvider: Provider<Set<PermissionProvider>>,
     private val smsCommunicatorPluginProvider: Provider<SmsCommunicatorPlugin>,
     private val nsClientV3PluginProvider: Provider<NSClientV3Plugin>,
@@ -233,7 +232,6 @@ class AapsLeaves(
 
     /** A value object: unscoped, as its Dagger binding is. */
     @Provides fun historyScope(): HistoryScope = historyScopeProvider.get()
-    @Provides fun searchableProviders(): Set<SearchableProvider> = searchableProvidersProvider.get()
     // Still Dagger-owned: the only contributor, AutomationRuntime, needs SmsCommunicator,
     // LocationServiceController, ReminderScheduler and BtConnectionSource, none of which the graph
     // reaches yet. PluginStore takes it through a lambda, so nothing is built until it is asked for.

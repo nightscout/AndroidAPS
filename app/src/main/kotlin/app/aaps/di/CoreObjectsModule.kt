@@ -71,6 +71,7 @@ import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -287,6 +288,8 @@ class CoreObjectsModule {
     @Provides fun provideAutosensData(graphs: MetroGraphs): AutosensData = graphs.autosensData
     @Provides @Singleton fun provideCommandQueue(graphs: MetroGraphs): CommandQueue = graphs.commandQueue
     @Provides @Singleton fun provideLocalAlertUtils(graphs: MetroGraphs): LocalAlertUtils = graphs.localAlertUtils
+    // ComposeMainActivity field-injects the concrete class through Hilt, so Dagger needs Metro's one.
+    @Provides @Singleton fun provideBuiltInSearchables(graphs: MetroGraphs): BuiltInSearchables = graphs.builtInSearchables
     // Unscoped on purpose - result objects, one per call, as the @Binds they replace were.
     @Provides fun provideAPSResult(graphs: MetroGraphs): APSResult = graphs.apsResult
     @Provides fun providePumpEnactResult(graphs: MetroGraphs): PumpEnactResult = graphs.pumpEnactResult
@@ -474,7 +477,6 @@ class CoreObjectsModule {
         contextProvider: Provider<Context>,
         uiInteractionProvider: Provider<UiInteraction>,
         versionCheckerUtilsProvider: Provider<VersionCheckerUtils>,
-        searchableProvidersProvider: Provider<Set<SearchableProvider>>,
         permissionProvidersProvider: Provider<Set<PermissionProvider>>,
         smsCommunicatorPluginProvider: Provider<SmsCommunicatorPlugin>,
         nsClientV3PluginProvider: Provider<NSClientV3Plugin>,
@@ -519,7 +521,6 @@ class CoreObjectsModule {
         contextProvider,
         uiInteractionProvider,
         versionCheckerUtilsProvider,
-        searchableProvidersProvider,
         permissionProvidersProvider,
         smsCommunicatorPluginProvider,
         nsClientV3PluginProvider,

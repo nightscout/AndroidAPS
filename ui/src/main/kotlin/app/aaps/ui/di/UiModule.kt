@@ -31,9 +31,6 @@ abstract class UiModule {
 
         // Scene icon resolution stays in :ui (the SceneIcons catalog lives here). The rest of the scene
         // engine + its DI bindings moved to :implementation (SceneModule).
-
-        @Binds @IntoSet fun bindBuiltInSearchables(impl: BuiltInSearchables): SearchableProvider
-        @Binds @IntoSet fun bindDialogSearchables(impl: DialogSearchables): SearchableProvider
     }
 
     companion object {
