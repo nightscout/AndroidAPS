@@ -99,13 +99,12 @@ class ImplementationModule {
         // would only generate an injector that injects nothing.
         // TimeDateOrTZChangeReceiver moved to Metro - see AppReceiversGraph. It was the last
         // dagger.android receiver in this module.
-        @Binds fun bindFabricPrivacy(fabricPrivacyImpl: FabricPrivacyImpl): FabricPrivacy
-        @Binds fun bindActivePlugin(pluginStore: PluginStore): ActivePlugin
-        @Binds fun bindPluginPermissions(pluginStore: PluginStore): PluginPermissions
-
         // Runtime-permission sources for non-plugin features (e.g. standalone Automation).
-        // May be empty; contributors bind via @IntoSet PermissionProvider.
+        // May be empty; contributors bind via @IntoSet PermissionProvider. Metro borrows the finished
+        // set through the `permissionProviders` leaf, so this declaration stays here.
         @Multibinds fun permissionProviders(): Set<PermissionProvider>
+
+        @Binds fun bindFabricPrivacy(fabricPrivacyImpl: FabricPrivacyImpl): FabricPrivacy
         @Binds fun bindResourceHelper(resourceHelperImpl: ResourceHelperImpl): ResourceHelper
 
         @Binds fun bindLocalAlertUtilsInterface(localAlertUtils: LocalAlertUtilsImpl): LocalAlertUtils

@@ -83,6 +83,18 @@ class ContributedBindingsTest {
         assertThat(root.sceneExecutor).isSameInstanceAs(root.sceneExecutor)
         // The inbox the broadcast receivers hand data to - two of them means dropped readings.
         assertThat(root.dataInbox).isSameInstanceAs(root.dataInbox)
+        assertThat(root.activePlugin).isSameInstanceAs(root.activePlugin)
+    }
+
+    @Test
+    fun `ActivePlugin, PluginPermissions and PluginStore are one object`() {
+        // PluginStore holds `plugins` as a lateinit var that MainApp assigns after the graph is built.
+        // If these three resolved to different instances, MainApp would fill one and every
+        // ActivePlugin lookup in the app would read an uninitialised lateinit - the loop would not
+        // find its APS, its pump or its sensitivity plugin. Nothing about that fails to compile.
+        val root = testRoot()
+        assertThat(root.activePlugin).isSameInstanceAs(root.pluginStore)
+        assertThat(root.pluginPermissions).isSameInstanceAs(root.pluginStore)
     }
 
     @Test

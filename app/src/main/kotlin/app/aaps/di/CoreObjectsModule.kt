@@ -53,6 +53,7 @@ import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.graph.GraphConfigRepository
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
+import app.aaps.core.interfaces.plugin.PermissionProvider
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginPermissions
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -115,6 +116,7 @@ import app.aaps.core.objects.wizard.BolusWizard
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.ui.search.SearchableProvider
 import app.aaps.core.utils.receivers.DataInbox
+import app.aaps.implementation.plugin.PluginStore
 import app.aaps.di.metro.AapsLeaves
 import app.aaps.di.metro.MetroGraphs
 import app.aaps.implementation.maintenance.cloud.CloudStorageManager
@@ -266,6 +268,12 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideStoreDataForDb(graphs: MetroGraphs): StoreDataForDb = graphs.storeDataForDb
     @Provides @Singleton fun provideSceneExecutor(graphs: MetroGraphs): SceneExecutor = graphs.sceneExecutor
     @Provides @Singleton fun provideDataInbox(graphs: MetroGraphs): DataInbox = graphs.dataInbox
+    @Provides @Singleton fun provideActivePlugin(graphs: MetroGraphs): ActivePlugin = graphs.activePlugin
+    @Provides @Singleton fun providePluginPermissions(graphs: MetroGraphs): PluginPermissions = graphs.pluginPermissions
+    // MainApp injects the concrete class to hand it the merged plugin list, and the androidTest
+    // helpers do the same. Without this Dagger would build a second PluginStore whose `plugins` is
+    // never set, and every ActivePlugin lookup through Metro would find an empty list.
+    @Provides @Singleton fun providePluginStore(graphs: MetroGraphs): PluginStore = graphs.pluginStore
     @Provides @Singleton fun provideXDripBroadcast(graphs: MetroGraphs): XDripBroadcast = graphs.xDripBroadcast
     @Provides @Singleton fun provideMaintenanceBinding(graphs: MetroGraphs): Maintenance = graphs.maintenance
     @Provides @Singleton fun provideFileListProviderBinding(graphs: MetroGraphs): FileListProvider = graphs.fileListProvider
@@ -422,7 +430,6 @@ class CoreObjectsModule {
         runningConfigurationProvider: Provider<RunningConfiguration>,
         nsClientSourceProvider: Provider<NSClientSource>,
         runningConfigurationKeysProvider: Provider<RunningConfigurationKeys>,
-        activePluginProvider: Provider<ActivePlugin>,
         @ApplicationScope appScopeProvider: Provider<CoroutineScope>,
         fabricPrivacyProvider: Provider<FabricPrivacy>,
         localAlertUtilsProvider: Provider<LocalAlertUtils>,
@@ -446,11 +453,11 @@ class CoreObjectsModule {
         uiInteractionProvider: Provider<UiInteraction>,
         versionCheckerUtilsProvider: Provider<VersionCheckerUtils>,
         searchableProvidersProvider: Provider<Set<SearchableProvider>>,
+        permissionProvidersProvider: Provider<Set<PermissionProvider>>,
         bolusProgressDataProvider: Provider<BolusProgressData>,
         pumpEnactResultProvider: Provider<PumpEnactResult>,
         historyScopeProvider: Provider<HistoryScope>,
         overviewDataCacheProvider: Provider<OverviewDataCache>,
-        pluginPermissionsProvider: Provider<PluginPermissions>,
         @ApplicationContext appContextProvider: Provider<Context>,
         nsClientProvider: Provider<NsClient>,
         clientControlActionDispatcherProvider: Provider<ClientControlActionDispatcher>,
@@ -461,7 +468,6 @@ class CoreObjectsModule {
         runningConfigurationProvider,
         nsClientSourceProvider,
         runningConfigurationKeysProvider,
-        activePluginProvider,
         appScopeProvider,
         fabricPrivacyProvider,
         localAlertUtilsProvider,
@@ -485,11 +491,11 @@ class CoreObjectsModule {
         uiInteractionProvider,
         versionCheckerUtilsProvider,
         searchableProvidersProvider,
+        permissionProvidersProvider,
         bolusProgressDataProvider,
         pumpEnactResultProvider,
         historyScopeProvider,
         overviewDataCacheProvider,
-        pluginPermissionsProvider,
         appContextProvider,
         nsClientProvider,
         clientControlActionDispatcherProvider,

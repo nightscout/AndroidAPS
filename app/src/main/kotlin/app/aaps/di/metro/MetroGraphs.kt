@@ -24,7 +24,9 @@ import app.aaps.plugins.automation.services.LastLocationDataContainer
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
 import app.aaps.implementation.scenes.SceneExecutor
+import app.aaps.core.interfaces.plugin.PluginPermissions
 import app.aaps.core.utils.receivers.DataInbox
+import app.aaps.implementation.plugin.PluginStore
 import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.workflow.WorkflowChainData
 import app.aaps.core.interfaces.maintenance.Maintenance
@@ -310,6 +312,9 @@ class MetroGraphs @Inject constructor(
     val storeDataForDb: StoreDataForDb get() = root.storeDataForDb
     val sceneExecutor: SceneExecutor get() = root.sceneExecutor
     val dataInbox: DataInbox get() = root.dataInbox
+    val activePlugin: ActivePlugin get() = root.activePlugin
+    val pluginPermissions: PluginPermissions get() = root.pluginPermissions
+    val pluginStore: PluginStore get() = root.pluginStore
     val xDripBroadcast: XDripBroadcast get() = root.xDripBroadcast
     val maintenance: Maintenance get() = root.maintenance
     val fileListProvider: FileListProvider get() = root.fileListProvider

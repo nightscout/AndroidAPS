@@ -55,7 +55,6 @@ class HistoryBrowserDataTest : TestBaseWithProfile() {
      * Only the leaves this test really needs are stubbed - see [testRoot].
      */
     private fun root() = testRoot { leaves ->
-        whenever(leaves.activePlugin()).thenReturn(activePlugin)
         whenever(leaves.persistenceLayer()).thenReturn(persistenceLayer)
         whenever(leaves.profileFunction()).thenReturn(profileFunction)
         whenever(leaves.rh()).thenReturn(rh)

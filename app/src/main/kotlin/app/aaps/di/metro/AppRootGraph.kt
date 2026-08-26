@@ -24,7 +24,10 @@ import app.aaps.plugins.automation.services.LastLocationDataContainer
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
 import app.aaps.implementation.scenes.SceneExecutor
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.PluginPermissions
 import app.aaps.core.utils.receivers.DataInbox
+import app.aaps.implementation.plugin.PluginStore
 import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.workflow.WorkflowChainData
 import app.aaps.core.interfaces.maintenance.Maintenance
@@ -57,6 +60,7 @@ import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.maintenance.CloudDirectoryManager
 import app.aaps.core.interfaces.overview.graph.GraphConfigRepository
+import app.aaps.core.interfaces.plugin.PermissionProvider
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileStore
@@ -278,6 +282,9 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val storeDataForDb: StoreDataForDb
     val sceneExecutor: SceneExecutor
     val dataInbox: DataInbox
+    val activePlugin: ActivePlugin
+    val pluginPermissions: PluginPermissions
+    val pluginStore: PluginStore
     val xDripBroadcast: XDripBroadcast
     val maintenance: Maintenance
     val fileListProvider: FileListProvider

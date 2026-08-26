@@ -24,6 +24,7 @@ import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
+import app.aaps.core.interfaces.plugin.PermissionProvider
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginPermissions
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -86,7 +87,6 @@ class AapsLeaves(
     private val runningConfigurationProvider: Provider<RunningConfiguration>,
     private val nsClientSourceProvider: Provider<NSClientSource>,
     private val runningConfigurationKeysProvider: Provider<RunningConfigurationKeys>,
-    private val activePluginProvider: Provider<ActivePlugin>,
     @ApplicationScope private val appScopeProvider: Provider<CoroutineScope>,
     private val fabricPrivacyProvider: Provider<FabricPrivacy>,
     private val localAlertUtilsProvider: Provider<LocalAlertUtils>,
@@ -135,6 +135,7 @@ class AapsLeaves(
     // A Dagger @IntoSet multibinding, handed over already assembled. Metro receives the Set as one
     // binding rather than re-declaring the multibinding on this side.
     private val searchableProvidersProvider: Provider<Set<SearchableProvider>>,
+    private val permissionProvidersProvider: Provider<Set<PermissionProvider>>,
     /**
      * The history browser scope.
      *
@@ -150,13 +151,11 @@ class AapsLeaves(
     private val historyScopeProvider: Provider<HistoryScope>,
     private val overviewDataCacheProvider: Provider<OverviewDataCache>,
     // Same object as ActivePlugin above (PluginStore), under its other interface.
-    private val pluginPermissionsProvider: Provider<PluginPermissions>,
     @ApplicationContext private val appContextProvider: Provider<Context>,
     private val nsClientProvider: Provider<NsClient>,
     private val clientControlActionDispatcherProvider: Provider<ClientControlActionDispatcher>,
     private val sntpClientProvider: Provider<SntpClient>
 ) {
-    @Provides fun activePlugin(): ActivePlugin = activePluginProvider.get()
 
     /**
      * The application scope, qualified.
@@ -219,8 +218,11 @@ class AapsLeaves(
     @Provides fun pumpEnactResult(): PumpEnactResult = pumpEnactResultProvider.get()
     @Provides fun historyScope(): HistoryScope = historyScopeProvider.get()
     @Provides fun searchableProviders(): Set<SearchableProvider> = searchableProvidersProvider.get()
+    // Still Dagger-owned: the only contributor, AutomationRuntime, needs SmsCommunicator,
+    // LocationServiceController, ReminderScheduler and BtConnectionSource, none of which the graph
+    // reaches yet. PluginStore takes it through a lambda, so nothing is built until it is asked for.
+    @Provides fun permissionProviders(): Set<PermissionProvider> = permissionProvidersProvider.get()
     @Provides fun overviewDataCache(): OverviewDataCache = overviewDataCacheProvider.get()
-    @Provides fun pluginPermissions(): PluginPermissions = pluginPermissionsProvider.get()
 
     /** Hilt's qualifier, read now that interop is on. Same Context as the unqualified binding. */
     @Provides @ApplicationContext fun appContext(): Context = appContextProvider.get()
