@@ -284,6 +284,11 @@ jobs:
             for m in $(find . -type d -name androidTest -not -path "*/build/*" -printf "%h\n" | sed 's|/src$||; s|^\./||; s|/|:|g'); do
               [ "$m" = "app" ] && continue; TASKS="$TASKS :$m:connectedFullDebugAndroidTest"
             done
+            # A multiplatform module has no flavours: its instrumented sources live in androidDeviceTest
+            # and the task is connectedAndroidDeviceTest. Finds nothing until the first module flips.
+            for m in $(find . -type d -name androidDeviceTest -not -path "*/build/*" -printf "%h\n" | sed 's|/src$||; s|^\./||; s|/|:|g'); do
+              TASKS="$TASKS :$m:connectedAndroidDeviceTest"
+            done
             [ -n "$TASKS" ] && $GRADLE_PIN ./gradlew --continue -Dorg.gradle.daemon=true -Dorg.gradle.workers.max=16 $TASKS || echo "no non-app test modules"
 
       - run:
