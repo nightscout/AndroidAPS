@@ -8,11 +8,12 @@ import app.aaps.core.utils.Percentile
 import app.aaps.plugins.aps.autotune.data.ATProfile
 import app.aaps.plugins.aps.autotune.data.PreppedGlucose
 import java.util.Calendar
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.math.max
 
-@Singleton
+@SingleIn(AppScope::class)
 class AutotuneCore @Inject constructor(
     private val preferences: Preferences,
     private val autotuneFS: AutotuneFS

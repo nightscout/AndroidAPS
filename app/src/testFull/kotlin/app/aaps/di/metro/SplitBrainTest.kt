@@ -52,7 +52,7 @@ class SplitBrainTest {
     @Test
     fun `nothing javax-scoped is rebuilt by Metro`() {
         val reports = unbridgedSingletons(anchors = ANCHORS, daggerOwned = daggerOwnedTypes())
-            .filterNot { report -> (STATELESS + AUTOTUNE).any { report.startsWith(it) } }
+            .filterNot { report -> STATELESS.any { report.startsWith(it) } }
 
         assertWithMessage(
             "These are javax @Singleton, so exactly one was intended, but Metro builds its own copy. " +
@@ -68,8 +68,8 @@ class SplitBrainTest {
      * A duplicate is still a wasted allocation, so this is a tolerance rather than an endorsement - but
      * scoping them would add a delegate that carries no meaning. **Only add an entry after reading the
      * class**: "looks harmless" is exactly how the three real ones got through, and a script that tried
-     * to decide this automatically reported every one of these as stateless including the two below that
-     * are not.
+     * to decide this automatically called every candidate stateless - including AutotuneIob and AutotuneFS,
+     * which turned out to be the pair that made autotune read data it had never populated.
      */
     private val STATELESS = listOf(
         // Branches on config and forwards to the dispatcher. No fields.
@@ -81,8 +81,6 @@ class SplitBrainTest {
         // Holds one Intent built from Context in its constructor; two are interchangeable.
         "app.aaps.persistentNotification.DummyServiceHelper",
         // Pure calculation over its arguments. No fields.
-        "app.aaps.plugins.aps.autotune.AutotuneCore",
-        "app.aaps.plugins.aps.autotune.AutotunePrep",
         "app.aaps.ui.compose.navigation.ElementAvailability",
         "app.aaps.ui.compose.quickLaunch.QuickLaunchResolver",
         "app.aaps.ui.search.WikiSearchRepository",
@@ -93,22 +91,6 @@ class SplitBrainTest {
         "app.aaps.ui.compose.profileHelper.defaultProfile.DefaultProfileDPV",
         // Caches the built index. A second copy rebuilds it - wasteful, not wrong.
         "app.aaps.ui.search.SearchIndexBuilder"
-    )
-
-    /**
-     * **Known issue, not a tolerance.** These two are genuinely stateful and genuinely duplicated:
-     * `AutotuneIob` holds the data autotune runs on (including `lateinit var glucose` and
-     * `lateinit var tempBasals`), and `AutotuneFS` holds `lateinit var autotunePath`,
-     * `lateinit var autotuneSettings` and an accumulating log. Metro builds a separate one of each for
-     * `AutotunePlugin`, `AutotunePrep` and `AutotuneFS`, so whichever instance is populated may not be
-     * the one read - wrong tuning output, or an uninitialised-property crash.
-     *
-     * This predates the Metro work in this file and is listed so the rest of the guard can run. It is
-     * being looked at on its own; do not extend this list to make a new report go away.
-     */
-    private val AUTOTUNE = listOf(
-        "app.aaps.plugins.aps.autotune.AutotuneIob",
-        "app.aaps.plugins.aps.autotune.AutotuneFS"
     )
 
     /**

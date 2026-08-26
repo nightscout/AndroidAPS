@@ -19,10 +19,11 @@ import java.io.PrintWriter
 import java.text.SimpleDateFormat
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@SingleIn(AppScope::class)
 class AutotuneFS @Inject constructor(
     private val rh: ResourceHelper,
     private val loggerUtils: LoggerUtils
