@@ -48,8 +48,8 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
@@ -83,7 +83,7 @@ import app.aaps.core.ui.R as CoreUiR
  */
 @Composable
 fun FillDialogScreen(
-    viewModel: FillDialogViewModel = hiltViewModel(),
+    viewModel: FillDialogViewModel = metroViewModel(),
     fillButtonsDef: PreferenceSubScreenDef,
     onNavigateBack: () -> Unit,
     onPickSiteLocation: () -> Unit = {},

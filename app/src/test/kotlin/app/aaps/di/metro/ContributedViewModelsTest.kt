@@ -8,6 +8,10 @@ import app.aaps.plugins.sync.smsCommunicator.compose.SmsCommunicatorViewModel
 import app.aaps.plugins.sync.tidepool.compose.TidepoolViewModel
 import app.aaps.plugins.sync.wear.compose.WearViewModel
 import app.aaps.plugins.sync.xdrip.compose.XdripViewModel
+import app.aaps.ui.compose.careDialog.CareDialogViewModel
+import app.aaps.ui.compose.fillDialog.FillDialogViewModel
+import app.aaps.ui.compose.scenes.wizard.SceneWizardViewModel
+import app.aaps.ui.compose.wizardDialog.WizardDialogViewModel
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
@@ -41,6 +45,28 @@ class ContributedViewModelsTest {
             AuthorizedClientsViewModel::class,
             PairWithMasterViewModel::class,
             WearViewModel::class
+        )
+    }
+
+    @Test
+    fun `the four dialogs that need SavedStateHandle are in the assisted map`() {
+        // They cannot be in the plain map: that one builds from the graph alone, and these four take a
+        // SavedStateHandle that only the caller has. `MetroViewModelFactory` checks the assisted map
+        // first, so being in the wrong one is not a compile error - it is "no binding for view model"
+        // when the dialog opens.
+        val root = testRoot()
+
+        assertThat(root.assistedFactoryProviders.keys).containsAtLeast(
+            CareDialogViewModel::class,
+            FillDialogViewModel::class,
+            SceneWizardViewModel::class,
+            WizardDialogViewModel::class
+        )
+        assertThat(root.viewModelProviders.keys).containsNoneOf(
+            CareDialogViewModel::class,
+            FillDialogViewModel::class,
+            SceneWizardViewModel::class,
+            WizardDialogViewModel::class
         )
     }
 

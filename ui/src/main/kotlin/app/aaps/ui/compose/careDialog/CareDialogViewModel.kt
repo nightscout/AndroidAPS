@@ -2,6 +2,8 @@ package app.aaps.ui.compose.careDialog
 
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.createSavedStateHandle
+import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.GlucoseUnit
@@ -29,19 +31,23 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.siteRotation.BodyType
 import app.aaps.ui.R
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactory
+import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactoryKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
 @Stable
-class CareDialogViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+class CareDialogViewModel @AssistedInject constructor(
+    @Assisted savedStateHandle: SavedStateHandle,
     private val persistenceLayer: PersistenceLayer,
     private val batchExecutor: BatchExecutor,
     private val profileFunction: ProfileFunction,
@@ -265,5 +271,21 @@ class CareDialogViewModel @Inject constructor(
         CareportalEventType.EXERCISE       -> Sources.Exercise
         CareportalEventType.QUESTION       -> Sources.Question
         CareportalEventType.ANNOUNCEMENT   -> Sources.Announcement
+    }
+
+    /**
+     * The same split assisted injection expresses everywhere: [SavedStateHandle] comes from the
+     * caller, everything else from the graph. `MetroViewModelFactory` tries the assisted map before
+     * the plain one, so the screen still calls `metroViewModel()` and nothing at the call site says
+     * this view model is built differently.
+     */
+    @ContributesIntoMap(AppScope::class)
+    @ViewModelAssistedFactoryKey(CareDialogViewModel::class)
+    @AssistedFactory
+    fun interface Factory : ViewModelAssistedFactory {
+
+        override fun create(extras: CreationExtras): CareDialogViewModel = create(extras.createSavedStateHandle())
+
+        fun create(@Assisted savedStateHandle: SavedStateHandle): CareDialogViewModel
     }
 }

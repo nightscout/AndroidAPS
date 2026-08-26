@@ -2,6 +2,8 @@ package app.aaps.ui.compose.wizardDialog
 
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.createSavedStateHandle
+import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.time.T
@@ -41,7 +43,13 @@ import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.objects.wizard.BolusWizard
 import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.core.ui.compose.icons.IcCalculator
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactory
+import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactoryKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -52,14 +60,12 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 import javax.inject.Provider
 import kotlin.math.abs
 
-@HiltViewModel
 @Stable
-class WizardDialogViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+class WizardDialogViewModel @AssistedInject constructor(
+    @Assisted private val savedStateHandle: SavedStateHandle,
     private val bolusWizardProvider: Provider<BolusWizard>,
     private val constraintChecker: ConstraintsChecker,
     private val profileFunction: ProfileFunction,
@@ -539,5 +545,21 @@ class WizardDialogViewModel @Inject constructor(
                 else                       -> Unit // Unconfirmed → app modal
             }
         }
+    }
+
+    /**
+     * The same split assisted injection expresses everywhere: [SavedStateHandle] comes from the
+     * caller, everything else from the graph. MetroViewModelFactory tries the assisted map before the
+     * plain one, so the screen still calls metroViewModel() and nothing at the call site says this
+     * view model is built differently.
+     */
+    @ContributesIntoMap(AppScope::class)
+    @ViewModelAssistedFactoryKey(WizardDialogViewModel::class)
+    @AssistedFactory
+    fun interface Factory : ViewModelAssistedFactory {
+
+        override fun create(extras: CreationExtras): WizardDialogViewModel = create(extras.createSavedStateHandle())
+
+        fun create(@Assisted savedStateHandle: SavedStateHandle): WizardDialogViewModel
     }
 }

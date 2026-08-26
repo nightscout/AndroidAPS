@@ -42,8 +42,8 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
@@ -65,7 +65,7 @@ import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 fun CareDialogScreen(
-    viewModel: CareDialogViewModel = hiltViewModel(),
+    viewModel: CareDialogViewModel = metroViewModel(),
     onNavigateBack: () -> Unit,
     onPickSiteLocation: () -> Unit = {},
     siteLocationResult: Pair<String?, String?>? = null

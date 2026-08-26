@@ -20,8 +20,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTopAppBar
@@ -31,7 +31,7 @@ import app.aaps.core.ui.compose.pump.StepProgressIndicator
 fun SceneWizardScreen(
     onFinished: () -> Unit,
     onCancel: () -> Unit,
-    viewModel: SceneWizardViewModel = hiltViewModel()
+    viewModel: SceneWizardViewModel = metroViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val chainTargets by viewModel.availableChainTargets.collectAsStateWithLifecycle()

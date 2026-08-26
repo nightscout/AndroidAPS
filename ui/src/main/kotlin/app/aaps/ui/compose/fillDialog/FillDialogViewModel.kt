@@ -2,6 +2,8 @@ package app.aaps.ui.compose.fillDialog
 
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.createSavedStateHandle
+import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.format.NumberFormat
@@ -38,7 +40,13 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.observeChange
 import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.ui.R
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactory
+import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactoryKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -51,15 +59,13 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 import kotlin.math.abs
 import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.R as CoreUiR
 
-@HiltViewModel
 @Stable
-class FillDialogViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+class FillDialogViewModel @AssistedInject constructor(
+    @Assisted savedStateHandle: SavedStateHandle,
     private val constraintChecker: ConstraintsChecker,
     activePlugin: ActivePlugin,
     private val persistenceLayer: PersistenceLayer,
@@ -451,4 +457,20 @@ class FillDialogViewModel @Inject constructor(
     fun decimalFormat(): NumberFormat =
         decimalFormatter.pumpSupportedBolusFormat(uiState.value.bolusStep)
 
+
+    /**
+     * The same split assisted injection expresses everywhere: [SavedStateHandle] comes from the
+     * caller, everything else from the graph. MetroViewModelFactory tries the assisted map before the
+     * plain one, so the screen still calls metroViewModel() and nothing at the call site says this
+     * view model is built differently.
+     */
+    @ContributesIntoMap(AppScope::class)
+    @ViewModelAssistedFactoryKey(FillDialogViewModel::class)
+    @AssistedFactory
+    fun interface Factory : ViewModelAssistedFactory {
+
+        override fun create(extras: CreationExtras): FillDialogViewModel = create(extras.createSavedStateHandle())
+
+        fun create(@Assisted savedStateHandle: SavedStateHandle): FillDialogViewModel
+    }
 }
