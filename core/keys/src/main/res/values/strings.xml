@@ -36,6 +36,8 @@
     <string name="pref_title_alert_increase_volume">Gradually increase notification volume</string>
     <string name="pref_title_alert_override_dnd">Override Do Not Disturb mode</string>
     <string name="pref_summary_alert_override_dnd">When enabled, AAPS alarms play through silent and Do Not Disturb modes (alarm stream). When disabled, alarms respect silent/DND (notification stream).</string>
+    <string name="pref_title_alert_failed_update_basal_profile_sound">Play sound on failed basal profile update</string>
+    <string name="pref_summary_alert_failed_update_basal_profile_sound">When disabled, AAPS still shows the failed basal profile update alert, but without the alarm sound.</string>
 
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Upload BG data to NS</string>
