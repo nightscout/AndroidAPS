@@ -28,8 +28,6 @@ dependencies {
 
     testImplementation(project(":shared:tests"))
 
-    implementation(libs.androidx.hilt.navigation.compose)
-
     runtimeOnly(libs.net.danlew.android.joda)
 
     ksp(libs.com.google.dagger.compiler)

@@ -42,7 +42,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     implementation(libs.com.github.bumptech.glide.compose)
     implementation(libs.com.google.dagger.hilt.android)
-    implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.com.google.code.gson)
 
     api(libs.androidx.room.runtime)

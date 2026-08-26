@@ -30,7 +30,6 @@ dependencies {
     testImplementation(project(":core:objects"))
 
     implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.com.google.code.gson)
 
     implementation(libs.com.google.guava)
