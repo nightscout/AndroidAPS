@@ -1,6 +1,5 @@
 package app.aaps.pump.common.di
 
-import app.aaps.pump.common.hw.rileylink.service.RileyLinkBluetoothStateReceiver
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkBroadcastReceiver
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkService
 import dagger.Module
@@ -26,5 +25,4 @@ abstract class RileyLinkModule {
 
     @ContributesAndroidInjector abstract fun contributesRileyLinkService(): RileyLinkService
     @ContributesAndroidInjector abstract fun contributesRileyLinkBroadcastReceiver(): RileyLinkBroadcastReceiver
-    @ContributesAndroidInjector abstract fun contributesRileyLinkBluetoothStateReceiver(): RileyLinkBluetoothStateReceiver
 }

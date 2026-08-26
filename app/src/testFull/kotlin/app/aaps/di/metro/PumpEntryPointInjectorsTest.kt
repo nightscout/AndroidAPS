@@ -7,6 +7,7 @@ import app.aaps.pump.diaconn.service.DiaconnG8Service
 import app.aaps.pump.insight.InsightAlertService
 import app.aaps.pump.insight.app_layer.activities.InsightAlertActivity
 import app.aaps.pump.insight.connection_service.InsightConnectionService
+import app.aaps.pump.common.hw.rileylink.service.RileyLinkBluetoothStateReceiver
 import app.aaps.pump.medtrum.services.MedtrumService
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
@@ -42,6 +43,13 @@ class PumpEntryPointInjectorsTest {
         val injectors = testRoot().contributedMemberInjectors
 
         assertThat(injectors.keys).containsAtLeast(MedtrumService::class, DiaconnG8Service::class)
+    }
+
+    @Test
+    fun `the rileylink bluetooth state receiver has an injector`() {
+        val injectors = testRoot().contributedMemberInjectors
+
+        assertThat(injectors.keys).contains(RileyLinkBluetoothStateReceiver::class)
     }
 
     @Test
