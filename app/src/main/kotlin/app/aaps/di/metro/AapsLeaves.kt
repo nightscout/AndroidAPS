@@ -8,7 +8,7 @@ import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.database.di.DatabaseConfig
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.dst.DstHelper
@@ -96,12 +96,11 @@ import javax.inject.Provider
 @BindingContainer
 class AapsLeaves(
     private val metroMemberInjectorProvider: Provider<MetroMemberInjector>,
-    private val nsClientRepositoryProvider: Provider<NSClientRepository>,
     private val nsClientSourceProvider: Provider<NSClientSource>,
     @ApplicationScope private val appScopeProvider: Provider<CoroutineScope>,
     private val fabricPrivacyProvider: Provider<FabricPrivacy>,
-    private val persistenceLayerProvider: Provider<PersistenceLayer>,
     private val configProvider: Provider<Config>,
+    private val databaseConfigProvider: Provider<DatabaseConfig>,
     // Dagger owns the app-wide emitter - `WorkflowModule.provideMainSignalsEmitter`. A history window
     // has its own, built in `HistoryWindowGraph`, which is why this one is not simply contributed.
     private val calculationSignalsEmitterProvider: Provider<CalculationSignalsEmitter>,
@@ -119,7 +118,6 @@ class AapsLeaves(
     private val cloudStorageManagerProvider: Provider<CloudStorageManager>,
     private val overviewDataCacheFactoryProvider: Provider<OverviewDataCacheFactory>,
     // Needed by the feature extensions below the root, which no longer carry their own leaf lists.
-    private val constraintsCheckerProvider: Provider<ConstraintsChecker>,
     private val automationProvider: Provider<Automation>,
     private val contextProvider: Provider<Context>,
     // Source plugins, still built by Dagger. They live here rather than in their own module because a
@@ -166,7 +164,6 @@ class AapsLeaves(
      * window is what keeps history browsing off the live loop's calculation objects, so an app-scoped
      * view model reading it is fine.
      */
-    private val bolusProgressDataProvider: Provider<BolusProgressData>,
     private val historyScopeProvider: Provider<HistoryScope>,
     private val overviewDataCacheProvider: Provider<OverviewDataCache>,
     // Same object as ActivePlugin above (PluginStore), under its other interface.
@@ -194,8 +191,8 @@ class AapsLeaves(
     @Provides fun fabricPrivacy(): FabricPrivacy = fabricPrivacyProvider.get()
     // No runningModeExpiryJob() leaf: Metro builds it now (commonMain, Metro @Inject), and Dagger gets
     // both running-mode classes from `CoreObjectsModule` instead.
-    @Provides fun persistenceLayer(): PersistenceLayer = persistenceLayerProvider.get()
     @Provides fun config(): Config = configProvider.get()
+    @Provides fun databaseConfig(): DatabaseConfig = databaseConfigProvider.get()
     // No iobCobCalculator() any more: Metro builds it now, in `MainPluginsBindings`, and Dagger receives
     // it through `CoreObjectsModule.provideIobCobCalculator`.
     @Provides fun calculationSignalsEmitter(): CalculationSignalsEmitter = calculationSignalsEmitterProvider.get()
@@ -219,7 +216,6 @@ class AapsLeaves(
     // two @ContributesBinding), so this leaf pushed an unscoped Dagger copy back in.
     @Provides fun cloudStorageManager(): CloudStorageManager = cloudStorageManagerProvider.get()
     @Provides fun overviewDataCacheFactory(): OverviewDataCacheFactory = overviewDataCacheFactoryProvider.get()
-    @Provides fun constraintsChecker(): ConstraintsChecker = constraintsCheckerProvider.get()
     @Provides fun automation(): Automation = automationProvider.get()
     @Provides fun context(): Context = contextProvider.get()
 
@@ -228,7 +224,6 @@ class AapsLeaves(
 
     @Provides fun versionCheckerUtils(): VersionCheckerUtils = versionCheckerUtilsProvider.get()
     @Provides fun sntpClient(): SntpClient = sntpClientProvider.get()
-    @Provides fun bolusProgressData(): BolusProgressData = bolusProgressDataProvider.get()
 
     /** A value object: unscoped, as its Dagger binding is. */
     @Provides fun historyScope(): HistoryScope = historyScopeProvider.get()
@@ -278,7 +273,6 @@ class AapsLeaves(
     @Provides fun nsClient(): NsClient = nsClientProvider.get()
 
     // What NSClientV3Service needs beyond the usual leaves. All three are Dagger @Binds in :plugins:sync.
-    @Provides fun nsClientRepository(): NSClientRepository = nsClientRepositoryProvider.get()
     @Provides fun nsClientSource(): NSClientSource = nsClientSourceProvider.get()
     @Provides fun clientControlActionDispatcher(): ClientControlActionDispatcher = clientControlActionDispatcherProvider.get()
 }

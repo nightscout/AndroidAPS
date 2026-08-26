@@ -12,7 +12,6 @@ import app.aaps.database.entities.embedments.InsulinConfiguration
 import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.database.entities.interfaces.DBEntryWithTime
 import app.aaps.database.entities.interfaces.TraceableDBEntry
-import java.util.TimeZone
 
 @Entity(
     tableName = TABLE_EFFECTIVE_PROFILE_SWITCHES,
@@ -37,7 +36,7 @@ data class EffectiveProfileSwitch(
     @Embedded
     override var interfaceIDs_backing: InterfaceIDs? = null,
     override var timestamp: Long,
-    override var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
+    override var utcOffset: Long = defaultUtcOffset(timestamp),
     var basalBlocks: List<Block>,
     var isfBlocks: List<Block>,
     var icBlocks: List<Block>,

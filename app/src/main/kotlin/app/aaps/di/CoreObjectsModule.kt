@@ -70,7 +70,10 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
+import app.aaps.core.interfaces.maintenance.CloudStorageProvider
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.database.AppRepository
+import app.aaps.database.di.DatabaseConfig
 import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -288,6 +291,12 @@ class CoreObjectsModule {
     @Provides fun provideAutosensData(graphs: MetroGraphs): AutosensData = graphs.autosensData
     @Provides @Singleton fun provideCommandQueue(graphs: MetroGraphs): CommandQueue = graphs.commandQueue
     @Provides @Singleton fun provideLocalAlertUtils(graphs: MetroGraphs): LocalAlertUtils = graphs.localAlertUtils
+    @Provides @Singleton fun provideBolusProgressData(graphs: MetroGraphs): BolusProgressData = graphs.bolusProgressData
+    @Provides @Singleton fun providePersistenceLayer(graphs: MetroGraphs): PersistenceLayer = graphs.persistenceLayer
+    @Provides @Singleton fun provideAppRepository(graphs: MetroGraphs): AppRepository = graphs.appRepository
+    @Provides @Singleton fun provideCloudStorageProviders(graphs: MetroGraphs): Set<CloudStorageProvider> = graphs.cloudStorageProviders
+    @Provides @Singleton fun provideConstraintsChecker(graphs: MetroGraphs): ConstraintsChecker = graphs.constraintsChecker
+    @Provides @Singleton fun provideNSClientRepository(graphs: MetroGraphs): NSClientRepository = graphs.nsClientRepository
     // ComposeMainActivity field-injects the concrete class through Hilt, so Dagger needs Metro's one.
     @Provides @Singleton fun provideBuiltInSearchables(graphs: MetroGraphs): BuiltInSearchables = graphs.builtInSearchables
     // Unscoped on purpose - result objects, one per call, as the @Binds they replace were.
@@ -456,12 +465,11 @@ class CoreObjectsModule {
     @Suppress("LongParameterList")
     fun provideAapsLeaves(
         metroMemberInjectorProvider: Provider<MetroMemberInjector>,
-        nsClientRepositoryProvider: Provider<NSClientRepository>,
         nsClientSourceProvider: Provider<NSClientSource>,
         @ApplicationScope appScopeProvider: Provider<CoroutineScope>,
         fabricPrivacyProvider: Provider<FabricPrivacy>,
-        persistenceLayerProvider: Provider<PersistenceLayer>,
         configProvider: Provider<Config>,
+        databaseConfigProvider: Provider<DatabaseConfig>,
         calculationSignalsEmitterProvider: Provider<CalculationSignalsEmitter>,
         authFlowOutProvider: Provider<AuthFlowOut>,
         tidepoolUploaderProvider: Provider<TidepoolUploader>,
@@ -472,7 +480,6 @@ class CoreObjectsModule {
         notificationManagerProvider: Provider<NotificationManager>,
         cloudStorageManagerProvider: Provider<CloudStorageManager>,
         overviewDataCacheFactoryProvider: Provider<OverviewDataCacheFactory>,
-        constraintsCheckerProvider: Provider<ConstraintsChecker>,
         automationProvider: Provider<Automation>,
         contextProvider: Provider<Context>,
         uiInteractionProvider: Provider<UiInteraction>,
@@ -491,7 +498,6 @@ class CoreObjectsModule {
         xdripMvvmRepositoryProvider: Provider<XdripMvvmRepository>,
         receiverDelegateProvider: Provider<ReceiverDelegate>,
         rateLimitProvider: Provider<RateLimit>,
-        bolusProgressDataProvider: Provider<BolusProgressData>,
         historyScopeProvider: Provider<HistoryScope>,
         overviewDataCacheProvider: Provider<OverviewDataCache>,
         @ApplicationContext appContextProvider: Provider<Context>,
@@ -500,12 +506,11 @@ class CoreObjectsModule {
         sntpClientProvider: Provider<SntpClient>
     ): AapsLeaves = AapsLeaves(
         metroMemberInjectorProvider,
-        nsClientRepositoryProvider,
         nsClientSourceProvider,
         appScopeProvider,
         fabricPrivacyProvider,
-        persistenceLayerProvider,
         configProvider,
+        databaseConfigProvider,
         calculationSignalsEmitterProvider,
         authFlowOutProvider,
         tidepoolUploaderProvider,
@@ -516,7 +521,6 @@ class CoreObjectsModule {
         notificationManagerProvider,
         cloudStorageManagerProvider,
         overviewDataCacheFactoryProvider,
-        constraintsCheckerProvider,
         automationProvider,
         contextProvider,
         uiInteractionProvider,
@@ -535,7 +539,6 @@ class CoreObjectsModule {
         xdripMvvmRepositoryProvider,
         receiverDelegateProvider,
         rateLimitProvider,
-        bolusProgressDataProvider,
         historyScopeProvider,
         overviewDataCacheProvider,
         appContextProvider,

@@ -55,8 +55,6 @@ abstract class SyncModule {
         @Binds fun bindSmsCommunicator(smsCommunicatorPlugin: SmsCommunicatorPlugin): SmsCommunicator
         @Binds fun bindNsClient(nsClientV3Plugin: NSClientV3Plugin): NsClient
 
-        @Binds fun bindNSClientRepository(nsClientRepositoryImpl: NSClientRepositoryImpl): NSClientRepository
-
         @Binds fun bindClientControlActionDispatcher(roundTrip: ClientControlRoundTrip): ClientControlActionDispatcher
     }
 

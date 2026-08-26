@@ -4,10 +4,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import app.aaps.core.interfaces.ui.UiInteraction
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
-import dagger.hilt.android.EntryPointAccessors
-import dagger.hilt.components.SingletonComponent
+import app.aaps.core.objects.workflow.MetroBroadcastReceiver
+import dev.zacsweers.metro.Inject
 
 /**
  * Handles the "Mute" action on the background alarm notification: silences every audible alarm
@@ -16,21 +14,15 @@ import dagger.hilt.components.SingletonComponent
  * Primary use: the case where `ErrorActivity` could not be brought to the foreground (another app on
  * top) so the user's only lock-screen surface is the notification.
  *
- * Reaches [UiInteraction] through a Hilt entry point since a manifest [BroadcastReceiver] is not
- * itself injected.
+ * A manifest [BroadcastReceiver] is not injected by the system, so it asks the graph itself - the
+ * same way the other receivers in this module do.
  */
-class AlarmMuteReceiver : BroadcastReceiver() {
+class AlarmMuteReceiver : MetroBroadcastReceiver() {
+
+    @Inject lateinit var uiInteraction: UiInteraction
 
     override fun onReceive(context: Context, intent: Intent) {
-        EntryPointAccessors.fromApplication(context.applicationContext, Entry::class.java)
-            .uiInteraction()
-            .stopAlarm("Notification mute action")
-    }
-
-    @EntryPoint
-    @InstallIn(SingletonComponent::class)
-    interface Entry {
-
-        fun uiInteraction(): UiInteraction
+        super.onReceive(context, intent)
+        uiInteraction.stopAlarm("Notification mute action")
     }
 }

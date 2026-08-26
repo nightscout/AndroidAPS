@@ -26,7 +26,6 @@ import app.aaps.database.entities.data.NewEntries
 import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.database.entities.interfaces.DBEntry
 import app.aaps.database.transactions.Transaction
-import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
@@ -42,8 +41,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.Closeable
 import java.io.File
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.days
 
@@ -57,12 +54,13 @@ data class DatabaseMaintenanceRaw(
     val report: String
 )
 
-@Singleton
-class AppRepository @Inject internal constructor(
-    internal val database: AppDatabase
+class AppRepository internal constructor(
+    databaseProvider: () -> AppDatabase
 ) : Closeable {
 
-    private val changeSubject = PublishSubject.create<List<DBEntry>>()
+    // Lazily: building the Room database is real work and the graph is resolved on a plain JVM in the
+    // unit tests, where nothing ever queries it. Change observers only read the flow below.
+    internal val database: AppDatabase by lazy(databaseProvider)
 
     /**
      * Coroutine scope for Flow emissions
@@ -107,7 +105,7 @@ class AppRepository @Inject internal constructor(
     /**
      * Executes a transaction ignoring its result (coroutine version)
      * Uses Room's suspend withTransaction API for proper coroutine support
-     * Emits to BOTH RxJava (existing) AND Flow (new)
+     * Emits the changed entries to [changeFlow] observers.
      */
     suspend fun <T> runTransactionSuspend(transaction: Transaction<T>) {
         // The COMMIT and its change-notification must be one atomic, uninterruptible unit. If the
@@ -123,10 +121,7 @@ class AppRepository @Inject internal constructor(
                     transaction.run()
                 }
             }
-            // Emit to RxJava (existing) - for backwards compatibility
-            changeSubject.onNext(changes)
-
-            // Emit to Flow (new)
+            // Notify observers
             if (changes.isNotEmpty()) {
                 _changeFlow.emit(changes)
             }
@@ -136,7 +131,7 @@ class AppRepository @Inject internal constructor(
     /**
      * Executes a transaction and returns its result (coroutine version)
      * Uses Room's suspend withTransaction API for proper coroutine support
-     * Emits to BOTH RxJava (existing) AND Flow (new)
+     * Emits the changed entries to [changeFlow] observers.
      */
     suspend fun <T : Any> runTransactionForResultSuspend(transaction: Transaction<T>): T =
     // The COMMIT and its change-notification must be one atomic, uninterruptible unit. If the
@@ -152,10 +147,7 @@ class AppRepository @Inject internal constructor(
                     transaction.run()
                 }
             }
-            // Emit to RxJava (existing) - for backwards compatibility
-            changeSubject.onNext(changes)
-
-            // Emit to Flow (new)
+            // Notify observers
             if (changes.isNotEmpty()) {
                 _changeFlow.emit(changes)
             }
@@ -400,7 +392,6 @@ class AppRepository @Inject internal constructor(
 
     suspend fun insert(word: UserEntry) {
         database.userEntryDao.insert(word)
-        changeSubject.onNext(mutableListOf(word)) // Not TraceableDao
     }
 
     // PROFILE SWITCH
@@ -754,7 +745,6 @@ class AppRepository @Inject internal constructor(
     fun insert(deviceStatus: DeviceStatus) {
         database.deviceStatusDao.insert(deviceStatus)
         val changes = mutableListOf<DBEntry>(deviceStatus) // Not TraceableDao
-        changeSubject.onNext(changes)
         _changeFlow.tryEmit(changes)
     }
 

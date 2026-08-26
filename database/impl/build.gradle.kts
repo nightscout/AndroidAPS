@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.metro)
     kotlin("plugin.allopen")
     id("android-module-dependencies")
     id("test-module-dependencies")
@@ -24,22 +25,14 @@ android {
 dependencies {
     api(libs.kotlin.stdlib.jdk8)
     api(libs.kotlin.reflect)
-
-    api(libs.io.reactivex.rxjava3.rxkotlin) // RxJava base for room-rxjava3
+    api(libs.kotlinx.datetime)
 
     api(libs.com.google.code.gson)
 
     api(libs.androidx.room.runtime)
-    api(libs.androidx.room.rxjava3)
     implementation(libs.androidx.sqlite.bundled)
 
-    api(libs.com.google.dagger.android)
-    api(libs.com.google.dagger.android.support)
-    api(libs.com.google.dagger.hilt.android)
 
     androidTestImplementation(libs.androidx.room.testing)
-
-    ksp(libs.com.google.dagger.compiler)
-    ksp(libs.com.google.dagger.hilt.compiler)
     ksp(libs.androidx.room.compiler)
 }

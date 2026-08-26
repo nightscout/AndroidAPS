@@ -8,7 +8,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import app.aaps.database.AppDatabase
-import app.aaps.database.di.DatabaseModule
+import app.aaps.database.di.AppDatabaseBuilder
 import app.aaps.database.entities.Bolus
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -50,7 +50,7 @@ class BolusMigrationTest {
         // Reopen through the production driver so 32->33 (rebuild + copy) and 33->34 run under it.
         val db = Room.databaseBuilder(context, AppDatabase::class.java, TEST_DB_NAME)
             .setDriver(BundledSQLiteDriver())
-            .addMigrations(*DatabaseModule().migrations)
+            .addMigrations(*AppDatabaseBuilder().migrations)
             .build()
         try {
             val bolus = db.bolusDao.getLastBolusRecord()
