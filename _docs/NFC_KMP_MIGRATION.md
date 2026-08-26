@@ -23,13 +23,14 @@ preparation work can happen without disturbing the main NFC line.
 
 | Step                                                       | State                                                                       |
 |------------------------------------------------------------|-----------------------------------------------------------------------------|
-| Merge `Nightscout/kmp` into the branch                     | **done** - `966e187d8b`                                                      |
+| Merge `Nightscout/kmp` into the branch                     | **done twice** - `966e187d8b`, then `7bdab8c8b5`                              |
 | Tier 1, the changes needed to compile at all (section 3)    | **done** - `9cd204b8da` "NFC Fix build after kmp merge"                        |
 | Architecture alignment (section 9)                         | **9.1 to 9.4, 9.6 and 9.7 done**. Only 9.5 remains, and it is not standalone   |
-| The typed command format (section 5)                        | **done** - `28305e0af6`. `NfcTagStore`'s two blobs are the remainder            |
-| Tier 2, needed only for a multiplatform module (section 4)  | **not started** apart from the `org.json` row, which the typed format did      |
-| Build verification                                         | **green** - compile clean, 84 NFC tests pass                                  |
-| `Nightscout/kmp` freshness                                 | last read 2026-08-26 at `c9ca405f39`, **109 commits** past our merge - see 1a   |
+| The command format and the store blobs (section 5)          | **done** - `28305e0af6` and `ff1916852f`. No `org.json` left in the plugin      |
+| Metro DI and the plugin's own manifest (section 1a)         | **done** - `ba1cdbd518`, `009f4087ca`. No `dagger.android` left in the plugin   |
+| Tier 2, needed only for a multiplatform module (section 4)  | **not started** apart from the `org.json` row, which sections 5 and 9.7 did    |
+| Build verification                                         | **green** - `:plugins:sync` and `:app` compile, 88 NFC tests pass               |
+| `Nightscout/kmp` freshness                                 | merged 2026-08-26 at `c9ca405f39`. Still not in `dev` - a third merge is due    |
 
 Sections 3.7 to 3.12 are six breaks that only a compiler found, after an import-derived list had
 missed them. The lesson is recorded there because it will repeat on the next merge: **grepping imports
@@ -54,6 +55,11 @@ anything was pushed, so that each one builds on its own:
 | `115eef6756`  | section 9.4b - the build screen state holder, 2 files        | one refactor, **builds**                 |
 | `67fd617b85`  | section 9.6 - typed wizard state, 4 files                    | removes an unchecked cast, **builds**    |
 | `28305e0af6`  | section 5 - the typed command format, 38 files, +348 / -372   | the format redesign, **builds**          |
+| `ff1916852f`  | section 5 - the store blobs off `org.json`, 4 files           | one reader rewrite, **builds**           |
+| `7bdab8c8b5`  | **merge 2**, 109 upstream commits, 3 conflicts               | landed **almost** building - one error   |
+| `ec7f230935`  | fix build after merge 2 - 1 file, one word                    | mechanical, **builds**                   |
+| `ba1cdbd518`  | section 1a - Metro member injection, 6 files                  | the DI change, **builds**                |
+| `009f4087ca`  | section 1a - manifest and resource into the plugin, 3 files    | pure move, **builds**                    |
 
 Keeping these apart matters for review: the fix-build commit only has to answer "did the merge really
 force this?", and the alignment commit carries its own rationale. `f9e51ec06c` is also the one that
@@ -129,9 +135,19 @@ receivers):
 | `DaggerService` | `MetroService` | `:core:objects` androidMain |
 | `DaggerAppCompatActivity` | `MetroAppCompatActivity` | `:core:ui` androidMain |
 
-So the NFC target becomes: `NfcControlActivity` extends `MetroAppCompatActivity` and **stays in
-`:plugins:sync`**, with its manifest entry moving out of `app/src/main/AndroidManifest.xml` into the
-plugin's own manifest - the shape `plugins/automation/src/main/AndroidManifest.xml` now has.
+So the NFC target becomes: `NfcControlActivity` is Metro-injected and **stays in `:plugins:sync`**,
+with its manifest entry moving out of `app/src/main/AndroidManifest.xml` into the plugin's own manifest -
+the shape `plugins/automation/src/main/AndroidManifest.xml` now has.
+
+**Done in `ba1cdbd518` and `009f4087ca`, and two of the predictions here were wrong.** Both are recorded
+below because they are the kind of thing that repeats.
+
+*It does not extend `MetroAppCompatActivity`.* The activity is declared with
+`Theme.Translucent.NoTitleBar`, and an `AppCompatActivity` requires an AppCompat theme - the one-word
+change would have compiled and then thrown at start up. It stays a `FragmentActivity` and calls
+`injectMetroMembers(this)`, which is the whole body of those base classes anyway, and which
+`MetroAndroidEntryPoints` already documents as the escape hatch. **The one-word rule holds only for an
+activity whose theme allows AppCompat** - check the manifest before believing it.
 
 **2. "No Dagger annotation anywhere, wiring moves to `app/di/`" is superseded.** The replacement is
 per-module Metro wiring, and as of 2026-08-26 `:plugins:sync` has **the exact template `NfcControlActivity`
@@ -147,8 +163,25 @@ object SyncMemberInjectors {
 ```
 
 Its own comment is the useful part: it *"contributes straight into the app root, so it needs no mention
-in `:app` at all"*. So converting `NfcControlActivity` means extending `MetroAppCompatActivity`, adding
-one entry here, and moving the manifest declaration into the plugin - no `:app` change. Nine modules
+in `:app` at all"*.
+
+*"No `:app` change" was wrong too, and the reason is worth knowing before the next plugin is converted.*
+The plugin list is **Dagger's**, and `NfcCommandsPlugin` is a `@Singleton` in it. The moment Metro
+injected the activity, Metro built its **own second** `NfcCommandsPlugin`: the screen would have acted
+on a different object than the plugin list holds, and the whole `NfcActionFactory` tree would have been
+pulled into the root graph. The symptom was indirect - Metro asked for `SceneIconResolver`, a type only
+`NfcActionFactory` needs and which only a Dagger `@Binds` in `:ui` provides.
+
+The fix is to **hand the plugin over from Dagger** through `AapsLeaves`, exactly as `AuthFlowOut` and
+`TidepoolUploader` already are for `AuthFlowIn`. One leaf entry, and Metro stops rebuilding the subtree -
+the proof being that the `SceneIconResolver` request disappeared by itself. Note `CoreObjectsModule`
+builds `AapsLeaves` **positionally**, so an inserted parameter silently shifts every later argument; the
+compiler catches it as a wall of type mismatches. That leaf is the only `:app` mention the plugin has
+left, and it goes away when Dagger does.
+
+**The general rule: any Metro-injected class that reaches a Dagger-owned singleton must get it through
+`AapsLeaves`, not let Metro construct it.** A missing binding error is the first sign, and it names a
+type from deep inside the subtree rather than the singleton itself. Nine modules
 now have a `*MemberInjectors.kt` of this shape, and `shared/tests` carries a `MemberInjectorCoverage`
 helper that guards the maps with a test.
 
@@ -156,9 +189,10 @@ helper that guards the maps with a test.
 a root graph of their own - and are not what NFC should copy.
 
 **3. `:plugins:sync` is still an Android module** (`main` / `test` / `androidTest`) and is now
-*mid-DI-migration*: 18 files touch Metro while 58 still use `javax.inject` and 25 still use Dagger. New
-NFC code should keep Dagger for now, consistent with the rest of the module, and be converted with it.
-`ActionFactory` in automation is still `@Singleton @Inject constructor` on `kmp` today.
+*mid-DI-migration*: many files touch Metro while most still use `javax.inject`. **The NFC plugin is now
+on the Metro side of that line** - see the two commits above. `javax.inject` on a constructor is not the
+issue and stays: Metro reads it through `includeDagger()`, and `ActionFactory` in automation is still
+`@Singleton @Inject constructor` on `kmp` today. What went is `dagger.android`.
 
 **4. The old cost rule is dead.** `KMP_IOS_FEASIBILITY.md` said "a module's conversion cost is roughly
 its Dagger count", because Dagger had to go before a module could be multiplatform. With Metro that is
@@ -221,8 +255,9 @@ Three compatibility seams survive the merge unchanged:
 - `PreferenceSubScreenDef` kept a `titleResId: Int` constructor next to the new `title: TextRef` one.
 - `ResourceHelper` still declares `gs(id: Int)` in `androidMain`, so all 82 `rh.gs(R.string.x)` calls
   still compile inside an Android module.
-- `dagger.android` is still alive on `kmp` (329 files use `HasAndroidInjector`), so
-  `NfcControlActivity`'s `AndroidInjection.inject(this)` is not broken.
+- `dagger.android` was still alive on `kmp` (329 files use `HasAndroidInjector`), so
+  `NfcControlActivity`'s `AndroidInjection.inject(this)` was not broken by the merge. It has since been
+  converted anyway, by choice rather than by need - see 1a.
 
 ---
 
@@ -362,7 +397,7 @@ This cannot move: registering an `ElementType` means touching the registry, and 
 | Item                                                                        | Sites                                     | Notes                                                                                                                                                                                                                                              |
 |-----------------------------------------------------------------------------|-------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **All Dagger annotations must go**                                          | 2 classes, 2 DI files, **plus section 9.1** | **SUPERSEDED - see section 1a.** The old rule was "no Dagger annotation anywhere, wiring moves to `app/di/`". The project is moving to **Metro**, which generates no Java and works in `commonMain`, so wiring stays in the module. What remains is a Dagger-to-Metro conversion, done with the rest of `:plugins:sync`. **Needed either way - see section 6.** |
-| **`org.json` to `kotlinx.serialization`**                                   | **18 files**                              | `params: JSONObject` is in `NfcAction`'s public API and in `NfcTagStore.buildCommand()`, so it is viral. Helpers already in `commonMain`: `buildJsonObject`, `app.aaps.core.utils.lenient*` (`JsonLenientRead.kt`), `OrgJsonCompat` in `:core:data`. Template commit: `9eb22e76a17`. **See section 5 for the risk.** |
+| ~~**`org.json` to `kotlinx.serialization`**~~                                | ~~18 files~~                              | **DONE** - `28305e0af6` for the commands and `ff1916852f` for the store blobs. `params` is a typed `NfcParams`, not a `JSONObject`, and `NfcTagStore.buildCommand()` is gone. See section 5. |
 | **`R.string` to `TextRef`**                                                 | **185 refs in 31 files** (82 `rh.gs`, 59 `stringResource`) | Needs a `GenerateKeyStringsTask` plus string owner registration in the module build file, as `:plugins:smoothing` does                                                                                                                        |
 | `androidx.annotation.StringRes` on `NfcAction.labelResId: Int`              | **26 files**                              | becomes `TextRef`                                                                                                                                                                                                                                  |
 | `java.util.concurrent.TimeUnit.MINUTES.toMillis`                            | 5                                         | `T.mins(x).msecs()`. Wave 2 removed `TimeUnit` repo wide; the NFC branch put 5 back                                                                                                                                                                 |
@@ -471,13 +506,26 @@ Note this diverges from the automation conversion on `kmp` (`9eb22e76a17`), whic
 API and kept lenient reads with defaults. The divergence is deliberate: the lenient reads are the
 defect being removed.
 
-### Still to do: the store blobs
+### The store blobs - DONE, `ff1916852f`
 
-`NfcTagStore` keeps `org.json` for the **tag list** and **log** blobs, which are a different format
-from commands. Both still wrap strict `getLong` / `getString` / `getBoolean` reads in one blanket
-`catch (Exception)` returning an empty list, so a single bad field discards the whole list with no error
-and no log line - a user's tag list or history simply appears empty. That is the remaining part of this
-section.
+`NfcTagStore` kept `org.json` for the **tag list** and **log** blobs, which are a different format from
+commands. Both wrapped strict `getLong` / `getString` / `getBoolean` reads in one blanket
+`catch (Exception)` returning an empty list, so a single bad field discarded the whole list with no
+error and no log line - a user's tag list or history simply appearing empty.
+
+`NfcCreatedTag` and `NfcLogEntry` are now `@Serializable`, which was one annotation each since both were
+already data classes. **The reader is the actual fix.** Decoding a `List<T>` in one call would keep the
+old all-or-nothing behaviour, so `loadList` parses the blob to a `JsonArray` and decodes **each element
+on its own**: a bad entry is dropped and named through `LTag.NFC`, and every other entry survives. Only
+a blob that is not an array at all yields an empty list, and that is logged too. `NfcTagStore` takes an
+`AAPSLogger` for this, which is the only reason its construction sites changed.
+
+Four tests cover it, including the case that matters in practice: a tag written before the typed format
+is **still listed with its name and uid**, and only its command fails to decode. Two behaviours were
+deliberately kept - entries with a blank uid or no non-blank command are still skipped, and the list is
+still sorted newest first.
+
+After this there is no `org.json` left anywhere in the plugin.
 
 For reference, the `org.json` versus `kotlinx` differences that made the profile conversion delicate
 still matter for that work, as things the new code must get right rather than stay compatible with:
@@ -540,9 +588,9 @@ One thing may still move: follow-up 3 in the KMP note is `PluginDescription.desc
 | Step | Work                                                                                                                                                             | Depends on           |
 |------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------|
 | 0    | **Ask the owner the section 6 question** - is NFC ever meant to be shared code?                                                                                    | -                    |
-| 1    | **The store blobs** (section 5) - the tag list and log off `org.json`, and stop discarding a whole list when one field fails.                                       | -                    |
-| 2    | Convert the NFC plugin's DI from Dagger to **Metro** and move `NfcControlActivity` plus its manifest entry into the plugin. The template now exists in the module - `SyncMemberInjectors.kt`, see 1a - so this is no longer blocked, only sequenced after the re-merge. | step 3               |
-| 3    | Wait for `kmp` to reach `dev`, then re-merge. Tier 1 is already applied; expect a smaller conflict set.                                                             | follow-up 1 on `kmp` |
+| 1    | ~~The store blobs (section 5)~~ - **done**, `ff1916852f`.                                                                                                          | -                    |
+| 2    | ~~Convert the NFC plugin's DI to Metro and move the activity's manifest entry into the plugin~~ - **done**, `ba1cdbd518` and `009f4087ca`. See 1a for the two predictions that were wrong. | -                    |
+| 3    | Wait for `kmp` to reach `dev`, then merge again. Tier 1 is applied and two merges are behind us; expect a small conflict set in the same shared files.              | follow-up 1 on `kmp` |
 | 4    | Only if step 0 says "shared": Tier 2, in the owner's own order - `TimeUnit` / `DateFormat` / `Clock` / hex first, then `R.string` to `TextRef`. The `org.json` row is already done. | step 0               |
 | 5    | Only when `:plugins:sync` is flipped: decide the NFC hardware seam.                                                                                                | step 4               |
 
@@ -619,7 +667,7 @@ undone, which puts it **on the critical path**, not in the cosmetic pile.
 
 **Fixed in `6e3d819ffd`** with an `NfcActionFactory` mirroring
 `plugins/automation/.../actions/ActionFactory.kt` - it holds the dependencies and passes each action
-exactly what it asks for. Verified: `:plugins:sync` compiles and all 84 NFC tests pass. Afterwards
+exactly what it asks for. Verified: `:plugins:sync` compiles and all NFC tests pass. Afterwards
 there are **zero** `plugin.x` accesses left in the actions package.
 
 Note the justification shifted with section 1a. The reason recorded here first was "Dagger cannot work
@@ -818,6 +866,28 @@ Commit `966e187d8b`, parents `52956a4654b` + `4957c26eb85`. Eight conflicts:
 | `plugins/main di/PluginsModule.kt` (modify/delete) | accepted the deletion; our edit was a missing newline |
 | `plugins/main res/values/colors.xml` (file location) | deleted; the file was empty |
 
+### Merge 2 outcome, for reference
+
+Commit `7bdab8c8b5`, 109 upstream commits, taken **before** the Metro work because
+`MetroAppCompatActivity`, `FeatureMemberInjectors` and `SyncMemberInjectors.kt` exist only upstream.
+Rename detection completed again. **Three** conflicts, all in shared files, and none under
+`nfcCommands/` - no file of the plugin was touched by the merge at all:
+
+| File | Resolution |
+|---|---|
+| `plugins/sync build.gradle.kts` | both sides added a plugin - kept both, Metro from upstream and kotlin serialization from here |
+| `app ComposeMainActivity.kt` | our NFC field sits where upstream added the `defaultViewModelProviderFactory` override - kept both, dropped our now-stale "Hilt-provided" comment |
+| `plugins/sync di/SyncModule.kt` | upstream removed `SMSCommunicatorModule` from the includes, we had added `NfcCommandsModule` - kept both changes |
+
+Four of the seven files predicted to conflict merged cleanly. **`rerere` recorded all three
+resolutions**, so a re-merge replays them.
+
+The merge landed with exactly **one** compile error, fixed in `ec7f230935`: `:plugins:sync` now carries
+the Metro compiler plugin, and Metro refuses a **non-final** class with `@Inject` fields unless it is
+annotated `@HasMemberInjections`, because the injector is looked up by runtime class. `NfcControlActivity`
+was `open` for no reason - nothing subclasses it - so it became final, which is also its end state after
+the Metro conversion.
+
 One trap worth remembering: **`PreferenceContentExtensions.kt` merged with no conflict while carrying
 our Android-only `androidx.compose.ui.res.stringResource` import into a `commonMain` file.** Git had
 no reason to flag it because kmp never touched those lines. A clean merge is not proof of a correct
@@ -838,7 +908,7 @@ Working tree after the merge and Tier 1, build folders excluded.
 | Our `:core:ui` footprint vs kmp            | 4 files, +81 lines |
 | Files with `android.*` imports             | 4     |
 | `android.*` import statements              | 28    |
-| Files with `org.json`                      | 18    |
+| Files with `org.json` (before section 5)   | 18    |
 | `R.string.` references                     | 185   |
 | Files with `R.string.`                     | 31    |
 | `rh.gs(` calls                             | 82    |
