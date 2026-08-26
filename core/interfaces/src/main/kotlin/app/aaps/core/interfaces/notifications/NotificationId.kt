@@ -117,6 +117,9 @@ enum class NotificationId(
     // Pump — Dana emulator
     PUMP_EMULATOR_DISPLAY(INFO, PUMP),
 
+    // Pump — Carelevo
+    CARELEVO_PATCH_ALERT(URGENT, PUMP, allowMultiple = true),
+
     // CGM
     BG_READINGS_MISSED(URGENT, CGM),
     SENSOR_CHANGE_DETECTED(NORMAL, CGM),

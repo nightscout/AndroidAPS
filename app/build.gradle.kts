@@ -234,6 +234,7 @@ dependencies {
     //  - :pump:combov2:comboctl is a support lib pulled in transitively by :pump:combov2
     // buildFile.exists() skips the phantom :pump:omnipod container Gradle auto-creates from the
     // nested :pump:omnipod:* includes (it has no build script / no consumable variant).
+    // :pump:carelevo is included automatically via this filter (present in settings.gradle).
     val pumpExclusions = setOf(":pump:virtual", ":pump:combov2:comboctl")
     rootProject.subprojects
         .filter { it.path.startsWith(":pump:") && it.path !in pumpExclusions && it.buildFile.exists() }
@@ -301,4 +302,3 @@ if (!gitAvailable()) {
 if (isMaster() && !allCommitted()) {
     throw GradleException("There are uncommitted changes. Clone sources again as described in wiki and do not allow gradle update")
 }
-

@@ -69,6 +69,8 @@
 
 ## See Also
 
-- `equil-migration.md` — detailed Equil Compose migration review (2026-03-09)
+- `carelevo-ble-transport-migration.md` — Carelevo BLE stack unification onto shared `BleTransport`
+  (Dana/Equil/Medtrum abstraction), Phase 1 adapter (`BleTransportGattConnection`) review (2026-07-08).
+  Confirms double-`@Singleton` DI pattern is intentional fleet convention (see Equil precedent), not a bug.
 - Earlier migration reviews (NSClient, Tidepool, Wear, SMS, Preferences, EOPatch2): see conversation
   history from 2026-03-01 and 2026-03-02.
