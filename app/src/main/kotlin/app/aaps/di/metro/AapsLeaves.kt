@@ -100,7 +100,6 @@ class AapsLeaves(
     private val nsClientSourceProvider: Provider<NSClientSource>,
     @ApplicationScope private val appScopeProvider: Provider<CoroutineScope>,
     private val fabricPrivacyProvider: Provider<FabricPrivacy>,
-    private val localAlertUtilsProvider: Provider<LocalAlertUtils>,
     private val persistenceLayerProvider: Provider<PersistenceLayer>,
     private val configProvider: Provider<Config>,
     // Dagger owns the app-wide emitter - `WorkflowModule.provideMainSignalsEmitter`. A history window
@@ -198,7 +197,6 @@ class AapsLeaves(
     @Provides fun fabricPrivacy(): FabricPrivacy = fabricPrivacyProvider.get()
     // No runningModeExpiryJob() leaf: Metro builds it now (commonMain, Metro @Inject), and Dagger gets
     // both running-mode classes from `CoreObjectsModule` instead.
-    @Provides fun localAlertUtils(): LocalAlertUtils = localAlertUtilsProvider.get()
     @Provides fun persistenceLayer(): PersistenceLayer = persistenceLayerProvider.get()
     @Provides fun config(): Config = configProvider.get()
     // No iobCobCalculator() any more: Metro builds it now, in `MainPluginsBindings`, and Dagger receives

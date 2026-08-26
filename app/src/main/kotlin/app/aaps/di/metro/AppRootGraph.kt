@@ -289,6 +289,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val dataInbox: DataInbox
     val autosensData: AutosensData
     val commandQueue: CommandQueue
+    val localAlertUtils: LocalAlertUtils
     val profileSwitchSilentGate: ProfileSwitchSilentGate
     val runningConfiguration: RunningConfiguration
     val runningConfigurationKeys: RunningConfigurationKeys

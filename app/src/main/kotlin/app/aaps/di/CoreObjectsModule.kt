@@ -286,6 +286,7 @@ class CoreObjectsModule {
     // Unscoped on purpose - a fresh value object per caller, as the @Binds it replaces was.
     @Provides fun provideAutosensData(graphs: MetroGraphs): AutosensData = graphs.autosensData
     @Provides @Singleton fun provideCommandQueue(graphs: MetroGraphs): CommandQueue = graphs.commandQueue
+    @Provides @Singleton fun provideLocalAlertUtils(graphs: MetroGraphs): LocalAlertUtils = graphs.localAlertUtils
     // One flag, two frameworks: SceneExecutor (Metro) marks it, CommandQueueImplementation (Dagger)
     // consumes it. Without this they get one each and the mark is never seen.
     @Provides @Singleton fun provideProfileSwitchSilentGate(graphs: MetroGraphs): ProfileSwitchSilentGate = graphs.profileSwitchSilentGate
@@ -453,7 +454,6 @@ class CoreObjectsModule {
         nsClientSourceProvider: Provider<NSClientSource>,
         @ApplicationScope appScopeProvider: Provider<CoroutineScope>,
         fabricPrivacyProvider: Provider<FabricPrivacy>,
-        localAlertUtilsProvider: Provider<LocalAlertUtils>,
         persistenceLayerProvider: Provider<PersistenceLayer>,
         configProvider: Provider<Config>,
         calculationSignalsEmitterProvider: Provider<CalculationSignalsEmitter>,
@@ -501,7 +501,6 @@ class CoreObjectsModule {
         nsClientSourceProvider,
         appScopeProvider,
         fabricPrivacyProvider,
-        localAlertUtilsProvider,
         persistenceLayerProvider,
         configProvider,
         calculationSignalsEmitterProvider,

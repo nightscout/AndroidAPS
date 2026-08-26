@@ -319,6 +319,7 @@ class MetroGraphs @Inject constructor(
     val dataInbox: DataInbox get() = root.dataInbox
     val autosensData: AutosensData get() = root.autosensData
     val commandQueue: CommandQueue get() = root.commandQueue
+    val localAlertUtils: LocalAlertUtils get() = root.localAlertUtils
     val profileSwitchSilentGate: ProfileSwitchSilentGate get() = root.profileSwitchSilentGate
     val runningConfiguration: RunningConfiguration get() = root.runningConfiguration
     val runningConfigurationKeys: RunningConfigurationKeys get() = root.runningConfigurationKeys

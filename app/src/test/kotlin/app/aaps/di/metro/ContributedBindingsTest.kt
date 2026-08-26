@@ -95,6 +95,7 @@ class ContributedBindingsTest {
         // Holds the queue of pending pump commands and the one being performed. A second copy would
         // accept commands that the copy the pump driver reads never sees.
         assertThat(root.commandQueue).isSameInstanceAs(root.commandQueue)
+        assertThat(root.localAlertUtils).isSameInstanceAs(root.localAlertUtils)
     }
 
     @Test
