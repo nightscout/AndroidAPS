@@ -40,6 +40,7 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.target
 import app.aaps.core.utils.MidnightUtils
+import app.aaps.plugins.aps.utils.StaticInjector
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
@@ -50,7 +51,7 @@ import kotlin.math.floor
 
 @Singleton
 open class TestOpenAPSSMBPlugin @Inject constructor(
-    private val injector: MetroMemberInjector,
+    private val injector: StaticInjector,
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val constraintChecker: ConstraintsChecker,

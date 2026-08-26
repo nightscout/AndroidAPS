@@ -344,6 +344,8 @@ class DetermineBasalAdapterAutoISFJS(private val scriptReader: ScriptReader, pri
     }
 
     init {
-        injector.injectMembers(this)
+        // Loud on the wrong injector: the app wide one returns false for a class it does not know, which
+        // would leave these lateinit fields unset and fail later somewhere unrelated.
+        check(injector.injectMembers(this)) { "No member injector for ${this::class.java.name}" }
     }
 }

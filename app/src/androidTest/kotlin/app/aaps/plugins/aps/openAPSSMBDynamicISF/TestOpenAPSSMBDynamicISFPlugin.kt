@@ -26,6 +26,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.aps.utils.StaticInjector
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.openAPSSMB.DetermineBasalAdapterSMBJS
 import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
@@ -36,7 +37,7 @@ import javax.inject.Singleton
 
 @Singleton
 class TestOpenAPSSMBDynamicISFPlugin @Inject constructor(
-    private val injector: MetroMemberInjector,
+    private val injector: StaticInjector,
     aapsLogger: AAPSLogger,
     rxBus: RxBus,
     constraintChecker: ConstraintsChecker,
