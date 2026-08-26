@@ -12,9 +12,13 @@ import app.aaps.pump.eopatch.vo.PatchConfig
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.functions.Consumer
+import dev.zacsweers.metro.HasMemberInjections
 import javax.inject.Inject
 import javax.inject.Singleton
 
+// Metro requires this on a non-final class with injected fields, so it knows subclasses are meant to
+// have those fields filled too. Inert for Dagger.
+@HasMemberInjections
 @Singleton
 open class TaskBase @Inject constructor(val func: TaskFunc) {
 

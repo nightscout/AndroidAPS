@@ -64,17 +64,15 @@ class AlarmManager @Inject constructor() : IAlarmManager {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var pumpSync: PumpSync
 
-    private lateinit var mAlarmProcess: AlarmProcess
+    // Was built in an @Inject fun, which is Dagger method injection - Metro does not support it and
+    // crashes the compiler on it (ZacSweers/metro#2735). It cannot move to `init`, because it reads two
+    // injected fields that are still unset there. `lazy` waits until first use instead, which is after
+    // injection either way.
+    private val mAlarmProcess: AlarmProcess by lazy { AlarmProcess(patchManager, patchManagerExecutor) }
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
     private var alarmDisposable: Disposable? = null
-
-    @Suppress("unused")
-    @Inject
-    fun onInit() {
-        mAlarmProcess = AlarmProcess(patchManager, patchManagerExecutor)
-    }
 
     override fun init() {
         alarmDisposable = EoPatchRxBus.listen(EventEoPatchAlarm::class.java)

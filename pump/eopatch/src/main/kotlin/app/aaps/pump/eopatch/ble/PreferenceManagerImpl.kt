@@ -34,16 +34,16 @@ class PreferenceManagerImpl @Inject constructor() : PreferenceManager {
 
     override var patchState = PatchState()
     override var bolusCurrent = BolusCurrent()
-    private lateinit var observePatchLifeCycle: Observable<PatchLifecycle>
-    private var initialized = false
-
-    @Inject
-    fun onInit() {
-        observePatchLifeCycle = patchConfig.observe()
+    // Was built in an @Inject fun, which is Dagger method injection - Metro does not support it and
+    // crashes the compiler on it (ZacSweers/metro#2735). It cannot move to `init`, because patchConfig is
+    // an injected field and is still unset there. `lazy` waits until first use, which is after injection.
+    private val observePatchLifeCycle: Observable<PatchLifecycle> by lazy {
+        patchConfig.observe()
             .map { patchConfig -> patchConfig.lifecycleEvent.lifeCycle }
             .distinctUntilChanged()
             .replay(1).refCount()
     }
+    private var initialized = false
 
     override fun init() {
         try {

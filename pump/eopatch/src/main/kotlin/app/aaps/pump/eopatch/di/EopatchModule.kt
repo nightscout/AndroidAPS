@@ -21,31 +21,27 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntKey
 import dagger.multibindings.IntoMap
-import javax.inject.Singleton
 
+// The @Binds below carry no scope: Metro rejects a scoped @Binds, and each implementation class is
+// already @Singleton itself, so the behaviour is the same.
 @Module(includes = [EopatchPrefModule::class])
 @InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class EopatchModule {
 
     @Binds
-    @Singleton
     abstract fun bindBleDevice(patch: Patch): IBleDevice
 
     @Binds
-    @Singleton
     abstract fun bindPatchManager(patchManager: PatchManager): IPatchManager
 
     @Binds
-    @Singleton
     abstract fun bindAlarmManager(alarmManager: AlarmManager): IAlarmManager
 
     @Binds
-    @Singleton
     abstract fun bindAlarmRegistry(alarmRegistry: AlarmRegistry): IAlarmRegistry
 
     @Binds
-    @Singleton
     abstract fun bindPreferenceManager(preferenceManager: PreferenceManagerImpl): PreferenceManager
 
     @ContributesAndroidInjector
