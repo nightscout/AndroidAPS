@@ -3,7 +3,6 @@ package app.aaps.pump.eopatch.di
 import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.pump.eopatch.EopatchPumpPlugin
-import app.aaps.pump.eopatch.OsAlarmReceiver
 import app.aaps.pump.eopatch.alarm.AlarmManager
 import app.aaps.pump.eopatch.alarm.AlarmRegistry
 import app.aaps.pump.eopatch.alarm.IAlarmManager
@@ -16,7 +15,6 @@ import app.aaps.pump.eopatch.core.Patch
 import app.aaps.pump.eopatch.core.scan.IBleDevice
 import dagger.Binds
 import dagger.Module
-import dagger.android.ContributesAndroidInjector
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntKey
@@ -43,9 +41,6 @@ abstract class EopatchModule {
 
     @Binds
     abstract fun bindPreferenceManager(preferenceManager: PreferenceManagerImpl): PreferenceManager
-
-    @ContributesAndroidInjector
-    abstract fun contributesOsAlarmReceiver(): OsAlarmReceiver
 
     // Pump plugin registration — @IntKey range 1000–1200, see PluginsListModule for overview
     @Binds
