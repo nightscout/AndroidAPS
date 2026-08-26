@@ -10,6 +10,8 @@ import app.aaps.core.interfaces.logging.LoggerUtils
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.interfaces.workflow.CalculationWorkflow
+import app.aaps.workflow.WorkflowChainData
 import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.overview.LastBgData
@@ -278,6 +280,8 @@ class MetroGraphs @Inject constructor(
     val importExportPrefs: ImportExportPrefs get() = root.importExportPrefs
     val preferences: Preferences get() = root.preferences
     val pumpWithConcentration: PumpWithConcentration get() = root.pumpWithConcentration
+    val calculationWorkflow: CalculationWorkflow get() = root.calculationWorkflow
+    val workflowChainData: WorkflowChainData get() = root.workflowChainData
     val maintenance: Maintenance get() = root.maintenance
     val fileListProvider: FileListProvider get() = root.fileListProvider
     val lastBgData: LastBgData get() = root.lastBgData

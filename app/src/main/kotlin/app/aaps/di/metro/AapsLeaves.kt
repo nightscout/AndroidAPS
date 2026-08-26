@@ -116,7 +116,6 @@ class AapsLeaves(
     private val sceneExecutorProvider: Provider<SceneExecutor>,
     private val dataInboxProvider: Provider<DataInbox>,
     private val cloudStorageManagerProvider: Provider<CloudStorageManager>,
-    private val calculationWorkflowProvider: Provider<CalculationWorkflow>,
     private val overviewDataCacheFactoryProvider: Provider<OverviewDataCacheFactory>,
     // Needed by the feature extensions below the root, which no longer carry their own leaf lists.
     private val constraintsCheckerProvider: Provider<ConstraintsChecker>,
@@ -224,7 +223,6 @@ class AapsLeaves(
     // two @ContributesBinding), so this leaf pushed an unscoped Dagger copy back in.
     @Provides fun dataInbox(): DataInbox = dataInboxProvider.get()
     @Provides fun cloudStorageManager(): CloudStorageManager = cloudStorageManagerProvider.get()
-    @Provides fun calculationWorkflow(): CalculationWorkflow = calculationWorkflowProvider.get()
     @Provides fun overviewDataCacheFactory(): OverviewDataCacheFactory = overviewDataCacheFactoryProvider.get()
     @Provides fun constraintsChecker(): ConstraintsChecker = constraintsCheckerProvider.get()
     @Provides fun automation(): Automation = automationProvider.get()

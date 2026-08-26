@@ -105,6 +105,7 @@ import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.workflow.WorkflowChainData
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.objects.crypto.CryptoUtil
@@ -243,6 +244,10 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideImportExportPrefsBinding(graphs: MetroGraphs): ImportExportPrefs = graphs.importExportPrefs
     @Provides @Singleton fun providePreferencesBinding(graphs: MetroGraphs): Preferences = graphs.preferences
     @Provides fun providePumpWithConcentrationBinding(graphs: MetroGraphs): PumpWithConcentration = graphs.pumpWithConcentration
+    @Provides @Singleton fun provideCalculationWorkflowBinding(graphs: MetroGraphs): CalculationWorkflow = graphs.calculationWorkflow
+    // The @HiltWorkers in :workflow inject this concrete class, so Dagger must get Metro's instance -
+    // it holds the chain generation counter, and a second copy would silently break the race guard.
+    @Provides @Singleton fun provideWorkflowChainData(graphs: MetroGraphs): WorkflowChainData = graphs.workflowChainData
     @Provides @Singleton fun provideMaintenanceBinding(graphs: MetroGraphs): Maintenance = graphs.maintenance
     @Provides @Singleton fun provideFileListProviderBinding(graphs: MetroGraphs): FileListProvider = graphs.fileListProvider
     @Provides @Singleton fun provideLastBgDataBinding(graphs: MetroGraphs): LastBgData = graphs.lastBgData
@@ -422,7 +427,6 @@ class CoreObjectsModule {
         sceneExecutorProvider: Provider<SceneExecutor>,
         dataInboxProvider: Provider<DataInbox>,
         cloudStorageManagerProvider: Provider<CloudStorageManager>,
-        calculationWorkflowProvider: Provider<CalculationWorkflow>,
         overviewDataCacheFactoryProvider: Provider<OverviewDataCacheFactory>,
         constraintsCheckerProvider: Provider<ConstraintsChecker>,
         automationProvider: Provider<Automation>,
@@ -475,7 +479,6 @@ class CoreObjectsModule {
         sceneExecutorProvider,
         dataInboxProvider,
         cloudStorageManagerProvider,
-        calculationWorkflowProvider,
         overviewDataCacheFactoryProvider,
         constraintsCheckerProvider,
         automationProvider,

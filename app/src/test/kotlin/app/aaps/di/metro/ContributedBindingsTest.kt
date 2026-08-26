@@ -63,6 +63,9 @@ class ContributedBindingsTest {
         assertThat(root.maintenance).isSameInstanceAs(root.maintenance)
         assertThat(root.importExportPrefs).isSameInstanceAs(root.importExportPrefs)
         assertThat(root.preferences).isSameInstanceAs(root.preferences)
+        assertThat(root.calculationWorkflow).isSameInstanceAs(root.calculationWorkflow)
+        // Holds the chain generation counter, so a second copy would silently break the race guard.
+        assertThat(root.workflowChainData).isSameInstanceAs(root.workflowChainData)
     }
 
     @Test

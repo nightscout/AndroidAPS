@@ -10,6 +10,8 @@ import app.aaps.core.interfaces.logging.LoggerUtils
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.interfaces.workflow.CalculationWorkflow
+import app.aaps.workflow.WorkflowChainData
 import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.overview.LastBgData
@@ -246,6 +248,8 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val importExportPrefs: ImportExportPrefs
     val preferences: Preferences
     val pumpWithConcentration: PumpWithConcentration
+    val calculationWorkflow: CalculationWorkflow
+    val workflowChainData: WorkflowChainData
     val maintenance: Maintenance
     val fileListProvider: FileListProvider
     val lastBgData: LastBgData

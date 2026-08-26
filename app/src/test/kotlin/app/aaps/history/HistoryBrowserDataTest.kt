@@ -62,7 +62,6 @@ class HistoryBrowserDataTest : TestBaseWithProfile() {
         whenever(leaves.dateUtil()).thenReturn(dateUtil)
         whenever(leaves.profileFunction()).thenReturn(profileFunction)
         whenever(leaves.rh()).thenReturn(rh)
-        whenever(leaves.calculationWorkflow()).thenReturn(calculationWorkflow)
         whenever(leaves.overviewDataCacheFactory()).thenReturn(overviewDataCacheFactory)
     }
 

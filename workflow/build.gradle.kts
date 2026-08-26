@@ -1,9 +1,20 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.ksp)
+    // Metro beside Dagger, same as :implementation. CalculationWorkflowImpl and WorkflowChainData are
+    // Metro bindings now; the @HiltWorkers here still come from Dagger, so both have to run in this
+    // module.
+    alias(libs.plugins.metro)
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("jacoco-module-dependencies")
+}
+
+metro {
+    interop {
+        // Lets Metro read the javax and Dagger annotations already on this module's classes.
+        includeDagger()
+    }
 }
 
 android {
