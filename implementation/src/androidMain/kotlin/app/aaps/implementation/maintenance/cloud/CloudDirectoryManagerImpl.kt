@@ -4,22 +4,22 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.CloudDirectoryInfo
 import app.aaps.core.interfaces.maintenance.CloudDirectoryManager
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.icons.IcGoogleDrive
-import app.aaps.implementation.R
+import app.aaps.implementation.ImplementationStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import javax.inject.Inject
 
 // Metro builds this; Dagger receives it via a @Provides delegate in `:app`.
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 class CloudDirectoryManagerImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val preferences: Preferences,
     private val cloudStorageManager: CloudStorageManager
 ) : CloudDirectoryManager {
@@ -40,8 +40,8 @@ class CloudDirectoryManagerImpl @Inject constructor(
             isCloudActive = isCloudActive,
             hasCredentials = hasCredentials,
             hasConnectionError = hasConnectionError,
-            providerDisplayName = provider?.displayName ?: rh.gs(R.string.storage_google_drive),
-            providerDescription = rh.gs(R.string.backup_to_google_drive),
+            providerDisplayName = provider?.displayName ?: rh.gs(ImplementationStrings.storage_google_drive),
+            providerDescription = rh.gs(ImplementationStrings.backup_to_google_drive),
             providerIcon = provider?.icon ?: IcGoogleDrive,
             authorizedStatusText = authorizedStatusText,
             cloudPath = CloudConstants.CLOUD_PATH_EXPORT

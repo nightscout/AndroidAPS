@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.UiStringIds
+import app.aaps.implementation.ImplementationStringIds
 import app.aaps.core.ui.locale.LocaleHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -39,6 +40,9 @@ class ResourceHelperImpl @Inject constructor(var context: Context, private val f
         // Here rather than in :core:ui, because this class is downstream of every module that owns
         // strings and is built before anything can ask it for text.
         TextRefIdRegistry.register("ui") { name -> UiStringIds.idOf(name) }
+        // Same for this module's own names: the classes here name their strings now, and ResourceHelper
+        // cannot see ImplementationStringIds from :core:interfaces either.
+        TextRefIdRegistry.register("implementation") { name -> ImplementationStringIds.idOf(name) }
 
         // GeneralLanguage changes trigger Activity.recreate() which rebuilds the context
         // via attachBaseContext/LocaleHelper.wrap — no need to rebuild here and race on Main.

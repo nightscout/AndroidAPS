@@ -6,6 +6,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.UiStrings
+import app.aaps.implementation.ImplementationStrings
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Before
@@ -56,6 +57,16 @@ internal class ResourceHelperImplNamedRefTest {
         // read_status carries one %s. Going through the name must format exactly as the id does.
         assertThat(sut.gs(UiStrings.read_status, "because"))
             .isEqualTo(sut.gs(app.aaps.core.ui.R.string.read_status, "because"))
+    }
+
+    @Test
+    fun `a name owned by this module resolves to its string`() {
+        // The `implementation` owner is registered from the same init as `ui`. It has to be, for the same
+        // reason: ResourceHelper lives here but the interface it implements is in :core:interfaces, which
+        // cannot see ImplementationStringIds.
+        val resolved = sut.gs(ImplementationStrings.backup_to_google_drive)
+        assertThat(resolved).isNotEqualTo("backup_to_google_drive")
+        assertThat(resolved).isNotEmpty()
     }
 
     @Test
