@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
+import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.bolus.BatchExecutor
@@ -217,6 +218,14 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideDstHelper(graphs: MetroGraphs): DstHelper = graphs.dstHelper
 
     @Provides @Singleton fun provideObjectives(graphs: MetroGraphs): Objectives = graphs.objectives
+
+    // Metro owns AutomationRuntime now, so these two are delegates rather than leaves. The set has
+    // exactly one contributor - AutomationRuntime itself - as it did under the Dagger @IntoSet.
+    @Provides @Singleton fun provideAutomation(graphs: MetroGraphs): Automation = graphs.automation
+
+    @Provides @Singleton fun provideAutomationRuntime(graphs: MetroGraphs): AutomationRuntime = graphs.automationRuntime
+
+    @Provides @Singleton fun providePermissionProviders(graphs: MetroGraphs): Set<PermissionProvider> = graphs.permissionProviders
 
     /*
      * By class as well as by interface, for the same reason as the signature verifier below: the
@@ -481,11 +490,9 @@ class CoreObjectsModule {
         workManagerProvider: Provider<WorkManager>,
         notificationManagerProvider: Provider<NotificationManager>,
         overviewDataCacheFactoryProvider: Provider<OverviewDataCacheFactory>,
-        automationProvider: Provider<Automation>,
         contextProvider: Provider<Context>,
         uiInteractionProvider: Provider<UiInteraction>,
         versionCheckerUtilsProvider: Provider<VersionCheckerUtils>,
-        permissionProvidersProvider: Provider<Set<PermissionProvider>>,
         smsCommunicatorPluginProvider: Provider<SmsCommunicatorPlugin>,
         nsClientV3PluginProvider: Provider<NSClientV3Plugin>,
         wearPluginProvider: Provider<WearPlugin>,
@@ -517,11 +524,9 @@ class CoreObjectsModule {
         workManagerProvider,
         notificationManagerProvider,
         overviewDataCacheFactoryProvider,
-        automationProvider,
         contextProvider,
         uiInteractionProvider,
         versionCheckerUtilsProvider,
-        permissionProvidersProvider,
         smsCommunicatorPluginProvider,
         nsClientV3PluginProvider,
         wearPluginProvider,

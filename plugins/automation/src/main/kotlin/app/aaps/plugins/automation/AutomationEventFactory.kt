@@ -5,8 +5,9 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.plugins.automation.actions.ActionFactory
 import app.aaps.plugins.automation.triggers.TriggerDeps
 import app.aaps.plugins.automation.triggers.TriggerFactory
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Builds [AutomationEventObject]s and holds what they need.
@@ -18,7 +19,7 @@ import javax.inject.Singleton
  * This holds the dependencies instead and passes them in. The event reads them back through the
  * factory, so a new event can be created from an existing one without carrying a second bundle.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class AutomationEventFactory @Inject constructor(
     val aapsLogger: AAPSLogger,
     val dateUtil: DateUtil,

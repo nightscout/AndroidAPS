@@ -72,6 +72,7 @@ import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.profiling.Profiler
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.bolus.WizardExecutor
+import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.di.APS
 import app.aaps.core.interfaces.di.FeatureMemberInjectors
@@ -128,6 +129,7 @@ import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
 import app.aaps.plugins.automation.di.AutomationMetroGraph
 import app.aaps.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
 import app.aaps.plugins.constraints.dstHelper.DstHelperPlugin
+import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.constraints.objectives.objectives.Objective
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
@@ -384,6 +386,18 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val dstHelperPlugin: DstHelperPlugin
     val dstHelper: DstHelper
     val objectivesPlugin: ObjectivesPlugin
+
+    /**
+     * Automation, and the permission providers it is the only contributor to.
+     *
+     * Metro owns `AutomationRuntime` now, so Dagger reads it back through `CoreObjectsModule`
+     * instead of the other way round.
+     */
+    val automation: Automation
+
+    /** Same object as [automation], by class: ComposeMainActivity and AppNavGraph inject the concrete type. */
+    val automationRuntime: AutomationRuntime
+    val permissionProviders: Set<PermissionProvider>
 
     /** The live loop's calculator. A history window has its own, at `HistoryWindowScope`. */
     val iobCobCalculator: IobCobCalculator

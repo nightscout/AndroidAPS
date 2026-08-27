@@ -94,8 +94,8 @@ class AutomationRuntimeSyncTest : TestBaseWithProfile() {
     }
 
     private fun newRuntime() = AutomationRuntime(
-        eventFactory, aapsLogger, rh, preferences, context, fabricPrivacy, loop, rxBus, constraintChecker,
-        aapsSchedulers, config, locationServiceController, dateUtil, activePlugin, reminderScheduler, actionFactory, triggerFactory, triggerDeps, receiverStatusStore,
+        eventFactory, aapsLogger, rh, preferences, loop, rxBus, constraintChecker,
+        config, locationServiceController, dateUtil, activePlugin, reminderScheduler, actionFactory, triggerFactory, triggerDeps, receiverStatusStore,
         uel, profileRepository, sceneApi
     )
 

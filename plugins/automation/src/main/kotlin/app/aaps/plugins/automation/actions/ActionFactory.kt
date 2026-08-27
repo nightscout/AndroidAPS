@@ -24,10 +24,11 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.lenientString
 import app.aaps.plugins.automation.triggers.TriggerDeps
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.serialization.json.JsonObject
-import javax.inject.Inject
 import javax.inject.Provider
-import javax.inject.Singleton
 
 /**
  * Builds [Action]s from their stored JSON.
@@ -41,7 +42,7 @@ import javax.inject.Singleton
  * below looks wide, but it is the same set that was reachable through the injector before; the
  * difference is that it is now visible, and each action's constructor states its own needs.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class ActionFactory @Inject constructor(
     private val triggerDeps: TriggerDeps,
     private val aapsLogger: AAPSLogger,

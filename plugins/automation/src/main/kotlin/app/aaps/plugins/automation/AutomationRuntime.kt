@@ -1,7 +1,6 @@
 package app.aaps.plugins.automation
 
 import android.Manifest
-import android.content.Context
 import androidx.annotation.VisibleForTesting
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -28,14 +27,12 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventBTChange
 import app.aaps.core.interfaces.rx.events.EventWearUpdateTiles
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
@@ -77,6 +74,12 @@ import app.aaps.plugins.automation.triggers.TriggerTempTarget
 import app.aaps.plugins.automation.triggers.TriggerTempTargetValue
 import app.aaps.plugins.automation.triggers.TriggerTime
 import app.aaps.plugins.automation.triggers.TriggerTimeRange
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.ContributesIntoSet
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
@@ -100,8 +103,6 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonArray
 import java.util.Collections
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
@@ -117,18 +118,18 @@ import kotlin.time.Duration.Companion.seconds
  * `PluginBase.requiredPermissions`) and are reported dynamically — only while an enabled event
  * actually uses a location trigger.
  */
-@Singleton
+@ContributesBinding(AppScope::class, binding = binding<Automation>())
+@ContributesBinding(AppScope::class, binding = binding<BtConnectionSource>())
+@ContributesIntoSet(AppScope::class, binding = binding<PermissionProvider>())
+@SingleIn(AppScope::class)
 class AutomationRuntime @Inject constructor(
     private val automationEventFactory: AutomationEventFactory,
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val preferences: Preferences,
-    private val context: Context,
-    private val fabricPrivacy: FabricPrivacy,
     private val loop: Loop,
     private val rxBus: RxBus,
     private val constraintChecker: ConstraintsChecker,
-    private val aapsSchedulers: AapsSchedulers,
     private val config: Config,
     private val locationServiceController: LocationServiceController,
     private val dateUtil: DateUtil,

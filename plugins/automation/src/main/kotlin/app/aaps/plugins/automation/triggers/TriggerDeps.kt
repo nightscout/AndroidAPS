@@ -12,9 +12,10 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.automation.services.LastLocationDataContainer
-import javax.inject.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Provider
-import javax.inject.Singleton
 
 /**
  * The dependencies every [Trigger] can reach.
@@ -30,7 +31,7 @@ import javax.inject.Singleton
  * What it is NOT is the old `HasAndroidInjector`: this is typed, built by Dagger in one place, and
  * needs no generated members injector, so trigger code can be multiplatform.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class TriggerDeps @Inject constructor(
     val aapsLogger: AAPSLogger,
     val rxBus: RxBus,

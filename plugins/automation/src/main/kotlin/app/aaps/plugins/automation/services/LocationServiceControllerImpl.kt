@@ -10,8 +10,10 @@ import android.os.IBinder
 import androidx.core.app.ActivityCompat
 import app.aaps.core.interfaces.location.LocationServiceController
 import app.aaps.core.interfaces.notifications.NotificationHolder
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 
 /*
     This code replaces  following
@@ -22,7 +24,8 @@ import javax.inject.Singleton
     Context.startForegroundService() did not then call Service.startForeground(): ServiceRecord{e317f7e u0 info.nightscout.nsclient/info.nightscout.androidaps.services.LocationService}
 
  */
-@Singleton
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class LocationServiceControllerImpl @Inject constructor(
     private val context: Context,
     private val notificationHolder: NotificationHolder

@@ -9,11 +9,14 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
-import javax.inject.Inject
-import javax.inject.Singleton
 import app.aaps.plugins.automation.R as AutomationR
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class ReminderSchedulerImpl @Inject constructor(
     private val context: Context,
     private val rh: ResourceHelper,
