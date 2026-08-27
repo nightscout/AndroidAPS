@@ -100,17 +100,20 @@ class ATProfile @Inject constructor(
     fun getBasal(timestamp: Long): Double = basal[MidnightUtils.secondsFromMidnight(timestamp) / 3600]
 
     // for local profile synchronisation
-    fun basal() = jsonArray(basal)
-    fun ic(circadian: Boolean = false): JSONArray {
+    // kotlinx, not org.json: these feed blockFromJson in AutotunePlugin, the last caller the org.json
+    // adapters had. The builders below were already kotlinx and only wrapped the result in a JSONArray
+    // via a string round trip.
+    fun basal(): JsonArray = jsonArrayOf(basal)
+    fun ic(circadian: Boolean = false): JsonArray {
         if (circadian)
-            return jsonArray(pumpProfile.icBlocks, avgIC / pumpProfileAvgIC)
-        return jsonArray(ic)
+            return jsonArrayOf(pumpProfile.icBlocks, avgIC / pumpProfileAvgIC)
+        return jsonArrayOf(ic)
     }
 
-    fun isf(circadian: Boolean = false): JSONArray {
+    fun isf(circadian: Boolean = false): JsonArray {
         if (circadian)
-            return jsonArray(pumpProfile.isfBlocks, avgISF / pumpProfileAvgISF)
-        return jsonArray(profileUtil.fromMgdlToUnits(isf, profile.units))
+            return jsonArrayOf(pumpProfile.isfBlocks, avgISF / pumpProfileAvgISF)
+        return jsonArrayOf(profileUtil.fromMgdlToUnits(isf, profile.units))
     }
 
     fun getProfile(circadian: Boolean = false): PureProfile {
@@ -235,13 +238,6 @@ class ATProfile @Inject constructor(
      * bytes identical: org.json renders a whole numbered Double as a bare integer and kotlinx renders
      * it with the fraction, and autotune's output files are read by people and by oref0.
      */
-
-    private fun jsonArray(values: DoubleArray): JSONArray = JSONArray(jsonArrayOf(values).toString())
-
-    private fun jsonArray(value: Double): JSONArray = JSONArray(jsonArrayOf(value).toString())
-
-    private fun jsonArray(values: List<Block>, multiplier: Double = 1.0): JSONArray =
-        JSONArray(jsonArrayOf(values, multiplier).toString())
 
     private fun jsonArrayOf(values: DoubleArray): JsonArray =
         buildJsonArray {

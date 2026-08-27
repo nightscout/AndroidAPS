@@ -33,7 +33,7 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.objects.extensions.blockFromJsonArray
+import app.aaps.core.objects.extensions.blockFromJson
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.compose.icons.IcPluginAutotune
@@ -433,9 +433,9 @@ class AutotunePlugin @Inject constructor(
         // rather than replaced with something unusable.
         val existing = profileRepository.profiles.value[indexLocalProfile]
         val updated = existing.copy(
-            basal = blockFromJsonArray(newProfile.basal(), dateUtil) ?: existing.basal,
-            ic = blockFromJsonArray(newProfile.ic(circadian), dateUtil) ?: existing.ic,
-            isf = blockFromJsonArray(newProfile.isf(circadian), dateUtil) ?: existing.isf
+            basal = blockFromJson(newProfile.basal(), dateUtil) ?: existing.basal,
+            ic = blockFromJson(newProfile.ic(circadian), dateUtil) ?: existing.ic,
+            isf = blockFromJson(newProfile.isf(circadian), dateUtil) ?: existing.isf
         )
         profileRepository.replace(indexLocalProfile, updated)
     }
