@@ -5,6 +5,7 @@ plugins {
     // Same reason as :core:graph, :core:ui, :core:objects and the rest.
     alias(libs.plugins.android.kmp.library)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.metro)
 }
 
@@ -36,10 +37,14 @@ kotlin {
         }
     }
 
+    iosArm64()
+    iosSimulatorArm64()
+
     sourceSets {
-        // Everything is still Android: the widgets are RemoteViews, and Glance, WorkManager and OkHttp
-        // are Android only. Screens move to commonMain one at a time from here, the way :core:ui did.
-        androidMain {
+        // The modules and the Compose artifacts a shared screen needs. Compose Multiplatform
+        // republishes the same `androidx.compose.*` package names, so a screen that only uses Compose
+        // moves here unchanged - that is how :core:ui ended up with 435 of its files in commonMain.
+        commonMain {
             dependencies {
                 implementation(project(":core:data"))
                 implementation(project(":core:graph"))
@@ -48,10 +53,22 @@ kotlin {
                 implementation(project(":core:objects"))
                 implementation(project(":core:ui"))
 
+                api(libs.cmp.runtime)
+                api(libs.cmp.foundation)
+                api(libs.cmp.ui)
+                api(libs.cmp.material3)
+                api(libs.cmp.material.icons.extended)
+                api(libs.kotlinx.datetime)
+                implementation(libs.cmp.ui.tooling.preview)
+            }
+        }
+
+        // Still Android: the widgets are RemoteViews, and Glance, WorkManager, OkHttp and the
+        // activity/lifecycle integrations have no iOS side. Screens move to commonMain from here.
+        androidMain {
+            dependencies {
                 api(project.dependencies.platform(libs.androidx.compose.bom))
                 implementation(libs.androidx.activity.compose)
-                api(libs.androidx.compose.material3)
-                api(libs.androidx.compose.material.icons.extended)
                 api(libs.androidx.compose.runtime)
                 api(libs.androidx.lifecycle.runtime.compose)
                 api(libs.androidx.ui.tooling.preview)
@@ -61,7 +78,6 @@ kotlin {
                 implementation(libs.androidx.glance.appwidget)
                 implementation(libs.androidx.work.runtime)
                 implementation(libs.androidx.core)
-                api(libs.kotlinx.datetime)
 
                 api(libs.com.squareup.okhttp3.okhttp)
             }
