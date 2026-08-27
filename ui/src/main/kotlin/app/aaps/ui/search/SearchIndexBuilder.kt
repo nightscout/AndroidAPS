@@ -10,9 +10,10 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.search.SearchableItem
 import app.aaps.core.ui.search.SearchableProvider
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import java.text.Normalizer
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Builds and maintains the search index for the global search feature.
@@ -23,7 +24,7 @@ import javax.inject.Singleton
  *
  * Index is built lazily on first search to avoid startup delay.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class SearchIndexBuilder @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val providers: Set<@JvmSuppressWildcards SearchableProvider>,

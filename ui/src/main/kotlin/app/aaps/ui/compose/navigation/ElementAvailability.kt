@@ -5,8 +5,9 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.interfaces.source.XDripSource
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Centralized check for whether an [app.aaps.core.ui.compose.navigation.ElementType] is available in the current configuration.
@@ -16,7 +17,7 @@ import javax.inject.Singleton
  *
  * This is NOT about user preference toggles (e.g., "show carbs button") — those are separate.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class ElementAvailability @Inject constructor(
     private val xDripSource: XDripSource,
     private val dexcomBoyda: DexcomBoyda,
