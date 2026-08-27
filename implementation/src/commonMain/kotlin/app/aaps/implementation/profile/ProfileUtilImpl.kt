@@ -6,7 +6,7 @@ import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.format.NumberFormatPlatform
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.pump.defs.PumpType
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
@@ -36,12 +36,12 @@ class ProfileUtilImpl @Inject constructor(
             else GlucoseUnit.MMOL
 
     override val unitLabel: String
-        get() = rh.gs(if (units == GlucoseUnit.MGDL) UiStrings.mgdl else UiStrings.mmol)
+        get() = rh.gs(if (units == GlucoseUnit.MGDL) CoreUiStrings.mgdl else CoreUiStrings.mmol)
 
     override fun fromMgdlToStringWithUnits(valueInMgdl: Double?): String =
         valueInMgdl?.let {
-            if (units == GlucoseUnit.MGDL) rh.gs(UiStrings.bg_mgdl, it.roundToInt())
-            else rh.gs(UiStrings.bg_mmol, it * Constants.MGDL_TO_MMOLL)
+            if (units == GlucoseUnit.MGDL) rh.gs(CoreUiStrings.bg_mgdl, it.roundToInt())
+            else rh.gs(CoreUiStrings.bg_mmol, it * Constants.MGDL_TO_MMOLL)
         } ?: ""
 
     override fun fromMgdlToUnits(valueInMgdl: Double, targetUnits: GlucoseUnit): Double =
