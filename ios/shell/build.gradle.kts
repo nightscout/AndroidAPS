@@ -2,6 +2,12 @@ plugins {
     kotlin("multiplatform")
     // Metro, because this module does not only link the migrated code, it builds a graph from it.
     alias(libs.plugins.metro)
+    // Compose, because this module also hosts AAPS's UI in a UIViewController. Declaring the
+    // dependency transitively through :core:ui is not enough: the declarations resolve at compile
+    // time, then `ComposeUIViewController` is missing at link time, which surfaces only when the
+    // app runs, as an IrLinkageError.
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.compose.multiplatform)
 }
 
 // A framework that links every module already migrated to Kotlin Multiplatform.
@@ -107,6 +113,12 @@ kotlin {
                 // `api`, not `implementation`: a module can only be exported to the framework when
                 // it is part of this module's own API, and `exportMigratedApi` turns that on.
                 migratedModules.forEach { api(project.dependencies.project(it)) }
+
+                // Named here rather than inherited, so the iOS parts of Compose are in the link.
+                implementation(libs.cmp.runtime)
+                implementation(libs.cmp.foundation)
+                implementation(libs.cmp.ui)
+                implementation(libs.cmp.material3)
             }
         }
 
