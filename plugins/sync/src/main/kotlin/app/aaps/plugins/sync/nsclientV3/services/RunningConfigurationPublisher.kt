@@ -19,6 +19,10 @@ import app.aaps.plugins.sync.nsclientV3.clientcontrol.AuthorizedClientsRepositor
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.clientControlOperational
 import app.aaps.plugins.sync.nsclientV3.services.RunningConfigurationPublisher.Companion.COLD_DEBOUNCE_MS
 import app.aaps.plugins.sync.nsclientV3.services.RunningConfigurationPublisher.Companion.HOT_DEBOUNCE_MS
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
@@ -36,9 +40,6 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
 
 /**
  * Master-side publisher for the NS running-config `settings` documents.
@@ -56,7 +57,7 @@ import javax.inject.Singleton
  * Only active when `config.APS` is true (master role); no-op on aapsclient.
  */
 @OptIn(FlowPreview::class)
-@Singleton
+@SingleIn(AppScope::class)
 class RunningConfigurationPublisher @Inject constructor(
     private val runningConfiguration: RunningConfiguration,
     private val runningConfigurationKeys: RunningConfigurationKeys,
@@ -141,7 +142,7 @@ class RunningConfigurationPublisher @Inject constructor(
             // auto-pruned doc. Debounced to swallow reconnect flapping. Republishing unchanged config is
             // harmless: clients re-apply idempotently and per-key LWW no-ops (same SyncedPrefModified).
             launch {
-                nsClientV3Plugin.get().wsConnectedFlow
+                nsClientV3Plugin().wsConnectedFlow
                     .filter { it }
                     .debounce(WS_RECONNECT_DEBOUNCE_MS)
                     .collect {
@@ -199,7 +200,7 @@ class RunningConfigurationPublisher @Inject constructor(
     }
 
     private suspend fun putSettings(identifier: String, runningConfig: JsonObject) {
-        val client = nsClientV3Plugin.get().nsAndroidClient ?: return
+        val client = nsClientV3Plugin().nsAndroidClient ?: return
         val doc = buildJsonObject {
             // NS APIv3 validateCommon requires date / utcOffset / app on UPDATE; all three are
             // immutable after first create, so pick stable constants — the doc represents a

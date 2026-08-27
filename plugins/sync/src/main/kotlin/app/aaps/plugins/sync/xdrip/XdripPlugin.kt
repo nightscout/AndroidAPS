@@ -60,6 +60,17 @@ import app.aaps.plugins.sync.xdrip.keys.XdripIntentKey
 import app.aaps.plugins.sync.xdrip.keys.XdripLongKey
 import app.aaps.plugins.sync.xdrip.workers.XdripDataSyncWorker
 import app.aaps.shared.impl.extensions.safeQueryBroadcastReceivers
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.ScheduledFuture
+import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
@@ -69,17 +80,6 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.json.JSONArray
-import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledExecutorService
-import java.util.concurrent.ScheduledFuture
-import java.util.concurrent.TimeUnit
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesBinding
-import dev.zacsweers.metro.ContributesIntoMap
-import dev.zacsweers.metro.IntKey
-import dev.zacsweers.metro.SingleIn
-import dev.zacsweers.metro.binding
-import javax.inject.Inject
 
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 // Also the app-wide XDripBroadcast. It was a second @Binds in SyncModule to this same class, so one

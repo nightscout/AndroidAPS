@@ -102,10 +102,7 @@ class AapsLeaves(
     // builds those. APSResult is asked for through a Provider - one result object per loop run.
     // Dagger owns this one; LoopPlugin needs it and Metro builds LoopPlugin now.
     // The activities this app injects need these; all three are Dagger @Binds in their own modules.
-    private val authFlowOutProvider: Provider<AuthFlowOut>,
-    private val tidepoolUploaderProvider: Provider<TidepoolUploader>,
     private val rhProvider: Provider<ResourceHelper>,
-    private val workManagerProvider: Provider<WorkManager>,
     private val notificationManagerProvider: Provider<NotificationManager>,
     private val overviewDataCacheFactoryProvider: Provider<OverviewDataCacheFactory>,
     // Needed by the feature extensions below the root, which no longer carry their own leaf lists.
@@ -129,19 +126,6 @@ class AapsLeaves(
     // Dagger keeps building this one - see the note in MaintenanceImplModule.
     // A Dagger @IntoSet multibinding, handed over already assembled. Metro receives the Set as one
     // binding rather than re-declaring the multibinding on this side.
-    private val smsCommunicatorPluginProvider: Provider<SmsCommunicatorPlugin>,
-    private val nsClientV3PluginProvider: Provider<NSClientV3Plugin>,
-    private val wearPluginProvider: Provider<WearPlugin>,
-    private val authorizedClientsRepositoryProvider: Provider<AuthorizedClientsRepository>,
-    private val pairingOfferPublisherProvider: Provider<PairingOfferPublisher>,
-    private val clientPairingRepositoryProvider: Provider<ClientPairingRepository>,
-    private val clientControlPublisherProvider: Provider<ClientControlPublisher>,
-    private val pairingOfferFetcherProvider: Provider<PairingOfferFetcher>,
-    private val smsCommunicatorRepositoryProvider: Provider<SmsCommunicatorRepository>,
-    private val tidepoolRepositoryProvider: Provider<TidepoolRepository>,
-    private val xdripMvvmRepositoryProvider: Provider<XdripMvvmRepository>,
-    private val receiverDelegateProvider: Provider<ReceiverDelegate>,
-    private val rateLimitProvider: Provider<RateLimit>,
     /**
      * The history browser scope.
      *
@@ -155,8 +139,6 @@ class AapsLeaves(
     private val historyScopeProvider: Provider<HistoryScope>,
     // Same object as ActivePlugin above (PluginStore), under its other interface.
     @ApplicationContext private val appContextProvider: Provider<Context>,
-    private val nsClientProvider: Provider<NsClient>,
-    private val clientControlActionDispatcherProvider: Provider<ClientControlActionDispatcher>,
 ) {
 
     /**
@@ -183,13 +165,10 @@ class AapsLeaves(
     // it through `CoreObjectsModule.provideIobCobCalculator`.
     // No loop() leaf any more: Metro builds LoopPlugin, so Loop travels the other way, through
     // `CoreObjectsModule.provideLoop`.
-    @Provides fun authFlowOut(): AuthFlowOut = authFlowOutProvider.get()
-    @Provides fun tidepoolUploader(): TidepoolUploader = tidepoolUploaderProvider.get()
     @Provides fun rh(): ResourceHelper = rhProvider.get()
 
     /** `ResourceHelper` is the Android implementation of the multiplatform [TextResolver]. */
     @Provides fun textResolver(rh: ResourceHelper): TextResolver = rh
-    @Provides fun workManager(): WorkManager = workManagerProvider.get()
     @Provides fun notificationManager(): NotificationManager = notificationManagerProvider.get()
     // No activeSceneManager() here on purpose: Metro owns it (@SingleIn on the class), so this leaf would
     // push a SECOND one in from Dagger - and an unscoped one, because the class carries no javax scope, so
@@ -210,28 +189,15 @@ class AapsLeaves(
     // Dagger owns these three, the same way it owns the pump drivers: AuthRequest, the nine
     // @HiltWorker loaders under nsclientV3 and the wear data layer all inject the concrete class, so
     // Dagger builds them and Metro borrows. See SyncPluginsBindings for how they reach the plugin map.
-    @Provides fun smsCommunicatorPlugin(): SmsCommunicatorPlugin = smsCommunicatorPluginProvider.get()
-    @Provides fun nsClientV3Plugin(): NSClientV3Plugin = nsClientV3PluginProvider.get()
-    @Provides fun wearPlugin(): WearPlugin = wearPluginProvider.get()
 
     // The repositories behind the :plugins:sync view models. Dagger-owned for the same reason the
     // plugins are: SmsCommunicatorPlugin, TidepoolPlugin, XdripPlugin, the xdrip worker and the
     // client-control receiver all inject them, so Dagger's copy is the one being written to.
-    @Provides fun authorizedClientsRepository(): AuthorizedClientsRepository = authorizedClientsRepositoryProvider.get()
-    @Provides fun pairingOfferPublisher(): PairingOfferPublisher = pairingOfferPublisherProvider.get()
-    @Provides fun clientPairingRepository(): ClientPairingRepository = clientPairingRepositoryProvider.get()
-    @Provides fun clientControlPublisher(): ClientControlPublisher = clientControlPublisherProvider.get()
-    @Provides fun pairingOfferFetcher(): PairingOfferFetcher = pairingOfferFetcherProvider.get()
-    @Provides fun smsCommunicatorRepository(): SmsCommunicatorRepository = smsCommunicatorRepositoryProvider.get()
-    @Provides fun tidepoolRepository(): TidepoolRepository = tidepoolRepositoryProvider.get()
-    @Provides fun xdripMvvmRepository(): XdripMvvmRepository = xdripMvvmRepositoryProvider.get()
 
     // Dagger-owned for the same reason as the plugins above: NSClientV3Plugin and TidepoolUploader are
     // built by Dagger and are what actually writes to these. Both hold state - ReceiverDelegate the
     // charging/network gate, RateLimit its map of last-run times - so a Metro-built second copy left
     // TidepoolPlugin reading a gate nobody updates and a rate limiter that never limits.
-    @Provides fun receiverDelegate(): ReceiverDelegate = receiverDelegateProvider.get()
-    @Provides fun rateLimit(): RateLimit = rateLimitProvider.get()
 
     /** Hilt's qualifier, read now that interop is on. Same Context as the unqualified binding. */
     @Provides @ApplicationContext fun appContext(): Context = appContextProvider.get()
@@ -244,8 +210,6 @@ class AapsLeaves(
      */
     @Provides fun metroMemberInjector(): MetroMemberInjector = metroMemberInjectorProvider.get()
 
-    @Provides fun nsClient(): NsClient = nsClientProvider.get()
 
     // What NSClientV3Service needs beyond the usual leaves. All three are Dagger @Binds in :plugins:sync.
-    @Provides fun clientControlActionDispatcher(): ClientControlActionDispatcher = clientControlActionDispatcherProvider.get()
 }

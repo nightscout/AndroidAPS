@@ -31,6 +31,7 @@ import app.aaps.core.nssdk.mapper.toNSDeviceStatus
 import app.aaps.core.nssdk.mapper.toNSFood
 import app.aaps.core.nssdk.mapper.toNSSgvV3
 import app.aaps.core.nssdk.mapper.toNSTreatment
+import app.aaps.core.objects.workflow.MetroService
 import app.aaps.plugins.sync.nsclientV3.NSAlarmObject
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
@@ -41,18 +42,17 @@ import app.aaps.plugins.sync.nsclientV3.data.NSDeviceStatusHandler
 import app.aaps.plugins.sync.nsclientV3.extensions.toRunningConfiguration
 import app.aaps.plugins.sync.nsclientV3.json.JsonBridge.toKotlinxJson
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
-import app.aaps.core.objects.workflow.MetroService
+import dev.zacsweers.metro.Inject
 import io.socket.client.Ack
 import io.socket.client.IO
 import io.socket.client.Socket
 import io.socket.emitter.Emitter
+import java.lang.ref.WeakReference
+import java.net.URISyntaxException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
-import java.lang.ref.WeakReference
-import java.net.URISyntaxException
-import javax.inject.Inject
 
 @Suppress("SpellCheckingInspection")
 class NSClientV3Service : MetroService() {

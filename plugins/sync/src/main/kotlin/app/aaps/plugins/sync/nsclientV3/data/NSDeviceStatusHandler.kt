@@ -18,11 +18,12 @@ import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
 import app.aaps.core.utils.JsonHelper.safeGetString
 import app.aaps.core.utils.JsonHelper.safeGetStringAllowNull
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
 
 /*
 {
@@ -77,7 +78,7 @@ import javax.inject.Singleton
 }
  */
 @Suppress("SpellCheckingInspection")
-@Singleton
+@SingleIn(AppScope::class)
 class NSDeviceStatusHandler @Inject constructor(
     private val preferences: Preferences,
     private val config: Config,
@@ -125,7 +126,7 @@ class NSDeviceStatusHandler @Inject constructor(
                 val newestCreatedAt = deviceStatuses
                     .mapNotNull { ds -> ds.createdAt?.let { runCatching { dateUtil.fromISODateString(it) }.getOrNull() } ?: ds.date }
                     .maxOrNull() ?: 0L
-                if (newestCreatedAt > 0L) nsClientV3Plugin.get().bumpDevicestatusHeartbeat(newestCreatedAt)
+                if (newestCreatedAt > 0L) nsClientV3Plugin().bumpDevicestatusHeartbeat(newestCreatedAt)
             }
             rxBus.send(EventNsClientStatusUpdated())
         }

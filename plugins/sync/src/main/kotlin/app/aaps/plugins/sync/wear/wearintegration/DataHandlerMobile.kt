@@ -98,25 +98,26 @@ import app.aaps.core.ui.compose.LightGeneralColors
 import app.aaps.core.ui.extensions.generateCOBString
 import app.aaps.core.ui.extensions.toStringShort
 import app.aaps.plugins.sync.R
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.LinkedList
 import java.util.Locale
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.math.abs
 import kotlin.math.min
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 
 // Quiet-period that closes a Wear-event batch. Long enough to absorb a Data Layer reconnect-flush,
 // short enough that live data stays effectively real-time.
 private const val HEALTH_EVENT_QUIET_PERIOD_MS = 500L
 
-@Singleton
+@SingleIn(AppScope::class)
 class DataHandlerMobile @Inject constructor(
     private val context: Context,
     private val rxBus: RxBus,

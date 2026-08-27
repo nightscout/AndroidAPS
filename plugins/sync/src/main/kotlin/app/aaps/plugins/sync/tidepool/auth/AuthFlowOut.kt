@@ -15,6 +15,11 @@ import app.aaps.plugins.sync.tidepool.events.EventTidepoolStatus
 import app.aaps.plugins.sync.tidepool.events.EventTidepoolUpdateGUI
 import app.aaps.plugins.sync.tidepool.keys.TidepoolBooleanKey
 import app.aaps.plugins.sync.tidepool.keys.TidepoolStringNonKey
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import java.nio.charset.StandardCharsets
+import java.security.MessageDigest
 import net.openid.appauth.AppAuthConfiguration
 import net.openid.appauth.AuthState
 import net.openid.appauth.AuthorizationException
@@ -24,10 +29,6 @@ import net.openid.appauth.AuthorizationServiceConfiguration
 import net.openid.appauth.ResponseTypeValues
 import net.openid.appauth.browser.BrowserAllowList
 import net.openid.appauth.browser.VersionedBrowserMatcher
-import java.nio.charset.StandardCharsets
-import java.security.MessageDigest
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * JamOrHam
@@ -35,7 +36,7 @@ import javax.inject.Singleton
  *
  * Handler for new style Tidepool openid auth
  */
-@Singleton
+@SingleIn(AppScope::class)
 class AuthFlowOut @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
@@ -70,7 +71,15 @@ class AuthFlowOut @Inject constructor(
                     ex.code == AuthorizationException.GeneralErrors.JSON_DESERIALIZATION_ERROR.code)
     }
 
-    val authService: AuthorizationService =
+    /**
+     * Built on first use, not at construction.
+     *
+     * `AuthorizationService`'s constructor inspects the installed browsers, which needs a real Android
+     * environment - as a property initializer it made **building the object graph** do that, and threw
+     * `ExceptionInInitializerError` in every plain-JVM graph test once Metro started constructing this
+     * class. Nothing needs it before the first authorization request.
+     */
+    val authService: AuthorizationService by lazy {
         AuthorizationService(
             context, AppAuthConfiguration.Builder()
                 .setBrowserMatcher(
@@ -82,6 +91,7 @@ class AuthFlowOut @Inject constructor(
                 )
                 .build()
         )
+    }
 
     enum class ConnectionStatus {
         NONE, BLOCKED, NOT_LOGGED_IN, NO_SESSION, FETCHING_TOKEN, SESSION_ESTABLISHED, FAILED

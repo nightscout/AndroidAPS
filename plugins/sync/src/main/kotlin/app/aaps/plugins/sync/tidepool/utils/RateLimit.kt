@@ -2,10 +2,11 @@ package app.aaps.plugins.sync.tidepool.utils
 
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.utils.DateUtil
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class RateLimit @Inject constructor(
     private val dateUtil: DateUtil
 ) {

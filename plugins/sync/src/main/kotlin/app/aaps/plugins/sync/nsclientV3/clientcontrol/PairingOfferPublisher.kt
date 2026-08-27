@@ -8,16 +8,17 @@ import app.aaps.core.nssdk.localmodel.clientcontrol.PairingOffer
 import app.aaps.core.nssdk.localmodel.clientcontrol.PairingPayload
 import app.aaps.core.nssdk.utils.ClientControlPairingCrypto
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.SingleIn
+import java.io.IOException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
-import java.io.IOException
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
 
 /**
  * Master-side publisher for PIN-wrapped pairing offers.
@@ -33,7 +34,7 @@ import javax.inject.Singleton
  * The wrap + upload runs on [Dispatchers.Default] — PBKDF2 is ~200ms; on Main it freezes the
  * dialog as it opens.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class PairingOfferPublisher @Inject constructor(
     private val nsClientV3Plugin: Provider<NSClientV3Plugin>,
     private val nsClientRepository: NSClientRepository,
@@ -43,7 +44,7 @@ class PairingOfferPublisher @Inject constructor(
     private val json = Json { encodeDefaults = true }
 
     suspend fun publishOffer(payload: PairingPayload, pin: String): Boolean = withContext(Dispatchers.Default) {
-        val client = nsClientV3Plugin.get().nsAndroidClient ?: run {
+        val client = nsClientV3Plugin().nsAndroidClient ?: run {
             aapsLogger.error(LTag.NSCLIENT, "PairingOffer: NS client not initialized")
             return@withContext false
         }
@@ -86,7 +87,7 @@ class PairingOfferPublisher @Inject constructor(
      * the offer identifier embeds a fresh per-pairing clientId, so it is never re-PUT after deletion.
      */
     suspend fun deleteOffer(clientId: String) {
-        val client = nsClientV3Plugin.get().nsAndroidClient ?: return
+        val client = nsClientV3Plugin().nsAndroidClient ?: return
         val identifier = "${ClientControlPublisher.IDENTIFIER_OFFER_PREFIX}$clientId"
         try {
             client.deleteSettingsPermanent(identifier)

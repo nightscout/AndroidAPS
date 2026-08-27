@@ -8,12 +8,13 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.localmodel.clientcontrol.AuthorizedClient
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientState
 import app.aaps.core.nssdk.utils.ClientControlCrypto
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Master-side store of clients authorized to send commands.
@@ -34,7 +35,7 @@ import javax.inject.Singleton
  * (lost counter / lost deletion). Serializing them keeps every committed write
  * built on the latest persisted state — relevant on a pump-control surface.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class AuthorizedClientsRepository @Inject constructor(
     private val preferences: Preferences,
     private val secureEncrypt: SecureEncrypt,

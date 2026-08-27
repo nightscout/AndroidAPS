@@ -27,6 +27,7 @@ import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.icons.IcPluginOpenHumans
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.plugins.sync.R
@@ -40,6 +41,15 @@ import app.aaps.plugins.sync.openhumans.keys.OhStringKey
 import app.aaps.plugins.sync.openhumans.ui.OHLoginActivity
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import java.io.ByteArrayOutputStream
+import java.security.MessageDigest
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.TimeZone
+import java.util.concurrent.TimeUnit
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
+import kotlin.time.Duration.Companion.hours
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
@@ -53,16 +63,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.ByteArrayOutputStream
-import java.security.MessageDigest
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.TimeZone
-import java.util.concurrent.TimeUnit
-import java.util.zip.ZipEntry
-import java.util.zip.ZipOutputStream
-import kotlin.time.Duration.Companion.hours
-import app.aaps.core.ui.R as CoreUiR
 
 @SingleIn(OpenHumansScope::class)
 class OpenHumansUploaderPlugin @Inject internal constructor(

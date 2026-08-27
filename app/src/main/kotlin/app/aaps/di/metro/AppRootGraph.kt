@@ -1,6 +1,7 @@
 package app.aaps.di.metro
 
 import android.content.SharedPreferences
+import androidx.work.WorkManager
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensData
@@ -11,6 +12,7 @@ import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.bolus.WizardExecutor
+import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.configuration.RunningConfigurationKeys
@@ -86,6 +88,7 @@ import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.stats.TirCalculator
 import app.aaps.core.interfaces.storage.Storage
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
+import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.ui.CarbSuggestionActions
 import app.aaps.core.interfaces.ui.IconsProvider
@@ -136,7 +139,23 @@ import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.NSClientSourcePlugin
 import app.aaps.plugins.source.XdripSourcePlugin
 import app.aaps.plugins.source.di.SourceMetroGraph
+import app.aaps.plugins.sync.di.OpenHumansMetroBridge
+import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
+import app.aaps.plugins.sync.nsclientV3.ReceiverDelegate
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.AuthorizedClientsRepository
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlPublisher
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientPairingRepository
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.PairingOfferFetcher
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.PairingOfferPublisher
+import app.aaps.plugins.sync.smsCommunicator.SmsCommunicatorPlugin
+import app.aaps.plugins.sync.smsCommunicator.compose.SmsCommunicatorRepository
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
+import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
+import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
+import app.aaps.plugins.sync.tidepool.utils.RateLimit
+import app.aaps.plugins.sync.wear.WearPlugin
+import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
 import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.workflow.WorkflowChainData
 import dev.zacsweers.metro.AppScope
@@ -370,6 +389,26 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val decimalFormatter: DecimalFormatter
     val profileUtil: ProfileUtil
     val hardLimits: HardLimits
+    val nsIncomingDataProcessor: NsIncomingDataProcessor
+    val openHumansMetroBridge: OpenHumansMetroBridge
+    val xdripMvvmRepository: XdripMvvmRepository
+    val wearPlugin: WearPlugin
+    val rateLimit: RateLimit
+    val tidepoolRepository: TidepoolRepository
+    val tidepoolUploader: TidepoolUploader
+    val authFlowOut: AuthFlowOut
+    val smsCommunicatorRepository: SmsCommunicatorRepository
+    val smsCommunicatorPlugin: SmsCommunicatorPlugin
+    val pairingOfferPublisher: PairingOfferPublisher
+    val pairingOfferFetcher: PairingOfferFetcher
+    val clientPairingRepository: ClientPairingRepository
+    val clientControlPublisher: ClientControlPublisher
+    val authorizedClientsRepository: AuthorizedClientsRepository
+    val receiverDelegate: ReceiverDelegate
+    val nsClientV3Plugin: NSClientV3Plugin
+    val workManager: WorkManager
+    val clientControlActionDispatcher: ClientControlActionDispatcher
+    val nsClient: NsClient
     val profileFunction: ProfileFunction
     val versionCheckerUtils: VersionCheckerUtils
     val storage: Storage

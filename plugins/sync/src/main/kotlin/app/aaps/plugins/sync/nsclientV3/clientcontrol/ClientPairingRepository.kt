@@ -10,8 +10,9 @@ import app.aaps.core.nssdk.localmodel.clientcontrol.MasterPairing
 import app.aaps.core.nssdk.localmodel.clientcontrol.PairingPayload
 import app.aaps.core.nssdk.localmodel.clientcontrol.SignedEnvelope
 import app.aaps.core.nssdk.utils.ClientControlCrypto
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Client-side store of the single master pairing.
@@ -27,7 +28,7 @@ import javax.inject.Singleton
  * rejected by the master (counter ≤ counterReceived); failure mode is "client must
  * re-pair", not "replay window opens".
  */
-@Singleton
+@SingleIn(AppScope::class)
 class ClientPairingRepository @Inject constructor(
     private val preferences: Preferences,
     private val secureEncrypt: SecureEncrypt,

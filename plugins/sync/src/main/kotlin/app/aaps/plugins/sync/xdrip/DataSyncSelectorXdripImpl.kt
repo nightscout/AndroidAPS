@@ -15,11 +15,11 @@ import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
 import app.aaps.plugins.sync.xdrip.keys.XdripLongKey
-import dagger.Lazy
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
-import javax.inject.Inject
 
 @Suppress("unused")
 // Metro builds this; Dagger receives it via a @Provides delegate in `:app`. Metro's @SingleIn,
@@ -32,7 +32,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
     private val profileRepository: ProfileRepository,
-    private val xdripBroadcast: Lazy<XDripBroadcast>,
+    private val xdripBroadcast: Provider<XDripBroadcast>,
     private val persistenceLayer: PersistenceLayer,
     private val preferences: Preferences,
     private val xdripMvvmRepository: XdripMvvmRepository
@@ -72,7 +72,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
 
     private val queueCounter = QueueCounter()
     private val isEnabled get() = xdripPlugin.isEnabled()
-    private val xdripPlugin get() = xdripBroadcast.get()
+    private val xdripPlugin get() = xdripBroadcast()
 
     private val maxAge get() = T.days(1).msecs()
     private fun isOld(timestamp: Long) = timestamp < dateUtil.now() - maxAge

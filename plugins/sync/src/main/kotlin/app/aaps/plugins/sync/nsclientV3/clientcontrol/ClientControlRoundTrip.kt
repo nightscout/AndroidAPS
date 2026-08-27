@@ -36,6 +36,14 @@ import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlRoundTrip.Companion.PROGRESS_WATCHDOG_MS
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlRoundTrip.Companion.PROPAGATION_MARGIN_MS
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlRoundTrip.Companion.ROUND_TRIP_TTL_MS
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -54,11 +62,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicReference
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
 
 /**
  * Client-side round-trip coordinator: sends a command via [ClientControlPublisher.publishTracked] and
@@ -72,7 +75,8 @@ import javax.inject.Singleton
  * ACK events are buffered with replay so an ack landing in the narrow window between publish and the
  * collector starting is not lost; the per-counter filter discards anything not for the live request.
  */
-@Singleton
+@SingleIn(AppScope::class)
+@ContributesBinding(AppScope::class, binding = binding<ClientControlActionDispatcher>())
 class ClientControlRoundTrip @Inject constructor(
     private val publisher: ClientControlPublisher,
     private val pairingRepository: ClientPairingRepository,
@@ -170,7 +174,7 @@ class ClientControlRoundTrip @Inject constructor(
         // Any authenticated ACK (a ping pong, or any command result) proves the master is alive right
         // now — feed the liveness clock so masterReachable clears the offline banner without waiting
         // for the next devicestatus heartbeat.
-        nsClientV3Plugin.get().bumpMasterSignal(dateUtil.now())
+        nsClientV3Plugin().bumpMasterSignal(dateUtil.now())
         nsClientRepository.addLog("◄ CLIENTCTL", "ack ${ack.phase}/${ack.status} counter=${ack.commandCounter}" + (ack.reason?.let { " ($it)" } ?: ""))
         // A late Delivery/Failed ack relays an async bolus failure the master only learned AFTER its Done ack —
         // raise an URGENT alarm here. It is NOT a round-trip response (the commit already terminated), so it does
@@ -206,7 +210,7 @@ class ClientControlRoundTrip @Inject constructor(
             aapsLogger.error(LTag.NSCLIENT, "ClientControl: progress signature invalid")
             return
         }
-        nsClientV3Plugin.get().bumpMasterSignal(dateUtil.now())
+        nsClientV3Plugin().bumpMasterSignal(dateUtil.now())
         if (env.timestamp <= lastProgressTs) return // stale / out-of-order
         lastProgressTs = env.timestamp
         when (env.phase) {
@@ -308,7 +312,7 @@ class ClientControlRoundTrip @Inject constructor(
             // No ack came back (timeout / connection lost) → we don't actually know the master's state.
             // Flip offline so the app-level probe pings + re-pulls and the real result reconciles, rather
             // than leaving a stale optimistic guess. Self-heals on the next pong/heartbeat.
-            if (terminal is ActionProgress.Unconfirmed) nsClientV3Plugin.get().markMasterUnreachable()
+            if (terminal is ActionProgress.Unconfirmed) nsClientV3Plugin().markMasterUnreachable()
             if (terminal is ActionProgress.Applied || terminal is ActionProgress.Prepared) {
                 val visibleMs = dateUtil.now() - shownAt
                 if (visibleMs < ClientControlActionDispatcher.MIN_MODAL_VISIBLE_MS)
@@ -366,7 +370,7 @@ class ClientControlRoundTrip @Inject constructor(
                 send(ActionProgress.Rejected(FailureReason.Internal)); return@channelFlow
             }
 
-            val plugin = nsClientV3Plugin.get()
+            val plugin = nsClientV3Plugin()
             val terminal = CompletableDeferred<ActionProgress>()
 
             val ackJob = launch {
@@ -430,7 +434,7 @@ class ClientControlRoundTrip @Inject constructor(
 
     /** Last-chance single read of the ACK doc before declaring Unconfirmed (covers a WS-missed ack). */
     private suspend fun pollAck(counter: Long): ActionProgress? {
-        val client = nsClientV3Plugin.get().nsAndroidClient ?: return null
+        val client = nsClientV3Plugin().nsAndroidClient ?: return null
         val clientId = pairingRepository.currentPairing()?.clientId ?: return null
         val identifier = ClientControlPublisher.IDENTIFIER_ACK_PREFIX + clientId
         val doc = runCatching { client.getSettings(identifier) }.getOrNull()?.values ?: return null

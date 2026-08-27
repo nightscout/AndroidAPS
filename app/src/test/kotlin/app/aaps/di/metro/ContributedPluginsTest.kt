@@ -70,19 +70,23 @@ class ContributedPluginsTest {
     }
 
     @Test
-    fun `the three Dagger-owned sync plugins are borrowed, not rebuilt by Metro`() {
-        // Same rule as the pump drivers, and the same check: testRoot() mocks AapsLeaves, so a plugin
-        // handed over by a leaf comes back a mock while one Metro constructed comes back real. These
-        // three must stay Dagger's, because AuthRequest, the nine @HiltWorker loaders and the wear data
-        // layer all inject the concrete class - a second copy would sit in the plugin list unused.
+    fun `the three sync plugins are built by Metro, once each`() {
+        // These used to be Dagger's, borrowed through AapsLeaves, and this test asserted they came back
+        // as mocks. Metro owns them now, so it asserts the property that actually matters instead: the
+        // object in the plugin list is the same one the interface binding hands out. Two copies would
+        // leave the started plugin in the list while every caller talked to an unstarted twin.
+        //
+        // The old justification - "AuthRequest, the nine @HiltWorker loaders and the wear data layer
+        // inject the concrete class" - no longer holds: there is not a single @HiltWorker left in the
+        // tree, and :wear has its own graph.
         val root = testRoot()
-        val borrowed = listOf(
-            300 to root.contributedNotNsClientPlugins[300],
-            310 to root.contributedPlugins[310],
-            350 to root.contributedPlugins[350]
-        )
 
-        assertThat(borrowed.filter { !mockingDetails(it.second).isMock }).isEmpty()
+        assertThat(root.contributedNotNsClientPlugins[300]).isSameInstanceAs(root.smsCommunicatorPlugin)
+        assertThat(root.contributedPlugins[310]).isSameInstanceAs(root.nsClientV3Plugin)
+        assertThat(root.contributedPlugins[350]).isSameInstanceAs(root.wearPlugin)
+
+        // Built for real, not handed over by a mocked leaf.
+        assertThat(mockingDetails(root.contributedPlugins[310]).isMock).isFalse()
     }
 
     @Test

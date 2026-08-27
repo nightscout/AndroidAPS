@@ -7,6 +7,10 @@ import app.aaps.plugins.sync.di.ClientId
 import app.aaps.plugins.sync.di.ClientSecret
 import app.aaps.plugins.sync.di.RedirectUrl
 import dev.zacsweers.metro.Inject
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Date
+import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Call
@@ -20,10 +24,6 @@ import okhttp3.Response
 import okio.BufferedSink
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.Date
-import kotlin.coroutines.resumeWithException
 
 class OpenHumansAPI @Inject constructor(
     @BaseUrl

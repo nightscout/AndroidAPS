@@ -3,12 +3,13 @@ package app.aaps.plugins.sync.tidepool.compose
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Repository for Tidepool UI state management.
@@ -16,7 +17,7 @@ import javax.inject.Singleton
  * Holds reactive state flows for connection status and log entries
  * that are collected by the ViewModel and displayed in TidepoolScreen.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class TidepoolRepository @Inject constructor(
     private val aapsLogger: AAPSLogger
 ) {

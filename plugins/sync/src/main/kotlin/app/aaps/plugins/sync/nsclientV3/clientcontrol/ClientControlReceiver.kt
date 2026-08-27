@@ -47,6 +47,12 @@ import app.aaps.core.nssdk.localmodel.clientcontrol.WizardDetailDto
 import app.aaps.core.nssdk.utils.ClientControlCrypto
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.services.RunningConfigurationPublisher
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.SingleIn
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -57,11 +63,6 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicReference
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
 
 /**
  * Master-side receiver for inbound client-control envelopes.
@@ -97,7 +98,7 @@ import javax.inject.Singleton
  * an older master version just doesn't know what to do with it). Replay is gated solely by the
  * persistent per-client counter — see the rationale comments in [verifyAndAck].
  */
-@Singleton
+@SingleIn(AppScope::class)
 class ClientControlReceiver @Inject constructor(
     private val authorizedRepository: AuthorizedClientsRepository,
     private val nsClientV3Plugin: Provider<NSClientV3Plugin>,
@@ -242,7 +243,7 @@ class ClientControlReceiver @Inject constructor(
      * land here with no polling-loop changes.
      */
     suspend fun processPending() {
-        val client = nsClientV3Plugin.get().nsAndroidClient ?: return
+        val client = nsClientV3Plugin().nsAndroidClient ?: return
         val now = dateUtil.now()
         val resp = runCatching { client.searchSettings(limit = 100) }.getOrNull() ?: return
         for (doc in resp.values) {
@@ -275,7 +276,7 @@ class ClientControlReceiver @Inject constructor(
     }
 
     private suspend fun verifyAndAck(identifier: String, doc: JsonObject, now: Long): Unit = commandMutex.withLock {
-        val client = nsClientV3Plugin.get().nsAndroidClient ?: return
+        val client = nsClientV3Plugin().nsAndroidClient ?: return
         // Unrecognized / unverifiable docs are IGNORED, never deleted. A delete soft-deletes
         // (tombstones) the identifier on NS, so the next legitimate PUT to that same per-type slot
         // returns HTTP 410 forever. Worse, in a multi-device setup (several clients, or another
@@ -816,7 +817,7 @@ class ClientControlReceiver @Inject constructor(
      * best-effort + exception-safe (writeAck swallows write failures). [comment] is the pump's error detail.
      */
     private suspend fun writeDeliveryFailureAck(entry: AuthorizedClient, commandCounter: Long, comment: String) {
-        val client = nsClientV3Plugin.get().nsAndroidClient ?: return
+        val client = nsClientV3Plugin().nsAndroidClient ?: return
         val secret = authorizedRepository.secretLookup(entry.clientId)?.secretBytes ?: return
         writeAck(client, secret, entry.clientId, commandCounter, AckPhase.Delivery, AckStatus.Failed, FailureReason.ExecutionFailed.name, comment, dateUtil.now())
     }
@@ -827,7 +828,7 @@ class ClientControlReceiver @Inject constructor(
      * frame just means a momentarily stale bar on the client; the next frame (or the terminal) corrects it.
      */
     private suspend fun writeProgress(clientId: String, phase: ProgressPhase, st: BolusProgressState) {
-        val client = nsClientV3Plugin.get().nsAndroidClient ?: return
+        val client = nsClientV3Plugin().nsAndroidClient ?: return
         val secret = authorizedRepository.secretLookup(clientId)?.secretBytes ?: return
         val env = ClientControlCrypto.signProgress(
             secret,

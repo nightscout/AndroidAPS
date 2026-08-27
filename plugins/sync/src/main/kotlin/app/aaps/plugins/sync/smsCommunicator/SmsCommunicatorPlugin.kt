@@ -90,9 +90,19 @@ import app.aaps.plugins.sync.smsCommunicator.compose.SmsCommunicatorOtpScreen
 import app.aaps.plugins.sync.smsCommunicator.compose.SmsCommunicatorRepository
 import app.aaps.plugins.sync.smsCommunicator.keys.SmsIntentKey
 import app.aaps.plugins.sync.smsCommunicator.otp.OneTimePassword
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
+import java.text.Normalizer
+import java.util.Locale
+import java.util.regex.Pattern
+import kotlin.math.max
+import kotlin.math.min
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -104,15 +114,9 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
 import org.apache.commons.lang3.Strings
 import org.joda.time.DateTime
-import java.text.Normalizer
-import java.util.Locale
-import java.util.regex.Pattern
-import javax.inject.Inject
-import javax.inject.Singleton
-import kotlin.math.max
-import kotlin.math.min
 
-@Singleton
+@SingleIn(AppScope::class)
+@ContributesBinding(AppScope::class, binding = binding<SmsCommunicator>())
 class SmsCommunicatorPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,

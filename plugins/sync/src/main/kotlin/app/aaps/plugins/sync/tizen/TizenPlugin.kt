@@ -38,18 +38,18 @@ import app.aaps.core.ui.compose.icons.IcPluginTizen
 import app.aaps.core.ui.extensions.toStringFull
 import app.aaps.plugins.sync.R
 import app.aaps.shared.impl.extensions.safeQueryBroadcastReceivers
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.runBlocking
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesIntoMap
-import dev.zacsweers.metro.IntKey
-import dev.zacsweers.metro.SingleIn
-import dev.zacsweers.metro.binding
-import javax.inject.Inject
 
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @IntKey(360)

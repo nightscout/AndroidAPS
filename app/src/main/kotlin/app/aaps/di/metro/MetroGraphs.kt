@@ -1,6 +1,7 @@
 package app.aaps.di.metro
 
 import android.content.SharedPreferences
+import androidx.work.WorkManager
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensData
@@ -11,6 +12,7 @@ import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.bolus.WizardExecutor
+import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.configuration.RunningConfigurationKeys
@@ -84,6 +86,7 @@ import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.stats.TirCalculator
 import app.aaps.core.interfaces.storage.Storage
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
+import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.ui.CarbSuggestionActions
 import app.aaps.core.interfaces.ui.IconsProvider
@@ -131,7 +134,22 @@ import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import app.aaps.plugins.source.di.SourceMetroGraph
 import app.aaps.plugins.sync.di.OpenHumansMetroBridge
+import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
+import app.aaps.plugins.sync.nsclientV3.ReceiverDelegate
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.AuthorizedClientsRepository
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlPublisher
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientPairingRepository
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.PairingOfferFetcher
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.PairingOfferPublisher
+import app.aaps.plugins.sync.smsCommunicator.SmsCommunicatorPlugin
+import app.aaps.plugins.sync.smsCommunicator.compose.SmsCommunicatorRepository
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
+import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
+import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
+import app.aaps.plugins.sync.tidepool.utils.RateLimit
+import app.aaps.plugins.sync.wear.WearPlugin
+import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
 import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.workflow.WorkflowChainData
 import dev.zacsweers.metro.MembersInjector
@@ -167,7 +185,6 @@ import javax.inject.Singleton
 @Singleton
 class MetroGraphs @Inject constructor(
 
-    private val openHumansMetroBridge: Provider<OpenHumansMetroBridge>,
     private val leaves: Provider<AapsLeaves>,
     private val pumpLeaves: Provider<PumpLeaves>
 ) {
@@ -197,7 +214,8 @@ class MetroGraphs @Inject constructor(
     private val workers: AppWorkersGraph get() = root.workersGraph
 
     // The module owns its own bridge, because its DI qualifiers are internal to it.
-    private val openHumans: OpenHumansMetroBridge get() = openHumansMetroBridge.get()
+    // Metro owns the bridge now, so it comes from the root graph rather than being handed in by Dagger.
+    private val openHumans: OpenHumansMetroBridge get() = root.openHumansMetroBridge
     private val automationGraph: AutomationMetroGraph get() = root.automationGraph
 
     /**
@@ -289,6 +307,25 @@ class MetroGraphs @Inject constructor(
 
     val profileFunction: ProfileFunction get() = root.profileFunction
     val versionCheckerUtils: VersionCheckerUtils get() = root.versionCheckerUtils
+    val nsClient: NsClient get() = root.nsClient
+    val clientControlActionDispatcher: ClientControlActionDispatcher get() = root.clientControlActionDispatcher
+    val workManager: WorkManager get() = root.workManager
+    val nsClientV3Plugin: NSClientV3Plugin get() = root.nsClientV3Plugin
+    val receiverDelegate: ReceiverDelegate get() = root.receiverDelegate
+    val authorizedClientsRepository: AuthorizedClientsRepository get() = root.authorizedClientsRepository
+    val clientControlPublisher: ClientControlPublisher get() = root.clientControlPublisher
+    val clientPairingRepository: ClientPairingRepository get() = root.clientPairingRepository
+    val pairingOfferFetcher: PairingOfferFetcher get() = root.pairingOfferFetcher
+    val pairingOfferPublisher: PairingOfferPublisher get() = root.pairingOfferPublisher
+    val smsCommunicatorPlugin: SmsCommunicatorPlugin get() = root.smsCommunicatorPlugin
+    val smsCommunicatorRepository: SmsCommunicatorRepository get() = root.smsCommunicatorRepository
+    val authFlowOut: AuthFlowOut get() = root.authFlowOut
+    val tidepoolUploader: TidepoolUploader get() = root.tidepoolUploader
+    val tidepoolRepository: TidepoolRepository get() = root.tidepoolRepository
+    val rateLimit: RateLimit get() = root.rateLimit
+    val wearPlugin: WearPlugin get() = root.wearPlugin
+    val xdripMvvmRepository: XdripMvvmRepository get() = root.xdripMvvmRepository
+    val nsIncomingDataProcessor: NsIncomingDataProcessor get() = root.nsIncomingDataProcessor
     val automation: Automation get() = root.automation
     val automationRuntime: AutomationRuntime get() = root.automationRuntime
     val permissionProviders: Set<PermissionProvider> get() = root.permissionProviders

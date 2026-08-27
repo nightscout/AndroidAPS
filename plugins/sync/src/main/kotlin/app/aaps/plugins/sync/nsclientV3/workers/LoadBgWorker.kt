@@ -22,8 +22,8 @@ import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
-import kotlinx.coroutines.Dispatchers
 import kotlin.math.max
+import kotlinx.coroutines.Dispatchers
 
 class LoadBgWorker @AssistedInject constructor(
     @Assisted context: Context,

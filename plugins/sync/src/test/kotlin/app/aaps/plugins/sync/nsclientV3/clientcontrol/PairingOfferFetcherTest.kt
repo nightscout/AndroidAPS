@@ -9,6 +9,7 @@ import app.aaps.core.nssdk.localmodel.clientcontrol.PairingPayload
 import app.aaps.core.nssdk.utils.ClientControlPairingCrypto
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import com.google.common.truth.Truth.assertThat
+import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
@@ -25,7 +26,6 @@ import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import java.io.IOException
-import javax.inject.Provider
 
 internal class PairingOfferFetcherTest {
 

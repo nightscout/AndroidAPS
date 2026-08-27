@@ -12,7 +12,7 @@ import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.objects.workflow.MetroBroadcastReceiver
 import app.aaps.core.utils.receivers.BundleLogger
 import dev.zacsweers.metro.HasMemberInjections
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 // The annotation is Metro's requirement for a non-final class with injected fields. Nothing subclasses
 // this today, but if something does it needs its own map entry - the lookup uses the runtime class.
