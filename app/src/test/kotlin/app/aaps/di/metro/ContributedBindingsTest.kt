@@ -1,6 +1,11 @@
 package app.aaps.di.metro
 
 import app.aaps.implementation.utils.TrendCalculatorImpl
+import app.aaps.core.interfaces.plugin.PermissionGroup
+import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.keys.interfaces.TextRef
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
@@ -110,15 +115,35 @@ class ContributedBindingsTest {
     }
 
     @Test
-    fun `ActivePlugin, PluginPermissions and PluginStore are one object`() {
+    fun `ActivePlugin and PluginStore are one object`() {
         // PluginStore holds `plugins` as a lateinit var that MainApp assigns after the graph is built.
-        // If these three resolved to different instances, MainApp would fill one and every
-        // ActivePlugin lookup in the app would read an uninitialised lateinit - the loop would not
-        // find its APS, its pump or its sensitivity plugin. Nothing about that fails to compile.
+        // If these resolved to different instances, MainApp would fill one and every ActivePlugin
+        // lookup in the app would read an uninitialised lateinit - the loop would not find its APS,
+        // its pump or its sensitivity plugin. Nothing about that fails to compile.
         val root = testRoot()
         assertThat(root.activePlugin).isSameInstanceAs(root.pluginStore)
-        assertThat(root.pluginPermissions).isSameInstanceAs(root.pluginStore)
     }
+
+    @Test
+    fun `PluginPermissions reads the same plugin list MainApp filled in`() {
+        // PluginPermissions is deliberately a separate object now: it is the only part of the old
+        // PluginStore that needed Android. It still has to see the plugins MainApp assigns, which it
+        // does by holding the same ActivePlugin. Asserting the list rather than the identity says
+        // what actually matters, and keeps saying it if the wiring changes shape again.
+        val root = testRoot()
+        val plugin = mock<PluginBase>()
+        whenever(plugin.isEnabled()).thenReturn(true)
+        whenever(plugin.requiredPermissions()).thenReturn(listOf(probeGroup))
+        root.pluginStore.plugins = listOf(plugin)
+
+        assertThat(root.pluginPermissions.collectAllPermissions(mock())).contains(probeGroup)
+    }
+
+    private val probeGroup = PermissionGroup(
+        permissions = listOf("app.aaps.permission.PROBE"),
+        rationaleTitle = TextRef.Literal(""),
+        rationaleDescription = TextRef.Literal("")
+    )
 
     @Test
     fun `the unscoped bindings stay UNSCOPED, as they were under Dagger`() {

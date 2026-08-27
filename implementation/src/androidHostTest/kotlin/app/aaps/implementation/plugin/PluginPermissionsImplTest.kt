@@ -1,6 +1,7 @@
 package app.aaps.implementation.plugin
 
 import android.content.Context
+import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PermissionProvider
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -17,12 +18,12 @@ import org.mockito.kotlin.whenever
 /**
  * Covers the non-plugin permission mechanism added for the standalone Automation runtime:
  * permissions contributed via the `Set<PermissionProvider>` multibinding must surface from
- * [PluginStore.collectAllPermissions] alongside plugin and global permissions.
+ * [PluginPermissionsImpl.collectAllPermissions] alongside plugin and global permissions.
  *
  * `collectMissingPermissions` is intentionally not exercised here — it calls into the Android
  * permission APIs (ContextCompat/PowerManager) which need an instrumented context.
  */
-class PluginStoreTest : TestBase() {
+class PluginPermissionsImplTest : TestBase() {
 
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var context: Context
@@ -33,11 +34,11 @@ class PluginStoreTest : TestBase() {
         rationaleDescription = TextRef.Literal("")
     )
 
-    private fun store(providers: Set<PermissionProvider>): PluginStore {
-        // Plain factories now, not dagger.Lazy; the pump one is never called by the permission paths.
-        return PluginStore(aapsLogger, preferences, { mock() }, { providers }).also {
-            it.plugins = emptyList<PluginBase>()
-        }
+    private fun store(providers: Set<PermissionProvider>): PluginPermissionsImpl {
+        // The registry is a mock now: permissions ask it for the plugin list and nothing else.
+        val activePlugin = mock<ActivePlugin>()
+        whenever(activePlugin.getPluginsList()).thenReturn(ArrayList<PluginBase>())
+        return PluginPermissionsImpl(activePlugin, preferences) { providers }
     }
 
     @Test
