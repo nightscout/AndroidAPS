@@ -166,11 +166,10 @@ class CommonNotificationManager(
         current.sortBy { it.level.priority }
         _notifications.value = current
 
+        // The platform gets the whole notification and decides what, if anything, to show.
         platform.show(
-            instanceKey = instanceKey,
-            title = rh.gs(if (level == NotificationLevel.URGENT) CoreUiStrings.urgent_alarm else CoreUiStrings.info),
-            text = text,
-            urgent = level == NotificationLevel.URGENT
+            notification = notification,
+            title = rh.gs(if (level == NotificationLevel.URGENT) CoreUiStrings.urgent_alarm else CoreUiStrings.info)
         )
         refreshAlarmSound()
 

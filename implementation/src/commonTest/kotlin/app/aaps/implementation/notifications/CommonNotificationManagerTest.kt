@@ -2,7 +2,9 @@ package app.aaps.implementation.notifications
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.interfaces.notifications.AlarmSound
+import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
@@ -39,8 +41,13 @@ class CommonNotificationManagerTest {
         var audibleSound: AlarmSound? = null
         var audibleCallCount = 0
 
-        override fun show(instanceKey: Int, title: String, text: String, urgent: Boolean) {
-            calls.add("show:$instanceKey:$text:urgent=$urgent")
+        /** The last notification handed over, so tests can assert on fields Android decides with. */
+        var lastShown: AapsNotification? = null
+
+        override fun show(notification: AapsNotification, title: String) {
+            lastShown = notification
+            val urgent = notification.level == NotificationLevel.URGENT
+            calls.add("show:${notification.instanceKey}:${notification.text}:urgent=$urgent")
         }
 
         override fun cancel(instanceKey: Int) {
@@ -310,6 +317,27 @@ class CommonNotificationManagerTest {
     // ---------------------------------------------------------------------------------------------
     // Text
     // ---------------------------------------------------------------------------------------------
+
+    /**
+     * Pins what the platform is given, because Android decides with it.
+     *
+     * `NotificationManagerImpl` posts an urgent notification that carries a sound *silently*, since
+     * the ramping audio is driven separately, and gates the plain visual one on a preference and on
+     * there being no actions. An implementation can only do that if the registry hands over `sound`
+     * and `actions`, so this asserts it does.
+     */
+    @Test
+    fun `the platform is given the sound and the actions`() = runTest {
+        val sut = createSut()
+        val action = NotificationAction(TextRef.Literal("Snooze")) {}
+
+        sut.post(NotificationId.TOAST_ALARM, "alarm", sound = AlarmSound.ERROR, actions = listOf(action))
+
+        val shown = platform.lastShown
+        assertEquals(AlarmSound.ERROR, shown?.sound)
+        assertEquals(1, shown?.actions?.size)
+        assertEquals(NotificationLevel.URGENT, shown?.level)
+    }
 
     @Test
     fun `a TextRef is resolved when it is posted`() = runTest {
