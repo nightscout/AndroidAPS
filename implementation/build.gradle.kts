@@ -103,6 +103,12 @@ kotlin {
             }
         }
 
+        iosTest {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
+
         androidMain {
             // Android only: the string name to R.string id map.
             kotlin.srcDir(generateImplementationStrings.flatMap { it.androidOutputDir })
