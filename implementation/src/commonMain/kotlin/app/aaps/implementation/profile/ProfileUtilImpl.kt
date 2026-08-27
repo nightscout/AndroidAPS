@@ -1,21 +1,22 @@
 package app.aaps.implementation.profile
 
+import dev.zacsweers.metro.Inject
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.data.format.NumberFormatPlatform
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.ui.UiStrings
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.ui.R
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
-import java.util.Locale
-import javax.inject.Inject
 import kotlin.math.roundToInt
 
 // Metro builds this now; Dagger gets it through a @Provides delegate in `:app`. Scoped with Metro's
@@ -26,7 +27,7 @@ import kotlin.math.roundToInt
 class ProfileUtilImpl @Inject constructor(
     private val preferences: Preferences,
     private val decimalFormatter: DecimalFormatter,
-    private val rh: ResourceHelper
+    private val rh: TextResolver
 ) : ProfileUtil {
 
     override val units: GlucoseUnit
@@ -35,12 +36,12 @@ class ProfileUtilImpl @Inject constructor(
             else GlucoseUnit.MMOL
 
     override val unitLabel: String
-        get() = rh.gs(if (units == GlucoseUnit.MGDL) R.string.mgdl else R.string.mmol)
+        get() = rh.gs(if (units == GlucoseUnit.MGDL) UiStrings.mgdl else UiStrings.mmol)
 
     override fun fromMgdlToStringWithUnits(valueInMgdl: Double?): String =
         valueInMgdl?.let {
-            if (units == GlucoseUnit.MGDL) rh.gs(R.string.bg_mgdl, it.roundToInt())
-            else rh.gs(R.string.bg_mmol, it * Constants.MGDL_TO_MMOLL)
+            if (units == GlucoseUnit.MGDL) rh.gs(UiStrings.bg_mgdl, it.roundToInt())
+            else rh.gs(UiStrings.bg_mmol, it * Constants.MGDL_TO_MMOLL)
         } ?: ""
 
     override fun fromMgdlToUnits(valueInMgdl: Double, targetUnits: GlucoseUnit): Double =
@@ -102,7 +103,7 @@ class ProfileUtilImpl @Inject constructor(
             val hour = basalValue.timeAsSeconds / (60 * 60)
             stringBuilder.append((if (hour < 10) "0" else "") + hour + ":00")
             stringBuilder.append(" ")
-            stringBuilder.append(String.format(Locale.ENGLISH, "%.3f", basalValueValue))
+            stringBuilder.append(NumberFormat(minFractionDigits = 3, maxFractionDigits = 3).format(basalValueValue, NumberFormatPlatform.SEPARATOR_DOT))
             stringBuilder.append(",\n")
         }
         return if (stringBuilder.length > 3) stringBuilder.substring(0, stringBuilder.length - 2) else stringBuilder.toString()
