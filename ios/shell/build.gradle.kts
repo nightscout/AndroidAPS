@@ -113,6 +113,8 @@ kotlin {
         iosTest {
             dependencies {
                 implementation(kotlin("test"))
+                // runTest, because everything the repository exposes is a suspend function.
+                implementation(libs.kotlinx.coroutines.test)
             }
         }
     }

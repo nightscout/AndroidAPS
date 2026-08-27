@@ -51,7 +51,7 @@ internal object ProbeTextResolver : TextResolver {
         is TextRef.AndroidRes -> "res:${ref.id}"
     }
 
-    override fun gs(ref: TextRef, vararg args: Any): String = gs(ref)
+    override fun gs(ref: TextRef, vararg args: Any?): String = gs(ref)
     override fun gsNotLocalised(ref: TextRef): String = gs(ref)
     override fun shortTextMode(): Boolean = false
 }

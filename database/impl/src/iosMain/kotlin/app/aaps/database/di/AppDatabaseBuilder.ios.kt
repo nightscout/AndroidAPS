@@ -60,6 +60,20 @@ class IosAppDatabaseBuilder {
             .build()
 
     /**
+     * Removes a database file and the journal files that sit beside it.
+     *
+     * Only meant for tests, which need each case to start from nothing. Room writes `-wal` and
+     * `-shm` next to the database, and leaving those behind would carry state into the next test.
+     */
+    @OptIn(ExperimentalForeignApi::class)
+    fun deleteDatabase(fileName: String) {
+        val manager = NSFileManager.defaultManager
+        listOf("", "-wal", "-shm").forEach { suffix ->
+            manager.removeItemAtPath(documentsPath(fileName) + suffix, null)
+        }
+    }
+
+    /**
      * The same computed indexes the Android builder creates.
      *
      * Room cannot declare an index over an expression, so both platforms add these by hand. They
