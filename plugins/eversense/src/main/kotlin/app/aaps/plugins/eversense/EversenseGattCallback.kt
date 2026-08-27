@@ -59,6 +59,19 @@ class EversenseGattCallback(
         // A value of 3 allows transient glitches to recover without internet, while still
         // falling back to full auth after sustained failures.
         private const val SHORTCUT_FAIL_THRESHOLD = 3
+
+        // Number of consecutive full-auth (WhoAmI + DMS login + fleet cert) failures before
+        // falling back to trying the shortcut again. Once disallowUseShortcut() fires, every
+        // future connect requires internet (DMS login) - if DMS itself is unreachable (observed
+        // in the wild: repeated SocketTimeoutException) or a BLE write in this longer sequence
+        // times out (more legs = more chances to hit a transient signal issue), there was
+        // previously no way back: the app would retry the same DMS-dependent path forever even
+        // though the original shortcut credentials were never actually proven invalid - only
+        // ever loosely inferred from a failure that could just as easily have been a transient
+        // range/signal issue. Re-enabling the shortcut after sustained full-auth failure lets the
+        // two strategies oscillate rather than deadlock on whichever one happened to be active
+        // when an unrelated outage (network or BLE) hit.
+        private const val FULL_AUTH_FAIL_THRESHOLD = 3
     }
 
     // FIX 1: Dedicated BLE executor for callbacks; separate network executor for HTTP calls
@@ -137,6 +150,11 @@ class EversenseGattCallback(
     // plug-in) that invalidate the session key without needing internet on every reconnect.
     @Volatile
     private var shortcutFailCount: Int = 0
+
+    // Tracks consecutive authV2flow failures while shortcut is disallowed (i.e. every attempt
+    // requires a full WhoAmI + DMS login + fleet cert handshake). See FULL_AUTH_FAIL_THRESHOLD.
+    @Volatile
+    private var fullAuthFailCount: Int = 0
 
     fun isConnected(): Boolean = connected && transmitterReady
     fun isBleConnected(): Boolean = connected
@@ -746,8 +764,9 @@ val authSession = networkExecutor.submit<Any?> {
             val session = writePacket<AuthStartPacket.Response>(AuthStartPacket(cryptoUtil.getStartSecret(signature)))
             cryptoUtil.generateSessionKey(session.sessionPublicKey)
 
-            // Auth succeeded — reset the shortcut fail counter
+            // Auth succeeded — reset both fail counters
             shortcutFailCount = 0
+            fullAuthFailCount = 0
 
             EversenseLogger.info(TAG, "365 auth complete — ready for full sync")
             Eversense365Communicator.fullSync(this, preferences, plugin.watchers, force = true)
@@ -782,6 +801,22 @@ EversenseLogger.info(TAG, "365 transmitter ready — notifying watchers")
                     cryptoUtil.disallowUseShortcut()
                 } else {
                     EversenseLogger.warning(TAG, "Shortcut auth failed ($shortcutFailCount/$SHORTCUT_FAIL_THRESHOLD) — will retry shortcut on next connect (no DMS re-auth)")
+                }
+            } else {
+                // Shortcut is currently disallowed, so this failure happened somewhere in the
+                // mandatory WhoAmI + DMS login + fleet cert sequence - it could be the DMS server/
+                // network (observed in the wild: repeated SocketTimeoutException) or a BLE write
+                // timing out, and neither says anything about whether the shortcut credentials
+                // are actually bad. Don't get stuck requiring internet forever if that path is
+                // itself the thing that's broken right now - fall back to trying the shortcut
+                // again after enough consecutive failures.
+                fullAuthFailCount++
+                if (fullAuthFailCount >= FULL_AUTH_FAIL_THRESHOLD) {
+                    EversenseLogger.warning(TAG, "Full-auth fail threshold reached — re-enabling shortcut for next connect")
+                    fullAuthFailCount = 0
+                    cryptoUtil.allowUseShortcut()
+                } else {
+                    EversenseLogger.warning(TAG, "Full re-auth failed ($fullAuthFailCount/$FULL_AUTH_FAIL_THRESHOLD) — will retry full re-auth on next connect")
                 }
             }
         bluetoothGatt?.disconnect()
