@@ -58,47 +58,47 @@ const val DATABASE_VERSION = 35
     exportSchema = true
 )
 @TypeConverters(Converters::class)
-internal abstract class AppDatabase : RoomDatabase() {
+internal abstract class AppDatabase : RoomDatabase(), AppDatabaseDaos {
 
-    abstract val glucoseValueDao: GlucoseValueDao
+    abstract override val glucoseValueDao: GlucoseValueDao
 
-    abstract val therapyEventDao: TherapyEventDao
+    abstract override val therapyEventDao: TherapyEventDao
 
-    abstract val temporaryBasalDao: TemporaryBasalDao
+    abstract override val temporaryBasalDao: TemporaryBasalDao
 
-    abstract val bolusDao: BolusDao
+    abstract override val bolusDao: BolusDao
 
-    abstract val extendedBolusDao: ExtendedBolusDao
+    abstract override val extendedBolusDao: ExtendedBolusDao
 
-    abstract val totalDailyDoseDao: TotalDailyDoseDao
+    abstract override val totalDailyDoseDao: TotalDailyDoseDao
 
-    abstract val carbsDao: CarbsDao
+    abstract override val carbsDao: CarbsDao
 
-    abstract val temporaryTargetDao: TemporaryTargetDao
+    abstract override val temporaryTargetDao: TemporaryTargetDao
 
-    abstract val bolusCalculatorResultDao: BolusCalculatorResultDao
+    abstract override val bolusCalculatorResultDao: BolusCalculatorResultDao
 
-    abstract val effectiveProfileSwitchDao: EffectiveProfileSwitchDao
+    abstract override val effectiveProfileSwitchDao: EffectiveProfileSwitchDao
 
-    abstract val profileSwitchDao: ProfileSwitchDao
+    abstract override val profileSwitchDao: ProfileSwitchDao
 
-    abstract val apsResultDao: APSResultDao
+    abstract override val apsResultDao: APSResultDao
 
-    abstract val versionChangeDao: VersionChangeDao
+    abstract override val versionChangeDao: VersionChangeDao
 
-    abstract val userEntryDao: UserEntryDao
+    abstract override val userEntryDao: UserEntryDao
 
-    abstract val preferenceChangeDao: PreferenceChangeDao
+    abstract override val preferenceChangeDao: PreferenceChangeDao
 
-    abstract val foodDao: FoodDao
+    abstract override val foodDao: FoodDao
 
-    abstract val deviceStatusDao: DeviceStatusDao
+    abstract override val deviceStatusDao: DeviceStatusDao
 
-    abstract val runningModeDao: RunningModeDao
+    abstract override val runningModeDao: RunningModeDao
 
-    abstract val heartRateDao: HeartRateDao
+    abstract override val heartRateDao: HeartRateDao
 
-    abstract val stepsCountDao: StepsCountDao
+    abstract override val stepsCountDao: StepsCountDao
 
-    abstract val calibrationEntryDao: CalibrationEntryDao
+    abstract override val calibrationEntryDao: CalibrationEntryDao
 }

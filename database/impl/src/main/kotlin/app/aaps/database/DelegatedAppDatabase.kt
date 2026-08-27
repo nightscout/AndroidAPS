@@ -44,7 +44,7 @@ import app.aaps.database.daos.delegated.DelegatedUserEntryDao
 import app.aaps.database.daos.delegated.DelegatedVersionChangeDao
 import app.aaps.database.entities.interfaces.DBEntry
 
-internal class DelegatedAppDatabase(val changes: MutableList<DBEntry>, val database: AppDatabase) {
+internal class DelegatedAppDatabase(val changes: MutableList<DBEntry>, private val database: AppDatabaseDaos) {
 
     val glucoseValueDao: GlucoseValueDao = DelegatedGlucoseValueDao(changes, database.glucoseValueDao)
     val therapyEventDao: TherapyEventDao = DelegatedTherapyEventDao(changes, database.therapyEventDao)
@@ -67,5 +67,4 @@ internal class DelegatedAppDatabase(val changes: MutableList<DBEntry>, val datab
     val heartRateDao: HeartRateDao = DelegatedHeartRateDao(changes, database.heartRateDao)
     val stepsCountDao: StepsCountDao = DelegatedStepsCountDao(changes, database.stepsCountDao)
     val calibrationEntryDao: CalibrationEntryDao = DelegatedCalibrationEntryDao(changes, database.calibrationEntryDao)
-    fun clearAllTables() = database.clearAllTables()
 }
