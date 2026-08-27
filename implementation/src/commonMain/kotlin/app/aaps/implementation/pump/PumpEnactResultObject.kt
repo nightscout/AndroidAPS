@@ -1,15 +1,16 @@
 package app.aaps.implementation.pump
 
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.keys.interfaces.TextRef
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 // Deliberately NOT @SingleIn: the @Binds this replaces had no scope. It is a result object, built
 // fresh for each call and handed back to the caller.
 @ContributesBinding(AppScope::class)
-class PumpEnactResultObject @Inject constructor(private val rh: ResourceHelper) : PumpEnactResult {
+class PumpEnactResultObject @Inject constructor(private val rh: TextResolver) : PumpEnactResult {
 
     override var success = false // request was processed successfully (but possible no change was needed)
     override var enacted = false // request was processed successfully and change has been made
@@ -32,7 +33,7 @@ class PumpEnactResultObject @Inject constructor(private val rh: ResourceHelper) 
     override fun success(success: Boolean): PumpEnactResultObject = this.also { this.success = success }
     override fun enacted(enacted: Boolean): PumpEnactResultObject = this.also { it.enacted = enacted }
     override fun comment(comment: String): PumpEnactResultObject = this.also { it.comment = comment }
-    override fun comment(comment: Int): PumpEnactResultObject = this.also { it.comment = rh.gs(comment) }
+    override fun comment(ref: TextRef): PumpEnactResultObject = this.also { it.comment = rh.gs(ref) }
     override fun duration(duration: Int): PumpEnactResultObject = this.also { it.duration = duration }
     override fun absolute(absolute: Double): PumpEnactResultObject = this.also { it.absolute = absolute }
     override fun percent(percent: Int): PumpEnactResultObject = this.also { it.percent = percent }

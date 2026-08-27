@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.UiStrings
 
 class CommandBolus(
@@ -46,8 +47,8 @@ class CommandBolus(
             if (detailedBolusInfo.carbs > 0) "CARBS " + rh.gs(InterfacesStrings.format_carbs, detailedBolusInfo.carbs.toInt()) else ""
     }
 
-    override fun cancel(commentResId: Int, success: Boolean) {
-        super.cancel(commentResId, success)
+    override fun cancel(comment: TextRef, success: Boolean) {
+        super.cancel(comment, success)
         bolusProgressData.clear(bolusGeneration)
     }
 }

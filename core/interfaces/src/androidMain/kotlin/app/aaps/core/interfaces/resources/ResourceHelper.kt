@@ -41,7 +41,7 @@ interface ResourceHelper : TextResolver {
     }
 
     /** Same, with format arguments - mirrors `gs(id, vararg)`. */
-    override fun gs(ref: TextRef, vararg args: Any): String = gs(ref.withArgs(*args))
+    override fun gs(ref: TextRef, vararg args: Any?): String = gs(ref.withArgs(*args))
 
     /** Same, but always in English - used to build the search index. */
     override fun gsNotLocalised(ref: TextRef): String = when (ref) {

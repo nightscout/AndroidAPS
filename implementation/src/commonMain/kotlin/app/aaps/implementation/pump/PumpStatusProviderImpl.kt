@@ -1,25 +1,27 @@
 package app.aaps.implementation.pump
 
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.objects.extensions.putIfThereIsValue
-import app.aaps.implementation.R
+import app.aaps.implementation.ImplementationStrings
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import kotlin.time.Clock
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonObject
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesBinding
-import dev.zacsweers.metro.SingleIn
-import javax.inject.Inject
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
@@ -28,7 +30,7 @@ class PumpStatusProviderImpl @Inject constructor(
     private val pumpSync: PumpSync,
     private val profileFunction: ProfileFunction,
     private val persistenceLayer: PersistenceLayer,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val dateUtil: DateUtil,
     private val decimalFormatter: DecimalFormatter,
     private val translator: Translator,
@@ -43,21 +45,21 @@ class PumpStatusProviderImpl @Inject constructor(
         val concentration = profileFunction.getProfile()?.insulinConcentration()
         val lines = mutableListOf<String>()
         if (!pump.isInitialized())
-            lines += rh.gs(R.string.short_status_not_initialized)
+            lines += rh.gs(ImplementationStrings.short_status_not_initialized)
         else if (pump.isSuspended())
-            lines += rh.gs(app.aaps.core.interfaces.R.string.pumpsuspended)
+            lines += rh.gs(InterfacesStrings.pumpsuspended)
         else {
             if (pump.lastDataTime.value != 0L) {
-                val agoMillis: Long = System.currentTimeMillis() - pump.lastDataTime.value
+                val agoMillis: Long = Clock.System.now().toEpochMilliseconds() - pump.lastDataTime.value
                 val agoMin = (agoMillis / 60.0 / 1000.0).toInt()
-                lines += rh.gs(R.string.short_status_last_connection, agoMin)
+                lines += rh.gs(ImplementationStrings.short_status_last_connection, agoMin)
             }
 
             pump.lastBolusAmount.value?.let { lastBolusAmount ->
                 pump.lastBolusTime.value?.let { lastBolusTimestamp ->
                     concentration?.let {
                         lines += rh.gs(
-                            R.string.short_status_last_bolus,
+                            ImplementationStrings.short_status_last_bolus,
                             decimalFormatter.to2Decimal(lastBolusAmount.iU(it)),
                             dateUtil.timeString(lastBolusTimestamp)
                         )
@@ -67,14 +69,14 @@ class PumpStatusProviderImpl @Inject constructor(
 
             val expectedState = pumpSync.expectedPumpState()
             expectedState.temporaryBasal?.let { temporaryBasal ->
-                lines += rh.gs(R.string.short_status_temp_basal, temporaryBasal.toStringFull(dateUtil, rh))
+                lines += rh.gs(ImplementationStrings.short_status_temp_basal, temporaryBasal.toStringFull(dateUtil, rh))
             }
 
             expectedState.extendedBolus?.let { extendedBolus ->
-                lines += rh.gs(R.string.short_status_temp_basal, extendedBolus.toStringFull(dateUtil, rh))
+                lines += rh.gs(ImplementationStrings.short_status_temp_basal, extendedBolus.toStringFull(dateUtil, rh))
             }
 
-            if (pump.batteryLevel.value != null && pump.batteryLevel.value != 0) lines += rh.gs(R.string.short_status_battery, pump.batteryLevel.value)
+            if (pump.batteryLevel.value != null && pump.batteryLevel.value != 0) lines += rh.gs(ImplementationStrings.short_status_battery, pump.batteryLevel.value)
             val additionalStatus = pump.pumpSpecificShortStatus(veryShort)
             if (additionalStatus.isNotEmpty()) lines += additionalStatus
         }
@@ -92,7 +94,7 @@ class PumpStatusProviderImpl @Inject constructor(
         // Do not send any info if there is no running profile
         val profile = profileFunction.getProfile() ?: return JsonObject(emptyMap())
         val expectedPumpState = pumpSync.expectedPumpState()
-        val now = System.currentTimeMillis()
+        val now = Clock.System.now().toEpochMilliseconds()
         val runningMode = persistenceLayer.getRunningModeActiveAt(now)
         val profileName = profileFunction.getProfileName()
 

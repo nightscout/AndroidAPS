@@ -1,6 +1,7 @@
 package app.aaps.core.interfaces.queue
 
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.keys.interfaces.TextRef
 
 interface Command {
 
@@ -48,11 +49,11 @@ interface Command {
     /**
      * Invoked when the queue drops this command without executing it (queue cleared,
      * superseded by a newer same-type command, etc.). Resumes any caller waiting on the
-     * command's [callback] with a failure result carrying [commentResId] as the reason.
+     * command's [callback] with a failure result carrying [comment] as the reason.
      * Override to add side-effects (e.g. clearing progress UI).
      * Return success = true to avoid command failed dialog
      */
-    fun cancel(commentResId: Int, success: Boolean = true) {
-        callback?.result(pumpEnactResultProvider().success(success).comment(commentResId))?.run()
+    fun cancel(comment: TextRef, success: Boolean = true) {
+        callback?.result(pumpEnactResultProvider().success(success).comment(comment))?.run()
     }
 }
