@@ -5,6 +5,8 @@ import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
+import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.database.AppRepository
@@ -13,6 +15,8 @@ import app.aaps.ios.shell.prefs.IosSp
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.ios.shell.config.IosClientConfig
 import app.aaps.shared.impl.rx.bus.RxBusImpl
+import app.aaps.implementation.notifications.CommonNotificationManager
+import app.aaps.implementation.notifications.IosSystemNotificationPlatform
 import app.aaps.shared.impl.utils.IosDateFormatPlatform
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -73,6 +77,7 @@ interface IosProbeGraph {
     val dateUtil: DateUtil
     val fabricPrivacy: FabricPrivacy
     val repository: AppRepository
+    val notificationManager: NotificationManager
 
     @Provides fun logger(): AAPSLogger = ProbeLogger
     @Provides fun textResolver(): TextResolver = ProbeTextResolver
@@ -110,6 +115,20 @@ interface IosProbeGraph {
     @Provides
     @SingleIn(AppScope::class)
     fun repository(): AppRepository = IosAppDatabaseBuilder().provideAppRepository("aaps-ios-graph.db")
+
+    /** Notifications through UNUserNotificationCenter, with the shared registry above it. */
+    @Provides
+    @SingleIn(AppScope::class)
+    fun systemNotificationPlatform(logger: AAPSLogger): SystemNotificationPlatform = IosSystemNotificationPlatform(logger)
+
+    @Provides
+    @SingleIn(AppScope::class)
+    fun notificationManager(
+        logger: AAPSLogger,
+        textResolver: TextResolver,
+        platform: SystemNotificationPlatform,
+        scope: CoroutineScope
+    ): NotificationManager = CommonNotificationManager(logger, textResolver, platform, scope)
 
     @DependencyGraph.Factory
     fun interface Factory {

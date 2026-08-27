@@ -40,19 +40,26 @@ kotlin {
         }
     }
 
-    // Declared even though nothing is in commonMain yet. Keeping the targets is what stops an
-    // android-only import from quietly reaching common code once files start moving across.
+    // Keeping the targets is what stops an android-only import from quietly reaching common code
+    // as more files move across.
     iosArm64()
     iosSimulatorArm64()
 
     sourceSets {
-        androidMain {
+        // What ConstraintsCheckerImpl needs. androidMain inherits these, so the rest of the module
+        // keeps compiling unchanged; only the modules no common file uses yet stay android only.
+        commonMain {
             dependencies {
-                implementation(project(":core:data"))
                 implementation(project(":core:interfaces"))
                 implementation(project(":core:keys"))
                 implementation(project(":core:objects"))
                 implementation(project(":core:ui"))
+            }
+        }
+
+        androidMain {
+            dependencies {
+                implementation(project(":core:data"))
                 implementation(project(":core:utils"))
 
                 api(libs.kotlinx.datetime)
