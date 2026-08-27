@@ -16,6 +16,49 @@ Do not guess. Ask Metro:
 3. The `[Metro/MissingBinding]` error names exactly one missing binding. That is the next blocker.
 4. Take the accessor out again before committing, so the graph keeps building.
 
+## Where tests for common code go
+
+**A test in `androidHostTest` does not run on iOS.** It is worth stating because the mistake is
+invisible: the class is in `commonMain`, the tests are green, and the iOS target is never exercised.
+`:implementation:iosSimulatorArm64Test` was `NO-SOURCE` for exactly this reason - the module had no
+`commonTest` source set at all, so every test of every common class in it ran only on the JVM.
+
+When moving a class to `commonMain`, move its tests to `commonTest` in the same module. Add the
+source set if it is missing:
+
+```kotlin
+commonTest {
+    dependencies {
+        implementation(kotlin("test"))
+        implementation(libs.kotlinx.coroutines.test)
+    }
+}
+```
+
+The cost is that Mockito is JVM only, so mocks become hand written fakes. That is usually an
+improvement for this kind of test - a recording fake shows the *order* of calls, which is what most
+of these assertions are really about.
+
+Moving one test file across immediately found two faults the JVM run had hidden: a fake that did not
+implement every interface member (Mockito had been filling it in), and a backticked test name
+containing a comma, which Kotlin/Native rejects outright.
+
+## Gotchas in iOS interop
+
+Collected so nobody pays for them twice. All were found by tests or a crash, not by review.
+
+- **`NSLog("%@", someKotlinString)` segfaults.** `NSLog` is a C varargs function and `%@` wants an
+  Obj-C object pointer; a Kotlin `String` is not boxed into an `NSString` on the way through. Pass
+  `NSString.create(string = line)`. It compiles and links either way.
+- **Obj-C class methods arrive as extensions and need their own import.**
+  `NSFileHandle.fileHandleForWritingAtPath` is an extension on `NSFileHandleMeta`, so
+  `import platform.Foundation.fileHandleForWritingAtPath` is required. Same for `closeFile`. When a
+  symbol looks like it should exist, dump the metadata rather than guessing:
+  `~/.konan/<dist>/bin/klib dump-metadata <klib path>`.
+- **Enum constants are not top level.** `UNNotificationInterruptionLevelTimeSensitive` is an entry on
+  `UNNotificationInterruptionLevel`, not a standalone `val`.
+- **A backticked test name cannot contain a comma** on Kotlin/Native.
+
 ## Open
 
 ### 1. The notification cluster - to delete a duplicate, not to unblock anything
@@ -32,7 +75,8 @@ they should become one. When these move to Metro:
   (`implementation/src/commonMain/kotlin/app/aaps/implementation/notifications/`) instead. It already
   holds all the shared logic: the list and its ordering, `allowMultiple` replacement, expiry and
   `validityCheck`, both `dismiss` overloads, `muteAllAlarms`, and the alarm sound owner handoff.
-  18 tests cover it in `implementation/src/androidHostTest/.../CommonNotificationManagerTest.kt`.
+  18 tests cover it in `implementation/src/commonTest/.../CommonNotificationManagerTest.kt`, and
+  they run on the JVM and on the iOS simulator.
 - keep the Android specific half - the channel, the dismiss `BroadcastReceiver`,
   `NotificationCompat` and the `PendingIntent` - as an Android `SystemNotificationPlatform`
   (`core/interfaces/src/commonMain/.../notifications/SystemNotificationPlatform.kt`). Drive
@@ -77,6 +121,14 @@ Not blockers, and not for the Windows session to fix. Listed so nobody is surpri
   - the kotlinx half of `JsonHelper` had to move to `commonMain` first, as `JsonHelperKtx.kt` - a
     Kotlin `object` cannot span source sets and the `org.json` half has to stay on Android
   - `getDefaultProfileJson()` was dead (test-only) and was removed from the `ProfileStore` interface
+- The five plugins that this file used to list as blocked - `SensitivityOref1Plugin`,
+  `SensitivityAAPSPlugin`, `SensitivityWeightedAveragePlugin`, `UnscentedKalmanFilterPlugin` and
+  `LinearCalibrationPlugin` - are built by `IosProbeGraph` and verified running on the simulator
+  (`59fe8102c3`). Nothing was left blocked by a missing common implementation.
+- `AAPSLoggerIos` (`59fe8102c3`) - `NSLog` plus a size rotating file in Documents, replacing the
+  `ProbeLogger` fake. Only `ProbeTextResolver` is still a stand-in.
+- `AapsTheme` renders on iOS (`048cebb42f`) - the AAPS colour scheme and typography, resolved through
+  a real `Preferences` on `NSUserDefaults`, not a bare `MaterialTheme`.
 - `ConstraintsCheckerImpl` - moved to `commonMain` (`a76cca9e41`)
 - `ProfileRepositoryImpl` - moved to `commonMain`, off `org.json` (`3252f044b1`)
 - `PluginStore` / `PluginPermissions` - split so the registry is no longer Android
