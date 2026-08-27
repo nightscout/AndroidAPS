@@ -361,6 +361,8 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideBuiltInSearchables(graphs: MetroGraphs): BuiltInSearchables = graphs.builtInSearchables
     // Same for MainApp, which still field-injects ActivityMonitor through Hilt.
     @Provides @Singleton fun provideActivityMonitor(graphs: MetroGraphs): ActivityMonitor = graphs.activityMonitor
+    // Metro owns the application scope now; this hands the same instance to Dagger consumers.
+    @Provides @Singleton @ApplicationScope fun provideAppScope(graphs: MetroGraphs): CoroutineScope = graphs.appScope
     // Unscoped on purpose - result objects, one per call, as the @Binds they replace were.
     @Provides fun provideAPSResult(graphs: MetroGraphs): APSResult = graphs.apsResult
     @Provides fun providePumpEnactResult(graphs: MetroGraphs): PumpEnactResult = graphs.pumpEnactResult
@@ -527,7 +529,6 @@ class CoreObjectsModule {
     @Suppress("LongParameterList")
     fun provideAapsLeaves(
         metroMemberInjectorProvider: Provider<MetroMemberInjector>,
-        @ApplicationScope appScopeProvider: Provider<CoroutineScope>,
         fabricPrivacyProvider: Provider<FabricPrivacy>,
         configProvider: Provider<Config>,
         databaseConfigProvider: Provider<DatabaseConfig>,
@@ -539,7 +540,6 @@ class CoreObjectsModule {
         @ApplicationContext appContextProvider: Provider<Context>,
     ): AapsLeaves = AapsLeaves(
         metroMemberInjectorProvider,
-        appScopeProvider,
         fabricPrivacyProvider,
         configProvider,
         databaseConfigProvider,

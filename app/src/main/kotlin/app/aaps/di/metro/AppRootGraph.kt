@@ -20,6 +20,7 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.di.APS
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.di.FeatureMemberInjectors
 import app.aaps.core.interfaces.di.NotNSClient
 import app.aaps.core.interfaces.di.PumpDriver
@@ -166,6 +167,7 @@ import dev.zacsweers.metro.MembersInjector
 import dev.zacsweers.metro.Multibinds
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metrox.viewmodel.MetroViewModelMultibindings
+import kotlinx.coroutines.CoroutineScope
 import kotlin.reflect.KClass
 import javax.inject.Singleton
 
@@ -344,6 +346,9 @@ interface AppRootGraph : MetroViewModelMultibindings {
 
     /** Metro builds it now, but `MainApp` still injects it through Dagger, so it is handed back. */
     val activityMonitor: ActivityMonitor
+
+    /** The one application scope. Metro owns it; Dagger consumers get this same instance. */
+    @ApplicationScope val appScope: CoroutineScope
     val apsResult: APSResult
     val pumpEnactResult: PumpEnactResult
     val profileSwitchSilentGate: ProfileSwitchSilentGate
@@ -506,6 +511,12 @@ interface AppRootGraph : MetroViewModelMultibindings {
          * DeferredRef used to do by hand is now just the shape of a binding container.
          */
         fun create(
+            /**
+             * The application scope, passed in rather than built here so the caller decides its
+             * dispatcher: production uses `Dispatchers.Default`, the unit tests an Unconfined one, so
+             * that work started while the graph is being built runs on the calling thread.
+             */
+            @Provides @ApplicationScope appScope: CoroutineScope,
             @Includes leaves: AapsLeaves,
             @Includes coreObjects: CoreObjectsGraph,
             @Includes pumpLeaves: PumpLeaves

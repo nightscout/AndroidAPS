@@ -36,11 +36,9 @@ fun testRoot(configure: (AapsLeaves) -> Unit = {}): AppRootGraph {
     // which fails as `ClassCastException ... cannot be cast to Job` from inside the graph. Unconfined so
     // anything launched runs on the calling thread and no test has to wait for it.
     val scope = CoroutineScope(Dispatchers.Unconfined + SupervisorJob())
-    whenever(leaves.appScope()).thenReturn(scope)
-    whenever(leaves.unqualifiedAppScope()).thenReturn(scope)
     configure(leaves)
     // PumpLeaves is mocked like AapsLeaves: the test source set compiles against the `full` flavour, so
     // this is the pump-bearing copy, and no test needs a real BLE transport.
     return createGraphFactory<AppRootGraph.Factory>()
-        .create(leaves, CoreObjectsGraph, mock<PumpLeaves>(defaultAnswer = Answers.RETURNS_MOCKS))
+        .create(scope, leaves, CoreObjectsGraph, mock<PumpLeaves>(defaultAnswer = Answers.RETURNS_MOCKS))
 }

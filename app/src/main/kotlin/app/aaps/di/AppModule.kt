@@ -5,7 +5,6 @@ import android.content.SharedPreferences
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.di.APS
 import app.aaps.core.interfaces.di.AllConfigs
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.di.NotNSClient
 import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -25,9 +24,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import javax.inject.Singleton
 
 @Suppress("unused")
@@ -83,12 +79,6 @@ abstract class AppModule {
 
             return plugins
         }
-
-        @Provides
-        @Singleton
-        @ApplicationScope
-        fun provideApplicationScope(): CoroutineScope =
-            CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
 
         /**

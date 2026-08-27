@@ -156,6 +156,9 @@ import app.aaps.workflow.WorkflowChainData
 import dev.zacsweers.metro.MembersInjector
 import dev.zacsweers.metro.createGraphFactory
 import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -204,9 +207,15 @@ class MetroGraphs @Inject constructor(
         (workers.workerCreators + openHumans.workerCreators + source.workerCreators)
             .mapKeys { (klass, _) -> klass.java.name }
 
+    /**
+     * The application scope. Built here rather than borrowed from Dagger, which is what `AapsLeaves`
+     * used to do; Dagger consumers now get this same instance back through `CoreObjectsModule`.
+     */
+    private val applicationScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+
     /** The one Metro root. Sub-graphs are extensions of it rather than roots of their own. */
     private val root: AppRootGraph by lazy {
-        createGraphFactory<AppRootGraph.Factory>().create(leaves.get(), CoreObjectsGraph, pumpLeaves.get())
+        createGraphFactory<AppRootGraph.Factory>().create(applicationScope, leaves.get(), CoreObjectsGraph, pumpLeaves.get())
     }
 
     private val source: SourceMetroGraph get() = root.sourceGraph
@@ -395,6 +404,7 @@ class MetroGraphs @Inject constructor(
     val nsClientRepository: NSClientRepository get() = root.nsClientRepository
     val builtInSearchables: BuiltInSearchables get() = root.builtInSearchables
     val activityMonitor: ActivityMonitor get() = root.activityMonitor
+    val appScope: CoroutineScope get() = root.appScope
     val apsResult: APSResult get() = root.apsResult
     val pumpEnactResult: PumpEnactResult get() = root.pumpEnactResult
     val profileSwitchSilentGate: ProfileSwitchSilentGate get() = root.profileSwitchSilentGate

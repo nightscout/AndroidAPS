@@ -9,7 +9,6 @@ import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.database.di.DatabaseConfig
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
@@ -68,7 +67,6 @@ import app.aaps.ui.compose.overview.OverviewDataCacheFactory
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.Provides
-import kotlinx.coroutines.CoroutineScope
 import javax.inject.Provider
 
 /**
@@ -94,7 +92,6 @@ import javax.inject.Provider
 @BindingContainer
 class AapsLeaves(
     private val metroMemberInjectorProvider: Provider<MetroMemberInjector>,
-    @ApplicationScope private val appScopeProvider: Provider<CoroutineScope>,
     private val fabricPrivacyProvider: Provider<FabricPrivacy>,
     private val configProvider: Provider<Config>,
     private val databaseConfigProvider: Provider<DatabaseConfig>,
@@ -140,20 +137,7 @@ class AapsLeaves(
     @ApplicationContext private val appContextProvider: Provider<Context>,
 ) {
 
-    /**
-     * The application scope, qualified.
-     *
-     * It used to be bound unqualified, because without Dagger interop Metro ignored the javax
-     * @Qualifier entirely. With interop on, consumers ask for the qualified type and get it.
-     */
-    @Provides @ApplicationScope fun appScope(): CoroutineScope = appScopeProvider.get()
 
-    /**
-     * The same scope again, unqualified, for the multiplatform classes that take a plain
-     * `CoroutineScope` - `@ApplicationScope` is a javax qualifier and cannot appear in commonMain.
-     * Same instance either way.
-     */
-    @Provides fun unqualifiedAppScope(): CoroutineScope = appScopeProvider.get()
 
     @Provides fun fabricPrivacy(): FabricPrivacy = fabricPrivacyProvider.get()
     // No runningModeExpiryJob() leaf: Metro builds it now (commonMain, Metro @Inject), and Dagger gets
