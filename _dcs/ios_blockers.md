@@ -18,26 +18,7 @@ Do not guess. Ask Metro:
 
 ## Open
 
-### 1. ProfileStoreObject - blocks `Preferences`, and so the whole AAPS theme on iOS
-
-`implementation/src/androidMain/kotlin/app/aaps/implementation/profile/ProfileStoreObject.kt`
-
-This is the one that matters most. `AapsTheme` reads `LocalPreferences`, so no real `Preferences`
-means no AAPS theme on iOS - the Compose screen there runs on a bare `MaterialTheme` today. Every
-other link in that chain (`PreferencesImpl`, `PersistenceLayerImpl`, `ProfileFunctionImpl`,
-`ProfileUtilImpl`, `HardLimitsImpl`, `PluginStore`, `ConstraintsCheckerImpl`, `DetermineBasalResult`)
-already resolves on iOS. This is the last one.
-
-Three things needed:
-
-- still `javax.inject`, so it needs the Dagger to Metro move
-- `androidx.collection.ArrayMap` -> `LinkedHashMap` (the map is small and never a hot path)
-- `ResourceHelper` -> `TextResolver`, with `R.string.x` -> `CoreUiStrings.x`
-
-The last point is the same swap already done in `ProfileRepositoryImpl` and `ConstraintsCheckerImpl`
-- see those two files for the pattern, including `TextRef.withArgs` for a format string.
-
-### 2. The notification cluster - to delete a duplicate, not to unblock anything
+### 1. The notification cluster - to delete a duplicate, not to unblock anything
 
 `implementation/src/androidMain/kotlin/app/aaps/implementation/notifications/NotificationManagerImpl.kt`
 and, in `implementation/src/androidMain/kotlin/app/aaps/implementation/androidNotification/`,
@@ -61,7 +42,7 @@ they should become one. When these move to Metro:
 `CommonNotificationManager` deliberately has **no** `@ContributesBinding`, so that it cannot clash
 with the Android binding while both exist. Add the annotation when the Android one goes away.
 
-### 3. AutotunePlugin - the last caller of the org.json adapters
+### 2. AutotunePlugin - the last caller of the org.json adapters
 
 `plugins/aps/src/androidMain/kotlin/app/aaps/plugins/aps/autotune/AutotunePlugin.kt`, 3 calls to
 `blockFromJsonArray`.
@@ -85,6 +66,17 @@ Not blockers, and not for the Windows session to fix. Listed so nobody is surpri
 
 ## Done
 
+- `ProfileStoreObject` - moved to `commonMain` (`220357539a`). `Preferences` now resolves on iOS -
+  verified with the probe procedure above. Notes for whoever reads this next:
+  - the map became `mutableMapOf` rather than `LinkedHashMap` by name; that is the same class
+  - there were no `R.string` uses, so no `CoreUiStrings` swap was needed - only `ResourceHelper` ->
+    `TextResolver`, which `validateSemantic` already took
+  - two unused constructor params went with it (`config`, `notificationManager`)
+  - `@Synchronized` -> `AapsLock`, and `getSpecificProfile` was rewritten because a `var` mutated in
+    a closure could not smart cast
+  - the kotlinx half of `JsonHelper` had to move to `commonMain` first, as `JsonHelperKtx.kt` - a
+    Kotlin `object` cannot span source sets and the `org.json` half has to stay on Android
+  - `getDefaultProfileJson()` was dead (test-only) and was removed from the `ProfileStore` interface
 - `ConstraintsCheckerImpl` - moved to `commonMain` (`a76cca9e41`)
 - `ProfileRepositoryImpl` - moved to `commonMain`, off `org.json` (`3252f044b1`)
 - `PluginStore` / `PluginPermissions` - split so the registry is no longer Android
