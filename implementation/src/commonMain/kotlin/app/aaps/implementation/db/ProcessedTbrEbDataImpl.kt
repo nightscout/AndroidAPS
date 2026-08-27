@@ -8,8 +8,8 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.objects.extensions.toTemporaryBasal
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import javax.inject.Inject
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)

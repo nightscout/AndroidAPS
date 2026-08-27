@@ -3,17 +3,18 @@ package app.aaps.implementation.overview
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.overview.OverviewData
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import kotlin.time.Instant
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesBinding
-import dev.zacsweers.metro.SingleIn
-import javax.inject.Inject
-import kotlin.time.Instant
+import kotlin.time.Clock
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
@@ -28,7 +29,7 @@ class OverviewDataImpl @Inject constructor() : OverviewData {
 
     private fun initialToTime(): Long {
         val tz = TimeZone.currentSystemDefault()
-        val now = Instant.fromEpochMilliseconds(System.currentTimeMillis())
+        val now = Instant.fromEpochMilliseconds(Clock.System.now().toEpochMilliseconds())
         val local = now.toLocalDateTime(tz)
         val truncatedHour = LocalDateTime(local.year, local.month, local.day, local.hour, 0)
         val nextFullHour = truncatedHour.toInstant(tz).plus(1, DateTimeUnit.HOUR, tz)

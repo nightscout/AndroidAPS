@@ -9,10 +9,10 @@ import app.aaps.core.objects.extensions.toJson
 import app.aaps.core.objects.extensions.toScenes
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 import kotlinx.coroutines.flow.StateFlow
-import javax.inject.Inject
 
 /**
  * Repository for scene definitions. Reads/writes the scene list from SharedPreferences via
