@@ -2,11 +2,11 @@ package app.aaps.implementation.logging
 
 import app.aaps.core.interfaces.logging.LoggerUtils
 import ch.qos.logback.classic.LoggerContext
+import dev.zacsweers.metro.Inject
 import org.slf4j.LoggerFactory
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
-import javax.inject.Inject
 
 /**
  * This class provides several methods for log-handling (eg. sending logs as emails).

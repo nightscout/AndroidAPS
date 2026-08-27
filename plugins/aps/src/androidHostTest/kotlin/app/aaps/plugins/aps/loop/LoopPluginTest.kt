@@ -30,6 +30,7 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.runTest
@@ -74,7 +75,10 @@ class LoopPluginTest : TestBaseWithProfile() {
         loopPlugin = LoopPlugin(
             aapsLogger, rxBus, preferences, config,
             constraintChecker, rh, profileFunction, context, commandQueue, activePlugin, processedTbrEbData, receiverStatusStore, fabricPrivacy, dateUtil, uel,
-            persistenceLayer, uiInteraction, notificationManager, pumpEnactResultProvider, processedDeviceStatusData, pumpStatusProvider, decimalFormatter, ch, carbSuggestionActions, testScope
+            // The shared test base still hands out a javax Provider, which other tests rely on;
+            // LoopPlugin takes Metro's now, so it is adapted here rather than flipping the base.
+            persistenceLayer, uiInteraction, notificationManager, Provider { pumpEnactResultProvider.get() },
+            processedDeviceStatusData, pumpStatusProvider, decimalFormatter, ch, carbSuggestionActions, testScope
         )
         whenever(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         whenever(context.getSystemService(Context.NOTIFICATION_SERVICE)).thenReturn(androidNotificationManager)

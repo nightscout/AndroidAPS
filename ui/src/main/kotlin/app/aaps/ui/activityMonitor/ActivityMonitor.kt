@@ -10,8 +10,9 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.interfaces.Preferences
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Data class representing statistics for a single Android Activity.
@@ -33,9 +34,7 @@ data class ActivityStats(
     val days: Double
 )
 
-// Stays on Dagger on purpose: MainApp carries @HiltAndroidApp and field-injects this, so the Hilt
-// graph has to be able to build it. Move it to Metro only together with MainApp.
-@Singleton
+@SingleIn(AppScope::class)
 class ActivityMonitor @Inject constructor(
     private var aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,

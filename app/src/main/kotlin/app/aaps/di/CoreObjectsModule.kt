@@ -154,6 +154,7 @@ import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
 import app.aaps.plugins.sync.wear.WearPlugin
 import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
+import app.aaps.ui.activityMonitor.ActivityMonitor
 import app.aaps.ui.compose.history.HistoryScope
 import app.aaps.ui.compose.overview.OverviewDataCacheFactory
 import app.aaps.ui.search.BuiltInSearchables
@@ -358,6 +359,8 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideNSClientRepository(graphs: MetroGraphs): NSClientRepository = graphs.nsClientRepository
     // ComposeMainActivity field-injects the concrete class through Hilt, so Dagger needs Metro's one.
     @Provides @Singleton fun provideBuiltInSearchables(graphs: MetroGraphs): BuiltInSearchables = graphs.builtInSearchables
+    // Same for MainApp, which still field-injects ActivityMonitor through Hilt.
+    @Provides @Singleton fun provideActivityMonitor(graphs: MetroGraphs): ActivityMonitor = graphs.activityMonitor
     // Unscoped on purpose - result objects, one per call, as the @Binds they replace were.
     @Provides fun provideAPSResult(graphs: MetroGraphs): APSResult = graphs.apsResult
     @Provides fun providePumpEnactResult(graphs: MetroGraphs): PumpEnactResult = graphs.pumpEnactResult

@@ -32,9 +32,9 @@ import app.aaps.core.ui.search.SearchableItem
 import app.aaps.core.ui.search.SearchableProvider
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoSet
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
-import javax.inject.Inject
 
 /**
  * Single source of truth for built-in (non-plugin) preference screens.
@@ -45,9 +45,6 @@ import javax.inject.Inject
  * 2. Add it to the appropriate list returned by getSearchableItems()
  * 3. Use the property in AllPreferencesScreen instead of inline definition
  */
-// The constructor annotation stays javax on purpose. Metro contributes this to the searchable set,
-// but it is also an AapsLeaves leaf and ComposeMainActivity (@AndroidEntryPoint) injects it, so Dagger
-// has to be able to build it too.
 @ContributesIntoSet(AppScope::class, binding = binding<SearchableProvider>())
 @SingleIn(AppScope::class)
 class BuiltInSearchables @Inject constructor(

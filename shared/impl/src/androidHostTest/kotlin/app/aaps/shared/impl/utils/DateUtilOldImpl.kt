@@ -31,8 +31,6 @@ import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
 import java.util.stream.Collectors
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -41,8 +39,8 @@ import kotlin.math.floor
  * The Class DateUtil. A simple wrapper around SimpleDateFormat to ease the handling of iso date string &lt;-&gt; date obj
  * with TZ
  */
-@Singleton
-class DateUtilOldImpl @Inject constructor(private val context: Context) {
+
+class DateUtilOldImpl(private val context: Context) {
 
     /**
      * The date format in iso.

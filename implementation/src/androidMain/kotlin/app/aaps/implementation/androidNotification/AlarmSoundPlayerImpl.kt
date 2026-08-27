@@ -19,8 +19,8 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.rawRes
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import javax.inject.Inject
 import kotlin.math.ln
 import kotlin.math.pow
 

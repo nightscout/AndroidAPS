@@ -36,16 +36,29 @@ class VersionCheckerUtilsImpl @Inject constructor(
     private val versionDefinition: VersionDefinition
 ) : VersionCheckerUtils {
 
+    private var loadedDefinition: JsonObject? = null
+
     /**
-     * Resolved on first use, not at construction.
+     * The allowed-versions document: read on first use, and writable.
      *
-     * Invoking [VersionDefinition] opens `definition.json` from the assets, and the definition is only
-     * needed when a version check actually runs. As a property initializer it made **building the
-     * graph** do file I/O, which is wrong in production and fatal in a unit test: the context there is
-     * a `RETURNS_MOCKS` mock, so `assets.open()` hands back a mock `InputStream` whose `read()` returns
-     * 0 and never -1, and the read loop in `SignatureVerifierPlugin.readInputStream` never ends.
+     * Both halves matter and pull in opposite directions.
+     *
+     * **Lazy**, because invoking [VersionDefinition] opens `definition.json` from the assets. As a
+     * property initializer it made *building the object graph* do file I/O - wrong in production, and
+     * fatal in a unit test, where the context is a `RETURNS_MOCKS` mock so `assets.open()` returns a
+     * mock `InputStream` whose `read()` answers 0 and never -1, and the read loop in
+     * `SignatureVerifierPlugin.readInputStream` never terminates.
+     *
+     * **A `var`**, because `MainApp.setupRemoteConfig` finds this property by reflection and casts it
+     * to `KMutableProperty` to merge the remote config into it. Making it a `val by lazy` threw
+     * `ClassCastException` on startup - and only on a device, since that path needs network and Play
+     * Services, so no test or CI build reaches it.
      */
-    val definition: JsonObject by lazy { versionDefinition.invoke() }
+    var definition: JsonObject
+        get() = loadedDefinition ?: versionDefinition.invoke().also { loadedDefinition = it }
+        set(value) {
+            loadedDefinition = value
+        }
 
     override fun triggerCheckVersion() {
         val version: String? = AllowedVersions.findByApi(definition, Build.VERSION.SDK_INT)

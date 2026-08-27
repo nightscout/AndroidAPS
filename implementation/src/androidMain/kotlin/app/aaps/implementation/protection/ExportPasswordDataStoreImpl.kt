@@ -16,11 +16,11 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.crypto.CryptoUtil
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.runBlocking
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
-import javax.inject.Inject
 
 /**
  * Class ExportPasswordDataStore (interface + implementation)

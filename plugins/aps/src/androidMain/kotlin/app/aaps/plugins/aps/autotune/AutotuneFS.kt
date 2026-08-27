@@ -5,6 +5,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.autotune.data.ATProfile
 import app.aaps.plugins.aps.autotune.data.PreppedGlucose
+import dev.zacsweers.metro.Inject
 import org.json.JSONException
 import org.slf4j.LoggerFactory
 import java.io.BufferedInputStream
@@ -21,7 +22,6 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
-import javax.inject.Inject
 
 @SingleIn(AppScope::class)
 class AutotuneFS @Inject constructor(

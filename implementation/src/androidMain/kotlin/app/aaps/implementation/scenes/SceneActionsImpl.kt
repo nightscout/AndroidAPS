@@ -12,8 +12,8 @@ import app.aaps.core.ui.CoreUiStrings
 import app.aaps.implementation.bolus.RoleBranch
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import javax.inject.Inject
 
 /**
  * [SceneActions] implementation. Scene START is the two-step master-controlled flow (the master authors the

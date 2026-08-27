@@ -156,6 +156,7 @@ import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
 import app.aaps.plugins.sync.wear.WearPlugin
 import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
+import app.aaps.ui.activityMonitor.ActivityMonitor
 import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.workflow.WorkflowChainData
 import dev.zacsweers.metro.AppScope
@@ -340,6 +341,9 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val constraintsChecker: ConstraintsChecker
     val nsClientRepository: NSClientRepository
     val builtInSearchables: BuiltInSearchables
+
+    /** Metro builds it now, but `MainApp` still injects it through Dagger, so it is handed back. */
+    val activityMonitor: ActivityMonitor
     val apsResult: APSResult
     val pumpEnactResult: PumpEnactResult
     val profileSwitchSilentGate: ProfileSwitchSilentGate
