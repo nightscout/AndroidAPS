@@ -1,7 +1,6 @@
 package app.aaps.history
 
 import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.core.interfaces.workflow.CalculationSignals
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.objects.workflow.CalculationSignalsImpl
 import app.aaps.di.metro.HistoryWindowGraph
@@ -15,11 +14,7 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
-import org.mockito.kotlin.any
-import org.mockito.kotlin.argumentCaptor
-import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 /**
@@ -32,17 +27,24 @@ import org.mockito.kotlin.whenever
 class HistoryBrowserDataTest : TestBaseWithProfile() {
 
     @Mock lateinit var calculationWorkflow: CalculationWorkflow
-    @Mock lateinit var overviewDataCacheFactory: OverviewDataCacheFactory
 
-    private lateinit var cache: OverviewDataCacheImpl
     private lateinit var sut: HistoryWindowGraph
 
     @BeforeEach
     fun setUp() {
-        cache = mock()
-        whenever(overviewDataCacheFactory.create(any(), any(), any())).thenReturn(cache)
         sut = createSut()
     }
+
+    /**
+     * The window's cache, as the concrete type.
+     *
+     * `OverviewDataCacheFactory` is a Metro `@AssistedFactory` now, so it cannot be swapped for a mock
+     * the way it was when Dagger owned it and `AapsLeaves` handed it over. These tests read the real
+     * object's assisted inputs instead, which checks the same three things - the window's own signals,
+     * its own calculator, and no database observation - one step closer to the truth than verifying the
+     * arguments of a call to a mock.
+     */
+    private val HistoryWindowGraph.cacheImpl: OverviewDataCacheImpl get() = cache as OverviewDataCacheImpl
 
     /**
      * Builds the real root and opens windows from it, rather than building a window directly. That is
@@ -54,7 +56,6 @@ class HistoryBrowserDataTest : TestBaseWithProfile() {
      */
     private fun root() = testRoot { leaves ->
         whenever(leaves.rh()).thenReturn(rh)
-        whenever(leaves.overviewDataCacheFactory()).thenReturn(overviewDataCacheFactory)
     }
 
     private fun createSut(): HistoryWindowGraph = root().historyWindowFactory.create()
@@ -72,19 +73,26 @@ class HistoryBrowserDataTest : TestBaseWithProfile() {
 
     @Test
     fun `creates the cache for history (no DB observation) wired to its own signals`() {
-        val signalsCaptor = argumentCaptor<CalculationSignals>()
-        assertThat(sut.cache).isSameInstanceAs(cache)
-        verify(overviewDataCacheFactory).create(any(), signalsCaptor.capture(), eq(false))
-        assertThat(signalsCaptor.firstValue).isSameInstanceAs(sut.signals)
+        // observeDatabase = false is the whole point of a history window: the cache must be filled by
+        // the window's workers through its own signals, never by the live database stream.
+        assertThat(sut.cacheImpl.observeDatabase).isFalse()
+        assertThat(sut.cacheImpl.signals).isSameInstanceAs(sut.signals)
+    }
+
+    @Test
+    fun `the window's cache is its own, not the app-wide one`() {
+        val shared = root()
+        val window = shared.historyWindowFactory.create()
+
+        assertThat(window.cache).isNotSameInstanceAs(shared.overviewDataCache)
+        assertThat(shared.historyWindowFactory.create().cache).isNotSameInstanceAs(window.cache)
     }
 
     @Test
     fun `the cache's IobCobCalculator provider resolves to the scope's calculator`() {
-        val providerCaptor = argumentCaptor<() -> IobCobCalculator>()
-        // Touch the cache so the factory is called, then check the deferred side of the cycle.
-        sut.cache
-        verify(overviewDataCacheFactory).create(providerCaptor.capture(), any(), any())
-        assertThat(providerCaptor.firstValue.invoke()).isSameInstanceAs(sut.iobCobCalculator)
+        // The deferred side of the cycle: the cache holds a provider, not a calculator, and resolving it
+        // must land on the window's own calculator rather than the root's.
+        assertThat(sut.cacheImpl.iobCobCalculatorProvider.invoke()).isSameInstanceAs(sut.iobCobCalculator)
     }
 
     @Test

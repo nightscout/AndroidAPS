@@ -15,6 +15,7 @@ import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -86,8 +87,11 @@ import app.aaps.core.objects.extensions.fromGv
 import app.aaps.core.objects.extensions.target
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedInject
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -105,10 +109,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
-import kotlin.math.abs
-import kotlin.math.max
-import kotlin.math.min
-import app.aaps.core.interfaces.R as InterfacesR
 
 /**
  * Implementation of OverviewDataCache using MutableStateFlow.
@@ -145,7 +145,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
     private val preferences: Preferences,
     private val dateUtil: DateUtil,
     private val trendCalculator: TrendCalculator,
-    @Assisted private val iobCobCalculatorProvider: () -> IobCobCalculator,
+    @Assisted val iobCobCalculatorProvider: () -> IobCobCalculator,
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val loop: Loop,
     private val config: Config,
@@ -155,8 +155,8 @@ class OverviewDataCacheImpl @AssistedInject constructor(
     private val decimalFormatter: DecimalFormatter,
     private val translator: Translator,
     private val rh: ResourceHelper,
-    @Assisted private val signals: CalculationSignals,
-    @Assisted private val observeDatabase: Boolean
+    @Assisted val signals: CalculationSignals,
+    @Assisted val observeDatabase: Boolean
 ) : OverviewDataCache {
 
     // Lazy lookup breaks the cache ↔ iobCobCalculator construction cycle.

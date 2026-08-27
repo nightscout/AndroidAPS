@@ -15,8 +15,8 @@ import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
-import app.aaps.core.utils.JsonHelper.safeGetString
-import app.aaps.core.utils.JsonHelper.safeGetStringAllowNull
+import app.aaps.core.utils.safeGetString
+import app.aaps.core.utils.safeGetStringAllowNull
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject

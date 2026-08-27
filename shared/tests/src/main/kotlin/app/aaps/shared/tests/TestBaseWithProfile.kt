@@ -318,7 +318,7 @@ open class TestBaseWithProfile : TestBase() {
             String.format(rh.gs(string), arg1, arg2, arg3)
         }.whenever(rh).gs(anyInt(), anyString(), anyInt(), anyString())
         pumpEnactResultProvider = Provider { PumpEnactResultObject(rh) }
-        profileStoreProvider = Provider { ProfileStoreObject(aapsLogger, activePlugin, config, rh, notificationManager, hardLimits, dateUtil) }
+        profileStoreProvider = Provider { ProfileStoreObject(aapsLogger, activePlugin, rh, hardLimits, dateUtil) }
         glucoseStatusCalculatorSMB = GlucoseStatusCalculatorSMB(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter, DeltaCalculator(aapsLogger))
 
         whenever(ch.bolusProgressString(any<PumpInsulin>(), any<Boolean>())).thenReturn("AnyString")
@@ -336,7 +336,7 @@ open class TestBaseWithProfile : TestBase() {
         store.put(TESTPROFILENAME, JSONObject(validProfileJSON))
         json.put("defaultProfile", TESTPROFILENAME)
         json.put("store", store)
-        return ProfileStoreObject(aapsLogger, activePlugin, config, rh, notificationManager, hardLimits, dateUtil).with(Json.parseToJsonElement(json.toString()).jsonObject)
+        return ProfileStoreObject(aapsLogger, activePlugin, rh, hardLimits, dateUtil).with(Json.parseToJsonElement(json.toString()).jsonObject)
     }
 
     fun getInvalidProfileStore1(): ProfileStore {
@@ -345,7 +345,7 @@ open class TestBaseWithProfile : TestBase() {
         store.put(TESTPROFILENAME, JSONObject(invalidProfileJSON))
         json.put("defaultProfile", TESTPROFILENAME)
         json.put("store", store)
-        return ProfileStoreObject(aapsLogger, activePlugin, config, rh, notificationManager, hardLimits, dateUtil).with(Json.parseToJsonElement(json.toString()).jsonObject)
+        return ProfileStoreObject(aapsLogger, activePlugin, rh, hardLimits, dateUtil).with(Json.parseToJsonElement(json.toString()).jsonObject)
     }
 
     fun getInvalidProfileStore2(): ProfileStore {
@@ -355,6 +355,6 @@ open class TestBaseWithProfile : TestBase() {
         store.put("invalid", JSONObject(invalidProfileJSON))
         json.put("defaultProfile", TESTPROFILENAME + "invalid")
         json.put("store", store)
-        return ProfileStoreObject(aapsLogger, activePlugin, config, rh, notificationManager, hardLimits, dateUtil).with(Json.parseToJsonElement(json.toString()).jsonObject)
+        return ProfileStoreObject(aapsLogger, activePlugin, rh, hardLimits, dateUtil).with(Json.parseToJsonElement(json.toString()).jsonObject)
     }
 }

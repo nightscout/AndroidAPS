@@ -104,7 +104,6 @@ class AapsLeaves(
     // The activities this app injects need these; all three are Dagger @Binds in their own modules.
     private val rhProvider: Provider<ResourceHelper>,
     private val notificationManagerProvider: Provider<NotificationManager>,
-    private val overviewDataCacheFactoryProvider: Provider<OverviewDataCacheFactory>,
     // Needed by the feature extensions below the root, which no longer carry their own leaf lists.
     private val contextProvider: Provider<Context>,
     // Source plugins, still built by Dagger. They live here rather than in their own module because a
@@ -176,7 +175,6 @@ class AapsLeaves(
     // other way, which is the direction the class itself documents.
     // No sceneRepository() either, same reason as activeSceneManager above: Metro owns it (@SingleIn +
     // two @ContributesBinding), so this leaf pushed an unscoped Dagger copy back in.
-    @Provides fun overviewDataCacheFactory(): OverviewDataCacheFactory = overviewDataCacheFactoryProvider.get()
     @Provides fun context(): Context = contextProvider.get()
 
 

@@ -1,24 +1,23 @@
 package app.aaps.implementation.profile
 
-import androidx.collection.ArrayMap
-import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.concurrent.AapsLock
+import app.aaps.core.interfaces.concurrent.withLock
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.profile.PureProfile
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
-import app.aaps.core.utils.JsonHelper.safeGetJSONObject
-import app.aaps.core.utils.JsonHelper.safeGetString
-import app.aaps.core.utils.JsonHelper.safeGetStringAllowNull
+import app.aaps.core.utils.safeGetJSONObject
+import app.aaps.core.utils.safeGetString
+import app.aaps.core.utils.safeGetStringAllowNull
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import kotlinx.serialization.json.JsonObject
-import javax.inject.Inject
 
 // Unscoped, matching the Dagger @Binds it replaces: a profile store is a value object and each caller
 // builds its own with `with(...)`.
@@ -26,9 +25,7 @@ import javax.inject.Inject
 class ProfileStoreObject @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val activePlugin: ActivePlugin,
-    private val config: Config,
-    private val rh: ResourceHelper,
-    private val notificationManager: NotificationManager,
+    private val rh: TextResolver,
     private val hardLimits: HardLimits,
     private val dateUtil: DateUtil
 ) : ProfileStore {
@@ -57,7 +54,8 @@ class ProfileStoreObject @Inject constructor(
      */
     override fun getData(): JsonObject = data
 
-    private val cachedObjects = ArrayMap<String, PureProfile>()
+    private val lock = AapsLock()
+    private val cachedObjects = mutableMapOf<String, PureProfile>()
 
     private fun storeUnits(): String? = data.safeGetStringAllowNull("units", null)
 
@@ -82,7 +80,6 @@ class ProfileStoreObject @Inject constructor(
     }
 
     override fun getDefaultProfile(): PureProfile? = getDefaultProfileName()?.let { getSpecificProfile(it) }
-    override fun getDefaultProfileJson(): JsonObject? = getDefaultProfileName()?.let { getSpecificProfileJson(it) }
 
     override fun getDefaultProfileName(): String? {
         // optString answered "" for a missing key, and the literal text "null" for an explicit null.
@@ -95,28 +92,22 @@ class ProfileStoreObject @Inject constructor(
     override fun getProfileList(): ArrayList<CharSequence> =
         ArrayList<CharSequence>().also { ret -> getStore()?.keys?.forEach { ret.add(it) } }
 
-    @Synchronized
-    override fun getSpecificProfile(profileName: String): PureProfile? {
-        var profile: PureProfile? = null
-        val units = data.safeGetStringAllowNull("units", storeUnits())
-        getStore()?.let { store ->
-            if (store.containsKey(profileName)) {
-                profile = cachedObjects[profileName]
-                if (profile == null) {
-                    store.safeGetJSONObject(profileName, null)?.let { profileObject ->
-                        profile = pureProfileFromJson(profileObject, dateUtil, units)
-                        profile?.let { cachedObjects[profileName] = profile }
-                    }
-                }
-            }
-        }
-        return profile
-    }
+    /**
+     * Guarded by [lock] rather than `@Synchronized`, which is JVM only.
+     *
+     * Rewritten from a `var` mutated inside a closure: that could not smart cast, and it read the cache
+     * and wrote it back in two separate steps. The behaviour is the same - first caller for a name
+     * parses it, everyone after reuses that instance.
+     */
+    override fun getSpecificProfile(profileName: String): PureProfile? = lock.withLock {
+        val store = getStore() ?: return@withLock null
+        if (!store.containsKey(profileName)) return@withLock null
+        cachedObjects[profileName]?.let { return@withLock it }
 
-    private fun getSpecificProfileJson(profileName: String): JsonObject? =
-        getStore()?.let { store ->
-            if (store.containsKey(profileName)) store.safeGetJSONObject(profileName, null) else null
-        }
+        val units = data.safeGetStringAllowNull("units", storeUnits())
+        val profileObject = store.safeGetJSONObject(profileName, null) ?: return@withLock null
+        pureProfileFromJson(profileObject, dateUtil, units)?.also { cachedObjects[profileName] = it }
+    }
 
     override val allProfilesValid: Boolean
         // Sync/storage gate: only semantic (pump-independent) validity. A profile that is merely

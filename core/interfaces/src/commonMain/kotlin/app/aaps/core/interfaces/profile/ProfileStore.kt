@@ -9,7 +9,6 @@ interface ProfileStore {
     fun getData(): JsonObject
     fun getStartDate(): Long
     fun getDefaultProfile(): PureProfile?
-    fun getDefaultProfileJson(): JsonObject?
     fun getDefaultProfileName(): String?
     fun getProfileList(): ArrayList<CharSequence>
     fun getSpecificProfile(profileName: String): PureProfile?
