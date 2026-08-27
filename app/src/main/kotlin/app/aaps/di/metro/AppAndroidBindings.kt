@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.telephony.SmsManager
 import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.shared.impl.sharedPreferences.defaultPreferences
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ContributesTo
@@ -25,6 +26,14 @@ import dev.zacsweers.metro.SingleIn
 @ContributesTo(AppScope::class)
 @BindingContainer
 object AppAndroidBindings {
+
+    /**
+     * Hilt's qualifier, read now that interop is on. The same Context as the unqualified binding
+     * `AppRootGraph.Factory` takes; Dagger consumers ask for the qualified one.
+     */
+    @Provides
+    @ApplicationContext
+    fun appContext(context: Context): Context = context
 
     /** Same file and mode as the Dagger provider this replaces - it must be the same preferences file. */
     @Provides

@@ -1,5 +1,6 @@
 package app.aaps.di.metro
 
+import android.content.Context
 import android.content.SharedPreferences
 import androidx.work.WorkManager
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
@@ -154,6 +155,7 @@ import app.aaps.ui.activityMonitor.ActivityMonitor
 import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.workflow.WorkflowChainData
 import dev.zacsweers.metro.MembersInjector
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.zacsweers.metro.createGraphFactory
 import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
 import kotlinx.coroutines.CoroutineScope
@@ -190,6 +192,7 @@ import javax.inject.Singleton
 class MetroGraphs @Inject constructor(
 
     private val leaves: Provider<AapsLeaves>,
+    @ApplicationContext private val contextProvider: Provider<Context>,
     private val pumpLeaves: Provider<PumpLeaves>
 ) {
 
@@ -215,7 +218,7 @@ class MetroGraphs @Inject constructor(
 
     /** The one Metro root. Sub-graphs are extensions of it rather than roots of their own. */
     private val root: AppRootGraph by lazy {
-        createGraphFactory<AppRootGraph.Factory>().create(applicationScope, leaves.get(), CoreObjectsGraph, pumpLeaves.get())
+        createGraphFactory<AppRootGraph.Factory>().create(applicationScope, contextProvider.get(), leaves.get(), CoreObjectsGraph, pumpLeaves.get())
     }
 
     private val source: SourceMetroGraph get() = root.sourceGraph

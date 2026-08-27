@@ -1,6 +1,5 @@
 package app.aaps.di.metro
 
-import android.content.Context
 import androidx.work.WorkManager
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.aps.APSResult
@@ -64,7 +63,6 @@ import app.aaps.plugins.automation.services.LastLocationDataContainer
 import app.aaps.plugins.constraints.objectives.SntpClient
 import app.aaps.ui.compose.history.HistoryScope
 import app.aaps.ui.compose.overview.OverviewDataCacheFactory
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.Provides
 import javax.inject.Provider
@@ -102,7 +100,6 @@ class AapsLeaves(
     private val rhProvider: Provider<ResourceHelper>,
     private val notificationManagerProvider: Provider<NotificationManager>,
     // Needed by the feature extensions below the root, which no longer carry their own leaf lists.
-    private val contextProvider: Provider<Context>,
     // Source plugins, still built by Dagger. They live here rather than in their own module because a
     // graph extension is generated in the parent's module, so Metro cannot read a container from the
     // module the extension is declared in.
@@ -134,7 +131,6 @@ class AapsLeaves(
      */
     private val historyScopeProvider: Provider<HistoryScope>,
     // Same object as ActivePlugin above (PluginStore), under its other interface.
-    @ApplicationContext private val appContextProvider: Provider<Context>,
 ) {
 
 
@@ -153,13 +149,6 @@ class AapsLeaves(
     /** `ResourceHelper` is the Android implementation of the multiplatform [TextResolver]. */
     @Provides fun textResolver(rh: ResourceHelper): TextResolver = rh
     @Provides fun notificationManager(): NotificationManager = notificationManagerProvider.get()
-    // No activeSceneManager() here on purpose: Metro owns it (@SingleIn on the class), so this leaf would
-    // push a SECOND one in from Dagger - and an unscoped one, because the class carries no javax scope, so
-    // every call built another. `CoreObjectsModule.provideActiveSceneManager` hands Metro's instance the
-    // other way, which is the direction the class itself documents.
-    // No sceneRepository() either, same reason as activeSceneManager above: Metro owns it (@SingleIn +
-    // two @ContributesBinding), so this leaf pushed an unscoped Dagger copy back in.
-    @Provides fun context(): Context = contextProvider.get()
 
 
     @Provides fun uiInteraction(): UiInteraction = uiInteractionProvider.get()
@@ -181,8 +170,6 @@ class AapsLeaves(
     // charging/network gate, RateLimit its map of last-run times - so a Metro-built second copy left
     // TidepoolPlugin reading a gate nobody updates and a rate limiter that never limits.
 
-    /** Hilt's qualifier, read now that interop is on. Same Context as the unqualified binding. */
-    @Provides @ApplicationContext fun appContext(): Context = appContextProvider.get()
     /**
      * The graph's own member injector, handed back to it.
      *

@@ -1,5 +1,6 @@
 package app.aaps.di.metro
 
+import android.content.Context
 import android.content.SharedPreferences
 import androidx.work.WorkManager
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
@@ -517,6 +518,9 @@ interface AppRootGraph : MetroViewModelMultibindings {
              * that work started while the graph is being built runs on the calling thread.
              */
             @Provides @ApplicationScope appScope: CoroutineScope,
+
+            /** The application context. Android owns it, so it is passed in rather than bound. */
+            @Provides context: Context,
             @Includes leaves: AapsLeaves,
             @Includes coreObjects: CoreObjectsGraph,
             @Includes pumpLeaves: PumpLeaves

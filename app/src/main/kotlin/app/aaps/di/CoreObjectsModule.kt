@@ -534,10 +534,8 @@ class CoreObjectsModule {
         databaseConfigProvider: Provider<DatabaseConfig>,
         rhProvider: Provider<ResourceHelper>,
         notificationManagerProvider: Provider<NotificationManager>,
-        contextProvider: Provider<Context>,
         uiInteractionProvider: Provider<UiInteraction>,
         historyScopeProvider: Provider<HistoryScope>,
-        @ApplicationContext appContextProvider: Provider<Context>,
     ): AapsLeaves = AapsLeaves(
         metroMemberInjectorProvider,
         fabricPrivacyProvider,
@@ -545,9 +543,7 @@ class CoreObjectsModule {
         databaseConfigProvider,
         rhProvider,
         notificationManagerProvider,
-        contextProvider,
         uiInteractionProvider,
         historyScopeProvider,
-        appContextProvider,
     )
 }
