@@ -42,7 +42,7 @@ class PluginStore @Inject constructor(
 ) : ActivePlugin {
 
 
-    lateinit var plugins: List<@JvmSuppressWildcards PluginBase>
+    lateinit var plugins: List<PluginBase>
 
 
     private var activeBgSourceStore: BgSource? = null
@@ -78,19 +78,22 @@ class PluginStore @Inject constructor(
         }
     }
 
-    /*
-     * The one thing keeping this class on Android.
+    /**
+     * True when the caller asked for something every plugin would match, which is not a question
+     * about plugins at all.
      *
-     * `interfaceClass.java.isAssignableFrom(...)` is JVM reflection and has no Kotlin/Native
-     * equivalent. It can be written portably - ask the ConfigBuilder among the plugins whether it
-     * matches, rather than asking the class - but that answers differently when ConfigBuilder is
-     * absent from the list, so it wants a deliberate decision rather than a quiet rewrite.
-     * Everything else here is already common code.
+     * This was `interfaceClass.java.isAssignableFrom(ConfigBuilder::class.java)`, which is JVM
+     * reflection. It needs no reflection: `ConfigBuilder` declares no supertypes, so the only
+     * classes it is assignable to are itself and `Any`. Naming those two directly says the same
+     * thing on every platform, and `PluginStoreInterfaceLookupTest` pins both cases.
      */
+    private fun asksForTheBuilder(interfaceClass: KClass<*>): Boolean =
+        interfaceClass == ConfigBuilder::class || interfaceClass == Any::class
+
     override fun getSpecificPluginsListByInterface(interfaceClass: KClass<*>): ArrayList<PluginBase> {
         val newList = ArrayList<PluginBase>()
         for (p in plugins) {
-            if (!interfaceClass.java.isAssignableFrom(ConfigBuilder::class.java) && interfaceClass.isInstance(p)) newList.add(p)
+            if (!asksForTheBuilder(interfaceClass) && interfaceClass.isInstance(p)) newList.add(p)
         }
         return newList
     }
