@@ -46,6 +46,14 @@ kotlin {
             }
         }
 
+        // Runs on Android and on the iOS simulator from one source. The values checked there are
+        // timestamps and wire format strings, so a platform difference would be a data bug.
+        commonTest {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
+
         androidMain {
             dependencies {
                 implementation(project(":core:utils"))
