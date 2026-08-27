@@ -9,16 +9,16 @@ import app.aaps.database.entities.TemporaryTarget
 internal interface TemporaryTargetDao : TraceableDao<TemporaryTarget> {
 
     @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE id = :id")
-    override fun findById(id: Long): TemporaryTarget?
+    override suspend fun findById(id: Long): TemporaryTarget?
 
     @Query("DELETE FROM $TABLE_TEMPORARY_TARGETS")
-    override fun deleteAllEntries()
+    override suspend fun deleteAllEntries()
 
     @Query("DELETE FROM $TABLE_TEMPORARY_TARGETS WHERE timestamp < :than")
-    override fun deleteOlderThan(than: Long): Int
+    override suspend fun deleteOlderThan(than: Long): Int
 
     @Query("DELETE FROM $TABLE_TEMPORARY_TARGETS WHERE referenceId IS NOT NULL")
-    override fun deleteTrackedChanges(): Int
+    override suspend fun deleteTrackedChanges(): Int
 
     @Query("SELECT id FROM $TABLE_TEMPORARY_TARGETS ORDER BY id DESC limit 1")
     suspend fun getLastId(): Long?

@@ -110,9 +110,9 @@ kotlin {
 }
 
 dependencies {
-    // Room only runs for Android: the @Database class is androidMain, because Room rejects the
-    // non-suspend DAO members that TraceableDao declares when a DAO is compiled for a non-Android
-    // target. The entities, DAOs and transactions are still commonMain - they just have no generated
-    // implementation outside Android.
+    // Room generates the database initialiser per target, so its processor runs for every target the
+    // @Database class is compiled for.
     add("kspAndroid", libs.androidx.room.compiler)
+    add("kspIosArm64", libs.androidx.room.compiler)
+    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
 }

@@ -1,7 +1,9 @@
 package app.aaps.database
 
+import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.RoomDatabaseConstructor
 import androidx.room.TypeConverters
 import app.aaps.database.daos.APSResultDao
 import app.aaps.database.daos.BolusCalculatorResultDao
@@ -57,7 +59,10 @@ const val DATABASE_VERSION = 35
         CalibrationEntry::class],
     exportSchema = true
 )
+// @ConstructedBy is what lets this class live in commonMain: Room generates the initialiser per target
+// and the expect object below is where each one lands. On Android alone it would be optional.
 @TypeConverters(Converters::class)
+@ConstructedBy(AppDatabaseConstructor::class)
 internal abstract class AppDatabase : RoomDatabase(), AppDatabaseDaos {
 
     abstract override val glucoseValueDao: GlucoseValueDao
@@ -101,4 +106,12 @@ internal abstract class AppDatabase : RoomDatabase(), AppDatabaseDaos {
     abstract override val stepsCountDao: StepsCountDao
 
     abstract override val calibrationEntryDao: CalibrationEntryDao
+}
+
+// Room supplies the actual per target. It must be `expect`, because the generated initialiser is
+// platform specific - that is the whole reason @ConstructedBy exists.
+@Suppress("NO_ACTUAL_FOR_EXPECT")
+internal expect object AppDatabaseConstructor : RoomDatabaseConstructor<AppDatabase> {
+
+    override fun initialize(): AppDatabase
 }

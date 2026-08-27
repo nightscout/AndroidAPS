@@ -59,7 +59,7 @@ interface PersistenceLayer {
     /**
      *  Clear ApsResults table
      */
-    fun clearApsResults()
+    suspend fun clearApsResults()
 
     /**
      * Perform database maintenance
@@ -1370,7 +1370,7 @@ interface PersistenceLayer {
      */
     suspend fun getLastDeviceStatusId(): Long?
 
-    fun insertDeviceStatus(deviceStatus: DS)
+    suspend fun insertDeviceStatus(deviceStatus: DS)
 
     /**
      * Update NS id' in database

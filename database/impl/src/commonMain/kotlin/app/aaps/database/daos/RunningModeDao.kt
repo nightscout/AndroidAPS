@@ -9,16 +9,16 @@ import app.aaps.database.entities.TABLE_RUNNING_MODE
 internal interface RunningModeDao : TraceableDao<RunningMode> {
 
     @Query("SELECT * FROM $TABLE_RUNNING_MODE WHERE id = :id")
-    override fun findById(id: Long): RunningMode?
+    override suspend fun findById(id: Long): RunningMode?
 
     @Query("DELETE FROM $TABLE_RUNNING_MODE")
-    override fun deleteAllEntries()
+    override suspend fun deleteAllEntries()
 
     @Query("DELETE FROM $TABLE_RUNNING_MODE WHERE timestamp < :than")
-    override fun deleteOlderThan(than: Long): Int
+    override suspend fun deleteOlderThan(than: Long): Int
 
     @Query("DELETE FROM $TABLE_RUNNING_MODE WHERE referenceId IS NOT NULL")
-    override fun deleteTrackedChanges(): Int
+    override suspend fun deleteTrackedChanges(): Int
 
     @Query("SELECT id FROM $TABLE_RUNNING_MODE ORDER BY id DESC limit 1")
     suspend fun getLastId(): Long?

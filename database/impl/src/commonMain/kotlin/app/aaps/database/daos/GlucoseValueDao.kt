@@ -9,16 +9,16 @@ import app.aaps.database.entities.TABLE_GLUCOSE_VALUES
 internal interface GlucoseValueDao : TraceableDao<GlucoseValue> {
 
     @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE id = :id")
-    override fun findById(id: Long): GlucoseValue?
+    override suspend fun findById(id: Long): GlucoseValue?
 
     @Query("DELETE FROM $TABLE_GLUCOSE_VALUES")
-    override fun deleteAllEntries()
+    override suspend fun deleteAllEntries()
 
     @Query("DELETE FROM $TABLE_GLUCOSE_VALUES WHERE timestamp < :than")
-    override fun deleteOlderThan(than: Long): Int
+    override suspend fun deleteOlderThan(than: Long): Int
 
     @Query("DELETE FROM $TABLE_GLUCOSE_VALUES WHERE referenceId IS NOT NULL")
-    override fun deleteTrackedChanges(): Int
+    override suspend fun deleteTrackedChanges(): Int
 
     @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE isValid = 1 AND referenceId IS NULL ORDER BY timestamp DESC limit 1")
     suspend fun getLast(): GlucoseValue?

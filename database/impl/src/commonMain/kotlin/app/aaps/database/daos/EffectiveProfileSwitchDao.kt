@@ -9,16 +9,16 @@ import app.aaps.database.entities.TABLE_EFFECTIVE_PROFILE_SWITCHES
 internal interface EffectiveProfileSwitchDao : TraceableDao<EffectiveProfileSwitch> {
 
     @Query("SELECT * FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE id = :id")
-    override fun findById(id: Long): EffectiveProfileSwitch?
+    override suspend fun findById(id: Long): EffectiveProfileSwitch?
 
     @Query("DELETE FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES")
-    override fun deleteAllEntries()
+    override suspend fun deleteAllEntries()
 
     @Query("DELETE FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE timestamp < :than")
-    override fun deleteOlderThan(than: Long): Int
+    override suspend fun deleteOlderThan(than: Long): Int
 
     @Query("DELETE FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE referenceId IS NOT NULL")
-    override fun deleteTrackedChanges(): Int
+    override suspend fun deleteTrackedChanges(): Int
 
     @Query("SELECT id FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES ORDER BY id DESC limit 1")
     suspend fun getLastId(): Long?

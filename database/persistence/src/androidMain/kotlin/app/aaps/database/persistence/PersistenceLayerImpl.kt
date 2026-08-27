@@ -166,7 +166,7 @@ class PersistenceLayerImpl(
 
     override fun clearDatabases() = repository.clearDatabases()
     override val databaseClearedFlow: Flow<Unit> get() = repository.databaseClearedFlow()
-    override fun clearApsResults() = repository.clearApsResults()
+    override suspend fun clearApsResults() = repository.clearApsResults()
     override suspend fun cleanupDatabase(keepDays: Long, deleteTrackedChanges: Boolean): String = withContext(Dispatchers.IO) {
         repository.cleanupDatabase(keepDays, deleteTrackedChanges)
     }
@@ -2284,7 +2284,7 @@ class PersistenceLayerImpl(
         repository.getLastDeviceStatusId()
     }
 
-    override fun insertDeviceStatus(deviceStatus: DS) {
+    override suspend fun insertDeviceStatus(deviceStatus: DS) {
         repository.insert(deviceStatus.toDb())
         aapsLogger.debug(LTag.DATABASE, "Inserted DeviceStatus $deviceStatus")
     }

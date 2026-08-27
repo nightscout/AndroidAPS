@@ -159,7 +159,7 @@ class AppRepository internal constructor(
         repositoryScope.launch { _databaseClearedFlow.emit(Unit) }
     }
 
-    fun clearApsResults() = database.apsResultDao.deleteAllEntries()
+    suspend fun clearApsResults() = database.apsResultDao.deleteAllEntries()
 
     suspend fun cleanupDatabase(keepDays: Long, deleteTrackedChanges: Boolean): String {
         database.useWriterConnection { connection -> connection.usePrepared("PRAGMA optimize") { it.step() } }
@@ -742,7 +742,7 @@ class AppRepository internal constructor(
         database.bolusCalculatorResultDao.getLastId()
 
     // DEVICE STATUS
-    fun insert(deviceStatus: DeviceStatus) {
+    suspend fun insert(deviceStatus: DeviceStatus) {
         database.deviceStatusDao.insert(deviceStatus)
         val changes = mutableListOf<DBEntry>(deviceStatus) // Not TraceableDao
         _changeFlow.tryEmit(changes)
