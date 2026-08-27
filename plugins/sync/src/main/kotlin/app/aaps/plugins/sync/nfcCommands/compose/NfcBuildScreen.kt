@@ -93,7 +93,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.QuickAddButtons
 import app.aaps.core.ui.compose.ToolbarConfig
@@ -1031,7 +1031,7 @@ private fun InsulinInputRow(plugin: NfcCommandsPlugin, value: Double, onValueCha
         valueRange = 0.0..30.0,
         step = bolusStep,
         decimalPlaces = 2,
-        unitLabel = UiStrings.units_insulin
+        unitLabel = CoreUiStrings.units_insulin
     )
     InsulinQuickAddButtons(
         increment1 = plugin.preferences.get(DoubleKey.OverviewInsulinButtonIncrement1),
@@ -1050,7 +1050,7 @@ private fun AmountGramsInputRow(plugin: NfcCommandsPlugin, value: Int, onValueCh
         valueRange = 0.0..200.0,
         step = 1.0,
         valueFormat = NumberFormat.INTEGER,
-        unitLabel = UiStrings.units_grams
+        unitLabel = CoreUiStrings.units_grams
     )
     QuickAddButtons(
         increment1 = plugin.preferences.get(IntKey.OverviewCarbsButtonIncrement1),
@@ -1069,7 +1069,7 @@ private fun DurationInputRow(value: Double, range: ClosedFloatingPointRange<Doub
         valueRange = range,
         step = step,
         valueFormat = NumberFormat.INTEGER,
-        unitLabel = UiStrings.units_min
+        unitLabel = CoreUiStrings.units_min
     )
 }
 
@@ -1082,7 +1082,7 @@ private fun RateInputRow(value: Double, onValueChange: (Double) -> Unit) {
         valueRange = 0.0..10.0,
         step = 0.05,
         decimalPlaces = 2,
-        unitLabel = UiStrings.units_insulin_rate
+        unitLabel = CoreUiStrings.units_insulin_rate
     )
 }
 
@@ -1095,7 +1095,7 @@ private fun PercentInputRow(value: Double, range: ClosedFloatingPointRange<Doubl
         valueRange = range,
         step = step,
         valueFormat = NumberFormat.INTEGER,
-        unitLabel = UiStrings.units_percent
+        unitLabel = CoreUiStrings.units_percent
     )
 }
 
@@ -1194,7 +1194,7 @@ private fun GlucoseInputRow(plugin: NfcCommandsPlugin, value: Double, onValueCha
         step = step,
         decimalPlaces = decimals,
         valueFormat = format,
-        unitLabel = if (isMmol) UiStrings.units_mmol else UiStrings.units_mgdl
+        unitLabel = if (isMmol) CoreUiStrings.units_mmol else CoreUiStrings.units_mgdl
     )
 }
 
