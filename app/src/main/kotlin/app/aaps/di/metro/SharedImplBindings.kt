@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
@@ -46,6 +47,17 @@ object SharedImplBindings {
     @Provides
     @SingleIn(AppScope::class)
     fun sp(sharedPreferences: SharedPreferences, context: Context): SP = SPImpl(sharedPreferences, context)
+
+    /**
+     * The same object, seen as the platform neutral half of itself.
+     *
+     * Common code such as `PreferencesImpl` asks for [KeyValueStore] rather than [SP], because a
+     * resource id overload means nothing off Android. `SP` extends it, so this hands over the one
+     * instance rather than building a second store.
+     */
+    @Provides
+    @SingleIn(AppScope::class)
+    fun keyValueStore(sp: SP): KeyValueStore = sp
 
     /** Deferred: [L] reads its log settings back out of [Preferences]. */
     @Provides

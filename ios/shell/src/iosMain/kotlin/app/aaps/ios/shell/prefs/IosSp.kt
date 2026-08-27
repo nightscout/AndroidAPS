@@ -1,5 +1,6 @@
 package app.aaps.ios.shell.prefs
 
+import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import platform.Foundation.NSBundle
 import platform.Foundation.NSUserDefaults
 
@@ -11,13 +12,11 @@ import platform.Foundation.NSUserDefaults
  * clamping, all plain Kotlin. So iOS does not need another `Preferences`, it needs a store for that
  * one to sit on, which is this.
  *
- * ## Why this does not yet say `: SP`
+ * ## What it implements
  *
- * The `SP` interface lives in `core/interfaces/src/androidMain`, so iOS cannot see it. Twenty of its
- * methods also take an `@StringRes resourceId: Int` and look the key up in Android resources, which
- * has no iOS meaning. Moving it to common therefore means changing it, and that is shared code, so
- * it is left alone here. The names and behaviour below match the string keyed half exactly, so this
- * class becomes an `SP` implementation by adding one supertype once that move happens.
+ * [KeyValueStore], the platform neutral half of Android's `SP`. `SP` itself keeps the overloads
+ * that name a key by Android resource id, which have no meaning here. Everything above this - the
+ * whole `Preferences` layer - is common code and talks to this interface.
  *
  * ## The one thing worth reading carefully
  *
@@ -39,52 +38,52 @@ class IosSp(
      */
     private val domain: String = NSBundle.mainBundle.bundleIdentifier ?: FALLBACK_DOMAIN,
     private val defaults: NSUserDefaults = NSUserDefaults.standardUserDefaults
-) {
+) : KeyValueStore {
 
     /** Every key and value this app has stored. System owned keys are not included. */
-    fun getAll(): Map<String, Any?> =
+    override fun getAll(): Map<String, Any?> =
         defaults.persistentDomainForName(domain).orEmpty().entries.mapNotNull { (k, v) ->
             (k as? String)?.let { it to v }
         }.toMap()
 
     /** Removes only what AAPS wrote. Keys owned by the system stay. */
-    fun clear() = defaults.removePersistentDomainForName(domain)
+    override fun clear() = defaults.removePersistentDomainForName(domain)
 
-    fun contains(key: String): Boolean = defaults.objectForKey(key) != null
+    override fun contains(key: String): Boolean = defaults.objectForKey(key) != null
 
-    fun remove(key: String) = defaults.removeObjectForKey(key)
+    override fun remove(key: String) = defaults.removeObjectForKey(key)
 
-    fun getString(key: String, defaultValue: String): String =
+    override fun getString(key: String, defaultValue: String): String =
         defaults.stringForKey(key) ?: defaultValue
 
-    fun getStringOrNull(key: String, defaultValue: String?): String? =
+    override fun getStringOrNull(key: String, defaultValue: String?): String? =
         defaults.stringForKey(key) ?: defaultValue
 
-    fun getBoolean(key: String, defaultValue: Boolean): Boolean =
+    override fun getBoolean(key: String, defaultValue: Boolean): Boolean =
         if (contains(key)) defaults.boolForKey(key) else defaultValue
 
-    fun getDouble(key: String, defaultValue: Double): Double =
+    override fun getDouble(key: String, defaultValue: Double): Double =
         if (contains(key)) defaults.doubleForKey(key) else defaultValue
 
-    fun getInt(key: String, defaultValue: Int): Int =
+    override fun getInt(key: String, defaultValue: Int): Int =
         if (contains(key)) defaults.integerForKey(key).toInt() else defaultValue
 
-    fun getLong(key: String, defaultValue: Long): Long =
+    override fun getLong(key: String, defaultValue: Long): Long =
         if (contains(key)) defaults.integerForKey(key) else defaultValue
 
-    fun putString(key: String, value: String) = defaults.setObject(value, key)
+    override fun putString(key: String, value: String) = defaults.setObject(value, key)
 
-    fun putBoolean(key: String, value: Boolean) = defaults.setBool(value, key)
+    override fun putBoolean(key: String, value: Boolean) = defaults.setBool(value, key)
 
-    fun putDouble(key: String, value: Double) = defaults.setDouble(value, key)
+    override fun putDouble(key: String, value: Double) = defaults.setDouble(value, key)
 
-    fun putInt(key: String, value: Int) = defaults.setInteger(value.toLong(), key)
+    override fun putInt(key: String, value: Int) = defaults.setInteger(value.toLong(), key)
 
-    fun putLong(key: String, value: Long) = defaults.setInteger(value, key)
+    override fun putLong(key: String, value: Long) = defaults.setInteger(value, key)
 
-    fun incInt(key: String) = putInt(key, getInt(key, 0) + 1)
+    override fun incInt(key: String) = putInt(key, getInt(key, 0) + 1)
 
-    fun incLong(key: String) = putLong(key, getLong(key, 0L) + 1L)
+    override fun incLong(key: String) = putLong(key, getLong(key, 0L) + 1L)
 
     /**
      * Runs [block] as one edit.
@@ -93,20 +92,20 @@ class IosSp(
      * writes to disk itself, so there is nothing to defer and the writes simply happen. The shape is
      * kept so that call sites written against `SP` do not have to change.
      */
-    fun edit(@Suppress("UNUSED_PARAMETER") commit: Boolean = false, block: Editor.() -> Unit) {
+    override fun edit(commit: Boolean, block: KeyValueStore.Editor.() -> Unit) {
         Editor(this).block()
     }
 
     /** The batching handle [edit] hands out. Writes straight through, as explained on [edit]. */
-    class Editor(private val sp: IosSp) {
+    class Editor(private val sp: IosSp) : KeyValueStore.Editor {
 
-        fun clear() = sp.clear()
-        fun remove(key: String) = sp.remove(key)
-        fun putBoolean(key: String, value: Boolean) = sp.putBoolean(key, value)
-        fun putDouble(key: String, value: Double) = sp.putDouble(key, value)
-        fun putLong(key: String, value: Long) = sp.putLong(key, value)
-        fun putInt(key: String, value: Int) = sp.putInt(key, value)
-        fun putString(key: String, value: String) = sp.putString(key, value)
+        override fun clear() = sp.clear()
+        override fun remove(key: String) = sp.remove(key)
+        override fun putBoolean(key: String, value: Boolean) = sp.putBoolean(key, value)
+        override fun putDouble(key: String, value: Double) = sp.putDouble(key, value)
+        override fun putLong(key: String, value: Long) = sp.putLong(key, value)
+        override fun putInt(key: String, value: Int) = sp.putInt(key, value)
+        override fun putString(key: String, value: String) = sp.putString(key, value)
     }
 
     companion object {

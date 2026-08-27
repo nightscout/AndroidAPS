@@ -5,7 +5,9 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.data.model.devAssert
+import app.aaps.core.interfaces.concurrent.AapsLock
+import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.SafeParse
@@ -52,18 +54,17 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.runBlocking
-import java.util.concurrent.ConcurrentHashMap
 import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
-import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 class PreferencesImpl @Inject constructor(
-    private val sp: SP,
+    private val sp: KeyValueStore,
     // Plain factories, not dagger.Lazy: that type is Dagger vocabulary. These three are only reached
     // through a lambda to break the cycle back to Preferences - all three are singletons, so calling
     // through each time returns the same instance and Lazy's caching bought nothing.
@@ -124,12 +125,12 @@ class PreferencesImpl @Inject constructor(
         put(LongComposedKey.SyncedPrefModified, key.key, value = version)
     }
 
-    private val booleanFlows = ConcurrentHashMap<String, MutableStateFlow<Boolean>>()
-    private val stringFlows = ConcurrentHashMap<String, MutableStateFlow<String>>()
-    private val doubleFlows = ConcurrentHashMap<String, MutableStateFlow<Double>>()
-    private val unitDoubleFlows = ConcurrentHashMap<String, MutableStateFlow<Double>>()
-    private val intFlows = ConcurrentHashMap<String, MutableStateFlow<Int>>()
-    private val longFlows = ConcurrentHashMap<String, MutableStateFlow<Long>>()
+    private val booleanFlows = FlowCache<Boolean>()
+    private val stringFlows = FlowCache<String>()
+    private val doubleFlows = FlowCache<Double>()
+    private val unitDoubleFlows = FlowCache<Double>()
+    private val intFlows = FlowCache<Int>()
+    private val longFlows = FlowCache<Long>()
 
     private fun isHidden(key: PreferenceKey): Boolean =
         if (apsMode && key.showInApsMode == false) true
@@ -161,7 +162,7 @@ class PreferencesImpl @Inject constructor(
     }
 
     override fun observe(key: BooleanNonPreferenceKey): StateFlow<Boolean> =
-        booleanFlows.computeIfAbsent(key.key) { MutableStateFlow(get(key)) }
+        booleanFlows.getOrCreate(key.key) { MutableStateFlow(get(key)) }
 
     override fun get(key: BooleanPreferenceKey): Boolean =
         if (!config.isEngineeringMode() && key.engineeringModeOnly) key.defaultValue
@@ -195,7 +196,7 @@ class PreferencesImpl @Inject constructor(
     }
 
     override fun observe(key: StringNonPreferenceKey): StateFlow<String> =
-        stringFlows.computeIfAbsent(key.key) { MutableStateFlow(get(key)) }
+        stringFlows.getOrCreate(key.key) { MutableStateFlow(get(key)) }
 
     override fun get(key: DoubleNonPreferenceKey): Double =
         sp.getDouble(key.key, key.defaultValue)
@@ -221,7 +222,7 @@ class PreferencesImpl @Inject constructor(
     }
 
     override fun observe(key: DoubleNonPreferenceKey): StateFlow<Double> =
-        doubleFlows.computeIfAbsent(key.key) { MutableStateFlow(get(key)) }
+        doubleFlows.getOrCreate(key.key) { MutableStateFlow(get(key)) }
 
     override fun get(key: DoubleComposedNonPreferenceKey, vararg arguments: Any): Double =
         sp.getDouble(key.composeKey(*arguments), key.defaultValue)
@@ -238,7 +239,7 @@ class PreferencesImpl @Inject constructor(
 
     override fun observe(key: DoubleComposedNonPreferenceKey, vararg arguments: Any): StateFlow<Double> {
         val composedKey = key.composeKey(*arguments)
-        return doubleFlows.computeIfAbsent(composedKey) { MutableStateFlow(get(key, *arguments)) }
+        return doubleFlows.getOrCreate(composedKey) { MutableStateFlow(get(key, *arguments)) }
     }
 
     override fun get(key: UnitDoublePreferenceKey): Double =
@@ -265,7 +266,7 @@ class PreferencesImpl @Inject constructor(
         sp.getDouble(key.key, key.defaultValue)
 
     override fun observe(key: UnitDoublePreferenceKey): StateFlow<Double> =
-        unitDoubleFlows.computeIfAbsent(key.key) { MutableStateFlow(get(key)) }
+        unitDoubleFlows.getOrCreate(key.key) { MutableStateFlow(get(key)) }
 
     private fun refreshUnitDoubleFlows() {
         unitDoubleFlows.forEach { (keyString, flow) ->
@@ -296,7 +297,7 @@ class PreferencesImpl @Inject constructor(
     }
 
     override fun observe(key: IntNonPreferenceKey): StateFlow<Int> =
-        intFlows.computeIfAbsent(key.key) { MutableStateFlow(get(key)) }
+        intFlows.getOrCreate(key.key) { MutableStateFlow(get(key)) }
 
     override fun inc(key: IntNonPreferenceKey) {
         sp.incInt(key.key)
@@ -323,7 +324,7 @@ class PreferencesImpl @Inject constructor(
 
     override fun observe(key: IntComposedNonPreferenceKey, vararg arguments: Any): StateFlow<Int> {
         val composedKey = key.composeKey(*arguments)
-        return intFlows.computeIfAbsent(composedKey) { MutableStateFlow(get(key, *arguments)) }
+        return intFlows.getOrCreate(composedKey) { MutableStateFlow(get(key, *arguments)) }
     }
 
     override fun get(key: LongNonPreferenceKey): Long =
@@ -345,7 +346,7 @@ class PreferencesImpl @Inject constructor(
     }
 
     override fun observe(key: LongNonPreferenceKey): StateFlow<Long> =
-        longFlows.computeIfAbsent(key.key) { MutableStateFlow(get(key)) }
+        longFlows.getOrCreate(key.key) { MutableStateFlow(get(key)) }
 
     override fun get(key: LongPreferenceKey): Long =
         if (!config.isEngineeringMode() && key.engineeringModeOnly) key.defaultValue
@@ -373,7 +374,7 @@ class PreferencesImpl @Inject constructor(
 
     override fun observe(key: LongComposedNonPreferenceKey, vararg arguments: Any): StateFlow<Long> {
         val composedKey = key.composeKey(*arguments)
-        return longFlows.computeIfAbsent(composedKey) { MutableStateFlow(get(key, *arguments)) }
+        return longFlows.getOrCreate(composedKey) { MutableStateFlow(get(key, *arguments)) }
     }
 
     override fun remove(key: ComposedKey, vararg arguments: Any) {
@@ -409,7 +410,7 @@ class PreferencesImpl @Inject constructor(
 
     override fun observe(key: BooleanComposedNonPreferenceKey, vararg arguments: Any): StateFlow<Boolean> {
         val composedKey = key.composeKey(*arguments)
-        return booleanFlows.computeIfAbsent(composedKey) { MutableStateFlow(get(key, *arguments)) }
+        return booleanFlows.getOrCreate(composedKey) { MutableStateFlow(get(key, *arguments)) }
     }
 
     override fun get(key: StringComposedNonPreferenceKey, vararg arguments: Any): String =
@@ -427,7 +428,7 @@ class PreferencesImpl @Inject constructor(
 
     override fun observe(key: StringComposedNonPreferenceKey, vararg arguments: Any): StateFlow<String> {
         val composedKey = key.composeKey(*arguments)
-        return stringFlows.computeIfAbsent(composedKey) { MutableStateFlow(get(key, *arguments)) }
+        return stringFlows.getOrCreate(composedKey) { MutableStateFlow(get(key, *arguments)) }
     }
 
     override fun registerPreferences(keys: List<NonPreferenceKey>) {
@@ -436,7 +437,7 @@ class PreferencesImpl @Inject constructor(
 
     override fun allMatchingStrings(key: ComposedKey): List<String> =
         mutableListOf<String>().also {
-            assert(key.format == "%s")
+            devAssert(key.format == "%s")
             val keys: Map<String, *> = sp.getAll()
             for ((singleKey, _) in keys)
                 if (singleKey.startsWith(key.key)) it.add(singleKey.split(key.key)[1])
@@ -444,7 +445,7 @@ class PreferencesImpl @Inject constructor(
 
     override fun allMatchingInts(key: ComposedKey): List<Int> =
         mutableListOf<Int>().also {
-            assert(key.format == "%d")
+            devAssert(key.format == "%d")
             val keys: Map<String, *> = sp.getAll()
             for ((singleKey, _) in keys)
                 if (singleKey.startsWith(key.key)) it.add(SafeParse.stringToInt(singleKey.split(key.key)[1]))
@@ -514,4 +515,52 @@ class PreferencesImpl @Inject constructor(
 
     override fun getAllPreferenceKeys(): List<PreferenceKey> =
         prefsList.filterIsInstance<PreferenceKey>()
+
+    /**
+     * The per key [MutableStateFlow] cache, kept behind a lock.
+     *
+     * This replaces a `ConcurrentHashMap`, which is JVM only. The single thing that has to hold is
+     * that two callers asking for the same key get the *same* flow: if they got different ones, an
+     * observer would attach to a flow that never receives the next write, and simply stop updating.
+     * `getOrCreate` is therefore atomic, which is what `computeIfAbsent` gave before.
+     */
+    private class FlowCache<T> {
+
+        private val lock = AapsLock()
+        private val values = mutableMapOf<String, MutableStateFlow<T>>()
+
+        operator fun get(key: String): MutableStateFlow<T>? {
+            lock.lock()
+            try {
+                return values[key]
+            } finally {
+                lock.unlock()
+            }
+        }
+
+        fun getOrCreate(key: String, create: (String) -> MutableStateFlow<T>): MutableStateFlow<T> {
+            lock.lock()
+            try {
+                return values.getOrPut(key) { create(key) }
+            } finally {
+                lock.unlock()
+            }
+        }
+
+        /**
+         * Visits every cached flow.
+         *
+         * The entries are copied before [action] runs, so a caller that writes to a flow - which is
+         * what the refresh passes do - cannot deadlock against the lock this cache holds.
+         */
+        fun forEach(action: (Map.Entry<String, MutableStateFlow<T>>) -> Unit) {
+            lock.lock()
+            val snapshot = try {
+                values.entries.toList()
+            } finally {
+                lock.unlock()
+            }
+            snapshot.forEach(action)
+        }
+    }
 }
