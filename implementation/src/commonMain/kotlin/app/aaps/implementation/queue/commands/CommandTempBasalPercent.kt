@@ -7,11 +7,12 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.ui.UiStrings
 
 class CommandTempBasalPercent(
     private val aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val activePlugin: ActivePlugin,
     override val pumpEnactResultProvider: () -> PumpEnactResult,
     private val percent: Int,
@@ -32,7 +33,7 @@ class CommandTempBasalPercent(
         return r
     }
 
-    override fun status(): String = rh.gs(app.aaps.core.ui.R.string.temp_basal_percent, percent, durationInMinutes)
+    override fun status(): String = rh.gs(UiStrings.temp_basal_percent, percent, durationInMinutes)
 
     override fun log(): String = "TEMP BASAL $percent% $durationInMinutes min"
 }

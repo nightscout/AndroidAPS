@@ -8,11 +8,13 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.ui.UiStrings
+import kotlin.time.Clock
 
 class CommandReadStatus(
     private val aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val activePlugin: ActivePlugin,
     private val localAlertUtils: LocalAlertUtils,
     override val pumpEnactResultProvider: () -> PumpEnactResult,
@@ -29,11 +31,11 @@ class CommandReadStatus(
         val pump = activePlugin.activePump
         val result = pumpEnactResultProvider().success(false)
         val lastConnection = pump.lastDataTime.value
-        if (lastConnection > System.currentTimeMillis() - T.mins(1).msecs()) result.success(true)
+        if (lastConnection > Clock.System.now().toEpochMilliseconds() - T.mins(1).msecs()) result.success(true)
         return result
     }
 
-    override fun status(): String = rh.gs(app.aaps.core.ui.R.string.read_status, reason)
+    override fun status(): String = rh.gs(UiStrings.read_status, reason)
 
     override fun log(): String = "READSTATUS $reason"
 }

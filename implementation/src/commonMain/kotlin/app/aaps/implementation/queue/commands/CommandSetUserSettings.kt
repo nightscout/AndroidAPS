@@ -9,31 +9,32 @@ import app.aaps.core.interfaces.pump.Medtrum
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.ui.UiStrings
 
-class CommandLoadEvents(
+class CommandSetUserSettings(
     private val aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val activePlugin: ActivePlugin,
     override val pumpEnactResultProvider: () -> PumpEnactResult,
     override val callback: Callback?,
 ) : Command {
 
-    override val commandType: Command.CommandType = Command.CommandType.LOAD_EVENTS
+    override val commandType: Command.CommandType = Command.CommandType.SET_USER_SETTINGS
 
     override suspend fun execute(): PumpEnactResult {
         val pump = activePlugin.activePumpInternal
         val result = when (pump) {
-            is Dana    -> pump.loadEvents()
-            is Diaconn -> pump.loadHistory()
-            is Medtrum -> pump.loadEvents()
+            is Dana    -> pump.setUserOptions()
+            is Diaconn -> pump.setUserOptions()
+            is Medtrum -> pump.setUserOptions()
             else       -> pumpEnactResultProvider().success(true).enacted(false)
         }
         aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${result.success} enacted: ${result.enacted}")
         return result
     }
 
-    override fun status(): String = rh.gs(app.aaps.core.ui.R.string.load_events)
+    override fun status(): String = rh.gs(UiStrings.set_user_settings)
 
-    override fun log(): String = "LOAD EVENTS"
+    override fun log(): String = "SET USER SETTINGS"
 }

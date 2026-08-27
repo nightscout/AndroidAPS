@@ -1,5 +1,6 @@
 package app.aaps.implementation.queue.commands
 
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -8,11 +9,12 @@ import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.ui.UiStrings
 
 class CommandBolus(
     private val aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val activePlugin: ActivePlugin,
     override val pumpEnactResultProvider: () -> PumpEnactResult,
     private val bolusProgressData: BolusProgressData,
@@ -35,13 +37,13 @@ class CommandBolus(
     }
 
     override fun status(): String {
-        return (if (detailedBolusInfo.insulin > 0) rh.gs(app.aaps.core.ui.R.string.bolus_u_min, detailedBolusInfo.insulin) else "") +
-            if (detailedBolusInfo.carbs > 0) rh.gs(app.aaps.core.ui.R.string.carbs_g, detailedBolusInfo.carbs.toInt()) else ""
+        return (if (detailedBolusInfo.insulin > 0) rh.gs(UiStrings.bolus_u_min, detailedBolusInfo.insulin) else "") +
+            if (detailedBolusInfo.carbs > 0) rh.gs(UiStrings.carbs_g, detailedBolusInfo.carbs.toInt()) else ""
     }
 
     override fun log(): String {
-        return (if (detailedBolusInfo.insulin > 0) "BOLUS " + rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, detailedBolusInfo.insulin) else "") +
-            if (detailedBolusInfo.carbs > 0) "CARBS " + rh.gs(app.aaps.core.interfaces.R.string.format_carbs, detailedBolusInfo.carbs.toInt()) else ""
+        return (if (detailedBolusInfo.insulin > 0) "BOLUS " + rh.gs(InterfacesStrings.format_insulin_units, detailedBolusInfo.insulin) else "") +
+            if (detailedBolusInfo.carbs > 0) "CARBS " + rh.gs(InterfacesStrings.format_carbs, detailedBolusInfo.carbs.toInt()) else ""
     }
 
     override fun cancel(commentResId: Int, success: Boolean) {

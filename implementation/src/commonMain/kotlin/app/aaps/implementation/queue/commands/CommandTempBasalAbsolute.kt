@@ -7,11 +7,12 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.ui.UiStrings
 
 class CommandTempBasalAbsolute(
     private val aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val activePlugin: ActivePlugin,
     override val pumpEnactResultProvider: () -> PumpEnactResult,
     private val absoluteRate: Double,
@@ -28,7 +29,7 @@ class CommandTempBasalAbsolute(
             aapsLogger.debug(LTag.PUMPQUEUE, "Result rate: $absoluteRate durationInMinutes: $durationInMinutes success: ${it.success} enacted: ${it.enacted}")
         }
 
-    override fun status(): String = rh.gs(app.aaps.core.ui.R.string.temp_basal_absolute, absoluteRate, durationInMinutes)
+    override fun status(): String = rh.gs(UiStrings.temp_basal_absolute, absoluteRate, durationInMinutes)
 
     override fun log(): String = "TEMP BASAL $absoluteRate U/h $durationInMinutes min"
 }

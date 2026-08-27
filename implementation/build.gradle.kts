@@ -69,6 +69,8 @@ kotlin {
                 implementation(project(":core:data"))
                 implementation(project(":core:interfaces"))
                 implementation(project(":core:keys"))
+                // For UiStrings: the command queue names its user text instead of numbering it.
+                implementation(project(":core:ui"))
             }
         }
 

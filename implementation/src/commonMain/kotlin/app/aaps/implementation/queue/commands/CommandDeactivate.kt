@@ -3,26 +3,27 @@ package app.aaps.implementation.queue.commands
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.pump.Insight
+import app.aaps.core.interfaces.pump.Medtrum
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.ui.UiStrings
 
-class CommandStopPump(
+class CommandDeactivate(
     private val aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val activePlugin: ActivePlugin,
     override val pumpEnactResultProvider: () -> PumpEnactResult,
     override val callback: Callback?,
 ) : Command {
 
-    override val commandType: Command.CommandType = Command.CommandType.STOP_PUMP
+    override val commandType: Command.CommandType = Command.CommandType.DEACTIVATE
 
     override suspend fun execute(): PumpEnactResult {
         val pump = activePlugin.activePumpInternal
-        return if (pump is Insight) {
-            pump.stopPump().also {
+        return if (pump is Medtrum) {
+            pump.deactivate().also {
                 aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${it.success} enacted: ${it.enacted}")
             }
         } else {
@@ -30,7 +31,7 @@ class CommandStopPump(
         }
     }
 
-    override fun status(): String = rh.gs(app.aaps.core.ui.R.string.stop_pump)
+    override fun status(): String = rh.gs(UiStrings.deactivate)
 
-    override fun log(): String = "STOP PUMP"
+    override fun log(): String = "DEACTIVATE"
 }

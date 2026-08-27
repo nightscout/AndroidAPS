@@ -11,13 +11,14 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.ui.UiStrings
 
 class CommandSetProfile(
     private val aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val smsCommunicator: SmsCommunicator,
     private val activePlugin: ActivePlugin,
     private val dateUtil: DateUtil,
@@ -43,12 +44,12 @@ class CommandSetProfile(
         val profileSwitch = persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now())
         if (profileSwitch != null && r.enacted && hasNsId && !config.AAPSCLIENT) {
             if (smsCommunicator.isEnabled() && !config.isEnabled(ExternalOptions.DO_NOT_SEND_SMS_ON_PROFILE_CHANGE))
-                smsCommunicator.sendNotificationToAllNumbers(rh.gs(app.aaps.core.ui.R.string.profile_set_ok))
+                smsCommunicator.sendNotificationToAllNumbers(rh.gs(UiStrings.profile_set_ok))
         }
         return r
     }
 
-    override fun status(): String = rh.gs(app.aaps.core.ui.R.string.set_profile)
+    override fun status(): String = rh.gs(UiStrings.set_profile)
 
     override fun log(): String = "SET PROFILE"
 }

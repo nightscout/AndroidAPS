@@ -7,22 +7,23 @@ import app.aaps.core.interfaces.pump.Medtrum
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.ui.UiStrings
 
-class CommandDeactivate(
+class CommandUpdateTime(
     private val aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val activePlugin: ActivePlugin,
     override val pumpEnactResultProvider: () -> PumpEnactResult,
     override val callback: Callback?,
 ) : Command {
 
-    override val commandType: Command.CommandType = Command.CommandType.DEACTIVATE
+    override val commandType: Command.CommandType = Command.CommandType.UPDATE_TIME
 
     override suspend fun execute(): PumpEnactResult {
         val pump = activePlugin.activePumpInternal
         return if (pump is Medtrum) {
-            pump.deactivate().also {
+            pump.updateTime().also {
                 aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${it.success} enacted: ${it.enacted}")
             }
         } else {
@@ -30,7 +31,6 @@ class CommandDeactivate(
         }
     }
 
-    override fun status(): String = rh.gs(app.aaps.core.ui.R.string.deactivate)
-
-    override fun log(): String = "DEACTIVATE"
+    override fun status(): String = rh.gs(UiStrings.update_time)
+    override fun log(): String = "UPDATE TIME"
 }

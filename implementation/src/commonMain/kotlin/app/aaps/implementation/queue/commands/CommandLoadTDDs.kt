@@ -6,11 +6,12 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.ui.UiStrings
 
 class CommandLoadTDDs(
     private val aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val activePlugin: ActivePlugin,
     override val pumpEnactResultProvider: () -> PumpEnactResult,
     override val callback: Callback?,
@@ -23,7 +24,7 @@ class CommandLoadTDDs(
             aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${it.success} enacted: ${it.enacted}")
         }
 
-    override fun status(): String = rh.gs(app.aaps.core.ui.R.string.load_tdds)
+    override fun status(): String = rh.gs(UiStrings.load_tdds)
 
     override fun log(): String = "LOAD TDDs"
 }

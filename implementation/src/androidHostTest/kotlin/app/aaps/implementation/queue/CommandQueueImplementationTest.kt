@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.PowerManager
 import androidx.compose.ui.text.font.FontWeight
 import app.aaps.core.data.model.BS
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -32,9 +33,12 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.ui.UiStrings
 import app.aaps.implementation.profile.ProfileSwitchSilentGate
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import java.util.Calendar
+import kotlin.reflect.KClass
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.emptyFlow
@@ -53,8 +57,6 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import java.util.Calendar
-import kotlin.reflect.KClass
 
 class CommandQueueImplementationTest : TestBaseWithProfile() {
 
@@ -162,7 +164,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             whenever(rh.gs(app.aaps.core.ui.R.string.connectiontimedout)).thenReturn("Connection timed out")
             whenever(rh.gs(app.aaps.implementation.R.string.executing_right_now)).thenReturn("Executing right now")
             whenever(rh.gs(app.aaps.core.ui.R.string.command_replaced)).thenReturn("Replaced by newer command")
-            whenever(rh.gs(eq(app.aaps.core.interfaces.R.string.format_insulin_units), anyOrNull())).thenReturn("%1\$.2f U")
+            whenever(rh.gs(InterfacesStrings.format_insulin_units)).thenReturn("%1\$.2f U")
             whenever(rh.gs(app.aaps.core.ui.R.string.goingtodeliver)).thenReturn("Going to deliver %1\$.2f U")
         }
     }
@@ -286,7 +288,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     @Test
     fun postProfileWriteResult_updated_postsOkAndClearsFailure() {
         // profile updated: success=true, enacted=true, not silent → confirmation shown, stale failure cleared.
-        whenever(rh.gs(app.aaps.core.ui.R.string.profile_set_ok)).thenReturn("Basal profile in pump updated")
+        whenever(rh.gs(UiStrings.profile_set_ok)).thenReturn("Basal profile in pump updated")
 
         val persisted = commandQueue.postProfileWriteResult(enactResult(isSuccess = true, isEnacted = true), silent = false)
 
@@ -866,8 +868,8 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
      * this has to hand back the template rather than the finished string.
      */
     private fun stubStatusCaptions() {
-        whenever(rh.gs(app.aaps.core.ui.R.string.read_status)).thenReturn("READSTATUS %1\$s")
-        whenever(rh.gs(app.aaps.core.ui.R.string.load_events)).thenReturn("LOAD EVENTS")
+        whenever(rh.gs(UiStrings.read_status)).thenReturn("READSTATUS %1\$s")
+        whenever(rh.gs(UiStrings.load_events)).thenReturn("LOAD EVENTS")
     }
 
     @Test

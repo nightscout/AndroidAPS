@@ -7,11 +7,12 @@ import app.aaps.core.interfaces.pump.Medtrum
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.ui.UiStrings
 
 class CommandClearAlarms(
     private val aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val activePlugin: ActivePlugin,
     override val pumpEnactResultProvider: () -> PumpEnactResult,
     override val callback: Callback?,
@@ -30,7 +31,7 @@ class CommandClearAlarms(
         }
     }
 
-    override fun status(): String = rh.gs(app.aaps.core.ui.R.string.clear_alarms)
+    override fun status(): String = rh.gs(UiStrings.clear_alarms)
 
     override fun log(): String = "CLEAR ALARMS"
 }

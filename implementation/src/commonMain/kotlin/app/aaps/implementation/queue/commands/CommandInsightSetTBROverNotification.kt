@@ -7,22 +7,24 @@ import app.aaps.core.interfaces.pump.Insight
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.ui.UiStrings
 
-class CommandStartPump(
+class CommandInsightSetTBROverNotification(
     private val aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val activePlugin: ActivePlugin,
     override val pumpEnactResultProvider: () -> PumpEnactResult,
+    private val enabled: Boolean,
     override val callback: Callback?,
 ) : Command {
 
-    override val commandType: Command.CommandType = Command.CommandType.START_PUMP
+    override val commandType: Command.CommandType = Command.CommandType.INSIGHT_SET_TBR_OVER_ALARM
 
     override suspend fun execute(): PumpEnactResult {
         val pump = activePlugin.activePumpInternal
         return if (pump is Insight) {
-            pump.startPump().also {
+            pump.setTBROverNotification(enabled).also {
                 aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${it.success} enacted: ${it.enacted}")
             }
         } else {
@@ -30,7 +32,8 @@ class CommandStartPump(
         }
     }
 
-    override fun status(): String = rh.gs(app.aaps.core.ui.R.string.start_pump)
+    override fun status(): String = rh.gs(UiStrings.insight_set_tbr_over_notification)
 
-    override fun log(): String = "START PUMP"
+    @Suppress("SpellCheckingInspection")
+    override fun log(): String = "INSIGHTSETTBROVERNOTIFICATION"
 }

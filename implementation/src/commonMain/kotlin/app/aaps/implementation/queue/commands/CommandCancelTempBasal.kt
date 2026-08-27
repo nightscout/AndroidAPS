@@ -7,12 +7,13 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.ui.UiStrings
 
 class CommandCancelTempBasal(
     private val aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val activePlugin: ActivePlugin,
     private val pumpSync: PumpSync,
     private val dateUtil: DateUtil,
@@ -50,7 +51,7 @@ class CommandCancelTempBasal(
         return r
     }
 
-    override fun status(): String = rh.gs(app.aaps.core.ui.R.string.uel_accepts_temp_basal)
+    override fun status(): String = rh.gs(UiStrings.uel_accepts_temp_basal)
 
     override fun log(): String = "CANCEL TEMPBASAL"
 }

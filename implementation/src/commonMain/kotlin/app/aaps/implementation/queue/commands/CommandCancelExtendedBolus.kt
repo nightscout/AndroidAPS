@@ -6,26 +6,25 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.ui.UiStrings
 
-class CommandExtendedBolus(
+class CommandCancelExtendedBolus(
     private val aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val activePlugin: ActivePlugin,
     override val pumpEnactResultProvider: () -> PumpEnactResult,
-    private val insulin: Double,
-    private val durationInMinutes: Int,
     override val callback: Callback?,
 ) : Command {
 
     override val commandType: Command.CommandType = Command.CommandType.EXTENDEDBOLUS
 
     override suspend fun execute(): PumpEnactResult =
-        activePlugin.activePump.setExtendedBolus(insulin, durationInMinutes).also {
-            aapsLogger.debug(LTag.PUMPQUEUE, "Result rate: $insulin durationInMinutes: $durationInMinutes success: ${it.success} enacted: ${it.enacted}")
+        activePlugin.activePump.cancelExtendedBolus().also {
+            aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${it.success} enacted: ${it.enacted}")
         }
 
-    override fun status(): String = rh.gs(app.aaps.core.ui.R.string.extended_bolus_u_min, insulin, durationInMinutes)
+    override fun status(): String = rh.gs(UiStrings.uel_cancel_extended_bolus)
 
-    override fun log(): String = "EXTENDEDBOLUS $insulin U $durationInMinutes min"
+    override fun log(): String = "CANCEL EXTENDEDBOLUS"
 }
