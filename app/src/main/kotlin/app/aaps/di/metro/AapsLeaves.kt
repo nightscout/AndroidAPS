@@ -8,10 +8,9 @@ import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.database.AppRepository
+import app.aaps.database.di.DatabaseConfig
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.di.MetroMemberInjector
-import app.aaps.core.interfaces.dst.DstHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
@@ -19,7 +18,6 @@ import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
 import app.aaps.core.interfaces.widget.WidgetUpdater
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.configuration.RunningConfigurationKeys
-import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
@@ -96,14 +94,10 @@ import javax.inject.Provider
 @BindingContainer
 class AapsLeaves(
     private val metroMemberInjectorProvider: Provider<MetroMemberInjector>,
-    private val nsClientSourceProvider: Provider<NSClientSource>,
     @ApplicationScope private val appScopeProvider: Provider<CoroutineScope>,
     private val fabricPrivacyProvider: Provider<FabricPrivacy>,
     private val configProvider: Provider<Config>,
-    private val appRepositoryProvider: Provider<AppRepository>,
-    // Dagger owns the app-wide emitter - `WorkflowModule.provideMainSignalsEmitter`. A history window
-    // has its own, built in `HistoryWindowGraph`, which is why this one is not simply contributed.
-    private val calculationSignalsEmitterProvider: Provider<CalculationSignalsEmitter>,
+    private val databaseConfigProvider: Provider<DatabaseConfig>,
     // Both are Dagger @Binds in ImplementationModule, and the openAPS plugins need them now that Metro
     // builds those. APSResult is asked for through a Provider - one result object per loop run.
     // Dagger owns this one; LoopPlugin needs it and Metro builds LoopPlugin now.
@@ -112,10 +106,8 @@ class AapsLeaves(
     private val tidepoolUploaderProvider: Provider<TidepoolUploader>,
     private val profileFunctionProvider: Provider<ProfileFunction>,
     private val rhProvider: Provider<ResourceHelper>,
-    private val dstHelperProvider: Provider<DstHelper>,
     private val workManagerProvider: Provider<WorkManager>,
     private val notificationManagerProvider: Provider<NotificationManager>,
-    private val cloudStorageManagerProvider: Provider<CloudStorageManager>,
     private val overviewDataCacheFactoryProvider: Provider<OverviewDataCacheFactory>,
     // Needed by the feature extensions below the root, which no longer carry their own leaf lists.
     private val automationProvider: Provider<Automation>,
@@ -165,7 +157,6 @@ class AapsLeaves(
      * view model reading it is fine.
      */
     private val historyScopeProvider: Provider<HistoryScope>,
-    private val overviewDataCacheProvider: Provider<OverviewDataCache>,
     // Same object as ActivePlugin above (PluginStore), under its other interface.
     @ApplicationContext private val appContextProvider: Provider<Context>,
     private val nsClientProvider: Provider<NsClient>,
@@ -192,10 +183,9 @@ class AapsLeaves(
     // No runningModeExpiryJob() leaf: Metro builds it now (commonMain, Metro @Inject), and Dagger gets
     // both running-mode classes from `CoreObjectsModule` instead.
     @Provides fun config(): Config = configProvider.get()
-    @Provides fun appRepository(): AppRepository = appRepositoryProvider.get()
+    @Provides fun databaseConfig(): DatabaseConfig = databaseConfigProvider.get()
     // No iobCobCalculator() any more: Metro builds it now, in `MainPluginsBindings`, and Dagger receives
     // it through `CoreObjectsModule.provideIobCobCalculator`.
-    @Provides fun calculationSignalsEmitter(): CalculationSignalsEmitter = calculationSignalsEmitterProvider.get()
     // No loop() leaf any more: Metro builds LoopPlugin, so Loop travels the other way, through
     // `CoreObjectsModule.provideLoop`.
     @Provides fun authFlowOut(): AuthFlowOut = authFlowOutProvider.get()
@@ -205,7 +195,6 @@ class AapsLeaves(
 
     /** `ResourceHelper` is the Android implementation of the multiplatform [TextResolver]. */
     @Provides fun textResolver(rh: ResourceHelper): TextResolver = rh
-    @Provides fun dstHelper(): DstHelper = dstHelperProvider.get()
     @Provides fun workManager(): WorkManager = workManagerProvider.get()
     @Provides fun notificationManager(): NotificationManager = notificationManagerProvider.get()
     // No activeSceneManager() here on purpose: Metro owns it (@SingleIn on the class), so this leaf would
@@ -214,7 +203,6 @@ class AapsLeaves(
     // other way, which is the direction the class itself documents.
     // No sceneRepository() either, same reason as activeSceneManager above: Metro owns it (@SingleIn +
     // two @ContributesBinding), so this leaf pushed an unscoped Dagger copy back in.
-    @Provides fun cloudStorageManager(): CloudStorageManager = cloudStorageManagerProvider.get()
     @Provides fun overviewDataCacheFactory(): OverviewDataCacheFactory = overviewDataCacheFactoryProvider.get()
     @Provides fun automation(): Automation = automationProvider.get()
     @Provides fun context(): Context = contextProvider.get()
@@ -257,7 +245,6 @@ class AapsLeaves(
     // TidepoolPlugin reading a gate nobody updates and a rate limiter that never limits.
     @Provides fun receiverDelegate(): ReceiverDelegate = receiverDelegateProvider.get()
     @Provides fun rateLimit(): RateLimit = rateLimitProvider.get()
-    @Provides fun overviewDataCache(): OverviewDataCache = overviewDataCacheProvider.get()
 
     /** Hilt's qualifier, read now that interop is on. Same Context as the unqualified binding. */
     @Provides @ApplicationContext fun appContext(): Context = appContextProvider.get()
@@ -273,6 +260,5 @@ class AapsLeaves(
     @Provides fun nsClient(): NsClient = nsClientProvider.get()
 
     // What NSClientV3Service needs beyond the usual leaves. All three are Dagger @Binds in :plugins:sync.
-    @Provides fun nsClientSource(): NSClientSource = nsClientSourceProvider.get()
     @Provides fun clientControlActionDispatcher(): ClientControlActionDispatcher = clientControlActionDispatcherProvider.get()
 }

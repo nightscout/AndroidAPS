@@ -37,7 +37,14 @@ import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.maintenance.CloudStorageProvider
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.database.AppRepository
+import app.aaps.core.interfaces.workflow.CalculationSignals
+import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
+import app.aaps.core.interfaces.overview.graph.OverviewDataCache
+import app.aaps.core.interfaces.dst.DstHelper
+import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.implementation.maintenance.cloud.CloudStorageManager
 import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.implementation.plugin.PluginStore
@@ -301,6 +308,11 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val localAlertUtils: LocalAlertUtils
     val bolusProgressData: BolusProgressData
     val persistenceLayer: PersistenceLayer
+    val cloudStorageManager: CloudStorageManager
+    val overviewDataCache: OverviewDataCache
+    val calculationSignals: CalculationSignals
+    val calculationSignalsEmitter: CalculationSignalsEmitter
+    val appRepository: AppRepository
     val cloudStorageProviders: Set<CloudStorageProvider>
     val constraintsChecker: ConstraintsChecker
     val nsClientRepository: NSClientRepository
@@ -370,6 +382,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
 
     val bgQualityCheckPlugin: BgQualityCheckPlugin
     val dstHelperPlugin: DstHelperPlugin
+    val dstHelper: DstHelper
     val objectivesPlugin: ObjectivesPlugin
 
     /** The live loop's calculator. A history window has its own, at `HistoryWindowScope`. */
@@ -406,6 +419,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
      */
     val xdripSourcePlugin: XdripSourcePlugin
     val nsClientSourcePlugin: NSClientSourcePlugin
+    val nsClientSource: NSClientSource
     val dexcomPlugin: DexcomPlugin
 
     val sourceGraph: SourceMetroGraph

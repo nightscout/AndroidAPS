@@ -6,6 +6,7 @@ import app.aaps.ui.widget.CompactBgWidget
 import app.aaps.ui.widget.SmallWidget
 import app.aaps.ui.widget.Widget
 import app.aaps.ui.widget.WidgetConfigureActivity
+import app.aaps.ui.widget.glance.WidgetDependencies
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
@@ -37,5 +38,13 @@ class UiMemberInjectorsTest {
     @Test
     fun `the ui activities have injectors`() {
         assertThat(injectors.keys).containsAtLeast(ErrorActivity::class, WidgetConfigureActivity::class)
+    }
+
+    @Test
+    fun `the glance widget dependencies have an injector`() {
+        // Glance builds its widgets itself, so they hold no fields; WidgetDependencies is what asks the
+        // graph from inside provideGlance. Without this entry the launcher shows a widget that never
+        // loads.
+        assertThat(injectors.keys).contains(WidgetDependencies::class)
     }
 }

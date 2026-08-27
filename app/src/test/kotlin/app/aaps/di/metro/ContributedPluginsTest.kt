@@ -96,6 +96,21 @@ class ContributedPluginsTest {
     }
 
     @Test
+    fun `the DST plugin and the DstHelper binding are the same object`() {
+        // Same shape as the xdrip case above. It used to reach Dagger and come back through a leaf,
+        // which was one hop for the same object; the binding is direct now, so pin the identity.
+        val root = testRoot()
+        assertThat(root.dstHelper).isSameInstanceAs(root.contributedPlugins[850])
+    }
+
+    @Test
+    fun `the NS client source plugin and the NSClientSource binding are the same object`() {
+        // Same shape again: the interface used to come back from Dagger through a leaf.
+        val root = testRoot()
+        assertThat(root.nsClientSource).isSameInstanceAs(root.contributedPlugins[410])
+    }
+
+    @Test
     fun `a history window calculates with its own calculator, not the loop's`() {
         // The inverse of every other instance-identity test here, and the reason `MainPluginsBindings`
         // does not just annotate the class: the window extension hangs off a root that now binds

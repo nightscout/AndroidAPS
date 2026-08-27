@@ -18,7 +18,7 @@ import javax.inject.Inject
  * The receiver itself holds no widget state — Glance can construct it reflectively
  * (e.g. for `addAllReceiversAndProvidersToPreferences`) without injection, so
  * [glanceAppWidget] must be a no-arg instance. [AapsGlanceWidget] resolves its
- * dependencies via Hilt EntryPoint inside `provideGlance`.
+ * dependencies from the Metro graph inside `provideGlance`.
  */
 class Widget : GlanceAppWidgetReceiver() {
 

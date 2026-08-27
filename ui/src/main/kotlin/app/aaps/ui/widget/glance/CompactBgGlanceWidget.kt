@@ -30,7 +30,6 @@ import androidx.glance.text.TextDecoration
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import app.aaps.core.ui.compose.navigation.DarkElementColors
-import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withTimeoutOrNull
 
@@ -43,12 +42,9 @@ class CompactBgGlanceWidget : GlanceAppWidget() {
     override val sizeMode: SizeMode = SizeMode.Single
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
-        val deps = EntryPointAccessors.fromApplication(
-            context.applicationContext,
-            WidgetDependencies::class.java
-        )
-        val stateLoader = deps.widgetStateLoader()
-        val config = deps.config()
+        val deps = WidgetDependencies.from(context)
+        val stateLoader = deps.widgetStateLoader
+        val config = deps.config
 
         val ready = config.appInitialized || withTimeoutOrNull(AWAIT_INIT_TIMEOUT_MS) {
             config.initProgressFlow.first { it.done }

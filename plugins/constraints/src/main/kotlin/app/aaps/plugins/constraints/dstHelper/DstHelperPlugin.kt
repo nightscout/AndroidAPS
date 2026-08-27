@@ -23,6 +23,7 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.plugins.constraints.R
 import app.aaps.plugins.constraints.dstHelper.keys.DstHelperLongKey
 import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.SingleIn
@@ -34,6 +35,7 @@ import javax.inject.Inject
 // Registers itself into the plugin list. Scoped with Metro's @SingleIn, not javax @Singleton: a
 // contributed class is built by the graph generated in `:app`, which has no Dagger interop, so a javax
 // scope there is ignored and every read would build a new plugin.
+@ContributesBinding(AppScope::class, binding = binding<DstHelper>())
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @IntKey(850)
 @SingleIn(AppScope::class)

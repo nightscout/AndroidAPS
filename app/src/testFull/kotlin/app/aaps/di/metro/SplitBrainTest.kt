@@ -2,6 +2,8 @@ package app.aaps.di.metro
 
 import app.aaps.plugins.sync.tidepool.TidepoolPlugin
 import app.aaps.pump.medtronic.MedtronicPumpPlugin
+import app.aaps.database.AppRepository
+import app.aaps.database.persistence.PersistenceLayerImpl
 import app.aaps.implementation.androidNotification.AlarmSoundPlayerImpl
 import app.aaps.plugins.aps.autotune.AutotunePlugin
 import app.aaps.plugins.automation.services.LastLocationDataContainer
@@ -72,8 +74,6 @@ class SplitBrainTest {
      * which turned out to be the pair that made autotune read data it had never populated.
      */
     private val STATELESS = listOf(
-        // Branches on config and forwards to the dispatcher. No fields.
-        "app.aaps.implementation.bolus.RoleBranch",
         // Encrypts and decrypts what it is handed; every var in it is a local.
         "app.aaps.implementation.maintenance.formats.EncryptedPrefsFormat",
         // Builds upload payloads from its arguments. No fields.
@@ -105,6 +105,8 @@ class SplitBrainTest {
         get() = listOf(
             AapsLeaves::class.java,                          // :app
             AlarmSoundPlayerImpl::class.java,                // :implementation
+            PersistenceLayerImpl::class.java,               // :database:persistence
+            AppRepository::class.java,                      // :database:impl
             CalibrationDialogViewModel::class.java,          // :ui
             TidepoolPlugin::class.java,                      // :plugins:sync
             BgQualityCheckPlugin::class.java,                // :plugins:constraints
