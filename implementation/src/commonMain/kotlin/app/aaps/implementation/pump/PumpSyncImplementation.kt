@@ -31,7 +31,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.core.objects.profile.ProfileSealed
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.implementation.extensions.toUeSource
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -103,7 +103,7 @@ class PumpSyncImplementation @Inject constructor(
         }
 
         if (showNotification && (type.description != storedType || serialNumber != storedSerial) && timestamp >= storedTimestamp)
-            notificationManager.post(NotificationId.WRONG_PUMP_DATA, UiStrings.wrong_pump_data)
+            notificationManager.post(NotificationId.WRONG_PUMP_DATA, CoreUiStrings.wrong_pump_data)
         aapsLogger.error(
             LTag.PUMP,
             "Ignoring pump history record  Allowed: ${dateUtil.dateAndTimeAndSecondsString(storedTimestamp)} $storedType $storedSerial Received: $timestamp ${

@@ -15,7 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 
 /**
  * Full-width error banner that explains why a screen's edit controls are disabled: the client's master
@@ -33,8 +33,8 @@ import app.aaps.core.ui.UiStrings
 fun MasterOfflineBanner(
     editingEnabled: Boolean,
     modifier: Modifier = Modifier,
-    text: String = if (!LocalMasterControlAllowed.current) stringResource(UiStrings.master_control_disabled_banner)
-    else stringResource(UiStrings.master_offline_banner)
+    text: String = if (!LocalMasterControlAllowed.current) stringResource(CoreUiStrings.master_control_disabled_banner)
+    else stringResource(CoreUiStrings.master_offline_banner)
 ) {
     if (editingEnabled) return
     Surface(

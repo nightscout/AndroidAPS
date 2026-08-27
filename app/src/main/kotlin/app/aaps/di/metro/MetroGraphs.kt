@@ -69,6 +69,7 @@ import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.profiling.Profiler
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.bolus.WizardExecutor
+import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.di.DeferredRef
@@ -78,6 +79,7 @@ import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.maintenance.CloudDirectoryManager
 import app.aaps.core.interfaces.overview.graph.GraphConfigRepository
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.PermissionProvider
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileStore
@@ -124,6 +126,7 @@ import app.aaps.plugins.aps.openAPSAutoISF.DetermineBasalAutoISF
 import app.aaps.plugins.aps.openAPSAutoISF.GlucoseStatusCalculatorAutoIsf
 import app.aaps.plugins.aps.openAPSSMB.DetermineBasalSMB
 import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
+import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.automation.di.AutomationMetroGraph
 import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
@@ -193,7 +196,7 @@ class MetroGraphs @Inject constructor(
 
     // The module owns its own bridge, because its DI qualifiers are internal to it.
     private val openHumans: OpenHumansMetroBridge get() = openHumansMetroBridge.get()
-    private val automation: AutomationMetroGraph get() = root.automationGraph
+    private val automationGraph: AutomationMetroGraph get() = root.automationGraph
 
     /**
      * Builds one history browsing window, with its own calculation objects.
@@ -213,7 +216,7 @@ class MetroGraphs @Inject constructor(
     fun injectMembers(target: Any): Boolean {
         val injector = receivers.memberInjectors[target::class]
             ?: openHumans.memberInjectors[target::class]
-            ?: automation.memberInjectors[target::class]
+            ?: automationGraph.memberInjectors[target::class]
             ?: source.memberInjectors[target::class]
             // Contributed straight into the root, which is how a pump module reaches this map without
             // MetroGraphs naming it - see `contributedMemberInjectors`.
@@ -281,6 +284,10 @@ class MetroGraphs @Inject constructor(
     val bgQualityCheck: BgQualityCheck get() = root.bgQualityCheckPlugin
     val dstHelper: DstHelper get() = root.dstHelper
     val objectives: Objectives get() = root.objectivesPlugin
+
+    val automation: Automation get() = root.automation
+    val automationRuntime: AutomationRuntime get() = root.automationRuntime
+    val permissionProviders: Set<PermissionProvider> get() = root.permissionProviders
 
     /** Same plugin as [objectives], by class. The instrumented tests ask for the concrete type. */
     val objectivesPlugin: ObjectivesPlugin get() = root.objectivesPlugin

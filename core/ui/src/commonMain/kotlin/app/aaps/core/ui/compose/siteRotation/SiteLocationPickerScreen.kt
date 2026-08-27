@@ -17,7 +17,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import app.aaps.core.data.model.TE
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.stringResource
 
@@ -42,12 +42,12 @@ fun SiteLocationPickerScreen(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(UiStrings.site_rotation)) },
+                title = { Text(stringResource(CoreUiStrings.site_rotation)) },
                 navigationIcon = {
                     IconButton(onClick = onClose) {
                         Icon(
                             imageVector = Icons.Filled.Close,
-                            contentDescription = stringResource(UiStrings.close)
+                            contentDescription = stringResource(CoreUiStrings.close)
                         )
                     }
                 },
@@ -58,7 +58,7 @@ fun SiteLocationPickerScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Check,
-                            contentDescription = stringResource(UiStrings.save),
+                            contentDescription = stringResource(CoreUiStrings.save),
                             tint = if (selectedLocation != TE.Location.NONE)
                                 MaterialTheme.colorScheme.primary
                             else

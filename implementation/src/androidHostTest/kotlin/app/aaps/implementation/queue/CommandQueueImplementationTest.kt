@@ -33,7 +33,7 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.constraints.ConstraintObject
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.implementation.profile.ProfileSwitchSilentGate
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -288,7 +288,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     @Test
     fun postProfileWriteResult_updated_postsOkAndClearsFailure() {
         // profile updated: success=true, enacted=true, not silent → confirmation shown, stale failure cleared.
-        whenever(rh.gs(UiStrings.profile_set_ok)).thenReturn("Basal profile in pump updated")
+        whenever(rh.gs(CoreUiStrings.profile_set_ok)).thenReturn("Basal profile in pump updated")
 
         val persisted = commandQueue.postProfileWriteResult(enactResult(isSuccess = true, isEnacted = true), silent = false)
 
@@ -868,8 +868,8 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
      * this has to hand back the template rather than the finished string.
      */
     private fun stubStatusCaptions() {
-        whenever(rh.gs(UiStrings.read_status)).thenReturn("READSTATUS %1\$s")
-        whenever(rh.gs(UiStrings.load_events)).thenReturn("LOAD EVENTS")
+        whenever(rh.gs(CoreUiStrings.read_status)).thenReturn("READSTATUS %1\$s")
+        whenever(rh.gs(CoreUiStrings.load_events)).thenReturn("LOAD EVENTS")
     }
 
     @Test

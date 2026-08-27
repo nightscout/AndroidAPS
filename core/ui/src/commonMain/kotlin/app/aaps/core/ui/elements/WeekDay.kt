@@ -1,7 +1,7 @@
 package app.aaps.core.ui.elements
 
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Instant
@@ -26,13 +26,13 @@ open class WeekDay {
             // them to other modules - so they must not change, and they must not need the JVM.
             private val calendarInts = intArrayOf(2, 3, 4, 5, 6, 7, 1)
             private val shortNames = arrayOf(
-                UiStrings.weekday_monday_short,
-                UiStrings.weekday_tuesday_short,
-                UiStrings.weekday_wednesday_short,
-                UiStrings.weekday_thursday_short,
-                UiStrings.weekday_friday_short,
-                UiStrings.weekday_saturday_short,
-                UiStrings.weekday_sunday_short
+                CoreUiStrings.weekday_monday_short,
+                CoreUiStrings.weekday_tuesday_short,
+                CoreUiStrings.weekday_wednesday_short,
+                CoreUiStrings.weekday_thursday_short,
+                CoreUiStrings.weekday_friday_short,
+                CoreUiStrings.weekday_saturday_short,
+                CoreUiStrings.weekday_sunday_short
             )
 
             fun fromCalendarInt(day: Int): DayOfWeek {

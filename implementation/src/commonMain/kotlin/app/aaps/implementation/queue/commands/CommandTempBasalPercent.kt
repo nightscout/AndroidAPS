@@ -8,7 +8,7 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.TextResolver
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 
 class CommandTempBasalPercent(
     private val aapsLogger: AAPSLogger,
@@ -33,7 +33,7 @@ class CommandTempBasalPercent(
         return r
     }
 
-    override fun status(): String = rh.gs(UiStrings.temp_basal_percent, percent, durationInMinutes)
+    override fun status(): String = rh.gs(CoreUiStrings.temp_basal_percent, percent, durationInMinutes)
 
     override fun log(): String = "TEMP BASAL $percent% $durationInMinutes min"
 }

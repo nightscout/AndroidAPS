@@ -6,7 +6,7 @@ import app.aaps.core.interfaces.InterfacesStringIds
 import app.aaps.core.interfaces.resources.TextRefIdRegistry
 import app.aaps.core.keys.KeysStringIds
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.UiStringIds
+import app.aaps.core.ui.CoreUiStringIds
 
 /**
  * Both resource forms end up in the platform `stringResource`. [TextRef.AndroidRes] carries the id
@@ -45,7 +45,7 @@ actual fun stringResource(ref: TextRef): String = when (ref) {
  */
 private fun androidIdOf(ref: TextRef.Named): Int? = when (ref.owner) {
     "keys"       -> KeysStringIds.idOf(ref.name)
-    "ui"         -> UiStringIds.idOf(ref.name)
+    "coreUi"     -> CoreUiStringIds.idOf(ref.name)
     "interfaces" -> InterfacesStringIds.idOf(ref.name)
     else         -> TextRefIdRegistry.idOf(ref)
 }

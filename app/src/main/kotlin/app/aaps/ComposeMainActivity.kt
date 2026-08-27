@@ -119,6 +119,7 @@ import app.aaps.core.ui.compose.LocalMasterReachable
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.LocalSnackbarHostState
+import app.aaps.core.ui.compose.MetroAppCompatActivity
 import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import app.aaps.core.ui.compose.ProtectionHost
 import app.aaps.core.ui.compose.ScreenMode
@@ -177,14 +178,12 @@ import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.ui.search.SearchIndexEntry
 import app.aaps.ui.search.SearchViewModel
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import dagger.hilt.android.AndroidEntryPoint
+import dev.zacsweers.metro.Inject
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@AndroidEntryPoint
-class ComposeMainActivity : AppCompatActivity() {
+class ComposeMainActivity : MetroAppCompatActivity() {
 
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper

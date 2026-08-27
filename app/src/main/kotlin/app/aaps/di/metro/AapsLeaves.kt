@@ -110,7 +110,6 @@ class AapsLeaves(
     private val notificationManagerProvider: Provider<NotificationManager>,
     private val overviewDataCacheFactoryProvider: Provider<OverviewDataCacheFactory>,
     // Needed by the feature extensions below the root, which no longer carry their own leaf lists.
-    private val automationProvider: Provider<Automation>,
     private val contextProvider: Provider<Context>,
     // Source plugins, still built by Dagger. They live here rather than in their own module because a
     // graph extension is generated in the parent's module, so Metro cannot read a container from the
@@ -132,7 +131,6 @@ class AapsLeaves(
     // Dagger keeps building this one - see the note in MaintenanceImplModule.
     // A Dagger @IntoSet multibinding, handed over already assembled. Metro receives the Set as one
     // binding rather than re-declaring the multibinding on this side.
-    private val permissionProvidersProvider: Provider<Set<PermissionProvider>>,
     private val smsCommunicatorPluginProvider: Provider<SmsCommunicatorPlugin>,
     private val nsClientV3PluginProvider: Provider<NSClientV3Plugin>,
     private val wearPluginProvider: Provider<WearPlugin>,
@@ -204,7 +202,6 @@ class AapsLeaves(
     // No sceneRepository() either, same reason as activeSceneManager above: Metro owns it (@SingleIn +
     // two @ContributesBinding), so this leaf pushed an unscoped Dagger copy back in.
     @Provides fun overviewDataCacheFactory(): OverviewDataCacheFactory = overviewDataCacheFactoryProvider.get()
-    @Provides fun automation(): Automation = automationProvider.get()
     @Provides fun context(): Context = contextProvider.get()
 
 
@@ -215,10 +212,6 @@ class AapsLeaves(
 
     /** A value object: unscoped, as its Dagger binding is. */
     @Provides fun historyScope(): HistoryScope = historyScopeProvider.get()
-    // Still Dagger-owned: the only contributor, AutomationRuntime, needs SmsCommunicator,
-    // LocationServiceController, ReminderScheduler and BtConnectionSource, none of which the graph
-    // reaches yet. PluginStore takes it through a lambda, so nothing is built until it is asked for.
-    @Provides fun permissionProviders(): Set<PermissionProvider> = permissionProvidersProvider.get()
 
     // Dagger owns these three, the same way it owns the pump drivers: AuthRequest, the nine
     // @HiltWorker loaders under nsclientV3 and the wear data layer all inject the concrete class, so

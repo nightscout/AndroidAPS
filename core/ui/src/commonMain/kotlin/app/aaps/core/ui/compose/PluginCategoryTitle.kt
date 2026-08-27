@@ -2,7 +2,7 @@ package app.aaps.core.ui.compose
 
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 
 /**
  * Single source of truth for the plugin-category → title string mapping, shared by the Configuration
@@ -11,14 +11,14 @@ import app.aaps.core.ui.UiStrings
  */
 
 fun pluginCategoryTitle(type: PluginType): TextRef = when (type) {
-    PluginType.BGSOURCE    -> UiStrings.configbuilder_bgsource
-    PluginType.SMOOTHING   -> UiStrings.configbuilder_smoothing
-    PluginType.CALIBRATION -> UiStrings.configbuilder_calibration
-    PluginType.PUMP        -> UiStrings.configbuilder_pump
-    PluginType.SENSITIVITY -> UiStrings.configbuilder_sensitivity
-    PluginType.APS         -> UiStrings.configbuilder_aps
-    PluginType.LOOP        -> UiStrings.configbuilder_loop
-    PluginType.CONSTRAINTS -> UiStrings.constraints
-    PluginType.SYNC        -> UiStrings.configbuilder_sync
-    PluginType.GENERAL     -> UiStrings.configbuilder_general
+    PluginType.BGSOURCE    -> CoreUiStrings.configbuilder_bgsource
+    PluginType.SMOOTHING   -> CoreUiStrings.configbuilder_smoothing
+    PluginType.CALIBRATION -> CoreUiStrings.configbuilder_calibration
+    PluginType.PUMP        -> CoreUiStrings.configbuilder_pump
+    PluginType.SENSITIVITY -> CoreUiStrings.configbuilder_sensitivity
+    PluginType.APS         -> CoreUiStrings.configbuilder_aps
+    PluginType.LOOP        -> CoreUiStrings.configbuilder_loop
+    PluginType.CONSTRAINTS -> CoreUiStrings.constraints
+    PluginType.SYNC        -> CoreUiStrings.configbuilder_sync
+    PluginType.GENERAL     -> CoreUiStrings.configbuilder_general
 }

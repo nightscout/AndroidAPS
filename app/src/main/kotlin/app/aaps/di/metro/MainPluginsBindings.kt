@@ -1,5 +1,6 @@
 package app.aaps.di.metro
 
+import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.IobCobCalculator
@@ -16,10 +17,12 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.main.iob.iobCobCalculator.IobCobCalculatorPlugin
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.IntoMap
 import dev.zacsweers.metro.Provider
@@ -90,4 +93,15 @@ object MainPluginsBindings {
     @IntoMap
     @IntKey(10)
     fun iobCobCalculatorEntry(plugin: IobCobCalculatorPlugin): PluginBase = plugin
+
+    /**
+     * The `Objectives` interface, unqualified.
+     *
+     * `ObjectivesPlugin` carries `@APS` for the plugin-list multibinding, and @ContributesBinding on
+     * the class would inherit that qualifier - so the interface would only be readable as
+     * `@APS Objectives`, which is not what a reader asks for. Providing it here keeps the qualifier on
+     * the plugin entry, where it belongs, and hands out the same scoped instance.
+     */
+    @Provides
+    fun objectives(plugin: ObjectivesPlugin): Objectives = plugin
 }

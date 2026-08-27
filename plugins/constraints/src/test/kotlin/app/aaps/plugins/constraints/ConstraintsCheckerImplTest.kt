@@ -23,7 +23,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.implementation.pump.PumpWithConcentrationImpl
 import app.aaps.plugins.aps.ApsStrings
 import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAMA
@@ -114,7 +114,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         whenever(rh.gs(app.aaps.core.ui.R.string.no_valid_basal_rate)).thenReturn("No valid basal rate read from pump")
         // :plugins:aps resolves its own strings through TextRef, so these need the ApsStrings key, not R.string.
         whenever(rh.gs(ApsStrings.hardlimit)).thenReturn("hard limit")
-        whenever(rh.gs(UiStrings.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
+        whenever(rh.gs(CoreUiStrings.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
         whenever(rh.gs(ApsStrings.maxvalueinpreferences)).thenReturn("max value in preferences")
         whenever(rh.gs(ApsStrings.autosens_disabled_in_preferences)).thenReturn("Autosens disabled in preferences")
         whenever(rh.gs(ApsStrings.smb_disabled_in_preferences)).thenReturn("SMB disabled in preferences")

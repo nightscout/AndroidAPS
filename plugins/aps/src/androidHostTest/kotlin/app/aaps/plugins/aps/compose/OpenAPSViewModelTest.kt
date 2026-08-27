@@ -4,7 +4,7 @@ import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
 import com.google.common.truth.Truth.assertThat
@@ -43,7 +43,7 @@ internal class OpenAPSViewModelTest {
     @Test
     fun uiState_showsNotAvailable_whenNoApsResult() {
         whenever(apsPlugin.lastAPSResult).thenReturn(null)
-        whenever(rh.gs(UiStrings.not_available_full)).thenReturn("N/A")
+        whenever(rh.gs(CoreUiStrings.not_available_full)).thenReturn("N/A")
 
         val sut = viewModel()
 
@@ -58,7 +58,7 @@ internal class OpenAPSViewModelTest {
         // Without this stub rh.gs returns null (mock default) -> non-null-param NPE inside the Unconfined init
         // coroutine; the standalone scope has no leaked-coroutine check, so it escapes this test and trips
         // "UncaughtExceptionsBeforeTest" in whatever runTest runs next in the same fork.
-        whenever(rh.gs(UiStrings.not_available_full)).thenReturn("N/A")
+        whenever(rh.gs(CoreUiStrings.not_available_full)).thenReturn("N/A")
 
         val sut = viewModel()
         sut.onRefresh()

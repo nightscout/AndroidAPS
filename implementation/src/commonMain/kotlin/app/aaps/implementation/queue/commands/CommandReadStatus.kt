@@ -9,7 +9,7 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.TextResolver
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import kotlin.time.Clock
 
 class CommandReadStatus(
@@ -35,7 +35,7 @@ class CommandReadStatus(
         return result
     }
 
-    override fun status(): String = rh.gs(UiStrings.read_status, reason)
+    override fun status(): String = rh.gs(CoreUiStrings.read_status, reason)
 
     override fun log(): String = "READSTATUS $reason"
 }

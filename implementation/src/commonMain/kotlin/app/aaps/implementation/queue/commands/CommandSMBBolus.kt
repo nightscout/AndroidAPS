@@ -16,7 +16,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import kotlin.time.Clock
 
 class CommandSMBBolus(
@@ -54,7 +54,7 @@ class CommandSMBBolus(
         return r
     }
 
-    override fun status(): String = rh.gs(UiStrings.smb_bolus_u, detailedBolusInfo.insulin)
+    override fun status(): String = rh.gs(CoreUiStrings.smb_bolus_u, detailedBolusInfo.insulin)
 
     override fun log(): String = "SMB BOLUS ${rh.gs(InterfacesStrings.format_insulin_units, detailedBolusInfo.insulin)}"
 

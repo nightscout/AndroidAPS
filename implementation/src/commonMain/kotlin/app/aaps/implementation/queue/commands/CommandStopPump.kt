@@ -8,7 +8,7 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.TextResolver
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 
 class CommandStopPump(
     private val aapsLogger: AAPSLogger,
@@ -31,7 +31,7 @@ class CommandStopPump(
         }
     }
 
-    override fun status(): String = rh.gs(UiStrings.stop_pump)
+    override fun status(): String = rh.gs(CoreUiStrings.stop_pump)
 
     override fun log(): String = "STOP PUMP"
 }

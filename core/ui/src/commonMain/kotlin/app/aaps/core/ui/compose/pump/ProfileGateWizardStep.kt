@@ -15,7 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.stringResource
 import kotlinx.coroutines.flow.StateFlow
@@ -52,18 +52,18 @@ fun ProfileGateWizardStep(host: ProfileGateStepHost) {
 
     WizardStepLayout(
         primaryButton = if (hasStore) WizardButton(
-            text = stringResource(UiStrings.activate_profile),
+            text = stringResource(CoreUiStrings.activate_profile),
             onClick = { host.activateSelectedProfile() },
             enabled = selected != null
         ) else null,
         secondaryButton = WizardButton(
-            text = stringResource(UiStrings.cancel),
+            text = stringResource(CoreUiStrings.cancel),
             onClick = { host.cancelGate() }
         )
     ) {
         if (hasStore) {
             Text(
-                text = stringResource(UiStrings.pump_wizard_profile_gate_pick),
+                text = stringResource(CoreUiStrings.pump_wizard_profile_gate_pick),
                 style = MaterialTheme.typography.bodyLarge
             )
             Column(
@@ -95,7 +95,7 @@ fun ProfileGateWizardStep(host: ProfileGateStepHost) {
             }
         } else {
             Text(
-                text = stringResource(UiStrings.pump_wizard_profile_gate_no_store),
+                text = stringResource(CoreUiStrings.pump_wizard_profile_gate_no_store),
                 style = MaterialTheme.typography.bodyLarge
             )
         }

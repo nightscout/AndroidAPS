@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.TE
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.stringResource
 
 /**
@@ -26,7 +26,7 @@ fun ArrowSelectionDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(UiStrings.select_arrow)) },
+        title = { Text(stringResource(CoreUiStrings.select_arrow)) },
         text = {
             Column {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {

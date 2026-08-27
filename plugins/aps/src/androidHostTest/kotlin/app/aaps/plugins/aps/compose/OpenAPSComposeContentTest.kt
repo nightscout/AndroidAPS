@@ -8,7 +8,7 @@ import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
 import kotlinx.coroutines.flow.emptyFlow
@@ -40,7 +40,7 @@ class OpenAPSComposeContentTest {
             whenever(it.toFlow(EventOpenAPSUpdateGui::class)).thenReturn(emptyFlow())
             whenever(it.toFlow(EventResetOpenAPSGui::class)).thenReturn(emptyFlow())
         }
-        val rh = mock<ResourceHelper> { whenever(it.gs(UiStrings.not_available_full)).thenReturn("N/A") }
+        val rh = mock<ResourceHelper> { whenever(it.gs(CoreUiStrings.not_available_full)).thenReturn("N/A") }
         val content = OpenAPSComposeContent(apsPlugin, rxBus, rh, mock<DateUtil>())
 
         compose.setContent {

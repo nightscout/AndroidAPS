@@ -11,7 +11,7 @@ import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 
 class CommandBolus(
     private val aapsLogger: AAPSLogger,
@@ -38,8 +38,8 @@ class CommandBolus(
     }
 
     override fun status(): String {
-        return (if (detailedBolusInfo.insulin > 0) rh.gs(UiStrings.bolus_u_min, detailedBolusInfo.insulin) else "") +
-            if (detailedBolusInfo.carbs > 0) rh.gs(UiStrings.carbs_g, detailedBolusInfo.carbs.toInt()) else ""
+        return (if (detailedBolusInfo.insulin > 0) rh.gs(CoreUiStrings.bolus_u_min, detailedBolusInfo.insulin) else "") +
+            if (detailedBolusInfo.carbs > 0) rh.gs(CoreUiStrings.carbs_g, detailedBolusInfo.carbs.toInt()) else ""
     }
 
     override fun log(): String {

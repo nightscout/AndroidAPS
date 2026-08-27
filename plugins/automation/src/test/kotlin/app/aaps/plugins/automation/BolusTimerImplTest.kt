@@ -69,7 +69,7 @@ class BolusTimerImplTest : TestBase() {
         whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         dateUtil = DateUtilImpl(context)
         automationRuntime = AutomationRuntime(
-            eventFactory, aapsLogger, rh, preferences, context, fabricPrivacy, loop, rxBus, constraintChecker, aapsSchedulers, config, locationServiceController, dateUtil,
+            eventFactory, aapsLogger, rh, preferences, loop, rxBus, constraintChecker, config, locationServiceController, dateUtil,
             activePlugin, reminderScheduler, actionFactory, triggerFactory, triggerDeps, receiverStatusStore, uel, profileRepository, sceneApi
         )
     }

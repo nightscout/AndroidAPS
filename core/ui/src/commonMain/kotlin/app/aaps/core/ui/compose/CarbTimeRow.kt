@@ -27,7 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 
 /**
  * Compact carb time row with inline expand/collapse.
@@ -82,13 +82,13 @@ fun CarbTimeRow(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = stringResource(UiStrings.wizard_carb_time) + ": ",
+                    text = stringResource(CoreUiStrings.wizard_carb_time) + ": ",
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 if (offsetMinutes == 0) {
                     Text(
-                        text = stringResource(UiStrings.carb_time_now),
+                        text = stringResource(CoreUiStrings.carb_time_now),
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onSurface
                     )
@@ -120,7 +120,7 @@ fun CarbTimeRow(
 
             if (!expanded) {
                 FilledTonalButton(onClick = { expanded = true }) {
-                    Text(stringResource(UiStrings.change))
+                    Text(stringResource(CoreUiStrings.change))
                 }
             }
         }
@@ -136,12 +136,12 @@ fun CarbTimeRow(
 
                 // Offset input
                 NumberInputRow(
-                    labelRef = UiStrings.time,
+                    labelRef = CoreUiStrings.time,
                     value = offsetMinutes.toDouble(),
                     onValueChange = { onOffsetChange(it.toInt()) },
                     valueRange = offsetRange.first.toDouble()..offsetRange.last.toDouble(),
                     step = offsetStep.toDouble(),
-                    unitLabel = UiStrings.units_min
+                    unitLabel = CoreUiStrings.units_min
                 )
 
                 // Alarm toggle (disabled when offset <= 0)
@@ -167,7 +167,7 @@ fun CarbTimeRow(
                             modifier = Modifier.size(20.dp)
                         )
                         Text(
-                            text = stringResource(UiStrings.wizard_set_alarm),
+                            text = stringResource(CoreUiStrings.wizard_set_alarm),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = alarmAlpha)
                         )
@@ -192,7 +192,7 @@ fun CarbTimeRow(
 @Composable
 private fun formatOffset(minutes: Int): String {
     return when {
-        minutes == 0 -> stringResource(UiStrings.carb_time_now)
+        minutes == 0 -> stringResource(CoreUiStrings.carb_time_now)
         minutes > 0  -> "+${formatMinutesAsDuration(minutes)}"
         else         -> "-${formatMinutesAsDuration(-minutes)}"
     }

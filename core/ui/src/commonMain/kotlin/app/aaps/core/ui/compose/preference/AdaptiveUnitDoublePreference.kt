@@ -15,7 +15,7 @@ import app.aaps.core.data.format.NumberFormatPlatform
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
 import app.aaps.core.keys.interfaces.VisibilityContext
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.stringResource
@@ -62,7 +62,7 @@ fun AdaptiveUnitDoublePreferenceItem(
     val valueFormat = if (isMgdl) NumberFormat.INTEGER else NumberFormat.DECIMAL_1
 
     // Get unit label from resources - short form for slider
-    val unitLabel = if (isMgdl) UiStrings.mgdl else UiStrings.mmol
+    val unitLabel = if (isMgdl) CoreUiStrings.mgdl else CoreUiStrings.mmol
 
     // Get summary if available
     val summary = stringResourceOrNull(unitKey.summary)

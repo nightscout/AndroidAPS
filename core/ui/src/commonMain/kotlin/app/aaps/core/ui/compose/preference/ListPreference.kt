@@ -48,7 +48,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.stringResource
 
 enum class ListPreferenceType {
@@ -116,7 +116,7 @@ fun <T> ListPreference(
                     title = title,
                     buttons = {
                         TextButton(onClick = { openSelector = false }) {
-                            Text(text = stringResource(UiStrings.cancel))
+                            Text(text = stringResource(CoreUiStrings.cancel))
                         }
                     },
                 ) {

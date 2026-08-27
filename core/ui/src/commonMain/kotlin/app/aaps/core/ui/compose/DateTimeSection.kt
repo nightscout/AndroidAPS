@@ -15,7 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 
 /**
  * Shared date/time picker row with two read-only OutlinedTextFields.
@@ -46,7 +46,7 @@ fun DateTimeSection(
             onValueChange = {},
             readOnly = true,
             enabled = false,
-            label = { Text(stringResource(UiStrings.date)) },
+            label = { Text(stringResource(CoreUiStrings.date)) },
             trailingIcon = {
                 Icon(
                     imageVector = Icons.Filled.DateRange,
@@ -71,7 +71,7 @@ fun DateTimeSection(
             onValueChange = {},
             readOnly = true,
             enabled = false,
-            label = { Text(stringResource(UiStrings.time)) },
+            label = { Text(stringResource(CoreUiStrings.time)) },
             trailingIcon = {
                 Icon(
                     imageVector = Icons.Outlined.Schedule,

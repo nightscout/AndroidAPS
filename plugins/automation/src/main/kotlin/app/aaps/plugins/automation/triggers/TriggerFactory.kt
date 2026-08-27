@@ -6,10 +6,11 @@ import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.utils.lenientString
 import app.aaps.plugins.automation.BtConnectionSource
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.serialization.json.JsonObject
-import javax.inject.Inject
 import javax.inject.Provider
-import javax.inject.Singleton
 import kotlin.reflect.full.primaryConstructor
 
 /**
@@ -22,7 +23,7 @@ import kotlin.reflect.full.primaryConstructor
  *
  * Most triggers need only [TriggerDeps]. The three that need more take it on their own constructor.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class TriggerFactory @Inject constructor(
     val deps: TriggerDeps,
     private val context: Context,

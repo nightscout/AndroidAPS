@@ -76,7 +76,7 @@ class CarbTimerImplTest : TestBase() {
         dateUtil = DateUtilImpl(context)
         reminderScheduler = mock()
         automationRuntime = AutomationRuntime(
-            eventFactory, aapsLogger, rh, preferences, context, fabricPrivacy, loop, rxBus, constraintChecker, aapsSchedulers, config, locationServiceController, dateUtil, activePlugin, reminderScheduler, actionFactory, triggerFactory, triggerDeps, receiverStatusStore, uel, profileRepository, sceneApi
+            eventFactory, aapsLogger, rh, preferences, loop, rxBus, constraintChecker, config, locationServiceController, dateUtil, activePlugin, reminderScheduler, actionFactory, triggerFactory, triggerDeps, receiverStatusStore, uel, profileRepository, sceneApi
         )
     }
 

@@ -13,7 +13,7 @@ import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.navigation.ElementCategory
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.icons.IcActivity
 import app.aaps.core.ui.compose.icons.IcAnnouncement
@@ -188,112 +188,112 @@ fun ElementType.icon(): ImageVector = when (this) {
 }
 
 fun ElementCategory.label(): TextRef? = when (this) {
-    ElementCategory.TREATMENT  -> UiStrings.overview_treatment_label
-    ElementCategory.CGM        -> UiStrings.cgm
-    ElementCategory.MANAGEMENT -> UiStrings.manage
-    ElementCategory.CAREPORTAL -> UiStrings.careportal
-    ElementCategory.DEVICE     -> UiStrings.device_maintenance
-    ElementCategory.BASAL      -> UiStrings.basal
+    ElementCategory.TREATMENT  -> CoreUiStrings.overview_treatment_label
+    ElementCategory.CGM        -> CoreUiStrings.cgm
+    ElementCategory.MANAGEMENT -> CoreUiStrings.manage
+    ElementCategory.CAREPORTAL -> CoreUiStrings.careportal
+    ElementCategory.DEVICE     -> CoreUiStrings.device_maintenance
+    ElementCategory.BASAL      -> CoreUiStrings.basal
     ElementCategory.SYSTEM,
     ElementCategory.NAVIGATION,
     ElementCategory.INTERNAL   -> null
 }
 
 fun ElementType.label(): TextRef? = when (this) {
-    ElementType.INSULIN                 -> UiStrings.overview_insulin_label
+    ElementType.INSULIN                 -> CoreUiStrings.overview_insulin_label
     ElementType.CARBS                   -> InterfacesStrings.carbs
-    ElementType.BOLUS_WIZARD            -> UiStrings.boluswizard
+    ElementType.BOLUS_WIZARD            -> CoreUiStrings.boluswizard
     ElementType.QUICK_WIZARD            -> null // dynamic label
-    ElementType.QUICK_WIZARD_MANAGEMENT -> UiStrings.quickwizard_managemnt
-    ElementType.FOOD_MANAGEMENT         -> UiStrings.food_management
-    ElementType.TREATMENT               -> UiStrings.overview_treatment_label
-    ElementType.CGM_XDRIP               -> UiStrings.cgm
-    ElementType.CGM_DEX                 -> UiStrings.cgm
-    ElementType.CALIBRATION             -> UiStrings.calibration
-    ElementType.INSULIN_MANAGEMENT      -> UiStrings.insulin_management
-    ElementType.PROFILE_MANAGEMENT      -> UiStrings.profile_management
-    ElementType.TEMP_TARGET_MANAGEMENT  -> UiStrings.temp_target_management
-    ElementType.BG_CHECK                -> UiStrings.careportal_bgcheck
-    ElementType.NOTE                    -> UiStrings.careportal_note
-    ElementType.EXERCISE                -> UiStrings.careportal_exercise
-    ElementType.QUESTION                -> UiStrings.careportal_question
-    ElementType.ANNOUNCEMENT            -> UiStrings.careportal_announcement
-    ElementType.SENSOR_INSERT           -> UiStrings.cgm_sensor_insert
-    ElementType.BATTERY_CHANGE          -> UiStrings.pump_battery_change
-    ElementType.CANNULA_CHANGE          -> UiStrings.careportal_pump_site_change
-    ElementType.FILL                    -> UiStrings.prime_fill
-    ElementType.SITE_ROTATION           -> UiStrings.site_rotation
-    ElementType.TEMP_BASAL              -> UiStrings.temp_basal
-    ElementType.EXTENDED_BOLUS          -> UiStrings.extended_bolus
+    ElementType.QUICK_WIZARD_MANAGEMENT -> CoreUiStrings.quickwizard_managemnt
+    ElementType.FOOD_MANAGEMENT         -> CoreUiStrings.food_management
+    ElementType.TREATMENT               -> CoreUiStrings.overview_treatment_label
+    ElementType.CGM_XDRIP               -> CoreUiStrings.cgm
+    ElementType.CGM_DEX                 -> CoreUiStrings.cgm
+    ElementType.CALIBRATION             -> CoreUiStrings.calibration
+    ElementType.INSULIN_MANAGEMENT      -> CoreUiStrings.insulin_management
+    ElementType.PROFILE_MANAGEMENT      -> CoreUiStrings.profile_management
+    ElementType.TEMP_TARGET_MANAGEMENT  -> CoreUiStrings.temp_target_management
+    ElementType.BG_CHECK                -> CoreUiStrings.careportal_bgcheck
+    ElementType.NOTE                    -> CoreUiStrings.careportal_note
+    ElementType.EXERCISE                -> CoreUiStrings.careportal_exercise
+    ElementType.QUESTION                -> CoreUiStrings.careportal_question
+    ElementType.ANNOUNCEMENT            -> CoreUiStrings.careportal_announcement
+    ElementType.SENSOR_INSERT           -> CoreUiStrings.cgm_sensor_insert
+    ElementType.BATTERY_CHANGE          -> CoreUiStrings.pump_battery_change
+    ElementType.CANNULA_CHANGE          -> CoreUiStrings.careportal_pump_site_change
+    ElementType.FILL                    -> CoreUiStrings.prime_fill
+    ElementType.SITE_ROTATION           -> CoreUiStrings.site_rotation
+    ElementType.TEMP_BASAL              -> CoreUiStrings.temp_basal
+    ElementType.EXTENDED_BOLUS          -> CoreUiStrings.extended_bolus
     ElementType.AUTOMATION              -> null // dynamic label
-    ElementType.AUTOMATION_MANAGEMENT   -> UiStrings.automation
-    ElementType.PUMP                    -> UiStrings.pump
-    ElementType.SETTINGS                -> UiStrings.settings
-    ElementType.QUICK_LAUNCH_CONFIG     -> UiStrings.quick_launch_configure
-    ElementType.TREATMENTS              -> UiStrings.treatments_history
-    ElementType.STATISTICS              -> UiStrings.statistics
-    ElementType.TDD_CYCLE_PATTERN       -> UiStrings.tdd_cycle_pattern
-    ElementType.PROFILE_HELPER          -> UiStrings.nav_profile_helper
-    ElementType.HISTORY_BROWSER         -> UiStrings.nav_history_browser
-    ElementType.SETUP_WIZARD            -> UiStrings.nav_setupwizard
-    ElementType.MAINTENANCE             -> UiStrings.maintenance
-    ElementType.CONFIGURATION           -> UiStrings.nav_configuration
-    ElementType.ABOUT                   -> UiStrings.nav_about
-    ElementType.COB                     -> UiStrings.cob
-    ElementType.SENSITIVITY             -> UiStrings.sensitivity
+    ElementType.AUTOMATION_MANAGEMENT   -> CoreUiStrings.automation
+    ElementType.PUMP                    -> CoreUiStrings.pump
+    ElementType.SETTINGS                -> CoreUiStrings.settings
+    ElementType.QUICK_LAUNCH_CONFIG     -> CoreUiStrings.quick_launch_configure
+    ElementType.TREATMENTS              -> CoreUiStrings.treatments_history
+    ElementType.STATISTICS              -> CoreUiStrings.statistics
+    ElementType.TDD_CYCLE_PATTERN       -> CoreUiStrings.tdd_cycle_pattern
+    ElementType.PROFILE_HELPER          -> CoreUiStrings.nav_profile_helper
+    ElementType.HISTORY_BROWSER         -> CoreUiStrings.nav_history_browser
+    ElementType.SETUP_WIZARD            -> CoreUiStrings.nav_setupwizard
+    ElementType.MAINTENANCE             -> CoreUiStrings.maintenance
+    ElementType.CONFIGURATION           -> CoreUiStrings.nav_configuration
+    ElementType.ABOUT                   -> CoreUiStrings.nav_about
+    ElementType.COB                     -> CoreUiStrings.cob
+    ElementType.SENSITIVITY             -> CoreUiStrings.sensitivity
     ElementType.SCENE                   -> null // dynamic label
-    ElementType.SCENE_MANAGEMENT        -> UiStrings.scene_management
-    ElementType.AUTHORIZED_CLIENTS      -> UiStrings.authorized_clients_manage_label
-    ElementType.PAIR_WITH_MASTER        -> UiStrings.pair_with_master_manage_label
-    ElementType.RUNNING_MODE            -> UiStrings.running_mode
-    ElementType.USER_ENTRY              -> UiStrings.user_entry
-    ElementType.LOOP                    -> UiStrings.loop
-    ElementType.AAPS                    -> UiStrings.aaps
-    ElementType.EXIT                    -> UiStrings.nav_exit
+    ElementType.SCENE_MANAGEMENT        -> CoreUiStrings.scene_management
+    ElementType.AUTHORIZED_CLIENTS      -> CoreUiStrings.authorized_clients_manage_label
+    ElementType.PAIR_WITH_MASTER        -> CoreUiStrings.pair_with_master_manage_label
+    ElementType.RUNNING_MODE            -> CoreUiStrings.running_mode
+    ElementType.USER_ENTRY              -> CoreUiStrings.user_entry
+    ElementType.LOOP                    -> CoreUiStrings.loop
+    ElementType.AAPS                    -> CoreUiStrings.aaps
+    ElementType.EXIT                    -> CoreUiStrings.nav_exit
 }
 
 fun ElementType.description(): TextRef? = when (this) {
-    ElementType.INSULIN                 -> UiStrings.treatment_insulin_desc
-    ElementType.CARBS                   -> UiStrings.treatment_carbs_desc
-    ElementType.BOLUS_WIZARD            -> UiStrings.treatment_calculator_desc
-    ElementType.TREATMENT               -> UiStrings.treatment_desc
-    ElementType.INSULIN_MANAGEMENT      -> UiStrings.manage_insulin_desc
-    ElementType.PROFILE_MANAGEMENT      -> UiStrings.manage_profile_desc
-    ElementType.TEMP_TARGET_MANAGEMENT  -> UiStrings.manage_temp_target_desc
-    ElementType.QUICK_WIZARD_MANAGEMENT -> UiStrings.manage_quickwizard_desc
-    ElementType.FOOD_MANAGEMENT         -> UiStrings.manage_food_desc
+    ElementType.INSULIN                 -> CoreUiStrings.treatment_insulin_desc
+    ElementType.CARBS                   -> CoreUiStrings.treatment_carbs_desc
+    ElementType.BOLUS_WIZARD            -> CoreUiStrings.treatment_calculator_desc
+    ElementType.TREATMENT               -> CoreUiStrings.treatment_desc
+    ElementType.INSULIN_MANAGEMENT      -> CoreUiStrings.manage_insulin_desc
+    ElementType.PROFILE_MANAGEMENT      -> CoreUiStrings.manage_profile_desc
+    ElementType.TEMP_TARGET_MANAGEMENT  -> CoreUiStrings.manage_temp_target_desc
+    ElementType.QUICK_WIZARD_MANAGEMENT -> CoreUiStrings.manage_quickwizard_desc
+    ElementType.FOOD_MANAGEMENT         -> CoreUiStrings.manage_food_desc
 
-    ElementType.TEMP_BASAL              -> UiStrings.manage_temp_basal_desc
-    ElementType.EXTENDED_BOLUS          -> UiStrings.manage_extended_bolus_desc
-    ElementType.SITE_ROTATION           -> UiStrings.manage_site_rotation_desc
-    ElementType.NOTE                    -> UiStrings.treatment_note_desc
-    ElementType.QUESTION                -> UiStrings.treatment_question_desc
+    ElementType.TEMP_BASAL              -> CoreUiStrings.manage_temp_basal_desc
+    ElementType.EXTENDED_BOLUS          -> CoreUiStrings.manage_extended_bolus_desc
+    ElementType.SITE_ROTATION           -> CoreUiStrings.manage_site_rotation_desc
+    ElementType.NOTE                    -> CoreUiStrings.treatment_note_desc
+    ElementType.QUESTION                -> CoreUiStrings.treatment_question_desc
     ElementType.CGM_XDRIP,
-    ElementType.CGM_DEX                 -> UiStrings.treatment_cgm_desc
+    ElementType.CGM_DEX                 -> CoreUiStrings.treatment_cgm_desc
 
-    ElementType.CALIBRATION             -> UiStrings.treatment_calibration_desc
-    ElementType.BG_CHECK                -> UiStrings.treatment_bg_check_desc
-    ElementType.EXERCISE                -> UiStrings.treatment_exercise_desc
-    ElementType.ANNOUNCEMENT            -> UiStrings.treatment_announcement_desc
-    ElementType.SENSOR_INSERT           -> UiStrings.treatment_sensor_insert_desc
-    ElementType.BATTERY_CHANGE          -> UiStrings.treatment_battery_change_desc
-    ElementType.CANNULA_CHANGE          -> UiStrings.treatment_cannula_change_desc
-    ElementType.FILL                    -> UiStrings.treatment_fill_desc
-    ElementType.TREATMENTS              -> UiStrings.treatments_desc
-    ElementType.STATISTICS              -> UiStrings.statistics_desc
-    ElementType.TDD_CYCLE_PATTERN       -> UiStrings.tdd_cycle_pattern_desc
-    ElementType.PROFILE_HELPER          -> UiStrings.nav_profile_helper_desc
-    ElementType.HISTORY_BROWSER         -> UiStrings.nav_history_browser_desc
-    ElementType.SETUP_WIZARD            -> UiStrings.nav_setupwizard_desc
-    ElementType.MAINTENANCE             -> UiStrings.description_maintenance
-    ElementType.CONFIGURATION           -> UiStrings.nav_configuration_desc
-    ElementType.ABOUT                   -> UiStrings.nav_about_desc
-    ElementType.QUICK_LAUNCH_CONFIG     -> UiStrings.quick_launch_configure_desc
-    ElementType.SCENE                   -> UiStrings.scene_desc
-    ElementType.SCENE_MANAGEMENT        -> UiStrings.scene_management_desc
-    ElementType.AUTOMATION_MANAGEMENT   -> UiStrings.automation_management_desc
-    ElementType.AUTHORIZED_CLIENTS      -> UiStrings.authorized_clients_manage_desc
-    ElementType.PAIR_WITH_MASTER        -> UiStrings.pair_with_master_manage_desc
+    ElementType.CALIBRATION             -> CoreUiStrings.treatment_calibration_desc
+    ElementType.BG_CHECK                -> CoreUiStrings.treatment_bg_check_desc
+    ElementType.EXERCISE                -> CoreUiStrings.treatment_exercise_desc
+    ElementType.ANNOUNCEMENT            -> CoreUiStrings.treatment_announcement_desc
+    ElementType.SENSOR_INSERT           -> CoreUiStrings.treatment_sensor_insert_desc
+    ElementType.BATTERY_CHANGE          -> CoreUiStrings.treatment_battery_change_desc
+    ElementType.CANNULA_CHANGE          -> CoreUiStrings.treatment_cannula_change_desc
+    ElementType.FILL                    -> CoreUiStrings.treatment_fill_desc
+    ElementType.TREATMENTS              -> CoreUiStrings.treatments_desc
+    ElementType.STATISTICS              -> CoreUiStrings.statistics_desc
+    ElementType.TDD_CYCLE_PATTERN       -> CoreUiStrings.tdd_cycle_pattern_desc
+    ElementType.PROFILE_HELPER          -> CoreUiStrings.nav_profile_helper_desc
+    ElementType.HISTORY_BROWSER         -> CoreUiStrings.nav_history_browser_desc
+    ElementType.SETUP_WIZARD            -> CoreUiStrings.nav_setupwizard_desc
+    ElementType.MAINTENANCE             -> CoreUiStrings.description_maintenance
+    ElementType.CONFIGURATION           -> CoreUiStrings.nav_configuration_desc
+    ElementType.ABOUT                   -> CoreUiStrings.nav_about_desc
+    ElementType.QUICK_LAUNCH_CONFIG     -> CoreUiStrings.quick_launch_configure_desc
+    ElementType.SCENE                   -> CoreUiStrings.scene_desc
+    ElementType.SCENE_MANAGEMENT        -> CoreUiStrings.scene_management_desc
+    ElementType.AUTOMATION_MANAGEMENT   -> CoreUiStrings.automation_management_desc
+    ElementType.AUTHORIZED_CLIENTS      -> CoreUiStrings.authorized_clients_manage_desc
+    ElementType.PAIR_WITH_MASTER        -> CoreUiStrings.pair_with_master_manage_desc
     ElementType.QUICK_WIZARD,
     ElementType.RUNNING_MODE,
     ElementType.AUTOMATION,

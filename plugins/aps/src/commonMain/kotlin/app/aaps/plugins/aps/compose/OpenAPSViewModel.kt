@@ -14,7 +14,7 @@ import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.aps.ApsStrings
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
@@ -83,7 +83,7 @@ class OpenAPSViewModel(
         val lastAPSResult = apsPlugin.lastAPSResult
         if (lastAPSResult == null) {
             _uiState.value = OpenAPSUiState(
-                statusMessage = rh.gs(UiStrings.not_available_full)
+                statusMessage = rh.gs(CoreUiStrings.not_available_full)
             )
             return
         }
@@ -169,7 +169,7 @@ class OpenAPSViewModel(
             }
 
             // --- Result group ---
-            add(OpenAPSSection(title = UiStrings.result, isGroupHeader = true))
+            add(OpenAPSSection(title = CoreUiStrings.result, isGroupHeader = true))
 
             // Script Debug
             lastAPSResult.scriptDebug?.let { debug ->
@@ -189,7 +189,7 @@ class OpenAPSViewModel(
             if (rawData is RT) {
                 add(
                     OpenAPSSection(
-                        title = UiStrings.result,
+                        title = CoreUiStrings.result,
                         rows = rawData.toRows(),
                         collapsedByDefault = true
                     )

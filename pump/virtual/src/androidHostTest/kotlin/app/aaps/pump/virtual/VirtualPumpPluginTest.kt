@@ -12,7 +12,7 @@ import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.keys.StringKey
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
@@ -87,8 +87,8 @@ class VirtualPumpPluginTest : TestBaseWithProfile() {
     @Test
     fun `deliverTreatment when stop pressed returns success with the partial delivered amount`() = runBlocking {
         whenever(config.AAPSCLIENT).thenReturn(true)
-        whenever(rh.gs(UiStrings.virtualpump_resultok)).thenReturn("OK")
-        whenever(rh.gs(UiStrings.stop)).thenReturn("Stop")
+        whenever(rh.gs(CoreUiStrings.virtualpump_resultok)).thenReturn("OK")
+        whenever(rh.gs(CoreUiStrings.stop)).thenReturn("Stop")
         whenever(bolusProgressData.isStopPressed).thenReturn(true) // stop on the very first 0.1U increment
         givenRunningProfile(profileICfg)
         val info = DetailedBolusInfo().apply { insulin = 1.0 }
@@ -107,7 +107,7 @@ class VirtualPumpPluginTest : TestBaseWithProfile() {
     @Test
     fun `deliverTreatment full delivery records the full amount`() = runBlocking {
         whenever(config.AAPSCLIENT).thenReturn(true)
-        whenever(rh.gs(UiStrings.virtualpump_resultok)).thenReturn("OK")
+        whenever(rh.gs(CoreUiStrings.virtualpump_resultok)).thenReturn("OK")
         whenever(bolusProgressData.isStopPressed).thenReturn(false)
         givenRunningProfile(profileICfg)
         val info = DetailedBolusInfo().apply { insulin = 0.3 }
@@ -126,7 +126,7 @@ class VirtualPumpPluginTest : TestBaseWithProfile() {
     @Test
     fun `deliverTreatment records the bolus with the running profile's insulin`() = runBlocking {
         whenever(config.AAPSCLIENT).thenReturn(true)
-        whenever(rh.gs(UiStrings.virtualpump_resultok)).thenReturn("OK")
+        whenever(rh.gs(CoreUiStrings.virtualpump_resultok)).thenReturn("OK")
         whenever(bolusProgressData.isStopPressed).thenReturn(false)
         givenRunningProfile(profileICfg)
 
@@ -141,7 +141,7 @@ class VirtualPumpPluginTest : TestBaseWithProfile() {
     @Test
     fun `deliverTreatment with no running profile still delivers but stores nothing`() = runBlocking {
         whenever(config.AAPSCLIENT).thenReturn(true)
-        whenever(rh.gs(UiStrings.virtualpump_resultok)).thenReturn("OK")
+        whenever(rh.gs(CoreUiStrings.virtualpump_resultok)).thenReturn("OK")
         whenever(bolusProgressData.isStopPressed).thenReturn(false)
         givenNoRunningProfile()
 

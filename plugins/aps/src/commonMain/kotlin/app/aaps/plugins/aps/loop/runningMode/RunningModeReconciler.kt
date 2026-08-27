@@ -18,7 +18,7 @@ import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -147,7 +147,7 @@ class RunningModeReconciler @Inject constructor(
             val result = commandQueue.cancelTempBasal(enforceNew = true)
             if (!result.success) {
                 aapsLogger.warn(LTag.APS, "RunningModeReconciler: startup-drift cancelTbr failed: ${result.comment}")
-                rxBus.send(EventShowSnackbar(rh.gs(UiStrings.temp_basal_delivery_error), EventShowSnackbar.Type.Error))
+                rxBus.send(EventShowSnackbar(rh.gs(CoreUiStrings.temp_basal_delivery_error), EventShowSnackbar.Type.Error))
             }
         }
     }
@@ -187,7 +187,7 @@ class RunningModeReconciler @Inject constructor(
         val result = commandQueue.cancelTempBasal(enforceNew = true)
         if (!result.success) {
             aapsLogger.warn(LTag.APS, "RunningModeReconciler: cancelTbr failed: ${result.comment}")
-            rxBus.send(EventShowSnackbar(rh.gs(UiStrings.temp_basal_delivery_error), EventShowSnackbar.Type.Error))
+            rxBus.send(EventShowSnackbar(rh.gs(CoreUiStrings.temp_basal_delivery_error), EventShowSnackbar.Type.Error))
         }
     }
 
@@ -261,7 +261,7 @@ class RunningModeReconciler @Inject constructor(
                 }
                 if (!result.success) {
                     aapsLogger.warn(LTag.APS, "RunningModeReconciler: zero-TBR issue failed: ${result.comment}")
-                    rxBus.send(EventShowSnackbar(rh.gs(UiStrings.temp_basal_delivery_error), EventShowSnackbar.Type.Error))
+                    rxBus.send(EventShowSnackbar(rh.gs(CoreUiStrings.temp_basal_delivery_error), EventShowSnackbar.Type.Error))
                 }
             }
         }
