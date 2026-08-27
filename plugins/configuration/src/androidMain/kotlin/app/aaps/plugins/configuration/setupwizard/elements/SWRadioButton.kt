@@ -9,7 +9,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.ui.compose.preference.InlineStringListPreferenceItem
 import app.aaps.core.ui.compose.stringResource
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class SWRadioButton @Inject constructor(aapsLogger: AAPSLogger, rh: ResourceHelper, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck) : SWItem(aapsLogger, rh, rxBus, preferences, passwordCheck) {
 

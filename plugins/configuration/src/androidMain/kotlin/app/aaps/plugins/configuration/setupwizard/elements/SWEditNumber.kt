@@ -5,29 +5,29 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.keys.interfaces.IntPreferenceKey
+import app.aaps.core.keys.interfaces.DoublePreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.ui.compose.preference.AdaptiveIntPreferenceItem
-import javax.inject.Inject
+import app.aaps.core.ui.compose.preference.AdaptiveDoublePreferenceItem
+import dev.zacsweers.metro.Inject
 
-class SWEditIntNumber @Inject constructor(aapsLogger: AAPSLogger, rh: ResourceHelper, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck) : SWItem(aapsLogger, rh, rxBus, preferences, passwordCheck) {
+class SWEditNumber @Inject constructor(aapsLogger: AAPSLogger, rh: ResourceHelper, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck) : SWItem(aapsLogger, rh, rxBus, preferences, passwordCheck) {
 
     private var updateDelay = 0
 
-    fun preference(preference: IntPreferenceKey): SWEditIntNumber {
+    fun preference(preference: DoublePreferenceKey): SWEditNumber {
         this.preference = preference
         return this
     }
 
-    fun updateDelay(updateDelay: Int): SWEditIntNumber {
+    fun updateDelay(updateDelay: Int): SWEditNumber {
         this.updateDelay = updateDelay
         return this
     }
 
     @Composable
     override fun Compose() {
-        AdaptiveIntPreferenceItem(
-            intKey = preference as IntPreferenceKey,
+        AdaptiveDoublePreferenceItem(
+            doubleKey = preference as DoublePreferenceKey,
             title = label
         )
     }

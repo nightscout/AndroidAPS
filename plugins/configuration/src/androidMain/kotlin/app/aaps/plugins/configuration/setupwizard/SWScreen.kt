@@ -5,7 +5,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.plugins.configuration.setupwizard.elements.SWItem
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class SWScreen @Inject constructor(private val rh: ResourceHelper) {
 

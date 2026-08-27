@@ -14,7 +14,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.plugins.configuration.setupwizard.elements.SWItem
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.reflect.KClass
 
 class SWEventListener @Inject constructor(
