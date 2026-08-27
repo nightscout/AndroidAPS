@@ -107,5 +107,13 @@ kotlin {
                 migratedModules.forEach { api(project.dependencies.project(it)) }
             }
         }
+
+        // Runs on the simulator through :ios:shell:iosSimulatorArm64Test. These cover the same
+        // ground the on screen checks do, but a machine reads the result instead of a person.
+        iosTest {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
     }
 }

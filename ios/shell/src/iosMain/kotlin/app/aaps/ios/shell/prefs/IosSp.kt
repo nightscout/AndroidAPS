@@ -1,5 +1,6 @@
 package app.aaps.ios.shell.prefs
 
+import platform.Foundation.NSBundle
 import platform.Foundation.NSUserDefaults
 
 /**
@@ -27,19 +28,27 @@ import platform.Foundation.NSUserDefaults
  * that opens with sensible values and one that opens with zeros.
  */
 class IosSp(
+    /**
+     * The preference domain this store owns, by default the app's own.
+     *
+     * [getAll] and [clear] are scoped to it. Reading and writing single keys goes through
+     * [defaults] as usual, but those two need to know which keys are AAPS's, and
+     * `dictionaryRepresentation()` cannot tell them: it merges the app's keys with NSGlobalDomain
+     * and the system defaults. A `clear` built on it would walk that merged map and delete the
+     * device's own settings.
+     */
+    private val domain: String = NSBundle.mainBundle.bundleIdentifier ?: FALLBACK_DOMAIN,
     private val defaults: NSUserDefaults = NSUserDefaults.standardUserDefaults
 ) {
 
-    /** Every stored key and value, for export and for tests. */
+    /** Every key and value this app has stored. System owned keys are not included. */
     fun getAll(): Map<String, Any?> =
-        defaults.dictionaryRepresentation().entries.mapNotNull { (k, v) ->
+        defaults.persistentDomainForName(domain).orEmpty().entries.mapNotNull { (k, v) ->
             (k as? String)?.let { it to v }
         }.toMap()
 
     /** Removes only what AAPS wrote. Keys owned by the system stay. */
-    fun clear() {
-        getAll().keys.forEach { defaults.removeObjectForKey(it) }
-    }
+    fun clear() = defaults.removePersistentDomainForName(domain)
 
     fun contains(key: String): Boolean = defaults.objectForKey(key) != null
 
@@ -98,5 +107,11 @@ class IosSp(
         fun putLong(key: String, value: Long) = sp.putLong(key, value)
         fun putInt(key: String, value: Int) = sp.putInt(key, value)
         fun putString(key: String, value: String) = sp.putString(key, value)
+    }
+
+    companion object {
+
+        /** Used only if the bundle has no identifier, which should not happen in a real app. */
+        const val FALLBACK_DOMAIN: String = "app.aaps"
     }
 }
