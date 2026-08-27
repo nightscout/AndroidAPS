@@ -150,6 +150,7 @@ import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
 import app.aaps.plugins.sync.wear.WearPlugin
 import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
+import app.aaps.ui.activityMonitor.ActivityMonitor
 import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.workflow.WorkflowChainData
 import dev.zacsweers.metro.MembersInjector
@@ -393,6 +394,7 @@ class MetroGraphs @Inject constructor(
     val constraintsChecker: ConstraintsChecker get() = root.constraintsChecker
     val nsClientRepository: NSClientRepository get() = root.nsClientRepository
     val builtInSearchables: BuiltInSearchables get() = root.builtInSearchables
+    val activityMonitor: ActivityMonitor get() = root.activityMonitor
     val apsResult: APSResult get() = root.apsResult
     val pumpEnactResult: PumpEnactResult get() = root.pumpEnactResult
     val profileSwitchSilentGate: ProfileSwitchSilentGate get() = root.profileSwitchSilentGate

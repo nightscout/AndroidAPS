@@ -18,9 +18,9 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -74,8 +74,6 @@ class GraphViewModel @AssistedInject constructor(
     private val rh: ResourceHelper
 ) : ViewModel() {
 
-    // Stays on Dagger on purpose: ComposeMainActivity carries @AndroidEntryPoint and injects this
-    // factory, so Hilt must be able to generate it.
     @AssistedFactory
     interface Factory {
 
