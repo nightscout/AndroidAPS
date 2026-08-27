@@ -6,29 +6,30 @@ import app.aaps.core.data.model.TT
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.keys.interfaces.TextRef
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 
 /**
  * Exercises every branch of [TranslatorImpl]'s `translate` overloads by iterating each enum's
- * `.entries`. `rh.gs(id)` is stubbed to a fixed marker, so every mapped value returns it; this
+ * `.entries`. `rh.gs(ref)` is stubbed to a fixed marker, so every mapped value returns it; this
  * catches a missing/duplicate `when` branch and a wrong string-resource reference.
  */
 internal class TranslatorImplTest {
 
-    @Mock private lateinit var rh: ResourceHelper
+    @Mock private lateinit var rh: TextResolver
     private lateinit var sut: TranslatorImpl
 
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        whenever(rh.gs(anyInt())).thenReturn("x")
+        whenever(rh.gs(any<TextRef>())).thenReturn("x")
         sut = TranslatorImpl(rh)
     }
 

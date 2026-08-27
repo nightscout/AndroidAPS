@@ -5,18 +5,18 @@ import app.aaps.core.data.model.SceneEndAction
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.scenes.SceneAutomationResult
-import app.aaps.core.ui.R
+import app.aaps.core.ui.UiStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
 
 // Metro builds this; Dagger receives it via a @Provides delegate in `:app`. Metro's @SingleIn,
 // not javax @Singleton, because the graph is generated in `:app`.
@@ -28,7 +28,7 @@ class SceneAutomationApiImpl @Inject constructor(
     private val activeSceneManager: ActiveSceneManager,
     private val sceneChainTargetResolver: SceneChainTargetResolver,
     private val notificationManager: NotificationManager,
-    private val rh: ResourceHelper
+    private val rh: TextResolver
 ) : SceneAutomationApi {
 
     override val scenesFlow: StateFlow<String> get() = sceneRepository.scenesFlow
@@ -72,8 +72,8 @@ class SceneAutomationApiImpl @Inject constructor(
     }
 
     override suspend fun prepareScene(id: String, durationMinutes: Int?): WizardBolusExecutor.PrepareResult {
-        val scene = sceneRepository.getScene(id) ?: return WizardBolusExecutor.PrepareResult.Error(rh.gs(R.string.clientcontrol_fail_scene_not_found))
-        if (!scene.isEnabled) return WizardBolusExecutor.PrepareResult.Error(rh.gs(R.string.clientcontrol_fail_scene_disabled))
+        val scene = sceneRepository.getScene(id) ?: return WizardBolusExecutor.PrepareResult.Error(rh.gs(UiStrings.clientcontrol_fail_scene_not_found))
+        if (!scene.isEnabled) return WizardBolusExecutor.PrepareResult.Error(rh.gs(UiStrings.clientcontrol_fail_scene_disabled))
         return sceneExecutor.prepareScene(scene, durationMinutes)
     }
 
@@ -114,15 +114,18 @@ class SceneAutomationApiImpl @Inject constructor(
         // Chain-completion notification — posted here so it fires identically whether the chain was
         // triggered from the End-Scene dialog or a client's scene.stop(triggerChain) command.
         if (result is SceneAutomationResult.ChainCompleted) {
-            if (result.failedCount == 0 && result.endedSceneName != null)
+            // Read into a local: the format arguments are non-null now, and a public property of
+            // another module cannot be smart cast.
+            val endedSceneName = result.endedSceneName
+            if (result.failedCount == 0 && endedSceneName != null)
                 notificationManager.post(
                     id = NotificationId.SCENE_CHAINED,
-                    text = rh.gs(R.string.scene_chained_format, result.endedSceneName, result.targetSceneName)
+                    text = rh.gs(UiStrings.scene_chained_format, endedSceneName, result.targetSceneName)
                 )
             else if (result.failedCount > 0)
                 notificationManager.post(
                     id = NotificationId.SCENE_CHAIN_ERROR,
-                    text = rh.gs(R.string.scene_chain_error_summary, result.endedSceneName ?: "", result.targetSceneName, result.failedCount, result.totalCount)
+                    text = rh.gs(UiStrings.scene_chain_error_summary, endedSceneName ?: "", result.targetSceneName, result.failedCount, result.totalCount)
                 )
         }
         return result

@@ -5,13 +5,12 @@ import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.utils.DateUtil
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -20,7 +19,7 @@ import kotlinx.coroutines.launch
 class UserEntryLoggerImpl @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil,
-    @ApplicationScope private val appScope: CoroutineScope
+    private val appScope: CoroutineScope
 ) : UserEntryLogger {
 
     override fun log(action: Action, source: Sources, note: String?, timestamp: Long, listValues: List<ValueWithUnit>) {

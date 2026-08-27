@@ -22,7 +22,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
@@ -30,15 +30,16 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.convertedToPercent
-import app.aaps.core.ui.R
+import app.aaps.core.ui.UiStrings
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import kotlin.math.abs
+import kotlin.math.max
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesBinding
-import javax.inject.Inject
-import kotlin.math.abs
-import kotlin.math.max
+import kotlin.time.Clock
 
 // Deliberately NOT @SingleIn: the @Binds this replaces had no scope. It is a result object, built
 // fresh for each call and handed back to the caller.
@@ -51,7 +52,7 @@ class DetermineBasalResult @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val processedTbrEbData: ProcessedTbrEbData,
     private val profileFunction: ProfileFunction,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val decimalFormatter: DecimalFormatter,
     private val dateUtil: DateUtil,
     private val apsResultProvider: () -> APSResult,
@@ -120,16 +121,16 @@ class DetermineBasalResult @Inject constructor(
     }
 
     override val carbsRequiredText: String
-        get() = rh.gs(R.string.carbsreq, carbsReq, carbsReqWithin)
+        get() = rh.gs(UiStrings.carbsreq, carbsReq, carbsReqWithin)
 
     override suspend fun resultAsString(): String {
         val pump = activePlugin.activePump
         if (isChangeRequested()) {
             // rate
-            var ret: String = if (rate == 0.0 && duration == 0) "${rh.gs(R.string.cancel_temp)} "
-            else if (rate == -1.0) "${rh.gs(R.string.let_temp_basal_run)}\n"
-            else if (usePercent) "${rh.gs(R.string.percent_rate_duration, percent.toDouble(), percent * ch.fromPump(pump.baseBasalRate) / 100.0, duration)} "
-            else "${rh.gs(R.string.rate_percent_duration, rate, rate / ch.fromPump(pump.baseBasalRate) * 100.0, duration)} "
+            var ret: String = if (rate == 0.0 && duration == 0) "${rh.gs(UiStrings.cancel_temp)} "
+            else if (rate == -1.0) "${rh.gs(UiStrings.let_temp_basal_run)}\n"
+            else if (usePercent) "${rh.gs(UiStrings.percent_rate_duration, percent.toDouble(), percent * ch.fromPump(pump.baseBasalRate) / 100.0, duration)} "
+            else "${rh.gs(UiStrings.rate_percent_duration, rate, rate / ch.fromPump(pump.baseBasalRate) * 100.0, duration)} "
 
             // smb
             if (smb != 0.0) ret += "SMB: ${decimalFormatter.toPumpSupportedBolus(smb, activePlugin.activePump.pumpDescription.bolusStep)} "
@@ -138,12 +139,12 @@ class DetermineBasalResult @Inject constructor(
             }
 
             // reason
-            ret += rh.gs(R.string.reason) + ": " + reason
+            ret += rh.gs(UiStrings.reason) + ": " + reason
             return ret
         }
         return if (isCarbsRequired) {
             carbsRequiredText
-        } else rh.gs(R.string.nochangerequested)
+        } else rh.gs(UiStrings.nochangerequested)
     }
 
     override fun newAndClone(): APSResult = apsResultProvider().with(result)
@@ -300,7 +301,7 @@ class DetermineBasalResult @Inject constructor(
             aapsLogger.debug(LTag.APS, "FALSE: No request")
             return false
         }
-        val now = System.currentTimeMillis()
+        val now = Clock.System.now().toEpochMilliseconds()
         val activeTemp = processedTbrEbData.getTempBasalIncludingConvertedExtended(now)
         val pump = activePlugin.activePump
         val profile = profileFunction.getProfile()

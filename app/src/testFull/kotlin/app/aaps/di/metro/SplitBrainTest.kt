@@ -74,8 +74,6 @@ class SplitBrainTest {
      * which turned out to be the pair that made autotune read data it had never populated.
      */
     private val STATELESS = listOf(
-        // Branches on config and forwards to the dispatcher. No fields.
-        "app.aaps.implementation.bolus.RoleBranch",
         // Encrypts and decrypts what it is handed; every var in it is a local.
         "app.aaps.implementation.maintenance.formats.EncryptedPrefsFormat",
         // Builds upload payloads from its arguments. No fields.
