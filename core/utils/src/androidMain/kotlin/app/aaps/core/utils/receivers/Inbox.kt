@@ -5,8 +5,6 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.ListenableWorker
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Type-safe slot for queue-and-drain delivery of payloads to a worker.
@@ -40,8 +38,8 @@ abstract class Inbox<T : Any>(
  * with no drainer is the only way to leak, and that is a wiring bug caught the
  * first time a developer notices a missing-data symptom.
  */
-@Singleton
-class DataInbox @Inject constructor(
+
+class DataInbox(
     private val context: Context
 ) {
 
