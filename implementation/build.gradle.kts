@@ -1,4 +1,5 @@
 plugins {
+    id("kmp-test-defaults")
     kotlin("multiplatform")
     // NOT com.android.library. AGP 9 refuses that plugin together with the multiplatform plugin.
     // Same reason as :core:ui, :core:interfaces and the other multiplatform modules.
@@ -27,6 +28,23 @@ metro {
 
 allOpen {
     annotation("app.aaps.annotations.OpenForTesting")
+}
+
+// One task, not one per variant: a multiplatform module has no product flavours. Same generator as
+// :core:keys, :core:ui and :core:interfaces, pointed at this module's strings. It lets the classes here
+// name their user text instead of numbering it, which is what a commonMain class needs. The strings
+// themselves do not move, and AAPT keeps resolving them on Android exactly as before.
+val generateImplementationStrings = tasks.register<GenerateKeyStringsTask>("generateImplementationStrings") {
+    resDir.set(layout.projectDirectory.dir("src/androidMain/res"))
+    packageName.set("app.aaps.implementation")
+    owner.set("implementation")
+    objectName.set("ImplementationStrings")
+    idsObjectName.set("ImplementationStringIds")
+    reportFile.set(layout.buildDirectory.file("reports/implementationStrings/translations.txt"))
+    // Set explicitly: addGeneratedSourceDirectory only applies a convention derived from the task name,
+    // so both properties would land on one directory and the second file written would delete the first.
+    commonOutputDir.set(layout.buildDirectory.dir("generated/implementationStrings/common"))
+    androidOutputDir.set(layout.buildDirectory.dir("generated/implementationStrings/android"))
 }
 
 kotlin {
@@ -65,6 +83,7 @@ kotlin {
     // TextResolver and a TextRef instead, the same move :core:keys already made.
     sourceSets {
         commonMain {
+            kotlin.srcDir(generateImplementationStrings.flatMap { it.commonOutputDir })
             dependencies {
                 implementation(project(":core:data"))
                 implementation(project(":core:interfaces"))
@@ -76,6 +95,8 @@ kotlin {
         }
 
         androidMain {
+            // Android only: the string name to R.string id map.
+            kotlin.srcDir(generateImplementationStrings.flatMap { it.androidOutputDir })
             dependencies {
                 implementation(project(":core:data"))
                 implementation(project(":core:interfaces"))
@@ -134,7 +155,8 @@ kotlin {
 }
 
 tasks.withType<Test> {
-    useJUnitPlatform()
+    // useJUnitPlatform() and the heap cap come from kmp-test-defaults; only the JaCoCo part is
+    // specific to this module.
     // Robolectric runs tests in its own classloader sandbox and rewrites bytecode, so the default
     // JaCoCo on-the-fly agent records no coverage for the classes those tests exercise. Restated
     // from jacoco-module-dependencies, which applies com.android.library.

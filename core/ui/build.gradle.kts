@@ -1,6 +1,7 @@
 import kotlin.math.min
 
 plugins {
+    id("kmp-test-defaults")
     kotlin("multiplatform")
     // NOT com.android.library. AGP 9 refuses that plugin together with the multiplatform plugin.
     // Same reason as :core:keys, :core:data, :core:utils and :core:interfaces.
@@ -150,7 +151,8 @@ kotlin {
 }
 
 tasks.withType<Test> {
-    useJUnitPlatform()
+    // useJUnitPlatform() and the heap cap come from kmp-test-defaults; only the JaCoCo part is
+    // specific to this module.
     // Robolectric runs tests in its own classloader sandbox and rewrites bytecode, so the default
     // JaCoCo on-the-fly agent records no coverage for the classes those tests exercise - here that is
     // every Compose screen the UI tests drive. Restated from jacoco-module-dependencies, which applies

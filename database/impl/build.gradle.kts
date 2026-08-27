@@ -1,4 +1,5 @@
 plugins {
+    id("kmp-test-defaults")
     kotlin("multiplatform")
     // NOT com.android.library. AGP 9 refuses that plugin together with the multiplatform plugin.
     alias(libs.plugins.android.kmp.library)
@@ -107,8 +108,4 @@ kotlin {
 
 dependencies {
     add("kspAndroid", libs.androidx.room.compiler)
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
 }

@@ -1,4 +1,5 @@
 plugins {
+    id("kmp-test-defaults")
     kotlin("multiplatform")
 }
 
@@ -51,8 +52,4 @@ kotlin {
             }
         }
     }
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
 }
