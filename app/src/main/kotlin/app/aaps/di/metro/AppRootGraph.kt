@@ -42,6 +42,7 @@ import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.notifications.NotificationHolder
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
@@ -350,6 +351,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
 
     /** The one application scope. Metro owns it; Dagger consumers get this same instance. */
     @ApplicationScope val appScope: CoroutineScope
+    val notificationManager: NotificationManager
     val apsResult: APSResult
     val pumpEnactResult: PumpEnactResult
     val profileSwitchSilentGate: ProfileSwitchSilentGate

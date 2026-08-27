@@ -39,6 +39,7 @@ import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.notifications.NotificationHolder
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
@@ -408,6 +409,7 @@ class MetroGraphs @Inject constructor(
     val builtInSearchables: BuiltInSearchables get() = root.builtInSearchables
     val activityMonitor: ActivityMonitor get() = root.activityMonitor
     val appScope: CoroutineScope get() = root.appScope
+    val notificationManager: NotificationManager get() = root.notificationManager
     val apsResult: APSResult get() = root.apsResult
     val pumpEnactResult: PumpEnactResult get() = root.pumpEnactResult
     val profileSwitchSilentGate: ProfileSwitchSilentGate get() = root.profileSwitchSilentGate

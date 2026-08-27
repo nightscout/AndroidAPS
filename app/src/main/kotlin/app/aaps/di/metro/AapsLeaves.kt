@@ -98,7 +98,6 @@ class AapsLeaves(
     // Dagger owns this one; LoopPlugin needs it and Metro builds LoopPlugin now.
     // The activities this app injects need these; all three are Dagger @Binds in their own modules.
     private val rhProvider: Provider<ResourceHelper>,
-    private val notificationManagerProvider: Provider<NotificationManager>,
     // Needed by the feature extensions below the root, which no longer carry their own leaf lists.
     // Source plugins, still built by Dagger. They live here rather than in their own module because a
     // graph extension is generated in the parent's module, so Metro cannot read a container from the
@@ -148,7 +147,6 @@ class AapsLeaves(
 
     /** `ResourceHelper` is the Android implementation of the multiplatform [TextResolver]. */
     @Provides fun textResolver(rh: ResourceHelper): TextResolver = rh
-    @Provides fun notificationManager(): NotificationManager = notificationManagerProvider.get()
 
 
     @Provides fun uiInteraction(): UiInteraction = uiInteractionProvider.get()

@@ -361,6 +361,8 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideBuiltInSearchables(graphs: MetroGraphs): BuiltInSearchables = graphs.builtInSearchables
     // Same for MainApp, which still field-injects ActivityMonitor through Hilt.
     @Provides @Singleton fun provideActivityMonitor(graphs: MetroGraphs): ActivityMonitor = graphs.activityMonitor
+    // Metro owns the notification registry now (CommonNotificationManager + the Android platform).
+    @Provides @Singleton fun provideNotificationManager(graphs: MetroGraphs): NotificationManager = graphs.notificationManager
     // Metro owns the application scope now; this hands the same instance to Dagger consumers.
     @Provides @Singleton @ApplicationScope fun provideAppScope(graphs: MetroGraphs): CoroutineScope = graphs.appScope
     // Unscoped on purpose - result objects, one per call, as the @Binds they replace were.
@@ -533,7 +535,6 @@ class CoreObjectsModule {
         configProvider: Provider<Config>,
         databaseConfigProvider: Provider<DatabaseConfig>,
         rhProvider: Provider<ResourceHelper>,
-        notificationManagerProvider: Provider<NotificationManager>,
         uiInteractionProvider: Provider<UiInteraction>,
         historyScopeProvider: Provider<HistoryScope>,
     ): AapsLeaves = AapsLeaves(
@@ -542,7 +543,6 @@ class CoreObjectsModule {
         configProvider,
         databaseConfigProvider,
         rhProvider,
-        notificationManagerProvider,
         uiInteractionProvider,
         historyScopeProvider,
     )
