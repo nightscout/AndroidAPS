@@ -39,12 +39,12 @@ import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.compose.icons.IcPluginAutotune
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.elements.WeekDay
-import app.aaps.core.utils.JsonHelper.safeGetBoolean
-import app.aaps.core.utils.JsonHelper.safeGetDouble
-import app.aaps.core.utils.JsonHelper.safeGetInt
-import app.aaps.core.utils.JsonHelper.safeGetJSONObject
-import app.aaps.core.utils.JsonHelper.safeGetLong
-import app.aaps.core.utils.JsonHelper.safeGetString
+import app.aaps.core.utils.safeGetBoolean
+import app.aaps.core.utils.safeGetDouble
+import app.aaps.core.utils.safeGetInt
+import app.aaps.core.utils.safeGetJSONObject
+import app.aaps.core.utils.safeGetLong
+import app.aaps.core.utils.safeGetString
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.autotune.compose.AutotuneComposeContent
 import app.aaps.plugins.aps.autotune.data.ATProfile
@@ -54,6 +54,7 @@ import app.aaps.plugins.aps.autotune.keys.AutotuneStringKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.IntKey as MetroIntKey
 import dev.zacsweers.metro.binding
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
@@ -66,7 +67,6 @@ import java.util.TimeZone
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
-import dev.zacsweers.metro.IntKey as MetroIntKey
 
 /*
  * adaptation from oref0 autotune developed by philoul on 2022 (complete refactoring of AutotunePlugin initialised by Rumen Georgiev on 1/29/2018.)

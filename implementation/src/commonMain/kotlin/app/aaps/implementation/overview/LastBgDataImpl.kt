@@ -12,7 +12,7 @@ import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.fromGv
 import app.aaps.core.objects.extensions.valueToUnits
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -46,9 +46,9 @@ class LastBgDataImpl @Inject constructor(
 
     override fun lastBgDescription(): String =
         when {
-            isLow()  -> rh.gs(UiStrings.a11y_low)
-            isHigh() -> rh.gs(UiStrings.a11y_high)
-            else     -> rh.gs(UiStrings.a11y_inrange)
+            isLow()  -> rh.gs(CoreUiStrings.a11y_low)
+            isHigh() -> rh.gs(CoreUiStrings.a11y_high)
+            else     -> rh.gs(CoreUiStrings.a11y_inrange)
         }
 
     override fun isActualBg(): Boolean =

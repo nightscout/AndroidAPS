@@ -7,7 +7,7 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.TextResolver
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 
 class CommandCancelExtendedBolus(
     private val aapsLogger: AAPSLogger,
@@ -24,7 +24,7 @@ class CommandCancelExtendedBolus(
             aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${it.success} enacted: ${it.enacted}")
         }
 
-    override fun status(): String = rh.gs(UiStrings.uel_cancel_extended_bolus)
+    override fun status(): String = rh.gs(CoreUiStrings.uel_cancel_extended_bolus)
 
     override fun log(): String = "CANCEL EXTENDEDBOLUS"
 }

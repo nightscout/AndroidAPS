@@ -4,8 +4,8 @@ import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import javax.inject.Inject
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)

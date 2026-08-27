@@ -55,15 +55,6 @@ object SyncPluginsBindings {
     @IntKey(300)
     fun smsCommunicatorPlugin(plugin: SmsCommunicatorPlugin): PluginBase = plugin
 
-    /**
-     * The same plugin under its interface, mirroring the `@Binds` in `SyncModule` that Dagger consumers
-     * still use. Both resolve through the `smsCommunicatorPlugin` leaf, so the two frameworks hand out
-     * the one object Dagger built - there is no second SmsCommunicator.
-     */
-    @Provides
-    @SingleIn(AppScope::class)
-    fun smsCommunicator(plugin: SmsCommunicatorPlugin): SmsCommunicator = plugin
-
     @Provides
     @SingleIn(AppScope::class)
     @IntoMap

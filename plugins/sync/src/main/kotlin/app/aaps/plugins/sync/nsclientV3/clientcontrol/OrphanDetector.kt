@@ -14,14 +14,15 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.nssdk.localmodel.configuration.NSRunningConfiguration
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.OrphanDetector.Companion.POST_PAIRING_GRACE_MS
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Client-side detector for "this device's pairing has been revoked or master was wiped."
@@ -45,7 +46,7 @@ import javax.inject.Singleton
  * **Coverage gap by design:** an uninstalled / dead master never republishes, so this detector
  * cannot signal that case. A liveness mechanism would be needed; deferred per Phase-2 scope.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class OrphanDetector @Inject constructor(
     private val pairingRepository: ClientPairingRepository,
     private val preferences: Preferences,

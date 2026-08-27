@@ -6,11 +6,14 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.MetroAppCompatActivity
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
 import app.aaps.plugins.sync.tidepool.events.EventTidepoolStatus
 import app.aaps.plugins.sync.tidepool.keys.TidepoolStringNonKey
 import app.aaps.plugins.sync.tidepool.messages.AuthReplyMessage
-import app.aaps.core.ui.compose.MetroAppCompatActivity
+import dev.zacsweers.metro.Inject
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -19,9 +22,6 @@ import net.openid.appauth.AppAuthConfiguration
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationResponse
 import org.json.JSONObject
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import javax.inject.Inject
 
 /**
  *

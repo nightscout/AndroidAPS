@@ -29,6 +29,7 @@ import app.aaps.core.nssdk.localmodel.treatment.CreateUpdateResponse
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.services.RunningConfigurationPublisher
 import com.google.common.truth.Truth.assertThat
+import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -53,7 +54,6 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import javax.inject.Provider
 
 /**
  * End-to-end **uplink** (client → master) integration test for the generic bidirectional sync channel

@@ -9,12 +9,12 @@ internal class DelegatedStepsCountDao(
     private val dao: StepsCountDao
 ) : DelegatedDao(changes), StepsCountDao by dao {
 
-    override fun insertNewEntry(entry: StepsCount): Long {
+    override suspend fun insertNewEntry(entry: StepsCount): Long {
         changes.add(entry)
         return dao.insertNewEntry(entry)
     }
 
-    override fun updateExistingEntry(entry: StepsCount): Long {
+    override suspend fun updateExistingEntry(entry: StepsCount): Long {
         changes.add(entry)
         return dao.updateExistingEntry(entry)
     }

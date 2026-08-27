@@ -14,10 +14,10 @@ import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.ui.R
 import app.aaps.ui.widget.glance.WidgetDependencies
 import app.aaps.ui.widget.glance.resolveClientColor
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * Classic [AppWidgetProvider] using RemoteViews/XML — not Glance — so vendor

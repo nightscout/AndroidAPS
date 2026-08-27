@@ -8,18 +8,18 @@ import kotlin.time.Clock
 
 internal interface TraceableDao<T : TraceableDBEntry> : TraceableDaoWorkaround<T> {
 
-    fun findById(id: Long): T?
+    suspend fun findById(id: Long): T?
 
-    fun deleteAllEntries()
+    suspend fun deleteAllEntries()
 
-    fun deleteOlderThan(than: Long): Int
-    fun deleteTrackedChanges(): Int
+    suspend fun deleteOlderThan(than: Long): Int
+    suspend fun deleteTrackedChanges(): Int
 
     @Insert
-    fun insert(entry: T): Long
+    suspend fun insert(entry: T): Long
 
     @Update
-    fun update(entry: T)
+    suspend fun update(entry: T)
 }
 
 /**
@@ -27,7 +27,7 @@ internal interface TraceableDao<T : TraceableDBEntry> : TraceableDaoWorkaround<T
  * @return The ID of the newly generated entry
  */
 //@Transaction
-internal fun <T : TraceableDBEntry> TraceableDao<T>.insertNewEntryImpl(entry: T): Long {
+internal suspend fun <T : TraceableDBEntry> TraceableDao<T>.insertNewEntryImpl(entry: T): Long {
     if (entry.id != 0L) throw IllegalArgumentException("ID must be 0.")
     if (entry.version != 0) throw IllegalArgumentException("Version must be 0.")
     if (entry.referenceId != null) throw IllegalArgumentException("Reference ID must be null.")
@@ -44,7 +44,7 @@ internal fun <T : TraceableDBEntry> TraceableDao<T>.insertNewEntryImpl(entry: T)
  * @return The ID of the newly generated HISTORIC entry
  */
 //@Transaction
-internal fun <T : TraceableDBEntry> TraceableDao<T>.updateExistingEntryImpl(entry: T): Long {
+internal suspend fun <T : TraceableDBEntry> TraceableDao<T>.updateExistingEntryImpl(entry: T): Long {
     if (entry.id == 0L) throw IllegalArgumentException("ID must not be 0.")
     if (entry.referenceId != null) throw IllegalArgumentException("Reference ID must be null.")
     if (!entry.foreignKeysValid) throw IllegalArgumentException("One or more foreign keys are invalid (e.g. 0 value).")

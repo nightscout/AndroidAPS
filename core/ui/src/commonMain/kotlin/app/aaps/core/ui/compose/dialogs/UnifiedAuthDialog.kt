@@ -30,7 +30,7 @@ import app.aaps.core.interfaces.protection.AuthorizationResult
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.protection.ProtectionType
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.stringResource
 
 /**
@@ -57,9 +57,9 @@ fun UnifiedAuthDialog(
 
     // Pick hint: master password is always accepted, plus any custom credentials
     val hintRes = when {
-        hasPin -> UiStrings.auth_hint_master_or_pin
-        hasCustomPassword -> UiStrings.auth_hint_master_or_password
-        else -> UiStrings.auth_hint_master_password
+        hasPin -> CoreUiStrings.auth_hint_master_or_pin
+        hasCustomPassword -> CoreUiStrings.auth_hint_master_or_password
+        else -> CoreUiStrings.auth_hint_master_password
     }
 
     var passwordText by remember { mutableStateOf("") }
@@ -95,7 +95,7 @@ fun UnifiedAuthDialog(
         },
         title = {
             Text(
-                text = stringResource(UiStrings.biometric_title),
+                text = stringResource(CoreUiStrings.biometric_title),
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
@@ -134,12 +134,12 @@ fun UnifiedAuthDialog(
                     tryAuthenticate(passwordText)
                 }
             ) {
-                Text(stringResource(UiStrings.ok))
+                Text(stringResource(CoreUiStrings.ok))
             }
         },
         dismissButton = {
             TextButton(onClick = { onResult(AuthorizationResult(null, ProtectionResult.CANCELLED)) }) {
-                Text(stringResource(UiStrings.cancel))
+                Text(stringResource(CoreUiStrings.cancel))
             }
         },
         properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)

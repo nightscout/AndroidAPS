@@ -25,6 +25,7 @@ import app.aaps.core.objects.extensions.toPureProfile
 import app.aaps.core.objects.profile.ProfileSealed
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,7 +37,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.math.RoundingMode
-import javax.inject.Inject
 
 data class TimeValue(
     val timeSeconds: Int,

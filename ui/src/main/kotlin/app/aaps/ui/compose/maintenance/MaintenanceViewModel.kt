@@ -32,6 +32,7 @@ import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.Dispatchers
@@ -42,7 +43,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 import app.aaps.core.ui.R as CoreUiR
 
 sealed interface MaintenanceEvent {

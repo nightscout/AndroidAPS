@@ -2,6 +2,9 @@ package app.aaps.ui.search
 
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.ui.search.SearchableItem
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl.Companion.toHttpUrl
@@ -9,8 +12,6 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Result of a wiki search operation.
@@ -26,7 +27,7 @@ sealed class WikiSearchResult {
  * Uses the RTD Search API v3 to query the wiki and returns results
  * as [SearchIndexEntry] items with [SearchCategory.WIKI].
  */
-@Singleton
+@SingleIn(AppScope::class)
 class WikiSearchRepository @Inject constructor(
     private val receiverStatusStore: ReceiverStatusStore
 ) {

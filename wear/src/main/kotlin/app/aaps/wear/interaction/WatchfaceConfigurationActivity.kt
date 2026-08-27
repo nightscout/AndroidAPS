@@ -13,13 +13,14 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceGroup
 import androidx.preference.PreferenceManager
 import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUpdateRequester
+import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.wear.R
 import app.aaps.wear.complications.BgGraphComplication
 import app.aaps.wear.preference.WearPreferenceActivity
 import app.aaps.wear.watchfaces.utils.WatchfaceViewAdapter.Companion.SelectedWatchFace
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -32,7 +33,7 @@ class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferenc
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Inject dependencies first
-        dagger.android.AndroidInjection.inject(this)
+        injectMetroMembers(this)
 
         // MUST set preferenceFile BEFORE calling super.onCreate() because super creates the fragment
         val requestedWatchFace = intent.getIntExtra(getString(R.string.key_selected_watchface), -1)

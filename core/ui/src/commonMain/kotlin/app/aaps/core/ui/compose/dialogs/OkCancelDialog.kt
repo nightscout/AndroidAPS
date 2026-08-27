@@ -19,7 +19,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.htmlToAnnotatedString
 import app.aaps.core.ui.compose.stringResource
 
@@ -91,12 +91,12 @@ fun OkCancelDialog(
         },
         confirmButton = {
             TextButton(onClick = onConfirm) {
-                Text(stringResource(UiStrings.ok))
+                Text(stringResource(CoreUiStrings.ok))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(UiStrings.cancel))
+                Text(stringResource(CoreUiStrings.cancel))
             }
         },
         properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = false)
@@ -161,12 +161,12 @@ fun OkCancelDialog(
         },
         confirmButton = {
             TextButton(onClick = onConfirm) {
-                Text(stringResource(UiStrings.ok))
+                Text(stringResource(CoreUiStrings.ok))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(UiStrings.cancel))
+                Text(stringResource(CoreUiStrings.cancel))
             }
         },
         properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = false)

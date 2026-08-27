@@ -40,7 +40,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.stringResource
 
 /**
@@ -123,9 +123,9 @@ fun <T> TextFieldPreference(
             title = title,
             buttons = {
                 TextButton(onClick = { openDialog = false }) {
-                    Text(text = stringResource(UiStrings.cancel))
+                    Text(text = stringResource(CoreUiStrings.cancel))
                 }
-                TextButton(onClick = onOk) { Text(text = stringResource(UiStrings.ok)) }
+                TextButton(onClick = onOk) { Text(text = stringResource(CoreUiStrings.ok)) }
             },
         ) {
             val focusRequester = remember { FocusRequester() }

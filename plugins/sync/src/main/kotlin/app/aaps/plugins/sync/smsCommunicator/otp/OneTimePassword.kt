@@ -9,15 +9,16 @@ import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import com.eatthepath.otp.HmacOneTimePasswordGenerator
 import com.google.common.io.BaseEncoding
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import java.net.URLEncoder
 import java.util.Locale
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.SecretKeySpec
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@SingleIn(AppScope::class)
 class OneTimePassword @Inject constructor(
     private val preferences: Preferences,
     private val rh: ResourceHelper,
@@ -28,9 +29,17 @@ class OneTimePassword @Inject constructor(
     private var pin: String = ""
     private val totp = HmacOneTimePasswordGenerator()
 
-    init {
-        configure()
-    }
+    /**
+     * Runs [configure] once, on first use rather than at construction.
+     *
+     * This was an `init` block. That was harmless while Dagger owned `SmsCommunicatorPlugin` and this
+     * class was never built in a unit test, but [configure] **generates and persists an OTP secret** -
+     * building the object graph must not do that. Metro constructs the plugin now, so an `init` here
+     * ran `Base64.encodeToString` on a plain JVM, got null back and failed every graph test.
+     *
+     * [checkOTP] still calls [configure] directly, because it must re-read the PIN each time.
+     */
+    private val configured: Unit by lazy { configure() }
 
     /**
      * Name of master device (target of OTP)
@@ -112,7 +121,7 @@ class OneTimePassword @Inject constructor(
      * Return URI used to provision Authenticator apps
      */
     fun provisioningURI(): String? =
-        key?.let {
+        configured.let { key }?.let {
             "otpauth://totp/AndroidAPS:" + URLEncoder.encode(name(), "utf-8").replace("+", "%20") + "?secret=" + BaseEncoding.base32().encode(it.encoded).replace("=", "") + "&issuer=AndroidAPS"
         }
 
@@ -120,6 +129,6 @@ class OneTimePassword @Inject constructor(
      * Return secret used to provision Authenticator apps, in Base32 format
      */
     fun provisioningSecret(): String? =
-        key?.let { BaseEncoding.base32().encode(it.encoded).replace("=", "") }
+        configured.let { key }?.let { BaseEncoding.base32().encode(it.encoded).replace("=", "") }
 
 }

@@ -30,7 +30,7 @@ class ProfileStoreObjectTest : TestBase() {
     @Mock lateinit var dateUtil: DateUtil
 
     private fun store(json: String): ProfileStore =
-        ProfileStoreObject(aapsLogger, activePlugin, config, rh, notificationManager, hardLimits, dateUtil)
+        ProfileStoreObject(aapsLogger, activePlugin, rh, hardLimits, dateUtil)
             .with(Json.parseToJsonElement(json).jsonObject)
 
     @Test

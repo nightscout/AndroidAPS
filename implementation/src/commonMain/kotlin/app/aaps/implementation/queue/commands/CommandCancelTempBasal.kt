@@ -9,7 +9,7 @@ import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 
 class CommandCancelTempBasal(
     private val aapsLogger: AAPSLogger,
@@ -51,7 +51,7 @@ class CommandCancelTempBasal(
         return r
     }
 
-    override fun status(): String = rh.gs(UiStrings.uel_accepts_temp_basal)
+    override fun status(): String = rh.gs(CoreUiStrings.uel_accepts_temp_basal)
 
     override fun log(): String = "CANCEL TEMPBASAL"
 }

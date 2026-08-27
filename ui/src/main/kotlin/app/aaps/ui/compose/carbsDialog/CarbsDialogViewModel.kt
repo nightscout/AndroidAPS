@@ -33,6 +33,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.clientcontrol.failText
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.CoroutineScope
@@ -45,7 +46,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 import kotlin.math.max
 
 // Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately

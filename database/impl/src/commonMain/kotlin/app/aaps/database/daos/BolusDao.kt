@@ -10,16 +10,16 @@ import app.aaps.database.entities.embedments.InterfaceIDs
 internal interface BolusDao : TraceableDao<Bolus> {
 
     @Query("SELECT * FROM $TABLE_BOLUSES WHERE id = :id")
-    override fun findById(id: Long): Bolus?
+    override suspend fun findById(id: Long): Bolus?
 
     @Query("DELETE FROM $TABLE_BOLUSES")
-    override fun deleteAllEntries()
+    override suspend fun deleteAllEntries()
 
     @Query("DELETE FROM $TABLE_BOLUSES WHERE timestamp < :than")
-    override fun deleteOlderThan(than: Long): Int
+    override suspend fun deleteOlderThan(than: Long): Int
 
     @Query("DELETE FROM $TABLE_BOLUSES WHERE referenceId IS NOT NULL")
-    override fun deleteTrackedChanges(): Int
+    override suspend fun deleteTrackedChanges(): Int
 
     @Query("SELECT id FROM $TABLE_BOLUSES ORDER BY id DESC limit 1")
     suspend fun getLastId(): Long?

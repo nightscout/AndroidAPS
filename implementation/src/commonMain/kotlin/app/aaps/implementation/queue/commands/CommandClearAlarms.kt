@@ -8,7 +8,7 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.TextResolver
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 
 class CommandClearAlarms(
     private val aapsLogger: AAPSLogger,
@@ -31,7 +31,7 @@ class CommandClearAlarms(
         }
     }
 
-    override fun status(): String = rh.gs(UiStrings.clear_alarms)
+    override fun status(): String = rh.gs(CoreUiStrings.clear_alarms)
 
     override fun log(): String = "CLEAR ALARMS"
 }

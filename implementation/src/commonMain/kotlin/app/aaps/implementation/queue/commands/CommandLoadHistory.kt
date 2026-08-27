@@ -9,7 +9,7 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.TextResolver
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 
 class CommandLoadHistory(
     private val aapsLogger: AAPSLogger,
@@ -33,7 +33,7 @@ class CommandLoadHistory(
         return result
     }
 
-    override fun status(): String = rh.gs(UiStrings.load_history, type.toInt())
+    override fun status(): String = rh.gs(CoreUiStrings.load_history, type.toInt())
 
     override fun log(): String = "LOAD HISTORY $type"
 }

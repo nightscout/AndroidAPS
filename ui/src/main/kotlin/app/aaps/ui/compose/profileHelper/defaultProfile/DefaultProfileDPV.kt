@@ -8,10 +8,11 @@ import app.aaps.core.data.time.systemUtcOffsetAt
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.utils.DateUtil
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class DefaultProfileDPV @Inject constructor(
     private val dateUtil: DateUtil,
     private val profileUtil: ProfileUtil

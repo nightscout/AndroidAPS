@@ -38,7 +38,7 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.withEntries
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.icons.IcPluginVirtualPump
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.pump.virtual.extensions.toText
@@ -119,7 +119,7 @@ open class VirtualPumpPlugin @Inject constructor(
             )
         }
         .icon(IcPluginVirtualPump)
-        .pluginName(UiStrings.virtual_pump)
+        .pluginName(CoreUiStrings.virtual_pump)
         .shortName(VirtualStrings.virtual_pump_shortname)
         .description(VirtualStrings.description_pump_virtual)
         .setDefault()
@@ -241,7 +241,7 @@ open class VirtualPumpPlugin @Inject constructor(
         val result = pumpEnactResultProvider()
             .success(true)
             .enacted(true)
-            .comment(rh.gs(UiStrings.virtualpump_resultok))
+            .comment(rh.gs(CoreUiStrings.virtualpump_resultok))
 
         var delivering = 0.0
         var stopped = false
@@ -260,7 +260,7 @@ open class VirtualPumpPlugin @Inject constructor(
             bolusProgressData.updateProgress(100)
             delay(1000)
         } else {
-            result.comment(rh.gs(UiStrings.stop))
+            result.comment(rh.gs(CoreUiStrings.stop))
         }
 
         result.bolusDelivered(delivering)
@@ -308,7 +308,7 @@ open class VirtualPumpPlugin @Inject constructor(
         result.isTempCancel = false
         result.absolute = absoluteRate
         result.duration = durationInMinutes
-        result.comment = rh.gs(UiStrings.virtualpump_resultok)
+        result.comment = rh.gs(CoreUiStrings.virtualpump_resultok)
         pumpSync.syncTemporaryBasalWithPumpId(
             timestamp = dateUtil.now(),
             rate = PumpRate(absoluteRate),
@@ -332,7 +332,7 @@ open class VirtualPumpPlugin @Inject constructor(
         result.isPercent = true
         result.isTempCancel = false
         result.duration = durationInMinutes
-        result.comment = rh.gs(UiStrings.virtualpump_resultok)
+        result.comment = rh.gs(CoreUiStrings.virtualpump_resultok)
         pumpSync.syncTemporaryBasalWithPumpId(
             timestamp = dateUtil.now(),
             rate = PumpRate(percent.toDouble()),
@@ -356,7 +356,7 @@ open class VirtualPumpPlugin @Inject constructor(
         result.bolusDelivered = insulin
         result.isTempCancel = false
         result.duration = durationInMinutes
-        result.comment = rh.gs(UiStrings.virtualpump_resultok)
+        result.comment = rh.gs(CoreUiStrings.virtualpump_resultok)
         pumpSync.syncExtendedBolusWithPumpId(
             timestamp = dateUtil.now(),
             rate = PumpRate(insulin),
@@ -375,7 +375,7 @@ open class VirtualPumpPlugin @Inject constructor(
         val result = pumpEnactResultProvider()
         result.success = true
         result.isTempCancel = true
-        result.comment = rh.gs(UiStrings.virtualpump_resultok)
+        result.comment = rh.gs(CoreUiStrings.virtualpump_resultok)
         if (pumpSync.expectedPumpState().temporaryBasal != null) {
             result.enacted = true
             pumpSync.syncStopTemporaryBasalWithPumpId(
@@ -403,7 +403,7 @@ open class VirtualPumpPlugin @Inject constructor(
         result.success = true
         result.enacted = true
         result.isTempCancel = true
-        result.comment = rh.gs(UiStrings.virtualpump_resultok)
+        result.comment = rh.gs(CoreUiStrings.virtualpump_resultok)
         aapsLogger.debug(LTag.PUMP, "Canceling extended bolus: ${result.toText(rh)}")
         _lastDataTime.value = Clock.System.now().toEpochMilliseconds()
         return result

@@ -19,12 +19,6 @@ internal class ProfileStoreTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun getDefaultProfileJsonTest() {
-        assertThat(getValidProfileStore().getDefaultProfileJson()?.containsKey("carbratio")).isTrue()
-        assertThat(getInvalidProfileStore2().getDefaultProfileJson()).isNull()
-    }
-
-    @Test
     fun getDefaultProfileNameTest() {
         assertThat(getValidProfileStore().getDefaultProfileName()).isEqualTo(TESTPROFILENAME)
     }

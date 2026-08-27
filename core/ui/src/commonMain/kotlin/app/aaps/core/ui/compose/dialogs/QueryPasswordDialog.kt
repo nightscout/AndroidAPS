@@ -25,7 +25,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.DialogProperties
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.stringResource
 
 /**
@@ -73,7 +73,7 @@ fun QueryPasswordDialog(
                 value = passwordText,
                 onValueChange = { passwordText = it },
                 label = {
-                    Text(stringResource(if (pinInput) UiStrings.protection_pin_hint else UiStrings.protection_password_hint))
+                    Text(stringResource(if (pinInput) CoreUiStrings.protection_pin_hint else CoreUiStrings.protection_password_hint))
                 },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(
@@ -102,12 +102,12 @@ fun QueryPasswordDialog(
                     onConfirm(passwordText)
                 }
             ) {
-                Text(stringResource(UiStrings.ok))
+                Text(stringResource(CoreUiStrings.ok))
             }
         },
         dismissButton = {
             TextButton(onClick = onCancel) {
-                Text(stringResource(UiStrings.cancel))
+                Text(stringResource(CoreUiStrings.cancel))
             }
         },
         properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)

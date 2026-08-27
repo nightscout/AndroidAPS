@@ -37,7 +37,7 @@ class HeartRateDaoTest {
 
     private fun getTableNames(db: SupportSQLiteDatabase) = getDbObjects(db, "table")
 
-    private fun insertAndFind(database: AppDatabase) {
+    private suspend fun insertAndFind(database: AppDatabase) {
         val hr1 = createHeartRate()
         val id = database.heartRateDao.insert(hr1)
         val hr2 = database.heartRateDao.findById(id)
@@ -53,7 +53,7 @@ class HeartRateDaoTest {
     }
 
     @Test
-    fun new_insertAndFind() {
+    fun new_insertAndFind() = runTest {
         createDatabase().also { db ->
             insertAndFind(db)
             db.close()
@@ -87,7 +87,7 @@ class HeartRateDaoTest {
     }
 
     @Test
-    fun migrate_insertAndFind() {
+    fun migrate_insertAndFind() = runTest {
         val helper = MigrationTestHelper(
             InstrumentationRegistry.getInstrumentation(),
             AppDatabase::class.java

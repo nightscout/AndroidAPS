@@ -12,11 +12,11 @@ import app.aaps.core.interfaces.widget.WidgetUpdater
 import app.aaps.ui.widget.glance.AapsGlanceWidget
 import app.aaps.ui.widget.glance.BgGraphGlanceWidget
 import app.aaps.ui.widget.glance.CompactBgGlanceWidget
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
-import javax.inject.Inject
 
 /**
  * Default [WidgetUpdater] implementation. Fires [AapsGlanceWidget.updateAll] on the

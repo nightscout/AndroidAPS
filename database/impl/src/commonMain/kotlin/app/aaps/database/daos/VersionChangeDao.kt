@@ -10,10 +10,10 @@ import app.aaps.database.entities.VersionChange
 interface VersionChangeDao {
 
     @Insert
-    fun insert(versionChange: VersionChange)
+    suspend fun insert(versionChange: VersionChange)
 
     @Query("DELETE FROM $TABLE_VERSION_CHANGES WHERE timestamp < :than")
-    fun deleteOlderThan(than: Long): Int
+    suspend fun deleteOlderThan(than: Long): Int
 
     @Query("SELECT * FROM $TABLE_VERSION_CHANGES ORDER BY id DESC LIMIT 1")
     suspend fun getMostRecentVersionChange(): VersionChange?

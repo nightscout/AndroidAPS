@@ -83,6 +83,8 @@ class ChipsViewModel @AssistedInject constructor(
     private val rxBus: RxBus
 ) : ViewModel() {
 
+    // Stays on Dagger on purpose: ComposeMainActivity carries @AndroidEntryPoint and injects this
+    // factory, so Hilt must be able to generate it.
     @AssistedFactory
     interface Factory {
 

@@ -11,19 +11,19 @@ import app.aaps.database.entities.TABLE_DEVICE_STATUS
 internal interface DeviceStatusDao {
 
     @Insert
-    fun insert(entry: DeviceStatus): Long
+    suspend fun insert(entry: DeviceStatus): Long
 
     @Update
-    fun update(entry: DeviceStatus)
+    suspend fun update(entry: DeviceStatus)
 
     @Query("SELECT * FROM $TABLE_DEVICE_STATUS WHERE id = :id")
-    fun findById(id: Long): DeviceStatus?
+    suspend fun findById(id: Long): DeviceStatus?
 
     @Query("DELETE FROM $TABLE_DEVICE_STATUS")
-    fun deleteAllEntries()
+    suspend fun deleteAllEntries()
 
     @Query("DELETE FROM $TABLE_DEVICE_STATUS WHERE timestamp < :than")
-    fun deleteOlderThan(than: Long): Int
+    suspend fun deleteOlderThan(than: Long): Int
 
     @Query("SELECT id FROM $TABLE_DEVICE_STATUS ORDER BY id DESC limit 1")
     suspend fun getLastId(): Long?

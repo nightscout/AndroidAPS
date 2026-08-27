@@ -10,12 +10,13 @@ import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
 import java.util.TreeMap
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlin.math.abs
 
 @Suppress("LocalVariableName")
-@Singleton
+@SingleIn(AppScope::class)
 class DefaultProfile @Inject constructor(
     private val dateUtil: DateUtil,
     private val profileUtil: ProfileUtil

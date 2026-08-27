@@ -10,7 +10,7 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.TextResolver
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 
 class CommandSetUserSettings(
     private val aapsLogger: AAPSLogger,
@@ -34,7 +34,7 @@ class CommandSetUserSettings(
         return result
     }
 
-    override fun status(): String = rh.gs(UiStrings.set_user_settings)
+    override fun status(): String = rh.gs(CoreUiStrings.set_user_settings)
 
     override fun log(): String = "SET USER SETTINGS"
 }

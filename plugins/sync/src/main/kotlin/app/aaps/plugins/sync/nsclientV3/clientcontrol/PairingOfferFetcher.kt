@@ -11,15 +11,16 @@ import app.aaps.core.nssdk.localmodel.clientcontrol.PairingOffer
 import app.aaps.core.nssdk.localmodel.clientcontrol.PairingPayload
 import app.aaps.core.nssdk.utils.ClientControlPairingCrypto
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.SingleIn
+import java.io.IOException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
-import java.io.IOException
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
 
 /**
  * Client-side fetcher for PIN-wrapped pairing offers.
@@ -32,7 +33,7 @@ import javax.inject.Singleton
  * The unwrap loop runs on [Dispatchers.Default] because each PBKDF2 attempt costs ~200ms;
  * trying it on Main blocks the UI long enough to trigger ANR with a handful of stale offers.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class PairingOfferFetcher @Inject constructor(
     private val nsClientV3Plugin: Provider<NSClientV3Plugin>,
     private val dateUtil: DateUtil,
@@ -62,7 +63,7 @@ class PairingOfferFetcher @Inject constructor(
     }
 
     suspend fun findOfferForPin(pin: String): Result {
-        val client = nsClientV3Plugin.get().nsAndroidClient ?: run {
+        val client = nsClientV3Plugin().nsAndroidClient ?: run {
             aapsLogger.error(LTag.NSCLIENT, "PairingOfferFetcher: NS client not initialized")
             return Result.NotAvailable
         }

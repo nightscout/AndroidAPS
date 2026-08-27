@@ -7,10 +7,10 @@ import app.aaps.plugins.sync.openhumans.keys.OhLongKey
 import app.aaps.plugins.sync.openhumans.keys.OhStringKey
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import kotlin.reflect.KProperty
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlin.reflect.KProperty
 
 @SingleIn(OpenHumansScope::class)
 internal class OHStateDelegate @Inject internal constructor(

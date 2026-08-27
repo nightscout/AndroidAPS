@@ -43,10 +43,10 @@ import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.wear.R
 import app.aaps.wear.comm.DataLayerListenerServiceWear
-import dagger.android.support.DaggerAppCompatActivity
-import javax.inject.Inject
+import app.aaps.wear.di.WearMetroActivity
+import dev.zacsweers.metro.Inject
 
-class RunningModeTimedActivity : DaggerAppCompatActivity() {
+class RunningModeTimedActivity : WearMetroActivity() {
 
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var sp: SP

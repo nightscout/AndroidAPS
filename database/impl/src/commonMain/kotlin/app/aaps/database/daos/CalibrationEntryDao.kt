@@ -9,16 +9,16 @@ import app.aaps.database.entities.TABLE_CALIBRATION_ENTRIES
 internal interface CalibrationEntryDao : TraceableDao<CalibrationEntry> {
 
     @Query("SELECT * FROM $TABLE_CALIBRATION_ENTRIES WHERE id = :id")
-    override fun findById(id: Long): CalibrationEntry?
+    override suspend fun findById(id: Long): CalibrationEntry?
 
     @Query("DELETE FROM $TABLE_CALIBRATION_ENTRIES")
-    override fun deleteAllEntries()
+    override suspend fun deleteAllEntries()
 
     @Query("DELETE FROM $TABLE_CALIBRATION_ENTRIES WHERE timestamp < :than")
-    override fun deleteOlderThan(than: Long): Int
+    override suspend fun deleteOlderThan(than: Long): Int
 
     @Query("DELETE FROM $TABLE_CALIBRATION_ENTRIES WHERE referenceId IS NOT NULL")
-    override fun deleteTrackedChanges(): Int
+    override suspend fun deleteTrackedChanges(): Int
 
     @Query("SELECT id FROM $TABLE_CALIBRATION_ENTRIES ORDER BY id DESC limit 1")
     suspend fun getLastId(): Long?

@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.em
 import app.aaps.core.keys.interfaces.NonPreferenceKey
 import app.aaps.core.keys.interfaces.SyncDirection
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.stringResource
 
@@ -41,7 +41,7 @@ fun SyncBadge(visible: Boolean, modifier: Modifier = Modifier) {
     // NOT a tappable refresh/sync control.
     Icon(
         imageVector = Icons.Default.PhonelinkRing,
-        contentDescription = stringResource(UiStrings.pref_syncs_with_main_phone),
+        contentDescription = stringResource(CoreUiStrings.pref_syncs_with_main_phone),
         modifier = modifier.size(14.dp),
         tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
     )
@@ -83,7 +83,7 @@ fun TextWithSyncBadge(
         ) {
             Icon(
                 imageVector = Icons.Default.PhonelinkRing,
-                contentDescription = stringResource(UiStrings.pref_syncs_with_main_phone),
+                contentDescription = stringResource(CoreUiStrings.pref_syncs_with_main_phone),
                 modifier = Modifier.fillMaxSize(),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
             )

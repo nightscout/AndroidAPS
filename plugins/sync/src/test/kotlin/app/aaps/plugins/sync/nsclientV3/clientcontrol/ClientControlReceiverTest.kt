@@ -43,6 +43,7 @@ import app.aaps.core.nssdk.utils.ClientControlCrypto
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.services.RunningConfigurationPublisher
 import com.google.common.truth.Truth.assertThat
+import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -68,7 +69,6 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import javax.inject.Provider
 
 internal class ClientControlReceiverTest {
 

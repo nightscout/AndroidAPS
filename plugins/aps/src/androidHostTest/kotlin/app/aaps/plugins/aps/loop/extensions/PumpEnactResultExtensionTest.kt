@@ -1,6 +1,8 @@
 package app.aaps.plugins.aps.loop.extensions
 
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.comment
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
@@ -23,7 +25,7 @@ class PumpEnactResultExtensionTest : TestBase() {
         override fun success(success: Boolean) = apply { this.success = success }
         override fun enacted(enacted: Boolean) = apply { this.enacted = enacted }
         override fun comment(comment: String) = apply { this.comment = comment }
-        override fun comment(comment: Int) = apply { this.comment = comment.toString() }
+        override fun comment(ref: TextRef) = apply { this.comment = ref.toString() }
         override fun duration(duration: Int) = apply { this.duration = duration }
         override fun absolute(absolute: Double) = apply { this.absolute = absolute }
         override fun percent(percent: Int) = apply { this.percent = percent }

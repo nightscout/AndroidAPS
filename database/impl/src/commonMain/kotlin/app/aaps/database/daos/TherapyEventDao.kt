@@ -9,16 +9,16 @@ import app.aaps.database.entities.TherapyEvent
 internal interface TherapyEventDao : TraceableDao<TherapyEvent> {
 
     @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE id = :id")
-    override fun findById(id: Long): TherapyEvent?
+    override suspend fun findById(id: Long): TherapyEvent?
 
     @Query("DELETE FROM $TABLE_THERAPY_EVENTS")
-    override fun deleteAllEntries()
+    override suspend fun deleteAllEntries()
 
     @Query("DELETE FROM $TABLE_THERAPY_EVENTS WHERE timestamp < :than")
-    override fun deleteOlderThan(than: Long): Int
+    override suspend fun deleteOlderThan(than: Long): Int
 
     @Query("DELETE FROM $TABLE_THERAPY_EVENTS WHERE referenceId IS NOT NULL")
-    override fun deleteTrackedChanges(): Int
+    override suspend fun deleteTrackedChanges(): Int
 
     @Query("SELECT id FROM $TABLE_THERAPY_EVENTS ORDER BY id DESC limit 1")
     suspend fun getLastId(): Long?

@@ -10,15 +10,15 @@ import app.aaps.core.nssdk.localmodel.clientcontrol.PairingPayload
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlPublisher
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientPairingRepository
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.PairingOfferFetcher
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesIntoMap
-import dev.zacsweers.metro.binding
-import dev.zacsweers.metrox.viewmodel.ViewModelKey
-import javax.inject.Inject
 
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey

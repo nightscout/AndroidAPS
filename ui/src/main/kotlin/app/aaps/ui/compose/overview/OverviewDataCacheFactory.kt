@@ -2,7 +2,7 @@ package app.aaps.ui.compose.overview
 
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.workflow.CalculationSignals
-import dagger.assisted.AssistedFactory
+import dev.zacsweers.metro.AssistedFactory
 
 /**
  * Factory for per-scope [OverviewDataCacheImpl] instances.

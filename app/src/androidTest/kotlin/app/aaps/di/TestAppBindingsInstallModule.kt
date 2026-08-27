@@ -10,7 +10,6 @@ import app.aaps.ui.compose.history.HistoryScope
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import dagger.android.AndroidInjectionModule
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
 import javax.inject.Singleton
@@ -55,9 +54,9 @@ class EmulatedOptionsConfig(private val delegate: Config) : Config by delegate {
  * Replaces [AppModule] as well as [AppModule.AppBindings]: `AppBindings` is pulled in by
  * `AppModule`'s `includes`, so replacing it alone would leave the original `Config` binding in the
  * graph and collide with this one. `AppModule.Provide` carries its own `@InstallIn` and so survives
- * on its own; `AndroidInjectionModule` does not, and is re-included here.
+ * on its own.
  */
-@Module(includes = [AndroidInjectionModule::class])
+@Module
 @TestInstallIn(components = [SingletonComponent::class], replaces = [AppModule::class, AppModule.AppBindings::class])
 abstract class TestAppBindingsInstallModule {
 

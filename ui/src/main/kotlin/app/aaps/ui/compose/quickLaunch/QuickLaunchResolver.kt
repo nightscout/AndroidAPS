@@ -28,15 +28,16 @@ import app.aaps.core.ui.compose.navigation.label
 import app.aaps.ui.compose.navigation.ElementAvailability
 import app.aaps.ui.compose.scenes.SceneIcons
 import app.aaps.ui.compose.tempTarget.toTTPresetsWithNameRes
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Shared resolver for QuickLaunch actions — resolves actions to display items
  * (label, description, icon) and validates dynamic entries.
  * Used by both MainViewModel and QuickLaunchConfigViewModel.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class QuickLaunchResolver @Inject constructor(
     private val preferences: Preferences,
     private val quickWizard: QuickWizard,

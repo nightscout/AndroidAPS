@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.DialogProperties
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.htmlToAnnotatedString
 import app.aaps.core.ui.compose.stringResource
 
@@ -47,7 +47,7 @@ fun OkDialog(
         },
         confirmButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(UiStrings.ok))
+                Text(stringResource(CoreUiStrings.ok))
             }
         },
         properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
@@ -79,7 +79,7 @@ fun OkDialog(
         },
         confirmButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(UiStrings.ok))
+                Text(stringResource(CoreUiStrings.ok))
             }
         },
         properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)

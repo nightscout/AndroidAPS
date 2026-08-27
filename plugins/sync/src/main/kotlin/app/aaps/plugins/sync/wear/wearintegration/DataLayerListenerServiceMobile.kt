@@ -4,6 +4,7 @@ import android.os.Binder
 import android.os.Handler
 import android.os.HandlerThread
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -15,7 +16,6 @@ import app.aaps.core.interfaces.rx.events.EventMobileToWearWatchface
 import app.aaps.core.interfaces.rx.events.EventWearUpdateGui
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.plugins.sync.wear.WearPlugin
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.CapabilityClient
@@ -26,6 +26,7 @@ import com.google.android.gms.wearable.Node
 import com.google.android.gms.wearable.PutDataMapRequest
 import com.google.android.gms.wearable.Wearable
 import com.google.android.gms.wearable.WearableListenerService
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
@@ -36,7 +37,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
-import javax.inject.Inject
 
 class DataLayerListenerServiceMobile : WearableListenerService() {
 

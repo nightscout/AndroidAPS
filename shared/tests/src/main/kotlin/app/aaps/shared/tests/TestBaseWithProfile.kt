@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
@@ -49,7 +50,6 @@ import app.aaps.implementation.utils.DecimalFormatterImpl
 import app.aaps.plugins.aps.openAPS.DeltaCalculator
 import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
 import app.aaps.shared.impl.utils.DateUtilImpl
-import app.aaps.core.interfaces.di.MetroMemberInjector
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
@@ -216,15 +216,9 @@ open class TestBaseWithProfile : TestBase() {
         // need a specific step set testPumpPlugin.pumpDescription.bolusStep). Real impl is amount-aware (Insight).
         whenever(ch.bolusStep(any<Double>())).thenAnswer { activePlugin.activePump.pumpDescription.bolusStep }
 
-        // The TextRef counterpart of the gs(anyInt(), ...) table below. One answer covers every
-        // argument shape, so a test that moved to TextRef only has to stub the plain gs(TextRef)
-        // template, exactly like it stubbed the plain gs(Int) one before.
-        doAnswer { invocation: InvocationOnMock ->
-            val ref = invocation.getArgument<TextRef>(0)
-            val args = invocation.arguments.drop(1).toTypedArray()
-            @Suppress("USELESS_ELVIS")
-            String.format(rh.gs(ref) ?: "", *args)
-        }.whenever(rh).gs(any<TextRef>(), anyVararg())
+        // The TextRef counterpart of the gs(anyInt(), ...) table below. One helper covers both
+        // argument shapes and routes them back to these same id stubs.
+        stubTextRefResolution(rh)
 
         doAnswer { invocation: InvocationOnMock ->
             val string = invocation.getArgument<Int>(0)
@@ -324,7 +318,7 @@ open class TestBaseWithProfile : TestBase() {
             String.format(rh.gs(string), arg1, arg2, arg3)
         }.whenever(rh).gs(anyInt(), anyString(), anyInt(), anyString())
         pumpEnactResultProvider = Provider { PumpEnactResultObject(rh) }
-        profileStoreProvider = Provider { ProfileStoreObject(aapsLogger, activePlugin, config, rh, notificationManager, hardLimits, dateUtil) }
+        profileStoreProvider = Provider { ProfileStoreObject(aapsLogger, activePlugin, rh, hardLimits, dateUtil) }
         glucoseStatusCalculatorSMB = GlucoseStatusCalculatorSMB(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter, DeltaCalculator(aapsLogger))
 
         whenever(ch.bolusProgressString(any<PumpInsulin>(), any<Boolean>())).thenReturn("AnyString")
@@ -342,7 +336,7 @@ open class TestBaseWithProfile : TestBase() {
         store.put(TESTPROFILENAME, JSONObject(validProfileJSON))
         json.put("defaultProfile", TESTPROFILENAME)
         json.put("store", store)
-        return ProfileStoreObject(aapsLogger, activePlugin, config, rh, notificationManager, hardLimits, dateUtil).with(Json.parseToJsonElement(json.toString()).jsonObject)
+        return ProfileStoreObject(aapsLogger, activePlugin, rh, hardLimits, dateUtil).with(Json.parseToJsonElement(json.toString()).jsonObject)
     }
 
     fun getInvalidProfileStore1(): ProfileStore {
@@ -351,7 +345,7 @@ open class TestBaseWithProfile : TestBase() {
         store.put(TESTPROFILENAME, JSONObject(invalidProfileJSON))
         json.put("defaultProfile", TESTPROFILENAME)
         json.put("store", store)
-        return ProfileStoreObject(aapsLogger, activePlugin, config, rh, notificationManager, hardLimits, dateUtil).with(Json.parseToJsonElement(json.toString()).jsonObject)
+        return ProfileStoreObject(aapsLogger, activePlugin, rh, hardLimits, dateUtil).with(Json.parseToJsonElement(json.toString()).jsonObject)
     }
 
     fun getInvalidProfileStore2(): ProfileStore {
@@ -361,6 +355,6 @@ open class TestBaseWithProfile : TestBase() {
         store.put("invalid", JSONObject(invalidProfileJSON))
         json.put("defaultProfile", TESTPROFILENAME + "invalid")
         json.put("store", store)
-        return ProfileStoreObject(aapsLogger, activePlugin, config, rh, notificationManager, hardLimits, dateUtil).with(Json.parseToJsonElement(json.toString()).jsonObject)
+        return ProfileStoreObject(aapsLogger, activePlugin, rh, hardLimits, dateUtil).with(Json.parseToJsonElement(json.toString()).jsonObject)
     }
 }

@@ -6,9 +6,9 @@ import app.aaps.core.ui.search.SearchableItem
 import app.aaps.core.ui.search.SearchableProvider
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoSet
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
-import javax.inject.Inject
 
 /**
  * Provides searchable items for dialogs and action screens.

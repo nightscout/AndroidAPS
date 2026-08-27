@@ -8,7 +8,7 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.TextResolver
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 
 class CommandUpdateTime(
     private val aapsLogger: AAPSLogger,
@@ -31,6 +31,6 @@ class CommandUpdateTime(
         }
     }
 
-    override fun status(): String = rh.gs(UiStrings.update_time)
+    override fun status(): String = rh.gs(CoreUiStrings.update_time)
     override fun log(): String = "UPDATE TIME"
 }

@@ -80,6 +80,7 @@ import app.aaps.ui.compose.tempTarget.toTTPresetsWithNameRes
 import app.aaps.ui.compose.wizardDialog.showWizardBolusConfirmation
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.CoroutineScope
@@ -97,7 +98,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 import kotlin.math.abs
 
 // Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately

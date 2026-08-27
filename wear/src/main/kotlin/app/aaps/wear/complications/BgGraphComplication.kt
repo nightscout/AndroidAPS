@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Icon
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Canvas as ComposeCanvas
 import androidx.compose.ui.graphics.drawscope.CanvasDrawScope
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
@@ -20,11 +21,10 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.wear.R
-import app.aaps.wear.interaction.activities.renderBgGraph
-import javax.inject.Inject
-import kotlin.math.sin
-import androidx.compose.ui.graphics.Canvas as ComposeCanvas
 import app.aaps.wear.data.ComplicationData as ComplicationStore
+import app.aaps.wear.interaction.activities.renderBgGraph
+import dev.zacsweers.metro.Inject
+import kotlin.math.sin
 
 /**
  * BG Graph Complication

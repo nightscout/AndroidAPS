@@ -61,16 +61,17 @@ import app.aaps.wear.tile.SceneTileService
 import app.aaps.wear.tile.TempTargetTileService
 import app.aaps.wear.tile.UserActionTileService
 import com.google.android.gms.wearable.WearableListenerService
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@SingleIn(AppScope::class)
 class DataHandlerWear @Inject constructor(
     private val context: Context,
     private val rxBus: RxBus,

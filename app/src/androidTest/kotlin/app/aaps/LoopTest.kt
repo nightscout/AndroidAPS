@@ -33,6 +33,7 @@ import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidTest
+import javax.inject.Inject
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.json.JSONObject
@@ -40,7 +41,6 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import javax.inject.Inject
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
@@ -79,7 +79,7 @@ class LoopTest : HiltInstrumentedTest() {
         loop.lastRun = null
         objectivesPlugin.objectives.forEach { it.startedOn = 0 }
         (profileFunction as ProfileFunctionImpl).cache.clear()
-        persistenceLayer.clearDatabases()
+        runBlocking { persistenceLayer.clearDatabases() }
     }
 
     @Test

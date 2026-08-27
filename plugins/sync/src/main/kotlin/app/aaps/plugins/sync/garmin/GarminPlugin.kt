@@ -23,11 +23,12 @@ import app.aaps.plugins.sync.garmin.keys.GarminIntKey
 import app.aaps.plugins.sync.garmin.keys.GarminStringKey
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.drop
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 import java.math.BigDecimal
 import java.math.MathContext
 import java.math.RoundingMode
@@ -40,14 +41,13 @@ import java.time.Instant
 import java.util.Date
 import java.util.concurrent.locks.Condition
 import java.util.concurrent.locks.ReentrantLock
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesIntoMap
-import dev.zacsweers.metro.IntKey
-import dev.zacsweers.metro.SingleIn
-import dev.zacsweers.metro.binding
-import javax.inject.Inject
 import kotlin.concurrent.withLock
 import kotlin.math.roundToInt
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.drop
 
 /** Support communication with Garmin devices.
  *

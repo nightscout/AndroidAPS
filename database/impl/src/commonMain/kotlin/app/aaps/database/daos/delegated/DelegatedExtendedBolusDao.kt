@@ -6,12 +6,12 @@ import app.aaps.database.entities.interfaces.DBEntry
 
 internal class DelegatedExtendedBolusDao(changes: MutableList<DBEntry>, private val dao: ExtendedBolusDao) : DelegatedDao(changes), ExtendedBolusDao by dao {
 
-    override fun insertNewEntry(entry: ExtendedBolus): Long {
+    override suspend fun insertNewEntry(entry: ExtendedBolus): Long {
         changes.add(entry)
         return dao.insertNewEntry(entry)
     }
 
-    override fun updateExistingEntry(entry: ExtendedBolus): Long {
+    override suspend fun updateExistingEntry(entry: ExtendedBolus): Long {
         changes.add(entry)
         return dao.updateExistingEntry(entry)
     }

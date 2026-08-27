@@ -7,7 +7,7 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.TextResolver
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 
 class CommandExtendedBolus(
     private val aapsLogger: AAPSLogger,
@@ -26,7 +26,7 @@ class CommandExtendedBolus(
             aapsLogger.debug(LTag.PUMPQUEUE, "Result rate: $insulin durationInMinutes: $durationInMinutes success: ${it.success} enacted: ${it.enacted}")
         }
 
-    override fun status(): String = rh.gs(UiStrings.extended_bolus_u_min, insulin, durationInMinutes)
+    override fun status(): String = rh.gs(CoreUiStrings.extended_bolus_u_min, insulin, durationInMinutes)
 
     override fun log(): String = "EXTENDEDBOLUS $insulin U $durationInMinutes min"
 }

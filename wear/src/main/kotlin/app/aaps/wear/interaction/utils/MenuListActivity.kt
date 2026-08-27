@@ -44,11 +44,13 @@ import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventUpdateSelectedWatchface
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.keys.interfaces.Preferences
-import dagger.android.support.DaggerAppCompatActivity
+import app.aaps.wear.di.WearMetroActivity
+import dev.zacsweers.metro.HasMemberInjections
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CoroutineStart
-import javax.inject.Inject
 
-abstract class MenuListActivity : DaggerAppCompatActivity() {
+@HasMemberInjections
+abstract class MenuListActivity : WearMetroActivity() {
 
     @Inject lateinit var sp: SP
     @Inject lateinit var preferences: Preferences

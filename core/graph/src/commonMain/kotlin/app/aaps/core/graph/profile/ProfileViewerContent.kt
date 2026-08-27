@@ -23,7 +23,7 @@ import app.aaps.core.graph.IsfProfileGraphCompose
 import app.aaps.core.graph.TargetBgProfileGraphCompose
 import app.aaps.core.interfaces.insulin.ConcentrationType
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.stringResource
 
@@ -70,7 +70,7 @@ fun ProfileSingleContent(
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     ProfileRow(
-                        label = stringResource(UiStrings.units_label),
+                        label = stringResource(CoreUiStrings.units_label),
                         value = profile.units.displayLabel
                     )
                 }
@@ -83,7 +83,7 @@ fun ProfileSingleContent(
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         ProfileRow(
-                            label = stringResource(UiStrings.insulin_label),
+                            label = stringResource(CoreUiStrings.insulin_label),
                             value = iCfg.insulinLabel
                         )
                     }
@@ -100,7 +100,7 @@ fun ProfileSingleContent(
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 ProfileRow(
-                    label = stringResource(UiStrings.ic_label),
+                    label = stringResource(CoreUiStrings.ic_label),
                     value = getIcList(profile)
                 )
                 IcProfileGraphCompose(
@@ -123,7 +123,7 @@ fun ProfileSingleContent(
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 ProfileRow(
-                    label = stringResource(UiStrings.isf_label),
+                    label = stringResource(CoreUiStrings.isf_label),
                     value = getIsfList(profile)
                 )
                 IsfProfileGraphCompose(
@@ -146,7 +146,7 @@ fun ProfileSingleContent(
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 ProfileRow(
-                    label = stringResource(UiStrings.basal_label),
+                    label = stringResource(CoreUiStrings.basal_label),
                     value = getBasalList(profile)
                 )
                 // Sum displayed above graph
@@ -179,7 +179,7 @@ fun ProfileSingleContent(
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 ProfileRow(
-                    label = stringResource(UiStrings.target_label),
+                    label = stringResource(CoreUiStrings.target_label),
                     value = getTargetList(profile)
                 )
                 TargetBgProfileGraphCompose(
@@ -229,7 +229,7 @@ fun ProfileCompareContent(
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = stringResource(UiStrings.profile),
+                        text = stringResource(CoreUiStrings.profile),
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(bottom = 8.dp)
@@ -268,20 +268,20 @@ fun ProfileCompareContent(
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     ProfileInlineRow(
-                        label = stringResource(UiStrings.insulin_label),
+                        label = stringResource(CoreUiStrings.insulin_label),
                         value = iCfg.insulinLabel
                     )
                     ProfileInlineRow(
-                        label = stringResource(UiStrings.concentration_label),
+                        label = stringResource(CoreUiStrings.concentration_label),
                         value = stringResource(ConcentrationType.fromDouble(iCfg.concentration).label)
                     )
                     ProfileInlineRow(
-                        label = stringResource(UiStrings.peak_label),
-                        value = stringResource(UiStrings.format_mins, iCfg.peak)
+                        label = stringResource(CoreUiStrings.peak_label),
+                        value = stringResource(CoreUiStrings.format_mins, iCfg.peak)
                     )
                     ProfileInlineRow(
-                        label = stringResource(UiStrings.dia_label),
-                        value = stringResource(UiStrings.format_hours, iCfg.dia)
+                        label = stringResource(CoreUiStrings.dia_label),
+                        value = stringResource(CoreUiStrings.format_hours, iCfg.dia)
                     )
                 }
             }
@@ -296,7 +296,7 @@ fun ProfileCompareContent(
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = stringResource(UiStrings.ic_label),
+                    text = stringResource(CoreUiStrings.ic_label),
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 8.dp)
@@ -329,7 +329,7 @@ fun ProfileCompareContent(
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = stringResource(UiStrings.isf_label),
+                    text = stringResource(CoreUiStrings.isf_label),
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 8.dp)
@@ -362,7 +362,7 @@ fun ProfileCompareContent(
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = stringResource(UiStrings.basal_label),
+                    text = stringResource(CoreUiStrings.basal_label),
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 8.dp)
@@ -395,7 +395,7 @@ fun ProfileCompareContent(
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = stringResource(UiStrings.target_label),
+                    text = stringResource(CoreUiStrings.target_label),
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 8.dp)

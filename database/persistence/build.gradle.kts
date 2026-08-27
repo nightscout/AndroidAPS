@@ -1,7 +1,5 @@
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-import org.gradle.api.tasks.testing.logging.TestLogEvent
-
 plugins {
+    id("kmp-test-defaults")
     kotlin("multiplatform")
     // NOT com.android.library. AGP 9 refuses that plugin together with the multiplatform plugin.
     alias(libs.plugins.android.kmp.library)
@@ -58,23 +56,5 @@ kotlin {
                 runtimeOnly(libs.org.junit.platform.launcher)
             }
         }
-    }
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
-}
-
-// Restated from test-module-dependencies, which applies com.android.library and so cannot be used by a
-// multiplatform module. Both halves matter: without the logging a failure on CI shows neither the test's
-// output nor a full stack trace, and without maxHeapSize each forked test JVM takes ~25% of machine RAM,
-// which is what used to push the emulators offline mid-instrumentation.
-tasks.withType<Test>().configureEach {
-    failOnNoDiscoveredTests = false
-    maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
-    maxHeapSize = "1536m"
-    testLogging {
-        events = setOf(TestLogEvent.FAILED, TestLogEvent.SKIPPED, TestLogEvent.STANDARD_OUT)
-        exceptionFormat = TestExceptionFormat.FULL
     }
 }

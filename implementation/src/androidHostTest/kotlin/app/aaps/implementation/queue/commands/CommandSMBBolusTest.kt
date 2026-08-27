@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
+import app.aaps.core.interfaces.queue.cancel
 import app.aaps.core.keys.IntKey
 import app.aaps.implementation.pump.PumpEnactResultObject
 import app.aaps.shared.tests.TestBaseWithProfile

@@ -33,7 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.TE
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.icons.IcCannulaChange
@@ -100,9 +100,9 @@ fun SiteLocationPicker(
         ) {
             Text(
                 text = if (selectedLocation != TE.Location.NONE)
-                    stringResource(UiStrings.selected_location, selectedLocationString ?: selectedLocation.text)
+                    stringResource(CoreUiStrings.selected_location, selectedLocationString ?: selectedLocation.text)
                 else
-                    stringResource(UiStrings.select_location),
+                    stringResource(CoreUiStrings.select_location),
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.weight(1f)
             )
@@ -112,7 +112,7 @@ fun SiteLocationPicker(
             ) {
                 Icon(
                     imageVector = selectedArrow.directionToComposeIcon(),
-                    contentDescription = stringResource(UiStrings.select_arrow),
+                    contentDescription = stringResource(CoreUiStrings.select_arrow),
                     modifier = Modifier.size(20.dp),
                     tint = MaterialTheme.colorScheme.onSurface
                 )
@@ -135,7 +135,7 @@ fun SiteLocationPicker(
                 ) {
                     Icon(
                         imageVector = IcCannulaChange,
-                        contentDescription = stringResource(UiStrings.careportal_pump_site_management),
+                        contentDescription = stringResource(CoreUiStrings.careportal_pump_site_management),
                         modifier = Modifier.size(24.dp)
                     )
                 }
@@ -148,7 +148,7 @@ fun SiteLocationPicker(
                 ) {
                     Icon(
                         imageVector = IcCgmInsert,
-                        contentDescription = stringResource(UiStrings.careportal_cgm_site_management),
+                        contentDescription = stringResource(CoreUiStrings.careportal_cgm_site_management),
                         modifier = Modifier.size(24.dp)
                     )
                 }
@@ -160,7 +160,7 @@ fun SiteLocationPicker(
                 positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
                 tooltip = {
                     PlainTooltip {
-                        Text(stringResource(UiStrings.site_filter_info))
+                        Text(stringResource(CoreUiStrings.site_filter_info))
                     }
                 },
                 state = tooltipState
@@ -279,7 +279,7 @@ fun SiteLocationPickerWithFilters(
                 ) {
                     Icon(
                         imageVector = IcCannulaChange,
-                        contentDescription = stringResource(UiStrings.careportal_pump_site_management),
+                        contentDescription = stringResource(CoreUiStrings.careportal_pump_site_management),
                         modifier = Modifier.size(24.dp)
                     )
                 }
@@ -291,7 +291,7 @@ fun SiteLocationPickerWithFilters(
                 ) {
                     Icon(
                         imageVector = IcCgmInsert,
-                        contentDescription = stringResource(UiStrings.careportal_cgm_site_management),
+                        contentDescription = stringResource(CoreUiStrings.careportal_cgm_site_management),
                         modifier = Modifier.size(24.dp)
                     )
                 }
@@ -303,7 +303,7 @@ fun SiteLocationPickerWithFilters(
                 positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
                 tooltip = {
                     PlainTooltip {
-                        Text(stringResource(UiStrings.site_filter_info))
+                        Text(stringResource(CoreUiStrings.site_filter_info))
                     }
                 },
                 state = tooltipState

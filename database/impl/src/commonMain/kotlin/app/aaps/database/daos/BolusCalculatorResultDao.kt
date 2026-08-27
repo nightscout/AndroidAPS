@@ -9,17 +9,17 @@ import app.aaps.database.entities.TABLE_BOLUS_CALCULATOR_RESULTS
 internal interface BolusCalculatorResultDao : TraceableDao<BolusCalculatorResult> {
 
     @Query("SELECT * FROM $TABLE_BOLUS_CALCULATOR_RESULTS WHERE id = :id")
-    override fun findById(id: Long): BolusCalculatorResult?
+    override suspend fun findById(id: Long): BolusCalculatorResult?
 
     @Query("DELETE FROM $TABLE_BOLUS_CALCULATOR_RESULTS")
 
-    override fun deleteAllEntries()
+    override suspend fun deleteAllEntries()
 
     @Query("DELETE FROM $TABLE_BOLUS_CALCULATOR_RESULTS WHERE timestamp < :than")
-    override fun deleteOlderThan(than: Long): Int
+    override suspend fun deleteOlderThan(than: Long): Int
 
     @Query("DELETE FROM $TABLE_BOLUS_CALCULATOR_RESULTS WHERE referenceId IS NOT NULL")
-    override fun deleteTrackedChanges(): Int
+    override suspend fun deleteTrackedChanges(): Int
 
     @Query("SELECT id FROM $TABLE_BOLUS_CALCULATOR_RESULTS ORDER BY id DESC limit 1")
     suspend fun getLastId(): Long?

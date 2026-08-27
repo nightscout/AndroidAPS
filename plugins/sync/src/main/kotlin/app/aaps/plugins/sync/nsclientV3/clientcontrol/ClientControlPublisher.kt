@@ -8,14 +8,15 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientControlMessage
 import app.aaps.core.nssdk.localmodel.clientcontrol.SignedEnvelope
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.SingleIn
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
 
 /**
  * Client-side publisher for client-control envelopes.
@@ -34,7 +35,7 @@ import javax.inject.Singleton
  * `schemaVersion` field for forward compatibility, with the signed envelope
  * embedded under `envelope`.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class ClientControlPublisher @Inject constructor(
     private val pairingRepository: ClientPairingRepository,
     private val nsClientV3Plugin: Provider<NSClientV3Plugin>,
@@ -148,7 +149,7 @@ class ClientControlPublisher @Inject constructor(
     data class TrackedPublish(val result: ClientControlSendResult, val counter: Long?)
 
     private suspend fun uploadEnvelope(identifier: String, envelope: SignedEnvelope): ClientControlSendResult {
-        val client = nsClientV3Plugin.get().nsAndroidClient ?: run {
+        val client = nsClientV3Plugin().nsAndroidClient ?: run {
             aapsLogger.error(LTag.NSCLIENT, "ClientControl: NS client not initialized")
             return ClientControlSendResult.PublishFailed("NS client not initialized")
         }

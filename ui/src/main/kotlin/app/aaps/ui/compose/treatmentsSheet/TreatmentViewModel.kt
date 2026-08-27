@@ -31,6 +31,7 @@ import app.aaps.ui.compose.main.QuickWizardItem
 import app.aaps.ui.compose.navigation.ElementAvailability
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,7 +44,6 @@ import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 import kotlin.math.abs
 import app.aaps.core.interfaces.R as InterfacesR
 

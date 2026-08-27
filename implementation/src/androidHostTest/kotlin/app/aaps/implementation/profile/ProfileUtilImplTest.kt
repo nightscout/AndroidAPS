@@ -12,6 +12,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.R
 import app.aaps.implementation.utils.DecimalFormatterImpl
 import app.aaps.shared.tests.TestBase
+import app.aaps.shared.tests.stubTextRefResolution
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -32,6 +33,7 @@ class ProfileUtilImplTest : TestBase() {
 
     @BeforeEach
     fun setup() {
+        stubTextRefResolution(rh)
         val decimalFormatter = DecimalFormatterImpl(rh)
         sut = ProfileUtilImpl(preferences, decimalFormatter, rh)
     }

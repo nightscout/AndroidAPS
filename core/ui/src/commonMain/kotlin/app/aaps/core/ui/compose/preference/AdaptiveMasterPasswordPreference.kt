@@ -7,7 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import app.aaps.core.keys.StringKey
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.dialogs.QueryPasswordDialog
 import app.aaps.core.ui.compose.dialogs.SetPasswordDialog
@@ -47,9 +47,9 @@ fun AdaptiveMasterPasswordPreferenceItem(
     val hasPassword = passwordState.isNotEmpty()
 
     val summary = if (hasPassword) {
-        stringResource(UiStrings.password_set)
+        stringResource(CoreUiStrings.password_set)
     } else {
-        stringResource(UiStrings.password_not_set)
+        stringResource(CoreUiStrings.password_not_set)
     }
 
     // Dialog states
@@ -80,16 +80,16 @@ fun AdaptiveMasterPasswordPreferenceItem(
     )
 
     // Message strings (resolved here for use in callbacks)
-    val wrongPasswordMsg = stringResource(UiStrings.wrongpassword)
-    val dontMatchMsg = stringResource(UiStrings.passwords_dont_match)
-    val passwordSetMsg = stringResource(UiStrings.password_set)
-    val passwordClearedMsg = stringResource(UiStrings.password_cleared)
-    val notChangedMsg = stringResource(UiStrings.password_not_changed)
+    val wrongPasswordMsg = stringResource(CoreUiStrings.wrongpassword)
+    val dontMatchMsg = stringResource(CoreUiStrings.passwords_dont_match)
+    val passwordSetMsg = stringResource(CoreUiStrings.password_set)
+    val passwordClearedMsg = stringResource(CoreUiStrings.password_cleared)
+    val notChangedMsg = stringResource(CoreUiStrings.password_not_changed)
 
     // Query current password dialog
     if (showQueryDialog) {
         QueryPasswordDialog(
-            title = stringResource(UiStrings.current_master_password),
+            title = stringResource(CoreUiStrings.current_master_password),
             pinInput = false,
             onConfirm = { enteredPassword ->
                 if (checkPassword(enteredPassword, passwordState)) {

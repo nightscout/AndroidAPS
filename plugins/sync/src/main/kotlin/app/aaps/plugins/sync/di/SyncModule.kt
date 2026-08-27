@@ -2,60 +2,28 @@ package app.aaps.plugins.sync.di
 
 import android.content.Context
 import androidx.work.WorkManager
-import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
-import app.aaps.core.interfaces.nsclient.NSClientRepository
-import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
-import app.aaps.core.interfaces.nsclient.StoreDataForDb
-import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
-import app.aaps.core.interfaces.sync.NsClient
-import app.aaps.core.interfaces.sync.XDripBroadcast
-import app.aaps.plugins.sync.garmin.LoopHub
-import app.aaps.plugins.sync.garmin.LoopHubImpl
-import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
-import app.aaps.plugins.sync.nsclientV3.StoreDataForDbImpl
-import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlRoundTrip
-import app.aaps.plugins.sync.nsclientV3.compose.NSClientRepositoryImpl
-import app.aaps.plugins.sync.nsclientV3.data.ProcessedDeviceStatusDataImpl
-import app.aaps.plugins.sync.smsCommunicator.SmsCommunicatorPlugin
-import app.aaps.plugins.sync.xdrip.XdripPlugin
-import dagger.Binds
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.BindingContainer
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.Provides
+import dev.zacsweers.metro.SingleIn
 
-@Module(
-    includes = [
-        SyncModule.Binding::class,
-        SyncModule.Provide::class
-    ]
-)
-@InstallIn(SingletonComponent::class)
-@Suppress("unused")
-abstract class SyncModule {
+/**
+ * What is left of this module's own wiring, now on Metro.
+ *
+ * The three `@Binds` that used to live here are gone: `SmsCommunicatorPlugin`, `NSClientV3Plugin` and
+ * `ClientControlRoundTrip` carry their own contributions now, so Metro binds the interfaces directly
+ * and `:app` reads them back through `CoreObjectsModule` delegates rather than the other way round.
+ */
+@ContributesTo(AppScope::class)
+@BindingContainer
+object SyncModule {
 
-    // NSClient / NSClientV3 / Xdrip sync workers migrated to @HiltWorker (constructed by HiltWorkerFactory).
-
-    @Module
-    @InstallIn(SingletonComponent::class)
-    open class Provide {
-
-        // Was @Reusable. Metro does not support it, and this module turns on Dagger interop so Metro
-        // validates every Dagger annotation here. WorkManager.getInstance already returns one
-        // instance, so @Singleton is the same behaviour.
-        @Singleton
-        @Provides
-        fun providesWorkManager(context: Context): WorkManager = WorkManager.getInstance(context)
-    }
-
-    @Module
-    @InstallIn(SingletonComponent::class)
-    interface Binding {
-        @Binds fun bindSmsCommunicator(smsCommunicatorPlugin: SmsCommunicatorPlugin): SmsCommunicator
-        @Binds fun bindNsClient(nsClientV3Plugin: NSClientV3Plugin): NsClient
-
-        @Binds fun bindClientControlActionDispatcher(roundTrip: ClientControlRoundTrip): ClientControlActionDispatcher
-    }
-
+    /**
+     * Was `@Reusable` under Dagger, then `@Singleton`. `WorkManager.getInstance` already returns one
+     * instance per process, so scoping it here only avoids repeating that lookup.
+     */
+    @Provides
+    @SingleIn(AppScope::class)
+    fun providesWorkManager(context: Context): WorkManager = WorkManager.getInstance(context)
 }

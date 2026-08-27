@@ -14,7 +14,7 @@ import app.aaps.core.keys.interfaces.BooleanKeyWithChangeGuard
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.VisibilityContext
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.stringResource
 
@@ -91,7 +91,7 @@ fun AdaptiveSwitchPreferenceItem(
     // Show guard rejection dialog
     guardMessage?.let { message ->
         OkDialog(
-            title = stringResource(UiStrings.error),
+            title = stringResource(CoreUiStrings.error),
             message = message,
             onDismiss = { guardMessage = null }
         )

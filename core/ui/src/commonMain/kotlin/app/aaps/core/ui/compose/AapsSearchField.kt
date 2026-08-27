@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 
 /**
  * Rounded search field styled like Google Contacts search bar.
@@ -39,7 +39,7 @@ fun AapsSearchField(
     query: String,
     onQueryChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    placeholder: String = stringResource(UiStrings.search),
+    placeholder: String = stringResource(CoreUiStrings.search),
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -66,7 +66,7 @@ fun AapsSearchField(
                 IconButton(onClick = { onQueryChange("") }) {
                     Icon(
                         Icons.Filled.Clear,
-                        contentDescription = stringResource(UiStrings.clear),
+                        contentDescription = stringResource(CoreUiStrings.clear),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }

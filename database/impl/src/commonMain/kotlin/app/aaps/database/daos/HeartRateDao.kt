@@ -9,16 +9,16 @@ import app.aaps.database.entities.TABLE_HEART_RATE
 internal interface HeartRateDao : TraceableDao<HeartRate> {
 
     @Query("SELECT * FROM $TABLE_HEART_RATE WHERE id = :id")
-    override fun findById(id: Long): HeartRate?
+    override suspend fun findById(id: Long): HeartRate?
 
     @Query("DELETE FROM $TABLE_HEART_RATE")
-    override fun deleteAllEntries()
+    override suspend fun deleteAllEntries()
 
     @Query("DELETE FROM $TABLE_HEART_RATE WHERE timestamp < :than")
-    override fun deleteOlderThan(than: Long): Int
+    override suspend fun deleteOlderThan(than: Long): Int
 
     @Query("DELETE FROM $TABLE_HEART_RATE WHERE referenceId IS NOT NULL")
-    override fun deleteTrackedChanges(): Int
+    override suspend fun deleteTrackedChanges(): Int
 
     @Query("SELECT * FROM $TABLE_HEART_RATE WHERE timestamp >= :timestamp ORDER BY timestamp")
     suspend fun getFromTime(timestamp: Long): List<HeartRate>

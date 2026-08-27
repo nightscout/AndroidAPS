@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import app.aaps.core.interfaces.pump.BolusProgressState
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.stringResource
 
@@ -164,7 +164,7 @@ private fun BolusProgressSection(
 ) {
     // Title
     Text(
-        text = stringResource(UiStrings.goingtodeliver, state.insulin),
+        text = stringResource(CoreUiStrings.goingtodeliver, state.insulin),
         style = MaterialTheme.typography.titleMedium,
         fontWeight = FontWeight.Bold,
         textAlign = TextAlign.Center,
@@ -216,7 +216,7 @@ private fun BolusProgressSection(
         // only hides this dialog — it does NOT stop the pump.
         state.stalled -> {
             Text(
-                text = stringResource(UiStrings.clientcontrol_bolus_progress_stalled_title),
+                text = stringResource(CoreUiStrings.clientcontrol_bolus_progress_stalled_title),
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.error,
@@ -225,7 +225,7 @@ private fun BolusProgressSection(
             )
             Spacer(modifier = Modifier.height(AapsSpacing.medium))
             Text(
-                text = stringResource(UiStrings.clientcontrol_bolus_progress_stalled_body),
+                text = stringResource(CoreUiStrings.clientcontrol_bolus_progress_stalled_body),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,
@@ -239,7 +239,7 @@ private fun BolusProgressSection(
                 // Neutral/tonal — Dismiss only hides this local view; it is NOT destructive like Stop,
                 // so it must not borrow Stop's error-red affordance.
                 FilledTonalButton(onClick = onDismiss) {
-                    Text(text = stringResource(UiStrings.dismiss))
+                    Text(text = stringResource(CoreUiStrings.dismiss))
                 }
             }
         }
@@ -259,8 +259,8 @@ private fun BolusProgressSection(
                     )
                 ) {
                     Text(
-                        text = if (state.stopPressed) stringResource(UiStrings.stop_pressed)
-                        else stringResource(UiStrings.stop)
+                        text = if (state.stopPressed) stringResource(CoreUiStrings.stop_pressed)
+                        else stringResource(CoreUiStrings.stop)
                     )
                 }
             }

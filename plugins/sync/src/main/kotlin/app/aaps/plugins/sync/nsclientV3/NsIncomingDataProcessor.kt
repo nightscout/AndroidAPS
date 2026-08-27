@@ -56,12 +56,13 @@ import app.aaps.plugins.sync.nsclientV3.extensions.toTemporaryBasal
 import app.aaps.plugins.sync.nsclientV3.extensions.toTemporaryTarget
 import app.aaps.plugins.sync.nsclientV3.extensions.toTherapyEvent
 import app.aaps.plugins.sync.nsclientV3.json.JsonBridge.toKotlinxJson
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.SingleIn
 import org.json.JSONObject
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
 
-@Singleton
+@SingleIn(AppScope::class)
 class NsIncomingDataProcessor @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val nsClientSource: NSClientSource,
@@ -275,7 +276,7 @@ class NsIncomingDataProcessor @Inject constructor(
             if (config.AAPSCLIENT) !nsClient.masterOrPairedClientFlow.value
             else preferences.get(BooleanKey.NsClientAcceptProfileStore) || doFullSync
         if (accept) {
-            val store = profileStoreProvider.get().with(profileJson.toKotlinxJson())
+            val store = profileStoreProvider().with(profileJson.toKotlinxJson())
             val createdAt = store.getStartDate()
             val lastLocalChange = preferences.get(LongNonKey.LocalProfileLastChange)
             aapsLogger.debug(LTag.PROFILE, "Received profileStore: createdAt: $createdAt Local last modification: $lastLocalChange")

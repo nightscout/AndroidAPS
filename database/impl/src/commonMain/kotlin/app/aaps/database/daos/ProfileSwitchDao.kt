@@ -11,16 +11,16 @@ import app.aaps.database.entities.data.checkSanity
 internal interface ProfileSwitchDao : ProfileSwitchDaoWorkaround {
 
     @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE id = :id")
-    override fun findById(id: Long): ProfileSwitch?
+    override suspend fun findById(id: Long): ProfileSwitch?
 
     @Query("DELETE FROM $TABLE_PROFILE_SWITCHES")
-    override fun deleteAllEntries()
+    override suspend fun deleteAllEntries()
 
     @Query("DELETE FROM $TABLE_PROFILE_SWITCHES WHERE timestamp < :than")
-    override fun deleteOlderThan(than: Long): Int
+    override suspend fun deleteOlderThan(than: Long): Int
 
     @Query("DELETE FROM $TABLE_PROFILE_SWITCHES WHERE referenceId IS NOT NULL")
-    override fun deleteTrackedChanges(): Int
+    override suspend fun deleteTrackedChanges(): Int
 
     @Query("SELECT id FROM $TABLE_PROFILE_SWITCHES ORDER BY id DESC limit 1")
     suspend fun getLastId(): Long?
@@ -60,7 +60,7 @@ internal interface ProfileSwitchDao : ProfileSwitchDaoWorkaround {
     suspend fun bulkMigrateInsulinConfig(label: String, end: Long, peak: Long, conc: Double): Int
 }
 
-internal fun ProfileSwitchDao.insertNewEntryImpl(entry: ProfileSwitch): Long {
+internal suspend fun ProfileSwitchDao.insertNewEntryImpl(entry: ProfileSwitch): Long {
     if (!entry.basalBlocks.checkSanity()) throw IllegalArgumentException("Sanity check failed for basal blocks.")
     if (!entry.icBlocks.checkSanity()) throw IllegalArgumentException("Sanity check failed for IC blocks.")
     if (!entry.isfBlocks.checkSanity()) throw IllegalArgumentException("Sanity check failed for ISF blocks.")
@@ -68,7 +68,7 @@ internal fun ProfileSwitchDao.insertNewEntryImpl(entry: ProfileSwitch): Long {
     return (this as TraceableDao<ProfileSwitch>).insertNewEntryImpl(entry)
 }
 
-internal fun ProfileSwitchDao.updateExistingEntryImpl(entry: ProfileSwitch): Long {
+internal suspend fun ProfileSwitchDao.updateExistingEntryImpl(entry: ProfileSwitch): Long {
     if (!entry.basalBlocks.checkSanity()) throw IllegalArgumentException("Sanity check failed for basal blocks.")
     if (!entry.icBlocks.checkSanity()) throw IllegalArgumentException("Sanity check failed for IC blocks.")
     if (!entry.isfBlocks.checkSanity()) throw IllegalArgumentException("Sanity check failed for ISF blocks.")

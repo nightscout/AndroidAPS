@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
@@ -19,10 +19,10 @@ fun formatMinutesAsDuration(minutes: Int): String {
     return if (abs >= 60) {
         val hours = abs / 60
         val mins = abs % 60
-        sign + if (mins == 0) stringResource(UiStrings.format_hours_only, hours)
-        else stringResource(UiStrings.format_hour_minute, hours, mins)
+        sign + if (mins == 0) stringResource(CoreUiStrings.format_hours_only, hours)
+        else stringResource(CoreUiStrings.format_hour_minute, hours, mins)
     } else {
-        stringResource(UiStrings.format_mins, minutes)
+        stringResource(CoreUiStrings.format_mins, minutes)
     }
 }
 
@@ -36,10 +36,10 @@ fun formatMinutesAsDuration(minutes: Int, rh: TextResolver): String {
     return if (abs >= 60) {
         val hours = abs / 60
         val mins = abs % 60
-        sign + if (mins == 0) rh.gs(UiStrings.format_hours_only, hours)
-        else rh.gs(UiStrings.format_hour_minute, hours, mins)
+        sign + if (mins == 0) rh.gs(CoreUiStrings.format_hours_only, hours)
+        else rh.gs(CoreUiStrings.format_hour_minute, hours, mins)
     } else {
-        rh.gs(UiStrings.format_mins, minutes)
+        rh.gs(CoreUiStrings.format_mins, minutes)
     }
 }
 

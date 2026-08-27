@@ -16,7 +16,7 @@ import app.aaps.core.keys.interfaces.DoublePreferenceKey
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.keys.step
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.isDuration
 import app.aaps.core.ui.compose.rangeText
@@ -119,7 +119,7 @@ fun AdaptiveDoublePreferenceItem(
         val summaryText = if (rangeRef != null) {
             stringResource(rangeRef)
         } else {
-            stringResource(UiStrings.preference_range_summary, valueFormat.format(value), unitLabelText, valueFormat.format(doubleKey.min), valueFormat.format(doubleKey.max))
+            stringResource(CoreUiStrings.preference_range_summary, valueFormat.format(value), unitLabelText, valueFormat.format(doubleKey.min), valueFormat.format(doubleKey.max))
         }
         TextFieldPreference(
             state = state,

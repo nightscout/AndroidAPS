@@ -119,6 +119,7 @@ import app.aaps.core.ui.compose.LocalMasterReachable
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.LocalSnackbarHostState
+import app.aaps.core.ui.compose.MetroAppCompatActivity
 import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import app.aaps.core.ui.compose.ProtectionHost
 import app.aaps.core.ui.compose.ScreenMode
@@ -137,7 +138,7 @@ import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.core.ui.search.SearchableItem
 import app.aaps.core.utils.isRunningRealPumpTest
-import app.aaps.implementation.plugin.PluginStore
+import app.aaps.implementation.plugin.PluginPermissionsImpl
 import app.aaps.implementation.protection.BiometricCheck
 import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.configuration.setupwizard.SWDefinition
@@ -178,14 +179,12 @@ import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.ui.search.SearchIndexEntry
 import app.aaps.ui.search.SearchViewModel
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import dagger.hilt.android.AndroidEntryPoint
+import dev.zacsweers.metro.Inject
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@AndroidEntryPoint
-class ComposeMainActivity : AppCompatActivity() {
+class ComposeMainActivity : MetroAppCompatActivity() {
 
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
@@ -556,7 +555,7 @@ class ComposeMainActivity : AppCompatActivity() {
                                     permissionsSnackbarHostState.showSnackbar(getString(app.aaps.plugins.configuration.R.string.alert_dialog_permission_battery_optimization_failed))
                                 }
 
-                            effect.group.permissions.contains(PluginStore.PERMISSION_SELECT_DIRECTORY)                  ->
+                            effect.group.permissions.contains(PluginPermissionsImpl.PERMISSION_SELECT_DIRECTORY)                  ->
                                 try {
                                     accessTree?.launch(null)
                                 } catch (_: Exception) {
@@ -580,7 +579,7 @@ class ComposeMainActivity : AppCompatActivity() {
                                     }
                                 )
 
-                            effect.group.permissions.contains(PluginStore.PERMISSION_NOTIFICATION_LISTENER)             ->
+                            effect.group.permissions.contains(PluginPermissionsImpl.PERMISSION_NOTIFICATION_LISTENER)             ->
                                 startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
                         }
 

@@ -8,7 +8,7 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 
 /**
  * Text for a temporary basal on screen.
@@ -25,9 +25,9 @@ fun TB.toStringFull(profile: Profile, dateUtil: DateUtil, rh: TextResolver): Str
     val timeAndDuration = "${dateUtil.timeString(timestamp)} ${getPassedDurationToTimeInMinutes(dateUtil.now())}/${durationInMinutes}'"
 
     return when {
-        type == TB.Type.FAKE_EXTENDED -> rh.gs(UiStrings.temp_basal_tsf_fake_extended, rate, netExtendedRate(profile), timeAndDuration)
-        isAbsolute                    -> rh.gs(UiStrings.temp_basal_tsf_absolute, rate, timeAndDuration)
-        else                          -> rh.gs(UiStrings.temp_basal_tsf_percent, rate, timeAndDuration)
+        type == TB.Type.FAKE_EXTENDED -> rh.gs(CoreUiStrings.temp_basal_tsf_fake_extended, rate, netExtendedRate(profile), timeAndDuration)
+        isAbsolute                    -> rh.gs(CoreUiStrings.temp_basal_tsf_absolute, rate, timeAndDuration)
+        else                          -> rh.gs(CoreUiStrings.temp_basal_tsf_percent, rate, timeAndDuration)
     }
 }
 
@@ -42,5 +42,5 @@ fun TB.toStringFull(profile: Profile, dateUtil: DateUtil, ch: ConcentrationHelpe
 }
 
 fun TB.toStringShort(rh: TextResolver): String =
-    if (isAbsolute || type == TB.Type.FAKE_EXTENDED) rh.gs(UiStrings.pump_base_basal_rate, rate)
-    else rh.gs(UiStrings.formatPercent, rate)
+    if (isAbsolute || type == TB.Type.FAKE_EXTENDED) rh.gs(CoreUiStrings.pump_base_basal_rate, rate)
+    else rh.gs(CoreUiStrings.formatPercent, rate)

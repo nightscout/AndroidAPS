@@ -19,7 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.dialogs.TimePickerModal
 
 /**
@@ -74,7 +74,7 @@ fun TimeRangePicker(
                     modifier = Modifier.clickable { showStartPicker = true }
                 ) {
                     Text(
-                        text = stringResource(UiStrings.from_label),
+                        text = stringResource(CoreUiStrings.from_label),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -99,7 +99,7 @@ fun TimeRangePicker(
                     modifier = Modifier.clickable { showEndPicker = true }
                 ) {
                     Text(
-                        text = stringResource(UiStrings.to_label),
+                        text = stringResource(CoreUiStrings.to_label),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )

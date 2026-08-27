@@ -1,7 +1,5 @@
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-import org.gradle.api.tasks.testing.logging.TestLogEvent
-
 plugins {
+    id("kmp-test-defaults")
     kotlin("multiplatform")
     // NOT com.android.library. AGP 9 refuses that plugin together with the multiplatform plugin.
     // Same reason as :core:ui, :core:interfaces and the other multiplatform modules.
@@ -91,7 +89,7 @@ kotlin {
                 implementation(project(":core:interfaces"))
                 implementation(project(":core:keys"))
                 implementation(project(":core:objects"))
-                // For UiStrings: the command queue names its user text instead of numbering it.
+                // For CoreUiStrings: the command queue names its user text instead of numbering it.
                 implementation(project(":core:ui"))
             }
         }
@@ -157,7 +155,8 @@ kotlin {
 }
 
 tasks.withType<Test> {
-    useJUnitPlatform()
+    // useJUnitPlatform() and the heap cap come from kmp-test-defaults; only the JaCoCo part is
+    // specific to this module.
     // Robolectric runs tests in its own classloader sandbox and rewrites bytecode, so the default
     // JaCoCo on-the-fly agent records no coverage for the classes those tests exercise. Restated
     // from jacoco-module-dependencies, which applies com.android.library.
@@ -167,7 +166,8 @@ tasks.withType<Test> {
     }
 }
 
-// :shared:impl and :shared:tests are flavoured Android libraries, and a multiplatform module has no
+// :shared:tests is a flavoured Android library (:shared:impl stopped being one when it went
+// multiplatform), and a multiplatform module has no
 // flavours of its own, so resolution would be ambiguous. Pin the same flavour the app builds with -
 // neither module has flavour specific sources, so this only picks a variant, it does not change code.
 // Same pin as :plugins:main and :plugins:aps.
@@ -181,19 +181,5 @@ listOf(
         attributes {
             attribute(com.android.build.api.attributes.ProductFlavorAttr.of("standard"), objects.named("full"))
         }
-    }
-}
-
-// Restated from test-module-dependencies, which applies com.android.library and so cannot be used by a
-// multiplatform module. Both halves matter: without the logging a failure on CI shows neither the test's
-// output nor a full stack trace, and without maxHeapSize each forked test JVM takes ~25% of machine RAM,
-// which is what used to push the emulators offline mid-instrumentation.
-tasks.withType<Test>().configureEach {
-    failOnNoDiscoveredTests = false
-    maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
-    maxHeapSize = "1536m"
-    testLogging {
-        events = setOf(TestLogEvent.FAILED, TestLogEvent.SKIPPED, TestLogEvent.STANDARD_OUT)
-        exceptionFormat = TestExceptionFormat.FULL
     }
 }

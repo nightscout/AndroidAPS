@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.DialogProperties
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.htmlToAnnotatedString
 import app.aaps.core.ui.compose.stringResource
 
@@ -68,7 +68,7 @@ fun ErrorDialog(
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(UiStrings.dismiss))
+                Text(stringResource(CoreUiStrings.dismiss))
             }
         },
         properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
@@ -118,7 +118,7 @@ fun ErrorDialog(
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(UiStrings.dismiss))
+                Text(stringResource(CoreUiStrings.dismiss))
             }
         },
         properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)

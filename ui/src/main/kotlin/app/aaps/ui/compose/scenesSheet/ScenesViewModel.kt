@@ -22,6 +22,7 @@ import app.aaps.core.interfaces.scenes.SceneStore
 import app.aaps.core.interfaces.sync.NsClient
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,7 +33,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.R as CoreUiR
 

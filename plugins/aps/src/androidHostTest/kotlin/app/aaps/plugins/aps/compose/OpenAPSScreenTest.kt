@@ -5,7 +5,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import app.aaps.core.ui.R
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -47,7 +47,7 @@ class OpenAPSScreenTest {
             lastRun = "12:34",
             sections = listOf(
                 OpenAPSSection(
-                    title = UiStrings.result,
+                    title = CoreUiStrings.result,
                     rows = listOf(KeyValueRow(key = "IOB", value = "1.5 U")),
                     collapsedByDefault = false
                 )
@@ -67,7 +67,7 @@ class OpenAPSScreenTest {
         val state = OpenAPSUiState(
             sections = listOf(
                 OpenAPSSection(
-                    title = UiStrings.result,
+                    title = CoreUiStrings.result,
                     rows = listOf(KeyValueRow(key = "IOB", value = "1.5 U")),
                     collapsedByDefault = true
                 )
@@ -86,7 +86,7 @@ class OpenAPSScreenTest {
     fun groupHeaderSection_rendersTitle() {
         val state = OpenAPSUiState(
             sections = listOf(
-                OpenAPSSection(title = UiStrings.result, isGroupHeader = true)
+                OpenAPSSection(title = CoreUiStrings.result, isGroupHeader = true)
             )
         )
         compose.setContent {

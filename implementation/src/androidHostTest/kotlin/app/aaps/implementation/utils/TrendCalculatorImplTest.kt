@@ -4,7 +4,7 @@ import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -22,15 +22,15 @@ class TrendCalculatorImplTest : TestBase() {
     @BeforeEach
     fun setup() {
         trendCalculator = TrendCalculatorImpl(rh)
-        whenever(rh.gs(UiStrings.a11y_arrow_double_down)).thenReturn("Double Down")
-        whenever(rh.gs(UiStrings.a11y_arrow_single_down)).thenReturn("Single Down")
-        whenever(rh.gs(UiStrings.a11y_arrow_forty_five_down)).thenReturn("Forty Five Down")
-        whenever(rh.gs(UiStrings.a11y_arrow_flat)).thenReturn("Flat")
-        whenever(rh.gs(UiStrings.a11y_arrow_forty_five_up)).thenReturn("Forty Five Up")
-        whenever(rh.gs(UiStrings.a11y_arrow_single_up)).thenReturn("Single Up")
-        whenever(rh.gs(UiStrings.a11y_arrow_double_up)).thenReturn("Double Up")
-        whenever(rh.gs(UiStrings.a11y_arrow_none)).thenReturn("None")
-        whenever(rh.gs(UiStrings.a11y_arrow_unknown)).thenReturn("Unknown")
+        whenever(rh.gs(CoreUiStrings.a11y_arrow_double_down)).thenReturn("Double Down")
+        whenever(rh.gs(CoreUiStrings.a11y_arrow_single_down)).thenReturn("Single Down")
+        whenever(rh.gs(CoreUiStrings.a11y_arrow_forty_five_down)).thenReturn("Forty Five Down")
+        whenever(rh.gs(CoreUiStrings.a11y_arrow_flat)).thenReturn("Flat")
+        whenever(rh.gs(CoreUiStrings.a11y_arrow_forty_five_up)).thenReturn("Forty Five Up")
+        whenever(rh.gs(CoreUiStrings.a11y_arrow_single_up)).thenReturn("Single Up")
+        whenever(rh.gs(CoreUiStrings.a11y_arrow_double_up)).thenReturn("Double Up")
+        whenever(rh.gs(CoreUiStrings.a11y_arrow_none)).thenReturn("None")
+        whenever(rh.gs(CoreUiStrings.a11y_arrow_unknown)).thenReturn("Unknown")
     }
 
     @Test

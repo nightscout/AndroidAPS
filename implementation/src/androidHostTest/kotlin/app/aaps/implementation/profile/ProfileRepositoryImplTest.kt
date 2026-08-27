@@ -18,6 +18,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.longOrNull
 import org.json.JSONArray
@@ -34,6 +35,7 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
+import java.util.TimeZone
 
 /**
  * Covers [ProfileRepositoryImpl.reorder] — the commit path behind the profile carousel's sort mode.
@@ -383,6 +385,24 @@ class ProfileRepositoryImplTest : TestBaseWithProfile() {
         assertThat(createSut().names()).containsExactly("Good")
     }
 
+    /**
+     * Pins a deliberate difference from the `org.json` reader this used to use.
+     *
+     * Android's `optString` turned a JSON `null` into the four-character string "null", so an entry
+     * with a null name became a profile actually called "null" - which was then written back and
+     * synced on to every client. Reading a JSON `null` as "no name" makes it a damaged entry, and
+     * damaged entries are skipped.
+     */
+    @Test
+    fun `an entry whose name is JSON null is skipped rather than named null`() = runTest {
+        storedPayload = JSONObject(payload(1_000L, "Good"))
+            .also { it.getJSONArray("profiles").put(JSONObject().put("name", JSONObject.NULL).put("mgdl", true)) }
+            .toString()
+        whenever(preferences.get(LongNonKey.LocalProfileLastChange)).thenReturn(1_000L)
+
+        assertThat(createSut().names()).containsExactly("Good")
+    }
+
     // ---------------------------------------------------------------------------------------------
     // Sync: the list travels as one Bidirectional preference, so writes must say where they came from.
     // ---------------------------------------------------------------------------------------------
@@ -462,6 +482,27 @@ class ProfileRepositoryImplTest : TestBaseWithProfile() {
         sut.add(profile("Mine"))
 
         assertThat(sut.profile.value?.getData()?.get("date")?.jsonPrimitive?.longOrNull).isNotNull()
+    }
+
+    /**
+     * Pins the `timezone` field of the published store.
+     *
+     * Nothing else asserted this field, and it is uploaded to Nightscout, so it is the one value in
+     * the store that could change quietly if the zone lookup is ever swapped for another one that
+     * looks equivalent. The oracle is the platform default on purpose: the field must keep saying
+     * what the device thinks its zone is, whichever library reads it.
+     */
+    @Test
+    fun `the published store carries the system time zone`() = runTest {
+        val sut = createSut()
+        sut.add(profile("Mine"))
+
+        val zone = sut.profile.value?.getData()
+            ?.get("store")?.jsonObject
+            ?.get("Mine")?.jsonObject
+            ?.get("timezone")?.jsonPrimitive?.content
+
+        assertThat(zone).isEqualTo(TimeZone.getDefault().id)
     }
 
     /** The accepted case still bumps, otherwise the editor would never notice an NS push. */

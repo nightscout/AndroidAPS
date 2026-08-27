@@ -31,6 +31,7 @@ import app.aaps.core.ui.compose.icons.IcPumpCartridge
 import app.aaps.core.ui.compose.pump.tickerFlow
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.Dispatchers
@@ -42,7 +43,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 // Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
 // unscoped so each screen gets its own.

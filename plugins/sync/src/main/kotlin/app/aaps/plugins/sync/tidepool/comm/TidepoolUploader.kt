@@ -22,6 +22,9 @@ import app.aaps.plugins.sync.tidepool.messages.DatasetReplyMessage
 import app.aaps.plugins.sync.tidepool.messages.OpenDatasetRequestMessage
 import app.aaps.plugins.sync.tidepool.messages.UploadReplyMessage
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -36,10 +39,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@SingleIn(AppScope::class)
 class TidepoolUploader @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,

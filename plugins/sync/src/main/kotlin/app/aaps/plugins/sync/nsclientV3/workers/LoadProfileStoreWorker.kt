@@ -19,9 +19,9 @@ import app.aaps.plugins.sync.nsclientV3.json.JsonBridge.toOrgJson
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
+import kotlin.math.max
 import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.json.JsonObject
-import kotlin.math.max
 
 class LoadProfileStoreWorker @AssistedInject constructor(
     @Assisted context: Context,

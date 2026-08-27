@@ -20,6 +20,7 @@ import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.ui.events.EventQuickWizardChange
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.CoroutineStart
@@ -38,7 +39,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
-import javax.inject.Inject
 
 /**
  * ViewModel for QuickWizardManagementScreen managing QuickWizard entries and editing.

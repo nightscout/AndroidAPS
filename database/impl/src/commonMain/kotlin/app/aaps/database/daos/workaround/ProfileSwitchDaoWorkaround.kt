@@ -10,10 +10,10 @@ import app.aaps.database.entities.ProfileSwitch
 internal interface ProfileSwitchDaoWorkaround : TraceableDao<ProfileSwitch> {
 
     @Transaction
-    override fun insertNewEntry(entry: ProfileSwitch): Long =
+    override suspend fun insertNewEntry(entry: ProfileSwitch): Long =
         (this as ProfileSwitchDao).insertNewEntryImpl(entry)
 
     @Transaction
-    override fun updateExistingEntry(entry: ProfileSwitch): Long =
+    override suspend fun updateExistingEntry(entry: ProfileSwitch): Long =
         (this as ProfileSwitchDao).updateExistingEntryImpl(entry)
 }

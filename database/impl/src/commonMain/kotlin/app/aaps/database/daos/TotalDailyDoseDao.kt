@@ -10,16 +10,16 @@ import app.aaps.database.entities.embedments.InterfaceIDs
 internal interface TotalDailyDoseDao : TraceableDao<TotalDailyDose> {
 
     @Query("SELECT * FROM $TABLE_TOTAL_DAILY_DOSES WHERE id = :id")
-    override fun findById(id: Long): TotalDailyDose?
+    override suspend fun findById(id: Long): TotalDailyDose?
 
     @Query("DELETE FROM $TABLE_TOTAL_DAILY_DOSES")
-    override fun deleteAllEntries()
+    override suspend fun deleteAllEntries()
 
     @Query("DELETE FROM $TABLE_TOTAL_DAILY_DOSES WHERE timestamp < :than")
-    override fun deleteOlderThan(than: Long): Int
+    override suspend fun deleteOlderThan(than: Long): Int
 
     @Query("DELETE FROM $TABLE_TOTAL_DAILY_DOSES WHERE referenceId IS NOT NULL")
-    override fun deleteTrackedChanges(): Int
+    override suspend fun deleteTrackedChanges(): Int
 
     @Query("SELECT * FROM $TABLE_TOTAL_DAILY_DOSES WHERE (pumpId = :pumpId) AND (pumpType = :pumpType) AND (pumpSerial = :pumpSerial) AND (referenceId IS NULL)")
     suspend fun findByPumpIds(pumpId: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): TotalDailyDose?

@@ -10,16 +10,16 @@ import app.aaps.database.entities.embedments.InterfaceIDs
 internal interface TemporaryBasalDao : TraceableDao<TemporaryBasal> {
 
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE id = :id")
-    override fun findById(id: Long): TemporaryBasal?
+    override suspend fun findById(id: Long): TemporaryBasal?
 
     @Query("DELETE FROM $TABLE_TEMPORARY_BASALS")
-    override fun deleteAllEntries()
+    override suspend fun deleteAllEntries()
 
     @Query("DELETE FROM $TABLE_TEMPORARY_BASALS WHERE timestamp < :than")
-    override fun deleteOlderThan(than: Long): Int
+    override suspend fun deleteOlderThan(than: Long): Int
 
     @Query("DELETE FROM $TABLE_TEMPORARY_BASALS WHERE referenceId IS NOT NULL")
-    override fun deleteTrackedChanges(): Int
+    override suspend fun deleteTrackedChanges(): Int
 
     @Query("SELECT id FROM $TABLE_TEMPORARY_BASALS ORDER BY id DESC limit 1")
     suspend fun getLastId(): Long?

@@ -9,7 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.BlePreCheckResult
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.stringResource
 import kotlinx.coroutines.Dispatchers
@@ -47,8 +47,8 @@ fun BlePreCheckHost(
     when (checkResult) {
         BlePreCheckResult.BLE_NOT_SUPPORTED -> {
             OkDialog(
-                title = stringResource(UiStrings.message),
-                message = stringResource(UiStrings.ble_not_supported),
+                title = stringResource(CoreUiStrings.message),
+                message = stringResource(CoreUiStrings.ble_not_supported),
                 onDismiss = {
                     checkResult = null
                     onFailed?.invoke()
@@ -58,8 +58,8 @@ fun BlePreCheckHost(
 
         BlePreCheckResult.BLE_NOT_ENABLED -> {
             OkDialog(
-                title = stringResource(UiStrings.message),
-                message = stringResource(UiStrings.ble_not_enabled),
+                title = stringResource(CoreUiStrings.message),
+                message = stringResource(CoreUiStrings.ble_not_enabled),
                 onDismiss = {
                     checkResult = null
                     onFailed?.invoke()
@@ -69,8 +69,8 @@ fun BlePreCheckHost(
 
         BlePreCheckResult.PERMISSIONS_MISSING -> {
             OkDialog(
-                title = stringResource(UiStrings.message),
-                message = stringResource(UiStrings.ble_permissions_missing),
+                title = stringResource(CoreUiStrings.message),
+                message = stringResource(CoreUiStrings.ble_permissions_missing),
                 onDismiss = {
                     checkResult = null
                     onFailed?.invoke()

@@ -6,12 +6,12 @@ import app.aaps.database.entities.interfaces.DBEntry
 
 internal class DelegatedEffectiveProfileSwitchDao(changes: MutableList<DBEntry>, private val dao: EffectiveProfileSwitchDao) : DelegatedDao(changes), EffectiveProfileSwitchDao by dao {
 
-    override fun insertNewEntry(entry: EffectiveProfileSwitch): Long {
+    override suspend fun insertNewEntry(entry: EffectiveProfileSwitch): Long {
         changes.add(entry)
         return super.insertNewEntry(entry)
     }
 
-    override fun updateExistingEntry(entry: EffectiveProfileSwitch): Long {
+    override suspend fun updateExistingEntry(entry: EffectiveProfileSwitch): Long {
         changes.add(entry)
         return super.updateExistingEntry(entry)
     }

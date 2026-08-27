@@ -30,7 +30,7 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.convertedToPercent
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -121,16 +121,16 @@ class DetermineBasalResult @Inject constructor(
     }
 
     override val carbsRequiredText: String
-        get() = rh.gs(UiStrings.carbsreq, carbsReq, carbsReqWithin)
+        get() = rh.gs(CoreUiStrings.carbsreq, carbsReq, carbsReqWithin)
 
     override suspend fun resultAsString(): String {
         val pump = activePlugin.activePump
         if (isChangeRequested()) {
             // rate
-            var ret: String = if (rate == 0.0 && duration == 0) "${rh.gs(UiStrings.cancel_temp)} "
-            else if (rate == -1.0) "${rh.gs(UiStrings.let_temp_basal_run)}\n"
-            else if (usePercent) "${rh.gs(UiStrings.percent_rate_duration, percent.toDouble(), percent * ch.fromPump(pump.baseBasalRate) / 100.0, duration)} "
-            else "${rh.gs(UiStrings.rate_percent_duration, rate, rate / ch.fromPump(pump.baseBasalRate) * 100.0, duration)} "
+            var ret: String = if (rate == 0.0 && duration == 0) "${rh.gs(CoreUiStrings.cancel_temp)} "
+            else if (rate == -1.0) "${rh.gs(CoreUiStrings.let_temp_basal_run)}\n"
+            else if (usePercent) "${rh.gs(CoreUiStrings.percent_rate_duration, percent.toDouble(), percent * ch.fromPump(pump.baseBasalRate) / 100.0, duration)} "
+            else "${rh.gs(CoreUiStrings.rate_percent_duration, rate, rate / ch.fromPump(pump.baseBasalRate) * 100.0, duration)} "
 
             // smb
             if (smb != 0.0) ret += "SMB: ${decimalFormatter.toPumpSupportedBolus(smb, activePlugin.activePump.pumpDescription.bolusStep)} "
@@ -139,12 +139,12 @@ class DetermineBasalResult @Inject constructor(
             }
 
             // reason
-            ret += rh.gs(UiStrings.reason) + ": " + reason
+            ret += rh.gs(CoreUiStrings.reason) + ": " + reason
             return ret
         }
         return if (isCarbsRequired) {
             carbsRequiredText
-        } else rh.gs(UiStrings.nochangerequested)
+        } else rh.gs(CoreUiStrings.nochangerequested)
     }
 
     override fun newAndClone(): APSResult = apsResultProvider().with(result)

@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.DialogProperties
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.htmlToAnnotatedString
 import app.aaps.core.ui.compose.stringResource
 
@@ -47,16 +47,16 @@ fun YesNoCancelDialog(
         },
         confirmButton = {
             TextButton(onClick = onYes) {
-                Text(stringResource(UiStrings.yes))
+                Text(stringResource(CoreUiStrings.yes))
             }
         },
         dismissButton = {
             Row {
                 TextButton(onClick = onCancel) {
-                    Text(stringResource(UiStrings.cancel))
+                    Text(stringResource(CoreUiStrings.cancel))
                 }
                 TextButton(onClick = onNo) {
-                    Text(stringResource(UiStrings.no))
+                    Text(stringResource(CoreUiStrings.no))
                 }
             }
         },
@@ -89,16 +89,16 @@ fun YesNoCancelDialog(
         },
         confirmButton = {
             TextButton(onClick = onYes) {
-                Text(stringResource(UiStrings.yes))
+                Text(stringResource(CoreUiStrings.yes))
             }
         },
         dismissButton = {
             Row {
                 TextButton(onClick = onCancel) {
-                    Text(stringResource(UiStrings.cancel))
+                    Text(stringResource(CoreUiStrings.cancel))
                 }
                 TextButton(onClick = onNo) {
-                    Text(stringResource(UiStrings.no))
+                    Text(stringResource(CoreUiStrings.no))
                 }
             }
         },

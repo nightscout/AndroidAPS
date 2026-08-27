@@ -6,7 +6,7 @@ import app.aaps.core.data.model.TT
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
@@ -26,4 +26,4 @@ fun TT.highValueToUnitsToString(units: GlucoseUnit, decimalFormatter: DecimalFor
 fun TT.friendlyDescription(units: GlucoseUnit, rh: TextResolver, profileUtil: ProfileUtil): String =
     profileUtil.toTargetRangeString(lowTarget, highTarget, GlucoseUnit.MGDL, units) +
         profileUtil.unitLabel +
-        "@" + rh.gs(UiStrings.format_mins, duration.milliseconds.inWholeMinutes) + "(" + reason.text + ")"
+        "@" + rh.gs(CoreUiStrings.format_mins, duration.milliseconds.inWholeMinutes) + "(" + reason.text + ")"

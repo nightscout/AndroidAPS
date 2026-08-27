@@ -7,7 +7,7 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.TextResolver
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 
 class CommandLoadTDDs(
     private val aapsLogger: AAPSLogger,
@@ -24,7 +24,7 @@ class CommandLoadTDDs(
             aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${it.success} enacted: ${it.enacted}")
         }
 
-    override fun status(): String = rh.gs(UiStrings.load_tdds)
+    override fun status(): String = rh.gs(CoreUiStrings.load_tdds)
 
     override fun log(): String = "LOAD TDDs"
 }

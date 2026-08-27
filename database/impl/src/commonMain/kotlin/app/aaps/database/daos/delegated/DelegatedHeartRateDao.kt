@@ -9,12 +9,12 @@ internal class DelegatedHeartRateDao(
     private val dao: HeartRateDao
 ) : DelegatedDao(changes), HeartRateDao by dao {
 
-    override fun insertNewEntry(entry: HeartRate): Long {
+    override suspend fun insertNewEntry(entry: HeartRate): Long {
         changes.add(entry)
         return dao.insertNewEntry(entry)
     }
 
-    override fun updateExistingEntry(entry: HeartRate): Long {
+    override suspend fun updateExistingEntry(entry: HeartRate): Long {
         changes.add(entry)
         return dao.updateExistingEntry(entry)
     }

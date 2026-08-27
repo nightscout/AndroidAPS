@@ -1,122 +1,124 @@
 package app.aaps.di.metro
 
 import android.content.SharedPreferences
+import androidx.work.WorkManager
+import app.aaps.core.interfaces.alerts.LocalAlertUtils
+import app.aaps.core.interfaces.aps.APSResult
+import app.aaps.core.interfaces.aps.AutosensData
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
-import app.aaps.core.interfaces.logging.LoggerUtils
-import app.aaps.core.interfaces.maintenance.ImportExportPrefs
-import app.aaps.core.interfaces.pump.PumpWithConcentration
-import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.interfaces.workflow.CalculationWorkflow
-import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.logging.L
-import app.aaps.core.interfaces.rx.AapsSchedulers
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.widget.WidgetUpdater
-import app.aaps.core.interfaces.scenes.SceneIconResolver
-import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
-import app.aaps.plugins.automation.services.LastLocationDataContainer
-import app.aaps.core.interfaces.nsclient.StoreDataForDb
-import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
-import app.aaps.implementation.scenes.SceneExecutor
-import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.plugin.PluginPermissions
-import app.aaps.core.interfaces.aps.AutosensData
-import app.aaps.core.interfaces.configuration.RunningConfigurationKeys
-import app.aaps.core.nssdk.interfaces.RunningConfiguration
-import app.aaps.core.interfaces.aps.APSResult
-import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.nsclient.NSClientRepository
-import app.aaps.core.interfaces.maintenance.CloudStorageProvider
-import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.pump.BolusProgressData
-import app.aaps.database.AppRepository
-import app.aaps.core.interfaces.workflow.CalculationSignals
-import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
-import app.aaps.core.interfaces.overview.graph.OverviewDataCache
-import app.aaps.core.interfaces.dst.DstHelper
-import app.aaps.core.interfaces.source.NSClientSource
-import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.implementation.maintenance.cloud.CloudStorageManager
-import app.aaps.ui.search.BuiltInSearchables
-import app.aaps.core.utils.receivers.DataInbox
-import app.aaps.implementation.plugin.PluginStore
-import app.aaps.implementation.profile.ProfileSwitchSilentGate
-import app.aaps.core.interfaces.sync.XDripBroadcast
-import app.aaps.workflow.WorkflowChainData
-import app.aaps.core.interfaces.maintenance.Maintenance
-import app.aaps.core.interfaces.maintenance.FileListProvider
-import app.aaps.core.interfaces.overview.LastBgData
-import app.aaps.core.interfaces.local.LocaleDependentSetting
-import app.aaps.core.interfaces.pump.PumpStatusProvider
-import app.aaps.core.interfaces.overview.OverviewData
-import app.aaps.core.interfaces.protection.ExportPasswordDataStore
-import app.aaps.core.interfaces.protection.SecureEncrypt
-import app.aaps.core.objects.crypto.CryptoUtil
-import app.aaps.core.interfaces.insulin.ConcentrationHelper
-import app.aaps.core.interfaces.db.ProcessedTbrEbData
-import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.iob.GlucoseStatusProvider
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.interfaces.notifications.NotificationHolder
-import app.aaps.core.interfaces.protection.PasswordCheck
-import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
-import app.aaps.core.interfaces.alerts.LocalAlertUtils
-import app.aaps.core.interfaces.profiling.Profiler
-import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.bolus.WizardExecutor
+import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
+import app.aaps.core.interfaces.configuration.RunningConfigurationKeys
+import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.di.APS
 import app.aaps.core.interfaces.di.FeatureMemberInjectors
 import app.aaps.core.interfaces.di.NotNSClient
 import app.aaps.core.interfaces.di.PumpDriver
+import app.aaps.core.interfaces.dst.DstHelper
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.insulin.InsulinManager
+import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.local.LocaleDependentSetting
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.L
+import app.aaps.core.interfaces.logging.LoggerUtils
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.maintenance.CloudDirectoryManager
+import app.aaps.core.interfaces.maintenance.CloudStorageProvider
+import app.aaps.core.interfaces.maintenance.FileListProvider
+import app.aaps.core.interfaces.maintenance.ImportExportPrefs
+import app.aaps.core.interfaces.maintenance.Maintenance
+import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
+import app.aaps.core.interfaces.notifications.NotificationHolder
+import app.aaps.core.interfaces.nsclient.NSClientRepository
+import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.core.interfaces.nsclient.StoreDataForDb
+import app.aaps.core.interfaces.overview.LastBgData
+import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.graph.GraphConfigRepository
+import app.aaps.core.interfaces.overview.graph.OverviewDataCache
+import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PermissionProvider
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginPermissions
+import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.profiling.Profiler
+import app.aaps.core.interfaces.protection.ExportPasswordDataStore
+import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.interfaces.protection.SecureEncrypt
 import app.aaps.core.interfaces.pump.BlePreCheck
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
+import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.scenes.ActiveSceneSync
 import app.aaps.core.interfaces.scenes.SceneActions
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.scenes.SceneChainResolver
+import app.aaps.core.interfaces.scenes.SceneIconResolver
 import app.aaps.core.interfaces.scenes.SceneStore
 import app.aaps.core.interfaces.scenes.Scenes
+import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.DexcomBoyda
+import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.source.XDripSource
 import app.aaps.core.interfaces.stats.DexcomTirCalculator
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.stats.TirCalculator
 import app.aaps.core.interfaces.storage.Storage
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
+import app.aaps.core.interfaces.sync.NsClient
+import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.ui.CarbSuggestionActions
 import app.aaps.core.interfaces.ui.IconsProvider
+import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.interfaces.utils.TrendCalculator
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
+import app.aaps.core.interfaces.widget.WidgetUpdater
+import app.aaps.core.interfaces.workflow.CalculationSignals
+import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
+import app.aaps.core.interfaces.workflow.CalculationWorkflow
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.VisibilityContext
+import app.aaps.core.nssdk.interfaces.RunningConfiguration
+import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.objects.wizard.BolusWizard
 import app.aaps.core.objects.wizard.QuickWizard
+import app.aaps.core.utils.receivers.DataInbox
+import app.aaps.database.AppRepository
+import app.aaps.implementation.maintenance.cloud.CloudStorageManager
+import app.aaps.implementation.plugin.PluginStore
+import app.aaps.implementation.profile.ProfileSwitchSilentGate
 import app.aaps.implementation.scenes.ActiveSceneManager
+import app.aaps.implementation.scenes.SceneExecutor
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryJob
 import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler
 import app.aaps.plugins.aps.openAPS.DeltaCalculator
@@ -125,7 +127,9 @@ import app.aaps.plugins.aps.openAPSAutoISF.DetermineBasalAutoISF
 import app.aaps.plugins.aps.openAPSAutoISF.GlucoseStatusCalculatorAutoIsf
 import app.aaps.plugins.aps.openAPSSMB.DetermineBasalSMB
 import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
+import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.automation.di.AutomationMetroGraph
+import app.aaps.plugins.automation.services.LastLocationDataContainer
 import app.aaps.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
 import app.aaps.plugins.constraints.dstHelper.DstHelperPlugin
 import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
@@ -135,6 +139,25 @@ import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.NSClientSourcePlugin
 import app.aaps.plugins.source.XdripSourcePlugin
 import app.aaps.plugins.source.di.SourceMetroGraph
+import app.aaps.plugins.sync.di.OpenHumansMetroBridge
+import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
+import app.aaps.plugins.sync.nsclientV3.ReceiverDelegate
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.AuthorizedClientsRepository
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlPublisher
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientPairingRepository
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.PairingOfferFetcher
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.PairingOfferPublisher
+import app.aaps.plugins.sync.smsCommunicator.SmsCommunicatorPlugin
+import app.aaps.plugins.sync.smsCommunicator.compose.SmsCommunicatorRepository
+import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
+import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
+import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
+import app.aaps.plugins.sync.tidepool.utils.RateLimit
+import app.aaps.plugins.sync.wear.WearPlugin
+import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
+import app.aaps.ui.search.BuiltInSearchables
+import app.aaps.workflow.WorkflowChainData
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Includes
@@ -142,8 +165,8 @@ import dev.zacsweers.metro.MembersInjector
 import dev.zacsweers.metro.Multibinds
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metrox.viewmodel.MetroViewModelMultibindings
-import javax.inject.Singleton
 import kotlin.reflect.KClass
+import javax.inject.Singleton
 
 /**
  * The one Metro root. Everything else hangs off it as a graph extension.
@@ -366,6 +389,28 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val decimalFormatter: DecimalFormatter
     val profileUtil: ProfileUtil
     val hardLimits: HardLimits
+    val nsIncomingDataProcessor: NsIncomingDataProcessor
+    val openHumansMetroBridge: OpenHumansMetroBridge
+    val xdripMvvmRepository: XdripMvvmRepository
+    val wearPlugin: WearPlugin
+    val rateLimit: RateLimit
+    val tidepoolRepository: TidepoolRepository
+    val tidepoolUploader: TidepoolUploader
+    val authFlowOut: AuthFlowOut
+    val smsCommunicatorRepository: SmsCommunicatorRepository
+    val smsCommunicatorPlugin: SmsCommunicatorPlugin
+    val pairingOfferPublisher: PairingOfferPublisher
+    val pairingOfferFetcher: PairingOfferFetcher
+    val clientPairingRepository: ClientPairingRepository
+    val clientControlPublisher: ClientControlPublisher
+    val authorizedClientsRepository: AuthorizedClientsRepository
+    val receiverDelegate: ReceiverDelegate
+    val nsClientV3Plugin: NSClientV3Plugin
+    val workManager: WorkManager
+    val clientControlActionDispatcher: ClientControlActionDispatcher
+    val nsClient: NsClient
+    val profileFunction: ProfileFunction
+    val versionCheckerUtils: VersionCheckerUtils
     val storage: Storage
     val receiverStatusStore: ReceiverStatusStore
 
@@ -384,6 +429,18 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val dstHelperPlugin: DstHelperPlugin
     val dstHelper: DstHelper
     val objectivesPlugin: ObjectivesPlugin
+
+    /**
+     * Automation, and the permission providers it is the only contributor to.
+     *
+     * Metro owns `AutomationRuntime` now, so Dagger reads it back through `CoreObjectsModule`
+     * instead of the other way round.
+     */
+    val automation: Automation
+
+    /** Same object as [automation], by class: ComposeMainActivity and AppNavGraph inject the concrete type. */
+    val automationRuntime: AutomationRuntime
+    val permissionProviders: Set<PermissionProvider>
 
     /** The live loop's calculator. A history window has its own, at `HistoryWindowScope`. */
     val iobCobCalculator: IobCobCalculator

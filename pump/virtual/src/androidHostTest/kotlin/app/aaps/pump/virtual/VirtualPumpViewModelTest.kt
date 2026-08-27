@@ -14,7 +14,7 @@ import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventQueueChanged
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.pump.virtual.keys.VirtualBooleanNonPreferenceKey
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
@@ -62,8 +62,8 @@ internal class VirtualPumpViewModelTest {
         // suspend preference observed by combine() and read by buildInitialState()
         whenever(preferences.observe(VirtualBooleanNonPreferenceKey.IsSuspended)).thenReturn(MutableStateFlow(false))
         // management-action labels resolved in buildInitialState()
-        whenever(rh.gs(UiStrings.pump_suspend)).thenReturn("Suspend")
-        whenever(rh.gs(UiStrings.pump_resume)).thenReturn("Resume")
+        whenever(rh.gs(CoreUiStrings.pump_suspend)).thenReturn("Suspend")
+        whenever(rh.gs(CoreUiStrings.pump_resume)).thenReturn("Resume")
     }
 
     // Dispatchers.Unconfined runs the PumpCommunicationStatus init collectors eagerly; reading

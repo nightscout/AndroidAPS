@@ -13,14 +13,15 @@ import app.aaps.core.keys.interfaces.NonPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Generic client-side publisher for bidirectionally-synced preference edits (plain values AND the
@@ -50,7 +51,7 @@ import javax.inject.Singleton
  * never corrupt the stored value.
  */
 @OptIn(FlowPreview::class)
-@Singleton
+@SingleIn(AppScope::class)
 class PreferencesClientPublisher @Inject constructor(
     private val preferences: Preferences,
     private val clientControlRoundTrip: ClientControlRoundTrip,

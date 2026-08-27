@@ -18,7 +18,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.icons.IcAs
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.utils.MidnightUtils
@@ -166,7 +166,7 @@ class SensitivityAAPSPlugin(
             IntKey.AutosensPeriod,
             PreferenceSubScreenDef(
                 key = "absorption_aaps_advanced",
-                title = UiStrings.advanced_settings_title,
+                title = CoreUiStrings.advanced_settings_title,
                 items = listOf(
                     DoubleKey.AutosensMax,
                     DoubleKey.AutosensMin

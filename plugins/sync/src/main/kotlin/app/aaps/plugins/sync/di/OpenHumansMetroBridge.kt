@@ -13,13 +13,14 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.MetroWorkerCreator
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.MembersInjector
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.createGraphFactory
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactory
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
 import kotlin.reflect.KClass
 
 /**
@@ -38,7 +39,7 @@ import kotlin.reflect.KClass
  * Dependencies are wrapped in [DeferredRef] rather than resolved here, for the re-entrancy reason
  * written up in `MetroGraphs`.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class OpenHumansMetroBridge @Inject constructor(
     private val aapsLogger: Provider<AAPSLogger>,
     private val rh: Provider<ResourceHelper>,
@@ -52,14 +53,14 @@ class OpenHumansMetroBridge @Inject constructor(
 
     private val graph: OpenHumansMetroGraph by lazy {
         createGraphFactory<OpenHumansMetroGraph.Factory>().create(
-            DeferredRef { aapsLogger.get() },
-            DeferredRef { rh.get() },
-            DeferredRef { preferences.get() },
-            DeferredRef { context.get() },
-            DeferredRef { persistenceLayer.get() },
-            DeferredRef { notificationManager.get() },
-            DeferredRef { rxBus.get() },
-            DeferredRef { fabricPrivacy.get() }
+            DeferredRef { aapsLogger() },
+            DeferredRef { rh() },
+            DeferredRef { preferences() },
+            DeferredRef { context() },
+            DeferredRef { persistenceLayer() },
+            DeferredRef { notificationManager() },
+            DeferredRef { rxBus() },
+            DeferredRef { fabricPrivacy() }
         )
     }
 

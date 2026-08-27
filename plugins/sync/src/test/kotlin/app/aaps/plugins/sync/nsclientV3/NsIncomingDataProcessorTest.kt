@@ -26,6 +26,7 @@ import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryBasal
 import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryTarget
 import app.aaps.core.nssdk.localmodel.treatment.NSTreatment
 import app.aaps.shared.tests.TestBaseWithProfile
+import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.json.JSONArray
@@ -75,7 +76,7 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
             profileRepository = profileRepository,
             storeDataForDb = storeDataForDb,
             config = config,
-            profileStoreProvider = profileStoreProvider,
+            profileStoreProvider = Provider { profileStoreProvider.get() },
             notificationManager = notificationManager,
             nsClientRepository = nsClientRepository
         )

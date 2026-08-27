@@ -33,7 +33,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 
 /**
  * How a plugin category lets the user choose plugins.
@@ -147,7 +147,7 @@ fun ConfigPluginCard(
                 if (showSettings) {
                     InCardActionRow(
                         leadingIcon = Icons.Filled.Settings,
-                        label = stringResource(UiStrings.settings),
+                        label = stringResource(CoreUiStrings.settings),
                         onClick = onSettingsClick
                     )
                 }
@@ -157,7 +157,7 @@ fun ConfigPluginCard(
                     }
                     InCardActionRow(
                         leadingIcon = Icons.AutoMirrored.Filled.OpenInNew,
-                        label = stringResource(UiStrings.open_plugin),
+                        label = stringResource(CoreUiStrings.open_plugin),
                         onClick = onOpenPluginClick
                     )
                 }

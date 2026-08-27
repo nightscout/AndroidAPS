@@ -6,8 +6,9 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import app.aaps.core.interfaces.notifications.NotificationHolder
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 
 /*
     This code replaces  following
@@ -18,7 +19,7 @@ import javax.inject.Singleton
     Context.startForegroundService() did not then call Service.startForeground(): ServiceRecord{e317f7e u0 info.nightscout.nsclient/info.nightscout.androidaps.services.DataLayerListenerServiceMobile}
 
  */
-@Singleton
+@SingleIn(AppScope::class)
 class DataLayerListenerServiceMobileHelper @Inject constructor(
     private val notificationHolder: NotificationHolder
 ) {

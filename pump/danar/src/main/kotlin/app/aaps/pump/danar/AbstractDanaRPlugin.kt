@@ -21,6 +21,7 @@ import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpSync.TemporaryBasalType
+import app.aaps.core.interfaces.pump.comment
 import app.aaps.core.interfaces.pump.mapState
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper

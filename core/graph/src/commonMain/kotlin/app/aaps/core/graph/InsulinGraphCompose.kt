@@ -15,7 +15,7 @@ import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.iobCalc
 import app.aaps.core.data.time.T
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.stringResource
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.Zoom
@@ -65,8 +65,8 @@ fun InsulinGraphCompose(
     modifier: Modifier = Modifier
 ) {
     val modelProducer = remember { CartesianChartModelProducer() }
-    val activityLabel = stringResource(UiStrings.activity)
-    val iobLabel = stringResource(UiStrings.iob)
+    val activityLabel = stringResource(CoreUiStrings.activity)
+    val iobLabel = stringResource(CoreUiStrings.iob)
 
     LaunchedEffect(iCfg.insulinPeakTime, iCfg.insulinEndTime, iCfg.concentration, diaSample) {
         val dia = diaSample ?: iCfg.dia

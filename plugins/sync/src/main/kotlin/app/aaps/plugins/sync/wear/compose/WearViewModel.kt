@@ -33,6 +33,11 @@ import app.aaps.shared.impl.weardata.JsonKeys
 import app.aaps.shared.impl.weardata.ResFileMap
 import app.aaps.shared.impl.weardata.ViewKeys
 import app.aaps.shared.impl.weardata.ZipWatchfaceFormat
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -42,11 +47,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesIntoMap
-import dev.zacsweers.metro.binding
-import dev.zacsweers.metrox.viewmodel.ViewModelKey
-import javax.inject.Inject
 
 @Immutable
 data class WearUiState(

@@ -6,7 +6,7 @@ import app.aaps.core.interfaces.InterfacesStringIds
 import app.aaps.core.interfaces.resources.TextRefIdRegistry
 import app.aaps.core.keys.KeysStringIds
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.UiStringIds
+import app.aaps.core.ui.CoreUiStringIds
 
 /**
  * Both resource forms end up in the platform `stringResource`. [TextRef.AndroidRes] carries the id
@@ -18,14 +18,14 @@ actual fun stringResource(ref: TextRef): String = when (ref) {
     is TextRef.Literal    -> ref.text
     is TextRef.AndroidRes ->
         if (ref.args.isEmpty()) stringResource(ref.id)
-        else stringResource(ref.id, *ref.args.toTypedArray())
+        else stringResource(ref.id, *ref.args.forFormat())
 
     is TextRef.Named      -> {
         val id = androidIdOf(ref)
         when {
             id == null         -> ref.name
             ref.args.isEmpty() -> stringResource(id)
-            else               -> stringResource(id, *ref.args.toTypedArray())
+            else               -> stringResource(id, *ref.args.forFormat())
         }
     }
 }
@@ -45,7 +45,17 @@ actual fun stringResource(ref: TextRef): String = when (ref) {
  */
 private fun androidIdOf(ref: TextRef.Named): Int? = when (ref.owner) {
     "keys"       -> KeysStringIds.idOf(ref.name)
-    "ui"         -> UiStringIds.idOf(ref.name)
+    "coreUi"     -> CoreUiStringIds.idOf(ref.name)
     "interfaces" -> InterfacesStringIds.idOf(ref.name)
     else         -> TextRefIdRegistry.idOf(ref)
 }
+
+/**
+ * Compose's `stringResource(id, vararg Any)` will not take a null, but `TextRef.args` may hold one
+ * because the resource id form it replaces - `gs(id, vararg Any?)` - always could.
+ *
+ * `String.format` renders a null `%s` as the text "null", so substituting it here produces exactly the
+ * same output as the non-Compose path. A null against a numeric conversion still fails, as it did
+ * before.
+ */
+private fun List<Any?>.forFormat(): Array<Any> = Array(size) { this[it] ?: "null" }

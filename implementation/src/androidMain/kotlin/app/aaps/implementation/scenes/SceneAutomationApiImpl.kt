@@ -8,7 +8,7 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.scenes.SceneAutomationResult
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
@@ -72,8 +72,8 @@ class SceneAutomationApiImpl @Inject constructor(
     }
 
     override suspend fun prepareScene(id: String, durationMinutes: Int?): WizardBolusExecutor.PrepareResult {
-        val scene = sceneRepository.getScene(id) ?: return WizardBolusExecutor.PrepareResult.Error(rh.gs(UiStrings.clientcontrol_fail_scene_not_found))
-        if (!scene.isEnabled) return WizardBolusExecutor.PrepareResult.Error(rh.gs(UiStrings.clientcontrol_fail_scene_disabled))
+        val scene = sceneRepository.getScene(id) ?: return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.clientcontrol_fail_scene_not_found))
+        if (!scene.isEnabled) return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.clientcontrol_fail_scene_disabled))
         return sceneExecutor.prepareScene(scene, durationMinutes)
     }
 
@@ -120,12 +120,12 @@ class SceneAutomationApiImpl @Inject constructor(
             if (result.failedCount == 0 && endedSceneName != null)
                 notificationManager.post(
                     id = NotificationId.SCENE_CHAINED,
-                    text = rh.gs(UiStrings.scene_chained_format, endedSceneName, result.targetSceneName)
+                    text = rh.gs(CoreUiStrings.scene_chained_format, endedSceneName, result.targetSceneName)
                 )
             else if (result.failedCount > 0)
                 notificationManager.post(
                     id = NotificationId.SCENE_CHAIN_ERROR,
-                    text = rh.gs(UiStrings.scene_chain_error_summary, endedSceneName ?: "", result.targetSceneName, result.failedCount, result.totalCount)
+                    text = rh.gs(CoreUiStrings.scene_chain_error_summary, endedSceneName ?: "", result.targetSceneName, result.failedCount, result.totalCount)
                 )
         }
         return result

@@ -31,7 +31,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.SnackbarColors
 import app.aaps.core.ui.compose.stringResource
@@ -87,7 +87,7 @@ fun GlobalSnackbarHost(
             dismissAction = {
                 TextButton(onClick = { hostState.currentSnackbarData?.dismiss() }) {
                     Text(
-                        text = stringResource(UiStrings.dismiss),
+                        text = stringResource(CoreUiStrings.dismiss),
                         color = contentColor
                     )
                 }

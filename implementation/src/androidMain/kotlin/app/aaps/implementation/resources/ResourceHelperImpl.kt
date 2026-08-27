@@ -9,7 +9,7 @@ import app.aaps.core.interfaces.resources.TextRefIdRegistry
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.ui.UiStringIds
+import app.aaps.core.ui.CoreUiStringIds
 import app.aaps.implementation.ImplementationStringIds
 import app.aaps.core.ui.locale.LocaleHelper
 import kotlinx.coroutines.CoroutineScope
@@ -34,12 +34,12 @@ class ResourceHelperImpl @Inject constructor(var context: Context, private val f
     private var localizedContext: Context = buildLocalizedContext()
 
     init {
-        // Teach ResourceHelper the names :core:ui owns. It cannot see UiStringIds itself - :core:ui
+        // Teach ResourceHelper the names :core:ui owns. It cannot see CoreUiStringIds itself - :core:ui
         // depends on :core:interfaces, not the other way round - so without this a `ui` name read
         // outside a Composable renders as the raw name ("format_carbs" instead of "12 g").
         // Here rather than in :core:ui, because this class is downstream of every module that owns
         // strings and is built before anything can ask it for text.
-        TextRefIdRegistry.register("ui") { name -> UiStringIds.idOf(name) }
+        TextRefIdRegistry.register("coreUi") { name -> CoreUiStringIds.idOf(name) }
         // Same for this module's own names: the classes here name their strings now, and ResourceHelper
         // cannot see ImplementationStringIds from :core:interfaces either.
         TextRefIdRegistry.register("implementation") { name -> ImplementationStringIds.idOf(name) }

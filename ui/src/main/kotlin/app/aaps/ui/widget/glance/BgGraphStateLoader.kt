@@ -15,8 +15,8 @@ import app.aaps.core.keys.BooleanComposedKey
 import app.aaps.core.keys.IntComposedKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.ui.widget.directionToDrawableRes
-import javax.inject.Inject
-import javax.inject.Provider
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
 
 data class BgGraphRenderState(
     val input: BgGraphInput,
@@ -50,7 +50,7 @@ class BgGraphStateLoader @Inject constructor(
 ) {
 
     suspend fun loadState(appWidgetId: Int): BgGraphRenderState {
-        val cache = cacheProvider.get()
+        val cache = cacheProvider()
         val alpha = preferences.get(IntComposedKey.WidgetOpacity, appWidgetId)
         val useBlack = preferences.get(BooleanComposedKey.WidgetUseBlack, appWidgetId)
         val backgroundColor = resolveWidgetBackground(config, useBlack, alpha)

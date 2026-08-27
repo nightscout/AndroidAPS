@@ -20,7 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.stringResource
 
 /**
@@ -46,8 +46,8 @@ fun BleScanStep(
     onStopScan: () -> Unit = {},
     onCancel: () -> Unit,
     deviceNameFilter: Regex? = null,
-    title: String = stringResource(UiStrings.ble_scan_select_pump),
-    subtitle: String = stringResource(UiStrings.ble_scan_scanning)
+    title: String = stringResource(CoreUiStrings.ble_scan_select_pump),
+    subtitle: String = stringResource(CoreUiStrings.ble_scan_scanning)
 ) {
     DisposableEffect(Unit) {
         onStartScan()
@@ -63,7 +63,7 @@ fun BleScanStep(
     WizardStepLayout(
         scrollable = false,
         secondaryButton = WizardButton(
-            text = stringResource(UiStrings.cancel),
+            text = stringResource(CoreUiStrings.cancel),
             onClick = onCancel
         )
     ) {

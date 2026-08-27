@@ -94,6 +94,14 @@ import app.aaps.plugins.sync.nsclientV3.workers.LoadProfileStoreWorker
 import app.aaps.plugins.sync.nsclientV3.workers.LoadSettingsWorker
 import app.aaps.plugins.sync.nsclientV3.workers.LoadStatusWorker
 import app.aaps.plugins.sync.nsclientV3.workers.LoadTreatmentsWorker
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
+import java.security.InvalidParameterException
+import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -121,13 +129,9 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.encodeToJsonElement
-import java.security.InvalidParameterException
-import java.util.concurrent.atomic.AtomicBoolean
-import javax.inject.Inject
-import javax.inject.Singleton
-import kotlin.time.Duration.Companion.milliseconds
 
-@Singleton
+@SingleIn(AppScope::class)
+@ContributesBinding(AppScope::class, binding = binding<NsClient>())
 class NSClientV3Plugin @Inject constructor(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,

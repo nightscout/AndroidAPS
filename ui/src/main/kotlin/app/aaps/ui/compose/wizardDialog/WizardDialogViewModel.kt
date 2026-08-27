@@ -48,6 +48,7 @@ import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactoryKey
@@ -61,7 +62,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Provider
 import kotlin.math.abs
 
 @Stable
@@ -386,7 +386,7 @@ class WizardDialogViewModel @AssistedInject constructor(
         // Percentage is always applied
         val percentageCorrection = state.percentage
 
-        val w = bolusWizardProvider.get().doCalc(
+        val w = bolusWizardProvider().doCalc(
             specificProfile,
             profileName,
             tempTarget,

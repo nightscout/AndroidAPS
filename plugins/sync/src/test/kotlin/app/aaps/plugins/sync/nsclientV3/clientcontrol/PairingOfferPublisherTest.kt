@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.localmodel.treatment.CreateUpdateResponse
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -18,7 +19,6 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.io.IOException
-import javax.inject.Provider
 
 internal class PairingOfferPublisherTest {
 

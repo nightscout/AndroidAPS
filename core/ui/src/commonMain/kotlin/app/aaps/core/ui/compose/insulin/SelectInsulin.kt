@@ -24,7 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.interfaces.insulin.ConcentrationType
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.stringResource
 
 /**
@@ -77,7 +77,7 @@ fun SelectInsulin(
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = stringResource(UiStrings.current_insulin),
+                    text = stringResource(CoreUiStrings.current_insulin),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -88,7 +88,7 @@ fun SelectInsulin(
                 )
             }
             FilledTonalButton(onClick = { expanded = !expanded }) {
-                Text(stringResource(UiStrings.change_insulin))
+                Text(stringResource(CoreUiStrings.change_insulin))
             }
         }
 
@@ -138,7 +138,7 @@ fun SelectInsulin(
                             )
                             if (isActive) {
                                 Text(
-                                    text = stringResource(UiStrings.current_insulin),
+                                    text = stringResource(CoreUiStrings.current_insulin),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )

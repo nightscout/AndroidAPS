@@ -46,6 +46,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.wear.compose.material3.CircularProgressIndicator
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Text
+import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -72,12 +73,11 @@ import app.aaps.wear.interaction.actions.WearDivider
 import app.aaps.wear.interaction.actions.WearSecondaryText
 import app.aaps.wear.interaction.actions.WearSummaryCardBg
 import app.aaps.wear.interaction.actions.formatDurationMinutes
-import dagger.android.AndroidInjection
+import dev.zacsweers.metro.Inject
+import java.util.Date
+import kotlin.math.abs
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineStart
-import java.util.Date
-import javax.inject.Inject
-import kotlin.math.abs
 
 // Loop mode / insulin / secondary-text colors shared with the wizard result screen live in
 // app.aaps.wear.interaction.actions.PlusMinusInputScreen.kt — imported above so the two screens
@@ -124,7 +124,7 @@ class LoopStatusActivity : AppCompatActivity() {
     private var uiState by mutableStateOf<LoopStatusUiState>(LoopStatusUiState.Loading)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
+        injectMetroMembers(this)
         super.onCreate(savedInstanceState)
 
         setContent {

@@ -43,7 +43,7 @@ import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.CAL
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.ToolbarConfig
@@ -62,7 +62,7 @@ internal fun CalibrationScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val title = stringResource(CalibrationStrings.linear_calibration_name)
-    val backDesc = stringResource(UiStrings.back)
+    val backDesc = stringResource(CoreUiStrings.back)
 
     LaunchedEffect(Unit) {
         setToolbarConfig(
@@ -176,11 +176,11 @@ internal fun CalibrationScreenContent(
                 TextButton(onClick = {
                     onDeleteEntry(id)
                     pendingDeleteId = null
-                }) { Text(stringResource(UiStrings.ok)) }
+                }) { Text(stringResource(CoreUiStrings.ok)) }
             },
             dismissButton = {
                 TextButton(onClick = { pendingDeleteId = null }) {
-                    Text(stringResource(UiStrings.cancel))
+                    Text(stringResource(CoreUiStrings.cancel))
                 }
             }
         )
@@ -412,7 +412,7 @@ private fun EntryRow(
             IconButton(onClick = { onDelete(entry.id) }) {
                 Icon(
                     imageVector = Icons.Filled.Delete,
-                    contentDescription = stringResource(UiStrings.delete),
+                    contentDescription = stringResource(CoreUiStrings.delete),
                     modifier = Modifier.size(20.dp)
                 )
             }

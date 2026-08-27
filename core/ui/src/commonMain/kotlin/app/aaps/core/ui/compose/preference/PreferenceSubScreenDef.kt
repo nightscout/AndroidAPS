@@ -15,7 +15,7 @@ import app.aaps.core.keys.interfaces.TextRef
  * these with `titleResId = R.string.x`; it wraps them in [TextRef.AndroidRes].
  *
  * Which one you get is decided by the argument NAME, and picking the wrong one is a type error rather
- * than anything readable: pass a [TextRef] (`title = UiStrings.x`) to `title`, and a resource id
+ * than anything readable: pass a [TextRef] (`title = CoreUiStrings.x`) to `title`, and a resource id
  * (`titleResId = R.string.x`) to `titleResId`. Multiplatform call sites want the first, since a
  * resource id means nothing off Android.
  *

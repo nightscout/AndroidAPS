@@ -116,13 +116,13 @@ class AutomationDownlinkIntegrationTest : TestBaseWithProfile() {
             .whenever(preferences).putRemote(eq(StringNonKey.AutomationEvents), any<String>(), any<Long>())
 
         masterRuntime = AutomationRuntime(
-            eventFactory, aapsLogger, rh, masterPreferences, context, fabricPrivacy, loop, rxBus, constraintsChecker,
-            aapsSchedulers, masterConfig, locationServiceController, dateUtil, activePlugin, reminderScheduler, actionFactory, triggerFactory, triggerDeps, receiverStatusStore,
+            eventFactory, aapsLogger, rh, masterPreferences, loop, rxBus, constraintsChecker,
+            masterConfig, locationServiceController, dateUtil, activePlugin, reminderScheduler, actionFactory, triggerFactory, triggerDeps, receiverStatusStore,
             uel, profileRepository, sceneApi
         )
         clientRuntime = AutomationRuntime(
-            eventFactory, aapsLogger, rh, preferences, context, fabricPrivacy, loop, rxBus, constraintsChecker,
-            aapsSchedulers, config, locationServiceController, dateUtil, activePlugin, reminderScheduler, actionFactory, triggerFactory, triggerDeps, receiverStatusStore,
+            eventFactory, aapsLogger, rh, preferences, loop, rxBus, constraintsChecker,
+            config, locationServiceController, dateUtil, activePlugin, reminderScheduler, actionFactory, triggerFactory, triggerDeps, receiverStatusStore,
             uel, profileRepository, sceneApi
         )
         runningConfig = RunningConfigurationImpl(

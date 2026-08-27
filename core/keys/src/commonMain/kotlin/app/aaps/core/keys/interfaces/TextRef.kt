@@ -35,17 +35,19 @@ sealed interface TextRef {
      * itself becomes multiplatform. The two resource forms coexist so modules can migrate one at a
      * time rather than all at once.
      *
-     * [args] are format arguments, in the order the format string expects. They are not checked at
+     * [args] are format arguments, in the order the format string expects. Nullable, because the id form
+     * `gs(id, vararg args: Any?)` has always accepted null and formats it as "null" - the named form has
+     * to behave the same or a caller cannot move across. They are not checked at
      * compile time - no worse than `stringResource(id, a, b)` today, but the arguments now travel
      * further from the format string, so a mismatch shows up when the text is built.
      */
-    data class AndroidRes(val id: Int, val args: List<Any> = emptyList()) : TextRef
+    data class AndroidRes(val id: Int, val args: List<Any?> = emptyList()) : TextRef
 
     /**
      * A string named rather than numbered, so the declaring code holds nothing Android specific.
      *
      * [name] is the `name` attribute from `strings.xml`. Take these from the generated object for
-     * the owning module - `KeysStrings` for `:core:keys`, `UiStrings` for `:core:ui` - never by
+     * the owning module - `KeysStrings` for `:core:keys`, `CoreUiStrings` for `:core:ui` - never by
      * writing the string out by hand, because only the generated form is checked against the XML at
      * build time.
      *
@@ -61,7 +63,7 @@ sealed interface TextRef {
      *
      * [args] behave as in [AndroidRes].
      */
-    data class Named(val owner: String, val name: String, val args: List<Any> = emptyList()) : TextRef
+    data class Named(val owner: String, val name: String, val args: List<Any?> = emptyList()) : TextRef
 
     /**
      * Text that is only known at run time - a scanned pump name, a wiki page title, a user label.
@@ -78,9 +80,9 @@ sealed interface TextRef {
          *
          * The generated objects hand out argument-free references, because a generator cannot know
          * what a call site wants to substitute. This is how a call site supplies them:
-         * `UiStrings.some_format.withArgs(count, unit)`.
+         * `CoreUiStrings.some_format.withArgs(count, unit)`.
          */
-        fun TextRef.withArgs(vararg args: Any): TextRef = when (this) {
+        fun TextRef.withArgs(vararg args: Any?): TextRef = when (this) {
             is Named      -> copy(args = args.toList())
             is AndroidRes -> copy(args = args.toList())
             is Literal    -> this

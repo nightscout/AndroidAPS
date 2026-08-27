@@ -21,7 +21,7 @@ interface TextResolver {
     fun gs(ref: TextRef): String
 
     /** Same, with format arguments. */
-    fun gs(ref: TextRef, vararg args: Any): String
+    fun gs(ref: TextRef, vararg args: Any?): String
 
     /** Same, but always in English - used for data that is stored or uploaded, not displayed. */
     fun gsNotLocalised(ref: TextRef): String

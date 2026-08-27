@@ -27,7 +27,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.stringResource
 
 /**
@@ -80,7 +80,7 @@ fun SetPasswordDialog(
                     value = password1,
                     onValueChange = { password1 = it },
                     label = {
-                        Text(stringResource(if (pinInput) UiStrings.protection_pin_hint else UiStrings.protection_password_hint))
+                        Text(stringResource(if (pinInput) CoreUiStrings.protection_pin_hint else CoreUiStrings.protection_password_hint))
                     },
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(
@@ -97,7 +97,7 @@ fun SetPasswordDialog(
                     value = password2,
                     onValueChange = { password2 = it },
                     label = {
-                        Text(stringResource(if (pinInput) UiStrings.confirm_pin_hint else UiStrings.confirm_password_hint))
+                        Text(stringResource(if (pinInput) CoreUiStrings.confirm_pin_hint else CoreUiStrings.confirm_password_hint))
                     },
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(
@@ -114,12 +114,12 @@ fun SetPasswordDialog(
         },
         confirmButton = {
             TextButton(onClick = { onConfirm(password1, password2) }) {
-                Text(stringResource(UiStrings.ok))
+                Text(stringResource(CoreUiStrings.ok))
             }
         },
         dismissButton = {
             TextButton(onClick = onCancel) {
-                Text(stringResource(UiStrings.cancel))
+                Text(stringResource(CoreUiStrings.cancel))
             }
         },
         properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
