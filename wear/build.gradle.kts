@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     id("com.android.application")
     kotlin("plugin.serialization")
+    alias(libs.plugins.metro)
     id("android-app-dependencies")
     id("test-app-dependencies")
     id("jacoco-app-dependencies")
@@ -239,11 +240,7 @@ dependencies {
     implementation(libs.com.google.android.gms.playservices.wearable)
     implementation(files("${rootDir}/wear/libs/hellocharts-library-1.5.8.aar"))
 
-    // Declared here rather than inherited: :shared:impl used to export it, and stopped when it became
-    // multiplatform. This module is the only one that still uses dagger.android.support.
-    implementation(libs.com.google.dagger.android.support)
-    ksp(libs.com.google.dagger.android.processor)
-    ksp(libs.com.google.dagger.compiler)
+    // Declared here rather than inherited: :shared:impl used to export it, and stopped when it became
 
     // Robolectric lets a few Android-coupled unit tests (Intent/Build) run on the JVM. It is a JUnit4
     // runner, so the vintage engine bridges those tests onto the JUnit Platform alongside the Jupiter tests.

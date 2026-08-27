@@ -14,39 +14,45 @@ import app.aaps.shared.impl.rx.bus.RxBusImpl
 import app.aaps.shared.impl.sharedPreferences.SPImpl
 import app.aaps.shared.impl.sharedPreferences.defaultPreferences
 import app.aaps.shared.impl.utils.DateUtilImpl
-import dagger.Lazy
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.migration.DisableInstallInCheck
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.BindingContainer
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.Provides
+import dev.zacsweers.metro.SingleIn
 
 /**
- * The shared-implementation wiring for **:wear only**. See [LoggerModule] for why `@InstallIn` is gone:
- * the phone builds all five of these in Metro now (`SharedImplBindings`), and wear keeps them here
- * through its own `includes`.
+ * The shared-implementation wiring for **:wear only**.
+ *
+ * The phone builds all five of these in Metro too, in its own `SharedImplBindings` - the classes are
+ * shared, the wiring is not. Wear has its own graph, so it needs its own copy of these bindings.
  */
-@Module
-@DisableInstallInCheck
-open class SharedImplModule {
+@ContributesTo(AppScope::class)
+@BindingContainer
+object SharedImplModule {
 
     @Provides
-    @Singleton
+    @SingleIn(AppScope::class)
     fun provideSP(context: Context): SP =
         SPImpl(defaultPreferences(context), context)
 
+    /**
+     * Deferred on purpose: `Preferences` is `PreferencesImpl`, which needs `L` to log, so asking for it
+     * directly here would be a cycle. `Provider` is Metro's `dagger.Lazy` - it just defers the lookup.
+     */
     @Provides
-    @Singleton
-    fun provideL(preferences: Lazy<Preferences>): L = LImpl { preferences.get() }
+    @SingleIn(AppScope::class)
+    fun provideL(preferences: Provider<Preferences>): L = LImpl { preferences() }
 
     @Provides
-    @Singleton
+    @SingleIn(AppScope::class)
     fun provideDateUtil(context: Context): DateUtil = DateUtilImpl(context)
 
     @Provides
-    @Singleton
+    @SingleIn(AppScope::class)
     fun provideRxBus(aapsLogger: AAPSLogger): RxBus = RxBusImpl(aapsLogger)
 
     @Provides
-    @Singleton
+    @SingleIn(AppScope::class)
     internal fun provideSchedulers(): AapsSchedulers = AapsSchedulersImpl()
 }

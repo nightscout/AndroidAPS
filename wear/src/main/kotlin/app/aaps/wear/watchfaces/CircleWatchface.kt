@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
+import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -29,18 +30,17 @@ import app.aaps.wear.interaction.menus.MainMenuActivity
 import app.aaps.wear.watchfaces.utils.WatchFace
 import app.aaps.wear.watchfaces.utils.WatchFaceTime
 import app.aaps.wear.watchfaces.utils.WatchfaceViewAdapter.Companion.SelectedWatchFace
-import dagger.android.AndroidInjection
+import dev.zacsweers.metro.Inject
+import java.util.Calendar
+import kotlin.math.ceil
+import kotlin.math.floor
+import kotlin.math.max
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import java.util.Calendar
-import javax.inject.Inject
-import kotlin.math.ceil
-import kotlin.math.floor
-import kotlin.math.max
 
 @SuppressLint("Deprecated")
 class CircleWatchface : WatchFace() {
@@ -93,7 +93,7 @@ class CircleWatchface : WatchFace() {
 
 
     override fun onCreate() {
-        AndroidInjection.inject(this)
+        injectMetroMembers(this)
         super.onCreate()
         sp.putInt(R.string.key_last_selected_watchface, SelectedWatchFace.CIRCLE.ordinal)
         rxBus.send(EventUpdateSelectedWatchface())

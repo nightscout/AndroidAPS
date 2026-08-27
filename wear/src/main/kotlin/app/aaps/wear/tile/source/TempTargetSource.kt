@@ -8,10 +8,11 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.wear.R
 import app.aaps.wear.interaction.actions.BackgroundActionActivity
 import app.aaps.wear.interaction.actions.TempTargetActivity
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class TempTargetSource @Inject constructor(context: Context, sp: SP, aapsLogger: AAPSLogger) : StaticTileSource(context, sp, aapsLogger) {
 
     override val preferencePrefix = "tile_tempt_"

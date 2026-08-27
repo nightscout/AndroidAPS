@@ -3,26 +3,21 @@ package app.aaps.wear.di
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
 import app.aaps.shared.impl.logging.AAPSLoggerProduction
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.migration.DisableInstallInCheck
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.BindingContainer
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.Provides
+import dev.zacsweers.metro.SingleIn
 
 /**
- * The logger wiring for **:wear only**.
- *
- * There is deliberately no `@InstallIn(SingletonComponent::class)` here any more. `WearModule` names
- * this module in its `includes`, so wear is unaffected, while the phone - which only ever got it
- * through that auto-install - now builds `AAPSLogger` in Metro instead (`SharedImplBindings`). Adding
- * `@InstallIn` back would give the phone two of everything below.
- *
- * The implementation classes themselves stay shared; only the wiring is split.
+ * The logger wiring for **:wear only**. The phone builds `AAPSLogger` in its own `SharedImplBindings`;
+ * the implementation class is shared, the wiring is not.
  */
-@Module
-@DisableInstallInCheck
-open class LoggerModule {
+@ContributesTo(AppScope::class)
+@BindingContainer
+object LoggerModule {
 
     @Provides
-    @Singleton
+    @SingleIn(AppScope::class)
     fun provideAAPSLogger(l: L): AAPSLogger = AAPSLoggerProduction(l)
 }

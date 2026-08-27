@@ -14,6 +14,7 @@ import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.viewbinding.ViewBinding
+import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -27,11 +28,14 @@ import app.aaps.wear.data.ComplicationData
 import app.aaps.wear.data.ComplicationDataRepository
 import app.aaps.wear.data.bgDataArray
 import app.aaps.wear.data.statusDataArray
+import app.aaps.wear.di.WearMetroService
 import app.aaps.wear.events.EventWearPreferenceChange
 import app.aaps.wear.interaction.menus.MainMenuActivity
 import app.aaps.wear.utils.toVisibility
 import app.aaps.wear.utils.toVisibilityKeepSpace
-import dagger.android.AndroidInjection
+import dev.zacsweers.metro.HasMemberInjections
+import dev.zacsweers.metro.Inject
+import kotlin.math.floor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
@@ -40,10 +44,9 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
-import kotlin.math.floor
 
 @SuppressLint("Deprecated")
+@HasMemberInjections
 abstract class BaseWatchFace : WatchFace() {
 
     @Inject lateinit var complicationDataRepository: ComplicationDataRepository
@@ -165,8 +168,8 @@ abstract class BaseWatchFace : WatchFace() {
     private var mLastDirection = ""
 
     override fun onCreate() {
-        // Not derived from DaggerService, do injection here
-        AndroidInjection.inject(this)
+        // Not derived from WearMetroService, do injection here
+        injectMetroMembers(this)
         super.onCreate()
         simpleUi.onCreate(::forceUpdate)
         val windowManager = getSystemService(WINDOW_SERVICE) as WindowManager

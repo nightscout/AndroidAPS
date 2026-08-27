@@ -5,11 +5,12 @@ import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.wear.R
 import app.aaps.wear.interaction.utils.Pair.Companion.create
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlin.math.max
 
-@Singleton
+@SingleIn(AppScope::class)
 class DisplayFormat @Inject internal constructor() {
 
     companion object {

@@ -43,11 +43,11 @@ import app.aaps.core.interfaces.rx.weardata.EventData.ActionFillPreCheck
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.wear.R
-import dagger.android.support.DaggerAppCompatActivity
-import javax.inject.Inject
+import app.aaps.wear.di.WearMetroActivity
+import dev.zacsweers.metro.Inject
 import kotlin.math.roundToInt
 
-class FillActivity : DaggerAppCompatActivity() {
+class FillActivity : WearMetroActivity() {
 
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var preferences: Preferences

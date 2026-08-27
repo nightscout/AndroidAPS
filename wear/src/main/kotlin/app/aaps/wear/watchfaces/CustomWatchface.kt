@@ -50,14 +50,14 @@ import app.aaps.wear.databinding.ActivityCustomBinding
 import app.aaps.wear.utils.toVisibility
 import app.aaps.wear.watchfaces.utils.BaseWatchFace
 import app.aaps.wear.watchfaces.utils.WatchfaceViewAdapter.Companion.SelectedWatchFace
-import kotlinx.coroutines.runBlocking
-import org.json.JSONObject
+import dev.zacsweers.metro.Inject
 import java.io.ByteArrayOutputStream
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.temporal.WeekFields
-import javax.inject.Inject
 import kotlin.math.floor
+import kotlinx.coroutines.runBlocking
+import org.json.JSONObject
 
 @SuppressLint("Deprecated")
 class CustomWatchface : BaseWatchFace() {

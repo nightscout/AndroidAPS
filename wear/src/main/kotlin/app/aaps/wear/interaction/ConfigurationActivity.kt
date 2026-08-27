@@ -7,12 +7,12 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceGroup
+import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.wear.R
 import app.aaps.wear.preference.WearPreferenceActivity
-import dagger.android.AndroidInjection
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class ConfigurationActivity : WearPreferenceActivity() {
 
@@ -21,7 +21,7 @@ class ConfigurationActivity : WearPreferenceActivity() {
     private var watchfaceComponentName: ComponentName? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
+        injectMetroMembers(this)
 
         // Extract the watchface component name from the intent BEFORE calling super.onCreate()
         // Wear OS 5.0 uses "COMPONENT_NAME_KEY" instead of the standard extras

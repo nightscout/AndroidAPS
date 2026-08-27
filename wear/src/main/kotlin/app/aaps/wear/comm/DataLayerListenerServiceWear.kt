@@ -8,6 +8,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -32,7 +33,7 @@ import com.google.android.gms.wearable.Node
 import com.google.android.gms.wearable.PutDataMapRequest
 import com.google.android.gms.wearable.Wearable
 import com.google.android.gms.wearable.WearableListenerService
-import dagger.android.AndroidInjection
+import dev.zacsweers.metro.Inject
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CancellationException
@@ -45,7 +46,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
-import javax.inject.Inject
 
 class DataLayerListenerServiceWear : WearableListenerService() {
 
@@ -71,7 +71,7 @@ class DataLayerListenerServiceWear : WearableListenerService() {
 
     @ExperimentalSerializationApi
     override fun onCreate() {
-        AndroidInjection.inject(this)
+        injectMetroMembers(this)
         super.onCreate()
         startForegroundService()
         handler.post { updateTranscriptionCapability() }
