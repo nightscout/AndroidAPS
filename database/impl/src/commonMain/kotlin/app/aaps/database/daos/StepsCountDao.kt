@@ -9,16 +9,16 @@ import app.aaps.database.entities.TABLE_STEPS_COUNT
 internal interface StepsCountDao : TraceableDao<StepsCount> {
 
     @Query("SELECT * FROM $TABLE_STEPS_COUNT WHERE id = :id")
-    override fun findById(id: Long): StepsCount?
+    override suspend fun findById(id: Long): StepsCount?
 
     @Query("DELETE FROM $TABLE_STEPS_COUNT")
-    override fun deleteAllEntries()
+    override suspend fun deleteAllEntries()
 
     @Query("DELETE FROM $TABLE_STEPS_COUNT WHERE timestamp < :than")
-    override fun deleteOlderThan(than: Long): Int
+    override suspend fun deleteOlderThan(than: Long): Int
 
     @Query("DELETE FROM $TABLE_STEPS_COUNT WHERE referenceId IS NOT NULL")
-    override fun deleteTrackedChanges(): Int
+    override suspend fun deleteTrackedChanges(): Int
 
     @Query("SELECT * FROM $TABLE_STEPS_COUNT WHERE timestamp >= :timestamp ORDER BY timestamp")
     suspend fun getFromTime(timestamp: Long): List<StepsCount>

@@ -15,12 +15,13 @@ import app.aaps.database.entities.data.Block
 import app.aaps.database.entities.data.GlucoseUnit
 import app.aaps.database.entities.data.TargetBlock
 import app.aaps.database.entities.embedments.InterfaceIDs
-import app.aaps.database.serialisation.SealedClassHelper
-import app.aaps.database.serialisation.fromJson
-import org.json.JSONArray
-import org.json.JSONObject
+import app.aaps.database.serialisation.ValueWithUnitSerializer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
 class Converters {
+
+    private val json = Json
 
     @TypeConverter
     fun fromAction(action: Action?) = action?.name
@@ -35,14 +36,19 @@ class Converters {
     fun toSource(source: String?) = source?.let { Sources.fromString(it) }
 
     @TypeConverter
-    fun fromListOfValueWithUnit(values: List<ValueWithUnit>): String = values.map(Converters::ValueWithUnitWrapper)
-        .let(SealedClassHelper.gson::toJson)
+    fun fromListOfValueWithUnit(values: List<ValueWithUnit>): String =
+        json.encodeToString(values.map(::ValueWithUnitWrapper))
 
     @TypeConverter
-    fun toMutableListOfValueWithUnit(string: String): List<ValueWithUnit> = SealedClassHelper.gson
-        .fromJson<List<ValueWithUnitWrapper>>(string).map { it.wrapped }
+    fun toMutableListOfValueWithUnit(string: String): List<ValueWithUnit> =
+        json.decodeFromString<List<ValueWithUnitWrapper>>(string).map { it.wrapped }
 
-    private class ValueWithUnitWrapper(val wrapped: ValueWithUnit)
+    /**
+     * The `wrapped` layer is part of the stored format - Gson wrote this class, not the sealed class
+     * itself - so it stays, and its property name is as load bearing as the subtype names are.
+     */
+    @Serializable
+    private class ValueWithUnitWrapper(@Serializable(with = ValueWithUnitSerializer::class) val wrapped: ValueWithUnit)
 
     @TypeConverter
     fun fromBolusType(bolusType: Bolus.Type?) = bolusType?.name
@@ -120,62 +126,21 @@ class Converters {
     @TypeConverter
     fun toAlgorithm(algorithm: String?) = algorithm?.let { APSResult.Algorithm.valueOf(it) }
 
+    // The profile blocks used to go through org.json, which exists only on Android. kotlinx writes the
+    // same keys and reads either form; it differs only in printing a whole double as "1.0" where
+    // org.json printed "1", and in keeping the declared key order where org.json sorted it. Rows stay
+    // readable in both directions, which is what ProfileBlocksFormatTest pins - not the exact bytes.
     @TypeConverter
-    fun fromListOfBlocks(blocks: List<Block>?): String? {
-        if (blocks == null) return null
-        val jsonArray = JSONArray()
-        blocks.forEach {
-            val jsonObject = JSONObject()
-            jsonObject.put("duration", it.duration)
-            jsonObject.put("amount", it.amount)
-            jsonArray.put(jsonObject)
-        }
-        return jsonArray.toString()
-    }
+    fun fromListOfBlocks(blocks: List<Block>?): String? = blocks?.let(json::encodeToString)
 
     @TypeConverter
-    fun toListOfBlocks(jsonString: String?): List<Block>? {
-        if (jsonString == null) return null
-        val jsonArray = JSONArray(jsonString)
-        val list = mutableListOf<Block>()
-        for (i in 0 until jsonArray.length()) {
-            val jsonObject = jsonArray.getJSONObject(i)
-            list.add(Block(jsonObject.getLong("duration"), jsonObject.getDouble("amount")))
-        }
-        return list
-    }
+    fun toListOfBlocks(jsonString: String?): List<Block>? = jsonString?.let(json::decodeFromString)
 
     @TypeConverter
-    fun fromListOfTargetBlocks(blocks: List<TargetBlock>?): String? {
-        if (blocks == null) return null
-        val jsonArray = JSONArray()
-        blocks.forEach {
-            val jsonObject = JSONObject()
-            jsonObject.put("duration", it.duration)
-            jsonObject.put("lowTarget", it.lowTarget)
-            jsonObject.put("highTarget", it.highTarget)
-            jsonArray.put(jsonObject)
-        }
-        return jsonArray.toString()
-    }
+    fun fromListOfTargetBlocks(blocks: List<TargetBlock>?): String? = blocks?.let(json::encodeToString)
 
     @TypeConverter
-    fun toListOfTargetBlocks(jsonString: String?): List<TargetBlock>? {
-        if (jsonString == null) return null
-        val jsonArray = JSONArray(jsonString)
-        val list = mutableListOf<TargetBlock>()
-        for (i in 0 until jsonArray.length()) {
-            val jsonObject = jsonArray.getJSONObject(i)
-            list.add(
-                TargetBlock(
-                    jsonObject.getLong("duration"),
-                    jsonObject.getDouble("lowTarget"),
-                    jsonObject.getDouble("highTarget")
-                )
-            )
-        }
-        return list
-    }
+    fun toListOfTargetBlocks(jsonString: String?): List<TargetBlock>? = jsonString?.let(json::decodeFromString)
 
     @TypeConverter
     fun fromRunningModeMode(mode: RunningMode.Mode?) = mode?.name

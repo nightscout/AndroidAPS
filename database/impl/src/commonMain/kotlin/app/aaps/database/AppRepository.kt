@@ -1,6 +1,5 @@
 package app.aaps.database
 
-import android.os.StatFs
 import androidx.room.Transactor.SQLiteTransactionType
 import androidx.room.useWriterConnection
 import app.aaps.database.entities.APSResult
@@ -39,10 +38,9 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.Closeable
-import java.io.File
 import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.days
+import kotlin.time.Clock
 
 /** Module-local carrier for [AppRepository.databaseMaintenanceInfo]; mapped to `DatabaseMaintenanceInfo`. */
 data class DatabaseMaintenanceRaw(
@@ -56,7 +54,7 @@ data class DatabaseMaintenanceRaw(
 
 class AppRepository internal constructor(
     databaseProvider: () -> AppDatabase
-) : Closeable {
+) : AutoCloseable {
 
     // Lazily: building the Room database is real work and the graph is resolved on a plain JVM in the
     // unit tests, where nothing ever queries it. Change observers only read the flow below.
@@ -66,7 +64,7 @@ class AppRepository internal constructor(
      * Coroutine scope for Flow emissions
      * Using SupervisorJob so failures don't cancel the entire scope
      */
-    private val repositoryScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private val repositoryScope = CoroutineScope(SupervisorJob() + databaseDispatcher)
 
     /**
      * SharedFlow for broadcasting database changes
@@ -154,16 +152,16 @@ class AppRepository internal constructor(
             result
         }
 
-    fun clearDatabases() {
-        database.clearAllTables()
+    suspend fun clearDatabases() {
+        database.clearAllTablesCompat()
         repositoryScope.launch { _databaseClearedFlow.emit(Unit) }
     }
 
-    fun clearApsResults() = database.apsResultDao.deleteAllEntries()
+    suspend fun clearApsResults() = database.apsResultDao.deleteAllEntries()
 
     suspend fun cleanupDatabase(keepDays: Long, deleteTrackedChanges: Boolean): String {
         database.useWriterConnection { connection -> connection.usePrepared("PRAGMA optimize") { it.step() } }
-        val than = System.currentTimeMillis() - keepDays.days.inWholeMilliseconds
+        val than = Clock.System.now().toEpochMilliseconds() - keepDays.days.inWholeMilliseconds
         val removed = mutableListOf<Pair<String, Int>>()
         removed.add(Pair("APSResult", database.apsResultDao.deleteOlderThan(than)))
         removed.add(Pair("GlucoseValue", database.glucoseValueDao.deleteOlderThan(than)))
@@ -246,7 +244,7 @@ class AppRepository internal constructor(
      * `core:interfaces`; [app.aaps.database.persistence] maps it to `DatabaseMaintenanceInfo`.
      */
     suspend fun databaseMaintenanceInfo(retentionDays: Long): DatabaseMaintenanceRaw {
-        val cutoff = System.currentTimeMillis() - retentionDays.days.inWholeMilliseconds
+        val cutoff = Clock.System.now().toEpochMilliseconds() - retentionDays.days.inWholeMilliseconds
         return database.useWriterConnection { connection ->
             suspend fun count(sql: String): Long =
                 try {
@@ -260,9 +258,7 @@ class AppRepository internal constructor(
             connection.usePrepared("PRAGMA database_list") { stmt ->
                 while (stmt.step()) if (stmt.getText(1) == "main") path = stmt.getText(2)
             }
-            val dbFile = File(path)
-            val dbSize = dbFile.length() + File("$path-wal").length() + File("$path-shm").length()
-            val available = dbFile.parent?.let { runCatching { StatFs(it).availableBytes }.getOrDefault(-1L) } ?: -1L
+            val fileStats = databaseFileStats(path)
 
             val tables = mutableListOf<String>()
             connection.usePrepared(
@@ -270,7 +266,7 @@ class AppRepository internal constructor(
             ) { stmt -> while (stmt.step()) tables.add(stmt.getText(0)) }
 
             val sb = StringBuilder()
-            sb.append("file=${dbFile.name} size=${dbSize / 1024}KB free=${if (available < 0) "?" else "${available / 1_048_576}MB"} tables=${tables.size}\n")
+            sb.append("file=${fileStats.name} size=${fileStats.sizeBytes / 1024}KB free=${if (fileStats.freeBytes < 0) "?" else "${fileStats.freeBytes / 1_048_576}MB"} tables=${tables.size}\n")
             var totRows = 0L
             var totOld = 0L
             var totChanges = 0L
@@ -284,7 +280,7 @@ class AppRepository internal constructor(
                 sb.append("  $t total=$all old=$old changes=$changes\n")
             }
             sb.append("TOTAL rows=$totRows deletable(>${retentionDays}d)=$totOld changes=$totChanges")
-            DatabaseMaintenanceRaw(dbSize, available, totRows, totOld, totChanges, sb.toString())
+            DatabaseMaintenanceRaw(fileStats.sizeBytes, fileStats.freeBytes, totRows, totOld, totChanges, sb.toString())
         }
     }
 
@@ -558,7 +554,7 @@ class AppRepository internal constructor(
         database.therapyEventDao.getTherapyEventDataIncludingInvalidFromTime(timestamp).reversedIf(!ascending)
 
     suspend fun getLastTherapyRecordUpToNow(type: TherapyEvent.Type): TherapyEvent? =
-        database.therapyEventDao.getLastTherapyRecord(type, System.currentTimeMillis())
+        database.therapyEventDao.getLastTherapyRecord(type, Clock.System.now().toEpochMilliseconds())
 
     suspend fun compatGetTherapyEventDataFromToTime(from: Long, to: Long): List<TherapyEvent> =
         database.therapyEventDao.compatGetTherapyEventDataFromToTime(from, to)
@@ -742,7 +738,7 @@ class AppRepository internal constructor(
         database.bolusCalculatorResultDao.getLastId()
 
     // DEVICE STATUS
-    fun insert(deviceStatus: DeviceStatus) {
+    suspend fun insert(deviceStatus: DeviceStatus) {
         database.deviceStatusDao.insert(deviceStatus)
         val changes = mutableListOf<DBEntry>(deviceStatus) // Not TraceableDao
         _changeFlow.tryEmit(changes)

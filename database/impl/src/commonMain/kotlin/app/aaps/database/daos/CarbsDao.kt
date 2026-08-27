@@ -10,16 +10,16 @@ import app.aaps.database.entities.embedments.InterfaceIDs
 internal interface CarbsDao : TraceableDao<Carbs> {
 
     @Query("SELECT * FROM $TABLE_CARBS WHERE id = :id")
-    override fun findById(id: Long): Carbs?
+    override suspend fun findById(id: Long): Carbs?
 
     @Query("DELETE FROM $TABLE_CARBS")
-    override fun deleteAllEntries()
+    override suspend fun deleteAllEntries()
 
     @Query("DELETE FROM $TABLE_CARBS WHERE timestamp < :than")
-    override fun deleteOlderThan(than: Long): Int
+    override suspend fun deleteOlderThan(than: Long): Int
 
     @Query("DELETE FROM $TABLE_CARBS WHERE referenceId IS NOT NULL")
-    override fun deleteTrackedChanges(): Int
+    override suspend fun deleteTrackedChanges(): Int
 
     @Query("SELECT id FROM $TABLE_CARBS ORDER BY id DESC limit 1")
     suspend fun getLastId(): Long?
@@ -31,7 +31,7 @@ internal interface CarbsDao : TraceableDao<Carbs> {
     suspend fun findByTimestamp(timestamp: Long): Carbs?
 
     @Query("SELECT * FROM $TABLE_CARBS WHERE (pumpId = :pumpId) AND (pumpType = :pumpType) AND (pumpSerial = :pumpSerial) AND (referenceId IS NULL)")
-    fun findByPumpIds(pumpId: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): Carbs?
+    suspend fun findByPumpIds(pumpId: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): Carbs?
 
     @Query("SELECT * FROM $TABLE_CARBS WHERE isValid = 1 AND referenceId IS NULL ORDER BY id DESC LIMIT 1")
     suspend fun getLastCarbsRecord(): Carbs?

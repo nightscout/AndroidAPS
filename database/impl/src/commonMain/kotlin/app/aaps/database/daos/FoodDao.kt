@@ -9,16 +9,16 @@ import app.aaps.database.entities.TABLE_FOODS
 internal interface FoodDao : TraceableDao<Food> {
 
     @Query("SELECT * FROM $TABLE_FOODS WHERE id = :id")
-    override fun findById(id: Long): Food?
+    override suspend fun findById(id: Long): Food?
 
     @Query("DELETE FROM $TABLE_FOODS")
-    override fun deleteAllEntries()
+    override suspend fun deleteAllEntries()
 
     @Query("DELETE FROM $TABLE_FOODS WHERE dateCreated < :than")
-    override fun deleteOlderThan(than: Long): Int
+    override suspend fun deleteOlderThan(than: Long): Int
 
     @Query("DELETE FROM $TABLE_FOODS WHERE referenceId IS NOT NULL")
-    override fun deleteTrackedChanges(): Int
+    override suspend fun deleteTrackedChanges(): Int
 
     @Query("SELECT id FROM $TABLE_FOODS ORDER BY id DESC limit 1")
     suspend fun getLastId(): Long?

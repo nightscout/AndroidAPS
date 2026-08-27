@@ -37,7 +37,7 @@ class StepsCountDaoTest {
 
     private fun getTableNames(db: SupportSQLiteDatabase) = getDbObjects(db, "table")
 
-    private fun insertAndFind(database: AppDatabase) {
+    private suspend fun insertAndFind(database: AppDatabase) {
         val sc1 = createStepsCount()
         val id = database.stepsCountDao.insert(sc1)
         val sc2 = database.stepsCountDao.findById(id)
@@ -58,7 +58,7 @@ class StepsCountDaoTest {
     }
 
     @Test
-    fun new_insertAndFind() {
+    fun new_insertAndFind() = runTest {
         createDatabase().also { db ->
             insertAndFind(db)
             db.close()
@@ -92,7 +92,7 @@ class StepsCountDaoTest {
     }
 
     @Test
-    fun migrate_insertAndFind() {
+    fun migrate_insertAndFind() = runTest {
         val helper = MigrationTestHelper(
             InstrumentationRegistry.getInstrumentation(),
             AppDatabase::class.java
