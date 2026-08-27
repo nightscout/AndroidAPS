@@ -3,6 +3,7 @@ package app.aaps.shared.impl.sharedPreferences
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
+import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.SafeParse
 
@@ -24,10 +25,10 @@ class SPImpl(
 ) : SP {
 
     @SuppressLint("ApplySharedPref")
-    override fun edit(commit: Boolean, block: SP.Editor.() -> Unit) {
+    override fun edit(commit: Boolean, block: KeyValueStore.Editor.() -> Unit) {
         val spEdit = sharedPreferences.edit()
 
-        val edit = object : SP.Editor {
+        val edit = object : KeyValueStore.Editor {
             override fun clear() {
                 spEdit.clear()
             }
