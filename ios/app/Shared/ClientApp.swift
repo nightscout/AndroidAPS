@@ -17,6 +17,20 @@ struct ClientApp: App {
     }
 }
 
+/// Hosts AAPS's Compose UI inside SwiftUI.
+///
+/// Compose Multiplatform hands back a plain UIViewController, so SwiftUI can show it the same way
+/// it shows any UIKit screen. Nothing on that screen is drawn by SwiftUI: the card, the spacing and
+/// the logo are AAPS composables from commonMain, running on iOS.
+struct AapsComposeView: UIViewControllerRepresentable {
+
+    func makeUIViewController(context: Context) -> UIViewController {
+        AapsComposeHostKt.aapsComposeViewController()
+    }
+
+    func updateUIViewController(_ controller: UIViewController, context: Context) {}
+}
+
 struct ShellView: View {
 
     private let info = ShellInfo.shared
@@ -65,6 +79,12 @@ struct ShellView: View {
             Text(info.checkDatabase())
                 .font(.caption.monospaced())
                 .multilineTextAlignment(.leading)
+
+            Divider().padding(.vertical, 4)
+
+            // AAPS's own Compose UI, rendered by iOS rather than described by SwiftUI.
+            AapsComposeView()
+                .frame(height: 200)
         }
         .padding()
         }

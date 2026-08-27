@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!--
+	  Compose Multiplatform refuses to start without this key: without it iOS caps the app at 60 Hz
+	  on 120 Hz iPhones. Xcode only turns a known list of INFOPLIST_KEY_* build settings into plist
+	  entries, and this key is not on that list, so it needs a real file. GENERATE_INFOPLIST_FILE
+	  stays on and Xcode merges the generated entries into this one.
+	-->
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+</dict>
+</plist>
