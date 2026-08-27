@@ -232,7 +232,7 @@ class NfcCommandsPlugin @Inject constructor(
         return requireRemoteCommands {
             val action = getAction(code)
             action.params = params
-            action.execute(tagName)
+            action.executeIfComplete(tagName)
         }
     }
 

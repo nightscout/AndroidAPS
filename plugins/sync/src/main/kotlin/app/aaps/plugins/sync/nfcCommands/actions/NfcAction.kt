@@ -9,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -19,6 +20,7 @@ import app.aaps.plugins.sync.nfcCommands.NfcParams
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nfcCommands.ArgType
+import app.aaps.plugins.sync.nfcCommands.isSetIn
 
 /**
  * Base class for all NFC-triggered actions.
@@ -69,6 +71,38 @@ abstract class NfcAction(
      * @return Result containing success status and a user message.
      */
     abstract suspend fun execute(tagName: String): NfcExecutionResult
+
+    /**
+     * The arguments this action declares in [argType] that [params] has no value for.
+     *
+     * Empty for a command built by the current build screen, because the screen always writes every
+     * field it shows. It is not empty for a command that was stored by a build whose parameter names
+     * differed, or restored from an export of one: the unknown names are dropped when the command is
+     * decoded, and what is left has no value.
+     */
+    fun missingArgs(): List<ArgType> = argType.filterNot { it.isSetIn(params) }
+
+    /**
+     * Runs the action, but only when every argument it declares has a value.
+     *
+     * This exists because a missing value used to be replaced by a number nobody chose. Each action
+     * read its own fallback - `params.insulin ?: 0.0`, `params.carbs ?: 0` - so a command that lost a
+     * field silently became a dose of zero, or of whatever that action happened to fall back to, and
+     * the screen showed a different number again. For insulin and carbs that is not an acceptable way
+     * to fail, so the command is refused instead and the user is told to set it again.
+     *
+     * [routeAction][app.aaps.plugins.sync.nfcCommands.NfcCommandsPlugin] is the only production caller
+     * of [execute], and it calls this instead, so no action can be run past this check by accident.
+     */
+    suspend fun executeIfComplete(tagName: String): NfcExecutionResult {
+        val missing = missingArgs()
+        if (missing.isEmpty()) return execute(tagName)
+        aapsLogger.error(
+            LTag.NFC,
+            "Not running ${this::class.simpleName}: the stored command has no value for $missing"
+        )
+        return NfcExecutionResult(false, rh.gs(R.string.nfccommands_command_incomplete))
+    }
 
     /**
      * Optional method to format current [params] into a human-readable summary.

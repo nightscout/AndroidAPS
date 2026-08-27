@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import app.aaps.core.ui.compose.icons.IcPluginNfc
 import app.aaps.core.ui.compose.navigation.color
+import app.aaps.plugins.sync.R
 import app.aaps.core.ui.R as CoreUiR
 import app.aaps.plugins.sync.nfcCommands.NfcCommand
 import app.aaps.plugins.sync.nfcCommands.NfcCommandCode
@@ -103,6 +104,10 @@ fun NfcCommandDisplay(
         value = action.formatParams(tagName)
     }
 
+    // A stored command can be missing a value it needs - see NfcAction.executeIfComplete. Scanning the
+    // tag would refuse it, so say so here rather than letting the row look ready to run.
+    val isIncomplete = remember(action, params) { action.missingArgs().isNotEmpty() }
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.padding(vertical = 2.dp),
@@ -135,5 +140,12 @@ fun NfcCommandDisplay(
             },
             style = MaterialTheme.typography.bodySmall
         )
+        if (isIncomplete) {
+            Text(
+                text = stringResource(R.string.nfccommands_value_missing),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.error
+            )
+        }
     }
 }

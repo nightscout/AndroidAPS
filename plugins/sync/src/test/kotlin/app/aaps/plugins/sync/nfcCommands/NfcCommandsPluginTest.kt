@@ -34,6 +34,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import app.aaps.core.interfaces.R as InterfacesR
@@ -685,5 +686,62 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         assertThat(result.success).isTrue()
         assertThat(result.message).contains("Loop disabled")
         assertThat(result.message).contains("Temp basal canceled")
+    }
+
+    // A command stored by a build whose parameter names differed loses those values when it is decoded.
+    // It used to run anyway, on a number no one chose - `params.insulin ?: 0.0` and friends. These four
+    // check that it is refused instead, for the two arguments where it matters most.
+
+    @Test
+    fun `executeCommand BOLUS with no insulin value is refused and no bolus is enqueued`() {
+        whenever(rh.gs(R.string.nfccommands_command_incomplete)).thenReturn("Command incomplete")
+
+        val result = execute(NfcCommandCode.BOLUS, NfcParams())
+
+        assertThat(result.success).isFalse()
+        assertThat(result.message).isEqualTo("Command incomplete")
+        runTest { verify(commandQueue, never()).bolus(any()) }
+    }
+
+    @Test
+    fun `executeCommand CARBS with no carbs value is refused`() {
+        whenever(rh.gs(R.string.nfccommands_command_incomplete)).thenReturn("Command incomplete")
+
+        val result = execute(NfcCommandCode.CARBS, NfcParams())
+
+        assertThat(result.success).isFalse()
+        assertThat(result.message).isEqualTo("Command incomplete")
+    }
+
+    @Test
+    fun `a command written with the old parameter names is refused, not run on a default`() {
+        whenever(rh.gs(R.string.nfccommands_command_incomplete)).thenReturn("Command incomplete")
+        // How a bolus looked before the typed format: the amount was under "amount", which is not a
+        // field any more, so it is dropped and the command has no insulin value at all.
+        val stored = """{"code":"BOLUS","params":{"amount":2.5,"tagname":"Kitchen"}}"""
+
+        val result = runBlocking { plugin.executeCommand(stored) }
+
+        assertThat(result.success).isFalse()
+        assertThat(result.message).isEqualTo("Command incomplete")
+        runTest { verify(commandQueue, never()).bolus(any()) }
+    }
+
+    @Test
+    fun `a command with a blank profile name is refused`() {
+        whenever(rh.gs(R.string.nfccommands_command_incomplete)).thenReturn("Command incomplete")
+
+        val result = execute(NfcCommandCode.PROFILE_SWITCH, NfcParams(profileName = "", percent = 100))
+
+        assertThat(result.success).isFalse()
+        assertThat(result.message).isEqualTo("Command incomplete")
+    }
+
+    @Test
+    fun `missingArgs is empty when every declared argument has a value`() {
+        val action = plugin.getAction(NfcCommandCode.BOLUS)
+        action.params = NfcParams(insulin = 1.0)
+
+        assertThat(action.missingArgs()).isEmpty()
     }
 }

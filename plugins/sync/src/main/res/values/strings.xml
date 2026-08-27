@@ -308,6 +308,8 @@
     <string name="nfccommands_delete_confirm_msg">This tag will be removed from My Tags. The physical NFC tag will no longer trigger any commands.</string>
     <string name="nfccommands_unknown_command">Unknown command or wrong reply</string>
     <string name="nfccommands_remote_command_not_allowed">Remote command is not allowed</string>
+    <string name="nfccommands_command_incomplete">This command has no value for one of its settings, so it was not run. Open the tag and save the command again.</string>
+    <string name="nfccommands_value_missing">value missing</string>
     <string name="nfccommands_remote_command_not_possible">Remote command is not possible</string>
     <string name="nfccommands_loop_has_been_disabled">Loop has been disabled</string>
     <string name="nfccommands_loop_resumed">Loop resumed</string>
