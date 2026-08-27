@@ -281,14 +281,22 @@ jobs:
             export ANDROID_HOME=/usr/lib/android-sdk
             export ANDROID_SERIAL=emulator-5554
             TASKS=""
+            # A directory on disk is not always a module: pump/omnipod/eros still has its sources but
+            # is no longer included, and naming its task made Gradle fail to configure - which the
+            # `|| echo` below turned into a green step that ran NO instrumented tests at all. Ask
+            # settings.gradle whether the module is in the build before naming a task on it.
             for m in $(find . -type d -name androidTest -not -path "*/build/*" -printf "%h\n" | sed 's|/src$||; s|^\./||; s|/|:|g'); do
-              [ "$m" = "app" ] && continue; TASKS="$TASKS :$m:connectedFullDebugAndroidTest"
+              [ "$m" = "app" ] && continue
+              grep -q "^include ':$m'" settings.gradle || { echo "skipping $m - not in settings.gradle"; continue; }
+              TASKS="$TASKS :$m:connectedFullDebugAndroidTest"
             done
             # A multiplatform module has no flavours: its instrumented sources live in androidDeviceTest
-            # and the task is connectedAndroidDeviceTest. Finds nothing until the first module flips.
+            # and the task is connectedAndroidDeviceTest.
             for m in $(find . -type d -name androidDeviceTest -not -path "*/build/*" -printf "%h\n" | sed 's|/src$||; s|^\./||; s|/|:|g'); do
+              grep -q "^include ':$m'" settings.gradle || { echo "skipping $m - not in settings.gradle"; continue; }
               TASKS="$TASKS :$m:connectedAndroidDeviceTest"
             done
+            echo "running: $TASKS"
             [ -n "$TASKS" ] && $GRADLE_PIN ./gradlew --continue -Dorg.gradle.daemon=true -Dorg.gradle.workers.max=16 $TASKS || echo "no non-app test modules"
 
       - run:
