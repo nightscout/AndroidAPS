@@ -31,10 +31,17 @@ import platform.UIKit.UIViewController
  * ## Why not [app.aaps.core.ui.compose.AapsTheme] yet
  *
  * `AapsTheme` reads `LocalPreferences` to pick light or dark, so it needs a real `Preferences`.
- * The only implementation is `PreferencesImpl`, whose constructor wants `PersistenceLayer`,
- * `ProfileUtil`, `ProfileFunction` and `HardLimits`, and `PersistenceLayer` has no iOS
- * implementation yet. Faking it would only test the fake, so this screen stays on `MaterialTheme`
- * until that chain closes, and then the theme swap is one line.
+ * That is one object, but it sits on top of a chain: `PreferencesImpl` wants `PersistenceLayer`,
+ * `ProfileUtil`, `ProfileFunction` and `HardLimits`, and each of those wants more again.
+ *
+ * Most of the chain is already common code and Metro resolves it on iOS today. The way to see what
+ * is left is to ask: add `val preferences: Preferences` to `IosProbeGraph` and read the error.
+ * At the time of writing it names `ProfileStore`, whose only implementation is still on Dagger and
+ * still holds an `androidx.collection.ArrayMap`, so it cannot cross into common code yet.
+ *
+ * Faking `Preferences` instead would only test the fake - it has 76 members - so this screen stays
+ * on `MaterialTheme` until the chain closes. The theme swap itself is then one line here; the work
+ * is all in the chain, not in this file.
  */
 fun aapsComposeViewController(): UIViewController = ComposeUIViewController {
     MaterialTheme {
