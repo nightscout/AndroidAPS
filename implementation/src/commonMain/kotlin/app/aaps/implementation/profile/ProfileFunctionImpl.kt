@@ -1,6 +1,5 @@
 package app.aaps.implementation.profile
 
-import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.ICfg
@@ -9,9 +8,10 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.concurrent.AapsLock
+import app.aaps.core.interfaces.concurrent.withLock
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -20,27 +20,30 @@ import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileStore
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.profile.ProfileSealed
+import app.aaps.core.ui.CoreUiStrings
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.util.concurrent.ConcurrentHashMap
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class ProfileFunctionImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val activePlugin: ActivePlugin,
     private val profileRepository: ProfileRepository,
     private val persistenceLayer: PersistenceLayer,
@@ -48,11 +51,14 @@ class ProfileFunctionImpl @Inject constructor(
     private val config: Config,
     private val hardLimits: HardLimits,
     private val notificationManager: NotificationManager,
-    @ApplicationScope private val appScope: CoroutineScope
+    private val appScope: CoroutineScope
 ) : ProfileFunction {
 
-    @VisibleForTesting
-    val cache = ConcurrentHashMap<Long, EffectiveProfile>()
+    // Both maps are guarded by [cacheLock]. They were a ConcurrentHashMap and a HashMap under a
+    // `synchronized(cache)` monitor; every access was already inside that monitor, so one lock over
+    // plain maps is the same thing without the JVM only types.
+    val cacheLock = AapsLock()
+    val cache = mutableMapOf<Long, EffectiveProfile>()
 
     // Dedup for the per-second [cache]. getEffectiveProfileSwitchActiveAt() deep-copies a brand-new EPS
     // (fresh block lists + Block objects, see EffectiveProfileSwitchExtension.fromDb) on every call, so
@@ -65,8 +71,7 @@ class ProfileFunctionImpl @Inject constructor(
     // reader. This used to rest on a convention instead - validatePump() clamped basal amounts in
     // place, and sharing was only safe because that clamp happened to run on freshly built profiles.
     // The clamp is gone and the types are `val`, so the guarantee is now the compiler's.
-    @VisibleForTesting
-    val canonicalEps = HashMap<Long, EPS>()
+    val canonicalEps = mutableMapOf<Long, EPS>()
 
     private val _runningICfg = MutableStateFlow<ICfg?>(null)
     override val runningICfg: StateFlow<ICfg?> = _runningICfg.asStateFlow()
@@ -82,8 +87,8 @@ class ProfileFunctionImpl @Inject constructor(
                     // which the change happened. A strict > against the raw ms timestamp would leave
                     // the current-second entry stale and getProfile() would keep returning the old EPS.
                     val rounded = timestamp - timestamp % 1000
-                    synchronized(cache) {
-                        cache.keys.removeIf { key -> key >= rounded }
+                    cacheLock.withLock {
+                        cache.keys.removeAll { key -> key >= rounded }
                         // An edited EPS keeps its id but changes content, so a stale canonical copy would be
                         // re-served on the next miss. Clear the whole map (not just changed ids): it rebuilds
                         // lazily and any surviving older wrapper already holds its own reference — nothing dangles.
@@ -98,16 +103,16 @@ class ProfileFunctionImpl @Inject constructor(
     }
 
     override suspend fun getProfileName(): String =
-        getProfileName(System.currentTimeMillis(), customized = true, showRemainingTime = false)
+        getProfileName(dateUtil.now(), customized = true, showRemainingTime = false)
 
     override suspend fun getOriginalProfileName(): String =
-        getProfileName(System.currentTimeMillis(), customized = false, showRemainingTime = false)
+        getProfileName(dateUtil.now(), customized = false, showRemainingTime = false)
 
     override suspend fun getProfileNameWithRemainingTime(): String =
-        getProfileName(System.currentTimeMillis(), customized = true, showRemainingTime = true)
+        getProfileName(dateUtil.now(), customized = true, showRemainingTime = true)
 
     private suspend fun getProfileName(time: Long, customized: Boolean, showRemainingTime: Boolean): String {
-        var profileName = rh.gs(app.aaps.core.ui.R.string.no_profile_set)
+        var profileName = rh.gs(CoreUiStrings.no_profile_set)
 
         val profileSwitch = persistenceLayer.getEffectiveProfileSwitchActiveAt(time)
         if (profileSwitch != null) {
@@ -126,7 +131,7 @@ class ProfileFunctionImpl @Inject constructor(
         // repair rewrites the running EPS row via a path that does not re-emit here, so without this the
         // stale canonical copy (DIA 0.0 sentinel) stays pinned for the whole session. Clear both maps, then
         // rebuild the synchronous mirror from the now-healed DB (after the clear, so it can't re-read stale).
-        synchronized(cache) {
+        cacheLock.withLock {
             cache.clear()
             canonicalEps.clear()
         }
@@ -139,7 +144,7 @@ class ProfileFunctionImpl @Inject constructor(
     override suspend fun getProfile(time: Long): EffectiveProfile? {
         val rounded = time - time % 1000
         // Clear cache after longer use
-        synchronized(cache) {
+        cacheLock.withLock {
             if (cache.keys.size > 30000) {
                 cache.clear()
                 canonicalEps.clear()
@@ -151,7 +156,7 @@ class ProfileFunctionImpl @Inject constructor(
         }
         val ps = persistenceLayer.getEffectiveProfileSwitchActiveAt(time)
         if (ps != null) {
-            synchronized(cache) {
+            cacheLock.withLock {
                 // Reuse the first deep copy seen for this EPS id; the throwaway copy from this DB read is
                 // dropped (GC'd) when a canonical entry already exists, so the window keeps a single copy.
                 val shared = canonicalEps.getOrPut(ps.id) { ps }
@@ -172,7 +177,7 @@ class ProfileFunctionImpl @Inject constructor(
             processedDeviceStatusData.pumpData?.activeProfileName?.let { activeProfile ->
                 profileRepository.profile.value?.getSpecificProfile(activeProfile)?.let { ap ->
                     val sealed = ProfileSealed.Pure(ap, activePlugin)
-                    synchronized(cache) {
+                    cacheLock.withLock {
                         cache.put(rounded, sealed)
                     }
                     return sealed
@@ -181,7 +186,7 @@ class ProfileFunctionImpl @Inject constructor(
             }
         }
         */
-        synchronized(cache) {
+        cacheLock.withLock {
             cache.remove(rounded)
         }
         return null
@@ -222,7 +227,7 @@ class ProfileFunctionImpl @Inject constructor(
     ): PS? {
         val ps = buildProfileSwitch(profileStore, profileName, durationInMinutes, percentage, timeShiftInHours, timestamp, iCfg) ?: return null
         val validity = ProfileSealed.PS(ps, activePlugin).isValid(
-            rh.gs(app.aaps.core.ui.R.string.careportal_profileswitch),
+            rh.gs(CoreUiStrings.careportal_profileswitch),
             activePlugin.activePump,
             config,
             rh,
@@ -243,7 +248,7 @@ class ProfileFunctionImpl @Inject constructor(
         val profileStore = profileRepository.profile.value ?: return null
         val ps = buildProfileSwitch(profileStore, profile.profileName, durationInMinutes, percentage, timeShiftInHours, dateUtil.now(), profile.iCfg) ?: return null
         val validity = ProfileSealed.PS(ps, activePlugin).isValid(
-            rh.gs(app.aaps.core.ui.R.string.careportal_profileswitch),
+            rh.gs(CoreUiStrings.careportal_profileswitch),
             activePlugin.activePump,
             config,
             rh,

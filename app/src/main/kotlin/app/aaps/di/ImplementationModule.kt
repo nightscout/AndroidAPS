@@ -2,11 +2,9 @@ package app.aaps.di
 
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PermissionProvider
-import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.implementation.notifications.NotificationManagerImpl
-import app.aaps.implementation.profile.ProfileFunctionImpl
 import app.aaps.implementation.resources.ResourceHelperImpl
 import app.aaps.implementation.utils.fabric.FabricPrivacyImpl
 import dagger.Binds
@@ -37,5 +35,4 @@ interface ImplementationModule {
     @Binds fun bindFabricPrivacy(fabricPrivacyImpl: FabricPrivacyImpl): FabricPrivacy
     @Binds fun bindResourceHelper(resourceHelperImpl: ResourceHelperImpl): ResourceHelper
     @Binds fun bindNotificationManager(notificationManagerImpl: NotificationManagerImpl): NotificationManager
-    @Binds fun bindsProfileFunction(profileFunctionImpl: ProfileFunctionImpl): ProfileFunction
 }

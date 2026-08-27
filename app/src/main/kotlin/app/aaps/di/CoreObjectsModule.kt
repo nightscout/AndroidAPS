@@ -221,6 +221,8 @@ class CoreObjectsModule {
 
     // Metro owns AutomationRuntime now, so these two are delegates rather than leaves. The set has
     // exactly one contributor - AutomationRuntime itself - as it did under the Dagger @IntoSet.
+    @Provides @Singleton fun provideProfileFunction(graphs: MetroGraphs): ProfileFunction = graphs.profileFunction
+
     @Provides @Singleton fun provideAutomation(graphs: MetroGraphs): Automation = graphs.automation
 
     @Provides @Singleton fun provideAutomationRuntime(graphs: MetroGraphs): AutomationRuntime = graphs.automationRuntime
@@ -485,7 +487,6 @@ class CoreObjectsModule {
         databaseConfigProvider: Provider<DatabaseConfig>,
         authFlowOutProvider: Provider<AuthFlowOut>,
         tidepoolUploaderProvider: Provider<TidepoolUploader>,
-        profileFunctionProvider: Provider<ProfileFunction>,
         rhProvider: Provider<ResourceHelper>,
         workManagerProvider: Provider<WorkManager>,
         notificationManagerProvider: Provider<NotificationManager>,
@@ -519,7 +520,6 @@ class CoreObjectsModule {
         databaseConfigProvider,
         authFlowOutProvider,
         tidepoolUploaderProvider,
-        profileFunctionProvider,
         rhProvider,
         workManagerProvider,
         notificationManagerProvider,

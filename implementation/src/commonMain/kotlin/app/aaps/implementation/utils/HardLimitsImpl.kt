@@ -5,12 +5,11 @@ import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
@@ -19,12 +18,13 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.extensions.asAnnouncement
+import app.aaps.core.ui.CoreUiStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
 
@@ -37,11 +37,11 @@ class HardLimitsImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val notificationManager: NotificationManager,
     private val preferences: Preferences,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil,
     private val rxBus: RxBus,
-    @ApplicationScope private val appScope: CoroutineScope
+    private val appScope: CoroutineScope
 ) : HardLimits {
 
     private fun loadAge(): HardLimits.AgeType {
@@ -71,8 +71,11 @@ class HardLimitsImpl @Inject constructor(
     override fun verifyHardLimits(value: Double, valueName: TextRef, lowLimit: Double, highLimit: Double): Double =
         verifyHardLimits(value, rh.gs(valueName), lowLimit, highLimit)
 
+    // The resource id form, kept for the call sites that still pass R.string directly. Wrapping the id
+    // in a TextRef is what lets this class live in commonMain: TextResolver has no gs(Int), and
+    // TextRef.AndroidRes only carries the id, so nothing Android specific leaks in.
     override fun verifyHardLimits(value: Double, valueName: Int, lowLimit: Double, highLimit: Double): Double =
-        verifyHardLimits(value, rh.gs(valueName), lowLimit, highLimit)
+        verifyHardLimits(value, rh.gs(TextRef.AndroidRes(valueName)), lowLimit, highLimit)
 
     /** Both public forms resolve their name first and share this, so the behaviour cannot drift. */
     private fun verifyHardLimits(value: Double, valueName: String, lowLimit: Double, highLimit: Double): Double {
@@ -80,9 +83,9 @@ class HardLimitsImpl @Inject constructor(
         if (newValue !in lowLimit..highLimit) {
             newValue = max(newValue, lowLimit)
             newValue = min(newValue, highLimit)
-            var msg = rh.gs(app.aaps.core.ui.R.string.valueoutofrange, valueName)
+            var msg = rh.gs(CoreUiStrings.valueoutofrange, valueName)
             msg += ".\n"
-            msg += rh.gs(app.aaps.core.ui.R.string.valuelimitedto, value, newValue)
+            msg += rh.gs(CoreUiStrings.valuelimitedto, value, newValue)
             aapsLogger.error(msg)
             appScope.launch {
                 persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
@@ -101,11 +104,11 @@ class HardLimitsImpl @Inject constructor(
     }
 
     override fun ageEntries() = arrayOf<CharSequence>(
-        rh.gs(app.aaps.core.ui.R.string.child),
-        rh.gs(app.aaps.core.ui.R.string.teenage),
-        rh.gs(app.aaps.core.ui.R.string.adult),
-        rh.gs(app.aaps.core.ui.R.string.resistant_adult),
-        rh.gs(app.aaps.core.ui.R.string.pregnant),
+        rh.gs(CoreUiStrings.child),
+        rh.gs(CoreUiStrings.teenage),
+        rh.gs(CoreUiStrings.adult),
+        rh.gs(CoreUiStrings.resistant_adult),
+        rh.gs(CoreUiStrings.pregnant),
     )
 
     override fun ageEntryValues() = arrayOf<CharSequence>(

@@ -104,7 +104,6 @@ class AapsLeaves(
     // The activities this app injects need these; all three are Dagger @Binds in their own modules.
     private val authFlowOutProvider: Provider<AuthFlowOut>,
     private val tidepoolUploaderProvider: Provider<TidepoolUploader>,
-    private val profileFunctionProvider: Provider<ProfileFunction>,
     private val rhProvider: Provider<ResourceHelper>,
     private val workManagerProvider: Provider<WorkManager>,
     private val notificationManagerProvider: Provider<NotificationManager>,
@@ -188,7 +187,6 @@ class AapsLeaves(
     // `CoreObjectsModule.provideLoop`.
     @Provides fun authFlowOut(): AuthFlowOut = authFlowOutProvider.get()
     @Provides fun tidepoolUploader(): TidepoolUploader = tidepoolUploaderProvider.get()
-    @Provides fun profileFunction(): ProfileFunction = profileFunctionProvider.get()
     @Provides fun rh(): ResourceHelper = rhProvider.get()
 
     /** `ResourceHelper` is the Android implementation of the multiplatform [TextResolver]. */
