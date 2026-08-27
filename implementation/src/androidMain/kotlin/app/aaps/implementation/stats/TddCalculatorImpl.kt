@@ -17,10 +17,10 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import java.time.Instant
 import java.time.ZoneId
-import javax.inject.Inject
 
 /**
  * Implementation of Total Daily Dose (TDD) calculator for insulin usage statistics.

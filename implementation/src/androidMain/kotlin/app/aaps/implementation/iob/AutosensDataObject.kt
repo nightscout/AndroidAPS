@@ -10,7 +10,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import java.util.Locale
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.math.min
 
 // Deliberately NOT @SingleIn: the @Binds this replaces had no scope. AutosensData is a value object

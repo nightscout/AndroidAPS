@@ -86,8 +86,8 @@ import app.aaps.core.ui.compose.icons.IcXDrip
 import app.aaps.core.ui.compose.navigation.color
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import javax.inject.Inject
 import app.aaps.core.interfaces.R as InterfacesR
 
 @ContributesBinding(AppScope::class)

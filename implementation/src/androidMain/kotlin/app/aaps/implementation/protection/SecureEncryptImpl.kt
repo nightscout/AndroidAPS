@@ -24,8 +24,8 @@ import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import javax.inject.Inject
 
 /***
  * Implementation for class SecureEncrypt

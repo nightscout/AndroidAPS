@@ -1,9 +1,9 @@
 package app.aaps.implementation.profile
 
 import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import java.util.concurrent.atomic.AtomicBoolean
-import javax.inject.Inject
 
 /**
  * One-shot flag used to suppress the central "Basal profile in pump updated" ([app.aaps.core.interfaces.notifications.NotificationId.PROFILE_SET_OK])

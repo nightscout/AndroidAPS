@@ -74,6 +74,7 @@ import app.aaps.implementation.queue.commands.CommandStopPump
 import app.aaps.implementation.queue.commands.CommandTempBasalAbsolute
 import app.aaps.implementation.queue.commands.CommandTempBasalPercent
 import app.aaps.implementation.queue.commands.CommandUpdateTime
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.map
@@ -83,7 +84,6 @@ import java.util.LinkedList
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
-import javax.inject.Inject
 import kotlin.reflect.KClass
 import kotlin.time.Duration.Companion.milliseconds
 
