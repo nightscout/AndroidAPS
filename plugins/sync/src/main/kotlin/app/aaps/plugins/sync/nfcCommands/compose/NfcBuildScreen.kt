@@ -106,6 +106,7 @@ import app.aaps.plugins.sync.nfcCommands.ArgType
 import app.aaps.plugins.sync.nfcCommands.NfcCategories
 import app.aaps.plugins.sync.nfcCommands.NfcCommand
 import app.aaps.plugins.sync.nfcCommands.NfcCommandCode
+import app.aaps.plugins.sync.nfcCommands.NfcDefaults
 import app.aaps.plugins.sync.nfcCommands.NfcCommandsPlugin
 import app.aaps.plugins.sync.nfcCommands.NfcCreatedTag
 import app.aaps.plugins.sync.nfcCommands.NfcLogEntry
@@ -156,6 +157,11 @@ fun NfcBuildScreen(
                     val params = decoded.params
                     run {
                         val action = createNfcUiAction(plugin, code, plugin.pumpBasalDurationStep())
+                        // The command's own defaults first, then whatever the tag stored on top.
+                        // applyParams leaves a field alone when the stored command has no value for it,
+                        // so a missing value shows the default for that command rather than a number
+                        // this screen made up - and the row is marked "value missing" either way.
+                        action.applyParams(plugin.getAction(code).getDefaultParams())
                         action.applyParams(params)
                         state.chain.add(action)
                     }
@@ -832,13 +838,15 @@ class GenericNfcUiAction(
 ) : NfcUiAction {
     override val meta = plugin.getAction(command)
 
-    // UI State for all possible field types
-    var units by mutableDoubleStateOf(1.0)
-    var glucose by mutableDoubleStateOf(100.0)
-    var grams by mutableIntStateOf(20)
-    var duration by mutableIntStateOf(30)
-    var percent by mutableIntStateOf(100)
-    var rate by mutableDoubleStateOf(1.0)
+    // UI state for all possible field types. These are only placeholders: both places that create a
+    // row call applyParams straight afterwards, with the command's own defaults for a new command and
+    // with the stored values for an existing one.
+    var units by mutableDoubleStateOf(NfcDefaults.BOLUS_INSULIN)
+    var glucose by mutableDoubleStateOf(NfcDefaults.TEMP_TARGET_MGDL_WITHOUT_PROFILE)
+    var grams by mutableIntStateOf(NfcDefaults.CARBS_GRAMS)
+    var duration by mutableIntStateOf(NfcDefaults.EXTENDED_BOLUS_DURATION_MINUTES)
+    var percent by mutableIntStateOf(NfcDefaults.PROFILE_SWITCH_PERCENT)
+    var rate by mutableDoubleStateOf(NfcDefaults.TEMP_BASAL_RATE)
     var meal by mutableStateOf(false)
     var profileName by mutableStateOf("")
     var sceneId by mutableStateOf("")
@@ -883,15 +891,15 @@ class GenericNfcUiAction(
         argTypes.forEach { type ->
             run {
                 when (type) {
-                    ArgType.INSULIN              -> units = params.insulin ?: 1.0
-                    ArgType.AMOUNT_GRAMS         -> grams = params.carbs ?: 20
-                    ArgType.PERCENT              -> percent = params.percent ?: 100
-                    ArgType.RATE                 -> rate = params.rate ?: 1.0
-                    ArgType.DURATION             -> duration = params.duration ?: 30
+                    ArgType.INSULIN              -> units = params.insulin ?: units
+                    ArgType.AMOUNT_GRAMS         -> grams = params.carbs ?: grams
+                    ArgType.PERCENT              -> percent = params.percent ?: percent
+                    ArgType.RATE                 -> rate = params.rate ?: rate
+                    ArgType.DURATION             -> duration = params.duration ?: duration
                     ArgType.MEAL_CHECK           -> meal = params.isMeal
-                    ArgType.PROFILE_NAME         -> profileName = params.profileName ?: ""
-                    ArgType.SCENE_ID             -> sceneId = params.sceneId ?: ""
-                    ArgType.GLUCOSE_TARGET       -> glucose = params.glucose ?: 100.0
+                    ArgType.PROFILE_NAME         -> profileName = params.profileName ?: profileName
+                    ArgType.SCENE_ID             -> sceneId = params.sceneId ?: sceneId
+                    ArgType.GLUCOSE_TARGET       -> glucose = params.glucose ?: glucose
 
                     ArgType.BOLUS_WIZARD_OPTIONS -> {
                         useBg = params.useBg

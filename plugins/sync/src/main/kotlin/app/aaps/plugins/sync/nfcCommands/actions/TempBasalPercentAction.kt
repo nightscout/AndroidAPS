@@ -17,6 +17,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.compose.icons.IcTbrLow
 import app.aaps.plugins.sync.nfcCommands.ArgType
+import app.aaps.plugins.sync.nfcCommands.NfcDefaults
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
 import app.aaps.plugins.sync.R
 import app.aaps.core.ui.R as CoreUiR
@@ -37,13 +38,13 @@ class TempBasalPercentAction(
     override val icon = IcTbrLow
 
     override suspend fun getDefaultParams() =
-        NfcParams(percent = 100, duration = pumpBasalDurationStep(activePlugin))
+        NfcParams(percent = NfcDefaults.TEMP_BASAL_PERCENT, duration = pumpBasalDurationStep(activePlugin))
 
     override fun isSupported(): Boolean = 
         activePlugin.activePump.pumpDescription.tempBasalStyle == PumpDescription.PERCENT
 
     override suspend fun formatParams(tagName: String): String {
-        val tempBasalPct = (params.percent ?: 100)
+        val tempBasalPct = (params.percent ?: NfcDefaults.TEMP_BASAL_PERCENT)
         val durationStep = pumpBasalDurationStep(activePlugin)
         val rawDuration = (params.duration ?: durationStep)
         val duration = roundUpToStep(rawDuration, durationStep)
@@ -55,7 +56,7 @@ class TempBasalPercentAction(
 
     override suspend fun execute(tagName: String): NfcExecutionResult {
         val profile = profileFunction.getProfile() ?: return NfcExecutionResult(false, rh.gs(CoreUiR.string.noprofile))
-        var tempBasalPct = (params.percent ?: 100)
+        var tempBasalPct = params.percent ?: return invalidFormat()
         val durationStep = pumpBasalDurationStep(activePlugin)
         val rawDuration = (params.duration ?: durationStep)
         

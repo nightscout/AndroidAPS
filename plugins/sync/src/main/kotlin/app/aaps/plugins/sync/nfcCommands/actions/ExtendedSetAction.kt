@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.plugins.sync.nfcCommands.ArgType
+import app.aaps.plugins.sync.nfcCommands.NfcDefaults
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
 import app.aaps.plugins.sync.R
 import app.aaps.core.ui.R as CoreUiR
@@ -33,11 +34,14 @@ class ExtendedSetAction(
     override val icon
         get() = elementType.icon()
 
-    override suspend fun getDefaultParams() = NfcParams(insulin = 0.0, duration = 30)
+    override suspend fun getDefaultParams() = NfcParams(
+        insulin = NfcDefaults.EXTENDED_BOLUS_INSULIN,
+        duration = NfcDefaults.EXTENDED_BOLUS_DURATION_MINUTES
+    )
 
     override suspend fun execute(tagName: String): NfcExecutionResult {
-        var amount = (params.insulin ?: 0.0)
-        val duration = (params.duration ?: 0)
+        var amount = params.insulin ?: return invalidFormat()
+        val duration = params.duration ?: return invalidFormat()
         
         if (amount <= 0.0 || duration <= 0) return invalidFormat()
         

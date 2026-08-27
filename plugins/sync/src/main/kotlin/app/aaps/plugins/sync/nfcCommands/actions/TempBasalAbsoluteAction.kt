@@ -17,6 +17,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.plugins.sync.nfcCommands.ArgType
+import app.aaps.plugins.sync.nfcCommands.NfcDefaults
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
 import app.aaps.plugins.sync.R
 import app.aaps.core.ui.R as CoreUiR
@@ -38,13 +39,13 @@ class TempBasalAbsoluteAction(
         get() = elementType.icon()
 
     override suspend fun getDefaultParams() =
-        NfcParams(rate = 0.0, duration = pumpBasalDurationStep(activePlugin))
+        NfcParams(rate = NfcDefaults.TEMP_BASAL_RATE, duration = pumpBasalDurationStep(activePlugin))
 
     override fun isSupported(): Boolean = 
         activePlugin.activePump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE
 
     override suspend fun formatParams(tagName: String): String {
-        val tempBasal = (params.rate ?: 0.0)
+        val tempBasal = (params.rate ?: NfcDefaults.TEMP_BASAL_RATE)
         val durationStep = pumpBasalDurationStep(activePlugin)
         val rawDuration = (params.duration ?: durationStep)
         val duration = roundUpToStep(rawDuration, durationStep)
@@ -56,7 +57,7 @@ class TempBasalAbsoluteAction(
 
     override suspend fun execute(tagName: String): NfcExecutionResult {
         val profile = profileFunction.getProfile() ?: return NfcExecutionResult(false, rh.gs(CoreUiR.string.noprofile))
-        var tempBasal = (params.rate ?: 0.0)
+        var tempBasal = params.rate ?: return invalidFormat()
         val durationStep = pumpBasalDurationStep(activePlugin)
         val rawDuration = (params.duration ?: durationStep)
         

@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.icons.IcLoopPaused
 import app.aaps.plugins.sync.nfcCommands.ArgType
+import app.aaps.plugins.sync.nfcCommands.NfcDefaults
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
 import app.aaps.plugins.sync.R
 import app.aaps.core.interfaces.R as InterfacesR
@@ -34,16 +35,16 @@ class LoopSuspendAction(
     override val icon = IcLoopPaused
     override val customIconColor: @Composable () -> Color = { AapsTheme.elementColors.loopSuspended }
 
-    override suspend fun getDefaultParams() = NfcParams(duration = 60)
+    override suspend fun getDefaultParams() = NfcParams(duration = NfcDefaults.LOOP_SUSPEND_DURATION_MINUTES)
 
     override suspend fun formatParams(tagName: String): String {
-        val duration = (params.duration ?: 60)
+        val duration = (params.duration ?: NfcDefaults.LOOP_SUSPEND_DURATION_MINUTES)
         return rh.gs(CoreUiR.string.format_mins, duration)
     }
 
     override suspend fun execute(tagName: String): NfcExecutionResult {
         val profile = profileFunction.getProfile() ?: return NfcExecutionResult(false, rh.gs(CoreUiR.string.noprofile))
-        val duration = (params.duration ?: 60)
+        val duration = params.duration ?: return invalidFormat()
         val normalizedDuration = duration.coerceIn(1, 180)
         
         if (!loop.allowedNextModes().contains(RM.Mode.SUSPENDED_BY_USER)) {

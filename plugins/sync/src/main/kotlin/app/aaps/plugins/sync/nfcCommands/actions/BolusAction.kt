@@ -32,6 +32,7 @@ import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nfcCommands.ArgType
+import app.aaps.plugins.sync.nfcCommands.NfcDefaults
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
 import java.util.concurrent.TimeUnit
 import app.aaps.core.interfaces.R as InterfacesR
@@ -68,10 +69,10 @@ class BolusAction(
             @Composable { ElementType.TEMP_TARGET_MANAGEMENT.color() }
         } else null
 
-    override suspend fun getDefaultParams() = NfcParams(insulin = 0.0, isMeal = false)
+    override suspend fun getDefaultParams() = NfcParams(insulin = NfcDefaults.BOLUS_INSULIN)
 
     override suspend fun formatParams(tagName: String): String {
-        val amount = (params.insulin ?: 0.0)
+        val amount = (params.insulin ?: NfcDefaults.BOLUS_INSULIN)
         val isMeal = params.isMeal
         val base = rh.gs(CoreUiR.string.goingtodeliver, amount)
         return if (isMeal) {
@@ -92,7 +93,7 @@ class BolusAction(
             return NfcExecutionResult(false, rh.gs(InterfacesR.string.pumpsuspended))
         }
         
-        var bolus = (params.insulin ?: 0.0)
+        var bolus = params.insulin ?: return invalidFormat()
         val isMeal = params.isMeal
         
         if (bolus <= 0.0) return invalidFormat()

@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.plugins.sync.nfcCommands.ArgType
+import app.aaps.plugins.sync.nfcCommands.NfcDefaults
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
 import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.R as CoreUiR
@@ -34,15 +35,15 @@ class CarbsAction(
     override val icon
         get() = elementType.icon()
 
-    override suspend fun getDefaultParams() = NfcParams(carbs = 0)
+    override suspend fun getDefaultParams() = NfcParams(carbs = NfcDefaults.CARBS_GRAMS)
 
     override suspend fun formatParams(tagName: String): String {
-        val grams = (params.carbs ?: 0)
+        val grams = (params.carbs ?: NfcDefaults.CARBS_GRAMS)
         return rh.gs(InterfacesR.string.format_carbs, grams)
     }
 
     override suspend fun execute(tagName: String): NfcExecutionResult {
-        var grams = (params.carbs ?: 0)
+        var grams = params.carbs ?: return invalidFormat()
         
         if (grams == 0) return invalidFormat()
         

@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.icons.IcLoopDisconnected
 import app.aaps.plugins.sync.nfcCommands.ArgType
+import app.aaps.plugins.sync.nfcCommands.NfcDefaults
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
 import app.aaps.plugins.sync.R
 import app.aaps.core.interfaces.R as InterfacesR
@@ -34,15 +35,17 @@ class PumpDisconnectAction(
     override val icon = IcLoopDisconnected
     override val customIconColor: @Composable () -> Color = { AapsTheme.elementColors.loopDisconnected }
 
-    override suspend fun getDefaultParams() = NfcParams(duration = 30)
+    override suspend fun getDefaultParams() = NfcParams(duration = NfcDefaults.PUMP_DISCONNECT_DURATION_MINUTES)
 
     override suspend fun formatParams(tagName: String): String {
-        val duration = (params.duration ?: 30).coerceIn(1, 180)
+        val duration = (params.duration ?: NfcDefaults.PUMP_DISCONNECT_DURATION_MINUTES)
+            .coerceIn(NfcDefaults.PUMP_DISCONNECT_DURATION_RANGE)
         return rh.gs(CoreUiR.string.format_mins, duration)
     }
 
     override suspend fun execute(tagName: String): NfcExecutionResult {
-        val duration = (params.duration ?: 30).coerceIn(1, 180)
+        val duration = (params.duration ?: return invalidFormat())
+            .coerceIn(NfcDefaults.PUMP_DISCONNECT_DURATION_RANGE)
         val profile = profileFunction.getProfile() ?: return NfcExecutionResult(false, rh.gs(CoreUiR.string.noprofile))
 
         val result = loop.handleRunningModeChange(

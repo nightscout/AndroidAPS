@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.ui.compose.icons.IcTtManual
+import app.aaps.plugins.sync.nfcCommands.NfcDefaults
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nfcCommands.ArgType
@@ -38,17 +39,18 @@ class TempTargetManualAction(
     override val icon = IcTtManual
     
     override suspend fun getDefaultParams(): NfcParams {
-        val defaultTargetMgdl = profileFunction.getProfile()?.getTargetLowMgdl() ?: 100.0
+        val defaultTargetMgdl =
+            profileFunction.getProfile()?.getTargetLowMgdl() ?: NfcDefaults.TEMP_TARGET_MGDL_WITHOUT_PROFILE
         return NfcParams(
             glucose = profileUtil.fromMgdlToUnits(defaultTargetMgdl, profileUtil.units),
-            duration = 60
+            duration = NfcDefaults.TEMP_TARGET_DURATION_MINUTES
         )
     }
 
     override suspend fun formatParams(tagName: String): String {
         val units = profileUtil.units
-        val glucose = (params.glucose ?: 0.0)
-        val duration = (params.duration ?: 0)
+        val glucose = (params.glucose ?: NfcDefaults.GLUCOSE_TARGET_UNSET)
+        val duration = (params.duration ?: NfcDefaults.TEMP_TARGET_DURATION_MINUTES)
         val unitLabel = if (units == GlucoseUnit.MMOL) "mmol/l" else "mg/dl"
         val glucoseString = if (units == GlucoseUnit.MMOL) decimalFormatter.to1Decimal(glucose) else decimalFormatter.to0Decimal(glucose)
         return "$glucoseString $unitLabel, ${duration}min"
@@ -56,8 +58,8 @@ class TempTargetManualAction(
 
     override suspend fun execute(tagName: String): NfcExecutionResult {
         val units = profileUtil.units
-        val glucose = (params.glucose ?: 0.0)
-        val durationMinutes = (params.duration ?: 60)
+        val glucose = params.glucose ?: return invalidFormat()
+        val durationMinutes = params.duration ?: return invalidFormat()
 
         if (glucose <= 0.0 || durationMinutes <= 0) return invalidFormat()
 

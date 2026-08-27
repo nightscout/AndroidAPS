@@ -46,8 +46,7 @@ class RunSceneAction(
     }
 
     override suspend fun execute(tagName: String): NfcExecutionResult {
-        val sceneId = (params.sceneId ?: "")
-        if (sceneId.isNullOrBlank()) return invalidFormat()
+        val sceneId = params.sceneId ?: return invalidFormat()
         val sceneName = sceneAutomationApi.getScene(sceneId)?.name ?: sceneId
 
         return when (val result = sceneAutomationApi.runScene(sceneId)) {

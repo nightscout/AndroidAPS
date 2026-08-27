@@ -17,6 +17,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nfcCommands.ArgType
+import app.aaps.plugins.sync.nfcCommands.NfcDefaults
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
 import app.aaps.core.ui.R as CoreUiR
 import app.aaps.plugins.sync.nfcCommands.NfcParams
@@ -39,18 +40,22 @@ class ProfileSwitchAction(
     }
 
     override suspend fun getDefaultParams() =
-        NfcParams(profileName = profileFunction.getOriginalProfileName(), percent = 100)
+        NfcParams(
+            profileName = profileFunction.getOriginalProfileName(),
+            percent = NfcDefaults.PROFILE_SWITCH_PERCENT
+        )
 
     override suspend fun formatParams(tagName: String): String? {
         val profileName = (params.profileName ?: "")
-        val percentage = (params.percent ?: 100)
+        val percentage = (params.percent ?: NfcDefaults.PROFILE_SWITCH_PERCENT)
         return if (percentage == 100) profileName else "$profileName $percentage%"
     }
 
     override suspend fun execute(tagName: String): NfcExecutionResult {
-        val profileName = (params.profileName ?: "")
+        val profileName = params.profileName ?: return invalidFormat()
         if (profileName.isNullOrBlank()) return invalidFormat()
-        val percentage = (params.percent ?: 100).coerceIn(10, 500)
+        val percentage = (params.percent ?: return invalidFormat())
+            .coerceIn(NfcDefaults.PROFILE_SWITCH_PERCENT_RANGE)
         
         val profileStore = profileRepository.profile.value ?: return NfcExecutionResult(false, rh.gs(CoreUiR.string.notconfigured))
         

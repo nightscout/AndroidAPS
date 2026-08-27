@@ -21,6 +21,7 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.plugins.sync.nfcCommands.ArgType
+import app.aaps.plugins.sync.nfcCommands.NfcDefaults
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
 import app.aaps.plugins.sync.R
 import app.aaps.core.interfaces.R as InterfacesR
@@ -56,22 +57,21 @@ class BolusWizardAction(
         persistenceLayer.getLastGlucoseValue().let {
             if (it != null) {
                 if (it.timestamp < dateUtil.now() - T.mins(time).msecs())
-                    percentage = 100
-            } else percentage = 100
+                    percentage = NfcDefaults.WIZARD_PERCENTAGE
+            } else percentage = NfcDefaults.WIZARD_PERCENTAGE
         }
+        // useBg, useTt and useIob are not repeated here: NfcParams already declares them true, and
+        // stating the same default in two places is how the others stopped matching.
         return NfcParams(
-            carbs = 0,
+            carbs = NfcDefaults.CARBS_GRAMS,
             percent = percentage,
-            useBg = true,
-            useTt = true,
             useTrend = useTrend,
-            useIob = true,
             useCob = useCOB
         )
     }
 
     override suspend fun formatParams(tagName: String): String? {
-        val amount = (params.carbs ?: 0)
+        val amount = (params.carbs ?: NfcDefaults.CARBS_GRAMS)
         return when (val prepared = prepareWizard(tagName)) {
             is WizardBolusExecutor.PrepareResult.Preview -> {
                 // Park the SAME preview (bolusId + computed insulin) the confirm dialog just displayed —
@@ -128,8 +128,8 @@ class BolusWizardAction(
      * never leak across NFC scans, unlike the previous design which reused one shared instance forever.
      */
     private suspend fun prepareWizard(tagName: String): WizardBolusExecutor.PrepareResult {
-        val carbs = (params.carbs ?: 0)
-        val percentage = (params.percent ?: 100)
+        val carbs = (params.carbs ?: NfcDefaults.CARBS_GRAMS)
+        val percentage = (params.percent ?: NfcDefaults.WIZARD_PERCENTAGE)
         val useBg = params.useBg
         val useTT = params.useTt
         val useTrend = params.useTrend
