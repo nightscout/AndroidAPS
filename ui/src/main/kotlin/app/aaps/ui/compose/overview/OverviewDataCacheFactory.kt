@@ -13,6 +13,9 @@ import dagger.assisted.AssistedFactory
  * @param observeDatabase true for the live pipeline (cache reacts to DB changes),
  *   false for history (cache is populated only by workers through [CalculationSignals]).
  */
+// Stays on Dagger on purpose: this is an AapsLeaves leaf, so Dagger owns it and Metro borrows it. A
+// Dagger @AssistedFactory can only build a target that has a Dagger @AssistedInject constructor,
+// which is why OverviewDataCacheImpl stays on Dagger with it.
 @AssistedFactory
 interface OverviewDataCacheFactory {
 

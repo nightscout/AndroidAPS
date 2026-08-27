@@ -32,7 +32,7 @@ import app.aaps.core.ui.compose.ttReasonColor
 import app.aaps.core.ui.extensions.displayText
 import app.aaps.ui.R
 import app.aaps.ui.widget.directionToDrawableRes
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.math.abs
 
 class WidgetStateLoader @Inject constructor(

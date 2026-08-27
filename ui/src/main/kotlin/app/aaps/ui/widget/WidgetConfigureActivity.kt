@@ -21,7 +21,7 @@ import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.dialogs.GlobalSnackbarHost
 import app.aaps.core.ui.compose.MetroAppCompatActivity
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class WidgetConfigureActivity : MetroAppCompatActivity() {
 

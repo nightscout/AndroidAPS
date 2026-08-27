@@ -38,6 +38,7 @@ import app.aaps.core.ui.extensions.toStringMedium
 import app.aaps.core.ui.extensions.toStringShort
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.CoroutineScope
@@ -54,7 +55,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 import app.aaps.ui.R as UiR
 
 // Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately

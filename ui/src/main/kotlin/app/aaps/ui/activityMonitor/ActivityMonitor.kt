@@ -33,6 +33,8 @@ data class ActivityStats(
     val days: Double
 )
 
+// Stays on Dagger on purpose: MainApp carries @HiltAndroidApp and field-injects this, so the Hilt
+// graph has to be able to build it. Move it to Metro only together with MainApp.
 @Singleton
 class ActivityMonitor @Inject constructor(
     private var aapsLogger: AAPSLogger,

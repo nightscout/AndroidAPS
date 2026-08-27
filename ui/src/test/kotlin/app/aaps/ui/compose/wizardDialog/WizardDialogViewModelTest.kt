@@ -21,6 +21,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.objects.wizard.BolusWizard
 import com.google.common.truth.Truth.assertThat
+import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -34,7 +35,6 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.mock
-import javax.inject.Provider
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class WizardDialogViewModelTest {

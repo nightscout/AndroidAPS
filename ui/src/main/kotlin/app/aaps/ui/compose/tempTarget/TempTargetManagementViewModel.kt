@@ -36,6 +36,7 @@ import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.navigation.icon
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.CoroutineScope
@@ -56,7 +57,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import java.util.UUID
-import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.roundToInt
 

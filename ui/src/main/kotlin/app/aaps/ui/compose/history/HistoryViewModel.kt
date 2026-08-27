@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.ui.compose.overview.graphs.GraphViewModel
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +16,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.util.Calendar
 import java.util.GregorianCalendar
-import javax.inject.Inject
 
 // Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
 // unscoped so each screen gets its own.
@@ -34,7 +34,7 @@ class HistoryViewModel @Inject constructor(
     val uiState: StateFlow<HistoryUiState> = _uiState.asStateFlow()
 
     init {
-        // Always start at "today" on (re-)entry. HistoryBrowserData is app-scoped @Singleton
+        // Always start at "today" on (re-)entry. HistoryBrowserData is app-scoped @SingleIn(AppScope::class)
         // so its time fields persist across VM lifetimes; reinitialising here avoids stale
         // windows flashing while the first calculation is in flight.
         setTime(dateUtil.now())
