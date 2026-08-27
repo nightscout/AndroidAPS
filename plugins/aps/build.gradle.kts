@@ -1,4 +1,5 @@
 plugins {
+    id("kmp-test-defaults")
     kotlin("multiplatform")
     // NOT com.android.library. AGP 9 refuses that plugin together with the multiplatform plugin.
     // Same reason as the :core modules and the other converted plugins.
@@ -131,8 +132,4 @@ listOf("androidHostTestCompileClasspath", "androidHostTestRuntimeClasspath").for
             attribute(com.android.build.api.attributes.ProductFlavorAttr.of("standard"), objects.named("full"))
         }
     }
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
 }

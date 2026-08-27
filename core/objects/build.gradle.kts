@@ -1,6 +1,7 @@
 import kotlin.math.min
 
 plugins {
+    id("kmp-test-defaults")
     kotlin("multiplatform")
     // NOT com.android.library. AGP 9 refuses that plugin together with the multiplatform plugin.
     alias(libs.plugins.android.kmp.library)
@@ -81,8 +82,4 @@ listOf("androidHostTestCompileClasspath", "androidHostTestRuntimeClasspath").for
             attribute(com.android.build.api.attributes.ProductFlavorAttr.of("standard"), objects.named("full"))
         }
     }
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
 }

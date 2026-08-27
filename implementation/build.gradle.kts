@@ -1,7 +1,5 @@
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-import org.gradle.api.tasks.testing.logging.TestLogEvent
-
 plugins {
+    id("kmp-test-defaults")
     kotlin("multiplatform")
     // NOT com.android.library. AGP 9 refuses that plugin together with the multiplatform plugin.
     // Same reason as :core:ui, :core:interfaces and the other multiplatform modules.
@@ -157,7 +155,8 @@ kotlin {
 }
 
 tasks.withType<Test> {
-    useJUnitPlatform()
+    // useJUnitPlatform() and the heap cap come from kmp-test-defaults; only the JaCoCo part is
+    // specific to this module.
     // Robolectric runs tests in its own classloader sandbox and rewrites bytecode, so the default
     // JaCoCo on-the-fly agent records no coverage for the classes those tests exercise. Restated
     // from jacoco-module-dependencies, which applies com.android.library.
@@ -181,19 +180,5 @@ listOf(
         attributes {
             attribute(com.android.build.api.attributes.ProductFlavorAttr.of("standard"), objects.named("full"))
         }
-    }
-}
-
-// Restated from test-module-dependencies, which applies com.android.library and so cannot be used by a
-// multiplatform module. Both halves matter: without the logging a failure on CI shows neither the test's
-// output nor a full stack trace, and without maxHeapSize each forked test JVM takes ~25% of machine RAM,
-// which is what used to push the emulators offline mid-instrumentation.
-tasks.withType<Test>().configureEach {
-    failOnNoDiscoveredTests = false
-    maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
-    maxHeapSize = "1536m"
-    testLogging {
-        events = setOf(TestLogEvent.FAILED, TestLogEvent.SKIPPED, TestLogEvent.STANDARD_OUT)
-        exceptionFormat = TestExceptionFormat.FULL
     }
 }
