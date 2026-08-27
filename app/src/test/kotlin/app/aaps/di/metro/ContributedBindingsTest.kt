@@ -98,6 +98,7 @@ class ContributedBindingsTest {
         assertThat(root.localAlertUtils).isSameInstanceAs(root.localAlertUtils)
         assertThat(root.bolusProgressData).isSameInstanceAs(root.bolusProgressData)
         assertThat(root.persistenceLayer).isSameInstanceAs(root.persistenceLayer)
+        assertThat(root.cloudStorageManager).isSameInstanceAs(root.cloudStorageManager)
         assertThat(root.overviewDataCache).isSameInstanceAs(root.overviewDataCache)
         assertThat(root.calculationSignals).isSameInstanceAs(root.calculationSignals)
         assertThat(root.calculationSignalsEmitter).isSameInstanceAs(root.calculationSignalsEmitter)

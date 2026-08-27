@@ -294,6 +294,7 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideLocalAlertUtils(graphs: MetroGraphs): LocalAlertUtils = graphs.localAlertUtils
     @Provides @Singleton fun provideBolusProgressData(graphs: MetroGraphs): BolusProgressData = graphs.bolusProgressData
     @Provides @Singleton fun providePersistenceLayer(graphs: MetroGraphs): PersistenceLayer = graphs.persistenceLayer
+    @Provides @Singleton fun provideCloudStorageManager(graphs: MetroGraphs): CloudStorageManager = graphs.cloudStorageManager
     @Provides @Singleton fun provideOverviewDataCache(graphs: MetroGraphs): OverviewDataCache = graphs.overviewDataCache
     @Provides @Singleton fun provideCalculationSignals(graphs: MetroGraphs): CalculationSignals = graphs.calculationSignals
     @Provides @Singleton fun provideCalculationSignalsEmitter(graphs: MetroGraphs): CalculationSignalsEmitter = graphs.calculationSignalsEmitter
@@ -469,7 +470,6 @@ class CoreObjectsModule {
     @Suppress("LongParameterList")
     fun provideAapsLeaves(
         metroMemberInjectorProvider: Provider<MetroMemberInjector>,
-        nsClientSourceProvider: Provider<NSClientSource>,
         @ApplicationScope appScopeProvider: Provider<CoroutineScope>,
         fabricPrivacyProvider: Provider<FabricPrivacy>,
         configProvider: Provider<Config>,
@@ -478,10 +478,8 @@ class CoreObjectsModule {
         tidepoolUploaderProvider: Provider<TidepoolUploader>,
         profileFunctionProvider: Provider<ProfileFunction>,
         rhProvider: Provider<ResourceHelper>,
-        dstHelperProvider: Provider<DstHelper>,
         workManagerProvider: Provider<WorkManager>,
         notificationManagerProvider: Provider<NotificationManager>,
-        cloudStorageManagerProvider: Provider<CloudStorageManager>,
         overviewDataCacheFactoryProvider: Provider<OverviewDataCacheFactory>,
         automationProvider: Provider<Automation>,
         contextProvider: Provider<Context>,
@@ -508,7 +506,6 @@ class CoreObjectsModule {
         sntpClientProvider: Provider<SntpClient>
     ): AapsLeaves = AapsLeaves(
         metroMemberInjectorProvider,
-        nsClientSourceProvider,
         appScopeProvider,
         fabricPrivacyProvider,
         configProvider,
@@ -517,10 +514,8 @@ class CoreObjectsModule {
         tidepoolUploaderProvider,
         profileFunctionProvider,
         rhProvider,
-        dstHelperProvider,
         workManagerProvider,
         notificationManagerProvider,
-        cloudStorageManagerProvider,
         overviewDataCacheFactoryProvider,
         automationProvider,
         contextProvider,

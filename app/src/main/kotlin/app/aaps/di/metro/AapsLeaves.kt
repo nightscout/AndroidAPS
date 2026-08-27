@@ -11,7 +11,6 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.database.di.DatabaseConfig
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.di.MetroMemberInjector
-import app.aaps.core.interfaces.dst.DstHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
@@ -19,7 +18,6 @@ import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
 import app.aaps.core.interfaces.widget.WidgetUpdater
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.configuration.RunningConfigurationKeys
-import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
@@ -96,7 +94,6 @@ import javax.inject.Provider
 @BindingContainer
 class AapsLeaves(
     private val metroMemberInjectorProvider: Provider<MetroMemberInjector>,
-    private val nsClientSourceProvider: Provider<NSClientSource>,
     @ApplicationScope private val appScopeProvider: Provider<CoroutineScope>,
     private val fabricPrivacyProvider: Provider<FabricPrivacy>,
     private val configProvider: Provider<Config>,
@@ -109,10 +106,8 @@ class AapsLeaves(
     private val tidepoolUploaderProvider: Provider<TidepoolUploader>,
     private val profileFunctionProvider: Provider<ProfileFunction>,
     private val rhProvider: Provider<ResourceHelper>,
-    private val dstHelperProvider: Provider<DstHelper>,
     private val workManagerProvider: Provider<WorkManager>,
     private val notificationManagerProvider: Provider<NotificationManager>,
-    private val cloudStorageManagerProvider: Provider<CloudStorageManager>,
     private val overviewDataCacheFactoryProvider: Provider<OverviewDataCacheFactory>,
     // Needed by the feature extensions below the root, which no longer carry their own leaf lists.
     private val automationProvider: Provider<Automation>,
@@ -200,7 +195,6 @@ class AapsLeaves(
 
     /** `ResourceHelper` is the Android implementation of the multiplatform [TextResolver]. */
     @Provides fun textResolver(rh: ResourceHelper): TextResolver = rh
-    @Provides fun dstHelper(): DstHelper = dstHelperProvider.get()
     @Provides fun workManager(): WorkManager = workManagerProvider.get()
     @Provides fun notificationManager(): NotificationManager = notificationManagerProvider.get()
     // No activeSceneManager() here on purpose: Metro owns it (@SingleIn on the class), so this leaf would
@@ -209,7 +203,6 @@ class AapsLeaves(
     // other way, which is the direction the class itself documents.
     // No sceneRepository() either, same reason as activeSceneManager above: Metro owns it (@SingleIn +
     // two @ContributesBinding), so this leaf pushed an unscoped Dagger copy back in.
-    @Provides fun cloudStorageManager(): CloudStorageManager = cloudStorageManagerProvider.get()
     @Provides fun overviewDataCacheFactory(): OverviewDataCacheFactory = overviewDataCacheFactoryProvider.get()
     @Provides fun automation(): Automation = automationProvider.get()
     @Provides fun context(): Context = contextProvider.get()
@@ -267,6 +260,5 @@ class AapsLeaves(
     @Provides fun nsClient(): NsClient = nsClientProvider.get()
 
     // What NSClientV3Service needs beyond the usual leaves. All three are Dagger @Binds in :plugins:sync.
-    @Provides fun nsClientSource(): NSClientSource = nsClientSourceProvider.get()
     @Provides fun clientControlActionDispatcher(): ClientControlActionDispatcher = clientControlActionDispatcherProvider.get()
 }

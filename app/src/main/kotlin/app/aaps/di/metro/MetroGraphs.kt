@@ -41,6 +41,7 @@ import app.aaps.core.interfaces.workflow.CalculationSignals
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.implementation.maintenance.cloud.CloudStorageManager
 import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.implementation.plugin.PluginStore
@@ -275,10 +276,10 @@ class MetroGraphs @Inject constructor(
      * wrong otherwise.
      */
     val xDripSource: XDripSource get() = root.xdripSourcePlugin
-    val nsClientSource: NSClientSource get() = root.nsClientSourcePlugin
+    val nsClientSource: NSClientSource get() = root.nsClientSource
     val dexcomBoyda: DexcomBoyda get() = root.dexcomPlugin
     val bgQualityCheck: BgQualityCheck get() = root.bgQualityCheckPlugin
-    val dstHelper: DstHelper get() = root.dstHelperPlugin
+    val dstHelper: DstHelper get() = root.dstHelper
     val objectives: Objectives get() = root.objectivesPlugin
 
     /** Same plugin as [objectives], by class. The instrumented tests ask for the concrete type. */
@@ -335,6 +336,7 @@ class MetroGraphs @Inject constructor(
     val localAlertUtils: LocalAlertUtils get() = root.localAlertUtils
     val bolusProgressData: BolusProgressData get() = root.bolusProgressData
     val persistenceLayer: PersistenceLayer get() = root.persistenceLayer
+    val cloudStorageManager: CloudStorageManager get() = root.cloudStorageManager
     val overviewDataCache: OverviewDataCache get() = root.overviewDataCache
     val calculationSignals: CalculationSignals get() = root.calculationSignals
     val calculationSignalsEmitter: CalculationSignalsEmitter get() = root.calculationSignalsEmitter
