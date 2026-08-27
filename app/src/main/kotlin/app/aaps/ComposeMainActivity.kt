@@ -138,7 +138,7 @@ import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.core.ui.search.SearchableItem
 import app.aaps.core.utils.isRunningRealPumpTest
-import app.aaps.implementation.plugin.PluginStore
+import app.aaps.implementation.plugin.PluginPermissionsImpl
 import app.aaps.implementation.protection.BiometricCheck
 import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.configuration.setupwizard.SWDefinition
@@ -552,7 +552,7 @@ class ComposeMainActivity : MetroAppCompatActivity() {
                                     permissionsSnackbarHostState.showSnackbar(getString(app.aaps.plugins.configuration.R.string.alert_dialog_permission_battery_optimization_failed))
                                 }
 
-                            effect.group.permissions.contains(PluginStore.PERMISSION_SELECT_DIRECTORY)                  ->
+                            effect.group.permissions.contains(PluginPermissionsImpl.PERMISSION_SELECT_DIRECTORY)                  ->
                                 try {
                                     accessTree?.launch(null)
                                 } catch (_: Exception) {
@@ -576,7 +576,7 @@ class ComposeMainActivity : MetroAppCompatActivity() {
                                     }
                                 )
 
-                            effect.group.permissions.contains(PluginStore.PERMISSION_NOTIFICATION_LISTENER)             ->
+                            effect.group.permissions.contains(PluginPermissionsImpl.PERMISSION_NOTIFICATION_LISTENER)             ->
                                 startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
                         }
 

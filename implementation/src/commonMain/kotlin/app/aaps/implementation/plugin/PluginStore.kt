@@ -1,15 +1,5 @@
 package app.aaps.implementation.plugin
 
-import android.Manifest
-import android.app.AlarmManager
-import android.content.ComponentName
-import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
-import android.os.PowerManager
-import android.provider.Settings
-import android.text.TextUtils
-import androidx.core.content.ContextCompat
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.Sensitivity
@@ -25,8 +15,6 @@ import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PermissionProvider
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
-import app.aaps.core.interfaces.plugin.PluginPermissions
-import app.aaps.core.interfaces.plugin.missingPermissions
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.smoothing.Smoothing
@@ -35,16 +23,14 @@ import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.implementation.R
 import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
-import javax.inject.Inject
 import kotlin.reflect.KClass
 
 @ContributesBinding(AppScope::class, binding = binding<ActivePlugin>())
-@ContributesBinding(AppScope::class, binding = binding<PluginPermissions>())
 @SingleIn(AppScope::class)
 class PluginStore @Inject constructor(
     private val aapsLogger: AAPSLogger,
@@ -53,69 +39,11 @@ class PluginStore @Inject constructor(
     // A factory, not an eager Set: a PermissionProvider (e.g. AutomationRuntime) transitively depends
     // on ActivePlugin (= this PluginStore), so asking for the set here would close the cycle. Was
     // dagger.Lazy; a plain lambda defers the same way without naming Dagger.
-    private val permissionProviders: () -> Set<PermissionProvider>
-) : ActivePlugin, PluginPermissions {
+) : ActivePlugin {
 
-    companion object {
 
-        /** Custom identifier for the AAPS directory selection requirement. */
-        const val PERMISSION_SELECT_DIRECTORY = "app.aaps.permission.SELECT_DIRECTORY"
+    lateinit var plugins: List<PluginBase>
 
-        /** Custom identifier for notification listener access. */
-        const val PERMISSION_NOTIFICATION_LISTENER = "app.aaps.permission.NOTIFICATION_LISTENER"
-
-        private fun isNotificationListenerEnabled(context: Context): Boolean {
-            val flat = Settings.Secure.getString(context.contentResolver, "enabled_notification_listeners")
-            if (!TextUtils.isEmpty(flat)) {
-                for (name in flat.split(":")) {
-                    val cn = ComponentName.unflattenFromString(name)
-                    if (cn != null && TextUtils.equals(context.packageName, cn.packageName)) return true
-                }
-            }
-            return false
-        }
-    }
-
-    lateinit var plugins: List<@JvmSuppressWildcards PluginBase>
-
-    private fun globalPermissions(context: Context): List<PermissionGroup> = buildList {
-        add(
-            PermissionGroup(
-                permissions = listOf(Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS),
-                rationaleTitle = TextRef.AndroidRes(R.string.permission_battery_title),
-                rationaleDescription = TextRef.AndroidRes(R.string.permission_battery_description),
-                special = true,
-            )
-        )
-        add(
-            PermissionGroup(
-                permissions = listOf(PERMISSION_SELECT_DIRECTORY),
-                rationaleTitle = TextRef.AndroidRes(R.string.permission_directory_title),
-                rationaleDescription = TextRef.AndroidRes(R.string.permission_directory_description),
-                special = true,
-                alwaysShowAction = true,
-            )
-        )
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            // When targetSdk < 33, the system won't show a runtime permission dialog for
-            // POST_NOTIFICATIONS — must open notification settings directly (special = true).
-            // When targetSdk >= 33, the standard runtime dialog works (special = false).
-            val needsSettingsWorkaround = context.applicationInfo.targetSdkVersion < Build.VERSION_CODES.TIRAMISU
-            add(
-                PermissionGroup(
-                    permissions = listOf(Manifest.permission.POST_NOTIFICATIONS),
-                    rationaleTitle = TextRef.AndroidRes(R.string.permission_notifications_title),
-                    rationaleDescription = TextRef.AndroidRes(R.string.permission_notifications_description),
-                    special = needsSettingsWorkaround,
-                )
-            )
-        }
-        // Note: USE_FULL_SCREEN_INTENT is intentionally NOT requested. Google Play silently
-        // re-revokes it on every update for a sideloaded, non-alarm app, so it can never be relied
-        // on. Background alarms instead wake the screen and launch the alarm activity via
-        // AlarmManager.setAlarmClock() (see AlarmScreenWakeReceiver / AlarmNotificationManager),
-        // which is permission-free.
-    }
 
     private var activeBgSourceStore: BgSource? = null
     private var activePumpStore: Pump? = null
@@ -150,10 +78,22 @@ class PluginStore @Inject constructor(
         }
     }
 
+    /**
+     * True when the caller asked for something every plugin would match, which is not a question
+     * about plugins at all.
+     *
+     * This was `interfaceClass.java.isAssignableFrom(ConfigBuilder::class.java)`, which is JVM
+     * reflection. It needs no reflection: `ConfigBuilder` declares no supertypes, so the only
+     * classes it is assignable to are itself and `Any`. Naming those two directly says the same
+     * thing on every platform, and `PluginStoreInterfaceLookupTest` pins both cases.
+     */
+    private fun asksForTheBuilder(interfaceClass: KClass<*>): Boolean =
+        interfaceClass == ConfigBuilder::class || interfaceClass == Any::class
+
     override fun getSpecificPluginsListByInterface(interfaceClass: KClass<*>): ArrayList<PluginBase> {
         val newList = ArrayList<PluginBase>()
         for (p in plugins) {
-            if (!interfaceClass.java.isAssignableFrom(ConfigBuilder::class.java) && interfaceClass.isInstance(p)) newList.add(p)
+            if (!asksForTheBuilder(interfaceClass) && interfaceClass.isInstance(p)) newList.add(p)
         }
         return newList
     }
@@ -303,57 +243,5 @@ class PluginStore @Inject constructor(
         get() = getSpecificPluginsListByInterface(Sync::class) as ArrayList<Sync>
 
     override fun getPluginsList(): ArrayList<PluginBase> = ArrayList(plugins)
-
-    private fun isPermissionMissing(context: Context, perm: String): Boolean =
-        when (perm) {
-            Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS -> {
-                val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
-                pm.isIgnoringBatteryOptimizations(context.packageName).not()
-            }
-
-            PERMISSION_SELECT_DIRECTORY                              ->
-                preferences.getIfExists(StringKey.AapsDirectoryUri).isNullOrEmpty()
-
-            Manifest.permission.SCHEDULE_EXACT_ALARM                 -> {
-                val am = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                am.canScheduleExactAlarms().not()
-            }
-
-            PERMISSION_NOTIFICATION_LISTENER                         ->
-                !isNotificationListenerEnabled(context)
-
-            else                                                     ->
-                ContextCompat.checkSelfPermission(context, perm) != PackageManager.PERMISSION_GRANTED
-        }
-
-    override fun collectMissingPermissions(context: Context): List<PermissionGroup> {
-        // Standard (non-special) plugin permissions — checked via ContextCompat
-        val pluginPerms = plugins.filter { it.isEnabled() }
-            .flatMap { it.missingPermissions(context) }
-            .distinctBy { it.permissions.toSet() }
-        // Special plugin permissions — missingPermissions() skips these, so check separately
-        val specialPluginPerms = plugins.filter { it.isEnabled() }
-            .flatMap { it.requiredPermissions().filter { group -> group.special } }
-            .filter { group -> group.permissions.any { perm -> isPermissionMissing(context, perm) } }
-            .distinctBy { it.permissions.toSet() }
-        // Global permissions (battery, directory)
-        val globalMissing = globalPermissions(context).filter { group ->
-            group.permissions.any { perm -> isPermissionMissing(context, perm) }
-        }
-        // Non-plugin feature permissions (e.g. standalone Automation). Queried dynamically, so a
-        // feature only contributes its permission while it actually needs it. isPermissionMissing
-        // handles both standard and special permission identifiers.
-        val providerMissing = permissionProviders()
-            .flatMap { it.requiredPermissions() }
-            .filter { group -> group.permissions.any { perm -> isPermissionMissing(context, perm) } }
-            .distinctBy { it.permissions.toSet() }
-        return (globalMissing + pluginPerms + specialPluginPerms + providerMissing).distinctBy { it.permissions.toSet() }
-    }
-
-    override fun collectAllPermissions(context: Context): List<PermissionGroup> =
-        (globalPermissions(context) +
-            plugins.filter { it.isEnabled() }.flatMap { it.requiredPermissions() } +
-            permissionProviders().flatMap { it.requiredPermissions() })
-            .distinctBy { it.permissions.toSet() }
 
 }
