@@ -2,21 +2,11 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.hilt)
     alias(libs.plugins.metro)
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("compose-test-module-dependencies")
     id("jacoco-module-dependencies")
-}
-
-metro {
-    interop {
-        // Lets Metro read the javax and Dagger annotations already on these classes, so converting a
-        // worker or a plugin means moving its wiring, not rewriting its annotations. Also required
-        // here because RequestDexcomPermissionActivity extends a dagger.android base class.
-        includeDagger()
-    }
 }
 
 android {
@@ -51,10 +41,6 @@ dependencies {
     testRuntimeOnly(libs.org.junit.vintage.engine)
 
     testImplementation(project(":shared:tests"))
-
-    implementation(libs.com.google.dagger.hilt.android)
-
-    ksp(libs.com.google.dagger.compiler)
-    ksp(libs.com.google.dagger.hilt.compiler)
-    ksp(libs.com.google.dagger.android.processor)
+
+
 }

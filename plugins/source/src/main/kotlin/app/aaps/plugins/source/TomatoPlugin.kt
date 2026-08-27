@@ -28,11 +28,11 @@ import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 import kotlinx.coroutines.Dispatchers
-import javax.inject.Inject
 
 // Registers itself into the plugin list. javax @Singleton stays: this module has Dagger interop on, so
 // Metro reads it as the scope, and the class is still built by Metro only once.

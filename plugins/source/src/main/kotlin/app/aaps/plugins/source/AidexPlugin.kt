@@ -37,11 +37,11 @@ import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 import kotlinx.coroutines.Dispatchers
-import javax.inject.Inject
 
 // Registers itself into the plugin list. Scoped with Metro's own @SingleIn, NOT javax @Singleton: the
 // graph that builds a contributed class is generated in `:app`, which has no Dagger interop, so a javax

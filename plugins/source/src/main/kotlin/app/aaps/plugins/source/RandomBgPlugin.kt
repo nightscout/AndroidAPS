@@ -35,6 +35,7 @@ import app.aaps.core.utils.isRunningTest
 import app.aaps.plugins.source.compose.BgSourceComposeContent
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -42,7 +43,6 @@ import kotlinx.coroutines.runBlocking
 import java.security.SecureRandom
 import java.util.Calendar
 import java.util.GregorianCalendar
-import javax.inject.Inject
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin

@@ -14,10 +14,10 @@ import app.aaps.plugins.source.compose.BgSourceComposeContent
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
-import javax.inject.Inject
 
 // Registers itself into the plugin list. Scoped with Metro's own @SingleIn, not javax @Singleton - see
 // the note on the other source plugins. It is also bound to an interface, and that binding is a
