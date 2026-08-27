@@ -3,12 +3,13 @@ package app.aaps.implementation.utils
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.aps.AutosensDataStore
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.TrendCalculator
+import app.aaps.core.ui.UiStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import javax.inject.Inject
 
 // Metro builds this now, and Dagger gets it through a @Provides delegate in `:app`. Scoped with
 // Metro's @SingleIn, not javax @Singleton: the graph is generated in `:app`, which has no Dagger
@@ -16,7 +17,7 @@ import javax.inject.Inject
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 class TrendCalculatorImpl @Inject constructor(
-    private val rh: ResourceHelper
+    private val rh: TextResolver
 ) : TrendCalculator {
 
     override fun getTrendArrow(autosensDataStore: AutosensDataStore): TrendArrow? {
@@ -35,15 +36,15 @@ class TrendCalculatorImpl @Inject constructor(
 
     override fun getTrendDescription(autosensDataStore: AutosensDataStore): String {
         return when (getTrendArrow(autosensDataStore)) {
-            TrendArrow.DOUBLE_DOWN     -> rh.gs(app.aaps.core.ui.R.string.a11y_arrow_double_down)
-            TrendArrow.SINGLE_DOWN     -> rh.gs(app.aaps.core.ui.R.string.a11y_arrow_single_down)
-            TrendArrow.FORTY_FIVE_DOWN -> rh.gs(app.aaps.core.ui.R.string.a11y_arrow_forty_five_down)
-            TrendArrow.FLAT            -> rh.gs(app.aaps.core.ui.R.string.a11y_arrow_flat)
-            TrendArrow.FORTY_FIVE_UP   -> rh.gs(app.aaps.core.ui.R.string.a11y_arrow_forty_five_up)
-            TrendArrow.SINGLE_UP       -> rh.gs(app.aaps.core.ui.R.string.a11y_arrow_single_up)
-            TrendArrow.DOUBLE_UP       -> rh.gs(app.aaps.core.ui.R.string.a11y_arrow_double_up)
-            TrendArrow.NONE            -> rh.gs(app.aaps.core.ui.R.string.a11y_arrow_none)
-            else                       -> rh.gs(app.aaps.core.ui.R.string.a11y_arrow_unknown)
+            TrendArrow.DOUBLE_DOWN     -> rh.gs(UiStrings.a11y_arrow_double_down)
+            TrendArrow.SINGLE_DOWN     -> rh.gs(UiStrings.a11y_arrow_single_down)
+            TrendArrow.FORTY_FIVE_DOWN -> rh.gs(UiStrings.a11y_arrow_forty_five_down)
+            TrendArrow.FLAT            -> rh.gs(UiStrings.a11y_arrow_flat)
+            TrendArrow.FORTY_FIVE_UP   -> rh.gs(UiStrings.a11y_arrow_forty_five_up)
+            TrendArrow.SINGLE_UP       -> rh.gs(UiStrings.a11y_arrow_single_up)
+            TrendArrow.DOUBLE_UP       -> rh.gs(UiStrings.a11y_arrow_double_up)
+            TrendArrow.NONE            -> rh.gs(UiStrings.a11y_arrow_none)
+            else                       -> rh.gs(UiStrings.a11y_arrow_unknown)
         }
     }
 
