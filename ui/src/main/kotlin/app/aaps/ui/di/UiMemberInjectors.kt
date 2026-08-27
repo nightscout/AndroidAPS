@@ -7,6 +7,7 @@ import app.aaps.ui.widget.CompactBgWidget
 import app.aaps.ui.widget.SmallWidget
 import app.aaps.ui.widget.Widget
 import app.aaps.ui.widget.WidgetConfigureActivity
+import app.aaps.ui.widget.glance.WidgetDependencies
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ClassKey
@@ -67,4 +68,12 @@ object UiMemberInjectors {
     @IntoMap
     @ClassKey(SmallWidget::class)
     fun bindSmallWidget(injector: MembersInjector<SmallWidget>): MembersInjector<*> = injector
+
+    // Glance builds its widgets itself, so they take no dependencies at all: WidgetDependencies asks
+    // the graph from inside provideGlance. It replaced a Hilt @EntryPoint.
+    @Provides
+    @FeatureMemberInjectors
+    @IntoMap
+    @ClassKey(WidgetDependencies::class)
+    fun bindWidgetDependencies(injector: MembersInjector<WidgetDependencies>): MembersInjector<*> = injector
 }

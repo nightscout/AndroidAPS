@@ -40,7 +40,6 @@ import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import app.aaps.core.ui.compose.DarkGeneralColors
 import app.aaps.core.ui.compose.navigation.DarkElementColors
-import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withTimeoutOrNull
 
@@ -51,12 +50,9 @@ class AapsGlanceWidget : GlanceAppWidget() {
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         // Resolve dependencies from the app graph here (not at construction time).
         // See WidgetDependencies for why.
-        val deps = EntryPointAccessors.fromApplication(
-            context.applicationContext,
-            WidgetDependencies::class.java
-        )
-        val stateLoader = deps.widgetStateLoader()
-        val config = deps.config()
+        val deps = WidgetDependencies.from(context)
+        val stateLoader = deps.widgetStateLoader
+        val config = deps.config
 
         // When the OS delivers APPWIDGET_UPDATE while the app is still booting
         // (typical on device reboot or cold-start via broadcast), wait briefly
