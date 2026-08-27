@@ -2,6 +2,7 @@ package app.aaps.ios.shell.di
 
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import dev.zacsweers.metro.createGraphFactory
+import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotSame
@@ -71,5 +72,41 @@ class IosProbeGraphTest {
         // Constructing a plugin is not enough to prove the leaf was wired in. Something has to call
         // through it.
         assertTrue(ProbeLogger.calls >= before)
+    }
+
+    // ---- real AAPS implementations, not stand-ins --------------------------------------------
+
+    @Test
+    fun `the graph builds the production DateUtil`() {
+        val dateUtil = graph().dateUtil
+
+        // A real formatter behind it: the string comes from NSDateFormatter, so an empty result
+        // would mean the platform side is wired but doing nothing.
+        assertTrue(dateUtil.dateString(1_700_000_000_000L).isNotBlank())
+        assertTrue(dateUtil.now() > 1_700_000_000_000L)
+    }
+
+    @Test
+    fun `DateUtil is one object across the graph`() {
+        val g = graph()
+
+        assertSame(g.dateUtil, g.dateUtil)
+    }
+
+    @Test
+    fun `the graph builds FabricPrivacy over the real preference store`() {
+        val fabric = graph().fabricPrivacy
+
+        // Reads NSUserDefaults for the enable flag, so calling it exercises the store too.
+        fabric.fabricEnabled()
+        fabric.logMessage("probe")
+    }
+
+    @Test
+    fun `the graph opens a real database`() = runTest {
+        graph().repository.use { repo ->
+            // An empty database answers null rather than failing, which is what proves it opened.
+            assertEquals(null, repo.getLastGlucoseValue())
+        }
     }
 }

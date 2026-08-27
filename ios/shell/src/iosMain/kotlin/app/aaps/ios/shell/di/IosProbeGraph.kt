@@ -2,6 +2,14 @@ package app.aaps.ios.shell.di
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.database.AppRepository
+import app.aaps.database.di.IosAppDatabaseBuilder
+import app.aaps.ios.shell.prefs.IosSp
+import app.aaps.shared.impl.utils.DateUtilImpl
+import app.aaps.shared.impl.utils.IosDateFormatPlatform
 import app.aaps.plugins.calibration.NoCalibrationPlugin
 import app.aaps.plugins.smoothing.AvgSmoothingPlugin
 import app.aaps.plugins.smoothing.ExponentialSmoothingPlugin
@@ -9,6 +17,7 @@ import app.aaps.plugins.smoothing.NoSmoothingPlugin
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Provides
+import dev.zacsweers.metro.SingleIn
 
 /**
  * A Metro graph that builds real AAPS plugins on iOS.
@@ -53,8 +62,32 @@ interface IosProbeGraph {
     val exponentialSmoothing: ExponentialSmoothingPlugin
     val noCalibration: NoCalibrationPlugin
 
+    /** Real AAPS classes, built from the iOS implementations underneath them. */
+    val dateUtil: DateUtil
+    val fabricPrivacy: FabricPrivacy
+    val repository: AppRepository
+
     @Provides fun logger(): AAPSLogger = ProbeLogger
     @Provides fun textResolver(): TextResolver = ProbeTextResolver
+
+    /** NSUserDefaults, the same store the preference layer will sit on. */
+    @Provides
+    @SingleIn(AppScope::class)
+    fun keyValueStore(): KeyValueStore = IosSp()
+
+    /** Dates through the iOS formatter, so this is the production class rather than a stand-in. */
+    @Provides
+    @SingleIn(AppScope::class)
+    fun dateUtil(): DateUtil = DateUtilImpl(IosDateFormatPlatform())
+
+    /**
+     * A real SQLite database, in a file of its own.
+     *
+     * Named apart from the app's so a probe run cannot disturb real data.
+     */
+    @Provides
+    @SingleIn(AppScope::class)
+    fun repository(): AppRepository = IosAppDatabaseBuilder().provideAppRepository("aaps-ios-graph.db")
 
     @DependencyGraph.Factory
     fun interface Factory {
