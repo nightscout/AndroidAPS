@@ -5,7 +5,6 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.observeChanges
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -15,8 +14,9 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.VisibilityContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import javax.inject.Inject
+import kotlin.concurrent.Volatile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
@@ -40,7 +40,7 @@ class VisibilityContextImpl @Inject constructor(
     private val config: Config,
     private val aapsLogger: AAPSLogger,
     private val nsClient: NsClient,
-    @ApplicationScope private val appScope: CoroutineScope,
+    private val appScope: CoroutineScope,
     override val preferences: Preferences
 ) : VisibilityContext {
 
