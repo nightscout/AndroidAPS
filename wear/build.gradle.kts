@@ -239,6 +239,9 @@ dependencies {
     implementation(libs.com.google.android.gms.playservices.wearable)
     implementation(files("${rootDir}/wear/libs/hellocharts-library-1.5.8.aar"))
 
+    // Declared here rather than inherited: :shared:impl used to export it, and stopped when it became
+    // multiplatform. This module is the only one that still uses dagger.android.support.
+    implementation(libs.com.google.dagger.android.support)
     ksp(libs.com.google.dagger.android.processor)
     ksp(libs.com.google.dagger.compiler)
 

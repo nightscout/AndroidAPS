@@ -1,4 +1,4 @@
-package app.aaps.shared.impl.di
+package app.aaps.wear.di
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L

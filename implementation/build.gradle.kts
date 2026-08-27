@@ -166,7 +166,8 @@ tasks.withType<Test> {
     }
 }
 
-// :shared:impl and :shared:tests are flavoured Android libraries, and a multiplatform module has no
+// :shared:tests is a flavoured Android library (:shared:impl stopped being one when it went
+// multiplatform), and a multiplatform module has no
 // flavours of its own, so resolution would be ambiguous. Pin the same flavour the app builds with -
 // neither module has flavour specific sources, so this only picks a variant, it does not change code.
 // Same pin as :plugins:main and :plugins:aps.

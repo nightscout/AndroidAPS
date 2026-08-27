@@ -4,9 +4,7 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.schedulers.Schedulers
-import javax.inject.Singleton
 
-@Singleton
 class AapsSchedulersImpl : AapsSchedulers {
 
     override val main: Scheduler = AndroidSchedulers.mainThread()

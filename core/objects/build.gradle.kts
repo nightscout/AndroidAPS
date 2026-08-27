@@ -74,7 +74,8 @@ kotlin {
     }
 }
 
-// :shared:tests and :shared:impl still carry the five product flavours. A multiplatform module asks
+// :shared:tests still carries the five product flavours (:shared:impl is multiplatform now, so it no
+// longer needs this). A multiplatform module asks
 // for none, so Gradle cannot choose a variant - pin the test classpaths to `full`.
 listOf("androidHostTestCompileClasspath", "androidHostTestRuntimeClasspath").forEach { name ->
     configurations.named(name) {

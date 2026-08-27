@@ -5,11 +5,20 @@ import android.content.Context
 import android.content.SharedPreferences
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.SafeParse
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class SPImpl @Inject constructor(
+/**
+ * The one preferences file the phone and the watch both use.
+ *
+ * Written out in three places before this: the phone graph, the wear graph and the backup agent. They
+ * have to agree exactly - a mismatch means the app reads one file and backs up another, and nothing
+ * fails while that is true.
+ */
+fun preferencesFileName(context: Context): String = "${context.packageName}_preferences"
+
+fun defaultPreferences(context: Context): SharedPreferences =
+    context.getSharedPreferences(preferencesFileName(context), Context.MODE_PRIVATE)
+
+class SPImpl(
     private val sharedPreferences: SharedPreferences,
     private val context: Context
 ) : SP {
