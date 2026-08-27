@@ -34,6 +34,9 @@ import app.aaps.plugins.aps.autotune.AutotuneFS
 import app.aaps.plugins.aps.autotune.AutotunePlugin
 import app.aaps.plugins.aps.autotune.data.ATProfile
 import app.aaps.plugins.aps.autotune.events.EventAutotuneUpdateGui
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,7 +48,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.JsonObject
 import java.util.Locale
-import javax.inject.Provider
 
 @Immutable
 data class ResultRow(
@@ -349,13 +351,13 @@ class AutotuneViewModel(
 
     fun onCheckInputProfile() {
         scope.launch {
-            val profileStore = profileRepository.profile.value ?: profileStoreProvider.get().with(JsonObject(emptyMap()))
+            val profileStore = profileRepository.profile.value ?: profileStoreProvider().with(JsonObject(emptyMap()))
             val pumpProfile = profileFunction.getProfile()?.let { currentProfile ->
                 profileStore.getSpecificProfile(profileName)?.let { specificProfile ->
-                    atProfileProvider.get().with(ProfileSealed.Pure(specificProfile, null), currentProfile.iCfg).also {
+                    atProfileProvider().with(ProfileSealed.Pure(specificProfile, null), currentProfile.iCfg).also {
                         it.profileName = profileName
                     }
-                } ?: atProfileProvider.get().with(currentProfile, currentProfile.iCfg).also {
+                } ?: atProfileProvider().with(currentProfile, currentProfile.iCfg).also {
                     it.profileName = profileFunction.getProfileName()
                 }
             } ?: return@launch
@@ -396,9 +398,9 @@ class AutotuneViewModel(
     // --- Internal ---
 
     private suspend fun resolveProfile() {
-        val profileStore = profileRepository.profile.value ?: profileStoreProvider.get().with(JsonObject(emptyMap()))
+        val profileStore = profileRepository.profile.value ?: profileStoreProvider().with(JsonObject(emptyMap()))
         profileFunction.getProfile()?.let { currentProfile ->
-            profile = atProfileProvider.get().with(
+            profile = atProfileProvider().with(
                 profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(value = it, activePlugin = null) } ?: currentProfile,
                 // The running profile owns the authoritative, non-null iCfg. Nothing here is reachable
                 // without it — the previous fallback was computed outside this let and then discarded.
@@ -426,9 +428,9 @@ class AutotuneViewModel(
 
     private suspend fun addWarnings(): String {
         val currentProfile = profileFunction.getProfile() ?: return rh.gs(app.aaps.core.ui.R.string.profileswitch_ismissing)
-        val profileStore = profileRepository.profile.value ?: profileStoreProvider.get().with(JsonObject(emptyMap()))
+        val profileStore = profileRepository.profile.value ?: profileStoreProvider().with(JsonObject(emptyMap()))
         val iCfg = currentProfile.iCfg
-        val atProfile = atProfileProvider.get().with(
+        val atProfile = atProfileProvider().with(
             profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(value = it, activePlugin = null) } ?: currentProfile,
             iCfg
         )
@@ -486,7 +488,7 @@ class AutotuneViewModel(
     }
 
     private suspend fun refreshState() {
-        val profileStore = profileRepository.profile.value ?: profileStoreProvider.get().with(JsonObject(emptyMap()))
+        val profileStore = profileRepository.profile.value ?: profileStoreProvider().with(JsonObject(emptyMap()))
         val profileList = profileStore.getProfileList().toMutableList()
         profileList.add(0, rh.gs(app.aaps.core.ui.R.string.active))
         val profileNames = profileList.map { it.toString() }

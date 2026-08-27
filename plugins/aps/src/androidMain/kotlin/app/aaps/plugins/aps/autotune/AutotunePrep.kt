@@ -18,8 +18,8 @@ import app.aaps.plugins.aps.autotune.data.DiaDeviation
 import app.aaps.plugins.aps.autotune.data.PeakDeviation
 import app.aaps.plugins.aps.autotune.data.PreppedGlucose
 import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.pow
