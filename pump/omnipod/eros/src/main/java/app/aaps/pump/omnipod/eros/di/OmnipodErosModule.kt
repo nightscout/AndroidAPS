@@ -5,11 +5,9 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.pump.omnipod.eros.OmnipodErosPumpPlugin
 import app.aaps.pump.omnipod.eros.driver.manager.ErosPodStateManager
 import app.aaps.pump.omnipod.eros.manager.AapsErosPodStateManager
-import app.aaps.pump.omnipod.eros.rileylink.service.RileyLinkOmnipodService
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import dagger.android.ContributesAndroidInjector
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntKey
@@ -19,12 +17,7 @@ import dagger.multibindings.IntoMap
 @InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class OmnipodErosModule {
-
-    // SERVICES
-
-    @ContributesAndroidInjector
-    abstract fun contributesRileyLinkOmnipodService(): RileyLinkOmnipodService
-
+
     companion object {
 
         @Provides

@@ -38,6 +38,5 @@ dependencies {
 
     ksp(libs.com.google.dagger.compiler)
     implementation(libs.com.google.dagger.hilt.android)
-    ksp(libs.com.google.dagger.hilt.compiler)
-    ksp(libs.com.google.dagger.android.processor)
+    ksp(libs.com.google.dagger.hilt.compiler)
 }

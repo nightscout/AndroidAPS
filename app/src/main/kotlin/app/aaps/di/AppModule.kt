@@ -22,8 +22,6 @@ import dagger.Binds
 import dagger.Lazy
 import dagger.Module
 import dagger.Provides
-import dagger.android.AndroidInjectionModule
-import dagger.android.HasAndroidInjector
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
@@ -35,7 +33,6 @@ import javax.inject.Singleton
 @Suppress("unused")
 @Module(
     includes = [
-        AndroidInjectionModule::class,
         AppModule.AppBindings::class,
         AppModule.Provide::class
     ]
@@ -106,11 +103,7 @@ abstract class AppModule {
 
         @Provides
         fun provideContext(@ApplicationContext context: Context): Context = context
-
-        @Provides
-        fun provideHasAndroidInjector(@ApplicationContext context: Context): HasAndroidInjector =
-            context.applicationContext as HasAndroidInjector
-    }
+    }
 
     @Module
     @InstallIn(SingletonComponent::class)

@@ -14,9 +14,6 @@ import app.aaps.di.metro.MetroGraphs
 import com.google.firebase.Firebase
 import com.google.firebase.analytics.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasAndroidInjector
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
@@ -25,18 +22,17 @@ import dagger.hilt.components.SingletonComponent
 import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
 
 /**
- * Base application for instrumented tests. Mirrors [app.aaps.MainApp]'s dagger-android bridge so that
- * production code resolving `(applicationContext as HasAndroidInjector).androidInjector()` keeps working
- * under Hilt. [CustomTestApplication] generates the Hilt-enabled `HiltTestApplication_Application`
+ * Base application for instrumented tests. Mirrors [app.aaps.MainApp]: both are Metro member injectors
+ * now, dagger.android having been removed from the phone. [CustomTestApplication] generates the Hilt-enabled `HiltTestApplication_Application`
  * (named after the annotated interface) used by the test runner.
  *
  * Under Hilt instrumented tests the singleton component is created per test by `HiltAndroidRule`, so it
  * does not exist in [onCreate]. Therefore this app does no graph access at startup — the plugin/config
  * initialization that MainApp does in onCreate is performed instead in [app.aaps.HiltInstrumentedTest]
- * after the rule has built the component. [androidInjector] resolves the injector freshly per call (no
- * caching) so it always targets the current test's component.
+ * after the rule has built the component. The Metro root is resolved freshly per call (no caching) so
+ * it always targets the current test's component.
  */
-open class BaseTestApp : Application(), HasAndroidInjector, MetroMemberInjector, MetroViewModelFactoryOwner {
+open class BaseTestApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner {
 
     override fun onCreate() {
         super.onCreate()
@@ -74,14 +70,7 @@ open class BaseTestApp : Application(), HasAndroidInjector, MetroMemberInjector,
             .build()
         WorkManagerTestInitHelper.initializeTestWorkManager(this, configuration)
     }
-
-    @EntryPoint
-    @InstallIn(SingletonComponent::class)
-    interface TestAppEntryPoint {
-
-        fun androidInjector(): DispatchingAndroidInjector<Any>
-    }
-
+
     /**
      * The Metro half of the bridge, resolved lazily because
      * the singleton component is built per test by `HiltAndroidRule`, so it does not exist in
@@ -93,10 +82,7 @@ open class BaseTestApp : Application(), HasAndroidInjector, MetroMemberInjector,
 
         fun metroGraphs(): MetroGraphs
     }
-
-    override fun androidInjector(): AndroidInjector<Any> =
-        EntryPointAccessors.fromApplication(this, TestAppEntryPoint::class.java).androidInjector()
-
+
     private fun metroGraphs(): MetroGraphs =
         EntryPointAccessors.fromApplication(this, MetroBridgeEntryPoint::class.java).metroGraphs()
 

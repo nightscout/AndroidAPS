@@ -106,9 +106,6 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.firebase.remoteconfig.remoteConfig
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasAndroidInjector
 import dagger.hilt.android.HiltAndroidApp
 import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
 import io.reactivex.rxjava3.exceptions.UndeliverableException
@@ -132,13 +129,10 @@ import kotlin.reflect.full.declaredMemberProperties
 import kotlin.time.Duration.Companion.milliseconds
 
 @HiltAndroidApp
-class MainApp : Application(), HasAndroidInjector, MetroMemberInjector, MetroViewModelFactoryOwner, Configuration.Provider {
-
-    @Inject lateinit var androidInjector: DispatchingAndroidInjector<Any>
-    override fun androidInjector(): AndroidInjector<Any> = androidInjector
-
-    // The Metro side of the same job. Classes already converted are filled by Metro; anything else is
-    // still dagger.android's, so a converted and an unconverted receiver can sit side by side.
+class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, Configuration.Provider {
+
+    // Every Android entry point on the phone is filled by Metro now - dagger.android is gone from this
+    // module. `injectMetroMembers` fails loudly on a missing binding, where dagger.android skipped it.
     override fun injectMembers(target: Any): Boolean = metroGraphs.injectMembers(target)
 
     // The @HiltViewModel replacement, reached by activities the same way.
