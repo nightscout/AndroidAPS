@@ -1,6 +1,5 @@
 package app.aaps.implementation.pump
 
-import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -29,8 +28,8 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.serialization.json.JsonObject
 import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.ContributesBinding
-import javax.inject.Inject
 
 // Deliberately NOT @SingleIn: the @Binds this replaces had no scope, so every injection site got its
 // own. Scoping it now would be a silent behaviour change in a class that talks to the pump.
@@ -43,7 +42,7 @@ class PumpWithConcentrationImpl @Inject constructor(
     private val pumpEnactResultProvider: () -> PumpEnactResult
 ) : PumpWithConcentration {
 
-    @VisibleForTesting val activePumpInternal
+    val activePumpInternal
         get() = activePlugin.activePumpInternal
 
     override fun selectedActivePump(): Pump = activePumpInternal

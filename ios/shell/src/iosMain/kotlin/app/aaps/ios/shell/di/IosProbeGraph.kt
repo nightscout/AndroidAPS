@@ -2,6 +2,8 @@ package app.aaps.ios.shell.di
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
@@ -9,7 +11,12 @@ import app.aaps.database.AppRepository
 import app.aaps.database.di.IosAppDatabaseBuilder
 import app.aaps.ios.shell.prefs.IosSp
 import app.aaps.shared.impl.utils.DateUtilImpl
+import app.aaps.ios.shell.config.IosClientConfig
+import app.aaps.shared.impl.rx.bus.RxBusImpl
 import app.aaps.shared.impl.utils.IosDateFormatPlatform
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import app.aaps.plugins.calibration.NoCalibrationPlugin
 import app.aaps.plugins.smoothing.AvgSmoothingPlugin
 import app.aaps.plugins.smoothing.ExponentialSmoothingPlugin
@@ -85,6 +92,21 @@ interface IosProbeGraph {
      *
      * Named apart from the app's so a probe run cannot disturb real data.
      */
+    /** What kind of build this is. An iOS build is a follower client, not a loop. */
+    @Provides
+    @SingleIn(AppScope::class)
+    fun config(): Config = IosClientConfig()
+
+    /** The production bus, which is already common code. */
+    @Provides
+    @SingleIn(AppScope::class)
+    fun rxBus(logger: AAPSLogger): RxBus = RxBusImpl(logger)
+
+    /** The scope long lived work runs in, the counterpart of the app's own. */
+    @Provides
+    @SingleIn(AppScope::class)
+    fun appScope(): CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+
     @Provides
     @SingleIn(AppScope::class)
     fun repository(): AppRepository = IosAppDatabaseBuilder().provideAppRepository("aaps-ios-graph.db")
