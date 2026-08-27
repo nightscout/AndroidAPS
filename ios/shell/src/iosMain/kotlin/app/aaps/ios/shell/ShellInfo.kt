@@ -2,7 +2,10 @@ package app.aaps.ios.shell
 
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.ios.shell.di.IosProbeGraph
-import app.aaps.ios.shell.di.ProbeLogger
+import app.aaps.core.keys.BooleanKey
+import platform.Foundation.NSFileManager
+import app.aaps.implementation.logging.AAPSLoggerIos
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.ios.shell.prefs.IosSp
 import dev.zacsweers.metro.createGraphFactory
 import kotlinx.datetime.TimeZone
@@ -61,6 +64,12 @@ object ShellInfo {
         val built = listOf(
             graph.noSmoothing, graph.avgSmoothing, graph.exponentialSmoothing, graph.noCalibration
         )
+        // The five that needed the whole chain below Preferences. Built here rather than only named,
+        // because the point of this probe is that linking and running are different questions.
+        val unblocked = listOf(
+            graph.sensitivityOref1, graph.sensitivityAAPS, graph.sensitivityWeightedAverage,
+            graph.unscentedKalmanFilter, graph.linearCalibration
+        )
         // Real work, not just construction: a plugin that cannot run would still pass a null check.
         val sample = mutableListOf(
             InMemoryGlucoseValue(timestamp = 1_000L, value = 100.0),
@@ -75,7 +84,10 @@ object ShellInfo {
             "singleton holds: " + (graph.noSmoothing === graph.noSmoothing),
             "graphs isolated: " + (graph.noSmoothing !== other.noSmoothing),
             "plugin ran: ${smoothed.size} values",
-            "logger calls: ${ProbeLogger.calls}"
+            "unblocked built: ${unblocked.size}",
+            "unblocked: " + unblocked.joinToString { it.name },
+            "preferences: simpleMode=" + graph.preferences.get(BooleanKey.GeneralSimpleMode),
+            "notifications: " + graph.notificationManager.notifications.value.size + " live"
         ).joinToString("\n")
     } catch (e: Throwable) {
         "DI FAILED: ${e::class.simpleName}: ${e.message}"
@@ -140,4 +152,24 @@ object ShellInfo {
      * See [DatabaseProbe] for why this writes rather than inspects.
      */
     fun checkDatabase(): String = DatabaseProbe.run()
+
+    /**
+     * Writes one line through the real logger and looks for the file afterwards.
+     *
+     * `NSLog` reaching the console proves nothing on its own - the file is the half that has to
+     * survive the app closing, and it is the half that can silently fail on a sandboxed path.
+     */
+    fun checkLogging(): String = try {
+        val logger = AAPSLoggerIos(fileName = "aaps-probe.log")
+        logger.debug(LTag.CORE, "probe line")
+        val url = logger.logFileUrl()
+        val path = url?.path
+        val exists = path?.let { NSFileManager.defaultManager.fileExistsAtPath(it) } == true
+        listOf(
+            "log file: " + (path?.substringAfterLast('/') ?: "no path"),
+            "written: $exists"
+        ).joinToString("\n")
+    } catch (e: Throwable) {
+        "LOGGING FAILED: ${e::class.simpleName}: ${e.message}"
+    }
 }

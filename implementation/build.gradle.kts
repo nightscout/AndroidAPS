@@ -94,6 +94,15 @@ kotlin {
             }
         }
 
+        // Tests for commonMain classes belong here, not in androidHostTest: a test that only runs on
+        // the JVM says nothing about the target the code was moved to common for.
+        commonTest {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(libs.kotlinx.coroutines.test)
+            }
+        }
+
         androidMain {
             // Android only: the string name to R.string id map.
             kotlin.srcDir(generateImplementationStrings.flatMap { it.androidOutputDir })
