@@ -23,14 +23,14 @@ preparation work can happen without disturbing the main NFC line.
 
 | Step                                                       | State                                                                       |
 |------------------------------------------------------------|-----------------------------------------------------------------------------|
-| Merge `Nightscout/kmp` into the branch                     | **done four times** - latest `66c9f75ca1`, the first with no conflicts at all  |
+| Merge `Nightscout/kmp` into the branch                     | **done five times** - latest `6fa678e46b`, 90 commits, 3 conflicts             |
 | Tier 1, the changes needed to compile at all (section 3)    | **done** - `9cd204b8da` "NFC Fix build after kmp merge"                        |
 | Architecture alignment (section 9)                         | **9.1 to 9.4, 9.6 and 9.7 done**. Only 9.5 remains, and it is not standalone   |
 | The command format and the store blobs (section 5)          | **done** - `28305e0af6` and `ff1916852f`. No `org.json` left in the plugin      |
 | Metro DI and the plugin's own manifest (section 1a)         | **done** - `ba1cdbd518`, `009f4087ca`, `42ea9bbad2`. Metro owns the plugin now  |
 | Tier 2, needed only for a multiplatform module (section 4)  | **not started** apart from the `org.json` row, which sections 5 and 9.7 did    |
-| Build verification                                         | **green** - compile clean, 93 NFC tests and 53 app DI tests pass                |
-| `Nightscout/kmp` freshness                                 | merged 2026-08-27 at `db8b2413e8`. Still not in `dev` - more merges are due     |
+| Build verification                                         | **green** - compile clean, 93 NFC tests and 54 app DI tests pass                |
+| `Nightscout/kmp` freshness                                 | merged 2026-08-27 at `3651e7abaf`. Still not in `dev` - more merges are due     |
 
 Sections 3.7 to 3.12 are six breaks that only a compiler found, after an import-derived list had
 missed them. The lesson is recorded there because it will repeat on the next merge: **grepping imports
@@ -65,6 +65,8 @@ anything was pushed, so that each one builds on its own:
 | `66c9f75ca1`  | **merge 4**, 29 upstream commits, no conflicts                | nothing to fix afterwards                |
 | `846802a5ca`  | section 5 - a missing value is refused, 6 files                | behaviour change, **builds**             |
 | `a1b8a842bb`  | section 9.8 - every default in one place, 14 files             | removes 15 invented values, **builds**   |
+| `6fa678e46b`  | **merge 5**, 90 upstream commits, 3 conflicts                 | does **not** build - see 10              |
+| `88d804a052`  | fix build after merge 5 - 1 file, the UiStrings rename         | mechanical, **builds**                   |
 
 Keeping these apart matters for review: the fix-build commit only has to answer "did the merge really
 force this?", and the alignment commit carries its own rationale. `f9e51ec06c` is also the one that
@@ -593,8 +595,35 @@ This changes the cost by roughly ten times and has not been decided.
 | **NFC stays Android only** - lives in `androidMain` when `:plugins:sync` is flipped   | Tier 1 (done) plus the Dagger work, and nothing else. `org.json`, `R.string`, `@StringRes`, `TimeUnit`, `DateFormat` are all allowed in `androidMain`. **1 to 2 days.**                          |
 | **NFC goes to `commonMain`**                                                          | All of Tier 2: 185 string refs, 18 JSON files, 26 `@StringRes` files, plus an `expect` / `actual` NFC seam whose iOS half cannot do the main job. **Weeks, with the wire format risk of section 5.** |
 
-**Ask the project owner before doing anything expensive.** Note that the section 9 alignment work is
-worth doing under *either* answer, and 9.1 is a prerequisite for the Dagger work in both.
+**Upstream has effectively answered this, as of merge 5.** `_docs/KMP_IOS_FEASIBILITY.md` on `kmp` says
+of the profile and device-status JSON:
+
+> Both live in `:plugins:sync`, which is **Android only by nature** (WorkManager, a socket.io
+> `Service`), so the `org.json` quirks stay out of the shared modules.
+
+And the module conversions bear it out. In the 90 commits of merge 5, upstream made `:plugins:automation`,
+`:plugins:constraints`, `:plugins:configuration`, `:plugins:source` and `:shared:impl` multiplatform,
+each with the same commit title - "move off Dagger to Metro **and make it multiplatform**".
+`:plugins:sync` got only the first half: `e7d693ac23` "Move `:plugins:sync` off Dagger to Metro and flip
+its leaves to delegates", 63 files, no multiplatform step.
+
+So the first row of the table is the one to plan for: **NFC stays Android only.** Two things follow, and
+they are the reason this matters.
+
+1. **Tier 2 is not needed.** The 185 string references, the 26 `@StringRes` files, `TimeUnit`,
+   `DateFormat` and the hex helper are all allowed in `androidMain`. That is the ten-times cost, and it
+   is off the table unless someone decides NFC should be shared.
+2. **The flip, when it comes, is a path move.** The other modules became multiplatform *shells* with an
+   `androidMain` for their Android-only code - `:plugins:automation` did exactly that. When
+   `:plugins:sync` follows, the plugin's files move from `src/main` to `src/androidMain` and nothing
+   else has to change, because Tier 1 is already applied.
+
+This is upstream's documented reasoning and its commit record, not a decision from the owner of this
+work, so it is still worth confirming. But it is no longer an open question with a ten-times cost hanging
+on it, and no expensive work should be started on the assumption that NFC goes to `commonMain`.
+
+Note that the section 9 alignment work is worth doing under either answer, and 9.1 was a prerequisite for
+the Dagger work in both.
 
 ---
 
@@ -628,18 +657,20 @@ One thing may still move: follow-up 3 in the KMP note is `PluginDescription.desc
 
 | Step | Work                                                                                                                                                             | Depends on           |
 |------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------|
-| 0    | **Ask the owner the section 6 question** - is NFC ever meant to be shared code?                                                                                    | -                    |
+| 0    | ~~Ask the owner the section 6 question~~ - upstream has answered it in its own doc and commits: `:plugins:sync` stays Android. Worth confirming, no longer worth waiting for.                                                                                    | -                    |
 | 1    | ~~The store blobs (section 5)~~ - **done**, `ff1916852f`.                                                                                                          | -                    |
 | 2    | ~~Convert the NFC plugin's DI to Metro and move the activity's manifest entry into the plugin~~ - **done**, `ba1cdbd518` and `009f4087ca`. See 1a for the two predictions that were wrong. | -                    |
-| 3    | Wait for `kmp` to reach `dev`, then merge again. Tier 1 is applied and two merges are behind us; expect a small conflict set in the same shared files.              | follow-up 1 on `kmp` |
-| 4    | Only if step 0 says "shared": Tier 2, in the owner's own order - `TimeUnit` / `DateFormat` / `Clock` / hex first, then `R.string` to `TextRef`. The `org.json` row is already done. | step 0               |
-| 5    | Only when `:plugins:sync` is flipped: decide the NFC hardware seam.                                                                                                | step 4               |
+| 3    | **Keep merging `kmp` as it moves**, roughly daily while it is this active. Five merges in, the conflict set is small and always the same shared files, and `nfcCommands/` has never been touched by one. Waiting costs more than merging - see the merge notes in section 10. | -                    |
+| 4    | ~~Tier 2~~ - **not needed.** Upstream's own doc and its conversion record say `:plugins:sync` stays Android, so the plugin lives in `androidMain`. See section 6. | -                    |
+| 5    | ~~Decide the NFC hardware seam~~ - **not needed** for the same reason. There is no iOS half to design. | -                    |
+| 6    | When upstream makes `:plugins:sync` multiplatform, move the plugin's files from `src/main` to `src/androidMain`. A path move; Tier 1 is already applied. | upstream flipping the module |
 
-Step 1 is worth doing whatever the answer to step 0, and nothing on `kmp` can invalidate it.
+What is actually left is small: **9.5**, and the path move of step 6 whenever upstream gets to it.
 
 Where the rest of section 9 lands: **9.1 to 9.4, 9.6 and 9.7 are done**. Only **9.5** remains and it is
 not standalone - Toast, vibration and the `Handler` post are the only reason `NfcCommandsPlugin` still
-takes a `Context`, so they go when it does, in step 4.
+takes a `Context`, so they go when it does. It is now the only alignment item left, and no longer gated
+on anything.
 
 ---
 
@@ -1012,6 +1043,34 @@ edited, so each was verified rather than trusted: our `@IntKey(380)` entry survi
 to `ContributedPluginsTest`, nothing of ours remains in `AapsLeaves` or `CoreObjectsModule` since
 `42ea9bbad2`, and `NfcCommandsPlugin` still carries its four Metro annotations. The `commonMain` source
 sets were grepped for `android` imports as well. All clean.
+
+### Merge 5 outcome, for reference
+
+Commit `6fa678e46b`, 90 upstream commits including a merge of `origin/ios` into `kmp`. Rename detection
+completed, `nfcCommands/` untouched a fifth time. Three conflicts:
+
+| File | Resolution |
+|---|---|
+| `plugins/sync build.gradle.kts`, `app build.gradle.kts` | each conflicted as **one hunk over the whole file**, because upstream committed both with CRLF and stray CR terminators while ours are LF - so every line differs. The real change is small: upstream dropped the `dagger.android` KSP processor from both. Took upstream's **bytes**, keeping their line endings so these two stop conflicting wholesale every time, and put our `kotlin("plugin.serialization")` line back |
+| `core/ui ElementTypeStyle.kt` | upstream renamed `UiStrings` to `CoreUiStrings`. Took upstream's version and put our four NFC branches back - the same resolution as merge 1 |
+
+Taking upstream's `app/build.gradle.kts` also **restores the `gitAvailable()` and `allCommitted()` build
+checks**, which `5aa040f7c0` "import NFC Plugin" had commented out. That has nothing to do with NFC and
+should not travel with this work. It cannot fire on this branch anyway, the uncommitted-changes check
+applying only on `master`.
+
+**The trap fired for real this time.** The `UiStrings` rename reaches `NfcBuildScreen.kt` too, and that
+file merged with **no conflict**, because upstream never touched those lines in our copy. So merge 5 did
+not build, and `88d804a052` fixed it - one import and seven unit labels. This is the second time the
+"clean merge is not a correct merge" note has paid for itself; keep grepping for renamed symbols after
+every merge, not only for `android` imports in `commonMain`.
+
+**A build-state trap that will hit anyone building this merge.** Ninety commits moved many classes from
+Dagger to Metro, and each leaves an orphan Dagger `_Factory.java` in its module's KSP output. Nothing
+regenerates or deletes those, `javac` still compiles them, and recompiling does not help - the build
+fails in whichever module it reaches first, `:database:persistence` and `:ui` here. Deleting the stale
+`build/generated/ksp/*/java` directories clears it, and they are all regenerated. There were 93 of them
+after this merge.
 
 One trap worth remembering: **`PreferenceContentExtensions.kt` merged with no conflict while carrying
 our Android-only `androidx.compose.ui.res.stringResource` import into a `commonMain` file.** Git had
