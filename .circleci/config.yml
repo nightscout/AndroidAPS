@@ -297,7 +297,14 @@ jobs:
               TASKS="$TASKS :$m:connectedAndroidDeviceTest"
             done
             echo "running: $TASKS"
-            [ -n "$TASKS" ] && $GRADLE_PIN ./gradlew --continue -Dorg.gradle.daemon=true -Dorg.gradle.workers.max=16 $TASKS || echo "no non-app test modules"
+            # if/else, not `cmd || echo`: the old form was meant for "there are no such modules" but
+            # swallowed every non-zero exit, so a failing suite - or a Gradle configuration error -
+            # left the step green. That is how these tests went unnoticed for months.
+            if [ -n "$TASKS" ]; then
+              $GRADLE_PIN ./gradlew --continue -Dorg.gradle.daemon=true -Dorg.gradle.workers.max=16 $TASKS
+            else
+              echo "no non-app test modules"
+            fi
 
       - run:
           name: Collect app shard results
