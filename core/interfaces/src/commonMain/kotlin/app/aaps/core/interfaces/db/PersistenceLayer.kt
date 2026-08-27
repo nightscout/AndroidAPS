@@ -54,7 +54,7 @@ interface PersistenceLayer {
     /**
      *  Clear all DB tables
      */
-    fun clearDatabases()
+    suspend fun clearDatabases()
 
     /**
      *  Clear ApsResults table

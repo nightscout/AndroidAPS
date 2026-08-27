@@ -13,12 +13,13 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.database.AppRepository
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidTest
+import javax.inject.Inject
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import javax.inject.Inject
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
@@ -33,12 +34,12 @@ class RunningConfigurationTest : HiltInstrumentedTest() {
 
     @Before
     fun setUp() {
-        repository.clearDatabases()
+        runBlocking { repository.clearDatabases() }
     }
 
     @After
     fun tearDown() {
-        repository.clearDatabases()
+        runBlocking { repository.clearDatabases() }
     }
 
     @SuppressLint("CheckResult")

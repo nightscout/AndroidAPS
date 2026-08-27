@@ -32,13 +32,13 @@ import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
 import app.aaps.testcategories.ShardB
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidTest
+import javax.inject.Inject
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.json.JSONObject
 import org.junit.After
 import org.junit.Test
 import org.junit.runner.RunWith
-import javax.inject.Inject
 
 /**
  * Integration tests verifying COB calculation with real worker pipeline.
@@ -82,7 +82,7 @@ class CobExtendedCarbsTest : HiltInstrumentedTest() {
         loop.lastRun = null
         objectivesPlugin.objectives.forEach { it.startedOn = 0 }
         (profileFunction as ProfileFunctionImpl).cache.clear()
-        persistenceLayer.clearDatabases()
+        runBlocking { persistenceLayer.clearDatabases() }
     }
 
     // ==================== Helpers ====================
