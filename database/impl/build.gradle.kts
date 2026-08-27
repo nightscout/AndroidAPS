@@ -64,6 +64,13 @@ kotlin {
             }
         }
 
+        // The bundled driver is what actually opens the database on a phone, so iOS needs it too.
+        iosMain {
+            dependencies {
+                implementation(libs.androidx.sqlite.bundled)
+            }
+        }
+
         androidMain {
             dependencies {
                 api(libs.kotlin.stdlib.jdk8)

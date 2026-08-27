@@ -133,4 +133,11 @@ object ShellInfo {
      * See [CoreProbe] for why `expect`/`actual` code is what this goes after.
      */
     fun checkCore(): String = CoreProbe.run().joinToString("\n")
+
+    /**
+     * Opens the AAPS database on iOS and writes a reading through it.
+     *
+     * See [DatabaseProbe] for why this writes rather than inspects.
+     */
+    fun checkDatabase(): String = DatabaseProbe.run()
 }

@@ -58,6 +58,13 @@ struct ShellView: View {
             Text(info.checkCore())
                 .font(.caption2.monospaced())
                 .multilineTextAlignment(.leading)
+
+            Divider().padding(.vertical, 4)
+
+            // The real AAPS database, opened and written to on this device.
+            Text(info.checkDatabase())
+                .font(.caption.monospaced())
+                .multilineTextAlignment(.leading)
         }
         .padding()
         }
