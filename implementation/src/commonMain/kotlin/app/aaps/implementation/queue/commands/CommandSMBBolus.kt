@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.UiStrings
 import kotlin.time.Clock
 
@@ -57,8 +58,8 @@ class CommandSMBBolus(
 
     override fun log(): String = "SMB BOLUS ${rh.gs(InterfacesStrings.format_insulin_units, detailedBolusInfo.insulin)}"
 
-    override fun cancel(commentResId: Int, success: Boolean) {
-        super.cancel(commentResId, success)
+    override fun cancel(comment: TextRef, success: Boolean) {
+        super.cancel(comment, success)
         bolusProgressData.clear(bolusGeneration)
     }
 }

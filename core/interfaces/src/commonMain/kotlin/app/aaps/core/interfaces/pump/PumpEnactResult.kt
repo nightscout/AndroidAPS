@@ -1,5 +1,7 @@
 package app.aaps.core.interfaces.pump
 
+import app.aaps.core.keys.interfaces.TextRef
+
 interface PumpEnactResult {
 
     var success: Boolean // request was processed successfully (but possible no change was needed)
@@ -20,7 +22,13 @@ interface PumpEnactResult {
     fun success(success: Boolean): PumpEnactResult
     fun enacted(enacted: Boolean): PumpEnactResult
     fun comment(comment: String): PumpEnactResult
-    fun comment(comment: Int): PumpEnactResult
+    /**
+     * The comment as a [TextRef], resolved by the implementation.
+     *
+     * This replaced `comment(Int)`, which put an Android resource id in a commonMain interface. The id
+     * form still exists as an androidMain extension, so call sites are unchanged.
+     */
+    fun comment(ref: TextRef): PumpEnactResult
     fun duration(duration: Int): PumpEnactResult
     fun absolute(absolute: Double): PumpEnactResult
     fun percent(percent: Int): PumpEnactResult

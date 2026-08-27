@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.queue.cancel
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.ui.UiStrings
 import app.aaps.implementation.pump.PumpEnactResultObject

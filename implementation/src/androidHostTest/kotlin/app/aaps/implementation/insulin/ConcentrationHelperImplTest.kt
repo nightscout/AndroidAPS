@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
+import org.mockito.kotlin.any
 import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.whenever
 
@@ -35,6 +37,10 @@ class ConcentrationHelperImplTest : TestBase() {
     fun setup() {
         whenever(rh.gs(anyInt())).thenReturn("s")
         whenever(rh.gs(anyInt(), anyVararg())).thenReturn("s")
+        // The class under test names its strings as TextRef now that it lives in commonMain, so the
+        // TextRef templates need the same answer as the resource-id ones.
+        whenever(rh.gs(any<TextRef>())).thenReturn("s")
+        whenever(rh.gs(any<TextRef>(), anyVararg())).thenReturn("s")
         whenever(dateUtil.timeString(anyLong())).thenReturn("12:00")
         whenever(dateUtil.now()).thenReturn(1_000_000L)
     }
