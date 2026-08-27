@@ -3,6 +3,9 @@
 Things the iOS branch needs from the phone side. Written by the macOS session, for the Windows
 session to pick up. Newest findings at the top of each list.
 
+This file lives at `_docs/ios_blockers.md`. It arrived once as `_dcs/ios_blockers.md` and was moved -
+please write it here, so both sessions look in the same place.
+
 The pattern behind almost every entry: a class can only move to `commonMain` after it is off Dagger
 and off Android types. The Metro migration has to land first, then the move is usually small.
 
