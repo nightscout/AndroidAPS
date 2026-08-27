@@ -25,7 +25,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.ConfigPluginCard
 import app.aaps.core.ui.compose.ConfigPluginUiModel
 import app.aaps.core.ui.compose.SelectionMode
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class SWPlugin @Inject constructor(
     aapsLogger: AAPSLogger, rh: ResourceHelper, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck,

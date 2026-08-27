@@ -46,16 +46,17 @@ import app.aaps.plugins.configuration.setupwizard.elements.SWPairingStatus
 import app.aaps.plugins.configuration.setupwizard.elements.SWPermissions
 import app.aaps.plugins.configuration.setupwizard.elements.SWPlugin
 import app.aaps.plugins.configuration.setupwizard.elements.SWRadioButton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
 
-@Singleton
+@SingleIn(AppScope::class)
 class SWDefinition @Inject constructor(
     @ApplicationScope private val appScope: CoroutineScope,
     private val rxBus: RxBus,
@@ -106,7 +107,7 @@ class SWDefinition @Inject constructor(
     private val screens: MutableList<SWScreen> = ArrayList()
 
     private fun pluginOption(pType: PluginType, @androidx.annotation.StringRes description: Int): SWPlugin =
-        swPluginProvider.get()
+        swPluginProvider()
             .option(pType, description)
             .onPreferences { pluginId -> onPluginPreferences?.invoke(pluginId) }
             .onOpenPlugin { pluginId -> onPluginOpen?.invoke(pluginId) }
@@ -135,16 +136,16 @@ class SWDefinition @Inject constructor(
     }
 
     private val screenSetupWizard
-        get() = swScreenProvider.get().with(R.string.welcome)
-            .add(swInfoTextProvider.get().label(R.string.welcometosetupwizard))
+        get() = swScreenProvider().with(R.string.welcome)
+            .add(swInfoTextProvider().label(R.string.welcometosetupwizard))
 
     private val screenEula
-        get() = swScreenProvider.get().with(R.string.end_user_license_agreement)
+        get() = swScreenProvider().with(R.string.end_user_license_agreement)
             .skippable(false)
-            .add(swInfoTextProvider.get().label(R.string.end_user_license_agreement_text))
-            .add(swBreakProvider.get())
+            .add(swInfoTextProvider().label(R.string.end_user_license_agreement_text))
+            .add(swBreakProvider())
             .add(
-                swButtonProvider.get()
+                swButtonProvider()
                     .text(R.string.end_user_license_agreement_i_understand)
                     .visibility { !preferences.get(BooleanNonKey.SetupWizardIUnderstand) }
                     .action {
@@ -155,28 +156,28 @@ class SWDefinition @Inject constructor(
             .validator { preferences.get(BooleanNonKey.SetupWizardIUnderstand) }
 
     private val screenUnits
-        get() = swScreenProvider.get().with(R.string.units)
+        get() = swScreenProvider().with(R.string.units)
             .skippable(false)
-            .add(swInfoTextProvider.get().label(R.string.setupwizard_units_prompt))
+            .add(swInfoTextProvider().label(R.string.setupwizard_units_prompt))
             .add(
-                swRadioButtonProvider.get()
+                swRadioButtonProvider()
                     .preference(StringKey.GeneralUnits)
             )
             .validator { preferences.get(StringKey.GeneralUnits).isNotEmpty() }
 
     private val displaySettings
-        get() = swScreenProvider.get().with(R.string.display_settings)
+        get() = swScreenProvider().with(R.string.display_settings)
             .skippable(false)
             .add(
-                swEditNumberWithUnitsProvider.get()
+                swEditNumberWithUnitsProvider()
                     .preference(UnitDoubleKey.OverviewLowMark)
                     .updateDelay(5)
                     .label(R.string.low_mark)
                     .comment(R.string.low_mark_comment)
             )
-            .add(swBreakProvider.get())
+            .add(swBreakProvider())
             .add(
-                swEditNumberWithUnitsProvider.get()
+                swEditNumberWithUnitsProvider()
                     .preference(UnitDoubleKey.OverviewHighMark)
                     .updateDelay(5)
                     .label(R.string.high_mark)
@@ -184,103 +185,103 @@ class SWDefinition @Inject constructor(
             )
 
     private val screenPermissions
-        get() = swScreenProvider.get().with(R.string.setupwizard_permissions)
+        get() = swScreenProvider().with(R.string.setupwizard_permissions)
             .skippable(true)
-            .add(swInfoTextProvider.get().label(R.string.setupwizard_permissions_info))
-            .add(swBreakProvider.get())
-            .add(swPermissionsProvider.get().with(this))
+            .add(swInfoTextProvider().label(R.string.setupwizard_permissions_info))
+            .add(swBreakProvider())
+            .add(swPermissionsProvider().with(this))
 
     private val screenImport
-        get() = swScreenProvider.get().with(app.aaps.core.ui.R.string.import_setting)
-            .add(swInfoTextProvider.get().label(R.string.storedsettingsfound))
-            .add(swBreakProvider.get())
-            .add(swButtonProvider.get().text(app.aaps.core.ui.R.string.import_setting).action {
+        get() = swScreenProvider().with(app.aaps.core.ui.R.string.import_setting)
+            .add(swInfoTextProvider().label(R.string.storedsettingsfound))
+            .add(swBreakProvider())
+            .add(swButtonProvider().text(app.aaps.core.ui.R.string.import_setting).action {
                 onImportSettings?.invoke()
             })
             .visibility { fileListProvider.listPreferenceFiles().isNotEmpty() }
 
     private val screenNsClient
-        get() = swScreenProvider.get().with(app.aaps.core.ui.R.string.configbuilder_sync)
+        get() = swScreenProvider().with(app.aaps.core.ui.R.string.configbuilder_sync)
             .skippable(true)
             .add(pluginOption(PluginType.SYNC, R.string.configbuilder_sync_description))
-            .add(swBreakProvider.get())
-            .add(swInfoTextProvider.get().label(R.string.syncinfotext))
-            .add(swBreakProvider.get())
-            .add(swEventListenerProvider.get().with(EventSWSyncStatus::class).label(R.string.status_label).initialStatus(nsClient.status))
+            .add(swBreakProvider())
+            .add(swInfoTextProvider().label(R.string.syncinfotext))
+            .add(swBreakProvider())
+            .add(swEventListenerProvider().with(EventSWSyncStatus::class).label(R.string.status_label).initialStatus(nsClient.status))
             .validator { nsClient.connected && nsClient.hasWritePermission }
 
     // Master side: explain the paired client-control channel, open the pairing (Authorized clients) screen,
     // and offer the old "accept data from NS" settings (now off by default).
     private val screenClientControl
-        get() = swScreenProvider.get().with(R.string.setupwizard_client_control_title)
+        get() = swScreenProvider().with(R.string.setupwizard_client_control_title)
             .skippable(true)
-            .add(swInfoTextProvider.get().label(R.string.setupwizard_client_control_info))
-            .add(swPairingStatusProvider.get())
-            .add(swBreakProvider.get())
+            .add(swInfoTextProvider().label(R.string.setupwizard_client_control_info))
+            .add(swPairingStatusProvider())
+            .add(swBreakProvider())
             .add(
-                swButtonProvider.get()
+                swButtonProvider()
                     .text(app.aaps.core.ui.R.string.authorized_clients_manage_label)
                     .visibility { preferences.get(BooleanKey.NsClient3UseWs) }
                     .action { onOpenAuthorizedClients?.invoke() }
             )
-            .add(swInfoTextProvider.get().label(R.string.setupwizard_pairing_ws_warning).visibility { !preferences.get(BooleanKey.NsClient3UseWs) })
-            .add(swBreakProvider.get())
-            .add(swInfoTextProvider.get().label(R.string.setupwizard_ns_receive_info))
+            .add(swInfoTextProvider().label(R.string.setupwizard_pairing_ws_warning).visibility { !preferences.get(BooleanKey.NsClient3UseWs) })
+            .add(swBreakProvider())
+            .add(swInfoTextProvider().label(R.string.setupwizard_ns_receive_info))
             .add(
-                swButtonProvider.get()
+                swButtonProvider()
                     .text(R.string.setupwizard_open_ns_receive_settings)
                     .action { onOpenNsReceiveSettings?.invoke() }
             )
 
     // Client side: explain pairing with a master and open the "Pair with master" (PIN entry) screen.
     private val screenPairWithMaster
-        get() = swScreenProvider.get().with(app.aaps.core.ui.R.string.pair_with_master_manage_label)
+        get() = swScreenProvider().with(app.aaps.core.ui.R.string.pair_with_master_manage_label)
             .skippable(true)
-            .add(swInfoTextProvider.get().label(R.string.setupwizard_pair_with_master_info))
-            .add(swBreakProvider.get())
+            .add(swInfoTextProvider().label(R.string.setupwizard_pair_with_master_info))
+            .add(swBreakProvider())
             .add(
-                swButtonProvider.get()
+                swButtonProvider()
                     .text(app.aaps.core.ui.R.string.pair_with_master_manage_label)
                     .visibility { preferences.get(BooleanKey.NsClient3UseWs) }
                     .action { onPairWithMaster?.invoke() }
             )
-            .add(swBreakProvider.get())
-            .add(swPairingStatusProvider.get())
-            .add(swInfoTextProvider.get().label(R.string.setupwizard_pairing_ws_warning).visibility { !preferences.get(BooleanKey.NsClient3UseWs) })
+            .add(swBreakProvider())
+            .add(swPairingStatusProvider())
+            .add(swInfoTextProvider().label(R.string.setupwizard_pairing_ws_warning).visibility { !preferences.get(BooleanKey.NsClient3UseWs) })
 
     private val screenPatientName
-        get() = swScreenProvider.get().with(StringKey.GeneralPatientName.title)
+        get() = swScreenProvider().with(StringKey.GeneralPatientName.title)
             .skippable(true)
-            .add(swInfoTextProvider.get().label(StringKey.GeneralPatientName.summary!!))
-            .add(swEditStringProvider.get().validator(String::isNotEmpty).preference(StringKey.GeneralPatientName))
+            .add(swInfoTextProvider().label(StringKey.GeneralPatientName.summary!!))
+            .add(swEditStringProvider().validator(String::isNotEmpty).preference(StringKey.GeneralPatientName))
 
     private val screenMasterPassword
-        get() = swScreenProvider.get().with(StringKey.ProtectionMasterPassword.title)
+        get() = swScreenProvider().with(StringKey.ProtectionMasterPassword.title)
             .skippable(false)
-            .add(swEditEncryptedPasswordProvider.get().preference(StringKey.ProtectionMasterPassword).onSetPassword { onSetMasterPassword?.invoke() })
-            .add(swBreakProvider.get())
-            .add(swInfoTextProvider.get().label(R.string.master_password_summary))
+            .add(swEditEncryptedPasswordProvider().preference(StringKey.ProtectionMasterPassword).onSetPassword { onSetMasterPassword?.invoke() })
+            .add(swBreakProvider())
+            .add(swInfoTextProvider().label(R.string.master_password_summary))
             .validator { !cryptoUtil.checkPassword("", preferences.get(StringKey.ProtectionMasterPassword)) }
 
     private val screenAge
-        get() = swScreenProvider.get().with(app.aaps.core.ui.R.string.patient_type)
+        get() = swScreenProvider().with(app.aaps.core.ui.R.string.patient_type)
             .skippable(false)
-            .add(swInfoTextProvider.get().label(app.aaps.core.ui.R.string.patient_age_summary))
+            .add(swInfoTextProvider().label(app.aaps.core.ui.R.string.patient_age_summary))
             .add(
-                swRadioButtonProvider.get()
+                swRadioButtonProvider()
                     .option(hardLimits.ageEntries(), hardLimits.ageEntryValues())
                     .preference(StringKey.SafetyAge)
             )
-            .add(swBreakProvider.get())
+            .add(swBreakProvider())
             .add(
-                swEditNumberProvider.get()
+                swEditNumberProvider()
                     .preference(DoubleKey.SafetyMaxBolus)
                     .updateDelay(5)
                     .label(app.aaps.core.ui.R.string.max_bolus_title)
                     .comment(R.string.common_values)
             )
             .add(
-                swEditIntNumberProvider.get()
+                swEditIntNumberProvider()
                     .preference(IntKey.SafetyMaxCarbs)
                     .updateDelay(5)
                     .label(app.aaps.core.ui.R.string.max_carbs_title)
@@ -293,54 +294,54 @@ class SWDefinition @Inject constructor(
             }
 
     private val screenInsulin
-        get() = swScreenProvider.get().with(app.aaps.core.ui.R.string.configbuilder_insulin)
+        get() = swScreenProvider().with(app.aaps.core.ui.R.string.configbuilder_insulin)
             .skippable(false)
-            .add(swInfoTextProvider.get().label(R.string.diawarning))
-            .add(swBreakProvider.get())
-            .add(swButtonProvider.get().text(app.aaps.core.ui.R.string.configbuilder_insulin).action { onManageInsulin?.invoke() })
+            .add(swInfoTextProvider().label(R.string.diawarning))
+            .add(swBreakProvider())
+            .add(swButtonProvider().text(app.aaps.core.ui.R.string.configbuilder_insulin).action { onManageInsulin?.invoke() })
 
     private val screenBgSource
-        get() = swScreenProvider.get().with(app.aaps.core.ui.R.string.configbuilder_bgsource)
+        get() = swScreenProvider().with(app.aaps.core.ui.R.string.configbuilder_bgsource)
             .skippable(false)
             .add(pluginOption(PluginType.BGSOURCE, R.string.configbuilder_bgsource_description))
-            .add(swBreakProvider.get())
+            .add(swBreakProvider())
 
     private val screenProfile
-        get() = swScreenProvider.get().with(app.aaps.core.ui.R.string.profile)
+        get() = swScreenProvider().with(app.aaps.core.ui.R.string.profile)
             .skippable(false)
-            .add(swInfoTextProvider.get().label(R.string.setupwizard_profile_info))
-            .add(swBreakProvider.get())
-            .add(swButtonProvider.get().text(app.aaps.core.ui.R.string.profile).action { onManageProfile?.invoke() })
+            .add(swInfoTextProvider().label(R.string.setupwizard_profile_info))
+            .add(swBreakProvider())
+            .add(swButtonProvider().text(app.aaps.core.ui.R.string.profile).action { onManageProfile?.invoke() })
             .validator { profileRepository.profiles.value.let { it.isNotEmpty() && it.all { p -> profileRepository.validateStructured(p).isEmpty() } } }
 
     private val screenProfileSwitch
-        get() = swScreenProvider.get().with(app.aaps.core.ui.R.string.careportal_profileswitch)
+        get() = swScreenProvider().with(app.aaps.core.ui.R.string.careportal_profileswitch)
             .skippable(false)
-            .add(swInfoTextProvider.get().label(app.aaps.core.ui.R.string.profileswitch_ismissing))
+            .add(swInfoTextProvider().label(app.aaps.core.ui.R.string.profileswitch_ismissing))
             .add(
-                swButtonProvider.get()
+                swButtonProvider()
                     .text(R.string.doprofileswitch)
                     .action { onProfileSwitch?.invoke() })
             .validator { runBlocking { profileFunction.getRequestedProfile() } != null }
             .visibility { runBlocking { profileFunction.getRequestedProfile() } == null }
 
     private val screenPump
-        get() = swScreenProvider.get().with(app.aaps.core.ui.R.string.configbuilder_pump)
+        get() = swScreenProvider().with(app.aaps.core.ui.R.string.configbuilder_pump)
             .skippable(false)
             .add(pluginOption(PluginType.PUMP, R.string.configbuilder_pump_description))
-            .add(swBreakProvider.get())
-            .add(swInfoTextProvider.get().label(R.string.setupwizard_pump_pump_not_initialized).visibility { !isPumpInitialized() })
+            .add(swBreakProvider())
+            .add(swInfoTextProvider().label(R.string.setupwizard_pump_pump_not_initialized).visibility { !isPumpInitialized() })
             .add( // Omnipod Eros only
-                swInfoTextProvider.get()
+                swInfoTextProvider()
                     .label(R.string.setupwizard_pump_waiting_for_riley_link_connection)
                     .visibility { activePlugin.activePumpInternal.let { it is OmnipodEros && !it.isRileyLinkReady() } }
             )
             .add( // Omnipod Eros only
-                swEventListenerProvider.get().with(EventSWRLStatus::class)
+                swEventListenerProvider().with(EventSWRLStatus::class)
                     .label(R.string.setupwizard_pump_riley_link_status)
                     .visibility { activePlugin.activePumpInternal is OmnipodEros })
             .add(
-                swButtonProvider.get()
+                swButtonProvider()
                     .text(R.string.readstatus)
                     .action { appScope.launch { commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.clicked_connect_to_pump)) } }
                     .visibility {
@@ -349,7 +350,7 @@ class SWDefinition @Inject constructor(
                         activePlugin.activePump !is OmnipodEros && activePlugin.activePump !is OmnipodDash && activePlugin.activePump !is Medtrum
                     })
             .add(
-                swEventListenerProvider.get().with(EventPumpStatusChanged::class)
+                swEventListenerProvider().with(EventPumpStatusChanged::class)
                     .visibility { activePlugin.activePumpInternal !is OmnipodEros && activePlugin.activePumpInternal !is OmnipodDash && activePlugin.activePumpInternal !is Medtrum })
             .validator { isPumpInitialized() }
 
@@ -366,29 +367,29 @@ class SWDefinition @Inject constructor(
     }
 
     private val screenAps
-        get() = swScreenProvider.get().with(app.aaps.core.ui.R.string.configbuilder_aps)
+        get() = swScreenProvider().with(app.aaps.core.ui.R.string.configbuilder_aps)
             .skippable(false)
-            .add(swInfoTextProvider.get().label(R.string.setupwizard_aps_description))
-            .add(swBreakProvider.get())
+            .add(swInfoTextProvider().label(R.string.setupwizard_aps_description))
+            .add(swBreakProvider())
             .add(pluginOption(PluginType.APS, R.string.configbuilder_aps_description))
-            .add(swBreakProvider.get())
-            .add(swHtmlLinkProvider.get().label("https://wiki.aaps.app"))
-            .add(swBreakProvider.get())
+            .add(swBreakProvider())
+            .add(swHtmlLinkProvider().label("https://wiki.aaps.app"))
+            .add(swBreakProvider())
 
     private val screenSensitivity
-        get() = swScreenProvider.get().with(app.aaps.core.ui.R.string.configbuilder_sensitivity)
+        get() = swScreenProvider().with(app.aaps.core.ui.R.string.configbuilder_sensitivity)
             .skippable(false)
-            .add(swInfoTextProvider.get().label(R.string.setupwizard_sensitivity_description))
-            .add(swHtmlLinkProvider.get().label(R.string.setupwizard_sensitivity_url))
-            .add(swBreakProvider.get())
+            .add(swInfoTextProvider().label(R.string.setupwizard_sensitivity_description))
+            .add(swHtmlLinkProvider().label(R.string.setupwizard_sensitivity_url))
+            .add(swBreakProvider())
             .add(pluginOption(PluginType.SENSITIVITY, R.string.configbuilder_sensitivity_description))
 
     private val getScreenObjectives
-        get() = swScreenProvider.get().with(app.aaps.core.ui.R.string.objectives)
+        get() = swScreenProvider().with(app.aaps.core.ui.R.string.objectives)
             .skippable(false)
-            .add(swInfoTextProvider.get().label(R.string.startobjective))
-            .add(swBreakProvider.get())
-            .add(swButtonProvider.get().text(R.string.open_objectives).action { onRunObjectives?.invoke() })
+            .add(swInfoTextProvider().label(R.string.startobjective))
+            .add(swBreakProvider())
+            .add(swButtonProvider().text(R.string.open_objectives).action { onRunObjectives?.invoke() })
             .validator { activePlugin.activeObjectives?.isStarted(Objectives.FIRST_OBJECTIVE) == true }
             .visibility { config.APS && activePlugin.activeObjectives?.allAccomplished == false }
 

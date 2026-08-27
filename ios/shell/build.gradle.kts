@@ -24,6 +24,7 @@ val migratedModules = listOf(
     ":implementation",
     ":plugins:aps",
     ":plugins:calibration",
+    ":plugins:configuration",
     ":plugins:main",
     ":plugins:sensitivity",
     ":plugins:smoothing",

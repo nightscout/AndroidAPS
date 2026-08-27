@@ -24,7 +24,7 @@ import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsSpacing
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class SWEditEncryptedPassword @Inject constructor(aapsLogger: AAPSLogger, rh: ResourceHelper, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck, private val cryptoUtil: CryptoUtil) :
     SWItem(aapsLogger, rh, rxBus, preferences, passwordCheck) {

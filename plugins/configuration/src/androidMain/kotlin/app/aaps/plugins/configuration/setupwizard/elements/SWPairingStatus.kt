@@ -13,7 +13,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.configuration.R
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 /**
  * Live pairing-status line for the SetupWizard master/client steps. Reads reactive [NsClient] flows so

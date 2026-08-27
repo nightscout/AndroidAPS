@@ -33,6 +33,7 @@ import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.nssdk.localmodel.configuration.NSActiveScene
 import app.aaps.core.nssdk.localmodel.configuration.NSRunningConfiguration
 import app.aaps.plugins.configuration.R
+import dev.zacsweers.metro.Inject
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
@@ -41,7 +42,6 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
-import javax.inject.Inject
 
 @ContributesBinding(AppScope::class, binding = binding<RunningConfiguration>())
 @ContributesBinding(AppScope::class, binding = binding<RunningConfigurationKeys>())
