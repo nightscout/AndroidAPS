@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.shared.tests.TestBase
+import app.aaps.shared.tests.stubTextRefResolution
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.jupiter.api.BeforeEach
@@ -35,12 +36,9 @@ class ConcentrationHelperImplTest : TestBase() {
 
     @BeforeEach
     fun setup() {
+        stubTextRefResolution(rh)
         whenever(rh.gs(anyInt())).thenReturn("s")
         whenever(rh.gs(anyInt(), anyVararg())).thenReturn("s")
-        // The class under test names its strings as TextRef now that it lives in commonMain, so the
-        // TextRef templates need the same answer as the resource-id ones.
-        whenever(rh.gs(any<TextRef>())).thenReturn("s")
-        whenever(rh.gs(any<TextRef>(), anyVararg())).thenReturn("s")
         whenever(dateUtil.timeString(anyLong())).thenReturn("12:00")
         whenever(dateUtil.now()).thenReturn(1_000_000L)
     }
