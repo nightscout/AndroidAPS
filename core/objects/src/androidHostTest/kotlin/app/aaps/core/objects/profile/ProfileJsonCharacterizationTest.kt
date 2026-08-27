@@ -3,8 +3,8 @@ package app.aaps.core.objects.profile
 import android.content.Context
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.objects.extensions.blockFromJsonArray
-import app.aaps.core.objects.extensions.targetBlockFromJsonArray
+import app.aaps.core.objects.extensions.blockFromJson
+import app.aaps.core.objects.extensions.targetBlockFromJson
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
@@ -13,6 +13,7 @@ import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.JsonArray
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
@@ -45,6 +46,22 @@ import org.mockito.Mock
  * null - not throwing - on malformed input. Those are the assertions a conversion must not break.
  */
 class ProfileJsonCharacterizationTest : TestBase() {
+
+    /**
+     * `org.json` fixtures, kotlinx readers.
+     *
+     * Production stopped speaking `org.json` for schedules, so the adapters that used to live in
+     * `:core:objects` are gone. These fixtures still build `JSONArray`, because that is the shape a
+     * stored or downloaded profile arrives in, so the conversion happens here instead.
+     */
+    private fun JSONArray?.kx(): JsonArray? =
+        this?.let { Json.parseToJsonElement(it.toString()) as? JsonArray }
+
+    private fun blockFromJsonArray(jsonArray: JSONArray?, dateUtil: DateUtil) =
+        blockFromJson(jsonArray.kx(), dateUtil)
+
+    private fun targetBlockFromJsonArray(low: JSONArray?, high: JSONArray?, dateUtil: DateUtil) =
+        targetBlockFromJson(low.kx(), high.kx(), dateUtil)
 
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var context: Context

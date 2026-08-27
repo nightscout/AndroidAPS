@@ -6,6 +6,8 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.utils.DateUtil
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
 import org.json.JSONArray
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -26,6 +28,23 @@ import java.util.Locale
  * must return the same blocks, for every schedule the parser accepts.
  */
 class BlockRenderTest {
+
+    /**
+     * `org.json` fixtures, kotlinx readers - the adapters these used to call are gone with their
+     * last production caller. Kept here because a stored schedule still arrives as `org.json`.
+     */
+    private fun JSONArray?.kx(): JsonArray? =
+        this?.let { Json.parseToJsonElement(it.toString()) as? JsonArray }
+
+    private fun List<Block>.toJSONArray(): JSONArray = JSONArray(toJsonArray().toString())
+    private fun List<TargetBlock>.lowToJSONArray(): JSONArray = JSONArray(lowToJsonArray().toString())
+    private fun List<TargetBlock>.highToJSONArray(): JSONArray = JSONArray(highToJsonArray().toString())
+
+    private fun blockFromJsonArray(jsonArray: JSONArray?, dateUtil: DateUtil) =
+        blockFromJson(jsonArray.kx(), dateUtil)
+
+    private fun targetBlockFromJsonArray(low: JSONArray?, high: JSONArray?, dateUtil: DateUtil) =
+        targetBlockFromJson(low.kx(), high.kx(), dateUtil)
 
     private val dateUtil: DateUtil = mock()
     private lateinit var originalLocale: Locale
@@ -256,11 +275,4 @@ class BlockRenderTest {
         assertThat(blockFromJsonArray(JSONArray("""[{"value":1.0}]"""), dateUtil)).isNull()
     }
 
-    /** Guards the adapter itself: the kotlinx form and the org.json form must not diverge. */
-    @Test
-    fun `the org json adapter matches the kotlinx renderer`() {
-        val schedule = blocks(1 to 1.0, 23 to 2.0)
-
-        assertThat(JSONArray(schedule.toJsonArray().toString()).toString()).isEqualTo(schedule.toJSONArray().toString())
-    }
 }

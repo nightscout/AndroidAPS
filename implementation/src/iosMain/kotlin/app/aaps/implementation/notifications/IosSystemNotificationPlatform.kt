@@ -2,7 +2,9 @@ package app.aaps.implementation.notifications
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.interfaces.notifications.AlarmSound
+import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
 import platform.UserNotifications.UNAuthorizationOptionAlert
 import platform.UserNotifications.UNAuthorizationOptionBadge
@@ -33,11 +35,20 @@ class IosSystemNotificationPlatform(
     private val center = UNUserNotificationCenter.currentNotificationCenter()
     private var authorizationAsked = false
 
-    override fun show(instanceKey: Int, title: String, text: String, urgent: Boolean) {
+    /**
+     * iOS shows every notification, unlike Android.
+     *
+     * The two fields Android needs to decide with - `sound` and `actions` - are ignored here on
+     * purpose. There is no "post the alarm silently" split because there is no separate ramping
+     * player to hand the audio to (see [setAudibleAlarm]), and no preference gating whether a system
+     * notification appears, because on iOS that choice belongs to the user in Settings.
+     */
+    override fun show(notification: AapsNotification, title: String) {
         ensureAuthorization()
+        val urgent = notification.level == NotificationLevel.URGENT
         val content = UNMutableNotificationContent().apply {
             setTitle(title)
-            setBody(text)
+            setBody(notification.text)
             // Time sensitive breaks through Focus modes, which is what an urgent AAPS alarm is for.
             // The sound stays off here on purpose: audible alarms are driven by setAudibleAlarm, the
             // same split the Android side uses so a replaced alarm does not restart the sound.
@@ -49,7 +60,7 @@ class IosSystemNotificationPlatform(
         // A repeated identifier replaces the delivered notification rather than adding another,
         // which is the behaviour the registry expects when it reposts the same id.
         val request = UNNotificationRequest.requestWithIdentifier(
-            identifier = identifier(instanceKey),
+            identifier = identifier(notification.instanceKey),
             content = content,
             trigger = null
         )
