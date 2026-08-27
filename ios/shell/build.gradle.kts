@@ -19,6 +19,8 @@ val migratedModules = listOf(
     ":core:objects",
     ":core:ui",
     ":core:utils",
+    ":database:impl",
+    ":database:persistence",
     ":implementation",
     ":plugins:aps",
     ":plugins:calibration",
