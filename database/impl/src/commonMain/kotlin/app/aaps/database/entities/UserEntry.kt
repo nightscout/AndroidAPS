@@ -5,6 +5,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import app.aaps.database.entities.interfaces.DBEntry
 import app.aaps.database.entities.interfaces.DBEntryWithTime
+import kotlin.jvm.JvmSuppressWildcards
 
 @Entity(
     tableName = TABLE_USER_ENTRY,

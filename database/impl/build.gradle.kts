@@ -45,7 +45,21 @@ kotlin {
         }
     }
 
+    // Apple klibs cross compile on Windows; linking and running still need a Mac. Room only runs its
+    // processor for Android here (see kspAndroid below) - the entities and DAOs in commonMain need the
+    // annotations to resolve, not the generated implementation, and the @Database class that does need
+    // it stays in androidMain with Converters.
+    iosArm64()
+    iosSimulatorArm64()
+
     sourceSets {
+        commonMain {
+            dependencies {
+                api(libs.kotlinx.datetime)
+                api(libs.androidx.room.runtime)
+            }
+        }
+
         androidMain {
             dependencies {
                 api(libs.kotlin.stdlib.jdk8)

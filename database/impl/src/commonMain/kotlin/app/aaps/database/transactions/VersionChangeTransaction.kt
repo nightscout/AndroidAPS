@@ -1,6 +1,7 @@
 package app.aaps.database.transactions
 
 import app.aaps.database.entities.VersionChange
+import kotlin.time.Clock
 
 class VersionChangeTransaction(
     private val versionName: String,
@@ -19,7 +20,7 @@ class VersionChangeTransaction(
         ) {
             database.versionChangeDao.insert(
                 VersionChange(
-                    timestamp = System.currentTimeMillis(),
+                    timestamp = Clock.System.now().toEpochMilliseconds(),
                     versionCode = versionCode,
                     versionName = versionName,
                     gitRemote = gitRemote,

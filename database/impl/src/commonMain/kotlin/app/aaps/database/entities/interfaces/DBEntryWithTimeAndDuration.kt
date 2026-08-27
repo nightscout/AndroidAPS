@@ -1,6 +1,7 @@
 package app.aaps.database.entities.interfaces
 
 import kotlin.math.min
+import kotlin.time.Clock
 
 interface DBEntryWithTimeAndDuration : DBEntryWithTime, DBEntryWithDuration
 
@@ -11,4 +12,4 @@ var DBEntryWithTimeAndDuration.end
         require(duration > 0)
     }
 
-fun DBEntryWithTimeAndDuration.getRemainingDuration(current: Long = System.currentTimeMillis()) = min(0L, end - current)
+fun DBEntryWithTimeAndDuration.getRemainingDuration(current: Long = Clock.System.now().toEpochMilliseconds()) = min(0L, end - current)
