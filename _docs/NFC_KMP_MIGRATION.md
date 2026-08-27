@@ -23,14 +23,14 @@ preparation work can happen without disturbing the main NFC line.
 
 | Step                                                       | State                                                                       |
 |------------------------------------------------------------|-----------------------------------------------------------------------------|
-| Merge `Nightscout/kmp` into the branch                     | **done three times** - `966e187d8b`, `7bdab8c8b5`, `2fed15e79b`               |
+| Merge `Nightscout/kmp` into the branch                     | **done four times** - latest `66c9f75ca1`, the first with no conflicts at all  |
 | Tier 1, the changes needed to compile at all (section 3)    | **done** - `9cd204b8da` "NFC Fix build after kmp merge"                        |
 | Architecture alignment (section 9)                         | **9.1 to 9.4, 9.6 and 9.7 done**. Only 9.5 remains, and it is not standalone   |
 | The command format and the store blobs (section 5)          | **done** - `28305e0af6` and `ff1916852f`. No `org.json` left in the plugin      |
 | Metro DI and the plugin's own manifest (section 1a)         | **done** - `ba1cdbd518`, `009f4087ca`, `42ea9bbad2`. Metro owns the plugin now  |
 | Tier 2, needed only for a multiplatform module (section 4)  | **not started** apart from the `org.json` row, which sections 5 and 9.7 did    |
-| Build verification                                         | **green** - compile clean, 88 NFC tests and 50 app DI tests pass                |
-| `Nightscout/kmp` freshness                                 | merged 2026-08-27 at `6dc5c57898`. Still not in `dev` - more merges are due     |
+| Build verification                                         | **green** - compile clean, 93 NFC tests and 53 app DI tests pass                |
+| `Nightscout/kmp` freshness                                 | merged 2026-08-27 at `db8b2413e8`. Still not in `dev` - more merges are due     |
 
 Sections 3.7 to 3.12 are six breaks that only a compiler found, after an import-derived list had
 missed them. The lesson is recorded there because it will repeat on the next merge: **grepping imports
@@ -62,6 +62,9 @@ anything was pushed, so that each one builds on its own:
 | `009f4087ca`  | section 1a - manifest and resource into the plugin, 3 files    | pure move, **builds**                    |
 | `2fed15e79b`  | **merge 3**, 56 upstream commits, 4 conflicts                 | leaves the plugin registered nowhere     |
 | `42ea9bbad2`  | fix build after merge 3 - the plugin registers itself, 7 files | one DI change, **builds**                |
+| `66c9f75ca1`  | **merge 4**, 29 upstream commits, no conflicts                | nothing to fix afterwards                |
+| `846802a5ca`  | section 5 - a missing value is refused, 6 files                | behaviour change, **builds**             |
+| `a1b8a842bb`  | section 9.8 - every default in one place, 14 files             | removes 15 invented values, **builds**   |
 
 Keeping these apart matters for review: the fix-build commit only has to answer "did the merge really
 force this?", and the alignment commit carries its own rationale. `f9e51ec06c` is also the one that
@@ -534,6 +537,37 @@ still sorted newest first.
 
 After this there is no `org.json` left anywhere in the plugin.
 
+### A missing value is refused, not invented - DONE, `846802a5ca`
+
+Every value a command must supply is nullable in `NfcParams`, where null means "not set". Nothing
+checked that. Each action carried its own fallback - `params.insulin ?: 0.0`, `params.carbs ?: 0` - so a
+command that had lost a field ran anyway, on a number nobody chose, with no error and nothing in the log.
+
+**This is not only a development story, which is the part worth keeping.** The rename from the hand
+written `org.json` keys to the `@Serializable` field names is indeed a one-off that users will never
+meet. But a command can arrive without a value in ordinary use:
+
+- **A preferences export restored into a build whose parameter names differ.** The tag list is
+  exportable since `3a902e974f`, and restoring a backup or moving to a new phone is routine.
+- **A tag written by another phone on another version.** A tag is a physical object that outlives an
+  install, and `NDEF_DISCOVERED` reads the command from the tag itself.
+
+In both, the unknown names are dropped when the command is decoded and what is left has no value. A
+truncated or corrupt tag is different and was already safe: the whole command fails to decode.
+
+Each action already declares what it needs in `argType`, so the check only had to read that list.
+`NfcArgs.kt` holds the one mapping from `ArgType` to `NfcParams` field - a blank profile or scene name
+counts as missing, and booleans never do, `false` and `true` both being real answers.
+`NfcAction.executeIfComplete` runs an action only when nothing is missing, and `routeAction` calls it
+instead of `execute`, so nothing can be run past the check by accident. The tag list marks such a command
+**"value missing"** so it is visible before the tag is scanned.
+
+**How this showed up in practice.** A tester's three wizard tags, written before the typed format,
+carried their carb amount under `amount`. The field is `carbs` now, so the value was dropped, and the
+build screen displayed **20 g** - its own invented default - while a scan would have calculated with
+**0 g**. Neither number was ever recorded by anyone. That is what made the case for refusing rather
+than filling in.
+
 For reference, the `org.json` versus `kotlinx` differences that made the profile conversion delicate
 still matter for that work, as things the new code must get right rather than stay compatible with:
 `optInt` truncates a JSON number but saturates a numeric string; `org.json` writes `1.0` as `1`,
@@ -799,6 +833,43 @@ which keeps typed editor state and serialises only at the storage boundary.
 
 ---
 
+### 9.8 Default values were written as literals in four places - FIXED, `a1b8a842bb`
+
+The project rule is that a value used in more than one place gets a name. The plugin had **four** sets of
+default values, written as literals wherever they were needed, and they did not agree:
+
+| Where | What it was for |
+|---|---|
+| each action's `getDefaultParams()` | what a new command starts with - the deliberate set |
+| the build screen's `applyParams()` | generic numbers of its own, used when restoring a stored command |
+| the build screen's field initialisers | generic again, and different again |
+| each action's own `?:` fallback | what to use when the value was missing |
+
+A missing duration fell back to **0, 30 or 60** depending which action you read, and to two different
+values inside the same action. A missing carb value showed **20 g** on screen and executed as **0 g**. A
+bolus was **1.0 U** on screen, **0.0 U** in the action, and `getDefaultParams` for the same command said
+**0.0 U**.
+
+`NfcDefaults` holds all of them now, one name each. It sits in the plugin rather than the shared
+`Constants`, because nothing outside reads them and numbers that look therapy-wide do not belong there.
+The two duplicated ranges (`10..500`, `1..180`) moved with them.
+
+**The fallbacks inside `execute()` were deleted, not renamed.** The commit before made them unreachable,
+and a dose must never come from a number nobody chose, so each is now
+`params.x ?: return invalidFormat()` - fifteen invented values gone. Only display paths keep a fallback,
+because they have to show something, and they use the same constant as the command's own default.
+`applyParams` no longer invents either: a value the stored command does not carry leaves the field alone,
+and the restore path lays the command's own defaults down first.
+
+Two restatements went too: `BolusWizardAction` repeated `useBg`, `useTt` and `useIob` as `true` although
+`NfcParams` already declares them so, and `BolusAction` repeated `isMeal = false`. Stating a default
+twice is how the others drifted apart.
+
+Left alone on purpose: the fallback for a missing BG reading, and the pump basal duration step, which
+comes from the pump and names a constant only for the case where the pump does not say.
+
+---
+
 ## 10. Git history and authorship
 
 **Jens Heuschkel has 16 commits on this branch, not 4.** He committed under two different author
@@ -930,6 +1001,17 @@ One build-state trap, not a source problem: a stale Dagger factory for `Persiste
 `database/persistence`'s KSP output from before that class moved to Metro. Nothing regenerates or removes
 it and `javac` still compiles it, so the build fails there until
 `database/persistence/build/generated/ksp/fullDebug/java` is deleted. Recompiling does not help.
+
+### Merge 4 outcome, for reference
+
+Commit `66c9f75ca1`, 29 upstream commits, 576 files - and **no conflicts at all**, the first such merge
+on this branch. Rename detection completed and `nfcCommands/` was untouched a fourth time.
+
+A clean merge is not a reason to skip the checks, and upstream had edited four files we have also
+edited, so each was verified rather than trusted: our `@IntKey(380)` entry survived upstream's own edit
+to `ContributedPluginsTest`, nothing of ours remains in `AapsLeaves` or `CoreObjectsModule` since
+`42ea9bbad2`, and `NfcCommandsPlugin` still carries its four Metro annotations. The `commonMain` source
+sets were grepped for `android` imports as well. All clean.
 
 One trap worth remembering: **`PreferenceContentExtensions.kt` merged with no conflict while carrying
 our Android-only `androidx.compose.ui.res.stringResource` import into a `commonMain` file.** Git had
