@@ -31,7 +31,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.stringResource
 
 /**
@@ -105,7 +105,7 @@ fun QueryAnyPasswordDialog(
                 OutlinedTextField(
                     value = passwordText,
                     onValueChange = { passwordText = it },
-                    label = { Text(stringResource(UiStrings.protection_password_hint)) },
+                    label = { Text(stringResource(CoreUiStrings.protection_password_hint)) },
                     isError = errorMessage != null,
                     supportingText = errorMessage?.let { msg -> { Text(msg, color = MaterialTheme.colorScheme.error) } },
                     visualTransformation = PasswordVisualTransformation(),
@@ -136,12 +136,12 @@ fun QueryAnyPasswordDialog(
                     onConfirm(passwordText)
                 }
             ) {
-                Text(stringResource(UiStrings.ok))
+                Text(stringResource(CoreUiStrings.ok))
             }
         },
         dismissButton = {
             TextButton(onClick = onCancel) {
-                Text(stringResource(UiStrings.cancel))
+                Text(stringResource(CoreUiStrings.cancel))
             }
         },
         properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)

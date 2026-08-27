@@ -41,7 +41,7 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.plannedRemainingMinutes
 import app.aaps.core.objects.extensions.target
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.icons.IcPluginOpenAPS
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.utils.MidnightUtils
@@ -132,8 +132,8 @@ class OpenAPSAMAPlugin @Inject constructor(
         val profile = profileFunction.getProfile()
         val pump = activePlugin.activePump
         if (profile == null) {
-            rxBus.send(EventResetOpenAPSGui(rh.gs(UiStrings.no_profile_set)))
-            aapsLogger.debug(LTag.APS, rh.gs(UiStrings.no_profile_set))
+            rxBus.send(EventResetOpenAPSGui(rh.gs(CoreUiStrings.no_profile_set)))
+            aapsLogger.debug(LTag.APS, rh.gs(CoreUiStrings.no_profile_set))
             return@withContext
         }
         if (!isEnabled()) {
@@ -156,8 +156,8 @@ class OpenAPSAMAPlugin @Inject constructor(
             )
         ) return@withContext
         if (!hardLimits.checkHardLimits(profile.getIsfMgdl("OpenAPSAMAPlugin"), InterfacesStrings.profile_sensitivity_value, HardLimits.LIMIT_ISF)) return@withContext
-        if (!hardLimits.checkHardLimits(profile.getMaxDailyBasal(), UiStrings.profile_max_daily_basal_value, 0.02, hardLimits.maxBasal())) return@withContext
-        if (!hardLimits.checkHardLimits(ch.fromPump(pump.baseBasalRate), UiStrings.current_basal_value, 0.01, hardLimits.maxBasal())) return@withContext
+        if (!hardLimits.checkHardLimits(profile.getMaxDailyBasal(), CoreUiStrings.profile_max_daily_basal_value, 0.02, hardLimits.maxBasal())) return@withContext
+        if (!hardLimits.checkHardLimits(ch.fromPump(pump.baseBasalRate), CoreUiStrings.current_basal_value, 0.01, hardLimits.maxBasal())) return@withContext
 
         val now = dateUtil.now()
         val tb = processedTbrEbData.getTempBasalIncludingConvertedExtended(now)
@@ -168,14 +168,14 @@ class OpenAPSAMAPlugin @Inject constructor(
         )
         var minBg = hardLimits.verifyHardLimits(Round.roundTo(profile.getTargetLowMgdl(), 0.1), InterfacesStrings.profile_low_target, HardLimits.LIMIT_MIN_BG)
         var maxBg = hardLimits.verifyHardLimits(Round.roundTo(profile.getTargetHighMgdl(), 0.1), InterfacesStrings.profile_high_target, HardLimits.LIMIT_MAX_BG)
-        var targetBg = hardLimits.verifyHardLimits(profile.getTargetMgdl(), UiStrings.temp_target_value, HardLimits.LIMIT_TARGET_BG)
+        var targetBg = hardLimits.verifyHardLimits(profile.getTargetMgdl(), CoreUiStrings.temp_target_value, HardLimits.LIMIT_TARGET_BG)
 
         var isTempTarget = false
         persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())?.let { tempTarget ->
             isTempTarget = true
-            minBg = hardLimits.verifyHardLimits(tempTarget.lowTarget, UiStrings.temp_target_low_target, HardLimits.LIMIT_TEMP_MIN_BG)
-            maxBg = hardLimits.verifyHardLimits(tempTarget.highTarget, UiStrings.temp_target_high_target, HardLimits.LIMIT_TEMP_MAX_BG)
-            targetBg = hardLimits.verifyHardLimits(tempTarget.target(), UiStrings.temp_target_value, HardLimits.LIMIT_TEMP_TARGET_BG)
+            minBg = hardLimits.verifyHardLimits(tempTarget.lowTarget, CoreUiStrings.temp_target_low_target, HardLimits.LIMIT_TEMP_MIN_BG)
+            maxBg = hardLimits.verifyHardLimits(tempTarget.highTarget, CoreUiStrings.temp_target_high_target, HardLimits.LIMIT_TEMP_MAX_BG)
+            targetBg = hardLimits.verifyHardLimits(tempTarget.target(), CoreUiStrings.temp_target_value, HardLimits.LIMIT_TEMP_TARGET_BG)
         }
 
         val autosensResult =
@@ -304,19 +304,19 @@ class OpenAPSAMAPlugin @Inject constructor(
                 maxBasal = profile.getMaxDailyBasal()
                 absoluteRate.addReason(rh.gs(ApsStrings.increasing_max_basal), this)
             }
-            absoluteRate.setIfSmaller(maxBasal, rh.gs(UiStrings.limitingbasalratio, maxBasal, rh.gs(ApsStrings.maxvalueinpreferences)), this)
+            absoluteRate.setIfSmaller(maxBasal, rh.gs(CoreUiStrings.limitingbasalratio, maxBasal, rh.gs(ApsStrings.maxvalueinpreferences)), this)
 
             // Check percentRate but absolute rate too, because we know real current basal in pump
             val maxBasalMultiplier = preferences.get(DoubleKey.ApsMaxCurrentBasalMultiplier)
             val maxFromBasalMultiplier = floor(maxBasalMultiplier * profile.getBasal() * 100) / 100
             absoluteRate.setIfSmaller(
                 maxFromBasalMultiplier,
-                rh.gs(UiStrings.limitingbasalratio, maxFromBasalMultiplier, rh.gs(ApsStrings.max_basal_multiplier)),
+                rh.gs(CoreUiStrings.limitingbasalratio, maxFromBasalMultiplier, rh.gs(ApsStrings.max_basal_multiplier)),
                 this
             )
             val maxBasalFromDaily = preferences.get(DoubleKey.ApsMaxDailyMultiplier)
             val maxFromDaily = floor(profile.getMaxDailyBasal() * maxBasalFromDaily * 100) / 100
-            absoluteRate.setIfSmaller(maxFromDaily, rh.gs(UiStrings.limitingbasalratio, maxFromDaily, rh.gs(ApsStrings.max_daily_basal_multiplier)), this)
+            absoluteRate.setIfSmaller(maxFromDaily, rh.gs(CoreUiStrings.limitingbasalratio, maxFromDaily, rh.gs(ApsStrings.max_daily_basal_multiplier)), this)
         }
         return absoluteRate
     }
@@ -339,7 +339,7 @@ class OpenAPSAMAPlugin @Inject constructor(
             DoubleKey.ApsAmaMin5MinCarbsImpact,
             PreferenceSubScreenDef(
                 key = "absorption_ama_advanced",
-                title = UiStrings.advanced_settings_title,
+                title = CoreUiStrings.advanced_settings_title,
                 items = listOf(
                     ApsIntentKey.LinkToDocs,
                     BooleanKey.ApsAlwaysUseShortDeltas,

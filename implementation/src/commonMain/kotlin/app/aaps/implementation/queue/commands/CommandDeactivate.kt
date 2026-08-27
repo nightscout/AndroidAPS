@@ -8,7 +8,7 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.TextResolver
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 
 class CommandDeactivate(
     private val aapsLogger: AAPSLogger,
@@ -31,7 +31,7 @@ class CommandDeactivate(
         }
     }
 
-    override fun status(): String = rh.gs(UiStrings.deactivate)
+    override fun status(): String = rh.gs(CoreUiStrings.deactivate)
 
     override fun log(): String = "DEACTIVATE"
 }

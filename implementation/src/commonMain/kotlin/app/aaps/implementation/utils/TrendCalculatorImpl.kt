@@ -5,7 +5,7 @@ import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.TrendCalculator
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -36,15 +36,15 @@ class TrendCalculatorImpl @Inject constructor(
 
     override fun getTrendDescription(autosensDataStore: AutosensDataStore): String {
         return when (getTrendArrow(autosensDataStore)) {
-            TrendArrow.DOUBLE_DOWN     -> rh.gs(UiStrings.a11y_arrow_double_down)
-            TrendArrow.SINGLE_DOWN     -> rh.gs(UiStrings.a11y_arrow_single_down)
-            TrendArrow.FORTY_FIVE_DOWN -> rh.gs(UiStrings.a11y_arrow_forty_five_down)
-            TrendArrow.FLAT            -> rh.gs(UiStrings.a11y_arrow_flat)
-            TrendArrow.FORTY_FIVE_UP   -> rh.gs(UiStrings.a11y_arrow_forty_five_up)
-            TrendArrow.SINGLE_UP       -> rh.gs(UiStrings.a11y_arrow_single_up)
-            TrendArrow.DOUBLE_UP       -> rh.gs(UiStrings.a11y_arrow_double_up)
-            TrendArrow.NONE            -> rh.gs(UiStrings.a11y_arrow_none)
-            else                       -> rh.gs(UiStrings.a11y_arrow_unknown)
+            TrendArrow.DOUBLE_DOWN     -> rh.gs(CoreUiStrings.a11y_arrow_double_down)
+            TrendArrow.SINGLE_DOWN     -> rh.gs(CoreUiStrings.a11y_arrow_single_down)
+            TrendArrow.FORTY_FIVE_DOWN -> rh.gs(CoreUiStrings.a11y_arrow_forty_five_down)
+            TrendArrow.FLAT            -> rh.gs(CoreUiStrings.a11y_arrow_flat)
+            TrendArrow.FORTY_FIVE_UP   -> rh.gs(CoreUiStrings.a11y_arrow_forty_five_up)
+            TrendArrow.SINGLE_UP       -> rh.gs(CoreUiStrings.a11y_arrow_single_up)
+            TrendArrow.DOUBLE_UP       -> rh.gs(CoreUiStrings.a11y_arrow_double_up)
+            TrendArrow.NONE            -> rh.gs(CoreUiStrings.a11y_arrow_none)
+            else                       -> rh.gs(CoreUiStrings.a11y_arrow_unknown)
         }
     }
 

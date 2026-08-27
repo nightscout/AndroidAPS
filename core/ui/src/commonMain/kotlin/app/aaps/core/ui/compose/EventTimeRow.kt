@@ -19,7 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 
 /**
  * Compact event time row with inline expand/collapse.
@@ -57,12 +57,12 @@ fun EventTimeRow(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = stringResource(UiStrings.time) + ": ",
+                    text = stringResource(CoreUiStrings.time) + ": ",
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = if (timeChanged) displayText else stringResource(UiStrings.carb_time_now),
+                    text = if (timeChanged) displayText else stringResource(CoreUiStrings.carb_time_now),
                     style = MaterialTheme.typography.titleMedium,
                     color = if (timeChanged) MaterialTheme.colorScheme.primary
                     else MaterialTheme.colorScheme.onSurface
@@ -71,7 +71,7 @@ fun EventTimeRow(
 
             if (!expanded) {
                 FilledTonalButton(onClick = { expanded = true }) {
-                    Text(stringResource(UiStrings.change))
+                    Text(stringResource(CoreUiStrings.change))
                 }
             }
         }

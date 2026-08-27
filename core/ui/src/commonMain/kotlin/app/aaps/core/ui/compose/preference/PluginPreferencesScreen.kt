@@ -27,7 +27,7 @@ import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.keys.interfaces.VisibilityContext
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.ComposeScreenContent
 import app.aaps.core.ui.compose.LocalSnackbarHostState
@@ -95,7 +95,7 @@ fun PluginPreferencesScreen(
                                     IconButton(onClick = onBackClick) {
                                         Icon(
                                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                            contentDescription = stringResource(UiStrings.back)
+                                            contentDescription = stringResource(CoreUiStrings.back)
                                         )
                                     }
                                 }
@@ -110,7 +110,7 @@ fun PluginPreferencesScreen(
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = stringResource(UiStrings.no_compose_preferences),
+                                text = stringResource(CoreUiStrings.no_compose_preferences),
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }
@@ -152,7 +152,7 @@ private fun SinglePluginPreferencesRenderer(
                     IconButton(onClick = onBackClick) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(UiStrings.back)
+                            contentDescription = stringResource(CoreUiStrings.back)
                         )
                     }
                 }

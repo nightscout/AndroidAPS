@@ -14,7 +14,7 @@ import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.VisibilityContext
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.dialogs.SetPasswordDialog
 import app.aaps.core.ui.compose.stringResource
@@ -69,8 +69,8 @@ fun AdaptivePasswordPreferenceItem(
 
     val summary = when {
         hasValue -> "••••••••"
-        isPin    -> stringResource(UiStrings.pin_not_set)
-        else     -> stringResource(UiStrings.password_not_set)
+        isPin    -> stringResource(CoreUiStrings.pin_not_set)
+        else     -> stringResource(CoreUiStrings.password_not_set)
     }
 
     Preference(
@@ -83,10 +83,10 @@ fun AdaptivePasswordPreferenceItem(
     )
 
     if (showDialog) {
-        val dontMatchMsg = stringResource(if (isPin) UiStrings.pin_dont_match else UiStrings.passwords_dont_match)
-        val setMsg = stringResource(if (isPin) UiStrings.pin_set else UiStrings.password_set)
-        val clearedMsg = stringResource(if (isPin) UiStrings.pin_cleared else UiStrings.password_cleared)
-        val notChangedMsg = stringResource(if (isPin) UiStrings.pin_not_changed else UiStrings.password_not_changed)
+        val dontMatchMsg = stringResource(if (isPin) CoreUiStrings.pin_dont_match else CoreUiStrings.passwords_dont_match)
+        val setMsg = stringResource(if (isPin) CoreUiStrings.pin_set else CoreUiStrings.password_set)
+        val clearedMsg = stringResource(if (isPin) CoreUiStrings.pin_cleared else CoreUiStrings.password_cleared)
+        val notChangedMsg = stringResource(if (isPin) CoreUiStrings.pin_not_changed else CoreUiStrings.password_not_changed)
 
         SetPasswordDialog(
             title = stringResource(effectiveTitle),

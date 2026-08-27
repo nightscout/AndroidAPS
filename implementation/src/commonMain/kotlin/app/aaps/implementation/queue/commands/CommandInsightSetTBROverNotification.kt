@@ -8,7 +8,7 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.TextResolver
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 
 class CommandInsightSetTBROverNotification(
     private val aapsLogger: AAPSLogger,
@@ -32,7 +32,7 @@ class CommandInsightSetTBROverNotification(
         }
     }
 
-    override fun status(): String = rh.gs(UiStrings.insight_set_tbr_over_notification)
+    override fun status(): String = rh.gs(CoreUiStrings.insight_set_tbr_over_notification)
 
     @Suppress("SpellCheckingInspection")
     override fun log(): String = "INSIGHTSETTBROVERNOTIFICATION"

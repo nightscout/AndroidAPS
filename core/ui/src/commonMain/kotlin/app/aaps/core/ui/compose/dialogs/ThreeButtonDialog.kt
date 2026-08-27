@@ -21,7 +21,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.htmlToAnnotatedString
 import app.aaps.core.ui.compose.stringResource
 
@@ -46,7 +46,7 @@ import app.aaps.core.ui.compose.stringResource
  * @param onPrimary Called when primary button is clicked
  * @param secondaryLabel Label for the alternative action button (e.g., "End")
  * @param onSecondary Called when secondary button is clicked
- * @param cancelLabel Optional override for cancel label; defaults to UiStrings.cancel
+ * @param cancelLabel Optional override for cancel label; defaults to CoreUiStrings.cancel
  * @param onDismiss Called when cancel is clicked or dialog is dismissed
  *
  * @see ThreeButtonDialogPreview
@@ -65,7 +65,7 @@ fun ThreeButtonDialog(
     cancelLabel: String? = null,
     onDismiss: () -> Unit
 ) {
-    val resolvedCancel = cancelLabel ?: stringResource(UiStrings.cancel)
+    val resolvedCancel = cancelLabel ?: stringResource(CoreUiStrings.cancel)
     AlertDialog(
         onDismissRequest = onDismiss,
         icon = icon?.let {

@@ -17,18 +17,18 @@ plugins {
 // set takes a task provider directly. Same generator as :core:keys and :core:interfaces, pointed at
 // this module's strings. The strings themselves do not move, and AAPT keeps resolving them on
 // Android exactly as before.
-val generateUiStrings = tasks.register<GenerateKeyStringsTask>("generateUiStrings") {
+val generateCoreUiStrings = tasks.register<GenerateKeyStringsTask>("generateCoreUiStrings") {
     resDir.set(layout.projectDirectory.dir("src/androidMain/res"))
     packageName.set("app.aaps.core.ui")
-    owner.set("ui")
-    objectName.set("UiStrings")
-    idsObjectName.set("UiStringIds")
-    reportFile.set(layout.buildDirectory.file("reports/uiStrings/translations.txt"))
+    owner.set("coreUi")
+    objectName.set("CoreUiStrings")
+    idsObjectName.set("CoreUiStringIds")
+    reportFile.set(layout.buildDirectory.file("reports/coreUiStrings/translations.txt"))
     // Set explicitly: addGeneratedSourceDirectory only applies a convention derived from the task
     // name, so both properties would land on one directory and the second file written would delete
     // the first.
-    commonOutputDir.set(layout.buildDirectory.dir("generated/uiStrings/common"))
-    androidOutputDir.set(layout.buildDirectory.dir("generated/uiStrings/android"))
+    commonOutputDir.set(layout.buildDirectory.dir("generated/coreUiStrings/common"))
+    androidOutputDir.set(layout.buildDirectory.dir("generated/coreUiStrings/android"))
 }
 
 kotlin {
@@ -70,7 +70,7 @@ kotlin {
 
     sourceSets {
         commonMain {
-            kotlin.srcDir(generateUiStrings.flatMap { it.commonOutputDir })
+            kotlin.srcDir(generateCoreUiStrings.flatMap { it.commonOutputDir })
             dependencies {
                 api(project(":core:data"))
                 api(project(":core:interfaces"))
@@ -99,7 +99,7 @@ kotlin {
 
         androidMain {
             // Android only: the string name to R.string id map.
-            kotlin.srcDir(generateUiStrings.flatMap { it.androidOutputDir })
+            kotlin.srcDir(generateCoreUiStrings.flatMap { it.androidOutputDir })
             dependencies {
                 // Everything here was `api` on the old android library and the consumer modules
                 // resolve it transitively, so it must stay exported.

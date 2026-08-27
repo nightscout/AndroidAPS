@@ -3,7 +3,7 @@ package app.aaps.core.ui.compose
 import app.aaps.core.keys.UnitType
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 
 /**
  * Maps a [UnitType] to the text that describes it.
@@ -19,16 +19,16 @@ import app.aaps.core.ui.UiStrings
  */
 fun UnitType.unitLabel(): TextRef? = when (this) {
     UnitType.NONE                                         -> null
-    UnitType.GRAMS                                        -> UiStrings.units_grams
-    UnitType.MIN                                          -> UiStrings.units_min
-    UnitType.SEC                                          -> UiStrings.units_sec
-    UnitType.HOURS, UnitType.HOURS_DOUBLE                 -> UiStrings.units_hours
-    UnitType.DAYS                                         -> UiStrings.units_days
-    UnitType.PERCENT                                      -> UiStrings.units_percent
-    UnitType.INSULIN, UnitType.INSULIN_INT                -> UiStrings.units_insulin
-    UnitType.INSULIN_RATE                                 -> UiStrings.units_insulin_rate
+    UnitType.GRAMS                                        -> CoreUiStrings.units_grams
+    UnitType.MIN                                          -> CoreUiStrings.units_min
+    UnitType.SEC                                          -> CoreUiStrings.units_sec
+    UnitType.HOURS, UnitType.HOURS_DOUBLE                 -> CoreUiStrings.units_hours
+    UnitType.DAYS                                         -> CoreUiStrings.units_days
+    UnitType.PERCENT                                      -> CoreUiStrings.units_percent
+    UnitType.INSULIN, UnitType.INSULIN_INT                -> CoreUiStrings.units_insulin
+    UnitType.INSULIN_RATE                                 -> CoreUiStrings.units_insulin_rate
     UnitType.DOUBLE, UnitType.DOUBLE_2, UnitType.DOUBLE_3 -> null // generic doubles carry no unit
-    UnitType.MGDL                                         -> UiStrings.units_mgdl
+    UnitType.MGDL                                         -> CoreUiStrings.units_mgdl
 }
 
 /**
@@ -48,38 +48,38 @@ fun UnitType.rangeText(value: Any, min: Any, max: Any): TextRef? =
  */
 fun UnitType.valueFormat(): TextRef? = when (this) {
     UnitType.NONE         -> null
-    UnitType.GRAMS        -> UiStrings.units_format_grams
-    UnitType.MIN          -> UiStrings.units_format_min
-    UnitType.SEC          -> UiStrings.units_format_sec
-    UnitType.HOURS        -> UiStrings.units_format_hours
-    UnitType.HOURS_DOUBLE -> UiStrings.units_format_hours_double
-    UnitType.DAYS         -> UiStrings.units_format_days
-    UnitType.PERCENT      -> UiStrings.units_format_percent
-    UnitType.INSULIN      -> UiStrings.units_format_insulin
-    UnitType.INSULIN_INT  -> UiStrings.units_format_insulin_int
-    UnitType.INSULIN_RATE -> UiStrings.units_format_insulin_rate
-    UnitType.DOUBLE       -> UiStrings.units_format_double
-    UnitType.DOUBLE_2     -> UiStrings.units_format_double_2
-    UnitType.DOUBLE_3     -> UiStrings.units_format_double_3
-    UnitType.MGDL         -> UiStrings.units_format_mgdl
+    UnitType.GRAMS        -> CoreUiStrings.units_format_grams
+    UnitType.MIN          -> CoreUiStrings.units_format_min
+    UnitType.SEC          -> CoreUiStrings.units_format_sec
+    UnitType.HOURS        -> CoreUiStrings.units_format_hours
+    UnitType.HOURS_DOUBLE -> CoreUiStrings.units_format_hours_double
+    UnitType.DAYS         -> CoreUiStrings.units_format_days
+    UnitType.PERCENT      -> CoreUiStrings.units_format_percent
+    UnitType.INSULIN      -> CoreUiStrings.units_format_insulin
+    UnitType.INSULIN_INT  -> CoreUiStrings.units_format_insulin_int
+    UnitType.INSULIN_RATE -> CoreUiStrings.units_format_insulin_rate
+    UnitType.DOUBLE       -> CoreUiStrings.units_format_double
+    UnitType.DOUBLE_2     -> CoreUiStrings.units_format_double_2
+    UnitType.DOUBLE_3     -> CoreUiStrings.units_format_double_3
+    UnitType.MGDL         -> CoreUiStrings.units_format_mgdl
 }
 
 private fun UnitType.rangeFormat(): TextRef? = when (this) {
     UnitType.NONE         -> null
-    UnitType.GRAMS        -> UiStrings.units_format_grams_range
-    UnitType.MIN          -> UiStrings.units_format_min_range
-    UnitType.SEC          -> UiStrings.units_format_sec_range
-    UnitType.HOURS        -> UiStrings.units_format_hours_range
-    UnitType.HOURS_DOUBLE -> UiStrings.units_format_hours_double_range
-    UnitType.DAYS         -> UiStrings.units_format_days_range
-    UnitType.PERCENT      -> UiStrings.units_format_percent_range
-    UnitType.INSULIN      -> UiStrings.units_format_insulin_range
-    UnitType.INSULIN_INT  -> UiStrings.units_format_insulin_int_range
-    UnitType.INSULIN_RATE -> UiStrings.units_format_insulin_rate_range
-    UnitType.DOUBLE       -> UiStrings.units_format_double_range
-    UnitType.DOUBLE_2     -> UiStrings.units_format_double_2_range
-    UnitType.DOUBLE_3     -> UiStrings.units_format_double_3_range
-    UnitType.MGDL         -> UiStrings.units_format_mgdl_range
+    UnitType.GRAMS        -> CoreUiStrings.units_format_grams_range
+    UnitType.MIN          -> CoreUiStrings.units_format_min_range
+    UnitType.SEC          -> CoreUiStrings.units_format_sec_range
+    UnitType.HOURS        -> CoreUiStrings.units_format_hours_range
+    UnitType.HOURS_DOUBLE -> CoreUiStrings.units_format_hours_double_range
+    UnitType.DAYS         -> CoreUiStrings.units_format_days_range
+    UnitType.PERCENT      -> CoreUiStrings.units_format_percent_range
+    UnitType.INSULIN      -> CoreUiStrings.units_format_insulin_range
+    UnitType.INSULIN_INT  -> CoreUiStrings.units_format_insulin_int_range
+    UnitType.INSULIN_RATE -> CoreUiStrings.units_format_insulin_rate_range
+    UnitType.DOUBLE       -> CoreUiStrings.units_format_double_range
+    UnitType.DOUBLE_2     -> CoreUiStrings.units_format_double_2_range
+    UnitType.DOUBLE_3     -> CoreUiStrings.units_format_double_3_range
+    UnitType.MGDL         -> CoreUiStrings.units_format_mgdl_range
 }
 
 /** True when this unit should be rendered as a duration ("1 h 30 min") rather than a plain number. */

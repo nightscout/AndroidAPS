@@ -14,7 +14,7 @@ import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.implementation.ImplementationStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -51,15 +51,15 @@ class ConcentrationHelperImpl @Inject constructor(
 
     override fun basalRateString(rate: PumpRate, isAbsolute: Boolean, decimals: Int): String {
         if (isAbsolute.not())
-            return rh.gs(UiStrings.formatPercent, rate.iU(concentration, isAbsolute))
+            return rh.gs(CoreUiStrings.formatPercent, rate.iU(concentration, isAbsolute))
         // Was "%.${decimals}f". String.format is JVM only; NumberFormat is the multiplatform
         // equivalent, and HALF_UP is stated explicitly because that is what String.format did - the
         // NumberFormat default is HALF_EVEN, which would round a tie the other way.
         val fmt = NumberFormat(minFractionDigits = decimals, rounding = NumberRounding.HALF_UP)
         if (isU100())
-            return rh.gs(UiStrings.pump_base_basal_rate_dynamic, fmt.format(rate.cU))
+            return rh.gs(CoreUiStrings.pump_base_basal_rate_dynamic, fmt.format(rate.cU))
         else {
-            val iUString = rh.gs(UiStrings.pump_base_basal_rate_dynamic, fmt.format(rate.iU(concentration, isAbsolute)))
+            val iUString = rh.gs(CoreUiStrings.pump_base_basal_rate_dynamic, fmt.format(rate.iU(concentration, isAbsolute)))
             val cUString = rh.gs(ImplementationStrings.pump_base_basal_rate_cu_dynamic, fmt.format(rate.cU))
             return rh.gs(ImplementationStrings.concentration_format, iUString, cUString)
         }

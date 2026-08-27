@@ -16,7 +16,7 @@ import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.keys.interfaces.StringValidator
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.VisibilityContext
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.stringResource
 
 /**
@@ -68,7 +68,7 @@ fun AdaptiveStringPreferenceItem(
             }
 
             isSecure && value.isEmpty()    -> {
-                val notSetResId = if (stringKey.isPin) UiStrings.pin_not_set else UiStrings.password_not_set
+                val notSetResId = if (stringKey.isPin) CoreUiStrings.pin_not_set else CoreUiStrings.password_not_set
                 { Text(stringResource(effectiveSummary ?: notSetResId)) }
             }
 

@@ -33,7 +33,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import kotlin.math.roundToInt
 
 /**
@@ -131,7 +131,7 @@ fun NumberInputRow(
     val rangeText = "${effectiveValueFormat.format(valueRange.start)} — ${effectiveValueFormat.format(valueRange.endInclusive)}"
 
     // Pre-resolve error strings for use in non-composable validateAndCommit
-    val errorInvalidNumber = stringResource(UiStrings.invalid_number)
+    val errorInvalidNumber = stringResource(CoreUiStrings.invalid_number)
 
     fun validateAndCommit(text: String) {
         val cleaned = text.trim().replace(",", ".")
@@ -295,7 +295,7 @@ fun NumberInputRow(
 }
 
 /**
- * Convenience for the many call sites that name their own module's `UiStrings.x`.
+ * Convenience for the many call sites that name their own module's `CoreUiStrings.x`.
  * The [TextRef] form above is the real one; this just wraps the id.
  */
 @Composable

@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.TE
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.core.ui.compose.stringResource
@@ -40,12 +40,12 @@ fun SiteLocationWizardStep(host: SiteLocationStepHost) {
 
     WizardStepLayout(
         primaryButton = WizardButton(
-            text = stringResource(UiStrings.next),
+            text = stringResource(CoreUiStrings.next),
             onClick = { host.completeSiteLocation() },
             enabled = siteLocation != TE.Location.NONE
         ),
         secondaryButton = WizardButton(
-            text = stringResource(UiStrings.skip),
+            text = stringResource(CoreUiStrings.skip),
             onClick = {
                 host.updateSiteLocation(TE.Location.NONE)
                 host.updateSiteArrow(TE.Arrow.NONE)

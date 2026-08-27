@@ -21,7 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import app.aaps.core.interfaces.resources.TextResolver
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 
 /**
  * Reusable toolbar builder for screens with selectable list items.
@@ -61,12 +61,12 @@ fun SelectableListToolbar(
     return if (isRemovingMode) {
         // Selection mode: show count, close icon, and delete action
         ToolbarConfig(
-            title = rh.gs(UiStrings.count_selected, selectedCount),
+            title = rh.gs(CoreUiStrings.count_selected, selectedCount),
             navigationIcon = {
                 IconButton(onClick = onExitRemovingMode) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = rh.gs(UiStrings.close)
+                        contentDescription = rh.gs(CoreUiStrings.close)
                     )
                 }
             },
@@ -75,7 +75,7 @@ fun SelectableListToolbar(
                 IconButton(onClick = onDelete) {
                     Icon(
                         imageVector = Icons.Default.Delete,
-                        contentDescription = rh.gs(UiStrings.delete),
+                        contentDescription = rh.gs(CoreUiStrings.delete),
                         tint = MaterialTheme.colorScheme.error
                     )
                 }
@@ -89,7 +89,7 @@ fun SelectableListToolbar(
                 IconButton(onClick = onNavigateBack) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = rh.gs(UiStrings.back)
+                        contentDescription = rh.gs(CoreUiStrings.back)
                     )
                 }
             },
@@ -100,9 +100,9 @@ fun SelectableListToolbar(
                         Icon(
                             imageVector = if (showInvalidated) Icons.Default.VisibilityOff else Icons.Default.Visibility,
                             contentDescription = if (showInvalidated)
-                                rh.gs(UiStrings.hide_invalidated)
+                                rh.gs(CoreUiStrings.hide_invalidated)
                             else
-                                rh.gs(UiStrings.show_invalidated)
+                                rh.gs(CoreUiStrings.show_invalidated)
                         )
                     }
                 }
@@ -112,7 +112,7 @@ fun SelectableListToolbar(
                     IconButton(onClick = onToggleLoop) {
                         Icon(
                             imageVector = if (showLoop) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                            contentDescription = rh.gs(UiStrings.show_hide_records)
+                            contentDescription = rh.gs(CoreUiStrings.show_hide_records)
                         )
                     }
                 }
@@ -127,7 +127,7 @@ fun SelectableListToolbar(
                     IconButton(onClick = onSettings) {
                         Icon(
                             imageVector = Icons.Default.Settings,
-                            contentDescription = rh.gs(UiStrings.nav_plugin_preferences)
+                            contentDescription = rh.gs(CoreUiStrings.nav_plugin_preferences)
                         )
                     }
                 }
@@ -150,7 +150,7 @@ private fun MenuDropdown(
         IconButton(onClick = { showMenu = true }) {
             Icon(
                 imageVector = Icons.Default.MoreVert,
-                contentDescription = rh.gs(UiStrings.more_options)
+                contentDescription = rh.gs(CoreUiStrings.more_options)
             )
         }
         DropdownMenu(

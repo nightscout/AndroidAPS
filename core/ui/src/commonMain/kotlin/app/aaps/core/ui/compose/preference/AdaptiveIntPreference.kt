@@ -14,7 +14,7 @@ import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.VisibilityContext
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.isDuration
 import app.aaps.core.ui.compose.rangeText
 import app.aaps.core.ui.compose.stringResource
@@ -112,7 +112,7 @@ fun AdaptiveIntPreferenceItem(
         val summaryText = if (rangeRef != null) {
             stringResource(rangeRef)
         } else {
-            stringResource(UiStrings.preference_range_summary, value.toString(), unitLabelText, intKey.min.toString(), intKey.max.toString())
+            stringResource(CoreUiStrings.preference_range_summary, value.toString(), unitLabelText, intKey.min.toString(), intKey.max.toString())
         }
         TextFieldPreference(
             state = state,

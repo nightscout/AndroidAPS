@@ -47,7 +47,7 @@ sealed interface TextRef {
      * A string named rather than numbered, so the declaring code holds nothing Android specific.
      *
      * [name] is the `name` attribute from `strings.xml`. Take these from the generated object for
-     * the owning module - `KeysStrings` for `:core:keys`, `UiStrings` for `:core:ui` - never by
+     * the owning module - `KeysStrings` for `:core:keys`, `CoreUiStrings` for `:core:ui` - never by
      * writing the string out by hand, because only the generated form is checked against the XML at
      * build time.
      *
@@ -80,7 +80,7 @@ sealed interface TextRef {
          *
          * The generated objects hand out argument-free references, because a generator cannot know
          * what a call site wants to substitute. This is how a call site supplies them:
-         * `UiStrings.some_format.withArgs(count, unit)`.
+         * `CoreUiStrings.some_format.withArgs(count, unit)`.
          */
         fun TextRef.withArgs(vararg args: Any?): TextRef = when (this) {
             is Named      -> copy(args = args.toList())

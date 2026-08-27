@@ -5,7 +5,7 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.implementation.ImplementationStrings
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +21,7 @@ import org.robolectric.annotation.Config
 /**
  * A `ui` owned [TextRef.Named] resolves to real text, not to its own name.
  *
- * `:core:ui` is above `:core:interfaces`, so `ResourceHelper` cannot see `UiStringIds` and has to be
+ * `:core:ui` is above `:core:interfaces`, so `ResourceHelper` cannot see `CoreUiStringIds` and has to be
  * told about it - [ResourceHelperImpl] does that from its `init`, through `TextRefIdRegistry`. When
  * that wiring is missing the resolver falls back to returning the raw name, which compiles, passes
  * every mocked test, and shows `read_status` on screen instead of "Read status".
@@ -47,7 +47,7 @@ internal class ResourceHelperImplNamedRefTest {
 
     @Test
     fun `a ui owned name resolves to its string`() {
-        val resolved = sut.gs(UiStrings.read_status)
+        val resolved = sut.gs(CoreUiStrings.read_status)
         assertThat(resolved).isNotEqualTo("read_status")
         assertThat(resolved).isNotEmpty()
     }
@@ -55,7 +55,7 @@ internal class ResourceHelperImplNamedRefTest {
     @Test
     fun `format arguments reach the ui owned string`() {
         // read_status carries one %s. Going through the name must format exactly as the id does.
-        assertThat(sut.gs(UiStrings.read_status, "because"))
+        assertThat(sut.gs(CoreUiStrings.read_status, "because"))
             .isEqualTo(sut.gs(app.aaps.core.ui.R.string.read_status, "because"))
     }
 

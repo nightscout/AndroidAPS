@@ -23,7 +23,7 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.extensions.asAnnouncement
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.implementation.alerts.keys.LocalAlertLongKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -71,21 +71,21 @@ class LocalAlertUtilsImpl @Inject constructor(
             if (preferences.get(BooleanKey.AlertPumpUnreachable)) {
                 aapsLogger.debug(LTag.CORE, "Generating pump unreachable alarm. lastConnection: " + dateUtil.dateAndTimeString(lastConnection) + " isStatusOutdated: true")
                 preferences.put(LocalAlertLongKey.NextPumpDisconnectedAlarm, dateUtil.now() + pumpUnreachableThreshold())
-                notificationManager.post(NotificationId.PUMP_UNREACHABLE, UiStrings.pump_unreachable, sound = AlarmSound.ALARM)
+                notificationManager.post(NotificationId.PUMP_UNREACHABLE, CoreUiStrings.pump_unreachable, sound = AlarmSound.ALARM)
                 if (preferences.get(BooleanKey.NsClientCreateAnnouncementsFromErrors) && config.APS)
                     appScope.launch {
                         persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
-                            therapyEvent = TE.asAnnouncement(rh.gs(UiStrings.pump_unreachable)),
+                            therapyEvent = TE.asAnnouncement(rh.gs(CoreUiStrings.pump_unreachable)),
                             timestamp = dateUtil.now(),
                             action = Action.CAREPORTAL,
                             source = Sources.Aaps,
-                            note = rh.gs(UiStrings.pump_unreachable),
+                            note = rh.gs(CoreUiStrings.pump_unreachable),
                             listValues = listOf(ValueWithUnit.TEType(TE.Type.ANNOUNCEMENT))
                         )
                     }
             }
             if (preferences.get(BooleanKey.SmsReportPumpUnreachable))
-                smsCommunicator.sendNotificationToAllNumbers(rh.gs(UiStrings.pump_unreachable))
+                smsCommunicator.sendNotificationToAllNumbers(rh.gs(CoreUiStrings.pump_unreachable))
         }
         if (!isStatusOutdated && !alarmTimeoutExpired) notificationManager.dismiss(NotificationId.PUMP_UNREACHABLE)
     }
@@ -138,15 +138,15 @@ class LocalAlertUtilsImpl @Inject constructor(
             && preferences.get(LocalAlertLongKey.NextMissedReadingsAlarm) < dateUtil.now()
         ) {
             preferences.put(LocalAlertLongKey.NextMissedReadingsAlarm, dateUtil.now() + missedReadingsThreshold())
-            notificationManager.post(NotificationId.BG_READINGS_MISSED, UiStrings.missed_bg_readings, sound = AlarmSound.ALARM)
+            notificationManager.post(NotificationId.BG_READINGS_MISSED, CoreUiStrings.missed_bg_readings, sound = AlarmSound.ALARM)
             if (preferences.get(BooleanKey.NsClientCreateAnnouncementsFromErrors) && config.APS) {
                 appScope.launch {
                     persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
-                        therapyEvent = TE.asAnnouncement(rh.gs(UiStrings.missed_bg_readings)),
+                        therapyEvent = TE.asAnnouncement(rh.gs(CoreUiStrings.missed_bg_readings)),
                         timestamp = dateUtil.now(),
                         action = Action.CAREPORTAL,
                         source = Sources.Aaps,
-                        note = rh.gs(UiStrings.missed_bg_readings),
+                        note = rh.gs(CoreUiStrings.missed_bg_readings),
                         listValues = listOf(ValueWithUnit.TEType(TE.Type.ANNOUNCEMENT))
                     )
                 }

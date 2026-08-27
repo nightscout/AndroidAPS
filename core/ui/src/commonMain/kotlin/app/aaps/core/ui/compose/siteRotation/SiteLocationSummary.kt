@@ -16,7 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.TE
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.icons.IcCannulaChange
 import app.aaps.core.ui.compose.icons.IcCgmInsert
@@ -65,21 +65,21 @@ fun SiteLocationSummary(
 
             if (hasSelection) {
                 Text(
-                    text = stringResource(UiStrings.selected_location, selectedLocationString),
+                    text = stringResource(CoreUiStrings.selected_location, selectedLocationString),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.weight(1f)
                 )
             } else if (lastLocationString != null) {
                 Text(
-                    text = stringResource(UiStrings.last_site_location, lastLocationString),
+                    text = stringResource(CoreUiStrings.last_site_location, lastLocationString),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.weight(1f)
                 )
             } else {
                 Text(
-                    text = stringResource(UiStrings.select_site_location),
+                    text = stringResource(CoreUiStrings.select_site_location),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.weight(1f)
@@ -87,7 +87,7 @@ fun SiteLocationSummary(
             }
 
             OutlinedButton(onClick = onPickSiteClick) {
-                Text(stringResource(UiStrings.pick_site))
+                Text(stringResource(CoreUiStrings.pick_site))
             }
         }
     }

@@ -9,7 +9,7 @@ import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.cancel
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.implementation.pump.PumpEnactResultObject
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -77,7 +77,7 @@ class CommandSetProfileTest : TestBaseWithProfile() {
         whenever(config.AAPSCLIENT).thenReturn(false)
         whenever(config.isEnabled(eq(ExternalOptions.DO_NOT_SEND_SMS_ON_PROFILE_CHANGE))).thenReturn(false)
         whenever(smsCommunicator.isEnabled()).thenReturn(true)
-        whenever(rh.gs(UiStrings.profile_set_ok)).thenReturn("profile set ok")
+        whenever(rh.gs(CoreUiStrings.profile_set_ok)).thenReturn("profile set ok")
 
         newCommand(hasNsId = true).execute()
 

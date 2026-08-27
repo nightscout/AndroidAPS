@@ -43,7 +43,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.stringResource
 
 /**
@@ -126,7 +126,7 @@ internal fun ClickablePreferenceCategoryHeader(
             if (collapsible) {
                 Icon(
                     imageVector = Icons.Default.ExpandMore,
-                    contentDescription = stringResource(if (expanded) UiStrings.collapse else UiStrings.expand),
+                    contentDescription = stringResource(if (expanded) CoreUiStrings.collapse else CoreUiStrings.expand),
                     modifier = Modifier
                         .size(theme.expandIconSize)
                         .graphicsLayer { rotationZ = rotationAngle.value }
