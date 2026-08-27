@@ -6,8 +6,9 @@ import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.sync.NsClient
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 
 /**
  * The shared role branch for the two-step relayed execution path — extracted from [BatchExecutorImpl] and
@@ -17,8 +18,9 @@ import javax.inject.Singleton
  * to dispatch and the master executor call to make — both supplied by the caller — so the gate, the round-trip,
  * and the `PrepareResult`/`ConfirmResult` → [ActionProgress] mapping live exactly once here.
  */
-@Singleton
-class RoleBranch @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class RoleBranch(
     private val dispatcher: ClientControlActionDispatcher,
     private val nsClient: NsClient,
     private val config: Config
