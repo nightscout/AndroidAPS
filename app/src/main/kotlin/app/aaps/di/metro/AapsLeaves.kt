@@ -116,7 +116,6 @@ class AapsLeaves(
     // Automation.
     private val uiInteractionProvider: Provider<UiInteraction>,
     // Constraints.
-    private val versionCheckerUtilsProvider: Provider<VersionCheckerUtils>,
     // Still Dagger-owned, and needed by the scene classes that moved to Metro.
     // Dagger-owned on purpose: it is bound from XdripPlugin, which is still in the Dagger plugin list.
     // Contributing it would have Metro build a second copy of that plugin.
@@ -158,7 +157,6 @@ class AapsLeaves(
     @ApplicationContext private val appContextProvider: Provider<Context>,
     private val nsClientProvider: Provider<NsClient>,
     private val clientControlActionDispatcherProvider: Provider<ClientControlActionDispatcher>,
-    private val sntpClientProvider: Provider<SntpClient>
 ) {
 
     /**
@@ -205,8 +203,6 @@ class AapsLeaves(
 
     @Provides fun uiInteraction(): UiInteraction = uiInteractionProvider.get()
 
-    @Provides fun versionCheckerUtils(): VersionCheckerUtils = versionCheckerUtilsProvider.get()
-    @Provides fun sntpClient(): SntpClient = sntpClientProvider.get()
 
     /** A value object: unscoped, as its Dagger binding is. */
     @Provides fun historyScope(): HistoryScope = historyScopeProvider.get()

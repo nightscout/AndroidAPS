@@ -223,6 +223,8 @@ class CoreObjectsModule {
     // exactly one contributor - AutomationRuntime itself - as it did under the Dagger @IntoSet.
     @Provides @Singleton fun provideProfileFunction(graphs: MetroGraphs): ProfileFunction = graphs.profileFunction
 
+    @Provides @Singleton fun provideVersionCheckerUtils(graphs: MetroGraphs): VersionCheckerUtils = graphs.versionCheckerUtils
+
     @Provides @Singleton fun provideAutomation(graphs: MetroGraphs): Automation = graphs.automation
 
     @Provides @Singleton fun provideAutomationRuntime(graphs: MetroGraphs): AutomationRuntime = graphs.automationRuntime
@@ -493,7 +495,6 @@ class CoreObjectsModule {
         overviewDataCacheFactoryProvider: Provider<OverviewDataCacheFactory>,
         contextProvider: Provider<Context>,
         uiInteractionProvider: Provider<UiInteraction>,
-        versionCheckerUtilsProvider: Provider<VersionCheckerUtils>,
         smsCommunicatorPluginProvider: Provider<SmsCommunicatorPlugin>,
         nsClientV3PluginProvider: Provider<NSClientV3Plugin>,
         wearPluginProvider: Provider<WearPlugin>,
@@ -511,7 +512,6 @@ class CoreObjectsModule {
         @ApplicationContext appContextProvider: Provider<Context>,
         nsClientProvider: Provider<NsClient>,
         clientControlActionDispatcherProvider: Provider<ClientControlActionDispatcher>,
-        sntpClientProvider: Provider<SntpClient>
     ): AapsLeaves = AapsLeaves(
         metroMemberInjectorProvider,
         appScopeProvider,
@@ -526,7 +526,6 @@ class CoreObjectsModule {
         overviewDataCacheFactoryProvider,
         contextProvider,
         uiInteractionProvider,
-        versionCheckerUtilsProvider,
         smsCommunicatorPluginProvider,
         nsClientV3PluginProvider,
         wearPluginProvider,
@@ -544,6 +543,5 @@ class CoreObjectsModule {
         appContextProvider,
         nsClientProvider,
         clientControlActionDispatcherProvider,
-        sntpClientProvider
     )
 }

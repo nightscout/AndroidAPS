@@ -96,6 +96,7 @@ import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.interfaces.widget.WidgetUpdater
 import app.aaps.core.interfaces.workflow.CalculationSignals
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
@@ -370,6 +371,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val profileUtil: ProfileUtil
     val hardLimits: HardLimits
     val profileFunction: ProfileFunction
+    val versionCheckerUtils: VersionCheckerUtils
     val storage: Storage
     val receiverStatusStore: ReceiverStatusStore
 
