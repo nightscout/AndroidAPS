@@ -82,6 +82,12 @@ struct ShellView: View {
 
             Divider().padding(.vertical, 4)
 
+            Text(info.checkLogging())
+                .font(.caption.monospaced())
+                .multilineTextAlignment(.leading)
+
+            Divider().padding(.vertical, 4)
+
             // AAPS's own Compose UI, rendered by iOS rather than described by SwiftUI.
             AapsComposeView()
                 .frame(height: 200)

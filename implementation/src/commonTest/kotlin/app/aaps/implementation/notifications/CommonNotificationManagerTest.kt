@@ -1,33 +1,35 @@
 package app.aaps.implementation.notifications
 
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.shared.tests.TestBase
-import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Test
-import org.mockito.Mock
-import org.mockito.kotlin.any
-import org.mockito.kotlin.whenever
+import kotlin.test.Test
+import kotlin.test.assertContains
+import kotlin.test.assertEquals
+import kotlin.test.assertNotEquals
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 /**
  * Covers the notification registry, which is the part that is the same on every platform.
  *
- * The system tray is a recording fake rather than a mock, because most of what matters here is the
- * *order* of what reaches the platform - which notification is cancelled before which is shown, and
- * which alarm is handed the sound afterwards.
+ * In `commonTest` rather than `androidHostTest` on purpose: this class was moved to `commonMain` so
+ * that iOS could use it, and a test that only runs on the JVM would say nothing about that. Running
+ * here means it runs on both the JVM and the iOS simulator. The cost is no Mockito, which is JVM
+ * only - hence the hand written fakes below, which suit this test anyway because most of what
+ * matters is the *order* of what reaches the platform.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
-class CommonNotificationManagerTest : TestBase() {
-
-    @Mock lateinit var rh: TextResolver
+class CommonNotificationManagerTest {
 
     /** Records what the platform was asked to do, in order. */
     private class RecordingPlatform : SystemNotificationPlatform {
@@ -59,14 +61,44 @@ class CommonNotificationManagerTest : TestBase() {
         override fun onDismissed(callback: (Int) -> Unit) {}
     }
 
+    /** Returns the literal for a [TextRef.Literal] and a fixed marker for anything else. */
+    private object FakeTextResolver : TextResolver {
+
+        override fun gs(ref: TextRef): String = (ref as? TextRef.Literal)?.text ?: "title"
+        override fun gs(ref: TextRef, vararg args: Any?): String = gs(ref)
+        override fun gsNotLocalised(ref: TextRef): String = gs(ref)
+        override fun shortTextMode(): Boolean = false
+    }
+
+    private object SilentLogger : AAPSLogger {
+
+        override fun debug(message: String) {}
+        override fun debug(enable: Boolean, tag: LTag, message: String) {}
+        override fun debug(tag: LTag, message: String) {}
+        override fun debug(tag: LTag, accessor: () -> String) {}
+        override fun debug(tag: LTag, format: String, vararg arguments: Any?) {}
+        override fun warn(tag: LTag, message: String) {}
+        override fun warn(tag: LTag, format: String, vararg arguments: Any?) {}
+        override fun info(tag: LTag, message: String) {}
+        override fun info(tag: LTag, format: String, vararg arguments: Any?) {}
+        override fun error(tag: LTag, message: String) {}
+        override fun error(tag: LTag, message: String, throwable: Throwable) {}
+        override fun error(tag: LTag, format: String, vararg arguments: Any?) {}
+        override fun error(message: String) {}
+        override fun error(message: String, throwable: Throwable) {}
+        override fun error(format: String, vararg arguments: Any?) {}
+        override fun debug(className: String, methodName: String, lineNumber: Int, tag: LTag, message: String) {}
+        override fun info(className: String, methodName: String, lineNumber: Int, tag: LTag, message: String) {}
+        override fun warn(className: String, methodName: String, lineNumber: Int, tag: LTag, message: String) {}
+        override fun error(className: String, methodName: String, lineNumber: Int, tag: LTag, message: String) {}
+    }
+
     private val platform = RecordingPlatform()
 
-    private fun createSut(): CommonNotificationManager {
-        // The registry resolves a title for every post. Tests that care about a specific TextRef
-        // stub it after this call, so their narrower stubbing wins.
-        whenever(rh.gs(any<TextRef>())).thenReturn("title")
-        return CommonNotificationManager(aapsLogger, rh, platform, TestScope(UnconfinedTestDispatcher()))
-    }
+    private fun createSut() =
+        CommonNotificationManager(SilentLogger, FakeTextResolver, platform, TestScope(UnconfinedTestDispatcher()))
+
+    private fun texts(sut: CommonNotificationManager) = sut.notifications.value.map { it.text }
 
     // ---------------------------------------------------------------------------------------------
     // The registry
@@ -78,8 +110,8 @@ class CommonNotificationManagerTest : TestBase() {
 
         val handle = sut.post(NotificationId.TOAST_ALARM, "over the limit")
 
-        assertThat(sut.notifications.value.map { it.text }).containsExactly("over the limit")
-        assertThat(platform.calls).contains("show:${handle.instanceKey}:over the limit:urgent=true")
+        assertEquals(listOf("over the limit"), texts(sut))
+        assertContains(platform.calls, "show:${handle.instanceKey}:over the limit:urgent=true")
     }
 
     /** allowMultiple = false, so a second post of the same id replaces the first rather than adding. */
@@ -90,7 +122,7 @@ class CommonNotificationManagerTest : TestBase() {
 
         sut.post(NotificationId.TOAST_ALARM, "second")
 
-        assertThat(sut.notifications.value.map { it.text }).containsExactly("second")
+        assertEquals(listOf("second"), texts(sut))
     }
 
     /** allowMultiple = true, so these are separate notifications with separate keys. */
@@ -101,18 +133,18 @@ class CommonNotificationManagerTest : TestBase() {
         val first = sut.post(NotificationId.AUTOMATION_MESSAGE, "one")
         val second = sut.post(NotificationId.AUTOMATION_MESSAGE, "two")
 
-        assertThat(first.instanceKey).isNotEqualTo(second.instanceKey)
-        assertThat(sut.notifications.value.map { it.text }).containsExactly("one", "two")
+        assertNotEquals(first.instanceKey, second.instanceKey)
+        assertEquals(listOf("one", "two"), texts(sut))
     }
 
     @Test
-    fun `the list is ordered by level, most severe first`() = runTest {
+    fun `the list is ordered by level - most severe first`() = runTest {
         val sut = createSut()
 
         sut.post(NotificationId.SCENE_ENDED, "info", level = NotificationLevel.INFO)
         sut.post(NotificationId.TOAST_ALARM, "urgent", level = NotificationLevel.URGENT)
 
-        assertThat(sut.notifications.value.map { it.text }).containsExactly("urgent", "info").inOrder()
+        assertEquals(listOf("urgent", "info"), texts(sut))
     }
 
     @Test
@@ -123,8 +155,8 @@ class CommonNotificationManagerTest : TestBase() {
 
         sut.dismiss(first)
 
-        assertThat(sut.notifications.value.map { it.text }).containsExactly("two")
-        assertThat(platform.calls).contains("cancel:${first.instanceKey}")
+        assertEquals(listOf("two"), texts(sut))
+        assertContains(platform.calls, "cancel:${first.instanceKey}")
     }
 
     @Test
@@ -135,7 +167,7 @@ class CommonNotificationManagerTest : TestBase() {
 
         sut.dismiss(NotificationId.AUTOMATION_MESSAGE)
 
-        assertThat(sut.notifications.value).isEmpty()
+        assertTrue(sut.notifications.value.isEmpty())
     }
 
     /** Dismissing something that is not there must not touch the list or the platform. */
@@ -147,8 +179,8 @@ class CommonNotificationManagerTest : TestBase() {
 
         sut.dismiss(NotificationId.AUTOMATION_MESSAGE)
 
-        assertThat(sut.notifications.value.map { it.text }).containsExactly("kept")
-        assertThat(platform.calls).isEmpty()
+        assertEquals(listOf("kept"), texts(sut))
+        assertTrue(platform.calls.isEmpty())
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -163,7 +195,7 @@ class CommonNotificationManagerTest : TestBase() {
         // Any later write runs the expiry sweep.
         sut.post(NotificationId.TOAST_ALARM, "fresh")
 
-        assertThat(sut.notifications.value.map { it.text }).containsExactly("fresh")
+        assertEquals(listOf("fresh"), texts(sut))
     }
 
     @Test
@@ -173,7 +205,7 @@ class CommonNotificationManagerTest : TestBase() {
 
         sut.cleanUp()
 
-        assertThat(sut.notifications.value.map { it.text }).containsExactly("forever")
+        assertEquals(listOf("forever"), texts(sut))
     }
 
     @Test
@@ -181,12 +213,12 @@ class CommonNotificationManagerTest : TestBase() {
         var stillValid = true
         val sut = createSut()
         sut.post(NotificationId.SCENE_ENDED, "conditional", validityCheck = { stillValid })
-        assertThat(sut.notifications.value).hasSize(1)
+        assertEquals(1, sut.notifications.value.size)
 
         stillValid = false
         sut.cleanUp()
 
-        assertThat(sut.notifications.value).isEmpty()
+        assertTrue(sut.notifications.value.isEmpty())
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -199,8 +231,8 @@ class CommonNotificationManagerTest : TestBase() {
 
         val handle = sut.post(NotificationId.TOAST_ALARM, "alarm", sound = AlarmSound.ERROR)
 
-        assertThat(platform.audibleKey).isEqualTo(handle.instanceKey)
-        assertThat(platform.audibleSound).isEqualTo(AlarmSound.ERROR)
+        assertEquals(handle.instanceKey, platform.audibleKey)
+        assertEquals(AlarmSound.ERROR, platform.audibleSound)
     }
 
     /** Sound is gated on URGENT: a sound on a lower level is deliberately ignored. */
@@ -210,7 +242,7 @@ class CommonNotificationManagerTest : TestBase() {
 
         sut.post(NotificationId.SCENE_ENDED, "quiet", level = NotificationLevel.INFO, sound = AlarmSound.ERROR)
 
-        assertThat(platform.audibleKey).isNull()
+        assertNull(platform.audibleKey)
     }
 
     /** The whole point of the owner slot: a second alarm must not restart the first one's sound. */
@@ -221,8 +253,8 @@ class CommonNotificationManagerTest : TestBase() {
 
         val newer = sut.post(NotificationId.EOFLOW_PATCH_ALERT, "newer", date = 2_000L, sound = AlarmSound.ALARM)
 
-        assertThat(platform.audibleKey).isEqualTo(newer.instanceKey)
-        assertThat(platform.audibleSound).isEqualTo(AlarmSound.ALARM)
+        assertEquals(newer.instanceKey, platform.audibleKey)
+        assertEquals(AlarmSound.ALARM, platform.audibleSound)
     }
 
     /** Dismissing the audible one promotes the next remaining alarm rather than going silent. */
@@ -231,12 +263,12 @@ class CommonNotificationManagerTest : TestBase() {
         val sut = createSut()
         val older = sut.post(NotificationId.EOFLOW_PATCH_ALERT, "older", date = 1_000L, sound = AlarmSound.ERROR)
         val newer = sut.post(NotificationId.EOFLOW_PATCH_ALERT, "newer", date = 2_000L, sound = AlarmSound.ALARM)
-        assertThat(platform.audibleKey).isEqualTo(newer.instanceKey)
+        assertEquals(newer.instanceKey, platform.audibleKey)
 
         sut.dismiss(newer)
 
-        assertThat(platform.audibleKey).isEqualTo(older.instanceKey)
-        assertThat(platform.audibleSound).isEqualTo(AlarmSound.ERROR)
+        assertEquals(older.instanceKey, platform.audibleKey)
+        assertEquals(AlarmSound.ERROR, platform.audibleSound)
     }
 
     /** Reposting while the same alarm still owns the audio must not re-trigger the sound. */
@@ -248,7 +280,7 @@ class CommonNotificationManagerTest : TestBase() {
 
         sut.post(NotificationId.SCENE_ENDED, "unrelated", level = NotificationLevel.INFO)
 
-        assertThat(platform.audibleCallCount).isEqualTo(callsAfterFirst)
+        assertEquals(callsAfterFirst, platform.audibleCallCount)
     }
 
     @Test
@@ -258,8 +290,8 @@ class CommonNotificationManagerTest : TestBase() {
 
         sut.dismiss(handle)
 
-        assertThat(platform.audibleKey).isNull()
-        assertThat(platform.audibleSound).isNull()
+        assertNull(platform.audibleKey)
+        assertNull(platform.audibleSound)
     }
 
     @Test
@@ -270,9 +302,9 @@ class CommonNotificationManagerTest : TestBase() {
 
         sut.muteAllAlarms()
 
-        assertThat(sut.notifications.value.map { it.text }).containsExactly("quiet")
-        assertThat(platform.audibleKey).isNull()
-        assertThat(platform.calls).contains("cancelAll")
+        assertEquals(listOf("quiet"), texts(sut))
+        assertNull(platform.audibleKey)
+        assertContains(platform.calls, "cancelAll")
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -281,12 +313,10 @@ class CommonNotificationManagerTest : TestBase() {
 
     @Test
     fun `a TextRef is resolved when it is posted`() = runTest {
-        val ref = TextRef.Literal("resolved text")
         val sut = createSut()
-        whenever(rh.gs(ref)).thenReturn("resolved text")
 
-        sut.post(NotificationId.SCENE_ENDED, ref)
+        sut.post(NotificationId.SCENE_ENDED, TextRef.Literal("resolved text"))
 
-        assertThat(sut.notifications.value.map { it.text }).containsExactly("resolved text")
+        assertEquals(listOf("resolved text"), texts(sut))
     }
 }

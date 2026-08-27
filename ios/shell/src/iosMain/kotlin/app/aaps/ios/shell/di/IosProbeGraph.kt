@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.database.AppRepository
 import app.aaps.database.di.IosAppDatabaseBuilder
@@ -21,10 +22,16 @@ import app.aaps.shared.impl.utils.IosDateFormatPlatform
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import app.aaps.implementation.logging.AAPSLoggerIos
+import app.aaps.plugins.calibration.LinearCalibrationPlugin
 import app.aaps.plugins.calibration.NoCalibrationPlugin
+import app.aaps.plugins.sensitivity.SensitivityAAPSPlugin
+import app.aaps.plugins.sensitivity.SensitivityOref1Plugin
+import app.aaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
 import app.aaps.plugins.smoothing.AvgSmoothingPlugin
 import app.aaps.plugins.smoothing.ExponentialSmoothingPlugin
 import app.aaps.plugins.smoothing.NoSmoothingPlugin
+import app.aaps.plugins.smoothing.UnscentedKalmanFilterPlugin
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Provides
@@ -42,28 +49,20 @@ import dev.zacsweers.metro.SingleIn
  * rather than a private scope invented for the test, so the `@SingleIn(AppScope::class)` on the
  * plugins is the real annotation being honoured.
  *
- * ## What is in here, and why not more
+ * ## What is in here
  *
- * Leaves only: a class goes in when Metro can build it from what this module already supplies,
- * which is a logger and a text resolver. Those four are not a sample, they are all of them - every
- * `@Inject` class in commonMain whose constructor needs nothing else.
+ * It started as leaves only - the four plugins whose constructors needed nothing but a logger and a
+ * text resolver - because everything else was held back by an interface with no common
+ * implementation. That list is now empty. `DateUtil`, `Preferences`, `PersistenceLayer`,
+ * `ActivePlugin`, `NotificationManager`, `ProfileUtil` and `RxBus` all resolve here, so the five
+ * plugins that were listed as blocked are built below, from real AAPS code with nothing faked under
+ * them.
  *
- * The rest are held back by an interface with no iOS implementation, not by anything about Metro:
+ * One fake is left, `ProbeTextResolver`, because resources are not a Metro problem: strings live in
+ * Android resource files and iOS has no reader for them yet.
  *
- * | class                             | still needs                                              |
- * |-----------------------------------|----------------------------------------------------------|
- * | `SensitivityOref1Plugin`          | DateUtil, Preferences                                     |
- * | `SensitivityAAPSPlugin`           | DateUtil, Preferences, ActivePlugin                       |
- * | `SensitivityWeightedAveragePlugin`| DateUtil, Preferences, ActivePlugin                       |
- * | `UnscentedKalmanFilterPlugin`     | Preferences, PersistenceLayer                             |
- * | `LinearCalibrationPlugin`         | DateUtil, PersistenceLayer, NotificationManager, RxBus, ProfileUtil, GlucoseStatusProvider |
- *
- * Add each one here as its dependencies gain common implementations. Faking them instead would
- * only test the fake: `PersistenceLayer` alone has 217 members, `Preferences` 76, `DateUtil` 66.
- * `RxBus` and `GlucoseStatusProvider` have two each, so the sensitivity plugins are the cheapest
- * next step, and they unlock three of the five at once.
- *
- * Metro only validates what a graph can reach, so leaving the others out costs nothing.
+ * To find what is still missing, add an accessor for it and read the `[Metro/MissingBinding]` error.
+ * `_dcs/ios_blockers.md` holds the current list and the procedure.
  */
 @DependencyGraph(AppScope::class)
 interface IosProbeGraph {
@@ -73,13 +72,31 @@ interface IosProbeGraph {
     val exponentialSmoothing: ExponentialSmoothingPlugin
     val noCalibration: NoCalibrationPlugin
 
+    /**
+     * The five that used to be held back.
+     *
+     * Each was blocked by an interface with no common implementation - DateUtil, Preferences,
+     * ActivePlugin, PersistenceLayer, NotificationManager. All of those now resolve, so these build
+     * from real AAPS code with nothing faked underneath them.
+     */
+    val sensitivityOref1: SensitivityOref1Plugin
+    val sensitivityAAPS: SensitivityAAPSPlugin
+    val sensitivityWeightedAverage: SensitivityWeightedAveragePlugin
+    val unscentedKalmanFilter: UnscentedKalmanFilterPlugin
+    val linearCalibration: LinearCalibrationPlugin
+
     /** Real AAPS classes, built from the iOS implementations underneath them. */
     val dateUtil: DateUtil
     val fabricPrivacy: FabricPrivacy
     val repository: AppRepository
     val notificationManager: NotificationManager
+    val logger: AAPSLogger
+    val preferences: Preferences
 
-    @Provides fun logger(): AAPSLogger = ProbeLogger
+    /** The real iOS logger: NSLog for the console, a rotating file for afterwards. */
+    @Provides
+    @SingleIn(AppScope::class)
+    fun logger(): AAPSLogger = AAPSLoggerIos()
     @Provides fun textResolver(): TextResolver = ProbeTextResolver
 
     /** NSUserDefaults, the same store the preference layer will sit on. */
