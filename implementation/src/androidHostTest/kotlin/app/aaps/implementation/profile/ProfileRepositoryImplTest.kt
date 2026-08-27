@@ -1,5 +1,6 @@
 package app.aaps.implementation.profile
 
+import app.aaps.core.data.model.data.Block
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.profile.SingleProfile
 import app.aaps.core.keys.LongNonKey
@@ -9,7 +10,7 @@ import app.aaps.core.keys.ProfileIntKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.objects.extensions.singleBlock
 import app.aaps.core.objects.extensions.singleTargetBlock
-import app.aaps.core.objects.extensions.toJSONArray
+import app.aaps.core.objects.extensions.toJsonArray
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import dev.zacsweers.metro.Provider
@@ -42,6 +43,13 @@ import java.util.TimeZone
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class ProfileRepositoryImplTest : TestBaseWithProfile() {
+
+    /**
+     * The fixtures below build `org.json` documents, which is what the repository is fed in
+     * production - a stored string. Production itself no longer holds `org.json`, so the bridge that
+     * used to live in `:core:objects` is here instead, where the fixtures are.
+     */
+    private fun List<Block>.asJSONArray(): JSONArray = JSONArray(toJsonArray().toString())
 
     private fun profile(name: String) = SingleProfile(
         name = name,
@@ -77,11 +85,11 @@ class ProfileRepositoryImplTest : TestBaseWithProfile() {
                         JSONObject()
                             .put("name", name)
                             .put("mgdl", true)
-                            .put("ic", singleBlock(15.0).toJSONArray())
-                            .put("isf", singleBlock(100.0).toJSONArray())
-                            .put("basal", singleBlock(0.1).toJSONArray())
-                            .put("targetLow", singleBlock(110.0).toJSONArray())
-                            .put("targetHigh", singleBlock(120.0).toJSONArray())
+                            .put("ic", singleBlock(15.0).asJSONArray())
+                            .put("isf", singleBlock(100.0).asJSONArray())
+                            .put("basal", singleBlock(0.1).asJSONArray())
+                            .put("targetLow", singleBlock(110.0).asJSONArray())
+                            .put("targetHigh", singleBlock(120.0).asJSONArray())
                     )
                 }
             })
@@ -275,11 +283,11 @@ class ProfileRepositoryImplTest : TestBaseWithProfile() {
         names.forEachIndexed { i, name ->
             whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedName, i)).thenReturn(name)
             whenever(preferences.get(ProfileComposedBooleanKey.LocalProfileNumberedMgdl, i)).thenReturn(true)
-            whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIc, i)).thenReturn(singleBlock(15.0).toJSONArray().toString())
-            whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIsf, i)).thenReturn(singleBlock(100.0).toJSONArray().toString())
-            whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedBasal, i)).thenReturn(singleBlock(0.1).toJSONArray().toString())
-            whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetLow, i)).thenReturn(singleBlock(110.0).toJSONArray().toString())
-            whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetHigh, i)).thenReturn(singleBlock(120.0).toJSONArray().toString())
+            whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIc, i)).thenReturn(singleBlock(15.0).asJSONArray().toString())
+            whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIsf, i)).thenReturn(singleBlock(100.0).asJSONArray().toString())
+            whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedBasal, i)).thenReturn(singleBlock(0.1).asJSONArray().toString())
+            whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetLow, i)).thenReturn(singleBlock(110.0).asJSONArray().toString())
+            whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetHigh, i)).thenReturn(singleBlock(120.0).asJSONArray().toString())
         }
     }
 

@@ -90,7 +90,7 @@ they should become one. When these move to Metro:
 with the Android binding while both exist. Add the annotation when the Android one goes away.
 
 **Windows session, 2026-08-27: started this and stopped, because the interface cannot express what
-Android does today.** `CommonNotificationManager.post` calls `platform.show(...)` unconditionally.
+Android does today.** `CommonNotificationManager.post` called `platform.show(...)` unconditionally.
 `NotificationManagerImpl` does not - it picks one of three paths:
 
 1. `level == URGENT && sound != null` -> `alarmNotificationManager.postSilentAlarmNotification(...)`,
@@ -99,14 +99,27 @@ Android does today.** `CommonNotificationManager.post` calls `platform.show(...)
    the ordinary `NotificationCompat` notification
 3. else nothing at all
 
-`show(instanceKey, title, text, urgent)` carries neither `sound` nor whether there are actions, so an
-Android implementation of it cannot reproduce 1 or 2 - it would either double-notify an alarm that is
-supposed to be silent, or ignore the user's preference. This is alarm behaviour, so it should not be
-guessed at.
+**macOS session: agreed, and fixed - the seam now carries the whole notification.**
 
-Suggestion: extend the interface to `show(instanceKey, title, text, urgent, sound: AlarmSound?,
-hasActions: Boolean)` and let each platform decide. iOS ignores the two new parameters. Whoever owns
-the iOS side should confirm that is the shape they want before it is built.
+```kotlin
+fun show(notification: AapsNotification, title: String)
+```
+
+Rather than adding `sound` and `hasActions` as separate parameters, which is what was suggested,
+`AapsNotification` is passed whole. It is `commonMain` already and is the registry's own currency, so
+Android can express all three paths, and the signature will not have to be widened a third time when
+something needs `date` or `id.category`. `title` stays separate because resolving it needs a
+`TextResolver`, which a platform implementation should not have to carry. An implementation may
+decide to show nothing at all, which is path 3.
+
+`CommonNotificationManagerTest` has a test - `the platform is given the sound and the actions` -
+whose only job is to keep those two fields reaching the platform, so this cannot regress quietly.
+iOS ignores them and says why in `IosSystemNotificationPlatform.show`.
+
+The remaining work is unchanged: take the four classes off `javax.inject`, then delete
+`NotificationManagerImpl` in favour of `CommonNotificationManager` plus an Android
+`SystemNotificationPlatform`. `AlarmSoundPlayerImpl` and `NotificationHolderImpl` are already off
+javax; `NotificationManagerImpl` and `AlarmNotificationManager` are not.
 
 ## Known gaps on the iOS side
 
@@ -148,6 +161,12 @@ Not blockers, and not for the Windows session to fix. Listed so nobody is surpri
   `ProbeLogger` fake. Only `ProbeTextResolver` is still a stand-in.
 - `AapsTheme` renders on iOS (`048cebb42f`) - the AAPS colour scheme and typography, resolved through
   a real `Preferences` on `NSUserDefaults`, not a bare `MaterialTheme`.
+- `BlockJsonAdapters.kt` is **deleted**. `AutotunePlugin` was the last production caller
+  (`47a7a8984d`), so `:core:objects` no longer holds `org.json` for schedules at all. Three test
+  files still build `org.json` fixtures, which is right - that is the shape a stored or downloaded
+  profile arrives in - so each now has a small private bridge to the kotlinx readers instead of a
+  shared production one. `BlockRenderTest`'s `the org json adapter matches the kotlinx renderer` went
+  with the adapter it was guarding.
 - `ConstraintsCheckerImpl` - moved to `commonMain` (`a76cca9e41`)
 - `ProfileRepositoryImpl` - moved to `commonMain`, off `org.json` (`3252f044b1`)
 - `PluginStore` / `PluginPermissions` - split so the registry is no longer Android
