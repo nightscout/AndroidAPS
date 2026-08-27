@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.ksp)
     // Metro is the only DI framework here now: AppRepository comes from DatabaseBindings.
     alias(libs.plugins.metro)
+    id("kotlinx-serialization")
 }
 
 ksp {
@@ -57,6 +58,8 @@ kotlin {
         commonMain {
             dependencies {
                 api(libs.kotlinx.datetime)
+                api(project.dependencies.platform(libs.kotlinx.serialization.bom))
+                api(libs.kotlinx.serialization.json)
                 api(libs.androidx.room.runtime)
             }
         }
@@ -107,5 +110,9 @@ kotlin {
 }
 
 dependencies {
+    // Room only runs for Android: the @Database class is androidMain, because Room rejects the
+    // non-suspend DAO members that TraceableDao declares when a DAO is compiled for a non-Android
+    // target. The entities, DAOs and transactions are still commonMain - they just have no generated
+    // implementation outside Android.
     add("kspAndroid", libs.androidx.room.compiler)
 }
