@@ -8,6 +8,7 @@ import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
+import app.aaps.shared.impl.sharedPreferences.defaultPreferences
 
 /**
  * Android framework objects the graph builds itself, rather than borrowing from Dagger.
@@ -28,7 +29,7 @@ object AppAndroidBindings {
     @Provides
     @SingleIn(AppScope::class)
     fun sharedPreferences(context: Context): SharedPreferences =
-        context.getSharedPreferences("${context.packageName}_preferences", Context.MODE_PRIVATE)
+        defaultPreferences(context)
 
     /**
      * Metro would construct this by itself - it has an `@Inject` constructor - but only the scope makes

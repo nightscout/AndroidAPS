@@ -23,8 +23,6 @@ import java.time.temporal.ChronoField
 import java.time.temporal.ChronoUnit
 import java.util.Locale
 import java.util.regex.Pattern
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -36,8 +34,7 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
 import android.text.format.DateFormat as AndroidDateFormat
 
-@Singleton
-class DateUtilImpl @Inject constructor(
+class DateUtilImpl(
     private val context: Context,
     private val clock: Clock = Clock.systemDefaultZone()
 ) : DateUtil {
