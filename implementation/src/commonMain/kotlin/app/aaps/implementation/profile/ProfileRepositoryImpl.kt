@@ -4,8 +4,8 @@ import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.data.Block
 import app.aaps.core.data.model.data.TargetBlock
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
@@ -20,7 +20,7 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.profile.ProfileValidationError
 import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.profile.SingleProfile
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.LongNonKey
@@ -29,27 +29,24 @@ import app.aaps.core.keys.ProfileComposedStringKey
 import app.aaps.core.keys.ProfileIntKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.objects.extensions.blockFromJsonArray
-import app.aaps.core.objects.extensions.highToJSONArray
+import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
+import app.aaps.core.objects.extensions.blockFromJson
 import app.aaps.core.objects.extensions.highToJsonArray
-import app.aaps.core.objects.extensions.lowToJSONArray
 import app.aaps.core.objects.extensions.lowToJsonArray
 import app.aaps.core.objects.extensions.singleBlock
 import app.aaps.core.objects.extensions.singleTargetBlock
-import app.aaps.core.objects.extensions.targetBlockFromJsonArray
-import app.aaps.core.objects.extensions.toJSONArray
+import app.aaps.core.objects.extensions.targetBlockFromJson
 import app.aaps.core.objects.extensions.toJsonArray
 import app.aaps.core.objects.extensions.toPureProfile
 import app.aaps.core.objects.profile.ProfileSealed
-import app.aaps.core.ui.R
+import app.aaps.core.ui.CoreUiStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
+import kotlin.concurrent.Volatile
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -58,13 +55,21 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.TimeZone
+import kotlinx.serialization.SerializationException
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.add
+import kotlinx.serialization.json.booleanOrNull
+import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.doubleOrNull
+import kotlinx.serialization.json.longOrNull
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonObject
-import org.json.JSONArray
-import org.json.JSONException
-import org.json.JSONObject
-import java.util.TimeZone
 
 /**
  * Single source of truth for the local profile list.
@@ -88,11 +93,13 @@ import java.util.TimeZone
 //
 // `Provider` replaces Dagger's `Lazy`: both defer, and ProfileFunction is a singleton, so the caching
 // difference between them cannot be observed here.
+
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
+
 class ProfileRepositoryImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val preferences: Preferences,
     private val profileFunction: Provider<ProfileFunction>,
     private val profileUtil: ProfileUtil,
@@ -104,7 +111,10 @@ class ProfileRepositoryImpl @Inject constructor(
     private val notificationManager: NotificationManager,
     // Hosts the [StringNonKey.LocalProfileData] collector: the repository is a @Singleton that lives
     // as long as the process, so the collector must live that long too.
-    @ApplicationScope private val appScope: CoroutineScope
+    // Unqualified on purpose: @ApplicationScope is a javax.inject.Qualifier, so it cannot cross
+    // into commonMain. `AapsLeaves.unqualifiedAppScope` hands out the very same scope object, so
+    // this is the same instance the qualifier used to select.
+    private val appScope: CoroutineScope
 ) : ProfileRepository {
 
     private val mutex = Mutex()
@@ -205,7 +215,7 @@ class ProfileRepositoryImpl @Inject constructor(
             return@withLock Result.failure(IndexOutOfBoundsException("clone($index): list size ${profilesList.size}"))
         }
         runCatching {
-            withContext(Dispatchers.IO) {
+            withContext(aapsIoDispatcher) {
                 val original = profilesList[index]
                 profilesList.add(original.copy(name = original.name + " copy"))
                 storeSettingsInternal(timestamp = dateUtil.now())
@@ -219,7 +229,7 @@ class ProfileRepositoryImpl @Inject constructor(
             return@withLock Result.failure(IndexOutOfBoundsException("remove($index): list size ${profilesList.size}"))
         }
         runCatching {
-            withContext(Dispatchers.IO) {
+            withContext(aapsIoDispatcher) {
                 profilesList.removeAt(index)
                 // Invariant: at least one profile always exists. If the user removed the last
                 // one, fabricate a default to fill the slot.
@@ -232,7 +242,7 @@ class ProfileRepositoryImpl @Inject constructor(
 
     override suspend fun add(profile: SingleProfile): Result<Unit> = mutex.withLock {
         runCatching {
-            withContext(Dispatchers.IO) {
+            withContext(aapsIoDispatcher) {
                 profilesList.add(profile)
                 storeSettingsInternal(timestamp = dateUtil.now())
             }
@@ -252,7 +262,7 @@ class ProfileRepositoryImpl @Inject constructor(
             return@withLock Result.success(Unit)
         }
         runCatching {
-            withContext(Dispatchers.IO) {
+            withContext(aapsIoDispatcher) {
                 // Rebuild rather than shuffle in place: storeSettingsInternal rewrites every indexed
                 // preference key from scratch, so the new list only has to be correct, not minimal.
                 profilesList = order.mapTo(ArrayList(order.size)) { profilesList[it] }
@@ -267,7 +277,7 @@ class ProfileRepositoryImpl @Inject constructor(
             return@withLock Result.failure(IndexOutOfBoundsException("replace($index): list size ${profilesList.size}"))
         }
         runCatching {
-            withContext(Dispatchers.IO) {
+            withContext(aapsIoDispatcher) {
                 // No defensive clone needed: SingleProfile is immutable, so the editor keeping its
                 // reference alive after save cannot reach into profilesList.
                 profilesList[index] = profile
@@ -279,7 +289,7 @@ class ProfileRepositoryImpl @Inject constructor(
 
     override suspend fun reset(): Result<Unit> = mutex.withLock {
         runCatching {
-            withContext(Dispatchers.IO) {
+            withContext(aapsIoDispatcher) {
                 loadSettingsInternal()
             }
             snapshot()
@@ -291,7 +301,7 @@ class ProfileRepositoryImpl @Inject constructor(
             // Snapshot only when the store was actually taken. A rejected store changes nothing, and
             // [revision] means "a mutation happened" — bumping it anyway would tell the editor to
             // reload and would throw away whatever the user was typing at that moment.
-            if (withContext(Dispatchers.IO) { loadFromStoreInternal(store) }) snapshot()
+            if (withContext(aapsIoDispatcher) { loadFromStoreInternal(store) }) snapshot()
         }
     }
 
@@ -305,7 +315,7 @@ class ProfileRepositoryImpl @Inject constructor(
         val errors = mutableListOf<ProfileValidationError>()
         with(profile) {
             if (name.isEmpty()) {
-                errors.add(ProfileValidationError(ProfileErrorType.NAME, rh.gs(R.string.missing_profile_name)))
+                errors.add(ProfileValidationError(ProfileErrorType.NAME, rh.gs(CoreUiStrings.missing_profile_name)))
             }
             // A schedule is invalid when it holds no block at all, or when *any* single block is out
             // of range. The "any" matters: checking only the first block would let one bad block hide
@@ -316,22 +326,22 @@ class ProfileRepositoryImpl @Inject constructor(
             // BG values are stored in the profile unit, the limits are always mg/dL.
             fun asMgdl(value: Double): Double = if (mgdl) value else profileUtil.convertToMgdl(value, GlucoseUnit.MMOL)
 
-            fun targetError() = ProfileValidationError(ProfileErrorType.TARGET, rh.gs(R.string.error_in_target_values))
+            fun targetError() = ProfileValidationError(ProfileErrorType.TARGET, rh.gs(CoreUiStrings.error_in_target_values))
 
             if (invalid(ic) { it in hardLimits.icRange() }) {
-                errors.add(ProfileValidationError(ProfileErrorType.IC, rh.gs(R.string.error_in_ic_values)))
+                errors.add(ProfileValidationError(ProfileErrorType.IC, rh.gs(CoreUiStrings.error_in_ic_values)))
             }
             if (invalid(isf) { asMgdl(it) in HardLimits.LIMIT_ISF }) {
-                errors.add(ProfileValidationError(ProfileErrorType.ISF, rh.gs(R.string.error_in_isf_values)))
+                errors.add(ProfileValidationError(ProfileErrorType.ISF, rh.gs(CoreUiStrings.error_in_isf_values)))
             }
             if (invalid(basal) { it in 0.01..hardLimits.maxBasal() }) {
-                errors.add(ProfileValidationError(ProfileErrorType.BASAL, rh.gs(R.string.error_in_basal_values)))
+                errors.add(ProfileValidationError(ProfileErrorType.BASAL, rh.gs(CoreUiStrings.error_in_basal_values)))
             }
             if (target.isEmpty() || target.any { asMgdl(it.lowTarget) !in HardLimits.LIMIT_MIN_BG }) errors.add(targetError())
             if (target.isEmpty() || target.any { asMgdl(it.highTarget) !in HardLimits.LIMIT_MAX_BG }) errors.add(targetError())
             if (target.any { it.lowTarget > it.highTarget }) errors.add(targetError())
             if (name.contains(".")) {
-                errors.add(ProfileValidationError(ProfileErrorType.NAME, rh.gs(R.string.profile_name_contains_dot)))
+                errors.add(ProfileValidationError(ProfileErrorType.NAME, rh.gs(CoreUiStrings.profile_name_contains_dot)))
             }
         }
         return errors.distinctBy { it.type to it.message }
@@ -345,7 +355,7 @@ class ProfileRepositoryImpl @Inject constructor(
         sealed.pct = percentage
         val check = sealed.validatePump("pumpCompatibility", activePlugin.activePump, config, rh, notificationManager, false)
         return if (check.isValid) emptyList()
-        else listOf(ProfileValidationError(ProfileErrorType.BASAL, rh.gs(R.string.profile_basal_not_compatible_with_pump)))
+        else listOf(ProfileValidationError(ProfileErrorType.BASAL, rh.gs(CoreUiStrings.profile_basal_not_compatible_with_pump)))
     }
 
     override fun newDraft(): SingleProfile {
@@ -433,12 +443,13 @@ class ProfileRepositoryImpl @Inject constructor(
             val name = preferences.get(ProfileComposedStringKey.LocalProfileNumberedName, i)
             if (profilesList.any { it.name == name }) continue
             try {
-                val entry = JSONObject()
-                    .put(KEY_IC, JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIc, i)))
-                    .put(KEY_ISF, JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIsf, i)))
-                    .put(KEY_BASAL, JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedBasal, i)))
-                    .put(KEY_TARGET_LOW, JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetLow, i)))
-                    .put(KEY_TARGET_HIGH, JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetHigh, i)))
+                val entry = buildJsonObject {
+                    put(KEY_IC, parseArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIc, i)))
+                    put(KEY_ISF, parseArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIsf, i)))
+                    put(KEY_BASAL, parseArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedBasal, i)))
+                    put(KEY_TARGET_LOW, parseArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetLow, i)))
+                    put(KEY_TARGET_HIGH, parseArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetHigh, i)))
+                }
                 profilesList.add(
                     SingleProfile(
                         name = name,
@@ -449,7 +460,7 @@ class ProfileRepositoryImpl @Inject constructor(
                         target = readTargetSchedule(entry, name)
                     )
                 )
-            } catch (e: JSONException) {
+            } catch (e: SerializationException) {
                 aapsLogger.error("Exception", e)
             }
         }
@@ -490,21 +501,26 @@ class ProfileRepositoryImpl @Inject constructor(
      * the 3.4.x upgrade path, so they are rendered back exactly as before — the in-memory model
      * changed, the document did not. Targets are one paired list in memory and two arrays here.
      */
-    private fun profilesToJson(timestamp: Long): JSONObject {
-        val array = JSONArray()
-        for (profile in profilesList) {
-            array.put(
-                JSONObject()
-                    .put(KEY_NAME, profile.name)
-                    .put(KEY_MGDL, profile.mgdl)
-                    .put(KEY_IC, profile.ic.toJSONArray())
-                    .put(KEY_ISF, profile.isf.toJSONArray())
-                    .put(KEY_BASAL, profile.basal.toJSONArray())
-                    .put(KEY_TARGET_LOW, profile.target.lowToJSONArray())
-                    .put(KEY_TARGET_HIGH, profile.target.highToJSONArray())
-            )
-        }
-        return JSONObject().put(KEY_LAST_CHANGE, timestamp).put(KEY_PROFILES, array)
+    private fun profilesToJson(timestamp: Long): JsonObject = buildJsonObject {
+        put(KEY_LAST_CHANGE, timestamp)
+        put(
+            KEY_PROFILES,
+            buildJsonArray {
+                for (profile in profilesList) {
+                    add(
+                        buildJsonObject {
+                            put(KEY_NAME, profile.name)
+                            put(KEY_MGDL, profile.mgdl)
+                            put(KEY_IC, profile.ic.toJsonArray())
+                            put(KEY_ISF, profile.isf.toJsonArray())
+                            put(KEY_BASAL, profile.basal.toJsonArray())
+                            put(KEY_TARGET_LOW, profile.target.lowToJsonArray())
+                            put(KEY_TARGET_HIGH, profile.target.highToJsonArray())
+                        }
+                    )
+                }
+            }
+        )
     }
 
     private class ParsedProfiles(val lastChange: Long, val profiles: ArrayList<SingleProfile>)
@@ -518,12 +534,12 @@ class ProfileRepositoryImpl @Inject constructor(
     private fun parsePayload(payload: String): ParsedProfiles? {
         if (payload.isEmpty()) return null
         return try {
-            val json = JSONObject(payload)
-            val array = json.optJSONArray(KEY_PROFILES) ?: return null
-            val parsed = ArrayList<SingleProfile>(array.length())
-            for (i in 0 until array.length()) {
-                val entry = array.optJSONObject(i) ?: continue
-                val name = entry.optString(KEY_NAME)
+            val json = Json.parseToJsonElement(payload) as? JsonObject ?: return null
+            val array = json[KEY_PROFILES] as? JsonArray ?: return null
+            val parsed = ArrayList<SingleProfile>(array.size)
+            for (element in array) {
+                val entry = element as? JsonObject ?: continue
+                val name = entry.stringOrEmpty(KEY_NAME)
                 if (name.isEmpty() || parsed.any { it.name == name }) continue
                 parsed.add(
                     SingleProfile(
@@ -531,7 +547,7 @@ class ProfileRepositoryImpl @Inject constructor(
                         // Same fallback as the pre-JSON key. It must NOT ask ProfileFunction for the
                         // current units: this runs from init(), and resolving that Lazy there closes a
                         // dependency cycle back into this repository (crash at startup).
-                        mgdl = entry.optBoolean(KEY_MGDL, ProfileComposedBooleanKey.LocalProfileNumberedMgdl.defaultValue),
+                        mgdl = entry.booleanOr(KEY_MGDL, ProfileComposedBooleanKey.LocalProfileNumberedMgdl.defaultValue),
                         ic = readSchedule(entry, KEY_IC, name),
                         isf = readSchedule(entry, KEY_ISF, name),
                         basal = readSchedule(entry, KEY_BASAL, name),
@@ -539,8 +555,8 @@ class ProfileRepositoryImpl @Inject constructor(
                     )
                 )
             }
-            if (parsed.isEmpty()) null else ParsedProfiles(json.optLong(KEY_LAST_CHANGE, 0L), parsed)
-        } catch (e: JSONException) {
+            if (parsed.isEmpty()) null else ParsedProfiles(json.longOr(KEY_LAST_CHANGE, 0L), parsed)
+        } catch (e: SerializationException) {
             aapsLogger.error(LTag.PROFILE, "Cannot parse stored profile data", e)
             null
         }
@@ -555,16 +571,16 @@ class ProfileRepositoryImpl @Inject constructor(
      * so the profile shows as invalid in the editor and is refused by save and by sync. It fails
      * where the user can see and fix it, instead of reaching the pump.
      */
-    private fun readSchedule(entry: JSONObject, key: String, profileName: String): List<Block> =
-        blockFromJsonArray(entry.optJSONArray(key), dateUtil) ?: run {
-            if (entry.has(key)) aapsLogger.error(LTag.PROFILE, "Cannot read '$key' of profile '$profileName', using zero")
+    private fun readSchedule(entry: JsonObject, key: String, profileName: String): List<Block> =
+        blockFromJson(entry[key] as? JsonArray, dateUtil) ?: run {
+            if (entry.containsKey(key)) aapsLogger.error(LTag.PROFILE, "Cannot read '$key' of profile '$profileName', using zero")
             singleBlock(0.0)
         }
 
     /** [readSchedule] for the paired target arrays. */
-    private fun readTargetSchedule(entry: JSONObject, profileName: String): List<TargetBlock> =
-        targetBlockFromJsonArray(entry.optJSONArray(KEY_TARGET_LOW), entry.optJSONArray(KEY_TARGET_HIGH), dateUtil) ?: run {
-            if (entry.has(KEY_TARGET_LOW) || entry.has(KEY_TARGET_HIGH))
+    private fun readTargetSchedule(entry: JsonObject, profileName: String): List<TargetBlock> =
+        targetBlockFromJson(entry[KEY_TARGET_LOW] as? JsonArray, entry[KEY_TARGET_HIGH] as? JsonArray, dateUtil) ?: run {
+            if (entry.containsKey(KEY_TARGET_LOW) || entry.containsKey(KEY_TARGET_HIGH))
                 aapsLogger.error(LTag.PROFILE, "Cannot read targets of profile '$profileName', using zero")
             singleTargetBlock(0.0, 0.0)
         }
@@ -589,7 +605,7 @@ class ProfileRepositoryImpl @Inject constructor(
                 } else {
                     notificationManager.post(
                         NotificationId.INVALID_PROFILE_NOT_ACCEPTED,
-                        TextRef.AndroidRes(R.string.invalid_profile_not_accepted, listOf(p.toString())))
+                        CoreUiStrings.invalid_profile_not_accepted.withArgs(p.toString()))
                 }
             }
             if (newProfiles.isNotEmpty()) {
@@ -654,7 +670,7 @@ class ProfileRepositoryImpl @Inject constructor(
                             put("target_low", target.lowToJsonArray())
                             put("target_high", target.highToJsonArray())
                             put("units", if (mgdl) GlucoseUnit.MGDL.asText else GlucoseUnit.MMOL.asText)
-                            put("timezone", TimeZone.getDefault().id)
+                            put("timezone", TimeZone.currentSystemDefault().id)
                         }
                     }
                 }
@@ -677,3 +693,47 @@ class ProfileRepositoryImpl @Inject constructor(
         private const val KEY_TARGET_HIGH = "targetHigh"
     }
 }
+
+/**
+ * The `org.json` reader semantics this file used to get from the platform, written out.
+ *
+ * `JSONObject.optX` never throws: a missing key, a wrong type or an unparsable value all fall back
+ * to a default. kotlinx returns null instead, so each reader below restates the same fallback. They
+ * are kept together, and named after what they do rather than after `opt*`, so the wire format stays
+ * readable without knowing which JSON library is underneath.
+ */
+
+/**
+ * Parse one stored schedule array.
+ *
+ * Throws like `JSONArray(String)` did when the text is not an array, because the caller counts on
+ * that to skip a damaged legacy profile without losing the rest.
+ */
+private fun parseArray(text: String): JsonArray =
+    Json.parseToJsonElement(text) as? JsonArray ?: throw SerializationException("Not a JSON array: $text")
+
+/**
+ * `optString` with an empty-string default.
+ *
+ * One deliberate difference from Android's `org.json`: a JSON `null` reads as absent here, where
+ * `optString` returned the four-character string "null". The caller treats an empty name as a
+ * damaged entry and skips it, so this turns a profile literally named "null" - which would then be
+ * written back and synced - into a skipped entry. See the round-trip tests in
+ * `ProfileRepositoryImplTest`.
+ */
+private fun JsonObject.stringOrEmpty(key: String): String =
+    (this[key] as? JsonPrimitive)?.contentOrNull ?: ""
+
+/** `optBoolean`: real booleans and the strings "true"/"false"; anything else takes [default]. */
+private fun JsonObject.booleanOr(key: String, default: Boolean): Boolean =
+    (this[key] as? JsonPrimitive)?.booleanOrNull ?: default
+
+/**
+ * `optLong`: whole numbers, numeric strings, and a fractional number truncated toward zero.
+ *
+ * The truncation matters because a document that went through a system storing every number as a
+ * double comes back with `lastChange` as `1.7e12`, and that timestamp decides which of the two
+ * stored formats wins on load.
+ */
+private fun JsonObject.longOr(key: String, default: Long): Long =
+    (this[key] as? JsonPrimitive)?.let { it.longOrNull ?: it.doubleOrNull?.toLong() } ?: default
