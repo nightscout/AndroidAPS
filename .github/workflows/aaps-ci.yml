@@ -64,35 +64,40 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Decode Secrets Keystore Set and Oauth2 to Env
+        env:
+          # Secrets arrive as environment variables so bash never parses them as
+          # source text. Interpolating them into the script body lets any $, ",
+          # backtick or newline in a password corrupt the value silently.
+          S_KEYSTORE_SET: ${{ secrets.KEYSTORE_SET }}
+          S_KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          S_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          S_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          S_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          S_GDRIVE_OAUTH2: ${{ secrets.GDRIVE_OAUTH2 }}
         run: |
-          if [ -n "${{ secrets.KEYSTORE_SET }}" ]; then
+          # heredoc form survives any value, including ones containing newlines
+          emit() { printf '%s<<__AAPS_EOF__\n%s\n__AAPS_EOF__\n' "$1" "$2" >> "$GITHUB_ENV"; }
+          # values cut out of KEYSTORE_SET are not registered secrets, so the
+          # runner will not redact them unless we ask it to
+          emit_masked() { echo "::add-mask::$2"; emit "$1" "$2"; }
+
+          if [ -n "$S_KEYSTORE_SET" ]; then
             echo "🔐 Decoding KEYSTORE_SET..."
-            DECODED=$(echo "${{ secrets.KEYSTORE_SET }}" | base64 -d)
+            DECODED=$(printf '%s' "$S_KEYSTORE_SET" | base64 -d)
 
-            KEYSTORE_BASE64=$(echo "$DECODED" | cut -d'|' -f1)
-            KEYSTORE_PASSWORD=$(echo "$DECODED" | cut -d'|' -f2)
-            KEY_ALIAS=$(echo "$DECODED" | cut -d'|' -f3)
-            KEY_PASSWORD=$(echo "$DECODED" | cut -d'|' -f4)
-
-            echo "KEYSTORE_BASE64=$KEYSTORE_BASE64" >> $GITHUB_ENV
-            echo "KEYSTORE_PASSWORD=$KEYSTORE_PASSWORD" >> $GITHUB_ENV
-            echo "KEY_ALIAS=$KEY_ALIAS" >> $GITHUB_ENV
-            echo "KEY_PASSWORD=$KEY_PASSWORD" >> $GITHUB_ENV
-
-            echo "::add-mask::$KEYSTORE_BASE64"
-            echo "::add-mask::$KEYSTORE_PASSWORD"
-            echo "::add-mask::$KEY_ALIAS"
-            echo "::add-mask::$KEY_PASSWORD"
-
+            emit_masked KEYSTORE_BASE64   "$(printf '%s' "$DECODED" | cut -d'|' -f1)"
+            emit_masked KEYSTORE_PASSWORD "$(printf '%s' "$DECODED" | cut -d'|' -f2)"
+            emit_masked KEY_ALIAS         "$(printf '%s' "$DECODED" | cut -d'|' -f3)"
+            emit_masked KEY_PASSWORD      "$(printf '%s' "$DECODED" | cut -d'|' -f4)"
             echo "✅ Keystore parameters extracted from KEYSTORE_SET"
           else
             echo "ℹ️ KEYSTORE_SET not provided, using separate secrets."
-            echo "KEYSTORE_BASE64=${{ secrets.KEYSTORE_BASE64 }}" >> $GITHUB_ENV
-            echo "KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> $GITHUB_ENV
-            echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> $GITHUB_ENV
-            echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> $GITHUB_ENV
+            emit KEYSTORE_BASE64   "$S_KEYSTORE_BASE64"
+            emit KEYSTORE_PASSWORD "$S_KEYSTORE_PASSWORD"
+            emit KEY_ALIAS         "$S_KEY_ALIAS"
+            emit KEY_PASSWORD      "$S_KEY_PASSWORD"
           fi
-          echo "GDRIVE_OAUTH2=${{ secrets.GDRIVE_OAUTH2 }}" >> $GITHUB_ENV
+          emit GDRIVE_OAUTH2 "$S_GDRIVE_OAUTH2"
 
       - name: Check Secrets
         run: |
