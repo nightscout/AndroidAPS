@@ -3,7 +3,7 @@ package app.aaps.implementation.protection
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.protection.PasswordRequest
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.keys.interfaces.Preferences
@@ -11,13 +11,13 @@ import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.ui.UiStrings
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesBinding
-import dev.zacsweers.metro.SingleIn
-import javax.inject.Inject
 
 /**
  * Publishes the prompt; `PasswordCheckHost` draws it.
@@ -37,7 +37,7 @@ class PasswordCheckImpl @Inject constructor(
     private val preferences: Preferences,
     private val cryptoUtil: CryptoUtil,
     private val rxBus: RxBus,
-    private val rh: ResourceHelper
+    private val rh: TextResolver
 ) : PasswordCheck {
 
     @Inject lateinit var exportPasswordDataStore: ExportPasswordDataStore
