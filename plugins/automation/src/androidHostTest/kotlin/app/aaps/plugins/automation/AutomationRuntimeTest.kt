@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation
 
+import app.aaps.core.data.model.GlucoseUnit
 import android.Manifest
 import app.aaps.core.interfaces.alerts.ReminderScheduler
 import app.aaps.core.interfaces.aps.Loop
@@ -9,6 +10,7 @@ import app.aaps.core.interfaces.location.LocationServiceController
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
+import app.aaps.plugins.automation.BtConnectionSource
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.triggers.TriggerConnector
 import app.aaps.plugins.automation.triggers.TriggerDeps
@@ -34,7 +36,8 @@ class AutomationRuntimeTest : TestBaseWithProfile() {
 
 @Mock lateinit var actionFactory: app.aaps.plugins.automation.actions.ActionFactory
     private val triggerFactory: TriggerFactory by lazy {
-        TriggerFactory(triggerDeps, mock(), sceneApi, receiverStatusStore)
+        // A real provider, not a mock: a mocked Provider hands null to TriggerBTDevice.
+        TriggerFactory(triggerDeps, { mock<BtConnectionSource>() }, sceneApi, receiverStatusStore)
     }
     // Real, not mocked: the runtime rebuilds triggers from JSON, and a mocked bundle would hand
     // nulls to element constructors that require them.
@@ -154,4 +157,18 @@ class AutomationRuntimeTest : TestBaseWithProfile() {
     // significant test scaffolding — not worth the fragility. The behavior is observable on a real
     // device: NS-sync an automation edit while on the Overview screen, watch the wear tile refresh
     // ~300ms later without opening the Automation screen first.
+
+    @Test
+    fun everyOfferedTriggerCanBeBuiltFromItsName() {
+        whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
+        // TriggerFactory names every trigger class explicitly since it stopped using reflection -
+        // Class.forName is JVM only. A trigger offered in the editor but missing from that list
+        // would make "add trigger" silently do nothing, so this pins the two lists together.
+        automationRuntime.getTriggerDummyObjects().forEach { offered ->
+            val name = offered::class.simpleName
+            val built = triggerFactory.instantiate(name!!)
+            assertThat(built).isNotNull()
+            assertThat(built!!::class.simpleName).isEqualTo(name)
+        }
+    }
 }
