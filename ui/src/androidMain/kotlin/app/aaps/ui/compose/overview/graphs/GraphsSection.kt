@@ -49,6 +49,7 @@ import app.aaps.core.interfaces.overview.graph.SecondaryGraph
 import app.aaps.core.interfaces.overview.graph.SeriesType
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
@@ -102,6 +103,7 @@ fun GraphsSection(
     modifier: Modifier = Modifier,
     fitWholeWindow: Boolean = false
 ) {
+    val dateUtil = LocalDateUtil.current
     val savedGraphConfig by graphViewModel.graphConfigFlow.collectAsStateWithLifecycle()
     // In simple mode: fixed layout (BG, IOB+BAS, COB — no overlays, no editing)
     val graphConfig = if (isSimpleMode) SIMPLE_MODE_CONFIG else savedGraphConfig
@@ -266,7 +268,7 @@ fun GraphsSection(
         val newTimestamp = bgInfoState.bgInfo?.timestamp ?: return@LaunchedEffect
         if (lastBgTimestamp != 0L && newTimestamp > lastBgTimestamp) {
             // Skip auto-reset while user is interacting with the graph
-            val sinceInteraction = System.currentTimeMillis() - graphViewModel.lastInteractionMs
+            val sinceInteraction = dateUtil.now() - graphViewModel.lastInteractionMs
             if (sinceInteraction < INTERACTION_GRACE_MS) {
                 lastBgTimestamp = newTimestamp
                 return@LaunchedEffect
@@ -289,7 +291,7 @@ fun GraphsSection(
         val timeRange = derivedTimeRange
         if (showPredictions && predictions.isNotEmpty() && timeRange != null) {
             val (minTimestamp, _) = timeRange
-            val nowX = timestampToX(System.currentTimeMillis(), minTimestamp)
+            val nowX = timestampToX(dateUtil.now(), minTimestamp)
             bgScrollState.animateScroll(Scroll.Absolute.x(nowX + 120.0, bias = 1f))
         }
     }

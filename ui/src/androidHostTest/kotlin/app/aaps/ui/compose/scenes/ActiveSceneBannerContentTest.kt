@@ -12,6 +12,10 @@ import app.aaps.core.data.model.SceneLifecycle
 import app.aaps.core.ui.R as CoreUiR
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
+import androidx.compose.runtime.CompositionLocalProvider
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.ui.compose.LocalDateUtil
+import org.mockito.kotlin.mock
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -25,6 +29,8 @@ import org.robolectric.annotation.GraphicsMode
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [35])
 class ActiveSceneBannerContentTest {
+
+    private val dateUtil: DateUtil = mock()
 
     @get:Rule
     val compose = createComposeRule()
@@ -48,8 +54,10 @@ class ActiveSceneBannerContentTest {
     fun activeScene_showsNameAndEndButton_firesOnEnd() {
         var ended = false
         compose.setContent {
-            MaterialTheme {
-                ActiveSceneBannerContent(state = state(), expired = false, onEndClick = { ended = true })
+            CompositionLocalProvider(LocalDateUtil provides dateUtil) {
+                MaterialTheme {
+                    ActiveSceneBannerContent(state = state(), expired = false, onEndClick = { ended = true })
+                }
             }
         }
         compose.onNodeWithText("Exercise").assertIsDisplayed()
@@ -62,11 +70,13 @@ class ActiveSceneBannerContentTest {
     fun expiredScene_showsEndedAndClose_firesOnDismiss() {
         var dismissed = false
         compose.setContent {
-            MaterialTheme {
-                ActiveSceneBannerContent(
-                    state = state(SceneLifecycle.EXPIRED), expired = true,
-                    onEndClick = {}, onDismiss = { dismissed = true }
-                )
+            CompositionLocalProvider(LocalDateUtil provides dateUtil) {
+                MaterialTheme {
+                    ActiveSceneBannerContent(
+                        state = state(SceneLifecycle.EXPIRED), expired = true,
+                        onEndClick = {}, onDismiss = { dismissed = true }
+                    )
+                }
             }
         }
         compose.onNodeWithText(endedLabel).assertIsDisplayed()

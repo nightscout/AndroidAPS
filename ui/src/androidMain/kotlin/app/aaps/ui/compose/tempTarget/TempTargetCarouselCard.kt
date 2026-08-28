@@ -37,6 +37,7 @@ import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TTPreset
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.formatMinutesAsDuration
@@ -70,6 +71,7 @@ fun TempTargetCarouselCard(
     onExpired: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
+    val dateUtil = LocalDateUtil.current
     val profileUtil = LocalProfileUtil.current
     val isActiveCard = activeTT != null
     val reason = preset?.reason ?: activeTT?.reason ?: TT.Reason.CUSTOM
@@ -82,7 +84,7 @@ fun TempTargetCarouselCard(
     LaunchedEffect(isActiveCard, activeTT?.timestamp, activeTT?.duration) {
         if (isActiveCard) {
             while (true) {
-                val now = System.currentTimeMillis()
+                val now = dateUtil.now()
                 val elapsed = now - activeTT.timestamp
                 val remaining = activeTT.duration - elapsed
                 if (remaining > 0) {

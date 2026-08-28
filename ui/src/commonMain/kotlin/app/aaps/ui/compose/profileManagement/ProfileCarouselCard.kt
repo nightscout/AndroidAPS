@@ -31,6 +31,7 @@ import app.aaps.core.data.model.EPS
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.stringResource
@@ -52,6 +53,7 @@ internal fun ProfileCarouselCard(
     formatBasalSum: (Double) -> String,
     modifier: Modifier = Modifier
 ) {
+    val dateUtil = LocalDateUtil.current
     // Check if active profile has modifications (percentage, timeshift, or duration)
     val isModified = activeProfileSwitch?.let { eps ->
         eps.originalPercentage != 100 || eps.originalTimeshift != 0L || eps.originalDuration != 0L
@@ -65,7 +67,7 @@ internal fun ProfileCarouselCard(
     LaunchedEffect(isActive, hasDuration, activeProfileSwitch?.timestamp) {
         if (isActive && hasDuration) {
             while (true) {
-                val now = System.currentTimeMillis()
+                val now = dateUtil.now()
                 val elapsed = now - activeProfileSwitch.timestamp
                 val remaining = activeProfileSwitch.originalDuration - elapsed
                 progress = if (remaining > 0) {

@@ -27,6 +27,7 @@ import app.aaps.core.interfaces.overview.graph.DeviationType
 import app.aaps.core.interfaces.overview.graph.GraphDataPoint
 import app.aaps.core.interfaces.overview.graph.SeriesType
 import app.aaps.core.interfaces.overview.graph.TreatmentGraphData
+import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.AapsTheme
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.CartesianDrawingContext
@@ -146,6 +147,7 @@ fun SecondaryGraphCompose(
     onVisibleRangeChanged: ((Pair<Double, Double>?) -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
+    val dateUtil = LocalDateUtil.current
     if (seriesTypes.isEmpty()) return
 
     // Ensure DEV_SLOPE is always primary — it needs primary to render both dsMax and dsMin lines
@@ -159,7 +161,7 @@ fun SecondaryGraphCompose(
 
     val hasRealTimeRange = derivedTimeRange != null
     val (minTimestamp, maxTimestamp) = derivedTimeRange ?: run {
-        val now = System.currentTimeMillis()
+        val now = dateUtil.now()
         val dayAgo = now - Constants.GRAPH_TIME_RANGE_HOURS * 60 * 60 * 1000L
         dayAgo to now
     }

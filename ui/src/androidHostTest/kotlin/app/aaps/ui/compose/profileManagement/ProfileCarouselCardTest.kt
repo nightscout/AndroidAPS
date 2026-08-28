@@ -4,6 +4,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.runtime.CompositionLocalProvider
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.ui.compose.LocalDateUtil
+import org.mockito.kotlin.mock
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -16,12 +20,15 @@ import org.robolectric.annotation.GraphicsMode
 @Config(sdk = [35])
 class ProfileCarouselCardTest {
 
+    private val dateUtil: DateUtil = mock()
+
     @get:Rule
     val compose = createComposeRule()
 
     @Test
     fun showsProfileName() {
         compose.setContent {
+            CompositionLocalProvider(LocalDateUtil provides dateUtil) {
             MaterialTheme {
                 ProfileCarouselCard(
                     profileName = "Weekday Profile",
@@ -34,6 +41,7 @@ class ProfileCarouselCardTest {
                     formatBasalSum = { "24.0 U" }
                 )
             }
+            }
         }
 
         compose.onNodeWithText("Weekday Profile").assertIsDisplayed()
@@ -42,6 +50,7 @@ class ProfileCarouselCardTest {
     @Test
     fun showsFormattedBasalSum() {
         compose.setContent {
+            CompositionLocalProvider(LocalDateUtil provides dateUtil) {
             MaterialTheme {
                 ProfileCarouselCard(
                     profileName = "Weekday Profile",
@@ -53,6 +62,7 @@ class ProfileCarouselCardTest {
                     nextProfileName = null,
                     formatBasalSum = { "24.0 U" }
                 )
+            }
             }
         }
 

@@ -28,9 +28,6 @@ import kotlin.time.Instant
 import kotlin.concurrent.Volatile
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 /**
  * Shared utilities for Vico graphs in AndroidAPS.
@@ -81,10 +78,13 @@ fun timestampToX(timestamp: Long, minTimestamp: Long): Double =
 @Composable
 fun rememberTimeFormatter(minTimestamp: Long): CartesianValueFormatter {
     return remember(minTimestamp) {
-        val dateFormat = SimpleDateFormat("HH", Locale.getDefault())
         CartesianValueFormatter { _, value, _ ->
             val timestamp = minTimestamp + (value * 60000).toLong()
-            dateFormat.format(Date(timestamp))
+            // Always 24 hour, as SimpleDateFormat("HH") was: on an axis a bare 12 hour label would
+            // not say which half of the day it belongs to.
+            Instant.fromEpochMilliseconds(timestamp)
+                .toLocalDateTime(TimeZone.currentSystemDefault())
+                .hour.toString().padStart(2, '0')
         }
     }
 }

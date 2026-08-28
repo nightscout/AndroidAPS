@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.objects.extensions.tickerFlow
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.stringResource
@@ -79,13 +80,14 @@ internal fun ActiveSceneBannerContent(
     endEnabled: Boolean = true,
     modifier: Modifier = Modifier
 ) {
+    val dateUtil = LocalDateUtil.current
     // Ticker for countdown — 30s matches GraphViewModel.ticker30s; text is minute-grain
     // and the progress bar stays visually smooth even on short scenes. tickerFlow's first
     // emission is immediate, so the initial `now` reflects subscription time without the
-    // `remember { System.currentTimeMillis() }` seed.
-    var now by remember { mutableLongStateOf(System.currentTimeMillis()) }
+    // `remember { dateUtil.now() }` seed.
+    var now by remember { mutableLongStateOf(dateUtil.now()) }
     LaunchedEffect(Unit) {
-        tickerFlow(30_000L).collect { now = System.currentTimeMillis() }
+        tickerFlow(30_000L).collect { now = dateUtil.now() }
     }
 
     val remainingMs = state.remainingMs(now)

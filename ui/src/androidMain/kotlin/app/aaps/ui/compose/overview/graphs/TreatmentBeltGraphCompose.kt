@@ -27,6 +27,7 @@ import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.overview.graph.TherapyEventGraphPoint
 import app.aaps.core.interfaces.overview.graph.TherapyEventType
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.icons.IcActivity
 import app.aaps.core.ui.compose.icons.IcAnnouncement
@@ -98,13 +99,14 @@ fun TreatmentBeltGraphCompose(
     nowTimestamp: Long,
     modifier: Modifier = Modifier
 ) {
+    val dateUtil = LocalDateUtil.current
     // Collect flows independently
     val runningModeData by viewModel.runningModeGraphFlow.collectAsStateWithLifecycle()
     val treatmentGraphData by viewModel.treatmentGraphFlow.collectAsStateWithLifecycle()
 
     val hasRealTimeRange = derivedTimeRange != null
     val (minTimestamp, maxTimestamp) = derivedTimeRange ?: run {
-        val now = System.currentTimeMillis()
+        val now = dateUtil.now()
         val dayAgo = now - Constants.GRAPH_TIME_RANGE_HOURS * 60 * 60 * 1000L
         dayAgo to now
     }

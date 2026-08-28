@@ -28,7 +28,7 @@ private val previewDecimalFormatter = object : DecimalFormatter {
 }
 
 private val previewBcr = BCR(
-    timestamp = System.currentTimeMillis(),
+    timestamp = PREVIEW_NOW,
     targetBGLow = 90.0,
     targetBGHigh = 90.0,
     isf = 40.0,
@@ -59,6 +59,9 @@ private val previewBcr = BCR(
     profileName = "Default",
     note = "Before lunch"
 )
+
+// A fixed instant: a preview must render the same every time, and there is no clock provided to it.
+private const val PREVIEW_NOW = 1_780_000_000_000L
 
 @Preview(showBackground = true)
 @Composable

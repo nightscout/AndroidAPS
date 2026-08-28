@@ -18,10 +18,13 @@ private fun sampleScene(name: String = "Exercise") = Scene(
     defaultDurationMinutes = 60
 )
 
+// A fixed instant: a preview must render the same every time, and there is no clock provided to it.
+private const val PREVIEW_NOW = 1_780_000_000_000L
+
 @Preview(showBackground = true)
 @Composable
 internal fun ActiveSceneBannerTimedPreview() {
-    val now = System.currentTimeMillis()
+    val now = PREVIEW_NOW
     MaterialTheme {
         Surface {
             ActiveSceneBannerContent(
@@ -40,7 +43,7 @@ internal fun ActiveSceneBannerTimedPreview() {
 @Preview(showBackground = true)
 @Composable
 internal fun ActiveSceneBannerExpiredPreview() {
-    val now = System.currentTimeMillis()
+    val now = PREVIEW_NOW
     MaterialTheme {
         Surface {
             ActiveSceneBannerContent(
@@ -61,7 +64,7 @@ internal fun ActiveSceneBannerExpiredPreview() {
 @Preview(showBackground = true)
 @Composable
 internal fun ActiveSceneBannerIndefinitePreview() {
-    val now = System.currentTimeMillis()
+    val now = PREVIEW_NOW
     MaterialTheme {
         Surface {
             ActiveSceneBannerContent(
