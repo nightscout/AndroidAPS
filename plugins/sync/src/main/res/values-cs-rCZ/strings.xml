@@ -77,6 +77,8 @@
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Nahrávání dat do Tidepoolu</string>
     <string name="upload_now">Nahrát nyní</string>
+    <string name="tidepool_purge_data">Smazat všechna data</string>
+    <string name="tidepool_purge_data_confirm">Odstranit VEŠKERÁ data, která byla z AAPS nahrána do Tidepoolu? Tuto akci nelze vrátit zpět. Použijte ji k odstranění dat poškozených použitím starší verze, poté spusťte „Plnou synchronizaci\" a znovu je nahrajte.</string>
     <string name="not_connected">Nepřipojeno</string>
     <string name="read_only">Jen pro čtení</string>
     <string name="working">Pracuji</string>

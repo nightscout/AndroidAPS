@@ -173,4 +173,5 @@
         <item quantity="many">Výstrahy Podu: %1$s</item>
         <item quantity="other">Výstrahy Podu: %1$s</item>
     </plurals>
+    <string name="omnipod_common_overview_pod_hard_end_date">Definitivní konec podu</string>
 </resources>

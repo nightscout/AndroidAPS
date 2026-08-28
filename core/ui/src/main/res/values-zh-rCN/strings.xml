@@ -104,6 +104,7 @@
     <string name="tdd_total">胰岛素输注日总量</string>
     <string name="tdd_old_data">旧的数据</string>
     <string name="goingtodeliver">将要输注 %1$.2f U</string>
+    <string name="carbs_not_saved_after_bolus">大剂量已输注，但碳水化合物未能保存。请重新输入碳水化合物。</string>
     <string name="androidaps_start">AAPS 已启动</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d 克</string>

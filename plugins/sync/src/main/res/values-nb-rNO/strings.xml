@@ -16,6 +16,7 @@
     <string name="authorized_clients_add">Legg til klient</string>
     <string name="authorized_clients_comm_switch_title">Tillat klientstyring</string>
     <string name="authorized_clients_comm_switch_summary">La tilkoblede klienter sende signerte kommandoer via Nightscout. Slå av for å stoppe kommunikasjonen uten å fjerne dem.</string>
+    <string name="authorized_clients_needs_websocket">Websockets er deaktivert, så kommandoer fra klienter kan ikke mottas. Klientene vil oppfatte denne hovedenheten som utilgjengelig for kommandoer til du aktiverer Websockets.</string>
     <string name="authorized_clients_state_active">Aktiv</string>
     <string name="authorized_clients_state_pending">Venter</string>
     <string name="authorized_clients_last_seen">Sist sett %1$s</string>

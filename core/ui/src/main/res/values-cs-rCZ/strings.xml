@@ -61,6 +61,8 @@
     <string name="configbuilder_pick_one_hint">Vyberte jeden. Pouze jeden může být aktivní.</string>
     <string name="configbuilder_pick_many_hint">Zvolte, co se použije.</string>
     <string name="configbuilder_no_selection_warning">V této kategorii není vybrán žádný plugin.</string>
+    <string name="configbuilder_switch_confirmation_title">Přepnout plugin?</string>
+    <string name="configbuilder_switch_confirmation">Tímto vypnete %1$s a zapnete %2$s.</string>
     <string name="expand">Rozbalit</string>
     <string name="collapse">Sbalit</string>
     <string name="no_compose_preferences">Pro tento plugin nejsou dostupné žádné předvolby</string>
@@ -102,6 +104,7 @@
     <string name="tdd_total">CDD celkem</string>
     <string name="tdd_old_data">Stará data</string>
     <string name="goingtodeliver">Podávání %1$.2f U inzulínu</string>
+    <string name="carbs_not_saved_after_bolus">Bolus byl vydán, ale sacharidy nebylo možné uložit. Zadejte sacharidy znovu.</string>
     <string name="androidaps_start">AAPS spuštěno</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
@@ -117,6 +120,12 @@
     <string name="carbs">Sacharidy</string>
     <string name="invalid_profile">Neplatný profil!</string>
     <string name="no_profile_set">ŽÁDNÝ PROFIL NENASTAVEN</string>
+    <string name="profile_switch_no_insulin">Nelze přepnout profil: nepoužívá se žádný inzulín a žádný nebyl vybrán.</string>
+    <string name="profile_switch_select_insulin_hint">Zatím se nepoužívá žádný inzulín. Vyberte inzulín, který používáte, aby jej přepnutí profilu mohlo zaznamenat.</string>
+    <string name="insulin_activation_failed">Inzulín nebyl přepnut. Váš předchozí inzulin se stále používá.</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason. Example: The insulin was not switched: Master not reachable. Your previous insulin is still in use.">Inzulín nebyl přepnut: %1$s. Váš předchozí inzulin se stále používá.</string>
+    <string name="insulin_activation_unconfirmed">Přepnutí inzulínu nemohlo být potvrzeno. Zkontrolujte, který inzulín je aktivní ve vašem profilu před dávkováním.</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInzulín také nebyl přepnut.</string>
     <string name="active"><![CDATA[<Aktivní>]]></string>
     <string name="date">Datum</string>
     <string name="units_label">Jednotky</string>
@@ -923,6 +932,12 @@
     <string name="add">Výměna</string>
     <string name="remove">Odstranit</string>
     <string name="reorder">Přeřadit</string>
+    <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Přesunout dopředu</string>
+    <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Přesunout dozadu</string>
+    <string name="carousel_show_card" comment="Screen-reader label for tapping a carousel card. The tap centres the card and shows its details below — it does not activate or apply anything.">Zobrazit podrobnosti</string>
+    <string name="presets_changed_reorder_aborted">Předvolby se změnily jinde. Nové pořadí nebylo uloženo.</string>
+    <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
+    <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Pozice %1$d z %2$d</string>
     <string name="status">Stav</string>
     <string name="pump_actions">Akce pumpy</string>
     <string name="tempbasal_button">Dočasný bazál</string>

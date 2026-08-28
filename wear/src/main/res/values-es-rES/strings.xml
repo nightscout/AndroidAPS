@@ -83,6 +83,11 @@
     <string name="menu_bg_graph">Gráfico de glucosa</string>
     <string name="menu_resync">Re-sincronizar</string>
     <string name="menu_prime_fill">Cebar/Llenar</string>
+    <string name="menu_install_watchface">Instalar esfera</string>
+    <string name="menu_installing_watchface">Instalando esfera…</string>
+    <string name="watchface_installed_active">Esfera instalada y establecida como activa</string>
+    <string name="watchface_installed_select">Esfera instalada, selecciónala en el selector de esferas</string>
+    <string name="watchface_install_failed">Error al instalar la esfera</string>
     <string name="menu_none">Ninguno</string>
     <string name="menu_default">Por defecto</string>
     <string name="menu_menu">Menú</string>
@@ -102,6 +107,7 @@
     <string name="action_high_unit" comment="In temp target menu, higher value from range">Alto [%s]</string>
     <string name="action_carbs">Carbohidratos</string>
     <string name="action_carbs_gram">Carbohidratos [g]</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs input when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (COB)">Eliminación máxima: %1$d g (COB)</string>
     <string name="action_ecarbs">eCarbs</string>
     <string name="action_percentage">Porcentaje\n[%]</string>
     <string name="action_start_minutes">Iniciar\n[minutos]</string>
@@ -257,7 +263,9 @@
     <string name="contacting_master_unknown">Estado desconocido — comprueba el teléfono</string>
     <string name="tile_settings">Ajustes de tarjetas</string>
     <string name="loop_status_error">Error al cargar el estado del lazo</string>
+    <string name="loop_status_duration_until" comment="%1$s=formatted duration e.g. 2 h 5 min, %2$s=end time. Example: 2 h 5 min (14:35)">%1$s (%2$s)</string>
     <string name="loop_status_tbr_rate">%1$.2f U/h (%2$d%%)</string>
+    <string name="loop_status_duration_remaining" comment="%1$s=formatted duration e.g. 2 h 5 min. Example: 2 h 5 min remaining">%1$s restante(s)</string>
     <string name="loop_status_tbr_continues">Basal temporal activa</string>
     <string name="loop_status_tbr_cancel">Establecer basal regular</string>
     <string name="loop_status_smb">%1$.2f U</string>

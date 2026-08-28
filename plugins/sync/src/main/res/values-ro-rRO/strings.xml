@@ -16,6 +16,7 @@
     <string name="authorized_clients_add">Adăugați un client</string>
     <string name="authorized_clients_comm_switch_title">Permiteți controlul clientului</string>
     <string name="authorized_clients_comm_switch_summary">Permiteți clienților să trimită comenzi semnate prin Nightscout. Dezactivați pentru a opri comunicarea fără a-i elimina.</string>
+    <string name="authorized_clients_needs_websocket">Conexiunile WebSocket sunt dezactivate, astfel încât comenzile de la clienți nu pot fi primite. Clienții văd acest principal ca fiind indisponibil pentru primirea comenzilor până când activați conexiunile WebSocket.</string>
     <string name="authorized_clients_state_active">Activ</string>
     <string name="authorized_clients_state_pending">În așteptare</string>
     <string name="authorized_clients_last_seen">Văzut ultima dată %1$s</string>

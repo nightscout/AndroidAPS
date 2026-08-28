@@ -16,6 +16,7 @@
     <string name="authorized_clients_add">添加客户端</string>
     <string name="authorized_clients_comm_switch_title">允许客户端控制</string>
     <string name="authorized_clients_comm_switch_summary">允许已配对的客户端通过 Nightscout 发送已签名的命令。关闭此选项可在不移除客户端的情况下停止通信。</string>
+    <string name="authorized_clients_needs_websocket">WebSocket 已关闭，因此无法接收来自客户端的命令。在您开启 WebSocket 之前，客户端会认为此主机不接受命令。</string>
     <string name="authorized_clients_state_active">已激活</string>
     <string name="authorized_clients_state_pending">等待中</string>
     <string name="authorized_clients_last_seen">上次活跃时间 %1$s</string>
