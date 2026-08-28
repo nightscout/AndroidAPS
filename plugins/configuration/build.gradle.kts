@@ -85,20 +85,6 @@ kotlin {
     }
 }
 
-// :shared:tests and :implementation are flavoured Android libraries, and a multiplatform module has no
-// flavours of its own, so every classpath that reaches them has to pick one or resolution is ambiguous.
-listOf(
-    "androidCompileClasspath",
-    "androidRuntimeClasspath",
-    "androidHostTestCompileClasspath",
-    "androidHostTestRuntimeClasspath"
-).forEach { name ->
-    configurations.named(name) {
-        attributes {
-            attribute(com.android.build.api.attributes.ProductFlavorAttr.of("standard"), objects.named("full"))
-        }
-    }
-}
 
 tasks.withType<Test> {
     // useJUnitPlatform() and the heap cap come from kmp-test-defaults; only the JaCoCo part is

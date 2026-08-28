@@ -103,12 +103,3 @@ kotlin {
     }
 }
 
-// :shared:tests and :implementation are flavoured Android libraries, so the host test classpath has
-// to pick a flavour or resolution is ambiguous.
-listOf("androidHostTestCompileClasspath", "androidHostTestRuntimeClasspath").forEach { name ->
-    configurations.named(name) {
-        attributes {
-            attribute(com.android.build.api.attributes.ProductFlavorAttr.of("standard"), objects.named("full"))
-        }
-    }
-}

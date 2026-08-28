@@ -92,12 +92,3 @@ kotlin {
     }
 }
 
-// :shared:tests is a flavoured Android library, so the host test classpath has to pick a flavour or
-// resolution is ambiguous. Same pin as :plugins:smoothing.
-listOf("androidHostTestCompileClasspath", "androidHostTestRuntimeClasspath").forEach { name ->
-    configurations.named(name) {
-        attributes {
-            attribute(com.android.build.api.attributes.ProductFlavorAttr.of("standard"), objects.named("full"))
-        }
-    }
-}

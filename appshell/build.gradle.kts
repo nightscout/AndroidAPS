@@ -90,19 +90,3 @@ kotlin {
     }
 }
 
-// The plugin modules are flavoured Android libraries and a multiplatform module has no flavours of
-// its own, so resolution would be ambiguous. Pin the flavour the app builds with - no module here has
-// flavour specific sources, so this only picks a variant, it does not change code.
-// Same pin as :implementation and :ui.
-listOf(
-    "androidCompileClasspath",
-    "androidRuntimeClasspath",
-    "androidHostTestCompileClasspath",
-    "androidHostTestRuntimeClasspath"
-).forEach { name ->
-    configurations.named(name) {
-        attributes {
-            attribute(com.android.build.api.attributes.ProductFlavorAttr.of("standard"), objects.named("full"))
-        }
-    }
-}

@@ -130,19 +130,3 @@ kotlin {
     }
 }
 
-// :shared:tests is a flavoured Android library and a multiplatform module has no flavours of its own,
-// so resolution would be ambiguous. Pin the same flavour the app builds with - neither module has
-// flavour specific sources, so this only picks a variant, it does not change code.
-// Same pin as :implementation and :plugins:main.
-listOf(
-    "androidCompileClasspath",
-    "androidRuntimeClasspath",
-    "androidHostTestCompileClasspath",
-    "androidHostTestRuntimeClasspath"
-).forEach { name ->
-    configurations.named(name) {
-        attributes {
-            attribute(com.android.build.api.attributes.ProductFlavorAttr.of("standard"), objects.named("full"))
-        }
-    }
-}
