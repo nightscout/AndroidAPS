@@ -76,6 +76,10 @@ kotlin {
                 api(libs.cmp.ui)
                 api(libs.cmp.material3)
                 api(libs.cmp.material.icons.extended)
+                // The JetBrains republish, not androidx.lifecycle: same `androidx.lifecycle.*` package names,
+                // but with Apple targets. Same choice as :core:ui and :plugins:calibration.
+                api(libs.jetbrains.lifecycle.viewmodel.compose)
+                api(libs.jetbrains.lifecycle.runtime.compose)
                 api(libs.kotlinx.datetime)
                 implementation(libs.cmp.ui.tooling.preview)
             }
