@@ -19,9 +19,9 @@ import app.aaps.core.data.model.TDD
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.LocalDateUtil
+import app.aaps.core.ui.compose.LocalDecimalFormatter
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
-import java.util.Locale
 
 /**
  * Data class containing TDD (Total Daily Dose) statistics for profile calculations.
@@ -70,6 +70,7 @@ fun TddStatsCompose(
     modifier: Modifier = Modifier
 ) {
     val dateUtil = LocalDateUtil.current
+    val decimalFormatter = LocalDecimalFormatter.current
     Column(modifier = modifier) {
         // Header row with column labels
         TddTableHeaderRow()
@@ -84,10 +85,10 @@ fun TddStatsCompose(
                 val tdd = tdds.valueAt(i)
                 TddTableDataRow(
                     date = dateUtil.dateString(tdd.timestamp),
-                    basal = String.format(Locale.getDefault(), "%.2f", tdd.basalAmount),
-                    bolus = String.format(Locale.getDefault(), "%.2f", tdd.bolusAmount),
-                    total = String.format(Locale.getDefault(), "%.2f", tdd.totalAmount),
-                    carbs = String.format(Locale.getDefault(), "%.0f", tdd.carbs)
+                    basal = decimalFormatter.to2Decimal(tdd.basalAmount),
+                    bolus = decimalFormatter.to2Decimal(tdd.bolusAmount),
+                    total = decimalFormatter.to2Decimal(tdd.totalAmount),
+                    carbs = decimalFormatter.to0Decimal(tdd.carbs)
                 )
             }
         }
@@ -105,10 +106,10 @@ fun TddStatsCompose(
             )
             TddTableDataRow(
                 date = "",
-                basal = String.format(Locale.getDefault(), "%.2f", avg.data.basalAmount),
-                bolus = String.format(Locale.getDefault(), "%.2f", avg.data.bolusAmount),
-                total = String.format(Locale.getDefault(), "%.2f", avg.data.totalAmount),
-                carbs = String.format(Locale.getDefault(), "%.0f", avg.data.carbs),
+                basal = decimalFormatter.to2Decimal(avg.data.basalAmount),
+                bolus = decimalFormatter.to2Decimal(avg.data.bolusAmount),
+                total = decimalFormatter.to2Decimal(avg.data.totalAmount),
+                carbs = decimalFormatter.to0Decimal(avg.data.carbs),
                 isBold = true
             )
         }
@@ -126,10 +127,10 @@ fun TddStatsCompose(
             )
             TddTableDataRow(
                 date = "",
-                basal = String.format(Locale.getDefault(), "%.2f", today.basalAmount),
-                bolus = String.format(Locale.getDefault(), "%.2f", today.bolusAmount),
-                total = String.format(Locale.getDefault(), "%.2f", today.totalAmount),
-                carbs = String.format(Locale.getDefault(), "%.0f", today.carbs),
+                basal = decimalFormatter.to2Decimal(today.basalAmount),
+                bolus = decimalFormatter.to2Decimal(today.bolusAmount),
+                total = decimalFormatter.to2Decimal(today.totalAmount),
+                carbs = decimalFormatter.to0Decimal(today.carbs),
                 isBold = true
             )
         }

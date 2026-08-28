@@ -43,6 +43,8 @@ import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlin.math.abs
 import kotlin.math.roundToInt
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
@@ -60,7 +62,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
-import java.util.UUID
 
 /**
  * ViewModel for TempTargetManagementScreen managing TT presets and activation.
@@ -671,6 +672,7 @@ class TempTargetManagementViewModel @Inject constructor(
     /**
      * Add a new custom preset
      */
+    @OptIn(ExperimentalUuidApi::class)
     fun addNewPreset() {
         viewModelScope.launch {
             try {
@@ -678,7 +680,7 @@ class TempTargetManagementViewModel @Inject constructor(
                 val defaultTargetMgdl = 100.0
 
                 val newPreset = TTPreset(
-                    id = UUID.randomUUID().toString(),
+                    id = Uuid.random().toString(),
                     name = "New Preset",
                     reason = TT.Reason.CUSTOM,
                     targetValue = defaultTargetMgdl, // Always store in mg/dL

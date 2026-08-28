@@ -16,11 +16,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.stats.TIR
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.ui.compose.LocalDecimalFormatter
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
-import java.util.Locale
 
 /**
  * Data class containing TIR (Time In Range) statistics.
@@ -66,6 +67,7 @@ fun TirStatsCompose(
 ) {
     val profileUtil = LocalProfileUtil.current
     val dateUtil = LocalDateUtil.current
+    val decimalFormatter = LocalDecimalFormatter.current
     Column(modifier = modifier) {
         // TIR Section
         Text(
@@ -89,9 +91,9 @@ fun TirStatsCompose(
                 val tir = tir7.valueAt(i)
                 TirTableDataRow(
                     date = dateUtil.dateString(tir.date),
-                    below = formatPercentage(tir.below, tir.count),
-                    inRange = formatPercentage(tir.inRange, tir.count),
-                    above = formatPercentage(tir.above, tir.count)
+                    below = formatPercentage(tir.below, tir.count, decimalFormatter),
+                    inRange = formatPercentage(tir.inRange, tir.count, decimalFormatter),
+                    above = formatPercentage(tir.above, tir.count, decimalFormatter)
                 )
             }
         }
@@ -113,9 +115,9 @@ fun TirStatsCompose(
         tirStatsData.averageTir7?.let { avg ->
             TirTableDataRow(
                 date = stringResource(CoreUiStrings.seven_days_short),
-                below = formatPercentage(avg.below, avg.count),
-                inRange = formatPercentage(avg.inRange, avg.count),
-                above = formatPercentage(avg.above, avg.count),
+                below = formatPercentage(avg.below, avg.count, decimalFormatter),
+                inRange = formatPercentage(avg.inRange, avg.count, decimalFormatter),
+                above = formatPercentage(avg.above, avg.count, decimalFormatter),
                 isBold = true
             )
         }
@@ -123,9 +125,9 @@ fun TirStatsCompose(
         tirStatsData.averageTir30?.let { avg ->
             TirTableDataRow(
                 date = stringResource(CoreUiStrings.thirty_days_short),
-                below = formatPercentage(avg.below, avg.count),
-                inRange = formatPercentage(avg.inRange, avg.count),
-                above = formatPercentage(avg.above, avg.count),
+                below = formatPercentage(avg.below, avg.count, decimalFormatter),
+                inRange = formatPercentage(avg.inRange, avg.count, decimalFormatter),
+                above = formatPercentage(avg.above, avg.count, decimalFormatter),
                 isBold = true
             )
         }
@@ -147,9 +149,9 @@ fun TirStatsCompose(
         tirStatsData.averageTit7?.let { avg ->
             TirTableDataRow(
                 date = stringResource(CoreUiStrings.seven_days_short),
-                below = formatPercentage(avg.below, avg.count),
-                inRange = formatPercentage(avg.inRange, avg.count),
-                above = formatPercentage(avg.above, avg.count),
+                below = formatPercentage(avg.below, avg.count, decimalFormatter),
+                inRange = formatPercentage(avg.inRange, avg.count, decimalFormatter),
+                above = formatPercentage(avg.above, avg.count, decimalFormatter),
                 isBold = true
             )
         }
@@ -157,9 +159,9 @@ fun TirStatsCompose(
         tirStatsData.averageTit30?.let { avg ->
             TirTableDataRow(
                 date = stringResource(CoreUiStrings.thirty_days_short),
-                below = formatPercentage(avg.below, avg.count),
-                inRange = formatPercentage(avg.inRange, avg.count),
-                above = formatPercentage(avg.above, avg.count),
+                below = formatPercentage(avg.below, avg.count, decimalFormatter),
+                inRange = formatPercentage(avg.inRange, avg.count, decimalFormatter),
+                above = formatPercentage(avg.above, avg.count, decimalFormatter),
                 isBold = true
             )
         }
@@ -265,9 +267,9 @@ fun TirTableDataRow(
 /**
  * Formats a TIR value as a percentage string.
  */
-private fun formatPercentage(value: Int, total: Int): String {
+private fun formatPercentage(value: Int, total: Int, decimalFormatter: DecimalFormatter): String {
     return if (total > 0) {
-        String.format(Locale.getDefault(), "%.0f%%", value * 100.0 / total)
+        decimalFormatter.to0Decimal(value * 100.0 / total, "%")
     } else {
         "-"
     }

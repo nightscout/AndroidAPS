@@ -20,6 +20,7 @@ import app.aaps.core.interfaces.profile.SingleProfile
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.objects.extensions.toPureProfile
 import app.aaps.core.objects.profile.ProfileSealed
@@ -38,7 +39,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.math.RoundingMode
 
 @Immutable
 data class ProfileUiState(
@@ -213,8 +213,8 @@ class ProfileEditorViewModel @Inject constructor(
      */
     private fun ClosedFloatingPointRange<Double>.inDisplayUnits(isMgdl: Boolean): ClosedFloatingPointRange<Double> {
         if (isMgdl) return this
-        val low = profileUtil.fromMgdlToUnits(start, GlucoseUnit.MMOL).toBigDecimal().setScale(1, RoundingMode.UP).toDouble()
-        val high = profileUtil.fromMgdlToUnits(endInclusive, GlucoseUnit.MMOL).toBigDecimal().setScale(1, RoundingMode.DOWN).toDouble()
+        val low = profileUtil.fromMgdlToUnits(start, GlucoseUnit.MMOL).let { Round.ceilTo(it, 0.1) }
+        val high = profileUtil.fromMgdlToUnits(endInclusive, GlucoseUnit.MMOL).let { Round.floorTo(it, 0.1) }
         return low..high
     }
 
