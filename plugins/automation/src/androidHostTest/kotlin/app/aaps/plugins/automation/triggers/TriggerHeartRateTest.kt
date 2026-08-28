@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.data.model.HR
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.asJsonObject
@@ -16,14 +17,14 @@ class TriggerHeartRateTest : TriggerTestBase() {
 
     @Test
     fun friendlyName() {
-        assertThat(TriggerHeartRate(triggerDeps).friendlyName()).isEqualTo(R.string.triggerHeartRate)
+        assertThat(TriggerHeartRate(triggerDeps).friendlyName()).isEqualTo(AutomationStrings.triggerHeartRate)
     }
 
     @Test
     fun friendlyDescription() {
         val t = TriggerHeartRate(triggerDeps)
         whenever(rh.gs(Comparator.Compare.IS_EQUAL_OR_GREATER.stringRes)).thenReturn(">")
-        whenever(rh.gs(R.string.triggerHeartRateDesc, ">", 80.0)).thenReturn("test")
+        whenever(rh.gs(AutomationStrings.triggerHeartRateDesc, ">", 80.0)).thenReturn("test")
         assertThat(t.friendlyDescription()).isEqualTo("test")
     }
 

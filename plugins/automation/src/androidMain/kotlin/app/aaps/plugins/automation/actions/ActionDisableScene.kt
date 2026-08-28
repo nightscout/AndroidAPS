@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.automation.AutomationStrings
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.VisibilityOff
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -28,9 +31,9 @@ class ActionDisableScene(
 
     var scene: InputSceneName = InputSceneName()
 
-    override fun friendlyName(): Int = R.string.action_disable_scene
+    override fun friendlyName(): TextRef = AutomationStrings.action_disable_scene
     override fun shortDescription(): String =
-        rh.gs(R.string.action_disable_scene_short, sceneApi.getScene(scene.value)?.name ?: "")
+        rh.gs(AutomationStrings.action_disable_scene_short, sceneApi.getScene(scene.value)?.name ?: "")
 
     override fun composeIcon() = sceneIconResolver.iconForScene(scene.value) ?: Icons.Filled.VisibilityOff
     override fun elementType() = ElementType.SCENE
@@ -38,14 +41,14 @@ class ActionDisableScene(
     override suspend fun doAction(): PumpEnactResult =
         when (val result = sceneApi.setEnabled(scene.value, false)) {
             SceneAutomationResult.Success           ->
-                pumpEnactResultProvider().success(true).comment(app.aaps.core.ui.R.string.ok)
+                pumpEnactResultProvider().success(true).comment(CoreUiStrings.ok)
 
             SceneAutomationResult.SceneNotFound     ->
-                pumpEnactResultProvider().success(false).comment(R.string.action_scene_not_found)
+                pumpEnactResultProvider().success(false).comment(AutomationStrings.action_scene_not_found)
 
             is SceneAutomationResult.Failed         ->
                 pumpEnactResultProvider().success(false)
-                    .comment(result.message ?: rh.gs(app.aaps.core.ui.R.string.error))
+                    .comment(result.message ?: rh.gs(CoreUiStrings.error))
 
             // setEnabled() never returns SceneDisabled or ChainCompleted; if either does, the contract changed.
             SceneAutomationResult.SceneDisabled,

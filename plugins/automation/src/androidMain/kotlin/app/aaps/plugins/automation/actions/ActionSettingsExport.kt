@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.plugins.automation.AutomationStrings
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FileDownload
 import app.aaps.core.data.model.TE
@@ -48,8 +51,8 @@ class ActionSettingsExport(
 
     private val text = InputString()
 
-    override fun friendlyName(): Int = app.aaps.core.ui.R.string.exportsettings
-    override fun shortDescription(): String = rh.gs(R.string.exportsettings_message, text.value)
+    override fun friendlyName(): TextRef = CoreUiStrings.exportsettings
+    override fun shortDescription(): String = rh.gs(AutomationStrings.exportsettings_message, text.value)
     override fun composeIcon() = Icons.Filled.FileDownload
     override fun elementType() = ElementType.SETTINGS
 
@@ -76,12 +79,12 @@ class ActionSettingsExport(
                     // Password is about to expire and needs re-entering by user soon: notify user
                     // Note: we are allowed to export!
                     exportResultComment = app.aaps.core.ui.R.string.export_warning
-                    exportResultMessage = rh.gs(app.aaps.core.ui.R.string.export_result_message_about_to_expire)
+                    exportResultMessage = rh.gs(CoreUiStrings.export_result_message_about_to_expire)
                     exportResultLevel = NotificationLevel.LOW  // LOW -> e.g. color ORANGE
                 } else {
                     // We have a valid password: start exporting, then notify
                     exportResultComment = app.aaps.core.ui.R.string.export_ok
-                    exportResultMessage = rh.gs(app.aaps.core.ui.R.string.export_result_message_exported)
+                    exportResultMessage = rh.gs(CoreUiStrings.export_result_message_exported)
                     exportResultLevel = NotificationLevel.INFO // INFO -> e.g. color GREEN
                 }
                 // Execute settings export, then notify user
@@ -89,14 +92,14 @@ class ActionSettingsExport(
                     // :-( Export failed (see logfile!?)
                     aapsLogger.error(LTag.AUTOMATION, "ERROR: exportSharedPreferencesNonInteractive() failed to export settings")
                     exportResultComment = app.aaps.core.ui.R.string.export_failed
-                    exportResultMessage = rh.gs(app.aaps.core.ui.R.string.export_result_message_failed)
+                    exportResultMessage = rh.gs(CoreUiStrings.export_result_message_failed)
                     exportResultLevel = NotificationLevel.IMPORTANT // URGENT -> e.g. color RED
                     announceAlert = true
                 }
             } else {
                 // No password or was expired and needs re-entering by user
                 exportResultComment = app.aaps.core.ui.R.string.export_expired
-                exportResultMessage = rh.gs(app.aaps.core.ui.R.string.export_result_message_expired)
+                exportResultMessage = rh.gs(CoreUiStrings.export_result_message_expired)
                 exportResultLevel = NotificationLevel.IMPORTANT  // URGENT -> e.g. color RED
                 // Clear password in datastore, then notify user
                 aapsLogger.info(LTag.AUTOMATION, "No password or was expired and needs re-entering by user")
@@ -106,7 +109,7 @@ class ActionSettingsExport(
         } else {
             // Not enabled, do nothing and notify user
             exportResultComment = app.aaps.core.ui.R.string.export_disabled
-            exportResultMessage = rh.gs(app.aaps.core.ui.R.string.export_result_message_disabled)
+            exportResultMessage = rh.gs(CoreUiStrings.export_result_message_disabled)
             exportResultLevel = NotificationLevel.IMPORTANT
             aapsLogger.info(LTag.AUTOMATION, "Settings export ignored: unattended settings export is disabled")
         }
@@ -127,7 +130,7 @@ class ActionSettingsExport(
 
         if (announceAlert && preferences.get(BooleanKey.NsClientCreateAnnouncementsFromErrors) && config.APS) {
             // Do additional event type announcement for aapsClient alerting
-            val alert = "${rh.gs(app.aaps.core.ui.R.string.export_alert)}(${text.value}): $exportResultMessage"
+            val alert = "${rh.gs(CoreUiStrings.export_alert)}(${text.value}): $exportResultMessage"
             aapsLogger.debug(LTag.AUTOMATION, "Insert therapy ALERT/ANNOUNCEMENT event, error=:${alert}")
             persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
                 therapyEvent = TE.asAnnouncement(error = alert),

@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputDropdownOnOffMenu
@@ -22,16 +23,16 @@ class ActionSMBChangeTest : ActionsTestBase() {
     private lateinit var sut: ActionSMBChange
 
     @BeforeEach fun setUp() {
-        whenever(rh.gs(R.string.changeSmbState)).thenReturn("Enable/disable SMB")
-        whenever(rh.gs(R.string.changeSmbTo)).thenReturn("Change SMB to %1\$s")
-        whenever(rh.gs(R.string.on)).thenReturn("ON")
-        whenever(rh.gs(R.string.off)).thenReturn("OFF")
+        whenever(rh.gs(AutomationStrings.changeSmbState)).thenReturn("Enable/disable SMB")
+        whenever(rh.gs(AutomationStrings.changeSmbTo)).thenReturn("Change SMB to %1\$s")
+        whenever(rh.gs(AutomationStrings.on)).thenReturn("ON")
+        whenever(rh.gs(AutomationStrings.off)).thenReturn("OFF")
 
         sut = ActionSMBChange(aapsLogger, rh, Provider { pumpEnactResultProvider.get() }, dateUtil, preferences)
     }
 
     @Test fun friendlyName() = runTest {
-        assertThat(sut.friendlyName()).isEqualTo(R.string.changeSmbState)
+        assertThat(sut.friendlyName()).isEqualTo(AutomationStrings.changeSmbState)
     }
 
     @Test fun shortDescriptionTest() = runTest {

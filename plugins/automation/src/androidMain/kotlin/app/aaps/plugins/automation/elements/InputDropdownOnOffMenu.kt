@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.elements
 
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.interfaces.resources.ResourceHelper
 
 class InputDropdownOnOffMenu(private val rh: ResourceHelper) {
@@ -16,8 +17,8 @@ class InputDropdownOnOffMenu(private val rh: ResourceHelper) {
     }
 
     fun toTextValue() = when (value) {
-        true  -> rh.gs(app.aaps.plugins.automation.R.string.on)
-        false -> rh.gs(app.aaps.plugins.automation.R.string.off)
+        true  -> rh.gs(AutomationStrings.on)
+        false -> rh.gs(AutomationStrings.off)
     }
 
     fun setValue(state: Boolean): InputDropdownOnOffMenu {

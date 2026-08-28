@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.compose.actions
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.plugins.automation.AutomationStrings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -119,7 +121,7 @@ fun ChooseActionSheet(
                 .verticalScroll(rememberScrollState())
         ) {
             Text(
-                text = stringResource(R.string.automation_choose_action),
+                text = stringResource(AutomationStrings.automation_choose_action),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold
             )

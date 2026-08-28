@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -45,14 +48,14 @@ class ActionRunAutotune(
     private var daysBack = InputDuration(0, InputDuration.TimeUnit.DAYS)
     private val days = InputWeekDay().also { it.setAll(true) }
 
-    override fun friendlyName(): Int = R.string.autotune_run
-    override fun shortDescription(): String = resourceHelper.gs(R.string.autotune_profile_name, inputProfileName.value)
+    override fun friendlyName(): TextRef = AutomationStrings.autotune_run
+    override fun shortDescription(): String = resourceHelper.gs(AutomationStrings.autotune_profile_name, inputProfileName.value)
     override fun composeIcon() = IcPluginAutotune
     override fun elementType() = ElementType.PROFILE_MANAGEMENT
 
     override suspend fun doAction(): PumpEnactResult {
         val autoSwitch = preferences.get(BooleanKey.AutotuneAutoSwitchProfile)
-        val profileName = if (inputProfileName.value == rh.gs(app.aaps.core.ui.R.string.active)) "" else inputProfileName.value
+        val profileName = if (inputProfileName.value == rh.gs(CoreUiStrings.active)) "" else inputProfileName.value
         var message = if (autoSwitch) R.string.autotune_run_with_autoswitch else R.string.autotune_run_without_autoswitch
         return if (!autotunePlugin.calculationRunning) {
             autotunePlugin.atLog("[Automation] Run Autotune $profileName, ${daysBack.value} days, Autoswitch $autoSwitch")

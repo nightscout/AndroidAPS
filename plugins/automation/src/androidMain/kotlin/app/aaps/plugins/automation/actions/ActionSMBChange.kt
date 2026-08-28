@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.pump.PumpEnactResult
@@ -27,14 +30,14 @@ class ActionSMBChange(
 
     var smbState: InputDropdownOnOffMenu = InputDropdownOnOffMenu(rh, true)
 
-    override fun friendlyName(): Int = R.string.changeSmbState
-    override fun shortDescription(): String = rh.gs(R.string.changeSmbTo, smbState.toTextValue())
+    override fun friendlyName(): TextRef = AutomationStrings.changeSmbState
+    override fun shortDescription(): String = rh.gs(AutomationStrings.changeSmbTo, smbState.toTextValue())
     override fun composeIcon() = IcSmb
     override fun elementType() = ElementType.INSULIN
 
     override suspend fun doAction(): PumpEnactResult {
         preferences.put(BooleanKey.ApsUseSmb, smbState.value)
-        return pumpEnactResultProvider().success(true).comment(app.aaps.core.ui.R.string.ok)
+        return pumpEnactResultProvider().success(true).comment(CoreUiStrings.ok)
     }
 
     override fun hasDialog(): Boolean = true

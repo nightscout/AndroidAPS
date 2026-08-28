@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.logging.LTag
@@ -68,10 +70,10 @@ class TriggerCannulaAge(deps: TriggerDeps) : Trigger(deps) {
         return this
     }
 
-    override fun friendlyName(): Int = R.string.triggerCannulaAgeLabel
+    override fun friendlyName(): TextRef = AutomationStrings.triggerCannulaAgeLabel
 
     override fun friendlyDescription(): String =
-        rh.gs(R.string.triggerCannulaAgeDesc, rh.gs(comparator.value.stringRes), cannulaAgeHours.value)
+        rh.gs(AutomationStrings.triggerCannulaAgeDesc, rh.gs(comparator.value.stringRes), cannulaAgeHours.value)
 
     override fun composeIcon() = IcCannulaChange
     override fun elementType() = ElementType.CANNULA_CHANGE

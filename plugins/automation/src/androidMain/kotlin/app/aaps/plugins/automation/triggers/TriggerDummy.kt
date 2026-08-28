@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.core.keys.interfaces.TextRef
 import kotlinx.serialization.json.JsonObject
 
 // Used for instantiation of other triggers only
@@ -15,7 +16,7 @@ class TriggerDummy(deps: TriggerDeps, val shouldRun: Boolean = false) : Trigger(
 
     override fun fromJSON(data: String): Trigger = TriggerDummy(deps)
 
-    override fun friendlyName(): Int {
+    override fun friendlyName(): TextRef {
         throw NotImplementedError("An operation is not implemented")
     }
 

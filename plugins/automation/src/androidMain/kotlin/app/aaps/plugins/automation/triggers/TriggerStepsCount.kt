@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
@@ -74,10 +76,10 @@ class TriggerStepsCount(deps: TriggerDeps) : Trigger(deps) {
         return this
     }
 
-    override fun friendlyName(): Int = R.string.triggerStepsCountLabel
+    override fun friendlyName(): TextRef = AutomationStrings.triggerStepsCountLabel
 
     override fun friendlyDescription(): String =
-        rh.gs(R.string.triggerStepsCountDesc, measurementDuration.value, rh.gs(comparator.value.stringRes), stepsCount.value)
+        rh.gs(AutomationStrings.triggerStepsCountDesc, measurementDuration.value, rh.gs(comparator.value.stringRes), stepsCount.value)
 
     override fun composeIcon() = IcActivity
     override fun elementType() = ElementType.EXERCISE

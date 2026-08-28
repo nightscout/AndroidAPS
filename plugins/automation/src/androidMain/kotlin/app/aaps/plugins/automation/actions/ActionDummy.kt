@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -12,7 +13,7 @@ class ActionDummy(
     pumpEnactResultProvider: Provider<PumpEnactResult>
 ) : Action(aapsLogger, rh, pumpEnactResultProvider) {
 
-    override fun friendlyName(): Int {
+    override fun friendlyName(): TextRef {
         throw NotImplementedError("An operation is not implemented")
     }
 

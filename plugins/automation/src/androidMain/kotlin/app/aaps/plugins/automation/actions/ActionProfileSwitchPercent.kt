@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -38,10 +41,10 @@ class ActionProfileSwitchPercent(
 
     override var precondition: Trigger? = TriggerProfilePercent(triggerDeps, 100.0, Comparator.Compare.IS_EQUAL)
 
-    override fun friendlyName(): Int = R.string.profilepercentage
+    override fun friendlyName(): TextRef = AutomationStrings.profilepercentage
     override fun shortDescription(): String =
-        if (duration.value == 0) rh.gs(R.string.startprofileforever, pct.value.toInt())
-        else rh.gs(app.aaps.core.ui.R.string.startprofile, pct.value.toInt(), duration.value)
+        if (duration.value == 0) rh.gs(AutomationStrings.startprofileforever, pct.value.toInt())
+        else rh.gs(CoreUiStrings.startprofile, pct.value.toInt(), duration.value)
 
     override fun composeIcon() = IcProfile
     override fun elementType() = ElementType.PROFILE_MANAGEMENT
@@ -53,17 +56,17 @@ class ActionProfileSwitchPercent(
             timeShiftInHours = 0,
             action = app.aaps.core.data.ue.Action.PROFILE_SWITCH,
             source = Sources.Automation,
-            note = title + ": " + rh.gs(app.aaps.core.ui.R.string.startprofile, pct.value.toInt(), duration.value),
+            note = title + ": " + rh.gs(CoreUiStrings.startprofile, pct.value.toInt(), duration.value),
             listValues = listOf(
                 ValueWithUnit.Percent(pct.value.toInt()),
                 ValueWithUnit.Minute(duration.value)
             )
         ) != null
         return if (switched) {
-            pumpEnactResultProvider().success(true).comment(app.aaps.core.ui.R.string.ok)
+            pumpEnactResultProvider().success(true).comment(CoreUiStrings.ok)
         } else {
             aapsLogger.error(LTag.AUTOMATION, "Final profile not valid")
-            pumpEnactResultProvider().success(false).comment(app.aaps.core.ui.R.string.ok)
+            pumpEnactResultProvider().success(false).comment(CoreUiStrings.ok)
         }
     }
 

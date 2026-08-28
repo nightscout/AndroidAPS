@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.core.keys.interfaces.TextRef
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.icon
@@ -38,7 +39,7 @@ abstract class Trigger(val deps: TriggerDeps) {
     protected fun jsonOf(data: String): JsonObject =
         runCatching { Json.parseToJsonElement(data).jsonObject }.getOrElse { JsonObject(emptyMap()) }
 
-    abstract fun friendlyName(): Int
+    abstract fun friendlyName(): TextRef
     abstract fun friendlyDescription(): String
 
     /**

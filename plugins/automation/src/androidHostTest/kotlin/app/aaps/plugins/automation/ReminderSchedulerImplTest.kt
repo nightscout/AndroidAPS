@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation
 
+import app.aaps.core.keys.interfaces.TextRef
 import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
@@ -18,6 +19,7 @@ import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.MockedConstruction.MockInitializer
 import org.mockito.Mockito.mockConstruction
+import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
@@ -86,7 +88,7 @@ class ReminderSchedulerImplTest : TestBase() {
         // A reminder that cannot be scheduled must say so - failing silently is how the previous
         // background-reminder bug stayed hidden.
         whenever(context.getSystemService(Context.ALARM_SERVICE)).thenThrow(RuntimeException("no alarm service"))
-        whenever(rh.gs(anyInt())).thenReturn("Cannot set reminder")
+        doAnswer { "Cannot set reminder" }.whenever(rh).gs(any<TextRef>())
 
         val events = argumentCaptor<Event>()
         sut.scheduleReminder(60, "Time to eat")

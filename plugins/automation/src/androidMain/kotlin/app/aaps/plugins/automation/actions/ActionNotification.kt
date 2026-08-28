@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.plugins.automation.AutomationStrings
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
 import app.aaps.core.data.model.TE
@@ -36,8 +39,8 @@ class ActionNotification(
 
     var text = InputString()
 
-    override fun friendlyName(): Int = app.aaps.core.ui.R.string.notification
-    override fun shortDescription(): String = rh.gs(R.string.notification_message, text.value)
+    override fun friendlyName(): TextRef = CoreUiStrings.notification
+    override fun shortDescription(): String = rh.gs(AutomationStrings.notification_message, text.value)
     override fun composeIcon() = Icons.Filled.Notifications
     override fun elementType() = ElementType.ANNOUNCEMENT
 
@@ -52,7 +55,7 @@ class ActionNotification(
             listValues = listOf()
         )
         rxBus.send(EventRefreshOverview("ActionNotification"))
-        return pumpEnactResultProvider().success(true).comment(app.aaps.core.ui.R.string.ok)
+        return pumpEnactResultProvider().success(true).comment(CoreUiStrings.ok)
     }
 
     override fun toJSON(): String =

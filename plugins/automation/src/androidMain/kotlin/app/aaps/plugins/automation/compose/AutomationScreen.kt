@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.compose
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.automation.AutomationStrings
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -101,7 +104,7 @@ fun AutomationScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
-                        contentDescription = stringResource(R.string.add_automation)
+                        contentDescription = stringResource(AutomationStrings.add_automation)
                     )
                 }
             }
@@ -119,11 +122,11 @@ private fun EmptyState(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = stringResource(R.string.automation),
+            text = stringResource(AutomationStrings.automation),
             style = MaterialTheme.typography.headlineSmall
         )
         Text(
-            text = stringResource(R.string.automation_empty_desc),
+            text = stringResource(AutomationStrings.automation_empty_desc),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(top = AapsSpacing.medium)
@@ -228,7 +231,7 @@ private fun AutomationEventCard(
             if (event.readOnly) {
                 Icon(
                     imageVector = Icons.Default.Lock,
-                    contentDescription = stringResource(R.string.system_automation),
+                    contentDescription = stringResource(AutomationStrings.system_automation),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             } else {
@@ -243,7 +246,7 @@ private fun AutomationEventCard(
             ) {
                 Icon(
                     Icons.Default.DragHandle,
-                    contentDescription = stringResource(app.aaps.core.ui.R.string.reorder)
+                    contentDescription = stringResource(CoreUiStrings.reorder)
                 )
             }
         }

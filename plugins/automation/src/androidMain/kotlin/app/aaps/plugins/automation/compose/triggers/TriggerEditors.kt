@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.compose.triggers
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.automation.AutomationStrings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -123,7 +126,7 @@ fun TriggerBgEditor(t: TriggerBg, onChange: () -> Unit, tick: Int = 0) {
             valueRange = if (isMmol) InputBg.MMOL_MIN..InputBg.MMOL_MAX else InputBg.MGDL_MIN..InputBg.MGDL_MAX,
             step = if (isMmol) 0.1 else 1.0,
             decimalPlaces = if (isMmol) 1 else 0,
-            unitLabel = TextRef.AndroidRes(if (isMmol) CoreUiR.string.units_mmol else CoreUiR.string.units_mgdl),
+            unitLabel = if (isMmol) CoreUiStrings.units_mmol else CoreUiStrings.units_mgdl,
             compact = true
         )
     }
@@ -157,7 +160,7 @@ fun TriggerDeltaEditor(t: TriggerDelta, onChange: () -> Unit, tick: Int = 0) {
             valueRange = -72.0..72.0,
             step = 0.1,
             decimalPlaces = 1,
-            unitLabel = TextRef.AndroidRes(if (isMmol) CoreUiR.string.units_mmol else CoreUiR.string.units_mgdl),
+            unitLabel = if (isMmol) CoreUiStrings.units_mmol else CoreUiStrings.units_mgdl,
             compact = true
         )
     }
@@ -177,7 +180,7 @@ fun TriggerCOBEditor(t: TriggerCOB, onChange: () -> Unit, tick: Int = 0) {
             onValueChange = { t.cob.value = it; onChange() },
             valueRange = 0.0..150.0,
             step = 1.0,
-            unitLabel = TextRef.AndroidRes(CoreUiR.string.units_grams),
+            unitLabel = CoreUiStrings.units_grams,
             compact = true
         )
     }
@@ -198,7 +201,7 @@ fun TriggerIobEditor(t: TriggerIob, onChange: () -> Unit, tick: Int = 0) {
             valueRange = -20.0..20.0,
             step = 0.1,
             decimalPlaces = 1,
-            unitLabel = TextRef.AndroidRes(CoreUiR.string.units_insulin),
+            unitLabel = CoreUiStrings.units_insulin,
             compact = true
         )
     }
@@ -238,7 +241,7 @@ fun TriggerAutosensValueEditor(t: TriggerAutosensValue, onChange: () -> Unit, ti
             onValueChange = { t.autosens.value = it; onChange() },
             valueRange = 0.0..300.0,
             step = 1.0,
-            unitLabel = TextRef.AndroidRes(CoreUiR.string.units_percent),
+            unitLabel = CoreUiStrings.units_percent,
             compact = true
         )
     }
@@ -258,7 +261,7 @@ fun TriggerBolusAgoEditor(t: TriggerBolusAgo, onChange: () -> Unit, tick: Int = 
             onValueChange = { t.minutesAgo.value = it.toInt(); onChange() },
             valueRange = 5.0..(24 * 60.0),
             step = 10.0,
-            unitLabel = TextRef.AndroidRes(CoreUiR.string.units_min),
+            unitLabel = CoreUiStrings.units_min,
             compact = true
         )
     }
@@ -279,7 +282,7 @@ fun TriggerCannulaAgeEditor(t: TriggerCannulaAge, onChange: () -> Unit, tick: In
             valueRange = 0.0..336.0,
             step = 0.1,
             decimalPlaces = 1,
-            unitLabel = TextRef.AndroidRes(CoreUiR.string.units_hours),
+            unitLabel = CoreUiStrings.units_hours,
             compact = true
         )
     }
@@ -300,7 +303,7 @@ fun TriggerInsulinAgeEditor(t: TriggerInsulinAge, onChange: () -> Unit, tick: In
             valueRange = 0.0..336.0,
             step = 0.1,
             decimalPlaces = 1,
-            unitLabel = TextRef.AndroidRes(CoreUiR.string.units_hours),
+            unitLabel = CoreUiStrings.units_hours,
             compact = true
         )
     }
@@ -320,7 +323,7 @@ fun TriggerReservoirLevelEditor(t: TriggerReservoirLevel, onChange: () -> Unit, 
             onValueChange = { t.reservoirLevel.value = it; onChange() },
             valueRange = 0.0..800.0,
             step = 1.0,
-            unitLabel = TextRef.AndroidRes(CoreUiR.string.units_insulin),
+            unitLabel = CoreUiStrings.units_insulin,
             compact = true
         )
     }
@@ -341,7 +344,7 @@ fun TriggerPumpBatteryAgeEditor(t: TriggerPumpBatteryAge, onChange: () -> Unit, 
             valueRange = 0.0..336.0,
             step = 0.1,
             decimalPlaces = 1,
-            unitLabel = TextRef.AndroidRes(CoreUiR.string.units_hours),
+            unitLabel = CoreUiStrings.units_hours,
             compact = true
         )
     }
@@ -361,7 +364,7 @@ fun TriggerPumpBatteryLevelEditor(t: TriggerPumpBatteryLevel, onChange: () -> Un
             onValueChange = { t.pumpBatteryLevel.value = it; onChange() },
             valueRange = 0.0..100.0,
             step = 1.0,
-            unitLabel = TextRef.AndroidRes(CoreUiR.string.units_percent),
+            unitLabel = CoreUiStrings.units_percent,
             compact = true
         )
     }
@@ -382,7 +385,7 @@ fun TriggerSensorAgeEditor(t: TriggerSensorAge, onChange: () -> Unit, tick: Int 
             valueRange = 0.0..720.0,
             step = 0.1,
             decimalPlaces = 1,
-            unitLabel = TextRef.AndroidRes(CoreUiR.string.units_hours),
+            unitLabel = CoreUiStrings.units_hours,
             compact = true
         )
     }
@@ -390,7 +393,7 @@ fun TriggerSensorAgeEditor(t: TriggerSensorAge, onChange: () -> Unit, tick: Int 
 
 @Composable
 fun TriggerPodChangeEditor() {
-    Text(stringResource(R.string.triggerPodChangeDesc))
+    Text(stringResource(AutomationStrings.triggerPodChangeDesc))
 }
 
 @Composable
@@ -407,7 +410,7 @@ fun TriggerPumpLastConnectionEditor(t: TriggerPumpLastConnection, onChange: () -
             onValueChange = { t.minutesAgo.value = it.toInt(); onChange() },
             valueRange = 5.0..(24 * 60.0),
             step = 10.0,
-            unitLabel = TextRef.AndroidRes(CoreUiR.string.units_min),
+            unitLabel = CoreUiStrings.units_min,
             compact = true
         )
     }
@@ -427,7 +430,7 @@ fun TriggerProfilePercentEditor(t: TriggerProfilePercent, onChange: () -> Unit, 
             onValueChange = { t.pct.value = it; onChange() },
             valueRange = InputPercent.MIN..InputPercent.MAX,
             step = 5.0,
-            unitLabel = TextRef.AndroidRes(CoreUiR.string.units_percent),
+            unitLabel = CoreUiStrings.units_percent,
             compact = true
         )
     }
@@ -455,7 +458,7 @@ fun TriggerTempTargetValueEditor(t: TriggerTempTargetValue, onChange: () -> Unit
             else Constants.TT_RANGE_MGDL,
             step = if (isMmol) 0.1 else 1.0,
             decimalPlaces = if (isMmol) 1 else 0,
-            unitLabel = TextRef.AndroidRes(if (isMmol) CoreUiR.string.units_mmol else CoreUiR.string.units_mgdl),
+            unitLabel = if (isMmol) CoreUiStrings.units_mmol else CoreUiStrings.units_mgdl,
             compact = true
         )
     }
@@ -466,7 +469,7 @@ fun TriggerStepsCountEditor(t: TriggerStepsCount, onChange: () -> Unit, tick: In
     @Suppress("UNUSED_EXPRESSION") tick
     val durations = listOf("5", "10", "15", "30", "60", "180")
     LabelWithElementRow(
-        textPre = stringResource(R.string.triggerStepsCountDropdownLabel) + ":",
+        textPre = stringResource(AutomationStrings.triggerStepsCountDropdownLabel) + ":",
         textPost = stringResource(app.aaps.core.interfaces.R.string.unit_minutes)
     ) {
         AutomationDropdown(
@@ -550,15 +553,15 @@ fun TriggerLocationEditor(
     @Suppress("UNUSED_EXPRESSION") tick
     InputStringEditor(
         value = t.name.value, onValueChange = { t.name.value = it; onChange() },
-        label = stringResource(app.aaps.core.ui.R.string.name_short)
+        label = stringResource(CoreUiStrings.name_short)
     )
     if (showCurrentLocation) {
         OutlinedButton(onClick = onUseCurrentLocation, modifier = Modifier.fillMaxWidth()) {
-            Text(stringResource(R.string.currentlocation))
+            Text(stringResource(AutomationStrings.currentlocation))
         }
     }
     OutlinedButton(onClick = { onPickLocationFromMap(t) }, modifier = Modifier.fillMaxWidth()) {
-        Text(stringResource(R.string.pick_from_map))
+        Text(stringResource(AutomationStrings.pick_from_map))
     }
     NumberInputRow(
         labelResId = 0,

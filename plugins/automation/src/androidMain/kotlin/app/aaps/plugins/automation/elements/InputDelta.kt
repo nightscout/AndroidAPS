@@ -1,6 +1,7 @@
 package app.aaps.plugins.automation.elements
 
-import androidx.annotation.StringRes
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.plugins.automation.R
@@ -10,11 +11,11 @@ class InputDelta(private val rh: ResourceHelper) {
     enum class DeltaType {
         DELTA, SHORT_AVERAGE, LONG_AVERAGE;
 
-        @get:StringRes val stringRes: Int
+        val stringRes: TextRef
             get() = when (this) {
-                DELTA -> R.string.delta
-                SHORT_AVERAGE -> R.string.short_avgdelta
-                LONG_AVERAGE -> R.string.long_avgdelta
+                DELTA -> AutomationStrings.delta
+                SHORT_AVERAGE -> AutomationStrings.short_avgdelta
+                LONG_AVERAGE -> AutomationStrings.long_avgdelta
             }
 
         companion object {

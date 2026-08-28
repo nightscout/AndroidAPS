@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.data.model.SC
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.asJsonObject
@@ -16,14 +17,14 @@ class TriggerStepsCountTest : TriggerTestBase() {
 
     @Test
     fun friendlyName() {
-        assertThat(TriggerStepsCount(triggerDeps).friendlyName()).isEqualTo(R.string.triggerStepsCountLabel)
+        assertThat(TriggerStepsCount(triggerDeps).friendlyName()).isEqualTo(AutomationStrings.triggerStepsCountLabel)
     }
 
     @Test
     fun friendlyDescription() {
         val t = TriggerStepsCount(triggerDeps)
         whenever(rh.gs(Comparator.Compare.IS_EQUAL_OR_GREATER.stringRes)).thenReturn(">")
-        whenever(rh.gs(R.string.triggerStepsCountDesc, "5", ">", 100.0)).thenReturn("test")
+        whenever(rh.gs(AutomationStrings.triggerStepsCountDesc, "5", ">", 100.0)).thenReturn("test")
 
         assertThat(t.friendlyDescription()).isEqualTo("test")
     }

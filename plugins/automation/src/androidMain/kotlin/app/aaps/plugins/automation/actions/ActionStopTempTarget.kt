@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -20,14 +22,14 @@ class ActionStopTempTarget(
 ) : Action(aapsLogger, rh, pumpEnactResultProvider) {
 
 
-    override fun friendlyName(): Int = app.aaps.core.ui.R.string.stoptemptarget
-    override fun shortDescription(): String = rh.gs(app.aaps.core.ui.R.string.stoptemptarget)
+    override fun friendlyName(): TextRef = CoreUiStrings.stoptemptarget
+    override fun shortDescription(): String = rh.gs(CoreUiStrings.stoptemptarget)
     override fun composeIcon() = IcTtCancel
     override fun elementType() = ElementType.TEMP_TARGET_MANAGEMENT
 
     override suspend fun doAction(): PumpEnactResult {
         persistenceLayer.cancelCurrentTemporaryTargetIfAny(dateUtil.now(), app.aaps.core.data.ue.Action.CANCEL_TT, Sources.Automation, title, listOf())
-        return pumpEnactResultProvider().success(true).comment(app.aaps.core.ui.R.string.ok)
+        return pumpEnactResultProvider().success(true).comment(CoreUiStrings.ok)
     }
 
     override fun isValid(): Boolean = true

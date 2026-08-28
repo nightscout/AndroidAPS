@@ -1,6 +1,7 @@
 package app.aaps.plugins.automation.elements
 
-import androidx.annotation.StringRes
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.resources.ResourceHelper
 
@@ -12,20 +13,20 @@ class InputCarePortalMenu() {
         QUESTION(TE.Type.QUESTION),
         ANNOUNCEMENT(TE.Type.ANNOUNCEMENT);
 
-        @get:StringRes val stringResWithValue: Int
+        val stringResWithValue: TextRef
             get() = when (this) {
-                NOTE         -> app.aaps.core.ui.R.string.careportal_note_message
-                EXERCISE     -> app.aaps.core.ui.R.string.careportal_exercise_message
-                QUESTION     -> app.aaps.core.ui.R.string.careportal_question_message
-                ANNOUNCEMENT -> app.aaps.core.ui.R.string.careportal_announcement_message
+                NOTE         -> CoreUiStrings.careportal_note_message
+                EXERCISE     -> CoreUiStrings.careportal_exercise_message
+                QUESTION     -> CoreUiStrings.careportal_question_message
+                ANNOUNCEMENT -> CoreUiStrings.careportal_announcement_message
             }
 
-        @get:StringRes val stringRes: Int
+        val stringRes: TextRef
             get() = when (this) {
-                NOTE         -> app.aaps.core.ui.R.string.careportal_note
-                EXERCISE     -> app.aaps.core.ui.R.string.careportal_exercise
-                QUESTION     -> app.aaps.core.ui.R.string.careportal_question
-                ANNOUNCEMENT -> app.aaps.core.ui.R.string.careportal_announcement
+                NOTE         -> CoreUiStrings.careportal_note
+                EXERCISE     -> CoreUiStrings.careportal_exercise
+                QUESTION     -> CoreUiStrings.careportal_question
+                ANNOUNCEMENT -> CoreUiStrings.careportal_announcement
             }
 
         companion object {

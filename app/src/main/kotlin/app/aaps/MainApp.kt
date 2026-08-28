@@ -92,6 +92,7 @@ import app.aaps.implementation.receivers.TimeDateOrTZChangeReceiver
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
 import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler
 import app.aaps.plugins.automation.AutomationRuntime
+import app.aaps.plugins.automation.AutomationStringIds
 import app.aaps.plugins.calibration.CalibrationStringIds
 import app.aaps.plugins.constraints.objectives.keys.ObjectivesLongComposedKey
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
@@ -131,7 +132,7 @@ import kotlin.time.Duration.Companion.milliseconds
 
 @HiltAndroidApp
 class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, Configuration.Provider {
-
+
     // Every Android entry point on the phone is filled by Metro now - dagger.android is gone from this
     // module. `injectMetroMembers` fails loudly on a missing binding, where dagger.android skipped it.
     override fun injectMembers(target: Any): Boolean = metroGraphs.injectMembers(target)
@@ -1027,5 +1028,6 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         TextRefIdRegistry.register("sensitivity") { name -> SensitivityStringIds.idOf(name) }
         TextRefIdRegistry.register("main") { name -> MainStringIds.idOf(name) }
         TextRefIdRegistry.register("ui") { name -> UiStringIds.idOf(name) }
+        TextRefIdRegistry.register("automation") { name -> AutomationStringIds.idOf(name) }
     }
 }

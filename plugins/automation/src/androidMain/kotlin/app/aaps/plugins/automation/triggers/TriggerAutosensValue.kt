@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
@@ -59,10 +61,10 @@ class TriggerAutosensValue(deps: TriggerDeps) : Trigger(deps) {
         return this
     }
 
-    override fun friendlyName(): Int = R.string.autosenslabel
+    override fun friendlyName(): TextRef = AutomationStrings.autosenslabel
 
     override fun friendlyDescription(): String =
-        rh.gs(R.string.autosenscompared, rh.gs(comparator.value.stringRes), autosens.value)
+        rh.gs(AutomationStrings.autosenscompared, rh.gs(comparator.value.stringRes), autosens.value)
 
     override fun composeIcon() = IcAs
     override fun elementType() = ElementType.SENSITIVITY

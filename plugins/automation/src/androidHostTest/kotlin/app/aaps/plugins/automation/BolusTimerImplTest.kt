@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation
 
+import app.aaps.core.keys.interfaces.TextRef
 import android.content.Context
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.alerts.ReminderScheduler
@@ -26,6 +27,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
+import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
@@ -65,7 +68,7 @@ class BolusTimerImplTest : TestBase() {
 
     @BeforeEach
     fun init() {
-        whenever(rh.gs(anyInt())).thenReturn("")
+        doAnswer { "" }.whenever(rh).gs(any<TextRef>())
         whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         dateUtil = DateUtilImpl(context)
         automationRuntime = AutomationRuntime(

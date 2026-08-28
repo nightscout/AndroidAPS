@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TT
@@ -52,8 +55,8 @@ class ActionStartTempTarget(
 
     override var precondition: Trigger? = TriggerTempTarget(triggerDeps, ComparatorExists.Compare.NOT_EXISTS)
 
-    override fun friendlyName(): Int = R.string.starttemptarget
-    override fun shortDescription(): String = rh.gs(R.string.starttemptarget) + ": " + tt().friendlyDescription(value.units, rh, profileUtil)
+    override fun friendlyName(): TextRef = AutomationStrings.starttemptarget
+    override fun shortDescription(): String = rh.gs(AutomationStrings.starttemptarget) + ": " + tt().friendlyDescription(value.units, rh, profileUtil)
     override fun composeIcon() = IcTtHigh
     override fun elementType() = ElementType.TEMP_TARGET_MANAGEMENT
 
@@ -70,9 +73,9 @@ class ActionStartTempTarget(
                     ValueWithUnit.Minute(tt().duration.milliseconds.inWholeMinutes.toInt())
                 )
             )
-            pumpEnactResultProvider().success(true).comment(app.aaps.core.ui.R.string.ok)
+            pumpEnactResultProvider().success(true).comment(CoreUiStrings.ok)
         } catch (_: Exception) {
-            pumpEnactResultProvider().success(false).comment(app.aaps.core.ui.R.string.error)
+            pumpEnactResultProvider().success(false).comment(CoreUiStrings.error)
         }
 
     override fun hasDialog(): Boolean {

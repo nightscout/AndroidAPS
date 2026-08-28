@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.automation.AutomationStrings
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Repeat
 import app.aaps.core.interfaces.logging.LTag
@@ -70,11 +72,11 @@ class TriggerRecurringTime(deps: TriggerDeps) : Trigger(deps) {
         return this
     }
 
-    override fun friendlyName(): Int = R.string.recurringTime
+    override fun friendlyName(): TextRef = AutomationStrings.recurringTime
 
     override fun friendlyDescription(): String {
         val sb = StringBuilder()
-        sb.append(rh.gs(R.string.every))
+        sb.append(rh.gs(AutomationStrings.every))
         sb.append(" ")
         var counter = 0
         for (i in days.getSelectedDays()) {
@@ -83,7 +85,7 @@ class TriggerRecurringTime(deps: TriggerDeps) : Trigger(deps) {
         }
         sb.append(" ")
         sb.append(dateUtil.timeString(toMills(time.value)))
-        return if (counter == 0) rh.gs(R.string.never) else sb.toString()
+        return if (counter == 0) rh.gs(AutomationStrings.never) else sb.toString()
     }
 
     override fun composeIcon() = Icons.Filled.Repeat

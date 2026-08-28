@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.R as CoreUiR
 import com.google.common.truth.Truth.assertThat
@@ -8,6 +10,7 @@ import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.kotlin.any
 import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.whenever
 
@@ -21,12 +24,12 @@ class ActionSettingsExportTest : ActionsTestBase() {
 
     @BeforeEach
     fun setup() {
-        whenever(rh.gs(anyInt(), anyVararg())).thenReturn("desc")
+        whenever(rh.gs(any<TextRef>(), anyVararg())).thenReturn("desc")
         sut = ActionSettingsExport(aapsLogger, rh, Provider { pumpEnactResultProvider.get() }, rxBus, notificationManager, dateUtil, config, persistenceLayer, importExportPrefs, exportPasswordDataStore, preferences)
     }
 
     @Test fun friendlyName() {
-        assertThat(sut.friendlyName()).isEqualTo(CoreUiR.string.exportsettings)
+        assertThat(sut.friendlyName()).isEqualTo(CoreUiStrings.exportsettings)
     }
 
     @Test fun shortDescription() {

@@ -1,6 +1,7 @@
 package app.aaps.plugins.automation.elements
 
-import androidx.annotation.StringRes
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.interfaces.resources.ResourceHelper
 
 class ComparatorExists(private val rh: ResourceHelper, var value: Compare = Compare.EXISTS) {
@@ -8,10 +9,10 @@ class ComparatorExists(private val rh: ResourceHelper, var value: Compare = Comp
     enum class Compare {
         EXISTS, NOT_EXISTS;
 
-        @get:StringRes val stringRes: Int
+        val stringRes: TextRef
             get() = when (this) {
-                EXISTS -> app.aaps.core.ui.R.string.exists
-                NOT_EXISTS -> app.aaps.core.ui.R.string.notexists
+                EXISTS -> CoreUiStrings.exists
+                NOT_EXISTS -> CoreUiStrings.notexists
             }
 
         companion object {

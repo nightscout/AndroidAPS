@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.objects.profile.ProfileSealed
@@ -76,10 +78,10 @@ class TriggerProfilePercent(deps: TriggerDeps) : Trigger(deps) {
         return this
     }
 
-    override fun friendlyName(): Int = R.string.profilepercentage
+    override fun friendlyName(): TextRef = AutomationStrings.profilepercentage
 
     override fun friendlyDescription(): String =
-        rh.gs(R.string.percentagecompared, rh.gs(comparator.value.stringRes), pct.value.toInt())
+        rh.gs(AutomationStrings.percentagecompared, rh.gs(comparator.value.stringRes), pct.value.toInt())
 
     override fun composeIcon() = IcProfile
     override fun elementType() = ElementType.PROFILE_MANAGEMENT

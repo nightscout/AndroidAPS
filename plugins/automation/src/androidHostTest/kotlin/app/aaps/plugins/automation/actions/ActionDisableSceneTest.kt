@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.data.model.Scene
 import app.aaps.core.interfaces.scenes.SceneAutomationResult
 import app.aaps.plugins.automation.R
@@ -23,14 +24,14 @@ class ActionDisableSceneTest : ActionsTestBase() {
     private val scene = Scene(id = "scene-1", name = "Sport")
 
     @BeforeEach fun setUp() {
-        whenever(rh.gs(R.string.action_disable_scene)).thenReturn("Disable scene")
-        whenever(rh.gs(R.string.action_disable_scene_short)).thenReturn("Disable scene: %1\$s")
-        whenever(rh.gs(R.string.action_scene_not_found)).thenReturn("Scene not found")
+        whenever(rh.gs(AutomationStrings.action_disable_scene)).thenReturn("Disable scene")
+        whenever(rh.gs(AutomationStrings.action_disable_scene_short)).thenReturn("Disable scene: %1\$s")
+        whenever(rh.gs(AutomationStrings.action_scene_not_found)).thenReturn("Scene not found")
         sut = ActionDisableScene(aapsLogger, rh, Provider { pumpEnactResultProvider.get() }, sceneApi, sceneIconResolver)
     }
 
     @Test fun friendlyName() = runTest {
-        assertThat(sut.friendlyName()).isEqualTo(R.string.action_disable_scene)
+        assertThat(sut.friendlyName()).isEqualTo(AutomationStrings.action_disable_scene)
     }
 
     @Test fun shortDescription() = runTest {

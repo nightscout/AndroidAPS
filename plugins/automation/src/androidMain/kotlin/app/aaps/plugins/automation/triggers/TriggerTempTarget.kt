@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.plugins.automation.AutomationStrings
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.icons.IcTtManual
@@ -52,10 +55,10 @@ class TriggerTempTarget(deps: TriggerDeps) : Trigger(deps) {
         return this
     }
 
-    override fun friendlyName(): Int = app.aaps.core.ui.R.string.temporary_target
+    override fun friendlyName(): TextRef = CoreUiStrings.temporary_target
 
     override fun friendlyDescription(): String =
-        rh.gs(R.string.temptargetcompared, rh.gs(comparator.value.stringRes))
+        rh.gs(AutomationStrings.temptargetcompared, rh.gs(comparator.value.stringRes))
 
     override fun composeIcon() = IcTtManual
     override fun elementType() = ElementType.TEMP_TARGET_MANAGEMENT

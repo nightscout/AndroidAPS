@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.compose
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.plugins.automation.AutomationStrings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -100,7 +102,7 @@ private fun ReadOnlyChip() {
     AssistChip(
         onClick = {},
         enabled = false,
-        label = { Text(stringResource(R.string.automation_read_only)) },
+        label = { Text(stringResource(AutomationStrings.automation_read_only)) },
         leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
         colors = AssistChipDefaults.assistChipColors(
             disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
@@ -121,12 +123,12 @@ private fun BasicsSection(
         OutlinedTextField(
             value = state.title,
             onValueChange = onTitleChange,
-            label = { Text(stringResource(R.string.taskname)) },
+            label = { Text(stringResource(AutomationStrings.taskname)) },
             singleLine = true,
             isError = state.titleError,
             enabled = !state.readOnly,
             supportingText = if (state.titleError) {
-                { Text(stringResource(R.string.automation_missing_task_name)) }
+                { Text(stringResource(AutomationStrings.automation_missing_task_name)) }
             } else null,
             modifier = Modifier.fillMaxWidth()
         )
@@ -135,7 +137,7 @@ private fun BasicsSection(
             modifier = Modifier.fillMaxWidth()
         ) {
             ListItem(
-                headlineContent = { Text(stringResource(R.string.user_action)) },
+                headlineContent = { Text(stringResource(AutomationStrings.user_action)) },
                 trailingContent = {
                     Switch(
                         checked = state.userAction,
@@ -146,7 +148,7 @@ private fun BasicsSection(
                 colors = ListItemDefaults.colors(containerColor = Color.Transparent)
             )
             ListItem(
-                headlineContent = { Text(stringResource(R.string.automation_enabled)) },
+                headlineContent = { Text(stringResource(AutomationStrings.automation_enabled)) },
                 trailingContent = {
                     Switch(
                         checked = state.enabled,
@@ -177,7 +179,7 @@ private fun ConditionSection(
     onEditTrigger: () -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        SectionHeader(stringResource(R.string.condition).trimEnd(':'))
+        SectionHeader(stringResource(AutomationStrings.condition).trimEnd(':'))
         Card(
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
             modifier = Modifier.fillMaxWidth()
@@ -190,7 +192,7 @@ private fun ConditionSection(
                     )
                 } else {
                     Text(
-                        text = stringResource(R.string.automation_missing_trigger),
+                        text = stringResource(AutomationStrings.automation_missing_trigger),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -199,7 +201,7 @@ private fun ConditionSection(
                     OutlinedButton(onClick = onEditTrigger) {
                         Icon(Icons.Default.Edit, contentDescription = null, modifier = Modifier.size(18.dp))
                         Spacer(Modifier.size(8.dp))
-                        Text(stringResource(R.string.edit_short))
+                        Text(stringResource(AutomationStrings.edit_short))
                     }
                 }
             }
@@ -213,7 +215,7 @@ private fun ConditionSection(
             ) {
                 Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(
-                        text = stringResource(R.string.preconditions).trimEnd(':'),
+                        text = stringResource(AutomationStrings.preconditions).trimEnd(':'),
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.primary
                     )
@@ -241,10 +243,10 @@ private fun ActionsSection(
     onActionChanged: () -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        SectionHeader(stringResource(R.string.action).trimEnd(':'))
+        SectionHeader(stringResource(AutomationStrings.action).trimEnd(':'))
         if (state.actions.isEmpty()) {
             Text(
-                text = stringResource(R.string.automation_missing_action),
+                text = stringResource(AutomationStrings.automation_missing_action),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp)
@@ -273,7 +275,7 @@ private fun ActionsSection(
             ) {
                 Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(18.dp))
                 Spacer(Modifier.size(8.dp))
-                Text(stringResource(R.string.add_short))
+                Text(stringResource(AutomationStrings.add_short))
             }
         }
     }

@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.automation.AutomationStrings
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bluetooth
 import app.aaps.core.interfaces.logging.LTag
@@ -49,10 +51,10 @@ class TriggerBTDevice(
         return this
     }
 
-    override fun friendlyName(): Int = R.string.btdevice
+    override fun friendlyName(): TextRef = AutomationStrings.btdevice
 
     override fun friendlyDescription(): String =
-        rh.gs(R.string.btdevicecompared, btDevice.value, rh.gs(comparator.value.stringRes))
+        rh.gs(AutomationStrings.btdevicecompared, btDevice.value, rh.gs(comparator.value.stringRes))
 
     override fun composeIcon() = Icons.Filled.Bluetooth
     override fun elementType() = ElementType.AAPS

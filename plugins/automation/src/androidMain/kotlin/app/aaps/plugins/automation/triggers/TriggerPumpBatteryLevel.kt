@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.LTag
@@ -64,10 +66,10 @@ class TriggerPumpBatteryLevel(deps: TriggerDeps) : Trigger(deps) {
         return this
     }
 
-    override fun friendlyName(): Int = R.string.triggerPumpBatteryLevelLabel
+    override fun friendlyName(): TextRef = AutomationStrings.triggerPumpBatteryLevelLabel
 
     override fun friendlyDescription(): String =
-        rh.gs(R.string.triggerPumpBatteryLevelDesc, rh.gs(comparator.value.stringRes), pumpBatteryLevel.value)
+        rh.gs(AutomationStrings.triggerPumpBatteryLevelDesc, rh.gs(comparator.value.stringRes), pumpBatteryLevel.value)
 
     override fun composeIcon() = IcPumpBattery
     override fun elementType() = ElementType.BATTERY_CHANGE

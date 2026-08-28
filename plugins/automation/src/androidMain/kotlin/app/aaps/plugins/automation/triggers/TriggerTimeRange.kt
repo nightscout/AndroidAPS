@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.automation.AutomationStrings
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Timer
 import app.aaps.core.interfaces.logging.LTag
@@ -62,10 +64,10 @@ class TriggerTimeRange(deps: TriggerDeps) : Trigger(deps) {
         return this
     }
 
-    override fun friendlyName(): Int = R.string.time_range
+    override fun friendlyName(): TextRef = AutomationStrings.time_range
 
     override fun friendlyDescription(): String =
-        rh.gs(R.string.timerange_value, dateUtil.timeString(toMills(range.start)), dateUtil.timeString(toMills(range.end)))
+        rh.gs(AutomationStrings.timerange_value, dateUtil.timeString(toMills(range.start)), dateUtil.timeString(toMills(range.end)))
 
     override fun composeIcon() = Icons.Filled.Timer
     override fun elementType() = ElementType.AUTOMATION

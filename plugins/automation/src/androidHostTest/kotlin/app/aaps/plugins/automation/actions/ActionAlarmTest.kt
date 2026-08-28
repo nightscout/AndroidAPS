@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.plugins.automation.AutomationStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.interfaces.alerts.ReminderScheduler
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputString
@@ -10,6 +12,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
@@ -24,8 +27,8 @@ class ActionAlarmTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun setup() {
-        whenever(rh.gs(app.aaps.core.ui.R.string.alarm)).thenReturn("Alarm")
-        whenever(rh.gs(ArgumentMatchers.eq(R.string.alarm_message), any())).thenReturn("Alarm: %s")
+        whenever(rh.gs(CoreUiStrings.alarm)).thenReturn("Alarm")
+        whenever(rh.gs(eq(AutomationStrings.alarm_message), any())).thenReturn("Alarm: %s")
         // ReminderScheduler is an interface now - the AlarmManager implementation lives in :app,
         // because a reminder that rings is an Android platform concern. That makes this a plain mock
         // instead of a real object that silently fell into its own catch block in a JVM test.
@@ -34,12 +37,12 @@ class ActionAlarmTest : TestBaseWithProfile() {
     }
 
     @Test fun friendlyNameTest() = runTest {
-        assertThat(sut.friendlyName()).isEqualTo(app.aaps.core.ui.R.string.alarm)
+        assertThat(sut.friendlyName()).isEqualTo(CoreUiStrings.alarm)
     }
 
     @Test fun shortDescriptionTest() = runTest {
         sut.text = InputString("Asd")
-        assertThat(sut.shortDescription()).isEqualTo("Alarm: %s")
+        assertThat(sut.shortDescription()).isEqualTo("Alarm: Asd")
     }
 
     @Test fun doActionTest() = runTest {

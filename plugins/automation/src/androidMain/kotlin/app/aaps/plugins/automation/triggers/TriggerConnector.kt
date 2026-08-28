@@ -1,6 +1,8 @@
 package app.aaps.plugins.automation.triggers
 
-import androidx.annotation.StringRes
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.utils.lenientString
@@ -27,11 +29,11 @@ class TriggerConnector(deps: TriggerDeps) : Trigger(deps) {
                 XOR -> a xor b
             }
 
-        @get:StringRes val stringRes: Int
+        val stringRes: TextRef
             get() = when (this) {
-                OR  -> R.string.or
-                XOR -> R.string.xor
-                AND -> app.aaps.core.ui.R.string.and
+                OR  -> AutomationStrings.or
+                XOR -> AutomationStrings.xor
+                AND -> CoreUiStrings.and
             }
 
         companion object {
@@ -96,7 +98,7 @@ class TriggerConnector(deps: TriggerDeps) : Trigger(deps) {
         return this
     }
 
-    override fun friendlyName(): Int = connectorType.stringRes
+    override fun friendlyName(): TextRef = connectorType.stringRes
 
     override fun friendlyDescription(): String {
         val result = StringBuilder()

@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.automation.AutomationStrings
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.SyncProblem
 import app.aaps.core.interfaces.logging.LTag
@@ -68,10 +70,10 @@ class TriggerPumpLastConnection(deps: TriggerDeps) : Trigger(deps) {
         return this
     }
 
-    override fun friendlyName(): Int = R.string.automation_trigger_pump_last_connection_label
+    override fun friendlyName(): TextRef = AutomationStrings.automation_trigger_pump_last_connection_label
 
     override fun friendlyDescription(): String =
-        rh.gs(R.string.automation_trigger_pump_last_connection_compared, rh.gs(comparator.value.stringRes), minutesAgo.value)
+        rh.gs(AutomationStrings.automation_trigger_pump_last_connection_compared, rh.gs(comparator.value.stringRes), minutesAgo.value)
 
     override fun composeIcon() = Icons.Filled.SyncProblem
     override fun elementType() = ElementType.PUMP

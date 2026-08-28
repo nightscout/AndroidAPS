@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Sources
@@ -43,7 +45,7 @@ class ActionCarePortalEvent(
     var cpEvent = InputCarePortalMenu()
     private var valuesWithUnit = mutableListOf<ValueWithUnit>()
 
-    override fun friendlyName(): Int = app.aaps.core.ui.R.string.careportal
+    override fun friendlyName(): TextRef = CoreUiStrings.careportal
     override fun shortDescription(): String = rh.gs(cpEvent.value.stringResWithValue, note.value)
 
     override fun composeIcon() = when (cpEvent.value) {
@@ -92,7 +94,7 @@ class ActionCarePortalEvent(
             note = title,
             listValues = valuesWithUnit
         )
-        return pumpEnactResultProvider().success(true).comment(app.aaps.core.ui.R.string.ok)
+        return pumpEnactResultProvider().success(true).comment(CoreUiStrings.ok)
     }
 
     override fun toJSON(): String =

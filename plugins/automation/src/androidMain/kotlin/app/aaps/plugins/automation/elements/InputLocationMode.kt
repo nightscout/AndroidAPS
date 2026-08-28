@@ -1,6 +1,7 @@
 package app.aaps.plugins.automation.elements
 
-import androidx.annotation.StringRes
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.plugins.automation.R
 
@@ -9,12 +10,12 @@ class InputLocationMode(private val rh: ResourceHelper) {
     enum class Mode {
         INSIDE, OUTSIDE, GOING_IN, GOING_OUT;
 
-        @get:StringRes val stringRes: Int
+        val stringRes: TextRef
             get() = when (this) {
-                INSIDE    -> R.string.location_inside
-                OUTSIDE   -> R.string.location_outside
-                GOING_IN  -> R.string.location_going_in
-                GOING_OUT -> R.string.location_going_out
+                INSIDE    -> AutomationStrings.location_inside
+                OUTSIDE   -> AutomationStrings.location_outside
+                GOING_IN  -> AutomationStrings.location_going_in
+                GOING_OUT -> AutomationStrings.location_going_out
             }
 
         companion object {

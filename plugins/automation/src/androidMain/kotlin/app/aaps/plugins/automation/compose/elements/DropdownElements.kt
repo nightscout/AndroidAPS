@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.compose.elements
 
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api

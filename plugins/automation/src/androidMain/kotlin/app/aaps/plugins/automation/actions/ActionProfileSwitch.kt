@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -31,8 +34,8 @@ class ActionProfileSwitch(
 
     var inputProfileName: InputProfileName = InputProfileName("")
 
-    override fun friendlyName(): Int = R.string.profilename
-    override fun shortDescription(): String = rh.gs(R.string.changengetoprofilename, inputProfileName.value)
+    override fun friendlyName(): TextRef = AutomationStrings.profilename
+    override fun shortDescription(): String = rh.gs(AutomationStrings.changengetoprofilename, inputProfileName.value)
     override fun composeIcon() = IcProfile
     override fun elementType() = ElementType.PROFILE_MANAGEMENT
 
@@ -41,26 +44,26 @@ class ActionProfileSwitch(
         //Check for uninitialized profileName
         if (inputProfileName.value == "") {
             aapsLogger.error(LTag.AUTOMATION, "Selected profile not initialized")
-            return pumpEnactResultProvider().success(false).comment(app.aaps.core.ui.R.string.error_field_must_not_be_empty)
+            return pumpEnactResultProvider().success(false).comment(CoreUiStrings.error_field_must_not_be_empty)
         }
         if (profileFunction.getProfile() == null) {
             aapsLogger.error(LTag.AUTOMATION, "ProfileFunctions not initialized")
-            return pumpEnactResultProvider().success(false).comment(app.aaps.core.ui.R.string.noprofile)
+            return pumpEnactResultProvider().success(false).comment(CoreUiStrings.noprofile)
         }
         if (inputProfileName.value == activeProfileName) {
             aapsLogger.debug(LTag.AUTOMATION, "Profile is already switched")
-            return pumpEnactResultProvider().success(true).comment(R.string.alreadyset)
+            return pumpEnactResultProvider().success(true).comment(AutomationStrings.alreadyset)
         }
         // Keep whatever insulin is in force — automation must not change it. The guard above already refuses when
         // no profile is running, so this is belt-and-braces: the two checks could drift, and substituting a
         // catalogue entry would silently re-scale every later IOB calculation.
         val iCfg = profileFunction.getRunningOrRequestedICfg()
-            ?: return pumpEnactResultProvider().success(false).comment(app.aaps.core.ui.R.string.profile_switch_no_insulin)
+            ?: return pumpEnactResultProvider().success(false).comment(CoreUiStrings.profile_switch_no_insulin)
         val profileStore = profileRepository.profile.value
-            ?: return pumpEnactResultProvider().success(false).comment(app.aaps.core.ui.R.string.noprofile)
+            ?: return pumpEnactResultProvider().success(false).comment(CoreUiStrings.noprofile)
         if (profileStore.getSpecificProfile(inputProfileName.value) == null) {
             aapsLogger.error(LTag.AUTOMATION, "Selected profile does not exist! - ${inputProfileName.value}")
-            return pumpEnactResultProvider().success(false).comment(app.aaps.core.ui.R.string.notexists)
+            return pumpEnactResultProvider().success(false).comment(CoreUiStrings.notexists)
         }
         val result = profileFunction.createProfileSwitch(
             profileStore = profileStore,
@@ -77,7 +80,7 @@ class ActionProfileSwitch(
             ),
             iCfg = iCfg
         )
-        return pumpEnactResultProvider().success(result != null).comment(app.aaps.core.ui.R.string.ok)
+        return pumpEnactResultProvider().success(result != null).comment(CoreUiStrings.ok)
     }
 
     override fun hasDialog(): Boolean = true

@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.data.model.BS
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
@@ -68,10 +70,10 @@ class TriggerBolusAgo(deps: TriggerDeps) : Trigger(deps) {
         return this
     }
 
-    override fun friendlyName(): Int = R.string.lastboluslabel
+    override fun friendlyName(): TextRef = AutomationStrings.lastboluslabel
 
     override fun friendlyDescription(): String =
-        rh.gs(R.string.lastboluscompared, rh.gs(comparator.value.stringRes), minutesAgo.getMinutes())
+        rh.gs(AutomationStrings.lastboluscompared, rh.gs(comparator.value.stringRes), minutesAgo.getMinutes())
 
     override fun composeIcon() = IcBolus
     override fun elementType() = ElementType.INSULIN

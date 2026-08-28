@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.automation.AutomationStrings
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Stop
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -18,15 +21,15 @@ class ActionStopProcessing(
     pumpEnactResultProvider: Provider<PumpEnactResult>
 ) : Action(aapsLogger, rh, pumpEnactResultProvider) {
 
-    override fun friendlyName(): Int = R.string.stop_processing
-    override fun shortDescription(): String = rh.gs(R.string.stop_processing)
+    override fun friendlyName(): TextRef = AutomationStrings.stop_processing
+    override fun shortDescription(): String = rh.gs(AutomationStrings.stop_processing)
     override fun composeIcon() = Icons.Filled.Stop
     override fun elementType() = ElementType.BG_CHECK
 
     override fun isValid(): Boolean = true
 
     override suspend fun doAction(): PumpEnactResult {
-        return pumpEnactResultProvider().success(true).comment(app.aaps.core.ui.R.string.ok)
+        return pumpEnactResultProvider().success(true).comment(CoreUiStrings.ok)
     }
 
     override fun toJSON(): String {

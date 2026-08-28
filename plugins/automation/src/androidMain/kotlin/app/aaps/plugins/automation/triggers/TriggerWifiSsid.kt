@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.plugins.automation.AutomationStrings
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Wifi
 import app.aaps.core.interfaces.logging.LTag
@@ -70,10 +73,10 @@ class TriggerWifiSsid(
         return this
     }
 
-    override fun friendlyName(): Int = app.aaps.core.ui.R.string.ns_wifi_ssids
+    override fun friendlyName(): TextRef = CoreUiStrings.ns_wifi_ssids
 
     override fun friendlyDescription(): String =
-        rh.gs(R.string.wifissidcompared, rh.gs(comparator.value.stringRes), ssid.value)
+        rh.gs(AutomationStrings.wifissidcompared, rh.gs(comparator.value.stringRes), ssid.value)
 
     override fun composeIcon() = Icons.Filled.Wifi
     override fun elementType() = ElementType.AAPS

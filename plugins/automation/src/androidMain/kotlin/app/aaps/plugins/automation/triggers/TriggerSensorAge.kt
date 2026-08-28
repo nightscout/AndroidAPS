@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.automation.AutomationStrings
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Sensors
 import app.aaps.core.data.format.NumberFormat
@@ -69,10 +71,10 @@ class TriggerSensorAge(deps: TriggerDeps) : Trigger(deps) {
         return this
     }
 
-    override fun friendlyName(): Int = R.string.triggerSensorAgeLabel
+    override fun friendlyName(): TextRef = AutomationStrings.triggerSensorAgeLabel
 
     override fun friendlyDescription(): String =
-        rh.gs(R.string.triggerSensorAgeDesc, rh.gs(comparator.value.stringRes), sensorAgeHours.value)
+        rh.gs(AutomationStrings.triggerSensorAgeDesc, rh.gs(comparator.value.stringRes), sensorAgeHours.value)
 
     override fun composeIcon() = Icons.Filled.Sensors
     override fun elementType() = ElementType.SENSOR_INSERT

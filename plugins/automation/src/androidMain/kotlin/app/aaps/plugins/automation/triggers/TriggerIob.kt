@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.plugins.automation.AutomationStrings
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.icons.IcBolus
@@ -56,10 +59,10 @@ class TriggerIob(deps: TriggerDeps) : Trigger(deps) {
         return this
     }
 
-    override fun friendlyName(): Int = app.aaps.core.ui.R.string.iob
+    override fun friendlyName(): TextRef = CoreUiStrings.iob
 
     override fun friendlyDescription(): String =
-        rh.gs(R.string.iobcompared, rh.gs(comparator.value.stringRes), insulin.value)
+        rh.gs(AutomationStrings.iobcompared, rh.gs(comparator.value.stringRes), insulin.value)
 
     override fun composeIcon() = IcBolus
     override fun elementType() = ElementType.INSULIN

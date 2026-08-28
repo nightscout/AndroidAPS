@@ -1,6 +1,7 @@
 package app.aaps.plugins.automation.elements
 
-import androidx.annotation.StringRes
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.plugins.automation.R
 
@@ -14,14 +15,14 @@ class Comparator(private val rh: ResourceHelper) {
         IS_GREATER,
         IS_NOT_AVAILABLE;
 
-        @get:StringRes val stringRes: Int
+        val stringRes: TextRef
             get() = when (this) {
-                IS_LESSER           -> R.string.islesser
-                IS_EQUAL_OR_LESSER  -> R.string.isequalorlesser
-                IS_EQUAL            -> R.string.isequal
-                IS_EQUAL_OR_GREATER -> R.string.isequalorgreater
-                IS_GREATER          -> R.string.isgreater
-                IS_NOT_AVAILABLE    -> R.string.isnotavailable
+                IS_LESSER           -> AutomationStrings.islesser
+                IS_EQUAL_OR_LESSER  -> AutomationStrings.isequalorlesser
+                IS_EQUAL            -> AutomationStrings.isequal
+                IS_EQUAL_OR_GREATER -> AutomationStrings.isequalorgreater
+                IS_GREATER          -> AutomationStrings.isgreater
+                IS_NOT_AVAILABLE    -> AutomationStrings.isnotavailable
             }
 
         fun <T : Comparable<T>> check(obj1: T, obj2: T): Boolean {

@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore.NetworkStatus
 import app.aaps.plugins.automation.asJsonObject
 import app.aaps.plugins.automation.elements.Comparator
@@ -53,10 +54,10 @@ class TriggerWifiSsidTest : TriggerTestBase() {
     }
 
     @Test fun friendlyNameTest() = runTest {
-        assertThat(triggerFactory.triggerWifiSsid().friendlyName()).isEqualTo(app.aaps.core.ui.R.string.ns_wifi_ssids)
+        assertThat(triggerFactory.triggerWifiSsid().friendlyName()).isEqualTo(CoreUiStrings.ns_wifi_ssids)
     }
 
     @Test fun friendlyDescriptionTest() = runTest {
-        assertThat(triggerFactory.triggerWifiSsid().friendlyDescription()).isNull() //not mocked
+        assertThat(triggerFactory.triggerWifiSsid().friendlyDescription()).isEqualTo("wifissidcompared") // nothing stubbed, so the name is the fallback
     }
 }

@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.automation.AutomationStrings
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.HourglassBottom
 import app.aaps.core.data.format.NumberFormat
@@ -74,10 +76,10 @@ class TriggerInsulinAge(deps: TriggerDeps) : Trigger(deps) {
         return this
     }
 
-    override fun friendlyName(): Int = R.string.triggerInsulinAgeLabel
+    override fun friendlyName(): TextRef = AutomationStrings.triggerInsulinAgeLabel
 
     override fun friendlyDescription(): String =
-        rh.gs(R.string.triggerInsulinAgeDesc, rh.gs(comparator.value.stringRes), insulinAgeHours.value)
+        rh.gs(AutomationStrings.triggerInsulinAgeDesc, rh.gs(comparator.value.stringRes), insulinAgeHours.value)
 
     override fun composeIcon() = Icons.Filled.HourglassBottom
     override fun elementType() = ElementType.FILL

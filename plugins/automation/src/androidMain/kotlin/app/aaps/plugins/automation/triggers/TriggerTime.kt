@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.plugins.automation.AutomationStrings
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Schedule
 import app.aaps.core.data.time.T
@@ -51,10 +54,10 @@ class TriggerTime(deps: TriggerDeps) : Trigger(deps) {
         return this
     }
 
-    override fun friendlyName(): Int = app.aaps.core.ui.R.string.time
+    override fun friendlyName(): TextRef = CoreUiStrings.time
 
     override fun friendlyDescription(): String =
-        rh.gs(R.string.atspecifiedtime, dateUtil.dateAndTimeString(time.value))
+        rh.gs(AutomationStrings.atspecifiedtime, dateUtil.dateAndTimeString(time.value))
 
     override fun composeIcon() = Icons.Filled.Schedule
     override fun elementType() = ElementType.AUTOMATION

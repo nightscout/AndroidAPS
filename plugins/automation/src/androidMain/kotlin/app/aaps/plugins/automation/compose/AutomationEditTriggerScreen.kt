@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.compose
 
+import app.aaps.plugins.automation.AutomationStrings
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -214,7 +217,7 @@ private fun ConnectorCard(
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     OutlinedButton(onClick = { showSheet = true }, modifier = Modifier.weight(1f)) {
                         Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(18.dp))
-                        Text(stringResource(R.string.automation_choose_trigger), modifier = Modifier.padding(start = 6.dp))
+                        Text(stringResource(AutomationStrings.automation_choose_trigger), modifier = Modifier.padding(start = 6.dp))
                     }
                     OutlinedButton(onClick = {
                         connector.list.add(newConnector())
@@ -222,7 +225,7 @@ private fun ConnectorCard(
                     }) {
                         Icon(Icons.Default.AccountTree, contentDescription = null, modifier = Modifier.size(18.dp))
                         Text(
-                            text = stringResource(R.string.automation_add_group),
+                            text = stringResource(AutomationStrings.automation_add_group),
                             modifier = Modifier.padding(start = 6.dp)
                         )
                     }

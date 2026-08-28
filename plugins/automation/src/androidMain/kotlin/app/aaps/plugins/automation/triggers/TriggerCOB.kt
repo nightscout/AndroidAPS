@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
@@ -68,10 +70,10 @@ class TriggerCOB(deps: TriggerDeps) : Trigger(deps) {
         return this
     }
 
-    override fun friendlyName(): Int = R.string.triggercoblabel
+    override fun friendlyName(): TextRef = AutomationStrings.triggercoblabel
 
     override fun friendlyDescription(): String =
-        rh.gs(R.string.cobcompared, rh.gs(comparator.value.stringRes), cob.value)
+        rh.gs(AutomationStrings.cobcompared, rh.gs(comparator.value.stringRes), cob.value)
 
     override fun composeIcon() = IcCarbs
     override fun elementType() = ElementType.COB

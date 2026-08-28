@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.automation.AutomationStrings
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import app.aaps.core.data.format.NumberFormat
@@ -71,10 +73,10 @@ class TriggerLocation(deps: TriggerDeps) : Trigger(deps) {
         return this
     }
 
-    override fun friendlyName(): Int = R.string.location
+    override fun friendlyName(): TextRef = AutomationStrings.location
 
     override fun friendlyDescription(): String =
-        rh.gs(R.string.locationis, rh.gs(modeSelected.value.stringRes), " " + name.value)
+        rh.gs(AutomationStrings.locationis, rh.gs(modeSelected.value.stringRes), " " + name.value)
 
     override fun composeIcon() = Icons.Filled.LocationOn
     override fun elementType() = ElementType.AAPS

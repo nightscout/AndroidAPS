@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.asJsonObject
 import app.aaps.plugins.automation.elements.InputLocationMode
@@ -98,10 +99,10 @@ class TriggerLocationTest : TriggerTestBase() {
     }
 
     @Test fun friendlyNameTest() = runTest {
-        assertThat(TriggerLocation(triggerDeps).friendlyName()).isEqualTo(R.string.location)
+        assertThat(TriggerLocation(triggerDeps).friendlyName()).isEqualTo(AutomationStrings.location)
     }
 
     @Test fun friendlyDescriptionTest() = runTest {
-        assertThat(TriggerLocation(triggerDeps).friendlyDescription()).isNull() //not mocked
+        assertThat(TriggerLocation(triggerDeps).friendlyDescription()).isEqualTo("locationis") // nothing stubbed, so the name is the fallback
     }
 }

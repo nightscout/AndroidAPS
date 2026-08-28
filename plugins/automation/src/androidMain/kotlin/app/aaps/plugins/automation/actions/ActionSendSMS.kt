@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.pump.PumpEnactResult
@@ -24,8 +26,8 @@ class ActionSendSMS(
 
     var text = InputString()
 
-    override fun friendlyName(): Int = R.string.sendsmsactiondescription
-    override fun shortDescription(): String = rh.gs(R.string.sendsmsactionlabel, text.value)
+    override fun friendlyName(): TextRef = AutomationStrings.sendsmsactiondescription
+    override fun shortDescription(): String = rh.gs(AutomationStrings.sendsmsactionlabel, text.value)
     override fun composeIcon() = IcPluginSms
     override fun elementType() = ElementType.AUTOMATION
 

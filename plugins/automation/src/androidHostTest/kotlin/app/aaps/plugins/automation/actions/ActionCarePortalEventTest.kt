@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.plugins.automation.elements.InputCarePortalMenu
@@ -21,7 +22,7 @@ class ActionCarePortalEventTest : ActionsTestBase() {
 
     @BeforeEach
     fun setup() {
-        whenever(rh.gs(app.aaps.core.ui.R.string.careportal_note_message)).thenReturn("Note : %s")
+        whenever(rh.gs(CoreUiStrings.careportal_note_message)).thenReturn("Note : %s")
         whenever(dateUtil.now()).thenReturn(0)
         whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         runTest {
@@ -36,7 +37,7 @@ class ActionCarePortalEventTest : ActionsTestBase() {
     }
 
     @Test fun friendlyNameTest() {
-        assertThat(sut.friendlyName()).isEqualTo(app.aaps.core.ui.R.string.careportal)
+        assertThat(sut.friendlyName()).isEqualTo(CoreUiStrings.careportal)
     }
 
     @Test fun shortDescriptionTest() {

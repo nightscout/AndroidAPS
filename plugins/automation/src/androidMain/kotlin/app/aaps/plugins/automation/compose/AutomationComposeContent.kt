@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.compose
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.automation.AutomationStrings
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -126,9 +129,9 @@ class AutomationComposeContent(
         val state by holder.state.collectAsStateWithLifecycle()
         var deleteTarget by remember { mutableStateOf<Int?>(null) }
 
-        val title = stringResource(R.string.automation)
-        val backDesc = stringResource(app.aaps.core.ui.R.string.back)
-        val settingsDesc = stringResource(app.aaps.core.ui.R.string.nav_plugin_preferences)
+        val title = stringResource(AutomationStrings.automation)
+        val backDesc = stringResource(CoreUiStrings.back)
+        val settingsDesc = stringResource(CoreUiStrings.nav_plugin_preferences)
 
         LaunchedEffect(Unit) {
             setToolbarConfig(
@@ -165,11 +168,11 @@ class AutomationComposeContent(
 
         deleteTarget?.let { pos ->
             val target = holder.eventAt(pos)
-            val message = stringResource(app.aaps.core.ui.R.string.removerecord) +
+            val message = stringResource(CoreUiStrings.removerecord) +
                 (target?.let { " " + it.title } ?: "")
             AlertDialog(
                 onDismissRequest = { deleteTarget = null },
-                title = { Text(stringResource(app.aaps.core.ui.R.string.removerecord)) },
+                title = { Text(stringResource(CoreUiStrings.removerecord)) },
                 text = { Text(message) },
                 confirmButton = {
                     TextButton(onClick = {
@@ -195,9 +198,9 @@ class AutomationComposeContent(
         setToolbarConfig: (ToolbarConfig) -> Unit
     ) {
         val focusManager = LocalFocusManager.current
-        val backDesc = stringResource(app.aaps.core.ui.R.string.back)
-        val saveDesc = stringResource(app.aaps.core.ui.R.string.save)
-        val title = stringResource(R.string.condition).trimEnd(':')
+        val backDesc = stringResource(CoreUiStrings.back)
+        val saveDesc = stringResource(CoreUiStrings.save)
+        val title = stringResource(AutomationStrings.condition).trimEnd(':')
         val dirty by holder.triggerDirty.collectAsStateWithLifecycle()
         val resetTick by holder.triggerResetTick.collectAsStateWithLifecycle()
         var showDiscardConfirm by remember { mutableStateOf(false) }
@@ -235,19 +238,19 @@ class AutomationComposeContent(
         if (showDiscardConfirm) {
             AlertDialog(
                 onDismissRequest = { showDiscardConfirm = false },
-                title = { Text(stringResource(R.string.automation_discard_title)) },
-                text = { Text(stringResource(R.string.automation_discard_message)) },
+                title = { Text(stringResource(AutomationStrings.automation_discard_title)) },
+                text = { Text(stringResource(AutomationStrings.automation_discard_message)) },
                 confirmButton = {
                     Row {
                         TextButton(onClick = {
                             showDiscardConfirm = false
                             holder.revertTrigger()
                             holder.closeTriggerEditor()
-                        }) { Text(stringResource(R.string.automation_discard_confirm)) }
+                        }) { Text(stringResource(AutomationStrings.automation_discard_confirm)) }
                         TextButton(onClick = {
                             showDiscardConfirm = false
                             holder.closeTriggerEditor()
-                        }) { Text(stringResource(app.aaps.core.ui.R.string.save)) }
+                        }) { Text(stringResource(CoreUiStrings.save)) }
                     }
                 },
                 dismissButton = {
@@ -261,7 +264,7 @@ class AutomationComposeContent(
         // null means the Bluetooth permission is missing, which the user can fix, so it gets a
         // message. An empty list just means no device is paired and says nothing.
         val pairedNames = remember { pairedBtDevices.names() }
-        val noPermission = stringResource(app.aaps.core.ui.R.string.need_connect_permission)
+        val noPermission = stringResource(CoreUiStrings.need_connect_permission)
         LaunchedEffect(pairedNames) {
             if (pairedNames == null) rxBus.send(EventShowSnackbar(noPermission, EventShowSnackbar.Type.Error))
         }
@@ -285,9 +288,9 @@ class AutomationComposeContent(
         setToolbarConfig: (ToolbarConfig) -> Unit,
         route: AutomationRoute.MapPicker
     ) {
-        val backDesc = stringResource(app.aaps.core.ui.R.string.back)
-        val okDesc = stringResource(app.aaps.core.ui.R.string.ok)
-        val title = stringResource(R.string.pick_from_map)
+        val backDesc = stringResource(CoreUiStrings.back)
+        val okDesc = stringResource(CoreUiStrings.ok)
+        val title = stringResource(AutomationStrings.pick_from_map)
         var selected by remember { mutableStateOf<Pair<Double, Double>?>(null) }
 
         androidx.activity.compose.BackHandler { holder.closeMapPicker() }
@@ -334,9 +337,9 @@ class AutomationComposeContent(
         val route by holder.route.collectAsStateWithLifecycle()
         val isNew = (route as? AutomationRoute.Edit)?.position == -1
 
-        val backDesc = stringResource(app.aaps.core.ui.R.string.back)
-        val saveDesc = stringResource(app.aaps.core.ui.R.string.save)
-        val title = if (isNew) stringResource(R.string.automation_new_rule) else stringResource(R.string.automation_edit_rule)
+        val backDesc = stringResource(CoreUiStrings.back)
+        val saveDesc = stringResource(CoreUiStrings.save)
+        val title = if (isNew) stringResource(AutomationStrings.automation_new_rule) else stringResource(AutomationStrings.automation_edit_rule)
         val canSave = editState.canSave
         val dirty by holder.eventDirty.collectAsStateWithLifecycle()
         var showDiscardConfirm by remember { mutableStateOf(false) }
@@ -380,20 +383,20 @@ class AutomationComposeContent(
         if (showDiscardConfirm) {
             AlertDialog(
                 onDismissRequest = { showDiscardConfirm = false },
-                title = { Text(stringResource(R.string.automation_discard_title)) },
-                text = { Text(stringResource(R.string.automation_discard_message)) },
+                title = { Text(stringResource(AutomationStrings.automation_discard_title)) },
+                text = { Text(stringResource(AutomationStrings.automation_discard_message)) },
                 confirmButton = {
                     Row {
                         TextButton(onClick = {
                             showDiscardConfirm = false
                             holder.closeEdit()
-                        }) { Text(stringResource(R.string.automation_discard_confirm)) }
+                        }) { Text(stringResource(AutomationStrings.automation_discard_confirm)) }
                         if (canSave) {
                             TextButton(onClick = {
                                 focusManager.clearFocus()
                                 showDiscardConfirm = false
                                 holder.save()
-                            }) { Text(stringResource(app.aaps.core.ui.R.string.save)) }
+                            }) { Text(stringResource(CoreUiStrings.save)) }
                         }
                     }
                 },
@@ -489,7 +492,7 @@ private fun AutomationOverflow(onRun: () -> Unit) {
     }
     DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
         DropdownMenuItem(
-            text = { Text(stringResource(R.string.run_automations)) },
+            text = { Text(stringResource(AutomationStrings.run_automations)) },
             onClick = { expanded = false; onRun() }
         )
     }

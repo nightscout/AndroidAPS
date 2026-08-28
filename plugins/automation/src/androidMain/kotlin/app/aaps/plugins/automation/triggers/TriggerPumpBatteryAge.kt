@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.logging.LTag
@@ -73,10 +75,10 @@ class TriggerPumpBatteryAge(deps: TriggerDeps) : Trigger(deps) {
         return this
     }
 
-    override fun friendlyName(): Int = R.string.triggerPumpBatteryAgeLabel
+    override fun friendlyName(): TextRef = AutomationStrings.triggerPumpBatteryAgeLabel
 
     override fun friendlyDescription(): String =
-        rh.gs(R.string.triggerPumpBatteryAgeDesc, rh.gs(comparator.value.stringRes), pumpBatteryAgeHours.value)
+        rh.gs(AutomationStrings.triggerPumpBatteryAgeDesc, rh.gs(comparator.value.stringRes), pumpBatteryAgeHours.value)
 
     override fun composeIcon() = IcPumpBattery
     override fun elementType() = ElementType.BATTERY_CHANGE

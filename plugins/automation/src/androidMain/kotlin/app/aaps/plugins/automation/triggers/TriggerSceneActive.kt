@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.automation.AutomationStrings
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import app.aaps.core.interfaces.logging.LTag
@@ -53,9 +55,9 @@ class TriggerSceneActive(
         return this
     }
 
-    override fun friendlyName(): Int = R.string.trigger_scene_active
+    override fun friendlyName(): TextRef = AutomationStrings.trigger_scene_active
     override fun friendlyDescription(): String =
-        rh.gs(R.string.trigger_scene_active_compared, rh.gs(comparator.value.stringRes))
+        rh.gs(AutomationStrings.trigger_scene_active_compared, rh.gs(comparator.value.stringRes))
 
     override fun composeIcon() = Icons.Filled.PlayArrow
     override fun elementType() = ElementType.SCENE

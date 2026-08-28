@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.data.model.TT
 import app.aaps.core.interfaces.db.PersistenceLayer
 import com.google.common.truth.Truth.assertThat
@@ -19,13 +20,13 @@ class ActionStopTempTargetTest : ActionsTestBase() {
 
     @BeforeEach
     fun setup() {
-        whenever(rh.gs(app.aaps.core.ui.R.string.stoptemptarget)).thenReturn("Stop temp target")
+        whenever(rh.gs(CoreUiStrings.stoptemptarget)).thenReturn("Stop temp target")
 
         sut = ActionStopTempTarget(aapsLogger, rh, Provider { pumpEnactResultProvider.get() }, persistenceLayer, dateUtil)
     }
 
     @Test fun friendlyNameTest() {
-        assertThat(sut.friendlyName()).isEqualTo(app.aaps.core.ui.R.string.stoptemptarget)
+        assertThat(sut.friendlyName()).isEqualTo(CoreUiStrings.stoptemptarget)
     }
 
     @Test fun shortDescriptionTest() {

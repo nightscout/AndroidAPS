@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.automation.AutomationStrings
 import androidx.annotation.VisibleForTesting
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MonitorHeart
@@ -56,10 +58,10 @@ class TriggerHeartRate(deps: TriggerDeps) : Trigger(deps) {
         return this
     }
 
-    override fun friendlyName(): Int = R.string.triggerHeartRate
+    override fun friendlyName(): TextRef = AutomationStrings.triggerHeartRate
 
     override fun friendlyDescription(): String =
-        rh.gs(R.string.triggerHeartRateDesc, rh.gs(comparator.value.stringRes), heartRate.value)
+        rh.gs(AutomationStrings.triggerHeartRateDesc, rh.gs(comparator.value.stringRes), heartRate.value)
 
     override fun composeIcon() = Icons.Filled.MonitorHeart
     override fun elementType() = ElementType.BG_CHECK

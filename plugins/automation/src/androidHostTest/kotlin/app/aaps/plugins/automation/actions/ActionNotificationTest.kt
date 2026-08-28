@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.plugins.automation.AutomationStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputString
@@ -24,8 +26,8 @@ class ActionNotificationTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun setup() {
-        whenever(rh.gs(app.aaps.core.ui.R.string.notification)).thenReturn("Notification")
-        whenever(rh.gs(eq(R.string.notification_message), any())).thenReturn("Notification: %s")
+        whenever(rh.gs(CoreUiStrings.notification)).thenReturn("Notification")
+        whenever(rh.gs(eq(AutomationStrings.notification_message), any())).thenReturn("Notification: %s")
         runTest {
             whenever(persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(any(), any(), any(), any(), any(), any()))
                 .thenReturn(PersistenceLayer.TransactionResult())
@@ -35,12 +37,12 @@ class ActionNotificationTest : TestBaseWithProfile() {
     }
 
     @Test fun friendlyNameTest() {
-        assertThat(sut.friendlyName()).isEqualTo(app.aaps.core.ui.R.string.notification)
+        assertThat(sut.friendlyName()).isEqualTo(CoreUiStrings.notification)
     }
 
     @Test fun shortDescriptionTest() {
         sut.text = InputString("Asd")
-        assertThat(sut.shortDescription()).isEqualTo("Notification: %s")
+        assertThat(sut.shortDescription()).isEqualTo("Notification: Asd")
     }
 
     @Test fun doActionTest() = runTest {

@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.plugins.automation.AutomationStrings
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
@@ -78,11 +81,11 @@ class TriggerBg(deps: TriggerDeps) : Trigger(deps) {
         return this
     }
 
-    override fun friendlyName(): Int = app.aaps.core.ui.R.string.glucose
+    override fun friendlyName(): TextRef = CoreUiStrings.glucose
 
     override fun friendlyDescription(): String {
         return if (comparator.value == Comparator.Compare.IS_NOT_AVAILABLE)
-            rh.gs(R.string.glucoseisnotavailable)
+            rh.gs(AutomationStrings.glucoseisnotavailable)
         else
             rh.gs(if (bg.units == GlucoseUnit.MGDL) R.string.glucosecomparedmgdl else R.string.glucosecomparedmmol, rh.gs(comparator.value.stringRes), bg.value, bg.units)
     }

@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.automation.AutomationStrings
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -38,9 +41,9 @@ class ActionRunScene(
     // activated scene the user may be relying on.
     override var precondition: Trigger? = TriggerSceneActive(triggerDeps, sceneApi, ComparatorExists.Compare.NOT_EXISTS)
 
-    override fun friendlyName(): Int = R.string.action_run_scene
+    override fun friendlyName(): TextRef = AutomationStrings.action_run_scene
     override fun shortDescription(): String =
-        rh.gs(R.string.action_run_scene_short, sceneApi.getScene(scene.value)?.name ?: "")
+        rh.gs(AutomationStrings.action_run_scene_short, sceneApi.getScene(scene.value)?.name ?: "")
 
     // Show the assigned scene's icon when one is selected; fall back to PlayArrow in the
     // chooser sheet (no scene yet) or if the scene was deleted.
@@ -50,22 +53,22 @@ class ActionRunScene(
     override suspend fun doAction(): PumpEnactResult =
         when (val result = sceneApi.runScene(scene.value)) {
             SceneAutomationResult.Success            ->
-                pumpEnactResultProvider().success(true).comment(app.aaps.core.ui.R.string.ok)
+                pumpEnactResultProvider().success(true).comment(CoreUiStrings.ok)
 
             SceneAutomationResult.SceneNotFound      ->
-                pumpEnactResultProvider().success(false).comment(R.string.action_scene_not_found)
+                pumpEnactResultProvider().success(false).comment(AutomationStrings.action_scene_not_found)
 
             SceneAutomationResult.SceneDisabled      ->
-                pumpEnactResultProvider().success(false).comment(R.string.action_scene_disabled)
+                pumpEnactResultProvider().success(false).comment(AutomationStrings.action_scene_disabled)
 
             is SceneAutomationResult.Failed          ->
                 pumpEnactResultProvider().success(false)
-                    .comment(result.message ?: rh.gs(app.aaps.core.ui.R.string.error))
+                    .comment(result.message ?: rh.gs(CoreUiStrings.error))
 
             // runScene never returns ChainCompleted (only stopActiveSceneAndStartScene does);
             // the sealed interface forces exhaustiveness here.
             is SceneAutomationResult.ChainCompleted  ->
-                pumpEnactResultProvider().success(true).comment(app.aaps.core.ui.R.string.ok)
+                pumpEnactResultProvider().success(true).comment(CoreUiStrings.ok)
         }
 
     override fun hasDialog(): Boolean = true

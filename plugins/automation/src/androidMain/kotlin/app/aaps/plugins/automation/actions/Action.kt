@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.core.keys.interfaces.TextRef
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.navigation.ElementType
@@ -35,7 +36,7 @@ abstract class Action(
 
     open var precondition: Trigger? = null
 
-    abstract fun friendlyName(): Int
+    abstract fun friendlyName(): TextRef
     abstract fun shortDescription(): String
     abstract suspend fun doAction(): PumpEnactResult
     abstract fun isValid(): Boolean

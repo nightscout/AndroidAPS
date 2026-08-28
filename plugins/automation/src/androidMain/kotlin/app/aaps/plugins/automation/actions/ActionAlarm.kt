@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.plugins.automation.AutomationStrings
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Alarm
 import app.aaps.core.interfaces.alerts.ReminderScheduler
@@ -44,8 +47,8 @@ class ActionAlarm(
         this.text = InputString(text)
     }
 
-    override fun friendlyName(): Int = app.aaps.core.ui.R.string.alarm
-    override fun shortDescription(): String = rh.gs(R.string.alarm_message, text.value)
+    override fun friendlyName(): TextRef = CoreUiStrings.alarm
+    override fun shortDescription(): String = rh.gs(AutomationStrings.alarm_message, text.value)
     override fun composeIcon() = Icons.Filled.Alarm
     override fun elementType() = ElementType.BG_CHECK
 
@@ -54,7 +57,7 @@ class ActionAlarm(
     override suspend fun doAction(): PumpEnactResult {
         reminderScheduler.scheduleReminder(10, text.value.takeIf { it.isNotBlank() }
             ?: rh.gs(config.appName))
-        return pumpEnactResultProvider().success(true).comment(app.aaps.core.ui.R.string.ok)
+        return pumpEnactResultProvider().success(true).comment(CoreUiStrings.ok)
     }
 
     override fun toJSON(): String =

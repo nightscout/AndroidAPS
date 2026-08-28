@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.compose
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.plugins.automation.AutomationStrings
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -67,8 +69,8 @@ fun MapPickerScreen(
         ) {
             Text(
                 text = selectedCoordinates?.let { (lat, lon) ->
-                    stringResource(R.string.selected_coords, lat, lon)
-                } ?: stringResource(R.string.tap_to_select_location),
+                    stringResource(AutomationStrings.selected_coords, lat, lon)
+                } ?: stringResource(AutomationStrings.tap_to_select_location),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onBackground
             )

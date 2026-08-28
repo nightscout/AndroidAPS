@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.logging.LTag
@@ -104,10 +106,10 @@ class TriggerDelta(deps: TriggerDeps) : Trigger(deps) {
         return this
     }
 
-    override fun friendlyName(): Int = R.string.deltalabel
+    override fun friendlyName(): TextRef = AutomationStrings.deltalabel
 
     override fun friendlyDescription(): String =
-        rh.gs(R.string.deltacompared, rh.gs(comparator.value.stringRes), delta.value, rh.gs(delta.deltaType.stringRes))
+        rh.gs(AutomationStrings.deltacompared, rh.gs(comparator.value.stringRes), delta.value, rh.gs(delta.deltaType.stringRes))
 
     override fun composeIcon() = IcDelta
     override fun elementType() = ElementType.AUTOMATION

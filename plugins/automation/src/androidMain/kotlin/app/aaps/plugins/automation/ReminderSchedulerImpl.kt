@@ -48,7 +48,7 @@ class ReminderSchedulerImpl @Inject constructor(
             )
             alarmManager.setAlarmClock(AlarmManager.AlarmClockInfo(triggerAt, pendingIntent), pendingIntent)
         } catch (_: Exception) {
-            rxBus.send(EventShowSnackbar(rh.gs(AutomationR.string.error_setting_reminder), EventShowSnackbar.Type.Error))
+            rxBus.send(EventShowSnackbar(rh.gs(AutomationStrings.error_setting_reminder), EventShowSnackbar.Type.Error))
         }
     }
 }

@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.compose.elements
 
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row

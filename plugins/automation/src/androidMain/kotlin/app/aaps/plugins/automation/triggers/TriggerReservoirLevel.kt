@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
@@ -64,10 +66,10 @@ class TriggerReservoirLevel(deps: TriggerDeps) : Trigger(deps) {
         return this
     }
 
-    override fun friendlyName(): Int = R.string.triggerReservoirLevelLabel
+    override fun friendlyName(): TextRef = AutomationStrings.triggerReservoirLevelLabel
 
     override fun friendlyDescription(): String =
-        rh.gs(R.string.triggerReservoirLevelDesc, rh.gs(comparator.value.stringRes), reservoirLevel.value)
+        rh.gs(AutomationStrings.triggerReservoirLevelDesc, rh.gs(comparator.value.stringRes), reservoirLevel.value)
 
     override fun composeIcon() = IcPumpCartridge
     override fun elementType() = ElementType.FILL

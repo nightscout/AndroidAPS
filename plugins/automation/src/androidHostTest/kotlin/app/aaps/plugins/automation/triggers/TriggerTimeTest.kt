@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.plugins.automation.AutomationStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.data.time.T
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.asJsonObject
@@ -16,7 +18,7 @@ class TriggerTimeTest : TriggerTestBase() {
 
     @Test
     fun shouldRunTest() = runTest {
-        whenever(rh.gs(R.string.atspecifiedtime)).thenReturn("At %1\$s")
+        whenever(rh.gs(AutomationStrings.atspecifiedtime)).thenReturn("At %1\$s")
 
         // scheduled 1 min before
         var t: TriggerTime = TriggerTime(triggerDeps).runAt(now - T.mins(1).msecs())
@@ -52,12 +54,12 @@ class TriggerTimeTest : TriggerTestBase() {
 
     @Test
     fun friendlyNameTest() = runTest {
-        assertThat(TriggerTime(triggerDeps).friendlyName()).isEqualTo(app.aaps.core.ui.R.string.time)
+        assertThat(TriggerTime(triggerDeps).friendlyName()).isEqualTo(CoreUiStrings.time)
     }
 
     @Test
     fun friendlyDescriptionTest() = runTest {
-        whenever(rh.gs(R.string.atspecifiedtime)).thenReturn("At %1\$s")
+        whenever(rh.gs(AutomationStrings.atspecifiedtime)).thenReturn("At %1\$s")
         assertThat(TriggerTime(triggerDeps).friendlyDescription()).startsWith("At ")
     }
 }

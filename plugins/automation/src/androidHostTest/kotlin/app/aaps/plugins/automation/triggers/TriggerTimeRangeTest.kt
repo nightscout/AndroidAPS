@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.asJsonObject
@@ -19,7 +20,7 @@ class TriggerTimeRangeTest : TriggerTestBase() {
         now = 754 // in minutes from midnight
         val nowMills = MidnightTime.calcMidnightPlusMinutes(now.toInt())
         whenever(dateUtil.now()).thenReturn(nowMills)
-        whenever(rh.gs(R.string.timerange_value)).thenReturn("Time is between %1\$s and %2\$s")
+        whenever(rh.gs(AutomationStrings.timerange_value)).thenReturn("Time is between %1\$s and %2\$s")
     }
 
     @Test
@@ -59,7 +60,7 @@ class TriggerTimeRangeTest : TriggerTestBase() {
     }
 
     @Test fun friendlyNameTest() = runTest {
-        assertThat(TriggerTimeRange(triggerDeps).friendlyName()).isEqualTo(R.string.time_range)
+        assertThat(TriggerTimeRange(triggerDeps).friendlyName()).isEqualTo(AutomationStrings.time_range)
     }
 
     @Test fun friendlyDescriptionTest() = runTest {

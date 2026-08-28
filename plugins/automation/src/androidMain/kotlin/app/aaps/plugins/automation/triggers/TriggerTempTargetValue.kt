@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.plugins.automation.AutomationStrings
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
@@ -74,11 +77,11 @@ class TriggerTempTargetValue(deps: TriggerDeps) : Trigger(deps) {
         return this
     }
 
-    override fun friendlyName(): Int = app.aaps.core.ui.R.string.careportal_temporarytargetvalue
+    override fun friendlyName(): TextRef = CoreUiStrings.careportal_temporarytargetvalue
 
     override fun friendlyDescription(): String {
         return if (comparator.value == Comparator.Compare.IS_NOT_AVAILABLE)
-            rh.gs(R.string.notemptarget)
+            rh.gs(AutomationStrings.notemptarget)
         else
             rh.gs(if (ttValue.units == GlucoseUnit.MGDL) R.string.temptargetcomparedmgdl else R.string.temptargetcomparedmmol, rh.gs(comparator.value.stringRes), ttValue.value, ttValue.units)
     }

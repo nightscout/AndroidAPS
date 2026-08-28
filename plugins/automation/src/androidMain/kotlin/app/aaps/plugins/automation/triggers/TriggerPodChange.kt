@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
@@ -34,10 +36,10 @@ class TriggerPodChange(deps: TriggerDeps) : Trigger(deps) {
         return this
     }
 
-    override fun friendlyName(): Int = R.string.triggerPodChangeLabel
+    override fun friendlyName(): TextRef = AutomationStrings.triggerPodChangeLabel
 
     override fun friendlyDescription(): String =
-        rh.gs(R.string.triggerPodChangeDesc)
+        rh.gs(AutomationStrings.triggerPodChangeDesc)
 
     override fun composeIcon() = IcPatchPump
     override fun elementType() = ElementType.CANNULA_CHANGE
