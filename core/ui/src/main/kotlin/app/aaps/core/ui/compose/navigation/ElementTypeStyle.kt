@@ -35,6 +35,7 @@ import app.aaps.core.ui.compose.icons.IcPluginConfigBuilder
 import app.aaps.core.ui.compose.icons.IcPluginFood
 import app.aaps.core.ui.compose.icons.IcPluginInsulin
 import app.aaps.core.ui.compose.icons.IcPluginMaintenance
+import app.aaps.core.ui.compose.icons.IcPluginNfc
 import app.aaps.core.ui.compose.icons.IcProfile
 import app.aaps.core.ui.compose.icons.IcPumpBattery
 import app.aaps.core.ui.compose.icons.IcPumpCartridge
@@ -96,6 +97,7 @@ fun ElementType.color(): Color = when (this) {
     ElementType.PUMP                    -> AapsTheme.elementColors.pump
     ElementType.SETTINGS,
     ElementType.QUICK_LAUNCH_CONFIG     -> AapsTheme.elementColors.settings
+    ElementType.NFC                     -> AapsTheme.elementColors.nfc
 
     ElementType.TREATMENTS              -> AapsTheme.elementColors.treatments
     ElementType.STATISTICS,
@@ -157,7 +159,7 @@ fun ElementType.icon(): ImageVector = when (this) {
     ElementType.EXTENDED_BOLUS          -> IcExtendedBolus
     ElementType.AUTOMATION,
     ElementType.AUTOMATION_MANAGEMENT   -> IcPluginAutomation
-
+    ElementType.NFC                     -> IcPluginNfc
     ElementType.PUMP                    -> Pump
     ElementType.SETTINGS                -> Icons.Default.Settings
     ElementType.QUICK_LAUNCH_CONFIG     -> Icons.Default.Settings
@@ -225,6 +227,7 @@ fun ElementType.labelResId(): Int = when (this) {
     ElementType.EXTENDED_BOLUS          -> R.string.extended_bolus
     ElementType.AUTOMATION              -> 0 // dynamic label
     ElementType.AUTOMATION_MANAGEMENT   -> R.string.automation
+    ElementType.NFC                     -> R.string.nfccommands
     ElementType.PUMP                    -> R.string.pump
     ElementType.SETTINGS                -> R.string.settings
     ElementType.QUICK_LAUNCH_CONFIG     -> R.string.quick_launch_configure
@@ -292,6 +295,7 @@ fun ElementType.descriptionResId(): Int = when (this) {
     ElementType.AUTOMATION_MANAGEMENT   -> R.string.automation_management_desc
     ElementType.AUTHORIZED_CLIENTS      -> R.string.authorized_clients_manage_desc
     ElementType.PAIR_WITH_MASTER        -> R.string.pair_with_master_manage_desc
+    ElementType.NFC                     -> R.string.description_nfc_communicator
     ElementType.QUICK_WIZARD,
     ElementType.RUNNING_MODE,
     ElementType.AUTOMATION,

@@ -26,6 +26,8 @@ dependencies {
     testImplementation(project(":plugins:aps"))
     testImplementation(project(":shared:tests"))
 
+    implementation(libs.sh.calvin.reorderable)
+
     ksp(libs.com.google.dagger.compiler)
     ksp(libs.com.google.dagger.hilt.compiler)
     ksp(libs.com.google.dagger.android.processor)

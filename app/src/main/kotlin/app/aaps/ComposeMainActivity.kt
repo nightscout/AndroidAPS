@@ -138,6 +138,7 @@ import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.configuration.setupwizard.SWDefinition
 import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
+import app.aaps.plugins.sync.nfcCommands.NfcForegroundDispatch
 import app.aaps.ui.compose.careDialog.CareportalEventType
 import app.aaps.ui.compose.clientcontrol.ClientControlPendingDialog
 import app.aaps.ui.compose.configuration.ConfigurationViewModel
@@ -217,6 +218,8 @@ class ComposeMainActivity : AppCompatActivity() {
     private var accessTree: ActivityResultLauncher<Uri?>? = null
     private var requestMultiplePermissions: ActivityResultLauncher<Array<String>>? = null
     private var onPermissionResultDenied: ((List<String>) -> Unit)? = null
+
+    private val nfcForegroundDispatch by lazy { NfcForegroundDispatch(this, preferences) }
 
     // ViewModels (Hilt-provided via @HiltViewModel)
     private val mainViewModel: MainViewModel by viewModels()
@@ -903,8 +906,19 @@ class ComposeMainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        nfcForegroundDispatch.onResume()
         if (!config.appInitialized) return
         refreshOnResume()
+    }
+
+    override fun onPause() {
+        nfcForegroundDispatch.onPause()
+        super.onPause()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        nfcForegroundDispatch.onNewIntent(intent)
     }
 
     private fun updateButtons() {
@@ -932,6 +946,7 @@ class ComposeMainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             preferences.observe(StringKey.GeneralLanguage).drop(1).collect { recreate() }
         }
+        nfcForegroundDispatch.observeWarning(lifecycleScope, rxBus, rh)
     }
 
     private fun setupWakeLock() {
@@ -1158,6 +1173,7 @@ class ComposeMainActivity : AppCompatActivity() {
             ElementType.QUICK_WIZARD,
             ElementType.SCENE,
             ElementType.AUTOMATION,
+            ElementType.NFC,
             ElementType.COB,
             ElementType.SENSITIVITY,
             ElementType.USER_ENTRY,
