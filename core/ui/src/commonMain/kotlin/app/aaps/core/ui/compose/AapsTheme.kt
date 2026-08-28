@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.LineHeightStyle
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.UiMode
@@ -59,6 +60,16 @@ val LocalDateUtil = compositionLocalOf<DateUtil> { error("No DateUtil provided")
  * Avoids threading config through multiple composable layers.
  */
 val LocalConfig = compositionLocalOf<Config> { error("No Config provided") }
+
+/**
+ * CompositionLocal providing number formatting.
+ *
+ * Screens used to write `"%.1f".format(value)`, which is `java.util.Formatter` and therefore JVM
+ * only - and which also ignored the user's locale, so a decimal comma came out as a point. This
+ * formats through the same object the rest of the app uses, and reaches deep display helpers without
+ * threading it through every composable in between.
+ */
+val LocalDecimalFormatter = compositionLocalOf<DecimalFormatter> { error("No DecimalFormatter provided") }
 
 /**
  * CompositionLocal exposing whether the master phone is currently reachable (see

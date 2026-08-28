@@ -38,7 +38,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.util.Locale
 
 @Stable
 class ChipsViewModel @AssistedInject constructor(
@@ -155,8 +154,8 @@ class ChipsViewModel @AssistedInject constructor(
             }
             val profileIsfDisplayed = profileUtil.fromMgdlToUnits(isfMgdl, units)
             val variableIsfDisplayed = profileUtil.fromMgdlToUnits(variableSens, units)
-            isfFrom = String.format(Locale.getDefault(), "%1$.1f", profileIsfDisplayed)
-            isfTo = String.format(Locale.getDefault(), "%1$.1f", variableIsfDisplayed)
+            isfFrom = decimalFormatter.to1Decimal(profileIsfDisplayed)
+            isfTo = decimalFormatter.to1Decimal(variableIsfDisplayed)
             dialogText.add(rh.gs(CoreUiStrings.isf_profile, profileIsfDisplayed))
             dialogText.add(rh.gs(CoreUiStrings.isf_variable, variableIsfDisplayed))
             if (ratioUsed != 1.0 && ratioUsed != lastAutosensRatio)

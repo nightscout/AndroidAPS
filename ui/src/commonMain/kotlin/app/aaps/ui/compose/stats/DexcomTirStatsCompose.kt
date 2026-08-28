@@ -25,6 +25,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.stats.DexcomTIR
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.ui.compose.LocalDecimalFormatter
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.stringResource
@@ -90,13 +92,15 @@ fun DexcomTirStatsCompose(
             modifier = Modifier.padding(vertical = 8.dp)
         )
 
+        val decimalFormatter = LocalDecimalFormatter.current
+
         // Data row
         DexcomTirTableDataRow(
-            veryLow = formatPercent(dexcomTir.veryLowPct()),
-            low = formatPercent(dexcomTir.lowPct()),
-            inRange = formatPercent(dexcomTir.inRangePct()),
-            high = formatPercent(dexcomTir.highPct()),
-            veryHigh = formatPercent(dexcomTir.veryHighPct())
+            veryLow = formatPercent(dexcomTir.veryLowPct(), decimalFormatter),
+            low = formatPercent(dexcomTir.lowPct(), decimalFormatter),
+            inRange = formatPercent(dexcomTir.inRangePct(), decimalFormatter),
+            high = formatPercent(dexcomTir.highPct(), decimalFormatter),
+            veryHigh = formatPercent(dexcomTir.veryHighPct(), decimalFormatter)
         )
 
         // Standard deviation
@@ -193,7 +197,7 @@ private fun RowScope.BarSegment(pct: Double, color: Color) {
     ) {
         if (pct >= 8.0) {
             Text(
-                text = String.format("%d%%", pct.roundToInt()),
+                text = LocalDecimalFormatter.current.to0Decimal(pct, "%"),
                 color = textColor,
                 style = MaterialTheme.typography.labelSmall,
                 fontWeight = FontWeight.Bold,
@@ -305,6 +309,5 @@ private fun DexcomTirTableDataRow(
 /**
  * Formats a percentage value as a string.
  */
-private fun formatPercent(value: Double): String {
-    return String.format("%.0f%%", value)
-}
+private fun formatPercent(value: Double, decimalFormatter: DecimalFormatter): String =
+    decimalFormatter.to0Decimal(value, "%")
