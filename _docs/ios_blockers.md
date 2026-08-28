@@ -93,10 +93,17 @@ Collected so nobody pays for them twice. All were found by tests or a crash, not
 - **Enum constants are not top level.** `UNNotificationInterruptionLevelTimeSensitive` is an entry on
   `UNNotificationInterruptionLevel`, not a standalone `val`.
 - **A backticked test name cannot contain a comma** on Kotlin/Native.
+- **Applying the Compose plugin without a multiplatform Compose runtime breaks the iOS build.**
+  `androidx.compose.*` artifacts are Android only, so a module with iOS targets needs
+  `libs.cmp.runtime` (and `cmp.foundation` / `cmp.ui` / `cmp.material3` if it draws) on a source set
+  the iOS compilation can see. Hit twice now: `ios/shell`, and `:plugins:automation`, which could not compile for iOS
+  at all until `cmp.*` reached its `commonMain`. The failure is
+  `IncompatibleComposeRuntimeVersionException` at compile time, or an `IrLinkageError` at run time if
+  only the declarations resolved.
 
 ## Open
 
-Nothing open. The notification cluster was the last one - see Done.
+Nothing right now.
 
 ## Known gaps on the iOS side
 
@@ -169,6 +176,13 @@ Not blockers, and not for the Windows session to fix. Listed so nobody is surpri
   profile arrives in - so each now has a small private bridge to the kotlinx readers instead of a
   shared production one. `BlockRenderTest`'s `the org json adapter matches the kotlinx renderer` went
   with the adapter it was guarding.
+- The three automation platform interfaces have iOS implementations. `LastKnownLocation` is real -
+  Core Location, with the distance left to `CLLocation.distanceFromLocation` so the geodesic maths
+  stays on the platform, as the migration rules ask. `PairedBtDevices` and `BtConnectionSource`
+  return empty and log why: iOS cannot read the phone's paired devices, and cannot see Bluetooth
+  connections made by anything other than this app. **A Bluetooth automation trigger can be
+  configured on iOS and will never fire** - decided deliberately, and written in both KDocs so it is
+  not mistaken for an oversight later.
 - `ConstraintsCheckerImpl` - moved to `commonMain` (`a76cca9e41`)
 - `ProfileRepositoryImpl` - moved to `commonMain`, off `org.json` (`3252f044b1`)
 - `PluginStore` / `PluginPermissions` - split so the registry is no longer Android
