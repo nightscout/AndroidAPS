@@ -32,6 +32,8 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactoryKey
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -39,7 +41,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import java.util.UUID
 
 @Stable
 class SceneWizardViewModel @AssistedInject constructor(
@@ -264,11 +265,12 @@ class SceneWizardViewModel @AssistedInject constructor(
         _state.update { it.copy(icon = iconKey) }
     }
 
+    @OptIn(ExperimentalUuidApi::class)
     fun save(): Boolean {
         val s = _state.value
         if (s.name.isBlank()) return false
 
-        val sceneId = editingSceneId ?: UUID.randomUUID().toString()
+        val sceneId = editingSceneId ?: Uuid.random().toString()
         // Defensive: self-chain would infinite-loop on zero-duration scenes.
         // availableChainTargets already filters out editingSceneId, so this is only reachable
         // if state is manipulated outside the wizard UI — keep as a backstop.
