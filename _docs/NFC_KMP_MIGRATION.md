@@ -23,14 +23,14 @@ preparation work can happen without disturbing the main NFC line.
 
 | Step                                                       | State                                                                       |
 |------------------------------------------------------------|-----------------------------------------------------------------------------|
-| Merge `Nightscout/kmp` into the branch                     | **done five times** - latest `6fa678e46b`, 90 commits, 3 conflicts             |
+| Merge `Nightscout/kmp` into the branch                     | **done six times** - latest `0ef1155b65`, 34 commits, no conflicts             |
 | Tier 1, the changes needed to compile at all (section 3)    | **done** - `9cd204b8da` "NFC Fix build after kmp merge"                        |
-| Architecture alignment (section 9)                         | **9.1 to 9.4, 9.6 and 9.7 done**. Only 9.5 remains, and it is not standalone   |
+| Architecture alignment (section 9)                         | **all done** - 9.1 to 9.8, the last being 9.5 in `57952b8690`                  |
 | The command format and the store blobs (section 5)          | **done** - `28305e0af6` and `ff1916852f`. No `org.json` left in the plugin      |
 | Metro DI and the plugin's own manifest (section 1a)         | **done** - `ba1cdbd518`, `009f4087ca`, `42ea9bbad2`. Metro owns the plugin now  |
 | Tier 2, needed only for a multiplatform module (section 4)  | **not started** apart from the `org.json` row, which sections 5 and 9.7 did    |
 | Build verification                                         | **green** - compile clean, 93 NFC tests and 54 app DI tests pass                |
-| `Nightscout/kmp` freshness                                 | merged 2026-08-27 at `3651e7abaf`. Still not in `dev` - more merges are due     |
+| `Nightscout/kmp` freshness                                 | merged 2026-08-28 at `30196d0c9f`. Still not in `dev` - more merges are due     |
 
 Sections 3.7 to 3.12 are six breaks that only a compiler found, after an import-derived list had
 missed them. The lesson is recorded there because it will repeat on the next merge: **grepping imports
@@ -67,6 +67,8 @@ anything was pushed, so that each one builds on its own:
 | `a1b8a842bb`  | section 9.8 - every default in one place, 14 files             | removes 15 invented values, **builds**   |
 | `6fa678e46b`  | **merge 5**, 90 upstream commits, 3 conflicts                 | does **not** build - see 10              |
 | `88d804a052`  | fix build after merge 5 - 1 file, the UiStrings rename         | mechanical, **builds**                   |
+| `0ef1155b65`  | **merge 6**, 34 upstream commits, no conflicts                | nothing to fix afterwards                |
+| `57952b8690`  | section 9.5 - snackbar events, no more Context, 7 files        | last alignment item, **builds**          |
 
 Keeping these apart matters for review: the fix-build commit only has to answer "did the merge really
 force this?", and the alignment commit carries its own rationale. `f9e51ec06c` is also the one that
@@ -665,12 +667,11 @@ One thing may still move: follow-up 3 in the KMP note is `PluginDescription.desc
 | 5    | ~~Decide the NFC hardware seam~~ - **not needed** for the same reason. There is no iOS half to design. | -                    |
 | 6    | When upstream makes `:plugins:sync` multiplatform, move the plugin's files from `src/main` to `src/androidMain`. A path move; Tier 1 is already applied. | upstream flipping the module |
 
-What is actually left is small: **9.5**, and the path move of step 6 whenever upstream gets to it.
+All of section 9 is done as of `57952b8690`. What is left is the path move of step 6, whenever upstream
+makes the module multiplatform, and keeping the merges going until then.
 
-Where the rest of section 9 lands: **9.1 to 9.4, 9.6 and 9.7 are done**. Only **9.5** remains and it is
-not standalone - Toast, vibration and the `Handler` post are the only reason `NfcCommandsPlugin` still
-takes a `Context`, so they go when it does. It is now the only alignment item left, and no longer gated
-on anything.
+Where section 9 lands: **all of it is done** - 9.1 to 9.4, 9.6, 9.7 and 9.8, and 9.5 last in
+`57952b8690`.
 
 ---
 
@@ -825,11 +826,39 @@ rename would have produced `state.tagName = name` *inside a constructor call*. `
 declares its own `chain` parameter outside the composable. The rename had to be scoped to the function
 body and those three sites left bare.
 
-### 9.5 Toast, vibration and `Handler(Looper.getMainLooper())`
+### 9.5 Toast, vibration and `Handler(Looper.getMainLooper())` - FIXED, `57952b8690`
 
-`CLAUDE.md` wants Snackbar or Android notifications rather than Toast. Also 3 Toast sites,
-`VibratorManager`, and a `Handler` post - together these are the only reason `NfcCommandsPlugin`
-needs a `Context` at all (Tier 2).
+Three Toast sites, a `VibratorManager` and a `Handler(Looper.getMainLooper())` post. Together they were
+the only reason `NfcCommandsPlugin` took a `Context`.
+
+`CLAUDE.md` prefers a snackbar to a Toast, but also warns that a background plugin has no Compose tree to
+show one in and should use a notification instead. **That warning does not apply here**, and the reason is
+worth writing down because it applies to any plugin: the project already has the mechanism, and
+`GlobalSnackbarHost` documents it itself -
+
+> all downstream code can `rxBus.send(EventShowSnackbar(...))` from any thread without needing a Context,
+> a `LocalSnackbarHostState`, or a direct reference to the host.
+
+and when no screen is up, an application-scoped collector in `MainApp` turns the event into a system
+notification. So the event covers both cases at once, which is more than the Toast did - a Toast posted
+from the plugin with the app in the background was simply lost.
+
+All three Toasts became `EventShowSnackbar`, typed `Success` or `Error` from the result rather than every
+message looking alike. The `Handler` post went with them: `rxBus` is safe from any thread, so there was
+nothing left to hop to the main thread for. No new `LocalSnackbarHostState` consumer was added, which
+`CLAUDE.md` also asks for.
+
+The vibration stays, because a tag is often scanned without looking at the phone and it is the only
+feedback at the moment of the scan. It needs a `Context`, so it moved to `NfcVibration.kt` and is called
+by the two screens that run a chain - same effects, same swallowing of failures, since a busy vibrator
+must not turn into a failed command.
+
+Result: `NfcCommandsPlugin` no longer imports anything from `android.*`, and its constructor has no
+`Context`. Two test construction sites lost that argument.
+
+Note this was never a Tier 2 prerequisite in the end - see section 6. It is worth having on its own
+terms: a message that survives the app being in the background, and a plugin that does not reach for the
+screen.
 
 ### 9.6 `Any`-typed action state - FIXED
 
@@ -1071,6 +1100,28 @@ regenerates or deletes those, `javac` still compiles them, and recompiling does 
 fails in whichever module it reaches first, `:database:persistence` and `:ui` here. Deleting the stale
 `build/generated/ksp/*/java` directories clears it, and they are all regenerated. There were 93 of them
 after this merge.
+
+### Merge 6 outcome, for reference
+
+Commit `0ef1155b65`, 34 upstream commits, **no conflicts**, and `nfcCommands/` untouched a sixth time.
+The checks were run anyway: the `@IntKey(380)` registration and its `ContributedPluginsTest` entry, the
+`NfcControlActivity` member injector, `CoreUiStrings` still being the name `NfcBuildScreen` imports, and
+no `android` import in a `commonMain` source set. All clean, and it compiled first time.
+
+**The stale-generated-output problem has a third hiding place**, worth listing together since each merge
+has found a new one:
+
+| Where | Found after |
+|---|---|
+| `database/persistence/build/generated/ksp/*/java` | merge 3 |
+| `ui/build/generated/ksp/*/java`, and 93 more | merge 5 |
+| `app/build/generated/hilt` | merge 6 |
+
+The pattern is always the same: upstream moves a class from Dagger to Metro, or deletes it, and a
+generated Java file that names it stays behind and is still compiled. Merge 6's was
+`NotificationManagerImpl`, a class that no longer exists anywhere in the tree - only a stale comment in
+`UiInteractionImpl` still mentions it - failing `:app:hiltJavaCompileFullDebug`. Recompiling never
+clears these. Deleting the generated directory does, and it is regenerated.
 
 One trap worth remembering: **`PreferenceContentExtensions.kt` merged with no conflict while carrying
 our Android-only `androidx.compose.ui.res.stringResource` import into a `commonMain` file.** Git had
