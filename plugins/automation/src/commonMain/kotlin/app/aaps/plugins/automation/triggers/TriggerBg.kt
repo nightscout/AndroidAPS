@@ -10,7 +10,6 @@ import app.aaps.core.ui.compose.icons.IcBgCheck
 import app.aaps.core.utils.lenientDouble
 import app.aaps.core.utils.lenientString
 import app.aaps.core.utils.lenientStringOrNull
-import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputBg
 import kotlinx.serialization.json.JsonObject
