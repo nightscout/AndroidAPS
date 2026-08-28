@@ -43,7 +43,7 @@ class ActivityMonitor @Inject constructor(
 ) : Application.ActivityLifecycleCallbacks {
 
     override fun onActivityPaused(activity: Activity) {
-        val name = activity.javaClass.simpleName
+        val name = activity::class.simpleName.orEmpty()
         val resumed = preferences.get(LongComposedKey.ActivityMonitorResumed, name)
         if (resumed == 0L) {
             aapsLogger.debug(LTag.UI, "onActivityPaused: $name resumed == 0")
@@ -59,7 +59,7 @@ class ActivityMonitor @Inject constructor(
     }
 
     override fun onActivityResumed(activity: Activity) {
-        val name = activity.javaClass.simpleName
+        val name = activity::class.simpleName.orEmpty()
         aapsLogger.debug(LTag.UI, "onActivityResumed: $name")
         preferences.put(LongComposedKey.ActivityMonitorResumed, name, value = dateUtil.now())
     }

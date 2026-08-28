@@ -1,6 +1,5 @@
 package app.aaps.ui.compose.maintenance
 
-import androidx.annotation.StringRes
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

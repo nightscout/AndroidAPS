@@ -145,7 +145,7 @@ fun MainNavigationBar(
             val label = pumpSetupPlugin.pluginDescription.pluginName?.let { stringResource(it) } ?: pumpSetupPlugin.name
             NavigationBarItem(
                 selected = false,
-                onClick = { onNavigate(NavigationRequest.Plugin(pumpSetupPlugin.javaClass.simpleName)) },
+                onClick = { onNavigate(NavigationRequest.Plugin(pumpSetupPlugin::class.simpleName.orEmpty())) },
                 icon = {
                     BadgedBox(
                         badge = { Badge { Text("!") } }
@@ -168,7 +168,7 @@ fun MainNavigationBar(
             val label = bgSetupPlugin.pluginDescription.pluginName?.let { stringResource(it) } ?: bgSetupPlugin.name
             NavigationBarItem(
                 selected = false,
-                onClick = { onNavigate(NavigationRequest.Plugin(bgSetupPlugin.javaClass.simpleName)) },
+                onClick = { onNavigate(NavigationRequest.Plugin(bgSetupPlugin::class.simpleName.orEmpty())) },
                 icon = {
                     BadgedBox(
                         badge = {
@@ -204,7 +204,7 @@ fun MainNavigationBar(
             val label = objectivesSetupPlugin.pluginDescription.pluginName?.let { stringResource(it) } ?: objectivesSetupPlugin.name
             NavigationBarItem(
                 selected = false,
-                onClick = { onNavigate(NavigationRequest.Plugin(objectivesSetupPlugin.javaClass.simpleName)) },
+                onClick = { onNavigate(NavigationRequest.Plugin(objectivesSetupPlugin::class.simpleName.orEmpty())) },
                 icon = {
                     BadgedBox(
                         badge = {

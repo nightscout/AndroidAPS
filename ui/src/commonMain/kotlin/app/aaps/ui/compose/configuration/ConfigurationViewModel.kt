@@ -142,7 +142,7 @@ class ConfigurationViewModel @Inject constructor(
             val isMultiSelect = isMultiSelect(type)
 
             val pluginModels = plugins.map { plugin ->
-                val id = plugin.javaClass.simpleName
+                val id = plugin::class.simpleName.orEmpty()
                 lookup[id] = plugin
                 val pluginEnabled = plugin.isEnabled(type)
                 val hasPreferences = plugin.hasPreferences()

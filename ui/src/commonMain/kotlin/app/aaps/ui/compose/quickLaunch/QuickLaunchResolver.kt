@@ -189,7 +189,7 @@ class QuickLaunchResolver @Inject constructor(
     }
 
     fun resolvePluginItem(plugin: PluginBase): ResolvedQuickLaunchItem {
-        val action = QuickLaunchAction.PluginAction(plugin.javaClass.simpleName)
+        val action = QuickLaunchAction.PluginAction(plugin::class.simpleName.orEmpty())
         val icon = plugin.pluginDescription.icon ?: Icons.Default.Extension
         val label = plugin.name
         val desc = plugin.pluginDescription.description?.let { rh.gs(it) }
@@ -203,7 +203,7 @@ class QuickLaunchResolver @Inject constructor(
     }
 
     private fun findPlugin(className: String): PluginBase? =
-        activePlugin.getPluginsList().find { it.javaClass.simpleName == className }
+        activePlugin.getPluginsList().find { it::class.simpleName.orEmpty() == className }
 
     companion object {
 
