@@ -32,7 +32,7 @@ class AutomationEventTest : TestBase() {
     private val triggerDeps: app.aaps.plugins.automation.triggers.TriggerDeps by lazy {
         app.aaps.plugins.automation.triggers.TriggerDeps(
             aapsLogger, mock(), rh, profileFunction, mock(), preferences, mock(), mock(), mock(), mock(), mock(), dateUtil
-        ) { triggerFactory }
+        )
     }
 
     private val triggerFactory: app.aaps.plugins.automation.triggers.TriggerFactory by lazy {

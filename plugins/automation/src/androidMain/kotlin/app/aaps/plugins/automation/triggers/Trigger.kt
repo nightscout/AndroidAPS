@@ -19,7 +19,7 @@ abstract class Trigger(val deps: TriggerDeps) {
     val profileFunction get() = deps.profileFunction
     val profileUtil get() = deps.profileUtil
     val preferences get() = deps.preferences
-    val locationDataContainer get() = deps.locationDataContainer
+    val lastKnownLocation get() = deps.lastKnownLocation
     val persistenceLayer get() = deps.persistenceLayer
     val activePlugin get() = deps.activePlugin
     val iobCobCalculator get() = deps.iobCobCalculator

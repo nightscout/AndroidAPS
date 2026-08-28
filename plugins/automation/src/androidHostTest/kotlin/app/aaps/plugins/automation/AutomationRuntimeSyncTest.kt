@@ -57,7 +57,7 @@ class AutomationRuntimeSyncTest : TestBaseWithProfile() {
         TriggerDeps(
             aapsLogger, rxBus, rh, profileFunction, profileUtil, preferences, mock(), mock(),
             activePlugin, iobCobCalculator, smbGlucoseStatusProvider, dateUtil
-        ) { triggerFactory }
+        )
     }
     @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var loop: Loop

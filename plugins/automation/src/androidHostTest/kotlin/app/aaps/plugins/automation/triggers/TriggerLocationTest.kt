@@ -1,6 +1,5 @@
 package app.aaps.plugins.automation.triggers
 
-import android.location.Location
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.asJsonObject
 import app.aaps.plugins.automation.elements.InputLocationMode
@@ -9,13 +8,17 @@ import kotlinx.coroutines.test.runTest
 import org.json.JSONException
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
 
 class TriggerLocationTest : TriggerTestBase() {
 
+    // The distance itself is measured by the platform now (`LastLocationDataContainer` still calls
+    // `Location.distanceTo`), so these tests state the distance directly. That also fixes the
+    // GOING_OUT case, which used to be skipped because a `Location` could not be mocked here.
     @BeforeEach fun mock() {
-        whenever(locationDataContainer.lastLocation).thenReturn(mockedLocation())
+        whenever(lastKnownLocation.distanceTo(any(), any())).thenReturn(1.0)
     }
 
     @Test fun copyConstructorTest() = runTest {
@@ -36,10 +39,11 @@ class TriggerLocationTest : TriggerTestBase() {
         t.latitude.setValue(213.0)
         t.longitude.setValue(212.0)
         t.distance.setValue(2.0)
-        //        t.modeSelected.setValue(InputLocationMode.Mode.OUTSIDE);
-        whenever(locationDataContainer.lastLocation).thenReturn(null)
+        // No position reported yet, so there is nothing to compare against.
+        whenever(lastKnownLocation.distanceTo(any(), any())).thenReturn(null)
         assertThat(t.shouldRun()).isFalse()
-        whenever(locationDataContainer.lastLocation).thenReturn(mockedLocation())
+        // 1 m away, inside the 2 m radius.
+        whenever(lastKnownLocation.distanceTo(any(), any())).thenReturn(1.0)
         assertThat(t.shouldRun()).isTrue()
         t = TriggerLocation(triggerDeps)
         t.distance.setValue(-500.0)
@@ -49,15 +53,21 @@ class TriggerLocationTest : TriggerTestBase() {
         t = TriggerLocation(triggerDeps)
         t.distance.setValue(50.0)
         t.lastMode = t.currentMode(55.0)
-        whenever(locationDataContainer.lastLocation).thenReturn(null)
-        whenever(locationDataContainer.lastLocation).thenReturn(mockedLocationOut())
+        whenever(lastKnownLocation.distanceTo(any(), any())).thenReturn(5.0)
         t.modeSelected.value = InputLocationMode.Mode.GOING_IN
         assertThat(InputLocationMode.Mode.OUTSIDE).isEqualTo(t.lastMode)
         assertThat(InputLocationMode.Mode.INSIDE).isEqualTo(t.currentMode(5.0))
         assertThat(t.shouldRun()).isTrue()
 
         //Test of GOING_OUT - last mode should be INSIDE, and current mode should be OUTSIDE
-        // Currently unavailable due to problems with Location mocking
+        t = TriggerLocation(triggerDeps)
+        t.distance.setValue(50.0)
+        t.lastMode = t.currentMode(5.0)
+        whenever(lastKnownLocation.distanceTo(any(), any())).thenReturn(55.0)
+        t.modeSelected.value = InputLocationMode.Mode.GOING_OUT
+        assertThat(InputLocationMode.Mode.INSIDE).isEqualTo(t.lastMode)
+        assertThat(InputLocationMode.Mode.OUTSIDE).isEqualTo(t.currentMode(55.0))
+        assertThat(t.shouldRun()).isTrue()
     }
 
     private var locationJson = "{\"data\":{\"mode\":\"OUTSIDE\",\"distance\":2,\"latitude\":213,\"name\":\"\",\"longitude\":212},\"type\":\"TriggerLocation\"}"
@@ -93,21 +103,5 @@ class TriggerLocationTest : TriggerTestBase() {
 
     @Test fun friendlyDescriptionTest() = runTest {
         assertThat(TriggerLocation(triggerDeps).friendlyDescription()).isNull() //not mocked
-    }
-
-    private fun mockedLocation(): Location {
-        val newLocation = Location("test")
-        newLocation.latitude = 10.0
-        newLocation.longitude = 11.0
-        newLocation.accuracy = 1f
-        return newLocation
-    }
-
-    private fun mockedLocationOut(): Location {
-        val newLocation = Location("test")
-        newLocation.latitude = 12.0
-        newLocation.longitude = 13.0
-        newLocation.accuracy = 1f
-        return newLocation
     }
 }

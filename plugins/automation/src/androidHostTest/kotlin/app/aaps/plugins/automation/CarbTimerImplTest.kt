@@ -47,7 +47,7 @@ class CarbTimerImplTest : TestBase() {
         TriggerDeps(
             aapsLogger, rxBus, rh, profileFunction, mock(), preferences, mock(), mock(),
             activePlugin, mock(), mock(), dateUtil
-        ) { triggerFactory }
+        )
     }
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var context: Context

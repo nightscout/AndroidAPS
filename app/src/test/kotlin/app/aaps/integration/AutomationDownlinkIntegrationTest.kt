@@ -64,7 +64,7 @@ class AutomationDownlinkIntegrationTest : TestBaseWithProfile() {
         TriggerDeps(
             aapsLogger, rxBus, rh, profileFunction, profileUtil, preferences, mock(), mock(),
             activePlugin, mock(), mock(), dateUtil
-        ) { triggerFactory }
+        )
     }
     @Mock private lateinit var actionFactory: app.aaps.plugins.automation.actions.ActionFactory
     private val eventFactory by lazy { AutomationEventFactory(aapsLogger, dateUtil, actionFactory, triggerFactory, triggerDeps) }

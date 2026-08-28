@@ -8,7 +8,7 @@ import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.plugins.automation.BtConnectionSource
-import app.aaps.plugins.automation.services.LastLocationDataContainer
+import app.aaps.plugins.automation.LastKnownLocation
 import app.aaps.shared.tests.TestBaseWithProfile
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.jupiter.api.BeforeEach
@@ -17,7 +17,7 @@ import org.mockito.kotlin.whenever
 
 open class TriggerTestBase : TestBaseWithProfile() {
 
-    @Mock lateinit var locationDataContainer: LastLocationDataContainer
+    @Mock lateinit var lastKnownLocation: LastKnownLocation
     @Mock lateinit var autosensDataStore: AutosensDataStore
     @Mock lateinit var btConnectionSource: BtConnectionSource
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
@@ -44,9 +44,9 @@ open class TriggerTestBase : TestBaseWithProfile() {
      */
     val triggerDeps: TriggerDeps by lazy {
         TriggerDeps(
-            aapsLogger, rxBus, rh, profileFunction, profileUtil, preferences, locationDataContainer,
+            aapsLogger, rxBus, rh, profileFunction, profileUtil, preferences, lastKnownLocation,
             persistenceLayer, activePlugin, iobCobCalculator, smbGlucoseStatusProvider, dateUtil
-        ) { triggerFactory }
+        )
     }
 
     val triggerFactory: TriggerFactory by lazy {

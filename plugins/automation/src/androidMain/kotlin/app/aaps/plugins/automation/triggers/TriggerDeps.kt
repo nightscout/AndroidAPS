@@ -11,10 +11,9 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.plugins.automation.services.LastLocationDataContainer
+import app.aaps.plugins.automation.LastKnownLocation
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 
 /**
@@ -39,13 +38,10 @@ class TriggerDeps @Inject constructor(
     val profileFunction: ProfileFunction,
     val profileUtil: ProfileUtil,
     val preferences: Preferences,
-    val locationDataContainer: LastLocationDataContainer,
+    val lastKnownLocation: LastKnownLocation,
     val persistenceLayer: PersistenceLayer,
     val activePlugin: ActivePlugin,
     val iobCobCalculator: IobCobCalculator,
     val glucoseStatusProvider: GlucoseStatusProvider,
-    val dateUtil: DateUtil,
-    // Provider breaks the cycle: TriggerFactory holds TriggerDeps. Only TriggerConnector needs it,
-    // to rebuild its children from JSON.
-    val triggerFactory: Provider<TriggerFactory>
+    val dateUtil: DateUtil
 )

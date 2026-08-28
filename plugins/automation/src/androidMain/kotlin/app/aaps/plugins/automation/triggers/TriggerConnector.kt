@@ -76,16 +76,22 @@ class TriggerConnector(deps: TriggerDeps) : Trigger(deps) {
             put("triggerList", buildJsonArray { for (t in list) add(JsonPrimitive(t.toJSON())) })
         }
 
+    /**
+     * Builds one child from its stored JSON. Set by [TriggerFactory] right before [fromJSON], because
+     * naming a trigger class is the factory's job, not this one's. Without it the children are
+     * dropped, which is why only the factory ever calls [fromJSON].
+     */
+    var childFromJson: ((JsonObject) -> Trigger)? = null
+
     override fun fromJSON(data: String): Trigger {
         val d = jsonOf(data)
         connectorType = Type.valueOf(d.lenientString("connectorType", Type.AND.toString()))
         val array = d["triggerList"] as? JsonArray ?: JsonArray(emptyList())
+        val build = childFromJson
         list.clear()
         for (element in array) {
             val child = (element as? JsonPrimitive)?.content ?: continue
-            deps.triggerFactory().instantiate(jsonOf(child)).let {
-                list.add(it)
-            }
+            build?.invoke(jsonOf(child))?.let { list.add(it) }
         }
         return this
     }

@@ -43,7 +43,7 @@ ActionsTestBase : TestBaseWithProfile() {
         app.aaps.plugins.automation.triggers.TriggerDeps(
             aapsLogger, rxBus, rh, profileFunction, profileUtil, preferences, mock(), persistenceLayer,
             activePlugin, mock(), glucoseStatusProvider, dateUtil
-        ) { mock<app.aaps.plugins.automation.triggers.TriggerFactory>() }
+        )
     }
 
     val actionFactory: ActionFactory by lazy {

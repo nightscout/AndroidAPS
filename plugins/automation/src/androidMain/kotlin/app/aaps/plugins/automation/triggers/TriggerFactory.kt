@@ -76,7 +76,7 @@ class TriggerFactory @Inject constructor(
                 TriggerPumpBatteryLevel::class.java.simpleName   -> TriggerPumpBatteryLevel(deps).fromJSON(data.toString())
                 TriggerIob::class.java.simpleName                -> TriggerIob(deps).fromJSON(data.toString())
                 TriggerCOB::class.java.simpleName                -> TriggerCOB(deps).fromJSON(data.toString())
-                TriggerConnector::class.java.simpleName          -> TriggerConnector(deps).fromJSON(data.toString())
+                TriggerConnector::class.java.simpleName          -> TriggerConnector(deps).also { it.childFromJson = ::instantiate }.fromJSON(data.toString())
                 TriggerDelta::class.java.simpleName              -> TriggerDelta(deps).fromJSON(data.toString())
                 TriggerDummy::class.java.simpleName              -> TriggerDummy(deps).fromJSON(data.toString())
                 TriggerHeartRate::class.java.simpleName          -> TriggerHeartRate(deps).fromJSON(data.toString())

@@ -1,6 +1,5 @@
 package app.aaps.plugins.automation.triggers
 
-import android.location.Location
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import app.aaps.core.data.format.NumberFormat
@@ -37,11 +36,7 @@ class TriggerLocation(deps: TriggerDeps) : Trigger(deps) {
     }
 
     override suspend fun shouldRun(): Boolean {
-        val location: Location = locationDataContainer.lastLocation ?: return false
-        val a = Location("Trigger")
-        a.latitude = latitude.value
-        a.longitude = longitude.value
-        val calculatedDistance = location.distanceTo(a).toDouble()
+        val calculatedDistance = lastKnownLocation.distanceTo(latitude.value, longitude.value) ?: return false
         if (modeSelected.value == InputLocationMode.Mode.INSIDE && calculatedDistance <= distance.value ||
             modeSelected.value == InputLocationMode.Mode.OUTSIDE && calculatedDistance > distance.value ||
             modeSelected.value == InputLocationMode.Mode.GOING_IN && calculatedDistance <= distance.value && lastMode == InputLocationMode.Mode.OUTSIDE ||

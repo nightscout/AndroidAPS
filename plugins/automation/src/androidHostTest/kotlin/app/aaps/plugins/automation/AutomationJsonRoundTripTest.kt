@@ -42,7 +42,7 @@ class AutomationJsonRoundTripTest : TestBase() {
     private val triggerDeps: TriggerDeps by lazy {
         TriggerDeps(
             aapsLogger, mock(), rh, profileFunction, mock(), preferences, mock(), mock(), mock(), mock(), mock(), dateUtil
-        ) { triggerFactory }
+        )
     }
 
     private val triggerFactory: TriggerFactory by lazy {
