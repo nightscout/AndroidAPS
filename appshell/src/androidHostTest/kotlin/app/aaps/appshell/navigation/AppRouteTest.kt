@@ -1,4 +1,4 @@
-package app.aaps.compose.navigation
+package app.aaps.appshell.navigation
 
 import app.aaps.core.data.model.TE
 import app.aaps.core.ui.compose.ScreenMode

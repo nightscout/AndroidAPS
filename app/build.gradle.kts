@@ -236,11 +236,9 @@ dependencies {
     implementation(project(":core:utils"))
     implementation(project(":core:ui"))
     implementation(project(":ui"))
-    // Feature plugins self-register into the Hilt plugin map (see e.g. :plugins:smoothing SmoothingModule).
-    // Adding/removing a plugin is therefore just an include in settings.gradle — no edit needed here.
-    rootProject.subprojects
-        .filter { it.path.startsWith(":plugins:") && it.buildFile.exists() }
-        .forEach { implementation(project(it.path)) }
+    // The shell carries the navigation graph and, with it, the feature plugins - as `api`, so the DI
+    // graph built here still sees every plugin that self-registers into the plugin map.
+    implementation(project(":appshell"))
     implementation(project(":implementation"))
     implementation(project(":database:impl"))
     implementation(project(":database:persistence"))

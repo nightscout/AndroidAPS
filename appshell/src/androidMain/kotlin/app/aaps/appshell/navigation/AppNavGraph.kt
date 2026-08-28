@@ -1,4 +1,4 @@
-package app.aaps.compose.navigation
+package app.aaps.appshell.navigation
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope

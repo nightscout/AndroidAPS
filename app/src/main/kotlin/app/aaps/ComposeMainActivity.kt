@@ -67,8 +67,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import app.aaps.compose.navigation.AppRoute
-import app.aaps.compose.navigation.appNavGraph
+import app.aaps.appshell.navigation.AppRoute
+import app.aaps.appshell.navigation.appNavGraph
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
