@@ -53,7 +53,7 @@ import app.aaps.ui.UiStrings
 
 @Composable
 internal fun presetDisplayName(preset: TTPreset): String = when {
-    preset.nameRes != null       -> stringResource(preset.nameRes!!)
+    preset.displayName != null   -> preset.displayName!!
     !preset.name.isNullOrEmpty() -> preset.name!!
     else                         -> when (preset.reason) {
         TT.Reason.ACTIVITY     -> stringResource(CoreUiStrings.activity)

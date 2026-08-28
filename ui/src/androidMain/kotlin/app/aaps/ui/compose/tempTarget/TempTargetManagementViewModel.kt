@@ -129,7 +129,7 @@ class TempTargetManagementViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 // Load presets from JSON (or create defaults if empty)
-                val presets = preferences.get(StringNonKey.TempTargetPresets).toTTPresetsWithNameRes()
+                val presets = preferences.get(StringNonKey.TempTargetPresets).toTTPresetsWithDisplayName(rh)
 
                 // Load active TT
                 val now = dateUtil.now()
@@ -196,7 +196,7 @@ class TempTargetManagementViewModel @Inject constructor(
     fun refreshData() {
         viewModelScope.launch {
             try {
-                val presets = preferences.get(StringNonKey.TempTargetPresets).toTTPresetsWithNameRes()
+                val presets = preferences.get(StringNonKey.TempTargetPresets).toTTPresetsWithDisplayName(rh)
                 val now = dateUtil.now()
                 val activeTT = persistenceLayer.getTemporaryTargetActiveAt(now)
 
@@ -512,7 +512,7 @@ class TempTargetManagementViewModel @Inject constructor(
                 val updatedPresets = currentState.presets.map { preset ->
                     if (preset.id == selectedPreset.id) {
                         preset.copy(
-                            name = if (preset.nameRes == null) currentState.editorName else preset.name,
+                            name = if (preset.displayName == null) currentState.editorName else preset.name,
                             targetValue = targetInMgdl,
                             duration = currentState.editorDuration
                         )
@@ -613,7 +613,7 @@ class TempTargetManagementViewModel @Inject constructor(
         val durationDiffers = currentState.editorDuration != preset.duration
 
         // For custom presets, also check name changes
-        val nameDiffers = if (preset.nameRes == null) {
+        val nameDiffers = if (preset.displayName == null) {
             currentState.editorName != (preset.name ?: "")
         } else false
 

@@ -69,8 +69,8 @@ data class TempTargetManagementUiState(
 )
 
 /**
- * Extension function to get display name for a TTPreset
- * Returns localized string from nameRes or custom name
+ * The name to show for a preset: the translated one for fixed presets, the user's own for custom ones.
+ *
+ * No resolver needed any more - `withDisplayName` has already translated it.
  */
-fun TTPreset.getDisplayName(rh: ResourceHelper): String =
-    nameRes?.let { rh.gs(it) } ?: name ?: "Unknown"
+fun TTPreset.getDisplayName(): String = displayName ?: name ?: "Unknown"

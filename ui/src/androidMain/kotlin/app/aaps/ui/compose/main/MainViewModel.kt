@@ -78,7 +78,7 @@ import app.aaps.ui.compose.quickLaunch.QuickLaunchAction
 import app.aaps.ui.compose.quickLaunch.QuickLaunchResolver
 import app.aaps.ui.compose.quickLaunch.QuickLaunchSerializer
 import app.aaps.ui.compose.quickLaunch.ResolvedQuickLaunchItem
-import app.aaps.ui.compose.tempTarget.toTTPresetsWithNameRes
+import app.aaps.ui.compose.tempTarget.toTTPresetsWithDisplayName
 import app.aaps.ui.compose.wizardDialog.showWizardBolusConfirmation
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
@@ -659,7 +659,7 @@ class MainViewModel @Inject constructor(
 
     /** QuickLaunch TT preset → contact the master, render the master's confirmation, commit on OK (role-transparent). */
     fun requestTempTargetPresetConfirmation(presetId: String) {
-        val presets = preferences.get(StringNonKey.TempTargetPresets).toTTPresetsWithNameRes()
+        val presets = preferences.get(StringNonKey.TempTargetPresets).toTTPresetsWithDisplayName(rh)
         val preset = presets.find { it.id == presetId } ?: return
         val icon = when (preset.reason) {
             TT.Reason.ACTIVITY     -> IcTtActivity

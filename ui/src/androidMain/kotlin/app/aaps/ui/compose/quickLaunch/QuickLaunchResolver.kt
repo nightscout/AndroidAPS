@@ -28,7 +28,7 @@ import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.label
 import app.aaps.ui.compose.navigation.ElementAvailability
 import app.aaps.ui.compose.scenes.SceneIcons
-import app.aaps.ui.compose.tempTarget.toTTPresetsWithNameRes
+import app.aaps.ui.compose.tempTarget.toTTPresetsWithDisplayName
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -126,9 +126,9 @@ class QuickLaunchResolver @Inject constructor(
         is QuickLaunchAction.AutomationAction  -> automation.findEventById(action.automationId)?.title ?: "?"
 
         is QuickLaunchAction.TempTargetPreset  -> {
-            val presets = preferences.get(StringNonKey.TempTargetPresets).toTTPresetsWithNameRes()
+            val presets = preferences.get(StringNonKey.TempTargetPresets).toTTPresetsWithDisplayName(rh)
             val preset = presets.find { it.id == action.presetId }
-            preset?.name ?: preset?.nameRes?.let { rh.gs(it) } ?: "?"
+            preset?.name ?: preset?.displayName ?: "?"
         }
 
         is QuickLaunchAction.ProfileAction     -> buildProfileLabel(action)

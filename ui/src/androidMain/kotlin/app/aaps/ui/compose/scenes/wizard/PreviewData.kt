@@ -23,6 +23,6 @@ internal val previewState = SceneWizardViewModel.WizardState(
 )
 
 internal val previewPresets = listOf(
-    TTPreset(id = "1", nameRes = CoreUiR.string.activity, reason = TT.Reason.ACTIVITY, targetValue = 140.0, duration = 3600000, isDeletable = false),
-    TTPreset(id = "2", nameRes = CoreUiR.string.eatingsoon, reason = TT.Reason.EATING_SOON, targetValue = 90.0, duration = 2700000, isDeletable = false)
+    TTPreset(id = "1", displayName = "Activity", reason = TT.Reason.ACTIVITY, targetValue = 140.0, duration = 3600000, isDeletable = false),
+    TTPreset(id = "2", displayName = "Eating soon", reason = TT.Reason.EATING_SOON, targetValue = 90.0, duration = 2700000, isDeletable = false)
 )

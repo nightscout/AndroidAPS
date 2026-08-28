@@ -148,7 +148,7 @@ fun TempTargetCarouselCard(
             ) {
                 // Preset/TT name - for standalone active card show TT reason as name
                 val nameText = when {
-                    preset != null -> preset.nameRes?.let { stringResource(it) } ?: preset.name ?: ""
+                    preset != null -> preset.displayName ?: preset.name ?: ""
                     isActiveCard   -> stringResource(getTTReasonStringRes(reason))
                     else           -> ""
                 }

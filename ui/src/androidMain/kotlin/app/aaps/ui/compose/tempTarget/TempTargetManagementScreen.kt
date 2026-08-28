@@ -143,7 +143,7 @@ fun TempTargetManagementScreen(
 
     // Delete confirmation dialog
     if (showDeleteDialog && uiState.selectedPreset != null) {
-        val presetName = uiState.selectedPreset!!.getDisplayName(viewModel.rh)
+        val presetName = uiState.selectedPreset!!.getDisplayName()
         OkCancelDialog(
             title = viewModel.rh.gs(CoreUiStrings.removerecord),
             message = "${viewModel.rh.gs(CoreUiStrings.delete)} $presetName?",
