@@ -32,7 +32,6 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.ui.CoreUiStrings
-import app.aaps.core.ui.R
 import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.core.ui.extensions.toStringMedium
 import app.aaps.core.ui.extensions.toStringShort

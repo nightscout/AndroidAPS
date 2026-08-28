@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import app.aaps.core.data.model.SceneAction
 import app.aaps.core.data.model.TE
 import app.aaps.core.ui.CoreUiStrings
-import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout

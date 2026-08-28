@@ -27,7 +27,6 @@ import app.aaps.core.ui.compose.icons.IcAutomation
 import app.aaps.core.ui.compose.icons.Pump
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.stringResource
-import app.aaps.ui.R
 import app.aaps.ui.UiStrings
 
 @Composable

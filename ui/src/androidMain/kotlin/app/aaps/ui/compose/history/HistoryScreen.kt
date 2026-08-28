@@ -52,7 +52,6 @@ import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.dialogs.DatePickerModal
 import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.stringResource
-import app.aaps.ui.R
 import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.overview.graphs.GraphViewModel
 import app.aaps.ui.compose.overview.graphs.GraphsSection

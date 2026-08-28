@@ -38,7 +38,6 @@ import app.aaps.core.data.ue.Action
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.stringResource
-import app.aaps.ui.R
 import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.overview.chips.toColor
 import app.aaps.ui.compose.overview.chips.toIcon

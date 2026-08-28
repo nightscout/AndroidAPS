@@ -11,7 +11,6 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.ui.CoreUiStrings
-import app.aaps.core.ui.R
 import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.treatments.MealLink
 import com.google.common.truth.Truth.assertThat

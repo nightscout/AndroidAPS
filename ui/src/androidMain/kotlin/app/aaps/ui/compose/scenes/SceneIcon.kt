@@ -67,7 +67,6 @@ import app.aaps.core.ui.compose.icons.IcTtEatingSoon
 import app.aaps.core.ui.compose.icons.IcTtHigh
 import app.aaps.core.ui.compose.icons.IcTtHypo
 import app.aaps.core.ui.compose.icons.IcTtManual
-import app.aaps.ui.R
 import app.aaps.ui.UiStrings
 
 /**

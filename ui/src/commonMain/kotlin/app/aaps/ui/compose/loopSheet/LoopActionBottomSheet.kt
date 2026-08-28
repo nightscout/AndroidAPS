@@ -25,7 +25,6 @@ import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.compose.stringResource
-import app.aaps.ui.R
 import app.aaps.ui.UiStrings
 
 @OptIn(ExperimentalMaterial3Api::class)

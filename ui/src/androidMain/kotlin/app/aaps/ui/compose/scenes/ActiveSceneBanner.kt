@@ -28,7 +28,6 @@ import androidx.compose.ui.Modifier
 import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.objects.extensions.tickerFlow
 import app.aaps.core.ui.CoreUiStrings
-import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.stringResource

@@ -38,7 +38,6 @@ import app.aaps.core.ui.compose.icons.IcBolus
 import app.aaps.core.ui.compose.icons.IcCarbs
 import app.aaps.core.ui.compose.icons.IcQuickwizard
 import app.aaps.core.ui.compose.stringResource
-import app.aaps.ui.R
 import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.quickWizard.viewmodels.TrendOption
 

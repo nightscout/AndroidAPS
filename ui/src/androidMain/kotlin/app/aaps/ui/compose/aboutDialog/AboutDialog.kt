@@ -34,7 +34,6 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.core.net.toUri
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.ui.CoreUiStrings
-import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
 

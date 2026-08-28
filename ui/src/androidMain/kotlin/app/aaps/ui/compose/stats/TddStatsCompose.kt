@@ -18,7 +18,6 @@ import app.aaps.core.data.aps.AverageTDD
 import app.aaps.core.data.model.TDD
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.ui.CoreUiStrings
-import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings

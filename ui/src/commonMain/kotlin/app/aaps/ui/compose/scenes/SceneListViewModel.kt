@@ -27,7 +27,6 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.extensions.profileNames
 import app.aaps.core.objects.extensions.toScenes
 import app.aaps.core.ui.CoreUiStrings
-import app.aaps.core.ui.R
 import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.ui.UiStrings
 import dev.zacsweers.metro.AppScope

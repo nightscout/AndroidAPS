@@ -64,7 +64,6 @@ import app.aaps.core.ui.compose.siteRotation.SiteEntryList
 import app.aaps.core.ui.compose.siteRotation.ZoomableBodyDiagram
 import app.aaps.core.ui.compose.siteRotation.directionToComposeIcon
 import app.aaps.core.ui.compose.stringResource
-import app.aaps.ui.R
 import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.siteRotationDialog.viewModels.SiteRotationManagementViewModel
 import app.aaps.ui.compose.siteRotationDialog.viewModels.SiteRotationUiState

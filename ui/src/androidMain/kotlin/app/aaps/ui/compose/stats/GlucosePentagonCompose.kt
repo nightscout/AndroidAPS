@@ -32,7 +32,6 @@ import app.aaps.core.interfaces.stats.DexcomTIR
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.stringResource
-import app.aaps.ui.R
 import app.aaps.ui.UiStrings
 import kotlin.math.PI
 import kotlin.math.cos

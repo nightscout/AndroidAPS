@@ -21,7 +21,6 @@ import app.aaps.core.interfaces.clientcontrol.PendingAction
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.core.ui.compose.stringResource
-import app.aaps.ui.R
 import app.aaps.ui.UiStrings
 
 /**

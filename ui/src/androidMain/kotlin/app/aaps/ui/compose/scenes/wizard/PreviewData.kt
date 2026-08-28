@@ -4,7 +4,6 @@ import app.aaps.core.data.model.SceneAction
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TTPreset
-import app.aaps.core.ui.R
 import app.aaps.core.ui.R as CoreUiR
 import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.scenes.SceneTemplate
