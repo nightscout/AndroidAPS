@@ -38,7 +38,8 @@ val migratedModules = listOf(
     ":plugins:smoothing",
     ":plugins:source",
     ":pump:virtual",
-    ":shared:impl"
+    ":shared:impl",
+    ":ui"
 )
 
 // Whether the migrated API is written into the framework header for Swift to call.
