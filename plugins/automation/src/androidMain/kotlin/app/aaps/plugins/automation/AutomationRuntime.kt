@@ -103,7 +103,6 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonArray
-import java.util.Collections
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
@@ -615,7 +614,9 @@ class AutomationRuntime @Inject constructor(
 
     @Synchronized
     fun swap(fromPosition: Int, toPosition: Int) {
-        Collections.swap(automationEvents, fromPosition, toPosition)
+        val moved = automationEvents[fromPosition]
+        automationEvents[fromPosition] = automationEvents[toPosition]
+        automationEvents[toPosition] = moved
         // Reorder is a config change — persisted ordering decides processing order in
         // processActions, so collectors and storeToSP both need to see it.
         markEdited()
