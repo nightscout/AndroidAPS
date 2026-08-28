@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.compose.actions
 
+import kotlin.reflect.KClass
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.plugins.automation.AutomationStrings
 import androidx.compose.foundation.layout.Arrangement
@@ -22,11 +24,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.compose.consumeOverscroll
-import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.actions.ActionAlarm
 import app.aaps.plugins.automation.actions.ActionCarePortalEvent
@@ -45,37 +45,37 @@ import app.aaps.plugins.automation.actions.ActionStopProcessing
 import app.aaps.plugins.automation.actions.ActionStopTempTarget
 import app.aaps.plugins.automation.compose.iconColor
 
-enum class ActionCategory(val labelResId: Int) {
-    Targets(R.string.automation_category_targets),
-    Profile(R.string.automation_category_profile),
-    Loop(R.string.automation_category_loop),
-    Scenes(R.string.automation_category_scenes),
-    Alerts(R.string.automation_category_alerts),
-    System(R.string.automation_category_system),
-    Other(R.string.automation_category_other)
+enum class ActionCategory(val labelResId: TextRef) {
+    Targets(AutomationStrings.automation_category_targets),
+    Profile(AutomationStrings.automation_category_profile),
+    Loop(AutomationStrings.automation_category_loop),
+    Scenes(AutomationStrings.automation_category_scenes),
+    Alerts(AutomationStrings.automation_category_alerts),
+    System(AutomationStrings.automation_category_system),
+    Other(AutomationStrings.automation_category_other)
 }
 
-private fun actionCategoryOf(cls: Class<*>): ActionCategory = when (cls) {
-    ActionStartTempTarget::class.java,
-    ActionStopTempTarget::class.java -> ActionCategory.Targets
+private fun actionCategoryOf(cls: KClass<*>): ActionCategory = when (cls) {
+    ActionStartTempTarget::class,
+    ActionStopTempTarget::class -> ActionCategory.Targets
 
-    ActionProfileSwitch::class.java,
-    ActionProfileSwitchPercent::class.java -> ActionCategory.Profile
+    ActionProfileSwitch::class,
+    ActionProfileSwitchPercent::class -> ActionCategory.Profile
 
-    ActionSMBChange::class.java,
-    ActionStopProcessing::class.java,
-    ActionRunAutotune::class.java -> ActionCategory.Loop
+    ActionSMBChange::class,
+    ActionStopProcessing::class,
+    ActionRunAutotune::class -> ActionCategory.Loop
 
-    ActionRunScene::class.java,
-    ActionEnableScene::class.java,
-    ActionDisableScene::class.java -> ActionCategory.Scenes
+    ActionRunScene::class,
+    ActionEnableScene::class,
+    ActionDisableScene::class -> ActionCategory.Scenes
 
-    ActionAlarm::class.java,
-    ActionNotification::class.java,
-    ActionSendSMS::class.java,
-    ActionCarePortalEvent::class.java -> ActionCategory.Alerts
+    ActionAlarm::class,
+    ActionNotification::class,
+    ActionSendSMS::class,
+    ActionCarePortalEvent::class -> ActionCategory.Alerts
 
-    ActionSettingsExport::class.java -> ActionCategory.System
+    ActionSettingsExport::class -> ActionCategory.System
     else -> ActionCategory.Other
 }
 
@@ -90,11 +90,11 @@ data class ActionOption(
     companion object {
 
         fun from(action: Action): ActionOption = ActionOption(
-            className = action.javaClass.name,
-            label = action.shortDescription().substringBefore(':').trim().ifEmpty { action.javaClass.simpleName },
+            className = action::class.simpleName.orEmpty(),
+            label = action.shortDescription().substringBefore(':').trim().ifEmpty { action::class.simpleName.orEmpty() },
             icon = action.composeIcon(),
             prototype = action,
-            category = actionCategoryOf(action.javaClass)
+            category = actionCategoryOf(action::class)
         )
     }
 }

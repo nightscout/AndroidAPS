@@ -10,14 +10,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.Scene
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.NumberInputRow
-import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.actions.ActionAlarm
 import app.aaps.plugins.automation.actions.ActionCarePortalEvent
@@ -38,7 +36,6 @@ import app.aaps.plugins.automation.compose.elements.InputStringEditor
 import app.aaps.plugins.automation.compose.elements.InputWeekDayEditor
 import app.aaps.plugins.automation.compose.elements.LabelWithElementRow
 import app.aaps.plugins.automation.elements.InputPercent
-import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 fun ActionEditor(
@@ -78,13 +75,13 @@ fun ActionEditor(
             is ActionRunScene             -> ActionRunSceneEditor(action, sceneOptions, onChange)
             is ActionEnableScene          -> ActionEnableSceneEditor(action, sceneOptions, onChange)
             is ActionDisableScene         -> ActionDisableSceneEditor(action, sceneOptions, onChange)
-            else                          -> Text(action.javaClass.simpleName)
+            else                          -> Text(action::class.simpleName.orEmpty())
         }
     }
 }
 
 @Composable
-private fun staticDescription(action: Action): String = action.shortDescription().ifEmpty { action.javaClass.simpleName }
+private fun staticDescription(action: Action): String = action.shortDescription().ifEmpty { action::class.simpleName.orEmpty() }
 
 // ---------- Individual editors ----------
 
@@ -117,19 +114,13 @@ fun ActionSendSMSEditor(a: ActionSendSMS, onChange: () -> Unit) {
 
 @Composable
 fun ActionSettingsExportEditor(a: ActionSettingsExport, onChange: () -> Unit) {
-    val textField = a.textFieldRef()
+    val textField = a.text
     InputStringEditor(
         value = textField.value,
         onValueChange = { textField.value = it; onChange() },
         label = stringResource(AutomationStrings.export_settings_short)
     )
 }
-
-private fun ActionSettingsExport.textFieldRef(): app.aaps.plugins.automation.elements.InputString =
-    javaClass.getDeclaredField("text").let {
-        it.isAccessible = true
-        it.get(this) as app.aaps.plugins.automation.elements.InputString
-    }
 
 @Composable
 fun ActionCarePortalEventEditor(a: ActionCarePortalEvent, tick: Int = 0, onChange: () -> Unit) {
@@ -147,7 +138,7 @@ fun ActionCarePortalEventEditor(a: ActionCarePortalEvent, tick: Int = 0, onChang
         }
     )
     NumberInputRow(
-        labelResId = app.aaps.core.ui.R.string.duration_label,
+        labelRef = CoreUiStrings.duration_label,
         value = a.duration.value.toDouble(),
         onValueChange = { a.duration.value = it.toInt(); onChange() },
         valueRange = 5.0..(24 * 60.0),
@@ -192,7 +183,7 @@ fun ActionProfileSwitchEditor(
 fun ActionProfileSwitchPercentEditor(a: ActionProfileSwitchPercent, tick: Int = 0, onChange: () -> Unit) {
     @Suppress("UNUSED_EXPRESSION") tick
     NumberInputRow(
-        labelResId = app.aaps.core.ui.R.string.percent,
+        labelRef = CoreUiStrings.percent,
         value = a.pct.value,
         onValueChange = { a.pct.value = it; onChange() },
         valueRange = InputPercent.MIN..InputPercent.MAX,
@@ -200,7 +191,7 @@ fun ActionProfileSwitchPercentEditor(a: ActionProfileSwitchPercent, tick: Int = 
         unitLabel = CoreUiStrings.units_percent
     )
     NumberInputRow(
-        labelResId = app.aaps.core.ui.R.string.duration_label,
+        labelRef = CoreUiStrings.duration_label,
         value = a.duration.value.toDouble(),
         onValueChange = { a.duration.value = it.toInt(); onChange() },
         valueRange = 5.0..(24 * 60.0),
@@ -218,52 +209,29 @@ fun ActionRunAutotuneEditor(
 ) {
     @Suppress("UNUSED_EXPRESSION") tick
     AutomationDropdown(
-        value = a.profileNameOrEmpty().ifEmpty { profileNames.firstOrNull() ?: "" },
+        value = a.inputProfileName.value.ifEmpty { profileNames.firstOrNull() ?: "" },
         options = profileNames,
-        onValueChange = { a.setProfileName(it); onChange() },
+        onValueChange = { a.inputProfileName.value = it; onChange() },
         label = stringResource(CoreUiStrings.autotune_select_profile)
     )
     NumberInputRow(
-        labelResId = app.aaps.core.ui.R.string.autotune_tune_days,
-        value = a.daysBackRef().value.toDouble(),
-        onValueChange = { a.daysBackRef().value = it.toInt(); onChange() },
+        labelRef = CoreUiStrings.autotune_tune_days,
+        value = a.daysBack.value.toDouble(),
+        onValueChange = { a.daysBack.value = it.toInt(); onChange() },
         valueRange = 1.0..30.0,
         step = 1.0,
         unitLabel = CoreUiStrings.units_days
     )
-    InputWeekDayEditor(weekdays = a.daysRef(), onChange = onChange)
+    InputWeekDayEditor(weekdays = a.days, onChange = onChange)
 }
 
-// Read-only accessors for ActionRunAutotune private fields via reflection-free shims
-private fun ActionRunAutotune.profileNameOrEmpty(): String = javaClass.getDeclaredField("inputProfileName").let {
-    it.isAccessible = true; (it.get(this) as app.aaps.plugins.automation.elements.InputProfileName).value
-}
-
-private fun ActionRunAutotune.setProfileName(v: String) {
-    javaClass.getDeclaredField("inputProfileName").let {
-        it.isAccessible = true
-        (it.get(this) as app.aaps.plugins.automation.elements.InputProfileName).value = v
-    }
-}
-
-private fun ActionRunAutotune.daysBackRef(): app.aaps.plugins.automation.elements.InputDuration =
-    javaClass.getDeclaredField("daysBack").let {
-        it.isAccessible = true
-        it.get(this) as app.aaps.plugins.automation.elements.InputDuration
-    }
-
-private fun ActionRunAutotune.daysRef(): app.aaps.core.ui.elements.WeekDay =
-    javaClass.getDeclaredField("days").let {
-        it.isAccessible = true
-        it.get(this) as app.aaps.core.ui.elements.WeekDay
-    }
 
 @Composable
 fun ActionStartTempTargetEditor(a: ActionStartTempTarget, tick: Int = 0, onChange: () -> Unit) {
     @Suppress("UNUSED_EXPRESSION") tick
     val isMmol = a.value.units == GlucoseUnit.MMOL
     NumberInputRow(
-        labelResId = app.aaps.core.ui.R.string.temporary_target,
+        labelRef = CoreUiStrings.temporary_target,
         value = a.value.value,
         onValueChange = { a.value.value = it; onChange() },
         valueRange = if (isMmol) Constants.TT_RANGE_MMOL else Constants.TT_RANGE_MGDL,
@@ -272,7 +240,7 @@ fun ActionStartTempTargetEditor(a: ActionStartTempTarget, tick: Int = 0, onChang
         unitLabel = if (isMmol) CoreUiStrings.units_mmol else CoreUiStrings.units_mgdl
     )
     NumberInputRow(
-        labelResId = app.aaps.core.ui.R.string.duration_label,
+        labelRef = CoreUiStrings.duration_label,
         value = a.duration.value.toDouble(),
         onValueChange = { a.duration.value = it.toInt(); onChange() },
         valueRange = 5.0..(24 * 60.0),

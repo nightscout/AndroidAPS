@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.compose
 
+import kotlin.reflect.KClass
 import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.stringResource
@@ -23,11 +24,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.compose.consumeOverscroll
-import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.triggers.TriggerAutosensValue
 import app.aaps.plugins.automation.triggers.TriggerBTDevice
@@ -55,43 +54,43 @@ import app.aaps.plugins.automation.triggers.TriggerTime
 import app.aaps.plugins.automation.triggers.TriggerTimeRange
 import app.aaps.plugins.automation.triggers.TriggerWifiSsid
 
-enum class TriggerCategory(val labelResId: Int) {
-    Time(R.string.automation_category_time),
-    Glucose(R.string.automation_category_glucose),
-    Device(R.string.automation_category_device),
-    Sensors(R.string.automation_category_sensors),
-    Other(R.string.automation_category_other)
+enum class TriggerCategory(val labelResId: TextRef) {
+    Time(AutomationStrings.automation_category_time),
+    Glucose(AutomationStrings.automation_category_glucose),
+    Device(AutomationStrings.automation_category_device),
+    Sensors(AutomationStrings.automation_category_sensors),
+    Other(AutomationStrings.automation_category_other)
 }
 
-fun triggerCategoryOf(triggerClass: Class<*>): TriggerCategory = when (triggerClass) {
-    TriggerTime::class.java,
-    TriggerRecurringTime::class.java,
-    TriggerTimeRange::class.java -> TriggerCategory.Time
+fun triggerCategoryOf(triggerClass: KClass<*>): TriggerCategory = when (triggerClass) {
+    TriggerTime::class,
+    TriggerRecurringTime::class,
+    TriggerTimeRange::class -> TriggerCategory.Time
 
-    TriggerBg::class.java,
-    TriggerDelta::class.java,
-    TriggerCOB::class.java,
-    TriggerIob::class.java,
-    TriggerAutosensValue::class.java,
-    TriggerProfilePercent::class.java,
-    TriggerTempTarget::class.java,
-    TriggerTempTargetValue::class.java,
-    TriggerBolusAgo::class.java -> TriggerCategory.Glucose
+    TriggerBg::class,
+    TriggerDelta::class,
+    TriggerCOB::class,
+    TriggerIob::class,
+    TriggerAutosensValue::class,
+    TriggerProfilePercent::class,
+    TriggerTempTarget::class,
+    TriggerTempTargetValue::class,
+    TriggerBolusAgo::class -> TriggerCategory.Glucose
 
-    TriggerCannulaAge::class.java,
-    TriggerInsulinAge::class.java,
-    TriggerReservoirLevel::class.java,
-    TriggerPumpBatteryAge::class.java,
-    TriggerPumpBatteryLevel::class.java,
-    TriggerSensorAge::class.java,
-    TriggerPodChange::class.java,
-    TriggerPumpLastConnection::class.java -> TriggerCategory.Device
+    TriggerCannulaAge::class,
+    TriggerInsulinAge::class,
+    TriggerReservoirLevel::class,
+    TriggerPumpBatteryAge::class,
+    TriggerPumpBatteryLevel::class,
+    TriggerSensorAge::class,
+    TriggerPodChange::class,
+    TriggerPumpLastConnection::class -> TriggerCategory.Device
 
-    TriggerHeartRate::class.java,
-    TriggerStepsCount::class.java,
-    TriggerLocation::class.java,
-    TriggerWifiSsid::class.java,
-    TriggerBTDevice::class.java -> TriggerCategory.Sensors
+    TriggerHeartRate::class,
+    TriggerStepsCount::class,
+    TriggerLocation::class,
+    TriggerWifiSsid::class,
+    TriggerBTDevice::class -> TriggerCategory.Sensors
 
     else -> TriggerCategory.Other
 }
@@ -107,11 +106,11 @@ data class TriggerOption(
     companion object {
 
         fun from(trigger: Trigger): TriggerOption = TriggerOption(
-            className = trigger.javaClass.name,
+            className = trigger::class.simpleName.orEmpty(),
             labelResId = trigger.friendlyName(),
             icon = trigger.composeIcon(),
             prototype = trigger,
-            category = triggerCategoryOf(trigger.javaClass)
+            category = triggerCategoryOf(trigger::class)
         )
     }
 }

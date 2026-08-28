@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.compose.triggers
 
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.automation.AutomationStrings
@@ -10,13 +11,11 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.NumberInputRow
-import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.compose.elements.AutomationDropdown
 import app.aaps.plugins.automation.compose.elements.ComparatorConnectEditor
 import app.aaps.plugins.automation.compose.elements.ComparatorExistsEditor
@@ -58,7 +57,6 @@ import app.aaps.plugins.automation.triggers.TriggerTempTargetValue
 import app.aaps.plugins.automation.triggers.TriggerTime
 import app.aaps.plugins.automation.triggers.TriggerTimeRange
 import app.aaps.plugins.automation.triggers.TriggerWifiSsid
-import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 fun TriggerEditor(
@@ -103,7 +101,7 @@ fun TriggerEditor(
             is TriggerBTDevice           -> TriggerBTDeviceEditor(trigger, bondedDevices, onChange)
             is TriggerLocation           -> TriggerLocationEditor(trigger, onChange, tick, onUseCurrentLocation, onPickLocationFromMap)
             is TriggerConnector          -> Text("Connector")
-            else                         -> Text(trigger.javaClass.simpleName)
+            else                         -> Text(trigger::class.simpleName.orEmpty())
         }
     }
 }
@@ -120,7 +118,7 @@ fun TriggerBgEditor(t: TriggerBg, onChange: () -> Unit, tick: Int = 0) {
         label = ""
     ) {
         NumberInputRow(
-            labelResId = 0,
+            labelRef = null,
             value = t.bg.value,
             onValueChange = { t.bg.value = it; onChange() },
             valueRange = if (isMmol) InputBg.MMOL_MIN..InputBg.MMOL_MAX else InputBg.MGDL_MIN..InputBg.MGDL_MAX,
@@ -154,7 +152,7 @@ fun TriggerDeltaEditor(t: TriggerDelta, onChange: () -> Unit, tick: Int = 0) {
         label = ""
     ) {
         NumberInputRow(
-            labelResId = 0,
+            labelRef = null,
             value = t.delta.value,
             onValueChange = { t.delta.value = it; onChange() },
             valueRange = -72.0..72.0,
@@ -175,7 +173,7 @@ fun TriggerCOBEditor(t: TriggerCOB, onChange: () -> Unit, tick: Int = 0) {
         label = ""
     ) {
         NumberInputRow(
-            labelResId = 0,
+            labelRef = null,
             value = t.cob.value,
             onValueChange = { t.cob.value = it; onChange() },
             valueRange = 0.0..150.0,
@@ -195,7 +193,7 @@ fun TriggerIobEditor(t: TriggerIob, onChange: () -> Unit, tick: Int = 0) {
         label = ""
     ) {
         NumberInputRow(
-            labelResId = 0,
+            labelRef = null,
             value = t.insulin.value,
             onValueChange = { t.insulin.value = it; onChange() },
             valueRange = -20.0..20.0,
@@ -216,12 +214,12 @@ fun TriggerHeartRateEditor(t: TriggerHeartRate, onChange: () -> Unit, tick: Int 
         label = ""
     ) {
         NumberInputRow(
-            labelResId = 0,
+            labelRef = null,
             value = t.heartRate.value,
             onValueChange = { t.heartRate.value = it; onChange() },
             valueRange = 30.0..250.0,
             step = 5.0,
-            unitLabel = TextRef.AndroidRes(R.string.automation_unit_bpm),
+            unitLabel = AutomationStrings.automation_unit_bpm,
             compact = true
         )
     }
@@ -236,7 +234,7 @@ fun TriggerAutosensValueEditor(t: TriggerAutosensValue, onChange: () -> Unit, ti
         label = ""
     ) {
         NumberInputRow(
-            labelResId = 0,
+            labelRef = null,
             value = t.autosens.value,
             onValueChange = { t.autosens.value = it; onChange() },
             valueRange = 0.0..300.0,
@@ -256,7 +254,7 @@ fun TriggerBolusAgoEditor(t: TriggerBolusAgo, onChange: () -> Unit, tick: Int = 
         label = ""
     ) {
         NumberInputRow(
-            labelResId = 0,
+            labelRef = null,
             value = t.minutesAgo.value.toDouble(),
             onValueChange = { t.minutesAgo.value = it.toInt(); onChange() },
             valueRange = 5.0..(24 * 60.0),
@@ -276,7 +274,7 @@ fun TriggerCannulaAgeEditor(t: TriggerCannulaAge, onChange: () -> Unit, tick: In
         label = ""
     ) {
         NumberInputRow(
-            labelResId = 0,
+            labelRef = null,
             value = t.cannulaAgeHours.value,
             onValueChange = { t.cannulaAgeHours.value = it; onChange() },
             valueRange = 0.0..336.0,
@@ -297,7 +295,7 @@ fun TriggerInsulinAgeEditor(t: TriggerInsulinAge, onChange: () -> Unit, tick: In
         label = ""
     ) {
         NumberInputRow(
-            labelResId = 0,
+            labelRef = null,
             value = t.insulinAgeHours.value,
             onValueChange = { t.insulinAgeHours.value = it; onChange() },
             valueRange = 0.0..336.0,
@@ -318,7 +316,7 @@ fun TriggerReservoirLevelEditor(t: TriggerReservoirLevel, onChange: () -> Unit, 
         label = ""
     ) {
         NumberInputRow(
-            labelResId = 0,
+            labelRef = null,
             value = t.reservoirLevel.value,
             onValueChange = { t.reservoirLevel.value = it; onChange() },
             valueRange = 0.0..800.0,
@@ -338,7 +336,7 @@ fun TriggerPumpBatteryAgeEditor(t: TriggerPumpBatteryAge, onChange: () -> Unit, 
         label = ""
     ) {
         NumberInputRow(
-            labelResId = 0,
+            labelRef = null,
             value = t.pumpBatteryAgeHours.value,
             onValueChange = { t.pumpBatteryAgeHours.value = it; onChange() },
             valueRange = 0.0..336.0,
@@ -359,7 +357,7 @@ fun TriggerPumpBatteryLevelEditor(t: TriggerPumpBatteryLevel, onChange: () -> Un
         label = ""
     ) {
         NumberInputRow(
-            labelResId = 0,
+            labelRef = null,
             value = t.pumpBatteryLevel.value,
             onValueChange = { t.pumpBatteryLevel.value = it; onChange() },
             valueRange = 0.0..100.0,
@@ -379,7 +377,7 @@ fun TriggerSensorAgeEditor(t: TriggerSensorAge, onChange: () -> Unit, tick: Int 
         label = ""
     ) {
         NumberInputRow(
-            labelResId = 0,
+            labelRef = null,
             value = t.sensorAgeHours.value,
             onValueChange = { t.sensorAgeHours.value = it; onChange() },
             valueRange = 0.0..720.0,
@@ -405,7 +403,7 @@ fun TriggerPumpLastConnectionEditor(t: TriggerPumpLastConnection, onChange: () -
         label = ""
     ) {
         NumberInputRow(
-            labelResId = 0,
+            labelRef = null,
             value = t.minutesAgo.value.toDouble(),
             onValueChange = { t.minutesAgo.value = it.toInt(); onChange() },
             valueRange = 5.0..(24 * 60.0),
@@ -425,7 +423,7 @@ fun TriggerProfilePercentEditor(t: TriggerProfilePercent, onChange: () -> Unit, 
         label = ""
     ) {
         NumberInputRow(
-            labelResId = 0,
+            labelRef = null,
             value = t.pct.value,
             onValueChange = { t.pct.value = it; onChange() },
             valueRange = InputPercent.MIN..InputPercent.MAX,
@@ -451,7 +449,7 @@ fun TriggerTempTargetValueEditor(t: TriggerTempTargetValue, onChange: () -> Unit
         label = ""
     ) {
         NumberInputRow(
-            labelResId = 0,
+            labelRef = null,
             value = t.ttValue.value,
             onValueChange = { t.ttValue.value = it; onChange() },
             valueRange = if (isMmol) Constants.TT_RANGE_MMOL
@@ -470,7 +468,7 @@ fun TriggerStepsCountEditor(t: TriggerStepsCount, onChange: () -> Unit, tick: In
     val durations = listOf("5", "10", "15", "30", "60", "180")
     LabelWithElementRow(
         textPre = stringResource(AutomationStrings.triggerStepsCountDropdownLabel) + ":",
-        textPost = stringResource(app.aaps.core.interfaces.R.string.unit_minutes)
+        textPost = stringResource(InterfacesStrings.unit_minutes)
     ) {
         AutomationDropdown(
             value = t.measurementDuration.value.ifEmpty { "5" },
@@ -484,7 +482,7 @@ fun TriggerStepsCountEditor(t: TriggerStepsCount, onChange: () -> Unit, tick: In
         label = ""
     ) {
         NumberInputRow(
-            labelResId = 0,
+            labelRef = null,
             value = t.stepsCount.value,
             onValueChange = { t.stepsCount.value = it; onChange() },
             valueRange = 0.0..20000.0,
@@ -564,12 +562,12 @@ fun TriggerLocationEditor(
         Text(stringResource(AutomationStrings.pick_from_map))
     }
     NumberInputRow(
-        labelResId = 0,
+        labelRef = null,
         value = t.distance.value,
         onValueChange = { t.distance.value = it; onChange() },
         valueRange = 0.0..100000.0,
         step = 10.0,
-        unitLabel = TextRef.AndroidRes(R.string.automation_unit_meters)
+        unitLabel = AutomationStrings.automation_unit_meters
     )
     InputLocationModeEditor(
         value = t.modeSelected.value,
