@@ -10,7 +10,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.semantics.Role
 import app.aaps.core.data.model.Scene
 import app.aaps.core.ui.R
@@ -30,21 +32,21 @@ internal fun ChainStep(
     onNext: () -> Unit
 ) {
     WizardStepLayout(
-        secondaryButton = WizardButton(text = stringResource(R.string.back), onClick = onBack),
-        primaryButton = WizardButton(text = stringResource(R.string.next), onClick = onNext)
+        secondaryButton = WizardButton(text = stringResource(CoreUiStrings.back), onClick = onBack),
+        primaryButton = WizardButton(text = stringResource(CoreUiStrings.next), onClick = onNext)
     ) {
         Text(
-            text = stringResource(R.string.scene_wizard_chain_title),
+            text = stringResource(CoreUiStrings.scene_wizard_chain_title),
             style = MaterialTheme.typography.headlineSmall
         )
         Text(
-            text = stringResource(R.string.scene_wizard_chain_info),
+            text = stringResource(CoreUiStrings.scene_wizard_chain_info),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         ChainTargetRow(
-            label = stringResource(R.string.scene_chain_none),
+            label = stringResource(CoreUiStrings.scene_chain_none),
             selected = state.chainTargetId == null,
             onSelect = { onSetChainTarget(null) }
         )

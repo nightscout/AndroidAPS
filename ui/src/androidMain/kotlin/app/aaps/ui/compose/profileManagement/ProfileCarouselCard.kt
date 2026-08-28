@@ -23,7 +23,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -143,7 +145,7 @@ internal fun ProfileCarouselCard(
                 if (hasErrors) {
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = stringResource(app.aaps.core.ui.R.string.invalid),
+                        text = stringResource(CoreUiStrings.invalid),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.error,
                         fontWeight = FontWeight.Bold
@@ -151,7 +153,7 @@ internal fun ProfileCarouselCard(
                 } else if (pumpIncompatible) {
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = stringResource(app.aaps.core.ui.R.string.profile_pump_incompatible_label),
+                        text = stringResource(CoreUiStrings.profile_pump_incompatible_label),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.tertiary,
                         fontWeight = FontWeight.Bold
@@ -164,9 +166,9 @@ internal fun ProfileCarouselCard(
 
                     // Show "ACTIVE -> Next: profile" when there's a next profile, otherwise just "ACTIVE"
                     val activeText = if (hasDuration && nextProfileName != null) {
-                        "${stringResource(R.string.active_profile_indicator)} → $nextProfileName"
+                        "${stringResource(UiStrings.active_profile_indicator)} → $nextProfileName"
                     } else {
-                        stringResource(R.string.active_profile_indicator)
+                        stringResource(UiStrings.active_profile_indicator)
                     }
                     Text(
                         text = activeText,

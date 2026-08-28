@@ -1,5 +1,8 @@
 package app.aaps.ui.compose.quickWizard.viewmodels
 
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.interfaces.resources.TextRefIdRegistry
+import app.aaps.ui.UiStringIds
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -245,6 +248,8 @@ internal class QuickWizardManagementViewModelTest {
     @Test
     fun `a replacement of the entry list aborts the commit`() = runTest {
         whenever(rh.gs(any<Int>())).thenReturn("message")
+        // The screens name their strings now, so the TextRef overload is the one they call.
+        whenever(rh.gs(any<TextRef>())).thenReturn("message")
         givenEntries("a", "b", "c")
         sut.enterReorderMode()
         sut.moveReorderItem(0, 2)

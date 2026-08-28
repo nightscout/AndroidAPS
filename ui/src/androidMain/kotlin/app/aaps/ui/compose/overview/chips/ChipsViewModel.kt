@@ -4,7 +4,9 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.aaps.core.interfaces.R as InterfacesR
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -101,7 +103,7 @@ class ChipsViewModel @AssistedInject constructor(
         val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
         val total = bolusIob.iob + basalIob.basaliob
         IobUiState(
-            text = rh.gs(InterfacesR.string.format_insulin_units, total),
+            text = rh.gs(InterfacesStrings.format_insulin_units, total),
             iobTotal = total
         )
     }.stateIn(
@@ -113,7 +115,7 @@ class ChipsViewModel @AssistedInject constructor(
     val cobUiState: StateFlow<CobUiState> = iobCobTicker.combine(cache.cobGraphFlow) { _, _ ->
         val cobInfo = iobCobCalculator.getCobInfo("ChipsViewModel COB")
         var cobText = cobInfo.displayText(rh, decimalFormatter)
-            ?: rh.gs(R.string.value_unavailable_short)
+            ?: rh.gs(CoreUiStrings.value_unavailable_short)
         var carbsReq = 0
 
         val constraintsProcessed = loop.lastRun?.constraintsProcessed
@@ -122,7 +124,7 @@ class ChipsViewModel @AssistedInject constructor(
             if (constraintsProcessed.carbsReq > 0) {
                 val lastCarbsTime = persistenceLayer.getNewestCarbs()?.timestamp ?: 0L
                 if (lastCarbsTime < lastRun.lastAPSRun) {
-                    cobText += " ${constraintsProcessed.carbsReq}${rh.gs(R.string.required)}"
+                    cobText += " ${constraintsProcessed.carbsReq}${rh.gs(CoreUiStrings.required)}"
                 }
                 carbsReq = constraintsProcessed.carbsReq
             }
@@ -173,19 +175,19 @@ class ChipsViewModel @AssistedInject constructor(
             // Variable ISF branch — hide "AS: 100%" from overview when ratio is exactly 100%
             lastAutosensPercent?.let {
                 if (it != 100.0)
-                    asText = rh.gs(R.string.autosens_short, it)
-                dialogText.add(rh.gs(R.string.autosens_long, it))
+                    asText = rh.gs(CoreUiStrings.autosens_short, it)
+                dialogText.add(rh.gs(CoreUiStrings.autosens_long, it))
             }
             val profileIsfDisplayed = profileUtil.fromMgdlToUnits(isfMgdl, units)
             val variableIsfDisplayed = profileUtil.fromMgdlToUnits(variableSens, units)
             isfFrom = String.format(Locale.getDefault(), "%1$.1f", profileIsfDisplayed)
             isfTo = String.format(Locale.getDefault(), "%1$.1f", variableIsfDisplayed)
-            dialogText.add(rh.gs(R.string.isf_profile, profileIsfDisplayed))
-            dialogText.add(rh.gs(R.string.isf_variable, variableIsfDisplayed))
+            dialogText.add(rh.gs(CoreUiStrings.isf_profile, profileIsfDisplayed))
+            dialogText.add(rh.gs(CoreUiStrings.isf_variable, variableIsfDisplayed))
             if (ratioUsed != 1.0 && ratioUsed != lastAutosensRatio)
-                dialogText.add(rh.gs(R.string.algorithm_long, ratioUsed * 100))
+                dialogText.add(rh.gs(CoreUiStrings.algorithm_long, ratioUsed * 100))
             val isfForCarbs = profile.getIsfMgdlForCarbs(dateUtil.now(), "Overview", config, processedDeviceStatusData)
-            dialogText.add(rh.gs(R.string.isf_for_carbs, profileUtil.fromMgdlToUnits(isfForCarbs, units)))
+            dialogText.add(rh.gs(CoreUiStrings.isf_for_carbs, profileUtil.fromMgdlToUnits(isfForCarbs, units)))
             if (config.APS) {
                 activePlugin.activeAPS?.getSensitivityOverviewString()?.let { dialogText.add(it) }
             }
@@ -194,14 +196,14 @@ class ChipsViewModel @AssistedInject constructor(
             lastAutosensData?.let {
                 val pct = it.autosensResult.ratio * 100
                 if (pct != 100.0)
-                    asText = rh.gs(R.string.autosens_short, pct)
-                dialogText.add(rh.gs(R.string.autosens_long, pct))
+                    asText = rh.gs(CoreUiStrings.autosens_short, pct)
+                dialogText.add(rh.gs(CoreUiStrings.autosens_long, pct))
             }
             if (isfMgdl != null) {
                 val profileIsfDisplayed = profileUtil.fromMgdlToUnits(isfMgdl, units)
-                dialogText.add(rh.gs(R.string.isf_profile, profileIsfDisplayed))
+                dialogText.add(rh.gs(CoreUiStrings.isf_profile, profileIsfDisplayed))
                 lastAutosensRatio?.let { ratio ->
-                    dialogText.add(rh.gs(R.string.isf_effective, profileUtil.fromMgdlToUnits(isfMgdl * ratio, units)))
+                    dialogText.add(rh.gs(CoreUiStrings.isf_effective, profileUtil.fromMgdlToUnits(isfMgdl * ratio, units)))
                 }
             }
         }
@@ -223,12 +225,12 @@ class ChipsViewModel @AssistedInject constructor(
             val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
             val total = bolusIob.iob + basalIob.basaliob
             val message =
-                rh.gs(R.string.bolus_iob_label) + ": " + rh.gs(InterfacesR.string.format_insulin_units, bolusIob.iob) + "\n" +
-                    rh.gs(R.string.treatments_wizard_basaliob_label) + ": " + rh.gs(InterfacesR.string.format_insulin_units, basalIob.basaliob) + "\n" +
-                    rh.gs(R.string.iob) + ": " + rh.gs(InterfacesR.string.format_insulin_units, total)
+                rh.gs(CoreUiStrings.bolus_iob_label) + ": " + rh.gs(InterfacesStrings.format_insulin_units, bolusIob.iob) + "\n" +
+                    rh.gs(CoreUiStrings.treatments_wizard_basaliob_label) + ": " + rh.gs(InterfacesStrings.format_insulin_units, basalIob.basaliob) + "\n" +
+                    rh.gs(CoreUiStrings.iob) + ": " + rh.gs(InterfacesStrings.format_insulin_units, total)
             rxBus.send(
                 EventShowDialog.Ok(
-                    title = rh.gs(R.string.iob),
+                    title = rh.gs(CoreUiStrings.iob),
                     message = message
                 )
             )

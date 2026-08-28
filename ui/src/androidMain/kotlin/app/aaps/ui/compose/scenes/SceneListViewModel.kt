@@ -3,6 +3,8 @@ package app.aaps.ui.compose.scenes
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
 import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.Scene
@@ -89,7 +91,7 @@ class SceneListViewModel @Inject constructor(
     val masterOfflineBanner: StateFlow<String?> = masterReachable
         .map { reachable ->
             if (reachable) null
-            else rh.gs(if (!nsClient.masterControlAllowed.value) R.string.scene_lock_banner_control_disabled else R.string.scene_lock_banner_master_offline)
+            else rh.gs(if (!nsClient.masterControlAllowed.value) CoreUiStrings.scene_lock_banner_control_disabled else CoreUiStrings.scene_lock_banner_master_offline)
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
@@ -100,8 +102,8 @@ class SceneListViewModel @Inject constructor(
      */
     val editLockReasons: StateFlow<Map<String, String?>> =
         combine(scenes, activeSceneState, masterReachable) { sceneList, active, reachable ->
-            val masterReason = if (!reachable) rh.gs(if (!nsClient.masterControlAllowed.value) R.string.scene_lock_reason_control_disabled else R.string.scene_lock_reason_master_offline) else null
-            val activeReason = rh.gs(R.string.scene_lock_reason_scene_active)
+            val masterReason = if (!reachable) rh.gs(if (!nsClient.masterControlAllowed.value) CoreUiStrings.scene_lock_reason_control_disabled else CoreUiStrings.scene_lock_reason_master_offline) else null
+            val activeReason = rh.gs(CoreUiStrings.scene_lock_reason_scene_active)
             sceneList.associate { scene ->
                 scene.id to (masterReason ?: if (scene.id == active?.scene?.id) activeReason else null)
             }
@@ -117,7 +119,7 @@ class SceneListViewModel @Inject constructor(
         combine(scenes, activationTick, masterReachable) { sceneList, _, reachable ->
             sceneList.associate { scene ->
                 scene.id to when {
-                    !reachable -> rh.gs(if (!nsClient.masterControlAllowed.value) R.string.scene_lock_reason_control_disabled else R.string.scene_lock_reason_master_offline)
+                    !reachable -> rh.gs(if (!nsClient.masterControlAllowed.value) CoreUiStrings.scene_lock_reason_control_disabled else CoreUiStrings.scene_lock_reason_master_offline)
                     else       -> sceneActions.validateActivation(scene)
                 }
             }
@@ -168,7 +170,7 @@ class SceneListViewModel @Inject constructor(
 
     /** Format minutes as human-readable duration using DateUtil */
     fun formatMinutes(minutes: Int): String =
-        if (minutes == 0) rh.gs(R.string.scene_duration_indefinite)
+        if (minutes == 0) rh.gs(CoreUiStrings.scene_duration_indefinite)
         else dateUtil.niceTimeScalar(minutes * 60_000L, rh)
 
     // --- Dialog state ---
@@ -312,7 +314,7 @@ class SceneListViewModel @Inject constructor(
         if (scene.actions.any { it is SceneAction.TempTarget }) {
             val activeTt = persistenceLayer.getTemporaryTargetActiveAt(now)
             if (activeTt != null) {
-                conflicts.add(rh.gs(R.string.scene_conflict_active_tt))
+                conflicts.add(rh.gs(CoreUiStrings.scene_conflict_active_tt))
             }
         }
 
@@ -320,7 +322,7 @@ class SceneListViewModel @Inject constructor(
         if (scene.actions.any { it is SceneAction.ProfileSwitch }) {
             val activePs = persistenceLayer.getProfileSwitchActiveAt(now)
             if (activePs != null && (activePs.duration > 0 || activePs.percentage != 100)) {
-                conflicts.add(rh.gs(R.string.scene_conflict_active_profile))
+                conflicts.add(rh.gs(CoreUiStrings.scene_conflict_active_profile))
             }
         }
 
@@ -331,14 +333,14 @@ class SceneListViewModel @Inject constructor(
             if (activeRm.id != 0L && !activeRm.autoForced &&
                 (activeRm.duration > 0 || activeRm.mode != RM.DEFAULT_MODE)
             ) {
-                conflicts.add(rh.gs(R.string.scene_conflict_active_running_mode))
+                conflicts.add(rh.gs(CoreUiStrings.scene_conflict_active_running_mode))
             }
         }
 
         // Active scene conflict
         val activeState = activeSceneManager.getActiveState()
         if (activeState != null) {
-            conflicts.add(rh.gs(R.string.scene_conflict_active_scene, activeState.scene.name))
+            conflicts.add(rh.gs(CoreUiStrings.scene_conflict_active_scene, activeState.scene.name))
         }
 
         return conflicts
@@ -351,23 +353,23 @@ class SceneListViewModel @Inject constructor(
         for (action in activeState.scene.actions) {
             when (action) {
                 is SceneAction.TempTarget      -> {
-                    summaries.add(rh.gs(R.string.scene_revert_tt))
+                    summaries.add(rh.gs(CoreUiStrings.scene_revert_tt))
                 }
 
                 is SceneAction.ProfileSwitch   -> {
-                    summaries.add(rh.gs(R.string.scene_revert_profile))
+                    summaries.add(rh.gs(CoreUiStrings.scene_revert_profile))
                 }
 
                 is SceneAction.SmbToggle       -> {
                     val wasEnabled = activeState.priorSmb ?: true
                     summaries.add(
-                        if (wasEnabled) rh.gs(R.string.scene_revert_smb_on)
-                        else rh.gs(R.string.scene_revert_smb_off)
+                        if (wasEnabled) rh.gs(CoreUiStrings.scene_revert_smb_on)
+                        else rh.gs(CoreUiStrings.scene_revert_smb_off)
                     )
                 }
 
                 is SceneAction.LoopModeChange  -> {
-                    summaries.add(rh.gs(R.string.scene_revert_loop_mode))
+                    summaries.add(rh.gs(CoreUiStrings.scene_revert_loop_mode))
                 }
 
                 is SceneAction.CarePortalEvent -> {
@@ -377,7 +379,7 @@ class SceneListViewModel @Inject constructor(
         }
 
         if (hasCarePortal) {
-            summaries.add(rh.gs(R.string.scene_careportal_no_revert))
+            summaries.add(rh.gs(CoreUiStrings.scene_careportal_no_revert))
         }
 
         return summaries

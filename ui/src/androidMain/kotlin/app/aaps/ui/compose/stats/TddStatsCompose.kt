@@ -11,7 +11,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -20,7 +23,6 @@ import app.aaps.core.data.model.TDD
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.LocalDateUtil
 import java.util.Locale
-import app.aaps.core.interfaces.R as InterfacesR
 
 /**
  * Data class containing TDD (Total Daily Dose) statistics for profile calculations.
@@ -97,7 +99,7 @@ fun TddStatsCompose(
                 modifier = Modifier.padding(vertical = 8.dp)
             )
             Text(
-                text = stringResource(R.string.average),
+                text = stringResource(CoreUiStrings.average),
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(vertical = 8.dp)
@@ -118,7 +120,7 @@ fun TddStatsCompose(
                 modifier = Modifier.padding(vertical = 8.dp)
             )
             Text(
-                text = stringResource(app.aaps.core.interfaces.R.string.today),
+                text = stringResource(InterfacesStrings.today),
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(vertical = 8.dp)
@@ -150,35 +152,35 @@ fun TddTableHeaderRow() {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = stringResource(R.string.date),
+            text = stringResource(CoreUiStrings.date),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1.5f),
             textAlign = TextAlign.Start
         )
         Text(
-            text = stringResource(R.string.basalrate),
+            text = stringResource(CoreUiStrings.basalrate),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),
             textAlign = TextAlign.Center
         )
         Text(
-            text = stringResource(InterfacesR.string.bolus),
+            text = stringResource(InterfacesStrings.bolus),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),
             textAlign = TextAlign.Center
         )
         Text(
-            text = stringResource(R.string.tdd_total),
+            text = stringResource(CoreUiStrings.tdd_total),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),
             textAlign = TextAlign.Center
         )
         Text(
-            text = stringResource(InterfacesR.string.carbs),
+            text = stringResource(InterfacesStrings.carbs),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),

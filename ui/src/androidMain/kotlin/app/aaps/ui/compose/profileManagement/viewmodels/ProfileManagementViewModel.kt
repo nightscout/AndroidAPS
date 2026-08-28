@@ -4,6 +4,9 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TT
@@ -71,7 +74,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
-import app.aaps.core.interfaces.R as InterfacesR
 
 /**
  * ViewModel for ProfileManagementScreen managing profile list and operations.
@@ -293,7 +295,7 @@ class ProfileManagementViewModel @Inject constructor(
     private suspend fun computeProfileErrors(profiles: List<SingleProfile>): List<List<ProfileValidationError>> =
         profiles.map { profile ->
             profileRepository.validateStructured(profile)
-                .filter { it.type != ProfileErrorType.NAME || it.message != rh.gs(R.string.profile_name_contains_dot) }
+                .filter { it.type != ProfileErrorType.NAME || it.message != rh.gs(CoreUiStrings.profile_name_contains_dot) }
         }
 
     private fun computeSelectedProfileAndCompareData(
@@ -336,7 +338,7 @@ class ProfileManagementViewModel @Inject constructor(
             baseChanged                             -> {
                 val profileName = profiles[currentIndex].name
                 val runningLabel = buildString {
-                    append(rh.gs(R.string.running))
+                    append(rh.gs(CoreUiStrings.running))
                     if (hasModifications) {
                         val tsHours = (tsMs / 3600000).toInt()
                         append(" (")
@@ -402,7 +404,7 @@ class ProfileManagementViewModel @Inject constructor(
                     _selectedIndex.value = (profileRepository.profiles.value.size - 1).coerceAtLeast(0)
                 }
                 .onFailure {
-                    _snackbarEvent.tryEmit(rh.gs(app.aaps.ui.R.string.profile_no_longer_exists))
+                    _snackbarEvent.tryEmit(rh.gs(UiStrings.profile_no_longer_exists))
                 }
         }
     }
@@ -421,7 +423,7 @@ class ProfileManagementViewModel @Inject constructor(
                     }
                 }
                 .onFailure {
-                    _snackbarEvent.tryEmit(rh.gs(app.aaps.ui.R.string.profile_no_longer_exists))
+                    _snackbarEvent.tryEmit(rh.gs(UiStrings.profile_no_longer_exists))
                 }
         }
     }
@@ -527,7 +529,7 @@ class ProfileManagementViewModel @Inject constructor(
     }
 
     private fun failReorder(): Int? {
-        _snackbarEvent.tryEmit(rh.gs(app.aaps.ui.R.string.profile_no_longer_exists))
+        _snackbarEvent.tryEmit(rh.gs(UiStrings.profile_no_longer_exists))
         _reorderOrder.value = null
         return null
     }
@@ -537,7 +539,7 @@ class ProfileManagementViewModel @Inject constructor(
     fun getIsfList(profile: Profile): String = profile.getIsfList(rh, dateUtil)
     fun getBasalList(profile: Profile): String = profile.getBasalList(rh, dateUtil)
     fun getTargetList(profile: Profile): String = profile.getTargetList(rh, dateUtil)
-    fun formatBasalSum(basalSum: Double): String = rh.gs(InterfacesR.string.format_insulin_units, basalSum)
+    fun formatBasalSum(basalSum: Double): String = rh.gs(InterfacesStrings.format_insulin_units, basalSum)
 
     /**
      * Get reuse values from current active profile if it has custom percentage/timeshift
@@ -634,7 +636,7 @@ class ProfileManagementViewModel @Inject constructor(
 
         profileStore.getSpecificProfile(profileName) ?: run {
             aapsLogger.error(LTag.UI, "Profile not found in store: $profileName")
-            _snackbarEvent.tryEmit(rh.gs(R.string.profile_not_saved_activate))
+            _snackbarEvent.tryEmit(rh.gs(CoreUiStrings.profile_not_saved_activate))
             return false
         }
 
@@ -646,7 +648,7 @@ class ProfileManagementViewModel @Inject constructor(
                 add(BatchAction.TempTarget(TT.Reason.ACTIVITY.text, targetMgdl, targetMgdl, durationMinutes, 0))
             }
         }
-        val label = rh.gs(R.string.careportal_profileswitch)
+        val label = rh.gs(CoreUiStrings.careportal_profileswitch)
         return when (val prepared = batchExecutor.prepare(actions, Sources.ProfileSwitchDialog, label)) {
             is ActionProgress.Prepared -> {
                 rxBus.send(

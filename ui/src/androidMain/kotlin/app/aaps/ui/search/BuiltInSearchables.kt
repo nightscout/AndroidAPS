@@ -6,6 +6,9 @@ import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.TipsAndUpdates
 import androidx.compose.material.icons.outlined.Palette
+import app.aaps.ui.UiStrings
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -65,18 +68,18 @@ class BuiltInSearchables @Inject constructor(
     val general: PreferenceSubScreenDef
         get() = PreferenceSubScreenDef(
             key = "general",
-            titleResId = app.aaps.core.ui.R.string.configbuilder_general,
+            title = CoreUiStrings.configbuilder_general,
             items = listOf(
                 StringKey.GeneralUnits,
                 StringKey.GeneralLanguage,
                 BooleanKey.GeneralSimpleMode.withChangeGuard { newValue ->
                     if (newValue && hasNonU100Insulin())
-                        rh.gs(app.aaps.core.ui.R.string.simple_mode_blocked_by_concentration)
+                        rh.gs(CoreUiStrings.simple_mode_blocked_by_concentration)
                     else null
                 },
                 BooleanKey.GeneralInsulinConcentration.withChangeGuard { newValue ->
                     if (!newValue && hasNonU100Insulin())
-                        rh.gs(app.aaps.core.ui.R.string.concentration_disable_blocked)
+                        rh.gs(CoreUiStrings.concentration_disable_blocked)
                     else null
                 },
                 BooleanKey.OverviewKeepScreenOn,
@@ -87,13 +90,13 @@ class BuiltInSearchables @Inject constructor(
 
     val appearance = PreferenceSubScreenDef(
         key = "appearance",
-        titleResId = app.aaps.core.ui.R.string.appearance,
+        title = CoreUiStrings.appearance,
         items = listOf(
 
             // Range settings subscreen
             PreferenceSubScreenDef(
                 key = "range_settings",
-                titleResId = app.aaps.core.ui.R.string.prefs_range_title,
+                title = CoreUiStrings.prefs_range_title,
                 items = listOf(
                     UnitDoubleKey.OverviewLowMark,
                     UnitDoubleKey.OverviewHighMark
@@ -111,7 +114,7 @@ class BuiltInSearchables @Inject constructor(
      */
     val protection = PreferenceSubScreenDef(
         key = "protection",
-        titleResId = app.aaps.core.ui.R.string.protection,
+        title = CoreUiStrings.protection,
         items = listOf(
             // Master Password
             StringKey.ProtectionMasterPassword,
@@ -138,7 +141,7 @@ class BuiltInSearchables @Inject constructor(
      */
     val pump = PreferenceSubScreenDef(
         key = "pump",
-        titleResId = app.aaps.core.ui.R.string.pump,
+        title = CoreUiStrings.pump,
         items = listOf(
             BooleanKey.PumpBtWatchdog
         ),
@@ -150,13 +153,13 @@ class BuiltInSearchables @Inject constructor(
      */
     val maintenance = PreferenceSubScreenDef(
         key = "maintenance_settings",
-        titleResId = app.aaps.core.ui.R.string.maintenance,
+        title = CoreUiStrings.maintenance,
         items = listOf(
             StringKey.MaintenanceEmail,
             IntKey.MaintenanceLogsAmount,
             PreferenceSubScreenDef(
                 key = "data_choice_setting",
-                titleResId = app.aaps.core.ui.R.string.data_choices,
+                title = CoreUiStrings.data_choices,
                 items = listOf(
                     BooleanKey.MaintenanceEnableFabric,
                     StringKey.MaintenanceIdentification
@@ -164,7 +167,7 @@ class BuiltInSearchables @Inject constructor(
             ),
             PreferenceSubScreenDef(
                 key = "unattended_export_setting",
-                titleResId = app.aaps.core.ui.R.string.unattended_settings_export,
+                title = CoreUiStrings.unattended_settings_export,
                 items = listOf(
                     BooleanKey.MaintenanceEnableExportSettingsAutomation
                 )
@@ -178,7 +181,7 @@ class BuiltInSearchables @Inject constructor(
      */
     val alerts = PreferenceSubScreenDef(
         key = "alerts",
-        titleResId = app.aaps.core.ui.R.string.localalertsettings_title,
+        title = CoreUiStrings.localalertsettings_title,
         items = listOf(
             BooleanKey.AlertMissedBgReading,
             IntKey.AlertsStaleDataThreshold,
@@ -199,7 +202,7 @@ class BuiltInSearchables @Inject constructor(
      */
     val fillButtons = PreferenceSubScreenDef(
         key = "prime_fill_settings",
-        titleResId = app.aaps.core.ui.R.string.prime_fill,
+        title = CoreUiStrings.prime_fill,
         items = listOf(
             DoubleKey.ActionsFillButton1,
             DoubleKey.ActionsFillButton2,
@@ -213,7 +216,7 @@ class BuiltInSearchables @Inject constructor(
      */
     val insulinButtons = PreferenceSubScreenDef(
         key = "insulin_button_settings",
-        titleResId = app.aaps.core.ui.R.string.insulin_label,
+        title = CoreUiStrings.insulin_label,
         items = listOf(
             DoubleKey.OverviewInsulinButtonIncrement1,
             DoubleKey.OverviewInsulinButtonIncrement2,
@@ -227,7 +230,7 @@ class BuiltInSearchables @Inject constructor(
      */
     val carbsButtons = PreferenceSubScreenDef(
         key = "carbs_button_settings",
-        titleResId = app.aaps.core.interfaces.R.string.carbs,
+        title = InterfacesStrings.carbs,
         items = listOf(
             IntKey.OverviewCarbsButtonIncrement1,
             IntKey.OverviewCarbsButtonIncrement2,
@@ -245,25 +248,25 @@ class BuiltInSearchables @Inject constructor(
     // (via [statusLights].items), and search indexes each group below.
     val statusLightsCannula = PreferenceSubScreenDef(
         key = "statuslights_cannula",
-        titleResId = app.aaps.core.ui.R.string.cannula,
+        title = CoreUiStrings.cannula,
         items = listOf(IntKey.OverviewCageWarning, IntKey.OverviewCageCritical),
         icon = IcCannulaChange
     )
     val statusLightsInsulin = PreferenceSubScreenDef(
         key = "statuslights_insulin",
-        titleResId = app.aaps.core.ui.R.string.insulin_label,
+        title = CoreUiStrings.insulin_label,
         items = listOf(IntKey.OverviewIageWarning, IntKey.OverviewIageCritical, IntKey.OverviewResWarning, IntKey.OverviewResCritical),
         icon = IcPumpCartridge
     )
     val statusLightsSensor = PreferenceSubScreenDef(
         key = "statuslights_sensor",
-        titleResId = app.aaps.core.ui.R.string.sensor_label,
+        title = CoreUiStrings.sensor_label,
         items = listOf(IntKey.OverviewSageWarning, IntKey.OverviewSageCritical, IntKey.OverviewSbatWarning, IntKey.OverviewSbatCritical),
         icon = IcCgmInsert
     )
     val statusLightsPump = PreferenceSubScreenDef(
         key = "statuslights_pump",
-        titleResId = app.aaps.core.ui.R.string.pb_label,
+        title = CoreUiStrings.pb_label,
         items = listOf(IntKey.OverviewBageWarning, IntKey.OverviewBageCritical, IntKey.OverviewBattWarning, IntKey.OverviewBattCritical),
         icon = IcPumpBattery
     )
@@ -272,7 +275,7 @@ class BuiltInSearchables @Inject constructor(
     // (each searchable individually). The parent itself is not added to search.
     val statusLights = PreferenceSubScreenDef(
         key = "statuslights_overview_advanced",
-        titleResId = app.aaps.core.ui.R.string.statuslights,
+        title = CoreUiStrings.statuslights,
         items = listOf(statusLightsCannula, statusLightsInsulin, statusLightsSensor, statusLightsPump),
         icon = Icons.Default.TipsAndUpdates
     )
@@ -282,7 +285,7 @@ class BuiltInSearchables @Inject constructor(
      */
     val treatmentButtons = PreferenceSubScreenDef(
         key = "treatment_button_settings",
-        titleResId = app.aaps.core.ui.R.string.treatments,
+        title = CoreUiStrings.treatments,
         items = listOf(
             BooleanKey.OverviewShowCgmButton,
             BooleanKey.OverviewShowCalibrationButton,
@@ -299,7 +302,7 @@ class BuiltInSearchables @Inject constructor(
      */
     val wizardSettings = PreferenceSubScreenDef(
         key = "wizard_settings",
-        titleResId = app.aaps.core.ui.R.string.boluswizard,
+        title = CoreUiStrings.boluswizard,
         items = listOf(
             IntKey.OverviewBolusPercentage,
             IntKey.OverviewResetBolusPercentageTime,
@@ -315,7 +318,7 @@ class BuiltInSearchables @Inject constructor(
      */
     val siteRotation = PreferenceSubScreenDef(
         key = "site_rotation_settings",
-        titleResId = app.aaps.core.ui.R.string.site_rotation,
+        title = CoreUiStrings.site_rotation,
         items = listOf(
             IntKey.SiteRotationUserProfile,
             BooleanKey.SiteRotationManagePump,
@@ -330,7 +333,7 @@ class BuiltInSearchables @Inject constructor(
      */
     val automation = PreferenceSubScreenDef(
         key = "automation_settings",
-        titleResId = app.aaps.core.ui.R.string.automation,
+        title = CoreUiStrings.automation,
         items = listOf(
             StringKey.AutomationLocation
         ),

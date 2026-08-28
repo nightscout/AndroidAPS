@@ -47,13 +47,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
+import app.aaps.ui.UiStrings
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.CarbTimeRow
 import app.aaps.core.ui.compose.NumberInputRow
@@ -74,8 +77,6 @@ import app.aaps.ui.compose.overview.chips.CobUiState
 import app.aaps.ui.compose.overview.chips.IobUiState
 import app.aaps.ui.compose.overview.graphs.BgInfoUiState
 import kotlinx.coroutines.flow.StateFlow
-import app.aaps.core.interfaces.R as InterfacesR
-import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 fun CarbsDialogScreen(
@@ -137,7 +138,7 @@ fun CarbsDialogScreen(
     if (showNoAction) {
         ElementConfirmationDialog(
             elementType = ElementType.CARBS,
-            message = stringResource(CoreUiR.string.no_action_selected),
+            message = stringResource(CoreUiStrings.no_action_selected),
             onConfirm = { showNoAction = false },
             onDismiss = { showNoAction = false }
         )
@@ -236,7 +237,7 @@ internal fun CarbsDialogContent(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.Filled.Close,
-                            contentDescription = stringResource(CoreUiR.string.close)
+                            contentDescription = stringResource(CoreUiStrings.close)
                         )
                     }
                 },
@@ -245,7 +246,7 @@ internal fun CarbsDialogContent(
                         IconButton(onClick = onSettingsClick) {
                             Icon(
                                 imageVector = Icons.Default.Settings,
-                                contentDescription = stringResource(CoreUiR.string.settings),
+                                contentDescription = stringResource(CoreUiStrings.settings),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
@@ -273,9 +274,9 @@ internal fun CarbsDialogContent(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 if (uiState.carbs > 0) {
-                    Text(stringResource(InterfacesR.string.format_carbs, uiState.carbs))
+                    Text(stringResource(InterfacesStrings.format_carbs, uiState.carbs))
                 } else {
-                    Text(stringResource(CoreUiR.string.ok))
+                    Text(stringResource(CoreUiStrings.ok))
                 }
             }
         }
@@ -324,19 +325,19 @@ internal fun CarbsDialogContent(
                     // Carbs + Quick add
                     Column(modifier = itemModifier) {
                         NumberInputRow(
-                            labelResId = InterfacesR.string.carbs,
+                            labelRef = InterfacesStrings.carbs,
                             value = uiState.carbs.toDouble(),
                             onValueChange = onCarbsChange,
                             // Lower bound = -COB (can't remove more than is on board); at COB 0 the minimum is 0.
                             valueRange = (-uiState.cobLimit).toDouble()..uiState.maxCarbs.toDouble(),
                             step = 1.0,
                             valueFormat = NumberFormat.INTEGER,
-                            unitLabel = TextRef.AndroidRes(CoreUiR.string.shortgramm)
+                            unitLabel = CoreUiStrings.shortgramm
                         )
                         // Removing carbs (negative): show the COB-bounded limit so the user understands why it can't go lower.
                         if (uiState.carbs < 0) {
                             Text(
-                                text = stringResource(CoreUiR.string.carbs_removal_cob_limit, uiState.cobLimit),
+                                text = stringResource(CoreUiStrings.carbs_removal_cob_limit, uiState.cobLimit),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -351,13 +352,13 @@ internal fun CarbsDialogContent(
 
                     // Duration
                     NumberInputRow(
-                        labelResId = CoreUiR.string.duration_label,
+                        labelRef = CoreUiStrings.duration_label,
                         value = uiState.durationHours.toDouble(),
                         onValueChange = onDurationChange,
                         valueRange = 0.0..uiState.maxCarbsDurationHours.toDouble(),
                         step = 1.0,
                         valueFormat = NumberFormat.INTEGER,
-                        unitLabel = TextRef.AndroidRes(InterfacesR.string.shorthour),
+                        unitLabel = InterfacesStrings.shorthour,
                         modifier = itemModifier
                     )
 
@@ -370,7 +371,7 @@ internal fun CarbsDialogContent(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = stringResource(CoreUiR.string.bolus_reminder),
+                                text = stringResource(CoreUiStrings.bolus_reminder),
                                 style = MaterialTheme.typography.bodyLarge,
                                 modifier = Modifier.weight(1f)
                             )
@@ -407,7 +408,7 @@ internal fun CarbsDialogContent(
                         TextField(
                             value = uiState.notes,
                             onValueChange = onNotesChange,
-                            label = { Text(stringResource(CoreUiR.string.notes_label)) },
+                            label = { Text(stringResource(CoreUiStrings.notes_label)) },
                             modifier = itemModifier,
                             singleLine = false,
                             maxLines = 3
@@ -440,7 +441,7 @@ private fun TempTargetCheckboxes(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = stringResource(app.aaps.ui.R.string.start_hypo_tt),
+                text = stringResource(UiStrings.start_hypo_tt),
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.weight(1f)
             )
@@ -455,7 +456,7 @@ private fun TempTargetCheckboxes(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = stringResource(app.aaps.ui.R.string.start_eating_soon_tt),
+                text = stringResource(UiStrings.start_eating_soon_tt),
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.weight(1f)
             )
@@ -470,7 +471,7 @@ private fun TempTargetCheckboxes(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = stringResource(app.aaps.ui.R.string.start_activity_tt),
+                text = stringResource(UiStrings.start_activity_tt),
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.weight(1f)
             )
@@ -516,7 +517,7 @@ private fun DateTimeSection(
             onValueChange = {},
             readOnly = true,
             enabled = false,
-            label = { Text(stringResource(CoreUiR.string.date)) },
+            label = { Text(stringResource(CoreUiStrings.date)) },
             trailingIcon = {
                 Icon(
                     imageVector = Icons.Filled.DateRange,
@@ -541,7 +542,7 @@ private fun DateTimeSection(
             onValueChange = {},
             readOnly = true,
             enabled = false,
-            label = { Text(stringResource(CoreUiR.string.time)) },
+            label = { Text(stringResource(CoreUiStrings.time)) },
             trailingIcon = {
                 Icon(
                     imageVector = Icons.Outlined.Schedule,

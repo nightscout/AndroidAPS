@@ -30,7 +30,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -80,7 +82,7 @@ fun SearchResults(
 
                 allResults.isEmpty() && !isSearchingWiki -> {
                     Text(
-                        text = stringResource(R.string.no_search_results),
+                        text = stringResource(CoreUiStrings.no_search_results),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier
@@ -148,11 +150,11 @@ private fun CategoryHeader(
     modifier: Modifier = Modifier
 ) {
     val titleResId = when (category) {
-        SearchCategory.PLUGIN     -> R.string.search_category_plugins
-        SearchCategory.CATEGORY   -> R.string.search_category_categories
-        SearchCategory.PREFERENCE -> R.string.search_category_preferences
-        SearchCategory.DIALOG     -> R.string.search_category_dialogs
-        SearchCategory.WIKI       -> R.string.search_category_wiki
+        SearchCategory.PLUGIN     -> CoreUiStrings.search_category_plugins
+        SearchCategory.CATEGORY   -> CoreUiStrings.search_category_categories
+        SearchCategory.PREFERENCE -> CoreUiStrings.search_category_preferences
+        SearchCategory.DIALOG     -> CoreUiStrings.search_category_dialogs
+        SearchCategory.WIKI       -> CoreUiStrings.search_category_wiki
     }
 
     Column(modifier = modifier) {
@@ -258,7 +260,7 @@ private fun SearchResultItem(
                 Spacer(modifier = Modifier.height(2.dp))
                 val pluginName = entry.item.plugin?.name ?: ""
                 Text(
-                    text = stringResource(R.string.search_plugin_disabled, pluginName),
+                    text = stringResource(CoreUiStrings.search_plugin_disabled, pluginName),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.error.copy(alpha = 0.7f),
                     maxLines = 1
@@ -306,7 +308,7 @@ private fun WikiLoadingIndicator(modifier: Modifier = Modifier) {
         CircularProgressIndicator(modifier = Modifier.size(16.dp), strokeWidth = 2.dp)
         Spacer(modifier = Modifier.width(12.dp))
         Text(
-            text = stringResource(R.string.search_category_wiki) + "\u2026",
+            text = stringResource(CoreUiStrings.search_category_wiki) + "\u2026",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -332,7 +334,7 @@ private fun WikiOfflineIndicator(modifier: Modifier = Modifier) {
         )
         Spacer(modifier = Modifier.width(12.dp))
         Text(
-            text = stringResource(R.string.wiki_search_offline),
+            text = stringResource(CoreUiStrings.wiki_search_offline),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )

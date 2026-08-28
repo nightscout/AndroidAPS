@@ -7,6 +7,8 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import app.aaps.core.interfaces.resources.TextRefIdRegistry
+import app.aaps.ui.UiStringIds
 import app.aaps.ui.R
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
@@ -33,6 +35,9 @@ class ProfileHelperContentTest {
 
     @Before
     fun setUp() {
+        // MainApp does this in production; a Robolectric test has no MainApp, so a TextRef.Named
+        // would have no id to resolve to and the screen would render blank text.
+        TextRefIdRegistry.register("ui") { name -> UiStringIds.idOf(name) }
         val ctx: Context = RuntimeEnvironment.getApplication()
         tab1 = ctx.getString(R.string.profile_tab_1)
         tab2 = ctx.getString(R.string.profile_tab_2)

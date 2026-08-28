@@ -16,16 +16,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.interfaces.insulin.ConcentrationType
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.ui.R as CoreUiR
 
 /**
  * Carousel card displaying an insulin configuration.
@@ -78,12 +78,12 @@ fun InsulinCarouselCard(
             // Peak / DIA summary
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text(
-                    text = stringResource(CoreUiR.string.format_mins, iCfg.peak),
+                    text = stringResource(CoreUiStrings.format_mins, iCfg.peak),
                     style = MaterialTheme.typography.bodySmall,
                     color = contentColor
                 )
                 Text(
-                    text = stringResource(CoreUiR.string.format_hours, iCfg.dia),
+                    text = stringResource(CoreUiStrings.format_hours, iCfg.dia),
                     style = MaterialTheme.typography.bodySmall,
                     color = contentColor
                 )
@@ -117,7 +117,7 @@ fun InsulinCarouselCard(
             if (isActive) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = stringResource(CoreUiR.string.active).uppercase(),
+                    text = stringResource(CoreUiStrings.active).uppercase(),
                     style = MaterialTheme.typography.labelMedium,
                     color = AapsTheme.generalColors.activeInsulinText,
                     fontWeight = FontWeight.Bold

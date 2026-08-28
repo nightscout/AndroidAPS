@@ -29,7 +29,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
@@ -116,7 +118,7 @@ fun M3SearchBar(
                     interactionSource = interactionSource,
                     placeholder = {
                         Text(
-                            text = stringResource(R.string.search),
+                            text = stringResource(CoreUiStrings.search),
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -136,7 +138,7 @@ fun M3SearchBar(
                             }) {
                                 Icon(
                                     imageVector = Icons.Filled.Clear,
-                                    contentDescription = stringResource(R.string.clear),
+                                    contentDescription = stringResource(CoreUiStrings.clear),
                                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }

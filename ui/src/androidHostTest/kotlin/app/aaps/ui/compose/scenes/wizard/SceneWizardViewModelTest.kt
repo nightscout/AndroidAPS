@@ -1,6 +1,8 @@
 package app.aaps.ui.compose.scenes.wizard
 
 import androidx.lifecycle.SavedStateHandle
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
 import app.aaps.core.data.model.SceneAction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -130,7 +132,7 @@ internal class SceneWizardViewModelTest {
 
     @Test
     fun `selectTemplate for a bundled template enables its actions and jumps to info step`() {
-        whenever(rh.gs(R.string.scene_template_exercise)).thenReturn("Exercise")
+        whenever(rh.gs(CoreUiStrings.scene_template_exercise)).thenReturn("Exercise")
 
         sut.selectTemplate(SceneTemplate.EXERCISE)
 
@@ -148,7 +150,7 @@ internal class SceneWizardViewModelTest {
 
     @Test
     fun `selectTemplate BLANK jumps to profile step with no actions and empty name`() {
-        whenever(rh.gs(R.string.scene_template_blank)).thenReturn("Blank")
+        whenever(rh.gs(CoreUiStrings.scene_template_blank)).thenReturn("Blank")
 
         sut.selectTemplate(SceneTemplate.BLANK)
 

@@ -4,6 +4,8 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.PS
 import app.aaps.core.data.time.T
@@ -181,9 +183,9 @@ class ProfileSwitchViewModel @Inject constructor(
 
         return if (selected.size == 1) {
             val ps = selected.first()
-            "${rh.gs(R.string.careportal_profileswitch)}: ${ps.profileName}\n${dateUtil.dateAndTimeString(ps.timestamp)}"
+            "${rh.gs(CoreUiStrings.careportal_profileswitch)}: ${ps.profileName}\n${dateUtil.dateAndTimeString(ps.timestamp)}"
         } else {
-            rh.gs(R.string.confirm_remove_multiple_items, selected.size)
+            rh.gs(CoreUiStrings.confirm_remove_multiple_items, selected.size)
         }
     }
 

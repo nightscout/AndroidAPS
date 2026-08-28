@@ -48,7 +48,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.graph.profile.ProfileCompareContent
@@ -130,8 +132,8 @@ fun ProfileManagementScreen(
     if (showDeleteDialog && profileToDelete != null) {
         val profileName = uiState.profileNames.getOrNull(profileToDelete!!) ?: ""
         OkCancelDialog(
-            title = viewModel.rh.gs(app.aaps.core.ui.R.string.removerecord),
-            message = viewModel.rh.gs(R.string.confirm_remove_profile, profileName),
+            title = viewModel.rh.gs(CoreUiStrings.removerecord),
+            message = viewModel.rh.gs(UiStrings.confirm_remove_profile, profileName),
             onConfirm = {
                 profileToDelete?.let { viewModel.removeProfile(it) }
                 showDeleteDialog = false
@@ -148,8 +150,8 @@ fun ProfileManagementScreen(
     if (showCloneDialog && profileToClone != null) {
         val profileName = uiState.profileNames.getOrNull(profileToClone!!) ?: ""
         OkCancelDialog(
-            title = viewModel.rh.gs(R.string.clone_label),
-            message = viewModel.rh.gs(R.string.confirm_clone_profile, profileName),
+            title = viewModel.rh.gs(UiStrings.clone_label),
+            message = viewModel.rh.gs(UiStrings.confirm_clone_profile, profileName),
             onConfirm = {
                 profileToClone?.let { viewModel.cloneProfile(it) }
                 showCloneDialog = false
@@ -178,12 +180,12 @@ fun ProfileManagementScreen(
             topBar = {
                 if (isReorderMode) {
                     AapsTopAppBar(
-                        title = { Text(stringResource(app.aaps.core.ui.R.string.reorder)) },
+                        title = { Text(stringResource(CoreUiStrings.reorder)) },
                         navigationIcon = {
                             IconButton(onClick = { viewModel.cancelReorder() }) {
                                 Icon(
                                     imageVector = Icons.Filled.Close,
-                                    contentDescription = stringResource(app.aaps.core.ui.R.string.cancel)
+                                    contentDescription = stringResource(CoreUiStrings.cancel)
                                 )
                             }
                         },
@@ -191,7 +193,7 @@ fun ProfileManagementScreen(
                             IconButton(onClick = { scope.launch { viewModel.commitReorder() } }) {
                                 Icon(
                                     imageVector = Icons.Filled.Check,
-                                    contentDescription = stringResource(app.aaps.core.ui.R.string.ok)
+                                    contentDescription = stringResource(CoreUiStrings.ok)
                                 )
                             }
                         }
@@ -203,7 +205,7 @@ fun ProfileManagementScreen(
                             IconButton(onClick = onNavigateBack) {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                    contentDescription = stringResource(app.aaps.core.ui.R.string.back)
+                                    contentDescription = stringResource(CoreUiStrings.back)
                                 )
                             }
                         },
@@ -217,7 +219,7 @@ fun ProfileManagementScreen(
                                     IconButton(onClick = onRequestEditMode) {
                                         Icon(
                                             imageVector = Icons.Filled.Edit,
-                                            contentDescription = stringResource(app.aaps.core.ui.R.string.switch_to_edit)
+                                            contentDescription = stringResource(CoreUiStrings.switch_to_edit)
                                         )
                                     }
                                 }
@@ -228,7 +230,7 @@ fun ProfileManagementScreen(
                                     IconButton(onClick = { showOverflowMenu = true }) {
                                         Icon(
                                             imageVector = Icons.Filled.MoreVert,
-                                            contentDescription = stringResource(app.aaps.core.ui.R.string.more_options)
+                                            contentDescription = stringResource(CoreUiStrings.more_options)
                                         )
                                     }
                                     DropdownMenu(
@@ -236,7 +238,7 @@ fun ProfileManagementScreen(
                                         onDismissRequest = { showOverflowMenu = false }
                                     ) {
                                         DropdownMenuItem(
-                                            text = { Text(stringResource(app.aaps.core.ui.R.string.reorder)) },
+                                            text = { Text(stringResource(CoreUiStrings.reorder)) },
                                             enabled = canReorder,
                                             onClick = {
                                                 showOverflowMenu = false
@@ -308,10 +310,10 @@ fun ProfileManagementScreen(
                             modifier = Modifier.fillMaxSize()
                         ) {
                             // Profile Carousel
-                            val moveEarlierLabel = stringResource(app.aaps.core.ui.R.string.carousel_move_earlier)
-                            val moveLaterLabel = stringResource(app.aaps.core.ui.R.string.carousel_move_later)
-                            val reorderLabel = stringResource(app.aaps.core.ui.R.string.reorder)
-                            val selectLabel = stringResource(app.aaps.core.ui.R.string.carousel_show_card)
+                            val moveEarlierLabel = stringResource(CoreUiStrings.carousel_move_earlier)
+                            val moveLaterLabel = stringResource(CoreUiStrings.carousel_move_later)
+                            val reorderLabel = stringResource(CoreUiStrings.reorder)
+                            val selectLabel = stringResource(CoreUiStrings.carousel_show_card)
                             val workingOrder = reorderOrder
 
                             ManagementCarousel(
@@ -329,10 +331,10 @@ fun ProfileManagementScreen(
                                         // rh rather than stringResource: these are read inside a
                                         // non-composable lambda, per position.
                                         positionLabel = { page ->
-                                            viewModel.rh.gs(app.aaps.core.ui.R.string.carousel_position, page + 1, order.size)
+                                            viewModel.rh.gs(CoreUiStrings.carousel_position, page + 1, order.size)
                                         },
                                         positionDescription = { page ->
-                                            viewModel.rh.gs(app.aaps.core.ui.R.string.carousel_position_description, page + 1, order.size)
+                                            viewModel.rh.gs(CoreUiStrings.carousel_position_description, page + 1, order.size)
                                         }
                                     )
                                 }
@@ -447,13 +449,13 @@ fun ProfileManagementScreen(
                                 IconButton(onClick = onAddProfile) {
                                     Icon(
                                         imageVector = Icons.Filled.Add,
-                                        contentDescription = stringResource(R.string.add_new_profile)
+                                        contentDescription = stringResource(UiStrings.add_new_profile)
                                     )
                                 }
                                 IconButton(onClick = { onEditProfile(currentPage) }) {
                                     Icon(
                                         imageVector = Icons.Filled.Edit,
-                                        contentDescription = stringResource(R.string.edit_label)
+                                        contentDescription = stringResource(UiStrings.edit_label)
                                     )
                                 }
                                 IconButton(onClick = {
@@ -462,7 +464,7 @@ fun ProfileManagementScreen(
                                 }) {
                                     Icon(
                                         imageVector = Icons.Filled.ContentCopy,
-                                        contentDescription = stringResource(R.string.clone_label)
+                                        contentDescription = stringResource(UiStrings.clone_label)
                                     )
                                 }
                                 val canDelete = uiState.profileNames.size > 1
@@ -476,7 +478,7 @@ fun ProfileManagementScreen(
                                 ) {
                                     Icon(
                                         imageVector = Icons.Filled.Delete,
-                                        contentDescription = stringResource(R.string.remove_label),
+                                        contentDescription = stringResource(UiStrings.remove_label),
                                         tint = if (canDelete)
                                             MaterialTheme.colorScheme.error
                                         else
@@ -495,7 +497,7 @@ fun ProfileManagementScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.PlayArrow,
-                                contentDescription = stringResource(R.string.activate_label)
+                                contentDescription = stringResource(UiStrings.activate_label)
                             )
                         }
                     }

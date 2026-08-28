@@ -27,7 +27,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.res.stringResource
+import app.aaps.ui.UiStrings
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -41,6 +43,7 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.objects.extensions.iobCalc
 import app.aaps.core.objects.extensions.isInProgress
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDateUtil
@@ -50,7 +53,6 @@ import app.aaps.core.ui.compose.icons.Ns
 import app.aaps.core.ui.compose.icons.Pump
 import app.aaps.ui.compose.components.ContentContainer
 import app.aaps.ui.compose.treatments.viewmodels.ExtendedBolusViewModel
-import app.aaps.core.ui.R as CoreUiR
 
 /**
  * Composable screen displaying extended boluses with delete and show hidden functionality.
@@ -92,7 +94,7 @@ fun ExtendedBolusScreen(
     // Delete confirmation dialog
     if (showDeleteDialog) {
         OkCancelDialog(
-            title = viewModel.rh.gs(app.aaps.core.ui.R.string.removerecord),
+            title = viewModel.rh.gs(CoreUiStrings.removerecord),
             message = deleteDialogMessage,
             onConfirm = {
                 viewModel.deleteSelected()
@@ -198,7 +200,7 @@ private fun ExtendedBolusItem(
                     )
                     append(" ")
                     // Rate
-                    append(stringResource(app.aaps.core.ui.R.string.pump_base_basal_rate, extendedBolus.rate))
+                    append(stringResource(CoreUiStrings.pump_base_basal_rate, extendedBolus.rate))
                     // IOB in blue color when != 0.0
                     if (iob != null && iob.iob != 0.0) {
                         append(" ")
@@ -209,14 +211,14 @@ private fun ExtendedBolusItem(
                             )
                         ) {
                             append("(")
-                            append(stringResource(app.aaps.core.interfaces.R.string.format_insulin_units, iob.iob))
+                            append(stringResource(InterfacesStrings.format_insulin_units, iob.iob))
                             append(")")
                         }
                     }
                     append(" ")
                     // Duration
                     append(T.msecs(extendedBolus.duration).mins().toInt().toString())
-                    append(stringResource(CoreUiR.string.units_min))
+                    append(stringResource(CoreUiStrings.units_min))
                 },
                 modifier = Modifier.padding(start = 4.dp),
                 fontSize = 14.sp,
@@ -233,7 +235,7 @@ private fun ExtendedBolusItem(
             if (!extendedBolus.isValid) {
                 Icon(
                     imageVector = Icons.Filled.Delete,
-                    contentDescription = stringResource(app.aaps.core.ui.R.string.invalid),
+                    contentDescription = stringResource(CoreUiStrings.invalid),
                     modifier = Modifier
                         .size(21.dp)
                         .padding(start = 5.dp),
@@ -245,7 +247,7 @@ private fun ExtendedBolusItem(
             if (extendedBolus.ids.pumpId != null) {
                 Icon(
                     imageVector = Pump,
-                    contentDescription = stringResource(app.aaps.core.ui.R.string.pump_history),
+                    contentDescription = stringResource(CoreUiStrings.pump_history),
                     modifier = Modifier
                         .size(21.dp)
                         .padding(start = 5.dp)
@@ -256,7 +258,7 @@ private fun ExtendedBolusItem(
             if (extendedBolus.ids.nightscoutId != null) {
                 Icon(
                     imageVector = Ns,
-                    contentDescription = stringResource(app.aaps.core.ui.R.string.ns),
+                    contentDescription = stringResource(CoreUiStrings.ns),
                     modifier = Modifier
                         .size(21.dp)
                         .padding(start = 5.dp)

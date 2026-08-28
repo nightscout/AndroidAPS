@@ -19,7 +19,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.R
@@ -42,10 +44,10 @@ fun SceneWizardScreen(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(R.string.scene)) },
+                title = { Text(stringResource(CoreUiStrings.scene)) },
                 navigationIcon = {
                     IconButton(onClick = onCancel) {
-                        Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.close))
+                        Icon(Icons.Filled.Close, contentDescription = stringResource(CoreUiStrings.close))
                     }
                 }
             )

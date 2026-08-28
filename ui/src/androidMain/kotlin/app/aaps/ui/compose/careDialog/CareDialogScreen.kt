@@ -39,7 +39,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -61,7 +63,6 @@ import app.aaps.core.ui.compose.siteRotation.SiteLocationSummary
 import app.aaps.ui.R
 import app.aaps.ui.compose.EventDatePicker
 import app.aaps.ui.compose.EventTimePicker
-import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 fun CareDialogScreen(
@@ -176,7 +177,7 @@ internal fun CareDialogContent(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.Filled.Close,
-                            contentDescription = stringResource(CoreUiR.string.close)
+                            contentDescription = stringResource(CoreUiStrings.close)
                         )
                     }
                 },
@@ -200,7 +201,7 @@ internal fun CareDialogContent(
                     modifier = Modifier.size(20.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(stringResource(CoreUiR.string.ok))
+                Text(stringResource(CoreUiStrings.ok))
             }
         }
     ) { paddingValues ->
@@ -278,7 +279,7 @@ internal fun CareDialogContent(
                         TextField(
                             value = uiState.notes,
                             onValueChange = onNotesChange,
-                            label = { Text(stringResource(CoreUiR.string.notes_label)) },
+                            label = { Text(stringResource(CoreUiStrings.notes_label)) },
                             modifier = itemModifier,
                             singleLine = false,
                             maxLines = 3
@@ -303,9 +304,9 @@ private fun BgSection(
 ) {
     Column(modifier = modifier) {
         val meterOptions = listOf(
-            TE.MeterType.FINGER to stringResource(R.string.bg_meter),
-            TE.MeterType.SENSOR to stringResource(R.string.bg_sensor),
-            TE.MeterType.MANUAL to stringResource(R.string.bg_other)
+            TE.MeterType.FINGER to stringResource(UiStrings.bg_meter),
+            TE.MeterType.SENSOR to stringResource(UiStrings.bg_sensor),
+            TE.MeterType.MANUAL to stringResource(UiStrings.bg_other)
         )
 
         Row(
@@ -344,7 +345,7 @@ private fun BgSection(
         }
 
         NumberInputRow(
-            labelResId = CoreUiR.string.bg_label,
+            labelRef = CoreUiStrings.bg_label,
             value = bgValue,
             onValueChange = onBgValueChange,
             valueRange = minBg..maxBg,
@@ -369,26 +370,26 @@ private fun DurationSection(
     modifier: Modifier = Modifier
 ) {
     NumberInputRow(
-        labelResId = CoreUiR.string.duration_label,
+        labelRef = CoreUiStrings.duration_label,
         value = duration,
         onValueChange = onDurationChange,
         valueRange = Constants.ACTION_DURATION,
         step = 10.0,
-        unitLabel = TextRef.AndroidRes(CoreUiR.string.units_min),
+        unitLabel = CoreUiStrings.units_min,
         modifier = modifier
     )
 }
 
 // Extension functions for EventType mapping
 
-fun CareportalEventType.titleResId(): Int = when (this) {
-    CareportalEventType.BGCHECK        -> CoreUiR.string.careportal_bgcheck
-    CareportalEventType.SENSOR_INSERT  -> CoreUiR.string.cgm_sensor_insert
-    CareportalEventType.BATTERY_CHANGE -> CoreUiR.string.pump_battery_change
-    CareportalEventType.NOTE           -> CoreUiR.string.careportal_note
-    CareportalEventType.EXERCISE       -> CoreUiR.string.careportal_exercise
-    CareportalEventType.QUESTION       -> CoreUiR.string.careportal_question
-    CareportalEventType.ANNOUNCEMENT   -> CoreUiR.string.careportal_announcement
+fun CareportalEventType.titleResId(): TextRef = when (this) {
+    CareportalEventType.BGCHECK        -> CoreUiStrings.careportal_bgcheck
+    CareportalEventType.SENSOR_INSERT  -> CoreUiStrings.cgm_sensor_insert
+    CareportalEventType.BATTERY_CHANGE -> CoreUiStrings.pump_battery_change
+    CareportalEventType.NOTE           -> CoreUiStrings.careportal_note
+    CareportalEventType.EXERCISE       -> CoreUiStrings.careportal_exercise
+    CareportalEventType.QUESTION       -> CoreUiStrings.careportal_question
+    CareportalEventType.ANNOUNCEMENT   -> CoreUiStrings.careportal_announcement
 }
 
 fun CareportalEventType.toElementType(): ElementType = when (this) {

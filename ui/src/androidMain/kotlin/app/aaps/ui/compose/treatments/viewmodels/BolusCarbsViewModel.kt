@@ -4,6 +4,9 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
@@ -38,7 +41,6 @@ import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import app.aaps.core.interfaces.R as InterfacesR
 
 /**
  * ViewModel for BolusCarbsScreen managing bolus, carbs, and calculator result state and business logic.
@@ -197,17 +199,17 @@ class BolusCarbsViewModel @Inject constructor(
             val ml = selected.first()
             val bolus = ml.bolus
             if (bolus != null) {
-                "${rh.gs(R.string.configbuilder_insulin)}: ${rh.gs(InterfacesR.string.format_insulin_units, bolus.amount)}\n${rh.gs(R.string.date)}: ${dateUtil.dateAndTimeString(bolus.timestamp)}"
+                "${rh.gs(CoreUiStrings.configbuilder_insulin)}: ${rh.gs(InterfacesStrings.format_insulin_units, bolus.amount)}\n${rh.gs(CoreUiStrings.date)}: ${dateUtil.dateAndTimeString(bolus.timestamp)}"
             } else {
                 val carbs = ml.carbs
                 if (carbs != null) {
-                    "${rh.gs(InterfacesR.string.carbs)}: ${rh.gs(InterfacesR.string.format_carbs, carbs.amount.toInt())}\n${rh.gs(R.string.date)}: ${dateUtil.dateAndTimeString(carbs.timestamp)}"
+                    "${rh.gs(InterfacesStrings.carbs)}: ${rh.gs(InterfacesStrings.format_carbs, carbs.amount.toInt())}\n${rh.gs(CoreUiStrings.date)}: ${dateUtil.dateAndTimeString(carbs.timestamp)}"
                 } else {
-                    rh.gs(R.string.confirm_remove_multiple_items, selected.size)
+                    rh.gs(CoreUiStrings.confirm_remove_multiple_items, selected.size)
                 }
             }
         } else {
-            rh.gs(R.string.confirm_remove_multiple_items, selected.size)
+            rh.gs(CoreUiStrings.confirm_remove_multiple_items, selected.size)
         }
     }
 

@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.data.model.SceneAction
 import app.aaps.core.data.model.TE
 import app.aaps.core.ui.R
@@ -32,20 +34,20 @@ internal fun CarePortalStep(
     onNext: () -> Unit
 ) {
     WizardStepLayout(
-        secondaryButton = WizardButton(text = stringResource(R.string.back), onClick = onBack),
-        primaryButton = WizardButton(text = stringResource(R.string.next), onClick = onNext)
+        secondaryButton = WizardButton(text = stringResource(CoreUiStrings.back), onClick = onBack),
+        primaryButton = WizardButton(text = stringResource(CoreUiStrings.next), onClick = onNext)
     ) {
         Text(
-            text = stringResource(R.string.careportal),
+            text = stringResource(CoreUiStrings.careportal),
             style = MaterialTheme.typography.headlineSmall
         )
         Text(
-            text = stringResource(R.string.scene_wizard_careportal_info),
+            text = stringResource(CoreUiStrings.scene_wizard_careportal_info),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         ActionToggle(
-            label = stringResource(R.string.scene_wizard_include_action, stringResource(R.string.careportal)),
+            label = stringResource(CoreUiStrings.scene_wizard_include_action, stringResource(CoreUiStrings.careportal)),
             checked = state.carePortalEnabled,
             onCheckedChange = onToggle
         )

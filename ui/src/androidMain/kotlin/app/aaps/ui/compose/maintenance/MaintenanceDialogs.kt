@@ -6,19 +6,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.keys.StringKey
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.dialogs.QueryAnyPasswordDialog
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.compose.maintenance.MaintenanceViewModel.ExportState
-import app.aaps.core.ui.R as CoreUiR
 
 /**
  * Encapsulates all maintenance-related dialogs and sheets from MainScreen:
@@ -132,8 +132,8 @@ fun MaintenanceDialogs(
     // Confirmation dialogs
     if (showConfirmResetAps) {
         OkCancelDialog(
-            title = stringResource(CoreUiR.string.confirmation),
-            message = stringResource(CoreUiR.string.reset_aps_results_confirm),
+            title = stringResource(CoreUiStrings.confirmation),
+            message = stringResource(CoreUiStrings.reset_aps_results_confirm),
             onConfirm = {
                 showConfirmResetAps = false
                 maintenanceViewModel.resetApsResults()
@@ -144,8 +144,8 @@ fun MaintenanceDialogs(
 
     if (showConfirmResetDb) {
         OkCancelDialog(
-            title = stringResource(CoreUiR.string.confirmation),
-            message = stringResource(CoreUiR.string.reset_db_confirm),
+            title = stringResource(CoreUiStrings.confirmation),
+            message = stringResource(CoreUiStrings.reset_db_confirm),
             onConfirm = {
                 showConfirmResetDb = false
                 maintenanceViewModel.resetDatabases()
@@ -156,8 +156,8 @@ fun MaintenanceDialogs(
 
     if (showConfirmCleanupDb) {
         OkCancelDialog(
-            title = stringResource(CoreUiR.string.confirmation),
-            message = stringResource(CoreUiR.string.cleanup_db_confirm),
+            title = stringResource(CoreUiStrings.confirmation),
+            message = stringResource(CoreUiStrings.cleanup_db_confirm),
             onConfirm = {
                 showConfirmCleanupDb = false
                 maintenanceViewModel.cleanupDatabases()
@@ -168,8 +168,8 @@ fun MaintenanceDialogs(
 
     if (showConfirmSendLogs) {
         OkCancelDialog(
-            title = stringResource(CoreUiR.string.confirmation),
-            message = stringResource(CoreUiR.string.send_logs) + "?",
+            title = stringResource(CoreUiStrings.confirmation),
+            message = stringResource(CoreUiStrings.send_logs) + "?",
             onConfirm = {
                 showConfirmSendLogs = false
                 maintenanceViewModel.sendLogs()
@@ -180,8 +180,8 @@ fun MaintenanceDialogs(
 
     if (showConfirmExportCsv) {
         OkCancelDialog(
-            title = stringResource(CoreUiR.string.confirmation),
-            message = stringResource(CoreUiR.string.ue_export_to_csv) + "?",
+            title = stringResource(CoreUiStrings.confirmation),
+            message = stringResource(CoreUiStrings.ue_export_to_csv) + "?",
             onConfirm = {
                 showConfirmExportCsv = false
                 maintenanceViewModel.exportCsv()
@@ -194,8 +194,8 @@ fun MaintenanceDialogs(
     when (exportState) {
         is ExportState.MasterPasswordMissing -> {
             OkDialog(
-                title = stringResource(CoreUiR.string.nav_export),
-                message = stringResource(CoreUiR.string.master_password_missing),
+                title = stringResource(CoreUiStrings.nav_export),
+                message = stringResource(CoreUiStrings.master_password_missing),
                 onDismiss = { maintenanceViewModel.cancelExport() }
             )
         }
@@ -203,9 +203,9 @@ fun MaintenanceDialogs(
         is ExportState.ConfirmExport         -> {
             val confirmState = exportState as ExportState.ConfirmExport
             OkCancelDialog(
-                title = stringResource(CoreUiR.string.export_to),
+                title = stringResource(CoreUiStrings.export_to),
                 message = confirmState.fileName + "?\n\n" +
-                    stringResource(CoreUiR.string.password_preferences_encrypt_prompt),
+                    stringResource(CoreUiStrings.password_preferences_encrypt_prompt),
                 onConfirm = { maintenanceViewModel.onExportConfirmed() },
                 onDismiss = { maintenanceViewModel.cancelExport() }
             )
@@ -215,8 +215,8 @@ fun MaintenanceDialogs(
             val askState = exportState as ExportState.AskPassword
             QueryAnyPasswordDialog(
                 title = stringResource(StringKey.ProtectionMasterPassword.title),
-                passwordExplanation = stringResource(CoreUiR.string.password_preferences_encrypt_prompt),
-                errorMessage = if (askState.wrongPassword) stringResource(CoreUiR.string.wrongpassword) else null,
+                passwordExplanation = stringResource(CoreUiStrings.password_preferences_encrypt_prompt),
+                errorMessage = if (askState.wrongPassword) stringResource(CoreUiStrings.wrongpassword) else null,
                 onConfirm = { password -> maintenanceViewModel.onExportPasswordEntered(password) },
                 onCancel = { maintenanceViewModel.cancelExport() }
             )
@@ -229,9 +229,9 @@ fun MaintenanceDialogs(
     // Cleanup result dialog
     cleanupResultText?.let { result ->
         OkDialog(
-            title = stringResource(CoreUiR.string.result),
+            title = stringResource(CoreUiStrings.result),
             message = buildAnnotatedString {
-                withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append(stringResource(CoreUiR.string.cleared_entries)) }
+                withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append(stringResource(CoreUiStrings.cleared_entries)) }
                 appendLine()
                 append(result)
             },

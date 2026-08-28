@@ -10,7 +10,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -42,7 +45,7 @@ fun ActivityStatsCompose(
             ActivityTableDataRow(
                 activityName = stats.activityName,
                 duration = stats.duration,
-                days = stringResource(app.aaps.core.interfaces.R.string.in_days, stats.days)
+                days = stringResource(InterfacesStrings.in_days, stats.days)
             )
         }
     }
@@ -60,21 +63,21 @@ private fun ActivityTableHeaderRow() {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = stringResource(app.aaps.core.ui.R.string.activity),
+            text = stringResource(CoreUiStrings.activity),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),
             textAlign = TextAlign.Start
         )
         Text(
-            text = stringResource(app.aaps.core.ui.R.string.duration),
+            text = stringResource(CoreUiStrings.duration),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),
             textAlign = TextAlign.Center
         )
         Text(
-            text = stringResource(R.string.time_range),
+            text = stringResource(UiStrings.time_range),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),

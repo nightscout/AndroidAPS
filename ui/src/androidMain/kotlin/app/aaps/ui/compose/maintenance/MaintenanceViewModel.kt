@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -43,7 +44,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import app.aaps.core.ui.R as CoreUiR
+import app.aaps.core.ui.CoreUiStrings
 
 sealed interface MaintenanceEvent {
     data object RecreateActivity : MaintenanceEvent
@@ -153,8 +154,8 @@ class MaintenanceViewModel @Inject constructor(
             }
             val message = buildResultMessage(
                 result,
-                localSuccess = CoreUiR.string.logs_sent,
-                localFailed = CoreUiR.string.logs_send_failed
+                localSuccess = CoreUiStrings.logs_sent,
+                localFailed = CoreUiStrings.logs_send_failed
             )
             _events.emit(MaintenanceEvent.Snackbar(message))
         }
@@ -165,7 +166,7 @@ class MaintenanceViewModel @Inject constructor(
             try {
                 maintenance.deleteLogs(5)
                 uel.log(Action.DELETE_LOGS, Sources.Maintenance)
-                _events.emit(MaintenanceEvent.Snackbar(rh.gs(CoreUiR.string.logs_deleted)))
+                _events.emit(MaintenanceEvent.Snackbar(rh.gs(CoreUiStrings.logs_deleted)))
             } catch (e: Exception) {
                 aapsLogger.error("Error deleting logs", e)
                 fabricPrivacy.logException(e)
@@ -251,8 +252,8 @@ class MaintenanceViewModel @Inject constructor(
             }
             val message = buildResultMessage(
                 result,
-                localSuccess = CoreUiR.string.csv_exported,
-                localFailed = CoreUiR.string.csv_export_failed
+                localSuccess = CoreUiStrings.csv_exported,
+                localFailed = CoreUiStrings.csv_export_failed
             )
             _events.emit(MaintenanceEvent.Snackbar(message))
         }
@@ -296,7 +297,7 @@ class MaintenanceViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 aapsLogger.error("Cloud directory connection error", e)
-                _events.emit(MaintenanceEvent.Error(e.message ?: rh.gs(CoreUiR.string.error)))
+                _events.emit(MaintenanceEvent.Error(e.message ?: rh.gs(CoreUiStrings.error)))
                 _cloudDirectoryState.value = CloudDirectoryState.Hidden
             }
         }
@@ -335,7 +336,7 @@ class MaintenanceViewModel @Inject constructor(
                 clearingCloud = false
             }
             if (!revoked) {
-                _events.emit(MaintenanceEvent.Snackbar(rh.gs(CoreUiR.string.cloud_revoke_incomplete)))
+                _events.emit(MaintenanceEvent.Snackbar(rh.gs(CoreUiStrings.cloud_revoke_incomplete)))
             }
         }
     }
@@ -363,20 +364,20 @@ class MaintenanceViewModel @Inject constructor(
                     cloudDirectoryManager.enableAllCloudExport()
                     refreshExportConfig()
                     _events.emit(MaintenanceEvent.BringToForeground)
-                    _events.emit(MaintenanceEvent.Snackbar(rh.gs(CoreUiR.string.cloud_auth_success)))
+                    _events.emit(MaintenanceEvent.Snackbar(rh.gs(CoreUiStrings.cloud_auth_success)))
                     _cloudDirectoryState.value = CloudDirectoryState.Hidden
                 } else {
                     _events.emit(MaintenanceEvent.BringToForeground)
-                    _events.emit(MaintenanceEvent.Error(rh.gs(CoreUiR.string.error)))
+                    _events.emit(MaintenanceEvent.Error(rh.gs(CoreUiStrings.error)))
                     _cloudDirectoryState.value = CloudDirectoryState.Hidden
                 }
             } else {
-                _events.emit(MaintenanceEvent.Error(rh.gs(CoreUiR.string.error)))
+                _events.emit(MaintenanceEvent.Error(rh.gs(CoreUiStrings.error)))
             }
         } catch (e: Exception) {
             aapsLogger.error("Auth flow error", e)
             _events.emit(MaintenanceEvent.BringToForeground)
-            _events.emit(MaintenanceEvent.Error(e.message ?: rh.gs(CoreUiR.string.error)))
+            _events.emit(MaintenanceEvent.Error(e.message ?: rh.gs(CoreUiStrings.error)))
             _cloudDirectoryState.value = CloudDirectoryState.Hidden
         }
     }
@@ -408,7 +409,7 @@ class MaintenanceViewModel @Inject constructor(
 
         val preparation = importExportPrefs.prepareExport()
         if (preparation == null) {
-            viewModelScope.launch { _events.emit(MaintenanceEvent.Error(rh.gs(CoreUiR.string.error))) }
+            viewModelScope.launch { _events.emit(MaintenanceEvent.Error(rh.gs(CoreUiStrings.error))) }
             return
         }
 
@@ -458,16 +459,16 @@ class MaintenanceViewModel @Inject constructor(
     }
 
     private fun buildExportResultMessage(result: ExportResult): String =
-        buildResultMessage(result, CoreUiR.string.export_result_message_exported, CoreUiR.string.export_result_message_failed)
+        buildResultMessage(result, CoreUiStrings.export_result_message_exported, CoreUiStrings.export_result_message_failed)
 
-    private fun buildResultMessage(result: ExportResult, @StringRes localSuccess: Int, @StringRes localFailed: Int): String {
+    private fun buildResultMessage(result: ExportResult, localSuccess: TextRef, localFailed: TextRef): String {
         val parts = mutableListOf<String>()
         result.localSuccess?.let { ok ->
             parts += if (ok) rh.gs(localSuccess) else rh.gs(localFailed)
         }
         result.cloudSuccess?.let { ok ->
-            parts += if (ok) rh.gs(CoreUiR.string.export_cloud_success)
-            else rh.gs(CoreUiR.string.export_cloud_failed)
+            parts += if (ok) rh.gs(CoreUiStrings.export_cloud_success)
+            else rh.gs(CoreUiStrings.export_cloud_failed)
         }
         return parts.joinToString("\n").ifEmpty { rh.gs(localFailed) }
     }

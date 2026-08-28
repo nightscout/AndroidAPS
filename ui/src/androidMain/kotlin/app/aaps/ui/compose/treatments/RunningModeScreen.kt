@@ -27,7 +27,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -90,7 +92,7 @@ fun RunningModeScreen(
     // Delete confirmation dialog
     if (showDeleteDialog) {
         OkCancelDialog(
-            title = viewModel.rh.gs(app.aaps.core.ui.R.string.removerecord),
+            title = viewModel.rh.gs(CoreUiStrings.removerecord),
             message = deleteDialogMessage,
             onConfirm = {
                 viewModel.deleteSelected()
@@ -203,9 +205,9 @@ private fun RunningModeItem(
                 // Duration
                 Text(
                     text = if (runningMode.duration > T.months(12).msecs()) {
-                        rh.gs(R.string.until_changed)
+                        rh.gs(UiStrings.until_changed)
                     } else if (runningMode.isTemporary()) {
-                        rh.gs(app.aaps.core.ui.R.string.format_mins, T.msecs(runningMode.duration).mins())
+                        rh.gs(CoreUiStrings.format_mins, T.msecs(runningMode.duration).mins())
                     } else {
                         ""
                     },
@@ -220,7 +222,7 @@ private fun RunningModeItem(
                 if (runningMode.ids.nightscoutId != null) {
                     Icon(
                         imageVector = Ns,
-                        contentDescription = stringResource(app.aaps.core.ui.R.string.ns),
+                        contentDescription = stringResource(CoreUiStrings.ns),
                         modifier = Modifier
                             .size(21.dp)
                             .padding(start = 5.dp)
@@ -231,7 +233,7 @@ private fun RunningModeItem(
                 if (!runningMode.isValid) {
                     Icon(
                         imageVector = Icons.Filled.Delete,
-                        contentDescription = stringResource(app.aaps.core.ui.R.string.invalid),
+                        contentDescription = stringResource(CoreUiStrings.invalid),
                         modifier = Modifier
                             .size(21.dp)
                             .padding(start = 5.dp),

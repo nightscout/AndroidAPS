@@ -24,7 +24,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.format.NumberFormat
@@ -178,7 +180,7 @@ private fun TimeValueRow(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
-                        contentDescription = stringResource(R.string.add_time_block),
+                        contentDescription = stringResource(CoreUiStrings.add_time_block),
                         modifier = Modifier.size(20.dp),
                         tint = MaterialTheme.colorScheme.primary
                     )
@@ -195,7 +197,7 @@ private fun TimeValueRow(
             ) {
                 Icon(
                     imageVector = Icons.Default.Close,
-                    contentDescription = stringResource(R.string.remove_entry),
+                    contentDescription = stringResource(CoreUiStrings.remove_entry),
                     modifier = Modifier.size(20.dp),
                     tint = if (canRemove) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
                 )
@@ -358,7 +360,7 @@ private fun TargetValueRow(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
-                        contentDescription = stringResource(R.string.add_time_block),
+                        contentDescription = stringResource(CoreUiStrings.add_time_block),
                         modifier = Modifier.size(20.dp),
                         tint = MaterialTheme.colorScheme.primary
                     )
@@ -375,7 +377,7 @@ private fun TargetValueRow(
             ) {
                 Icon(
                     imageVector = Icons.Default.Close,
-                    contentDescription = stringResource(R.string.remove_entry),
+                    contentDescription = stringResource(CoreUiStrings.remove_entry),
                     modifier = Modifier.size(20.dp),
                     tint = if (canRemove) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
                 )
@@ -390,7 +392,7 @@ private fun TargetValueRow(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = stringResource(R.string.target_low_label),
+                text = stringResource(CoreUiStrings.target_low_label),
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.width(40.dp)
             )
@@ -413,7 +415,7 @@ private fun TargetValueRow(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = stringResource(R.string.target_high_label),
+                text = stringResource(CoreUiStrings.target_high_label),
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.width(40.dp)
             )

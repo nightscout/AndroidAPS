@@ -23,7 +23,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.plugin.PluginType
@@ -45,7 +47,7 @@ fun ConfigurationScreen(
 ) {
     if (hardwarePumpConfirmation != null) {
         OkCancelDialog(
-            title = stringResource(R.string.confirmation),
+            title = stringResource(CoreUiStrings.confirmation),
             message = hardwarePumpConfirmation.message,
             onConfirm = onConfirmHardwarePump,
             onDismiss = onDismissHardwarePump
@@ -55,12 +57,12 @@ fun ConfigurationScreen(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(R.string.nav_configuration)) },
+                title = { Text(stringResource(CoreUiStrings.nav_configuration)) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
+                            contentDescription = stringResource(CoreUiStrings.back)
                         )
                     }
                 }

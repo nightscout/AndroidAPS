@@ -26,7 +26,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.compose.AapsTheme
@@ -74,7 +76,7 @@ fun TddCyclePatternCompose(
 
     Column(modifier = modifier) {
         Text(
-            text = stringResource(R.string.cycles_found, data.cycleCount, data.totalDaysAvailable),
+            text = stringResource(UiStrings.cycles_found, data.cycleCount, data.totalDaysAvailable),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(bottom = 8.dp)
@@ -87,19 +89,19 @@ fun TddCyclePatternCompose(
             FilterChip(
                 selected = !showCleaned,
                 onClick = { showCleaned = false },
-                label = { Text(stringResource(R.string.raw_tdd)) },
+                label = { Text(stringResource(UiStrings.raw_tdd)) },
                 modifier = Modifier.padding(end = 8.dp)
             )
             FilterChip(
                 selected = showCleaned,
                 onClick = { showCleaned = true },
-                label = { Text(stringResource(R.string.cleaned_tdd)) }
+                label = { Text(stringResource(UiStrings.cleaned_tdd)) }
             )
         }
 
         if (showCleaned) {
             Text(
-                text = stringResource(R.string.cleaned_tdd_explanation),
+                text = stringResource(UiStrings.cleaned_tdd_explanation),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(bottom = 8.dp)
@@ -110,7 +112,7 @@ fun TddCyclePatternCompose(
         val cycles = if (showCleaned) data.cleanedCycles else data.rawCycles
         if (cycles.isNotEmpty()) {
             Text(
-                text = stringResource(R.string.cycle_day1_date, cycles.first().startDate),
+                text = stringResource(UiStrings.cycle_day1_date, cycles.first().startDate),
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
@@ -143,7 +145,7 @@ fun TddCyclePatternCompose(
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = stringResource(R.string.cycle_lines_legend),
+                text = stringResource(UiStrings.cycle_lines_legend),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -155,7 +157,7 @@ fun TddCyclePatternCompose(
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = stringResource(app.aaps.core.ui.R.string.average),
+                text = stringResource(CoreUiStrings.average),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -163,7 +165,7 @@ fun TddCyclePatternCompose(
 
         // Offset slider
         NumberInputRow(
-            labelResId = R.string.cycle_offset,
+            labelRef = UiStrings.cycle_offset,
             value = offset.toDouble(),
             onValueChange = { onOffsetChange(it.toInt()) },
             valueRange = 0.0..27.0,

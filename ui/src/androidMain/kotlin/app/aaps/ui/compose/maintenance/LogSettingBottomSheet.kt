@@ -24,11 +24,11 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.logging.LogElement
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.consumeOverscroll
-import app.aaps.core.ui.R as CoreUiR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -76,7 +76,7 @@ internal fun LogSettingBottomSheetContent(
             .padding(bottom = 24.dp)
     ) {
         Text(
-            text = stringResource(CoreUiR.string.nav_logsettings),
+            text = stringResource(CoreUiStrings.nav_logsettings),
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp)
@@ -118,7 +118,7 @@ internal fun LogSettingBottomSheetContent(
                 modifier = Modifier.size(18.dp)
             )
             Text(
-                text = stringResource(CoreUiR.string.resettodefaults),
+                text = stringResource(CoreUiStrings.resettodefaults),
                 modifier = Modifier.padding(start = 8.dp)
             )
         }

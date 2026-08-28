@@ -3,7 +3,9 @@ package app.aaps.ui.compose.scenes.wizard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
@@ -29,16 +31,16 @@ internal fun InfoStep(
 ) {
     val template = state.template ?: return
     WizardStepLayout(
-        secondaryButton = WizardButton(text = stringResource(R.string.back), onClick = onBack),
-        primaryButton = WizardButton(text = stringResource(R.string.next), onClick = onNext)
+        secondaryButton = WizardButton(text = stringResource(CoreUiStrings.back), onClick = onBack),
+        primaryButton = WizardButton(text = stringResource(CoreUiStrings.next), onClick = onNext)
     ) {
         Text(
             text = stringResource(template.nameResId),
             style = MaterialTheme.typography.headlineSmall
         )
-        if (template.infoResId != 0) {
+        template.infoResId?.let { info ->
             Text(
-                text = stringResource(template.infoResId),
+                text = stringResource(info),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

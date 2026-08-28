@@ -13,15 +13,15 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import app.aaps.core.data.model.BCR
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.LocalProfileUtil
 import kotlin.math.abs
-import app.aaps.core.interfaces.R as InterfacesR
-import app.aaps.core.ui.R as CoreUiR
 
 /**
  * Compose dialog showing the calculation breakdown of a Bolus Calculator Result.
@@ -39,7 +39,7 @@ internal fun WizardInfoDialog(
         onDismissRequest = onDismiss,
         title = {
             Text(
-                text = stringResource(CoreUiR.string.boluswizard),
+                text = stringResource(CoreUiStrings.boluswizard),
                 style = MaterialTheme.typography.titleMedium
             )
         },
@@ -54,7 +54,7 @@ internal fun WizardInfoDialog(
         },
         confirmButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(android.R.string.ok))
+                Text(stringResource(CoreUiStrings.ok))
             }
         }
     )
@@ -78,12 +78,12 @@ internal fun WizardInfoDialogContent(
         // BG with ISF
         if (bcr.wasGlucoseUsed) {
             CalcRow(
-                label = stringResource(CoreUiR.string.wizard_bg_label) + " $bgString (ISF: ${decimalFormatter.to1Decimal(isfInUnits)})",
-                value = stringResource(InterfacesR.string.format_insulin_units, bcr.glucoseInsulin)
+                label = stringResource(CoreUiStrings.wizard_bg_label) + " $bgString (ISF: ${decimalFormatter.to1Decimal(isfInUnits)})",
+                value = stringResource(InterfacesStrings.format_insulin_units, bcr.glucoseInsulin)
             )
             if (bcr.wasTempTargetUsed) {
                 CalcRow(
-                    label = stringResource(CoreUiR.string.tt_label),
+                    label = stringResource(CoreUiStrings.tt_label),
                     value = ""
                 )
             }
@@ -92,24 +92,24 @@ internal fun WizardInfoDialogContent(
         // Trend
         if (bcr.wasTrendUsed) {
             CalcRow(
-                label = stringResource(CoreUiR.string.wizard_bg_label) + " \u039415m: $trendString",
-                value = stringResource(InterfacesR.string.format_insulin_units, bcr.trendInsulin)
+                label = stringResource(CoreUiStrings.wizard_bg_label) + " \u039415m: $trendString",
+                value = stringResource(InterfacesStrings.format_insulin_units, bcr.trendInsulin)
             )
         }
 
         // COB with IC
         if (bcr.wasCOBUsed) {
             CalcRow(
-                label = stringResource(CoreUiR.string.cob) + " ${decimalFormatter.to1Decimal(bcr.cob)}g (IC: ${decimalFormatter.to1Decimal(bcr.ic)})",
-                value = stringResource(InterfacesR.string.format_insulin_units, bcr.cobInsulin)
+                label = stringResource(CoreUiStrings.cob) + " ${decimalFormatter.to1Decimal(bcr.cob)}g (IC: ${decimalFormatter.to1Decimal(bcr.ic)})",
+                value = stringResource(InterfacesStrings.format_insulin_units, bcr.cobInsulin)
             )
         }
 
         // Carbs with IC
         if (bcr.wereCarbsUsed) {
             CalcRow(
-                label = stringResource(InterfacesR.string.carbs) + " ${decimalFormatter.to0Decimal(bcr.carbs)}g (IC: ${decimalFormatter.to1Decimal(bcr.ic)})",
-                value = stringResource(InterfacesR.string.format_insulin_units, bcr.carbsInsulin)
+                label = stringResource(InterfacesStrings.carbs) + " ${decimalFormatter.to0Decimal(bcr.carbs)}g (IC: ${decimalFormatter.to1Decimal(bcr.ic)})",
+                value = stringResource(InterfacesStrings.format_insulin_units, bcr.carbsInsulin)
             )
         }
 
@@ -118,13 +118,13 @@ internal fun WizardInfoDialogContent(
             HorizontalDivider(modifier = Modifier.padding(vertical = AapsSpacing.small))
             val scaledSubtotal = bcr.glucoseInsulin + bcr.trendInsulin + bcr.cobInsulin + bcr.carbsInsulin
             CalcRow(
-                label = stringResource(CoreUiR.string.wizard_subtotal),
-                value = stringResource(InterfacesR.string.format_insulin_units, scaledSubtotal)
+                label = stringResource(CoreUiStrings.wizard_subtotal),
+                value = stringResource(InterfacesStrings.format_insulin_units, scaledSubtotal)
             )
             val afterPercentage = scaledSubtotal * bcr.percentageCorrection / 100.0
             CalcRow(
-                label = stringResource(CoreUiR.string.format_percent, bcr.percentageCorrection),
-                value = stringResource(InterfacesR.string.format_insulin_units, afterPercentage)
+                label = stringResource(CoreUiStrings.format_percent, bcr.percentageCorrection),
+                value = stringResource(InterfacesStrings.format_insulin_units, afterPercentage)
             )
         }
 
@@ -134,52 +134,52 @@ internal fun WizardInfoDialogContent(
         // Bolus IOB
         if (bcr.wasBolusIOBUsed) {
             CalcRow(
-                label = stringResource(CoreUiR.string.bolus_iob_label),
-                value = stringResource(InterfacesR.string.format_insulin_units, -bcr.bolusIOB)
+                label = stringResource(CoreUiStrings.bolus_iob_label),
+                value = stringResource(InterfacesStrings.format_insulin_units, -bcr.bolusIOB)
             )
         }
 
         // Basal IOB
         if (bcr.wasBasalIOBUsed) {
             CalcRow(
-                label = stringResource(CoreUiR.string.treatments_wizard_basaliob_label),
-                value = stringResource(InterfacesR.string.format_insulin_units, -bcr.basalIOB)
+                label = stringResource(CoreUiStrings.treatments_wizard_basaliob_label),
+                value = stringResource(InterfacesStrings.format_insulin_units, -bcr.basalIOB)
             )
         }
 
         // Direct Correction — threshold guards against floating-point noise
         if (abs(bcr.otherCorrection) > 0.005) {
             CalcRow(
-                label = stringResource(CoreUiR.string.wizard_correction),
-                value = stringResource(InterfacesR.string.format_insulin_units, bcr.otherCorrection)
+                label = stringResource(CoreUiStrings.wizard_correction),
+                value = stringResource(InterfacesStrings.format_insulin_units, bcr.otherCorrection)
             )
         }
 
         // Superbolus
         if (bcr.wasSuperbolusUsed) {
             CalcRow(
-                label = stringResource(CoreUiR.string.superbolus),
-                value = stringResource(InterfacesR.string.format_insulin_units, bcr.superbolusInsulin)
+                label = stringResource(CoreUiStrings.superbolus),
+                value = stringResource(InterfacesStrings.format_insulin_units, bcr.superbolusInsulin)
             )
         }
 
         // === Total ===
         HorizontalDivider(modifier = Modifier.padding(vertical = AapsSpacing.small))
         CalcRow(
-            label = stringResource(CoreUiR.string.wizard_total),
-            value = stringResource(InterfacesR.string.format_insulin_units, bcr.totalInsulin)
+            label = stringResource(CoreUiStrings.wizard_total),
+            value = stringResource(InterfacesStrings.format_insulin_units, bcr.totalInsulin)
         )
 
         // === Footer ===
         HorizontalDivider(modifier = Modifier.padding(vertical = AapsSpacing.small))
         Text(
-            text = stringResource(CoreUiR.string.profile) + ": " + bcr.profileName,
+            text = stringResource(CoreUiStrings.profile) + ": " + bcr.profileName,
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         if (bcr.note.isNotEmpty()) {
             Text(
-                text = stringResource(CoreUiR.string.notes_label) + ": " + bcr.note,
+                text = stringResource(CoreUiStrings.notes_label) + ": " + bcr.note,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

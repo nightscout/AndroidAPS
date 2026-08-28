@@ -6,6 +6,9 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
@@ -160,23 +163,23 @@ class CareDialogViewModel @AssistedInject constructor(
         val state = uiState.value
         confirmedState = state
         return confirmationLines {
-            line(ConfirmationRole.NORMAL, rh.gs(R.string.confirm_treatment))
+            line(ConfirmationRole.NORMAL, rh.gs(UiStrings.confirm_treatment))
 
             if (state.showBgSection) {
                 line(
                     ConfirmationRole.NORMAL,
-                    rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, rh.gs(R.string.glucose_type), translator.translate(state.meterType))
+                    rh.gs(InterfacesStrings.confirmation_line, rh.gs(UiStrings.glucose_type), translator.translate(state.meterType))
                 )
                 val unitResId = if (state.glucoseUnits == GlucoseUnit.MGDL)
-                    app.aaps.core.ui.R.string.mgdl else app.aaps.core.ui.R.string.mmol
+                    CoreUiStrings.mgdl else CoreUiStrings.mmol
                 val bgWithUnit = rh.gs(
-                    app.aaps.core.ui.R.string.value_with_unit,
+                    CoreUiStrings.value_with_unit,
                     profileUtil.stringInCurrentUnitsDetect(state.bgValue),
                     rh.gs(unitResId)
                 )
                 line(
                     ConfirmationRole.PRIMARY,
-                    rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, rh.gs(app.aaps.core.ui.R.string.bg_label), bgWithUnit)
+                    rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.bg_label), bgWithUnit)
                 )
             }
 
@@ -184,9 +187,9 @@ class CareDialogViewModel @AssistedInject constructor(
                 line(
                     ConfirmationRole.NORMAL,
                     rh.gs(
-                        app.aaps.core.interfaces.R.string.confirmation_line,
-                        rh.gs(app.aaps.core.ui.R.string.duration_label),
-                        rh.gs(app.aaps.core.ui.R.string.format_mins, state.duration.toInt())
+                        InterfacesStrings.confirmation_line,
+                        rh.gs(CoreUiStrings.duration_label),
+                        rh.gs(CoreUiStrings.format_mins, state.duration.toInt())
                     )
                 )
             }
@@ -194,21 +197,21 @@ class CareDialogViewModel @AssistedInject constructor(
             if (state.notes.isNotEmpty()) {
                 line(
                     ConfirmationRole.NORMAL,
-                    rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, rh.gs(app.aaps.core.ui.R.string.notes_label), state.notes)
+                    rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.notes_label), state.notes)
                 )
             }
 
             if (state.eventTimeChanged) {
                 line(
                     ConfirmationRole.NORMAL,
-                    rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, rh.gs(app.aaps.core.ui.R.string.time), dateUtil.dateAndTimeString(state.eventTime))
+                    rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.time), dateUtil.dateAndTimeString(state.eventTime))
                 )
             }
 
             if (state.showSiteRotationSection && state.siteLocation != TE.Location.NONE) {
                 line(
                     ConfirmationRole.NORMAL,
-                    rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, rh.gs(app.aaps.core.ui.R.string.site_location), translator.translate(state.siteLocation))
+                    rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.site_location), translator.translate(state.siteLocation))
                 )
             }
         }
@@ -237,7 +240,7 @@ class CareDialogViewModel @AssistedInject constructor(
             arrow = arrow,
             source = eventType.toSource()
         )
-        val label = rh.gs(app.aaps.core.ui.R.string.careportal)
+        val label = rh.gs(CoreUiStrings.careportal)
 
         // appScope, not viewModelScope: the screen navigates back immediately after confirm.
         appScope.launch {

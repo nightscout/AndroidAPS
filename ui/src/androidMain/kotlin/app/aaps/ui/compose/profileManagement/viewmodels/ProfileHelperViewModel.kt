@@ -3,6 +3,8 @@ package app.aaps.ui.compose.profileManagement.viewmodels
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.time.T
@@ -190,10 +192,10 @@ class ProfileHelperViewModel @Inject constructor(
         profileSwitchIndex: Int
     ): String {
         return when (profileType) {
-            ProfileType.MOTOL_DEFAULT     -> if (tdd > 0) rh.gs(R.string.format_with_tdd, age, tdd)
-            else rh.gs(R.string.format_with_weight, age, weight)
+            ProfileType.MOTOL_DEFAULT     -> if (tdd > 0) rh.gs(UiStrings.format_with_tdd, age, tdd)
+            else rh.gs(UiStrings.format_with_weight, age, weight)
 
-            ProfileType.DPV_DEFAULT       -> rh.gs(R.string.format_with_tdd_and_pct, age, tdd, (basalPct * 100).toInt())
+            ProfileType.DPV_DEFAULT       -> rh.gs(UiStrings.format_with_tdd_and_pct, age, tdd, (basalPct * 100).toInt())
             ProfileType.CURRENT           -> uiState.value.currentProfileName
 
             ProfileType.AVAILABLE_PROFILE -> {
@@ -226,8 +228,8 @@ class ProfileHelperViewModel @Inject constructor(
         profile?.let {
             rxBus.send(
                 EventShowDialog.OkCancel(
-                    title = rh.gs(app.aaps.core.ui.R.string.careportal_profileswitch),
-                    message = rh.gs(app.aaps.core.ui.R.string.copytolocalprofile),
+                    title = rh.gs(CoreUiStrings.careportal_profileswitch),
+                    message = rh.gs(CoreUiStrings.copytolocalprofile),
                     icon = IcProfile,
                     onOk = {
                         viewModelScope.launch {

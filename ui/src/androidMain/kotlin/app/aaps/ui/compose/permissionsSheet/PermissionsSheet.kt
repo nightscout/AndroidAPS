@@ -24,7 +24,8 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.plugin.PermissionGroup
@@ -70,14 +71,14 @@ internal fun PermissionsSheetContent(
                 .padding(horizontal = 16.dp)
         ) {
             Text(
-                text = stringResource(R.string.permission_sheet_title),
+                text = stringResource(UiStrings.permission_sheet_title),
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
             )
             Spacer(Modifier.height(4.dp))
             Text(
-                text = stringResource(R.string.permission_sheet_subtitle),
+                text = stringResource(UiStrings.permission_sheet_subtitle),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.fillMaxWidth(),
@@ -139,8 +140,8 @@ private fun PermissionRow(
                 TextButton(onClick = onGrant) {
                     Text(
                         stringResource(
-                            if (item.granted) R.string.permission_change
-                            else R.string.permission_grant
+                            if (item.granted) UiStrings.permission_change
+                            else UiStrings.permission_grant
                         )
                     )
                 }

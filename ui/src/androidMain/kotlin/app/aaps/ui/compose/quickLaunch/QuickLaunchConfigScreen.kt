@@ -41,7 +41,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.configuration.Constants
@@ -55,7 +57,6 @@ import app.aaps.ui.R
 import kotlinx.coroutines.launch
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
-import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 fun QuickLauchConfigScreen(
@@ -100,7 +101,7 @@ fun QuickLauchConfigScreen(
         modifier = modifier.fillMaxSize(),
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(app.aaps.core.ui.R.string.quick_launch_configure)) },
+                title = { Text(stringResource(CoreUiStrings.quick_launch_configure)) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
@@ -120,12 +121,12 @@ fun QuickLauchConfigScreen(
         ) {
             // ── Selected actions ──
             item(key = "header_selected") {
-                SectionHeader(stringResource(R.string.quick_launch_selected_actions))
+                SectionHeader(stringResource(UiStrings.quick_launch_selected_actions))
             }
 
             if (state.selectedItems.isEmpty()) {
                 item(key = "empty_selected") {
-                    EmptyHint(stringResource(R.string.quick_launch_no_dynamic_items))
+                    EmptyHint(stringResource(UiStrings.quick_launch_no_dynamic_items))
                 }
             }
 
@@ -172,7 +173,7 @@ fun QuickLauchConfigScreen(
                     HorizontalDivider()
                 }
                 item(key = "header_treatment") {
-                    SectionHeader(stringResource(R.string.quick_launch_category_treatment))
+                    SectionHeader(stringResource(UiStrings.quick_launch_category_treatment))
                 }
                 items(treatmentItems, key = { "avail_${it.action.typeId}" }) { item ->
                     AvailableActionItem(item = item, onAdd = { viewModel.addAction(item.action) }, modifier = Modifier.animateItem())
@@ -188,7 +189,7 @@ fun QuickLauchConfigScreen(
                     HorizontalDivider()
                 }
                 item(key = "header_care") {
-                    SectionHeader(stringResource(R.string.quick_launch_category_care))
+                    SectionHeader(stringResource(UiStrings.quick_launch_category_care))
                 }
                 items(careItems, key = { "avail_${it.action.typeId}" }) { item ->
                     AvailableActionItem(item = item, onAdd = { viewModel.addAction(item.action) }, modifier = Modifier.animateItem())
@@ -201,7 +202,7 @@ fun QuickLauchConfigScreen(
                     HorizontalDivider()
                 }
                 item(key = "header_qw") {
-                    SectionHeader(stringResource(R.string.quick_launch_category_quick_wizard))
+                    SectionHeader(stringResource(UiStrings.quick_launch_category_quick_wizard))
                 }
                 items(state.availableQuickWizardItems, key = { "avail_qw_${it.action.dynamicId}" }) { item ->
                     AvailableActionItem(item = item, onAdd = { viewModel.addAction(item.action) }, modifier = Modifier.animateItem())
@@ -214,7 +215,7 @@ fun QuickLauchConfigScreen(
                     HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
                 }
                 item(key = "header_scenes") {
-                    SectionHeader(stringResource(app.aaps.core.ui.R.string.scenes))
+                    SectionHeader(stringResource(CoreUiStrings.scenes))
                 }
                 items(state.availableSceneItems, key = { "avail_scene_${it.action.dynamicId}" }) { item ->
                     AvailableActionItem(item = item, onAdd = { viewModel.addAction(item.action) }, modifier = Modifier.animateItem())
@@ -227,7 +228,7 @@ fun QuickLauchConfigScreen(
                     HorizontalDivider()
                 }
                 item(key = "header_auto") {
-                    SectionHeader(stringResource(R.string.quick_launch_category_automation))
+                    SectionHeader(stringResource(UiStrings.quick_launch_category_automation))
                 }
                 items(state.availableAutomationItems, key = { "avail_auto_${it.action.dynamicId}" }) { item ->
                     AvailableActionItem(item = item, onAdd = { viewModel.addAction(item.action) }, modifier = Modifier.animateItem())
@@ -240,7 +241,7 @@ fun QuickLauchConfigScreen(
                     HorizontalDivider()
                 }
                 item(key = "header_tt") {
-                    SectionHeader(stringResource(R.string.quick_launch_category_temp_target))
+                    SectionHeader(stringResource(UiStrings.quick_launch_category_temp_target))
                 }
                 items(state.availableTtPresetItems, key = { "avail_tt_${it.action.dynamicId}" }) { item ->
                     AvailableActionItem(item = item, onAdd = { viewModel.addAction(item.action) }, modifier = Modifier.animateItem())
@@ -253,7 +254,7 @@ fun QuickLauchConfigScreen(
                     HorizontalDivider()
                 }
                 item(key = "header_profiles") {
-                    SectionHeader(stringResource(R.string.quick_launch_category_profile))
+                    SectionHeader(stringResource(UiStrings.quick_launch_category_profile))
                 }
                 items(state.availableProfileItems, key = { "avail_profile_${it.action.dynamicId}" }) { item ->
                     AvailableActionItem(item = item, onAdd = { viewModel.addAction(item.action) }, modifier = Modifier.animateItem())
@@ -331,7 +332,7 @@ private fun SelectedActionItem(
                 ) {
                     Icon(
                         Icons.Default.DragHandle,
-                        contentDescription = stringResource(app.aaps.core.ui.R.string.reorder),
+                        contentDescription = stringResource(CoreUiStrings.reorder),
                         modifier = Modifier.size(20.dp)
                     )
                 }
@@ -348,7 +349,7 @@ private fun SelectedActionItem(
                     ) {
                         Icon(
                             Icons.Default.Edit,
-                            contentDescription = stringResource(R.string.quick_launch_edit_profile_preset),
+                            contentDescription = stringResource(UiStrings.quick_launch_edit_profile_preset),
                             tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(16.dp)
                         )
@@ -361,7 +362,7 @@ private fun SelectedActionItem(
                 ) {
                     Icon(
                         Icons.Default.Remove,
-                        contentDescription = stringResource(app.aaps.core.ui.R.string.remove),
+                        contentDescription = stringResource(CoreUiStrings.remove),
                         tint = MaterialTheme.colorScheme.error,
                         modifier = Modifier.size(16.dp)
                     )
@@ -396,7 +397,7 @@ private fun AvailableActionItem(
             ) {
                 Icon(
                     Icons.Default.Add,
-                    contentDescription = stringResource(app.aaps.core.ui.R.string.add),
+                    contentDescription = stringResource(CoreUiStrings.add),
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(16.dp)
                 )
@@ -418,7 +419,7 @@ private fun ProfilePresetDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.quick_launch_edit_profile_preset)) },
+        title = { Text(stringResource(UiStrings.quick_launch_edit_profile_preset)) },
         text = {
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
@@ -428,25 +429,25 @@ private fun ProfilePresetDialog(
                 )
 
                 NumberInputRow(
-                    labelResId = app.aaps.core.ui.R.string.percent,
+                    labelRef = CoreUiStrings.percent,
                     value = percentage.toDouble(),
                     onValueChange = { percentage = it.toInt() },
                     valueRange = Constants.CPP_PERCENTAGE_RANGE,
                     step = 5.0,
-                    unitLabel = TextRef.AndroidRes(CoreUiR.string.units_percent)
+                    unitLabel = CoreUiStrings.units_percent
                 )
 
                 NumberInputRow(
-                    labelResId = app.aaps.core.ui.R.string.duration,
+                    labelRef = CoreUiStrings.duration,
                     value = durationMinutes.toDouble(),
                     onValueChange = { durationMinutes = it.toInt() },
                     valueRange = Constants.ACTION_DURATION,
                     step = 10.0,
-                    unitLabel = TextRef.AndroidRes(CoreUiR.string.units_min)
+                    unitLabel = CoreUiStrings.units_min
                 )
                 if (durationMinutes == 0) {
                     Text(
-                        text = stringResource(R.string.quick_launch_profile_permanent),
+                        text = stringResource(UiStrings.quick_launch_profile_permanent),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -455,12 +456,12 @@ private fun ProfilePresetDialog(
         },
         confirmButton = {
             TextButton(onClick = { onConfirm(percentage, durationMinutes) }) {
-                Text(stringResource(android.R.string.ok))
+                Text(stringResource(CoreUiStrings.ok))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(android.R.string.cancel))
+                Text(stringResource(CoreUiStrings.cancel))
             }
         }
     )

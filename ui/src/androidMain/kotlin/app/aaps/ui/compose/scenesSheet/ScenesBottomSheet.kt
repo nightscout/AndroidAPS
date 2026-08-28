@@ -23,15 +23,15 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.TonalIcon
 import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.compose.icons.IcAutomation
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.ui.compose.scenes.SceneIcons
-import app.aaps.core.ui.R as CoreUiR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,7 +62,7 @@ fun ScenesBottomSheet(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = stringResource(CoreUiR.string.scenes),
+                    text = stringResource(CoreUiStrings.scenes),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.weight(1f)
@@ -168,7 +168,7 @@ fun ScenesBottomSheet(
                         supportingContent = {
                             Text(
                                 text = item.activationReason
-                                    ?: stringResource(CoreUiR.string.scene_action_count, item.actionCount),
+                                    ?: stringResource(CoreUiStrings.scene_action_count, item.actionCount),
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         },

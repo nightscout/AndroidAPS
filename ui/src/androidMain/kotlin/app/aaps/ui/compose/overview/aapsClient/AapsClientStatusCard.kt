@@ -31,7 +31,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.overview.graph.AapsClientStatusData
 import app.aaps.core.ui.R
@@ -87,7 +89,7 @@ fun AapsClientStatusCard(
                 Icon(
                     imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
                     contentDescription = stringResource(
-                        if (expanded) R.string.collapse else R.string.expand
+                        if (expanded) CoreUiStrings.collapse else CoreUiStrings.expand
                     ),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.clickable { expanded = !expanded }

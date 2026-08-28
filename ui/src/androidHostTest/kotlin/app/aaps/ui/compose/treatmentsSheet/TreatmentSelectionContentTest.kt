@@ -8,6 +8,7 @@ import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.LocalConfig
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
@@ -20,7 +21,6 @@ import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 import app.aaps.core.interfaces.configuration.Config as AppConfig
-import app.aaps.core.ui.R as CoreUiR
 
 /** Robolectric composable test for [TreatmentSelectionContent]: header renders (all action buttons enabled) + settings fires. */
 @RunWith(RobolectricTestRunner::class)

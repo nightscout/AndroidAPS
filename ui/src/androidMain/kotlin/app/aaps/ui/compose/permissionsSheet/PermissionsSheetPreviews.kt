@@ -5,6 +5,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
+import app.aaps.ui.UiStrings
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.ui.R
@@ -16,24 +17,24 @@ internal fun PermissionsSheetContentPreview() {
         PermissionItem(
             group = PermissionGroup(
                 permissions = listOf("android.permission.BLUETOOTH_CONNECT"),
-                rationaleTitle = TextRef.AndroidRes(R.string.permission_sheet_title),
-                rationaleDescription = TextRef.AndroidRes(R.string.permission_sheet_subtitle),
+                rationaleTitle = UiStrings.permission_sheet_title,
+                rationaleDescription = UiStrings.permission_sheet_subtitle,
             ),
             granted = true
         ),
         PermissionItem(
             group = PermissionGroup(
                 permissions = listOf("android.permission.POST_NOTIFICATIONS"),
-                rationaleTitle = TextRef.AndroidRes(R.string.permission_grant),
-                rationaleDescription = TextRef.AndroidRes(R.string.permission_sheet_subtitle),
+                rationaleTitle = UiStrings.permission_grant,
+                rationaleDescription = UiStrings.permission_sheet_subtitle,
             ),
             granted = false
         ),
         PermissionItem(
             group = PermissionGroup(
                 permissions = listOf("android.permission.ACCESS_FINE_LOCATION"),
-                rationaleTitle = TextRef.AndroidRes(R.string.permission_change),
-                rationaleDescription = TextRef.AndroidRes(R.string.permission_sheet_subtitle),
+                rationaleTitle = UiStrings.permission_change,
+                rationaleDescription = UiStrings.permission_sheet_subtitle,
                 alwaysShowAction = true,
             ),
             granted = true

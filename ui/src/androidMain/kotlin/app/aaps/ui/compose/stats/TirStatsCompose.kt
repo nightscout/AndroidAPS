@@ -11,7 +11,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -68,7 +70,7 @@ fun TirStatsCompose(
     Column(modifier = modifier) {
         // TIR Section
         Text(
-            text = stringResource(R.string.tir) + " (" +
+            text = stringResource(CoreUiStrings.tir) + " (" +
                 profileUtil.stringInCurrentUnitsDetect(tirStatsData.lowTirMgdl) + "-" +
                 profileUtil.stringInCurrentUnitsDetect(tirStatsData.highTirMgdl) + ")",
             style = MaterialTheme.typography.labelMedium,
@@ -101,7 +103,7 @@ fun TirStatsCompose(
         )
 
         Text(
-            text = stringResource(R.string.average) + " (" +
+            text = stringResource(CoreUiStrings.average) + " (" +
                 profileUtil.stringInCurrentUnitsDetect(tirStatsData.lowTirMgdl) + "-" +
                 profileUtil.stringInCurrentUnitsDetect(tirStatsData.highTirMgdl) + ")",
             style = MaterialTheme.typography.labelMedium,
@@ -111,7 +113,7 @@ fun TirStatsCompose(
 
         tirStatsData.averageTir7?.let { avg ->
             TirTableDataRow(
-                date = stringResource(R.string.seven_days_short),
+                date = stringResource(CoreUiStrings.seven_days_short),
                 below = formatPercentage(avg.below, avg.count),
                 inRange = formatPercentage(avg.inRange, avg.count),
                 above = formatPercentage(avg.above, avg.count),
@@ -121,7 +123,7 @@ fun TirStatsCompose(
 
         tirStatsData.averageTir30?.let { avg ->
             TirTableDataRow(
-                date = stringResource(R.string.thirty_days_short),
+                date = stringResource(CoreUiStrings.thirty_days_short),
                 below = formatPercentage(avg.below, avg.count),
                 inRange = formatPercentage(avg.inRange, avg.count),
                 above = formatPercentage(avg.above, avg.count),
@@ -135,7 +137,7 @@ fun TirStatsCompose(
         )
 
         Text(
-            text = stringResource(R.string.average) + " (" +
+            text = stringResource(CoreUiStrings.average) + " (" +
                 profileUtil.stringInCurrentUnitsDetect(tirStatsData.lowTitMgdl) + "-" +
                 profileUtil.stringInCurrentUnitsDetect(tirStatsData.highTitMgdl) + ")",
             style = MaterialTheme.typography.labelMedium,
@@ -145,7 +147,7 @@ fun TirStatsCompose(
 
         tirStatsData.averageTit7?.let { avg ->
             TirTableDataRow(
-                date = stringResource(R.string.seven_days_short),
+                date = stringResource(CoreUiStrings.seven_days_short),
                 below = formatPercentage(avg.below, avg.count),
                 inRange = formatPercentage(avg.inRange, avg.count),
                 above = formatPercentage(avg.above, avg.count),
@@ -155,7 +157,7 @@ fun TirStatsCompose(
 
         tirStatsData.averageTit30?.let { avg ->
             TirTableDataRow(
-                date = stringResource(R.string.thirty_days_short),
+                date = stringResource(CoreUiStrings.thirty_days_short),
                 below = formatPercentage(avg.below, avg.count),
                 inRange = formatPercentage(avg.inRange, avg.count),
                 above = formatPercentage(avg.above, avg.count),
@@ -177,28 +179,28 @@ fun TirTableHeaderRow() {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = stringResource(R.string.date),
+            text = stringResource(CoreUiStrings.date),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1.5f),
             textAlign = TextAlign.Start
         )
         Text(
-            text = stringResource(R.string.below),
+            text = stringResource(CoreUiStrings.below),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),
             textAlign = TextAlign.Center
         )
         Text(
-            text = stringResource(R.string.in_range),
+            text = stringResource(CoreUiStrings.in_range),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),
             textAlign = TextAlign.Center
         )
         Text(
-            text = stringResource(R.string.above),
+            text = stringResource(CoreUiStrings.above),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),

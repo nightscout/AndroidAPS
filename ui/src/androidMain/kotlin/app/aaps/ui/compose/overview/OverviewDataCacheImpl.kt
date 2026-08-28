@@ -1,5 +1,8 @@
 package app.aaps.ui.compose.overview
 
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.BS
@@ -15,7 +18,6 @@ import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.time.T
-import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -786,7 +788,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
                     timestamp = ca.timestamp,
                     amount = ca.amount,
                     isValid = ca.isValid && ca.amount > 0,
-                    label = rh.gs(InterfacesR.string.format_carbs, ca.amount.toInt())
+                    label = rh.gs(InterfacesStrings.format_carbs, ca.amount.toInt())
                 )
             }
 
@@ -800,7 +802,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
                         amount = eb.amount,
                         rate = eb.rate,
                         duration = eb.duration,
-                        label = rh.gs(R.string.extended_bolus_data_point_graph, eb.amount, eb.rate)
+                        label = rh.gs(CoreUiStrings.extended_bolus_data_point_graph, eb.amount, eb.rate)
                     )
                 }
         } else emptyList()
@@ -842,7 +844,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
                 val label = buildString {
                     if (eps.originalPercentage != 100) append("${eps.originalPercentage}%")
                     if (eps.originalPercentage != 100 && eps.originalTimeshift != 0L) append(",")
-                    if (eps.originalTimeshift != 0L) append("${T.msecs(eps.originalTimeshift).hours()}${rh.gs(app.aaps.core.interfaces.R.string.shorthour)}")
+                    if (eps.originalTimeshift != 0L) append("${T.msecs(eps.originalTimeshift).hours()}${rh.gs(InterfacesStrings.shorthour)}")
                 }
                 EpsGraphPoint(
                     timestamp = eps.timestamp,
@@ -982,10 +984,10 @@ class OverviewDataCacheImpl @AssistedInject constructor(
                 }
             }
             AapsClientStatusItem(
-                label = rh.gs(R.string.pump),
+                label = rh.gs(CoreUiStrings.pump),
                 value = value,
                 level = level,
-                dialogTitle = rh.gs(R.string.pump),
+                dialogTitle = rh.gs(CoreUiStrings.pump),
                 dialogText = dialogText
             )
         }
@@ -1013,10 +1015,10 @@ class OverviewDataCacheImpl @AssistedInject constructor(
                 }
             }
             AapsClientStatusItem(
-                label = rh.gs(R.string.openaps_short),
+                label = rh.gs(CoreUiStrings.openaps_short),
                 value = value,
                 level = level,
-                dialogTitle = rh.gs(R.string.openaps),
+                dialogTitle = rh.gs(CoreUiStrings.openaps),
                 dialogText = dialogText
             )
         } else null
@@ -1043,10 +1045,10 @@ class OverviewDataCacheImpl @AssistedInject constructor(
                 }
             }.trimEnd()
             AapsClientStatusItem(
-                label = rh.gs(R.string.uploader_short),
+                label = rh.gs(CoreUiStrings.uploader_short),
                 value = value,
                 level = AapsClientLevel.INFO,
-                dialogTitle = rh.gs(R.string.uploader),
+                dialogTitle = rh.gs(CoreUiStrings.uploader),
                 dialogText = dialogText
             )
         } else null

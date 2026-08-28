@@ -3,6 +3,7 @@ package app.aaps.ui.compose.quickLaunch
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Extension
 import androidx.compose.ui.graphics.vector.ImageVector
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.data.model.TT
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -145,7 +146,7 @@ class QuickLaunchResolver @Inject constructor(
             when (entry.mode()) {
                 QuickWizardMode.INSULIN -> {
                     val insulin = entry.insulin()
-                    if (insulin > 0.0) rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, insulin) else null
+                    if (insulin > 0.0) rh.gs(InterfacesStrings.format_insulin_units, insulin) else null
                 }
 
                 QuickWizardMode.CARBS   -> {

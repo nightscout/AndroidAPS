@@ -24,7 +24,8 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
@@ -132,7 +133,7 @@ fun ErrorScreen(
                     onClick = onMute5Min,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(stringResource(app.aaps.core.ui.R.string.mute5min))
+                    Text(stringResource(CoreUiStrings.mute5min))
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -142,7 +143,7 @@ fun ErrorScreen(
                     onClick = onMute,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(stringResource(app.aaps.core.ui.R.string.mute))
+                    Text(stringResource(CoreUiStrings.mute))
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -152,7 +153,7 @@ fun ErrorScreen(
                     onClick = onOk,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(stringResource(app.aaps.core.ui.R.string.ok))
+                    Text(stringResource(CoreUiStrings.ok))
                 }
             }
         }

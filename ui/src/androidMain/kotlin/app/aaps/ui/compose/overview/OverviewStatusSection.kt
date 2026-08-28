@@ -38,12 +38,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.PreferenceSheetContent
@@ -100,7 +102,7 @@ fun OverviewStatusSection(
             ) {
                 if (expanded) {
                     Text(
-                        text = stringResource(app.aaps.core.ui.R.string.status),
+                        text = stringResource(CoreUiStrings.status),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface,
@@ -114,14 +116,14 @@ fun OverviewStatusSection(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Settings,
-                            contentDescription = stringResource(app.aaps.core.ui.R.string.settings),
+                            contentDescription = stringResource(CoreUiStrings.settings),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.size(20.dp)
                         )
                     }
                     Icon(
                         imageVector = Icons.Filled.ExpandLess,
-                        contentDescription = stringResource(app.aaps.core.ui.R.string.collapse),
+                        contentDescription = stringResource(CoreUiStrings.collapse),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.clickable { onExpandedChange(false) }
                     )
@@ -139,7 +141,7 @@ fun OverviewStatusSection(
                     }
                     Icon(
                         imageVector = Icons.Filled.ExpandMore,
-                        contentDescription = stringResource(app.aaps.core.ui.R.string.expand),
+                        contentDescription = stringResource(CoreUiStrings.expand),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.clickable { onExpandedChange(true) }
                     )
@@ -208,7 +210,7 @@ internal fun StatusLightsSettingsContent(settingsDef: PreferenceSubScreenDef) {
             .padding(bottom = 24.dp)
     ) {
         Text(
-            text = stringResource(app.aaps.core.ui.R.string.statuslights),
+            text = stringResource(CoreUiStrings.statuslights),
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp)

@@ -2,6 +2,8 @@ package app.aaps.ui.compose.insulinManagement
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.ui.UiStrings
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.ue.Action
@@ -32,6 +34,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.observeChange
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.ui.R
@@ -54,8 +57,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicBoolean
-import app.aaps.core.interfaces.R as InterfacesR
-import app.aaps.core.ui.R as CoreUiR
 
 // Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
 // unscoped so each screen gets its own.
@@ -390,7 +391,7 @@ class InsulinManagementViewModel @Inject constructor(
 
         val nickname = state.editorNickname.trim()
         if (nickname.isEmpty()) {
-            showSnackbar(rh.gs(R.string.missing_insulin_name))
+            showSnackbar(rh.gs(UiStrings.missing_insulin_name))
             return false
         }
 
@@ -404,7 +405,7 @@ class InsulinManagementViewModel @Inject constructor(
         if (targetIndex < 0) {
             // The insulin we were editing no longer exists (removed by an external sync). Surface it and
             // reload rather than silently reporting success on a write that goes nowhere.
-            showSnackbar(rh.gs(R.string.insulin_edit_target_gone))
+            showSnackbar(rh.gs(UiStrings.insulin_edit_target_gone))
             loadData(reload = true)
             return false
         }
@@ -429,18 +430,18 @@ class InsulinManagementViewModel @Inject constructor(
 
         // Validation
         if (editedICfg.dia !in hardLimits.diaRange()) {
-            showSnackbar(rh.gs(InterfacesR.string.value_out_of_hard_limits, rh.gs(CoreUiR.string.insulin_dia), editedICfg.dia))
+            showSnackbar(rh.gs(InterfacesStrings.value_out_of_hard_limits, rh.gs(CoreUiStrings.insulin_dia), editedICfg.dia))
             return false
         }
         if (editedICfg.peak !in hardLimits.peakRange()) {
-            showSnackbar(rh.gs(InterfacesR.string.value_out_of_hard_limits, rh.gs(CoreUiR.string.insulin_peak), editedICfg.peak.toDouble()))
+            showSnackbar(rh.gs(InterfacesStrings.value_out_of_hard_limits, rh.gs(CoreUiStrings.insulin_peak), editedICfg.peak.toDouble()))
             return false
         }
 
         // Check name uniqueness against the live list (same source as the write target).
         val existingIndex = insulinManager.insulins.indexOfFirst { it.insulinLabel == editedICfg.insulinLabel }
         if (existingIndex >= 0 && existingIndex != targetIndex) {
-            showSnackbar(rh.gs(R.string.insulin_name_exists, editedICfg.insulinLabel))
+            showSnackbar(rh.gs(UiStrings.insulin_name_exists, editedICfg.insulinLabel))
             return false
         }
 
@@ -480,12 +481,12 @@ class InsulinManagementViewModel @Inject constructor(
     fun deleteCurrentInsulin(): Boolean {
         val state = uiState.value
         if (state.insulins.size <= 1) {
-            showSnackbar(rh.gs(R.string.cannot_delete_last_insulin))
+            showSnackbar(rh.gs(UiStrings.cannot_delete_last_insulin))
             return false
         }
         val currentICfg = state.insulins.getOrNull(state.currentCardIndex) ?: return false
         if (currentICfg.insulinLabel == state.activeInsulinLabel) {
-            showSnackbar(rh.gs(R.string.cannot_delete_active_insulin))
+            showSnackbar(rh.gs(UiStrings.cannot_delete_active_insulin))
             return false
         }
 
@@ -511,7 +512,7 @@ class InsulinManagementViewModel @Inject constructor(
             try {
                 val state = uiState.value
                 val iCfg = state.insulins.getOrNull(state.currentCardIndex) ?: return@launch
-                val label = rh.gs(CoreUiR.string.activate_insulin)
+                val label = rh.gs(CoreUiStrings.activate_insulin)
                 when (val prepared = batchExecutor.prepare(listOf(BatchAction.InsulinActivate(iCfg)), Sources.Insulin, label)) {
                     is ActionProgress.Prepared -> _sideEffect.emit(SideEffect.ShowConfirmation(prepared.id, prepared.lines))
                     // Offline block (and a master-local failure, e.g. no active profile) surface here; a client round-trip
@@ -531,10 +532,10 @@ class InsulinManagementViewModel @Inject constructor(
     /** Confirm the master's prepared activation: apply it exactly once. On Applied: confirm + refresh (client chip follows sync-back). */
     fun commit(bolusId: Long) {
         appScope.launch {
-            val result = batchExecutor.commit(bolusId, Sources.Insulin, rh.gs(CoreUiR.string.activate_insulin))
+            val result = batchExecutor.commit(bolusId, Sources.Insulin, rh.gs(CoreUiStrings.activate_insulin))
             when {
                 result is ActionProgress.Applied                                                 -> {
-                    showSnackbar(rh.gs(R.string.insulin_activation_applied), EventShowSnackbar.Type.Info)
+                    showSnackbar(rh.gs(UiStrings.insulin_activation_applied), EventShowSnackbar.Type.Info)
                     refreshData()
                 }
 

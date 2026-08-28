@@ -9,6 +9,23 @@ plugins {
     alias(libs.plugins.metro)
 }
 
+// Generates UiStrings (commonMain) and UiStringIds (androidMain) from this module's strings.xml, the
+// same generator :core:ui, :core:keys and :implementation use. It lets a screen name its user text
+// instead of numbering it, which is what a commonMain composable needs. The strings themselves do not
+// move, and AAPT keeps resolving them on Android exactly as before.
+val generateUiStrings = tasks.register<GenerateKeyStringsTask>("generateUiStrings") {
+    resDir.set(layout.projectDirectory.dir("src/androidMain/res"))
+    packageName.set("app.aaps.ui")
+    owner.set("ui")
+    objectName.set("UiStrings")
+    idsObjectName.set("UiStringIds")
+    reportFile.set(layout.buildDirectory.file("reports/uiStrings/translations.txt"))
+    // Set explicitly: addGeneratedSourceDirectory only derives a convention from the task name, so
+    // both properties would land on one directory and the second file written would delete the first.
+    commonOutputDir.set(layout.buildDirectory.dir("generated/uiStrings/common"))
+    androidOutputDir.set(layout.buildDirectory.dir("generated/uiStrings/android"))
+}
+
 metro {
     interop {
         // PermissionsViewModel still reads Hilt's @ApplicationContext qualifier. Everything else in this
@@ -45,6 +62,7 @@ kotlin {
         // republishes the same `androidx.compose.*` package names, so a screen that only uses Compose
         // moves here unchanged - that is how :core:ui ended up with 435 of its files in commonMain.
         commonMain {
+            kotlin.srcDir(generateUiStrings.flatMap { it.commonOutputDir })
             dependencies {
                 implementation(project(":core:data"))
                 implementation(project(":core:graph"))
@@ -66,6 +84,8 @@ kotlin {
         // Still Android: the widgets are RemoteViews, and Glance, WorkManager, OkHttp and the
         // activity/lifecycle integrations have no iOS side. Screens move to commonMain from here.
         androidMain {
+            // Android only: the string name to R.string id map.
+            kotlin.srcDir(generateUiStrings.flatMap { it.androidOutputDir })
             dependencies {
                 api(project.dependencies.platform(libs.androidx.compose.bom))
                 implementation(libs.androidx.activity.compose)

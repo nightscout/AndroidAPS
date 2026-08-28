@@ -1,5 +1,7 @@
 package app.aaps.ui.compose.treatments.viewmodels
 
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
 import app.aaps.core.data.model.TB
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -104,7 +106,7 @@ internal class TempBasalViewModelTest {
         // getDeleteConfirmationMessage is suspend on this VM (unlike the sibling VMs).
         assertThat(sut.getDeleteConfirmationMessage()).isEqualTo("")
 
-        whenever(rh.gs(R.string.confirm_remove_multiple_items, 2)).thenReturn("Remove 2 items")
+        whenever(rh.gs(CoreUiStrings.confirm_remove_multiple_items, 2)).thenReturn("Remove 2 items")
         sut.enterSelectionMode(mock<TB>())
         sut.toggleSelection(mock<TB>())
         assertThat(sut.getDeleteConfirmationMessage()).isEqualTo("Remove 2 items")

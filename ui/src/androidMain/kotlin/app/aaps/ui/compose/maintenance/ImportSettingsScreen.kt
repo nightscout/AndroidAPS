@@ -43,7 +43,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -52,13 +52,13 @@ import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.maintenance.ImportDecryptResult
 import app.aaps.core.interfaces.maintenance.PrefsFile
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.ImportSummaryItem
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.OkDialog
-import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 fun ImportSettingsScreen(
@@ -75,10 +75,10 @@ fun ImportSettingsScreen(
             Scaffold(
                 topBar = {
                     AapsTopAppBar(
-                        title = { Text(stringResource(CoreUiR.string.import_setting)) },
+                        title = { Text(stringResource(CoreUiStrings.import_setting)) },
                         navigationIcon = {
                             IconButton(onClick = { viewModel.cancelImport(); onClose() }) {
-                                Icon(Icons.Filled.Close, contentDescription = stringResource(CoreUiR.string.close))
+                                Icon(Icons.Filled.Close, contentDescription = stringResource(CoreUiStrings.close))
                             }
                         }
                     )
@@ -122,15 +122,15 @@ fun ImportSettingsScreen(
 
         is ImportStep.RestartConfirm -> {
             OkDialog(
-                title = stringResource(CoreUiR.string.import_restart_title),
-                message = stringResource(CoreUiR.string.import_restart_message),
+                title = stringResource(CoreUiStrings.import_restart_title),
+                message = stringResource(CoreUiStrings.import_restart_message),
                 onDismiss = { viewModel.onRestartConfirmed() }
             )
         }
 
         is ImportStep.Error          -> {
             OkDialog(
-                title = stringResource(CoreUiR.string.error),
+                title = stringResource(CoreUiStrings.error),
                 message = currentStep.message,
                 onDismiss = {
                     viewModel.dismissError()
@@ -152,10 +152,10 @@ internal fun ImportFilePickerContent(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(CoreUiR.string.import_setting)) },
+                title = { Text(stringResource(CoreUiStrings.import_setting)) },
                 navigationIcon = {
                     IconButton(onClick = onClose) {
-                        Icon(Icons.Filled.Close, contentDescription = stringResource(CoreUiR.string.close))
+                        Icon(Icons.Filled.Close, contentDescription = stringResource(CoreUiStrings.close))
                     }
                 }
             )
@@ -169,7 +169,7 @@ internal fun ImportFilePickerContent(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = stringResource(CoreUiR.string.import_no_files),
+                    text = stringResource(CoreUiStrings.import_no_files),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -231,7 +231,7 @@ internal fun ImportFilePickerContent(
                                 CircularProgressIndicator()
                             } else {
                                 OutlinedButton(onClick = onLoadMore) {
-                                    Text(stringResource(CoreUiR.string.import_load_more))
+                                    Text(stringResource(CoreUiStrings.import_load_more))
                                 }
                             }
                         }
@@ -373,9 +373,9 @@ private fun ImportFileCard(
 @Composable
 private fun SourceBadge(source: ImportSource) {
     val (icon, label) = when (source) {
-        ImportSource.LOCAL -> Icons.Default.Smartphone to stringResource(CoreUiR.string.import_source_local)
-        ImportSource.CLOUD -> Icons.Default.Cloud to stringResource(CoreUiR.string.import_source_cloud)
-        ImportSource.BOTH  -> Icons.Default.Cloud to stringResource(CoreUiR.string.import_source_cloud)
+        ImportSource.LOCAL -> Icons.Default.Smartphone to stringResource(CoreUiStrings.import_source_local)
+        ImportSource.CLOUD -> Icons.Default.Cloud to stringResource(CoreUiStrings.import_source_cloud)
+        ImportSource.BOTH  -> Icons.Default.Cloud to stringResource(CoreUiStrings.import_source_cloud)
     }
 
     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -411,10 +411,10 @@ internal fun ImportReviewContent(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(CoreUiR.string.import_setting)) },
+                title = { Text(stringResource(CoreUiStrings.import_setting)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Filled.Close, contentDescription = stringResource(CoreUiR.string.close))
+                        Icon(Icons.Filled.Close, contentDescription = stringResource(CoreUiStrings.close))
                     }
                 }
             )
@@ -436,8 +436,8 @@ internal fun ImportReviewContent(
                         else ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
                     ) {
                         Text(
-                            if (importOk) stringResource(CoreUiR.string.import_btn)
-                            else stringResource(CoreUiR.string.import_anyway_btn)
+                            if (importOk) stringResource(CoreUiStrings.import_btn)
+                            else stringResource(CoreUiStrings.import_anyway_btn)
                         )
                     }
                 }
@@ -463,13 +463,13 @@ internal fun ImportReviewContent(
                 OutlinedTextField(
                     value = state.masterPassword,
                     onValueChange = onMasterPasswordChanged,
-                    label = { Text(stringResource(CoreUiR.string.import_master_password)) },
+                    label = { Text(stringResource(CoreUiStrings.import_master_password)) },
                     modifier = Modifier.fillMaxWidth(),
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     isError = state.passwordFieldError,
                     supportingText = if (state.passwordFieldError) {
-                        { Text(stringResource(CoreUiR.string.import_wrong_password)) }
+                        { Text(stringResource(CoreUiStrings.import_wrong_password)) }
                     } else null,
                     singleLine = true,
                     enabled = !state.isProcessing && state.decryptResult == null
@@ -492,7 +492,7 @@ internal fun ImportReviewContent(
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                         }
-                        Text(stringResource(CoreUiR.string.import_decrypt_review))
+                        Text(stringResource(CoreUiStrings.import_decrypt_review))
                     }
                 }
             }
@@ -505,7 +505,7 @@ internal fun ImportReviewContent(
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(
-                        text = stringResource(CoreUiR.string.import_different_password_hint),
+                        text = stringResource(CoreUiStrings.import_different_password_hint),
                         style = MaterialTheme.typography.bodySmall,
                         color = AapsTheme.generalColors.statusWarning
                     )
@@ -513,13 +513,13 @@ internal fun ImportReviewContent(
                     OutlinedTextField(
                         value = state.decryptionPassword,
                         onValueChange = onDecryptionPasswordChanged,
-                        label = { Text(stringResource(CoreUiR.string.import_decryption_password)) },
+                        label = { Text(stringResource(CoreUiStrings.import_decryption_password)) },
                         modifier = Modifier.fillMaxWidth(),
                         visualTransformation = PasswordVisualTransformation(),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                         isError = state.decryptResult is ImportDecryptResult.WrongPassword,
                         supportingText = if (state.decryptResult is ImportDecryptResult.WrongPassword) {
-                            { Text(stringResource(CoreUiR.string.import_wrong_password)) }
+                            { Text(stringResource(CoreUiStrings.import_wrong_password)) }
                         } else null,
                         singleLine = true,
                         enabled = !state.isProcessing
@@ -540,7 +540,7 @@ internal fun ImportReviewContent(
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                         }
-                        Text(stringResource(CoreUiR.string.import_decrypt))
+                        Text(stringResource(CoreUiStrings.import_decrypt))
                     }
                 }
             }
@@ -577,19 +577,19 @@ internal fun ImportReviewContent(
                                 result.importOk       -> Triple(
                                     Icons.Default.CheckCircle,
                                     AapsTheme.generalColors.statusNormal,
-                                    stringResource(CoreUiR.string.import_decrypt_ok)
+                                    stringResource(CoreUiStrings.import_decrypt_ok)
                                 )
 
                                 result.importPossible -> Triple(
                                     Icons.Default.Warning,
                                     AapsTheme.generalColors.statusWarning,
-                                    stringResource(CoreUiR.string.import_decrypt_warn)
+                                    stringResource(CoreUiStrings.import_decrypt_warn)
                                 )
 
                                 else                  -> Triple(
                                     Icons.Default.Error,
                                     MaterialTheme.colorScheme.error,
-                                    stringResource(CoreUiR.string.import_decrypt_error)
+                                    stringResource(CoreUiStrings.import_decrypt_error)
                                 )
                             }
 

@@ -1,5 +1,8 @@
 package app.aaps.ui.compose.scenes
 
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.SceneAction
 import app.aaps.core.data.model.TE
@@ -12,18 +15,18 @@ import app.aaps.core.ui.R
  * and serve as starting points — the wizard lets users adjust everything.
  */
 enum class SceneTemplate(
-    val nameResId: Int,
-    val descResId: Int,
-    val infoResId: Int,
+    val nameResId: TextRef,
+    val descResId: TextRef,
+    val infoResId: TextRef?,
     val icon: String,
     val defaultDurationMinutes: Int,
     val defaultActions: List<SceneAction>
 ) {
 
     EXERCISE(
-        nameResId = R.string.scene_template_exercise,
-        descResId = R.string.scene_wizard_exercise_desc,
-        infoResId = R.string.scene_wizard_info_exercise,
+        nameResId = CoreUiStrings.scene_template_exercise,
+        descResId = CoreUiStrings.scene_wizard_exercise_desc,
+        infoResId = CoreUiStrings.scene_wizard_info_exercise,
         icon = "exercise",
         defaultDurationMinutes = 180, // 3 hours
         defaultActions = listOf(
@@ -35,9 +38,9 @@ enum class SceneTemplate(
     ),
 
     SICK_DAY(
-        nameResId = R.string.scene_template_sick_day,
-        descResId = R.string.scene_wizard_sick_day_desc,
-        infoResId = R.string.scene_wizard_info_sick_day,
+        nameResId = CoreUiStrings.scene_template_sick_day,
+        descResId = CoreUiStrings.scene_wizard_sick_day_desc,
+        infoResId = CoreUiStrings.scene_wizard_info_sick_day,
         icon = "thermostat",
         defaultDurationMinutes = 480, // 8 hours
         defaultActions = listOf(
@@ -47,9 +50,9 @@ enum class SceneTemplate(
     ),
 
     SICK_DAY_VOMITING(
-        nameResId = R.string.scene_template_sick_day_vomiting,
-        descResId = R.string.scene_wizard_sick_day_vomiting_desc,
-        infoResId = R.string.scene_wizard_info_sick_day_vomiting,
+        nameResId = CoreUiStrings.scene_template_sick_day_vomiting,
+        descResId = CoreUiStrings.scene_wizard_sick_day_vomiting_desc,
+        infoResId = CoreUiStrings.scene_wizard_info_sick_day_vomiting,
         icon = "thermostat",
         defaultDurationMinutes = 480, // 8 hours
         defaultActions = listOf(
@@ -61,18 +64,18 @@ enum class SceneTemplate(
     ),
 
     SLEEP(
-        nameResId = R.string.scene_template_sleep,
-        descResId = R.string.scene_wizard_sleep_desc,
-        infoResId = R.string.scene_wizard_info_sleep,
+        nameResId = CoreUiStrings.scene_template_sleep,
+        descResId = CoreUiStrings.scene_wizard_sleep_desc,
+        infoResId = CoreUiStrings.scene_wizard_info_sleep,
         icon = "sleep",
         defaultDurationMinutes = 480, // 8 hours
         defaultActions = emptyList()
     ),
 
     POST_EXERCISE_NIGHT(
-        nameResId = R.string.scene_template_post_exercise_night,
-        descResId = R.string.scene_wizard_post_exercise_night_desc,
-        infoResId = R.string.scene_wizard_info_post_exercise_night,
+        nameResId = CoreUiStrings.scene_template_post_exercise_night,
+        descResId = CoreUiStrings.scene_wizard_post_exercise_night_desc,
+        infoResId = CoreUiStrings.scene_wizard_info_post_exercise_night,
         icon = "sleep",
         defaultDurationMinutes = 600, // 10 hours — covers sleep + post-exercise safety buffer
         defaultActions = listOf(
@@ -83,9 +86,9 @@ enum class SceneTemplate(
     ),
 
     PRE_MEAL(
-        nameResId = R.string.scene_template_pre_meal,
-        descResId = R.string.scene_wizard_pre_meal_desc,
-        infoResId = R.string.scene_wizard_info_pre_meal,
+        nameResId = CoreUiStrings.scene_template_pre_meal,
+        descResId = CoreUiStrings.scene_wizard_pre_meal_desc,
+        infoResId = CoreUiStrings.scene_wizard_info_pre_meal,
         icon = "meal",
         defaultDurationMinutes = 30,
         defaultActions = listOf(
@@ -94,9 +97,9 @@ enum class SceneTemplate(
     ),
 
     ALCOHOL(
-        nameResId = R.string.scene_template_alcohol,
-        descResId = R.string.scene_wizard_alcohol_desc,
-        infoResId = R.string.scene_wizard_info_alcohol,
+        nameResId = CoreUiStrings.scene_template_alcohol,
+        descResId = CoreUiStrings.scene_wizard_alcohol_desc,
+        infoResId = CoreUiStrings.scene_wizard_info_alcohol,
         icon = "cafe",
         defaultDurationMinutes = 720, // 12 hours
         defaultActions = listOf(
@@ -109,9 +112,9 @@ enum class SceneTemplate(
     ),
 
     DRIVING(
-        nameResId = R.string.scene_template_driving,
-        descResId = R.string.scene_wizard_driving_desc,
-        infoResId = R.string.scene_wizard_info_driving,
+        nameResId = CoreUiStrings.scene_template_driving,
+        descResId = CoreUiStrings.scene_wizard_driving_desc,
+        infoResId = CoreUiStrings.scene_wizard_info_driving,
         icon = "car",
         defaultDurationMinutes = 60,
         defaultActions = listOf(
@@ -120,9 +123,9 @@ enum class SceneTemplate(
     ),
 
     BATHING(
-        nameResId = R.string.scene_template_bathing,
-        descResId = R.string.scene_wizard_bathing_desc,
-        infoResId = R.string.scene_wizard_info_bathing,
+        nameResId = CoreUiStrings.scene_template_bathing,
+        descResId = CoreUiStrings.scene_wizard_bathing_desc,
+        infoResId = CoreUiStrings.scene_wizard_info_bathing,
         icon = "swim",
         defaultDurationMinutes = 60,
         defaultActions = listOf(
@@ -131,9 +134,9 @@ enum class SceneTemplate(
     ),
 
     LUTEAL_PHASE(
-        nameResId = R.string.scene_template_luteal_phase,
-        descResId = R.string.scene_wizard_luteal_phase_desc,
-        infoResId = R.string.scene_wizard_info_luteal_phase,
+        nameResId = CoreUiStrings.scene_template_luteal_phase,
+        descResId = CoreUiStrings.scene_wizard_luteal_phase_desc,
+        infoResId = CoreUiStrings.scene_wizard_info_luteal_phase,
         icon = "heart",
         defaultDurationMinutes = 7200, // 5 days
         defaultActions = listOf(
@@ -143,9 +146,9 @@ enum class SceneTemplate(
     ),
 
     HOT_WEATHER(
-        nameResId = R.string.scene_template_hot_weather,
-        descResId = R.string.scene_wizard_hot_weather_desc,
-        infoResId = R.string.scene_wizard_info_hot_weather,
+        nameResId = CoreUiStrings.scene_template_hot_weather,
+        descResId = CoreUiStrings.scene_wizard_hot_weather_desc,
+        infoResId = CoreUiStrings.scene_wizard_info_hot_weather,
         icon = "thermostat",
         defaultDurationMinutes = 480, // 8 hours
         defaultActions = listOf(
@@ -154,9 +157,9 @@ enum class SceneTemplate(
     ),
 
     MEDICAL_PROCEDURE(
-        nameResId = R.string.scene_template_medical_procedure,
-        descResId = R.string.scene_wizard_medical_procedure_desc,
-        infoResId = R.string.scene_wizard_info_medical_procedure,
+        nameResId = CoreUiStrings.scene_template_medical_procedure,
+        descResId = CoreUiStrings.scene_wizard_medical_procedure_desc,
+        infoResId = CoreUiStrings.scene_wizard_info_medical_procedure,
         icon = "hospital",
         defaultDurationMinutes = 0, // indefinite — end manually
         defaultActions = listOf(
@@ -166,9 +169,9 @@ enum class SceneTemplate(
     ),
 
     BLANK(
-        nameResId = R.string.scene_template_blank,
-        descResId = R.string.scene_wizard_blank_desc,
-        infoResId = 0, // No info step for blank template
+        nameResId = CoreUiStrings.scene_template_blank,
+        descResId = CoreUiStrings.scene_wizard_blank_desc,
+        infoResId = null, // No info step for blank template
         icon = "star",
         defaultDurationMinutes = 60,
         defaultActions = emptyList()

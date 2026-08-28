@@ -1,5 +1,7 @@
 package app.aaps.ui.compose.treatments.viewmodels
 
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
 import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
@@ -121,7 +123,7 @@ internal class BolusCarbsViewModelTest {
 
     @Test
     fun `getDeleteConfirmationMessage uses the plural string for multiple selection`() {
-        whenever(rh.gs(R.string.confirm_remove_multiple_items, 2)).thenReturn("Remove 2 items")
+        whenever(rh.gs(CoreUiStrings.confirm_remove_multiple_items, 2)).thenReturn("Remove 2 items")
         sut.enterSelectionMode(link())
         sut.toggleSelection(link())
 

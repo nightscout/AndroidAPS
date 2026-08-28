@@ -6,6 +6,9 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.ui.UiStrings
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
@@ -38,6 +41,7 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.observeChange
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.ui.R
 import dev.zacsweers.metro.AppScope
@@ -61,8 +65,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.math.abs
-import app.aaps.core.interfaces.R as InterfacesR
-import app.aaps.core.ui.R as CoreUiR
 
 @Stable
 class FillDialogViewModel @AssistedInject constructor(
@@ -108,7 +110,7 @@ class FillDialogViewModel @AssistedInject constructor(
      * gone is dropped silently — exactly the outcomes the user most needs to see. Route them through the app-level
      * dialog bus instead, which outlives this screen.
      */
-    private fun reportAfterClose(titleResId: Int, message: String) {
+    private fun reportAfterClose(titleResId: TextRef, message: String) {
         rxBus.send(EventShowDialog.Ok(title = rh.gs(titleResId), message = message))
     }
 
@@ -236,7 +238,7 @@ class FillDialogViewModel @AssistedInject constructor(
     private fun pumpUnitsWarningFor(iCfg: ICfg?): String? {
         val concentration = iCfg?.concentration ?: return null
         if (concentration == 1.0) return null // U100 — no warning needed
-        return rh.gs(R.string.fill_pump_units_note)
+        return rh.gs(UiStrings.fill_pump_units_note)
     }
 
     fun updateSiteLocation(location: TE.Location) {
@@ -261,19 +263,19 @@ class FillDialogViewModel @AssistedInject constructor(
 
         return confirmationLines {
             if (state.insulinAfterConstraints > 0) {
-                line(ConfirmationRole.WARNING, rh.gs(R.string.fill_warning))
+                line(ConfirmationRole.WARNING, rh.gs(UiStrings.fill_warning))
                 line(ConfirmationRole.NORMAL, "")
                 val bolusValue =
                     if (state.siteChange || state.insulinCartridgeChange)
                         ch.bolusWithVolume(state.insulinAfterConstraints)
                     else
                         decimalFormatter.toPumpSupportedBolusWithUnits(state.insulinAfterConstraints, bolusStep)
-                line(ConfirmationRole.BOLUS, rh.gs(InterfacesR.string.confirmation_line, rh.gs(R.string.fill_prime_amount), bolusValue))
+                line(ConfirmationRole.BOLUS, rh.gs(InterfacesStrings.confirmation_line, rh.gs(UiStrings.fill_prime_amount), bolusValue))
                 if (state.constraintApplied) {
                     line(
                         ConfirmationRole.WARNING,
                         rh.gs(
-                            InterfacesR.string.bolus_constraint_applied_warn,
+                            InterfacesStrings.bolus_constraint_applied_warn,
                             state.insulin,
                             state.insulinAfterConstraints
                         )
@@ -285,30 +287,30 @@ class FillDialogViewModel @AssistedInject constructor(
             }
 
             if (state.siteChange) {
-                line(ConfirmationRole.NORMAL, rh.gs(R.string.record_pump_site_change))
+                line(ConfirmationRole.NORMAL, rh.gs(UiStrings.record_pump_site_change))
             }
 
             if (state.insulinCartridgeChange) {
-                line(ConfirmationRole.NORMAL, rh.gs(R.string.record_insulin_cartridge_change))
+                line(ConfirmationRole.NORMAL, rh.gs(UiStrings.record_insulin_cartridge_change))
             }
 
             if (state.insulinChanged) {
                 line(
                     ConfirmationRole.WARNING,
-                    rh.gs(R.string.fill_insulin_change, state.selectedInsulin?.insulinLabel ?: "")
+                    rh.gs(UiStrings.fill_insulin_change, state.selectedInsulin?.insulinLabel ?: "")
                 )
             }
 
             if (state.notes.isNotEmpty()) {
-                line(ConfirmationRole.NORMAL, rh.gs(InterfacesR.string.confirmation_line, rh.gs(CoreUiR.string.notes_label), state.notes))
+                line(ConfirmationRole.NORMAL, rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.notes_label), state.notes))
             }
 
             if (state.eventTimeChanged) {
-                line(ConfirmationRole.NORMAL, rh.gs(InterfacesR.string.confirmation_line, rh.gs(CoreUiR.string.time), dateUtil.dateAndTimeString(state.eventTime)))
+                line(ConfirmationRole.NORMAL, rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.time), dateUtil.dateAndTimeString(state.eventTime)))
             }
 
             if (state.siteRotationEnabled && state.siteLocation != TE.Location.NONE) {
-                line(ConfirmationRole.NORMAL, rh.gs(InterfacesR.string.confirmation_line, rh.gs(CoreUiR.string.site_location), translator.translate(state.siteLocation)))
+                line(ConfirmationRole.NORMAL, rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.site_location), translator.translate(state.siteLocation)))
             }
         }
     }
@@ -342,8 +344,8 @@ class FillDialogViewModel @AssistedInject constructor(
                         // The switch is chained to onSuccess, so a failed prime silently skips it — but the
                         // confirmation already promised it. Say so in the SAME message rather than two dialogs.
                         reportAfterClose(
-                            CoreUiR.string.treatmentdeliveryerror,
-                            if (doProfileSwitch) rh.gs(CoreUiR.string.fill_prime_failed_insulin_not_switched, error) else error
+                            CoreUiStrings.treatmentdeliveryerror,
+                            if (doProfileSwitch) rh.gs(CoreUiStrings.fill_prime_failed_insulin_not_switched, error) else error
                         )
                     },
                     onSuccess = {
@@ -395,7 +397,7 @@ class FillDialogViewModel @AssistedInject constructor(
 
     /** Record a careportal therapy event through the master-controlled batch channel (no confirmation UI — prepare→commit). */
     private suspend fun recordTherapyEvent(action: BatchAction.TherapyEvent) {
-        val label = rh.gs(CoreUiR.string.careportal)
+        val label = rh.gs(CoreUiStrings.careportal)
         when (val prepared = batchExecutor.prepare(listOf(action), action.source, label)) {
             is ActionProgress.Prepared -> {
                 val committed = batchExecutor.commit(prepared.id, action.source, label)
@@ -419,7 +421,7 @@ class FillDialogViewModel @AssistedInject constructor(
      * [reportInsulinActivation] rather than a `when` with a silent `else`.
      */
     private suspend fun activateInsulin(iCfg: ICfg) {
-        val label = rh.gs(CoreUiR.string.activate_insulin)
+        val label = rh.gs(CoreUiStrings.activate_insulin)
         val outcome = when (val prepared = batchExecutor.prepare(listOf(BatchAction.InsulinActivate(iCfg)), Sources.FillDialog, label)) {
             is ActionProgress.Prepared -> batchExecutor.commit(prepared.id, Sources.FillDialog, label)
             else                       -> prepared
@@ -439,7 +441,7 @@ class FillDialogViewModel @AssistedInject constructor(
             is ActionProgress.Applied     -> Unit
             is ActionProgress.Unconfirmed -> {
                 aapsLogger.warn(LTag.UI, "Fill insulin activation unconfirmed: ${outcome.reason} ${outcome.detail}")
-                reportAfterClose(CoreUiR.string.activate_insulin, rh.gs(CoreUiR.string.insulin_activation_unconfirmed))
+                reportAfterClose(CoreUiStrings.activate_insulin, rh.gs(CoreUiStrings.insulin_activation_unconfirmed))
             }
 
             else                          -> {
@@ -447,9 +449,9 @@ class FillDialogViewModel @AssistedInject constructor(
                 val detail = (outcome as? ActionProgress.Rejected)?.let { rh.gs(it.reason.failText()) }
                 aapsLogger.warn(LTag.UI, "Fill insulin activation failed: $outcome")
                 reportAfterClose(
-                    CoreUiR.string.activate_insulin,
-                    detail?.let { rh.gs(CoreUiR.string.insulin_activation_failed_reason, it) }
-                        ?: rh.gs(CoreUiR.string.insulin_activation_failed)
+                    CoreUiStrings.activate_insulin,
+                    detail?.let { rh.gs(CoreUiStrings.insulin_activation_failed_reason, it) }
+                        ?: rh.gs(CoreUiStrings.insulin_activation_failed)
                 )
             }
         }

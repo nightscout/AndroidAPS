@@ -67,7 +67,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
+import app.aaps.ui.UiStrings
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -99,8 +102,6 @@ import app.aaps.core.ui.compose.rememberBringIntoViewOnExpand
 import app.aaps.core.ui.compose.stringResourceOrNull
 import app.aaps.ui.R
 import kotlinx.coroutines.launch
-import app.aaps.core.interfaces.R as InterfacesR
-import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 fun WizardDialogScreen(
@@ -166,7 +167,7 @@ fun WizardDialogScreen(
     if (showNoAction) {
         ElementConfirmationDialog(
             elementType = ElementType.BOLUS_WIZARD,
-            message = stringResource(CoreUiR.string.no_action_selected),
+            message = stringResource(CoreUiStrings.no_action_selected),
             onConfirm = { showNoAction = false },
             onDismiss = { showNoAction = false }
         )
@@ -248,7 +249,7 @@ internal fun WizardDialogContent(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.Filled.Close,
-                            contentDescription = stringResource(CoreUiR.string.close)
+                            contentDescription = stringResource(CoreUiStrings.close)
                         )
                     }
                 },
@@ -256,7 +257,7 @@ internal fun WizardDialogContent(
                     IconButton(onClick = onSettingsClick) {
                         Icon(
                             imageVector = Icons.Default.Settings,
-                            contentDescription = stringResource(CoreUiR.string.settings),
+                            contentDescription = stringResource(CoreUiStrings.settings),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
@@ -282,19 +283,19 @@ internal fun WizardDialogContent(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 if (uiState.totalInsulin > 0.0) {
-                    Text(stringResource(InterfacesR.string.format_insulin_units, uiState.totalInsulin))
+                    Text(stringResource(InterfacesStrings.format_insulin_units, uiState.totalInsulin))
                 }
                 if (uiState.totalInsulin > 0.0 && (uiState.effectiveCarbs > 0 || uiState.eCarbs > 0)) {
                     Spacer(modifier = Modifier.width(4.dp))
                 }
                 if (uiState.effectiveCarbs > 0 || uiState.eCarbs > 0) {
                     Text(
-                        if (uiState.eCarbs > 0) stringResource(CoreUiR.string.format_carbs_split, uiState.effectiveCarbs, uiState.eCarbs)
-                        else stringResource(InterfacesR.string.format_carbs, uiState.effectiveCarbs)
+                        if (uiState.eCarbs > 0) stringResource(CoreUiStrings.format_carbs_split, uiState.effectiveCarbs, uiState.eCarbs)
+                        else stringResource(InterfacesStrings.format_carbs, uiState.effectiveCarbs)
                     )
                 }
                 if (!uiState.okVisible) {
-                    Text(stringResource(CoreUiR.string.ok))
+                    Text(stringResource(CoreUiStrings.ok))
                 }
             }
         }
@@ -311,7 +312,7 @@ internal fun WizardDialogContent(
         ) {
             // --- Forced-record-only warning ---
             if (uiState.forcedRecordOnly) {
-                WarningBanner(message = stringResource(InterfacesR.string.bolus_recorded_only))
+                WarningBanner(message = stringResource(InterfacesStrings.bolus_recorded_only))
             }
 
             // --- Calculation Card (expandable, at top) ---
@@ -332,7 +333,7 @@ internal fun WizardDialogContent(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = stringResource(CoreUiR.string.wizard_calculation),
+                            text = stringResource(CoreUiStrings.wizard_calculation),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
@@ -344,15 +345,15 @@ internal fun WizardDialogContent(
                             if (uiState.hasResult && (uiState.totalInsulin > 0.0 || uiState.carbs > 0)) {
                                 if (uiState.totalInsulin > 0.0) {
                                     Text(
-                                        text = stringResource(InterfacesR.string.format_insulin_units, uiState.totalInsulin),
+                                        text = stringResource(InterfacesStrings.format_insulin_units, uiState.totalInsulin),
                                         fontWeight = FontWeight.Bold,
                                         color = ElementType.INSULIN.color()
                                     )
                                 }
                                 if (uiState.effectiveCarbs > 0 || uiState.eCarbs > 0) {
                                     Text(
-                                        text = if (uiState.eCarbs > 0) stringResource(CoreUiR.string.format_carbs_split, uiState.effectiveCarbs, uiState.eCarbs)
-                                        else stringResource(InterfacesR.string.format_carbs, uiState.effectiveCarbs),
+                                        text = if (uiState.eCarbs > 0) stringResource(CoreUiStrings.format_carbs_split, uiState.effectiveCarbs, uiState.eCarbs)
+                                        else stringResource(InterfacesStrings.format_carbs, uiState.effectiveCarbs),
                                         fontWeight = FontWeight.Bold,
                                         color = ElementType.CARBS.color()
                                     )
@@ -362,14 +363,14 @@ internal fun WizardDialogContent(
                                     Text("(", fontWeight = FontWeight.Bold)
                                     if (uiState.percentage != 100) {
                                         Text(
-                                            text = stringResource(CoreUiR.string.format_percent, uiState.percentage),
+                                            text = stringResource(CoreUiStrings.format_percent, uiState.percentage),
                                             fontWeight = FontWeight.Bold,
                                             color = ElementType.CARBS.color()
                                         )
                                     }
                                     if (uiState.directCorrection != 0.0) {
                                         Text(
-                                            text = stringResource(CoreUiR.string.format_insulin_units_signed, uiState.directCorrection),
+                                            text = stringResource(CoreUiStrings.format_insulin_units_signed, uiState.directCorrection),
                                             fontWeight = FontWeight.Bold,
                                             color = ElementType.INSULIN.color()
                                         )
@@ -378,7 +379,7 @@ internal fun WizardDialogContent(
                                 }
                             } else if (uiState.hasResult && uiState.carbsEquivalent > 0) {
                                 Text(
-                                    text = stringResource(R.string.missing_carbs, uiState.carbsEquivalent.toInt()),
+                                    text = stringResource(UiStrings.missing_carbs, uiState.carbsEquivalent.toInt()),
                                     fontWeight = FontWeight.Bold,
                                     color = ElementType.CARBS.color()
                                 )
@@ -408,7 +409,7 @@ internal fun WizardDialogContent(
                             ) {
                                 Icon(
                                     imageVector = ElementType.BG_CHECK.icon(),
-                                    contentDescription = stringResource(CoreUiR.string.wizard_include_bg),
+                                    contentDescription = stringResource(CoreUiStrings.wizard_include_bg),
                                     modifier = Modifier.size(24.dp)
                                 )
                             }
@@ -422,7 +423,7 @@ internal fun WizardDialogContent(
                             ) {
                                 Icon(
                                     imageVector = IcTtManual,
-                                    contentDescription = stringResource(CoreUiR.string.wizard_include_tt),
+                                    contentDescription = stringResource(CoreUiStrings.wizard_include_tt),
                                     modifier = Modifier.size(24.dp)
                                 )
                             }
@@ -435,7 +436,7 @@ internal fun WizardDialogContent(
                             ) {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Filled.TrendingUp,
-                                    contentDescription = stringResource(CoreUiR.string.wizard_include_trend),
+                                    contentDescription = stringResource(CoreUiStrings.wizard_include_trend),
                                     modifier = Modifier.size(24.dp)
                                 )
                             }
@@ -448,7 +449,7 @@ internal fun WizardDialogContent(
                             ) {
                                 Icon(
                                     imageVector = ElementType.INSULIN.icon(),
-                                    contentDescription = stringResource(CoreUiR.string.wizard_include_iob),
+                                    contentDescription = stringResource(CoreUiStrings.wizard_include_iob),
                                     modifier = Modifier.size(24.dp)
                                 )
                             }
@@ -461,7 +462,7 @@ internal fun WizardDialogContent(
                             ) {
                                 Icon(
                                     imageVector = ElementType.COB.icon(),
-                                    contentDescription = stringResource(CoreUiR.string.wizard_include_cob),
+                                    contentDescription = stringResource(CoreUiStrings.wizard_include_cob),
                                     modifier = Modifier.size(24.dp)
                                 )
                             }
@@ -473,7 +474,7 @@ internal fun WizardDialogContent(
                             positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
                             tooltip = {
                                 PlainTooltip {
-                                    Text(stringResource(R.string.wizard_include_info))
+                                    Text(stringResource(UiStrings.wizard_include_info))
                                 }
                             },
                             state = includeTooltipState
@@ -506,8 +507,8 @@ internal fun WizardDialogContent(
                                 // BG
                                 if (uiState.useBg && uiState.bg > 0) {
                                     CalcRow(
-                                        label = stringResource(CoreUiR.string.wizard_bg_label) + " (ISF: ${decimalFormatter.to1Decimal(uiState.isf)})",
-                                        value = stringResource(InterfacesR.string.format_insulin_units, uiState.insulinFromBG)
+                                        label = stringResource(CoreUiStrings.wizard_bg_label) + " (ISF: ${decimalFormatter.to1Decimal(uiState.isf)})",
+                                        value = stringResource(InterfacesStrings.format_insulin_units, uiState.insulinFromBG)
                                     )
                                 }
 
@@ -515,32 +516,32 @@ internal fun WizardDialogContent(
                                 if (uiState.useTrend) {
                                     CalcRow(
                                         label = uiState.trendDetail,
-                                        value = stringResource(InterfacesR.string.format_insulin_units, uiState.insulinFromTrend)
+                                        value = stringResource(InterfacesStrings.format_insulin_units, uiState.insulinFromTrend)
                                     )
                                 }
 
                                 // COB
                                 if (uiState.useCOB) {
                                     CalcRow(
-                                        label = stringResource(CoreUiR.string.cob) + " (IC: ${decimalFormatter.to1Decimal(uiState.ic)})",
-                                        value = stringResource(InterfacesR.string.format_insulin_units, uiState.insulinFromCOB)
+                                        label = stringResource(CoreUiStrings.cob) + " (IC: ${decimalFormatter.to1Decimal(uiState.ic)})",
+                                        value = stringResource(InterfacesStrings.format_insulin_units, uiState.insulinFromCOB)
                                     )
                                 }
 
                                 // Carbs
                                 if (uiState.eCarbs > 0) {
                                     CalcRow(
-                                        label = stringResource(InterfacesR.string.carbs) + " ${uiState.effectiveCarbs}g (IC: ${decimalFormatter.to1Decimal(uiState.ic)})",
-                                        value = stringResource(InterfacesR.string.format_insulin_units, uiState.insulinFromCarbs)
+                                        label = stringResource(InterfacesStrings.carbs) + " ${uiState.effectiveCarbs}g (IC: ${decimalFormatter.to1Decimal(uiState.ic)})",
+                                        value = stringResource(InterfacesStrings.format_insulin_units, uiState.insulinFromCarbs)
                                     )
                                     CalcRow(
-                                        label = stringResource(InterfacesR.string.wizard_ecarbs, uiState.eCarbs, uiState.eCarbsDurationHours, uiState.eCarbsDelayMinutes),
+                                        label = stringResource(InterfacesStrings.wizard_ecarbs, uiState.eCarbs, uiState.eCarbsDurationHours, uiState.eCarbsDelayMinutes),
                                         value = ""
                                     )
                                 } else {
                                     CalcRow(
-                                        label = stringResource(InterfacesR.string.carbs) + " (IC: ${decimalFormatter.to1Decimal(uiState.ic)})",
-                                        value = stringResource(InterfacesR.string.format_insulin_units, uiState.insulinFromCarbs)
+                                        label = stringResource(InterfacesStrings.carbs) + " (IC: ${decimalFormatter.to1Decimal(uiState.ic)})",
+                                        value = stringResource(InterfacesStrings.format_insulin_units, uiState.insulinFromCarbs)
                                     )
                                 }
 
@@ -550,13 +551,13 @@ internal fun WizardDialogContent(
                                     val scaledSubtotal = uiState.insulinFromBG + uiState.insulinFromTrend +
                                         uiState.insulinFromCarbs + uiState.insulinFromCOB
                                     CalcRow(
-                                        label = stringResource(CoreUiR.string.wizard_subtotal),
-                                        value = stringResource(InterfacesR.string.format_insulin_units, scaledSubtotal)
+                                        label = stringResource(CoreUiStrings.wizard_subtotal),
+                                        value = stringResource(InterfacesStrings.format_insulin_units, scaledSubtotal)
                                     )
                                     val afterPercentage = scaledSubtotal * uiState.percentage / 100.0
                                     CalcRow(
-                                        label = stringResource(CoreUiR.string.format_percent, uiState.percentage),
-                                        value = stringResource(InterfacesR.string.format_insulin_units, afterPercentage)
+                                        label = stringResource(CoreUiStrings.format_percent, uiState.percentage),
+                                        value = stringResource(InterfacesStrings.format_insulin_units, afterPercentage)
                                     )
                                 }
 
@@ -567,24 +568,24 @@ internal fun WizardDialogContent(
                                 // IOB
                                 if (uiState.useIOB) {
                                     CalcRow(
-                                        label = stringResource(CoreUiR.string.iob),
-                                        value = stringResource(InterfacesR.string.format_insulin_units, uiState.totalIOB)
+                                        label = stringResource(CoreUiStrings.iob),
+                                        value = stringResource(InterfacesStrings.format_insulin_units, uiState.totalIOB)
                                     )
                                 }
 
                                 // Direct Correction
                                 if (uiState.insulinFromCorrection != 0.0) {
                                     CalcRow(
-                                        label = stringResource(CoreUiR.string.wizard_correction),
-                                        value = stringResource(InterfacesR.string.format_insulin_units, uiState.insulinFromCorrection)
+                                        label = stringResource(CoreUiStrings.wizard_correction),
+                                        value = stringResource(InterfacesStrings.format_insulin_units, uiState.insulinFromCorrection)
                                     )
                                 }
 
                                 // === Total ===
                                 HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
                                 CalcRow(
-                                    label = stringResource(CoreUiR.string.wizard_total),
-                                    value = stringResource(InterfacesR.string.format_insulin_units, uiState.totalInsulin)
+                                    label = stringResource(CoreUiStrings.wizard_total),
+                                    value = stringResource(InterfacesStrings.format_insulin_units, uiState.totalInsulin)
                                 )
                             }
                         }
@@ -614,7 +615,7 @@ internal fun WizardDialogContent(
                     // Carbs Input
                     Column(modifier = itemModifier) {
                         NumberInputRow(
-                            labelResId = InterfacesR.string.carbs,
+                            labelRef = InterfacesStrings.carbs,
                             value = uiState.carbs.toDouble(),
                             onValueChange = onCarbsChange,
                             valueRange = 0.0..uiState.maxCarbs.toDouble(),
@@ -667,19 +668,19 @@ internal fun WizardDialogContent(
                                         Column {
                                             Text(
                                                 text = when (uiState.carbsType) {
-                                                    CarbsType.BREAD -> stringResource(CoreUiR.string.carbs_type_bread)
-                                                    CarbsType.CAKE  -> stringResource(CoreUiR.string.carbs_type_cake)
-                                                    CarbsType.PIZZA -> stringResource(CoreUiR.string.carbs_type_pizza)
+                                                    CarbsType.BREAD -> stringResource(CoreUiStrings.carbs_type_bread)
+                                                    CarbsType.CAKE  -> stringResource(CoreUiStrings.carbs_type_cake)
+                                                    CarbsType.PIZZA -> stringResource(CoreUiStrings.carbs_type_pizza)
                                                 }
                                             )
                                             Spacer(modifier = Modifier.height(4.dp))
                                             val type = uiState.carbsType
                                             Text(
                                                 text = if (type == CarbsType.BREAD)
-                                                    stringResource(R.string.wizard_carbs_type_bread_desc)
+                                                    stringResource(UiStrings.wizard_carbs_type_bread_desc)
                                                 else
                                                     stringResource(
-                                                        R.string.wizard_carbs_type_desc,
+                                                        UiStrings.wizard_carbs_type_desc,
                                                         100 - type.carbsPercent,
                                                         type.eCarbsPercent,
                                                         type.eCarbsDelayMinutes,
@@ -705,12 +706,12 @@ internal fun WizardDialogContent(
 
                     // Direct Correction input
                     NumberInputRow(
-                        labelResId = CoreUiR.string.wizard_correction,
+                        labelRef = CoreUiStrings.wizard_correction,
                         value = uiState.directCorrection,
                         onValueChange = onDirectCorrectionChange,
                         valueRange = -uiState.maxBolus..uiState.maxBolus,
                         step = uiState.bolusStep,
-                        unitLabel = TextRef.AndroidRes(CoreUiR.string.insulin_unit_shortname),
+                        unitLabel = CoreUiStrings.insulin_unit_shortname,
                         decimalPlaces = 2,
                         modifier = itemModifier
                     )
@@ -737,7 +738,7 @@ internal fun WizardDialogContent(
                                 modifier = Modifier.weight(1f)
                             ) {
                                 Text(
-                                    text = stringResource(CoreUiR.string.wizard_bg_label) + ": ",
+                                    text = stringResource(CoreUiStrings.wizard_bg_label) + ": ",
                                     style = MaterialTheme.typography.labelLarge,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -756,7 +757,7 @@ internal fun WizardDialogContent(
                                     )
                                 } else {
                                     Text(
-                                        text = stringResource(CoreUiR.string.not_available_full),
+                                        text = stringResource(CoreUiStrings.not_available_full),
                                         style = MaterialTheme.typography.titleMedium,
                                         color = MaterialTheme.colorScheme.error
                                     )
@@ -764,7 +765,7 @@ internal fun WizardDialogContent(
                             }
                             if (!bgExpanded) {
                                 FilledTonalButton(onClick = { bgExpanded = true }) {
-                                    Text(stringResource(CoreUiR.string.change))
+                                    Text(stringResource(CoreUiStrings.change))
                                 }
                             }
                         }
@@ -774,7 +775,7 @@ internal fun WizardDialogContent(
                             exit = shrinkVertically()
                         ) {
                             NumberInputRow(
-                                labelResId = CoreUiR.string.wizard_bg_label,
+                                labelRef = CoreUiStrings.wizard_bg_label,
                                 value = uiState.bg,
                                 onValueChange = onBgChange,
                                 valueRange = uiState.bgRange,
@@ -799,7 +800,7 @@ internal fun WizardDialogContent(
                                 modifier = Modifier.weight(1f)
                             ) {
                                 Text(
-                                    text = stringResource(CoreUiR.string.wizard_use_percentage) + ": ",
+                                    text = stringResource(CoreUiStrings.wizard_use_percentage) + ": ",
                                     style = MaterialTheme.typography.labelLarge,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -811,7 +812,7 @@ internal fun WizardDialogContent(
                             }
                             if (!percentageExpanded) {
                                 FilledTonalButton(onClick = { percentageExpanded = true }) {
-                                    Text(stringResource(CoreUiR.string.change))
+                                    Text(stringResource(CoreUiStrings.change))
                                 }
                             }
                         }
@@ -821,7 +822,7 @@ internal fun WizardDialogContent(
                             exit = shrinkVertically()
                         ) {
                             NumberInputRow(
-                                labelResId = CoreUiR.string.wizard_use_percentage,
+                                labelRef = CoreUiStrings.wizard_use_percentage,
                                 value = uiState.percentage.toDouble(),
                                 onValueChange = onPercentageChange,
                                 valueRange = Constants.WIZARD_PERCENTAGE_RANGE,
@@ -850,7 +851,7 @@ internal fun WizardDialogContent(
                                     modifier = Modifier.weight(1f)
                                 ) {
                                     Text(
-                                        text = stringResource(CoreUiR.string.profile) + ": ",
+                                        text = stringResource(CoreUiStrings.profile) + ": ",
                                         style = MaterialTheme.typography.labelLarge,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
@@ -862,7 +863,7 @@ internal fun WizardDialogContent(
                                 }
                                 if (!profileExpanded) {
                                     FilledTonalButton(onClick = { profileExpanded = true }) {
-                                        Text(stringResource(CoreUiR.string.change))
+                                        Text(stringResource(CoreUiStrings.change))
                                     }
                                 }
                             }
@@ -884,7 +885,7 @@ internal fun WizardDialogContent(
                         TextField(
                             value = uiState.notes,
                             onValueChange = onNotesChange,
-                            label = { Text(stringResource(CoreUiR.string.notes_label)) },
+                            label = { Text(stringResource(CoreUiStrings.notes_label)) },
                             modifier = itemModifier,
                             singleLine = false,
                             maxLines = 3
@@ -958,7 +959,7 @@ private fun ProfileDropdown(
             value = selectedText,
             onValueChange = {},
             readOnly = true,
-            label = { Text(stringResource(CoreUiR.string.profile)) },
+            label = { Text(stringResource(CoreUiStrings.profile)) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             modifier = Modifier
                 .fillMaxWidth()

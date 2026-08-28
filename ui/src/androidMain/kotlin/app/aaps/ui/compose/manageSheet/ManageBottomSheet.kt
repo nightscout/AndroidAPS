@@ -41,11 +41,13 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.actions.CustomAction
 import app.aaps.core.keys.interfaces.ElementVisibility
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.MasterOfflineBanner
 import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.compose.icons.IcCancelExtendedBolus
@@ -58,7 +60,6 @@ import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.label
 import app.aaps.core.ui.compose.rememberBringIntoViewOnExpand
 import app.aaps.core.ui.compose.stringResourceOrNull
-import app.aaps.core.ui.R as CoreUiR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -164,7 +165,7 @@ internal fun ManageBottomSheetContent(
         // Explains offline vs. control-disabled; renders nothing when editing is enabled.
         MasterOfflineBanner(editingEnabled = editingEnabled)
         // Section: Manage
-        SectionHeader(stringResource(CoreUiR.string.manage))
+        SectionHeader(stringResource(CoreUiStrings.manage))
 
         GridSection(modifier = Modifier.padding(horizontal = 16.dp)) {
             // Profiles are the exception: an unpaired client still needs to SEE them (it receives them
@@ -244,7 +245,7 @@ internal fun ManageBottomSheetContent(
             if (pumpPlugin != null && showPump) {
                 add { modifier ->
                     ManageGridItem(
-                        text = stringResource(CoreUiR.string.pump_management),
+                        text = stringResource(CoreUiStrings.pump_management),
                         icon = pumpPlugin.pluginDescription.icon ?: ElementType.PUMP.icon(),
                         color = ElementType.PUMP.color(),
                         onDismiss = onDismiss,
@@ -328,7 +329,7 @@ internal fun ManageBottomSheetContent(
                         add { modifier ->
                             ManageGridItem(
                                 elementType = ElementType.TEMP_BASAL,
-                                text = stringResource(CoreUiR.string.tempbasal_button),
+                                text = stringResource(CoreUiStrings.tempbasal_button),
                                 onDismiss = onDismiss,
                                 onNavigate = onNavigate,
                                 modifier = modifier
@@ -351,7 +352,7 @@ internal fun ManageBottomSheetContent(
                         add { modifier ->
                             ManageGridItem(
                                 elementType = ElementType.EXTENDED_BOLUS,
-                                text = stringResource(CoreUiR.string.extended_bolus_button),
+                                text = stringResource(CoreUiStrings.extended_bolus_button),
                                 onDismiss = onDismiss,
                                 onNavigate = onNavigate,
                                 modifier = modifier
@@ -369,7 +370,7 @@ internal fun ManageBottomSheetContent(
             val careportalExpandRequester = rememberBringIntoViewOnExpand(careportalExpanded)
             HorizontalDivider(modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 12.dp))
             CollapsibleSectionHeader(
-                text = stringResource(CoreUiR.string.careportal),
+                text = stringResource(CoreUiStrings.careportal),
                 expanded = careportalExpanded,
                 onToggle = { careportalExpanded = !careportalExpanded }
             )
@@ -431,7 +432,7 @@ internal fun ManageBottomSheetContent(
         // Section: Pump actions (only if non-empty)
         if (customActions.isNotEmpty()) {
             HorizontalDivider(modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 12.dp))
-            SectionHeader(stringResource(CoreUiR.string.pump_actions))
+            SectionHeader(stringResource(CoreUiStrings.pump_actions))
 
             val pumpColor = ElementType.PUMP.color()
             GridSection(modifier = Modifier.padding(horizontal = 16.dp)) {

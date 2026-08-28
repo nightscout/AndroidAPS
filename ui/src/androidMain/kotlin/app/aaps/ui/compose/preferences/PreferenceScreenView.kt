@@ -21,7 +21,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.ComposeScreenContent
@@ -97,7 +99,7 @@ fun PreferenceScreenView(
                             IconButton(onClick = onBackClick) {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                    contentDescription = stringResource(app.aaps.core.ui.R.string.back)
+                                    contentDescription = stringResource(CoreUiStrings.back)
                                 )
                             }
                         }

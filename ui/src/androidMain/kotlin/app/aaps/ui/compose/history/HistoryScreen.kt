@@ -39,7 +39,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -54,7 +56,6 @@ import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.ui.R
 import app.aaps.ui.compose.overview.graphs.GraphViewModel
 import app.aaps.ui.compose.overview.graphs.GraphsSection
-import app.aaps.core.ui.R as CoreUiR
 
 data class HistoryUiState(
     val dateText: String,
@@ -101,7 +102,7 @@ fun HistoryScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(CoreUiR.string.back)
+                            contentDescription = stringResource(CoreUiStrings.back)
                         )
                     }
                 }
@@ -202,7 +203,7 @@ private fun HistoryToolbar(
             FilledIconButton(onClick = onPreviousWindow) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.NavigateBefore,
-                    contentDescription = stringResource(R.string.a11y_history_previous_window)
+                    contentDescription = stringResource(UiStrings.a11y_history_previous_window)
                 )
             }
             OutlinedButton(
@@ -218,12 +219,12 @@ private fun HistoryToolbar(
                         .width(18.dp)
                 )
                 Spacer(Modifier.width(8.dp))
-                Text(stringResource(R.string.history_now))
+                Text(stringResource(UiStrings.history_now))
             }
             FilledIconButton(onClick = onNextWindow, enabled = !uiState.isAtNow) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.NavigateNext,
-                    contentDescription = stringResource(R.string.a11y_history_next_window)
+                    contentDescription = stringResource(UiStrings.a11y_history_next_window)
                 )
             }
         }

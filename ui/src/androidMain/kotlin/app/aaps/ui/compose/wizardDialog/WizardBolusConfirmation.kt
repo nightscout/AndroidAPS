@@ -1,6 +1,8 @@
 package app.aaps.ui.compose.wizardDialog
 
 import androidx.compose.ui.graphics.vector.ImageVector
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -29,8 +31,8 @@ fun showWizardBolusConfirmation(
     if (advisorApplies)
         rxBus.send(
             EventShowDialog.YesNoCancel(
-                title = rh.gs(R.string.bolus_advisor),
-                message = rh.gs(R.string.bolus_advisor_message),
+                title = rh.gs(CoreUiStrings.bolus_advisor),
+                message = rh.gs(CoreUiStrings.bolus_advisor_message),
                 onYes = { showConfirm(advisorLines, true) },
                 onNo = { showConfirm(normalLines, false) }
             )

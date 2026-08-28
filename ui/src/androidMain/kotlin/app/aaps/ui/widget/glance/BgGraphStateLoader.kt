@@ -1,5 +1,7 @@
 package app.aaps.ui.widget.glance
 
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.configuration.Config
@@ -83,7 +85,7 @@ class BgGraphStateLoader @Inject constructor(
         // Current BG + trend (same logic as WidgetStateLoader)
         val lastBg = lastBgData.lastBg()
         val bgText = lastBg?.let { profileUtil.fromMgdlToStringInUnits(it.recalculated) }
-            ?: rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
+            ?: rh.gs(CoreUiStrings.value_unavailable_short)
         val bgColor = when {
             lastBgData.isLow()  -> colors.low
             lastBgData.isHigh() -> colors.high

@@ -3,6 +3,7 @@ package app.aaps.ui.compose.carbsDialog
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.time.T
@@ -280,14 +281,14 @@ class CarbsDialogViewModel @Inject constructor(
                 _sideEffect.tryEmit(SideEffect.ShowNoActionDialog)
                 return@launch
             }
-            when (val prepared = batchExecutor.prepare(actions, Sources.CarbDialog, rh.gs(app.aaps.core.interfaces.R.string.carbs))) {
+            when (val prepared = batchExecutor.prepare(actions, Sources.CarbDialog, rh.gs(InterfacesStrings.carbs))) {
                 is ActionProgress.Prepared -> _sideEffect.tryEmit(SideEffect.ShowConfirmation(prepared.id, prepared.lines))
                 is ActionProgress.Rejected -> when (prepared.reason) {
-                    FailureReason.NotReachable, FailureReason.ControlDisabled -> rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.interfaces.R.string.carbs), message = rh.gs(prepared.reason.failText())))
+                    FailureReason.NotReachable, FailureReason.ControlDisabled -> rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.carbs), message = rh.gs(prepared.reason.failText())))
                     // No-op (e.g. nothing left to remove after a COB-shrink between open and confirm): neutral message, NOT the bolus-error alarm.
                     FailureReason.NoAction     -> _sideEffect.tryEmit(SideEffect.ShowNoActionDialog)
                     else                       -> prepared.detail?.let { detail ->
-                        if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.interfaces.R.string.carbs), message = detail))
+                        if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.carbs), message = detail))
                         else _sideEffect.tryEmit(SideEffect.ShowDeliveryError(detail))
                     }
                 }
@@ -301,7 +302,7 @@ class CarbsDialogViewModel @Inject constructor(
     fun commit(bolusId: Long) {
         appScope.launch {
             val state = confirmedState
-            val result = batchExecutor.commit(bolusId, Sources.CarbDialog, rh.gs(app.aaps.core.interfaces.R.string.carbs))
+            val result = batchExecutor.commit(bolusId, Sources.CarbDialog, rh.gs(InterfacesStrings.carbs))
             // Opt-in post-carbs bolus reminder (device-local) on success.
             if (result is ActionProgress.Applied && preferences.get(BooleanKey.OverviewUseBolusReminder) && state?.bolusReminderChecked == true)
                 automation.scheduleAutomationEventBolusReminder()
@@ -309,9 +310,9 @@ class CarbsDialogViewModel @Inject constructor(
             // NoPendingBolus, …) → the master's detail. Unconfirmed (state unknown) rides the round-trip's app-level modal.
             if (result is ActionProgress.Rejected) {
                 if (result.reason == FailureReason.NotReachable || result.reason == FailureReason.ControlDisabled)
-                    rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.interfaces.R.string.carbs), message = rh.gs(result.reason.failText())))
+                    rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.carbs), message = rh.gs(result.reason.failText())))
                 else result.detail?.let { detail ->
-                    if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.interfaces.R.string.carbs), message = detail))
+                    if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.carbs), message = detail))
                     else _sideEffect.tryEmit(SideEffect.ShowDeliveryError(detail))
                 }
             }

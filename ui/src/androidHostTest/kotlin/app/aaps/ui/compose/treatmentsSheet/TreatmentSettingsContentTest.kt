@@ -8,6 +8,8 @@ import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.R as CoreUiR
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -22,7 +24,6 @@ import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 import app.aaps.core.interfaces.configuration.Config as AppConfig
-import app.aaps.core.ui.R as CoreUiR
 
 /** Robolectric composable test for [TreatmentSettingsContent]: renders + fires back. */
 @RunWith(RobolectricTestRunner::class)
@@ -51,7 +52,7 @@ class TreatmentSettingsContentTest {
             CompositionLocalProvider(LocalPreferences provides preferences, LocalConfig provides config) {
                 MaterialTheme {
                     TreatmentSettingsContent(
-                        settingsDef = PreferenceSubScreenDef(key = "treatments", titleResId = CoreUiR.string.treatments),
+                        settingsDef = PreferenceSubScreenDef(key = "treatments", title = CoreUiStrings.treatments),
                         onBack = { back = true }
                     )
                 }

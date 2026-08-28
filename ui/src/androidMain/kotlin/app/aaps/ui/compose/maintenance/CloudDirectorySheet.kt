@@ -21,13 +21,13 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.maintenance.CloudDirectoryInfo
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.dialogs.ErrorDialog
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.ui.compose.maintenance.MaintenanceViewModel.CloudDirectoryState
-import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 fun CloudDirectorySheet(
@@ -52,8 +52,8 @@ fun CloudDirectorySheet(
 
         is CloudDirectoryState.ConfirmClear -> {
             OkCancelDialog(
-                title = stringResource(CoreUiR.string.clear_cloud_settings),
-                message = stringResource(CoreUiR.string.clear_cloud_settings_message),
+                title = stringResource(CoreUiStrings.clear_cloud_settings),
+                message = stringResource(CoreUiStrings.clear_cloud_settings_message),
                 onConfirm = onConfirmClear,
                 onDismiss = onCancelClear
             )
@@ -61,9 +61,9 @@ fun CloudDirectorySheet(
 
         is CloudDirectoryState.Reauthorize -> {
             ErrorDialog(
-                title = stringResource(CoreUiR.string.cloud_connection_failed),
-                message = stringResource(CoreUiR.string.cloud_reauthorize_message),
-                positiveButton = stringResource(CoreUiR.string.reauthorize),
+                title = stringResource(CoreUiStrings.cloud_connection_failed),
+                message = stringResource(CoreUiStrings.cloud_reauthorize_message),
+                positiveButton = stringResource(CoreUiStrings.reauthorize),
                 onPositive = onReauthorize,
                 onDismiss = onDismiss
             )
@@ -81,7 +81,7 @@ private fun CloudDirectoryDialog(
         onDismissRequest = onDismiss,
         title = {
             Text(
-                text = stringResource(CoreUiR.string.select_storage_type),
+                text = stringResource(CoreUiStrings.select_storage_type),
                 style = MaterialTheme.typography.titleLarge
             )
         },
@@ -123,7 +123,7 @@ private fun CloudDirectoryDialog(
                 if (info.hasCredentials) {
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = stringResource(CoreUiR.string.authorization_status),
+                        text = stringResource(CoreUiStrings.authorization_status),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -162,7 +162,7 @@ private fun CloudDirectoryDialog(
         confirmButton = {},
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(CoreUiR.string.cancel))
+                Text(stringResource(CoreUiStrings.cancel))
             }
         }
     )

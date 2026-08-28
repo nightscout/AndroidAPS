@@ -10,18 +10,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.overview.graph.BgRange
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.ui.compose.overview.chips.CobUiState
 import app.aaps.ui.compose.overview.chips.IobUiState
 import app.aaps.ui.compose.overview.graphs.BgInfoUiState
-import app.aaps.core.ui.R as CoreUiR
 
 /**
  * Compact status bar showing BG + trend + delta | IOB | COB.
@@ -82,7 +82,7 @@ fun DialogStatusBar(
             // IOB section
             if (iob.text.isNotEmpty()) {
                 Text(
-                    text = stringResource(CoreUiR.string.iob),
+                    text = stringResource(CoreUiStrings.iob),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1
@@ -100,7 +100,7 @@ fun DialogStatusBar(
             // COB section
             if (cob.text.isNotEmpty()) {
                 Text(
-                    text = stringResource(CoreUiR.string.cob),
+                    text = stringResource(CoreUiStrings.cob),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1

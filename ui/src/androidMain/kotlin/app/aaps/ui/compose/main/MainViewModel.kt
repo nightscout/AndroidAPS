@@ -4,6 +4,9 @@ import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.ui.UiStrings
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.data.model.RM
@@ -378,12 +381,12 @@ class MainViewModel @Inject constructor(
     private fun computeInsulinItem(entry: QuickWizardEntry, pump: Pump, runningMode: RM.Mode?): QuickWizardItem {
         val buttonText = entry.buttonText()
         val guid = entry.guid()
-        val detail = rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, entry.insulin())
+        val detail = rh.gs(InterfacesStrings.format_insulin_units, entry.insulin())
 
         val disabledReason = when {
-            !pump.isInitialized()                    -> rh.gs(app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set)
-            pump.isSuspended()                       -> rh.gs(app.aaps.core.interfaces.R.string.pumpsuspended)
-            runningMode == RM.Mode.DISCONNECTED_PUMP -> rh.gs(app.aaps.core.interfaces.R.string.pump_disconnected)
+            !pump.isInitialized()                    -> rh.gs(CoreUiStrings.pump_not_initialized_profile_not_set)
+            pump.isSuspended()                       -> rh.gs(InterfacesStrings.pumpsuspended)
+            runningMode == RM.Mode.DISCONNECTED_PUMP -> rh.gs(InterfacesStrings.pump_disconnected)
             else                                     -> null
         }
         if (disabledReason != null)
@@ -392,7 +395,7 @@ class MainViewModel @Inject constructor(
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(entry.insulin(), aapsLogger)).value()
         val minStep = pump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints)
         if (abs(insulinAfterConstraints - entry.insulin()) >= minStep)
-            return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, disabledReason = rh.gs(app.aaps.ui.R.string.insulin_constraint_violation))
+            return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, disabledReason = rh.gs(UiStrings.insulin_constraint_violation))
 
         return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, isEnabled = true)
     }
@@ -400,11 +403,11 @@ class MainViewModel @Inject constructor(
     private fun computeCarbsItem(entry: QuickWizardEntry): QuickWizardItem {
         val buttonText = entry.buttonText()
         val guid = entry.guid()
-        val detail = rh.gs(app.aaps.core.interfaces.R.string.format_carbs, entry.carbs())
+        val detail = rh.gs(InterfacesStrings.format_carbs, entry.carbs())
 
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(entry.carbs(), aapsLogger)).value()
         if (carbsAfterConstraints != entry.carbs())
-            return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, disabledReason = rh.gs(app.aaps.ui.R.string.carbs_constraint_violation))
+            return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, disabledReason = rh.gs(UiStrings.carbs_constraint_violation))
 
         return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, isEnabled = true)
     }
@@ -424,12 +427,12 @@ class MainViewModel @Inject constructor(
             // Before app init completes, activePlugin.activeAPS is still null, so the profile's `aps` is
             // null and doCalc() would hit ProfileSealed's "APS not defined" guard (early-boot crash).
             // Mirror the appInitialized gate the bolus path already has (WizardBolusExecutorImpl).
-            !config.appInitialized                   -> rh.gs(app.aaps.core.ui.R.string.initializing)
-            lastBG == null                           -> rh.gs(app.aaps.core.ui.R.string.wizard_no_actual_bg)
-            profile == null                          -> rh.gs(app.aaps.core.ui.R.string.noprofile)
-            !pump.isInitialized()                    -> rh.gs(app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set)
-            pump.isSuspended()                       -> rh.gs(app.aaps.core.interfaces.R.string.pumpsuspended)
-            runningMode == RM.Mode.DISCONNECTED_PUMP -> rh.gs(app.aaps.core.interfaces.R.string.pump_disconnected)
+            !config.appInitialized                   -> rh.gs(CoreUiStrings.initializing)
+            lastBG == null                           -> rh.gs(CoreUiStrings.wizard_no_actual_bg)
+            profile == null                          -> rh.gs(CoreUiStrings.noprofile)
+            !pump.isInitialized()                    -> rh.gs(CoreUiStrings.pump_not_initialized_profile_not_set)
+            pump.isSuspended()                       -> rh.gs(InterfacesStrings.pumpsuspended)
+            runningMode == RM.Mode.DISCONNECTED_PUMP -> rh.gs(InterfacesStrings.pump_disconnected)
             else                                     -> null
         }
         if (globalReason != null)
@@ -437,17 +440,17 @@ class MainViewModel @Inject constructor(
 
         val wizard = entry.doCalc(profile!!, profileName, lastBG!!)
         if (wizard.calculatedTotalInsulin <= 0.0)
-            return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, disabledReason = rh.gs(app.aaps.ui.R.string.wizard_no_insulin_required))
+            return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, disabledReason = rh.gs(UiStrings.wizard_no_insulin_required))
 
-        val detail = rh.gs(app.aaps.core.interfaces.R.string.format_carbs, entry.carbs()) +
-            " " + rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, wizard.calculatedTotalInsulin)
+        val detail = rh.gs(InterfacesStrings.format_carbs, entry.carbs()) +
+            " " + rh.gs(InterfacesStrings.format_insulin_units, wizard.calculatedTotalInsulin)
 
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(entry.carbs(), aapsLogger)).value()
         if (carbsAfterConstraints != entry.carbs())
-            return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, disabledReason = rh.gs(app.aaps.ui.R.string.carbs_constraint_violation))
+            return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, disabledReason = rh.gs(UiStrings.carbs_constraint_violation))
         val minStep = pump.pumpDescription.pumpType.determineCorrectBolusStepSize(wizard.insulinAfterConstraints)
         if (abs(wizard.insulinAfterConstraints - wizard.calculatedTotalInsulin) >= minStep)
-            return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, disabledReason = rh.gs(app.aaps.ui.R.string.insulin_constraint_violation))
+            return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, disabledReason = rh.gs(UiStrings.insulin_constraint_violation))
 
         return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, isEnabled = true)
     }
@@ -475,7 +478,7 @@ class MainViewModel @Inject constructor(
      * once (the advisor fork chooses correction-only). No dose is ever computed on a client.
      */
     private suspend fun executeWizardQuickWizard(entry: QuickWizardEntry, guid: String) {
-        val label = rh.gs(app.aaps.core.ui.R.string.clientcontrol_action_deliver_bolus)
+        val label = rh.gs(CoreUiStrings.clientcontrol_action_deliver_bolus)
         when (val prepared = wizardExecutor.prepare(WizardExecutor.WizardSource.QuickWizard(guid), label)) {
             is ActionProgress.Prepared ->
                 showWizardBolusConfirmation(rxBus, rh, entry.buttonText(), IcQuickwizard, prepared.advisorApplies, prepared.lines, prepared.advisorLines) { asAdvisor ->
@@ -528,7 +531,7 @@ class MainViewModel @Inject constructor(
         executeFixedBatch(
             entry,
             listOf(BatchAction.Bolus(insulin = insulin, carbs = 0, carbsTimeOffsetMinutes = 0, carbsDurationHours = 0, recordOnly = false, notes = entry.buttonText(), timestamp = 0L, iCfg = null)),
-            rh.gs(app.aaps.core.interfaces.R.string.bolus),
+            rh.gs(InterfacesStrings.bolus),
             IcBolus
         )
     }
@@ -546,7 +549,7 @@ class MainViewModel @Inject constructor(
                 eCarbsDelayMinutes = if (hasEcarbs) entry.time() else 0,
                 eCarbsDurationHours = if (hasEcarbs) entry.duration() else 0
             )),
-            rh.gs(app.aaps.core.interfaces.R.string.carbs),
+            rh.gs(InterfacesStrings.carbs),
             IcCarbs
         )
     }
@@ -555,16 +558,16 @@ class MainViewModel @Inject constructor(
      * Get localized name string for running mode
      */
     private fun getModeNameString(mode: RM.Mode): String = when (mode) {
-        RM.Mode.CLOSED_LOOP       -> rh.gs(app.aaps.core.ui.R.string.closedloop)
-        RM.Mode.CLOSED_LOOP_LGS   -> rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)
-        RM.Mode.OPEN_LOOP         -> rh.gs(app.aaps.core.ui.R.string.openloop)
-        RM.Mode.DISABLED_LOOP     -> rh.gs(app.aaps.core.ui.R.string.disabled_loop)
-        RM.Mode.SUPER_BOLUS       -> rh.gs(app.aaps.core.ui.R.string.superbolus)
-        RM.Mode.DISCONNECTED_PUMP -> rh.gs(app.aaps.core.interfaces.R.string.pump_disconnected)
-        RM.Mode.SUSPENDED_BY_PUMP -> rh.gs(app.aaps.core.ui.R.string.pump_suspended)
-        RM.Mode.SUSPENDED_BY_USER -> rh.gs(app.aaps.core.interfaces.R.string.loopsuspended)
-        RM.Mode.SUSPENDED_BY_DST  -> rh.gs(app.aaps.core.ui.R.string.loop_suspended_by_dst)
-        RM.Mode.RESUME            -> rh.gs(app.aaps.core.ui.R.string.resumeloop)
+        RM.Mode.CLOSED_LOOP       -> rh.gs(CoreUiStrings.closedloop)
+        RM.Mode.CLOSED_LOOP_LGS   -> rh.gs(CoreUiStrings.lowglucosesuspend)
+        RM.Mode.OPEN_LOOP         -> rh.gs(CoreUiStrings.openloop)
+        RM.Mode.DISABLED_LOOP     -> rh.gs(CoreUiStrings.disabled_loop)
+        RM.Mode.SUPER_BOLUS       -> rh.gs(CoreUiStrings.superbolus)
+        RM.Mode.DISCONNECTED_PUMP -> rh.gs(InterfacesStrings.pump_disconnected)
+        RM.Mode.SUSPENDED_BY_PUMP -> rh.gs(CoreUiStrings.pump_suspended)
+        RM.Mode.SUSPENDED_BY_USER -> rh.gs(InterfacesStrings.loopsuspended)
+        RM.Mode.SUSPENDED_BY_DST  -> rh.gs(CoreUiStrings.loop_suspended_by_dst)
+        RM.Mode.RESUME            -> rh.gs(CoreUiStrings.resumeloop)
     }
 
     // Map cache state to UI chip state
@@ -600,10 +603,10 @@ class MainViewModel @Inject constructor(
     fun buildAboutDialogData(appName: String): AboutDialogData {
         var message = "Build: ${config.BUILD_VERSION}\n"
         message += "Flavor: ${config.FLAVOR}${config.BUILD_TYPE}\n"
-        message += "${rh.gs(app.aaps.core.ui.R.string.configbuilder_nightscoutversion_label)} ${nsClient.detectedNsVersion() ?: rh.gs(app.aaps.core.ui.R.string.not_available_full)}"
-        if (!fabricPrivacy.fabricEnabled()) message += "\n${rh.gs(app.aaps.core.ui.R.string.fabric_upload_disabled)}"
+        message += "${rh.gs(CoreUiStrings.configbuilder_nightscoutversion_label)} ${nsClient.detectedNsVersion() ?: rh.gs(CoreUiStrings.not_available_full)}"
+        if (!fabricPrivacy.fabricEnabled()) message += "\n${rh.gs(CoreUiStrings.fabric_upload_disabled)}"
         val enabledOptions = ExternalOptions.entries.filter { config.isEnabled(it) }
-        message += rh.gs(app.aaps.core.ui.R.string.about_link_urls)
+        message += rh.gs(CoreUiStrings.about_link_urls)
 
         return AboutDialogData(
             title = "$appName ${config.VERSION}",
@@ -663,14 +666,14 @@ class MainViewModel @Inject constructor(
             TT.Reason.HYPOGLYCEMIA -> IcTtHypo
             else                   -> IcTtManual
         }
-        val label = rh.gs(app.aaps.core.ui.R.string.clientcontrol_action_set_temp_target)
+        val label = rh.gs(CoreUiStrings.clientcontrol_action_set_temp_target)
         val actions = listOf(BatchAction.TempTarget(preset.reason.text, preset.targetValue, preset.targetValue, (preset.duration / 60000L).toInt(), 0))
         viewModelScope.launch {
             when (val prepared = batchExecutor.prepare(actions, Sources.TTDialog, label)) {
                 is ActionProgress.Prepared ->
                     rxBus.send(
                         EventShowDialog.OkCancel(
-                            title = rh.gs(app.aaps.core.ui.R.string.temporary_target),
+                            title = rh.gs(CoreUiStrings.temporary_target),
                             message = "",
                             confirmationLines = prepared.lines,
                             icon = icon,
@@ -679,7 +682,7 @@ class MainViewModel @Inject constructor(
 
                 is ActionProgress.Rejected ->
                     if (!config.AAPSCLIENT || prepared.reason == FailureReason.NotReachable || prepared.reason == FailureReason.ControlDisabled)
-                        rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.ui.R.string.temporary_target), message = prepared.detail ?: rh.gs(prepared.reason.failText())))
+                        rxBus.send(EventShowDialog.Ok(title = rh.gs(CoreUiStrings.temporary_target), message = prepared.detail ?: rh.gs(prepared.reason.failText())))
 
                 else                       -> Unit
             }
@@ -688,7 +691,7 @@ class MainViewModel @Inject constructor(
 
     /** QuickLaunch profile switch → contact the master, render the master's confirmation, commit on OK (role-transparent). */
     fun requestProfileConfirmation(profileName: String, percentage: Int, durationMinutes: Int) {
-        val label = rh.gs(app.aaps.core.ui.R.string.careportal_profileswitch)
+        val label = rh.gs(CoreUiStrings.careportal_profileswitch)
         val actions = listOf(BatchAction.ProfileSwitch(percentage, 0, durationMinutes, profileName = profileName))
         viewModelScope.launch {
             when (val prepared = batchExecutor.prepare(actions, Sources.ProfileSwitchDialog, label)) {
@@ -711,14 +714,14 @@ class MainViewModel @Inject constructor(
             val title: String
             val message: String
             if (activeTb != null && profile != null) {
-                title = rh.gs(app.aaps.core.ui.R.string.temp_basal)
+                title = rh.gs(CoreUiStrings.temp_basal)
                 message = activeTb.toStringFull(profile, dateUtil, rh)
             } else {
-                title = rh.gs(app.aaps.core.ui.R.string.base_basal_rate_label)
+                title = rh.gs(CoreUiStrings.base_basal_rate_label)
                 message = if (profile != null)
-                    rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, profile.getBasal())
+                    rh.gs(CoreUiStrings.pump_base_basal_rate, profile.getBasal())
                 else
-                    rh.gs(app.aaps.ui.R.string.no_temp_basal_running)
+                    rh.gs(UiStrings.no_temp_basal_running)
             }
             rxBus.send(EventShowDialog.Ok(title = title, message = message))
         }
@@ -767,7 +770,7 @@ class MainViewModel @Inject constructor(
 
     /** QuickLaunch scene → ask the MASTER to PREPARE it, render the master's authored confirmation lines, commit on OK (role-transparent). */
     fun requestSceneConfirmation(sceneId: String) {
-        val title = rh.gs(app.aaps.core.ui.R.string.scene)
+        val title = rh.gs(CoreUiStrings.scene)
         viewModelScope.launch {
             when (val prepared = sceneActions.prepareStart(sceneId)) {
                 is ActionProgress.Prepared ->
@@ -791,7 +794,7 @@ class MainViewModel @Inject constructor(
 
     fun requestSceneDeactivation() = viewModelScope.launch {
         val activeState = activeSceneManager.getActiveState() ?: return@launch
-        val message = rh.gs(app.aaps.core.ui.R.string.scene_confirm_deactivate, activeState.scene.name)
+        val message = rh.gs(CoreUiStrings.scene_confirm_deactivate, activeState.scene.name)
         // When the scene chains to a runnable follow-up, "Skip to <Next>" becomes the primary
         // action and "End Scene" the alternative — the chain represents the user's pre-declared
         // intent for what happens next, so it's the recommended path on early end. On master,
@@ -802,16 +805,16 @@ class MainViewModel @Inject constructor(
         else sceneChainTargetResolver.resolveRunnableChainTarget(activeState.scene)
         _actionConfirmation.update {
             if (target != null) ActionConfirmation(
-                title = rh.gs(app.aaps.core.ui.R.string.scene_deactivate),
+                title = rh.gs(CoreUiStrings.scene_deactivate),
                 message = message,
                 icon = IcAction,
                 onConfirmAction = ConfirmableAction.DeactivateAndChainScene(target.id),
-                confirmLabel = rh.gs(app.aaps.core.ui.R.string.scene_skip_to_format, target.name),
+                confirmLabel = rh.gs(CoreUiStrings.scene_skip_to_format, target.name),
                 secondaryAction = ConfirmableAction.DeactivateScene,
-                secondaryLabel = rh.gs(app.aaps.core.ui.R.string.scene_deactivate)
+                secondaryLabel = rh.gs(CoreUiStrings.scene_deactivate)
             )
             else ActionConfirmation(
-                title = rh.gs(app.aaps.core.ui.R.string.scene_deactivate),
+                title = rh.gs(CoreUiStrings.scene_deactivate),
                 message = message,
                 icon = IcAction,
                 onConfirmAction = ConfirmableAction.DeactivateScene

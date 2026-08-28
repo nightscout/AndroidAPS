@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.ui.UiStrings
 import app.aaps.core.data.model.RM
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -87,7 +88,7 @@ class LoopActionViewModel @Inject constructor(
                 LoopActionUiState(
                     actionAvailable = true,
                     request = lastRun.constraintsProcessed?.resultAsString().orEmpty(),
-                    reason = rh.gs(app.aaps.ui.R.string.loop_accept_set_basal_question)
+                    reason = rh.gs(UiStrings.loop_accept_set_basal_question)
                 )
             } else {
                 LoopActionUiState(actionAvailable = false)

@@ -23,7 +23,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -38,8 +41,6 @@ import app.aaps.core.ui.compose.icons.IcCarbs
 import app.aaps.core.ui.compose.icons.IcQuickwizard
 import app.aaps.ui.R
 import app.aaps.ui.compose.quickWizard.viewmodels.TrendOption
-import app.aaps.core.interfaces.R as InterfacesR
-import app.aaps.core.ui.R as CoreR
 
 /**
  * Editor for QuickWizard entry with all configurable fields.
@@ -153,7 +154,7 @@ fun QuickWizardEditor(
         OutlinedTextField(
             value = buttonText,
             onValueChange = onButtonTextChange,
-            label = { Text(stringResource(R.string.overview_edit_quickwizard_button_text)) },
+            label = { Text(stringResource(UiStrings.overview_edit_quickwizard_button_text)) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
@@ -182,9 +183,9 @@ fun QuickWizardEditor(
                 ) {
                     Text(
                         text = when (m) {
-                            QuickWizardMode.WIZARD  -> stringResource(R.string.quick_wizard_mode_wizard)
-                            QuickWizardMode.INSULIN -> stringResource(R.string.quick_wizard_mode_insulin)
-                            QuickWizardMode.CARBS   -> stringResource(R.string.quick_wizard_mode_carbs)
+                            QuickWizardMode.WIZARD  -> stringResource(UiStrings.quick_wizard_mode_wizard)
+                            QuickWizardMode.INSULIN -> stringResource(UiStrings.quick_wizard_mode_insulin)
+                            QuickWizardMode.CARBS   -> stringResource(UiStrings.quick_wizard_mode_carbs)
                         }
                     )
                 }
@@ -194,13 +195,13 @@ fun QuickWizardEditor(
         // Insulin (INSULIN mode only)
         if (mode == QuickWizardMode.INSULIN) {
             NumberInputRow(
-                labelResId = CoreR.string.overview_insulin_label,
+                labelRef = CoreUiStrings.overview_insulin_label,
                 value = insulin,
                 onValueChange = onInsulinChange,
                 valueRange = 0.0..maxInsulin,
                 step = 0.05,
                 decimalPlaces = 2,
-                unitLabel = TextRef.AndroidRes(CoreR.string.insulin_unit_shortname),
+                unitLabel = CoreUiStrings.insulin_unit_shortname,
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -208,12 +209,12 @@ fun QuickWizardEditor(
         // Carbs (WIZARD and CARBS modes)
         if (mode != QuickWizardMode.INSULIN) {
             NumberInputRow(
-                labelResId = InterfacesR.string.carbs,
+                labelRef = InterfacesStrings.carbs,
                 value = carbs.toDouble(),
                 onValueChange = { onCarbsChange(it.toInt()) },
                 valueRange = 0.0..maxCarbs,
                 step = 1.0,
-                unitLabel = TextRef.AndroidRes(CoreR.string.units_grams),
+                unitLabel = CoreUiStrings.units_grams,
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -221,19 +222,19 @@ fun QuickWizardEditor(
         // Carb Time (WIZARD mode only)
         if (mode == QuickWizardMode.WIZARD) {
             NumberInputRow(
-                labelResId = R.string.carb_time,
+                labelRef = UiStrings.carb_time,
                 value = carbTime.toDouble(),
                 onValueChange = { onCarbTimeChange(it.toInt()) },
                 valueRange = -60.0..60.0,
                 step = 5.0,
-                unitLabel = TextRef.AndroidRes(CoreR.string.units_min),
+                unitLabel = CoreUiStrings.units_min,
                 modifier = Modifier.fillMaxWidth()
             )
         }
 
         // Valid Time Range
         TimeRangePicker(
-            label = stringResource(R.string.valid_from_to),
+            label = stringResource(UiStrings.valid_from_to),
             startSeconds = validFrom,
             endSeconds = validTo,
             onStartChange = onValidFromChange,
@@ -247,28 +248,28 @@ fun QuickWizardEditor(
 
             // Calculator Options Section
             Text(
-                text = stringResource(R.string.calculator_options),
+                text = stringResource(UiStrings.calculator_options),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.primary
             )
 
             // Use BG
             SwitchRow(
-                label = stringResource(R.string.use_bg),
+                label = stringResource(UiStrings.use_bg),
                 checked = useBG,
                 onCheckedChange = onUseBGChange
             )
 
             // Use COB
             SwitchRow(
-                label = stringResource(R.string.use_cob),
+                label = stringResource(UiStrings.use_cob),
                 checked = useCOB,
                 onCheckedChange = onUseCOBChange
             )
 
             // Use IOB
             SwitchRow(
-                label = stringResource(R.string.use_iob),
+                label = stringResource(UiStrings.use_iob),
                 checked = useIOB,
                 onCheckedChange = onUseIOBChange
             )
@@ -276,7 +277,7 @@ fun QuickWizardEditor(
             // Use Positive IOB Only (only visible when IOB enabled)
             if (useIOB) {
                 SwitchRow(
-                    label = stringResource(R.string.overview_edit_quickwizard_use_positive_iob_only),
+                    label = stringResource(UiStrings.overview_edit_quickwizard_use_positive_iob_only),
                     checked = usePositiveIOBOnly,
                     onCheckedChange = onUsePositiveIOBOnlyChange,
                     modifier = Modifier.padding(start = 16.dp)
@@ -286,7 +287,7 @@ fun QuickWizardEditor(
             // Use Trend
             Column(modifier = Modifier.fillMaxWidth()) {
                 SwitchRow(
-                    label = stringResource(R.string.use_trend),
+                    label = stringResource(UiStrings.use_trend),
                     checked = useTrend != TrendOption.NO,
                     onCheckedChange = { enabled ->
                         onUseTrendChange(if (enabled) TrendOption.YES else TrendOption.NO)
@@ -296,17 +297,17 @@ fun QuickWizardEditor(
                 if (useTrend != TrendOption.NO) {
                     Column(modifier = Modifier.padding(start = 16.dp, top = 8.dp)) {
                         TrendRadioButton(
-                            label = stringResource(R.string.trend_all),
+                            label = stringResource(UiStrings.trend_all),
                             selected = useTrend == TrendOption.YES,
                             onClick = { onUseTrendChange(TrendOption.YES) }
                         )
                         TrendRadioButton(
-                            label = stringResource(R.string.trend_positive_only),
+                            label = stringResource(UiStrings.trend_positive_only),
                             selected = useTrend == TrendOption.POSITIVE_ONLY,
                             onClick = { onUseTrendChange(TrendOption.POSITIVE_ONLY) }
                         )
                         TrendRadioButton(
-                            label = stringResource(R.string.trend_negative_only),
+                            label = stringResource(UiStrings.trend_negative_only),
                             selected = useTrend == TrendOption.NEGATIVE_ONLY,
                             onClick = { onUseTrendChange(TrendOption.NEGATIVE_ONLY) }
                         )
@@ -317,7 +318,7 @@ fun QuickWizardEditor(
             // Use Super Bolus (only if enabled in preferences)
             if (showSuperBolusOption) {
                 SwitchRow(
-                    label = stringResource(R.string.overview_edit_quickwizard_superbolus),
+                    label = stringResource(UiStrings.overview_edit_quickwizard_superbolus),
                     checked = useSuperBolus,
                     onCheckedChange = onUseSuperBolusChange
                 )
@@ -325,14 +326,14 @@ fun QuickWizardEditor(
 
             // Use Temp Target
             SwitchRow(
-                label = stringResource(R.string.use_temp_target),
+                label = stringResource(UiStrings.use_temp_target),
                 checked = useTempTarget,
                 onCheckedChange = onUseTempTargetChange
             )
 
             // Alarm
             SwitchRow(
-                label = stringResource(R.string.use_alarm),
+                label = stringResource(UiStrings.use_alarm),
                 checked = useAlarm,
                 onCheckedChange = onUseAlarmChange,
                 icon = Icons.Default.Alarm
@@ -347,7 +348,7 @@ fun QuickWizardEditor(
                 onValueChange = { onPercentageChange(it.toInt()) },
                 valueRange = Constants.WIZARD_PERCENTAGE_RANGE,
                 step = 5.0,
-                unitLabel = TextRef.AndroidRes(CoreR.string.units_percent),
+                unitLabel = CoreUiStrings.units_percent,
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -357,20 +358,20 @@ fun QuickWizardEditor(
         if (showWearOptions) {
             HorizontalDivider()
             Text(
-                text = stringResource(R.string.device_selection),
+                text = stringResource(UiStrings.device_selection),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.primary
             )
 
             SwitchRow(
-                label = stringResource(R.string.show_on_phone),
+                label = stringResource(UiStrings.show_on_phone),
                 checked = devicePhone,
                 onCheckedChange = onDevicePhoneChange,
                 icon = Icons.Default.PhoneAndroid
             )
 
             SwitchRow(
-                label = stringResource(R.string.show_on_watch),
+                label = stringResource(UiStrings.show_on_watch),
                 checked = deviceWatch,
                 onCheckedChange = onDeviceWatchChange,
                 icon = Icons.Default.Watch
@@ -381,7 +382,7 @@ fun QuickWizardEditor(
         if (mode != QuickWizardMode.INSULIN) {
             HorizontalDivider()
             SwitchRow(
-                label = stringResource(R.string.additional_ecarbs),
+                label = stringResource(UiStrings.additional_ecarbs),
                 checked = useEcarbs,
                 onCheckedChange = onUseEcarbsChange
             )
@@ -395,34 +396,34 @@ fun QuickWizardEditor(
                 ) {
                     // Time offset
                     NumberInputRow(
-                        labelResId = R.string.time_offset,
+                        labelRef = UiStrings.time_offset,
                         value = time.toDouble(),
                         onValueChange = { onTimeChange(it.toInt()) },
                         valueRange = (-7 * 24 * 60).toDouble()..(12 * 60).toDouble(),
                         step = 5.0,
-                        unitLabel = TextRef.AndroidRes(CoreR.string.units_min),
+                        unitLabel = CoreUiStrings.units_min,
                         modifier = Modifier.fillMaxWidth()
                     )
 
                     // Duration
                     NumberInputRow(
-                        labelResId = CoreR.string.duration,
+                        labelRef = CoreUiStrings.duration,
                         value = duration.toDouble(),
                         onValueChange = { onDurationChange(it.toInt()) },
                         valueRange = 0.0..10.0,
                         step = 1.0,
-                        unitLabel = TextRef.AndroidRes(CoreR.string.units_hours),
+                        unitLabel = CoreUiStrings.units_hours,
                         modifier = Modifier.fillMaxWidth()
                     )
 
                     // Additional carbs
                     NumberInputRow(
-                        labelResId = R.string.ecarbs_additional,
+                        labelRef = UiStrings.ecarbs_additional,
                         value = carbs2.toDouble(),
                         onValueChange = { onCarbs2Change(it.toInt()) },
                         valueRange = 0.0..maxCarbs,
                         step = 1.0,
-                        unitLabel = TextRef.AndroidRes(CoreR.string.units_grams),
+                        unitLabel = CoreUiStrings.units_grams,
                         modifier = Modifier.fillMaxWidth()
                     )
                 }

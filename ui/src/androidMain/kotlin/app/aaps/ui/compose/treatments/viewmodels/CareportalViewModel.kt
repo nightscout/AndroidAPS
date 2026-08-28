@@ -4,6 +4,8 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
@@ -158,11 +160,11 @@ class CareportalViewModel @Inject constructor(
 
         return if (selected.size == 1) {
             val te = selected.first()
-            "${rh.gs(R.string.event_type)}: ${translator.translate(te.type)}\n" +
-                "${rh.gs(R.string.notes_label)}: ${te.note ?: ""}\n" +
-                "${rh.gs(R.string.date)}: ${dateUtil.dateAndTimeString(te.timestamp)}"
+            "${rh.gs(CoreUiStrings.event_type)}: ${translator.translate(te.type)}\n" +
+                "${rh.gs(CoreUiStrings.notes_label)}: ${te.note ?: ""}\n" +
+                "${rh.gs(CoreUiStrings.date)}: ${dateUtil.dateAndTimeString(te.timestamp)}"
         } else {
-            rh.gs(R.string.confirm_remove_multiple_items, selected.size)
+            rh.gs(CoreUiStrings.confirm_remove_multiple_items, selected.size)
         }
     }
 

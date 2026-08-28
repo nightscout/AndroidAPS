@@ -17,11 +17,14 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.ui.UiStrings
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.RM
 import app.aaps.core.interfaces.overview.graph.TherapyEventGraphPoint
@@ -528,15 +531,15 @@ private fun createModeSegmentLine(color: Color): LineCartesianLayer.Line =
  */
 @Composable
 private fun rememberModeNameMap(): Map<RM.Mode, String> {
-    val closedLoop = stringResource(app.aaps.core.ui.R.string.closedloop)
-    val openLoop = stringResource(app.aaps.core.ui.R.string.openloop)
-    val lgs = stringResource(app.aaps.core.ui.R.string.lowglucosesuspend)
-    val disabledLoop = stringResource(app.aaps.core.ui.R.string.disabled_loop)
-    val superbolus = stringResource(app.aaps.core.ui.R.string.superbolus)
-    val disconnected = stringResource(app.aaps.core.ui.R.string.disconnected)
-    val pumpSuspended = stringResource(app.aaps.core.interfaces.R.string.pumpsuspended)
-    val loopSuspended = stringResource(app.aaps.core.interfaces.R.string.loopsuspended)
-    val dstSuspended = stringResource(app.aaps.core.ui.R.string.loop_suspended_by_dst)
+    val closedLoop = stringResource(CoreUiStrings.closedloop)
+    val openLoop = stringResource(CoreUiStrings.openloop)
+    val lgs = stringResource(CoreUiStrings.lowglucosesuspend)
+    val disabledLoop = stringResource(CoreUiStrings.disabled_loop)
+    val superbolus = stringResource(CoreUiStrings.superbolus)
+    val disconnected = stringResource(CoreUiStrings.disconnected)
+    val pumpSuspended = stringResource(InterfacesStrings.pumpsuspended)
+    val loopSuspended = stringResource(InterfacesStrings.loopsuspended)
+    val dstSuspended = stringResource(CoreUiStrings.loop_suspended_by_dst)
     return mapOf(
         RM.Mode.CLOSED_LOOP to closedLoop,
         RM.Mode.RESUME to closedLoop,

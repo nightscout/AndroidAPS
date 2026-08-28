@@ -1,5 +1,7 @@
 package app.aaps.ui.compose.tempTarget
 
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TTPreset
 import app.aaps.core.interfaces.tempTargets.toTTPresets as coreTTPresets
@@ -11,9 +13,9 @@ import app.aaps.core.interfaces.tempTargets.toTTPresets as coreTTPresets
 private fun nameResFromReason(reason: TT.Reason, isDeletable: Boolean): Int? {
     if (isDeletable) return null
     return when (reason) {
-        TT.Reason.EATING_SOON  -> app.aaps.core.ui.R.string.eatingsoon
-        TT.Reason.ACTIVITY     -> app.aaps.core.ui.R.string.activity
-        TT.Reason.HYPOGLYCEMIA -> app.aaps.core.ui.R.string.hypo
+        TT.Reason.EATING_SOON  -> CoreUiR.string.eatingsoon
+        TT.Reason.ACTIVITY     -> CoreUiR.string.activity
+        TT.Reason.HYPOGLYCEMIA -> CoreUiR.string.hypo
         else                   -> null
     }
 }

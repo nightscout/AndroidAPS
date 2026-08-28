@@ -27,11 +27,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import app.aaps.core.keys.interfaces.TextRef
 import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TTPreset
@@ -203,7 +207,7 @@ fun TempTargetCarouselCard(
                 if (isActiveCard) {
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = stringResource(app.aaps.core.ui.R.string.active).uppercase(),
+                        text = stringResource(CoreUiStrings.active).uppercase(),
                         style = MaterialTheme.typography.labelMedium,
                         color = AapsTheme.generalColors.activeInsulinText,
                         fontWeight = FontWeight.Bold
@@ -246,14 +250,14 @@ private fun getTTReasonColor(reason: TT.Reason): Color {
 /**
  * Get string resource ID for TT reason
  */
-private fun getTTReasonStringRes(reason: TT.Reason): Int {
+private fun getTTReasonStringRes(reason: TT.Reason): TextRef {
     return when (reason) {
-        TT.Reason.EATING_SOON  -> app.aaps.core.ui.R.string.eatingsoon
-        TT.Reason.ACTIVITY     -> app.aaps.core.ui.R.string.activity
-        TT.Reason.HYPOGLYCEMIA -> app.aaps.core.ui.R.string.hypo
-        TT.Reason.CUSTOM       -> app.aaps.core.ui.R.string.custom
-        TT.Reason.AUTOMATION   -> app.aaps.core.ui.R.string.automation
-        TT.Reason.WEAR         -> app.aaps.core.ui.R.string.wear
+        TT.Reason.EATING_SOON  -> CoreUiStrings.eatingsoon
+        TT.Reason.ACTIVITY     -> CoreUiStrings.activity
+        TT.Reason.HYPOGLYCEMIA -> CoreUiStrings.hypo
+        TT.Reason.CUSTOM       -> CoreUiStrings.custom
+        TT.Reason.AUTOMATION   -> CoreUiStrings.automation
+        TT.Reason.WEAR         -> CoreUiStrings.wear
     }
 }
 

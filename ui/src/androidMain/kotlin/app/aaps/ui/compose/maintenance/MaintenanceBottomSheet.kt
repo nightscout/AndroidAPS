@@ -37,12 +37,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.maintenance.ExportConfig
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.TonalIcon
 import app.aaps.core.ui.compose.consumeOverscroll
-import app.aaps.core.ui.R as CoreUiR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -142,19 +142,19 @@ internal fun MaintenanceBottomSheetContent(
             .padding(bottom = 24.dp)
     ) {
         // Section: Log Files
-        SectionHeader(stringResource(CoreUiR.string.log_files))
+        SectionHeader(stringResource(CoreUiStrings.log_files))
 
         MaintenanceItem(
-            text = stringResource(CoreUiR.string.nav_logsettings),
-            description = stringResource(CoreUiR.string.maintenance_log_settings_desc),
+            text = stringResource(CoreUiStrings.nav_logsettings),
+            description = stringResource(CoreUiStrings.maintenance_log_settings_desc),
             icon = Icons.Default.Settings,
             color = primaryColor,
             onDismiss = onDismiss,
             onClick = onLogSettingsClick
         )
         MaintenanceItem(
-            text = stringResource(CoreUiR.string.send_logs),
-            description = stringResource(CoreUiR.string.maintenance_send_logs_desc),
+            text = stringResource(CoreUiStrings.send_logs),
+            description = stringResource(CoreUiStrings.maintenance_send_logs_desc),
             icon = Icons.AutoMirrored.Filled.Send,
             color = primaryColor,
             onDismiss = onDismiss,
@@ -165,9 +165,9 @@ internal fun MaintenanceBottomSheetContent(
                         localSelected = it.logEmail,
                         cloudSelected = it.logCloud,
                         cloudEnabled = isCloudActive,
-                        cloudLabel = stringResource(CoreUiR.string.chip_cloud),
+                        cloudLabel = stringResource(CoreUiStrings.chip_cloud),
                         useEmailLabel = true,
-                        emailLabel = stringResource(CoreUiR.string.chip_email),
+                        emailLabel = stringResource(CoreUiStrings.chip_email),
                         onLocalToggle = onToggleLogEmail,
                         onCloudToggle = onToggleLogCloud
                     )
@@ -175,8 +175,8 @@ internal fun MaintenanceBottomSheetContent(
             }
         )
         MaintenanceItem(
-            text = stringResource(CoreUiR.string.delete_logs),
-            description = stringResource(CoreUiR.string.maintenance_delete_logs_desc),
+            text = stringResource(CoreUiStrings.delete_logs),
+            description = stringResource(CoreUiStrings.maintenance_delete_logs_desc),
             icon = Icons.Default.Delete,
             color = primaryColor,
             onDismiss = onDismiss,
@@ -185,11 +185,11 @@ internal fun MaintenanceBottomSheetContent(
 
         // Section: File management
         HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
-        SectionHeader(stringResource(CoreUiR.string.file_management))
+        SectionHeader(stringResource(CoreUiStrings.file_management))
 
         MaintenanceItem(
-            text = stringResource(CoreUiR.string.aaps_directory),
-            description = stringResource(CoreUiR.string.maintenance_aaps_directory_desc),
+            text = stringResource(CoreUiStrings.aaps_directory),
+            description = stringResource(CoreUiStrings.maintenance_aaps_directory_desc),
             icon = Icons.Default.Folder,
             color = primaryColor,
             onDismiss = onDismiss,
@@ -202,8 +202,8 @@ internal fun MaintenanceBottomSheetContent(
             }
         )
         MaintenanceItem(
-            text = stringResource(CoreUiR.string.cloud_directory),
-            description = stringResource(CoreUiR.string.maintenance_cloud_directory_desc),
+            text = stringResource(CoreUiStrings.cloud_directory),
+            description = stringResource(CoreUiStrings.maintenance_cloud_directory_desc),
             icon = Icons.Default.Cloud,
             color = primaryColor,
             onDismiss = onDismiss,
@@ -221,7 +221,7 @@ internal fun MaintenanceBottomSheetContent(
                     IconButton(onClick = onClearCloudClick) {
                         Icon(
                             imageVector = Icons.Default.Clear,
-                            contentDescription = stringResource(CoreUiR.string.clear_cloud_action),
+                            contentDescription = stringResource(CoreUiStrings.clear_cloud_action),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
@@ -229,8 +229,8 @@ internal fun MaintenanceBottomSheetContent(
             } else null
         )
         MaintenanceItem(
-            text = stringResource(CoreUiR.string.nav_export),
-            description = stringResource(CoreUiR.string.maintenance_export_desc),
+            text = stringResource(CoreUiStrings.nav_export),
+            description = stringResource(CoreUiStrings.maintenance_export_desc),
             icon = Icons.Default.FileUpload,
             color = primaryColor,
             onDismiss = onDismiss,
@@ -241,7 +241,7 @@ internal fun MaintenanceBottomSheetContent(
                         localSelected = it.settingsLocal,
                         cloudSelected = it.settingsCloud,
                         cloudEnabled = isCloudActive,
-                        cloudLabel = stringResource(CoreUiR.string.chip_cloud),
+                        cloudLabel = stringResource(CoreUiStrings.chip_cloud),
                         onLocalToggle = onToggleSettingsLocal,
                         onCloudToggle = onToggleSettingsCloud
                     )
@@ -249,8 +249,8 @@ internal fun MaintenanceBottomSheetContent(
             }
         )
         MaintenanceItem(
-            text = stringResource(CoreUiR.string.import_setting),
-            description = stringResource(CoreUiR.string.maintenance_import_desc),
+            text = stringResource(CoreUiStrings.import_setting),
+            description = stringResource(CoreUiStrings.maintenance_import_desc),
             icon = Icons.Default.FileDownload,
             color = primaryColor,
             onDismiss = onDismiss,
@@ -268,7 +268,7 @@ internal fun MaintenanceBottomSheetContent(
                         localSelected = it.settingsLocal,
                         cloudSelected = it.settingsCloud,
                         cloudEnabled = isCloudActive,
-                        cloudLabel = stringResource(CoreUiR.string.chip_cloud),
+                        cloudLabel = stringResource(CoreUiStrings.chip_cloud),
                         onLocalToggle = onToggleSettingsLocal,
                         onCloudToggle = onToggleSettingsCloud
                     )
@@ -276,8 +276,8 @@ internal fun MaintenanceBottomSheetContent(
             }
         )
         MaintenanceItem(
-            text = stringResource(CoreUiR.string.ue_export_to_csv),
-            description = stringResource(CoreUiR.string.maintenance_export_csv_desc),
+            text = stringResource(CoreUiStrings.ue_export_to_csv),
+            description = stringResource(CoreUiStrings.maintenance_export_csv_desc),
             icon = Icons.Default.TableChart,
             color = primaryColor,
             onDismiss = onDismiss,
@@ -288,7 +288,7 @@ internal fun MaintenanceBottomSheetContent(
                         localSelected = it.csvLocal,
                         cloudSelected = it.csvCloud,
                         cloudEnabled = isCloudActive,
-                        cloudLabel = stringResource(CoreUiR.string.chip_cloud),
+                        cloudLabel = stringResource(CoreUiStrings.chip_cloud),
                         onLocalToggle = onToggleCsvLocal,
                         onCloudToggle = onToggleCsvCloud
                     )
@@ -298,19 +298,19 @@ internal fun MaintenanceBottomSheetContent(
 
         // Section: Database management
         HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
-        SectionHeader(stringResource(CoreUiR.string.database_management))
+        SectionHeader(stringResource(CoreUiStrings.database_management))
 
         MaintenanceItem(
-            text = stringResource(CoreUiR.string.database_cleanup),
-            description = stringResource(CoreUiR.string.maintenance_cleanup_db_desc),
+            text = stringResource(CoreUiStrings.database_cleanup),
+            description = stringResource(CoreUiStrings.maintenance_cleanup_db_desc),
             icon = Icons.Default.Delete,
             color = primaryColor,
             onDismiss = onDismiss,
             onClick = onCleanupDbClick
         )
         MaintenanceItem(
-            text = stringResource(CoreUiR.string.reset_aps_results),
-            description = stringResource(CoreUiR.string.maintenance_reset_aps_results_desc),
+            text = stringResource(CoreUiStrings.reset_aps_results),
+            description = stringResource(CoreUiStrings.maintenance_reset_aps_results_desc),
             icon = Icons.Default.DeleteForever,
             color = primaryColor,
             onDismiss = onDismiss,
@@ -318,8 +318,8 @@ internal fun MaintenanceBottomSheetContent(
             danger = true
         )
         MaintenanceItem(
-            text = stringResource(CoreUiR.string.nav_resetdb),
-            description = stringResource(CoreUiR.string.maintenance_reset_db_desc),
+            text = stringResource(CoreUiStrings.nav_resetdb),
+            description = stringResource(CoreUiStrings.maintenance_reset_db_desc),
             icon = Icons.Default.DeleteForever,
             color = primaryColor,
             onDismiss = onDismiss,
@@ -451,7 +451,7 @@ private fun DestinationChips(
             onClick = { onLocalToggle(!localSelected) },
             label = {
                 Text(
-                    text = if (useEmailLabel) emailLabel else stringResource(CoreUiR.string.chip_local),
+                    text = if (useEmailLabel) emailLabel else stringResource(CoreUiStrings.chip_local),
                     style = MaterialTheme.typography.labelSmall
                 )
             },

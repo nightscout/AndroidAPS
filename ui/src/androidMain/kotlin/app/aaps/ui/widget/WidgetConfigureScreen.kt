@@ -28,7 +28,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -65,7 +67,7 @@ fun WidgetConfigureScreen(
                 modifier = Modifier.padding(horizontal = 24.dp, vertical = 20.dp)
             ) {
                 Text(
-                    text = stringResource(R.string.widget_configuration),
+                    text = stringResource(UiStrings.widget_configuration),
                     style = MaterialTheme.typography.headlineSmall,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
@@ -78,7 +80,7 @@ fun WidgetConfigureScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = stringResource(R.string.configure),
+                        text = stringResource(UiStrings.configure),
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.weight(1f)
                     )
@@ -115,7 +117,7 @@ fun WidgetConfigureScreen(
                     Checkbox(checked = useBlack, onCheckedChange = null)
                     Spacer(Modifier.width(12.dp))
                     Text(
-                        text = stringResource(R.string.use_black_color),
+                        text = stringResource(UiStrings.use_black_color),
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
@@ -127,7 +129,7 @@ fun WidgetConfigureScreen(
                     horizontalArrangement = Arrangement.End
                 ) {
                     TextButton(onClick = onClose) {
-                        Text(stringResource(app.aaps.core.ui.R.string.close))
+                        Text(stringResource(CoreUiStrings.close))
                     }
                 }
             }

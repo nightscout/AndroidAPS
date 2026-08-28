@@ -26,15 +26,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.ui.UiStrings
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Translator
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDateUtil
@@ -46,7 +48,6 @@ import app.aaps.core.ui.extensions.highValueToUnitsToString
 import app.aaps.core.ui.extensions.lowValueToUnitsToString
 import app.aaps.ui.compose.components.ContentContainer
 import app.aaps.ui.compose.treatments.viewmodels.TempTargetViewModel
-import app.aaps.core.ui.R as CoreUiR
 
 /**
  * Composable screen displaying temporary targets with delete and show hidden functionality.
@@ -94,7 +95,7 @@ fun TempTargetScreen(
     // Delete confirmation dialog
     if (showDeleteDialog) {
         OkCancelDialog(
-            title = viewModel.rh.gs(app.aaps.core.ui.R.string.removerecord),
+            title = viewModel.rh.gs(CoreUiStrings.removerecord),
             message = deleteDialogMessage,
             onConfirm = {
                 viewModel.deleteSelected()
@@ -203,7 +204,7 @@ private fun TempTargetItem(
                     append(" ")
                     // Duration
                     append(T.msecs(tempTarget.duration).mins().toInt())
-                    append(rh.gs(CoreUiR.string.units_min))
+                    append(rh.gs(CoreUiStrings.units_min))
                     append(" ")
                     // Reason (without "Reason:" label)
                     append(translator.translate(tempTarget.reason))
@@ -224,7 +225,7 @@ private fun TempTargetItem(
             if (!tempTarget.isValid) {
                 Icon(
                     imageVector = Icons.Filled.Delete,
-                    contentDescription = stringResource(app.aaps.core.ui.R.string.invalid),
+                    contentDescription = stringResource(CoreUiStrings.invalid),
                     modifier = Modifier
                         .size(21.dp)
                         .padding(start = 5.dp),
@@ -236,7 +237,7 @@ private fun TempTargetItem(
             if (tempTarget.ids.nightscoutId != null) {
                 Icon(
                     imageVector = Ns,
-                    contentDescription = stringResource(app.aaps.core.ui.R.string.ns),
+                    contentDescription = stringResource(CoreUiStrings.ns),
                     modifier = Modifier
                         .size(21.dp)
                         .padding(start = 5.dp)

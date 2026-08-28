@@ -25,7 +25,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.objects.extensions.tickerFlow
 import app.aaps.core.ui.R
@@ -115,7 +117,7 @@ internal fun ActiveSceneBannerContent(
                     )
                     if (expired) {
                         Text(
-                            text = stringResource(R.string.scene_ended),
+                            text = stringResource(CoreUiStrings.scene_ended),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -127,7 +129,7 @@ internal fun ActiveSceneBannerContent(
                         )
                     } else {
                         Text(
-                            text = stringResource(R.string.scene_active),
+                            text = stringResource(CoreUiStrings.scene_active),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -135,14 +137,14 @@ internal fun ActiveSceneBannerContent(
                 }
                 if (expired) {
                     FilledTonalButton(onClick = onDismiss) {
-                        Text(stringResource(R.string.close))
+                        Text(stringResource(CoreUiStrings.close))
                     }
                 } else {
                     // Active scene's End button — disabled on AAPSCLIENT while WS is down,
                     // since the scene_stop envelope can't reach the master. Master is the
                     // authoritative actor; locally faking "ended" would desync the chip.
                     FilledTonalButton(onClick = onEndClick, enabled = endEnabled) {
-                        Text(stringResource(R.string.scene_deactivate))
+                        Text(stringResource(CoreUiStrings.scene_deactivate))
                     }
                 }
             }

@@ -34,13 +34,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.banner.WarningBanner
@@ -54,8 +56,6 @@ import app.aaps.ui.compose.overview.chips.CobUiState
 import app.aaps.ui.compose.overview.chips.IobUiState
 import app.aaps.ui.compose.overview.graphs.BgInfoUiState
 import kotlinx.coroutines.flow.StateFlow
-import app.aaps.core.interfaces.R as InterfacesR
-import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 fun TreatmentDialogScreen(
@@ -113,7 +113,7 @@ fun TreatmentDialogScreen(
     if (showNoAction) {
         ElementConfirmationDialog(
             elementType = ElementType.TREATMENT,
-            message = stringResource(CoreUiR.string.no_action_selected),
+            message = stringResource(CoreUiStrings.no_action_selected),
             onConfirm = { showNoAction = false },
             onDismiss = { showNoAction = false }
         )
@@ -156,7 +156,7 @@ internal fun TreatmentDialogContent(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.Filled.Close,
-                            contentDescription = stringResource(CoreUiR.string.close)
+                            contentDescription = stringResource(CoreUiStrings.close)
                         )
                     }
                 },
@@ -183,16 +183,16 @@ internal fun TreatmentDialogContent(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 if (uiState.insulin > 0.0) {
-                    Text(stringResource(InterfacesR.string.format_insulin_units, uiState.insulin))
+                    Text(stringResource(InterfacesStrings.format_insulin_units, uiState.insulin))
                 }
                 if (uiState.insulin > 0.0 && uiState.carbs > 0) {
                     Spacer(modifier = Modifier.width(4.dp))
                 }
                 if (uiState.carbs > 0) {
-                    Text(stringResource(InterfacesR.string.format_carbs, uiState.carbs))
+                    Text(stringResource(InterfacesStrings.format_carbs, uiState.carbs))
                 }
                 if (!hasAction) {
-                    Text(stringResource(CoreUiR.string.ok))
+                    Text(stringResource(CoreUiStrings.ok))
                 }
             }
         }
@@ -216,7 +216,7 @@ internal fun TreatmentDialogContent(
 
             // --- Forced-record-only warning ---
             if (uiState.forcedRecordOnly) {
-                WarningBanner(message = stringResource(InterfacesR.string.bolus_recorded_only))
+                WarningBanner(message = stringResource(InterfacesStrings.bolus_recorded_only))
             }
 
             // --- Single Card: Insulin + Carbs ---
@@ -226,24 +226,24 @@ internal fun TreatmentDialogContent(
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     NumberInputRow(
-                        labelResId = CoreUiR.string.overview_insulin_label,
+                        labelRef = CoreUiStrings.overview_insulin_label,
                         value = uiState.insulin,
                         onValueChange = onInsulinChange,
                         valueRange = 0.0..uiState.maxInsulin,
                         step = uiState.bolusStep,
                         valueFormat = bolusFormat,
-                        unitLabel = TextRef.AndroidRes(CoreUiR.string.insulin_unit_shortname),
+                        unitLabel = CoreUiStrings.insulin_unit_shortname,
                         modifier = itemModifier
                     )
 
                     NumberInputRow(
-                        labelResId = InterfacesR.string.carbs,
+                        labelRef = InterfacesStrings.carbs,
                         value = uiState.carbs.toDouble(),
                         onValueChange = onCarbsChange,
                         valueRange = 0.0..uiState.maxCarbs.toDouble(),
                         step = 1.0,
                         valueFormat = NumberFormat.INTEGER,
-                        unitLabel = TextRef.AndroidRes(CoreUiR.string.shortgramm),
+                        unitLabel = CoreUiStrings.shortgramm,
                         modifier = itemModifier
                     )
                 }

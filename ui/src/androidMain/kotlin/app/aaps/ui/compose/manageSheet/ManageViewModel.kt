@@ -3,6 +3,8 @@ package app.aaps.ui.compose.manageSheet
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
 import app.aaps.core.data.model.EB
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TB
@@ -55,7 +57,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import app.aaps.ui.R as UiR
 
 // Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
 // unscoped so each screen gets its own.
@@ -142,7 +143,7 @@ class ManageViewModel @Inject constructor(
                 if (activeExtendedBolus != null) {
                     showExtendedBolus = false
                     showCancelExtendedBolus = true // cancel relays to the master via batchExecutor → shown on a client too
-                    cancelExtendedBolusText = rh.gs(UiR.string.cancel_action_with_details, rh.gs(R.string.cancel), activeExtendedBolus.toStringMedium(dateUtil, rh))
+                    cancelExtendedBolusText = rh.gs(UiStrings.cancel_action_with_details, rh.gs(CoreUiStrings.cancel), activeExtendedBolus.toStringMedium(dateUtil, rh))
                 } else {
                     showExtendedBolus = true
                     showCancelExtendedBolus = false
@@ -168,7 +169,7 @@ class ManageViewModel @Inject constructor(
                 if (activeTemp != null) {
                     showTempBasal = false
                     showCancelTempBasal = true // cancel relays to the master via batchExecutor → shown on a client too
-                    cancelTempBasalText = rh.gs(UiR.string.cancel_action_with_details, rh.gs(R.string.cancel), activeTemp.toStringShort(rh))
+                    cancelTempBasalText = rh.gs(UiStrings.cancel_action_with_details, rh.gs(CoreUiStrings.cancel), activeTemp.toStringShort(rh))
                 } else {
                     showTempBasal = true
                     showCancelTempBasal = false
@@ -207,9 +208,9 @@ class ManageViewModel @Inject constructor(
     // Action handlers — cancel goes through the MASTER (batchExecutor): the master validates its pump, authors the
     // confirmation, and applies the cancel on its own pump. On a client this is the signed round-trip; on a master it's
     // local. The uel log + commandQueue.cancel now live in the executor (the single master-side apply point).
-    fun cancelTempBasal() = prepareCancel(BatchAction.CancelTempBasal, ElementType.TEMP_BASAL, rh.gs(R.string.tempbasal_label))
+    fun cancelTempBasal() = prepareCancel(BatchAction.CancelTempBasal, ElementType.TEMP_BASAL, rh.gs(CoreUiStrings.tempbasal_label))
 
-    fun cancelExtendedBolus() = prepareCancel(BatchAction.CancelExtendedBolus, ElementType.EXTENDED_BOLUS, rh.gs(R.string.extended_bolus))
+    fun cancelExtendedBolus() = prepareCancel(BatchAction.CancelExtendedBolus, ElementType.EXTENDED_BOLUS, rh.gs(CoreUiStrings.extended_bolus))
 
     /**
      * Ask the MASTER to PREPARE the cancel and return its confirmation [lines]; the user then confirms and [commitCancel]

@@ -39,7 +39,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.format.NumberFormat
@@ -56,7 +58,6 @@ import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.navigation.label
 import app.aaps.core.ui.compose.stringResourceOrNull
 import app.aaps.ui.R
-import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 fun CalibrationDialogScreen(
@@ -98,7 +99,7 @@ fun CalibrationDialogScreen(
     if (showNoAction) {
         ElementConfirmationDialog(
             elementType = ElementType.CALIBRATION,
-            message = stringResource(CoreUiR.string.no_action_selected),
+            message = stringResource(CoreUiStrings.no_action_selected),
             onConfirm = { showNoAction = false },
             onDismiss = { showNoAction = false }
         )
@@ -141,7 +142,7 @@ internal fun CalibrationDialogContent(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.Filled.Close,
-                            contentDescription = stringResource(CoreUiR.string.close)
+                            contentDescription = stringResource(CoreUiStrings.close)
                         )
                     }
                 },
@@ -171,7 +172,7 @@ internal fun CalibrationDialogContent(
                     val bgFormat = remember(uiState.isMgdl) { if (uiState.isMgdl) NumberFormat.INTEGER else NumberFormat.DECIMAL_1 }
                     Text("${bgFormat.format(uiState.bg)} ${uiState.unitLabel}")
                 } else {
-                    Text(stringResource(CoreUiR.string.ok))
+                    Text(stringResource(CoreUiStrings.ok))
                 }
             }
         }
@@ -200,7 +201,7 @@ internal fun CalibrationDialogContent(
             ) {
                 Column(modifier = Modifier.padding(horizontal = AapsSpacing.extraLarge, vertical = AapsSpacing.medium)) {
                     NumberInputRow(
-                        labelResId = CoreUiR.string.bg_label,
+                        labelRef = CoreUiStrings.bg_label,
                         value = uiState.bg,
                         onValueChange = onBgChange,
                         valueRange = uiState.bgRange,
@@ -251,7 +252,7 @@ private fun PreflightWarningCard(
                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.onErrorContainer),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(stringResource(R.string.cal_precheck_mark_sensor_change))
+                    Text(stringResource(UiStrings.cal_precheck_mark_sensor_change))
                 }
             }
         }

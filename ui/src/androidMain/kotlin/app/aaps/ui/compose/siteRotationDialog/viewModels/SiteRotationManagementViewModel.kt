@@ -3,6 +3,7 @@ package app.aaps.ui.compose.siteRotationDialog.viewModels
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.ui.UiStrings
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Sources
@@ -21,6 +22,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.siteRotation.BodyType
 import app.aaps.core.ui.compose.siteRotation.SiteEntryDisplayData
 import app.aaps.core.ui.compose.siteRotation.toDisplayData
@@ -38,7 +40,6 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import app.aaps.core.ui.R as CoreUiR
 
 // Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
 // unscoped so each screen gets its own.
@@ -210,14 +211,14 @@ class SiteRotationManagementViewModel @Inject constructor(
         return confirmationLines {
             te?.let {
                 if (it.location != loadedLocation)
-                    line(ConfirmationRole.NORMAL, rh.gs(R.string.record_site_location, translator.translate(it.location)))
+                    line(ConfirmationRole.NORMAL, rh.gs(UiStrings.record_site_location, translator.translate(it.location)))
                 if (it.arrow != loadedArrow)
-                    line(ConfirmationRole.NORMAL, rh.gs(R.string.record_site_arrow, translator.translate(it.arrow)))
+                    line(ConfirmationRole.NORMAL, rh.gs(UiStrings.record_site_arrow, translator.translate(it.arrow)))
                 if (it.note != loadedNote) {
                     if (!it.note.isNullOrEmpty())
-                        line(ConfirmationRole.NORMAL, rh.gs(R.string.record_site_note, it.note))
+                        line(ConfirmationRole.NORMAL, rh.gs(UiStrings.record_site_note, it.note))
                     else
-                        line(ConfirmationRole.NORMAL, rh.gs(R.string.delete_site_note))
+                        line(ConfirmationRole.NORMAL, rh.gs(UiStrings.delete_site_note))
                 }
             }
         }
@@ -237,7 +238,7 @@ class SiteRotationManagementViewModel @Inject constructor(
                 note = te.note,
                 source = Sources.SiteRotationDialog
             )
-            val label = rh.gs(CoreUiR.string.site_rotation)
+            val label = rh.gs(CoreUiStrings.site_rotation)
             // appScope, not viewModelScope: the commit round-trip may outlive this edit's UI state (cleared below).
             appScope.launch {
                 when (val prepared = batchExecutor.prepare(listOf(action), action.source, label)) {

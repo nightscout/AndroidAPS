@@ -28,10 +28,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.keys.interfaces.ElementVisibility
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.MasterOfflineBanner
 import app.aaps.core.ui.compose.TonalIcon
 import app.aaps.core.ui.compose.consumeOverscroll
@@ -48,7 +49,6 @@ import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.compose.stringResourceOrNull
 import app.aaps.ui.compose.main.QuickWizardItem
-import app.aaps.core.ui.R as CoreUiR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -133,7 +133,7 @@ internal fun TreatmentSelectionContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = stringResource(CoreUiR.string.treatments),
+                text = stringResource(CoreUiStrings.treatments),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.weight(1f)
@@ -145,7 +145,7 @@ internal fun TreatmentSelectionContent(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Settings,
-                        contentDescription = stringResource(CoreUiR.string.settings),
+                        contentDescription = stringResource(CoreUiStrings.settings),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(20.dp)
                     )
@@ -306,7 +306,7 @@ internal fun TreatmentSettingsContent(
             IconButton(onClick = onBack) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = stringResource(CoreUiR.string.back)
+                    contentDescription = stringResource(CoreUiStrings.back)
                 )
             }
         }

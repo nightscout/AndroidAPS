@@ -27,7 +27,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.res.stringResource
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -52,7 +54,6 @@ import app.aaps.core.ui.compose.icons.Pump
 import app.aaps.ui.R
 import app.aaps.ui.compose.components.ContentContainer
 import app.aaps.ui.compose.treatments.viewmodels.ProfileSwitchViewModel
-import app.aaps.core.ui.R as CoreUiR
 
 /**
  * Composable screen displaying profile switches with delete and show hidden functionality.
@@ -103,7 +104,7 @@ fun ProfileSwitchScreen(
     // Delete confirmation dialog
     if (showDeleteDialog) {
         OkCancelDialog(
-            title = viewModel.rh.gs(app.aaps.core.ui.R.string.removerecord),
+            title = viewModel.rh.gs(CoreUiStrings.removerecord),
             message = deleteDialogMessage,
             onConfirm = {
                 viewModel.deleteSelected()
@@ -116,7 +117,7 @@ fun ProfileSwitchScreen(
     // Clone confirmation dialog
     if (showCloneDialog) {
         OkCancelDialog(
-            title = viewModel.rh.gs(app.aaps.core.ui.R.string.careportal_profileswitch),
+            title = viewModel.rh.gs(CoreUiStrings.careportal_profileswitch),
             message = cloneDialogMessage,
             onConfirm = {
                 pendingCloneAction?.invoke()
@@ -171,7 +172,7 @@ fun ProfileSwitchScreen(
                                 val timestamp = ps.value.timestamp
                                 val timestampStr = viewModel.dateUtil.dateAndTimeString(timestamp)
 
-                                cloneDialogMessage = "${viewModel.rh.gs(app.aaps.core.ui.R.string.copytolocalprofile)}\n$profileName\n$timestampStr"
+                                cloneDialogMessage = "${viewModel.rh.gs(CoreUiStrings.copytolocalprofile)}\n$profileName\n$timestampStr"
                                 pendingCloneAction = {
                                     uel.log(
                                         action = Action.PROFILE_SWITCH_CLONED,
@@ -250,7 +251,7 @@ private fun ProfileSwitchItem(
                     if (profileSwitch.duration != null && profileSwitch.duration != 0L) {
                         append(" ")
                         append(T.msecs(profileSwitch.duration ?: 0L).mins().toInt())
-                        append(rh.gs(CoreUiR.string.units_min))
+                        append(rh.gs(CoreUiStrings.units_min))
                     }
                 },
                 modifier = Modifier.padding(start = 4.dp),
@@ -269,7 +270,7 @@ private fun ProfileSwitchItem(
             if (!profileSwitch.isValid) {
                 Icon(
                     imageVector = Icons.Filled.Delete,
-                    contentDescription = stringResource(app.aaps.core.ui.R.string.invalid),
+                    contentDescription = stringResource(CoreUiStrings.invalid),
                     modifier = Modifier
                         .size(21.dp)
                         .padding(start = 5.dp),
@@ -280,7 +281,7 @@ private fun ProfileSwitchItem(
             // Clone button - only for PS
             if (!isRemovingMode && profileSwitch is ProfileSealed.PS && profileSwitch.isValid) {
                 Text(
-                    text = stringResource(R.string.clone_label),
+                    text = stringResource(UiStrings.clone_label),
                     modifier = Modifier
                         .clickable {
                             onClone(profileSwitch)
@@ -297,7 +298,7 @@ private fun ProfileSwitchItem(
             if (profileSwitch is ProfileSealed.EPS) {
                 Icon(
                     imageVector = Pump,
-                    contentDescription = stringResource(app.aaps.core.ui.R.string.pump_history),
+                    contentDescription = stringResource(CoreUiStrings.pump_history),
                     modifier = Modifier
                         .size(21.dp)
                         .padding(start = 5.dp)
@@ -308,7 +309,7 @@ private fun ProfileSwitchItem(
             if (profileSwitch.ids?.nightscoutId != null) {
                 Icon(
                     imageVector = Ns,
-                    contentDescription = stringResource(app.aaps.core.ui.R.string.ns),
+                    contentDescription = stringResource(CoreUiStrings.ns),
                     modifier = Modifier
                         .size(21.dp)
                         .padding(start = 5.dp)

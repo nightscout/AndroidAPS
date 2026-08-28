@@ -3,6 +3,8 @@ package app.aaps.ui.compose.tempBasalDialog
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ui.ConfirmationLine
@@ -126,14 +128,14 @@ class TempBasalDialogViewModel @Inject constructor(
             try {
                 val rate = if (state.isPercentPump) state.basalPercent else state.basalAbsolute
                 val action = BatchAction.TempBasal(rate = rate, isPercent = state.isPercentPump, durationMinutes = state.durationMinutes.toInt())
-                val label = rh.gs(app.aaps.core.ui.R.string.tempbasal_label)
+                val label = rh.gs(CoreUiStrings.tempbasal_label)
                 when (val prepared = batchExecutor.prepare(listOf(action), Sources.TempBasalDialog, label)) {
                     is ActionProgress.Prepared -> _sideEffect.tryEmit(SideEffect.ShowConfirmation(prepared.id, prepared.lines))
                     // Offline block (and a master-local failure) surface here; a client round-trip failure already showed on the modal.
                     is ActionProgress.Rejected ->
-                        if (prepared.reason == FailureReason.NotReachable || prepared.reason == FailureReason.ControlDisabled) rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.ui.R.string.tempbasal_label), message = rh.gs(prepared.reason.failText())))
+                        if (prepared.reason == FailureReason.NotReachable || prepared.reason == FailureReason.ControlDisabled) rxBus.send(EventShowDialog.Ok(title = rh.gs(CoreUiStrings.tempbasal_label), message = rh.gs(prepared.reason.failText())))
                         else prepared.detail?.let { detail ->
-                            if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.ui.R.string.tempbasal_label), message = detail))
+                            if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = rh.gs(CoreUiStrings.tempbasal_label), message = detail))
                             else _sideEffect.tryEmit(SideEffect.ShowDeliveryError(detail))
                         }
 
@@ -148,11 +150,11 @@ class TempBasalDialogViewModel @Inject constructor(
     /** Confirm the master's prepared temp basal: apply it exactly once. A master-local apply failure (pump comms) surfaces here. */
     fun commit(bolusId: Long) {
         appScope.launch {
-            val result = batchExecutor.commit(bolusId, Sources.TempBasalDialog, rh.gs(app.aaps.core.ui.R.string.tempbasal_label), pumpDirect = true)
+            val result = batchExecutor.commit(bolusId, Sources.TempBasalDialog, rh.gs(CoreUiStrings.tempbasal_label), pumpDirect = true)
             if (result is ActionProgress.Rejected)
-                if (result.reason == FailureReason.NotReachable || result.reason == FailureReason.ControlDisabled) rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.ui.R.string.tempbasal_label), message = rh.gs(result.reason.failText())))
+                if (result.reason == FailureReason.NotReachable || result.reason == FailureReason.ControlDisabled) rxBus.send(EventShowDialog.Ok(title = rh.gs(CoreUiStrings.tempbasal_label), message = rh.gs(result.reason.failText())))
                 else result.detail?.let { detail ->
-                    if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.ui.R.string.tempbasal_label), message = detail))
+                    if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = rh.gs(CoreUiStrings.tempbasal_label), message = detail))
                     else _sideEffect.tryEmit(SideEffect.ShowDeliveryError(detail))
                 }
         }

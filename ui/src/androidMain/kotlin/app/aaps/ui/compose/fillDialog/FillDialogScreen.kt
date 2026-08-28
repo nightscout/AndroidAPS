@@ -45,7 +45,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -72,7 +74,6 @@ import app.aaps.core.ui.compose.stringResourceOrNull
 import app.aaps.ui.R
 import app.aaps.ui.compose.EventDatePicker
 import app.aaps.ui.compose.EventTimePicker
-import app.aaps.core.ui.R as CoreUiR
 
 /**
  * @see PreviewSiteChange
@@ -154,7 +155,7 @@ fun FillDialogScreen(
     if (showNoAction) {
         ElementConfirmationDialog(
             elementType = ElementType.FILL,
-            message = stringResource(CoreUiR.string.no_action_selected),
+            message = stringResource(CoreUiStrings.no_action_selected),
             onConfirm = { showNoAction = false },
             onDismiss = { showNoAction = false }
         )
@@ -243,7 +244,7 @@ internal fun FillDialogContent(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.Filled.Close,
-                            contentDescription = stringResource(CoreUiR.string.close)
+                            contentDescription = stringResource(CoreUiStrings.close)
                         )
                     }
                 },
@@ -252,7 +253,7 @@ internal fun FillDialogContent(
                         IconButton(onClick = onSettingsClick) {
                             Icon(
                                 imageVector = Icons.Default.Settings,
-                                contentDescription = stringResource(CoreUiR.string.settings),
+                                contentDescription = stringResource(CoreUiStrings.settings),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
@@ -278,7 +279,7 @@ internal fun FillDialogContent(
                     modifier = Modifier.size(20.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(stringResource(CoreUiR.string.ok))
+                Text(stringResource(CoreUiStrings.ok))
             }
         }
     ) { paddingValues ->
@@ -316,7 +317,7 @@ internal fun FillDialogContent(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = stringResource(R.string.record_pump_site_change),
+                            text = stringResource(UiStrings.record_pump_site_change),
                             style = MaterialTheme.typography.bodyLarge
                         )
                         Switch(
@@ -344,7 +345,7 @@ internal fun FillDialogContent(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = stringResource(R.string.record_insulin_cartridge_change),
+                            text = stringResource(UiStrings.record_insulin_cartridge_change),
                             style = MaterialTheme.typography.bodyLarge
                         )
                         Switch(
@@ -378,13 +379,13 @@ internal fun FillDialogContent(
                     // actions (site / cartridge / insulin-type change) work on a client. showBolus = !AAPSCLIENT.
                     Column(modifier = itemModifier) {
                         NumberInputRow(
-                            labelResId = R.string.fill_prime_amount,
+                            labelRef = UiStrings.fill_prime_amount,
                             value = uiState.insulin,
                             onValueChange = onInsulinChange,
                             valueRange = 0.0..uiState.maxInsulin,
                             step = uiState.bolusStep,
                             valueFormat = bolusFormat,
-                            unitLabel = TextRef.AndroidRes(CoreUiR.string.insulin_unit_shortname),
+                            unitLabel = CoreUiStrings.insulin_unit_shortname,
                             enabled = uiState.showBolus
                         )
 
@@ -430,7 +431,7 @@ internal fun FillDialogContent(
                         TextField(
                             value = uiState.notes,
                             onValueChange = onNotesChange,
-                            label = { Text(stringResource(CoreUiR.string.notes_label)) },
+                            label = { Text(stringResource(CoreUiStrings.notes_label)) },
                             modifier = itemModifier,
                             singleLine = false,
                             maxLines = 3

@@ -1,6 +1,8 @@
 package app.aaps.ui.compose.fillDialog
 
 import androidx.lifecycle.SavedStateHandle
+import app.aaps.core.interfaces.resources.TextRefIdRegistry
+import app.aaps.ui.UiStringIds
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.bolus.BatchExecutor
@@ -50,7 +52,7 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import app.aaps.core.ui.R as CoreUiR
+import app.aaps.core.ui.CoreUiStrings
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class FillDialogViewModelTest {
@@ -110,11 +112,14 @@ internal class FillDialogViewModelTest {
      */
     private fun stubStrings() {
         whenever(rh.gs(any<Int>())).thenReturn("s")
+        // The screens name their strings now, so the TextRef overload is the one they call.
         whenever(rh.gs(any<TextRef>())).thenReturn("s")
         whenever(rh.gs(any<Int>(), anyOrNull())).thenReturn("s")
+        whenever(rh.gs(any<TextRef>(), anyOrNull())).thenReturn("s")
         whenever(rh.gs(any<Int>(), anyOrNull(), anyOrNull())).thenReturn("s")
-        whenever(rh.gs(CoreUiR.string.insulin_activation_unconfirmed)).thenReturn("UNCONFIRMED")
-        whenever(rh.gs(eq(CoreUiR.string.insulin_activation_failed_reason), anyOrNull())).thenReturn("FAILED_REASON")
+        whenever(rh.gs(any<TextRef>(), anyOrNull(), anyOrNull())).thenReturn("s")
+        whenever(rh.gs(CoreUiStrings.insulin_activation_unconfirmed)).thenReturn("UNCONFIRMED")
+        whenever(rh.gs(eq(CoreUiStrings.insulin_activation_failed_reason), anyOrNull())).thenReturn("FAILED_REASON")
     }
 
     /**
@@ -175,7 +180,7 @@ internal class FillDialogViewModelTest {
      */
     private suspend fun runFailingPrime(changeInsulin: Boolean): List<String> {
         stubStrings()
-        whenever(rh.gs(eq(CoreUiR.string.fill_prime_failed_insulin_not_switched), anyOrNull())).thenReturn("PRIME_FAILED_AND_NOT_SWITCHED")
+        whenever(rh.gs(eq(CoreUiStrings.fill_prime_failed_insulin_not_switched), anyOrNull())).thenReturn("PRIME_FAILED_AND_NOT_SWITCHED")
         // A non-zero constrained amount makes hasPrimeBolus true, so the switch is chained to the prime.
         val constrained: Constraint<Double> = mock()
         whenever(constrained.value()).thenReturn(0.3)

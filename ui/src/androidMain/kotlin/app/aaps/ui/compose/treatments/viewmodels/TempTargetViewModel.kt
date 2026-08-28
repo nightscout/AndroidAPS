@@ -4,6 +4,8 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
@@ -166,9 +168,9 @@ class TempTargetViewModel @Inject constructor(
 
         return if (selected.size == 1) {
             val tt = selected.first()
-            "${rh.gs(R.string.temporary_target)}: ${tt.friendlyDescription(profileUtil.units, rh, profileUtil)}\n${dateUtil.dateAndTimeString(tt.timestamp)}"
+            "${rh.gs(CoreUiStrings.temporary_target)}: ${tt.friendlyDescription(profileUtil.units, rh, profileUtil)}\n${dateUtil.dateAndTimeString(tt.timestamp)}"
         } else {
-            rh.gs(R.string.confirm_remove_multiple_items, selected.size)
+            rh.gs(CoreUiStrings.confirm_remove_multiple_items, selected.size)
         }
     }
 

@@ -28,7 +28,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -56,7 +59,6 @@ import app.aaps.ui.R
 import app.aaps.ui.compose.components.ContentContainer
 import app.aaps.ui.compose.treatments.viewmodels.TempBasalViewModel
 import kotlinx.coroutines.launch
-import app.aaps.core.ui.R as CoreUiR
 
 /**
  * Composable screen displaying temporary basals and extended boluses with delete and show hidden functionality.
@@ -103,7 +105,7 @@ fun TempBasalScreen(
     // Delete confirmation dialog
     if (showDeleteDialog) {
         OkCancelDialog(
-            title = viewModel.rh.gs(app.aaps.core.ui.R.string.removerecord),
+            title = viewModel.rh.gs(CoreUiStrings.removerecord),
             message = deleteDialogMessage,
             onConfirm = {
                 viewModel.deleteSelected()
@@ -206,9 +208,9 @@ private fun TempBasalItem(
                     append(" ")
                     // Rate
                     if (tempBasal.isAbsolute) {
-                        append(stringResource(app.aaps.core.ui.R.string.pump_base_basal_rate, tempBasal.rate))
+                        append(stringResource(CoreUiStrings.pump_base_basal_rate, tempBasal.rate))
                     } else {
-                        append(stringResource(app.aaps.core.ui.R.string.format_percent, tempBasal.rate.toInt()))
+                        append(stringResource(CoreUiStrings.format_percent, tempBasal.rate.toInt()))
                     }
                     // IOB in color
                     if (iob.basaliob != 0.0) {
@@ -220,14 +222,14 @@ private fun TempBasalItem(
                             )
                         ) {
                             append("(")
-                            append(stringResource(app.aaps.core.interfaces.R.string.format_insulin_units, iob.basaliob))
+                            append(stringResource(InterfacesStrings.format_insulin_units, iob.basaliob))
                             append(")")
                         }
                     }
                     append(" ")
                     // Duration
                     append(T.msecs(tempBasal.duration).mins().toInt().toString())
-                    append(stringResource(CoreUiR.string.units_min))
+                    append(stringResource(CoreUiStrings.units_min))
                 },
                 modifier = Modifier.padding(start = 4.dp),
                 fontSize = 14.sp,
@@ -241,7 +243,7 @@ private fun TempBasalItem(
             // Type flags
             if (tempBasal.type == TB.Type.FAKE_EXTENDED) {
                 Text(
-                    text = stringResource(R.string.tbr_type_flag_extended),
+                    text = stringResource(UiStrings.tbr_type_flag_extended),
                     modifier = Modifier.padding(start = 8.dp),
                     fontSize = 14.sp,
                     color = ElementType.TEMP_BASAL.color()
@@ -250,7 +252,7 @@ private fun TempBasalItem(
 
             if (tempBasal.type == TB.Type.PUMP_SUSPEND) {
                 Text(
-                    text = stringResource(R.string.tbr_type_flag_suspended),
+                    text = stringResource(UiStrings.tbr_type_flag_suspended),
                     modifier = Modifier.padding(start = 8.dp),
                     fontSize = 14.sp,
                     color = ElementType.TEMP_BASAL.color()
@@ -259,7 +261,7 @@ private fun TempBasalItem(
 
             if (tempBasal.type == TB.Type.EMULATED_PUMP_SUSPEND) {
                 Text(
-                    text = stringResource(R.string.tbr_type_flag_emulated_suspended),
+                    text = stringResource(UiStrings.tbr_type_flag_emulated_suspended),
                     modifier = Modifier.padding(start = 8.dp),
                     fontSize = 14.sp,
                     color = ElementType.TEMP_BASAL.color()
@@ -268,7 +270,7 @@ private fun TempBasalItem(
 
             if (tempBasal.type == TB.Type.SUPERBOLUS) {
                 Text(
-                    text = stringResource(R.string.tbr_type_flag_superbolus),
+                    text = stringResource(UiStrings.tbr_type_flag_superbolus),
                     modifier = Modifier.padding(start = 8.dp),
                     fontSize = 14.sp,
                     color = ElementType.TEMP_BASAL.color()
@@ -282,7 +284,7 @@ private fun TempBasalItem(
             if (!tempBasal.isValid) {
                 Icon(
                     imageVector = Icons.Filled.Delete,
-                    contentDescription = stringResource(app.aaps.core.ui.R.string.invalid),
+                    contentDescription = stringResource(CoreUiStrings.invalid),
                     modifier = Modifier
                         .size(21.dp)
                         .padding(start = 5.dp),
@@ -294,7 +296,7 @@ private fun TempBasalItem(
             if (tempBasal.ids.pumpId != null) {
                 Icon(
                     imageVector = Pump,
-                    contentDescription = stringResource(app.aaps.core.ui.R.string.pump_history),
+                    contentDescription = stringResource(CoreUiStrings.pump_history),
                     modifier = Modifier
                         .size(21.dp)
                         .padding(start = 5.dp)
@@ -305,7 +307,7 @@ private fun TempBasalItem(
             if (tempBasal.ids.nightscoutId != null) {
                 Icon(
                     imageVector = Ns,
-                    contentDescription = stringResource(app.aaps.core.ui.R.string.ns),
+                    contentDescription = stringResource(CoreUiStrings.ns),
                     modifier = Modifier
                         .size(21.dp)
                         .padding(start = 5.dp)

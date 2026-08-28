@@ -4,6 +4,8 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.data.Block
 import app.aaps.core.data.model.data.TargetBlock
@@ -181,7 +183,7 @@ class ProfileEditorViewModel @Inject constructor(
         // Validate the local clone (with in-flight edits) — not the persisted snapshot.
         val validationErrors = profile?.let { profileRepository.validateStructured(it) } ?: emptyList()
         val tabErrors = validationErrors
-            .filter { it.type != ProfileErrorType.NAME || it.message != rh.gs(app.aaps.core.ui.R.string.profile_name_contains_dot) }
+            .filter { it.type != ProfileErrorType.NAME || it.message != rh.gs(CoreUiStrings.profile_name_contains_dot) }
             .associateBy({ it.type }, { it.message })
 
         // Pump compatibility is a non-blocking warning (does not feed [isValid]).

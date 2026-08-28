@@ -6,6 +6,8 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ui.ConfirmationLine
@@ -127,7 +129,7 @@ class WizardDialogViewModel @AssistedInject constructor(
         val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
 
         // Build profile names list: "Active" + profile store names
-        val profileList = mutableListOf(rh.gs(app.aaps.core.ui.R.string.active))
+        val profileList = mutableListOf(rh.gs(CoreUiStrings.active))
         profileList.addAll(profileStore.getProfileList().map { it.toString() })
 
         // Load saved preferences
@@ -416,7 +418,7 @@ class WizardDialogViewModel @AssistedInject constructor(
         val trendDetail = if (state.useTrend) {
             val signedTrendValue = (if (w.data.trend > 0) "+" else "") +
                 profileUtil.fromMgdlToStringInUnits(w.data.trend * 3, state.units)
-            rh.gs(app.aaps.core.ui.R.string.wizard_trend_detail, signedTrendValue, profileUtil.unitLabel)
+            rh.gs(CoreUiStrings.wizard_trend_detail, signedTrendValue, profileUtil.unitLabel)
         } else ""
 
         _uiState.update {
@@ -516,11 +518,11 @@ class WizardDialogViewModel @AssistedInject constructor(
             eCarbsGrams = state.eCarbs, eCarbsDelayMinutes = state.eCarbsDelayMinutes + state.carbTime, eCarbsDurationHours = state.eCarbsDurationHours,
             profileName = profileName
         )
-        val label = rh.gs(app.aaps.core.ui.R.string.clientcontrol_action_deliver_bolus)
+        val label = rh.gs(CoreUiStrings.clientcontrol_action_deliver_bolus)
         appScope.launch {
             when (val prepared = wizardExecutor.prepare(WizardExecutor.WizardSource.Manual(inputs), label)) {
                 is ActionProgress.Prepared ->
-                    showWizardBolusConfirmation(rxBus, rh, rh.gs(app.aaps.core.ui.R.string.boluswizard), IcCalculator, prepared.advisorApplies, prepared.lines, prepared.advisorLines) { asAdvisor ->
+                    showWizardBolusConfirmation(rxBus, rh, rh.gs(CoreUiStrings.boluswizard), IcCalculator, prepared.advisorApplies, prepared.lines, prepared.advisorLines) { asAdvisor ->
                         // Confirmed → close the wizard (Cancel leaves it open with inputs intact, like the insulin dialog).
                         _sideEffect.tryEmit(SideEffect.NavigateBack)
                         appScope.launch {
@@ -541,7 +543,7 @@ class WizardDialogViewModel @AssistedInject constructor(
                 // Master-local compute failure (no modal) or client offline; a client round-trip failure already showed on the app modal.
                 is ActionProgress.Rejected ->
                     if (!config.AAPSCLIENT || prepared.reason == FailureReason.NotReachable || prepared.reason == FailureReason.ControlDisabled)
-                        rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.ui.R.string.boluswizard), message = prepared.detail ?: rh.gs(prepared.reason.failText())))
+                        rxBus.send(EventShowDialog.Ok(title = rh.gs(CoreUiStrings.boluswizard), message = prepared.detail ?: rh.gs(prepared.reason.failText())))
 
                 else                       -> Unit // Unconfirmed → app modal
             }

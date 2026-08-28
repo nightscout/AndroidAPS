@@ -3,6 +3,8 @@ package app.aaps.ui.compose.calibrationDialog
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.ui.UiStrings
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.ue.Action
@@ -37,8 +39,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import app.aaps.core.interfaces.R as InterfacesR
-import app.aaps.core.ui.R as CoreUiR
+import app.aaps.core.ui.CoreUiStrings
 
 // Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
 // unscoped so each screen gets its own.
@@ -140,9 +141,9 @@ class CalibrationDialogViewModel @Inject constructor(
         val state = uiState.value
         confirmedState = state
         val bgText = profileUtil.stringInCurrentUnitsDetect(state.bg)
-        val bgWithUnit = rh.gs(CoreUiR.string.value_with_unit, bgText, state.unitLabel)
+        val bgWithUnit = rh.gs(CoreUiStrings.value_with_unit, bgText, state.unitLabel)
         return confirmationLines {
-            line(ConfirmationRole.PRIMARY, rh.gs(InterfacesR.string.confirmation_line, rh.gs(CoreUiR.string.bg_label), bgWithUnit))
+            line(ConfirmationRole.PRIMARY, rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.bg_label), bgWithUnit))
         }
     }
 
@@ -182,29 +183,29 @@ class CalibrationDialogViewModel @Inject constructor(
     }
 
     fun preconditionMessage(rejected: AddEntryResult.Rejected): String = when (rejected) {
-        AddEntryResult.Rejected.NoSession       -> rh.gs(R.string.cal_precheck_no_session)
-        is AddEntryResult.Rejected.InWarmUp     -> rh.gs(R.string.cal_precheck_warmup, dateUtil.timeString(rejected.warmUpEndsAt))
+        AddEntryResult.Rejected.NoSession       -> rh.gs(UiStrings.cal_precheck_no_session)
+        is AddEntryResult.Rejected.InWarmUp     -> rh.gs(UiStrings.cal_precheck_warmup, dateUtil.timeString(rejected.warmUpEndsAt))
         is AddEntryResult.Rejected.DeltaTooHigh -> rh.gs(
-            R.string.cal_precheck_delta_too_high,
+            UiStrings.cal_precheck_delta_too_high,
             formatDeltaInDisplayUnit(rejected.deltaMgdlPer5Min),
             formatDeltaInDisplayUnit(rejected.thresholdMgdlPer5Min),
             profileUtil.unitLabel
         )
 
-        AddEntryResult.Rejected.NoSensorPair    -> rh.gs(R.string.cal_precheck_no_pair)
+        AddEntryResult.Rejected.NoSensorPair    -> rh.gs(UiStrings.cal_precheck_no_pair)
     }
 
     private fun AddEntryResult.Rejected.message(): String = when (this) {
         is AddEntryResult.Rejected.DeltaTooHigh -> rh.gs(
-            R.string.cal_reject_delta_too_high,
+            UiStrings.cal_reject_delta_too_high,
             formatDeltaInDisplayUnit(deltaMgdlPer5Min),
             formatDeltaInDisplayUnit(thresholdMgdlPer5Min),
             profileUtil.unitLabel
         )
 
-        AddEntryResult.Rejected.NoSensorPair    -> rh.gs(R.string.cal_reject_no_pair)
-        is AddEntryResult.Rejected.InWarmUp     -> rh.gs(R.string.cal_reject_warmup)
-        AddEntryResult.Rejected.NoSession       -> rh.gs(R.string.cal_reject_no_session)
+        AddEntryResult.Rejected.NoSensorPair    -> rh.gs(UiStrings.cal_reject_no_pair)
+        is AddEntryResult.Rejected.InWarmUp     -> rh.gs(UiStrings.cal_reject_warmup)
+        AddEntryResult.Rejected.NoSession       -> rh.gs(UiStrings.cal_reject_no_session)
     }
 
     // Input is already in mg/dL per 5 min — just convert to the user's display unit.

@@ -47,17 +47,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.FD
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSearchField
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.compose.icons.IcCalculator
-import app.aaps.core.ui.R as CoreUiR
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -70,8 +70,8 @@ fun FoodManagementScreen(
     val filteredFoods by viewModel.filteredFoods.collectAsStateWithLifecycle()
     val filteredSubCategories by viewModel.filteredSubCategories.collectAsStateWithLifecycle()
     val snackbarHostState = LocalSnackbarHostState.current
-    val undoLabel = stringResource(CoreUiR.string.undo)
-    val deletedLabel = stringResource(CoreUiR.string.food_deleted)
+    val undoLabel = stringResource(CoreUiStrings.undo)
+    val deletedLabel = stringResource(CoreUiStrings.food_deleted)
 
     // Show undo snackbar when a food is deleted
     LaunchedEffect(state.undoFood) {
@@ -100,14 +100,14 @@ fun FoodManagementScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(CoreUiR.string.back))
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(CoreUiStrings.back))
                     }
                 }
             )
         },
         floatingActionButton = {
             FloatingActionButton(onClick = { viewModel.openEditor() }) {
-                Icon(Icons.Filled.Add, contentDescription = stringResource(CoreUiR.string.add))
+                Icon(Icons.Filled.Add, contentDescription = stringResource(CoreUiStrings.add))
             }
         }
     ) { padding ->
@@ -162,7 +162,7 @@ fun FoodManagementScreen(
             } else if (filteredFoods.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text(
-                        text = stringResource(CoreUiR.string.no_data),
+                        text = stringResource(CoreUiStrings.no_data),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -279,7 +279,7 @@ private fun FoodItem(
             IconButton(onClick = onCalculate) {
                 Icon(
                     imageVector = IcCalculator,
-                    contentDescription = stringResource(CoreUiR.string.boluswizard),
+                    contentDescription = stringResource(CoreUiStrings.boluswizard),
                     modifier = Modifier.size(AapsSpacing.chipIconSize),
                     tint = MaterialTheme.colorScheme.primary
                 )
@@ -317,14 +317,14 @@ internal fun FoodEditorContent(
         verticalArrangement = Arrangement.spacedBy(AapsSpacing.large)
     ) {
         Text(
-            text = stringResource(if (isEditing) CoreUiR.string.edit_food else CoreUiR.string.add_food),
+            text = stringResource(if (isEditing) CoreUiStrings.edit_food else CoreUiStrings.add_food),
             style = MaterialTheme.typography.titleLarge
         )
 
         OutlinedTextField(
             value = state.editorName,
             onValueChange = onNameChange,
-            label = { Text(stringResource(CoreUiR.string.name)) },
+            label = { Text(stringResource(CoreUiStrings.name)) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             isError = state.editorSaveAttempted && state.editorName.isBlank()
@@ -334,14 +334,14 @@ internal fun FoodEditorContent(
             OutlinedTextField(
                 value = state.editorCategory,
                 onValueChange = onCategoryChange,
-                label = { Text(stringResource(CoreUiR.string.category)) },
+                label = { Text(stringResource(CoreUiStrings.category)) },
                 modifier = Modifier.weight(1f),
                 singleLine = true
             )
             OutlinedTextField(
                 value = state.editorSubCategory,
                 onValueChange = onSubCategoryChange,
-                label = { Text(stringResource(CoreUiR.string.subcategory)) },
+                label = { Text(stringResource(CoreUiStrings.subcategory)) },
                 modifier = Modifier.weight(1f),
                 singleLine = true
             )
@@ -351,7 +351,7 @@ internal fun FoodEditorContent(
             OutlinedTextField(
                 value = state.editorPortion,
                 onValueChange = onPortionChange,
-                label = { Text(stringResource(CoreUiR.string.portion)) },
+                label = { Text(stringResource(CoreUiStrings.portion)) },
                 modifier = Modifier.weight(1f),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
@@ -359,7 +359,7 @@ internal fun FoodEditorContent(
             OutlinedTextField(
                 value = state.editorUnit,
                 onValueChange = onUnitChange,
-                label = { Text(stringResource(CoreUiR.string.unit_label)) },
+                label = { Text(stringResource(CoreUiStrings.unit_label)) },
                 modifier = Modifier.weight(1f),
                 singleLine = true
             )
@@ -368,7 +368,7 @@ internal fun FoodEditorContent(
         OutlinedTextField(
             value = state.editorCarbs,
             onValueChange = onCarbsChange,
-            label = { Text(stringResource(CoreUiR.string.label_carbs_g)) },
+            label = { Text(stringResource(CoreUiStrings.label_carbs_g)) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
@@ -378,7 +378,7 @@ internal fun FoodEditorContent(
             OutlinedTextField(
                 value = state.editorFat,
                 onValueChange = onFatChange,
-                label = { Text(stringResource(CoreUiR.string.label_fat_g)) },
+                label = { Text(stringResource(CoreUiStrings.label_fat_g)) },
                 modifier = Modifier.weight(1f),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
@@ -386,7 +386,7 @@ internal fun FoodEditorContent(
             OutlinedTextField(
                 value = state.editorProtein,
                 onValueChange = onProteinChange,
-                label = { Text(stringResource(CoreUiR.string.label_protein_g)) },
+                label = { Text(stringResource(CoreUiStrings.label_protein_g)) },
                 modifier = Modifier.weight(1f),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
@@ -394,7 +394,7 @@ internal fun FoodEditorContent(
             OutlinedTextField(
                 value = state.editorEnergy,
                 onValueChange = onEnergyChange,
-                label = { Text(stringResource(CoreUiR.string.label_energy_kj)) },
+                label = { Text(stringResource(CoreUiStrings.label_energy_kj)) },
                 modifier = Modifier.weight(1f),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
@@ -411,7 +411,7 @@ internal fun FoodEditorContent(
             if (onDelete != null) {
                 TextButton(onClick = onDelete) {
                     Text(
-                        stringResource(CoreUiR.string.delete),
+                        stringResource(CoreUiStrings.delete),
                         color = MaterialTheme.colorScheme.error
                     )
                 }
@@ -420,14 +420,14 @@ internal fun FoodEditorContent(
             }
             Row {
                 TextButton(onClick = onCancel) {
-                    Text(stringResource(CoreUiR.string.cancel))
+                    Text(stringResource(CoreUiStrings.cancel))
                 }
                 Spacer(Modifier.width(AapsSpacing.medium))
                 TextButton(
                     onClick = onSave,
                     enabled = !state.editorSaveAttempted || state.editorName.isNotBlank()
                 ) {
-                    Text(stringResource(CoreUiR.string.save))
+                    Text(stringResource(CoreUiStrings.save))
                 }
             }
         }

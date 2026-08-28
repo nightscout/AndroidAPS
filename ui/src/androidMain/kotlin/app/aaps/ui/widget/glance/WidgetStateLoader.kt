@@ -1,6 +1,9 @@
 package app.aaps.ui.widget.glance
 
 import androidx.compose.ui.graphics.toArgb
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TT
@@ -61,7 +64,7 @@ class WidgetStateLoader @Inject constructor(
 
         val lastBg = lastBgData.lastBg()
         val bgText = lastBg?.let { profileUtil.fromMgdlToStringInUnits(it.recalculated) }
-            ?: rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
+            ?: rh.gs(CoreUiStrings.value_unavailable_short)
         val bgColor = when {
             lastBgData.isLow()  -> BgGraphColors.WIDGET.low
             lastBgData.isHigh() -> BgGraphColors.WIDGET.high
@@ -73,14 +76,14 @@ class WidgetStateLoader @Inject constructor(
         val arrowResId = lastBg?.let { (trendArrow ?: TrendArrow.FLAT).directionToDrawableRes() }
 
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
-        val unavailable = rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
+        val unavailable = rh.gs(CoreUiStrings.value_unavailable_short)
         val deltaText = glucoseStatus?.let { profileUtil.fromMgdlToSignedStringInUnits(it.delta) } ?: unavailable
         val timeAgoText = dateUtil.minAgo(rh, lastBg?.timestamp)
 
         val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
         val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
         val iobTotal = bolusIob.iob + basalIob.basaliob
-        val iobText = rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, iobTotal)
+        val iobText = rh.gs(InterfacesStrings.format_insulin_units, iobTotal)
         val iobActive = abs(iobTotal) > 0.001
 
         val cobInfo = iobCobCalculator.getCobInfo("Overview COB")
@@ -92,7 +95,7 @@ class WidgetStateLoader @Inject constructor(
             if (constraintsProcessed.carbsReq > 0) {
                 val lastCarbsTime = persistenceLayer.getNewestCarbs()?.timestamp ?: 0L
                 if (lastCarbsTime < lastRun.lastAPSRun) {
-                    cobText += "\n" + constraintsProcessed.carbsReq + " " + rh.gs(app.aaps.core.ui.R.string.required)
+                    cobText += "\n" + constraintsProcessed.carbsReq + " " + rh.gs(CoreUiStrings.required)
                     cobActive = true
                 }
             }
@@ -152,7 +155,7 @@ class WidgetStateLoader @Inject constructor(
                 }
             } ?: R.drawable.ic_widget_as_x_equal
         val sensitivityText = lastAutosensData?.let {
-            rh.gs(app.aaps.core.ui.R.string.autosens_short, it.autosensResult.ratio * 100)
+            rh.gs(CoreUiStrings.autosens_short, it.autosensResult.ratio * 100)
         } ?: "—"
 
         val profile = profileFunction.getProfile()
@@ -170,17 +173,17 @@ class WidgetStateLoader @Inject constructor(
         val mode = loop.runningMode()
         val runningModeText = rh.gs(
             when (mode) {
-                RM.Mode.OPEN_LOOP         -> app.aaps.core.ui.R.string.openloop
-                RM.Mode.CLOSED_LOOP       -> app.aaps.core.ui.R.string.closedloop
-                RM.Mode.CLOSED_LOOP_LGS   -> R.string.widget_rm_lgs
-                RM.Mode.DISABLED_LOOP     -> R.string.widget_rm_disabled
-                RM.Mode.SUPER_BOLUS       -> app.aaps.core.ui.R.string.superbolus
-                RM.Mode.DISCONNECTED_PUMP -> app.aaps.core.ui.R.string.disconnected
+                RM.Mode.OPEN_LOOP         -> CoreUiStrings.openloop
+                RM.Mode.CLOSED_LOOP       -> CoreUiStrings.closedloop
+                RM.Mode.CLOSED_LOOP_LGS   -> UiStrings.widget_rm_lgs
+                RM.Mode.DISABLED_LOOP     -> UiStrings.widget_rm_disabled
+                RM.Mode.SUPER_BOLUS       -> CoreUiStrings.superbolus
+                RM.Mode.DISCONNECTED_PUMP -> CoreUiStrings.disconnected
                 RM.Mode.SUSPENDED_BY_PUMP,
                 RM.Mode.SUSPENDED_BY_USER,
-                RM.Mode.SUSPENDED_BY_DST  -> R.string.widget_rm_suspended
+                RM.Mode.SUSPENDED_BY_DST  -> UiStrings.widget_rm_suspended
 
-                RM.Mode.RESUME            -> R.string.widget_rm_resume
+                RM.Mode.RESUME            -> UiStrings.widget_rm_resume
             }
         )
         val runningModeColor = mode.loopColor(DarkGeneralColors).toArgb()

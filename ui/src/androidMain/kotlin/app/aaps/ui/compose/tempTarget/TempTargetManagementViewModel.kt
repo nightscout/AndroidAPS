@@ -3,6 +3,8 @@ package app.aaps.ui.compose.tempTarget
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TT
@@ -365,7 +367,7 @@ class TempTargetManagementViewModel @Inject constructor(
             _reorderOrder.value = null
             rxBus.send(
                 EventShowSnackbar(
-                    rh.gs(app.aaps.core.ui.R.string.presets_changed_reorder_aborted),
+                    rh.gs(CoreUiStrings.presets_changed_reorder_aborted),
                     EventShowSnackbar.Type.Error
                 )
             )
@@ -731,7 +733,7 @@ class TempTargetManagementViewModel @Inject constructor(
         val durationMinutes = (currentState.editorDuration / 60000L).toInt()
         val reason = currentState.selectedPreset?.reason ?: TT.Reason.CUSTOM
         val notes = currentState.notes.takeIf { it.isNotBlank() }
-        val label = rh.gs(app.aaps.core.ui.R.string.clientcontrol_action_set_temp_target)
+        val label = rh.gs(CoreUiStrings.clientcontrol_action_set_temp_target)
         val startOffsetMinutes = ((timestamp - dateUtil.now()) / 60000L).toInt()
         val actions = listOf(BatchAction.TempTarget(reason.text, targetMgdl, targetMgdl, durationMinutes, startOffsetMinutes, notes))
         viewModelScope.launch {
@@ -739,7 +741,7 @@ class TempTargetManagementViewModel @Inject constructor(
                 is ActionProgress.Prepared ->
                     rxBus.send(
                         EventShowDialog.OkCancel(
-                            title = rh.gs(app.aaps.core.ui.R.string.temporary_target), message = "", confirmationLines = prepared.lines,
+                            title = rh.gs(CoreUiStrings.temporary_target), message = "", confirmationLines = prepared.lines,
                             icon = ElementType.TEMP_TARGET_MANAGEMENT.icon(),
                             onOk = {
                                 appScope.launch {
@@ -754,7 +756,7 @@ class TempTargetManagementViewModel @Inject constructor(
                 // Master-local failure (no modal) or a client offline pre-check; a client round-trip failure already showed on the app modal.
                 is ActionProgress.Rejected ->
                     if (!config.AAPSCLIENT || prepared.reason == FailureReason.NotReachable || prepared.reason == FailureReason.ControlDisabled)
-                        rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.ui.R.string.temporary_target), message = prepared.detail ?: rh.gs(prepared.reason.failText())))
+                        rxBus.send(EventShowDialog.Ok(title = rh.gs(CoreUiStrings.temporary_target), message = prepared.detail ?: rh.gs(prepared.reason.failText())))
 
                 else                       -> Unit
             }
@@ -768,14 +770,14 @@ class TempTargetManagementViewModel @Inject constructor(
      * (ActionProgress.Applied) — so the caller can close the screen on a real cancel, not when the dialog appears.
      */
     fun cancelActive(onSuccess: () -> Unit) {
-        val label = rh.gs(app.aaps.core.ui.R.string.clientcontrol_action_cancel_temp_target)
+        val label = rh.gs(CoreUiStrings.clientcontrol_action_cancel_temp_target)
         val actions = listOf(BatchAction.TempTarget(TT.Reason.CUSTOM.text, 0.0, 0.0, 0, 0))
         viewModelScope.launch {
             when (val prepared = batchExecutor.prepare(actions, Sources.TTDialog, label)) {
                 is ActionProgress.Prepared ->
                     rxBus.send(
                         EventShowDialog.OkCancel(
-                            title = rh.gs(app.aaps.core.ui.R.string.temporary_target), message = "", confirmationLines = prepared.lines,
+                            title = rh.gs(CoreUiStrings.temporary_target), message = "", confirmationLines = prepared.lines,
                             icon = ElementType.TEMP_TARGET_MANAGEMENT.icon(),
                             onOk = {
                                 appScope.launch {
@@ -788,7 +790,7 @@ class TempTargetManagementViewModel @Inject constructor(
 
                 is ActionProgress.Rejected ->
                     if (!config.AAPSCLIENT || prepared.reason == FailureReason.NotReachable || prepared.reason == FailureReason.ControlDisabled)
-                        rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.ui.R.string.temporary_target), message = prepared.detail ?: rh.gs(prepared.reason.failText())))
+                        rxBus.send(EventShowDialog.Ok(title = rh.gs(CoreUiStrings.temporary_target), message = prepared.detail ?: rh.gs(prepared.reason.failText())))
 
                 else                       -> Unit
             }

@@ -3,6 +3,8 @@ package app.aaps.ui.compose.quickWizard.viewmodels
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -298,7 +300,7 @@ class QuickWizardManagementViewModel @Inject constructor(
         _reorderOrder.value = null
         rxBus.send(
             EventShowSnackbar(
-                rh.gs(app.aaps.core.ui.R.string.presets_changed_reorder_aborted),
+                rh.gs(CoreUiStrings.presets_changed_reorder_aborted),
                 EventShowSnackbar.Type.Error
             )
         )

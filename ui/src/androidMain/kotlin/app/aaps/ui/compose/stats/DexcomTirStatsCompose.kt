@@ -20,7 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -47,9 +49,9 @@ fun DexcomTirStatsCompose(
         // Header with ranges
         Text(
             text = buildString {
-                append(stringResource(R.string.detailed_14_days))
+                append(stringResource(CoreUiStrings.detailed_14_days))
                 append("\n")
-                append(stringResource(R.string.day_tir))
+                append(stringResource(CoreUiStrings.day_tir))
                 append(" (")
                 append(profileUtil.fromMgdlToStringInUnits(0.0))
                 append("-")
@@ -61,7 +63,7 @@ fun DexcomTirStatsCompose(
                 append("-")
                 append(profileUtil.stringInCurrentUnitsDetect(dexcomTir.veryHighTirMgdl()))
                 append("-∞)\n")
-                append(stringResource(R.string.night_tir))
+                append(stringResource(CoreUiStrings.night_tir))
                 append(" (")
                 append(profileUtil.fromMgdlToStringInUnits(0.0))
                 append("-")
@@ -101,7 +103,7 @@ fun DexcomTirStatsCompose(
         // Standard deviation
         if (dexcomTir.count() > 0) {
             Text(
-                text = stringResource(R.string.std_deviation, profileUtil.fromMgdlToStringInUnits(dexcomTir.calculateSD())),
+                text = stringResource(CoreUiStrings.std_deviation, profileUtil.fromMgdlToStringInUnits(dexcomTir.calculateSD())),
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
@@ -116,7 +118,7 @@ fun DexcomTirStatsCompose(
 
             Text(
                 text = buildString {
-                    append(stringResource(R.string.hba1c))
+                    append(stringResource(CoreUiStrings.hba1c))
                     append(hba1cPercent)
                     append("% (")
                     append(hba1cMmol)
@@ -155,7 +157,7 @@ private fun DexcomTirBarCompose(
     val colors = AapsTheme.generalColors
     Column(modifier = modifier) {
         Text(
-            text = stringResource(R.string.tir),
+            text = stringResource(CoreUiStrings.tir),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
@@ -214,35 +216,35 @@ private fun DexcomTirTableHeaderRow() {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = stringResource(R.string.veryLow),
+            text = stringResource(CoreUiStrings.veryLow),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),
             textAlign = TextAlign.Center
         )
         Text(
-            text = stringResource(R.string.low),
+            text = stringResource(CoreUiStrings.low),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),
             textAlign = TextAlign.Center
         )
         Text(
-            text = stringResource(R.string.in_range),
+            text = stringResource(CoreUiStrings.in_range),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),
             textAlign = TextAlign.Center
         )
         Text(
-            text = stringResource(R.string.high),
+            text = stringResource(CoreUiStrings.high),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),
             textAlign = TextAlign.Center
         )
         Text(
-            text = stringResource(R.string.veryHigh),
+            text = stringResource(CoreUiStrings.veryHigh),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),

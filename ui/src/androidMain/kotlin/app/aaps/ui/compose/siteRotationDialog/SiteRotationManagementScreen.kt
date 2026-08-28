@@ -46,7 +46,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.navigation.ElementType
@@ -67,7 +69,6 @@ import app.aaps.ui.R
 import app.aaps.ui.compose.siteRotationDialog.viewModels.SiteRotationManagementViewModel
 import app.aaps.ui.compose.siteRotationDialog.viewModels.SiteRotationUiState
 import kotlinx.coroutines.launch
-import app.aaps.core.ui.R as CoreUiR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -204,7 +205,7 @@ internal fun SiteRotationManagementContent(
         topBar = {
             AapsTopAppBar(
                 title = {
-                    Text(stringResource(if (isEditing) R.string.edit_site else CoreUiR.string.site_rotation))
+                    Text(stringResource(if (isEditing) UiStrings.edit_site else CoreUiStrings.site_rotation))
                 },
                 navigationIcon = {
                     IconButton(onClick = {
@@ -212,7 +213,7 @@ internal fun SiteRotationManagementContent(
                     }) {
                         Icon(
                             imageVector = if (isEditing) Icons.Default.Close else Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = if (isEditing) stringResource(CoreUiR.string.cancel) else stringResource(CoreUiR.string.back)
+                            contentDescription = if (isEditing) stringResource(CoreUiStrings.cancel) else stringResource(CoreUiStrings.back)
                         )
                     }
                 },
@@ -221,7 +222,7 @@ internal fun SiteRotationManagementContent(
                         IconButton(onClick = onConfirmEdit) {
                             Icon(
                                 imageVector = Icons.Default.Save,
-                                contentDescription = stringResource(CoreUiR.string.save),
+                                contentDescription = stringResource(CoreUiStrings.save),
                                 tint = MaterialTheme.colorScheme.primary
                             )
                         }
@@ -229,7 +230,7 @@ internal fun SiteRotationManagementContent(
                         IconButton(onClick = onPreferenceClick) {
                             Icon(
                                 imageVector = Icons.Default.Settings,
-                                contentDescription = stringResource(CoreUiR.string.settings)
+                                contentDescription = stringResource(CoreUiStrings.settings)
                             )
                         }
                     }
@@ -272,7 +273,7 @@ internal fun SiteRotationManagementContent(
                         ) {
                             Icon(
                                 imageVector = IcCannulaChange,
-                                contentDescription = stringResource(CoreUiR.string.careportal_pump_site_management),
+                                contentDescription = stringResource(CoreUiStrings.careportal_pump_site_management),
                                 modifier = Modifier.size(24.dp)
                             )
                         }
@@ -286,7 +287,7 @@ internal fun SiteRotationManagementContent(
                         ) {
                             Icon(
                                 imageVector = IcCgmInsert,
-                                contentDescription = stringResource(CoreUiR.string.careportal_cgm_site_management),
+                                contentDescription = stringResource(CoreUiStrings.careportal_cgm_site_management),
                                 modifier = Modifier.size(24.dp)
                             )
                         }
@@ -298,7 +299,7 @@ internal fun SiteRotationManagementContent(
                         positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
                         tooltip = {
                             PlainTooltip {
-                                Text(stringResource(CoreUiR.string.site_filter_info))
+                                Text(stringResource(CoreUiStrings.site_filter_info))
                             }
                         },
                         state = tooltipState
@@ -401,7 +402,7 @@ internal fun InlineEditorContent(
             ) {
                 Icon(
                     imageVector = (te.arrow ?: TE.Arrow.NONE).directionToComposeIcon(),
-                    contentDescription = stringResource(R.string.select_arrow),
+                    contentDescription = stringResource(UiStrings.select_arrow),
                     modifier = Modifier.size(20.dp),
                     tint = MaterialTheme.colorScheme.onSurface
                 )
@@ -414,7 +415,7 @@ internal fun InlineEditorContent(
                 noteText = it
                 onNoteChange(it)
             },
-            label = { Text(stringResource(CoreUiR.string.careportal_note)) },
+            label = { Text(stringResource(CoreUiStrings.careportal_note)) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             shape = MaterialTheme.shapes.small

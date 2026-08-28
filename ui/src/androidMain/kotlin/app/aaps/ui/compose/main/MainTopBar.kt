@@ -15,8 +15,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.icons.IcSettingsOff
 import app.aaps.ui.search.M3SearchBar
 import app.aaps.ui.search.SearchUiState
@@ -66,7 +68,7 @@ fun MainTopBar(
             IconButton(onClick = onMenuClick) {
                 Icon(
                     imageVector = Icons.Default.Menu,
-                    contentDescription = stringResource(app.aaps.core.ui.R.string.open_navigation)
+                    contentDescription = stringResource(CoreUiStrings.open_navigation)
                 )
             }
         },
@@ -76,7 +78,7 @@ fun MainTopBar(
                 // the button action (open settings) is unchanged.
                 Icon(
                     imageVector = if (isSimpleMode) IcSettingsOff else Icons.Default.Settings,
-                    contentDescription = stringResource(app.aaps.core.ui.R.string.settings)
+                    contentDescription = stringResource(CoreUiStrings.settings)
                 )
             }
         },

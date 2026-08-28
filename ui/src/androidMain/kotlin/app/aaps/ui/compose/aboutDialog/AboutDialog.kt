@@ -21,7 +21,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
@@ -103,7 +105,7 @@ fun AboutAlertDialog(
         },
         confirmButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.ok))
+                Text(stringResource(CoreUiStrings.ok))
             }
         },
         dismissButton = {
@@ -117,7 +119,7 @@ fun AboutAlertDialog(
                     )
                 }
             ) {
-                Text(stringResource(R.string.cta_dont_kill_my_app_info))
+                Text(stringResource(CoreUiStrings.cta_dont_kill_my_app_info))
             }
         },
         properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)

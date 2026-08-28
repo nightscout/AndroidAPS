@@ -4,6 +4,8 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
 import app.aaps.core.data.model.EB
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
@@ -156,9 +158,9 @@ class ExtendedBolusViewModel @Inject constructor(
 
         return if (selected.size == 1) {
             val eb = selected.first()
-            "${rh.gs(R.string.extended_bolus)}\n${rh.gs(R.string.date)}: ${dateUtil.dateAndTimeString(eb.timestamp)}"
+            "${rh.gs(CoreUiStrings.extended_bolus)}\n${rh.gs(CoreUiStrings.date)}: ${dateUtil.dateAndTimeString(eb.timestamp)}"
         } else {
-            rh.gs(R.string.confirm_remove_multiple_items, selected.size)
+            rh.gs(CoreUiStrings.confirm_remove_multiple_items, selected.size)
         }
     }
 

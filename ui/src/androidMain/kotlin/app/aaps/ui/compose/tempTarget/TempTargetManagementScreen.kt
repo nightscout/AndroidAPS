@@ -49,7 +49,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -142,8 +144,8 @@ fun TempTargetManagementScreen(
     if (showDeleteDialog && uiState.selectedPreset != null) {
         val presetName = uiState.selectedPreset!!.getDisplayName(viewModel.rh)
         OkCancelDialog(
-            title = viewModel.rh.gs(app.aaps.core.ui.R.string.removerecord),
-            message = "${viewModel.rh.gs(app.aaps.core.ui.R.string.delete)} $presetName?",
+            title = viewModel.rh.gs(CoreUiStrings.removerecord),
+            message = "${viewModel.rh.gs(CoreUiStrings.delete)} $presetName?",
             onConfirm = {
                 viewModel.deleteCurrentPreset()
                 showDeleteDialog = false
@@ -221,12 +223,12 @@ fun TempTargetManagementScreen(
             topBar = {
                 if (isReorderMode) {
                     AapsTopAppBar(
-                        title = { Text(stringResource(app.aaps.core.ui.R.string.reorder)) },
+                        title = { Text(stringResource(CoreUiStrings.reorder)) },
                         navigationIcon = {
                             IconButton(onClick = { viewModel.cancelReorder() }) {
                                 Icon(
                                     imageVector = Icons.Filled.Close,
-                                    contentDescription = stringResource(app.aaps.core.ui.R.string.cancel)
+                                    contentDescription = stringResource(CoreUiStrings.cancel)
                                 )
                             }
                         },
@@ -234,7 +236,7 @@ fun TempTargetManagementScreen(
                             IconButton(onClick = { scope.launch { viewModel.commitReorder() } }) {
                                 Icon(
                                     imageVector = Icons.Filled.Check,
-                                    contentDescription = stringResource(app.aaps.core.ui.R.string.ok)
+                                    contentDescription = stringResource(CoreUiStrings.ok)
                                 )
                             }
                         }
@@ -246,7 +248,7 @@ fun TempTargetManagementScreen(
                             IconButton(onClick = onNavigateBack) {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                    contentDescription = stringResource(app.aaps.core.ui.R.string.back)
+                                    contentDescription = stringResource(CoreUiStrings.back)
                                 )
                             }
                         },
@@ -256,7 +258,7 @@ fun TempTargetManagementScreen(
                                 IconButton(onClick = onRequestEditMode, enabled = editingEnabled) {
                                     Icon(
                                         imageVector = Icons.Filled.Edit,
-                                        contentDescription = stringResource(app.aaps.core.ui.R.string.switch_to_edit)
+                                        contentDescription = stringResource(CoreUiStrings.switch_to_edit)
                                     )
                                 }
                             } else {
@@ -268,7 +270,7 @@ fun TempTargetManagementScreen(
                                     }) {
                                         Icon(
                                             imageVector = Icons.Default.Save,
-                                            contentDescription = stringResource(app.aaps.core.ui.R.string.save),
+                                            contentDescription = stringResource(CoreUiStrings.save),
                                             tint = MaterialTheme.colorScheme.primary
                                         )
                                     }
@@ -280,7 +282,7 @@ fun TempTargetManagementScreen(
                                     IconButton(onClick = { showOverflowMenu = true }) {
                                         Icon(
                                             imageVector = Icons.Filled.MoreVert,
-                                            contentDescription = stringResource(app.aaps.core.ui.R.string.more_options)
+                                            contentDescription = stringResource(CoreUiStrings.more_options)
                                         )
                                     }
                                     DropdownMenu(
@@ -288,7 +290,7 @@ fun TempTargetManagementScreen(
                                         onDismissRequest = { showOverflowMenu = false }
                                     ) {
                                         DropdownMenuItem(
-                                            text = { Text(stringResource(app.aaps.core.ui.R.string.reorder)) },
+                                            text = { Text(stringResource(CoreUiStrings.reorder)) },
                                             enabled = canEnterReorder,
                                             onClick = {
                                                 showOverflowMenu = false
@@ -385,10 +387,10 @@ fun TempTargetManagementScreen(
                             // can never be moved or displaced.
                             val presetOffset = if (hasStandaloneActiveTT) 1 else 0
                             val workingOrder = reorderOrder
-                            val moveEarlierLabel = stringResource(app.aaps.core.ui.R.string.carousel_move_earlier)
-                            val moveLaterLabel = stringResource(app.aaps.core.ui.R.string.carousel_move_later)
-                            val reorderLabel = stringResource(app.aaps.core.ui.R.string.reorder)
-                            val selectLabel = stringResource(app.aaps.core.ui.R.string.carousel_show_card)
+                            val moveEarlierLabel = stringResource(CoreUiStrings.carousel_move_earlier)
+                            val moveLaterLabel = stringResource(CoreUiStrings.carousel_move_later)
+                            val reorderLabel = stringResource(CoreUiStrings.reorder)
+                            val selectLabel = stringResource(CoreUiStrings.carousel_show_card)
 
                             ManagementCarousel(
                                 state = pagerState,
@@ -406,14 +408,14 @@ fun TempTargetManagementScreen(
                                         moveLaterLabel = moveLaterLabel,
                                         positionLabel = { page ->
                                             viewModel.rh.gs(
-                                                app.aaps.core.ui.R.string.carousel_position,
+                                                CoreUiStrings.carousel_position,
                                                 page + 1,
                                                 order.size + presetOffset
                                             )
                                         },
                                         positionDescription = { page ->
                                             viewModel.rh.gs(
-                                                app.aaps.core.ui.R.string.carousel_position_description,
+                                                CoreUiStrings.carousel_position_description,
                                                 page + 1,
                                                 order.size + presetOffset
                                             )
@@ -512,7 +514,7 @@ fun TempTargetManagementScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.Close,
-                                contentDescription = stringResource(app.aaps.core.ui.R.string.cancel)
+                                contentDescription = stringResource(CoreUiStrings.cancel)
                             )
                         }
                     }
@@ -551,7 +553,7 @@ fun TempTargetManagementScreen(
                                         IconButton(onClick = { viewModel.revertToDefaults() }) {
                                             Icon(
                                                 imageVector = Icons.Filled.Refresh,
-                                                contentDescription = stringResource(app.aaps.core.ui.R.string.revert_to_defaults)
+                                                contentDescription = stringResource(CoreUiStrings.revert_to_defaults)
                                             )
                                         }
                                     }
@@ -561,7 +563,7 @@ fun TempTargetManagementScreen(
                                     ) {
                                         Icon(
                                             imageVector = Icons.Filled.Delete,
-                                            contentDescription = stringResource(R.string.remove_label),
+                                            contentDescription = stringResource(UiStrings.remove_label),
                                             tint = if (uiState.selectedPreset?.isDeletable == true)
                                                 MaterialTheme.colorScheme.error
                                             else
@@ -580,7 +582,7 @@ fun TempTargetManagementScreen(
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.PlayArrow,
-                                    contentDescription = stringResource(R.string.activate_label)
+                                    contentDescription = stringResource(UiStrings.activate_label)
                                 )
                             }
                         }

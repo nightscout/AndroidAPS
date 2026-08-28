@@ -41,9 +41,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.overview.graph.GraphConfig
 import app.aaps.core.interfaces.overview.graph.SecondaryGraph
@@ -373,7 +376,7 @@ fun GraphsSection(
         }
         if (editingBgOverlays) {
             GraphSeriesBottomSheet(
-                title = stringResource(app.aaps.core.ui.R.string.graph_bg),
+                title = stringResource(CoreUiStrings.graph_bg),
                 selectedSeries = graphConfig.bgOverlays,
                 availableSeries = BG_OVERLAY_SERIES,
                 height = graphConfig.bgHeight,
@@ -405,7 +408,7 @@ fun GraphsSection(
                     .height(graphConfig.iobHeight.dp)
             )
             Text(
-                text = stringResource(app.aaps.core.ui.R.string.iob) + " / " + stringResource(app.aaps.core.ui.R.string.basal_shortname),
+                text = stringResource(CoreUiStrings.iob) + " / " + stringResource(CoreUiStrings.basal_shortname),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                 modifier = Modifier
@@ -423,7 +426,7 @@ fun GraphsSection(
         }
         if (editingIobOverlays) {
             GraphSeriesBottomSheet(
-                title = stringResource(app.aaps.core.ui.R.string.iob) + " / " + stringResource(app.aaps.core.ui.R.string.basal_shortname),
+                title = stringResource(CoreUiStrings.iob) + " / " + stringResource(CoreUiStrings.basal_shortname),
                 selectedSeries = graphConfig.iobOverlays,
                 availableSeries = listOf(SeriesType.ACTIVITY),
                 height = graphConfig.iobHeight,
@@ -476,7 +479,7 @@ fun GraphsSection(
         if (editingGraphIndex >= 0 && editingGraphIndex < activeCount) {
             val editing = graphConfig.secondaryGraphs[editingGraphIndex]
             GraphSeriesBottomSheet(
-                title = stringResource(app.aaps.core.ui.R.string.graph_number, editingGraphIndex + 2),
+                title = stringResource(CoreUiStrings.graph_number, editingGraphIndex + 2),
                 selectedSeries = editing.series,
                 availableSeries = CONFIGURABLE_SERIES,
                 height = editing.height,
@@ -521,13 +524,13 @@ fun GraphsSection(
             ) {
                 Icon(Icons.Filled.Add, contentDescription = null, modifier = Modifier.size(16.dp))
                 Spacer(Modifier.width(4.dp))
-                Text(stringResource(app.aaps.core.ui.R.string.graph_add), style = MaterialTheme.typography.labelMedium)
+                Text(stringResource(CoreUiStrings.graph_add), style = MaterialTheme.typography.labelMedium)
             }
             if (showAddSheet) {
                 var newGraphSeries by remember { mutableStateOf(emptyList<SeriesType>()) }
                 var newGraphHeight by remember { mutableIntStateOf(GraphConfig.DEFAULT_GRAPH_HEIGHT_DP) }
                 GraphSeriesBottomSheet(
-                    title = stringResource(app.aaps.core.ui.R.string.graph_new),
+                    title = stringResource(CoreUiStrings.graph_new),
                     selectedSeries = newGraphSeries,
                     availableSeries = CONFIGURABLE_SERIES,
                     height = newGraphHeight,
@@ -572,19 +575,19 @@ private fun seriesListLabel(seriesList: List<SeriesType>): String {
 }
 
 /** String resource ID for the short name of a series type */
-private fun seriesShortNameId(type: SeriesType): Int = when (type) {
-    SeriesType.IOB             -> app.aaps.core.ui.R.string.iob
-    SeriesType.ABS_IOB         -> app.aaps.core.ui.R.string.abs_insulin_shortname
-    SeriesType.COB             -> app.aaps.core.ui.R.string.cob
-    SeriesType.BGI             -> app.aaps.core.ui.R.string.bgi_shortname
-    SeriesType.DEVIATIONS      -> app.aaps.core.ui.R.string.deviation_shortname
-    SeriesType.SENSITIVITY     -> app.aaps.core.ui.R.string.sensitivity_shortname
-    SeriesType.VAR_SENSITIVITY -> app.aaps.core.ui.R.string.variable_sensitivity_shortname
-    SeriesType.DEV_SLOPE       -> app.aaps.core.ui.R.string.devslope_shortname
-    SeriesType.HEART_RATE      -> app.aaps.core.ui.R.string.heartRate_shortname
-    SeriesType.STEPS           -> app.aaps.core.ui.R.string.steps_shortname
-    SeriesType.ACTIVITY        -> app.aaps.core.ui.R.string.activity_shortname
-    SeriesType.PREDICTIONS     -> app.aaps.core.ui.R.string.predictions_shortname
+private fun seriesShortNameId(type: SeriesType): TextRef = when (type) {
+    SeriesType.IOB             -> CoreUiStrings.iob
+    SeriesType.ABS_IOB         -> CoreUiStrings.abs_insulin_shortname
+    SeriesType.COB             -> CoreUiStrings.cob
+    SeriesType.BGI             -> CoreUiStrings.bgi_shortname
+    SeriesType.DEVIATIONS      -> CoreUiStrings.deviation_shortname
+    SeriesType.SENSITIVITY     -> CoreUiStrings.sensitivity_shortname
+    SeriesType.VAR_SENSITIVITY -> CoreUiStrings.variable_sensitivity_shortname
+    SeriesType.DEV_SLOPE       -> CoreUiStrings.devslope_shortname
+    SeriesType.HEART_RATE      -> CoreUiStrings.heartRate_shortname
+    SeriesType.STEPS           -> CoreUiStrings.steps_shortname
+    SeriesType.ACTIVITY        -> CoreUiStrings.activity_shortname
+    SeriesType.PREDICTIONS     -> CoreUiStrings.predictions_shortname
 }
 
 // =========================================================================
@@ -648,13 +651,13 @@ private fun GraphSeriesBottomSheet(
                     TextButton(onClick = onRemoveGraph) {
                         Icon(Icons.Filled.Delete, contentDescription = null, modifier = Modifier.size(16.dp))
                         Spacer(Modifier.width(4.dp))
-                        Text(stringResource(app.aaps.core.ui.R.string.remove))
+                        Text(stringResource(CoreUiStrings.remove))
                     }
                 }
             }
             Spacer(Modifier.height(12.dp))
             NumberInputRow(
-                labelResId = app.aaps.core.ui.R.string.graph_height,
+                labelRef = CoreUiStrings.graph_height,
                 value = height.toDouble(),
                 onValueChange = { onHeightChange(it.toInt()) },
                 valueRange = GraphConfig.DEFAULT_GRAPH_HEIGHT_DP.toDouble()..GraphConfig.MAX_GRAPH_HEIGHT_DP.toDouble(),

@@ -19,7 +19,9 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.configuration.Constants
@@ -83,7 +85,7 @@ fun TempTargetEditor(
     ) {
         // Section header
         Text(
-            text = stringResource(R.string.preset_settings),
+            text = stringResource(CoreUiStrings.preset_settings),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary
@@ -94,7 +96,7 @@ fun TempTargetEditor(
             OutlinedTextField(
                 value = editorName,
                 onValueChange = onNameChange,
-                label = { Text(stringResource(R.string.name_short).removeSuffix(":")) },
+                label = { Text(stringResource(CoreUiStrings.name_short).removeSuffix(":")) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 colors = OutlinedTextFieldDefaults.colors()
@@ -108,7 +110,7 @@ fun TempTargetEditor(
         }
 
         NumberInputRow(
-            labelResId = R.string.temporary_target,
+            labelRef = CoreUiStrings.temporary_target,
             value = editorTarget,
             onValueChange = onTargetChange,
             valueRange = targetRange,
@@ -120,12 +122,12 @@ fun TempTargetEditor(
 
         // Duration
         NumberInputRow(
-            labelResId = R.string.duration,
+            labelRef = CoreUiStrings.duration,
             value = editorDuration.toDouble(),
             onValueChange = { onDurationChange((it * 60000L).toLong()) },
             valueRange = Constants.ACTION_DURATION,
             step = 5.0,
-            unitLabel = TextRef.AndroidRes(R.string.units_min),
+            unitLabel = CoreUiStrings.units_min,
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -136,7 +138,7 @@ fun TempTargetEditor(
 
         // Activation section header
         Text(
-            text = stringResource(R.string.activation),
+            text = stringResource(CoreUiStrings.activation),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary
@@ -153,7 +155,7 @@ fun TempTargetEditor(
                 onValueChange = {},
                 readOnly = true,
                 enabled = false,
-                label = { Text(stringResource(R.string.date)) },
+                label = { Text(stringResource(CoreUiStrings.date)) },
                 trailingIcon = {
                     Icon(
                         imageVector = Icons.Filled.DateRange,
@@ -178,7 +180,7 @@ fun TempTargetEditor(
                 onValueChange = {},
                 readOnly = true,
                 enabled = false,
-                label = { Text(stringResource(R.string.time)) },
+                label = { Text(stringResource(CoreUiStrings.time)) },
                 trailingIcon = {
                     Icon(
                         imageVector = Icons.Outlined.Schedule,
@@ -203,7 +205,7 @@ fun TempTargetEditor(
             OutlinedTextField(
                 value = notes,
                 onValueChange = onNotesChange,
-                label = { Text(stringResource(R.string.notes_label)) },
+                label = { Text(stringResource(CoreUiStrings.notes_label)) },
                 modifier = Modifier.fillMaxWidth(),
                 minLines = 2,
                 maxLines = 4,

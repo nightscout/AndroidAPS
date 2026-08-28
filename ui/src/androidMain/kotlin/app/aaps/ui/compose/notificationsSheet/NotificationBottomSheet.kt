@@ -23,7 +23,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.interfaces.notifications.NotificationCategory
@@ -60,7 +62,7 @@ fun NotificationBottomSheet(
         LazyColumn {
             item {
                 Text(
-                    text = stringResource(R.string.notification),
+                    text = stringResource(CoreUiStrings.notification),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp)
@@ -124,7 +126,7 @@ private fun NotificationItem(
                     }
                 }
             } else {
-                ActionButton(text = TextRef.AndroidRes(R.string.dismiss), onClick = onDismiss)
+                ActionButton(text = CoreUiStrings.dismiss, onClick = onDismiss)
             }
         }
     }

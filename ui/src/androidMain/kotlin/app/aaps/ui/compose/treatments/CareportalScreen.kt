@@ -27,7 +27,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -90,7 +92,7 @@ fun CareportalScreen(
                 },
                 menuItems = listOf(
                     MenuItemData(
-                        label = viewModel.rh.gs(R.string.careportal_remove_started_events),
+                        label = viewModel.rh.gs(UiStrings.careportal_remove_started_events),
                         onClick = {
                             showRemoveStartedDialog = true
                         }
@@ -103,7 +105,7 @@ fun CareportalScreen(
     // Delete confirmation dialog
     if (showDeleteDialog) {
         OkCancelDialog(
-            title = viewModel.rh.gs(app.aaps.core.ui.R.string.removerecord),
+            title = viewModel.rh.gs(CoreUiStrings.removerecord),
             message = deleteDialogMessage,
             onConfirm = {
                 viewModel.deleteSelected()
@@ -116,12 +118,12 @@ fun CareportalScreen(
     // Remove started events dialog
     if (showRemoveStartedDialog) {
         OkCancelDialog(
-            title = viewModel.rh.gs(app.aaps.core.ui.R.string.careportal),
-            message = viewModel.rh.gs(R.string.careportal_remove_started_events),
+            title = viewModel.rh.gs(CoreUiStrings.careportal),
+            message = viewModel.rh.gs(UiStrings.careportal_remove_started_events),
             onConfirm = {
                 scope.launch {
                     persistenceLayer.invalidateTherapyEventsWithNote(
-                        viewModel.rh.gs(app.aaps.core.ui.R.string.androidaps_start),
+                        viewModel.rh.gs(CoreUiStrings.androidaps_start),
                         Action.RESTART_EVENTS_REMOVED,
                         Sources.Treatments
                     )
@@ -231,7 +233,7 @@ private fun TherapyEventItem(
                 if (therapyEvent.ids.nightscoutId != null) {
                     Icon(
                         imageVector = Ns,
-                        contentDescription = stringResource(app.aaps.core.ui.R.string.ns),
+                        contentDescription = stringResource(CoreUiStrings.ns),
                         modifier = Modifier
                             .size(21.dp)
                             .padding(end = 5.dp)
@@ -242,7 +244,7 @@ private fun TherapyEventItem(
                 if (!therapyEvent.isValid) {
                     Icon(
                         imageVector = Icons.Filled.Delete,
-                        contentDescription = stringResource(app.aaps.core.ui.R.string.invalid),
+                        contentDescription = stringResource(CoreUiStrings.invalid),
                         modifier = Modifier
                             .size(21.dp)
                             .padding(start = 5.dp),

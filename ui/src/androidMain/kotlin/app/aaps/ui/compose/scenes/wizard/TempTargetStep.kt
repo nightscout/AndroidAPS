@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.data.model.SceneAction
 import app.aaps.core.data.model.TTPreset
 import app.aaps.core.ui.R
@@ -34,20 +36,20 @@ internal fun TempTargetStep(
 ) {
     val canProceed = !state.ttEnabled || state.ttAction != null
     WizardStepLayout(
-        secondaryButton = WizardButton(text = stringResource(R.string.back), onClick = onBack),
-        primaryButton = WizardButton(text = stringResource(R.string.next), onClick = onNext, enabled = canProceed)
+        secondaryButton = WizardButton(text = stringResource(CoreUiStrings.back), onClick = onBack),
+        primaryButton = WizardButton(text = stringResource(CoreUiStrings.next), onClick = onNext, enabled = canProceed)
     ) {
         Text(
-            text = stringResource(R.string.temporary_target),
+            text = stringResource(CoreUiStrings.temporary_target),
             style = MaterialTheme.typography.headlineSmall
         )
         Text(
-            text = stringResource(R.string.scene_wizard_tt_info),
+            text = stringResource(CoreUiStrings.scene_wizard_tt_info),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         ActionToggle(
-            label = stringResource(R.string.scene_wizard_include_action, stringResource(R.string.temporary_target)),
+            label = stringResource(CoreUiStrings.scene_wizard_include_action, stringResource(CoreUiStrings.temporary_target)),
             checked = state.ttEnabled,
             onCheckedChange = onToggle
         )

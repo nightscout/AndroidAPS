@@ -1,5 +1,7 @@
 package app.aaps.ui.compose.treatments.viewmodels
 
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.PS
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -104,7 +106,7 @@ internal class ProfileSwitchViewModelTest {
     fun `getDeleteConfirmationMessage empty when nothing selected, plural for many`() {
         assertThat(sut.getDeleteConfirmationMessage()).isEqualTo("")
 
-        whenever(rh.gs(R.string.confirm_remove_multiple_items, 2)).thenReturn("Remove 2 items")
+        whenever(rh.gs(CoreUiStrings.confirm_remove_multiple_items, 2)).thenReturn("Remove 2 items")
         sut.enterSelectionMode(link())
         sut.toggleSelection(link())
         assertThat(sut.getDeleteConfirmationMessage()).isEqualTo("Remove 2 items")

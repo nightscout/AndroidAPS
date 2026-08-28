@@ -19,7 +19,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.ui.compose.AapsTheme
@@ -28,7 +30,6 @@ import app.aaps.core.ui.compose.icons.Pump
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.R
-import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 fun MainNavigationBar(
@@ -88,12 +89,12 @@ fun MainNavigationBar(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Fastfood,
-                            contentDescription = stringResource(CoreUiR.string.treatments),
+                            contentDescription = stringResource(CoreUiStrings.treatments),
                             modifier = Modifier.size(24.dp)
                         )
                     }
                 },
-                label = { Text(text = stringResource(CoreUiR.string.treatments)) },
+                label = { Text(text = stringResource(CoreUiStrings.treatments)) },
                 colors = navColors
             )
         }
@@ -117,12 +118,12 @@ fun MainNavigationBar(
                     ) {
                         Icon(
                             imageVector = IcAutomation,
-                            contentDescription = stringResource(CoreUiR.string.scenes),
+                            contentDescription = stringResource(CoreUiStrings.scenes),
                             modifier = Modifier.size(24.dp)
                         )
                     }
                 },
-                label = { Text(text = stringResource(CoreUiR.string.scenes)) },
+                label = { Text(text = stringResource(CoreUiStrings.scenes)) },
                 colors = navColors
             )
         }
@@ -134,10 +135,10 @@ fun MainNavigationBar(
             icon = {
                 Icon(
                     imageVector = Icons.Default.ManageAccounts,
-                    contentDescription = stringResource(CoreUiR.string.manage)
+                    contentDescription = stringResource(CoreUiStrings.manage)
                 )
             },
-            label = { Text(text = stringResource(CoreUiR.string.manage)) },
+            label = { Text(text = stringResource(CoreUiStrings.manage)) },
             colors = navColors
         )
 
@@ -249,12 +250,12 @@ fun MainNavigationBar(
                     ) {
                         Icon(
                             imageVector = Icons.Default.PlayCircle,
-                            contentDescription = stringResource(R.string.loop_accept_nav_label),
+                            contentDescription = stringResource(UiStrings.loop_accept_nav_label),
                             modifier = Modifier.size(24.dp)
                         )
                     }
                 },
-                label = { Text(text = stringResource(R.string.loop_accept_nav_label)) },
+                label = { Text(text = stringResource(UiStrings.loop_accept_nav_label)) },
                 colors = navColors
             )
         }
@@ -268,11 +269,11 @@ fun MainNavigationBar(
                     BadgedBox(badge = { Badge() }) {
                         Icon(
                             imageVector = Icons.Default.GppMaybe,
-                            contentDescription = stringResource(R.string.permission_sheet_title),
+                            contentDescription = stringResource(UiStrings.permission_sheet_title),
                         )
                     }
                 },
-                label = { Text(text = stringResource(R.string.permission_nav_label)) },
+                label = { Text(text = stringResource(UiStrings.permission_nav_label)) },
                 colors = navColors.copy(
                     unselectedIconColor = MaterialTheme.colorScheme.error,
                     unselectedTextColor = MaterialTheme.colorScheme.error,

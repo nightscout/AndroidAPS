@@ -34,7 +34,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -84,11 +86,11 @@ fun SceneListScreen(
                 // "Skip to <X>" fast-forwards to the chained scene; secondary just stops; cancel
                 // dismisses. Body summarises the revert actions, identical to the 2-button path.
                 ThreeButtonDialog(
-                    title = stringResource(R.string.scene_confirm_deactivate, state.sceneName),
+                    title = stringResource(CoreUiStrings.scene_confirm_deactivate, state.sceneName),
                     message = state.revertSummaries.joinToString("\n") { "• $it" },
-                    primaryLabel = stringResource(R.string.scene_skip_to_format, state.chainTargetName),
+                    primaryLabel = stringResource(CoreUiStrings.scene_skip_to_format, state.chainTargetName),
                     onPrimary = viewModel::confirmDeactivationAndChain,
-                    secondaryLabel = stringResource(R.string.scene_deactivate),
+                    secondaryLabel = stringResource(CoreUiStrings.scene_deactivate),
                     onSecondary = viewModel::confirmDeactivation,
                     onDismiss = viewModel::dismissDialog
                 )
@@ -103,7 +105,7 @@ fun SceneListScreen(
 
         is SceneListViewModel.DialogState.ValidationError     -> {
             OkDialog(
-                title = stringResource(R.string.error),
+                title = stringResource(CoreUiStrings.error),
                 message = state.message,
                 onDismiss = viewModel::dismissDialog
             )
@@ -118,7 +120,7 @@ fun SceneListScreen(
                 title = { Text((stringResourceOrNull(ElementType.SCENE_MANAGEMENT.label()) ?: "")) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(CoreUiStrings.back))
                     }
                 }
             )
@@ -129,7 +131,7 @@ fun SceneListScreen(
             // useful, so don't surface the affordance when sync can't happen.
             if (masterOfflineBanner == null) {
                 FloatingActionButton(onClick = onNavigateToWizard) {
-                    Icon(Icons.Default.Add, contentDescription = stringResource(R.string.scene))
+                    Icon(Icons.Default.Add, contentDescription = stringResource(CoreUiStrings.scene))
                 }
             }
         }
@@ -152,11 +154,11 @@ fun SceneListScreen(
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = stringResource(R.string.scenes),
+                        text = stringResource(CoreUiStrings.scenes),
                         style = MaterialTheme.typography.headlineSmall
                     )
                     Text(
-                        text = stringResource(R.string.scene_desc),
+                        text = stringResource(CoreUiStrings.scene_desc),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(top = AapsSpacing.medium)
@@ -172,7 +174,7 @@ fun SceneListScreen(
                         val isActive = activeState?.scene?.id == scene.id
                         val isInvalid = scene.id in invalidSceneIds
                         val subtitle = stringResource(
-                            R.string.scene_summary,
+                            CoreUiStrings.scene_summary,
                             scene.actions.size,
                             viewModel.formatMinutes(scene.defaultDurationMinutes)
                         )
@@ -268,13 +270,13 @@ internal fun SceneCard(
                 )
                 when {
                     chainMissing            -> Text(
-                        text = stringResource(R.string.scene_chain_target_missing),
+                        text = stringResource(CoreUiStrings.scene_chain_target_missing),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.error
                     )
 
                     chainTargetName != null -> Text(
-                        text = stringResource(R.string.scene_chain_indicator, chainTargetName),
+                        text = stringResource(CoreUiStrings.scene_chain_indicator, chainTargetName),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -303,14 +305,14 @@ internal fun SceneCard(
             Row {
                 if (isActive) {
                     IconButton(onClick = onDeactivate, enabled = masterReachable) {
-                        Icon(Icons.Default.Stop, contentDescription = stringResource(R.string.scene_deactivate))
+                        Icon(Icons.Default.Stop, contentDescription = stringResource(CoreUiStrings.scene_deactivate))
                     }
                 } else {
                     IconButton(
                         onClick = onActivate,
                         enabled = scene.isEnabled && activationReason == null
                     ) {
-                        Icon(Icons.Default.PlayArrow, contentDescription = stringResource(R.string.scene_activate))
+                        Icon(Icons.Default.PlayArrow, contentDescription = stringResource(CoreUiStrings.scene_activate))
                     }
                 }
                 IconButton(onClick = onEdit, enabled = editEnabled) {
@@ -337,7 +339,7 @@ private fun SceneActivationDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Text(stringResource(R.string.scene_confirm_activate, state.scene.name))
+            Text(stringResource(CoreUiStrings.scene_confirm_activate, state.scene.name))
         },
         text = {
             Column {
@@ -366,12 +368,12 @@ private fun SceneActivationDialog(
         },
         confirmButton = {
             TextButton(onClick = onConfirm) {
-                Text(stringResource(R.string.scene_activate))
+                Text(stringResource(CoreUiStrings.scene_activate))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.cancel))
+                Text(stringResource(CoreUiStrings.cancel))
             }
         },
         properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = false)
@@ -387,7 +389,7 @@ private fun SceneDeactivationDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Text(stringResource(R.string.scene_confirm_deactivate, state.sceneName))
+            Text(stringResource(CoreUiStrings.scene_confirm_deactivate, state.sceneName))
         },
         text = {
             Column {
@@ -402,12 +404,12 @@ private fun SceneDeactivationDialog(
         },
         confirmButton = {
             TextButton(onClick = onConfirm) {
-                Text(stringResource(R.string.scene_deactivate))
+                Text(stringResource(CoreUiStrings.scene_deactivate))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.cancel))
+                Text(stringResource(CoreUiStrings.cancel))
             }
         },
         properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = false)

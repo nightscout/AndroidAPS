@@ -33,8 +33,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.icons.IcBolus
@@ -171,7 +173,7 @@ private fun OverflowMenuButton(
         ) {
             Icon(
                 imageVector = Icons.Default.MoreVert,
-                contentDescription = stringResource(app.aaps.core.ui.R.string.more_options),
+                contentDescription = stringResource(CoreUiStrings.more_options),
                 modifier = Modifier.size(24.dp)
             )
         }

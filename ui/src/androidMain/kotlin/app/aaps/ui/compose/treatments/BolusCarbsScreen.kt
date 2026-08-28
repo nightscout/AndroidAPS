@@ -29,7 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -37,6 +37,9 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.ui.UiStrings
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
@@ -107,7 +110,7 @@ fun BolusCarbsScreen(
     // Delete confirmation dialog
     if (showDeleteDialog) {
         OkCancelDialog(
-            title = viewModel.rh.gs(app.aaps.core.ui.R.string.removerecord),
+            title = viewModel.rh.gs(CoreUiStrings.removerecord),
             message = deleteDialogMessage,
             onConfirm = {
                 viewModel.deleteSelected()
@@ -225,7 +228,7 @@ private fun MealLinkItem(
                         ) {
                             Icon(
                                 imageVector = ElementType.BOLUS_WIZARD.icon(),
-                                contentDescription = stringResource(app.aaps.core.ui.R.string.boluswizard),
+                                contentDescription = stringResource(CoreUiStrings.boluswizard),
                                 modifier = Modifier.size(21.dp),
                                 tint = ElementType.BOLUS_WIZARD.color()
                             )
@@ -234,7 +237,7 @@ private fun MealLinkItem(
                         if (bcr.ids.nightscoutId != null) {
                             Icon(
                                 imageVector = Ns,
-                                contentDescription = stringResource(app.aaps.core.ui.R.string.ns),
+                                contentDescription = stringResource(CoreUiStrings.ns),
                                 modifier = Modifier
                                     .size(21.dp)
                                     .padding(start = 5.dp)
@@ -273,7 +276,7 @@ private fun MealLinkItem(
                             val bolusText = if (iob.iobContrib > 0.01) {
                                 buildAnnotatedString {
                                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                        append(stringResource(app.aaps.core.interfaces.R.string.format_insulin_units, bolus.amount))
+                                        append(stringResource(InterfacesStrings.format_insulin_units, bolus.amount))
                                         append(" ")
                                     }
                                     withStyle(
@@ -283,14 +286,14 @@ private fun MealLinkItem(
                                         )
                                     ) {
                                         append("(")
-                                        append(stringResource(app.aaps.core.interfaces.R.string.format_insulin_units, iob.iobContrib))
+                                        append(stringResource(InterfacesStrings.format_insulin_units, iob.iobContrib))
                                         append(")")
                                     }
                                 }
                             } else {
                                 buildAnnotatedString {
                                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                        append(stringResource(app.aaps.core.interfaces.R.string.format_insulin_units, bolus.amount))
+                                        append(stringResource(InterfacesStrings.format_insulin_units, bolus.amount))
                                     }
                                 }
                             }
@@ -302,7 +305,7 @@ private fun MealLinkItem(
                             )
                         } ?: run {
                             Text(
-                                text = stringResource(app.aaps.core.interfaces.R.string.format_insulin_units, bolus.amount),
+                                text = stringResource(InterfacesStrings.format_insulin_units, bolus.amount),
                                 modifier = Modifier.padding(start = 10.dp),
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold
@@ -328,9 +331,9 @@ private fun MealLinkItem(
                         // "Prime/Fill" here; a carbs icon on a normal/correction bolus was misleading).
                         Text(
                             text = when (bolus.type) {
-                                BS.Type.SMB     -> stringResource(app.aaps.core.ui.R.string.smb_shortname)
-                                BS.Type.NORMAL  -> stringResource(app.aaps.core.ui.R.string.careportal_mealbolus)
-                                BS.Type.PRIMING -> stringResource(app.aaps.core.ui.R.string.prime_fill)
+                                BS.Type.SMB     -> stringResource(CoreUiStrings.smb_shortname)
+                                BS.Type.NORMAL  -> stringResource(CoreUiStrings.careportal_mealbolus)
+                                BS.Type.PRIMING -> stringResource(CoreUiStrings.prime_fill)
                             },
                             fontSize = 11.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -339,7 +342,7 @@ private fun MealLinkItem(
                         if (bolus.ids.nightscoutId != null) {
                             Icon(
                                 imageVector = Ns,
-                                contentDescription = stringResource(app.aaps.core.ui.R.string.ns),
+                                contentDescription = stringResource(CoreUiStrings.ns),
                                 modifier = Modifier
                                     .size(21.dp)
                                     .padding(start = 5.dp)
@@ -349,7 +352,7 @@ private fun MealLinkItem(
                         if (bolus.ids.isPumpHistory()) {
                             Icon(
                                 imageVector = Pump,
-                                contentDescription = stringResource(app.aaps.core.ui.R.string.pump_history),
+                                contentDescription = stringResource(CoreUiStrings.pump_history),
                                 modifier = Modifier
                                     .size(21.dp)
                                     .padding(start = 5.dp)
@@ -359,7 +362,7 @@ private fun MealLinkItem(
                         if (!bolus.isValid) {
                             Icon(
                                 imageVector = Icons.Filled.Delete,
-                                contentDescription = stringResource(app.aaps.core.ui.R.string.invalid),
+                                contentDescription = stringResource(CoreUiStrings.invalid),
                                 modifier = Modifier
                                     .size(21.dp)
                                     .padding(start = 5.dp),
@@ -393,20 +396,20 @@ private fun MealLinkItem(
                         )
 
                         Text(
-                            text = rh.gs(app.aaps.core.interfaces.R.string.carbs) + ":",
+                            text = rh.gs(InterfacesStrings.carbs) + ":",
                             modifier = Modifier.padding(start = 8.dp, end = 4.dp),
                             fontSize = 14.sp
                         )
 
                         Text(
-                            text = rh.gs(app.aaps.core.interfaces.R.string.format_carbs, carbs.amount.toInt()),
+                            text = rh.gs(InterfacesStrings.format_carbs, carbs.amount.toInt()),
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold
                         )
 
                         if (carbs.duration > 0) {
                             Text(
-                                text = rh.gs(app.aaps.core.ui.R.string.format_mins, T.msecs(carbs.duration).mins().toInt()),
+                                text = rh.gs(CoreUiStrings.format_mins, T.msecs(carbs.duration).mins().toInt()),
                                 modifier = Modifier.padding(start = 8.dp),
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold
@@ -427,7 +430,7 @@ private fun MealLinkItem(
                         if (carbs.ids.nightscoutId != null) {
                             Icon(
                                 imageVector = Ns,
-                                contentDescription = stringResource(app.aaps.core.ui.R.string.ns),
+                                contentDescription = stringResource(CoreUiStrings.ns),
                                 modifier = Modifier
                                     .size(21.dp)
                                     .padding(start = 5.dp)
@@ -437,7 +440,7 @@ private fun MealLinkItem(
                         if (carbs.ids.isPumpHistory()) {
                             Icon(
                                 imageVector = Pump,
-                                contentDescription = stringResource(app.aaps.core.ui.R.string.pump_history),
+                                contentDescription = stringResource(CoreUiStrings.pump_history),
                                 modifier = Modifier
                                     .size(21.dp)
                                     .padding(start = 5.dp)
@@ -447,7 +450,7 @@ private fun MealLinkItem(
                         if (!carbs.isValid) {
                             Icon(
                                 imageVector = Icons.Filled.Delete,
-                                contentDescription = stringResource(app.aaps.core.ui.R.string.invalid),
+                                contentDescription = stringResource(CoreUiStrings.invalid),
                                 modifier = Modifier
                                     .size(21.dp)
                                     .padding(start = 5.dp),

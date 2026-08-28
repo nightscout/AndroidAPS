@@ -29,7 +29,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -64,12 +66,12 @@ fun StatsScreen(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(app.aaps.core.ui.R.string.statistics)) },
+                title = { Text(stringResource(CoreUiStrings.statistics)) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(app.aaps.core.ui.R.string.back)
+                            contentDescription = stringResource(CoreUiStrings.back)
                         )
                     }
                 }
@@ -99,13 +101,13 @@ fun StatsScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = stringResource(app.aaps.core.ui.R.string.tdd),
+                            text = stringResource(CoreUiStrings.tdd),
                             style = MaterialTheme.typography.titleMedium
                         )
                         Spacer(modifier = Modifier.weight(1f))
                         if (state.tddExpanded && !state.tddLoading) {
                             FilledTonalButton(onClick = { viewModel.showRecalculateDialog() }) {
-                                Text(text = stringResource(R.string.recalculate))
+                                Text(text = stringResource(UiStrings.recalculate))
                             }
                         }
                         Icon(
@@ -118,12 +120,12 @@ fun StatsScreen(
                     AnimatedVisibility(visible = state.tddExpanded) {
                         Crossfade(
                             targetState = state.tddLoading,
-                            label = stringResource(app.aaps.core.ui.R.string.loading)
+                            label = stringResource(CoreUiStrings.loading)
                         ) { isLoading ->
                             if (isLoading) {
                                 LoadingSection(
-                                    title = stringResource(app.aaps.core.ui.R.string.tdd),
-                                    message = stringResource(R.string.calculation_in_progress)
+                                    title = stringResource(CoreUiStrings.tdd),
+                                    message = stringResource(UiStrings.calculation_in_progress)
                                 )
                             } else {
                                 state.tddStatsData?.let { data ->
@@ -153,7 +155,7 @@ fun StatsScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = stringResource(app.aaps.core.ui.R.string.tir),
+                            text = stringResource(CoreUiStrings.tir),
                             style = MaterialTheme.typography.titleMedium
                         )
                         Spacer(modifier = Modifier.weight(1f))
@@ -167,12 +169,12 @@ fun StatsScreen(
                     AnimatedVisibility(visible = state.tirExpanded) {
                         Crossfade(
                             targetState = state.tirLoading,
-                            label = stringResource(app.aaps.core.ui.R.string.loading)
+                            label = stringResource(CoreUiStrings.loading)
                         ) { isLoading ->
                             if (isLoading) {
                                 LoadingSection(
-                                    title = stringResource(app.aaps.core.ui.R.string.tir),
-                                    message = stringResource(R.string.calculation_in_progress)
+                                    title = stringResource(CoreUiStrings.tir),
+                                    message = stringResource(UiStrings.calculation_in_progress)
                                 )
                             } else {
                                 state.tirStatsData?.let { data ->
@@ -202,7 +204,7 @@ fun StatsScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = stringResource(R.string.dexcom_tir),
+                            text = stringResource(UiStrings.dexcom_tir),
                             style = MaterialTheme.typography.titleMedium
                         )
                         Spacer(modifier = Modifier.weight(1f))
@@ -216,12 +218,12 @@ fun StatsScreen(
                     AnimatedVisibility(visible = state.dexcomTirExpanded) {
                         Crossfade(
                             targetState = state.dexcomTirLoading,
-                            label = stringResource(app.aaps.core.ui.R.string.loading)
+                            label = stringResource(CoreUiStrings.loading)
                         ) { isLoading ->
                             if (isLoading) {
                                 LoadingSection(
-                                    title = stringResource(R.string.dexcom_tir),
-                                    message = stringResource(R.string.calculation_in_progress)
+                                    title = stringResource(UiStrings.dexcom_tir),
+                                    message = stringResource(UiStrings.calculation_in_progress)
                                 )
                             } else {
                                 state.dexcomTirData?.let { data ->
@@ -251,13 +253,13 @@ fun StatsScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = stringResource(R.string.activity_monitor),
+                            text = stringResource(UiStrings.activity_monitor),
                             style = MaterialTheme.typography.titleMedium
                         )
                         Spacer(modifier = Modifier.weight(1f))
                         if (state.activityExpanded && !state.activityLoading) {
                             FilledTonalButton(onClick = { viewModel.showResetActivityDialog() }) {
-                                Text(text = stringResource(app.aaps.core.ui.R.string.reset))
+                                Text(text = stringResource(CoreUiStrings.reset))
                             }
                         }
                         Icon(
@@ -270,12 +272,12 @@ fun StatsScreen(
                     AnimatedVisibility(visible = state.activityExpanded) {
                         Crossfade(
                             targetState = state.activityLoading,
-                            label = stringResource(app.aaps.core.ui.R.string.loading)
+                            label = stringResource(CoreUiStrings.loading)
                         ) { isLoading ->
                             if (isLoading) {
                                 LoadingSection(
-                                    title = stringResource(R.string.activity_monitor),
-                                    message = stringResource(R.string.calculation_in_progress)
+                                    title = stringResource(UiStrings.activity_monitor),
+                                    message = stringResource(UiStrings.calculation_in_progress)
                                 )
                             } else {
                                 state.activityStatsData?.let { data ->
@@ -305,7 +307,7 @@ fun StatsScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = stringResource(app.aaps.core.ui.R.string.tdd_cycle_pattern),
+                            text = stringResource(CoreUiStrings.tdd_cycle_pattern),
                             style = MaterialTheme.typography.titleMedium
                         )
                         Spacer(modifier = Modifier.weight(1f))
@@ -335,7 +337,7 @@ fun StatsScreen(
                                     )
                                     Text(
                                         text = stringResource(
-                                            R.string.calculation_in_progress_percent,
+                                            UiStrings.calculation_in_progress_percent,
                                             (state.tddCycleProgress * 100).toInt()
                                         ),
                                         style = MaterialTheme.typography.labelMedium
@@ -353,7 +355,7 @@ fun StatsScreen(
                                 )
                             } else if (!state.tddCycleLoading) {
                                 Text(
-                                    text = stringResource(R.string.not_enough_data_for_cycles),
+                                    text = stringResource(UiStrings.not_enough_data_for_cycles),
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -367,13 +369,13 @@ fun StatsScreen(
             AapsCard(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = stringResource(R.string.cgp_title),
+                        text = stringResource(UiStrings.cgp_title),
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
                     Crossfade(targetState = state.dexcomTirLoading, label = "cgp_loading") { isLoading ->
                         if (isLoading) {
-                            LoadingSection(title = stringResource(R.string.cgp_title), message = stringResource(R.string.calculation_in_progress))
+                            LoadingSection(title = stringResource(UiStrings.cgp_title), message = stringResource(UiStrings.calculation_in_progress))
                         } else {
                             state.dexcomTirData?.let { data ->
                                 GlucosePentagonCompose(dexcomTir = data, modifier = Modifier.fillMaxWidth())
@@ -387,7 +389,7 @@ fun StatsScreen(
 
     if (state.showRecalculateDialog) {
         OkCancelDialog(
-            message = stringResource(R.string.do_you_want_recalculate_tdd_stats),
+            message = stringResource(UiStrings.do_you_want_recalculate_tdd_stats),
             onConfirm = { viewModel.confirmRecalculateTdd() },
             onDismiss = { viewModel.dismissRecalculateDialog() }
         )
@@ -395,7 +397,7 @@ fun StatsScreen(
 
     if (state.showResetActivityDialog) {
         OkCancelDialog(
-            message = stringResource(R.string.do_you_want_reset_stats),
+            message = stringResource(UiStrings.do_you_want_reset_stats),
             onConfirm = { viewModel.confirmResetActivityStats() },
             onDismiss = { viewModel.dismissResetActivityDialog() }
         )

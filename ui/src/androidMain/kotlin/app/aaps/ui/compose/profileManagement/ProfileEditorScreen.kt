@@ -46,7 +46,10 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -63,7 +66,6 @@ import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileEditorViewModel
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileUiState
 import app.aaps.ui.compose.profileManagement.viewmodels.SingleProfileState
-import app.aaps.core.interfaces.R as InterfacesR
 
 @Composable
 fun ProfileEditorScreen(
@@ -107,12 +109,12 @@ fun ProfileEditorScreen(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(R.string.localprofile)) },
+                title = { Text(stringResource(CoreUiStrings.localprofile)) },
                 navigationIcon = {
                     IconButton(onClick = handleBack) {
                         Icon(
                             Icons.Filled.Close,
-                            contentDescription = stringResource(R.string.close)
+                            contentDescription = stringResource(CoreUiStrings.close)
                         )
                     }
                 },
@@ -125,7 +127,7 @@ fun ProfileEditorScreen(
                         }) {
                             Icon(
                                 Icons.Default.Refresh,
-                                contentDescription = stringResource(R.string.reset)
+                                contentDescription = stringResource(CoreUiStrings.reset)
                             )
                         }
                         // Save button
@@ -138,7 +140,7 @@ fun ProfileEditorScreen(
                         ) {
                             Icon(
                                 Icons.Default.Save,
-                                contentDescription = stringResource(R.string.save),
+                                contentDescription = stringResource(CoreUiStrings.save),
                                 tint = if (state.isValid) MaterialTheme.colorScheme.primary
                                 else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
                             )
@@ -158,7 +160,7 @@ fun ProfileEditorScreen(
                 contentAlignment = Alignment.Center
             ) {
                 FilledTonalButton(onClick = { /* Unlock handled by activity */ }) {
-                    Text(stringResource(R.string.unlock_settings))
+                    Text(stringResource(CoreUiStrings.unlock_settings))
                 }
             }
         } else {
@@ -192,7 +194,7 @@ fun ProfileEditorScreen(
                         modifier = Modifier.background(
                             if (icHasError) MaterialTheme.colorScheme.errorContainer else Color.Transparent
                         ),
-                        text = { Text(stringResource(R.string.ic_short)) }
+                        text = { Text(stringResource(CoreUiStrings.ic_short)) }
                     )
                     Tab(
                         selected = state.selectedTab == 1,
@@ -200,7 +202,7 @@ fun ProfileEditorScreen(
                         modifier = Modifier.background(
                             if (isfHasError) MaterialTheme.colorScheme.errorContainer else Color.Transparent
                         ),
-                        text = { Text(stringResource(R.string.isf_short)) }
+                        text = { Text(stringResource(CoreUiStrings.isf_short)) }
                     )
                     Tab(
                         selected = state.selectedTab == 2,
@@ -208,7 +210,7 @@ fun ProfileEditorScreen(
                         modifier = Modifier.background(
                             if (basalHasError) MaterialTheme.colorScheme.errorContainer else Color.Transparent
                         ),
-                        text = { Text(stringResource(R.string.basal_short)) }
+                        text = { Text(stringResource(CoreUiStrings.basal_short)) }
                     )
                     Tab(
                         selected = state.selectedTab == 3,
@@ -216,7 +218,7 @@ fun ProfileEditorScreen(
                         modifier = Modifier.background(
                             if (targetHasError) MaterialTheme.colorScheme.errorContainer else Color.Transparent
                         ),
-                        text = { Text(stringResource(R.string.target_short)) }
+                        text = { Text(stringResource(CoreUiStrings.target_short)) }
                     )
                 }
 
@@ -249,7 +251,7 @@ fun ProfileEditorScreen(
                     // current pump until the basal fits the pump's limits.
                     if (state.pumpIncompatible && state.selectedTab == 2) {
                         Text(
-                            text = stringResource(R.string.profile_basal_not_compatible_with_pump),
+                            text = stringResource(CoreUiStrings.profile_basal_not_compatible_with_pump),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.tertiary,
                             modifier = Modifier.padding(bottom = 8.dp)
@@ -328,7 +330,7 @@ private fun ProfileNameHeader(
                     }) {
                         Icon(
                             Icons.Default.Close,
-                            contentDescription = stringResource(R.string.cancel),
+                            contentDescription = stringResource(CoreUiStrings.cancel),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
@@ -339,7 +341,7 @@ private fun ProfileNameHeader(
                     }) {
                         Icon(
                             Icons.Default.Check,
-                            contentDescription = stringResource(R.string.ok),
+                            contentDescription = stringResource(CoreUiStrings.ok),
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }
@@ -360,7 +362,7 @@ private fun ProfileNameHeader(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = profileName.ifEmpty { stringResource(R.string.profile_name) },
+                    text = profileName.ifEmpty { stringResource(CoreUiStrings.profile_name) },
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -371,7 +373,7 @@ private fun ProfileNameHeader(
                 Spacer(Modifier.width(4.dp))
                 Icon(
                     imageVector = Icons.Default.Edit,
-                    contentDescription = stringResource(R.string.edit_profile_name),
+                    contentDescription = stringResource(CoreUiStrings.edit_profile_name),
                     modifier = Modifier.size(18.dp),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -379,7 +381,7 @@ private fun ProfileNameHeader(
 
             // Units display
             Text(
-                text = "${stringResource(R.string.units_colon)} $units",
+                text = "${stringResource(CoreUiStrings.units_colon)} $units",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -396,23 +398,23 @@ private fun UnsavedChangesDialog(
 ) {
     AlertDialog(
         onDismissRequest = onCancel,
-        title = { Text(stringResource(R.string.unsaved_changes)) },
-        text = { Text(stringResource(R.string.unsaved_changes_message)) },
+        title = { Text(stringResource(CoreUiStrings.unsaved_changes)) },
+        text = { Text(stringResource(CoreUiStrings.unsaved_changes_message)) },
         confirmButton = {
             // Disabled when the profile is invalid — an incomplete/invalid profile must not be saved
             // (e.g. an unfinished new draft); the user can still Discard or Cancel.
             FilledTonalButton(onClick = onSave, enabled = saveEnabled) {
-                Text(stringResource(R.string.save))
+                Text(stringResource(CoreUiStrings.save))
             }
         },
         dismissButton = {
             Row {
                 TextButton(onClick = onCancel) {
-                    Text(stringResource(R.string.cancel))
+                    Text(stringResource(CoreUiStrings.cancel))
                 }
                 Spacer(Modifier.width(8.dp))
                 TextButton(onClick = onDiscard) {
-                    Text(stringResource(R.string.discard))
+                    Text(stringResource(CoreUiStrings.discard))
                 }
             }
         }
@@ -429,7 +431,7 @@ private fun IcContent(
     Column {
         if (supportsDynamic) {
             Text(
-                text = stringResource(R.string.ic_dynamic_label_warning),
+                text = stringResource(CoreUiStrings.ic_dynamic_label_warning),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(bottom = 8.dp)
@@ -441,7 +443,7 @@ private fun IcContent(
             elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
         ) {
             TimeValueList(
-                title = stringResource(R.string.ic_long_label),
+                title = stringResource(CoreUiStrings.ic_long_label),
                 entries = profile.ic,
                 onEntryChange = { index, entry -> viewModel.updateIcEntry(index, entry) },
                 onAddEntry = { index -> viewModel.addIcEntry(index) },
@@ -449,7 +451,7 @@ private fun IcContent(
                 valueRange = state.icRange,
                 step = 0.1,
                 valueFormat = NumberFormat.DECIMAL_1,
-                unitLabel = stringResource(InterfacesR.string.profile_carbs_per_unit),
+                unitLabel = stringResource(InterfacesStrings.profile_carbs_per_unit),
                 modifier = Modifier.padding(16.dp)
             )
         }
@@ -485,7 +487,7 @@ private fun IsfContent(
     Column {
         if (supportsDynamic) {
             Text(
-                text = stringResource(R.string.isf_dynamic_label_warning),
+                text = stringResource(CoreUiStrings.isf_dynamic_label_warning),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(bottom = 8.dp)
@@ -497,7 +499,7 @@ private fun IsfContent(
             elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
         ) {
             TimeValueList(
-                title = stringResource(R.string.isf_long_label),
+                title = stringResource(CoreUiStrings.isf_long_label),
                 entries = profile.isf,
                 onEntryChange = { index, entry -> viewModel.updateIsfEntry(index, entry) },
                 onAddEntry = { index -> viewModel.addIsfEntry(index) },
@@ -505,7 +507,7 @@ private fun IsfContent(
                 valueRange = state.isfRange,
                 step = if (profile.mgdl) 1.0 else 0.1,
                 valueFormat = if (profile.mgdl) NumberFormat.INTEGER else NumberFormat.DECIMAL_1,
-                unitLabel = "${state.units}/${stringResource(R.string.insulin_unit_shortname)}",
+                unitLabel = "${state.units}/${stringResource(CoreUiStrings.insulin_unit_shortname)}",
                 modifier = Modifier.padding(16.dp)
             )
         }
@@ -548,12 +550,12 @@ private fun BasalContent(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "${stringResource(R.string.basal_long_label)} [${stringResource(InterfacesR.string.profile_ins_units_per_hour)}]",
+                        text = "${stringResource(CoreUiStrings.basal_long_label)} [${stringResource(InterfacesStrings.profile_ins_units_per_hour)}]",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
-                        text = "∑ ${stringResource(InterfacesR.string.format_insulin_units, state.basalSum)}",
+                        text = "∑ ${stringResource(InterfacesStrings.format_insulin_units, state.basalSum)}",
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.primary
                     )
@@ -608,7 +610,7 @@ private fun TargetContent(
             elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
         ) {
             TargetValueList(
-                title = stringResource(R.string.target_long_label),
+                title = stringResource(CoreUiStrings.target_long_label),
                 lowEntries = profile.targetLow,
                 highEntries = profile.targetHigh,
                 onEntryChange = { index, low, high ->

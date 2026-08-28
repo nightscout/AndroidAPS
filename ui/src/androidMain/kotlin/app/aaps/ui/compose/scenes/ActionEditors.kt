@@ -33,7 +33,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.interfaces.InterfacesStrings
 import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.RM
@@ -45,7 +49,6 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.NumberInputRow
-import app.aaps.core.interfaces.R as InterfacesR
 
 // --- Helpers ---
 
@@ -54,9 +57,9 @@ internal fun presetDisplayName(preset: TTPreset): String = when {
     preset.nameRes != null       -> stringResource(preset.nameRes!!)
     !preset.name.isNullOrEmpty() -> preset.name!!
     else                         -> when (preset.reason) {
-        TT.Reason.ACTIVITY     -> stringResource(R.string.activity)
-        TT.Reason.EATING_SOON  -> stringResource(R.string.eatingsoon)
-        TT.Reason.HYPOGLYCEMIA -> stringResource(R.string.hypo)
+        TT.Reason.ACTIVITY     -> stringResource(CoreUiStrings.activity)
+        TT.Reason.EATING_SOON  -> stringResource(CoreUiStrings.eatingsoon)
+        TT.Reason.HYPOGLYCEMIA -> stringResource(CoreUiStrings.hypo)
         else                   -> preset.reason.text
     }
 }
@@ -72,7 +75,7 @@ internal fun TempTargetEditor(
 ) {
     if (ttPresets.isEmpty()) {
         Text(
-            text = stringResource(R.string.scene_editor_no_tt_presets),
+            text = stringResource(CoreUiStrings.scene_editor_no_tt_presets),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.error
         )
@@ -84,13 +87,13 @@ internal fun TempTargetEditor(
         ttPresets.firstOrNull { it.reason == a.reason && it.targetValue == a.targetMgdl }
             ?: ttPresets.firstOrNull { it.reason == a.reason }
     }
-    val placeholder = stringResource(R.string.scene_editor_select_tt_preset)
+    val placeholder = stringResource(CoreUiStrings.scene_editor_select_tt_preset)
     val currentPresetName = currentPreset?.let { presetDisplayName(it) } ?: placeholder
 
     // Preset dropdown
     val presetNames = ttPresets.map { it to presetDisplayName(it) }
     DropdownSelector(
-        label = stringResource(R.string.scene_editor_tt_preset),
+        label = stringResource(CoreUiStrings.scene_editor_tt_preset),
         selected = currentPresetName,
         options = presetNames.map { it.second },
         onSelect = { selectedName ->
@@ -107,7 +110,7 @@ internal fun TempTargetEditor(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = stringResource(R.string.scene_editor_target),
+                text = stringResource(CoreUiStrings.scene_editor_target),
                 style = MaterialTheme.typography.bodyMedium
             )
             Text(
@@ -126,11 +129,11 @@ internal fun ProfileSwitchEditor(
     profileNames: List<String>
 ) {
     // Profile name dropdown with "keep current" option
-    val keepCurrentLabel = stringResource(R.string.scene_editor_keep_current_profile)
+    val keepCurrentLabel = stringResource(CoreUiStrings.scene_editor_keep_current_profile)
     val options = listOf(keepCurrentLabel) + profileNames
     val selected = if (action.profileName.isEmpty()) keepCurrentLabel else action.profileName
     DropdownSelector(
-        label = stringResource(R.string.scene_editor_profile),
+        label = stringResource(CoreUiStrings.scene_editor_profile),
         selected = selected,
         options = options,
         onSelect = { choice ->
@@ -141,12 +144,12 @@ internal fun ProfileSwitchEditor(
 
     // Percentage slider
     NumberInputRow(
-        labelResId = R.string.scene_editor_percentage,
+        labelRef = CoreUiStrings.scene_editor_percentage,
         value = action.percentage.toDouble(),
         onValueChange = { onUpdate(action.copy(percentage = it.toInt())) },
         valueRange = Constants.CPP_PERCENTAGE_RANGE,
         step = 5.0,
-        unitLabel = TextRef.AndroidRes(R.string.units_percent)
+        unitLabel = CoreUiStrings.units_percent
     )
 }
 
@@ -161,7 +164,7 @@ internal fun SmbToggleEditor(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = if (action.enabled) stringResource(R.string.scene_editor_enabled) else stringResource(R.string.scene_editor_disabled),
+            text = if (action.enabled) stringResource(CoreUiStrings.scene_editor_enabled) else stringResource(CoreUiStrings.scene_editor_disabled),
             style = MaterialTheme.typography.bodyLarge
         )
         Switch(
@@ -187,7 +190,7 @@ internal fun RunningModeEditor(
     // Pre-resolve display names in composable context
     val modeNames = modes.map { it to loopModeDisplayName(it) }
     DropdownSelector(
-        label = stringResource(R.string.scene_editor_mode),
+        label = stringResource(CoreUiStrings.scene_editor_mode),
         selected = modeNames.firstOrNull { it.first == action.mode }?.second ?: action.mode.name,
         options = modeNames.map { it.second },
         onSelect = { selectedName ->
@@ -199,12 +202,12 @@ internal fun RunningModeEditor(
 
 @Composable
 internal fun loopModeDisplayName(mode: RM.Mode): String = when (mode) {
-    RM.Mode.CLOSED_LOOP       -> stringResource(R.string.closedloop)
-    RM.Mode.CLOSED_LOOP_LGS   -> stringResource(R.string.lowglucosesuspend)
-    RM.Mode.OPEN_LOOP         -> stringResource(R.string.openloop)
-    RM.Mode.DISABLED_LOOP     -> stringResource(R.string.disableloop)
-    RM.Mode.SUSPENDED_BY_USER -> stringResource(R.string.suspendloop)
-    RM.Mode.DISCONNECTED_PUMP -> stringResource(InterfacesR.string.pump_disconnected)
+    RM.Mode.CLOSED_LOOP       -> stringResource(CoreUiStrings.closedloop)
+    RM.Mode.CLOSED_LOOP_LGS   -> stringResource(CoreUiStrings.lowglucosesuspend)
+    RM.Mode.OPEN_LOOP         -> stringResource(CoreUiStrings.openloop)
+    RM.Mode.DISABLED_LOOP     -> stringResource(CoreUiStrings.disableloop)
+    RM.Mode.SUSPENDED_BY_USER -> stringResource(CoreUiStrings.suspendloop)
+    RM.Mode.DISCONNECTED_PUMP -> stringResource(InterfacesStrings.pump_disconnected)
     else                      -> mode.name
 }
 
@@ -231,7 +234,7 @@ internal fun CarePortalEditor(
     )
     val typeNames = types.map { it to translateEventType(it) }
     DropdownSelector(
-        label = stringResource(R.string.scene_editor_event_type),
+        label = stringResource(CoreUiStrings.scene_editor_event_type),
         selected = translateEventType(action.type),
         options = typeNames.map { it.second },
         onSelect = { selectedName ->
@@ -244,7 +247,7 @@ internal fun CarePortalEditor(
     OutlinedTextField(
         value = action.note,
         onValueChange = { onUpdate(action.copy(note = it)) },
-        label = { Text(stringResource(R.string.scene_editor_note)) },
+        label = { Text(stringResource(CoreUiStrings.scene_editor_note)) },
         modifier = Modifier.fillMaxWidth(),
         singleLine = true
     )
@@ -327,7 +330,7 @@ internal fun SceneIconPicker(
                     )
                     Column {
                         Text(
-                            text = stringResource(R.string.scene_icon),
+                            text = stringResource(CoreUiStrings.scene_icon),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )

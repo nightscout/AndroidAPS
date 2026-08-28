@@ -44,7 +44,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
+import app.aaps.ui.UiStrings
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.format.NumberFormat
@@ -52,6 +54,7 @@ import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.DateTimeSection
 import app.aaps.core.ui.compose.InsulinSelector
@@ -72,8 +75,6 @@ import app.aaps.ui.compose.overview.chips.CobUiState
 import app.aaps.ui.compose.overview.chips.IobUiState
 import app.aaps.ui.compose.overview.graphs.BgInfoUiState
 import kotlinx.coroutines.flow.StateFlow
-import app.aaps.core.interfaces.R as InterfacesR
-import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 fun InsulinDialogScreen(
@@ -135,7 +136,7 @@ fun InsulinDialogScreen(
     if (showNoAction) {
         ElementConfirmationDialog(
             elementType = ElementType.INSULIN,
-            message = stringResource(CoreUiR.string.no_action_selected),
+            message = stringResource(CoreUiStrings.no_action_selected),
             onConfirm = { showNoAction = false },
             onDismiss = { showNoAction = false }
         )
@@ -232,7 +233,7 @@ internal fun InsulinDialogContent(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.Filled.Close,
-                            contentDescription = stringResource(CoreUiR.string.close)
+                            contentDescription = stringResource(CoreUiStrings.close)
                         )
                     }
                 },
@@ -241,7 +242,7 @@ internal fun InsulinDialogContent(
                         IconButton(onClick = onSettingsClick) {
                             Icon(
                                 imageVector = Icons.Default.Settings,
-                                contentDescription = stringResource(CoreUiR.string.settings),
+                                contentDescription = stringResource(CoreUiStrings.settings),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
@@ -268,9 +269,9 @@ internal fun InsulinDialogContent(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 if (uiState.insulin > 0.0) {
-                    Text(stringResource(InterfacesR.string.format_insulin_units, uiState.insulin))
+                    Text(stringResource(InterfacesStrings.format_insulin_units, uiState.insulin))
                 } else {
-                    Text(stringResource(CoreUiR.string.ok))
+                    Text(stringResource(CoreUiStrings.ok))
                 }
             }
         }
@@ -312,7 +313,7 @@ internal fun InsulinDialogContent(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = stringResource(app.aaps.ui.R.string.start_eating_soon_tt),
+                            text = stringResource(UiStrings.start_eating_soon_tt),
                             style = MaterialTheme.typography.bodyLarge,
                             modifier = Modifier.weight(1f)
                         )
@@ -330,7 +331,7 @@ internal fun InsulinDialogContent(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = stringResource(InterfacesR.string.bolus_recorded_only),
+                            text = stringResource(InterfacesStrings.bolus_recorded_only),
                             style = MaterialTheme.typography.bodyLarge,
                             color = if (uiState.forcedRecordOnly) MaterialTheme.colorScheme.error
                             else MaterialTheme.colorScheme.onSurface,
@@ -352,13 +353,13 @@ internal fun InsulinDialogContent(
             ) {
                 Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
                     NumberInputRow(
-                        labelResId = CoreUiR.string.overview_insulin_label,
+                        labelRef = CoreUiStrings.overview_insulin_label,
                         value = uiState.insulin,
                         onValueChange = onInsulinChange,
                         valueRange = 0.0..uiState.maxInsulin,
                         step = uiState.bolusStep,
                         valueFormat = bolusFormat,
-                        unitLabel = TextRef.AndroidRes(CoreUiR.string.insulin_unit_shortname)
+                        unitLabel = CoreUiStrings.insulin_unit_shortname
                     )
                     InsulinQuickAddButtons(
                         increment1 = uiState.insulinButtonIncrement1,
@@ -378,7 +379,7 @@ internal fun InsulinDialogContent(
                 ) {
                     Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
                         Text(
-                            text = stringResource(CoreUiR.string.record_insulin_hint),
+                            text = stringResource(CoreUiStrings.record_insulin_hint),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.error,
                             modifier = Modifier.padding(bottom = 8.dp)
@@ -400,12 +401,12 @@ internal fun InsulinDialogContent(
                 ) {
                     Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
                         NumberInputRow(
-                            labelResId = CoreUiR.string.time,
+                            labelRef = CoreUiStrings.time,
                             value = uiState.timeOffsetMinutes.toDouble(),
                             onValueChange = onTimeOffsetChange,
                             valueRange = -12.0 * 60..12.0 * 60,
                             step = 5.0,
-                            unitLabel = TextRef.AndroidRes(CoreUiR.string.units_min)
+                            unitLabel = CoreUiStrings.units_min
                         )
                         DateTimeSection(
                             dateString = dateString,
@@ -427,7 +428,7 @@ internal fun InsulinDialogContent(
                     TextField(
                         value = uiState.notes,
                         onValueChange = onNotesChange,
-                        label = { Text(stringResource(CoreUiR.string.notes_label)) },
+                        label = { Text(stringResource(CoreUiStrings.notes_label)) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp, vertical = 8.dp),

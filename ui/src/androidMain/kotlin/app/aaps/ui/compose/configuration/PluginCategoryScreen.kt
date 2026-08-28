@@ -18,7 +18,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsSpacing
@@ -48,9 +50,9 @@ fun PluginCategoryScreen(
 ) {
     if (pluginSwitchConfirmation != null) {
         OkCancelDialog(
-            title = stringResource(R.string.configbuilder_switch_confirmation_title),
+            title = stringResource(CoreUiStrings.configbuilder_switch_confirmation_title),
             message = stringResource(
-                R.string.configbuilder_switch_confirmation,
+                CoreUiStrings.configbuilder_switch_confirmation,
                 pluginSwitchConfirmation.fromName,
                 pluginSwitchConfirmation.toName
             ),
@@ -61,7 +63,7 @@ fun PluginCategoryScreen(
 
     if (hardwarePumpConfirmation != null) {
         OkCancelDialog(
-            title = stringResource(R.string.confirmation),
+            title = stringResource(CoreUiStrings.confirmation),
             message = hardwarePumpConfirmation.message,
             onConfirm = onConfirmHardwarePump,
             onDismiss = onDismissHardwarePump
@@ -78,7 +80,7 @@ fun PluginCategoryScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
+                            contentDescription = stringResource(CoreUiStrings.back)
                         )
                     }
                 }
@@ -89,8 +91,8 @@ fun PluginCategoryScreen(
 
         val selectionMode =
             if (category.isMultiSelect) SelectionMode.MULTI_SELECT else SelectionMode.SINGLE_SELECT
-        val hintRes = if (category.isMultiSelect) R.string.configbuilder_pick_many_hint
-        else R.string.configbuilder_pick_one_hint
+        val hintRes = if (category.isMultiSelect) CoreUiStrings.configbuilder_pick_many_hint
+        else CoreUiStrings.configbuilder_pick_one_hint
         val noneSelected = !category.isMultiSelect && category.plugins.none { it.isEnabled }
         // Offline-gating applies ONLY to synced categories — those control the master's selection, so they
         // need the master reachable. Non-synced categories (SYNC/GENERAL/pump/etc.) are local config and stay
@@ -161,7 +163,7 @@ private fun NoSelectionWarning() {
             )
             Column {
                 Text(
-                    text = stringResource(R.string.configbuilder_no_selection_warning),
+                    text = stringResource(CoreUiStrings.configbuilder_no_selection_warning),
                     style = MaterialTheme.typography.bodyMedium
                 )
             }

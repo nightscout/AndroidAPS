@@ -1,5 +1,8 @@
 package app.aaps.ui.compose.tempTarget
 
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.interfaces.resources.TextRefIdRegistry
+import app.aaps.ui.UiStringIds
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TT
@@ -300,6 +303,8 @@ internal class TempTargetManagementViewModelTest {
     @Test
     fun `a same-size replacement of the preset list aborts the commit`() = runTest {
         whenever(rh.gs(any<Int>())).thenReturn("message")
+        // The screens name their strings now, so the TextRef overload is the one they call.
+        whenever(rh.gs(any<TextRef>())).thenReturn("message")
         givenPresets()
         sut.enterReorderMode()
         sut.moveReorderItem(4, 3)

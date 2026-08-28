@@ -28,7 +28,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -67,10 +69,10 @@ fun RunningModeScreen(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(state.currentModeText.ifEmpty { stringResource(app.aaps.core.ui.R.string.running_mode) }) },
+                title = { Text(state.currentModeText.ifEmpty { stringResource(CoreUiStrings.running_mode) }) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Filled.Close, contentDescription = stringResource(app.aaps.core.ui.R.string.close))
+                        Icon(Icons.Filled.Close, contentDescription = stringResource(CoreUiStrings.close))
                     }
                 }
             )
@@ -86,7 +88,7 @@ fun RunningModeScreen(
         ) {
             // Reasons card (if any)
             if (!state.reasons.isNullOrEmpty()) {
-                SectionCard(title = stringResource(app.aaps.core.ui.R.string.constraints)) {
+                SectionCard(title = stringResource(CoreUiStrings.constraints)) {
                     Text(
                         text = state.reasons!!,
                         style = MaterialTheme.typography.bodySmall,
@@ -105,7 +107,7 @@ fun RunningModeScreen(
                     colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
                 ) {
                     Text(
-                        text = stringResource(app.aaps.core.ui.R.string.no_profile_set),
+                        text = stringResource(CoreUiStrings.no_profile_set),
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onErrorContainer,
@@ -198,12 +200,12 @@ private fun LoopControlSection(
     allowedModes: List<RM.Mode>,
     onAction: (PendingRunningModeAction) -> Unit
 ) {
-    val closedLoopText = stringResource(app.aaps.core.ui.R.string.closedloop)
-    val lgsText = stringResource(app.aaps.core.ui.R.string.lowglucosesuspend)
-    val openLoopText = stringResource(app.aaps.core.ui.R.string.openloop)
-    val disableLoopText = stringResource(app.aaps.core.ui.R.string.disableloop)
+    val closedLoopText = stringResource(CoreUiStrings.closedloop)
+    val lgsText = stringResource(CoreUiStrings.lowglucosesuspend)
+    val openLoopText = stringResource(CoreUiStrings.openloop)
+    val disableLoopText = stringResource(CoreUiStrings.disableloop)
 
-    SectionCard(title = stringResource(app.aaps.core.ui.R.string.running_mode)) {
+    SectionCard(title = stringResource(CoreUiStrings.running_mode)) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -247,13 +249,13 @@ private fun SuspendSection(
     onAction: (PendingRunningModeAction) -> Unit
 ) {
     val isSuspended = currentMode == RM.Mode.SUSPENDED_BY_USER
-    val title = if (isSuspended) stringResource(app.aaps.core.ui.R.string.resumeloop) else stringResource(app.aaps.core.ui.R.string.suspendloop)
+    val title = if (isSuspended) stringResource(CoreUiStrings.resumeloop) else stringResource(CoreUiStrings.suspendloop)
 
-    val resumeText = stringResource(R.string.resume)
-    val duration1hText = stringResource(R.string.duration1h)
-    val duration2hText = stringResource(R.string.duration2h)
-    val duration3hText = stringResource(R.string.duration3h)
-    val duration10hText = stringResource(R.string.duration10h)
+    val resumeText = stringResource(UiStrings.resume)
+    val duration1hText = stringResource(UiStrings.duration1h)
+    val duration2hText = stringResource(UiStrings.duration2h)
+    val duration3hText = stringResource(UiStrings.duration3h)
+    val duration10hText = stringResource(UiStrings.duration10h)
 
     SectionCard(title = title) {
         if (isSuspended && allowedModes.contains(RM.Mode.RESUME)) {
@@ -298,14 +300,14 @@ private fun PumpDisconnectSection(
     onAction: (PendingRunningModeAction) -> Unit
 ) {
     val isDisconnected = currentMode == RM.Mode.DISCONNECTED_PUMP
-    val title = if (isDisconnected) stringResource(R.string.reconnect) else stringResource(R.string.disconnectpump)
+    val title = if (isDisconnected) stringResource(UiStrings.reconnect) else stringResource(UiStrings.disconnectpump)
 
-    val reconnectText = stringResource(R.string.reconnect)
-    val duration15mText = stringResource(R.string.duration15m)
-    val duration30mText = stringResource(R.string.duration30m)
-    val duration1hText = stringResource(R.string.duration1h)
-    val duration2hText = stringResource(R.string.duration2h)
-    val duration3hText = stringResource(R.string.duration3h)
+    val reconnectText = stringResource(UiStrings.reconnect)
+    val duration15mText = stringResource(UiStrings.duration15m)
+    val duration30mText = stringResource(UiStrings.duration30m)
+    val duration1hText = stringResource(UiStrings.duration1h)
+    val duration2hText = stringResource(UiStrings.duration2h)
+    val duration3hText = stringResource(UiStrings.duration3h)
 
     SectionCard(title = title) {
         if (isDisconnected && allowedModes.contains(RM.Mode.RESUME)) {

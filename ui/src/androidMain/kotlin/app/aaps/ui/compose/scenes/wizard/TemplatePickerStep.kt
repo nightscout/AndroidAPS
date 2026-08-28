@@ -16,7 +16,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsSpacing
@@ -31,11 +33,11 @@ import app.aaps.ui.compose.scenes.SceneTemplate
 internal fun TemplatePickerStep(onSelect: (SceneTemplate) -> Unit) {
     WizardStepLayout {
         Text(
-            text = stringResource(R.string.scene_start_from_template),
+            text = stringResource(CoreUiStrings.scene_start_from_template),
             style = MaterialTheme.typography.headlineSmall
         )
         Text(
-            text = stringResource(R.string.scene_wizard_choose_template),
+            text = stringResource(CoreUiStrings.scene_wizard_choose_template),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )

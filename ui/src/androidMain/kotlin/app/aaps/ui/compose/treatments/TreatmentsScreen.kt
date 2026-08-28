@@ -26,7 +26,10 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
@@ -79,7 +82,7 @@ fun TreatmentsScreen(
                 TreatmentTab(
                     pageIndex = currentIndex++,
                     icon = IcCarbs,
-                    titleRes = R.string.carbs_and_bolus,
+                    titleRes = UiStrings.carbs_and_bolus,
                     colorGetter = { iconColors.carbs },
                 )
             )
@@ -88,7 +91,7 @@ fun TreatmentsScreen(
                     TreatmentTab(
                         pageIndex = currentIndex++,
                         icon = IcExtendedBolus,
-                        titleRes = app.aaps.core.ui.R.string.extended_bolus,
+                        titleRes = CoreUiStrings.extended_bolus,
                         colorGetter = { iconColors.extendedBolus },
                     )
                 )
@@ -97,7 +100,7 @@ fun TreatmentsScreen(
                 TreatmentTab(
                     pageIndex = currentIndex++,
                     icon = IcTbrHigh,
-                    titleRes = app.aaps.core.ui.R.string.tempbasal_label,
+                    titleRes = CoreUiStrings.tempbasal_label,
                     colorGetter = { iconColors.tempBasal },
                 )
             )
@@ -105,7 +108,7 @@ fun TreatmentsScreen(
                 TreatmentTab(
                     pageIndex = currentIndex++,
                     icon = IcTtHigh,
-                    titleRes = app.aaps.core.ui.R.string.temporary_target,
+                    titleRes = CoreUiStrings.temporary_target,
                     colorGetter = { iconColors.tempTarget },
                 )
             )
@@ -113,7 +116,7 @@ fun TreatmentsScreen(
                 TreatmentTab(
                     pageIndex = currentIndex++,
                     icon = IcProfile,
-                    titleRes = app.aaps.core.ui.R.string.careportal_profileswitch,
+                    titleRes = CoreUiStrings.careportal_profileswitch,
                     colorGetter = { iconColors.profileSwitch },
                 )
             )
@@ -121,7 +124,7 @@ fun TreatmentsScreen(
                 TreatmentTab(
                     pageIndex = currentIndex++,
                     icon = IcNote,
-                    titleRes = app.aaps.core.ui.R.string.careportal,
+                    titleRes = CoreUiStrings.careportal,
                     colorGetter = { iconColors.careportal },
                 )
             )
@@ -129,7 +132,7 @@ fun TreatmentsScreen(
                 TreatmentTab(
                     pageIndex = currentIndex++,
                     icon = Icons.AutoMirrored.Filled.DirectionsRun,
-                    titleRes = app.aaps.core.ui.R.string.running_mode,
+                    titleRes = CoreUiStrings.running_mode,
                     colorGetter = { iconColors.runningMode },
                 )
             )
@@ -137,7 +140,7 @@ fun TreatmentsScreen(
                 TreatmentTab(
                     pageIndex = currentIndex++,
                     icon = Icons.AutoMirrored.Filled.Note,
-                    titleRes = R.string.user_entry,
+                    titleRes = UiStrings.user_entry,
                     colorGetter = { iconColors.userEntry },
                 )
             )
@@ -160,7 +163,7 @@ fun TreatmentsScreen(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(activeToolbar.title.ifEmpty { stringResource(app.aaps.core.ui.R.string.treatments_history) }) },
+                title = { Text(activeToolbar.title.ifEmpty { stringResource(CoreUiStrings.treatments_history) }) },
                 navigationIcon = { activeToolbar.navigationIcon() },
                 actions = { activeToolbar.actions(this) }
             )
@@ -207,14 +210,14 @@ fun TreatmentsScreen(
                     { config -> toolbarConfigs[tab.pageIndex] = config }
                 }
                 when (tab.titleRes) {
-                    R.string.carbs_and_bolus                           ->
+                    UiStrings.carbs_and_bolus                           ->
                         BolusCarbsScreen(
                             viewModel = viewModel.bolusCarbsViewModel,
                             setToolbarConfig = setConfig,
                             onNavigateBack = onNavigateBack
                         )
 
-                    app.aaps.core.ui.R.string.extended_bolus           ->
+                    CoreUiStrings.extended_bolus           ->
                         ExtendedBolusScreen(
                             viewModel = viewModel.extendedBolusViewModel,
                             profileFunction = viewModel.profileFunction,
@@ -222,7 +225,7 @@ fun TreatmentsScreen(
                             onNavigateBack = onNavigateBack
                         )
 
-                    app.aaps.core.ui.R.string.tempbasal_label          ->
+                    CoreUiStrings.tempbasal_label          ->
                         TempBasalScreen(
                             viewModel = viewModel.tempBasalViewModel,
                             profileFunction = viewModel.profileFunction,
@@ -231,7 +234,7 @@ fun TreatmentsScreen(
                             onNavigateBack = onNavigateBack
                         )
 
-                    app.aaps.core.ui.R.string.temporary_target         ->
+                    CoreUiStrings.temporary_target         ->
                         TempTargetScreen(
                             viewModel = viewModel.tempTargetViewModel,
                             translator = viewModel.translator,
@@ -240,7 +243,7 @@ fun TreatmentsScreen(
                             onNavigateBack = onNavigateBack
                         )
 
-                    app.aaps.core.ui.R.string.careportal_profileswitch ->
+                    CoreUiStrings.careportal_profileswitch ->
                         ProfileSwitchScreen(
                             viewModel = viewModel.profileSwitchViewModel,
                             decimalFormatter = viewModel.decimalFormatter,
@@ -249,7 +252,7 @@ fun TreatmentsScreen(
                             onNavigateBack = onNavigateBack
                         )
 
-                    app.aaps.core.ui.R.string.careportal               ->
+                    CoreUiStrings.careportal               ->
                         CareportalScreen(
                             viewModel = viewModel.careportalViewModel,
                             persistenceLayer = viewModel.persistenceLayer,
@@ -258,7 +261,7 @@ fun TreatmentsScreen(
                             onNavigateBack = onNavigateBack
                         )
 
-                    app.aaps.core.ui.R.string.running_mode             ->
+                    CoreUiStrings.running_mode             ->
                         RunningModeScreen(
                             viewModel = viewModel.runningModeViewModel,
                             translator = viewModel.translator,
@@ -266,7 +269,7 @@ fun TreatmentsScreen(
                             onNavigateBack = onNavigateBack
                         )
 
-                    R.string.user_entry                                ->
+                    UiStrings.user_entry                                ->
                         UserEntryScreen(
                             viewModel = viewModel.userEntryViewModel,
                             userEntryPresentationHelper = viewModel.userEntryPresentationHelper,
@@ -276,6 +279,11 @@ fun TreatmentsScreen(
                             setToolbarConfig = setConfig,
                             onNavigateBack = onNavigateBack
                         )
+
+                    // The tabs are built right above from this same set of titles, so nothing else can
+                    // reach here. A TextRef is an interface rather than an Int, so the compiler wants
+                    // the branch spelled out.
+                    else                                   -> Unit
                 }
             }
         }
@@ -291,6 +299,6 @@ fun TreatmentsScreen(
 private class TreatmentTab(
     val pageIndex: Int,
     val icon: ImageVector,
-    val titleRes: Int,
+    val titleRes: TextRef,
     val colorGetter: () -> Color,
 )

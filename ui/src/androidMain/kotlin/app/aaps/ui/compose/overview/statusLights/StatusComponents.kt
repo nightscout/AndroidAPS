@@ -19,7 +19,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.R
@@ -42,8 +44,8 @@ internal fun StatusSectionContent(
     onInsulinChangeClick: (() -> Unit)? = null,
     onBatteryChangeClick: (() -> Unit)? = null
 ) {
-    val addLabel = stringResource(R.string.add)
-    val fillLabel = stringResource(R.string.prime_fill)
+    val addLabel = stringResource(CoreUiStrings.add)
+    val fillLabel = stringResource(CoreUiStrings.prime_fill)
 
     cannulaStatus?.let {
         StatusRow(item = it, actionLabel = fillLabel, onActionClick = onFillClick)

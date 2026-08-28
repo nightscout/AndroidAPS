@@ -4,6 +4,8 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -158,7 +160,7 @@ class RunningModeManagementViewModel @Inject constructor(
         durationMinutes: Int = 0
     ) {
         viewModelScope.launch {
-            val label = rh.gs(R.string.running_mode)
+            val label = rh.gs(CoreUiStrings.running_mode)
             when (val prepared = batchExecutor.prepare(listOf(BatchAction.RunningMode(targetMode, durationMinutes)), Sources.LoopDialog, label)) {
                 is ActionProgress.Prepared -> rxBus.send(
                     EventShowDialog.OkCancel(

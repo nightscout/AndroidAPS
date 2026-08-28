@@ -6,7 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.ui.compose.overview.chips.SensitivityChip
 import app.aaps.ui.compose.overview.chips.SensitivityUiState
@@ -26,7 +28,7 @@ fun SensitivityChipBlock(
     )
     if (showSensitivityDialog) {
         OkCancelDialog(
-            title = stringResource(app.aaps.core.ui.R.string.sensitivity),
+            title = stringResource(CoreUiStrings.sensitivity),
             message = state.dialogText,
             onConfirm = { showSensitivityDialog = false },
             onDismiss = { showSensitivityDialog = false }

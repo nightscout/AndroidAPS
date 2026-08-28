@@ -3,6 +3,9 @@ package app.aaps.ui.compose.overview.statusLights
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.ui.UiStrings
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.configuration.Config
@@ -141,7 +144,7 @@ class StatusViewModel @Inject constructor(
         val levelPercent = if (hasBattery) bgSource.sensorBatteryLevel / 100f else -1f
 
         return StatusItem(
-            label = rh.gs(R.string.sensor_label),
+            label = rh.gs(CoreUiStrings.sensor_label),
             age = event?.let { formatAge(it.timestamp) } ?: "-",
             ageStatus = event?.let { getAgeStatus(it.timestamp, IntKey.OverviewSageWarning, IntKey.OverviewSageCritical) } ?: StatusLevel.UNSPECIFIED,
             agePercent = event?.let { getAgePercent(it.timestamp, IntKey.OverviewSageCritical) } ?: 0f,
@@ -167,7 +170,7 @@ class StatusViewModel @Inject constructor(
             // takes the existing "-" / UNSPECIFIED branch below rather than showing a mis-scaled figure.
             profileFunction.getProfile()?.let { activePlugin.activePump.reservoirLevel.value.iU(it.insulinConcentration()) } ?: 0.0
         }
-        val insulinUnit = rh.gs(R.string.insulin_unit_shortname)
+        val insulinUnit = rh.gs(CoreUiStrings.insulin_unit_shortname)
 
         val level: String? = if (reservoirLevel > 0) {
             if (!config.AAPSCLIENT && isPatchPump && reservoirLevel >= maxReading) {
@@ -178,7 +181,7 @@ class StatusViewModel @Inject constructor(
         } else null
 
         return StatusItem(
-            label = rh.gs(R.string.insulin_label),
+            label = rh.gs(CoreUiStrings.insulin_label),
             age = event?.let { formatAge(it.timestamp) } ?: "-",
             ageStatus = event?.let { getAgeStatus(it.timestamp, IntKey.OverviewIageWarning, IntKey.OverviewIageCritical) } ?: StatusLevel.UNSPECIFIED,
             agePercent = event?.let { getAgePercent(it.timestamp, IntKey.OverviewIageCritical) } ?: 0f,
@@ -194,7 +197,7 @@ class StatusViewModel @Inject constructor(
         val event = withContext(Dispatchers.IO) {
             persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.CANNULA_CHANGE)
         }
-        val insulinUnit = rh.gs(R.string.insulin_unit_shortname)
+        val insulinUnit = rh.gs(CoreUiStrings.insulin_unit_shortname)
 
         // Calculate usage since last cannula change (expensive - can be deferred)
         val usage = if (includeTddCalculation && event != null) {
@@ -203,7 +206,7 @@ class StatusViewModel @Inject constructor(
             }
         } else 0.0
 
-        val label = if (isPatchPump) rh.gs(R.string.patch_pump) else rh.gs(R.string.cannula)
+        val label = if (isPatchPump) rh.gs(CoreUiStrings.patch_pump) else rh.gs(CoreUiStrings.cannula)
         val icon = if (isPatchPump) IcPatchPump else IcCannulaChange
 
         return StatusItem(
@@ -244,7 +247,7 @@ class StatusViewModel @Inject constructor(
             || (pump.model() != PumpType.ACCU_CHEK_COMBO && pump.model() != PumpType.OMNIPOD_DASH)
 
         return StatusItem(
-            label = rh.gs(R.string.pb_label),
+            label = rh.gs(CoreUiStrings.pb_label),
             age = event?.let { formatAge(it.timestamp) } ?: "-",
             ageStatus = event?.let { getAgeStatus(it.timestamp, IntKey.OverviewBageWarning, IntKey.OverviewBageCritical) } ?: StatusLevel.UNSPECIFIED,
             agePercent = event?.let { getAgePercent(it.timestamp, IntKey.OverviewBageCritical) } ?: 0f,
@@ -263,9 +266,9 @@ class StatusViewModel @Inject constructor(
         val days = diff.days
         val hours = diff.hours
         return if (rh.shortTextMode()) {
-            "${days}${rh.gs(app.aaps.core.interfaces.R.string.shortday)}${hours}${rh.gs(app.aaps.core.interfaces.R.string.shorthour)}"
+            "${days}${rh.gs(InterfacesStrings.shortday)}${hours}${rh.gs(InterfacesStrings.shorthour)}"
         } else {
-            "$days ${rh.gs(app.aaps.core.interfaces.R.string.days)} $hours ${rh.gs(app.aaps.core.interfaces.R.string.hours)}"
+            "$days ${rh.gs(InterfacesStrings.days)} $hours ${rh.gs(InterfacesStrings.hours)}"
         }
     }
 

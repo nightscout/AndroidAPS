@@ -48,7 +48,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -78,7 +80,6 @@ import app.aaps.core.ui.compose.masterEditingEnabled
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.R
 import app.aaps.ui.compose.components.ManagementCarousel
-import app.aaps.core.ui.R as CoreUiR
 
 /**
  * Main insulin management screen with carousel and editor.
@@ -169,7 +170,7 @@ fun InsulinManagementScreen(
     if (showDeleteDialog) {
         val insulinName = uiState.insulins.getOrNull(uiState.currentCardIndex)?.insulinLabel ?: ""
         OkCancelDialog(
-            title = stringResource(CoreUiR.string.removerecord),
+            title = stringResource(CoreUiStrings.removerecord),
             message = insulinName,
             onConfirm = {
                 viewModel.deleteCurrentInsulin()
@@ -195,8 +196,8 @@ fun InsulinManagementScreen(
     // External (client→master sync) update arrived while the user has unsaved edits
     if (uiState.externalUpdatePending) {
         OkCancelDialog(
-            title = stringResource(R.string.insulin_external_update_title),
-            message = stringResource(R.string.insulin_external_update_message),
+            title = stringResource(UiStrings.insulin_external_update_title),
+            message = stringResource(UiStrings.insulin_external_update_message),
             icon = IcPluginInsulin,
             onConfirm = { viewModel.acceptExternalUpdate() },
             onDismiss = { viewModel.dismissExternalUpdate() }
@@ -215,7 +216,7 @@ fun InsulinManagementScreen(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(CoreUiR.string.insulin_label)) },
+                title = { Text(stringResource(CoreUiStrings.insulin_label)) },
                 navigationIcon = {
                     IconButton(onClick = { viewModel.requestBack() }) {
                         Icon(
@@ -328,7 +329,7 @@ fun InsulinManagementScreen(
                                 OutlinedTextField(
                                     value = uiState.editorNickname,
                                     onValueChange = { viewModel.updateEditorNickname(it) },
-                                    label = { Text(stringResource(CoreUiR.string.insulin_nickname_label)) },
+                                    label = { Text(stringResource(CoreUiStrings.insulin_nickname_label)) },
                                     singleLine = true,
                                     enabled = editorEnabled,
                                     modifier = Modifier.weight(1f)
@@ -364,12 +365,12 @@ fun InsulinManagementScreen(
 
                             // Peak editor
                             NumberInputRow(
-                                labelResId = CoreUiR.string.peak_label,
+                                labelRef = CoreUiStrings.peak_label,
                                 value = uiState.editorPeakMinutes.toDouble(),
                                 onValueChange = { viewModel.updateEditorPeak(it.toInt()) },
                                 valueRange = viewModel.peakRange(),
                                 step = 1.0,
-                                unitLabel = TextRef.AndroidRes(CoreUiR.string.units_min),
+                                unitLabel = CoreUiStrings.units_min,
                                 enabled = editorEnabled,
                                 modifier = Modifier.fillMaxWidth()
                             )
@@ -386,13 +387,13 @@ fun InsulinManagementScreen(
 
                             // DIA editor
                             NumberInputRow(
-                                labelResId = CoreUiR.string.dia_label,
+                                labelRef = CoreUiStrings.dia_label,
                                 value = uiState.editorDiaHours,
                                 onValueChange = { viewModel.updateEditorDia(it) },
                                 valueRange = viewModel.diaRange(),
                                 step = 0.1,
                                 decimalPlaces = 1,
-                                unitLabel = TextRef.AndroidRes(CoreUiR.string.units_hours),
+                                unitLabel = CoreUiStrings.units_hours,
                                 enabled = editorEnabled,
                                 modifier = Modifier.fillMaxWidth()
                             )
@@ -439,7 +440,7 @@ fun InsulinManagementScreen(
                                 IconButton(onClick = { viewModel.addNewInsulin() }) {
                                     Icon(
                                         imageVector = Icons.Default.Add,
-                                        contentDescription = stringResource(R.string.a11y_add_new_insulin)
+                                        contentDescription = stringResource(UiStrings.a11y_add_new_insulin)
                                     )
                                 }
                                 // Delete
@@ -449,7 +450,7 @@ fun InsulinManagementScreen(
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.Delete,
-                                        contentDescription = stringResource(R.string.a11y_delete_current_insulin)
+                                        contentDescription = stringResource(UiStrings.a11y_delete_current_insulin)
                                     )
                                 }
                             }
@@ -494,21 +495,21 @@ private fun UnsavedChangesDialog(
 ) {
     AlertDialog(
         onDismissRequest = onCancel,
-        title = { Text(stringResource(CoreUiR.string.unsaved_changes)) },
-        text = { Text(stringResource(CoreUiR.string.unsaved_changes_message)) },
+        title = { Text(stringResource(CoreUiStrings.unsaved_changes)) },
+        text = { Text(stringResource(CoreUiStrings.unsaved_changes_message)) },
         confirmButton = {
             FilledTonalButton(onClick = onSave) {
-                Text(stringResource(CoreUiR.string.save))
+                Text(stringResource(CoreUiStrings.save))
             }
         },
         dismissButton = {
             Row {
                 TextButton(onClick = onCancel) {
-                    Text(stringResource(CoreUiR.string.cancel))
+                    Text(stringResource(CoreUiStrings.cancel))
                 }
                 Spacer(Modifier.width(8.dp))
                 TextButton(onClick = onDiscard) {
-                    Text(stringResource(CoreUiR.string.discard))
+                    Text(stringResource(CoreUiStrings.discard))
                 }
             }
         }
@@ -527,7 +528,7 @@ private fun PeakPresetChips(
 
     if (showInfo) {
         val parts = presets.map { preset ->
-            Triple(stringResource(preset.label), stringResource(preset.comment), stringResource(CoreUiR.string.format_mins, preset.iCfg.peak))
+            Triple(stringResource(preset.label), stringResource(preset.comment), stringResource(CoreUiStrings.format_mins, preset.iCfg.peak))
         }
         val message = buildAnnotatedString {
             parts.forEachIndexed { index, (label, comment, peak) ->
@@ -537,7 +538,7 @@ private fun PeakPresetChips(
             }
         }
         OkDialog(
-            title = stringResource(R.string.load_peak_from),
+            title = stringResource(UiStrings.load_peak_from),
             message = message,
             icon = IcPluginInsulin,
             onDismiss = { showInfo = false }
@@ -554,7 +555,7 @@ private fun PeakPresetChips(
             modifier = Modifier.padding(top = 4.dp, bottom = 4.dp)
         ) {
             Text(
-                text = stringResource(R.string.load_peak_from),
+                text = stringResource(UiStrings.load_peak_from),
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

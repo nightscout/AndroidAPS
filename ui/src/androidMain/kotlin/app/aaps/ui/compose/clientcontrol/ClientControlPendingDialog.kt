@@ -13,7 +13,9 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
@@ -22,7 +24,6 @@ import app.aaps.core.interfaces.clientcontrol.PendingAction
 import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.R
-import app.aaps.core.ui.R as CoreUiR
 
 /**
  * Modal shown while a client-control action is in flight, and for its terminal failure states. The
@@ -47,10 +48,10 @@ fun ClientControlPendingDialog(
     val partial = progress is ActionProgress.Rejected && progress.reason == FailureReason.PartialFailure
 
     val title = when {
-        partial                                -> stringResource(R.string.clientcontrol_pending_partial_title)
-        progress is ActionProgress.Rejected    -> stringResource(R.string.clientcontrol_pending_rejected_title)
-        progress is ActionProgress.Unconfirmed -> stringResource(R.string.clientcontrol_pending_unconfirmed_title)
-        else                                   -> stringResource(R.string.clientcontrol_pending_working_title) // Sending/MasterExecuting
+        partial                                -> stringResource(UiStrings.clientcontrol_pending_partial_title)
+        progress is ActionProgress.Rejected    -> stringResource(UiStrings.clientcontrol_pending_rejected_title)
+        progress is ActionProgress.Unconfirmed -> stringResource(UiStrings.clientcontrol_pending_unconfirmed_title)
+        else                                   -> stringResource(UiStrings.clientcontrol_pending_working_title) // Sending/MasterExecuting
     }
 
     AlertDialog(
@@ -66,25 +67,25 @@ fun ClientControlPendingDialog(
             ) {
                 when (progress) {
                     is ActionProgress.Rejected    ->
-                        if (partial) Text(stringResource(R.string.clientcontrol_pending_partial_format, pending.label))
-                        else Text(stringResource(R.string.clientcontrol_pending_failed_format, pending.label, reasonText(progress.reason)))
+                        if (partial) Text(stringResource(UiStrings.clientcontrol_pending_partial_format, pending.label))
+                        else Text(stringResource(UiStrings.clientcontrol_pending_failed_format, pending.label, reasonText(progress.reason)))
 
                     is ActionProgress.Unconfirmed ->
-                        Text(stringResource(R.string.clientcontrol_pending_unconfirmed_format, pending.label, reasonText(progress.reason)))
+                        Text(stringResource(UiStrings.clientcontrol_pending_unconfirmed_format, pending.label, reasonText(progress.reason)))
 
                     else                          ->
                         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                             CircularProgressIndicator(modifier = Modifier.size(24.dp))
-                            Text(stringResource(R.string.clientcontrol_pending_working_text))
+                            Text(stringResource(UiStrings.clientcontrol_pending_working_text))
                         }
                 }
             }
         },
         confirmButton = {
-            if (!waiting) TextButton(onClick = onDismiss) { Text(stringResource(CoreUiR.string.ok)) }
+            if (!waiting) TextButton(onClick = onDismiss) { Text(stringResource(CoreUiStrings.ok)) }
         },
         dismissButton = {
-            if (waiting) TextButton(onClick = onDismiss) { Text(stringResource(R.string.clientcontrol_pending_stop_waiting)) }
+            if (waiting) TextButton(onClick = onDismiss) { Text(stringResource(UiStrings.clientcontrol_pending_stop_waiting)) }
         }
     )
 }

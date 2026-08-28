@@ -22,7 +22,8 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.res.stringResource
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
@@ -195,12 +196,12 @@ internal fun GlucosePentagonCard(
         ) {
             LegendItem(
                 color = AapsTheme.generalColors.bgInRange,
-                text = stringResource(R.string.cgp_reference)
+                text = stringResource(UiStrings.cgp_reference)
             )
             Spacer(modifier = Modifier.size(24.dp))
             LegendItem(
                 color = MaterialTheme.colorScheme.primary,
-                text = stringResource(R.string.cgp_patient)
+                text = stringResource(UiStrings.cgp_patient)
             )
         }
 
@@ -213,18 +214,18 @@ internal fun GlucosePentagonCard(
             else               -> MaterialTheme.colorScheme.error
         }
         Text(
-            text = "${stringResource(R.string.cgp_pgr)}: ${"%.1f".format(cgpData.pgr)}",
+            text = "${stringResource(UiStrings.cgp_pgr)}: ${"%.1f".format(cgpData.pgr)}",
             style = MaterialTheme.typography.titleMedium,
             color = pgrColor,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
         val pgrExplanation = when {
-            cgpData.pgr <= 2.0 -> stringResource(R.string.cgp_pgr_very_low)
-            cgpData.pgr <= 3.0 -> stringResource(R.string.cgp_pgr_low)
-            cgpData.pgr <= 4.0 -> stringResource(R.string.cgp_pgr_moderate)
-            cgpData.pgr <= 4.5 -> stringResource(R.string.cgp_pgr_high)
-            else               -> stringResource(R.string.cgp_pgr_extremely_high)
+            cgpData.pgr <= 2.0 -> stringResource(UiStrings.cgp_pgr_very_low)
+            cgpData.pgr <= 3.0 -> stringResource(UiStrings.cgp_pgr_low)
+            cgpData.pgr <= 4.0 -> stringResource(UiStrings.cgp_pgr_moderate)
+            cgpData.pgr <= 4.5 -> stringResource(UiStrings.cgp_pgr_high)
+            else               -> stringResource(UiStrings.cgp_pgr_extremely_high)
         }
         Text(
             text = pgrExplanation,
@@ -256,11 +257,11 @@ fun GlucosePentagonChart(
 
     // Axis labels and value strings
     val axisLabels = listOf(
-        stringResource(R.string.cgp_tor),
-        stringResource(R.string.cgp_cv),
-        stringResource(R.string.cgp_hypo),
-        stringResource(R.string.cgp_hyper),
-        stringResource(R.string.cgp_mean_glucose)
+        stringResource(UiStrings.cgp_tor),
+        stringResource(UiStrings.cgp_cv),
+        stringResource(UiStrings.cgp_hypo),
+        stringResource(UiStrings.cgp_hyper),
+        stringResource(UiStrings.cgp_mean_glucose)
     )
     val axisValues = listOf(
         "%.0f%%".format(cgpData.torPct),

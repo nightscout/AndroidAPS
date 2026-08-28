@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.automation.AutomationIconData
@@ -33,8 +34,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import app.aaps.core.interfaces.R as InterfacesR
-import app.aaps.core.ui.R as CoreUiR
+import app.aaps.core.ui.CoreUiStrings
 
 @Immutable
 data class AutomationActionItem(
@@ -125,7 +125,7 @@ class ScenesViewModel @Inject constructor(
             // gate — the action can't reach master regardless of what the local validator says.
             val masterOfflineReason: String? =
                 if (!masterReachable.value)
-                    rh.gs(if (!nsClient.masterControlAllowed.value) CoreUiR.string.scene_lock_reason_control_disabled else CoreUiR.string.scene_lock_reason_master_offline)
+                    rh.gs(if (!nsClient.masterControlAllowed.value) CoreUiStrings.scene_lock_reason_control_disabled else CoreUiStrings.scene_lock_reason_master_offline)
                 else null
 
             // Scenes are *definitions* — show them regardless of pump/loop/profile state.
@@ -151,9 +151,9 @@ class ScenesViewModel @Inject constructor(
             val automationReason: String? = when {
                 watchOnly                                -> null  // hidden, not disabled
                 masterOfflineReason != null              -> masterOfflineReason
-                loop.runningMode().pausesLoopExecution() -> rh.gs(InterfacesR.string.pump_disconnected)
+                loop.runningMode().pausesLoopExecution() -> rh.gs(InterfacesStrings.pump_disconnected)
                 !activePlugin.activePump.isInitialized() ||
-                    profileFunction.getProfile() == null -> rh.gs(CoreUiR.string.pump_not_initialized_profile_not_set)
+                    profileFunction.getProfile() == null -> rh.gs(CoreUiStrings.pump_not_initialized_profile_not_set)
 
                 else                                     -> null
             }

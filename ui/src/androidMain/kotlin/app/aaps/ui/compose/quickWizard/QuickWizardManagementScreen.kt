@@ -47,7 +47,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.navigation.ElementType
@@ -67,7 +69,6 @@ import app.aaps.ui.compose.components.ContentContainer
 import app.aaps.ui.compose.components.ManagementCarousel
 import app.aaps.ui.compose.quickWizard.viewmodels.QuickWizardManagementViewModel
 import kotlinx.coroutines.launch
-import app.aaps.core.ui.R as CoreR
 
 /**
  * Screen for managing QuickWizard entries.
@@ -123,8 +124,8 @@ fun QuickWizardManagementScreen(
     if (showDeleteDialog) {
         val entry = uiState.entries.getOrNull(uiState.selectedIndex)
         OkCancelDialog(
-            title = stringResource(CoreR.string.removerecord),
-            message = "${stringResource(CoreR.string.delete)} ${entry?.buttonText() ?: ""}?",
+            title = stringResource(CoreUiStrings.removerecord),
+            message = "${stringResource(CoreUiStrings.delete)} ${entry?.buttonText() ?: ""}?",
             onConfirm = {
                 viewModel.deleteCurrentEntry()
                 showDeleteDialog = false
@@ -136,8 +137,8 @@ fun QuickWizardManagementScreen(
     // Unsaved changes confirmation dialog
     if (showUnsavedChangesDialog) {
         OkCancelDialog(
-            title = stringResource(CoreR.string.unsaved_changes),
-            message = stringResource(R.string.save_changes_question),
+            title = stringResource(CoreUiStrings.unsaved_changes),
+            message = stringResource(UiStrings.save_changes_question),
             onConfirm = {
                 viewModel.saveCurrentEntry()
                 showUnsavedChangesDialog = false
@@ -196,12 +197,12 @@ fun QuickWizardManagementScreen(
             topBar = {
                 if (isReorderMode) {
                     AapsTopAppBar(
-                        title = { Text(stringResource(CoreR.string.reorder)) },
+                        title = { Text(stringResource(CoreUiStrings.reorder)) },
                         navigationIcon = {
                             IconButton(onClick = { viewModel.cancelReorder() }) {
                                 Icon(
                                     imageVector = Icons.Filled.Close,
-                                    contentDescription = stringResource(CoreR.string.cancel)
+                                    contentDescription = stringResource(CoreUiStrings.cancel)
                                 )
                             }
                         },
@@ -209,7 +210,7 @@ fun QuickWizardManagementScreen(
                             IconButton(onClick = { scope.launch { viewModel.commitReorder() } }) {
                                 Icon(
                                     imageVector = Icons.Filled.Check,
-                                    contentDescription = stringResource(CoreR.string.ok)
+                                    contentDescription = stringResource(CoreUiStrings.ok)
                                 )
                             }
                         }
@@ -227,7 +228,7 @@ fun QuickWizardManagementScreen(
                             }) {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                    contentDescription = stringResource(CoreR.string.back)
+                                    contentDescription = stringResource(CoreUiStrings.back)
                                 )
                             }
                         },
@@ -237,7 +238,7 @@ fun QuickWizardManagementScreen(
                                 IconButton(onClick = onRequestEditMode, enabled = editingEnabled) {
                                     Icon(
                                         imageVector = Icons.Filled.Edit,
-                                        contentDescription = stringResource(CoreR.string.switch_to_edit)
+                                        contentDescription = stringResource(CoreUiStrings.switch_to_edit)
                                     )
                                 }
                             } else {
@@ -249,7 +250,7 @@ fun QuickWizardManagementScreen(
                                     }) {
                                         Icon(
                                             imageVector = Icons.Default.Save,
-                                            contentDescription = stringResource(CoreR.string.save),
+                                            contentDescription = stringResource(CoreUiStrings.save),
                                             tint = MaterialTheme.colorScheme.primary
                                         )
                                     }
@@ -261,7 +262,7 @@ fun QuickWizardManagementScreen(
                                     IconButton(onClick = { showOverflowMenu = true }) {
                                         Icon(
                                             imageVector = Icons.Filled.MoreVert,
-                                            contentDescription = stringResource(CoreR.string.more_options)
+                                            contentDescription = stringResource(CoreUiStrings.more_options)
                                         )
                                     }
                                     DropdownMenu(
@@ -269,7 +270,7 @@ fun QuickWizardManagementScreen(
                                         onDismissRequest = { showOverflowMenu = false }
                                     ) {
                                         DropdownMenuItem(
-                                            text = { Text(stringResource(CoreR.string.reorder)) },
+                                            text = { Text(stringResource(CoreUiStrings.reorder)) },
                                             enabled = canEnterReorder,
                                             onClick = {
                                                 showOverflowMenu = false
@@ -357,8 +358,8 @@ fun QuickWizardManagementScreen(
                         ) {
                             // QuickWizard Entry Carousel
                             val workingOrder = reorderOrder
-                            val moveEarlierLabel = stringResource(CoreR.string.carousel_move_earlier)
-                            val moveLaterLabel = stringResource(CoreR.string.carousel_move_later)
+                            val moveEarlierLabel = stringResource(CoreUiStrings.carousel_move_earlier)
+                            val moveLaterLabel = stringResource(CoreUiStrings.carousel_move_later)
 
                             ManagementCarousel(
                                 state = pagerState,
@@ -374,10 +375,10 @@ fun QuickWizardManagementScreen(
                                         moveEarlierLabel = moveEarlierLabel,
                                         moveLaterLabel = moveLaterLabel,
                                         positionLabel = { page ->
-                                            viewModel.rh.gs(CoreR.string.carousel_position, page + 1, order.size)
+                                            viewModel.rh.gs(CoreUiStrings.carousel_position, page + 1, order.size)
                                         },
                                         positionDescription = { page ->
-                                            viewModel.rh.gs(CoreR.string.carousel_position_description, page + 1, order.size)
+                                            viewModel.rh.gs(CoreUiStrings.carousel_position_description, page + 1, order.size)
                                         }
                                     )
                                 }
@@ -488,7 +489,7 @@ fun QuickWizardManagementScreen(
                                     IconButton(onClick = { viewModel.addNewEntry() }) {
                                         Icon(
                                             imageVector = Icons.Filled.Add,
-                                            contentDescription = stringResource(CoreR.string.add)
+                                            contentDescription = stringResource(CoreUiStrings.add)
                                         )
                                     }
                                     // Clone button
@@ -512,7 +513,7 @@ fun QuickWizardManagementScreen(
                                     ) {
                                         Icon(
                                             imageVector = Icons.Filled.Delete,
-                                            contentDescription = stringResource(R.string.remove_label),
+                                            contentDescription = stringResource(UiStrings.remove_label),
                                             tint = if (uiState.entries.isNotEmpty())
                                                 MaterialTheme.colorScheme.error
                                             else

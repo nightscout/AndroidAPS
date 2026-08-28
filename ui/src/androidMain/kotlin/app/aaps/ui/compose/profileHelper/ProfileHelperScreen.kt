@@ -46,7 +46,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -68,7 +71,6 @@ import app.aaps.core.ui.compose.stringResourceOrNull
 import app.aaps.ui.R
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileHelperViewModel
 import app.aaps.ui.compose.stats.TddStatsCompose
-import app.aaps.core.ui.R as CoreUiR
 
 /**
  * Enumeration of available profile calculation/source types.
@@ -171,11 +173,11 @@ fun ProfileHelperScreen(
                     profile1 = sealed1,
                     profile2 = sealed2,
                     icsRows = buildIcRows(sealed1, sealed2, viewModel.dateUtil),
-                    icUnits = viewModel.rh.gs(app.aaps.core.interfaces.R.string.profile_carbs_per_unit),
+                    icUnits = viewModel.rh.gs(InterfacesStrings.profile_carbs_per_unit),
                     isfsRows = buildIsfRows(sealed1, sealed2, viewModel.profileUtil, viewModel.dateUtil),
-                    isfUnits = viewModel.rh.gs(if (viewModel.getUnits() == GlucoseUnit.MGDL) app.aaps.core.interfaces.R.string.profile_isf_units_mgdl else app.aaps.core.interfaces.R.string.profile_isf_units_mmol),
+                    isfUnits = viewModel.rh.gs(if (viewModel.getUnits() == GlucoseUnit.MGDL) InterfacesStrings.profile_isf_units_mgdl else InterfacesStrings.profile_isf_units_mmol),
                     basalsRows = buildBasalRows(sealed1, sealed2, viewModel.dateUtil),
-                    basalUnits = viewModel.rh.gs(app.aaps.core.interfaces.R.string.profile_ins_units_per_hour),
+                    basalUnits = viewModel.rh.gs(InterfacesStrings.profile_ins_units_per_hour),
                     targetsRows = buildTargetRows(sealed1, sealed2, viewModel.dateUtil, viewModel.profileUtil),
                     targetUnits = viewModel.getUnits().displayLabel,
                     profileName1 = name0,
@@ -189,7 +191,7 @@ fun ProfileHelperScreen(
                     elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
                 ) {
                     Text(
-                        text = stringResource(app.aaps.core.ui.R.string.no_profile_set),
+                        text = stringResource(CoreUiStrings.no_profile_set),
                         modifier = Modifier.padding(16.dp),
                         style = MaterialTheme.typography.bodyLarge
                     )
@@ -224,7 +226,7 @@ fun ProfileHelperScreen(
                     ProfileType.CURRENT                                -> {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
-                                text = stringResource(R.string.active_profile),
+                                text = stringResource(UiStrings.active_profile),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.SemiBold,
                                 modifier = Modifier.padding(bottom = 8.dp)
@@ -276,7 +278,7 @@ fun ProfileHelperScreen(
                                     CircularProgressIndicator(modifier = Modifier.size(24.dp), strokeWidth = 2.dp)
                                     Spacer(modifier = Modifier.width(12.dp))
                                     Text(
-                                        text = stringResource(app.aaps.core.ui.R.string.loading),
+                                        text = stringResource(CoreUiStrings.loading),
                                         style = MaterialTheme.typography.bodyMedium,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
@@ -315,9 +317,9 @@ internal fun ProfileHelperContent(
     profileTabContent: @Composable (Int) -> Unit,
 ) {
     val tabTitles = listOf(
-        stringResource(R.string.profile_tab_1),
-        stringResource(R.string.profile_tab_2),
-        stringResource(R.string.comparation)
+        stringResource(UiStrings.profile_tab_1),
+        stringResource(UiStrings.profile_tab_2),
+        stringResource(UiStrings.comparation)
     )
 
     Scaffold(
@@ -326,7 +328,7 @@ internal fun ProfileHelperContent(
                 title = { Text((stringResourceOrNull(ElementType.PROFILE_HELPER.label()) ?: "")) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.Filled.Close, contentDescription = stringResource(app.aaps.core.ui.R.string.close))
+                        Icon(Icons.Filled.Close, contentDescription = stringResource(CoreUiStrings.close))
                     }
                 },
                 actions = {}
@@ -351,8 +353,8 @@ internal fun ProfileHelperContent(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    if (showCloneAction) stringResource(R.string.clone_label)
-                    else stringResource(app.aaps.core.ui.R.string.ok)
+                    if (showCloneAction) stringResource(UiStrings.clone_label)
+                    else stringResource(CoreUiStrings.ok)
                 )
             }
         },
@@ -423,11 +425,11 @@ private fun ProfileTypeDropdown(
     var expanded by remember { mutableStateOf(false) }
 
     val profileTypeOptions = listOf(
-        ProfileType.MOTOL_DEFAULT to stringResource(R.string.motol_default_profile),
-        ProfileType.DPV_DEFAULT to stringResource(R.string.dpv_default_profile),
-        ProfileType.CURRENT to stringResource(R.string.current_profile),
-        ProfileType.AVAILABLE_PROFILE to stringResource(R.string.available_profile),
-        ProfileType.PROFILE_SWITCH to stringResource(app.aaps.core.ui.R.string.careportal_profileswitch)
+        ProfileType.MOTOL_DEFAULT to stringResource(UiStrings.motol_default_profile),
+        ProfileType.DPV_DEFAULT to stringResource(UiStrings.dpv_default_profile),
+        ProfileType.CURRENT to stringResource(UiStrings.current_profile),
+        ProfileType.AVAILABLE_PROFILE to stringResource(UiStrings.available_profile),
+        ProfileType.PROFILE_SWITCH to stringResource(CoreUiStrings.careportal_profileswitch)
     )
 
     ExposedDropdownMenuBox(
@@ -439,7 +441,7 @@ private fun ProfileTypeDropdown(
             value = getProfileTypeDisplayName(selectedType),
             onValueChange = {},
             readOnly = true,
-            label = { Text(stringResource(R.string.profile_type)) },
+            label = { Text(stringResource(UiStrings.profile_type)) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             modifier = Modifier
                 .fillMaxWidth()
@@ -462,11 +464,11 @@ private fun ProfileTypeDropdown(
 @Composable
 fun getProfileTypeDisplayName(type: ProfileType): String {
     return when (type) {
-        ProfileType.MOTOL_DEFAULT     -> stringResource(R.string.motol_default_profile)
-        ProfileType.DPV_DEFAULT       -> stringResource(R.string.dpv_default_profile)
-        ProfileType.CURRENT           -> stringResource(R.string.current_profile)
-        ProfileType.AVAILABLE_PROFILE -> stringResource(R.string.available_profile)
-        ProfileType.PROFILE_SWITCH    -> stringResource(app.aaps.core.ui.R.string.careportal_profileswitch)
+        ProfileType.MOTOL_DEFAULT     -> stringResource(UiStrings.motol_default_profile)
+        ProfileType.DPV_DEFAULT       -> stringResource(UiStrings.dpv_default_profile)
+        ProfileType.CURRENT           -> stringResource(UiStrings.current_profile)
+        ProfileType.AVAILABLE_PROFILE -> stringResource(UiStrings.available_profile)
+        ProfileType.PROFILE_SWITCH    -> stringResource(CoreUiStrings.careportal_profileswitch)
     }
 }
 
@@ -484,38 +486,38 @@ fun DefaultProfileContent(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
-        Text(text = stringResource(R.string.profile_parameters), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(bottom = 16.dp))
+        Text(text = stringResource(UiStrings.profile_parameters), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(bottom = 16.dp))
         NumberInputRow(
-            labelResId = R.string.age,
+            labelRef = UiStrings.age,
             value = age.toDouble(),
             onValueChange = { onAgeChange(it.toInt()) },
             valueRange = 1.0..99.0,
             step = 1.0,
-            unitLabel = TextRef.AndroidRes(CoreUiR.string.units_years)
+            unitLabel = CoreUiStrings.units_years
         )
         if (showTdd) NumberInputRow(
-            labelResId = app.aaps.core.ui.R.string.tdd_total,
+            labelRef = CoreUiStrings.tdd_total,
             value = tdd,
             onValueChange = onTddChange,
             valueRange = 0.0..200.0,
             step = 1.0,
-            unitLabel = TextRef.AndroidRes(CoreUiR.string.units_insulin)
+            unitLabel = CoreUiStrings.units_insulin
         )
         if (showWeight) NumberInputRow(
-            labelResId = R.string.weight_label,
+            labelRef = UiStrings.weight_label,
             value = weight,
             onValueChange = onWeightChange,
             valueRange = 0.0..150.0,
             step = 1.0,
-            unitLabel = TextRef.AndroidRes(CoreUiR.string.units_kg)
+            unitLabel = CoreUiStrings.units_kg
         )
         if (showPct) NumberInputRow(
-            labelResId = R.string.basal_pct_from_tdd_label,
+            labelRef = UiStrings.basal_pct_from_tdd_label,
             value = pct,
             onValueChange = onPctChange,
             valueRange = 32.0..37.0,
             step = 1.0,
-            unitLabel = TextRef.AndroidRes(CoreUiR.string.units_percent)
+            unitLabel = CoreUiStrings.units_percent
         )
     }
 }
@@ -530,11 +532,11 @@ fun AvailableProfileContent(profiles: List<String>, selectedIndex: Int, onProfil
     val selectedProfile = if (profiles.isNotEmpty() && selectedIndex < profiles.size) profiles[selectedIndex] else ""
 
     Column(modifier = modifier) {
-        Text(text = stringResource(R.string.available_profiles), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(bottom = 12.dp))
+        Text(text = stringResource(UiStrings.available_profiles), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(bottom = 12.dp))
         ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = !expanded }, modifier = Modifier.fillMaxWidth()) {
             OutlinedTextField(
                 value = selectedProfile, onValueChange = {}, readOnly = true,
-                label = { Text(stringResource(R.string.selected_profile)) },
+                label = { Text(stringResource(UiStrings.selected_profile)) },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -559,11 +561,11 @@ fun ProfileSwitchContent(profileSwitches: List<String>, selectedIndex: Int, onPr
     val selectedSwitch = if (profileSwitches.isNotEmpty() && selectedIndex < profileSwitches.size) profileSwitches[selectedIndex] else ""
 
     Column(modifier = modifier) {
-        Text(text = stringResource(R.string.profile_switches), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(bottom = 12.dp))
+        Text(text = stringResource(UiStrings.profile_switches), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(bottom = 12.dp))
         ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = !expanded }, modifier = Modifier.fillMaxWidth()) {
             OutlinedTextField(
                 value = selectedSwitch, onValueChange = {}, readOnly = true,
-                label = { Text(stringResource(app.aaps.core.ui.R.string.careportal_profileswitch)) },
+                label = { Text(stringResource(CoreUiStrings.careportal_profileswitch)) },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 modifier = Modifier
                     .fillMaxWidth()
