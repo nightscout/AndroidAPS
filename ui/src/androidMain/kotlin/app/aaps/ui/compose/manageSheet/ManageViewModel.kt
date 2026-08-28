@@ -16,7 +16,6 @@ import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -77,7 +76,9 @@ class ManageViewModel @Inject constructor(
     private val batchExecutor: BatchExecutor,
     private val nsClient: NsClient,
     private val visibilityContext: VisibilityContext,
-    @ApplicationScope private val appScope: CoroutineScope
+    // Unqualified: @ApplicationScope is a javax qualifier and cannot appear in commonMain. The graph
+    // binds the same instance under both names.
+    private val appScope: CoroutineScope
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ManageUiState(pumpPlugin = activePlugin.activePumpInternal as PluginBase))

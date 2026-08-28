@@ -11,7 +11,6 @@ import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -47,7 +46,9 @@ class ExtendedBolusDialogViewModel @Inject constructor(
     private val rh: TextResolver,
     private val batchExecutor: BatchExecutor,
     private val rxBus: RxBus,
-    @ApplicationScope private val appScope: CoroutineScope
+    // Unqualified: @ApplicationScope is a javax qualifier and cannot appear in commonMain. The graph
+    // binds the same instance under both names.
+    private val appScope: CoroutineScope
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ExtendedBolusDialogUiState())

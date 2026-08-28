@@ -19,7 +19,6 @@ import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.compensateForClockSkew
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -107,7 +106,9 @@ class ProfileManagementViewModel @Inject constructor(
     private val nsClient: NsClient,
     private val batchExecutor: BatchExecutor,
     private val rxBus: RxBus,
-    @ApplicationScope private val appScope: CoroutineScope
+    // Unqualified: @ApplicationScope is a javax qualifier and cannot appear in commonMain. The graph
+    // binds the same instance under both names.
+    private val appScope: CoroutineScope
 ) : ViewModel() {
 
     // VM-owned selection state. The source of truth for "which profile is currently shown

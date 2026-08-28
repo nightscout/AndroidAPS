@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.compensateForClockSkew
 import app.aaps.core.interfaces.db.observeChanges
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.insulin.ConcentrationType
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.insulin.InsulinType
@@ -75,7 +74,9 @@ class InsulinManagementViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,
     private val config: Config,
     private val batchExecutor: BatchExecutor,
-    @ApplicationScope private val appScope: CoroutineScope
+    // Unqualified: @ApplicationScope is a javax qualifier and cannot appear in commonMain. The graph
+    // binds the same instance under both names.
+    private val appScope: CoroutineScope
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(InsulinManagementUiState())

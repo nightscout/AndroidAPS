@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -38,6 +37,7 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlin.math.max
+import kotlin.concurrent.Volatile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -67,7 +67,9 @@ class CarbsDialogViewModel @Inject constructor(
     val rh: TextResolver,
     val dateUtil: DateUtil,
     private val rxBus: RxBus,
-    @ApplicationScope private val appScope: CoroutineScope
+    // Unqualified: @ApplicationScope is a javax qualifier and cannot appear in commonMain. The graph
+    // binds the same instance under both, so this is the same application scope.
+    private val appScope: CoroutineScope
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CarbsDialogUiState())

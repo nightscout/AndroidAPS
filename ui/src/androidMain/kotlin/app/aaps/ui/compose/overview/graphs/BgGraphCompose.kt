@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlin.concurrent.Volatile
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.graph.vico.Square
 import app.aaps.core.interfaces.overview.graph.ActivityGraphData

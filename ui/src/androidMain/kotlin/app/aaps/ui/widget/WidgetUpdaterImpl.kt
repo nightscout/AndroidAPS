@@ -5,7 +5,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import androidx.glance.appwidget.updateAll
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.widget.WidgetUpdater
@@ -29,7 +28,9 @@ import kotlinx.coroutines.launch
 class WidgetUpdaterImpl @Inject constructor(
     private val context: Context,
     private val aapsLogger: AAPSLogger,
-    @ApplicationScope private val scope: CoroutineScope
+    // Unqualified: @ApplicationScope is a javax qualifier and cannot appear in commonMain. The graph
+    // binds the same instance under both names.
+    private val scope: CoroutineScope
 ) : WidgetUpdater {
 
     override fun update(from: String) {
