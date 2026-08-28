@@ -20,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
@@ -34,13 +33,13 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.core.net.toUri
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.LocalAppIcon
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
 
 data class AboutDialogData(
     val title: String,
     val message: String,
-    val icon: Int,
     val enabledOptions: List<ExternalOptions> = emptyList()
 )
 
@@ -59,12 +58,7 @@ fun AboutAlertDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         icon = {
-            Icon(
-                painter = painterResource(id = data.icon),
-                contentDescription = null,
-                modifier = Modifier.size(48.dp),
-                tint = Color.Unspecified
-            )
+            LocalAppIcon.current(Modifier.size(48.dp))
         },
         title = {
             Text(

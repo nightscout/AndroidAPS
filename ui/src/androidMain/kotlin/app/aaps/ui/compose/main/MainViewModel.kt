@@ -112,7 +112,6 @@ class MainViewModel @Inject constructor(
     val config: Config,
     val preferences: Preferences,
     private val fabricPrivacy: FabricPrivacy,
-    private val iconsProvider: IconsProvider,
     private val rh: TextResolver,
     private val dateUtil: DateUtil,
     private val overviewDataCache: OverviewDataCache,
@@ -188,7 +187,6 @@ class MainViewModel @Inject constructor(
     val actionConfirmation: StateFlow<ActionConfirmation?> = _actionConfirmation.asStateFlow()
 
     val versionName: String get() = config.VERSION_NAME
-    val appIcon: Int get() = iconsProvider.getIcon()
     val calcProgressFlow: StateFlow<Int> = overviewDataCache.calcProgressFlow
 
     // Ticker for time-based progress updates (every 30 seconds). Cold flow — only runs while
@@ -612,7 +610,6 @@ class MainViewModel @Inject constructor(
         return AboutDialogData(
             title = "$appName ${config.VERSION}",
             message = message,
-            icon = iconsProvider.getIcon(),
             enabledOptions = enabledOptions
         )
     }

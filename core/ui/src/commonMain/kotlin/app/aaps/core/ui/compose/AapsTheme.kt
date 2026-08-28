@@ -14,6 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.style.LineHeightStyle
@@ -70,6 +71,17 @@ val LocalConfig = compositionLocalOf<Config> { error("No Config provided") }
  * threading it through every composable in between.
  */
 val LocalDecimalFormatter = compositionLocalOf<DecimalFormatter> { error("No DecimalFormatter provided") }
+
+/**
+ * Draws this build's own app icon.
+ *
+ * A slot rather than an id or an [androidx.compose.ui.graphics.vector.ImageVector], because the icon
+ * differs per flavour - the clients each have their own owl - and those are bitmaps, not vectors.
+ * The host knows how to paint its icon; a shared screen only needs to say where it goes.
+ *
+ * Defaults to drawing nothing, so a preview or a screen shown outside the app shell still renders.
+ */
+val LocalAppIcon = compositionLocalOf<@Composable (Modifier) -> Unit> { {} }
 
 /**
  * CompositionLocal exposing whether the master phone is currently reachable (see

@@ -21,9 +21,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.ui.compose.LocalAppIcon
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.navigation.description
 import app.aaps.core.ui.compose.navigation.icon
@@ -33,7 +33,6 @@ import app.aaps.core.ui.compose.stringResourceOrNull
 @Composable
 fun MainDrawer(
     versionName: String,
-    appIcon: Int,
     onNavigate: (NavigationRequest) -> Unit,
     isTreatmentsEnabled: Boolean,
     modifier: Modifier = Modifier
@@ -47,11 +46,7 @@ fun MainDrawer(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp)
         ) {
-            Image(
-                painter = painterResource(id = appIcon),
-                contentDescription = "AAPS Logo",
-                modifier = Modifier.size(40.dp)
-            )
+            LocalAppIcon.current(Modifier.size(40.dp))
             Spacer(modifier = Modifier.width(12.dp))
             Text(
                 text = "AAPS $versionName",

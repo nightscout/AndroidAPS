@@ -175,7 +175,6 @@ fun MainScreen(
         drawerContent = {
             MainDrawer(
                 versionName = mainViewModel.versionName,
-                appIcon = mainViewModel.appIcon,
                 onNavigate = { request ->
                     scope.launch { drawerState.close() }
                     onDrawerClosed()
