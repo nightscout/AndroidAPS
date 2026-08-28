@@ -186,6 +186,14 @@ and their `linkDebugTestIosSimulatorArm64` task reports `NO-SOURCE`.
     - Remove unused functions, parameters, and extensions
     - Delete deprecated code and escape hatches
     - Compile frequently to verify nothing breaks
+- **Remove dead code when you find it**, in the same change, including unreferenced resources (delete
+  those from every locale). Do not ship a generator, an interface or a registration that nothing uses
+  yet - add it when the thing that consumes it lands.
+    - **But check first whether the dead code is hiding a bug.** A private function with no callers,
+      or a parameter that is always the default, can mean a caller was lost rather than that the code
+      is obsolete. `TriggerBTDevice.devicesPaired()` looked like dead code and was in fact a
+      user-facing regression: the Compose migration dropped its caller, so the Bluetooth device
+      picker was permanently empty. Compare against `master` before deleting.
 - **Use TodoWrite for complex multi-step work:**
     - Create specific, actionable todo items (not vague descriptions)
     - Mark todos in_progress before starting, completed immediately after finishing
@@ -279,9 +287,39 @@ and their `linkDebugTestIosSimulatorArm64` task reports `NO-SOURCE`.
     - Note: Adding external library dependencies via `api(libs.xxx)` or `implementation(libs.xxx)`
       is fine.
 
+## Skills
+
+- Repeatable procedures live in `.claude/skills/<name>/SKILL.md` and load on demand. Use one when the
+  task matches instead of working from memory.
+- **Keep a skill up to date as you use it.** If you hit a step that is missing, add it before you
+  finish. If a step is wrong or no longer needed, correct it in the same change. A stale procedure is
+  worse than none, because it gets believed. The same goes for `.claude/procedures/*.md`.
+- Skills are checked into the repo, so every contributor and the macOS checkout get them. Keep them
+  free of session state ("green, uncommitted, device-pending") - that belongs in notes, not here.
+
 ## Migration Procedures
 
 - **For migrations**: Follow procedures in `.claude/procedures/migration.md`
+- **For flipping a module to Kotlin Multiplatform**: use the `kmp-module-flip` skill.
+
+### Kotlin Multiplatform migration rules
+
+- **Migrate the class, lift only the platform call out.** A class is not "Android" because one line
+  of it is. Put that line behind an interface in commonMain and keep the rule - inputs,
+  serialization, description, matching logic - in shared code. `PairedBtDevices` and
+  `LastKnownLocation` in `:plugins:automation` are the examples to copy.
+- **Implement the androidMain side straight away; other platforms can follow later.** Do not hold up
+  a migration waiting for an iOS implementation.
+- **Prefer a platform-independent interface over passing `Context` around.** Where code takes a
+  `Context` (or another Android type) only to reach one capability, replace it with an interface so
+  the code compiles for iOS or the JVM. First check whether the parameter is used at all - several
+  turned out to be dead.
+- **An interface must be honourable on every target that gets one.** An implementation that silently
+  does nothing is a safety problem here: an automation rule the user relies on would quietly stop
+  firing. Where a target cannot honour the contract, the feature should be visibly absent on that
+  target rather than present and dead. Ask before making that call.
+- **Keep exact platform maths on the platform.** Move the decision, not the calculation, when a
+  different formula would change results.
 
 ## When Stuck
 
