@@ -41,30 +41,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Locale
 
-@Immutable
-data class IobUiState(
-    val text: String = "",
-    val iobTotal: Double = 0.0
-)
-
-@Immutable
-data class CobUiState(
-    val text: String = "",
-    val carbsReq: Int = 0,
-    val cobValue: Double = 0.0
-)
-
-@Immutable
-data class SensitivityUiState(
-    val asText: String = "",
-    val isfFrom: String = "",
-    val isfTo: String = "",
-    val dialogText: String = "",
-    val ratio: Double = 1.0,
-    val isEnabled: Boolean = true,
-    val hasData: Boolean = false
-)
-
 @Stable
 class ChipsViewModel @AssistedInject constructor(
     @Assisted cache: OverviewDataCache,

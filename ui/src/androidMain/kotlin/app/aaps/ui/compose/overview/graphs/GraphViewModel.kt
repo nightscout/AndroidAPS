@@ -46,23 +46,6 @@ import kotlinx.coroutines.flow.update
  * Workers emit to cache flows → ViewModel exposes flows → UI collects independently
  */
 
-/**
- * Static chart configuration (doesn't change during graph lifetime)
- */
-data class ChartConfig(
-    val highMark: Double,
-    val lowMark: Double
-)
-
-/**
- * UI state for BG info section display
- */
-@Immutable
-data class BgInfoUiState(
-    val bgInfo: BgInfoData?,
-    val timeAgoText: String
-)
-
 @Stable
 class GraphViewModel @AssistedInject constructor(
     @Assisted cache: OverviewDataCache,
