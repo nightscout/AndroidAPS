@@ -23,14 +23,14 @@ preparation work can happen without disturbing the main NFC line.
 
 | Step                                                       | State                                                                       |
 |------------------------------------------------------------|-----------------------------------------------------------------------------|
-| Merge `Nightscout/kmp` into the branch                     | **done six times** - latest `0ef1155b65`, 34 commits, no conflicts             |
+| Merge `Nightscout/kmp` into the branch                     | **done seven times** - latest `31889dde7a`, 30 commits, no conflicts           |
 | Tier 1, the changes needed to compile at all (section 3)    | **done** - `9cd204b8da` "NFC Fix build after kmp merge"                        |
 | Architecture alignment (section 9)                         | **all done** - 9.1 to 9.8, the last being 9.5 in `57952b8690`                  |
 | The command format and the store blobs (section 5)          | **done** - `28305e0af6` and `ff1916852f`. No `org.json` left in the plugin      |
 | Metro DI and the plugin's own manifest (section 1a)         | **done** - `ba1cdbd518`, `009f4087ca`, `42ea9bbad2`. Metro owns the plugin now  |
 | Tier 2, needed only for a multiplatform module (section 4)  | **not started** apart from the `org.json` row, which sections 5 and 9.7 did    |
 | Build verification                                         | **green** - compile clean, 93 NFC tests and 54 app DI tests pass                |
-| `Nightscout/kmp` freshness                                 | merged 2026-08-28 at `30196d0c9f`. Still not in `dev` - more merges are due     |
+| `Nightscout/kmp` freshness                                 | merged 2026-08-28 at `2c62ecad75`. Still not in `dev` - more merges are due     |
 
 Sections 3.7 to 3.12 are six breaks that only a compiler found, after an import-derived list had
 missed them. The lesson is recorded there because it will repeat on the next merge: **grepping imports
@@ -69,6 +69,7 @@ anything was pushed, so that each one builds on its own:
 | `88d804a052`  | fix build after merge 5 - 1 file, the UiStrings rename         | mechanical, **builds**                   |
 | `0ef1155b65`  | **merge 6**, 34 upstream commits, no conflicts                | nothing to fix afterwards                |
 | `57952b8690`  | section 9.5 - snackbar events, no more Context, 7 files        | last alignment item, **builds**          |
+| `31889dde7a`  | **merge 7**, 30 upstream commits, no conflicts                | nothing to fix afterwards                |
 
 Keeping these apart matters for review: the fix-build commit only has to answer "did the merge really
 force this?", and the alignment commit carries its own rationale. `f9e51ec06c` is also the one that
@@ -665,10 +666,29 @@ One thing may still move: follow-up 3 in the KMP note is `PluginDescription.desc
 | 3    | **Keep merging `kmp` as it moves**, roughly daily while it is this active. Five merges in, the conflict set is small and always the same shared files, and `nfcCommands/` has never been touched by one. Waiting costs more than merging - see the merge notes in section 10. | -                    |
 | 4    | ~~Tier 2~~ - **not needed.** Upstream's own doc and its conversion record say `:plugins:sync` stays Android, so the plugin lives in `androidMain`. See section 6. | -                    |
 | 5    | ~~Decide the NFC hardware seam~~ - **not needed** for the same reason. There is no iOS half to design. | -                    |
-| 6    | When upstream makes `:plugins:sync` multiplatform, move the plugin's files from `src/main` to `src/androidMain`. A path move; Tier 1 is already applied. | upstream flipping the module |
+| 6    | When upstream makes `:plugins:sync` multiplatform, the plugin's files move from `src/main` to `src/androidMain`. **Not our task** - see below. | upstream flipping the module |
 
-All of section 9 is done as of `57952b8690`. What is left is the path move of step 6, whenever upstream
-makes the module multiplatform, and keeping the merges going until then.
+All of section 9 is done as of `57952b8690`. **The NFC work is finished.** What is left is not work on
+the plugin at all - it is step 6, and step 6 is not ours to do.
+
+**Why step 6 is not our task, and why `androidMain` needs no other plugin to justify it.** Two facts
+settle both halves:
+
+1. `androidMain` is created because the **module** becomes multiplatform, not because some file needs a
+   home. Upstream already has modules that are multiplatform with **no `commonMain` at all** -
+   `:plugins:source` and `:plugins:configuration` keep every line in `androidMain`. `:plugins:sync` is
+   full of Android-only code already (WorkManager, `NSClientV3Service`, `DataLayerListenerServiceMobile`,
+   the activities), so nothing about NFC is needed to justify the source set.
+2. The conversion is a **pure path move**, done in one commit by whoever converts the module.
+   `0628ea8c2d` "Make `:plugins:source` a multiplatform module" is **101 detected renames with zero line
+   changes**. Whoever converts `:plugins:sync` moves all of `src/main`, and our files go with it because
+   by then they are just part of the module.
+
+So there is no NFC step waiting on the other side. What there is, is a **merge event to expect**: if
+`:plugins:sync` is converted before this branch lands, upstream's tree will have `src/androidMain` where
+ours has `src/main`. Git's directory rename detection normally carries new files across a renamed
+directory, but it can report a `CONFLICT (file location)` for files upstream never had - which is exactly
+what all of `nfcCommands/` is. Expect to confirm the placement once, not to do the move by hand.
 
 Where section 9 lands: **all of it is done** - 9.1 to 9.4, 9.6, 9.7 and 9.8, and 9.5 last in
 `57952b8690`.
@@ -1123,6 +1143,16 @@ generated Java file that names it stays behind and is still compiled. Merge 6's 
 `UiInteractionImpl` still mentions it - failing `:app:hiltJavaCompileFullDebug`. Recompiling never
 clears these. Deleting the generated directory does, and it is regenerated.
 
+### Merge 7 outcome, for reference
+
+Commit `31889dde7a`, 30 upstream commits, **no conflicts**, `nfcCommands/` untouched a seventh time, and
+nothing to fix afterwards - the first merge that needed no follow-up commit at all. The usual checks were
+run and all passed.
+
+The one thing it changed for us is not code: **library modules lost their product flavours**, so the
+build commands are different from here on. That is written up in the appendix under "Build commands
+changed at merge 7", because the error Gradle gives looks alarming and has nothing to do with the code.
+
 One trap worth remembering: **`PreferenceContentExtensions.kt` merged with no conflict while carrying
 our Android-only `androidx.compose.ui.res.stringResource` import into a `commonMain` file.** Git had
 no reason to flag it because kmp never touched those lines. A clean merge is not proof of a correct
@@ -1155,6 +1185,24 @@ Working tree after the merge and Tier 1, build folders excluded.
 
 Largest files: `NfcBuildScreen.kt` 1239, `NfcCommandsScreen.kt` 489, `NfcCommandsPlugin.kt` ~315,
 `NfcControlActivity.kt` 220, `NfcTagStore.kt` 171, `NfcCommonUi.kt` 142, `NfcCommandCode.kt` 118.
+
+### Build commands changed at merge 7
+
+Upstream **removed the product flavours from library modules** - `flavorDimensions` and the five
+`productFlavors` are gone from `buildSrc/.../android-module-dependencies.gradle.kts`, and a new
+`:appshell` module appeared. Library modules now build plain `debug` / `release` variants, so the task
+names changed:
+
+| Before merge 7 | From merge 7 |
+|---|---|
+| `:plugins:sync:compileFullDebugKotlin` | `:plugins:sync:compileDebugKotlin` |
+| `:plugins:sync:testFullDebugUnitTest` | `:plugins:sync:testDebugUnitTest` |
+| test results under `build/test-results/testFullDebugUnitTest/` | `.../testDebugUnitTest/` |
+
+`:app` keeps its flavours, so `:app:compileFullDebugKotlin` and `:app:testFullDebugUnitTest` are
+unchanged. The failure this produces is not a compile error and says nothing about the code - Gradle
+reports *"Cannot locate tasks that match ... task 'compileFullDebugKotlin' not found in project
+':plugins:sync'"*.
 
 ### Reading build output
 
