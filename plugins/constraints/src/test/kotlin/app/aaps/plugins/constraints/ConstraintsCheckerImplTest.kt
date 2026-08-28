@@ -186,17 +186,16 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         whenever(activePlugin.getSpecificPluginsListByInterface(PluginConstraints::class.java)).thenReturn(constraintsPluginsList)
     }
 
-    // Combo & Objectives
+    // SHTF eternal build: objectives no longer veto loop invocation
     @Test
     fun isLoopInvocationAllowedTest() {
         val c = constraintChecker.isLoopInvocationAllowed()
-        assertThat(c.reasonList).hasSize(1) // Objectives
-        assertThat(c.mostLimitedReasonList).hasSize(1) // Objectives
-        assertThat(c.value()).isFalse()
+        assertThat(c.reasonList).isEmpty()
+        assertThat(c.mostLimitedReasonList).isEmpty()
+        assertThat(c.value()).isTrue()
     }
 
-    // Safety & Objectives
-    // 2x Safety & Objectives
+    // SHTF eternal build: objectives no longer veto closed loop
     @Test
     fun isClosedLoopAllowedTest() {
         whenever(config.isEngineeringModeOrRelease()).thenReturn(true)
@@ -204,8 +203,8 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         objectivesPlugin.objectives[Objectives.CLOSED_LOOP_OBJECTIVE].startedOn = 0
         val c: Constraint<Boolean> = constraintChecker.isClosedLoopAllowed()
         aapsLogger.debug("Reason list: " + c.reasonList.toString())
-        assertThat(c.reasonList[0]).contains("Objectives: Objective 7 not started") // Safety & Objectives
-        assertThat(c.value()).isFalse()
+        assertThat(c.reasonList).isEmpty()
+        assertThat(c.value()).isTrue()
     }
 
     // Safety & Objectives
@@ -215,8 +214,8 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         objectivesPlugin.objectives[Objectives.AUTOSENS_OBJECTIVE].startedOn = 0
         whenever(preferences.get(BooleanKey.ApsUseAutosens)).thenReturn(false)
         val c = constraintChecker.isAutosensModeEnabled()
-        assertThat(c.reasonList).hasSize(2) // Safety & Objectives
-        assertThat(c.mostLimitedReasonList).hasSize(2) // Safety & Objectives
+        assertThat(c.reasonList).hasSize(1) // Safety only (SHTF eternal build: objectives neutralized)
+        assertThat(c.mostLimitedReasonList).hasSize(1) // Safety only
         assertThat(c.value()).isFalse()
     }
 
@@ -247,8 +246,8 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         whenever(loop.runningMode).thenReturn(RM.Mode.OPEN_LOOP)
 //        whenever(constraintChecker.isClosedLoopAllowed()).thenReturn(ConstraintObject(true))
         val c = constraintChecker.isSMBModeEnabled()
-        assertThat(c.reasonList).hasSize(3) // 2x Safety & Objectives
-        assertThat(c.mostLimitedReasonList).hasSize(3) // 2x Safety & Objectives
+        assertThat(c.reasonList).hasSize(2) // 2x Safety (SHTF eternal build: objectives neutralized)
+        assertThat(c.mostLimitedReasonList).hasSize(2) // 2x Safety
         assertThat(c.value()).isFalse()
     }
 

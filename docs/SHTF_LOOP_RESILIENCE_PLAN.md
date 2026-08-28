@@ -8,6 +8,22 @@
 
 ---
 
+## STATUS UPDATE — 2026-08-28 (agent execution pass)
+
+The Section 5 code work is **done** in this repo. Decisions made with the owner and facts verified in source:
+
+- **Version target changed from Section 1's plan:** the owner chose the **newest release**. This repo already contains it — AAPS **3.4.2.6**, commit `598e2eb3`, byte-identical to upstream `nightscout/AndroidAPS` tag `3.4.2.6`. **autoISF is integrated into mainline AAPS since 3.3**, so the `ga-zelle/autoISF` fork is no longer needed. Note: importing the owner's 3.2 settings export crosses the 3.3 preference migration — verify every profile value on-device after import.
+- **Expiry mechanism as verified (differs from the guesses below):** `VersionCheckerUtilsImpl` stores an expiry date (from bundled `assets/definition.json` merged with **Firebase Remote Config**) into an `AppExpiration` preference; `VersionCheckerPlugin.applyMaxIOBConstraints()` then forces **maxIOB = 0** once that date passes. Both neutralized; stored dates are actively cleared. See `ETERNAL_BUILD_CHANGES.md` for exact edits.
+- **Objectives fully neutralized** (owner's decision — all objectives long since completed): all six constraint vetoes are no-ops, and the **clock landmine** is removed — stock AAPS permanently wipes objective progress if the device clock is >3h behind the stored timestamps (exactly what a cold-stored phone with a reset RTC hits), and offline recovery is impossible because restarting an objective requires an internet time check. Section 9's original claim that a wrong clock "will not disable the loop" was **wrong for stock code** and is only true now because of these changes.
+- **SignatureVerifierPlugin needs no change:** it only disables *leaked* APKs whose certificates are on a revocation list; self-signed private-keystore builds are explicitly safe.
+- **Spare phone confirmed:** Samsung Galaxy S24+ (SM-S926U1), Android 16 — comfortably above the Android 12 (`minSdk 31`) floor. Samsung battery-manager settings are mandatory: see `RUNBOOK_SPARE_PHONE_SETUP.md`.
+- **Pumps:** Omnipod DASH primary; Eros pods + RileyLink/OrangeLink and Medtronic (AAA batteries) as fallbacks — all three drivers ship in the same APK. Medtronic model/firmware numbers still to be verified against the loopable list. Link-device batteries join the 3-month top-up rotation. See `RUNBOOK_BREAK_GLASS.md`.
+- **xDrip+: break-glass only** (owner's decision), with a mandatory end-to-end test before storage. Switch procedure in `RUNBOOK_BREAK_GLASS.md`.
+- **Companion docs created:** `ETERNAL_BUILD_CHANGES.md` (exact change record + re-apply guide), `BUILD_ENV_NOTES.md` (toolchain, signing, offline-rebuild ark), `RUNBOOK_SPARE_PHONE_SETUP.md` (provisioning + pre-storage checklist incl. clock-forward **and clock-backward** tests), `RUNBOOK_BREAK_GLASS.md` (CGM/pump fallbacks, printable).
+- **Still owner-side:** keystore generation + signing, sideload, settings export/import, xDrip+/BYODA install, pod activation test, Medtronic model check, printed cards, Faraday bagging.
+
+---
+
 ## 1. Owner's current known-good baseline
 
 Captured from the owner's running phone (do not assume, confirm if anything changed):
@@ -167,7 +183,7 @@ Software outlasts supplies. Plan the physical layer:
 - Store the spare phone at **~50% charge** (lithium degrades fastest at full or empty).
 - **Top up every ~3 months** — set a recurring reminder. A dead-battery spare is as useless as an expired app.
 - Keep the spare in the Faraday bag with: printed runbooks (Sections 6.4, 8), a charging cable, and ideally a small offline power source.
-- Because the eternal build has expiry disabled, the phone's clock drifting or being wrong will **not** disable the loop — but still set the clock correctly when you pull it out, for correct dosing timestamps.
+- Clock correctness: **stock AAPS can wipe objective progress (and thus closed loop) when the phone's clock is behind the stored timestamps** — a real risk after a long-dead RTC. The eternal build removes both that wipe and version expiry, so a wrong clock no longer disables the loop — but still set the clock correctly when you pull the phone out, for correct dosing timestamps, and run both clock tests in the pre-storage checklist.
 
 ---
 

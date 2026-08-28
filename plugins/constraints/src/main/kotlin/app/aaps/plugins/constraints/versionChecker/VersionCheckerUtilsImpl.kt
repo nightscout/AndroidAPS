@@ -34,21 +34,17 @@ class VersionCheckerUtilsImpl @Inject constructor(
     var definition: JSONObject = versionDefinition.invoke()
 
     override fun triggerCheckVersion() {
+        // SHTF eternal build: version-expiry disabled intentionally. See docs/SHTF_LOOP_RESILIENCE_PLAN.md
+        // Stock behavior: this method stored an expiry date for the running version (sourced from the
+        // bundled assets/definition.json merged with Firebase Remote Config) into the AppExpiration
+        // preference, which VersionCheckerPlugin then used to force maxIOB=0 after the date passed.
+        // This build never stores or acts on an expiry date. The harmless "new version available"
+        // notification is kept.
         val version: String? = AllowedVersions.findByApi(definition, Build.VERSION.SDK_INT)
-        val newVersionByApi = compareWithCurrentVersion(newVersion = version, currentVersion = config.get().VERSION_NAME)
-
-        // App expiration
-        if (newVersionByApi || config.get().isDev()) {
-            var endDate = preferences.get(LongComposedKey.AppExpiration, config.get().VERSION_NAME)
-            AllowedVersions.findByVersion(definition, config.get().VERSION_NAME)?.let { dateAsString ->
-                AllowedVersions.endDateToMilliseconds(dateAsString)?.let { ed ->
-                    endDate = ed + T.days(1).msecs()
-                    preferences.put(LongComposedKey.AppExpiration, config.get().VERSION_NAME, value = endDate)
-                }
-            }
-            if (endDate != 0L) onExpireDateDetected(config.get().VERSION_NAME, endDate)
-        }
-
+        compareWithCurrentVersion(newVersion = version, currentVersion = config.get().VERSION_NAME)
+        // Clear any expiry date persisted by a previous run of this or an earlier build so a
+        // date already on disk can never resurface.
+        preferences.put(LongComposedKey.AppExpiration, config.get().VERSION_NAME, value = 0L)
     }
 
     @Suppress("SameParameterValue")
@@ -121,22 +117,8 @@ class VersionCheckerUtilsImpl @Inject constructor(
         return true
     }
 
-    private fun onExpireDateDetected(currentVersion: String, endDate: Long) {
-        val now = dateUtil.now()
-        if (dateUtil.now() > endDate && shouldWarnAgain()) {
-            // store last notification time
-            preferences.put(VersionCheckerLongKey.LastVersionCheckWarning, now)
-            //notify
-            uiInteraction.addNotification(Notification.VERSION_EXPIRE, rh.gs(R.string.application_expired), Notification.URGENT)
-        } else if (dateUtil.isAfterNoon() && now > preferences.get(VersionCheckerLongKey.LastVersionCheckWarning) + warnEvery(endDate)) {
-            aapsLogger.debug(LTag.CORE, rh.gs(R.string.version_expire, currentVersion, dateUtil.dateString(endDate)))
-            uiInteraction.addNotification(Notification.VERSION_EXPIRE, rh.gs(R.string.version_expire, currentVersion, dateUtil.dateString(endDate)), Notification.LOW)
-            preferences.put(VersionCheckerLongKey.LastExpiredWarning, now)
-        }
-    }
-
-    private fun shouldWarnAgain() =
-        dateUtil.now() > preferences.get(VersionCheckerLongKey.LastVersionCheckWarning) + warnEvery(expiration = preferences.get(LongComposedKey.AppExpiration, config.get().VERSION_NAME))
+    // SHTF eternal build: onExpireDateDetected()/shouldWarnAgain() removed — no expiry warnings or
+    // "application expired" notifications can ever fire. See docs/SHTF_LOOP_RESILIENCE_PLAN.md
 
     private fun String?.toNumberList() =
         this?.numericVersionPart().takeIf { !it.isNullOrBlank() }?.split(".")?.map { it.toInt() }

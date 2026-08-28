@@ -1,14 +1,11 @@
 package app.aaps.plugins.constraints.versionChecker
 
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
-import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.objects.constraints.ConstraintObject
-import app.aaps.plugins.constraints.R
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
-import org.mockito.kotlin.whenever
 
 class VersionCheckerPluginTest : TestBaseWithProfile() {
 
@@ -16,24 +13,14 @@ class VersionCheckerPluginTest : TestBaseWithProfile() {
 
     private lateinit var versionCheckerPlugin: VersionCheckerPlugin
 
+    // SHTF eternal build: version-expiry disabled intentionally. See docs/SHTF_LOOP_RESILIENCE_PLAN.md
+    // maxIOB must never be clamped because of version age, regardless of any stored expiry date.
     @Test
-    fun applyMaxIOBConstraintsTest() {
-        versionCheckerPlugin = VersionCheckerPlugin(aapsLogger, rh, preferences, versionCheckerUtils, config, dateUtil)
-        whenever(rh.gs(R.string.application_expired)).thenReturn("")
+    fun applyMaxIOBConstraintsNeverClampsTest() {
+        versionCheckerPlugin = VersionCheckerPlugin(aapsLogger, rh, preferences, versionCheckerUtils)
 
-        // No expiration
-        whenever(preferences.get(LongComposedKey.AppExpiration, config.VERSION_NAME)).thenReturn(0)
         val c1 = ConstraintObject(Double.MAX_VALUE, aapsLogger)
         assertThat(versionCheckerPlugin.applyMaxIOBConstraints(c1).value()).isEqualTo(Double.MAX_VALUE)
-
-        // Waiting for expiration
-        whenever(preferences.get(LongComposedKey.AppExpiration, config.VERSION_NAME)).thenReturn(now + 1000)
-        val c2 = ConstraintObject(Double.MAX_VALUE, aapsLogger)
-        assertThat(versionCheckerPlugin.applyMaxIOBConstraints(c2).value()).isEqualTo(Double.MAX_VALUE)
-
-        // Expired
-        whenever(preferences.get(LongComposedKey.AppExpiration, config.VERSION_NAME)).thenReturn(now - 1000)
-        val c3 = ConstraintObject(Double.MAX_VALUE, aapsLogger)
-        assertThat(versionCheckerPlugin.applyMaxIOBConstraints(c3).value()).isEqualTo(0.0)
+        assertThat(c1.getReasons()).isEmpty()
     }
 }

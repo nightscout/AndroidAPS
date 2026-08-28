@@ -30,15 +30,12 @@ abstract class Objective(
             preferences.put(ObjectivesLongComposedKey.Started, spName, value = value)
         }
     var accomplishedOn: Long = 0
-        get() {
-            var value = preferences.get(ObjectivesLongComposedKey.Accomplished, spName)
-            if (value - dateUtil.now() > T.hours(3).msecs() || startedOn - dateUtil.now() > T.hours(3).msecs()) { // more than 3 hours in the future
-                startedOn = 0
-                accomplishedOn = 0
-                value = 0
-            }
-            return value
-        }
+        // SHTF eternal build: clock-sanity auto-reset removed. See docs/SHTF_LOOP_RESILIENCE_PLAN.md
+        // Stock behavior: if the stored timestamps were more than 3 hours in the future relative to
+        // the device clock, this getter permanently zeroed the objective's progress. On a cold-stored
+        // spare phone whose RTC has reset, that wipes all objectives on first launch — unrecoverable
+        // offline. Stored progress is now always trusted regardless of the device clock.
+        get() = preferences.get(ObjectivesLongComposedKey.Accomplished, spName)
         set(value) {
             field = value
             preferences.put(ObjectivesLongComposedKey.Accomplished, spName, value = value)
@@ -62,7 +59,9 @@ abstract class Objective(
     }
 
     val isAccomplished: Boolean
-        get() = accomplishedOn != 0L && accomplishedOn < dateUtil.now()
+        // SHTF eternal build: an accomplished timestamp counts even if the device clock is behind it,
+        // so a reset RTC cannot make completed objectives display as unfinished.
+        get() = accomplishedOn != 0L
     val isStarted: Boolean
         get() = startedOn != 0L
 

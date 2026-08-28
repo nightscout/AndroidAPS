@@ -10,7 +10,6 @@ import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.implementation.sharedPreferences.PreferencesImpl
-import app.aaps.plugins.constraints.R
 import app.aaps.plugins.constraints.objectives.objectives.Objective0
 import app.aaps.plugins.constraints.objectives.objectives.Objective1
 import app.aaps.plugins.constraints.objectives.objectives.Objective2
@@ -30,8 +29,9 @@ import dagger.Lazy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
-import org.mockito.kotlin.whenever
 
+// SHTF eternal build: objectives gating disabled intentionally. See docs/SHTF_LOOP_RESILIENCE_PLAN.md
+// These tests assert that no objective state can ever veto looping.
 class ObjectivesPluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
@@ -64,44 +64,58 @@ class ObjectivesPluginTest : TestBaseWithProfile() {
         )
         objectivesPlugin = ObjectivesPlugin(aapsLogger, rh, emulatedPreferences, config, objectives)
         objectivesPlugin.onStart()
-        whenever(rh.gs(R.string.objectivenotstarted)).thenReturn("Objective %1\$d not started")
-        whenever(rh.gs(R.string.objectivenotfinished)).thenReturn("Objective %1\$d not finished")
     }
 
-    @Test fun notStartedObjectivesShouldLimitLoopInvocation() {
+    @Test fun notStartedObjectivesShouldNotLimitLoopInvocation() {
         objectivesPlugin.objectives[Objectives.FIRST_OBJECTIVE].startedOn = 0
         val c = objectivesPlugin.isLoopInvocationAllowed(ConstraintObject(true, aapsLogger))
-        assertThat(c.getReasons()).isEqualTo("Objectives: Objective 1 not started")
-        assertThat(c.value()).isFalse()
-        objectivesPlugin.objectives[Objectives.FIRST_OBJECTIVE].startedOn = dateUtil.now()
-    }
-
-    @Test fun notStartedObjective5ShouldForceLgs() {
-        objectivesPlugin.objectives[Objectives.LGS_OBJECTIVE].startedOn = 1
-        objectivesPlugin.objectives[Objectives.LGS_OBJECTIVE].accomplishedOn = 0
-        val c = objectivesPlugin.isLgsForced(ConstraintObject(false, aapsLogger))
-        assertThat(c.getReasons()).contains("Objective 6 not finished")
+        assertThat(c.getReasons()).isEmpty()
         assertThat(c.value()).isTrue()
     }
 
-    @Test fun notStartedObjective6ShouldLimitClosedLoop() {
+    @Test fun notFinishedObjective5ShouldNotForceLgs() {
+        objectivesPlugin.objectives[Objectives.LGS_OBJECTIVE].startedOn = 1
+        objectivesPlugin.objectives[Objectives.LGS_OBJECTIVE].accomplishedOn = 0
+        val c = objectivesPlugin.isLgsForced(ConstraintObject(false, aapsLogger))
+        assertThat(c.getReasons()).isEmpty()
+        assertThat(c.value()).isFalse()
+    }
+
+    @Test fun notStartedObjective6ShouldNotLimitClosedLoop() {
         objectivesPlugin.objectives[Objectives.CLOSED_LOOP_OBJECTIVE].startedOn = 0
         val c = objectivesPlugin.isClosedLoopAllowed(ConstraintObject(true, aapsLogger))
-        assertThat(c.getReasons()).contains("Objective 7 not started")
-        assertThat(c.value()).isFalse()
+        assertThat(c.getReasons()).isEmpty()
+        assertThat(c.value()).isTrue()
     }
 
-    @Test fun notStartedObjective8ShouldLimitAutosensMode() {
+    @Test fun notStartedObjective8ShouldNotLimitAutosensMode() {
         objectivesPlugin.objectives[Objectives.AUTOSENS_OBJECTIVE].startedOn = 0
         val c = objectivesPlugin.isAutosensModeEnabled(ConstraintObject(true, aapsLogger))
-        assertThat(c.getReasons()).contains("Objective 8 not started")
-        assertThat(c.value()).isFalse()
+        assertThat(c.getReasons()).isEmpty()
+        assertThat(c.value()).isTrue()
     }
 
-    @Test fun notStartedObjective10ShouldLimitSMBMode() {
+    @Test fun notStartedObjective10ShouldNotLimitSMBMode() {
         objectivesPlugin.objectives[Objectives.SMB_OBJECTIVE].startedOn = 0
         val c = objectivesPlugin.isSMBModeEnabled(ConstraintObject(true, aapsLogger))
-        assertThat(c.getReasons()).contains("Objective 9 not started")
-        assertThat(c.value()).isFalse()
+        assertThat(c.getReasons()).isEmpty()
+        assertThat(c.value()).isTrue()
+    }
+
+    @Test fun interfaceAlwaysReportsStartedAndAccomplished() {
+        assertThat(objectivesPlugin.isStarted(Objectives.FIRST_OBJECTIVE)).isTrue()
+        assertThat(objectivesPlugin.isAccomplished(Objectives.AUTO_OBJECTIVE)).isTrue()
+    }
+
+    // SHTF eternal build: stored progress must survive a device clock far in the past
+    // (stock code wiped objectives whose timestamps were >3h in the future).
+    @Test fun progressSurvivesClockReset() {
+        val objective = objectivesPlugin.objectives[Objectives.FIRST_OBJECTIVE]
+        val farFuture = dateUtil.now() + 2L * 365 * 24 * 3600 * 1000
+        objective.startedOn = farFuture
+        objective.accomplishedOn = farFuture
+        assertThat(objective.accomplishedOn).isEqualTo(farFuture)
+        assertThat(objective.startedOn).isEqualTo(farFuture)
+        assertThat(objective.isAccomplished).isTrue()
     }
 }
