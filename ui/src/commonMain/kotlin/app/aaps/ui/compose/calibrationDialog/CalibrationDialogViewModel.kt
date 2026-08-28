@@ -23,6 +23,7 @@ import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.source.XDripSource
 import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.ui.UiStrings
 import dev.zacsweers.metro.AppScope
@@ -55,7 +56,8 @@ class CalibrationDialogViewModel @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil,
-    private val rh: TextResolver
+    private val rh: TextResolver,
+    private val decimalFormatter: DecimalFormatter
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CalibrationDialogUiState())
@@ -210,6 +212,6 @@ class CalibrationDialogViewModel @Inject constructor(
     // Input is already in mg/dL per 5 min — just convert to the user's display unit.
     private fun formatDeltaInDisplayUnit(mgdlPer5Min: Double): String {
         val displayDelta = profileUtil.fromMgdlToUnits(mgdlPer5Min)
-        return if (profileUtil.units == GlucoseUnit.MMOL) "%.1f".format(displayDelta) else "%.0f".format(displayDelta)
+        return if (profileUtil.units == GlucoseUnit.MMOL) decimalFormatter.to1Decimal(displayDelta) else decimalFormatter.to0Decimal(displayDelta)
     }
 }

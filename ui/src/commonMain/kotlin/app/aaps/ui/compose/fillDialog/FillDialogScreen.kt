@@ -54,6 +54,7 @@ import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.LocalDecimalFormatter
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.DateTimeSection
 import app.aaps.core.ui.compose.EventTimeRow
@@ -460,8 +461,9 @@ private fun PresetButtonsRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        val decimalFormatter = LocalDecimalFormatter.current
         presets.forEach { amount ->
-            val label = if (bolusStep <= 0.051) "%.2f".format(amount) else "%.1f".format(amount)
+            val label = if (bolusStep <= 0.051) decimalFormatter.to2Decimal(amount) else decimalFormatter.to1Decimal(amount)
             FilledTonalButton(onClick = { onPresetClick(amount) }) {
                 Text(label)
             }

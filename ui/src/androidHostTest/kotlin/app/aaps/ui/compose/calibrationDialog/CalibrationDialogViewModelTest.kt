@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.XDripSource
 import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -38,6 +39,7 @@ internal class CalibrationDialogViewModelTest {
     @Mock private lateinit var persistenceLayer: PersistenceLayer
     @Mock private lateinit var dateUtil: DateUtil
     @Mock private lateinit var rh: ResourceHelper
+    @Mock private lateinit var decimalFormatter: DecimalFormatter
 
     private lateinit var sut: CalibrationDialogViewModel
 
@@ -50,7 +52,7 @@ internal class CalibrationDialogViewModelTest {
         whenever(profileUtil.fromMgdlToUnits(any(), any())).thenReturn(0.0)
         sut = CalibrationDialogViewModel(
             profileUtil, profileFunction, xDripBroadcast, xDripSource, uel, glucoseStatusProvider,
-            activePlugin, persistenceLayer, dateUtil, rh
+            activePlugin, persistenceLayer, dateUtil, rh, decimalFormatter
         )
     }
 
