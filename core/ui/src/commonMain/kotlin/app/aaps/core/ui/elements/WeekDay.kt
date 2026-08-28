@@ -3,6 +3,7 @@ package app.aaps.core.ui.elements
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Instant
 
@@ -41,6 +42,17 @@ open class WeekDay {
                 }
                 throw IllegalStateException("Invalid day")
             }
+
+            /**
+             * The day [now] falls on, in the phone's own time zone.
+             *
+             * The entries are declared Monday first, which is the same order ISO-8601 numbers them,
+             * so the day number indexes them directly. That is the whole mapping - it is here rather
+             * than at the call site so it sits beside [calendarInts], the other place where a day
+             * number is turned into one of these.
+             */
+            fun of(now: Instant): DayOfWeek =
+                entries[now.toLocalDateTime(TimeZone.currentSystemDefault()).dayOfWeek.isoDayNumber - 1]
         }
     }
 

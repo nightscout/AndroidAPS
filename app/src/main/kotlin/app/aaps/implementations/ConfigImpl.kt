@@ -1,5 +1,6 @@
 package app.aaps.implementations
 
+import app.aaps.core.keys.interfaces.TextRef
 import android.os.Build
 import app.aaps.BuildConfig
 import app.aaps.R
@@ -46,7 +47,7 @@ class ConfigImpl @Inject constructor(
     override val DEBUG = BuildConfig.DEBUG
 
     override val currentDeviceModelString = Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ")"
-    override val appName: Int = R.string.app_name
+    override val appName: TextRef = TextRef.AndroidRes(R.string.app_name)
 
     private val _initProgressFlow = MutableStateFlow(InitProgress())
     override val initProgressFlow: StateFlow<InitProgress> = _initProgressFlow.asStateFlow()

@@ -18,8 +18,7 @@ import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.core.interfaces.pump.comment
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.utils.DateUtil
@@ -28,7 +27,6 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.core.objects.extensions.asSettingsExport
 import app.aaps.core.utils.lenientString
-import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputString
 import dev.zacsweers.metro.Provider
 import kotlinx.serialization.json.buildJsonObject
@@ -36,7 +34,7 @@ import kotlinx.serialization.json.put
 
 class ActionSettingsExport(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    rh: TextResolver,
     pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val rxBus: RxBus,
     private val notificationManager: NotificationManager,
@@ -62,7 +60,7 @@ class ActionSettingsExport(
 
         // Feedback on result
         var exportResultMessage: String
-        var exportResultComment: Int        // Comment string ID set in code
+        var exportResultComment: TextRef        // Comment text set in code
         var exportResultLevel: NotificationLevel // Level for user notification when done
         var announceAlert = false      // Also post an announcement (NS)
 
@@ -78,12 +76,12 @@ class ActionSettingsExport(
                 if (isAboutToExpire) {
                     // Password is about to expire and needs re-entering by user soon: notify user
                     // Note: we are allowed to export!
-                    exportResultComment = app.aaps.core.ui.R.string.export_warning
+                    exportResultComment = CoreUiStrings.export_warning
                     exportResultMessage = rh.gs(CoreUiStrings.export_result_message_about_to_expire)
                     exportResultLevel = NotificationLevel.LOW  // LOW -> e.g. color ORANGE
                 } else {
                     // We have a valid password: start exporting, then notify
-                    exportResultComment = app.aaps.core.ui.R.string.export_ok
+                    exportResultComment = CoreUiStrings.export_ok
                     exportResultMessage = rh.gs(CoreUiStrings.export_result_message_exported)
                     exportResultLevel = NotificationLevel.INFO // INFO -> e.g. color GREEN
                 }
@@ -91,14 +89,14 @@ class ActionSettingsExport(
                 if (!importExportPrefs.exportSharedPreferencesNonInteractive(password)) {
                     // :-( Export failed (see logfile!?)
                     aapsLogger.error(LTag.AUTOMATION, "ERROR: exportSharedPreferencesNonInteractive() failed to export settings")
-                    exportResultComment = app.aaps.core.ui.R.string.export_failed
+                    exportResultComment = CoreUiStrings.export_failed
                     exportResultMessage = rh.gs(CoreUiStrings.export_result_message_failed)
                     exportResultLevel = NotificationLevel.IMPORTANT // URGENT -> e.g. color RED
                     announceAlert = true
                 }
             } else {
                 // No password or was expired and needs re-entering by user
-                exportResultComment = app.aaps.core.ui.R.string.export_expired
+                exportResultComment = CoreUiStrings.export_expired
                 exportResultMessage = rh.gs(CoreUiStrings.export_result_message_expired)
                 exportResultLevel = NotificationLevel.IMPORTANT  // URGENT -> e.g. color RED
                 // Clear password in datastore, then notify user
@@ -108,7 +106,7 @@ class ActionSettingsExport(
             }
         } else {
             // Not enabled, do nothing and notify user
-            exportResultComment = app.aaps.core.ui.R.string.export_disabled
+            exportResultComment = CoreUiStrings.export_disabled
             exportResultMessage = rh.gs(CoreUiStrings.export_result_message_disabled)
             exportResultLevel = NotificationLevel.IMPORTANT
             aapsLogger.info(LTag.AUTOMATION, "Settings export ignored: unattended settings export is disabled")
@@ -149,7 +147,7 @@ class ActionSettingsExport(
     override fun toJSON(): String {
         val data = buildJsonObject { put("text", text.value) }
         return buildJsonObject {
-            put("type", this@ActionSettingsExport.javaClass.simpleName)
+            put("type", this@ActionSettingsExport::class.simpleName)
             put("data", data)
         }.toString()
     }

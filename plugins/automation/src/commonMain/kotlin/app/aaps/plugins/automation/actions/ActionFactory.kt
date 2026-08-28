@@ -14,7 +14,7 @@ import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.scenes.SceneIconResolver
@@ -45,7 +45,7 @@ import kotlinx.serialization.json.JsonObject
 class ActionFactory @Inject constructor(
     private val triggerDeps: TriggerDeps,
     private val aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val rxBus: RxBus,
     private val dateUtil: DateUtil,
@@ -104,22 +104,22 @@ class ActionFactory @Inject constructor(
      */
     fun instantiate(className: String): Action? =
         when (className.substringAfterLast('.')) {
-            ActionAlarm::class.java.simpleName                -> actionAlarm()
-            ActionSettingsExport::class.java.simpleName       -> actionSettingsExport()
-            ActionCarePortalEvent::class.java.simpleName      -> actionCarePortalEvent()
-            ActionDisableScene::class.java.simpleName         -> actionDisableScene()
-            ActionDummy::class.java.simpleName                -> actionDummy()
-            ActionEnableScene::class.java.simpleName          -> actionEnableScene()
-            ActionSMBChange::class.java.simpleName            -> actionSMBChange()
-            ActionNotification::class.java.simpleName         -> actionNotification()
-            ActionProfileSwitch::class.java.simpleName        -> actionProfileSwitch()
-            ActionProfileSwitchPercent::class.java.simpleName -> actionProfileSwitchPercent()
-            ActionRunAutotune::class.java.simpleName          -> actionRunAutotune()
-            ActionRunScene::class.java.simpleName             -> actionRunScene()
-            ActionSendSMS::class.java.simpleName              -> actionSendSMS()
-            ActionStartTempTarget::class.java.simpleName      -> actionStartTempTarget()
-            ActionStopProcessing::class.java.simpleName       -> actionStopProcessing()
-            ActionStopTempTarget::class.java.simpleName       -> actionStopTempTarget()
+            ActionAlarm::class.simpleName                -> actionAlarm()
+            ActionSettingsExport::class.simpleName       -> actionSettingsExport()
+            ActionCarePortalEvent::class.simpleName      -> actionCarePortalEvent()
+            ActionDisableScene::class.simpleName         -> actionDisableScene()
+            ActionDummy::class.simpleName                -> actionDummy()
+            ActionEnableScene::class.simpleName          -> actionEnableScene()
+            ActionSMBChange::class.simpleName            -> actionSMBChange()
+            ActionNotification::class.simpleName         -> actionNotification()
+            ActionProfileSwitch::class.simpleName        -> actionProfileSwitch()
+            ActionProfileSwitchPercent::class.simpleName -> actionProfileSwitchPercent()
+            ActionRunAutotune::class.simpleName          -> actionRunAutotune()
+            ActionRunScene::class.simpleName             -> actionRunScene()
+            ActionSendSMS::class.simpleName              -> actionSendSMS()
+            ActionStartTempTarget::class.simpleName      -> actionStartTempTarget()
+            ActionStopProcessing::class.simpleName       -> actionStopProcessing()
+            ActionStopTempTarget::class.simpleName       -> actionStopTempTarget()
             else                                             -> null
         }
 
@@ -131,7 +131,7 @@ class ActionFactory @Inject constructor(
         try {
             val type = obj.lenientString("type")
             val data = obj["data"] as? JsonObject ?: JsonObject(emptyMap())
-            val action = instantiate(type) ?: throw ClassNotFoundException(type)
+            val action = instantiate(type) ?: throw IllegalArgumentException("Unknown action type: $type")
             return action.fromJSON(data.toString())
         } catch (e: Exception) {
             aapsLogger.error("Unhandled exception", e)

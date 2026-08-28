@@ -2,7 +2,6 @@ package app.aaps.plugins.automation.triggers
 
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.plugins.automation.AutomationStrings
-import androidx.annotation.VisibleForTesting
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MonitorHeart
 import app.aaps.core.data.format.NumberFormat
@@ -10,7 +9,6 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.lenientDouble
 import app.aaps.core.utils.lenientStringOrNull
-import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
 import kotlinx.serialization.json.JsonObject
@@ -19,7 +17,9 @@ import kotlinx.serialization.json.put
 
 class TriggerHeartRate(deps: TriggerDeps) : Trigger(deps) {
 
-    @VisibleForTesting val averageHeartRateDurationMillis = 330 * 1000L
+    // Public only so the test can name the window it feeds samples into. The androidx
+    // @VisibleForTesting annotation is Android only, and it was advisory anyway.
+    val averageHeartRateDurationMillis = 330 * 1000L
     private val minValue = 30
     private val maxValue = 250
     var heartRate: InputDouble = InputDouble(80.0, minValue.toDouble(), maxValue.toDouble(), 10.0, NumberFormat.INTEGER)

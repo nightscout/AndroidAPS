@@ -86,6 +86,9 @@ kotlin {
                 api(libs.jetbrains.lifecycle.viewmodel.compose)
                 api(libs.jetbrains.lifecycle.runtime.compose)
                 implementation(libs.kotlinx.serialization.json)
+                // A Compose Multiplatform library - it publishes iosArm64, jvm and wasm too, so the
+                // reorderable list works everywhere and does not pin a screen to Android.
+                implementation(libs.sh.calvin.reorderable)
             }
         }
 
@@ -106,7 +109,6 @@ kotlin {
                 api(libs.androidx.compose.material3)
                 api(libs.androidx.compose.material.icons.extended)
                 api(libs.androidx.lifecycle.runtime.compose)
-                implementation(libs.sh.calvin.reorderable)
             }
         }
 

@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.triggers
 
+import kotlin.time.Instant
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.plugins.automation.AutomationStrings
 import androidx.compose.material.icons.Icons
@@ -16,8 +17,6 @@ import app.aaps.plugins.automation.elements.InputWeekDay
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
-import java.util.Calendar
-import java.util.Objects
 
 class TriggerRecurringTime(deps: TriggerDeps) : Trigger(deps) {
 
@@ -27,7 +26,7 @@ class TriggerRecurringTime(deps: TriggerDeps) : Trigger(deps) {
     constructor(deps: TriggerDeps, triggerRecurringTime: TriggerRecurringTime) : this(deps) {
         time.value = triggerRecurringTime.time.value
         if (days.weekdays.size >= 0)
-            System.arraycopy(triggerRecurringTime.days.weekdays, 0, days.weekdays, 0, triggerRecurringTime.days.weekdays.size)
+            triggerRecurringTime.days.weekdays.copyInto(days.weekdays)
     }
 
     fun time(minutes: Int): TriggerRecurringTime {
@@ -37,8 +36,7 @@ class TriggerRecurringTime(deps: TriggerDeps) : Trigger(deps) {
 
     override suspend fun shouldRun(): Boolean {
         val currentMinSinceMidnight = getMinSinceMidnight(dateUtil.now())
-        val scheduledDayOfWeek = Calendar.getInstance()[Calendar.DAY_OF_WEEK]
-        if (days.isSet(Objects.requireNonNull(WeekDay.DayOfWeek.fromCalendarInt(scheduledDayOfWeek)))) {
+        if (days.isSet(WeekDay.DayOfWeek.of(Instant.fromEpochMilliseconds(dateUtil.now())))) {
             if (currentMinSinceMidnight >= time.value && currentMinSinceMidnight - time.value < 5) {
                 aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
                 return true
@@ -80,7 +78,7 @@ class TriggerRecurringTime(deps: TriggerDeps) : Trigger(deps) {
         var counter = 0
         for (i in days.getSelectedDays()) {
             if (counter++ > 0) sb.append(",")
-            sb.append(rh.gs(Objects.requireNonNull(WeekDay.DayOfWeek.fromCalendarInt(i)).shortName))
+            sb.append(rh.gs(WeekDay.DayOfWeek.fromCalendarInt(i).shortName))
         }
         sb.append(" ")
         sb.append(dateUtil.timeString(toMills(time.value)))

@@ -54,7 +54,7 @@ class ActionAlarm(
 
     override suspend fun doAction(): PumpEnactResult {
         reminderScheduler.scheduleReminder(10, text.value.takeIf { it.isNotBlank() }
-            ?: rh.gs(TextRef.AndroidRes(config.appName)))
+            ?: rh.gs(config.appName))
         return pumpEnactResultProvider().success(true).comment(CoreUiStrings.ok)
     }
 

@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation
 
+import app.aaps.core.keys.interfaces.TextRef
 import android.app.Application
 import android.content.Intent
 import app.aaps.core.interfaces.configuration.Config
@@ -50,8 +51,8 @@ class TimerReminderReceiverTest : TestBase() {
             }
             true
         }
-        whenever(config.appName).thenReturn(1)
-        whenever(rh.gs(1)).thenReturn("AAPS")
+        whenever(config.appName).thenReturn(TextRef.Literal("AAPS"))
+        whenever(rh.gs(TextRef.Literal("AAPS"))).thenReturn("AAPS")
         sut = TimerReminderReceiver()
     }
 

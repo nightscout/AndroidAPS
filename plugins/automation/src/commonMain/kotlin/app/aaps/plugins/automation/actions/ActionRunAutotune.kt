@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.plugins.automation.AutomationStrings
@@ -10,8 +11,7 @@ import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.core.interfaces.pump.comment
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -20,7 +20,6 @@ import app.aaps.core.ui.elements.WeekDay
 import app.aaps.core.utils.lenientBoolean
 import app.aaps.core.utils.lenientInt
 import app.aaps.core.utils.lenientString
-import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputDuration
 import app.aaps.plugins.automation.elements.InputProfileName
 import app.aaps.plugins.automation.elements.InputWeekDay
@@ -33,9 +32,9 @@ import kotlinx.serialization.json.put
 
 class ActionRunAutotune(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    rh: TextResolver,
     pumpEnactResultProvider: Provider<PumpEnactResult>,
-    private val resourceHelper: ResourceHelper,
+    private val resourceHelper: TextResolver,
     private val autotunePlugin: Autotune,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
@@ -56,21 +55,21 @@ class ActionRunAutotune(
     override suspend fun doAction(): PumpEnactResult {
         val autoSwitch = preferences.get(BooleanKey.AutotuneAutoSwitchProfile)
         val profileName = if (inputProfileName.value == rh.gs(CoreUiStrings.active)) "" else inputProfileName.value
-        var message = if (autoSwitch) R.string.autotune_run_with_autoswitch else R.string.autotune_run_without_autoswitch
+        var message = if (autoSwitch) AutomationStrings.autotune_run_with_autoswitch else AutomationStrings.autotune_run_without_autoswitch
         return if (!autotunePlugin.calculationRunning) {
             autotunePlugin.atLog("[Automation] Run Autotune $profileName, ${daysBack.value} days, Autoswitch $autoSwitch")
             // aapsAutotune is suspend; runs heavy work but uses suspend I/O internally — keep
             // the explicit IO dispatcher to push the CPU+I/O loop off the caller's dispatcher.
-            withContext(Dispatchers.IO) {
+            withContext(aapsIoDispatcher) {
                 autotunePlugin.aapsAutotune(daysBack.value, autoSwitch, profileName, days.weekdays)
             }
             if (!autotunePlugin.lastRunSuccess) {
-                message = R.string.autotune_run_with_error
+                message = AutomationStrings.autotune_run_with_error
                 aapsLogger.error(LTag.AUTOMATION, "Error during Autotune Run")
             }
             pumpEnactResultProvider().success(autotunePlugin.lastRunSuccess).comment(message)
         } else {
-            message = R.string.autotune_run_cancelled
+            message = AutomationStrings.autotune_run_cancelled
             aapsLogger.debug(LTag.AUTOMATION, "Autotune run detected, Autotune Run Cancelled")
             pumpEnactResultProvider().success(false).comment(message)
         }
@@ -87,7 +86,7 @@ class ActionRunAutotune(
             }
         }
         return buildJsonObject {
-            put("type", this@ActionRunAutotune.javaClass.simpleName)
+            put("type", this@ActionRunAutotune::class.simpleName)
             put("data", data)
         }.toString()
     }

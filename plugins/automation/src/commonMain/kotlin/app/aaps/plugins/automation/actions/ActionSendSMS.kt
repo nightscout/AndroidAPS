@@ -1,16 +1,15 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.core.interfaces.pump.comment
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.ui.compose.icons.IcPluginSms
 import app.aaps.core.utils.lenientString
-import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputString
 import dev.zacsweers.metro.Provider
 import kotlinx.serialization.json.buildJsonObject
@@ -18,7 +17,7 @@ import kotlinx.serialization.json.put
 
 class ActionSendSMS(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    rh: TextResolver,
     pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val smsCommunicator: SmsCommunicator
 ) : Action(aapsLogger, rh, pumpEnactResultProvider) {
@@ -33,7 +32,7 @@ class ActionSendSMS(
 
     override suspend fun doAction(): PumpEnactResult {
         val result = smsCommunicator.sendNotificationToAllNumbers(text.value)
-        return pumpEnactResultProvider().success(result).comment(if (result) app.aaps.core.ui.R.string.ok else app.aaps.core.ui.R.string.error)
+        return pumpEnactResultProvider().success(result).comment(if (result) CoreUiStrings.ok else CoreUiStrings.error)
     }
 
     override fun isValid(): Boolean = text.value.isNotEmpty()
@@ -41,7 +40,7 @@ class ActionSendSMS(
     override fun toJSON(): String {
         val data = buildJsonObject { put("text", text.value) }
         return buildJsonObject {
-            put("type", this@ActionSendSMS.javaClass.simpleName)
+            put("type", this@ActionSendSMS::class.simpleName)
             put("data", data)
         }.toString()
     }
