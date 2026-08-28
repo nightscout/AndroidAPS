@@ -19,13 +19,24 @@ package app.aaps.core.interfaces.notifications
 interface SystemNotificationPlatform {
 
     /**
-     * Show the system notification for [instanceKey], replacing any earlier one with that key.
+     * Show the system notification for [notification], replacing any earlier one with its
+     * `instanceKey`.
      *
-     * [urgent] selects the loud presentation (heads up on Android, time sensitive on iOS). It is
-     * separate from sound: an urgent notification can be silent, because the ramping audio is
-     * driven by [setAudibleAlarm] rather than by the notification itself.
+     * The whole record is passed rather than a chosen few fields, because what to show is a
+     * platform decision and the shared registry should not decide it in advance. Android needs
+     * `level` **and** `sound` **and** `actions` together: an urgent notification carrying a sound is
+     * posted silently, because the ramping audio is driven by [setAudibleAlarm] instead, and the
+     * plain visual notification is gated behind a user preference and only used when there are no
+     * actions. A signature naming a subset of the fields could not express that, and an
+     * implementation forced to guess would either double alert an alarm meant to be silent or
+     * ignore the preference.
+     *
+     * [title] is resolved by the registry because it needs a `TextResolver`, which is not something
+     * a platform implementation should have to carry.
+     *
+     * An implementation may legitimately decide to show nothing at all.
      */
-    fun show(instanceKey: Int, title: String, text: String, urgent: Boolean)
+    fun show(notification: AapsNotification, title: String)
 
     /** Take one notification out of the system tray. Does nothing when it is not there. */
     fun cancel(instanceKey: Int)

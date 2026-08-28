@@ -1,5 +1,6 @@
 package app.aaps.di.metro
 
+import android.content.Context
 import android.content.SharedPreferences
 import androidx.work.WorkManager
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
@@ -38,6 +39,7 @@ import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.notifications.NotificationHolder
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
@@ -150,11 +152,16 @@ import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
 import app.aaps.plugins.sync.wear.WearPlugin
 import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
+import app.aaps.ui.activityMonitor.ActivityMonitor
 import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.workflow.WorkflowChainData
 import dev.zacsweers.metro.MembersInjector
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.zacsweers.metro.createGraphFactory
 import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -186,6 +193,7 @@ import javax.inject.Singleton
 class MetroGraphs @Inject constructor(
 
     private val leaves: Provider<AapsLeaves>,
+    @ApplicationContext private val contextProvider: Provider<Context>,
     private val pumpLeaves: Provider<PumpLeaves>
 ) {
 
@@ -203,9 +211,15 @@ class MetroGraphs @Inject constructor(
         (workers.workerCreators + openHumans.workerCreators + source.workerCreators)
             .mapKeys { (klass, _) -> klass.java.name }
 
+    /**
+     * The application scope. Built here rather than borrowed from Dagger, which is what `AapsLeaves`
+     * used to do; Dagger consumers now get this same instance back through `CoreObjectsModule`.
+     */
+    private val applicationScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+
     /** The one Metro root. Sub-graphs are extensions of it rather than roots of their own. */
     private val root: AppRootGraph by lazy {
-        createGraphFactory<AppRootGraph.Factory>().create(leaves.get(), CoreObjectsGraph, pumpLeaves.get())
+        createGraphFactory<AppRootGraph.Factory>().create(applicationScope, contextProvider.get(), leaves.get(), CoreObjectsGraph, pumpLeaves.get())
     }
 
     private val source: SourceMetroGraph get() = root.sourceGraph
@@ -393,6 +407,9 @@ class MetroGraphs @Inject constructor(
     val constraintsChecker: ConstraintsChecker get() = root.constraintsChecker
     val nsClientRepository: NSClientRepository get() = root.nsClientRepository
     val builtInSearchables: BuiltInSearchables get() = root.builtInSearchables
+    val activityMonitor: ActivityMonitor get() = root.activityMonitor
+    val appScope: CoroutineScope get() = root.appScope
+    val notificationManager: NotificationManager get() = root.notificationManager
     val apsResult: APSResult get() = root.apsResult
     val pumpEnactResult: PumpEnactResult get() = root.pumpEnactResult
     val profileSwitchSilentGate: ProfileSwitchSilentGate get() = root.profileSwitchSilentGate

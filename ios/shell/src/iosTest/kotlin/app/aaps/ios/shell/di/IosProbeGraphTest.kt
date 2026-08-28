@@ -1,6 +1,8 @@
 package app.aaps.ios.shell.di
 
 import app.aaps.core.data.iob.InMemoryGlucoseValue
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.implementation.logging.AAPSLoggerIos
 import dev.zacsweers.metro.createGraphFactory
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
@@ -64,14 +66,27 @@ class IosProbeGraphTest {
     }
 
     @Test
-    fun `the injected logger is the one this module supplied`() {
-        val before = ProbeLogger.calls
+    fun `the injected logger is the real iOS one`() {
+        assertTrue(graph().logger is AAPSLoggerIos)
+    }
 
-        graph().avgSmoothing.smooth(mutableListOf(InMemoryGlucoseValue(timestamp = 1L, value = 100.0)))
+    /**
+     * Calls through the injected logger, and passes by not crashing.
+     *
+     * That sounds like a weak assertion and is not: the first version of `AAPSLoggerIos` segfaulted
+     * here, because `NSLog` is a C varargs function and `%@` given a Kotlin String rather than an
+     * NSString dereferences something that is not an object. Constructing a logger never showed it -
+     * only calling through one did.
+     */
+    @Test
+    fun `logging through the graph does not crash`() {
+        val logger = graph().logger
 
-        // Constructing a plugin is not enough to prove the leaf was wired in. Something has to call
-        // through it.
-        assertTrue(ProbeLogger.calls >= before)
+        logger.debug(LTag.CORE, "probe")
+        logger.warn(LTag.CORE, "value is {}", 42)
+        logger.error(LTag.CORE, "failed", RuntimeException("boom"))
+
+        assertTrue(true)
     }
 
     // ---- real AAPS implementations, not stand-ins --------------------------------------------

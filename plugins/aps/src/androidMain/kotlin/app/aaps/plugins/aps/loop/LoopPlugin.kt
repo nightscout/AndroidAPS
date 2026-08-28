@@ -87,6 +87,8 @@ import app.aaps.plugins.aps.loop.extensions.json
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.CoroutineScope
@@ -103,9 +105,7 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonObject
 import org.json.JSONObject
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
+import dev.zacsweers.metro.Provider
 import kotlin.math.abs
 import android.app.NotificationManager as AndroidNotificationManager
 import app.aaps.core.interfaces.pump.comment
@@ -114,7 +114,7 @@ import dev.zacsweers.metro.IntKey as MetroIntKey
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @MetroIntKey(200)
 @ContributesBinding(AppScope::class, binding = binding<Loop>())
-@Singleton
+@SingleIn(AppScope::class)
 class LoopPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
@@ -653,7 +653,7 @@ class LoopPlugin @Inject constructor(
                     if (resultAfterConstraints.isChangeRequested()
                         && !commandQueue.bolusInQueue()
                     ) {
-                        val waiting = pumpEnactResultProvider.get()
+                        val waiting = pumpEnactResultProvider()
                         waiting.queued = true
                         if (resultAfterConstraints.isTempBasalRequested) lastRun.tbrSetByPump = waiting
                         if (resultAfterConstraints.isBolusRequested) lastRun.smbSetByPump =
@@ -794,15 +794,15 @@ class LoopPlugin @Inject constructor(
      */
     private suspend fun applyTBRRequest(request: APSResult, profile: Profile): PumpEnactResult {
         if (!request.isTempBasalRequested)
-            return pumpEnactResultProvider.get().enacted(false).success(true).comment(app.aaps.core.ui.R.string.nochangerequested)
+            return pumpEnactResultProvider().enacted(false).success(true).comment(app.aaps.core.ui.R.string.nochangerequested)
         val pump = activePlugin.activePump
         if (!pump.isInitialized()) {
             aapsLogger.debug(LTag.APS, "applyAPSRequest: " + rh.gs(R.string.pump_not_initialized))
-            return pumpEnactResultProvider.get().comment(R.string.pump_not_initialized).enacted(false).success(false)
+            return pumpEnactResultProvider().comment(R.string.pump_not_initialized).enacted(false).success(false)
         }
         if (pump.isSuspended()) {
             aapsLogger.debug(LTag.APS, "applyAPSRequest: " + rh.gs(app.aaps.core.interfaces.R.string.pumpsuspended))
-            return pumpEnactResultProvider.get().comment(app.aaps.core.interfaces.R.string.pumpsuspended).enacted(false).success(false)
+            return pumpEnactResultProvider().comment(app.aaps.core.interfaces.R.string.pumpsuspended).enacted(false).success(false)
         }
         aapsLogger.debug(LTag.APS, "applyAPSRequest: $request")
         val now = System.currentTimeMillis()
@@ -814,7 +814,7 @@ class LoopPlugin @Inject constructor(
                 return commandQueue.cancelTempBasal(enforceNew = false)
             } else {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: Basal set correctly")
-                return pumpEnactResultProvider.get().absolute(request.rate).duration(0)
+                return pumpEnactResultProvider().absolute(request.rate).duration(0)
                     .enacted(false).success(true).comment(R.string.basal_set_correctly)
             }
         } else if (request.usePercent && allowPercentage()) {
@@ -825,7 +825,7 @@ class LoopPlugin @Inject constructor(
                     return commandQueue.cancelTempBasal(enforceNew = false)
                 } else {
                     aapsLogger.debug(LTag.APS, "applyAPSRequest: Basal set correctly")
-                    return pumpEnactResultProvider.get().percent(request.percent).duration(0)
+                    return pumpEnactResultProvider().percent(request.percent).duration(0)
                         .enacted(false).success(true).comment(R.string.basal_set_correctly)
                 }
             } else if (activeTemp != null && activeTemp.plannedRemainingMinutes > 5 && request.duration - activeTemp.plannedRemainingMinutes < 30 && request.percent == activeTemp.convertedToPercent(
@@ -834,7 +834,7 @@ class LoopPlugin @Inject constructor(
                 )
             ) {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: Temp basal set correctly")
-                return pumpEnactResultProvider.get().percent(request.percent)
+                return pumpEnactResultProvider().percent(request.percent)
                     .enacted(false).success(true).duration(activeTemp.plannedRemainingMinutes)
                     .comment(app.aaps.core.ui.R.string.let_temp_basal_run)
             } else {
@@ -855,7 +855,7 @@ class LoopPlugin @Inject constructor(
                 ) < pump.pumpDescription.basalStep
             ) {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: Temp basal set correctly")
-                return pumpEnactResultProvider.get().absolute(activeTemp.convertedToAbsolute(now, profile))
+                return pumpEnactResultProvider().absolute(activeTemp.convertedToAbsolute(now, profile))
                     .enacted(false).success(true).duration(activeTemp.plannedRemainingMinutes)
                     .comment(app.aaps.core.ui.R.string.let_temp_basal_run)
             } else {
@@ -878,15 +878,15 @@ class LoopPlugin @Inject constructor(
         val lastBolusTime = persistenceLayer.getNewestBolus()?.timestamp ?: 0L
         if (lastBolusTime != 0L && lastBolusTime + T.mins(preferences.get(IntKey.ApsMaxSmbFrequency).toLong()).msecs() > dateUtil.now()) {
             aapsLogger.debug(LTag.APS, "SMB requested but still in ${preferences.get(IntKey.ApsMaxSmbFrequency)} min interval")
-            return pumpEnactResultProvider.get().comment(R.string.smb_frequency_exceeded).enacted(false).success(false)
+            return pumpEnactResultProvider().comment(R.string.smb_frequency_exceeded).enacted(false).success(false)
         }
         if (!pump.isInitialized()) {
             aapsLogger.debug(LTag.APS, "applySMBRequest: " + rh.gs(R.string.pump_not_initialized))
-            return pumpEnactResultProvider.get().comment(R.string.pump_not_initialized).enacted(false).success(false)
+            return pumpEnactResultProvider().comment(R.string.pump_not_initialized).enacted(false).success(false)
         }
         if (runningMode().pausesLoopExecution()) {
             aapsLogger.debug(LTag.APS, "applySMBRequest: " + rh.gs(app.aaps.core.interfaces.R.string.pumpsuspended))
-            return pumpEnactResultProvider.get().comment(app.aaps.core.interfaces.R.string.pumpsuspended).enacted(false).success(false)
+            return pumpEnactResultProvider().comment(app.aaps.core.interfaces.R.string.pumpsuspended).enacted(false).success(false)
         }
         aapsLogger.debug(LTag.APS, "applySMBRequest: $request")
 

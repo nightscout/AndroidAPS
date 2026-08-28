@@ -31,10 +31,9 @@ import kotlin.time.Duration.Companion.minutes
  * live, which replaces which, when they expire, and which alarm owns the sound. The system tray and
  * the audio are reached through [SystemNotificationPlatform].
  *
- * Android still has its own `NotificationManagerImpl` while it is on Dagger. The two are meant to
- * become one: when that class moves to Metro, it can be deleted in favour of this one plus an
- * Android [SystemNotificationPlatform] holding its channel, receiver and `NotificationCompat` code.
- * Until then this is bound only on iOS, so nothing on Android changes.
+ * Both platforms use this now. `NotificationManagerImpl` is gone: Android keeps its channel,
+ * receiver and `NotificationCompat` code in `AndroidSystemNotificationPlatform`, and iOS in
+ * `IosSystemNotificationPlatform`. There is one registry.
  */
 class CommonNotificationManager(
     private val aapsLogger: AAPSLogger,
@@ -166,11 +165,10 @@ class CommonNotificationManager(
         current.sortBy { it.level.priority }
         _notifications.value = current
 
+        // The platform gets the whole notification and decides what, if anything, to show.
         platform.show(
-            instanceKey = instanceKey,
-            title = rh.gs(if (level == NotificationLevel.URGENT) CoreUiStrings.urgent_alarm else CoreUiStrings.info),
-            text = text,
-            urgent = level == NotificationLevel.URGENT
+            notification = notification,
+            title = rh.gs(if (level == NotificationLevel.URGENT) CoreUiStrings.urgent_alarm else CoreUiStrings.info)
         )
         refreshAlarmSound()
 

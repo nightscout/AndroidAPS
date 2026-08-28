@@ -68,7 +68,7 @@ kotlin {
                 api(libs.com.google.crypto.tink)
 
                 //WorkManager
-                api(libs.androidx.work.runtime) // DataWorkerStorage
+                api(libs.androidx.work.runtime) // Inbox, WorkExtensions, WorkerDataBuilder
 
                 // ProcessLifecycleOwner for DeferredForegroundStart
                 implementation(libs.androidx.lifecycle.process)

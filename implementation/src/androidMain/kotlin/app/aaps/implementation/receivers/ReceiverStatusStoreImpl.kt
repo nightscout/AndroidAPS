@@ -7,10 +7,10 @@ import app.aaps.core.interfaces.receivers.ReceiverStatusStore.ChargingStatus
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore.NetworkStatus
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import javax.inject.Inject
 
 // Metro builds this now; Dagger gets it through a @Provides delegate in `:app`. Scoped with Metro's
 // @SingleIn, not javax @Singleton - the graph is generated in `:app`, which has no Dagger interop, so

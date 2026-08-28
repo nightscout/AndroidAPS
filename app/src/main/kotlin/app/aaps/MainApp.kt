@@ -99,6 +99,7 @@ import app.aaps.plugins.main.MainStringIds
 import app.aaps.plugins.sensitivity.SensitivityStringIds
 import app.aaps.plugins.smoothing.SmoothingStringIds
 import app.aaps.pump.virtual.VirtualStringIds
+import app.aaps.ui.UiStringIds
 import app.aaps.ui.activityMonitor.ActivityMonitor
 import app.aaps.utils.configureLeakCanary
 import com.google.firebase.Firebase
@@ -1025,5 +1026,6 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         TextRefIdRegistry.register("calibration") { name -> CalibrationStringIds.idOf(name) }
         TextRefIdRegistry.register("sensitivity") { name -> SensitivityStringIds.idOf(name) }
         TextRefIdRegistry.register("main") { name -> MainStringIds.idOf(name) }
+        TextRefIdRegistry.register("ui") { name -> UiStringIds.idOf(name) }
     }
 }

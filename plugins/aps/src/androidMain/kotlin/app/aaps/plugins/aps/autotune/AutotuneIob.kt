@@ -28,12 +28,12 @@ import app.aaps.core.objects.extensions.toJson
 import app.aaps.core.objects.extensions.toTemporaryBasal
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.plugins.aps.autotune.data.ATProfile
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.runBlocking
 import org.json.JSONArray
 import org.json.JSONObject
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
-import javax.inject.Inject
 import kotlin.math.ceil
 
 @SingleIn(AppScope::class)

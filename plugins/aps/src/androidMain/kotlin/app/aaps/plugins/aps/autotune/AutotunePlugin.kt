@@ -33,7 +33,7 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.objects.extensions.blockFromJsonArray
+import app.aaps.core.objects.extensions.blockFromJson
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.compose.icons.IcPluginAutotune
@@ -54,7 +54,10 @@ import app.aaps.plugins.aps.autotune.keys.AutotuneStringKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.IntKey as MetroIntKey
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
@@ -64,9 +67,6 @@ import kotlinx.serialization.json.put
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.TimeZone
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
 
 /*
  * adaptation from oref0 autotune developed by philoul on 2022 (complete refactoring of AutotunePlugin initialised by Rumen Georgiev on 1/29/2018.)
@@ -77,7 +77,7 @@ import javax.inject.Singleton
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @MetroIntKey(240)
 @ContributesBinding(AppScope::class, binding = binding<Autotune>())
-@Singleton
+@SingleIn(AppScope::class)
 class AutotunePlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,
@@ -206,10 +206,10 @@ class AutotunePlugin @Inject constructor(
         if (endTime > lastRun) endTime -= 24 * 60 * 60 * 1000L      // Check if 4 AM is before now
         val startTime = endTime - daysBack * 24 * 60 * 60 * 1000L
         autotuneFS.exportSettings(settings(lastRun, daysBack, startTime, endTime, iCfg))
-        tunedProfile = atProfileProvider.get().with(profile, iCfg).also {
+        tunedProfile = atProfileProvider().with(profile, iCfg).also {
             it.profileName = rh.gs(R.string.autotune_tunedprofile_name)
         }
-        pumpProfile = atProfileProvider.get().with(profile, iCfg).also {
+        pumpProfile = atProfileProvider().with(profile, iCfg).also {
             it.profileName = selectedProfile
         }
         autotuneFS.exportPumpProfile(pumpProfile)
@@ -418,7 +418,7 @@ class AutotunePlugin @Inject constructor(
     suspend fun updateProfile(newProfile: ATProfile?) {
         if (newProfile == null) return
         val circadian = preferences.get(BooleanKey.AutotuneCircadianIcIsf)
-        val profileStore = profileRepository.profile.value ?: profileStoreProvider.get().with(JsonObject(emptyMap()))
+        val profileStore = profileRepository.profile.value ?: profileStoreProvider().with(JsonObject(emptyMap()))
         val profileList: ArrayList<CharSequence> = profileStore.getProfileList()
         var indexLocalProfile = -1
         for (p in profileList.indices)
@@ -433,9 +433,9 @@ class AutotunePlugin @Inject constructor(
         // rather than replaced with something unusable.
         val existing = profileRepository.profiles.value[indexLocalProfile]
         val updated = existing.copy(
-            basal = blockFromJsonArray(newProfile.basal(), dateUtil) ?: existing.basal,
-            ic = blockFromJsonArray(newProfile.ic(circadian), dateUtil) ?: existing.ic,
-            isf = blockFromJsonArray(newProfile.isf(circadian), dateUtil) ?: existing.isf
+            basal = blockFromJson(newProfile.basal(), dateUtil) ?: existing.basal,
+            ic = blockFromJson(newProfile.ic(circadian), dateUtil) ?: existing.ic,
+            isf = blockFromJson(newProfile.isf(circadian), dateUtil) ?: existing.isf
         )
         profileRepository.replace(indexLocalProfile, updated)
     }
@@ -488,7 +488,7 @@ class AutotunePlugin @Inject constructor(
             selectedProfile = json.safeGetString("pumpProfileName", "")
             val profile = json.safeGetJSONObject("pumpProfile", null)?.let { pureProfileFromJson(it, dateUtil) }
                 ?: return
-            pumpProfile = atProfileProvider.get().with(ProfileSealed.Pure(value = profile, activePlugin = null), iCfg).also { it.profileName = selectedProfile }
+            pumpProfile = atProfileProvider().with(ProfileSealed.Pure(value = profile, activePlugin = null), iCfg).also { it.profileName = selectedProfile }
             val tunedPeak = json.safeGetInt("tunedPeak")
             val tunedDia = json.safeGetDouble("tunedDia")
             val tunedConcentration = json.safeGetDouble("tunedConcentration", 1.0)
@@ -498,7 +498,7 @@ class AutotunePlugin @Inject constructor(
                 ?: return
             val circadianTuned = json.safeGetJSONObject("tunedCircadianProfile", null)?.let { pureProfileFromJson(it, dateUtil) }
                 ?: return
-            tunedProfile = atProfileProvider.get().with(ProfileSealed.Pure(value = tuned, activePlugin = null), iCfg).also { atProfile ->
+            tunedProfile = atProfileProvider().with(ProfileSealed.Pure(value = tuned, activePlugin = null), iCfg).also { atProfile ->
                 atProfile.profileName = tunedProfileName
                 atProfile.circadianProfile = ProfileSealed.Pure(value = circadianTuned, activePlugin = null)
                 for (i in 0..23) {

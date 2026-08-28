@@ -11,13 +11,19 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.ComposeUIViewController
 import app.aaps.core.ui.compose.AapsCard
+import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.icons.IcAaps
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.ios.shell.ShellInfo
+import app.aaps.ios.shell.di.IosProbeGraph
+import dev.zacsweers.metro.createGraphFactory
 import platform.UIKit.UIViewController
 
 /**
@@ -28,24 +34,27 @@ import platform.UIKit.UIViewController
  * in. This is that composition, and everything it draws below the framing text is AAPS code from
  * `commonMain` - [AapsCard], [AapsSpacing] and the [IcAaps] vector - not Material defaults.
  *
- * ## Why not [app.aaps.core.ui.compose.AapsTheme] yet
+ * ## The theme
  *
- * `AapsTheme` reads `LocalPreferences` to pick light or dark, so it needs a real `Preferences`.
- * That is one object, but it sits on top of a chain: `PreferencesImpl` wants `PersistenceLayer`,
- * `ProfileUtil`, `ProfileFunction` and `HardLimits`, and each of those wants more again.
+ * This renders [AapsTheme], not a bare `MaterialTheme`, which is the part worth proving: the theme
+ * carries AAPS's own colours, typography and spacing, and it resolves them through code written for
+ * Android. It reads `LocalPreferences` to pick light or dark, so it needs a real [Preferences] -
+ * built here by the same Metro graph the rest of the probe uses, on top of `NSUserDefaults`.
  *
- * Most of the chain is already common code and Metro resolves it on iOS today. The way to see what
- * is left is to ask: add `val preferences: Preferences` to `IosProbeGraph` and read the error.
- * At the time of writing it names `ProfileStore`, whose only implementation is still on Dagger and
- * still holds an `androidx.collection.ArrayMap`, so it cannot cross into common code yet.
- *
- * Faking `Preferences` instead would only test the fake - it has 76 members - so this screen stays
- * on `MaterialTheme` until the chain closes. The theme swap itself is then one line here; the work
- * is all in the chain, not in this file.
+ * Getting to that point took the whole chain below `Preferences` into `commonMain`: `PreferencesImpl`,
+ * `PersistenceLayerImpl`, `ProfileFunctionImpl`, `ProfileUtilImpl`, `HardLimitsImpl`, `PluginStore`,
+ * `ConstraintsCheckerImpl`, `DetermineBasalResult` and `ProfileStoreObject`.
  */
-fun aapsComposeViewController(): UIViewController = ComposeUIViewController {
-    MaterialTheme {
-        ShellScreen()
+fun aapsComposeViewController(): UIViewController {
+    // Built once, outside the composition: a graph rebuilt on every recomposition would hand out a
+    // new NSUserDefaults wrapper each time.
+    val preferences = createGraphFactory<IosProbeGraph.Factory>().create().preferences
+    return ComposeUIViewController {
+        CompositionLocalProvider(LocalPreferences provides preferences) {
+            AapsTheme {
+                ShellScreen()
+            }
+        }
     }
 }
 

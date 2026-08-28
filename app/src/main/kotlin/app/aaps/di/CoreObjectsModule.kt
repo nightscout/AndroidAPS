@@ -154,6 +154,7 @@ import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
 import app.aaps.plugins.sync.wear.WearPlugin
 import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
+import app.aaps.ui.activityMonitor.ActivityMonitor
 import app.aaps.ui.compose.history.HistoryScope
 import app.aaps.ui.compose.overview.OverviewDataCacheFactory
 import app.aaps.ui.search.BuiltInSearchables
@@ -358,6 +359,12 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideNSClientRepository(graphs: MetroGraphs): NSClientRepository = graphs.nsClientRepository
     // ComposeMainActivity field-injects the concrete class through Hilt, so Dagger needs Metro's one.
     @Provides @Singleton fun provideBuiltInSearchables(graphs: MetroGraphs): BuiltInSearchables = graphs.builtInSearchables
+    // Same for MainApp, which still field-injects ActivityMonitor through Hilt.
+    @Provides @Singleton fun provideActivityMonitor(graphs: MetroGraphs): ActivityMonitor = graphs.activityMonitor
+    // Metro owns the notification registry now (CommonNotificationManager + the Android platform).
+    @Provides @Singleton fun provideNotificationManager(graphs: MetroGraphs): NotificationManager = graphs.notificationManager
+    // Metro owns the application scope now; this hands the same instance to Dagger consumers.
+    @Provides @Singleton @ApplicationScope fun provideAppScope(graphs: MetroGraphs): CoroutineScope = graphs.appScope
     // Unscoped on purpose - result objects, one per call, as the @Binds they replace were.
     @Provides fun provideAPSResult(graphs: MetroGraphs): APSResult = graphs.apsResult
     @Provides fun providePumpEnactResult(graphs: MetroGraphs): PumpEnactResult = graphs.pumpEnactResult
@@ -524,27 +531,19 @@ class CoreObjectsModule {
     @Suppress("LongParameterList")
     fun provideAapsLeaves(
         metroMemberInjectorProvider: Provider<MetroMemberInjector>,
-        @ApplicationScope appScopeProvider: Provider<CoroutineScope>,
         fabricPrivacyProvider: Provider<FabricPrivacy>,
         configProvider: Provider<Config>,
         databaseConfigProvider: Provider<DatabaseConfig>,
         rhProvider: Provider<ResourceHelper>,
-        notificationManagerProvider: Provider<NotificationManager>,
-        contextProvider: Provider<Context>,
         uiInteractionProvider: Provider<UiInteraction>,
         historyScopeProvider: Provider<HistoryScope>,
-        @ApplicationContext appContextProvider: Provider<Context>,
     ): AapsLeaves = AapsLeaves(
         metroMemberInjectorProvider,
-        appScopeProvider,
         fabricPrivacyProvider,
         configProvider,
         databaseConfigProvider,
         rhProvider,
-        notificationManagerProvider,
-        contextProvider,
         uiInteractionProvider,
         historyScopeProvider,
-        appContextProvider,
     )
 }

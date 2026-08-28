@@ -4,8 +4,8 @@ import android.content.res.Resources
 import app.aaps.core.interfaces.local.LocaleDependentSetting
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import javax.inject.Inject
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)

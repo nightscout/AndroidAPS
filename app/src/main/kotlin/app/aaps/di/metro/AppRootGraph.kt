@@ -1,5 +1,6 @@
 package app.aaps.di.metro
 
+import android.content.Context
 import android.content.SharedPreferences
 import androidx.work.WorkManager
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
@@ -20,6 +21,7 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.di.APS
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.di.FeatureMemberInjectors
 import app.aaps.core.interfaces.di.NotNSClient
 import app.aaps.core.interfaces.di.PumpDriver
@@ -40,6 +42,7 @@ import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.notifications.NotificationHolder
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
@@ -156,6 +159,7 @@ import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
 import app.aaps.plugins.sync.wear.WearPlugin
 import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
+import app.aaps.ui.activityMonitor.ActivityMonitor
 import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.workflow.WorkflowChainData
 import dev.zacsweers.metro.AppScope
@@ -165,6 +169,7 @@ import dev.zacsweers.metro.MembersInjector
 import dev.zacsweers.metro.Multibinds
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metrox.viewmodel.MetroViewModelMultibindings
+import kotlinx.coroutines.CoroutineScope
 import kotlin.reflect.KClass
 import javax.inject.Singleton
 
@@ -340,6 +345,13 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val constraintsChecker: ConstraintsChecker
     val nsClientRepository: NSClientRepository
     val builtInSearchables: BuiltInSearchables
+
+    /** Metro builds it now, but `MainApp` still injects it through Dagger, so it is handed back. */
+    val activityMonitor: ActivityMonitor
+
+    /** The one application scope. Metro owns it; Dagger consumers get this same instance. */
+    @ApplicationScope val appScope: CoroutineScope
+    val notificationManager: NotificationManager
     val apsResult: APSResult
     val pumpEnactResult: PumpEnactResult
     val profileSwitchSilentGate: ProfileSwitchSilentGate
@@ -502,6 +514,15 @@ interface AppRootGraph : MetroViewModelMultibindings {
          * DeferredRef used to do by hand is now just the shape of a binding container.
          */
         fun create(
+            /**
+             * The application scope, passed in rather than built here so the caller decides its
+             * dispatcher: production uses `Dispatchers.Default`, the unit tests an Unconfined one, so
+             * that work started while the graph is being built runs on the calling thread.
+             */
+            @Provides @ApplicationScope appScope: CoroutineScope,
+
+            /** The application context. Android owns it, so it is passed in rather than bound. */
+            @Provides context: Context,
             @Includes leaves: AapsLeaves,
             @Includes coreObjects: CoreObjectsGraph,
             @Includes pumpLeaves: PumpLeaves

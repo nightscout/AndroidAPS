@@ -2,11 +2,19 @@ package app.aaps.implementation.notifications
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.interfaces.notifications.AlarmSound
+import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
 import platform.UserNotifications.UNAuthorizationOptionAlert
 import platform.UserNotifications.UNAuthorizationOptionBadge
 import platform.UserNotifications.UNAuthorizationOptionSound
+import platform.darwin.NSObject
+import platform.UserNotifications.UNNotificationCategory
+import platform.UserNotifications.UNNotificationCategoryOptionCustomDismissAction
+import platform.UserNotifications.UNNotificationDismissActionIdentifier
+import platform.UserNotifications.UNNotificationResponse
+import platform.UserNotifications.UNUserNotificationCenterDelegateProtocol
 import platform.UserNotifications.UNMutableNotificationContent
 import platform.UserNotifications.UNNotificationInterruptionLevel.UNNotificationInterruptionLevelActive
 import platform.UserNotifications.UNNotificationInterruptionLevel.UNNotificationInterruptionLevelTimeSensitive
@@ -30,17 +38,39 @@ class IosSystemNotificationPlatform(
     private val aapsLogger: AAPSLogger
 ) : SystemNotificationPlatform {
 
-    private val center = UNUserNotificationCenter.currentNotificationCenter()
+    /**
+     * Resolved on first use, not in the constructor.
+     *
+     * `currentNotificationCenter()` needs an app bundle and throws
+     * `bundleProxyForCurrentProcess is nil` without one, so constructing this class eagerly made it
+     * impossible to build outside a running app - including in a test. Nothing here needs the centre
+     * until something is actually posted.
+     */
+    private val center by lazy { UNUserNotificationCenter.currentNotificationCenter() }
     private var authorizationAsked = false
 
-    override fun show(instanceKey: Int, title: String, text: String, urgent: Boolean) {
+    /** Strong reference: the centre holds its delegate weakly. */
+    private var delegate: DismissDelegate? = null
+
+    /**
+     * iOS shows every notification, unlike Android.
+     *
+     * The two fields Android needs to decide with - `sound` and `actions` - are ignored here on
+     * purpose. There is no "post the alarm silently" split because there is no separate ramping
+     * player to hand the audio to (see [setAudibleAlarm]), and no preference gating whether a system
+     * notification appears, because on iOS that choice belongs to the user in Settings.
+     */
+    override fun show(notification: AapsNotification, title: String) {
         ensureAuthorization()
+        val urgent = notification.level == NotificationLevel.URGENT
         val content = UNMutableNotificationContent().apply {
             setTitle(title)
-            setBody(text)
+            setBody(notification.text)
             // Time sensitive breaks through Focus modes, which is what an urgent AAPS alarm is for.
             // The sound stays off here on purpose: audible alarms are driven by setAudibleAlarm, the
             // same split the Android side uses so a replaced alarm does not restart the sound.
+            // Without this the dismiss callback never fires - see onDismissed.
+            setCategoryIdentifier(CATEGORY)
             setInterruptionLevel(
                 if (urgent) UNNotificationInterruptionLevelTimeSensitive
                 else UNNotificationInterruptionLevelActive
@@ -49,7 +79,7 @@ class IosSystemNotificationPlatform(
         // A repeated identifier replaces the delivered notification rather than adding another,
         // which is the behaviour the registry expects when it reposts the same id.
         val request = UNNotificationRequest.requestWithIdentifier(
-            identifier = identifier(instanceKey),
+            identifier = identifier(notification.instanceKey),
             content = content,
             trigger = null
         )
@@ -82,19 +112,59 @@ class IosSystemNotificationPlatform(
     }
 
     /**
-     * Not wired yet.
+     * Learn about notifications the user swiped away outside the app.
      *
-     * Learning that the user swiped a notification away needs a `UNUserNotificationCenterDelegate`,
-     * and the delegate has to be set on the shared centre by the app at start up - it cannot be
-     * owned by this class without two of them fighting over the same slot. Leaving it unregistered
-     * means a notification the user clears on the lock screen stays in the in-app list, which is
-     * visible but harmless, rather than silently dropping something.
+     * Two things are needed, and missing either one makes this silently never fire:
+     *
+     * 1. A delegate on the shared centre. The slot is app wide and **weak**, so the delegate is held
+     *    in a property here - a local would be collected and the callbacks would simply stop.
+     * 2. A category carrying `customDismissAction`. Without it iOS reports taps but not dismissals,
+     *    which is the trap: the code looks right and nothing ever arrives.
      */
     override fun onDismissed(callback: (instanceKey: Int) -> Unit) {
-        aapsLogger.debug(LTag.NOTIFICATION, "Dismiss callbacks need a UNUserNotificationCenterDelegate, not registered")
+        center.setNotificationCategories(setOf(dismissibleCategory()))
+        delegate = DismissDelegate { identifier ->
+            instanceKeyOf(identifier)?.let(callback)
+        }
+        center.setDelegate(delegate)
     }
 
-    private fun identifier(instanceKey: Int) = "aaps-$instanceKey"
+    private fun dismissibleCategory(): UNNotificationCategory =
+        UNNotificationCategory.categoryWithIdentifier(
+            identifier = CATEGORY,
+            actions = emptyList<Any>(),
+            intentIdentifiers = emptyList<Any>(),
+            options = UNNotificationCategoryOptionCustomDismissAction
+        )
+
+    /**
+     * Only reacts to a dismissal, and hands every other response straight back to iOS.
+     *
+     * A tap is deliberately not treated as a dismissal: the notification does go away, but the user
+     * asked to *see* the thing, so it must stay in the in-app list.
+     */
+    private class DismissDelegate(
+        private val onDismiss: (String) -> Unit
+    ) : NSObject(), UNUserNotificationCenterDelegateProtocol {
+
+        override fun userNotificationCenter(
+            center: UNUserNotificationCenter,
+            didReceiveNotificationResponse: UNNotificationResponse,
+            withCompletionHandler: () -> Unit
+        ) {
+            if (didReceiveNotificationResponse.actionIdentifier == UNNotificationDismissActionIdentifier) {
+                onDismiss(didReceiveNotificationResponse.notification.request.identifier)
+            }
+            withCompletionHandler()
+        }
+    }
+
+    internal fun identifier(instanceKey: Int) = "$IDENTIFIER_PREFIX$instanceKey"
+
+    /** The reverse of [identifier]. Null for anything this class did not post. */
+    internal fun instanceKeyOf(identifier: String): Int? =
+        if (identifier.startsWith(IDENTIFIER_PREFIX)) identifier.removePrefix(IDENTIFIER_PREFIX).toIntOrNull()
+        else null
 
     private fun ensureAuthorization() {
         if (authorizationAsked) return
@@ -104,5 +174,13 @@ class IosSystemNotificationPlatform(
             if (error != null) aapsLogger.error(LTag.NOTIFICATION, "Notification permission failed: $error")
             else aapsLogger.debug(LTag.NOTIFICATION, "Notification permission granted=$granted")
         }
+    }
+
+    companion object {
+
+        private const val IDENTIFIER_PREFIX = "aaps-"
+
+        /** Named once: it has to match between the posted content and the registered category. */
+        private const val CATEGORY = "aaps-notification"
     }
 }
