@@ -66,8 +66,8 @@ fun TriggerEditor(
     onChange: () -> Unit,
     tick: Int = 0,
     bondedDevices: List<String> = emptyList(),
-    showCurrentLocation: Boolean = false,
-    onUseCurrentLocation: () -> Unit = {},
+
+    onUseCurrentLocation: ((TriggerLocation) -> Unit)? = null,
     onPickLocationFromMap: (TriggerLocation) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
@@ -101,7 +101,7 @@ fun TriggerEditor(
             is TriggerTimeRange          -> TriggerTimeRangeEditor(trigger, onChange)
             is TriggerWifiSsid           -> TriggerWifiSsidEditor(trigger, onChange)
             is TriggerBTDevice           -> TriggerBTDeviceEditor(trigger, bondedDevices, onChange)
-            is TriggerLocation           -> TriggerLocationEditor(trigger, onChange, tick, showCurrentLocation, onUseCurrentLocation, onPickLocationFromMap)
+            is TriggerLocation           -> TriggerLocationEditor(trigger, onChange, tick, onUseCurrentLocation, onPickLocationFromMap)
             is TriggerConnector          -> Text("Connector")
             else                         -> Text(trigger.javaClass.simpleName)
         }
@@ -546,8 +546,8 @@ fun TriggerLocationEditor(
     t: TriggerLocation,
     onChange: () -> Unit,
     tick: Int = 0,
-    showCurrentLocation: Boolean,
-    onUseCurrentLocation: () -> Unit,
+
+    onUseCurrentLocation: ((TriggerLocation) -> Unit)?,
     onPickLocationFromMap: (TriggerLocation) -> Unit
 ) {
     @Suppress("UNUSED_EXPRESSION") tick
@@ -555,8 +555,8 @@ fun TriggerLocationEditor(
         value = t.name.value, onValueChange = { t.name.value = it; onChange() },
         label = stringResource(CoreUiStrings.name_short)
     )
-    if (showCurrentLocation) {
-        OutlinedButton(onClick = onUseCurrentLocation, modifier = Modifier.fillMaxWidth()) {
+    if (onUseCurrentLocation != null) {
+        OutlinedButton(onClick = { onUseCurrentLocation(t) }, modifier = Modifier.fillMaxWidth()) {
             Text(stringResource(AutomationStrings.currentlocation))
         }
     }

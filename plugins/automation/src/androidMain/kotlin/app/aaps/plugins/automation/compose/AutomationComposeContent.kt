@@ -53,6 +53,7 @@ import app.aaps.plugins.automation.compose.actions.ChooseActionSheet
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.triggers.TriggerConnector
 import app.aaps.plugins.automation.triggers.TriggerFactory
+import app.aaps.plugins.automation.triggers.TriggerLocation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -269,10 +270,23 @@ class AutomationComposeContent(
             if (pairedNames == null) rxBus.send(EventShowSnackbar(noPermission, EventShowSnackbar.Type.Error))
         }
 
+        // Offered only when a position is known, which is what the old dialog did with
+        // `maybeAdd(..., lastLocation != null)`. Null means no button rather than a dead one.
+        val lastKnownLocation = triggerFactory.deps.lastKnownLocation
+        val useCurrentLocation: ((TriggerLocation) -> Unit)? =
+            lastKnownLocation.position()?.let { position ->
+                { trigger: TriggerLocation ->
+                    trigger.latitude.setValue(position.latitude)
+                    trigger.longitude.setValue(position.longitude)
+                    holder.onTriggerChanged()
+                }
+            }
+
         key(resetTick) {
             AutomationEditTriggerScreen(
                 root = holder.workingEvent().trigger,
                 bondedDevices = pairedNames.orEmpty(),
+                onUseCurrentLocation = useCurrentLocation,
                 availableTriggers = plugin.getTriggerDummyObjects(),
                 createTrigger = { cn -> instantiateTrigger(cn) },
                 newConnector = { TriggerConnector(triggerFactory.deps) },

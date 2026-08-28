@@ -70,7 +70,8 @@ fun AutomationEditTriggerScreen(
     onChange: () -> Unit,
     modifier: Modifier = Modifier,
     bondedDevices: List<String> = emptyList(),
-    onPickLocationFromMap: (TriggerLocation) -> Unit = {}
+    onPickLocationFromMap: (TriggerLocation) -> Unit = {},
+    onUseCurrentLocation: ((TriggerLocation) -> Unit)? = null
 ) {
     var tick by remember { mutableIntStateOf(0) }
     fun bump() {
@@ -97,6 +98,7 @@ fun AutomationEditTriggerScreen(
                 newConnector = newConnector,
                 bondedDevices = bondedDevices,
                 onPickLocationFromMap = onPickLocationFromMap,
+                onUseCurrentLocation = onUseCurrentLocation,
                 onChange = ::bump,
                 isRoot = true,
                 onRemoveSelf = {}
@@ -116,6 +118,7 @@ private fun ConnectorCard(
     newConnector: () -> TriggerConnector,
     bondedDevices: List<String>,
     onPickLocationFromMap: (TriggerLocation) -> Unit,
+    onUseCurrentLocation: ((TriggerLocation) -> Unit)?,
     onChange: () -> Unit,
     isRoot: Boolean,
     onRemoveSelf: () -> Unit
@@ -190,6 +193,7 @@ private fun ConnectorCard(
                             newConnector = newConnector,
                             bondedDevices = bondedDevices,
                             onPickLocationFromMap = onPickLocationFromMap,
+                            onUseCurrentLocation = onUseCurrentLocation,
                             onChange = onChange,
                             isRoot = false,
                             onRemoveSelf = {
@@ -204,6 +208,7 @@ private fun ConnectorCard(
                             tick = tick,
                             bondedDevices = bondedDevices,
                             onPickLocationFromMap = onPickLocationFromMap,
+                            onUseCurrentLocation = onUseCurrentLocation,
                             onRemove = {
                                 val i = connector.list.indexOf(child)
                                 if (i >= 0) connector.list.removeAt(i)
@@ -255,6 +260,7 @@ private fun LeafCard(
     tick: Int,
     bondedDevices: List<String>,
     onPickLocationFromMap: (TriggerLocation) -> Unit,
+    onUseCurrentLocation: ((TriggerLocation) -> Unit)?,
     onRemove: () -> Unit,
     onChange: () -> Unit
 ) {
@@ -292,7 +298,8 @@ private fun LeafCard(
                 onChange = onChange,
                 tick = tick,
                 bondedDevices = bondedDevices,
-                onPickLocationFromMap = onPickLocationFromMap
+                onPickLocationFromMap = onPickLocationFromMap,
+                onUseCurrentLocation = onUseCurrentLocation
             )
         }
     }
