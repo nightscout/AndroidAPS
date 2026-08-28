@@ -32,7 +32,7 @@ fun LargeClock(
 
     LaunchedEffect(bgTimestamp) {
         while (true) {
-            val now = System.currentTimeMillis()
+            val now = dateUtil.now()
             val msToNextMinute = 60_000L - (now % 60_000L)
             delay(msToNextMinute)
             timeText = dateUtil.timeString()

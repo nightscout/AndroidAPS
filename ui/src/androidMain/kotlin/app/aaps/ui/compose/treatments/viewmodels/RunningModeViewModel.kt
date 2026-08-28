@@ -66,7 +66,7 @@ class RunningModeViewModel @Inject constructor(
             }
 
             try {
-                val now = System.currentTimeMillis()
+                val now = dateUtil.now()
                 val millsToThePast = T.days(TREATMENT_HISTORY_DAYS).msecs()
 
                 val runningModes = if (currentState.showInvalidated) {

@@ -269,7 +269,7 @@ private fun MealLinkItem(
 
                         // Bolus amount with IOB
                         profile?.let { _ ->
-                            val iob = bolus.iobCalc(System.currentTimeMillis())
+                            val iob = bolus.iobCalc(dateUtil.now())
                             val bolusText = if (iob.iobContrib > 0.01) {
                                 buildAnnotatedString {
                                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {

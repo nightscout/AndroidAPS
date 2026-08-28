@@ -147,7 +147,7 @@ class GraphViewModel @AssistedInject constructor(
     // Ticker flow for periodic updates (every 30 seconds) — used for timeAgo text and now line
     private val ticker30s = flow {
         while (true) {
-            emit(System.currentTimeMillis())
+            emit(dateUtil.now())
             delay(30_000L)
         }
     }
@@ -156,7 +156,7 @@ class GraphViewModel @AssistedInject constructor(
     val nowTimestamp: StateFlow<Long> = ticker30s.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
-        initialValue = System.currentTimeMillis()
+        initialValue = dateUtil.now()
     )
 
     // BG info UI state - combines bgInfo with periodic timeAgo updates
@@ -224,7 +224,7 @@ class GraphViewModel @AssistedInject constructor(
 
     fun onGraphInteraction() {
         preferences.put(BooleanNonKey.ObjectivesScaleUsed, true)
-        lastInteractionMs = System.currentTimeMillis()
+        lastInteractionMs = dateUtil.now()
     }
 
     override fun onCleared() {

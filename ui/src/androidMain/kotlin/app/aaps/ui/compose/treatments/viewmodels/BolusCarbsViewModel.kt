@@ -74,7 +74,7 @@ class BolusCarbsViewModel @Inject constructor(
             }
 
             try {
-                val now = System.currentTimeMillis()
+                val now = dateUtil.now()
                 val millsToThePast = T.days(TREATMENT_HISTORY_DAYS).msecs()
 
                 val boluses = if (currentState.showInvalidated) {

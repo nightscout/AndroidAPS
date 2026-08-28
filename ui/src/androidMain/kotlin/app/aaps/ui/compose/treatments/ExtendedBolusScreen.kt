@@ -162,7 +162,7 @@ private fun ExtendedBolusItem(
         value = profileFunction.getProfile(extendedBolus.timestamp)
     }
     val iob = if (profile != null) {
-        extendedBolus.iobCalc(System.currentTimeMillis(), profile!!)
+        extendedBolus.iobCalc(dateUtil.now(), profile!!)
     } else {
         null
     }

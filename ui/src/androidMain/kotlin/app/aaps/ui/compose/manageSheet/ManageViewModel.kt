@@ -163,7 +163,7 @@ class ManageViewModel @Inject constructor(
                 cancelTempBasalText = ""
             } else {
                 val activeTemp = withContext(Dispatchers.IO) {
-                    processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
+                    processedTbrEbData.getTempBasalIncludingConvertedExtended(dateUtil.now())
                 }
                 if (activeTemp != null) {
                     showTempBasal = false

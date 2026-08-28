@@ -65,7 +65,7 @@ class UserEntryViewModel @Inject constructor(
             }
 
             try {
-                val now = System.currentTimeMillis()
+                val now = dateUtil.now()
                 val userEntries = if (currentState.showLoop) {
                     persistenceLayer.getUserEntryDataFromTime(now - millsToThePastUnFiltered)
                 } else {

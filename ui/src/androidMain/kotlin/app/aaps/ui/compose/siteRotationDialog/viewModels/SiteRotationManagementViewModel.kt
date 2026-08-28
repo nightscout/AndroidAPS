@@ -96,7 +96,7 @@ class SiteRotationManagementViewModel @Inject constructor(
         viewModelScope.launch {
             if (showLoading) _uiState.value = _uiState.value.copy(isLoading = true)
             try {
-                val now = System.currentTimeMillis()
+                val now = dateUtil.now()
                 val entries = persistenceLayer.getTherapyEventDataFromTime(now - millsToThePast, false)
                     .filter { te ->
                         te.type == TE.Type.CANNULA_CHANGE || te.type == TE.Type.SENSOR_CHANGE

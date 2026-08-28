@@ -259,7 +259,7 @@ class StatusViewModel @Inject constructor(
     }
 
     private fun formatAge(timestamp: Long): String {
-        val diff = dateUtil.computeDiff(timestamp, System.currentTimeMillis())
+        val diff = dateUtil.computeDiff(timestamp, dateUtil.now())
         val days = diff.days
         val hours = diff.hours
         return if (rh.shortTextMode()) {
@@ -272,7 +272,7 @@ class StatusViewModel @Inject constructor(
     private fun getAgeStatus(timestamp: Long, warnKey: IntPreferenceKey, urgentKey: IntPreferenceKey): StatusLevel {
         val warnHours = preferences.get(warnKey)
         val urgentHours = preferences.get(urgentKey)
-        val ageHours = (System.currentTimeMillis() - timestamp) / (1000 * 60 * 60)
+        val ageHours = (dateUtil.now() - timestamp) / (1000 * 60 * 60)
         return when {
             ageHours >= urgentHours -> StatusLevel.CRITICAL
             ageHours >= warnHours   -> StatusLevel.WARNING
@@ -283,7 +283,7 @@ class StatusViewModel @Inject constructor(
     private fun getAgePercent(timestamp: Long, urgentKey: IntPreferenceKey): Float {
         val urgentHours = preferences.get(urgentKey)
         if (urgentHours <= 0) return 0f
-        val ageHours = (System.currentTimeMillis() - timestamp) / (1000.0 * 60 * 60)
+        val ageHours = (dateUtil.now() - timestamp) / (1000.0 * 60 * 60)
         return (ageHours / urgentHours).coerceIn(0.0, 1.0).toFloat()
     }
 

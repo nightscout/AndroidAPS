@@ -60,9 +60,13 @@ internal class GraphViewModelTest {
     }
 
     @Test
-    fun `onGraphInteraction records a non-zero interaction timestamp`() {
+    fun `onGraphInteraction records the interaction timestamp`() {
+        // The time comes from DateUtil rather than the wall clock, so it can be pinned here instead
+        // of only being asserted as "some number above zero".
+        whenever(dateUtil.now()).thenReturn(1_700_000_000_000L)
+
         assertThat(sut.lastInteractionMs).isEqualTo(0L)
         sut.onGraphInteraction()
-        assertThat(sut.lastInteractionMs).isGreaterThan(0L)
+        assertThat(sut.lastInteractionMs).isEqualTo(1_700_000_000_000L)
     }
 }
