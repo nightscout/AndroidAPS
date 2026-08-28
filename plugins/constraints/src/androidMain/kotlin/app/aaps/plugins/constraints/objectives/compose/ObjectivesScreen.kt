@@ -1,5 +1,7 @@
 package app.aaps.plugins.constraints.objectives.compose
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.plugins.constraints.ConstraintsStrings
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.expandVertically
@@ -54,12 +56,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import app.aaps.plugins.constraints.R
 
 @Composable
 fun ObjectivesScreen(
@@ -344,7 +344,7 @@ private fun AccomplishedObjectiveContent(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = stringResource(R.string.what_i_ve_learned),
+                        text = stringResource(ConstraintsStrings.what_i_ve_learned),
                         style = MaterialTheme.typography.labelSmall
                     )
                 }
@@ -367,7 +367,7 @@ private fun AccomplishedObjectiveContent(
                     )
                     TextButton(onClick = onUnfinish) {
                         Text(
-                            text = stringResource(R.string.objectives_button_unfinish),
+                            text = stringResource(ConstraintsStrings.objectives_button_unfinish),
                             textAlign = TextAlign.Center
                         )
                     }
@@ -389,7 +389,7 @@ private fun AccomplishedObjectiveContent(
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
-                text = if (expanded) stringResource(R.string.objectives_collapse) else stringResource(R.string.objectives_expand),
+                text = if (expanded) stringResource(ConstraintsStrings.objectives_collapse) else stringResource(ConstraintsStrings.objectives_expand),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -497,7 +497,7 @@ private fun ActiveObjectiveContent(
                             .fillMaxHeight()
                     ) {
                         Text(
-                            text = stringResource(R.string.objectives_button_unstart),
+                            text = stringResource(ConstraintsStrings.objectives_button_unstart),
                             textAlign = TextAlign.Center
                         )
                     }
@@ -509,7 +509,7 @@ private fun ActiveObjectiveContent(
                             .fillMaxHeight()
                     ) {
                         Text(
-                            text = stringResource(R.string.objectives_button_verify),
+                            text = stringResource(ConstraintsStrings.objectives_button_verify),
                             textAlign = TextAlign.Center
                         )
                     }
@@ -588,7 +588,7 @@ private fun TaskRow(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = stringResource(R.string.objectives_show_hint),
+                        text = stringResource(ConstraintsStrings.objectives_show_hint),
                         style = MaterialTheme.typography.labelSmall
                     )
                 }
@@ -671,7 +671,7 @@ private fun NotStartedObjectiveContent(
         Spacer(modifier = Modifier.height(8.dp))
         Button(onClick = onStart) {
             Text(
-                text = stringResource(R.string.objectives_button_start),
+                text = stringResource(ConstraintsStrings.objectives_button_start),
                 textAlign = TextAlign.Center
             )
         }

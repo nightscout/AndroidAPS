@@ -1,5 +1,7 @@
 package app.aaps.plugins.constraints.objectives.compose
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.plugins.constraints.ConstraintsStrings
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,11 +35,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.compose.consumeOverscroll
-import app.aaps.plugins.constraints.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,7 +66,7 @@ fun ExamBottomSheet(
         ) {
             // Progress header
             Text(
-                text = stringResource(R.string.objectives_exam_question_progress, state.currentTaskIndex + 1, state.totalTasks),
+                text = stringResource(ConstraintsStrings.objectives_exam_question_progress, state.currentTaskIndex + 1, state.totalTasks),
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -166,14 +166,14 @@ fun ExamBottomSheet(
                     OutlinedButton(onClick = onReset) {
                         Icon(Icons.Default.Refresh, contentDescription = null, modifier = Modifier.height(18.dp))
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text(stringResource(R.string.objectives_exam_reset))
+                        Text(stringResource(ConstraintsStrings.objectives_exam_reset))
                     }
                 } else {
                     Button(
                         onClick = onVerify,
                         enabled = state.canAnswer
                     ) {
-                        Text(stringResource(R.string.objectives_button_verify))
+                        Text(stringResource(ConstraintsStrings.objectives_button_verify))
                     }
                 }
             }
@@ -190,7 +190,7 @@ fun ExamBottomSheet(
                     onClick = { onNavigate(-1) },
                     enabled = state.canGoBack
                 ) {
-                    Icon(Icons.AutoMirrored.Filled.NavigateBefore, contentDescription = stringResource(R.string.objectives_exam_previous))
+                    Icon(Icons.AutoMirrored.Filled.NavigateBefore, contentDescription = stringResource(ConstraintsStrings.objectives_exam_previous))
                 }
 
                 FilledTonalButton(
@@ -200,7 +200,7 @@ fun ExamBottomSheet(
                     Icon(Icons.Default.SkipNext, contentDescription = null, modifier = Modifier.height(18.dp))
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = stringResource(R.string.objectives_exam_next_unanswered),
+                        text = stringResource(ConstraintsStrings.objectives_exam_next_unanswered),
                         style = MaterialTheme.typography.labelMedium
                     )
                 }
@@ -209,7 +209,7 @@ fun ExamBottomSheet(
                     onClick = { onNavigate(1) },
                     enabled = state.canGoNext
                 ) {
-                    Icon(Icons.AutoMirrored.Filled.NavigateNext, contentDescription = stringResource(R.string.objectives_exam_next))
+                    Icon(Icons.AutoMirrored.Filled.NavigateNext, contentDescription = stringResource(ConstraintsStrings.objectives_exam_next))
                 }
             }
         }

@@ -1,11 +1,11 @@
 package app.aaps.plugins.constraints.objectives.objectives
 
+import app.aaps.plugins.constraints.ConstraintsStrings
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.plugins.constraints.R
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
@@ -24,18 +24,18 @@ class Objective4 @Inject constructor(
     rh: ResourceHelper,
     dateUtil: DateUtil,
     private val profileFunction: ProfileFunction
-) : Objective(preferences, rh, dateUtil, "maxbasal", R.string.objectives_maxbasal_objective, R.string.objectives_maxbasal_gate) {
+) : Objective(preferences, rh, dateUtil, "maxbasal", ConstraintsStrings.objectives_maxbasal_objective, ConstraintsStrings.objectives_maxbasal_gate) {
 
     init {
         tasks.add(
-            object : Task(this, R.string.objectives_maxbasal) {
+            object : Task(this, ConstraintsStrings.objectives_maxbasal) {
                 override suspend fun isCompleted(): Boolean {
                     val profile = profileFunction.getProfile() ?: return false
                     val maxBasalSet = preferences.getIfExists(DoubleKey.ApsMaxBasal) ?: 0.0
                     val maxDailyBasal = profile.getMaxDailyBasal()
                     return maxBasalSet > 2.8 * maxDailyBasal || preferences.simpleMode
                 }
-            }.learned(Learned(R.string.objectives_maxbasal_learned))
+            }.learned(Learned(ConstraintsStrings.objectives_maxbasal_learned))
         )
     }
 }

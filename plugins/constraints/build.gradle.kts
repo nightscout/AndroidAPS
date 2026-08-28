@@ -21,6 +21,22 @@ allOpen {
 // three qualified plugin buckets keep working because @AllConfigs, @APS and @NotNSClient each carry
 // Metro's own @Qualifier alongside the javax one - ConstraintsBucketsTest is the guard.
 
+// Generates ConstraintsStrings (commonMain) and ConstraintsStringIds (androidMain) from this module's
+// res/values, the same generator the other plugins use. The objectives and exam text is the bulk of
+// it. The strings themselves do not move, and AAPT keeps resolving them on Android exactly as before.
+val generateConstraintsStrings = tasks.register<GenerateKeyStringsTask>("generateConstraintsStrings") {
+    resDir.set(layout.projectDirectory.dir("src/androidMain/res"))
+    packageName.set("app.aaps.plugins.constraints")
+    owner.set("constraints")
+    objectName.set("ConstraintsStrings")
+    idsObjectName.set("ConstraintsStringIds")
+    reportFile.set(layout.buildDirectory.file("reports/constraintsStrings/translations.txt"))
+    // Set explicitly: addGeneratedSourceDirectory only derives a convention from the task name, so
+    // both properties would land on one directory and the second file written would delete the first.
+    commonOutputDir.set(layout.buildDirectory.dir("generated/constraintsStrings/common"))
+    androidOutputDir.set(layout.buildDirectory.dir("generated/constraintsStrings/android"))
+}
+
 kotlin {
     android {
         namespace = "app.aaps.plugins.constraints"
@@ -49,6 +65,7 @@ kotlin {
         // What ConstraintsCheckerImpl needs. androidMain inherits these, so the rest of the module
         // keeps compiling unchanged; only the modules no common file uses yet stay android only.
         commonMain {
+            kotlin.srcDir(generateConstraintsStrings.flatMap { it.commonOutputDir })
             dependencies {
                 implementation(project(":core:interfaces"))
                 implementation(project(":core:keys"))
@@ -58,6 +75,8 @@ kotlin {
         }
 
         androidMain {
+            // Android only: the string name to R.string id map.
+            kotlin.srcDir(generateConstraintsStrings.flatMap { it.androidOutputDir })
             dependencies {
                 implementation(project(":core:data"))
                 implementation(project(":core:utils"))

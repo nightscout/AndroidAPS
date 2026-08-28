@@ -1,5 +1,7 @@
 package app.aaps.plugins.constraints.objectives.compose
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.plugins.constraints.ConstraintsStrings
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,11 +24,9 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.compose.consumeOverscroll
-import app.aaps.plugins.constraints.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,12 +49,12 @@ fun LearnedBottomSheet(
                 .verticalScroll(rememberScrollState())
         ) {
             Text(
-                text = stringResource(R.string.what_i_ve_learned),
+                text = stringResource(ConstraintsStrings.what_i_ve_learned),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = stringResource(R.string.nth_objective, state.objectiveNumber) + " — " + state.objectiveTitle,
+                text = stringResource(ConstraintsStrings.nth_objective, state.objectiveNumber) + " — " + state.objectiveTitle,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -65,7 +65,7 @@ fun LearnedBottomSheet(
 
             if (state.items.isEmpty()) {
                 Text(
-                    text = stringResource(R.string.objectives_no_learned),
+                    text = stringResource(ConstraintsStrings.objectives_no_learned),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

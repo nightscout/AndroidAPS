@@ -1,5 +1,7 @@
 package app.aaps.plugins.constraints.storage
 
+import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
+import app.aaps.plugins.constraints.ConstraintsStrings
 import android.os.Environment
 import android.os.StatFs
 import app.aaps.annotations.OpenForTesting
@@ -16,7 +18,6 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.plugins.constraints.R
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
@@ -41,7 +42,7 @@ class StorageConstraintPlugin @Inject constructor(
         .mainType(PluginType.CONSTRAINTS)
         .alwaysEnabled(true)
         .showInList { false }
-        .pluginName(TextRef.AndroidRes(R.string.storage)),
+        .pluginName(ConstraintsStrings.storage),
     aapsLogger, rh
 ), PluginConstraints {
 
@@ -49,8 +50,8 @@ class StorageConstraintPlugin @Inject constructor(
         val diskFree = availableInternalMemorySize()
         if (diskFree < Constants.MINIMUM_FREE_SPACE) {
             aapsLogger.debug(LTag.CONSTRAINTS, "Closed loop disabled. Internal storage free (Mb):$diskFree")
-            value.set(false, rh.gs(R.string.disk_full, Constants.MINIMUM_FREE_SPACE), this)
-            notificationManager.post(NotificationId.DISK_FULL, TextRef.AndroidRes(R.string.disk_full, listOf(Constants.MINIMUM_FREE_SPACE)))
+            value.set(false, rh.gs(ConstraintsStrings.disk_full, Constants.MINIMUM_FREE_SPACE), this)
+            notificationManager.post(NotificationId.DISK_FULL, ConstraintsStrings.disk_full.withArgs(Constants.MINIMUM_FREE_SPACE))
         }
         return value
     }

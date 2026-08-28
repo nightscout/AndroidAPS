@@ -95,6 +95,7 @@ import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.automation.AutomationStringIds
 import app.aaps.plugins.calibration.CalibrationStringIds
 import app.aaps.plugins.configuration.ConfigurationStringIds
+import app.aaps.plugins.constraints.ConstraintsStringIds
 import app.aaps.plugins.constraints.objectives.keys.ObjectivesLongComposedKey
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import app.aaps.plugins.main.MainStringIds
@@ -1031,5 +1032,6 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         TextRefIdRegistry.register("ui") { name -> UiStringIds.idOf(name) }
         TextRefIdRegistry.register("automation") { name -> AutomationStringIds.idOf(name) }
         TextRefIdRegistry.register("configuration") { name -> ConfigurationStringIds.idOf(name) }
+        TextRefIdRegistry.register("constraints") { name -> ConstraintsStringIds.idOf(name) }
     }
 }
