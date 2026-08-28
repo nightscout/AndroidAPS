@@ -51,7 +51,6 @@ import androidx.compose.material.icons.filled.Surfing
 import androidx.compose.material.icons.filled.Thermostat
 import androidx.compose.material.icons.filled.Work
 import androidx.compose.ui.graphics.vector.ImageVector
-import app.aaps.ui.UiStrings
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.icons.IcActivity
 import app.aaps.core.ui.compose.icons.IcAutomation
@@ -69,6 +68,7 @@ import app.aaps.core.ui.compose.icons.IcTtHigh
 import app.aaps.core.ui.compose.icons.IcTtHypo
 import app.aaps.core.ui.compose.icons.IcTtManual
 import app.aaps.ui.R
+import app.aaps.ui.UiStrings
 
 /**
  * Available icons for scenes, organized by category.

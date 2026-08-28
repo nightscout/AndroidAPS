@@ -46,12 +46,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import app.aaps.ui.UiStrings
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.clearFocusOnTap
@@ -65,7 +63,9 @@ import app.aaps.core.ui.compose.siteRotation.SiteEntryDisplayData
 import app.aaps.core.ui.compose.siteRotation.SiteEntryList
 import app.aaps.core.ui.compose.siteRotation.ZoomableBodyDiagram
 import app.aaps.core.ui.compose.siteRotation.directionToComposeIcon
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.R
+import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.siteRotationDialog.viewModels.SiteRotationManagementViewModel
 import app.aaps.ui.compose.siteRotationDialog.viewModels.SiteRotationUiState
 import kotlinx.coroutines.launch

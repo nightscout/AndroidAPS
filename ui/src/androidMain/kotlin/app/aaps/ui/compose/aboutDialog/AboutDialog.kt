@@ -21,9 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.ui.UiStrings
-import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
@@ -36,7 +33,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.net.toUri
 import app.aaps.core.interfaces.configuration.ExternalOptions
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.R
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.ui.UiStrings
 
 data class AboutDialogData(
     val title: String,

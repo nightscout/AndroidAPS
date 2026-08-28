@@ -1,6 +1,5 @@
 package app.aaps.ui.compose.tempTarget
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -49,15 +48,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.ui.UiStrings
-import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsFab
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
@@ -69,8 +69,10 @@ import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.TimePickerModal
 import app.aaps.core.ui.compose.masterEditingEnabled
 import app.aaps.core.ui.compose.navigation.label
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.compose.stringResourceOrNull
 import app.aaps.ui.R
+import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.components.CarouselReorderConfig
 import app.aaps.ui.compose.components.ContentContainer
 import app.aaps.ui.compose.components.ManagementCarousel
@@ -210,7 +212,11 @@ fun TempTargetManagementScreen(
     var showOverflowMenu by remember { mutableStateOf(false) }
 
     // Back leaves sort mode rather than the screen, so a reshuffle isn't silently discarded.
-    BackHandler(enabled = isReorderMode) { viewModel.cancelReorder() }
+    NavigationBackHandler(
+        state = rememberNavigationEventState(NavigationEventInfo.None),
+        isBackEnabled = isReorderMode,
+        onBackCompleted = { viewModel.cancelReorder() }
+    )
 
     // The view model outlives the screen, so an uncommitted order would otherwise survive until the
     // screen is reopened — dropping the user straight back into sort mode with a stale order.

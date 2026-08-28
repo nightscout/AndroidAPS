@@ -23,17 +23,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.ui.UiStrings
-import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.preference.SyncBadge
 import app.aaps.core.ui.compose.stringResource
+import app.aaps.ui.UiStrings
 import app.aaps.ui.plugin.HardwarePumpConfirmation
 
 @Composable

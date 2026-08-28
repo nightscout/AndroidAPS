@@ -33,11 +33,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
-import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
-import app.aaps.ui.UiStrings
-import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.icons.IcBolus
 import app.aaps.core.ui.compose.icons.IcCarbs
@@ -45,6 +43,8 @@ import app.aaps.core.ui.compose.icons.IcTtActivity
 import app.aaps.core.ui.compose.icons.IcTtEatingSoon
 import app.aaps.core.ui.compose.icons.IcTtHypo
 import app.aaps.core.ui.compose.navigation.color
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.ui.UiStrings
 
 @Immutable
 data class ResolvedQuickLaunchItem(

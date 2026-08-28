@@ -1,6 +1,5 @@
 package app.aaps.ui.compose.preferences
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,15 +20,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import app.aaps.core.interfaces.resources.TextResolver
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.ui.UiStrings
-import app.aaps.core.ui.CoreUiStrings
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.ComposeScreenContent
 import app.aaps.core.ui.compose.LocalConfig
@@ -43,6 +43,8 @@ import app.aaps.core.ui.compose.preference.ProvidePreferenceTheme
 import app.aaps.core.ui.compose.preference.addPreferenceContent
 import app.aaps.core.ui.compose.preference.rememberPreferenceSectionState
 import app.aaps.core.ui.compose.preference.verticalScrollIndicators
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.ui.UiStrings
 import app.aaps.ui.search.BuiltInSearchables
 import kotlinx.coroutines.launch
 
@@ -147,9 +149,11 @@ fun AllPreferencesScreen(
     }
     var composeScreen: ComposeScreenContent? by remember { mutableStateOf(null) }
 
-    BackHandler(enabled = composeScreen != null) {
-        composeScreen = null
-    }
+    NavigationBackHandler(
+        state = rememberNavigationEventState(NavigationEventInfo.None),
+        isBackEnabled = composeScreen != null,
+        onBackCompleted = { composeScreen = null }
+    )
 
     composeScreen?.let { screen ->
         screen.Content(onBack = { composeScreen = null })

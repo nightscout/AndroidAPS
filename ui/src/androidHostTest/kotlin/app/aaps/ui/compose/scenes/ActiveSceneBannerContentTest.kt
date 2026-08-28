@@ -9,6 +9,7 @@ import androidx.compose.ui.test.performClick
 import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.data.model.Scene
 import app.aaps.core.data.model.SceneLifecycle
+import app.aaps.core.ui.R as CoreUiR
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -18,7 +19,6 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
-import app.aaps.core.ui.R as CoreUiR
 
 /** Robolectric composable test for [ActiveSceneBannerContent]: active (name + End) vs expired (ended + Close). */
 @RunWith(RobolectricTestRunner::class)

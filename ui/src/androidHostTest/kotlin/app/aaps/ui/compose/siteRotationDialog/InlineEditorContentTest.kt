@@ -6,11 +6,11 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
-import app.aaps.core.interfaces.resources.TextRefIdRegistry
-import app.aaps.ui.UiStringIds
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TE
+import app.aaps.core.interfaces.resources.TextRefIdRegistry
 import app.aaps.ui.R
+import app.aaps.ui.UiStringIds
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Rule

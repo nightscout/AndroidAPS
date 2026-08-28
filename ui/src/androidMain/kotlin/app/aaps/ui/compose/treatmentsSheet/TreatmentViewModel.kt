@@ -3,11 +3,9 @@ package app.aaps.ui.compose.treatmentsSheet
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.ui.UiStrings
-import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.RM
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -29,7 +27,9 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.core.objects.wizard.QuickWizardMode
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.R
+import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.main.QuickWizardItem
 import app.aaps.ui.compose.navigation.ElementAvailability
 import dev.zacsweers.metro.AppScope
@@ -37,6 +37,7 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import kotlin.math.abs
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -47,7 +48,6 @@ import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.math.abs
 
 // Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
 // unscoped so each screen gets its own.

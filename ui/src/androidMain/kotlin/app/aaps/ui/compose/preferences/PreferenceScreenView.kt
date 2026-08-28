@@ -1,6 +1,5 @@
 package app.aaps.ui.compose.preferences
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,10 +20,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.ui.UiStrings
-import app.aaps.core.ui.CoreUiStrings
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.ComposeScreenContent
 import app.aaps.core.ui.compose.LocalSnackbarHostState
@@ -39,6 +39,7 @@ import app.aaps.core.ui.compose.preference.addPreferenceContent
 import app.aaps.core.ui.compose.preference.rememberPreferenceSectionState
 import app.aaps.core.ui.compose.preference.verticalScrollIndicators
 import app.aaps.core.ui.compose.stringResource
+import app.aaps.ui.UiStrings
 import kotlinx.coroutines.launch
 
 /**
@@ -72,9 +73,11 @@ fun PreferenceScreenView(
         sectionState.toggle("${screenDef.key}_main", SectionLevel.TOP_LEVEL)
     }
 
-    BackHandler(enabled = composeScreen != null) {
-        composeScreen = null
-    }
+    NavigationBackHandler(
+        state = rememberNavigationEventState(NavigationEventInfo.None),
+        isBackEnabled = composeScreen != null,
+        onBackCompleted = { composeScreen = null }
+    )
 
     composeScreen?.let { screen ->
         screen.Content(onBack = { composeScreen = null })

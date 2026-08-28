@@ -6,8 +6,8 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import app.aaps.core.interfaces.resources.TextRefIdRegistry
-import app.aaps.ui.UiStringIds
 import app.aaps.ui.R
+import app.aaps.ui.UiStringIds
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test

@@ -15,10 +15,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import app.aaps.ui.UiStrings
-import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.R
+import app.aaps.ui.UiStrings
 
 /**
  * Container for screen content that handles loading and empty states.

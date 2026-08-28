@@ -2,11 +2,10 @@ package app.aaps.ui.compose.scenes.wizard
 
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.createSavedStateHandle
-import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
-import app.aaps.core.interfaces.resources.TextResolver
+import androidx.lifecycle.viewmodel.CreationExtras
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.Scene
 import app.aaps.core.data.model.SceneAction
@@ -15,6 +14,7 @@ import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TTPreset
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.scenes.SceneStore
 import app.aaps.core.interfaces.tempTargets.toTTPresets
 import app.aaps.core.interfaces.utils.DateUtil

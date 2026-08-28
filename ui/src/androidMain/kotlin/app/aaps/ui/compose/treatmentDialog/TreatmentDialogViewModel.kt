@@ -3,9 +3,9 @@ package app.aaps.ui.compose.treatmentDialog
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ui.ConfirmationLine
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor

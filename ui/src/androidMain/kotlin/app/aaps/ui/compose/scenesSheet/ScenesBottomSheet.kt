@@ -23,7 +23,6 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.CoreUiStrings
@@ -31,6 +30,7 @@ import app.aaps.core.ui.compose.TonalIcon
 import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.compose.icons.IcAutomation
 import app.aaps.core.ui.compose.navigation.color
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.compose.scenes.SceneIcons
 
 @OptIn(ExperimentalMaterial3Api::class)

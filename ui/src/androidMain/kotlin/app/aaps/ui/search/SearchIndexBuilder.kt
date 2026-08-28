@@ -1,9 +1,9 @@
 package app.aaps.ui.search
 
-import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.interfaces.PreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef

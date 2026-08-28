@@ -13,17 +13,16 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import app.aaps.ui.UiStrings
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.clientcontrol.PendingAction
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.R
+import app.aaps.ui.UiStrings
 
 /**
  * Modal shown while a client-control action is in flight, and for its terminal failure states. The

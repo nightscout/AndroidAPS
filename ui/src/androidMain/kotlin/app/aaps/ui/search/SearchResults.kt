@@ -30,15 +30,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.ui.UiStrings
-import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.masterEditingEnabled
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.search.SearchableItem
+import app.aaps.ui.UiStrings
 
 /**
  * Displays search results in a categorized list.

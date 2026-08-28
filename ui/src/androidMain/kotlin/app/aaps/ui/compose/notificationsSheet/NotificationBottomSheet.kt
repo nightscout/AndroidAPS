@@ -23,14 +23,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.ui.UiStrings
-import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.interfaces.notifications.NotificationCategory
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDateUtil
@@ -42,6 +40,7 @@ import app.aaps.core.ui.compose.icons.IcPluginNsClient
 import app.aaps.core.ui.compose.icons.IcPluginVirtualPump
 import app.aaps.core.ui.compose.icons.IcProfile
 import app.aaps.core.ui.compose.stringResource
+import app.aaps.ui.UiStrings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

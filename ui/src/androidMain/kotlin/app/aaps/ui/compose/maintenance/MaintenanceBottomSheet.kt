@@ -37,12 +37,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.maintenance.ExportConfig
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.TonalIcon
 import app.aaps.core.ui.compose.consumeOverscroll
+import app.aaps.core.ui.compose.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

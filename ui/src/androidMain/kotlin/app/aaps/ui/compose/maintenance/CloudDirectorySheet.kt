@@ -21,12 +21,12 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.maintenance.CloudDirectoryInfo
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.dialogs.ErrorDialog
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.compose.maintenance.MaintenanceViewModel.CloudDirectoryState
 
 @Composable

@@ -13,14 +13,14 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import app.aaps.core.interfaces.InterfacesStrings
-import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import app.aaps.core.data.model.BCR
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.LocalProfileUtil
+import app.aaps.core.ui.compose.stringResource
 import kotlin.math.abs
 
 /**

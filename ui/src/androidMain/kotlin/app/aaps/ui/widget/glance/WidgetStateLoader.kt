@@ -1,14 +1,11 @@
 package app.aaps.ui.widget.glance
 
 import androidx.compose.ui.graphics.toArgb
-import app.aaps.core.interfaces.resources.TextResolver
-import app.aaps.core.interfaces.InterfacesStrings
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.ui.UiStrings
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TrendArrow
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -20,6 +17,7 @@ import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.overview.LastBgData
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.TrendCalculator
@@ -29,11 +27,13 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.apsAdjustedTargetMgdl
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.profile.ProfileSealed
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.DarkGeneralColors
 import app.aaps.core.ui.compose.loopColor
 import app.aaps.core.ui.compose.ttReasonColor
 import app.aaps.core.ui.extensions.displayText
 import app.aaps.ui.R
+import app.aaps.ui.UiStrings
 import app.aaps.ui.widget.directionToDrawableRes
 import dev.zacsweers.metro.Inject
 import kotlin.math.abs

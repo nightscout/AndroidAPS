@@ -3,8 +3,6 @@ package app.aaps.ui.compose.manageSheet
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.ui.UiStrings
 import app.aaps.core.data.model.EB
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TB
@@ -34,10 +32,12 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.VisibilityContext
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.R
 import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.core.ui.extensions.toStringMedium
 import app.aaps.core.ui.extensions.toStringShort
+import app.aaps.ui.UiStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject

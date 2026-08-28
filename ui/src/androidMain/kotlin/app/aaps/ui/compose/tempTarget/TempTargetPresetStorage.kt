@@ -1,10 +1,10 @@
 package app.aaps.ui.compose.tempTarget
 
-import app.aaps.ui.UiStrings
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TTPreset
 import app.aaps.core.interfaces.tempTargets.toTTPresets as coreTTPresets
+import app.aaps.core.ui.R as CoreUiR
+import app.aaps.ui.UiStrings
 
 /**
  * Derive nameRes from TT.Reason for fixed (non-deletable) presets.

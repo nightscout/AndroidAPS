@@ -1,8 +1,5 @@
 package app.aaps.ui.compose.tempTarget
 
-import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.interfaces.resources.TextRefIdRegistry
-import app.aaps.ui.UiStringIds
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TT
@@ -14,12 +11,15 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextRefIdRegistry
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.tempTargets.toJson
 import app.aaps.core.interfaces.tempTargets.toTTPresets
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.ui.UiStringIds
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

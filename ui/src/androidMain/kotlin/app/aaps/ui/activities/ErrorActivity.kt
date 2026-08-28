@@ -39,8 +39,8 @@ import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalSnackbarHostState
-import app.aaps.core.ui.compose.dialogs.GlobalSnackbarHost
 import app.aaps.core.ui.compose.MetroAppCompatActivity
+import app.aaps.core.ui.compose.dialogs.GlobalSnackbarHost
 import dev.zacsweers.metro.Inject
 
 /**

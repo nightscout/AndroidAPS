@@ -1,13 +1,13 @@
 package app.aaps.ui.compose.wizardDialog
 
 import androidx.compose.ui.graphics.vector.ImageVector
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.ui.UiStrings
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.R
+import app.aaps.ui.UiStrings
 
 /**
  * The single wizard-bolus confirmation renderer, shared by the QuickWizard button (`MainViewModel`) and the manual

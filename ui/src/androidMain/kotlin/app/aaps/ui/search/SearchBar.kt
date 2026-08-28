@@ -1,6 +1,5 @@
 package app.aaps.ui.search
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,13 +28,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.ui.UiStrings
-import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.R
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.ui.UiStrings
 
 /**
  * M3-style pill-shaped search bar.
@@ -73,11 +75,15 @@ fun M3SearchBar(
         }
     }
 
-    BackHandler(enabled = isActive) {
-        keyboardController?.hide()
-        onClearClick()
-        onActiveChange(false)
-    }
+    NavigationBackHandler(
+        state = rememberNavigationEventState(NavigationEventInfo.None),
+        isBackEnabled = isActive,
+        onBackCompleted = {
+            keyboardController?.hide()
+            onClearClick()
+            onActiveChange(false)
+        }
+    )
 
     Surface(
         modifier = modifier

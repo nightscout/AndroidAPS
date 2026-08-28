@@ -48,9 +48,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
-import app.aaps.ui.UiStrings
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -65,6 +62,7 @@ import app.aaps.core.graph.InsulinGraphCompose
 import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsFab
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.MasterOfflineBanner
@@ -79,6 +77,7 @@ import app.aaps.core.ui.compose.insulin.ConcentrationDropdown
 import app.aaps.core.ui.compose.masterEditingEnabled
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.R
+import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.components.ManagementCarousel
 
 /**

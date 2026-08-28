@@ -3,8 +3,6 @@ package app.aaps.ui.compose.quickWizard.viewmodels
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.aaps.ui.UiStrings
-import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -18,7 +16,9 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.core.objects.wizard.QuickWizardMode
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.ScreenMode
+import app.aaps.ui.UiStrings
 import app.aaps.ui.events.EventQuickWizardChange
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap

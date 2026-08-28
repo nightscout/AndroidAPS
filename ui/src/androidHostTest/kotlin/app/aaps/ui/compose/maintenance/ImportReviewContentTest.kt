@@ -9,6 +9,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import app.aaps.core.interfaces.maintenance.PrefsFile
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.ui.R as CoreUiR
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -19,7 +20,6 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
-import app.aaps.core.ui.R as CoreUiR
 
 /** Robolectric composable test for [ImportReviewContent]: renders review + fires back. */
 @RunWith(RobolectricTestRunner::class)

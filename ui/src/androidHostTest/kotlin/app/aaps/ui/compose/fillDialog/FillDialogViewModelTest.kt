@@ -1,8 +1,6 @@
 package app.aaps.ui.compose.fillDialog
 
 import androidx.lifecycle.SavedStateHandle
-import app.aaps.core.interfaces.resources.TextRefIdRegistry
-import app.aaps.ui.UiStringIds
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.bolus.BatchExecutor
@@ -20,6 +18,7 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextRefIdRegistry
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.Event
 import app.aaps.core.interfaces.rx.events.EventShowDialog
@@ -29,6 +28,8 @@ import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStringIds
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -52,7 +53,6 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import app.aaps.core.ui.CoreUiStrings
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class FillDialogViewModelTest {

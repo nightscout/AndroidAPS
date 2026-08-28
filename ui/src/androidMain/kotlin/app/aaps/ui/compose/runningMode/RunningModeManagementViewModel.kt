@@ -4,8 +4,6 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.ui.UiStrings
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -33,8 +31,10 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.R
 import app.aaps.core.ui.clientcontrol.failText
+import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.overview.chips.toIcon
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap

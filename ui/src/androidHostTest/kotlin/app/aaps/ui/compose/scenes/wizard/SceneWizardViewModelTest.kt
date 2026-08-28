@@ -1,8 +1,6 @@
 package app.aaps.ui.compose.scenes.wizard
 
 import androidx.lifecycle.SavedStateHandle
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.ui.UiStrings
 import app.aaps.core.data.model.SceneAction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -12,7 +10,9 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.R
+import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.scenes.SceneTemplate
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
