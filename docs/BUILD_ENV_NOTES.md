@@ -60,6 +60,21 @@ After one successful **online** build, archive together:
 With those five pieces a rebuild needs zero network: restore `~/.gradle` and the SDK, then run
 `./gradlew --offline :app:assembleFullRelease`.
 
+## Verification record — 2026-08-28
+
+Built and tested in a clean Linux container with exactly the toolchain above:
+
+- `:app:assembleFullRelease` → **BUILD SUCCESSFUL**, output `app-full-release-unsigned.apk` (~89 MB).
+- `:plugins:constraints:testFullReleaseUnitTest` → **82/83 pass**. The one failure,
+  `SntpClientTest.ntpTimeTest`, queries a real internet time server and cannot pass in a
+  sandboxed environment; it is unrelated to the eternal-build changes and passes on a normal
+  networked machine.
+- Note: the build script refuses to build with uncommitted tracked changes ("Clone sources
+  again…") — commit before building. Untracked files (e.g. `local.properties`) are fine.
+- Memory: the default `-Xmx8g` + 12 workers OOM-killed the daemon on a 15 GB machine. If that
+  happens, add `-Dorg.gradle.jvmargs="-Xmx5g -XX:+UseParallelGC -Xss1024m"
+  -Dorg.gradle.workers.max=2 --no-parallel` to the gradlew invocation.
+
 ## Notes
 
 - `app/google-services.json` is committed in this repo, so no Firebase setup is needed to build.
