@@ -29,7 +29,6 @@ class NfcControlActivityTest : TestBaseWithProfile() {
         nfcTagStore.clearJustWrittenForTest()
         
         pluginUnderTest = NfcCommandsPlugin(
-            context = context,
             aapsLogger = aapsLogger,
             rh = rh,
             preferences = preferences,

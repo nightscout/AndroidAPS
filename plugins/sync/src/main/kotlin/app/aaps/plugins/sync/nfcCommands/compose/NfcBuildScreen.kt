@@ -7,7 +7,6 @@ import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.nfc.tech.Ndef
 import android.nfc.tech.NdefFormatable
-import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.InfiniteRepeatableSpec
 import androidx.compose.animation.core.RepeatMode
@@ -328,7 +327,7 @@ fun NfcBuildScreen(
                     coroutineScope.launch(Dispatchers.Main) {
                         state.isWritingMode = false
                         if (outcome == WriteOutcome.GENERIC_ASSIGNED) {
-                            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+                            plugin.showMessage(message)
                         }
                         state.chain.clear()
                         onTagWritten()

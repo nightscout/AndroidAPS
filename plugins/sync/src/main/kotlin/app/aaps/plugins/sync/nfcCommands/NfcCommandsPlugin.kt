@@ -1,16 +1,10 @@
 package app.aaps.plugins.sync.nfcCommands
 
-import android.content.Context
 import android.content.Intent
 import android.nfc.NdefMessage
 import android.nfc.NdefRecord
 import android.nfc.NfcAdapter
 import android.nfc.Tag
-import android.os.Handler
-import android.os.Looper
-import android.os.VibrationEffect
-import android.os.VibratorManager
-import android.widget.Toast
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
@@ -34,6 +28,7 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.scenes.SceneIconResolver
 import app.aaps.core.interfaces.utils.DateUtil
@@ -86,7 +81,6 @@ data class NfcExecutionResult(
 @IntKey(380)
 @SingleIn(AppScope::class)
 class NfcCommandsPlugin @Inject constructor(
-    private val context: Context,
     aapsLogger: AAPSLogger,
     // Narrows PluginBase.rh, which is a TextResolver and so only takes TextRef. This module still owns
     // AAPT resources, so it needs the resource id overloads. Same as SmsCommunicatorPlugin.
@@ -135,7 +129,7 @@ class NfcCommandsPlugin @Inject constructor(
             BooleanKey.NfcForegroundPriority,
             NfcIntentKey.ClearLog.withClick {
                 nfcTagStore.clearLog()
-                showToast(rh.gs(R.string.nfccommands_log_cleared))
+                showMessage(rh.gs(R.string.nfccommands_log_cleared), EventShowSnackbar.Type.Success)
             },
         ),
         icon = pluginDescription.icon,
@@ -174,7 +168,15 @@ class NfcCommandsPlugin @Inject constructor(
     }
 
     /**
-     * Executes commands and provides physical (vibration) and visual (toast/log) feedback.
+     * Executes commands, records the result in the NFC log, and asks for it to be shown on screen.
+     *
+     * The message goes out as an [EventShowSnackbar] rather than a Toast. The event needs no [android.content.Context]
+     * and no reference to a host, it is styled by success or failure, and when no screen is up an
+     * application-scoped collector turns it into a system notification instead of losing it - which a
+     * Toast posted from here could not do.
+     *
+     * The vibration is not done here. It needs a Context, so the screens do it with
+     * [vibrateForNfcResult] on the result this returns.
      */
     suspend fun executeWithFeedback(commands: List<String>, tagName: String, action: String = "READ"): NfcExecutionResult {
         val result = executeCascade(commands, tagName)
@@ -188,29 +190,16 @@ class NfcCommandsPlugin @Inject constructor(
                 message = result.message,
             ),
         )
-        vibrate(result.success)
-        showToast(result.message)
+        showMessage(
+            result.message,
+            if (result.success) EventShowSnackbar.Type.Success else EventShowSnackbar.Type.Error
+        )
         return result
     }
 
-    private fun vibrate(success: Boolean) {
-        runCatching {
-            val vm = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as? VibratorManager ?: return
-            val effect = if (success) {
-                VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE)
-            } else {
-                VibrationEffect.createWaveform(longArrayOf(0, 150, 100, 150), -1)
-            }
-            vm.defaultVibrator.vibrate(effect)
-        }
-    }
-
-    private fun showToast(message: String) {
-        runCatching {
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(context, message, Toast.LENGTH_LONG).show()
-            }
-        }
+    /** Asks whatever screen is up to show [message]. Safe to call from any thread. */
+    internal fun showMessage(message: String, type: EventShowSnackbar.Type = EventShowSnackbar.Type.Info) {
+        rxBus.send(EventShowSnackbar(message, type))
     }
 
     /** Returns the pump's temporary basal duration step in minutes. Used by the build screen. */

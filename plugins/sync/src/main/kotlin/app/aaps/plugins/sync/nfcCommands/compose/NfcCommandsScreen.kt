@@ -48,6 +48,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -68,6 +69,7 @@ import app.aaps.core.ui.R as CoreUiR
 import app.aaps.plugins.sync.nfcCommands.NfcCommand
 import app.aaps.plugins.sync.nfcCommands.NfcCommandCode
 import app.aaps.plugins.sync.nfcCommands.NfcCommandsPlugin
+import app.aaps.plugins.sync.nfcCommands.vibrateForNfcResult
 import app.aaps.plugins.sync.nfcCommands.NfcParams
 import app.aaps.plugins.sync.nfcCommands.NfcCreatedTag
 import app.aaps.plugins.sync.nfcCommands.NfcLogEntry
@@ -299,6 +301,7 @@ private fun NfcTagsScreen(
     onBuild: () -> Unit,
     onEdit: (NfcCreatedTag) -> Unit,
 ) {
+    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     var refreshKey by remember { mutableIntStateOf(0) }
     var tags by remember { mutableStateOf<List<NfcCreatedTag>>(emptyList()) }
@@ -347,7 +350,10 @@ private fun NfcTagsScreen(
                 val tagName = tag.name
                 executeTarget = null
                 coroutineScope.launch {
-                    withContext(Dispatchers.IO) { plugin.executeWithFeedback(commands, tagName, action = "MANUAL") }
+                    val result = withContext(Dispatchers.IO) {
+                        plugin.executeWithFeedback(commands, tagName, action = "MANUAL")
+                    }
+                    vibrateForNfcResult(context, result.success)
                     refreshKey++
                 }
             },

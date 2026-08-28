@@ -2,7 +2,6 @@ package app.aaps.plugins.sync.nfcCommands
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -109,7 +109,9 @@ class NfcControlActivity : FragmentActivity() {
                                         pendingTag = null
                                         scope.launch {
                                             nfcPlugin.updateLastScanned(currentTag.tagUid)
-                                            nfcPlugin.executeWithFeedback(currentTag.commands, currentTag.name)
+                                            val result =
+                                                nfcPlugin.executeWithFeedback(currentTag.commands, currentTag.name)
+                                            vibrateForNfcResult(this@NfcControlActivity, result.success)
                                             withContext(Dispatchers.Main) {
                                                 if (hasBolusCommand(currentTag.commands)) {
                                                     var waited = 0L
@@ -192,9 +194,7 @@ class NfcControlActivity : FragmentActivity() {
             when (val prep = nfcPlugin.processIntent(intent)) {
                 is NfcPrepareResult.Error -> {
                     if (prep.message.isNotEmpty()) {
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(this@NfcControlActivity, prep.message, Toast.LENGTH_LONG).show()
-                        }
+                        nfcPlugin.showMessage(prep.message, EventShowSnackbar.Type.Error)
                     }
                     if (pendingTag == null) finish()
                 }
