@@ -1,6 +1,8 @@
 package app.aaps.plugins.configuration.setupwizard.elements
 
-import androidx.annotation.StringRes
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
@@ -13,13 +15,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.protection.PasswordCheck
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.ConfigPluginCard
@@ -28,17 +29,17 @@ import app.aaps.core.ui.compose.SelectionMode
 import dev.zacsweers.metro.Inject
 
 class SWPlugin @Inject constructor(
-    aapsLogger: AAPSLogger, rh: ResourceHelper, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck,
+    aapsLogger: AAPSLogger, rh: TextResolver, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck,
     private val activePlugin: ActivePlugin,
     private val configBuilder: ConfigBuilder
 ) : SWItem(aapsLogger, rh, rxBus, preferences, passwordCheck) {
 
     private var pType: PluginType? = null
-    @StringRes private var pluginDescription = 0
+    private var pluginDescription: TextRef? = null
     private var onPreferencesNavigate: ((pluginId: String) -> Unit)? = null
     private var onOpenPluginNavigate: ((pluginId: String) -> Unit)? = null
 
-    fun option(pType: PluginType, @StringRes pluginDescription: Int): SWPlugin {
+    fun option(pType: PluginType, pluginDescription: TextRef): SWPlugin {
         this.pType = pType
         this.pluginDescription = pluginDescription
         return this
@@ -62,9 +63,7 @@ class SWPlugin @Inject constructor(
         var confirmationMessage by remember { mutableStateOf<String?>(null) }
         var pendingAction by remember { mutableStateOf<(() -> Unit)?>(null) }
 
-        if (pluginDescription != 0) {
-            Text(text = stringResource(pluginDescription))
-        }
+        pluginDescription?.let { Text(text = stringResource(it)) }
 
         val selectionMode =
             if (isMultiSelect(pType)) SelectionMode.MULTI_SELECT else SelectionMode.SINGLE_SELECT
@@ -73,7 +72,7 @@ class SWPlugin @Inject constructor(
             plugins.forEach { plugin ->
                 val pluginEnabled = remember(refreshTick) { plugin.isEnabled(pType) }
                 val model = ConfigPluginUiModel(
-                    id = plugin.javaClass.simpleName,
+                    id = plugin::class.simpleName.orEmpty(),
                     name = plugin.name,
                     description = plugin.description,
                     composeIcon = plugin.pluginDescription.icon,
@@ -97,8 +96,8 @@ class SWPlugin @Inject constructor(
                             refreshTick++
                         }
                     },
-                    onSettingsClick = { onPreferencesNavigate?.invoke(plugin.javaClass.simpleName) },
-                    onOpenPluginClick = { onOpenPluginNavigate?.invoke(plugin.javaClass.simpleName) }
+                    onSettingsClick = { onPreferencesNavigate?.invoke(plugin::class.simpleName.orEmpty()) },
+                    onOpenPluginClick = { onOpenPluginNavigate?.invoke(plugin::class.simpleName.orEmpty()) }
                 )
             }
         }
@@ -109,20 +108,20 @@ class SWPlugin @Inject constructor(
                     confirmationMessage = null
                     pendingAction = null
                 },
-                title = { Text(stringResource(app.aaps.core.ui.R.string.confirmation)) },
+                title = { Text(stringResource(CoreUiStrings.confirmation)) },
                 text = { Text(confirmationMessage!!) },
                 confirmButton = {
                     TextButton(onClick = {
                         pendingAction?.invoke()
                         confirmationMessage = null
                         pendingAction = null
-                    }) { Text(stringResource(android.R.string.ok)) }
+                    }) { Text(stringResource(CoreUiStrings.ok)) }
                 },
                 dismissButton = {
                     TextButton(onClick = {
                         confirmationMessage = null
                         pendingAction = null
-                    }) { Text(stringResource(android.R.string.cancel)) }
+                    }) { Text(stringResource(CoreUiStrings.cancel)) }
                 }
             )
         }

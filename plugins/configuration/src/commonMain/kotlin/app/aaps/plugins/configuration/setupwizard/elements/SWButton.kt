@@ -1,27 +1,28 @@
 package app.aaps.plugins.configuration.setupwizard.elements
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.keys.interfaces.TextRef
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.protection.PasswordCheck
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.interfaces.Preferences
 import dev.zacsweers.metro.Inject
 
-class SWButton @Inject constructor(aapsLogger: AAPSLogger, rh: ResourceHelper, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck) : SWItem(aapsLogger, rh, rxBus, preferences, passwordCheck) {
+class SWButton @Inject constructor(aapsLogger: AAPSLogger, rh: TextResolver, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck) : SWItem(aapsLogger, rh, rxBus, preferences, passwordCheck) {
 
-    private var buttonRunnable: Runnable? = null
-    private var buttonText = 0
+    private var buttonRunnable: (() -> Unit)? = null
+    private var buttonText: TextRef? = null
     private var buttonValidator: (() -> Boolean)? = null
 
-    fun text(buttonText: Int): SWButton {
+    fun text(buttonText: TextRef): SWButton {
         this.buttonText = buttonText
         return this
     }
 
-    fun action(buttonRunnable: Runnable): SWButton {
+    fun action(buttonRunnable: () -> Unit): SWButton {
         this.buttonRunnable = buttonRunnable
         return this
     }
@@ -35,10 +36,10 @@ class SWButton @Inject constructor(aapsLogger: AAPSLogger, rh: ResourceHelper, r
     override fun Compose() {
         val enabled = buttonValidator?.invoke() != false
         androidx.compose.material3.Button(
-            onClick = { buttonRunnable?.run() },
+            onClick = { buttonRunnable?.invoke() },
             enabled = enabled
         ) {
-            Text(text = stringResource(buttonText))
+            buttonText?.let { Text(text = stringResource(it)) }
         }
     }
 }

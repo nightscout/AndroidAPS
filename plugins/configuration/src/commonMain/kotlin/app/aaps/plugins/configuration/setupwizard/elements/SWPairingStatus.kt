@@ -1,18 +1,18 @@
 package app.aaps.plugins.configuration.setupwizard.elements
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.plugins.configuration.ConfigurationStrings
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.res.stringResource
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.protection.PasswordCheck
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.plugins.configuration.R
 import dev.zacsweers.metro.Inject
 
 /**
@@ -23,7 +23,7 @@ import dev.zacsweers.metro.Inject
  */
 class SWPairingStatus @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    rh: TextResolver,
     rxBus: RxBus,
     preferences: Preferences,
     passwordCheck: PasswordCheck,
@@ -37,15 +37,15 @@ class SWPairingStatus @Inject constructor(
             val paired by nsClient.masterOrPairedClientFlow.collectAsState()
             Text(
                 text = stringResource(
-                    if (paired) R.string.setupwizard_pairing_status_client_paired
-                    else R.string.setupwizard_pairing_status_client_not_paired
+                    if (paired) ConfigurationStrings.setupwizard_pairing_status_client_paired
+                    else ConfigurationStrings.setupwizard_pairing_status_client_not_paired
                 )
             )
         } else {
             val count by nsClient.pairedClientCountFlow.collectAsState()
             Text(
-                text = if (count > 0) stringResource(R.string.setupwizard_pairing_status_master, count)
-                else stringResource(R.string.setupwizard_pairing_status_master_none)
+                text = if (count > 0) stringResource(ConfigurationStrings.setupwizard_pairing_status_master, count)
+                else stringResource(ConfigurationStrings.setupwizard_pairing_status_master_none)
             )
         }
     }

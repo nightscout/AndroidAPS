@@ -7,7 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.protection.PasswordCheck
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventStatus
 import app.aaps.core.keys.interfaces.Preferences
@@ -19,7 +19,7 @@ import kotlin.reflect.KClass
 
 class SWEventListener @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    rh: TextResolver,
     rxBus: RxBus,
     preferences: Preferences,
     passwordCheck: PasswordCheck
@@ -41,7 +41,6 @@ class SWEventListener @Inject constructor(
         return this
     }
 
-    override fun label(label: Int): SWEventListener = label(TextRef.AndroidRes(label))
 
     fun initialStatus(status: String): SWEventListener {
         this.status = status

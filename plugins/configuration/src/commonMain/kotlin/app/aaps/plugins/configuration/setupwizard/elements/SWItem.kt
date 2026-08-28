@@ -1,10 +1,10 @@
 package app.aaps.plugins.configuration.setupwizard.elements
 
-import androidx.annotation.StringRes
+import app.aaps.plugins.configuration.ConfigurationStrings
 import androidx.compose.runtime.Composable
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.protection.PasswordCheck
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventSWUpdate
 import app.aaps.core.keys.interfaces.PreferenceKey
@@ -23,7 +23,7 @@ import kotlin.time.Duration.Companion.seconds
 
 open class SWItem @Inject constructor(
     val aapsLogger: AAPSLogger,
-    val rh: ResourceHelper,
+    val rh: TextResolver,
     val rxBus: RxBus,
     val preferences: Preferences,
     val passwordCheck: PasswordCheck
@@ -35,7 +35,7 @@ open class SWItem @Inject constructor(
     private var scheduledEventPost: Job? = null
 
     var label: TextRef? = null
-    var comment: Int? = null
+    var comment: TextRef? = null
     var preference: PreferenceKey? = null
 
     open fun label(label: TextRef): SWItem {
@@ -43,10 +43,9 @@ open class SWItem @Inject constructor(
         return this
     }
 
-    /** Convenience for the many call sites that pass their own module's `R.string.x`. */
-    open fun label(@StringRes label: Int): SWItem = label(TextRef.AndroidRes(label))
+    /** Convenience for the many call sites that pass their own module's `ConfigurationStrings.x`. */
 
-    fun comment(@StringRes comment: Int): SWItem {
+    fun comment(comment: TextRef): SWItem {
         this.comment = comment
         return this
     }

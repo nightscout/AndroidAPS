@@ -11,6 +11,22 @@ plugins {
 
 // No `metro { interop { includeDagger() } }`: nothing here carries a javax annotation any more.
 
+// Generates ConfigurationStrings (commonMain) and ConfigurationStringIds (androidMain) from this
+// module's strings.xml, the same generator :ui, :plugins:automation and the :core modules use. The
+// strings themselves do not move, and AAPT keeps resolving them on Android exactly as before.
+val generateConfigurationStrings = tasks.register<GenerateKeyStringsTask>("generateConfigurationStrings") {
+    resDir.set(layout.projectDirectory.dir("src/androidMain/res"))
+    packageName.set("app.aaps.plugins.configuration")
+    owner.set("configuration")
+    objectName.set("ConfigurationStrings")
+    idsObjectName.set("ConfigurationStringIds")
+    reportFile.set(layout.buildDirectory.file("reports/configurationStrings/translations.txt"))
+    // Set explicitly: addGeneratedSourceDirectory only derives a convention from the task name, so
+    // both properties would land on one directory and the second file written would delete the first.
+    commonOutputDir.set(layout.buildDirectory.dir("generated/configurationStrings/common"))
+    androidOutputDir.set(layout.buildDirectory.dir("generated/configurationStrings/android"))
+}
+
 kotlin {
     android {
         namespace = "app.aaps.plugins.configuration"
@@ -40,7 +56,9 @@ kotlin {
     iosSimulatorArm64()
 
     sourceSets {
-        androidMain {
+        // The setup wizard and its elements live here. androidMain inherits all of this.
+        commonMain {
+            kotlin.srcDir(generateConfigurationStrings.flatMap { it.commonOutputDir })
             dependencies {
                 implementation(project(":core:data"))
                 implementation(project(":core:interfaces"))
@@ -49,6 +67,22 @@ kotlin {
                 implementation(project(":core:nssdk"))
                 implementation(project(":core:ui"))
 
+                api(libs.cmp.runtime)
+                api(libs.cmp.foundation)
+                api(libs.cmp.ui)
+                api(libs.cmp.material3)
+                api(libs.cmp.material.icons.extended)
+                // The JetBrains republish, not androidx.lifecycle: same package names, with Apple targets.
+                api(libs.jetbrains.lifecycle.viewmodel.compose)
+                api(libs.jetbrains.lifecycle.runtime.compose)
+                implementation(libs.cmp.ui.tooling.preview)
+            }
+        }
+
+        androidMain {
+            // Android only: the string name to R.string id map.
+            kotlin.srcDir(generateConfigurationStrings.flatMap { it.androidOutputDir })
+            dependencies {
                 // `api` as before: consumers resolve these transitively.
                 api(project.dependencies.platform(libs.androidx.compose.bom))
                 api(libs.androidx.compose.material3)

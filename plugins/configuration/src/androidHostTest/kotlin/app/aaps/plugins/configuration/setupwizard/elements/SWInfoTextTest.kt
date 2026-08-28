@@ -1,5 +1,6 @@
 package app.aaps.plugins.configuration.setupwizard.elements
 
+import app.aaps.core.ui.CoreUiStrings
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
@@ -41,7 +42,7 @@ class SWInfoTextTest {
 
     @Before
     fun setUp() {
-        resourceLabel = RuntimeEnvironment.getApplication().getString(R.string.result)
+        resourceLabel = RuntimeEnvironment.getApplication().getString(app.aaps.core.ui.R.string.result)
     }
 
     @Test
@@ -56,7 +57,7 @@ class SWInfoTextTest {
 
     @Test
     fun rendersResourceLabel_whenNoLiteral() {
-        val item = newInfoText().label(R.string.result)
+        val item = newInfoText().label(CoreUiStrings.result)
         compose.setContent {
             MaterialTheme { item.Compose() }
         }

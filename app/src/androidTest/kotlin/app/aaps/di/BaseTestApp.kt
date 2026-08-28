@@ -14,6 +14,7 @@ import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import app.aaps.di.metro.MetroGraphs
 import app.aaps.plugins.automation.AutomationStringIds
 import app.aaps.plugins.calibration.CalibrationStringIds
+import app.aaps.plugins.configuration.ConfigurationStringIds
 import app.aaps.plugins.main.MainStringIds
 import app.aaps.plugins.sensitivity.SensitivityStringIds
 import app.aaps.plugins.smoothing.SmoothingStringIds
@@ -132,6 +133,7 @@ open class BaseTestApp : Application(), MetroMemberInjector, MetroViewModelFacto
         TextRefIdRegistry.register("main") { name -> MainStringIds.idOf(name) }
         TextRefIdRegistry.register("ui") { name -> UiStringIds.idOf(name) }
         TextRefIdRegistry.register("automation") { name -> AutomationStringIds.idOf(name) }
+        TextRefIdRegistry.register("configuration") { name -> ConfigurationStringIds.idOf(name) }
     }
 }
 
