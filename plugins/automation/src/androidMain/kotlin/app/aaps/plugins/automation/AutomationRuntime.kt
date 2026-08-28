@@ -142,7 +142,8 @@ class AutomationRuntime @Inject constructor(
     // UI-only dependencies, forwarded to the Compose screen via [composeContent].
     private val uel: UserEntryLogger,
     private val profileRepository: ProfileRepository,
-    private val sceneApi: SceneAutomationApi
+    private val sceneApi: SceneAutomationApi,
+    private val pairedBtDevices: PairedBtDevices
 ) : Automation, PermissionProvider, BtConnectionSource {
 
     override val executionEnabled: Boolean get() = config.APS
@@ -161,7 +162,8 @@ class AutomationRuntime @Inject constructor(
             triggerFactory = triggerFactory,
             uel = uel,
             profileRepository = profileRepository,
-            sceneApi = sceneApi
+            sceneApi = sceneApi,
+            pairedBtDevices = pairedBtDevices
         )
 
     private var scope: CoroutineScope? = null

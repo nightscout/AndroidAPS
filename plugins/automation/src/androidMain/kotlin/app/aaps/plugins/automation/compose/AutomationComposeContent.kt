@@ -34,6 +34,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.objects.extensions.profileNames
 import app.aaps.core.ui.compose.ComposablePluginContent
@@ -41,6 +42,7 @@ import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.masterEditingEnabled
 import app.aaps.plugins.automation.AutomationEventFactory
 import app.aaps.plugins.automation.AutomationRuntime
+import app.aaps.plugins.automation.PairedBtDevices
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.actions.ActionFactory
 import app.aaps.plugins.automation.compose.actions.ActionOption
@@ -60,7 +62,8 @@ class AutomationComposeContent(
     private val triggerFactory: TriggerFactory,
     private val uel: UserEntryLogger,
     private val profileRepository: ProfileRepository,
-    private val sceneApi: SceneAutomationApi
+    private val sceneApi: SceneAutomationApi,
+    private val pairedBtDevices: PairedBtDevices
 ) : ComposablePluginContent {
 
     @Composable
@@ -255,9 +258,18 @@ class AutomationComposeContent(
             )
         }
 
+        // null means the Bluetooth permission is missing, which the user can fix, so it gets a
+        // message. An empty list just means no device is paired and says nothing.
+        val pairedNames = remember { pairedBtDevices.names() }
+        val noPermission = stringResource(app.aaps.core.ui.R.string.need_connect_permission)
+        LaunchedEffect(pairedNames) {
+            if (pairedNames == null) rxBus.send(EventShowSnackbar(noPermission, EventShowSnackbar.Type.Error))
+        }
+
         key(resetTick) {
             AutomationEditTriggerScreen(
                 root = holder.workingEvent().trigger,
+                bondedDevices = pairedNames.orEmpty(),
                 availableTriggers = plugin.getTriggerDummyObjects(),
                 createTrigger = { cn -> instantiateTrigger(cn) },
                 newConnector = { TriggerConnector(triggerFactory.deps) },

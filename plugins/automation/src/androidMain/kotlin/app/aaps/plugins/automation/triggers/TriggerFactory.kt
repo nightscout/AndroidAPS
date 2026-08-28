@@ -1,6 +1,5 @@
 package app.aaps.plugins.automation.triggers
 
-import android.content.Context
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
@@ -26,7 +25,6 @@ import kotlinx.serialization.json.JsonObject
 @SingleIn(AppScope::class)
 class TriggerFactory @Inject constructor(
     val deps: TriggerDeps,
-    private val context: Context,
     // Provider breaks a cycle: BtConnectionSource is AutomationRuntime, which reaches this factory.
     private val btConnectionSource: Provider<BtConnectionSource>,
     private val sceneApi: SceneAutomationApi,
@@ -36,7 +34,7 @@ class TriggerFactory @Inject constructor(
     private val aapsLogger get() = deps.aapsLogger
 
     /// The three triggers that need more than [TriggerDeps]; everything else takes deps alone.
-    fun triggerBTDevice() = TriggerBTDevice(deps, context, btConnectionSource())
+    fun triggerBTDevice() = TriggerBTDevice(deps, btConnectionSource())
     fun triggerWifiSsid() = TriggerWifiSsid(deps, receiverStatusStore)
     fun triggerSceneActive() = TriggerSceneActive(deps, sceneApi)
 

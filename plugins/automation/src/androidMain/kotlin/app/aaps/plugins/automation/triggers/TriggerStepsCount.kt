@@ -17,7 +17,7 @@ import kotlinx.serialization.json.put
 
 class TriggerStepsCount(deps: TriggerDeps) : Trigger(deps) {
 
-    var measurementDuration: InputDropdownMenu = InputDropdownMenu(rh, "5")
+    var measurementDuration: InputDropdownMenu = InputDropdownMenu("5")
     var stepsCount: InputDouble = InputDouble(100.0, 0.0, 20000.0, 10.0, NumberFormat.INTEGER)
     var comparator: Comparator = Comparator(rh).apply {
         value = Comparator.Compare.IS_EQUAL_OR_GREATER

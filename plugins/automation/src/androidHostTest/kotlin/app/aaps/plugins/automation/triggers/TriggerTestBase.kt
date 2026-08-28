@@ -50,7 +50,7 @@ open class TriggerTestBase : TestBaseWithProfile() {
     }
 
     val triggerFactory: TriggerFactory by lazy {
-        TriggerFactory(triggerDeps, context, { btConnectionSource }, sceneApi, receiverStatusStore)
+        TriggerFactory(triggerDeps, { btConnectionSource }, sceneApi, receiverStatusStore)
     }
 
 }

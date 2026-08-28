@@ -1,6 +1,5 @@
 package app.aaps.plugins.automation.actions
 
-import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Alarm
 import app.aaps.core.interfaces.alerts.ReminderScheduler
@@ -24,7 +23,6 @@ class ActionAlarm(
     rh: ResourceHelper,
     pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val rxBus: RxBus,
-    private val context: Context,
     private val dateUtil: DateUtil,
     private val reminderScheduler: ReminderScheduler,
     private val config: Config
@@ -38,12 +36,11 @@ class ActionAlarm(
         rh: ResourceHelper,
         pumpEnactResultProvider: Provider<PumpEnactResult>,
         rxBus: RxBus,
-        context: Context,
         dateUtil: DateUtil,
         reminderScheduler: ReminderScheduler,
         config: Config,
         text: String
-    ) : this(aapsLogger, rh, pumpEnactResultProvider, rxBus, context, dateUtil, reminderScheduler, config) {
+    ) : this(aapsLogger, rh, pumpEnactResultProvider, rxBus, dateUtil, reminderScheduler, config) {
         this.text = InputString(text)
     }
 

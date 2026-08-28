@@ -1,32 +1,15 @@
 package app.aaps.plugins.automation.elements
 
-import app.aaps.core.interfaces.resources.ResourceHelper
-
-class InputDropdownMenu(private val rh: ResourceHelper) {
-
-    private var itemList: ArrayList<CharSequence> = ArrayList()
-    var value: String = ""
-
-    constructor(rh: ResourceHelper, name: String) : this(rh) {
-        value = name
-    }
-
-    @Suppress("unused")
-    constructor(rh: ResourceHelper, another: InputDropdownMenu) : this(rh) {
-        value = another.value
-    }
+/**
+ * The value picked in a dropdown.
+ *
+ * The list of choices belongs to the Compose editor that draws the dropdown, not here - see
+ * `TriggerBTDeviceEditor` and `TriggerStepsCountEditor`. This class only carries the chosen value.
+ */
+class InputDropdownMenu(var value: String = "") {
 
     fun setValue(name: String): InputDropdownMenu {
         value = name
         return this
-    }
-
-    fun setList(values: ArrayList<CharSequence>) {
-        itemList = ArrayList(values)
-    }
-
-    // For testing only
-    fun add(item: String) {
-        itemList.add(item)
     }
 }

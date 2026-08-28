@@ -46,12 +46,12 @@ class AutomationJsonRoundTripTest : TestBase() {
     }
 
     private val triggerFactory: TriggerFactory by lazy {
-        TriggerFactory(triggerDeps, mock(), mock(), mock(), mock())
+        TriggerFactory(triggerDeps, mock(), mock(), mock())
     }
 
     private val actionFactory: ActionFactory by lazy {
         ActionFactory(
-            triggerDeps, aapsLogger, rh, pumpEnactResultProvider, mock(), mock(), dateUtil, mock(), mock(), mock(),
+            triggerDeps, aapsLogger, rh, pumpEnactResultProvider, mock(), dateUtil, mock(), mock(), mock(),
             profileFunction, mock(), mock(), mock(), mock(), mock(), preferences, mock(), mock(), mock(), mock(),
             mock(), mock()
         )

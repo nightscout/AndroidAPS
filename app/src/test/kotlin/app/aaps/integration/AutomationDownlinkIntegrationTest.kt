@@ -56,7 +56,7 @@ class AutomationDownlinkIntegrationTest : TestBaseWithProfile() {
     // RunningConfigurationImpl deps (client side) not provided by the base.
     // insulin / notificationManager / constraintsChecker come from TestBaseWithProfile.
     private val triggerFactory: TriggerFactory by lazy {
-        TriggerFactory(triggerDeps, context, mock(), mock(), mock())
+        TriggerFactory(triggerDeps, mock(), mock(), mock())
     }
     // Real, not mocked: the runtime rebuilds triggers from the synced JSON, and a mocked factory
     // would hand back null and silently drop every event.
@@ -118,12 +118,12 @@ class AutomationDownlinkIntegrationTest : TestBaseWithProfile() {
         masterRuntime = AutomationRuntime(
             eventFactory, aapsLogger, rh, masterPreferences, loop, rxBus, constraintsChecker,
             masterConfig, locationServiceController, dateUtil, activePlugin, reminderScheduler, actionFactory, triggerFactory, triggerDeps, receiverStatusStore,
-            uel, profileRepository, sceneApi
+            uel, profileRepository, sceneApi, mock()
         )
         clientRuntime = AutomationRuntime(
             eventFactory, aapsLogger, rh, preferences, loop, rxBus, constraintsChecker,
             config, locationServiceController, dateUtil, activePlugin, reminderScheduler, actionFactory, triggerFactory, triggerDeps, receiverStatusStore,
-            uel, profileRepository, sceneApi
+            uel, profileRepository, sceneApi, mock()
         )
         runningConfig = RunningConfigurationImpl(
             activePlugin, activeSceneSync, preferences, aapsLogger, config,

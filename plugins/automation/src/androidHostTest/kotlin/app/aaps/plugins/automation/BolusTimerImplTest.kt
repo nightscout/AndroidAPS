@@ -33,7 +33,7 @@ class BolusTimerImplTest : TestBase() {
 
 @Mock lateinit var actionFactory: app.aaps.plugins.automation.actions.ActionFactory
     private val triggerFactory: TriggerFactory by lazy {
-        TriggerFactory(triggerDeps, context, mock(), sceneApi, receiverStatusStore)
+        TriggerFactory(triggerDeps, mock(), sceneApi, receiverStatusStore)
     }
     // Real, not mocked: the runtime rebuilds triggers from JSON, and a mocked bundle would hand
     // nulls to element constructors that require them.
@@ -70,7 +70,7 @@ class BolusTimerImplTest : TestBase() {
         dateUtil = DateUtilImpl(context)
         automationRuntime = AutomationRuntime(
             eventFactory, aapsLogger, rh, preferences, loop, rxBus, constraintChecker, config, locationServiceController, dateUtil,
-            activePlugin, reminderScheduler, actionFactory, triggerFactory, triggerDeps, receiverStatusStore, uel, profileRepository, sceneApi
+            activePlugin, reminderScheduler, actionFactory, triggerFactory, triggerDeps, receiverStatusStore, uel, profileRepository, sceneApi, mock()
         )
     }
 

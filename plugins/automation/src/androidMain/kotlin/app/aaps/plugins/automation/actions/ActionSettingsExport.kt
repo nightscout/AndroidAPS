@@ -1,6 +1,5 @@
 package app.aaps.plugins.automation.actions
 
-import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FileDownload
 import app.aaps.core.data.model.TE
@@ -38,7 +37,6 @@ class ActionSettingsExport(
     pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val rxBus: RxBus,
     private val notificationManager: NotificationManager,
-    private val context: Context,
     private val dateUtil: DateUtil,
     private val config: Config,
     private val persistenceLayer: PersistenceLayer,

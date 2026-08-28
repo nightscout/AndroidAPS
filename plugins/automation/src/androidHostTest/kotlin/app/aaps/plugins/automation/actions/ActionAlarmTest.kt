@@ -30,7 +30,7 @@ class ActionAlarmTest : TestBaseWithProfile() {
         // because a reminder that rings is an Android platform concern. That makes this a plain mock
         // instead of a real object that silently fell into its own catch block in a JVM test.
         reminderScheduler = mock()
-        sut = ActionAlarm(aapsLogger, rh, Provider { pumpEnactResultProvider.get() }, rxBus, context, dateUtil, reminderScheduler, config)
+        sut = ActionAlarm(aapsLogger, rh, Provider { pumpEnactResultProvider.get() }, rxBus, dateUtil, reminderScheduler, config)
     }
 
     @Test fun friendlyNameTest() = runTest {

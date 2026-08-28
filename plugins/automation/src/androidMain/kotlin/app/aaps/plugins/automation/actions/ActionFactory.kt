@@ -1,6 +1,5 @@
 package app.aaps.plugins.automation.actions
 
-import android.content.Context
 import app.aaps.core.interfaces.alerts.ReminderScheduler
 import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.configuration.Config
@@ -49,7 +48,6 @@ class ActionFactory @Inject constructor(
     private val rh: ResourceHelper,
     private val pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val rxBus: RxBus,
-    private val context: Context,
     private val dateUtil: DateUtil,
     private val reminderScheduler: ReminderScheduler,
     private val config: Config,
@@ -77,8 +75,8 @@ class ActionFactory @Inject constructor(
         actionStartTempTarget(), actionStopProcessing(), actionStopTempTarget()
     )
 
-    fun actionAlarm() = ActionAlarm(aapsLogger, rh, pumpEnactResultProvider, rxBus, context, dateUtil, reminderScheduler, config)
-    fun actionAlarm(text: String) = ActionAlarm(aapsLogger, rh, pumpEnactResultProvider, rxBus, context, dateUtil, reminderScheduler, config, text)
+    fun actionAlarm() = ActionAlarm(aapsLogger, rh, pumpEnactResultProvider, rxBus, dateUtil, reminderScheduler, config)
+    fun actionAlarm(text: String) = ActionAlarm(aapsLogger, rh, pumpEnactResultProvider, rxBus, dateUtil, reminderScheduler, config, text)
     fun actionCarePortalEvent() = ActionCarePortalEvent(aapsLogger, rh, pumpEnactResultProvider, persistenceLayer, profileFunction, dateUtil, glucoseStatusProvider)
     fun actionDisableScene() = ActionDisableScene(aapsLogger, rh, pumpEnactResultProvider, sceneApi, sceneIconResolver)
     fun actionDummy() = ActionDummy(aapsLogger, rh, pumpEnactResultProvider)
@@ -91,7 +89,7 @@ class ActionFactory @Inject constructor(
     fun actionSendSMS() = ActionSendSMS(aapsLogger, rh, pumpEnactResultProvider, smsCommunicator)
     fun actionSettingsExport() =
         ActionSettingsExport(
-            aapsLogger, rh, pumpEnactResultProvider, rxBus, notificationManager, context, dateUtil, config,
+            aapsLogger, rh, pumpEnactResultProvider, rxBus, notificationManager, dateUtil, config,
             persistenceLayer, importExportPrefs, exportPasswordDataStore, preferences
         )
 

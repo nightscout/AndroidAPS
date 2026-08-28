@@ -37,11 +37,12 @@ kotlin {
         }
     }
 
-    // Declared even though nothing is in commonMain yet. Keeping the targets is what stops an
-    // android-only import from quietly reaching common code once files start moving across.
+    // Keeping the targets is what stops an android-only import from quietly reaching common code as
+    // files move across. commonMain holds the platform ports so far, such as PairedBtDevices.
     //
-    // Note for that move: the SMS action stays android only. There is no iOS equivalent an app can
-    // drive, so ActionSendSMS and the SmsCommunicator wiring behind it must not go to commonMain.
+    // Rule for that move: the action or trigger class itself is shared, and only the call it cannot
+    // make everywhere is lifted out behind an interface implemented per platform. ActionSendSMS needs
+    // nothing here - it already goes through the SmsCommunicator interface.
     iosArm64()
     iosSimulatorArm64()
 
