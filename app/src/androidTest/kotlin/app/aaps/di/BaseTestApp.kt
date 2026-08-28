@@ -9,8 +9,15 @@ import androidx.work.WorkerParameters
 import androidx.work.testing.SynchronousExecutor
 import androidx.work.testing.WorkManagerTestInitHelper
 import app.aaps.core.interfaces.di.MetroMemberInjector
+import app.aaps.core.interfaces.resources.TextRefIdRegistry
 import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import app.aaps.di.metro.MetroGraphs
+import app.aaps.plugins.calibration.CalibrationStringIds
+import app.aaps.plugins.main.MainStringIds
+import app.aaps.plugins.sensitivity.SensitivityStringIds
+import app.aaps.plugins.smoothing.SmoothingStringIds
+import app.aaps.pump.virtual.VirtualStringIds
+import app.aaps.ui.UiStringIds
 import com.google.firebase.Firebase
 import com.google.firebase.analytics.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -36,6 +43,11 @@ open class BaseTestApp : Application(), MetroMemberInjector, MetroViewModelFacto
 
     override fun onCreate() {
         super.onCreate()
+        // The same owners MainApp registers. This application replaces MainApp for instrumented tests,
+        // so without this every TextRef.Named has no id to resolve to and the screens render blank
+        // text - which fails as "the text is not displayed", a long way from the cause.
+        // `coreUi` and `implementation` are not here because ResourceHelperImpl registers those itself.
+        registerStringOwners()
         // Instrumented tests run under the production applicationId with Firebase auto-initialized (via
         // FirebaseInitProvider, before onCreate), so a crash on a CI emulator — e.g. an activity launched
         // outside a HiltAndroidRule scope whose graph access then fails (RequestDexcomPermissionActivity /
@@ -70,7 +82,7 @@ open class BaseTestApp : Application(), MetroMemberInjector, MetroViewModelFacto
             .build()
         WorkManagerTestInitHelper.initializeTestWorkManager(this, configuration)
     }
-
+
     /**
      * The Metro half of the bridge, resolved lazily because
      * the singleton component is built per test by `HiltAndroidRule`, so it does not exist in
@@ -82,7 +94,7 @@ open class BaseTestApp : Application(), MetroMemberInjector, MetroViewModelFacto
 
         fun metroGraphs(): MetroGraphs
     }
-
+
     private fun metroGraphs(): MetroGraphs =
         EntryPointAccessors.fromApplication(this, MetroBridgeEntryPoint::class.java).metroGraphs()
 
@@ -106,6 +118,19 @@ open class BaseTestApp : Application(), MetroMemberInjector, MetroViewModelFacto
     }
 
     override val metroViewModelFactory: MetroViewModelFactory get() = metroGraphs().viewModelFactory
+
+    /**
+     * Keep in step with `MainApp.registerStringOwners`. Each of these modules generates its own name
+     * to `R.string` id map, and the registry is what a `TextRef.Named` is resolved through.
+     */
+    private fun registerStringOwners() {
+        TextRefIdRegistry.register("virtual") { name -> VirtualStringIds.idOf(name) }
+        TextRefIdRegistry.register("smoothing") { name -> SmoothingStringIds.idOf(name) }
+        TextRefIdRegistry.register("calibration") { name -> CalibrationStringIds.idOf(name) }
+        TextRefIdRegistry.register("sensitivity") { name -> SensitivityStringIds.idOf(name) }
+        TextRefIdRegistry.register("main") { name -> MainStringIds.idOf(name) }
+        TextRefIdRegistry.register("ui") { name -> UiStringIds.idOf(name) }
+    }
 }
 
 @CustomTestApplication(BaseTestApp::class)
