@@ -27,7 +27,7 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.interfaces.utils.DateUtil
@@ -80,7 +80,7 @@ class WizardDialogViewModel @AssistedInject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val preferences: Preferences,
     private val config: Config,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val dateUtil: DateUtil,
     val decimalFormatter: DecimalFormatter,
     private val aapsLogger: AAPSLogger,

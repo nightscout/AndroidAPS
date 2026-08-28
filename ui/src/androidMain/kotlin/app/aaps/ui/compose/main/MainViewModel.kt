@@ -44,7 +44,7 @@ import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.interfaces.scenes.ActiveSceneSync
@@ -114,7 +114,7 @@ class MainViewModel @Inject constructor(
     val preferences: Preferences,
     private val fabricPrivacy: FabricPrivacy,
     private val iconsProvider: IconsProvider,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val dateUtil: DateUtil,
     private val overviewDataCache: OverviewDataCache,
     private val iobCobCalculator: IobCobCalculator,

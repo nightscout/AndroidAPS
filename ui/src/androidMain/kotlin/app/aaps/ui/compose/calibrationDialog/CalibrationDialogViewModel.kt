@@ -4,6 +4,7 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.ui.UiStrings
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TE
@@ -20,7 +21,6 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.XDripSource
 import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.utils.DateUtil
@@ -56,7 +56,7 @@ class CalibrationDialogViewModel @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil,
-    private val rh: ResourceHelper
+    private val rh: TextResolver
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CalibrationDialogUiState())

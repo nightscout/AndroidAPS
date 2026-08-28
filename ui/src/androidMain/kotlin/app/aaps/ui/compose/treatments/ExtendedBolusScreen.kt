@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import app.aaps.ui.UiStrings
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -40,7 +41,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.EB
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.objects.extensions.iobCalc
 import app.aaps.core.objects.extensions.isInProgress
 import app.aaps.core.ui.CoreUiStrings
@@ -157,7 +157,7 @@ private fun ExtendedBolusItem(
     onClick: () -> Unit,
     onLongPress: () -> Unit,
     profileFunction: ProfileFunction,
-    rh: ResourceHelper
+    rh: TextResolver
 ) {
     val dateUtil = LocalDateUtil.current
     val profile by produceState<app.aaps.core.interfaces.profile.EffectiveProfile?>(null, extendedBolus.timestamp) {

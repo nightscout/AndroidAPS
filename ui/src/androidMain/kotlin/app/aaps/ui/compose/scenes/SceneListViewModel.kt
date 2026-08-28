@@ -14,7 +14,7 @@ import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.profile.ProfileRepository
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
@@ -57,7 +57,7 @@ class SceneListViewModel @Inject constructor(
     private val activeSceneManager: ActiveSceneSync,
     private val persistenceLayer: PersistenceLayer,
     private val profileRepository: ProfileRepository,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val rxBus: RxBus,
     private val dateUtil: DateUtil,
     private val config: Config,

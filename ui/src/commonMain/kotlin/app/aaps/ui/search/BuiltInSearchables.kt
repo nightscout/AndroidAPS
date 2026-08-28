@@ -7,12 +7,12 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.TipsAndUpdates
 import androidx.compose.material.icons.outlined.Palette
 import app.aaps.ui.UiStrings
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
@@ -51,7 +51,7 @@ import dev.zacsweers.metro.binding
 @ContributesIntoSet(AppScope::class, binding = binding<SearchableProvider>())
 @SingleIn(AppScope::class)
 class BuiltInSearchables @Inject constructor(
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val insulinManager: InsulinManager,
     private val profileFunction: ProfileFunction,
     private val config: Config

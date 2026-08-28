@@ -21,7 +21,7 @@ import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.interfaces.tempTargets.ttDurationMinutes
@@ -64,7 +64,7 @@ class CarbsDialogViewModel @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     val preferences: Preferences,
     val config: Config,
-    val rh: ResourceHelper,
+    val rh: TextResolver,
     val dateUtil: DateUtil,
     private val rxBus: RxBus,
     @ApplicationScope private val appScope: CoroutineScope

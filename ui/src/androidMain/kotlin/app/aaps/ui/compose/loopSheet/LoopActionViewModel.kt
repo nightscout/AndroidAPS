@@ -10,7 +10,7 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAcceptOpenLoopChange
 import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
@@ -45,7 +45,7 @@ class LoopActionViewModel @Inject constructor(
     private val loop: Loop,
     private val activePlugin: ActivePlugin,
     private val profileFunction: ProfileFunction,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     rxBus: RxBus
 ) : ViewModel() {
 

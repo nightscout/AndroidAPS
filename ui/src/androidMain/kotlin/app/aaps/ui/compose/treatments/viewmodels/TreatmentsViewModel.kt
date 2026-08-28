@@ -10,7 +10,7 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
@@ -38,7 +38,7 @@ class TreatmentsViewModel @Inject constructor(
     val profileFunction: ProfileFunction,
     val activePlugin: ActivePlugin,
     val profileRepository: ProfileRepository,
-    val rh: ResourceHelper,
+    val rh: TextResolver,
     val translator: Translator,
     val dateUtil: DateUtil,
     val decimalFormatter: DecimalFormatter,

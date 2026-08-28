@@ -48,12 +48,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import app.aaps.ui.UiStrings
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.ICfg
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.DateTimeSection
@@ -78,7 +78,7 @@ import java.util.Calendar
  * @param hasReuseValues Whether reuse button should be shown
  * @param showNotesField Whether to show the notes input field (based on BooleanKey.OverviewShowNotesInDialogs)
  * @param initialTimestamp Initial timestamp (defaults to now)
- * @param rh ResourceHelper for string resources
+ * @param rh TextResolver for string resources
  * @param onNavigateBack Callback to navigate back
  * @param checkPumpCompatible Returns whether the profile's basal is deliverable by the current pump
  *        at the given percentage. Re-queried as the percentage changes so the screen can block
@@ -99,7 +99,7 @@ fun ProfileActivationScreen(
     hasReuseValues: Boolean = false,
     showNotesField: Boolean = true,
     initialTimestamp: Long,
-    rh: ResourceHelper,
+    rh: TextResolver,
     onNavigateBack: () -> Unit,
     checkPumpCompatible: (percentage: Int) -> Boolean = { true },
     insulinChoices: List<ICfg> = emptyList(),

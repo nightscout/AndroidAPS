@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
 import app.aaps.core.ui.CoreUiStrings
@@ -29,7 +30,6 @@ import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.ComposeScreenContent
 import app.aaps.core.ui.compose.LocalConfig
@@ -53,7 +53,7 @@ import kotlinx.coroutines.launch
  * direct dependencies on specific plugin implementations.
  *
  * @param activePlugin ActivePlugin instance for accessing plugins by interface
- * @param rh ResourceHelper instance
+ * @param rh TextResolver instance
  * @param builtInSearchables BuiltInSearchables instance (single source of truth for built-in screens)
  * @param configBuilder ConfigBuilder for the synced-selection gate (client APS visibility)
  * @param onBackClick Callback when back button is clicked
@@ -62,7 +62,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun AllPreferencesScreen(
     activePlugin: ActivePlugin,
-    rh: ResourceHelper,
+    rh: TextResolver,
     builtInSearchables: BuiltInSearchables,
     configBuilder: ConfigBuilder,
     onBackClick: () -> Unit

@@ -22,7 +22,7 @@ import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.interfaces.tempTargets.ttDurationMinutes
@@ -70,7 +70,7 @@ class InsulinDialogViewModel @Inject constructor(
     val decimalFormatter: DecimalFormatter,
     private val loop: Loop,
     val preferences: Preferences,
-    val rh: ResourceHelper,
+    val rh: TextResolver,
     val dateUtil: DateUtil,
     hardLimits: HardLimits,
     private val batchExecutor: BatchExecutor,

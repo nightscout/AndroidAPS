@@ -8,7 +8,7 @@ import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
@@ -55,7 +55,7 @@ class QuickWizardManagementViewModel @Inject constructor(
     private val rxBus: RxBus,
     private val constraintChecker: ConstraintsChecker,
     private val preferences: Preferences,
-    val rh: ResourceHelper,
+    val rh: TextResolver,
     val dateUtil: DateUtil,
     private val aapsLogger: AAPSLogger
 ) : ViewModel() {

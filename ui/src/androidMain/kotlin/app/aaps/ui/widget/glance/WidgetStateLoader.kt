@@ -1,6 +1,7 @@
 package app.aaps.ui.widget.glance
 
 import androidx.compose.ui.graphics.toArgb
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.ui.UiStrings
@@ -19,7 +20,6 @@ import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.overview.LastBgData
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.TrendCalculator
@@ -43,7 +43,7 @@ class WidgetStateLoader @Inject constructor(
     private val profileUtil: ProfileUtil,
     private val lastBgData: LastBgData,
     private val trendCalculator: TrendCalculator,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val dateUtil: DateUtil,
     private val aapsLogger: AAPSLogger,

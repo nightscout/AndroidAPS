@@ -23,13 +23,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.ui.UiStrings
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.wizard.QuickWizardMode
@@ -120,7 +120,7 @@ fun QuickWizardEditor(
     showWearOptions: Boolean,
     maxCarbs: Double,
     maxInsulin: Double,
-    rh: ResourceHelper,
+    rh: TextResolver,
     onModeChange: (QuickWizardMode) -> Unit,
     onButtonTextChange: (String) -> Unit,
     onInsulinChange: (Double) -> Unit,

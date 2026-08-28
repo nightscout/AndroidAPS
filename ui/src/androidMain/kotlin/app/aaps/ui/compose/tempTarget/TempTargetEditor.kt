@@ -19,6 +19,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.ui.UiStrings
 import app.aaps.core.ui.compose.stringResource
@@ -28,7 +29,6 @@ import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TTPreset
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.LocalDateUtil
@@ -67,7 +67,7 @@ fun TempTargetEditor(
     notes: String,
     showNotesField: Boolean,
     units: GlucoseUnit,
-    rh: ResourceHelper,
+    rh: TextResolver,
     onNameChange: (String) -> Unit,
     onTargetChange: (Double) -> Unit,
     onDurationChange: (Long) -> Unit,

@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.ui.UiStrings
 import app.aaps.core.data.ui.ConfirmationLine
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.ui.R
@@ -18,7 +18,7 @@ import app.aaps.core.ui.R
  */
 fun showWizardBolusConfirmation(
     rxBus: RxBus,
-    rh: ResourceHelper,
+    rh: TextResolver,
     title: String,
     icon: ImageVector,
     advisorApplies: Boolean,

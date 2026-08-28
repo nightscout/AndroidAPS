@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.ui.compose.LocalDateUtil
 
 /**
@@ -32,7 +32,7 @@ fun <T> TreatmentLazyColumn(
     items: List<T>,
     getTimestamp: (T) -> Long,
     getItemKey: (T) -> Any,
-    rh: ResourceHelper,
+    rh: TextResolver,
     itemContent: @Composable (T) -> Unit,
     modifier: Modifier = Modifier
 ) {

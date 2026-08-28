@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -47,7 +48,6 @@ import app.aaps.core.data.model.iobCalc
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDateUtil
@@ -188,7 +188,7 @@ private fun MealLinkItem(
     onLongPress: () -> Unit,
     onCalculatorClick: (BCR) -> Unit,
     profile: Profile?,
-    rh: ResourceHelper,
+    rh: TextResolver,
     showInvalidated: Boolean
 ) {
     val dateUtil = LocalDateUtil.current

@@ -12,7 +12,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
@@ -78,7 +78,7 @@ class ScenesViewModel @Inject constructor(
     private val rxBus: RxBus,
     private val sceneRepository: SceneStore,
     private val sceneActions: SceneActions,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val nsClient: NsClient
 ) : ViewModel() {
 

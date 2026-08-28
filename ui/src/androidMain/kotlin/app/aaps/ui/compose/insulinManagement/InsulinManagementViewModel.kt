@@ -25,7 +25,7 @@ import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
@@ -69,7 +69,7 @@ class InsulinManagementViewModel @Inject constructor(
     private val dateUtil: DateUtil,
     private val hardLimits: HardLimits,
     private val uel: UserEntryLogger,
-    val rh: ResourceHelper,
+    val rh: TextResolver,
     private val rxBus: RxBus,
     private val persistenceLayer: PersistenceLayer,
     private val profileRepository: ProfileRepository,

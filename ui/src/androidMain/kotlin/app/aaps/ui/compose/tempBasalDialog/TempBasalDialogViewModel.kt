@@ -16,7 +16,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.ui.clientcontrol.failText
@@ -45,7 +45,7 @@ class TempBasalDialogViewModel @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
     private val config: Config,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val batchExecutor: BatchExecutor,
     private val rxBus: RxBus,
     @ApplicationScope private val appScope: CoroutineScope

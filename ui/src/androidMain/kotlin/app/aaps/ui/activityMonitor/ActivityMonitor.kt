@@ -3,10 +3,10 @@ package app.aaps.ui.activityMonitor
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -37,7 +37,7 @@ data class ActivityStats(
 @SingleIn(AppScope::class)
 class ActivityMonitor @Inject constructor(
     private var aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val preferences: Preferences,
     private val dateUtil: DateUtil
 ) : Application.ActivityLifecycleCallbacks {

@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import app.aaps.ui.UiStrings
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -40,7 +41,6 @@ import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.objects.extensions.getCustomizedName
 import app.aaps.core.objects.profile.ProfileSealed
@@ -212,7 +212,7 @@ private fun ProfileSwitchItem(
     onClick: () -> Unit,
     onLongPress: () -> Unit,
     onClone: (ProfileSealed.PS) -> Unit,
-    rh: ResourceHelper,
+    rh: TextResolver,
     decimalFormatter: DecimalFormatter
 ) {
     val dateUtil = LocalDateUtil.current
