@@ -40,23 +40,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.math.RoundingMode
 
-data class TimeValue(
-    val timeSeconds: Int,
-    val value: Double
-)
-
-@Immutable
-data class SingleProfileState(
-    val name: String = "",
-    val mgdl: Boolean = true,
-    val dia: Double = 5.0,
-    val ic: List<TimeValue> = listOf(TimeValue(0, 0.0)),
-    val isf: List<TimeValue> = listOf(TimeValue(0, 0.0)),
-    val basal: List<TimeValue> = listOf(TimeValue(0, 0.0)),
-    val targetLow: List<TimeValue> = listOf(TimeValue(0, 0.0)),
-    val targetHigh: List<TimeValue> = listOf(TimeValue(0, 0.0))
-)
-
 @Immutable
 data class ProfileUiState(
     val profiles: List<String> = emptyList(),

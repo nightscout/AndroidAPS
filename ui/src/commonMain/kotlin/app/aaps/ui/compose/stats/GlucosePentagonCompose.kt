@@ -29,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.aaps.core.interfaces.stats.DexcomTIR
+import app.aaps.core.ui.compose.LocalDecimalFormatter
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.stringResource
@@ -213,7 +214,7 @@ internal fun GlucosePentagonCard(
             else               -> MaterialTheme.colorScheme.error
         }
         Text(
-            text = "${stringResource(UiStrings.cgp_pgr)}: ${"%.1f".format(cgpData.pgr)}",
+            text = "${stringResource(UiStrings.cgp_pgr)}: ${LocalDecimalFormatter.current.to1Decimal(cgpData.pgr)}",
             style = MaterialTheme.typography.titleMedium,
             color = pgrColor,
             textAlign = TextAlign.Center,
@@ -262,11 +263,12 @@ fun GlucosePentagonChart(
         stringResource(UiStrings.cgp_hyper),
         stringResource(UiStrings.cgp_mean_glucose)
     )
+    val decimalFormatter = LocalDecimalFormatter.current
     val axisValues = listOf(
-        "%.0f%%".format(cgpData.torPct),
-        "%.1f%%".format(cgpData.cvPct),
-        "%.1f%%".format(cgpData.hypoPct),
-        "%.1f%%".format(cgpData.hyperPct),
+        decimalFormatter.to0Decimal(cgpData.torPct, "%"),
+        decimalFormatter.to1Decimal(cgpData.cvPct, "%"),
+        decimalFormatter.to1Decimal(cgpData.hypoPct, "%"),
+        decimalFormatter.to1Decimal(cgpData.hyperPct, "%"),
         meanGlucoseFormatted
     )
 

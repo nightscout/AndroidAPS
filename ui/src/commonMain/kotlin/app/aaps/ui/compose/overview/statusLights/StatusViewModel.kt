@@ -5,13 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.rx.events.EventNsClientStatusUpdated
@@ -36,7 +37,6 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -52,7 +52,7 @@ import kotlinx.coroutines.withContext
 @ViewModelKey
 @Stable
 class StatusViewModel @Inject constructor(
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val activePlugin: ActivePlugin,
     private val profileFunction: ProfileFunction,
     private val config: Config,
@@ -133,7 +133,7 @@ class StatusViewModel @Inject constructor(
     }
 
     private suspend fun buildSensorStatus(): StatusItem {
-        val event = withContext(Dispatchers.IO) {
+        val event = withContext(aapsIoDispatcher) {
             persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)
         }
         val bgSource = activePlugin.activeBgSource
@@ -156,7 +156,7 @@ class StatusViewModel @Inject constructor(
     }
 
     private suspend fun buildInsulinStatus(isPatchPump: Boolean, maxReading: Double): StatusItem {
-        val event = withContext(Dispatchers.IO) {
+        val event = withContext(aapsIoDispatcher) {
             persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.INSULIN_CHANGE)
         }
         // AAPSCLIENT: local activePump is VirtualPump with a stale hardcoded reservoir.
@@ -193,14 +193,14 @@ class StatusViewModel @Inject constructor(
     }
 
     private suspend fun buildCannulaStatus(isPatchPump: Boolean, includeTddCalculation: Boolean = true): StatusItem {
-        val event = withContext(Dispatchers.IO) {
+        val event = withContext(aapsIoDispatcher) {
             persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.CANNULA_CHANGE)
         }
         val insulinUnit = rh.gs(CoreUiStrings.insulin_unit_shortname)
 
         // Calculate usage since last cannula change (expensive - can be deferred)
         val usage = if (includeTddCalculation && event != null) {
-            withContext(Dispatchers.IO) {
+            withContext(aapsIoDispatcher) {
                 tddCalculator.calculateInterval(event.timestamp, dateUtil.now(), allowMissingData = false)?.totalAmount ?: 0.0
             }
         } else 0.0
@@ -233,7 +233,7 @@ class StatusViewModel @Inject constructor(
         // If neither age nor level can be shown, skip entirely
         if (!hasAge && !hasLevel) return null
 
-        val event = if (hasAge) withContext(Dispatchers.IO) {
+        val event = if (hasAge) withContext(aapsIoDispatcher) {
             persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.PUMP_BATTERY_CHANGE)
         } else null
 
