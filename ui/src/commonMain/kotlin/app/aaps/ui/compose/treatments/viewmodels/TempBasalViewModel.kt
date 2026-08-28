@@ -9,6 +9,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -29,7 +30,6 @@ import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentConstants.TREATMENT_HISTORY_DAYS
 import dev.zacsweers.metro.Inject
 import kotlin.time.Duration.Companion.milliseconds
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -205,7 +205,7 @@ class TempBasalViewModel @Inject constructor(
         val selected = uiState.value.selectedItems
         if (selected.isEmpty()) return
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(aapsIoDispatcher) {
             try {
                 selected.forEach { tempBasal ->
                     val isFakeExtended = tempBasal.type == TB.Type.FAKE_EXTENDED

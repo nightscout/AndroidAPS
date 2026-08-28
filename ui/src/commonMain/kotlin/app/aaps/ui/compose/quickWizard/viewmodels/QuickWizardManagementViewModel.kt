@@ -3,6 +3,7 @@ package app.aaps.ui.compose.quickWizard.viewmodels
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -26,7 +27,6 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -277,7 +277,7 @@ class QuickWizardManagementViewModel @Inject constructor(
         if (uiState.value.entries.map { it.guid() } != reorderGuids) return failReorder()
         val expectedGuids = order.map { reorderGuids[it] }
         return try {
-            val applied = withContext(Dispatchers.IO) { quickWizard.reorder(order) }
+            val applied = withContext(aapsIoDispatcher) { quickWizard.reorder(order) }
             if (!applied) return failReorder()
             rxBus.send(EventQuickWizardChange())
             // Hold the working order until the reloaded list carries the new arrangement, otherwise

@@ -4,15 +4,17 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.aaps.core.data.model.RM
+import app.aaps.core.data.model.TT
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
@@ -20,11 +22,11 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.SelectableListToolbar
 import app.aaps.core.ui.compose.ToolbarConfig
+import app.aaps.core.ui.extensions.friendlyDescription
 import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentConstants.TREATMENT_HISTORY_DAYS
 import dev.zacsweers.metro.Inject
 import kotlin.time.Duration.Companion.milliseconds
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -36,33 +38,34 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 /**
- * ViewModel for RunningModeScreen managing running mode state and business logic.
+ * ViewModel for TempTargetScreen managing temporary target state and business logic.
  */
 @Stable
-class RunningModeViewModel @Inject constructor(
+class TempTargetViewModel @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
+    private val profileUtil: ProfileUtil,
     val rh: TextResolver,
     val dateUtil: DateUtil,
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(RunningModeUiState())
-    val uiState: StateFlow<RunningModeUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(TempTargetUiState())
+    val uiState: StateFlow<TempTargetUiState> = _uiState.asStateFlow()
 
     init {
         loadData()
-        observeRunningModeChanges()
+        observeTempTargetChanges()
     }
 
     /**
-     * Load running modes
+     * Load temporary targets
      */
     fun loadData() {
         viewModelScope.launch {
             // Only show loading on initial load, not on refreshes
             val currentState = uiState.value
-            if (currentState.runningModes.isEmpty()) {
+            if (currentState.tempTargets.isEmpty()) {
                 _uiState.update { it.copy(isLoading = true) }
             }
 
@@ -70,35 +73,35 @@ class RunningModeViewModel @Inject constructor(
                 val now = dateUtil.now()
                 val millsToThePast = T.days(TREATMENT_HISTORY_DAYS).msecs()
 
-                val runningModes = if (currentState.showInvalidated) {
-                    persistenceLayer.getRunningModesIncludingInvalidFromTime(now - millsToThePast, false)
+                val tempTargets = if (currentState.showInvalidated) {
+                    persistenceLayer.getTemporaryTargetDataIncludingInvalidFromTime(now - millsToThePast, false)
                 } else {
-                    persistenceLayer.getRunningModesFromTime(now - millsToThePast, false)
+                    persistenceLayer.getTemporaryTargetDataFromTime(now - millsToThePast, false)
                 }
 
-                val activeMode = persistenceLayer.getRunningModeActiveAt(dateUtil.now())
+                val activeTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
                 _uiState.update {
                     it.copy(
-                        runningModes = runningModes,
-                        activeMode = activeMode,
+                        tempTargets = tempTargets,
+                        activeTarget = activeTarget,
                         isLoading = false
                     )
                 }
             } catch (e: Exception) {
-                aapsLogger.error(LTag.UI, "Failed to load running modes", e)
+                aapsLogger.error(LTag.UI, "Failed to load temp targets", e)
                 _uiState.update { it.copy(isLoading = false) }
-                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error loading running modes", EventShowSnackbar.Type.Error))
+                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error loading temp targets", EventShowSnackbar.Type.Error))
             }
         }
     }
 
     /**
-     * Subscribe to running mode change events using Flow
+     * Subscribe to temp target change events using Flow
      */
     @OptIn(FlowPreview::class)
-    private fun observeRunningModeChanges() {
+    private fun observeTempTargetChanges() {
         persistenceLayer
-            .observeChanges<RM>()
+            .observeChanges<TT>()
             .debounce(1000L) // 1 second debounce
             .onEach { loadData() }
             .launchIn(viewModelScope)
@@ -115,7 +118,7 @@ class RunningModeViewModel @Inject constructor(
     /**
      * Enter selection mode with initial item selected
      */
-    fun enterSelectionMode(item: RM) {
+    fun enterSelectionMode(item: TT) {
         _uiState.update {
             it.copy(
                 isRemovingMode = true,
@@ -139,7 +142,7 @@ class RunningModeViewModel @Inject constructor(
     /**
      * Toggle selection of an item
      */
-    fun toggleSelection(item: RM) {
+    fun toggleSelection(item: TT) {
         _uiState.update { state ->
             val newSelection = if (item in state.selectedItems) {
                 state.selectedItems - item
@@ -151,9 +154,9 @@ class RunningModeViewModel @Inject constructor(
     }
 
     /**
-     * Get currently active running mode
+     * Get currently active temporary target
      */
-    fun getActiveMode(): RM? = uiState.value.activeMode
+    fun getActiveTarget(): TT? = uiState.value.activeTarget
 
     /**
      * Prepare delete confirmation message
@@ -163,8 +166,8 @@ class RunningModeViewModel @Inject constructor(
         if (selected.isEmpty()) return ""
 
         return if (selected.size == 1) {
-            val rm = selected.first()
-            "${rh.gs(CoreUiStrings.running_mode)}: ${rm.mode.name}\n${dateUtil.dateAndTimeString(rm.timestamp)}"
+            val tt = selected.first()
+            "${rh.gs(CoreUiStrings.temporary_target)}: ${tt.friendlyDescription(profileUtil.units, rh, profileUtil)}\n${dateUtil.dateAndTimeString(tt.timestamp)}"
         } else {
             rh.gs(CoreUiStrings.confirm_remove_multiple_items, selected.size)
         }
@@ -177,25 +180,28 @@ class RunningModeViewModel @Inject constructor(
         val selected = uiState.value.selectedItems
         if (selected.isEmpty()) return
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(aapsIoDispatcher) {
             try {
-                selected.forEach { rm ->
-                    persistenceLayer.invalidateRunningMode(
-                        id = rm.id,
-                        action = Action.LOOP_REMOVED,
+                selected.forEach { tt ->
+                    persistenceLayer.invalidateTemporaryTarget(
+                        id = tt.id,
+                        action = Action.TT_REMOVED,
                         source = Sources.Treatments,
                         note = null,
                         listValues = listOfNotNull(
-                            ValueWithUnit.Timestamp(rm.timestamp),
-                            ValueWithUnit.RMMode(rm.mode),
-                            ValueWithUnit.Minute(rm.duration.milliseconds.inWholeMinutes.toInt())
+                            ValueWithUnit.Timestamp(tt.timestamp),
+                            ValueWithUnit.TETTReason(tt.reason),
+                            ValueWithUnit.Mgdl(tt.lowTarget),
+                            ValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
+                            ValueWithUnit.Minute(tt.duration.milliseconds.inWholeMinutes.toInt())
                         )
                     )
                 }
                 exitSelectionMode()
                 loadData()
             } catch (e: Exception) {
-                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error deleting running modes", EventShowSnackbar.Type.Error))
+                aapsLogger.error(LTag.UI, "Failed to delete temp targets", e)
+                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error deleting temp targets", EventShowSnackbar.Type.Error))
             }
         }
     }
@@ -223,14 +229,14 @@ class RunningModeViewModel @Inject constructor(
 }
 
 /**
- * UI state for RunningModeScreen
+ * UI state for TempTargetScreen
  */
 @Immutable
-data class RunningModeUiState(
-    val runningModes: List<RM> = emptyList(),
-    val activeMode: RM? = null,
+data class TempTargetUiState(
+    val tempTargets: List<TT> = emptyList(),
+    val activeTarget: TT? = null,
     val isLoading: Boolean = true,
     val showInvalidated: Boolean = false,
     val isRemovingMode: Boolean = false,
-    val selectedItems: Set<RM> = emptySet()
+    val selectedItems: Set<TT> = emptySet()
 )

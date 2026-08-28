@@ -8,6 +8,7 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TTPreset
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
@@ -377,7 +378,7 @@ class TempTargetManagementViewModel @Inject constructor(
         val reordered = order.map { reorderPresets[it] }
         val expectedIds = reordered.map { it.id }
         return try {
-            withContext(Dispatchers.IO) {
+            withContext(aapsIoDispatcher) {
                 preferences.put(StringNonKey.TempTargetPresets, reordered.toJson())
             }
             // Hold the working order until the reloaded state carries the new arrangement — clearing

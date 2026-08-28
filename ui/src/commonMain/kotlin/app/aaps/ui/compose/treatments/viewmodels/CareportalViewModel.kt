@@ -4,70 +4,67 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.aaps.core.data.model.EPS
-import app.aaps.core.data.model.PS
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.profile.ProfileRepository
-import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.objects.profile.ProfileSealed
+import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.MenuItemData
 import app.aaps.core.ui.compose.SelectableListToolbar
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentConstants.TREATMENT_HISTORY_DAYS
 import dev.zacsweers.metro.Inject
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 /**
- * ViewModel for ProfileSwitchScreen managing profile switch state and business logic.
+ * ViewModel for CareportalScreen managing therapy event state and business logic.
  */
 @Stable
-class ProfileSwitchViewModel @Inject constructor(
+class CareportalViewModel @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
-    private val profileRepository: ProfileRepository,
     val rh: TextResolver,
+    private val translator: Translator,
     val dateUtil: DateUtil,
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(ProfileSwitchUiState())
-    val uiState: StateFlow<ProfileSwitchUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(CareportalUiState())
+    val uiState: StateFlow<CareportalUiState> = _uiState.asStateFlow()
 
     init {
         loadData()
-        observeProfileSwitchChanges()
+        observeTherapyEventChanges()
     }
 
     /**
-     * Load profile switches (both PS and EPS)
+     * Load therapy events
      */
     fun loadData() {
         viewModelScope.launch {
             // Only show loading on initial load, not on refreshes
             val currentState = uiState.value
-            if (currentState.profileSwitches.isEmpty()) {
+            if (currentState.therapyEvents.isEmpty()) {
                 _uiState.update { it.copy(isLoading = true) }
             }
 
@@ -75,48 +72,33 @@ class ProfileSwitchViewModel @Inject constructor(
                 val now = dateUtil.now()
                 val millsToThePast = T.days(TREATMENT_HISTORY_DAYS).msecs()
 
-                val ps = if (currentState.showInvalidated) {
-                    persistenceLayer.getProfileSwitchesIncludingInvalidFromTime(now - millsToThePast, false)
+                val therapyEvents = if (currentState.showInvalidated) {
+                    persistenceLayer.getTherapyEventDataIncludingInvalidFromTime(now - millsToThePast, false)
                 } else {
-                    persistenceLayer.getProfileSwitchesFromTime(now - millsToThePast, false)
+                    persistenceLayer.getTherapyEventDataFromTime(now - millsToThePast, false)
                 }
 
-                val eps = if (currentState.showInvalidated) {
-                    persistenceLayer.getEffectiveProfileSwitchesIncludingInvalidFromTime(now - millsToThePast, false)
-                } else {
-                    persistenceLayer.getEffectiveProfileSwitchesFromTime(now - millsToThePast, false)
-                }
-
-                val profileSwitches = (ps.map { ProfileSealed.PS(value = it, activePlugin = null) } +
-                    eps.map { ProfileSealed.EPS(value = it, activePlugin = null) })
-                    .sortedByDescending { it.timestamp }
-
-                val activeEps = persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now())
                 _uiState.update {
                     it.copy(
-                        profileSwitches = profileSwitches,
-                        activeProfile = activeEps?.let { eps -> ProfileSealed.EPS(value = eps, activePlugin = null) },
+                        therapyEvents = therapyEvents,
                         isLoading = false
                     )
                 }
             } catch (e: Exception) {
-                aapsLogger.error(LTag.UI, "Failed to load profile switches", e)
+                aapsLogger.error(LTag.UI, "Failed to load therapy events", e)
                 _uiState.update { it.copy(isLoading = false) }
-                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error loading profile switches", EventShowSnackbar.Type.Error))
+                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error loading therapy events", EventShowSnackbar.Type.Error))
             }
         }
     }
 
     /**
-     * Subscribe to profile switch change events using Flow
-     * Observes both ProfileSwitch and EffectiveProfileSwitch changes
+     * Subscribe to therapy event change events using Flow
      */
     @OptIn(FlowPreview::class)
-    private fun observeProfileSwitchChanges() {
-        merge(
-            persistenceLayer.observeChanges<PS>(),
-            persistenceLayer.observeChanges<EPS>()
-        )
+    private fun observeTherapyEventChanges() {
+        persistenceLayer
+            .observeChanges<TE>()
             .debounce(1000L) // 1 second debounce
             .onEach { loadData() }
             .launchIn(viewModelScope)
@@ -133,7 +115,7 @@ class ProfileSwitchViewModel @Inject constructor(
     /**
      * Enter selection mode with initial item selected
      */
-    fun enterSelectionMode(item: ProfileSealed) {
+    fun enterSelectionMode(item: TE) {
         _uiState.update {
             it.copy(
                 isRemovingMode = true,
@@ -157,7 +139,7 @@ class ProfileSwitchViewModel @Inject constructor(
     /**
      * Toggle selection of an item
      */
-    fun toggleSelection(item: ProfileSealed) {
+    fun toggleSelection(item: TE) {
         _uiState.update { state ->
             val newSelection = if (item in state.selectedItems) {
                 state.selectedItems - item
@@ -169,11 +151,6 @@ class ProfileSwitchViewModel @Inject constructor(
     }
 
     /**
-     * Get currently active effective profile switch
-     */
-    fun getActiveProfile(): ProfileSealed? = uiState.value.activeProfile
-
-    /**
      * Prepare delete confirmation message
      */
     fun getDeleteConfirmationMessage(): String {
@@ -181,40 +158,41 @@ class ProfileSwitchViewModel @Inject constructor(
         if (selected.isEmpty()) return ""
 
         return if (selected.size == 1) {
-            val ps = selected.first()
-            "${rh.gs(CoreUiStrings.careportal_profileswitch)}: ${ps.profileName}\n${dateUtil.dateAndTimeString(ps.timestamp)}"
+            val te = selected.first()
+            "${rh.gs(CoreUiStrings.event_type)}: ${translator.translate(te.type)}\n" +
+                "${rh.gs(CoreUiStrings.notes_label)}: ${te.note ?: ""}\n" +
+                "${rh.gs(CoreUiStrings.date)}: ${dateUtil.dateAndTimeString(te.timestamp)}"
         } else {
             rh.gs(CoreUiStrings.confirm_remove_multiple_items, selected.size)
         }
     }
 
     /**
-     * Delete selected items (only PS can be deleted, not EPS)
+     * Delete selected items
      */
     fun deleteSelected() {
         val selected = uiState.value.selectedItems
         if (selected.isEmpty()) return
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(aapsIoDispatcher) {
             try {
-                selected.forEach { profileSwitch ->
-                    if (profileSwitch is ProfileSealed.PS) {
-                        persistenceLayer.invalidateProfileSwitch(
-                            id = profileSwitch.id,
-                            action = Action.PROFILE_SWITCH_REMOVED,
-                            source = Sources.Treatments,
-                            note = profileSwitch.profileName,
-                            listValues = listOf(
-                                ValueWithUnit.Timestamp(profileSwitch.timestamp)
-                            )
+                selected.forEach { te ->
+                    persistenceLayer.invalidateTherapyEvent(
+                        id = te.id,
+                        action = Action.CAREPORTAL_REMOVED,
+                        source = Sources.Treatments,
+                        note = te.note,
+                        listValues = listOf(
+                            ValueWithUnit.Timestamp(te.timestamp),
+                            ValueWithUnit.TEType(te.type)
                         )
-                    }
+                    )
                 }
                 exitSelectionMode()
                 loadData()
             } catch (e: Exception) {
-                aapsLogger.error(LTag.UI, "Failed to delete profile switches", e)
-                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error deleting profile switches", EventShowSnackbar.Type.Error))
+                aapsLogger.error(LTag.UI, "Failed to delete therapy events", e)
+                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error deleting therapy events", EventShowSnackbar.Type.Error))
             }
         }
     }
@@ -222,7 +200,7 @@ class ProfileSwitchViewModel @Inject constructor(
     /**
      * Get toolbar configuration for current state
      */
-    fun getToolbarConfig(onNavigateBack: () -> Unit, onDeleteClick: () -> Unit): ToolbarConfig {
+    fun getToolbarConfig(onNavigateBack: () -> Unit, onDeleteClick: () -> Unit, menuItems: List<MenuItemData>): ToolbarConfig {
         val state = uiState.value
         return SelectableListToolbar(
             isRemovingMode = state.isRemovingMode,
@@ -236,31 +214,20 @@ class ProfileSwitchViewModel @Inject constructor(
             },
             rh = rh,
             showInvalidated = state.showInvalidated,
-            onToggleInvalidated = { toggleInvalidated() }
+            onToggleInvalidated = { toggleInvalidated() },
+            menuItems = menuItems
         )
-    }
-
-    /**
-     * Persist a PureProfile (derived from an existing ProfileSwitch) into the local profile
-     * store as a new SingleProfile with the given [name]. Used by the "clone to local profile"
-     * action on the ProfileSwitchScreen.
-     */
-    fun copyToLocalProfile(profile: PureProfile, name: String) {
-        viewModelScope.launch {
-            profileRepository.add(profileRepository.copyFrom(profile, name))
-        }
     }
 }
 
 /**
- * UI state for ProfileSwitchScreen
+ * UI state for CareportalScreen
  */
 @Immutable
-data class ProfileSwitchUiState(
-    val profileSwitches: List<ProfileSealed> = emptyList(),
-    val activeProfile: ProfileSealed? = null,
+data class CareportalUiState(
+    val therapyEvents: List<TE> = emptyList(),
     val isLoading: Boolean = true,
     val showInvalidated: Boolean = false,
     val isRemovingMode: Boolean = false,
-    val selectedItems: Set<ProfileSealed> = emptySet()
+    val selectedItems: Set<TE> = emptySet()
 )

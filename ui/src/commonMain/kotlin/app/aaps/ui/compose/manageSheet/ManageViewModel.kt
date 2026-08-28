@@ -8,6 +8,7 @@ import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ui.ConfirmationLine
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor
@@ -42,7 +43,6 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -137,7 +137,7 @@ class ManageViewModel @Inject constructor(
                 showCancelExtendedBolus = false
                 cancelExtendedBolusText = ""
             } else {
-                val activeExtendedBolus = withContext(Dispatchers.IO) {
+                val activeExtendedBolus = withContext(aapsIoDispatcher) {
                     persistenceLayer.getExtendedBolusActiveAt(dateUtil.now())
                 }
                 if (activeExtendedBolus != null) {
@@ -163,7 +163,7 @@ class ManageViewModel @Inject constructor(
                 showCancelTempBasal = false
                 cancelTempBasalText = ""
             } else {
-                val activeTemp = withContext(Dispatchers.IO) {
+                val activeTemp = withContext(aapsIoDispatcher) {
                     processedTbrEbData.getTempBasalIncludingConvertedExtended(dateUtil.now())
                 }
                 if (activeTemp != null) {

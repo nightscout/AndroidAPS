@@ -9,6 +9,7 @@ import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.TDD
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -101,7 +102,7 @@ class StatsViewModel @Inject constructor(
     private fun loadTddStats() {
         viewModelScope.launch {
             _uiState.update { it.copy(tddLoading = true) }
-            val data = withContext(Dispatchers.IO) {
+            val data = withContext(aapsIoDispatcher) {
                 val tdds = tddCalculator.calculate(7, allowMissingDays = true)
                 val averageTdd = tddCalculator.averageTDD(tdds)
                 val todayTdd = tddCalculator.calculateToday()
@@ -114,7 +115,7 @@ class StatsViewModel @Inject constructor(
     private fun loadTirStats() {
         viewModelScope.launch {
             _uiState.update { it.copy(tirLoading = true) }
-            val data = withContext(Dispatchers.IO) {
+            val data = withContext(aapsIoDispatcher) {
                 val lowTirMgdl = Constants.STATS_RANGE_LOW_MMOL * Constants.MMOLL_TO_MGDL
                 val highTirMgdl = Constants.STATS_RANGE_HIGH_MMOL * Constants.MMOLL_TO_MGDL
                 val lowTitMgdl = Constants.STATS_TARGET_LOW_MMOL * Constants.MMOLL_TO_MGDL
@@ -144,7 +145,7 @@ class StatsViewModel @Inject constructor(
     private fun loadDexcomTirStats() {
         viewModelScope.launch {
             _uiState.update { it.copy(dexcomTirLoading = true) }
-            val data = withContext(Dispatchers.IO) {
+            val data = withContext(aapsIoDispatcher) {
                 dexcomTirCalculator.calculate()
             }
             _uiState.update { it.copy(dexcomTirData = data, dexcomTirLoading = false) }
@@ -154,7 +155,7 @@ class StatsViewModel @Inject constructor(
     private fun loadActivityStats() {
         viewModelScope.launch {
             _uiState.update { it.copy(activityLoading = true) }
-            val data = withContext(Dispatchers.IO) {
+            val data = withContext(aapsIoDispatcher) {
                 activityMonitor.getActivityStats()
             }
             _uiState.update { it.copy(activityStatsData = data, activityLoading = false) }
@@ -221,7 +222,7 @@ class StatsViewModel @Inject constructor(
             val phase1Chunks = 8
             val totalChunks = phase1Chunks + 4 // 8 + 4 = 12 total
             for (chunk in 0 until phase1Chunks) {
-                val chunkTdds = withContext(Dispatchers.IO) {
+                val chunkTdds = withContext(aapsIoDispatcher) {
                     val timestamp = now - chunk.toLong() * 7 * dayMs
                     tddCalculator.calculate(timestamp, 7, allowMissingDays = true)
                 }
@@ -233,7 +234,7 @@ class StatsViewModel @Inject constructor(
 
             // Phase 2: Load older data in 28-day chunks (4 × 28 = 112 more days, total 168)
             for (chunk in 0 until 4) {
-                val chunkTdds = withContext(Dispatchers.IO) {
+                val chunkTdds = withContext(aapsIoDispatcher) {
                     val timestamp = now - (56 + chunk.toLong() * 28) * dayMs
                     tddCalculator.calculate(timestamp, 28, allowMissingDays = true)
                 }
@@ -334,7 +335,7 @@ class StatsViewModel @Inject constructor(
     fun confirmResetActivityStats() {
         _uiState.update { it.copy(showResetActivityDialog = false) }
         uel.log(Action.STAT_RESET, Sources.Stats)
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(aapsIoDispatcher) {
             activityMonitor.reset()
             loadActivityStats()
         }

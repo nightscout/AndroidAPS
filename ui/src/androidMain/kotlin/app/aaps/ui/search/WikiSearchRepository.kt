@@ -1,11 +1,11 @@
 package app.aaps.ui.search
 
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.ui.search.SearchableItem
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
@@ -48,7 +48,7 @@ class WikiSearchRepository @Inject constructor(
         if (query.length < MIN_QUERY_LENGTH) return WikiSearchResult.Success(emptyList())
         if (!receiverStatusStore.isConnected) return WikiSearchResult.Offline
 
-        return withContext(Dispatchers.IO) {
+        return withContext(aapsIoDispatcher) {
             try {
                 val url = API_URL.toHttpUrl().newBuilder()
                     .addQueryParameter("q", "project:$PROJECT_SLUG $query")

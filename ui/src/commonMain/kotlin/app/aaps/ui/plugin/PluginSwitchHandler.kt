@@ -2,12 +2,12 @@ package app.aaps.ui.plugin
 
 import androidx.compose.runtime.Immutable
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -57,7 +57,7 @@ class PluginSwitchHandler(
     private val configBuilder: ConfigBuilder,
     private val onSwitched: () -> Unit,
     // Dispatcher for the blocking config work; overridable so tests can run it in virtual time.
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val ioDispatcher: CoroutineDispatcher = aapsIoDispatcher
 ) {
 
     private val switchMutex = Mutex()

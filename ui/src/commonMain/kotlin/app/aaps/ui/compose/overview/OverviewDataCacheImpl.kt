@@ -15,6 +15,7 @@ import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
@@ -94,7 +95,6 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
@@ -164,7 +164,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
     // Only used on DB-observation paths (observeDatabase == true).
     private val iobCobCalculator: IobCobCalculator get() = iobCobCalculatorProvider()
 
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private val scope = CoroutineScope(SupervisorJob() + aapsIoDispatcher)
 
     // =========================================================================
     // State flows (must be declared before init block to avoid race conditions)
