@@ -83,7 +83,7 @@ class TriggerTempTargetValue(deps: TriggerDeps) : Trigger(deps) {
         return if (comparator.value == Comparator.Compare.IS_NOT_AVAILABLE)
             rh.gs(AutomationStrings.notemptarget)
         else
-            rh.gs(if (ttValue.units == GlucoseUnit.MGDL) R.string.temptargetcomparedmgdl else R.string.temptargetcomparedmmol, rh.gs(comparator.value.stringRes), ttValue.value, ttValue.units)
+            rh.gs(if (ttValue.units == GlucoseUnit.MGDL) AutomationStrings.temptargetcomparedmgdl else AutomationStrings.temptargetcomparedmmol, rh.gs(comparator.value.stringRes), ttValue.value, ttValue.units)
     }
 
     override fun composeIcon() = IcTtManual

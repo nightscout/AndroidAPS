@@ -87,7 +87,7 @@ class TriggerBg(deps: TriggerDeps) : Trigger(deps) {
         return if (comparator.value == Comparator.Compare.IS_NOT_AVAILABLE)
             rh.gs(AutomationStrings.glucoseisnotavailable)
         else
-            rh.gs(if (bg.units == GlucoseUnit.MGDL) R.string.glucosecomparedmgdl else R.string.glucosecomparedmmol, rh.gs(comparator.value.stringRes), bg.value, bg.units)
+            rh.gs(if (bg.units == GlucoseUnit.MGDL) AutomationStrings.glucosecomparedmgdl else AutomationStrings.glucosecomparedmmol, rh.gs(comparator.value.stringRes), bg.value, bg.units)
     }
 
     override fun composeIcon() = IcBgCheck

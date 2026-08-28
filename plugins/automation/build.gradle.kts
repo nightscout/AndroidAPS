@@ -64,17 +64,10 @@ kotlin {
     iosSimulatorArm64()
 
     sourceSets {
+        // The triggers, the actions and their screens live here. androidMain inherits all of this,
+        // so nothing below is repeated there.
         commonMain {
             kotlin.srcDir(generateAutomationStrings.flatMap { it.commonOutputDir })
-            dependencies {
-                // TextRef, which the generated AutomationStrings is built from.
-                implementation(project(":core:keys"))
-            }
-        }
-
-        androidMain {
-            // Android only: the string name to R.string id map.
-            kotlin.srcDir(generateAutomationStrings.flatMap { it.androidOutputDir })
             dependencies {
                 implementation(project(":core:data"))
                 implementation(project(":core:interfaces"))
@@ -83,6 +76,23 @@ kotlin {
                 implementation(project(":core:utils"))
                 implementation(project(":core:ui"))
 
+                api(libs.cmp.runtime)
+                api(libs.cmp.foundation)
+                api(libs.cmp.ui)
+                api(libs.cmp.material3)
+                api(libs.cmp.material.icons.extended)
+                // The JetBrains republish, not androidx.lifecycle: same `androidx.lifecycle.*` package
+                // names, but with Apple targets. Same choice as :core:ui and :ui.
+                api(libs.jetbrains.lifecycle.viewmodel.compose)
+                api(libs.jetbrains.lifecycle.runtime.compose)
+                implementation(libs.kotlinx.serialization.json)
+            }
+        }
+
+        androidMain {
+            // Android only: the string name to R.string id map.
+            kotlin.srcDir(generateAutomationStrings.flatMap { it.androidOutputDir })
+            dependencies {
                 api(libs.com.google.android.gms.playservices.location)
                 implementation(libs.kotlin.reflect)
                 // OpenStreetMap for map picker

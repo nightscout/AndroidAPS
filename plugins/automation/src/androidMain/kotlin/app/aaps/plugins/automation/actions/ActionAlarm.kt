@@ -10,12 +10,10 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.core.interfaces.pump.comment
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.utils.lenientString
-import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputString
 import dev.zacsweers.metro.Provider
 import kotlinx.serialization.json.buildJsonObject
@@ -23,7 +21,7 @@ import kotlinx.serialization.json.put
 
 class ActionAlarm(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    rh: TextResolver,
     pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val rxBus: RxBus,
     private val dateUtil: DateUtil,
@@ -36,7 +34,7 @@ class ActionAlarm(
 
     constructor(
         aapsLogger: AAPSLogger,
-        rh: ResourceHelper,
+        rh: TextResolver,
         pumpEnactResultProvider: Provider<PumpEnactResult>,
         rxBus: RxBus,
         dateUtil: DateUtil,
@@ -56,13 +54,13 @@ class ActionAlarm(
 
     override suspend fun doAction(): PumpEnactResult {
         reminderScheduler.scheduleReminder(10, text.value.takeIf { it.isNotBlank() }
-            ?: rh.gs(config.appName))
+            ?: rh.gs(TextRef.AndroidRes(config.appName)))
         return pumpEnactResultProvider().success(true).comment(CoreUiStrings.ok)
     }
 
     override fun toJSON(): String =
         buildJsonObject {
-            put("type", this@ActionAlarm.javaClass.simpleName)
+            put("type", this@ActionAlarm::class.simpleName)
             put("data", buildJsonObject { put("text", text.value) })
         }.toString()
 

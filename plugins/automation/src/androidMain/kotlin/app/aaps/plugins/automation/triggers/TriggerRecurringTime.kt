@@ -11,7 +11,6 @@ import app.aaps.core.ui.elements.WeekDay
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.core.utils.lenientBoolean
 import app.aaps.core.utils.lenientInt
-import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputTime
 import app.aaps.plugins.automation.elements.InputWeekDay
 import kotlinx.serialization.json.JsonObject
