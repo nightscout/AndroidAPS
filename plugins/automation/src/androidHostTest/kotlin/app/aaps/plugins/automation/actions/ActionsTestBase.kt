@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.alerts.ReminderScheduler
 import app.aaps.core.interfaces.aps.Loop
@@ -43,12 +44,12 @@ ActionsTestBase : TestBaseWithProfile() {
         app.aaps.plugins.automation.triggers.TriggerDeps(
             aapsLogger, rxBus, rh, profileFunction, profileUtil, preferences, mock(), persistenceLayer,
             activePlugin, mock(), glucoseStatusProvider, dateUtil
-        ) { mock<app.aaps.plugins.automation.triggers.TriggerFactory>() }
+        )
     }
 
     val actionFactory: ActionFactory by lazy {
         ActionFactory(
-            triggerDeps, aapsLogger, rh, Provider { pumpEnactResultProvider.get() }, rxBus, context, dateUtil, mock<ReminderScheduler>(),
+            triggerDeps, aapsLogger, rh, Provider { pumpEnactResultProvider.get() }, rxBus, dateUtil, mock<ReminderScheduler>(),
             config, persistenceLayer, profileFunction, profileRepository, profileUtil, glucoseStatusProvider,
             notificationManager, activePlugin, preferences, sceneApi, sceneIconResolver, smsCommunicator,
             autotunePlugin, importExportPrefs, exportPasswordDataStore
@@ -63,7 +64,7 @@ ActionsTestBase : TestBaseWithProfile() {
             whenever(loop.handleRunningModeChange(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyInt(), anyOrNull())).thenReturn(true)
         }
 
-        whenever(rh.gs(app.aaps.core.ui.R.string.ok)).thenReturn("OK")
-        whenever(rh.gs(app.aaps.core.ui.R.string.error)).thenReturn("Error")
+        whenever(rh.gs(CoreUiStrings.ok)).thenReturn("OK")
+        whenever(rh.gs(CoreUiStrings.error)).thenReturn("Error")
     }
 }

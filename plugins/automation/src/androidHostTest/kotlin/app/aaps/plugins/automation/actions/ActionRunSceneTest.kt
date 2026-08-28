@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.data.model.Scene
 import app.aaps.core.interfaces.scenes.SceneAutomationResult
 import app.aaps.plugins.automation.R
@@ -25,15 +26,15 @@ class ActionRunSceneTest : ActionsTestBase() {
     private val disabledScene = Scene(id = "scene-2", name = "Sleep", isEnabled = false)
 
     @BeforeEach fun setUp() {
-        whenever(rh.gs(R.string.action_run_scene)).thenReturn("Run scene")
-        whenever(rh.gs(R.string.action_run_scene_short)).thenReturn("Run scene: %1\$s")
-        whenever(rh.gs(R.string.action_scene_not_found)).thenReturn("Scene not found")
-        whenever(rh.gs(R.string.action_scene_disabled)).thenReturn("Scene is disabled")
+        whenever(rh.gs(AutomationStrings.action_run_scene)).thenReturn("Run scene")
+        whenever(rh.gs(AutomationStrings.action_run_scene_short)).thenReturn("Run scene: %1\$s")
+        whenever(rh.gs(AutomationStrings.action_scene_not_found)).thenReturn("Scene not found")
+        whenever(rh.gs(AutomationStrings.action_scene_disabled)).thenReturn("Scene is disabled")
         sut = ActionRunScene(aapsLogger, rh, Provider { pumpEnactResultProvider.get() }, sceneApi, sceneIconResolver, triggerDeps)
     }
 
     @Test fun friendlyName() = runTest {
-        assertThat(sut.friendlyName()).isEqualTo(R.string.action_run_scene)
+        assertThat(sut.friendlyName()).isEqualTo(AutomationStrings.action_run_scene)
     }
 
     @Test fun shortDescription() = runTest {

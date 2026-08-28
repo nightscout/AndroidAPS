@@ -3,10 +3,10 @@ package app.aaps.ui.activityMonitor
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
-import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -43,7 +43,7 @@ class ActivityMonitor @Inject constructor(
 ) : Application.ActivityLifecycleCallbacks {
 
     override fun onActivityPaused(activity: Activity) {
-        val name = activity.javaClass.simpleName
+        val name = activity::class.simpleName.orEmpty()
         val resumed = preferences.get(LongComposedKey.ActivityMonitorResumed, name)
         if (resumed == 0L) {
             aapsLogger.debug(LTag.UI, "onActivityPaused: $name resumed == 0")
@@ -59,7 +59,7 @@ class ActivityMonitor @Inject constructor(
     }
 
     override fun onActivityResumed(activity: Activity) {
-        val name = activity.javaClass.simpleName
+        val name = activity::class.simpleName.orEmpty()
         aapsLogger.debug(LTag.UI, "onActivityResumed: $name")
         preferences.put(LongComposedKey.ActivityMonitorResumed, name, value = dateUtil.now())
     }

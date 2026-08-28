@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.compose
 
+import app.aaps.plugins.automation.AutomationStrings
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -95,7 +98,7 @@ fun triggerCategoryOf(triggerClass: Class<*>): TriggerCategory = when (triggerCl
 
 data class TriggerOption(
     val className: String,
-    val labelResId: Int,
+    val labelResId: TextRef,
     val icon: androidx.compose.ui.graphics.vector.ImageVector?,
     val prototype: Trigger,
     val category: TriggerCategory
@@ -135,7 +138,7 @@ fun ChooseTriggerSheet(
                 .verticalScroll(rememberScrollState())
         ) {
             Text(
-                text = stringResource(R.string.automation_choose_trigger),
+                text = stringResource(AutomationStrings.automation_choose_trigger),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold
             )

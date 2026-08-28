@@ -22,11 +22,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.graph.vico.AdaptiveStep
 import app.aaps.core.graph.vico.Square
+import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.overview.graph.BolusType
 import app.aaps.core.interfaces.overview.graph.DeviationType
 import app.aaps.core.interfaces.overview.graph.GraphDataPoint
 import app.aaps.core.interfaces.overview.graph.SeriesType
 import app.aaps.core.interfaces.overview.graph.TreatmentGraphData
+import app.aaps.core.ui.compose.LocalDecimalFormatter
+import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.AapsTheme
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.CartesianDrawingContext
@@ -146,6 +149,7 @@ fun SecondaryGraphCompose(
     onVisibleRangeChanged: ((Pair<Double, Double>?) -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
+    val dateUtil = LocalDateUtil.current
     if (seriesTypes.isEmpty()) return
 
     // Ensure DEV_SLOPE is always primary — it needs primary to render both dsMax and dsMin lines
@@ -159,7 +163,7 @@ fun SecondaryGraphCompose(
 
     val hasRealTimeRange = derivedTimeRange != null
     val (minTimestamp, maxTimestamp) = derivedTimeRange ?: run {
-        val now = System.currentTimeMillis()
+        val now = dateUtil.now()
         val dayAgo = now - Constants.GRAPH_TIME_RANGE_HOURS * 60 * 60 * 1000L
         dayAgo to now
     }
@@ -1206,18 +1210,19 @@ fun rememberIobLineStyles(): IobLineStyles {
     val iobColor = AapsTheme.generalColors.iobPrediction
     val smbColor = AapsTheme.elementColors.insulin
     val extBolusColor = AapsTheme.elementColors.extendedBolus
+    val decimalFormatter = LocalDecimalFormatter.current
 
     val bolusLabelComponent = remember(smbColor) {
         TextComponent(textStyle = TextStyle(color = smbColor, fontSize = 16.sp))
     }
     val bolusValueFormatter = remember {
-        CartesianValueFormatter { _, value, _ -> formatBolusLabel(value) }
+        CartesianValueFormatter { _, value, _ -> formatBolusLabel(value, decimalFormatter) }
     }
     val extBolusLabelComponent = remember(extBolusColor) {
         TextComponent(textStyle = TextStyle(color = extBolusColor, fontSize = 16.sp))
     }
     val extBolusValueFormatter = remember {
-        CartesianValueFormatter { _, value, _ -> formatBolusLabel(value) }
+        CartesianValueFormatter { _, value, _ -> formatBolusLabel(value, decimalFormatter) }
     }
 
     return remember(iobColor, smbColor, extBolusColor, bolusLabelComponent, bolusValueFormatter, extBolusLabelComponent, extBolusValueFormatter) {
@@ -1285,12 +1290,13 @@ data class CobLineStyles(
 fun rememberCobLineStyles(): CobLineStyles {
     val cobColor = AapsTheme.generalColors.cobPrediction
     val carbsColor = AapsTheme.elementColors.carbs
+    val decimalFormatter = LocalDecimalFormatter.current
 
     val carbsLabelComponent = remember(carbsColor) {
         TextComponent(textStyle = TextStyle(color = carbsColor, fontSize = 14.sp))
     }
     val carbsValueFormatter = remember {
-        CartesianValueFormatter { _, value, _ -> formatCarbsLabel(value) }
+        CartesianValueFormatter { _, value, _ -> formatCarbsLabel(value, decimalFormatter) }
     }
 
     return remember(cobColor, carbsColor, carbsLabelComponent, carbsValueFormatter) {
@@ -1328,16 +1334,16 @@ fun rememberCobLineStyles(): CobLineStyles {
 // =========================================================================
 
 /** Formats bolus amount: 1.0->"1", 1.2->"1.2", 0.8->".8" (drop leading zero) */
-private fun formatBolusLabel(value: Double): String {
+private fun formatBolusLabel(value: Double, decimalFormatter: DecimalFormatter): String {
     if (value == 0.0) return ""
-    val formatted = "%.2f".format(value).trimEnd('0').trimEnd('.').trimEnd(',')
+    val formatted = decimalFormatter.to2Decimal(value).trimEnd('0').trimEnd('.').trimEnd(',')
     return if (formatted.startsWith("0.")) formatted.substring(1) else formatted
 }
 
 /** Formats carbs amount: 45.0->"45", 7.5->"7.5", 0.0->"" */
-private fun formatCarbsLabel(value: Double): String {
+private fun formatCarbsLabel(value: Double, decimalFormatter: DecimalFormatter): String {
     if (value == 0.0) return ""
-    return "%.1f".format(value).trimEnd('0').trimEnd('.').trimEnd(',')
+    return decimalFormatter.to1Decimal(value).trimEnd('0').trimEnd('.').trimEnd(',')
 }
 
 // =========================================================================

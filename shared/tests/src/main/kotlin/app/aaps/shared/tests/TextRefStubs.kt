@@ -34,8 +34,15 @@ fun stubTextRefResolution(rh: ResourceHelper) {
 
     doAnswer { invocation: InvocationOnMock ->
         val args = invocation.arguments.drop(1).toTypedArray()
-        @Suppress("USELESS_ELVIS")
-        String.format(resolve(rh, invocation.getArgument(0)) ?: "", *args)
+        // Ask through the mock rather than calling resolve() directly, so a test that stubbed this
+        // exact ref gets its own text. Only when it did not does this fall through to the generic
+        // answer above. Without that, a module whose owner is not in the map below would format the
+        // raw name instead of the stubbed template.
+        // Through a local of nullable type on purpose: `gs` is declared non-null, so an elvis on the
+        // call itself is compiled away and a mock that returns null reaches String.format, which
+        // then throws instead of showing what the test actually stubbed.
+        val template: String? = rh.gs(invocation.getArgument<TextRef>(0))
+        String.format(template ?: "", *args)
     }.whenever(rh).gs(any<TextRef>(), anyVararg())
 }
 

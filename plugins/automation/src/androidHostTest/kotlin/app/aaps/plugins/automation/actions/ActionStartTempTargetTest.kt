@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.TT
@@ -26,14 +27,14 @@ class ActionStartTempTargetTest : ActionsTestBase() {
 
     @BeforeEach
     fun setup() {
-        whenever(rh.gs(R.string.starttemptarget)).thenReturn("Start temp target")
+        whenever(rh.gs(AutomationStrings.starttemptarget)).thenReturn("Start temp target")
         whenever(rh.gs(CoreUiStrings.format_mins)).thenReturn("%1\$d min")
 
         sut = ActionStartTempTarget(aapsLogger, rh, Provider { pumpEnactResultProvider.get() }, activePlugin, persistenceLayer, profileFunction, dateUtil, profileUtil, triggerDeps)
     }
 
     @Test fun friendlyNameTest() {
-        assertThat(sut.friendlyName()).isEqualTo(R.string.starttemptarget)
+        assertThat(sut.friendlyName()).isEqualTo(AutomationStrings.starttemptarget)
     }
 
     @Test fun shortDescriptionTest() {

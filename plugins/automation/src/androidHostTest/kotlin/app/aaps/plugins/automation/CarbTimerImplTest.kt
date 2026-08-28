@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation
 
+import app.aaps.core.keys.interfaces.TextRef
 import android.content.Context
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.alerts.ReminderScheduler
@@ -24,9 +25,10 @@ import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
+import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
@@ -39,7 +41,7 @@ class CarbTimerImplTest : TestBase() {
 
 @Mock lateinit var actionFactory: app.aaps.plugins.automation.actions.ActionFactory
     private val triggerFactory: TriggerFactory by lazy {
-        TriggerFactory(triggerDeps, context, mock(), sceneApi, receiverStatusStore)
+        TriggerFactory(triggerDeps, mock(), sceneApi, receiverStatusStore)
     }
     // Real, not mocked: the runtime rebuilds triggers from JSON, and a mocked bundle would hand
     // nulls to element constructors that require them.
@@ -47,7 +49,7 @@ class CarbTimerImplTest : TestBase() {
         TriggerDeps(
             aapsLogger, rxBus, rh, profileFunction, mock(), preferences, mock(), mock(),
             activePlugin, mock(), mock(), dateUtil
-        ) { triggerFactory }
+        )
     }
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var context: Context
@@ -71,12 +73,12 @@ class CarbTimerImplTest : TestBase() {
     private lateinit var automationRuntime: AutomationRuntime
 
     @BeforeEach fun init() {
-        whenever(rh.gs(anyInt())).thenReturn("")
+        doAnswer { "" }.whenever(rh).gs(any<TextRef>())
         whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         dateUtil = DateUtilImpl(context)
         reminderScheduler = mock()
         automationRuntime = AutomationRuntime(
-            eventFactory, aapsLogger, rh, preferences, loop, rxBus, constraintChecker, config, locationServiceController, dateUtil, activePlugin, reminderScheduler, actionFactory, triggerFactory, triggerDeps, receiverStatusStore, uel, profileRepository, sceneApi
+            eventFactory, aapsLogger, rh, preferences, loop, rxBus, constraintChecker, config, locationServiceController, dateUtil, activePlugin, reminderScheduler, actionFactory, triggerFactory, triggerDeps, receiverStatusStore, uel, profileRepository, sceneApi, mock()
         )
     }
 

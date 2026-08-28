@@ -3,6 +3,7 @@ package app.aaps.ui.compose.history
 import androidx.lifecycle.ViewModel
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.ui.compose.overview.graphs.GraphViewModel
@@ -14,8 +15,6 @@ import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import java.util.Calendar
-import java.util.GregorianCalendar
 
 // Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
 // unscoped so each screen gets its own.
@@ -80,14 +79,7 @@ class HistoryViewModel @Inject constructor(
 
     // Round to start-of-day so windows snap to midnight.
     private fun setTime(start: Long) {
-        GregorianCalendar().also { calendar ->
-            calendar.timeInMillis = start
-            calendar[Calendar.MILLISECOND] = 0
-            calendar[Calendar.SECOND] = 0
-            calendar[Calendar.MINUTE] = 0
-            calendar[Calendar.HOUR_OF_DAY] = 0
-            adjustTimeRange(calendar.timeInMillis)
-        }
+        adjustTimeRange(MidnightTime.calc(start))
     }
 
     // The +100000 ms nudge here comes from the legacy GraphView era where exact boundary

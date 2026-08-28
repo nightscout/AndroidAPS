@@ -1,6 +1,5 @@
 package app.aaps.ui.compose.tempTarget
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -49,15 +48,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.ui.UiStrings
-import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsFab
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
@@ -69,13 +69,16 @@ import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.TimePickerModal
 import app.aaps.core.ui.compose.masterEditingEnabled
 import app.aaps.core.ui.compose.navigation.label
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.compose.stringResourceOrNull
-import app.aaps.ui.R
+import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.components.CarouselReorderConfig
 import app.aaps.ui.compose.components.ContentContainer
 import app.aaps.ui.compose.components.ManagementCarousel
+import kotlin.time.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlinx.coroutines.launch
-import java.util.Calendar
 
 /**
  * Screen for managing temporary target presets and activating TTs.
@@ -142,7 +145,7 @@ fun TempTargetManagementScreen(
 
     // Delete confirmation dialog
     if (showDeleteDialog && uiState.selectedPreset != null) {
-        val presetName = uiState.selectedPreset!!.getDisplayName(viewModel.rh)
+        val presetName = uiState.selectedPreset!!.getDisplayName()
         OkCancelDialog(
             title = viewModel.rh.gs(CoreUiStrings.removerecord),
             message = "${viewModel.rh.gs(CoreUiStrings.delete)} $presetName?",
@@ -159,15 +162,12 @@ fun TempTargetManagementScreen(
         DatePickerModal(
             onDateSelected = { selectedMillis ->
                 selectedMillis?.let {
-                    val currentCalendar = Calendar.getInstance().apply {
-                        timeInMillis = uiState.eventTime
-                    }
-                    val newCalendar = Calendar.getInstance().apply {
-                        timeInMillis = it
-                        set(Calendar.HOUR_OF_DAY, currentCalendar.get(Calendar.HOUR_OF_DAY))
-                        set(Calendar.MINUTE, currentCalendar.get(Calendar.MINUTE))
-                    }
-                    viewModel.updateEventTime(newCalendar.timeInMillis)
+                    // Keep the time of day the user already chose, move only the date.
+                    val current = Instant.fromEpochMilliseconds(uiState.eventTime)
+                        .toLocalDateTime(TimeZone.currentSystemDefault())
+                    viewModel.updateEventTime(
+                        viewModel.dateUtil.mergeHourMinuteToTimestamp(it, current.hour, current.minute, true)
+                    )
                 }
             },
             onDismiss = { showDatePicker = false },
@@ -177,22 +177,19 @@ fun TempTargetManagementScreen(
 
     // Time picker modal
     if (showTimePicker) {
-        val calendar = Calendar.getInstance().apply {
-            timeInMillis = uiState.eventTime
-        }
+        val eventLocal = Instant.fromEpochMilliseconds(uiState.eventTime)
+            .toLocalDateTime(TimeZone.currentSystemDefault())
 
         TimePickerModal(
             onTimeSelected = { hour, minute ->
-                val newCalendar = Calendar.getInstance().apply {
-                    timeInMillis = uiState.eventTime
-                    set(Calendar.HOUR_OF_DAY, hour)
-                    set(Calendar.MINUTE, minute)
-                }
-                viewModel.updateEventTime(newCalendar.timeInMillis)
+                // Keep the date, move only the time of day.
+                viewModel.updateEventTime(
+                    viewModel.dateUtil.mergeHourMinuteToTimestamp(uiState.eventTime, hour, minute, true)
+                )
             },
             onDismiss = { showTimePicker = false },
-            initialHour = calendar.get(Calendar.HOUR_OF_DAY),
-            initialMinute = calendar.get(Calendar.MINUTE),
+            initialHour = eventLocal.hour,
+            initialMinute = eventLocal.minute,
             is24Hour = true
         )
     }
@@ -210,7 +207,11 @@ fun TempTargetManagementScreen(
     var showOverflowMenu by remember { mutableStateOf(false) }
 
     // Back leaves sort mode rather than the screen, so a reshuffle isn't silently discarded.
-    BackHandler(enabled = isReorderMode) { viewModel.cancelReorder() }
+    NavigationBackHandler(
+        state = rememberNavigationEventState(NavigationEventInfo.None),
+        isBackEnabled = isReorderMode,
+        onBackCompleted = { viewModel.cancelReorder() }
+    )
 
     // The view model outlives the screen, so an uncommitted order would otherwise survive until the
     // screen is reopened — dropping the user straight back into sort mode with a stale order.

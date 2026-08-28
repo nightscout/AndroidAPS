@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.asJsonObject
 import app.aaps.plugins.automation.elements.Comparator
@@ -54,6 +55,6 @@ class TriggerPumpLastConnectionTest : TriggerTestBase() {
     }
 
     @Test fun friendlyNameTest() = runTest {
-        assertThat(TriggerPumpLastConnection(triggerDeps).friendlyName()).isEqualTo(R.string.automation_trigger_pump_last_connection_label)
+        assertThat(TriggerPumpLastConnection(triggerDeps).friendlyName()).isEqualTo(AutomationStrings.automation_trigger_pump_last_connection_label)
     }
 }

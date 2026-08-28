@@ -67,8 +67,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import app.aaps.compose.navigation.AppRoute
-import app.aaps.compose.navigation.appNavGraph
+import app.aaps.appshell.navigation.AppRoute
+import app.aaps.appshell.navigation.appNavGraph
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
@@ -102,8 +102,10 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.interfaces.sync.NsClient
+import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
@@ -114,6 +116,8 @@ import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.LocalDateUtil
+import app.aaps.core.ui.compose.LocalAppIcon
+import app.aaps.core.ui.compose.LocalDecimalFormatter
 import app.aaps.core.ui.compose.LocalMasterControlAllowed
 import app.aaps.core.ui.compose.LocalMasterReachable
 import app.aaps.core.ui.compose.LocalPreferences
@@ -190,6 +194,8 @@ class ComposeMainActivity : MetroAppCompatActivity() {
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var preferences: Preferences
+    @Inject lateinit var decimalFormatter: DecimalFormatter
+    @Inject lateinit var iconsProvider: IconsProvider
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var protectionCheck: ProtectionCheck
@@ -347,6 +353,10 @@ class ComposeMainActivity : MetroAppCompatActivity() {
         CompositionLocalProvider(
             LocalPreferences provides preferences,
             LocalDateUtil provides dateUtil,
+            LocalDecimalFormatter provides decimalFormatter,
+            // This build's launcher icon: a flavour specific bitmap, so the shell paints it and shared
+            // screens only say where it goes.
+            LocalAppIcon provides { modifier -> Image(painterResource(iconsProvider.getIcon()), null, modifier) },
             LocalConfig provides config,
             LocalMasterReachable provides masterReachable,
             LocalMasterControlAllowed provides masterControlAllowed,

@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.compose
 
+import app.aaps.core.interfaces.resources.TextRefIdRegistry
+import app.aaps.plugins.automation.AutomationStringIds
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
@@ -28,6 +30,9 @@ class AutomationScreenTest {
 
     @Before
     fun setUp() {
+        // What MainApp does at startup. The screen names its strings now, and a TextRef.Named is
+        // resolved through this registry - without it every label would render as its raw name.
+        TextRefIdRegistry.register("automation") { name -> AutomationStringIds.idOf(name) }
         val app = RuntimeEnvironment.getApplication()
         emptyDesc = app.getString(R.string.automation_empty_desc)
         // core:ui R collides with automation R, so it is imported aliased as CoreUiR.

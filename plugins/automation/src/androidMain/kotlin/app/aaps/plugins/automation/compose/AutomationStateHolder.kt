@@ -171,7 +171,7 @@ class AutomationStateHolder(
             trigger.latitude.value = lat
             trigger.longitude.value = lon
         }
-        val lastLocation = trigger.locationDataContainer.lastLocation
+        val lastLocation = trigger.lastKnownLocation.position()
         _route.value = AutomationRoute.MapPicker(
             initialLat = trigger.latitude.value.takeIf { it != 0.0 } ?: lastLocation?.latitude,
             initialLon = trigger.longitude.value.takeIf { it != 0.0 } ?: lastLocation?.longitude

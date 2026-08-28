@@ -3,11 +3,10 @@ package app.aaps.ui.compose.profileManagement.viewmodels
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.ui.UiStrings
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -21,8 +20,9 @@ import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.objects.profile.ProfileSealed
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.icons.IcProfile
-import app.aaps.ui.R
+import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.profileHelper.ProfileType
 import app.aaps.ui.compose.profileHelper.defaultProfile.DefaultProfile
 import app.aaps.ui.compose.profileHelper.defaultProfile.DefaultProfileDPV
@@ -32,7 +32,6 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -101,7 +100,7 @@ class ProfileHelperViewModel @Inject constructor(
         viewModelScope.launch {
             val currentProfileName = profileFunction.getProfileName()
             val currentProfile = profileFunction.getProfile()?.convertToNonCustomizedProfile(dateUtil)
-            val profileSwitches = withContext(Dispatchers.IO) {
+            val profileSwitches = withContext(aapsIoDispatcher) {
                 persistenceLayer.getEffectiveProfileSwitchesFromTime(
                     dateUtil.now() - T.months(2).msecs(),
                     true
@@ -122,7 +121,7 @@ class ProfileHelperViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoadingStats = true) }
             try {
-                val data = withContext(Dispatchers.IO) {
+                val data = withContext(aapsIoDispatcher) {
                     val tdds = tddCalculator.calculate(7, allowMissingDays = true)
                     val averageTdd = tddCalculator.averageTDD(tdds)
                     val todayTdd = tddCalculator.calculateToday()

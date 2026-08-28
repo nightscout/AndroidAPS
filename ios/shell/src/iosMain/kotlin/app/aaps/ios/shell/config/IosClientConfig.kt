@@ -1,5 +1,6 @@
 package app.aaps.ios.shell.config
 
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.configuration.InitProgress
@@ -54,7 +55,7 @@ class IosClientConfig(
         UIDevice.currentDevice.let { "${it.model} ${it.systemName} ${it.systemVersion}" }
 
     /** Android returns a string resource id here. iOS has no resource table, so nothing to name. */
-    override val appName: Int = 0
+    override val appName: TextRef = TextRef.Literal("AAPS")
 
     private val _initProgressFlow = MutableStateFlow(InitProgress(done = true))
     override val initProgressFlow: StateFlow<InitProgress> = _initProgressFlow.asStateFlow()

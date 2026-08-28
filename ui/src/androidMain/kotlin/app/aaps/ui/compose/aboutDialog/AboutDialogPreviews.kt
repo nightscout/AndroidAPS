@@ -14,7 +14,6 @@ internal fun AboutAlertDialogPreview() {
             data = AboutDialogData(
                 title = "AndroidAPS 3.3.0",
                 message = "Build: 3.3.0-dev\nFlavor: full\n\nhttps://androidaps.org",
-                icon = R.drawable.splash_logo,
                 enabledOptions = listOf(ExternalOptions.ENGINEERING_MODE, ExternalOptions.UNFINISHED_MODE)
             ),
             onDismiss = {}

@@ -5,18 +5,17 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import androidx.glance.appwidget.updateAll
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.widget.WidgetUpdater
 import app.aaps.ui.widget.glance.AapsGlanceWidget
 import app.aaps.ui.widget.glance.BgGraphGlanceWidget
 import app.aaps.ui.widget.glance.CompactBgGlanceWidget
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesBinding
 
 /**
  * Default [WidgetUpdater] implementation. Fires [AapsGlanceWidget.updateAll] on the
@@ -29,7 +28,9 @@ import dev.zacsweers.metro.ContributesBinding
 class WidgetUpdaterImpl @Inject constructor(
     private val context: Context,
     private val aapsLogger: AAPSLogger,
-    @ApplicationScope private val scope: CoroutineScope
+    // Unqualified: @ApplicationScope is a javax qualifier and cannot appear in commonMain. The graph
+    // binds the same instance under both names.
+    private val scope: CoroutineScope
 ) : WidgetUpdater {
 
     override fun update(from: String) {

@@ -9,6 +9,23 @@ plugins {
     alias(libs.plugins.metro)
 }
 
+// Generates AutomationStrings (commonMain) and AutomationStringIds (androidMain) from this module's
+// strings.xml, the same generator :ui, :core:ui, :core:keys and :implementation use. It lets a trigger
+// or action name its user text instead of numbering it, which is what commonMain code needs. The
+// strings themselves do not move, and AAPT keeps resolving them on Android exactly as before.
+val generateAutomationStrings = tasks.register<GenerateKeyStringsTask>("generateAutomationStrings") {
+    resDir.set(layout.projectDirectory.dir("src/androidMain/res"))
+    packageName.set("app.aaps.plugins.automation")
+    owner.set("automation")
+    objectName.set("AutomationStrings")
+    idsObjectName.set("AutomationStringIds")
+    reportFile.set(layout.buildDirectory.file("reports/automationStrings/translations.txt"))
+    // Set explicitly: addGeneratedSourceDirectory only derives a convention from the task name, so
+    // both properties would land on one directory and the second file written would delete the first.
+    commonOutputDir.set(layout.buildDirectory.dir("generated/automationStrings/common"))
+    androidOutputDir.set(layout.buildDirectory.dir("generated/automationStrings/android"))
+}
+
 metro {
     interop {
         // Still on for the Android side: this module takes `@ApplicationScope CoroutineScope` and the
@@ -37,16 +54,20 @@ kotlin {
         }
     }
 
-    // Declared even though nothing is in commonMain yet. Keeping the targets is what stops an
-    // android-only import from quietly reaching common code once files start moving across.
+    // Keeping the targets is what stops an android-only import from quietly reaching common code as
+    // files move across. commonMain holds the platform ports so far, such as PairedBtDevices.
     //
-    // Note for that move: the SMS action stays android only. There is no iOS equivalent an app can
-    // drive, so ActionSendSMS and the SmsCommunicator wiring behind it must not go to commonMain.
+    // Rule for that move: the action or trigger class itself is shared, and only the call it cannot
+    // make everywhere is lifted out behind an interface implemented per platform. ActionSendSMS needs
+    // nothing here - it already goes through the SmsCommunicator interface.
     iosArm64()
     iosSimulatorArm64()
 
     sourceSets {
-        androidMain {
+        // The triggers, the actions and their screens live here. androidMain inherits all of this,
+        // so nothing below is repeated there.
+        commonMain {
+            kotlin.srcDir(generateAutomationStrings.flatMap { it.commonOutputDir })
             dependencies {
                 implementation(project(":core:data"))
                 implementation(project(":core:interfaces"))
@@ -55,6 +76,26 @@ kotlin {
                 implementation(project(":core:utils"))
                 implementation(project(":core:ui"))
 
+                api(libs.cmp.runtime)
+                api(libs.cmp.foundation)
+                api(libs.cmp.ui)
+                api(libs.cmp.material3)
+                api(libs.cmp.material.icons.extended)
+                // The JetBrains republish, not androidx.lifecycle: same `androidx.lifecycle.*` package
+                // names, but with Apple targets. Same choice as :core:ui and :ui.
+                api(libs.jetbrains.lifecycle.viewmodel.compose)
+                api(libs.jetbrains.lifecycle.runtime.compose)
+                implementation(libs.kotlinx.serialization.json)
+                // A Compose Multiplatform library - it publishes iosArm64, jvm and wasm too, so the
+                // reorderable list works everywhere and does not pin a screen to Android.
+                implementation(libs.sh.calvin.reorderable)
+            }
+        }
+
+        androidMain {
+            // Android only: the string name to R.string id map.
+            kotlin.srcDir(generateAutomationStrings.flatMap { it.androidOutputDir })
+            dependencies {
                 api(libs.com.google.android.gms.playservices.location)
                 implementation(libs.kotlin.reflect)
                 // OpenStreetMap for map picker
@@ -68,7 +109,6 @@ kotlin {
                 api(libs.androidx.compose.material3)
                 api(libs.androidx.compose.material.icons.extended)
                 api(libs.androidx.lifecycle.runtime.compose)
-                implementation(libs.sh.calvin.reorderable)
             }
         }
 
@@ -105,20 +145,6 @@ kotlin {
     }
 }
 
-// Several dependencies above are flavoured Android libraries, and a multiplatform module has no
-// flavours of its own, so every classpath that reaches them has to pick one.
-listOf(
-    "androidCompileClasspath",
-    "androidRuntimeClasspath",
-    "androidHostTestCompileClasspath",
-    "androidHostTestRuntimeClasspath"
-).forEach { name ->
-    configurations.named(name) {
-        attributes {
-            attribute(com.android.build.api.attributes.ProductFlavorAttr.of("standard"), objects.named("full"))
-        }
-    }
-}
 
 tasks.withType<Test> {
     // useJUnitPlatform() and the heap cap come from kmp-test-defaults; only the JaCoCo part is

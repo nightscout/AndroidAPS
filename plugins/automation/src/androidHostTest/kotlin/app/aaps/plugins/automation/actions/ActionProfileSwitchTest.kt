@@ -1,5 +1,7 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.PS
 import app.aaps.plugins.automation.R
@@ -29,12 +31,12 @@ class ActionProfileSwitchTest : ActionsTestBase() {
     private lateinit var sut: ActionProfileSwitch
 
     @BeforeEach fun setUp() {
-        whenever(rh.gs(R.string.profilename)).thenReturn("Change profile to")
-        whenever(rh.gs(R.string.changengetoprofilename)).thenReturn("Change profile to %s")
-        whenever(rh.gs(R.string.alreadyset)).thenReturn("Already set")
-        whenever(rh.gs(app.aaps.core.ui.R.string.notexists)).thenReturn("not exists")
-        whenever(rh.gs(app.aaps.core.ui.R.string.error_field_must_not_be_empty)).thenReturn("The field must not be empty")
-        whenever(rh.gs(app.aaps.core.ui.R.string.noprofile)).thenReturn("No profile loaded from NS yet")
+        whenever(rh.gs(AutomationStrings.profilename)).thenReturn("Change profile to")
+        whenever(rh.gs(AutomationStrings.changengetoprofilename)).thenReturn("Change profile to %s")
+        whenever(rh.gs(AutomationStrings.alreadyset)).thenReturn("Already set")
+        whenever(rh.gs(CoreUiStrings.notexists)).thenReturn("not exists")
+        whenever(rh.gs(CoreUiStrings.error_field_must_not_be_empty)).thenReturn("The field must not be empty")
+        whenever(rh.gs(CoreUiStrings.noprofile)).thenReturn("No profile loaded from NS yet")
         // Automation keeps whatever insulin is in force; it never picks one from the catalogue.
         runBlocking { whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(iCfg) }
 
@@ -42,7 +44,7 @@ class ActionProfileSwitchTest : ActionsTestBase() {
     }
 
     @Test fun friendlyName() = runTest {
-        assertThat(sut.friendlyName()).isEqualTo(R.string.profilename)
+        assertThat(sut.friendlyName()).isEqualTo(AutomationStrings.profilename)
     }
 
     @Test fun shortDescriptionTest() = runTest {

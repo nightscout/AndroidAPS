@@ -1,5 +1,6 @@
 package app.aaps.core.ui.compose.preference
 
+import app.aaps.core.keys.interfaces.TextRef
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -159,7 +160,7 @@ private object PreviewConfig : Config {
     override val APPLICATION_ID: String = "preview"
     override val DEBUG: Boolean = true
     override val currentDeviceModelString: String = "Preview"
-    override val appName: Int = 0
+    override val appName: TextRef = TextRef.Literal("AAPS")
     override val initProgressFlow: StateFlow<InitProgress> = MutableStateFlow(InitProgress(done = true))
     override val initSnackbarFlow: SharedFlow<String> = MutableSharedFlow()
     override fun updateInitProgress(step: String, current: Int, total: Int) {}

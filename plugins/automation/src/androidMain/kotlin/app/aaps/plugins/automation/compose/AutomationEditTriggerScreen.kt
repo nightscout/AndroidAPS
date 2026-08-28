@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.compose
 
+import app.aaps.plugins.automation.AutomationStrings
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -67,7 +70,8 @@ fun AutomationEditTriggerScreen(
     onChange: () -> Unit,
     modifier: Modifier = Modifier,
     bondedDevices: List<String> = emptyList(),
-    onPickLocationFromMap: (TriggerLocation) -> Unit = {}
+    onPickLocationFromMap: (TriggerLocation) -> Unit = {},
+    onUseCurrentLocation: ((TriggerLocation) -> Unit)? = null
 ) {
     var tick by remember { mutableIntStateOf(0) }
     fun bump() {
@@ -94,6 +98,7 @@ fun AutomationEditTriggerScreen(
                 newConnector = newConnector,
                 bondedDevices = bondedDevices,
                 onPickLocationFromMap = onPickLocationFromMap,
+                onUseCurrentLocation = onUseCurrentLocation,
                 onChange = ::bump,
                 isRoot = true,
                 onRemoveSelf = {}
@@ -113,6 +118,7 @@ private fun ConnectorCard(
     newConnector: () -> TriggerConnector,
     bondedDevices: List<String>,
     onPickLocationFromMap: (TriggerLocation) -> Unit,
+    onUseCurrentLocation: ((TriggerLocation) -> Unit)?,
     onChange: () -> Unit,
     isRoot: Boolean,
     onRemoveSelf: () -> Unit
@@ -187,6 +193,7 @@ private fun ConnectorCard(
                             newConnector = newConnector,
                             bondedDevices = bondedDevices,
                             onPickLocationFromMap = onPickLocationFromMap,
+                            onUseCurrentLocation = onUseCurrentLocation,
                             onChange = onChange,
                             isRoot = false,
                             onRemoveSelf = {
@@ -201,6 +208,7 @@ private fun ConnectorCard(
                             tick = tick,
                             bondedDevices = bondedDevices,
                             onPickLocationFromMap = onPickLocationFromMap,
+                            onUseCurrentLocation = onUseCurrentLocation,
                             onRemove = {
                                 val i = connector.list.indexOf(child)
                                 if (i >= 0) connector.list.removeAt(i)
@@ -214,7 +222,7 @@ private fun ConnectorCard(
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     OutlinedButton(onClick = { showSheet = true }, modifier = Modifier.weight(1f)) {
                         Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(18.dp))
-                        Text(stringResource(R.string.automation_choose_trigger), modifier = Modifier.padding(start = 6.dp))
+                        Text(stringResource(AutomationStrings.automation_choose_trigger), modifier = Modifier.padding(start = 6.dp))
                     }
                     OutlinedButton(onClick = {
                         connector.list.add(newConnector())
@@ -222,7 +230,7 @@ private fun ConnectorCard(
                     }) {
                         Icon(Icons.Default.AccountTree, contentDescription = null, modifier = Modifier.size(18.dp))
                         Text(
-                            text = stringResource(R.string.automation_add_group),
+                            text = stringResource(AutomationStrings.automation_add_group),
                             modifier = Modifier.padding(start = 6.dp)
                         )
                     }
@@ -252,6 +260,7 @@ private fun LeafCard(
     tick: Int,
     bondedDevices: List<String>,
     onPickLocationFromMap: (TriggerLocation) -> Unit,
+    onUseCurrentLocation: ((TriggerLocation) -> Unit)?,
     onRemove: () -> Unit,
     onChange: () -> Unit
 ) {
@@ -289,7 +298,8 @@ private fun LeafCard(
                 onChange = onChange,
                 tick = tick,
                 bondedDevices = bondedDevices,
-                onPickLocationFromMap = onPickLocationFromMap
+                onPickLocationFromMap = onPickLocationFromMap,
+                onUseCurrentLocation = onUseCurrentLocation
             )
         }
     }

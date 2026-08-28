@@ -94,22 +94,6 @@ kotlin {
     }
 }
 
-// :ui and :shared:tests are flavoured Android libraries, and a multiplatform module has no flavours of
-// its own, so every classpath that reaches them has to pick one or resolution is ambiguous. The main
-// classpaths are pinned too - unlike :plugins:aps, which depends on no flavoured module.
-listOf(
-    "androidCompileClasspath",
-    "androidRuntimeClasspath",
-    "androidHostTestCompileClasspath",
-    "androidHostTestRuntimeClasspath"
-).forEach { name ->
-    configurations.named(name) {
-        attributes {
-            attribute(com.android.build.api.attributes.ProductFlavorAttr.of("standard"), objects.named("full"))
-        }
-    }
-}
-
 tasks.withType<Test> {
     // useJUnitPlatform() and the heap cap come from kmp-test-defaults; only the JaCoCo part is
     // specific here. Restated from jacoco-module-dependencies, which applies com.android.library.

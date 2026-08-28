@@ -4,6 +4,7 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -16,7 +17,6 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -234,7 +234,7 @@ class ImportViewModel @Inject constructor(
         _importStep.value = current.copy(isProcessing = true)
 
         viewModelScope.launch {
-            val result = withContext(Dispatchers.IO) {
+            val result = withContext(aapsIoDispatcher) {
                 importExportPrefs.decryptImportFile(current.file, password)
             }
 
@@ -278,7 +278,7 @@ class ImportViewModel @Inject constructor(
         _importStep.value = current.copy(isProcessing = true)
 
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
+            withContext(aapsIoDispatcher) {
                 importExportPrefs.executeImport(result.prefs)
                 importExportPrefs.prepareImportRestart()
             }

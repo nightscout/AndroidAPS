@@ -1,7 +1,24 @@
 apply(plugin = "jacoco")
 
+/**
+ * The name of the debug variant this module builds.
+ *
+ * Only the app modules have product flavours; a library is unflavoured, so its output sits under
+ * `debug` and not `fullDebug`. Ask the module rather than assuming one name for all: getting this
+ * wrong makes the module contribute no classes and no execution data, which shows up as a silent
+ * coverage drop instead of an error. Reflection because the root project has no typed accessor for
+ * another module's `android` extension.
+ */
+fun Project.debugVariantName(): String {
+    val flavored = runCatching {
+        val android = extensions.findByName("android") ?: return@runCatching false
+        val flavors = android.javaClass.getMethod("getProductFlavors").invoke(android) as? Collection<*>
+        flavors?.isNotEmpty() == true
+    }.getOrDefault(false)
+    return if (flavored) "fullDebug" else "debug"
+}
+
 project.afterEvaluate {
-    val variants = listOf("fullDebug")
 
     tasks.register<JacocoReport>(name = "jacocoAllDebugReport") {
 
@@ -63,29 +80,27 @@ project.afterEvaluate {
                 val kmpPath = proj.layout.buildDirectory.dir("classes/kotlin/$kmpTarget/main").get()
                 classes.add(fileTree(kmpPath) { exclude(excludes); include("**/*.class") })
             } else {
-                variants.forEach { variant ->
-                    // Use variant directory as base - fileTree recurses into subdirectories
-                    // This avoids hardcoding exact task-name subdirectories that may vary between AGP versions
-                    val javaPath = proj.layout.buildDirectory.dir("intermediates/javac/$variant").get()
-                    classes.add(fileTree(javaPath) { exclude(excludes); include("**/*.class") })
-                    val kotlinPath = proj.layout.buildDirectory.dir("intermediates/built_in_kotlinc/$variant").get()
-                    classes.add(fileTree(kotlinPath) { exclude(excludes); include("**/*.class") })
-                    // Fallback for older AGP versions
-                    val kotlinLegacyPath = proj.layout.buildDirectory.dir("tmp/kotlin-classes/$variant").get()
-                    classes.add(fileTree(kotlinLegacyPath) { exclude(excludes); include("**/*.class") })
-                }
+                val variant = proj.debugVariantName()
+                // Use variant directory as base - fileTree recurses into subdirectories
+                // This avoids hardcoding exact task-name subdirectories that may vary between AGP versions
+                val javaPath = proj.layout.buildDirectory.dir("intermediates/javac/$variant").get()
+                classes.add(fileTree(javaPath) { exclude(excludes); include("**/*.class") })
+                val kotlinPath = proj.layout.buildDirectory.dir("intermediates/built_in_kotlinc/$variant").get()
+                classes.add(fileTree(kotlinPath) { exclude(excludes); include("**/*.class") })
+                // Fallback for older AGP versions
+                val kotlinLegacyPath = proj.layout.buildDirectory.dir("tmp/kotlin-classes/$variant").get()
+                classes.add(fileTree(kotlinLegacyPath) { exclude(excludes); include("**/*.class") })
             }
         }
         classDirectories.setFrom(files(listOf(classes)))
 
         val sources = mutableListOf<String>().also {
             subprojects.forEach { proj ->
-                variants.forEach { variant ->
-                    it.add("${proj.projectDir}/src/main/java")
-                    it.add("${proj.projectDir}/src/main/kotlin")
-                    it.add("${proj.projectDir}/src/$variant/java")
-                    it.add("${proj.projectDir}/src/$variant/kotlin")
-                }
+                val variant = proj.debugVariantName()
+                it.add("${proj.projectDir}/src/main/java")
+                it.add("${proj.projectDir}/src/main/kotlin")
+                it.add("${proj.projectDir}/src/$variant/java")
+                it.add("${proj.projectDir}/src/$variant/kotlin")
                 // Multiplatform source sets. A missing directory contributes nothing, so these are
                 // harmless on the modules that are still plain Android.
                 it.add("${proj.projectDir}/src/commonMain/kotlin")
@@ -97,17 +112,16 @@ project.afterEvaluate {
 
         val executions = mutableListOf<File>()
         subprojects.forEach { proj ->
-            variants.forEach { variant ->
-                val path = proj.layout.buildDirectory.dir("outputs/unit_test_code_coverage/${variant}UnitTest/test${variant.replaceFirstChar(Char::titlecase)}UnitTest.exec").get()
-                files(path).forEach { file ->
-                    println("Collecting execution data from: ${file.absolutePath}")
-                    executions.add(file)
-                }
-                val androidPath = proj.layout.buildDirectory.dir("outputs/code_coverage/${variant}AndroidTest/connected/").get()
-                fileTree(androidPath).forEach { file ->
-                    println("Collecting android execution data from: ${file.absolutePath}")
-                    executions.add(file)
-                }
+            val variant = proj.debugVariantName()
+            val path = proj.layout.buildDirectory.dir("outputs/unit_test_code_coverage/${variant}UnitTest/test${variant.replaceFirstChar(Char::titlecase)}UnitTest.exec").get()
+            files(path).forEach { file ->
+                println("Collecting execution data from: ${file.absolutePath}")
+                executions.add(file)
+            }
+            val androidPath = proj.layout.buildDirectory.dir("outputs/code_coverage/${variant}AndroidTest/connected/").get()
+            fileTree(androidPath).forEach { file ->
+                println("Collecting android execution data from: ${file.absolutePath}")
+                executions.add(file)
             }
             // Multiplatform test tasks write here instead - testAndroidHostTest.exec for a module
             // with an Android target, jvmTest.exec otherwise. Matched to the class directories

@@ -11,7 +11,7 @@ internal fun ErrorScreenPreview() {
         ErrorScreen(
             title = "Pump unreachable",
             status = "Last successful communication 25 minutes ago. Check Bluetooth and pump status.",
-            appIcon = app.aaps.core.ui.R.drawable.ic_error_red_48dp,
+            appIcon = app.aaps.core.ui.R.mipmap.ic_launcher,
             onOk = {},
             onMute = {},
             onMute5Min = {},
@@ -27,7 +27,7 @@ internal fun ErrorScreenShortPreview() {
         ErrorScreen(
             title = "Bolus error",
             status = "Delivery failed.",
-            appIcon = app.aaps.core.ui.R.drawable.ic_error_red_48dp,
+            appIcon = app.aaps.core.ui.R.mipmap.ic_launcher,
             onOk = {},
             onMute = {},
             onMute5Min = {},

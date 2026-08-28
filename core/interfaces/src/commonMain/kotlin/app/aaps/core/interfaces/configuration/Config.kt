@@ -1,5 +1,6 @@
 package app.aaps.core.interfaces.configuration
 
+import app.aaps.core.keys.interfaces.TextRef
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
@@ -60,7 +61,7 @@ interface Config {
     val APPLICATION_ID: String
     val DEBUG: Boolean
     val currentDeviceModelString: String
-    val appName: Int
+    val appName: TextRef
 
     val initProgressFlow: StateFlow<InitProgress>
     val initSnackbarFlow: SharedFlow<String>

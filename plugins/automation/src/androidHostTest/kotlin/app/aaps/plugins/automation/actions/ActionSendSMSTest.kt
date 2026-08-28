@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputString
 import com.google.common.truth.Truth.assertThat
@@ -18,14 +19,14 @@ class ActionSendSMSTest : ActionsTestBase() {
     @BeforeEach
     fun setup() {
 
-        whenever(rh.gs(R.string.sendsmsactionlabel)).thenReturn("Send SMS: %s")
-        whenever(rh.gs(R.string.sendsmsactiondescription)).thenReturn("Send SMS to all numbers")
+        whenever(rh.gs(AutomationStrings.sendsmsactionlabel)).thenReturn("Send SMS: %s")
+        whenever(rh.gs(AutomationStrings.sendsmsactiondescription)).thenReturn("Send SMS to all numbers")
 
         sut = ActionSendSMS(aapsLogger, rh, Provider { pumpEnactResultProvider.get() }, smsCommunicator)
     }
 
     @Test fun friendlyNameTest() = runTest {
-        assertThat(sut.friendlyName()).isEqualTo(R.string.sendsmsactiondescription)
+        assertThat(sut.friendlyName()).isEqualTo(AutomationStrings.sendsmsactiondescription)
     }
 
     @Test fun shortDescriptionTest() = runTest {

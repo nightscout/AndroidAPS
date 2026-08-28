@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.plugins.automation.R
 import com.google.common.truth.Truth.assertThat
 import dev.zacsweers.metro.Provider
@@ -15,13 +16,13 @@ class ActionStopProcessingTest : ActionsTestBase() {
     @BeforeEach
     fun setup() {
 
-        whenever(rh.gs(R.string.stop_processing)).thenReturn("Stop processing")
+        whenever(rh.gs(AutomationStrings.stop_processing)).thenReturn("Stop processing")
         sut = ActionStopProcessing(aapsLogger, rh, Provider { pumpEnactResultProvider.get() })
     }
 
     @Test
     fun friendlyNameTest() = runTest {
-        assertThat(sut.friendlyName()).isEqualTo(R.string.stop_processing)
+        assertThat(sut.friendlyName()).isEqualTo(AutomationStrings.stop_processing)
     }
 
     @Test

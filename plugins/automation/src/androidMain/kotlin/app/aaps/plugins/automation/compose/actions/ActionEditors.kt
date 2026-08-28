@@ -1,5 +1,8 @@
 package app.aaps.plugins.automation.compose.actions
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.automation.AutomationStrings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -90,7 +93,7 @@ fun ActionAlarmEditor(a: ActionAlarm, onChange: () -> Unit) {
     InputStringEditor(
         value = a.text.value,
         onValueChange = { a.text.value = it; onChange() },
-        label = stringResource(R.string.alarm_short)
+        label = stringResource(AutomationStrings.alarm_short)
     )
 }
 
@@ -99,7 +102,7 @@ fun ActionNotificationEditor(a: ActionNotification, onChange: () -> Unit) {
     InputStringEditor(
         value = a.text.value,
         onValueChange = { a.text.value = it; onChange() },
-        label = stringResource(R.string.message_short)
+        label = stringResource(AutomationStrings.message_short)
     )
 }
 
@@ -108,7 +111,7 @@ fun ActionSendSMSEditor(a: ActionSendSMS, onChange: () -> Unit) {
     InputStringEditor(
         value = a.text.value,
         onValueChange = { a.text.value = it; onChange() },
-        label = stringResource(R.string.sendsmsactiontext)
+        label = stringResource(AutomationStrings.sendsmsactiontext)
     )
 }
 
@@ -118,7 +121,7 @@ fun ActionSettingsExportEditor(a: ActionSettingsExport, onChange: () -> Unit) {
     InputStringEditor(
         value = textField.value,
         onValueChange = { textField.value = it; onChange() },
-        label = stringResource(R.string.export_settings_short)
+        label = stringResource(AutomationStrings.export_settings_short)
     )
 }
 
@@ -149,18 +152,18 @@ fun ActionCarePortalEventEditor(a: ActionCarePortalEvent, tick: Int = 0, onChang
         onValueChange = { a.duration.value = it.toInt(); onChange() },
         valueRange = 5.0..(24 * 60.0),
         step = 10.0,
-        unitLabel = TextRef.AndroidRes(CoreUiR.string.units_min)
+        unitLabel = CoreUiStrings.units_min
     )
     InputStringEditor(
         value = a.note.value,
         onValueChange = { a.note.value = it; onChange() },
-        label = stringResource(app.aaps.core.ui.R.string.notes_label)
+        label = stringResource(CoreUiStrings.notes_label)
     )
 }
 
 @Composable
 fun ActionSMBChangeEditor(a: ActionSMBChange, onChange: () -> Unit) {
-    LabelWithElementRow(textPre = stringResource(R.string.newSmbMode)) {
+    LabelWithElementRow(textPre = stringResource(AutomationStrings.newSmbMode)) {
         InputDropdownOnOffEditor(
             on = a.smbState.value,
             onValueChange = { a.smbState.setValue(it); onChange() }
@@ -181,7 +184,7 @@ fun ActionProfileSwitchEditor(
         value = displayValue,
         options = profileNames,
         onValueChange = { a.inputProfileName.value = it; onChange() },
-        label = stringResource(R.string.profilename)
+        label = stringResource(AutomationStrings.profilename)
     )
 }
 
@@ -194,7 +197,7 @@ fun ActionProfileSwitchPercentEditor(a: ActionProfileSwitchPercent, tick: Int = 
         onValueChange = { a.pct.value = it; onChange() },
         valueRange = InputPercent.MIN..InputPercent.MAX,
         step = 5.0,
-        unitLabel = TextRef.AndroidRes(CoreUiR.string.units_percent)
+        unitLabel = CoreUiStrings.units_percent
     )
     NumberInputRow(
         labelResId = app.aaps.core.ui.R.string.duration_label,
@@ -202,7 +205,7 @@ fun ActionProfileSwitchPercentEditor(a: ActionProfileSwitchPercent, tick: Int = 
         onValueChange = { a.duration.value = it.toInt(); onChange() },
         valueRange = 5.0..(24 * 60.0),
         step = 10.0,
-        unitLabel = TextRef.AndroidRes(CoreUiR.string.units_min)
+        unitLabel = CoreUiStrings.units_min
     )
 }
 
@@ -218,7 +221,7 @@ fun ActionRunAutotuneEditor(
         value = a.profileNameOrEmpty().ifEmpty { profileNames.firstOrNull() ?: "" },
         options = profileNames,
         onValueChange = { a.setProfileName(it); onChange() },
-        label = stringResource(app.aaps.core.ui.R.string.autotune_select_profile)
+        label = stringResource(CoreUiStrings.autotune_select_profile)
     )
     NumberInputRow(
         labelResId = app.aaps.core.ui.R.string.autotune_tune_days,
@@ -226,7 +229,7 @@ fun ActionRunAutotuneEditor(
         onValueChange = { a.daysBackRef().value = it.toInt(); onChange() },
         valueRange = 1.0..30.0,
         step = 1.0,
-        unitLabel = TextRef.AndroidRes(CoreUiR.string.units_days)
+        unitLabel = CoreUiStrings.units_days
     )
     InputWeekDayEditor(weekdays = a.daysRef(), onChange = onChange)
 }
@@ -266,7 +269,7 @@ fun ActionStartTempTargetEditor(a: ActionStartTempTarget, tick: Int = 0, onChang
         valueRange = if (isMmol) Constants.TT_RANGE_MMOL else Constants.TT_RANGE_MGDL,
         step = if (isMmol) 0.1 else 1.0,
         decimalPlaces = if (isMmol) 1 else 0,
-        unitLabel = TextRef.AndroidRes(if (isMmol) CoreUiR.string.units_mmol else CoreUiR.string.units_mgdl)
+        unitLabel = if (isMmol) CoreUiStrings.units_mmol else CoreUiStrings.units_mgdl
     )
     NumberInputRow(
         labelResId = app.aaps.core.ui.R.string.duration_label,
@@ -274,7 +277,7 @@ fun ActionStartTempTargetEditor(a: ActionStartTempTarget, tick: Int = 0, onChang
         onValueChange = { a.duration.value = it.toInt(); onChange() },
         valueRange = 5.0..(24 * 60.0),
         step = 10.0,
-        unitLabel = TextRef.AndroidRes(CoreUiR.string.units_min)
+        unitLabel = CoreUiStrings.units_min
     )
 }
 
@@ -298,7 +301,7 @@ private fun ScenePicker(
         onValueChange = { pickedLabel ->
             labelById.entries.firstOrNull { it.value == pickedLabel }?.key?.let(onPicked)
         },
-        label = stringResource(R.string.action_scene_label)
+        label = stringResource(AutomationStrings.action_scene_label)
     )
 }
 

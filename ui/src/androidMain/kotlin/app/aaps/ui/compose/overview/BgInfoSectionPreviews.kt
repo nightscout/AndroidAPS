@@ -7,6 +7,9 @@ import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.overview.graph.BgInfoData
 import app.aaps.core.interfaces.overview.graph.BgRange
 
+// A fixed instant: a preview must render the same every time, and there is no clock provided to it.
+private const val PREVIEW_NOW = 1_780_000_000_000L
+
 @Preview(showBackground = true)
 @Composable
 internal fun BgInfoSectionInRangePreview() {
@@ -17,7 +20,7 @@ internal fun BgInfoSectionInRangePreview() {
                 bgText = "120",
                 bgRange = BgRange.IN_RANGE,
                 isOutdated = false,
-                timestamp = System.currentTimeMillis(),
+                timestamp = PREVIEW_NOW,
                 trendArrow = TrendArrow.FLAT,
                 trendDescription = "Flat",
                 delta = 2.0,
@@ -42,7 +45,7 @@ internal fun BgInfoSectionHighPreview() {
                 bgText = "220",
                 bgRange = BgRange.HIGH,
                 isOutdated = false,
-                timestamp = System.currentTimeMillis(),
+                timestamp = PREVIEW_NOW,
                 trendArrow = TrendArrow.DOUBLE_UP,
                 trendDescription = "Rising fast",
                 delta = 15.0,
@@ -67,7 +70,7 @@ internal fun BgInfoSectionLowPreview() {
                 bgText = "65",
                 bgRange = BgRange.LOW,
                 isOutdated = false,
-                timestamp = System.currentTimeMillis(),
+                timestamp = PREVIEW_NOW,
                 trendArrow = TrendArrow.TRIPLE_DOWN,
                 trendDescription = "Falling rapidly",
                 delta = -10.0,

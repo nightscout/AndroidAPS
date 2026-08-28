@@ -59,7 +59,6 @@ internal class MainViewModelTest {
     @Mock private lateinit var config: Config
     @Mock private lateinit var preferences: Preferences
     @Mock private lateinit var fabricPrivacy: FabricPrivacy
-    @Mock private lateinit var iconsProvider: IconsProvider
     @Mock private lateinit var rh: ResourceHelper
     @Mock private lateinit var dateUtil: DateUtil
     @Mock private lateinit var overviewDataCache: OverviewDataCache
@@ -114,7 +113,7 @@ internal class MainViewModelTest {
         whenever(preferences.observe(StringNonKey.QuickLaunchActions)).thenReturn(MutableStateFlow(""))
 
         sut = MainViewModel(
-            activePlugin, config, preferences, fabricPrivacy, iconsProvider, rh, dateUtil,
+            activePlugin, config, preferences, fabricPrivacy, rh, dateUtil,
             overviewDataCache, iobCobCalculator, profileFunction, constraintChecker, quickWizard,
             automation, persistenceLayer, aapsLogger, quickLaunchResolver, wizardExecutor,
             batchExecutor, uel, loop, protectionCheck, sceneActions, sceneChainTargetResolver,

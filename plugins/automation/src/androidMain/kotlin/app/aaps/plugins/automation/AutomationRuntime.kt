@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation
 
+import app.aaps.core.ui.CoreUiStrings
 import android.Manifest
 import androidx.annotation.VisibleForTesting
 import androidx.compose.ui.text.AnnotatedString
@@ -142,7 +143,8 @@ class AutomationRuntime @Inject constructor(
     // UI-only dependencies, forwarded to the Compose screen via [composeContent].
     private val uel: UserEntryLogger,
     private val profileRepository: ProfileRepository,
-    private val sceneApi: SceneAutomationApi
+    private val sceneApi: SceneAutomationApi,
+    private val pairedBtDevices: PairedBtDevices
 ) : Automation, PermissionProvider, BtConnectionSource {
 
     override val executionEnabled: Boolean get() = config.APS
@@ -161,7 +163,8 @@ class AutomationRuntime @Inject constructor(
             triggerFactory = triggerFactory,
             uel = uel,
             profileRepository = profileRepository,
-            sceneApi = sceneApi
+            sceneApi = sceneApi,
+            pairedBtDevices = pairedBtDevices
         )
 
     private var scope: CoroutineScope? = null
@@ -499,7 +502,7 @@ class AutomationRuntime @Inject constructor(
          */
         if (!(loop as PluginBase).isEnabled()) {
             aapsLogger.debug(LTag.AUTOMATION, "Loop not enabled")
-            executionLog.add(AnnotatedString(rh.gs(app.aaps.core.ui.R.string.disconnected)))
+            executionLog.add(AnnotatedString(rh.gs(CoreUiStrings.disconnected)))
             rxBus.send(EventAutomationUpdateGui())
             commonEventsEnabled = false
         }
@@ -696,14 +699,14 @@ class AutomationRuntime @Inject constructor(
      * @param seconds seconds to the future
      */
     override fun scheduleTimeToEatReminder(seconds: Int) =
-        reminderScheduler.scheduleReminder(seconds, rh.gs(R.string.time_to_eat))
+        reminderScheduler.scheduleReminder(seconds, rh.gs(AutomationStrings.time_to_eat))
 
     /**
      * Create new Automation event to alarm when is time to eat
      */
     override fun scheduleAutomationEventEatReminder() {
         val event = automationEventFactory.newEvent().apply {
-            title = rh.gs(app.aaps.core.ui.R.string.bolus_advisor)
+            title = rh.gs(CoreUiStrings.bolus_advisor)
             readOnly = true
             systemAction = true
             autoRemove = true
@@ -750,7 +753,7 @@ class AutomationRuntime @Inject constructor(
                 })
             }
             // this@AutomationRuntime: inside apply{} on AutomationEventObject, which has its own actionFactory field.
-            actions.add(this@AutomationRuntime.actionFactory.actionAlarm(rh.gs(R.string.time_to_eat)))
+            actions.add(this@AutomationRuntime.actionFactory.actionAlarm(rh.gs(AutomationStrings.time_to_eat)))
         }
 
         addIfNotExists(event)
@@ -761,14 +764,14 @@ class AutomationRuntime @Inject constructor(
      */
     override fun removeAutomationEventEatReminder() {
         val event = automationEventFactory.newEvent().apply {
-            title = rh.gs(app.aaps.core.ui.R.string.bolus_advisor)
+            title = rh.gs(CoreUiStrings.bolus_advisor)
         }
         removeIfExists(event)
     }
 
     override fun scheduleAutomationEventBolusReminder() {
         val event = automationEventFactory.newEvent().apply {
-            title = rh.gs(app.aaps.core.ui.R.string.bolus_reminder)
+            title = rh.gs(CoreUiStrings.bolus_reminder)
             readOnly = true
             systemAction = true
             autoRemove = true
@@ -784,7 +787,7 @@ class AutomationRuntime @Inject constructor(
                 )
             }
             // this@AutomationRuntime: inside apply{} on AutomationEventObject, which has its own actionFactory field.
-            actions.add(this@AutomationRuntime.actionFactory.actionAlarm(rh.gs(R.string.time_to_bolus)))
+            actions.add(this@AutomationRuntime.actionFactory.actionAlarm(rh.gs(AutomationStrings.time_to_bolus)))
         }
 
         addIfNotExists(event)
@@ -792,7 +795,7 @@ class AutomationRuntime @Inject constructor(
 
     override fun removeAutomationEventBolusReminder() {
         val event = automationEventFactory.newEvent().apply {
-            title = rh.gs(app.aaps.core.ui.R.string.bolus_reminder)
+            title = rh.gs(CoreUiStrings.bolus_reminder)
         }
         removeIfExists(event)
     }

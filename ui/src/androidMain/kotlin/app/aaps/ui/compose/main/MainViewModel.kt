@@ -4,9 +4,6 @@ import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.aaps.ui.UiStrings
-import app.aaps.core.interfaces.InterfacesStrings
-import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.data.model.RM
@@ -15,6 +12,7 @@ import app.aaps.core.data.model.TT
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bolus.BatchAction
@@ -26,7 +24,6 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -62,6 +59,7 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.core.objects.wizard.QuickWizardMode
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.core.ui.compose.icons.IcAction
 import app.aaps.core.ui.compose.icons.IcAutomation
@@ -74,18 +72,20 @@ import app.aaps.core.ui.compose.icons.IcTtEatingSoon
 import app.aaps.core.ui.compose.icons.IcTtHypo
 import app.aaps.core.ui.compose.icons.IcTtManual
 import app.aaps.core.ui.extensions.toStringFull
+import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.aboutDialog.AboutDialogData
 import app.aaps.ui.compose.quickLaunch.QuickLaunchAction
 import app.aaps.ui.compose.quickLaunch.QuickLaunchResolver
 import app.aaps.ui.compose.quickLaunch.QuickLaunchSerializer
 import app.aaps.ui.compose.quickLaunch.ResolvedQuickLaunchItem
-import app.aaps.ui.compose.tempTarget.toTTPresetsWithNameRes
+import app.aaps.ui.compose.tempTarget.toTTPresetsWithDisplayName
 import app.aaps.ui.compose.wizardDialog.showWizardBolusConfirmation
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import kotlin.math.abs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -101,7 +101,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.math.abs
 
 // Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
 // unscoped so each screen gets its own.
@@ -113,7 +112,6 @@ class MainViewModel @Inject constructor(
     val config: Config,
     val preferences: Preferences,
     private val fabricPrivacy: FabricPrivacy,
-    private val iconsProvider: IconsProvider,
     private val rh: TextResolver,
     private val dateUtil: DateUtil,
     private val overviewDataCache: OverviewDataCache,
@@ -136,7 +134,9 @@ class MainViewModel @Inject constructor(
     private val rxBus: RxBus,
     private val nsClient: NsClient,
     private val visibilityContext: VisibilityContext,
-    @ApplicationScope private val appScope: CoroutineScope
+    // Unqualified: @ApplicationScope is a javax qualifier and cannot appear in commonMain. The graph
+    // binds the same instance under both names.
+    private val appScope: CoroutineScope
 ) : ViewModel() {
 
     // Event-driven state (drawer, dialogs, simple-mode preference). Imperative .update{} calls
@@ -187,7 +187,6 @@ class MainViewModel @Inject constructor(
     val actionConfirmation: StateFlow<ActionConfirmation?> = _actionConfirmation.asStateFlow()
 
     val versionName: String get() = config.VERSION_NAME
-    val appIcon: Int get() = iconsProvider.getIcon()
     val calcProgressFlow: StateFlow<Int> = overviewDataCache.calcProgressFlow
 
     // Ticker for time-based progress updates (every 30 seconds). Cold flow — only runs while
@@ -611,7 +610,6 @@ class MainViewModel @Inject constructor(
         return AboutDialogData(
             title = "$appName ${config.VERSION}",
             message = message,
-            icon = iconsProvider.getIcon(),
             enabledOptions = enabledOptions
         )
     }
@@ -658,7 +656,7 @@ class MainViewModel @Inject constructor(
 
     /** QuickLaunch TT preset → contact the master, render the master's confirmation, commit on OK (role-transparent). */
     fun requestTempTargetPresetConfirmation(presetId: String) {
-        val presets = preferences.get(StringNonKey.TempTargetPresets).toTTPresetsWithNameRes()
+        val presets = preferences.get(StringNonKey.TempTargetPresets).toTTPresetsWithDisplayName(rh)
         val preset = presets.find { it.id == presetId } ?: return
         val icon = when (preset.reason) {
             TT.Reason.ACTIVITY     -> IcTtActivity

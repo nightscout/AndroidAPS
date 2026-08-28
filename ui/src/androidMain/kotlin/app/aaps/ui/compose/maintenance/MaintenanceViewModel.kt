@@ -1,13 +1,11 @@
 package app.aaps.ui.compose.maintenance
 
-import androidx.annotation.StringRes
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.aaps.core.interfaces.resources.TextResolver
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -28,15 +26,17 @@ import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -44,7 +44,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import app.aaps.core.ui.CoreUiStrings
 
 sealed interface MaintenanceEvent {
     data object RecreateActivity : MaintenanceEvent
@@ -96,7 +95,7 @@ class MaintenanceViewModel @Inject constructor(
 
     fun refreshExportConfig() {
         viewModelScope.launch {
-            val (config, accessGranted) = withContext(Dispatchers.IO) {
+            val (config, accessGranted) = withContext(aapsIoDispatcher) {
                 importExportPrefs.getExportConfig() to fileListProvider.isDirectoryAccessGranted()
             }
             _exportConfig.value = config
@@ -149,7 +148,7 @@ class MaintenanceViewModel @Inject constructor(
 
     fun sendLogs() {
         viewModelScope.launch {
-            val result = withContext(Dispatchers.IO) {
+            val result = withContext(aapsIoDispatcher) {
                 maintenance.executeSendLogs()
             }
             val message = buildResultMessage(
@@ -162,7 +161,7 @@ class MaintenanceViewModel @Inject constructor(
     }
 
     fun deleteLogs() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(aapsIoDispatcher) {
             try {
                 maintenance.deleteLogs(5)
                 uel.log(Action.DELETE_LOGS, Sources.Maintenance)
@@ -177,7 +176,7 @@ class MaintenanceViewModel @Inject constructor(
     // Database actions
 
     fun resetApsResults() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(aapsIoDispatcher) {
             try {
                 persistenceLayer.clearApsResults()
                 aapsLogger.debug("Aps results cleared")
@@ -191,7 +190,7 @@ class MaintenanceViewModel @Inject constructor(
     fun cleanupDatabases() {
         viewModelScope.launch {
             try {
-                val result = withContext(Dispatchers.IO) {
+                val result = withContext(aapsIoDispatcher) {
                     persistenceLayer.cleanupDatabase(93, deleteTrackedChanges = true)
                 }
                 if (result.isNotEmpty()) {
@@ -208,7 +207,7 @@ class MaintenanceViewModel @Inject constructor(
     fun resetDatabases() {
         viewModelScope.launch {
             try {
-                withContext(Dispatchers.IO) {
+                withContext(aapsIoDispatcher) {
                     persistenceLayer.clearDatabases()
                     for (plugin in activePlugin.getSpecificPluginsListByInterface(OwnDatabasePlugin::class)) {
                         (plugin as OwnDatabasePlugin).clearAllTables()
@@ -247,7 +246,7 @@ class MaintenanceViewModel @Inject constructor(
     fun exportCsv() {
         uel.log(Action.EXPORT_CSV, Sources.Maintenance)
         viewModelScope.launch {
-            val result = withContext(Dispatchers.IO) {
+            val result = withContext(aapsIoDispatcher) {
                 importExportPrefs.executeCsvExport()
             }
             val message = buildResultMessage(
@@ -282,7 +281,7 @@ class MaintenanceViewModel @Inject constructor(
 
     fun connectGoogleDrive() {
         val info = cloudDirectoryManager.getCloudDirectoryInfo()
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(aapsIoDispatcher) {
             try {
                 if (info.hasCredentials) {
                     if (cloudDirectoryManager.testConnection()) {
@@ -347,7 +346,7 @@ class MaintenanceViewModel @Inject constructor(
 
     fun reauthorize() {
         cloudDirectoryManager.clearCloudSettings()
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(aapsIoDispatcher) {
             startAuthAndComplete()
         }
     }
@@ -450,7 +449,7 @@ class MaintenanceViewModel @Inject constructor(
 
     private fun doExport(password: String) {
         viewModelScope.launch {
-            val result = withContext(Dispatchers.IO) {
+            val result = withContext(aapsIoDispatcher) {
                 importExportPrefs.executeExport(password)
             }
             val message = buildExportResultMessage(result)
