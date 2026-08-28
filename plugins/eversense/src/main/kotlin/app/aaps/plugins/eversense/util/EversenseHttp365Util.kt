@@ -31,10 +31,28 @@ class EversenseHttp365Util {
         private val CLIENT_NO = 2
         private val CLIENT_TYPE = 128
 
-        // Overridable for unit tests
+        // US endpoints. Overridable for unit tests. Used whenever
+        // EversenseSecureState.isEuropeanRegion is false (the default) — untouched by the
+        // EU routing below.
         internal var tokenBaseUrl = "https://usiamapi.eversensedms.com/"
         internal var uploadBaseUrl = "https://usmobileappmsprod.eversensedms.com/"
         internal var careBaseUrl = "https://usapialpha.eversensedms.com/"
+
+        // EU/OUS endpoints, selected per-call via effectiveTokenBaseUrl/effectiveUploadBaseUrl/
+        // effectiveCareBaseUrl when EversenseSecureState.isEuropeanRegion is true.
+        // tokenBaseUrl/uploadBaseUrl confirmed live: both CNAME to a distinctly-named AWS load
+        // balancer ("sens-ous-dms-prod-app-lb", eu-central-1) — the real "us" -> "ous" analogue
+        // of the confirmed-live US hosts above. careBaseUrl reuses the OUS "care" host
+        // EversenseHttpE3Util already uses in production for real EU E3 transmitters — the
+        // naive "us" -> "ous" swap of usapialpha (ousapialpha) is dead, so this is the
+        // confirmed-working OUS care endpoint instead, shared across transmitter generations.
+        private const val euTokenBaseUrl = "https://ousiamapi.eversensedms.com/"
+        private const val euUploadBaseUrl = "https://ousmobileappmsprod.eversensedms.com/"
+        private const val euCareBaseUrl = "https://ousalphaapiservices.eversensedms.com/"
+
+        private fun effectiveTokenBaseUrl(state: EversenseSecureState) = if (state.isEuropeanRegion) euTokenBaseUrl else tokenBaseUrl
+        private fun effectiveUploadBaseUrl(state: EversenseSecureState) = if (state.isEuropeanRegion) euUploadBaseUrl else uploadBaseUrl
+        private fun effectiveCareBaseUrl(state: EversenseSecureState) = if (state.isEuropeanRegion) euCareBaseUrl else careBaseUrl
 
         fun login(preference: SharedPreferences): LoginResponseModel? {
             val state = getState(preference)
@@ -47,7 +65,7 @@ class EversenseHttp365Util {
                     "password=${URLEncoder.encode(state.password, "UTF-8")}"
                 ).joinToString("&")
 
-                val url = URL("${tokenBaseUrl}connect/token")
+                val url = URL("${effectiveTokenBaseUrl(state)}connect/token")
                 val conn = url.openConnection() as HttpURLConnection
                 conn.requestMethod = "POST"
                 conn.doOutput = true
@@ -87,6 +105,12 @@ class EversenseHttp365Util {
             }
         }
 
+        // deviceauthorization.eversensedms.com is deliberately NOT routed by region: it has no
+        // confirmed OUS counterpart (unlike tokenBaseUrl/uploadBaseUrl/careBaseUrl above), and
+        // the fleet/vault operation it performs — issuing a certificate for a transmitter serial
+        // + client public key — is plausibly shared, account-independent infrastructure rather
+        // than region-partitioned like the account-login hosts. Revisit if an EU user's fleet
+        // cert request fails against this host.
         fun getFleetSecretV2(accessToken: String, serialNumber: ByteArray, nonce: ByteArray, flags: Boolean, publicKey: ByteArray): FleetSecretV2ResponseModel? {
             try {
                 val publicKeyStr = Base64.getUrlEncoder().withoutPadding()
@@ -179,6 +203,7 @@ class EversenseHttp365Util {
                 EversenseLogger.error(TAG, "Cannot upload glucose — no valid access token")
                 return false
             }
+            val state = getState(preferences)
 
             return try {
                 // Only upload readings that have raw BLE data — readings without rawResponseHex are skipped.
@@ -205,7 +230,7 @@ class EversenseHttp365Util {
                     """{"SensorId":"$portalSensorId","TransmitterId":"$transmitterSerialNumber","Timestamp":"$ts","CurrentGlucoseValue":${r.glucoseInMgDl},"CurrentGlucoseDateTime":"$ts","FWVersion":"$firmwareVersion","EssentialLog":"$essentialLog"}"""
                 }
 
-                val url = URL("${uploadBaseUrl}api/v1.0/DiagnosticLog/PostEssentialLogs")
+                val url = URL("${effectiveUploadBaseUrl(state)}api/v1.0/DiagnosticLog/PostEssentialLogs")
                 val conn = url.openConnection() as HttpURLConnection
                 conn.requestMethod = "POST"
                 conn.connectTimeout = 30_000
@@ -257,7 +282,7 @@ class EversenseHttp365Util {
                 val ts = dateFormatter.get().format(Date(timestamp))
                 val jsonBody = """{"CurrentGlucose":$glucose,"CGTime":"$ts","GlucoseTrend":${EversenseDmsBinaryCodec.trendOrdinal(trend)},"SignalStrength":${EversenseDmsBinaryCodec.signalStrengthOrdinal(signalStrength)},"BatteryStrength":${batteryPercentage.coerceAtLeast(0)},"IsTransmitterConnected":1}"""
 
-                val url = URL("${careBaseUrl}api/care/PutCurrentValues")
+                val url = URL("${effectiveCareBaseUrl(getState(preferences))}api/care/PutCurrentValues")
                 val conn = url.openConnection() as HttpURLConnection
                 conn.requestMethod = "POST"
                 conn.connectTimeout = 30_000
@@ -317,7 +342,7 @@ class EversenseHttp365Util {
 
                 val jsonBody = """{"deviceType":"SMSIMeter","deviceName":"Smart Transmitter (Android)","deviceID":"$transmitterSerialNumber","offsetBytes":"$offsetBytes","sgBytes":"$sgBytes","mgBytes":"$mgBytes","patientBytes":"$patientBytes","alertBytes":"$alertBytes","algorithmVersion":"10"}"""
 
-                val url = URL("${careBaseUrl}api/care/PutDeviceEvents")
+                val url = URL("${effectiveCareBaseUrl(getState(preferences))}api/care/PutDeviceEvents")
                 val conn = url.openConnection() as HttpURLConnection
                 conn.requestMethod = "POST"
                 conn.connectTimeout = 30_000

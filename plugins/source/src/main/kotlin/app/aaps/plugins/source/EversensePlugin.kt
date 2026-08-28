@@ -198,9 +198,13 @@ class EversensePlugin @Inject constructor(
             // Sync credentials into SECURE_STATE immediately — fixes new phone deadlock
             // where login fails before first glucose reading so SECURE_STATE never gets populated
             val secureState = getSecureState()
-            val credentialsChanged = secureState.username != username || secureState.password != password
+            val europeanRegion = preferences.get(BooleanKey.EversenseEuropeanRegion)
+            // Region flips the DMS host a cached token was issued by, so it must invalidate
+            // the token cache exactly like a credentials change does.
+            val credentialsChanged = secureState.username != username || secureState.password != password || secureState.isEuropeanRegion != europeanRegion
             secureState.username = username
             secureState.password = password
+            secureState.isEuropeanRegion = europeanRegion
             saveSecureState(secureState)
             // Also set on EversenseCGMPlugin so GattCallback can sync before login
             eversense.username = username
@@ -238,7 +242,8 @@ class EversensePlugin @Inject constructor(
                 titleResId = R.string.eversense_credentials_title,
                 items = listOf(
                     EversenseStringKey.EversenseUsername,
-                    EversenseStringKey.EversensePassword
+                    EversenseStringKey.EversensePassword,
+                    BooleanKey.EversenseEuropeanRegion
                 )
             ),
             EversenseIntentKey.EversenseSignOut.withClick {
@@ -478,10 +483,13 @@ class EversensePlugin @Inject constructor(
                 val password = preferences.get(EversenseStringKey.EversensePassword)
                 if (username.isNotEmpty() && password.isNotEmpty()) {
                     val secureState = getSecureState()
-                    // Only invalidate the token cache if credentials have actually changed.
-                    val credentialsChanged = secureState.username != username || secureState.password != password
+                    val europeanRegion = preferences.get(BooleanKey.EversenseEuropeanRegion)
+                    // Only invalidate the token cache if credentials or region have actually
+                    // changed — region flips the DMS host a cached token was issued by.
+                    val credentialsChanged = secureState.username != username || secureState.password != password || secureState.isEuropeanRegion != europeanRegion
                     secureState.username = username
                     secureState.password = password
+                    secureState.isEuropeanRegion = europeanRegion
                     saveSecureState(secureState)
                     if (credentialsChanged) {
                         val prefs2 = eversense.preferences

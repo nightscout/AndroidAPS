@@ -465,5 +465,7 @@
     <string name="eversense_use_smoothing">Use ESEL smoothing</string>
     <string name="eversense_cloud_upload_enabled">Enable Eversense cloud upload</string>
     <string name="eversense_cloud_upload_toast">Show cloud upload result</string>
+    <string name="eversense_european_region">Eversense 365 transmitter is European</string>
+    <string name="eversense_european_region_summary">Routes login and cloud sync through Eversense\'s European servers instead of the US ones. Leave off for a US transmitter.</string>
 </resources>
 
