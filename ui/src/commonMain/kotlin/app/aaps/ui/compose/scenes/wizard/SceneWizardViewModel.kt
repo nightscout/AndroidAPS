@@ -34,6 +34,7 @@ import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactoryKey
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
+import kotlin.reflect.KClass
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -152,7 +153,8 @@ class SceneWizardViewModel @AssistedInject constructor(
     fun translateEventType(type: TE.Type): String = translator.translate(type)
 
     fun selectTemplate(template: SceneTemplate) {
-        val hasAction = { cls: Class<*> -> template.defaultActions.any { cls.isInstance(it) } }
+        // KClass.isInstance rather than Class.isInstance: the same test, without JVM reflection.
+        val hasAction = { cls: KClass<*> -> template.defaultActions.any { cls.isInstance(it) } }
 
         // Determine default TT action: use user's preset matching the template reason, or null (no pre-selection)
         val templateTt = template.defaultActions.filterIsInstance<SceneAction.TempTarget>().firstOrNull()
@@ -176,11 +178,11 @@ class SceneWizardViewModel @AssistedInject constructor(
         _state.value = WizardState(
             template = template,
             currentStep = if (template == SceneTemplate.BLANK) STEP_PROFILE else STEP_INFO,
-            profileEnabled = hasAction(SceneAction.ProfileSwitch::class.java),
-            ttEnabled = hasAction(SceneAction.TempTarget::class.java),
-            smbEnabled = hasAction(SceneAction.SmbToggle::class.java),
-            runningModeEnabled = hasAction(SceneAction.LoopModeChange::class.java),
-            carePortalEnabled = hasAction(SceneAction.CarePortalEvent::class.java),
+            profileEnabled = hasAction(SceneAction.ProfileSwitch::class),
+            ttEnabled = hasAction(SceneAction.TempTarget::class),
+            smbEnabled = hasAction(SceneAction.SmbToggle::class),
+            runningModeEnabled = hasAction(SceneAction.LoopModeChange::class),
+            carePortalEnabled = hasAction(SceneAction.CarePortalEvent::class),
             profileAction = profileAction,
             ttAction = ttAction,
             smbAction = smbAction,
