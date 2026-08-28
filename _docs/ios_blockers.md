@@ -46,6 +46,38 @@ Moving one test file across immediately found two faults the JVM run had hidden:
 implement every interface member (Mockito had been filling it in), and a backticked test name
 containing a comma, which Kotlin/Native rejects outright.
 
+## Hint: most common code still has no iOS test coverage
+
+Measured 2026-08-27, after `:implementation` got its `commonTest`. This is a survey, not a claim that
+anything is broken - but the one module that was converted immediately turned up three real faults,
+so it is worth working through.
+
+| module | commonMain files | commonTest | test files that never run on iOS |
+|---|---|---|---|
+| `plugins/aps` | 23 | none | 33 |
+| `core/objects` | 26 | none | 27 |
+| `database/persistence` | 32 | none | 16 |
+| `core/interfaces` | 255 | none | 13 |
+| `plugins/sensitivity`, `smoothing`, `calibration` | 22 | none | 9 |
+| `core/utils` | 6 | none | 5 |
+
+Only `core/data`, `shared/impl` and `implementation` have a `commonTest` at all. Everything else
+tests `commonMain` classes from `androidHostTest`, which runs on the JVM only - so code that ships to
+iOS is verified only on Android. `plugins/aps` is the dosing algorithm and `database/persistence` is
+what writes user data, so those two are worth the most.
+
+What converting one module found, none of which the JVM could have shown: a fake that did not
+implement every interface member because Mockito had been filling it in, a backticked test name
+containing a comma, which Kotlin/Native rejects, and a segfault in `NSLog` that only appeared when
+something called through the injected logger.
+
+This is left for the kmp session because it touches many modules at once. Friction to expect: AAPS
+tests lean on Mockito, which is JVM only, so a test that mocks has to be rewritten with hand written
+fakes before it can move. Expect each module to split into "moves today" and "needs a rewrite first"
+- converting the first group and recording the second is a good outcome, a clean sweep is not
+realistic. See `implementation/src/commonTest/.../CommonNotificationManagerTest.kt` for the shape,
+and the section above for the source set to add.
+
 ## Gotchas in iOS interop
 
 Collected so nobody pays for them twice. All were found by tests or a crash, not by review.
@@ -128,10 +160,12 @@ Not blockers, and not for the Windows session to fix. Listed so nobody is surpri
 - `IosSystemNotificationPlatform.setAudibleAlarm` only logs. An iOS notification carries its own
   sound, and reposting one every time the owner is recomputed would re-alert the user. A real
   ramping alarm needs a critical alert entitlement or an audio session.
-- `IosSystemNotificationPlatform.onDismissed` is not wired. It needs a
-  `UNUserNotificationCenterDelegate` set on the shared centre by the app during start up, which that
-  class cannot own without two of them fighting over the slot. A notification cleared on the lock
-  screen therefore stays in the in-app list.
+- `IosSystemNotificationPlatform.onDismissed` **is** wired now. Two things were needed and either
+  one missing makes it silently never fire: a delegate on the shared centre, held in a property
+  because that slot is weak, and a `UNNotificationCategory` carrying `customDismissAction`, without
+  which iOS reports taps but not dismissals. The one caveat left is that it calls
+  `setNotificationCategories` with only its own category, so it would clobber categories registered
+  elsewhere - nothing else registers any today.
 
 ## Done
 
