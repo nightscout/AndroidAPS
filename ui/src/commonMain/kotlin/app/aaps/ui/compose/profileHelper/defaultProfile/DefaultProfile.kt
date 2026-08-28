@@ -13,7 +13,6 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlin.math.abs
-import java.util.TreeMap
 
 @Suppress("LocalVariableName")
 @SingleIn(AppScope::class)
@@ -22,10 +21,10 @@ class DefaultProfile @Inject constructor(
     private val profileUtil: ProfileUtil
 ) {
 
-    private var oneToFive: TreeMap<Double, Array<Double>> = TreeMap()
-    private var sixToEleven: TreeMap<Double, Array<Double>> = TreeMap()
-    private var twelveToSeventeen: TreeMap<Double, Array<Double>> = TreeMap()
-    @Suppress("unused") var eighteenToTwentyFour: TreeMap<Double, Array<Double>> = TreeMap()
+    private var oneToFive: MutableMap<Double, Array<Double>> = mutableMapOf()
+    private var sixToEleven: MutableMap<Double, Array<Double>> = mutableMapOf()
+    private var twelveToSeventeen: MutableMap<Double, Array<Double>> = mutableMapOf()
+    @Suppress("unused") var eighteenToTwentyFour: MutableMap<Double, Array<Double>> = mutableMapOf()
 
     /**
      * Builds the profile directly.
@@ -154,19 +153,24 @@ class DefaultProfile @Inject constructor(
         twelveToSeventeen[47.30] = arrayOf(1.50, 1.50, 1.70, 1.70, 2.00, 2.00, 2.20, 2.30, 2.20, 2.00, 1.80, 1.60, 1.60, 1.60, 1.80, 2.00, 2.10, 1.90, 1.80, 1.80, 2.00, 2.00, 1.60, 1.60)
     }
 
-    private fun closest(map: TreeMap<Double, Array<Double>>, key: Double): Array<Double>? {
-        val low = map.floorEntry(key)
-        val high = map.ceilingEntry(key)
-        var res: Array<Double>? = null
-        if (low != null && high != null) {
-            res = if (abs(key - low.key) < abs(key - high.key))
-                low.value
-            else
-                high.value
-        } else if (low != null || high != null) {
-            res = if (low != null) low.value else high!!.value
+    /**
+     * The entry nearest [key], preferring the higher one when both are equally far.
+     *
+     * This used to be `TreeMap.floorEntry`/`ceilingEntry`, which is JVM only. The neighbours are
+     * found by scanning instead - these maps hold a few dozen entries, so there is nothing to gain
+     * from a sorted structure, and the tie is still broken the same way.
+     */
+    private fun closest(map: Map<Double, Array<Double>>, key: Double): Array<Double>? {
+        val lowKey = map.keys.filter { it <= key }.maxOrNull()
+        val highKey = map.keys.filter { it >= key }.minOrNull()
+        return when {
+            lowKey != null && highKey != null ->
+                if (abs(key - lowKey) < abs(key - highKey)) map[lowKey] else map[highKey]
+
+            lowKey != null                    -> map[lowKey]
+            highKey != null                   -> map[highKey]
+            else                              -> null
         }
-        return res
     }
 
     /** Hours at which [singleValueArray] and [singleValueArrayFromMmolToUnits] change value. */

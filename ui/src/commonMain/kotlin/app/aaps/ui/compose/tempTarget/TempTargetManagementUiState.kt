@@ -2,9 +2,9 @@ package app.aaps.ui.compose.tempTarget
 
 import androidx.compose.runtime.Immutable
 
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TTPreset
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.ui.compose.ScreenMode
 
 /**

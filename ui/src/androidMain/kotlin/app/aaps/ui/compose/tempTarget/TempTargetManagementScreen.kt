@@ -75,8 +75,10 @@ import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.components.CarouselReorderConfig
 import app.aaps.ui.compose.components.ContentContainer
 import app.aaps.ui.compose.components.ManagementCarousel
+import kotlin.time.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlinx.coroutines.launch
-import java.util.Calendar
 
 /**
  * Screen for managing temporary target presets and activating TTs.
@@ -160,15 +162,12 @@ fun TempTargetManagementScreen(
         DatePickerModal(
             onDateSelected = { selectedMillis ->
                 selectedMillis?.let {
-                    val currentCalendar = Calendar.getInstance().apply {
-                        timeInMillis = uiState.eventTime
-                    }
-                    val newCalendar = Calendar.getInstance().apply {
-                        timeInMillis = it
-                        set(Calendar.HOUR_OF_DAY, currentCalendar.get(Calendar.HOUR_OF_DAY))
-                        set(Calendar.MINUTE, currentCalendar.get(Calendar.MINUTE))
-                    }
-                    viewModel.updateEventTime(newCalendar.timeInMillis)
+                    // Keep the time of day the user already chose, move only the date.
+                    val current = Instant.fromEpochMilliseconds(uiState.eventTime)
+                        .toLocalDateTime(TimeZone.currentSystemDefault())
+                    viewModel.updateEventTime(
+                        viewModel.dateUtil.mergeHourMinuteToTimestamp(it, current.hour, current.minute, true)
+                    )
                 }
             },
             onDismiss = { showDatePicker = false },
@@ -178,22 +177,19 @@ fun TempTargetManagementScreen(
 
     // Time picker modal
     if (showTimePicker) {
-        val calendar = Calendar.getInstance().apply {
-            timeInMillis = uiState.eventTime
-        }
+        val eventLocal = Instant.fromEpochMilliseconds(uiState.eventTime)
+            .toLocalDateTime(TimeZone.currentSystemDefault())
 
         TimePickerModal(
             onTimeSelected = { hour, minute ->
-                val newCalendar = Calendar.getInstance().apply {
-                    timeInMillis = uiState.eventTime
-                    set(Calendar.HOUR_OF_DAY, hour)
-                    set(Calendar.MINUTE, minute)
-                }
-                viewModel.updateEventTime(newCalendar.timeInMillis)
+                // Keep the date, move only the time of day.
+                viewModel.updateEventTime(
+                    viewModel.dateUtil.mergeHourMinuteToTimestamp(uiState.eventTime, hour, minute, true)
+                )
             },
             onDismiss = { showTimePicker = false },
-            initialHour = calendar.get(Calendar.HOUR_OF_DAY),
-            initialMinute = calendar.get(Calendar.MINUTE),
+            initialHour = eventLocal.hour,
+            initialMinute = eventLocal.minute,
             is24Hour = true
         )
     }

@@ -41,6 +41,8 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import kotlin.concurrent.atomics.AtomicBoolean
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -54,12 +56,12 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.concurrent.atomic.AtomicBoolean
 
 // Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
 // unscoped so each screen gets its own.
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
+@OptIn(ExperimentalAtomicApi::class)
 class InsulinManagementViewModel @Inject constructor(
     val insulinManager: InsulinManager,
     private val preferences: Preferences,
@@ -102,6 +104,7 @@ class InsulinManagementViewModel @Inject constructor(
 
     // Guards [prepareActivation] against re-taps while a prepare round-trip is still in flight, so a
     // double-tap on Activate can't launch two concurrent prepares.
+    // Kotlin's atomics rather than java.util.concurrent: same compare-and-set, available on every target.
     private val activating = AtomicBoolean(false)
 
     init {
@@ -524,7 +527,7 @@ class InsulinManagementViewModel @Inject constructor(
                     else                       -> Unit // Unconfirmed → app-level modal
                 }
             } finally {
-                activating.set(false)
+                activating.store(false)
             }
         }
     }

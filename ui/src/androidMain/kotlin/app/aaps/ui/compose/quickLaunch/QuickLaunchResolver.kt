@@ -3,13 +3,13 @@ package app.aaps.ui.compose.quickLaunch
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Extension
 import androidx.compose.ui.graphics.vector.ImageVector
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.data.model.TT
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileRepository
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.scenes.SceneStore
 import app.aaps.core.interfaces.tempTargets.toTTPresets
 import app.aaps.core.keys.StringNonKey
@@ -46,7 +46,7 @@ class QuickLaunchResolver @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val profileRepository: ProfileRepository,
     private val sceneRepository: SceneStore,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val elementAvailability: ElementAvailability
 ) {
 
