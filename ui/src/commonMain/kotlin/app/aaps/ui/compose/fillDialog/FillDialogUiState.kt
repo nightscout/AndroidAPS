@@ -18,7 +18,7 @@ data class FillDialogUiState(
     val notes: String = "",
 
     // Date/Time
-    val eventTime: Long = System.currentTimeMillis(),
+    val eventTime: Long = 0L,
     val eventTimeChanged: Boolean = false,
 
     // Config values (set once on init)

@@ -15,8 +15,8 @@ data class CarbsDialogUiState(
     val alarmChecked: Boolean = false,
     val bolusReminderChecked: Boolean = false,
     val notes: String = "",
-    val eventTime: Long = System.currentTimeMillis(),
-    val eventTimeOriginal: Long = System.currentTimeMillis(),
+    val eventTime: Long = 0L,
+    val eventTimeOriginal: Long = 0L,
 
     // Config (set once during init)
     val maxCarbs: Int = 0,

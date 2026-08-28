@@ -12,8 +12,8 @@ data class InsulinDialogUiState(
     val eatingSoonTtChecked: Boolean = false,
     val recordOnlyChecked: Boolean = false,
     val notes: String = "",
-    val eventTime: Long = System.currentTimeMillis(),
-    val eventTimeOriginal: Long = System.currentTimeMillis(),
+    val eventTime: Long = 0L,
+    val eventTimeOriginal: Long = 0L,
     val selectedIcfg: ICfg? = null,
     val insulins: List<ICfg> = emptyList(),
 

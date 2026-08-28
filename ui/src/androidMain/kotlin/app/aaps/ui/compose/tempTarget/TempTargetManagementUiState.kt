@@ -44,7 +44,7 @@ data class TempTargetManagementUiState(
     // ===== Activation fields (NOT saved to preset, only for activation) =====
 
     /** Date/time for activation (default: now) */
-    val eventTime: Long = System.currentTimeMillis(),
+    val eventTime: Long = 0L,
 
     /** Whether user modified the event time */
     val eventTimeChanged: Boolean = false,

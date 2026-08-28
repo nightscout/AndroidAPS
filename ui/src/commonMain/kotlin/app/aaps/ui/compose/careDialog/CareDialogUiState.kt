@@ -19,7 +19,7 @@ data class CareDialogUiState(
     val notes: String = "",
 
     // Date/Time (always visible)
-    val eventTime: Long = System.currentTimeMillis(),
+    val eventTime: Long = 0L,
     val eventTimeChanged: Boolean = false,
 
     // Config values
