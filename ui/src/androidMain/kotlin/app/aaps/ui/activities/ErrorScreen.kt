@@ -17,6 +17,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Error
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -82,9 +85,10 @@ fun ErrorScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     // Main error icon
-                    Image(
-                        painter = painterResource(id = app.aaps.core.ui.R.drawable.ic_error_red_48dp),
+                    Icon(
+                        imageVector = Icons.Filled.Error,
                         contentDescription = null,
+                        tint = MaterialTheme.colorScheme.error,
                         modifier = Modifier.size(48.dp)
                     )
                     // App icon badge in bottom-right corner
