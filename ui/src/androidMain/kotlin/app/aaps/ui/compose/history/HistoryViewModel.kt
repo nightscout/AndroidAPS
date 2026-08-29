@@ -1,5 +1,7 @@
 package app.aaps.ui.compose.history
 
+import kotlinx.coroutines.launch
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.ViewModel
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.time.T
@@ -65,14 +67,14 @@ class HistoryViewModel @Inject constructor(
     }
 
     fun onPause() {
-        calculationWorkflow.stopCalculation(CalculationWorkflow.HISTORY_CALCULATION, "onPause")
+        viewModelScope.launch { calculationWorkflow.stopCalculation(CalculationWorkflow.HISTORY_CALCULATION, "onPause") }
     }
 
     fun selectedDateMillis(): Long =
         dateUtil.getTimestampWithCurrentTimeOfDay(historyScope.overviewData.fromTime)
 
     override fun onCleared() {
-        calculationWorkflow.stopCalculation(CalculationWorkflow.HISTORY_CALCULATION, "onCleared")
+        viewModelScope.launch { calculationWorkflow.stopCalculation(CalculationWorkflow.HISTORY_CALCULATION, "onCleared") }
         historyScope.onDestroy()
         super.onCleared()
     }
@@ -93,7 +95,9 @@ class HistoryViewModel @Inject constructor(
         _uiState.value = buildState()
     }
 
-    private fun runCalculation(from: String) {
+    // Launches rather than suspends: the five callers are UI callbacks, and the calculation is
+    // fire-and-forget from their point of view.
+    private fun runCalculation(from: String) = viewModelScope.launch {
         // Clear the old window before recalculating. The worker fills the cache one series at a time
         // and BG comes last, so without this the graph shows the new date over the previous day's
         // blood glucose for the several seconds the calculation takes - insulin and BG history that
