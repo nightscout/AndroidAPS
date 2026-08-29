@@ -47,11 +47,21 @@ import kotlin.math.abs
 
 class Eversense365Communicator {
     companion object {
-        private const val TAG = "EversenseE3Communicator"
+        private const val TAG = "Eversense365Communicator"
         private val JSON = Json { ignoreUnknownKeys = true }
         private val handler = Handler(Looper.getMainLooper())
 
         private var sensorIdLength = 10
+
+        // The transmitter's history log and its "current glucose" characteristic timestamp the
+        // same physical measurement a few seconds apart (log entry first, live characteristic a
+        // moment later) - on a fast, already-connected keep-alive round trip that gap is usually
+        // too small for the log to have caught up yet, but after a slower full reconnect (BLE
+        // connect + service discovery + auth) there's enough elapsed time for the log to already
+        // contain it. The backfill filter below excludes any history entry within this tolerance
+        // of the live reading's timestamp so it isn't double-counted as a distinct reading -
+        // comfortably under the ~5-minute reading cadence, so a real gap still backfills correctly.
+        private val BACKFILL_DEDUP_TOLERANCE_MS = TimeUnit.SECONDS.toMillis(90)
 
         fun readGlucose(gatt: EversenseGattCallback, preferences: SharedPreferences, watchers: List<EversenseWatcher>) {
             val stateJson = preferences.getString(StorageKeys.STATE, null) ?: "{}"
@@ -110,7 +120,7 @@ class Eversense365Communicator {
                     GetGlucoseLogValuesPacket(from = range.from, to = range.to, sensorIdLength = sensorIdLength)
                 )
                 val backfill = history.glucoseHistory
-                    .filter { it.datetime > previousGlucoseDatetime && it.datetime < glucoseData.datetime }
+                    .filter { it.datetime > previousGlucoseDatetime && it.datetime < glucoseData.datetime - BACKFILL_DEDUP_TOLERANCE_MS }
                     .map { item -> EversenseCGMResult(glucoseInMgDl = item.valueInMgDl, datetime = item.datetime, trend = item.trend, rawResponseHex = item.rawResponseHex) }
                 if (backfill.isNotEmpty()) {
                     result.addAll(0, backfill)
