@@ -2,7 +2,10 @@ package app.aaps.ios.shell
 
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.ios.shell.di.IosProbeGraph
+import app.aaps.core.interfaces.notifications.AlarmSound
+import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.keys.BooleanKey
+import platform.Foundation.NSBundle
 import platform.Foundation.NSFileManager
 import app.aaps.implementation.logging.AAPSLoggerIos
 import app.aaps.core.interfaces.logging.LTag
@@ -171,5 +174,32 @@ object ShellInfo {
         ).joinToString("\n")
     } catch (e: Throwable) {
         "LOGGING FAILED: ${e::class.simpleName}: ${e.message}"
+    }
+
+    /**
+     * Looks for the alarm audio, and starts one briefly.
+     *
+     * Two things here can fail without any compiler noticing. The four MP3s are copied into the
+     * bundle by a script in the Xcode project, so a rename on the Android side leaves them missing,
+     * and `AVAudioPlayer` refuses to start for reasons - a bad file, a session it cannot activate -
+     * that only show at run time. Both would end as an alarm that stays silent, which is the worst
+     * way for this to break.
+     */
+    fun checkAlarm(): String = try {
+        val found = listOf("alarm", "urgentalarm", "error", "boluserror")
+            .count { NSBundle.mainBundle.URLForResource(it, withExtension = "mp3") != null }
+        val graph = createGraphFactory<IosProbeGraph.Factory>().create()
+        val player = graph.alarmSoundPlayer
+        // Started and stopped straight away: this is a check that it runs, not a demonstration.
+        player.play(AlarmSound.ERROR, AlarmSoundPlayer.OWNER_INTERNAL)
+        player.stop(AlarmSoundPlayer.OWNER_INTERNAL)
+        // Not "the alarm works": play() is asynchronous, so this only says the call was accepted.
+        // Whether AVAudioPlayer actually started is in the log, and on the simulator it does not.
+        listOf(
+            "alarm sounds bundled: $found of 4",
+            "play requested: yes (see the log for whether audio started)"
+        ).joinToString("\n")
+    } catch (e: Throwable) {
+        "ALARM FAILED: ${e::class.simpleName}: ${e.message}"
     }
 }
