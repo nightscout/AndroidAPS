@@ -253,6 +253,48 @@ Two rules when the format is already on the wire:
   generates and prepends its own nonce; `encryptWithIvBlocking` (behind `@DelicateCryptographyApi`)
   is the one that matches a format storing the IV separately.
 
+### Positional `mock()` constructor arguments hide a wrong wiring
+
+Tests here build big plugins positionally, with long runs of bare `mock()`. Adding or removing a
+constructor parameter shifts everything after it, and nothing complains: `mock()` fits any type.
+
+The failure surfaces far away and looks nothing like the cause. Passing an unstubbed `mock()` where
+the class collects a `Flow` gives a **null** upstream, which fails as
+`UncaughtExceptionsBeforeTest` in whatever test happens to run next - not in the test that caused
+it, and not with a message naming the parameter.
+
+- Do not target these lines with `sed -i '<line>s/.../.../'`. Line numbers shift as soon as an
+  import or a field is added above, and the edit then lands on the wrong call.
+- After changing a constructor, grep every construction site and check the argument that matters is
+  the **named field**, not a fresh `mock()`.
+- `git stash` and re-run to tell "my change broke this" from "this was already flaky". The suite has
+  a real `UncaughtExceptionsBeforeTest` flake, so the two are easy to confuse.
+
+### Splitting a WorkManager worker
+
+A worker is almost always a body wrapped in a class WorkManager can construct. `RunnerWorker` and
+`WorkOutcome` in `:core:objects` exist for this: the body becomes a `XxxRunner` in commonMain with
+`suspend fun run(): WorkOutcome`, and the worker keeps only the `@AssistedInject` scaffolding.
+
+The nine NS client workers all transformed the same way, so it is scriptable - drop the
+`@Assisted context`/`params` and `fabricPrivacy` parameters, make `aapsLogger` a `private val`, swap
+`@AssistedInject constructor` for `@Inject`, drop the `LoggingWorker` supertype and the
+`@AssistedFactory`, and map the returns:
+
+| worker | runner |
+|---|---|
+| `Result.success()` | `WorkOutcome.Success` |
+| `Result.success(workDataOf("Result" to x))` | `WorkOutcome.Skipped(x)` |
+| `Result.failure(workDataOf("Error" to x))` | `WorkOutcome.Failure(x)` |
+
+**Review the mapping table by hand afterwards** - it is the only part that carries meaning. A
+`Result.success` with output data is not the same as a bare one: `WorkOutcome.Skipped` was added
+precisely because `LoadBgWorker` reported "Load not enabled" that way, and collapsing it into
+`Success` silently dropped a signal a test was asserting on.
+
+Worker tests construct the worker directly, so each needs its argument list wrapped:
+`XxxWorker(appContext, params, aapsLogger, fabricPrivacy, XxxRunner(aapsLogger, ...rest))`.
+
 ### Other common blockers
 
 `javax.inject` (swap to `dev.zacsweers.metro.Inject` only for a class Metro already builds),

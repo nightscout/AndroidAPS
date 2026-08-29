@@ -8,6 +8,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.localmodel.clientcontrol.PairingPayload
 import app.aaps.core.nssdk.utils.ClientControlCrypto
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -64,13 +65,13 @@ internal class ClientPairingRepositoryTest {
     }
 
     @Test
-    fun unpairedRepoReportsNotPaired() {
+    fun unpairedRepoReportsNotPaired() = runTest {
         assertThat(sut.isPaired()).isFalse()
         assertThat(sut.currentPairing()).isNull()
     }
 
     @Test
-    fun pairPersistsEncryptedSecretOnly() {
+    fun pairPersistsEncryptedSecretOnly() = runTest {
         val payload = samplePayload(secretHex = "deadbeef".repeat(8))
         sut.pair(payload, now)
         assertThat(sut.isPaired()).isTrue()
@@ -80,7 +81,7 @@ internal class ClientPairingRepositoryTest {
     }
 
     @Test
-    fun currentPairingReturnsAssembledSnapshot() {
+    fun currentPairingReturnsAssembledSnapshot() = runTest {
         sut.pair(samplePayload(), now)
         val pairing = sut.currentPairing()!!
         assertThat(pairing.masterInstallId).isEqualTo("master-uuid")
@@ -89,27 +90,27 @@ internal class ClientPairingRepositoryTest {
     }
 
     @Test
-    fun pairResetsCounter() {
+    fun pairResetsCounter() = runTest {
         longStore[LongNonKey.NsClientControlCounterSent] = 42L
         sut.pair(samplePayload(), now)
         assertThat(longStore[LongNonKey.NsClientControlCounterSent]).isEqualTo(0L)
     }
 
     @Test
-    fun pairPersistsPairedAtForOrphanRaceGuard() {
+    fun pairPersistsPairedAtForOrphanRaceGuard() = runTest {
         sut.pair(samplePayload(), now)
         assertThat(longStore[LongNonKey.NsClientControlPairedAt]).isEqualTo(now)
     }
 
     @Test
-    fun unpairClearsPairedAt() {
+    fun unpairClearsPairedAt() = runTest {
         sut.pair(samplePayload(), now)
         sut.unpair()
         assertThat(longStore[LongNonKey.NsClientControlPairedAt]).isEqualTo(0L)
     }
 
     @Test
-    fun unpairClearsAllKeysAndCounter() {
+    fun unpairClearsAllKeysAndCounter() = runTest {
         sut.pair(samplePayload(), now)
         sut.nextSignedEnvelope("hello", "{}", 1_000L) // bumps counter
         sut.unpair()
@@ -119,7 +120,7 @@ internal class ClientPairingRepositoryTest {
     }
 
     @Test
-    fun nextSignedEnvelopeMonotonicallyIncrementsCounter() {
+    fun nextSignedEnvelopeMonotonicallyIncrementsCounter() = runTest {
         sut.pair(samplePayload(), now)
         val a = sut.nextSignedEnvelope("hello", "{}", 1_000L)!!
         val b = sut.nextSignedEnvelope("scene_start", """{"id":"x"}""", 2_000L)!!
@@ -130,7 +131,7 @@ internal class ClientPairingRepositoryTest {
     }
 
     @Test
-    fun nextSignedEnvelopeFillsAllFields() {
+    fun nextSignedEnvelopeFillsAllFields() = runTest {
         sut.pair(samplePayload(), now)
         val env = sut.nextSignedEnvelope("hello", """{"protocolVersion":1}""", 1_700_000_000_000L)!!
         assertThat(env.clientId).isEqualTo("client-uuid")
@@ -142,7 +143,7 @@ internal class ClientPairingRepositoryTest {
     }
 
     @Test
-    fun nextSignedEnvelopeProducesVerifiableSignature() {
+    fun nextSignedEnvelopeProducesVerifiableSignature() = runTest {
         val secretHex = "ab".repeat(32)
         sut.pair(samplePayload(secretHex = secretHex), now)
         val env = sut.nextSignedEnvelope("hello", "{}", 1_000L)!!
@@ -151,19 +152,19 @@ internal class ClientPairingRepositoryTest {
     }
 
     @Test
-    fun nextSignedEnvelopeReturnsNullWhenUnpaired() {
+    fun nextSignedEnvelopeReturnsNullWhenUnpaired() = runTest {
         assertThat(sut.nextSignedEnvelope("hello", "{}", 1_000L)).isNull()
     }
 
     @Test
-    fun nextSignedEnvelopeReturnsNullOnCorruptBlob() {
+    fun nextSignedEnvelopeReturnsNullOnCorruptBlob() = runTest {
         sut.pair(samplePayload(), now)
         rejectsBlobValidation = true // simulate corrupted ciphertext
         assertThat(sut.nextSignedEnvelope("hello", "{}", 1_000L)).isNull()
     }
 
     @Test
-    fun pairOverwritesExistingPairing() {
+    fun pairOverwritesExistingPairing() = runTest {
         sut.pair(samplePayload(secretHex = "00".repeat(32)), now)
         val firstClientId = stringStore[StringNonKey.NsClientControlClientId]
         sut.pair(PairingPayload(masterInstallId = "master2", clientId = "client2", secretHex = "ff".repeat(32), expiresAt = 1L), now)
@@ -172,7 +173,7 @@ internal class ClientPairingRepositoryTest {
     }
 
     @Test
-    fun pairOverwriteResetsCounter() {
+    fun pairOverwriteResetsCounter() = runTest {
         sut.pair(samplePayload(), now)
         sut.nextSignedEnvelope("hello", "{}", 1_000L) // counter = 1
         sut.pair(PairingPayload(masterInstallId = "master2", clientId = "client2", secretHex = "ff".repeat(32), expiresAt = 1L), now)

@@ -54,13 +54,18 @@ import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.ToolbarConfig
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
+import kotlin.time.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 private val jsonPrettyPrint = Json { prettyPrint = true }
 
-private val timeFormatPreview = DateTimeFormatter.ofPattern("HH:mm:ss").withZone(ZoneId.systemDefault())
+// Only used by Compose previews, where there is no DateUtil. Hand-padded because String.format is
+// JVM only.
+private fun previewTime(millis: Long): String =
+    Instant.fromEpochMilliseconds(millis).toLocalDateTime(TimeZone.currentSystemDefault()).let {
+        "${it.hour.toString().padStart(2, '0')}:${it.minute.toString().padStart(2, '0')}:${it.second.toString().padStart(2, '0')}"
+    }
 
 private const val JSON_EXPANDED = "json_expanded"
 
@@ -214,7 +219,7 @@ fun NSClientScreenContent(
                     Column(modifier = Modifier.fillMaxWidth()) {
                         Text(
                             text = buildAnnotatedString {
-                                append(dateUtil?.timeStringWithSeconds(log.date) ?: timeFormatPreview.format(Instant.ofEpochMilli(log.date)))
+                                append(dateUtil?.timeStringWithSeconds(log.date) ?: previewTime(log.date))
                                 append(" ")
                                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                                     append(log.action)

@@ -12,7 +12,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -39,7 +39,7 @@ class ReceiverDelegate @Inject constructor(
     val allowed: Boolean get() = _connectivityStatusFlow.value.allowed
     val blockingReason: String get() = _connectivityStatusFlow.value.blockingReason
 
-    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private val scope = CoroutineScope(aapsIoDispatcher + SupervisorJob())
 
     init {
         val onNetworkPrefChange: suspend (Any) -> Unit = {

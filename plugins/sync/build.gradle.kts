@@ -80,6 +80,8 @@ kotlin {
                 api(libs.cmp.ui)
                 api(libs.cmp.material3)
                 api(libs.cmp.material.icons.extended)
+                // NavigationBackHandler: the multiplatform replacement for androidx.activity BackHandler.
+                implementation(libs.androidx.navigationevent.compose)
                 api(libs.jetbrains.lifecycle.viewmodel.compose)
                 api(libs.jetbrains.lifecycle.runtime.compose)
                 implementation(libs.cmp.ui.tooling.preview)

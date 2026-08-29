@@ -60,7 +60,7 @@ internal class LoadLastModificationWorkerTest : TestBaseWithProfile() {
         TestListenableWorkerBuilder<LoadLastModificationWorker>(context)
             .setWorkerFactory(object : WorkerFactory() {
                 override fun createWorker(appContext: Context, workerClassName: String, workerParameters: WorkerParameters) =
-                    LoadLastModificationWorker(appContext, workerParameters, aapsLogger, fabricPrivacy, nsClientV3Plugin, nsClientRepository)
+                    LoadLastModificationWorker(appContext, workerParameters, aapsLogger, fabricPrivacy, LoadLastModificationRunner(aapsLogger, nsClientV3Plugin, nsClientRepository))
             })
             .build()
 
@@ -72,9 +72,9 @@ internal class LoadLastModificationWorkerTest : TestBaseWithProfile() {
         whenever(receiverStatusStore.chargingStatusFlow).thenReturn(MutableStateFlow(null))
         receiverDelegate = ReceiverDelegate(rh, preferences, receiverStatusStore)
         nsClientV3Plugin = NSClientV3Plugin(
-            aapsLogger, rh, preferences, rxBus, context,
+            aapsLogger, rh, preferences, rxBus,
             receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
-            nsClientSource, storeDataForDb, decimalFormatter, l, nsClientRepository, uel, mock(), mock(), mock(), mock(), mock(), mock(), profileRepository, mock()
+            nsClientSource, storeDataForDb, decimalFormatter, l, nsClientRepository, uel, mock(), mock(), mock(), mock(), mock(), mock(), profileRepository, mock(), mock()
         )
         nsClientV3Plugin.newestDataOnServer = null
     }

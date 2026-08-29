@@ -72,8 +72,9 @@ internal class LoadBgWorkerTest : TestBaseWithProfile() {
             .setWorkerFactory(object : WorkerFactory() {
                 override fun createWorker(appContext: Context, workerClassName: String, workerParameters: WorkerParameters) =
                     LoadBgWorker(
-                        appContext, workerParameters, aapsLogger, fabricPrivacy, preferences, dateUtil,
-                        nsClientV3Plugin, nsClientSource, nsIncomingDataProcessor, storeDataForDb, nsClientRepository
+                        appContext, workerParameters, aapsLogger, fabricPrivacy,
+                        LoadBgRunner(aapsLogger, preferences, dateUtil,
+                        nsClientV3Plugin, nsClientSource, nsIncomingDataProcessor, storeDataForDb, nsClientRepository)
                     )
             })
             .build()
@@ -87,9 +88,9 @@ internal class LoadBgWorkerTest : TestBaseWithProfile() {
         whenever(receiverStatusStore.chargingStatusFlow).thenReturn(MutableStateFlow(null))
         receiverDelegate = ReceiverDelegate(rh, preferences, receiverStatusStore)
         nsClientV3Plugin = NSClientV3Plugin(
-            aapsLogger, rh, preferences, rxBus, context,
+            aapsLogger, rh, preferences, rxBus,
             receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
-            nsClientSource, storeDataForDb, decimalFormatter, l, nsClientRepository, uel, mock(), mock(), mock(), mock(), mock(), mock(), profileRepository, mock()
+            nsClientSource, storeDataForDb, decimalFormatter, l, nsClientRepository, uel, mock(), mock(), mock(), mock(), mock(), mock(), profileRepository, mock(), mock()
         )
         nsClientV3Plugin.newestDataOnServer = LastModified(LastModified.Collections())
     }

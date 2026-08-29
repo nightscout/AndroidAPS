@@ -190,7 +190,7 @@ internal class ClientControlReceiverTest {
     }
 
     /** Adds a pending client and returns (clientId, secretBytes). */
-    private fun pair(name: String = "phone"): Pair<String, ByteArray> {
+    private suspend fun pair(name: String = "phone"): Pair<String, ByteArray> {
         val (entry, secretHex) = authorizedRepository.addPending(name, pairTtlMs = 60_000L, now = now - 10_000L)
         val secretBytes = secretHex.chunked(2).map { it.toInt(16).toByte() }.toByteArray()
         return entry.clientId to secretBytes
@@ -200,7 +200,7 @@ internal class ClientControlReceiverTest {
      * Adds a pending client whose pairing window already expired relative to `now`.
      * Created 2h ago with a 5-min TTL, so pairExpiresAt is well in the past.
      */
-    private fun pairExpired(name: String = "phone"): Pair<String, ByteArray> {
+    private suspend fun pairExpired(name: String = "phone"): Pair<String, ByteArray> {
         val (entry, secretHex) = authorizedRepository.addPending(name, pairTtlMs = 5 * 60_000L, now = now - 2 * 60 * 60 * 1000L)
         val secretBytes = secretHex.chunked(2).map { it.toInt(16).toByte() }.toByteArray()
         return entry.clientId to secretBytes

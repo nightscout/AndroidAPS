@@ -3,6 +3,10 @@
 Things the iOS branch needs from the phone side. Written by the macOS session, for the Windows
 session to pick up. Newest findings at the top of each list.
 
+It now carries a little traffic the other way too - see **Ready for iOS**, written by the Windows
+session for the macOS one. Those sections say what has landed in `commonMain` and what is left to
+implement on the Apple side, so neither session has to re-derive it from the diff.
+
 This file lives at `_docs/ios_blockers.md`. It arrived once as `_dcs/ios_blockers.md` and was moved -
 please write it here, so both sessions look in the same place.
 
@@ -111,6 +115,68 @@ Two warnings from having done several of these:
 - `Dispatchers.IO` reports itself as `internal` rather than missing. Use `aapsIoDispatcher` from
   `:core:interfaces`.
 
+## Ready for iOS: the Nightscout client
+
+Written by the Windows session, for the macOS one - the other direction from the rest of this file.
+
+`plugins/sync/nsclientV3` is **60 files in commonMain, 17 on Android**. The plugin, the whole
+client-control subsystem (receiver, round trip, both repositories, pairing offer fetch/publish,
+preferences publisher, orphan detector), the incoming data processor, all sixteen NS extensions,
+the nine load/upload bodies and all three screens now build for `iosArm64`.
+
+What is still on Android is there because it has to be: the nine `Worker` shims, `NSClientV3Service`
+(wake lock + `START_STICKY`), `SocketIoNsSocket`, `JsonBridge` (org.json), `StoreDataForDbImpl`,
+`NSAlarmObject`, and the Android halves of the two ports below.
+
+### Three interfaces need an iOS implementation
+
+Nothing else blocks the NS client on iOS. All three are in
+`plugins/sync/src/commonMain/.../nsclientV3/ws/`, each with a working Android implementation to read.
+
+| interface | what it does | iOS side |
+|---|---|---|
+| `NsSocket` | one Nightscout websocket namespace. `on(event, listener)`, `connect`, `close`, `emitWithAck`, `emitAlarmAck`. Payloads cross as **JSON text**, so no socket.io types leak | a Ktor websocket client. `SocketIoNsSocket` shows the exact event names and the ack shape |
+| `NsLoadExecutor` | runs the load round: `runChain(steps)`, `runReplacing`, `runDetached`, `cancel`, `isRunning`, `idle` | a coroutine sequence over `NsLoadStep`, calling the shared `XxxRunner` for each step. `CoroutineCalculationExecutor` in `:workflow` is the same shape |
+| `NsConnection` | owns the connection's lifetime: `start`, `stop`, `connected`, `socketConnected`, `hasLiveSocket` | **needs a product decision first - see below** |
+
+Two behaviours are part of the `NsConnection` contract and are easy to lose:
+
+- **`start(reason)` is idempotent.** On Android both the service's own creation and the bind callback
+  ask for it, and calling it on a live connection must not tear anything down.
+- **`stop()` closes the sockets *before* releasing whatever carries them.** A quick restart otherwise
+  races the teardown and finds the old sockets still attached. `ServiceNsConnectionTest` pins both,
+  and mutating either one fails exactly one test.
+
+### The decision that is blocking `NsConnection` on iOS
+
+iOS will not hold a websocket open in the background, so the port cannot simply be implemented the
+way Android does it. Three options, and this is a product call rather than a porting one:
+
+1. **Foreground only** - connect when active, disconnect on background, and *show* that state. Honest
+   and simple; a follower is stale while backgrounded.
+2. **Foreground websocket plus REST polling when backgrounded** - reuses the `Load*Runner` chain,
+   which is already shared, and `initialLoadFinished` already handles backfilling the offline window.
+   More work, no silent gap.
+3. **Push-driven** - needs Nightscout-side push. Out of scope today.
+
+Option 1 then 2 is the suggested order. Whichever is chosen, the rule this codebase already follows
+applies: an implementation that silently does nothing is worse than a feature that is visibly absent,
+because a user relying on NS data would simply stop receiving it without being told.
+
+### Wire formats that must not drift
+
+Two things in this subsystem are exchanged with deployed AAPS instances, so they are contracts:
+
+- **The client-control crypto** is now shared (`:core:nssdk`, cryptography-kotlin over
+  JCA / CryptoKit / OpenSSL 3). `ClientControlCryptoVectorsTest` lives in `commonTest`, so it runs on
+  every target - `mingwX64Test` already proves the Kotlin/Native path on Windows. Run
+  `iosSimulatorArm64Test` on the Mac to cover CryptoKit; a failure there is a real incompatibility,
+  not a stale test.
+- **The pairing offer's Base64** (`kdfSaltB64`, `ivB64`, `wrappedB64`) moved from
+  `android.util.Base64` with `NO_WRAP` to `kotlin.io.encoding.Base64.Default`. Both are RFC 4648 with
+  padding and no line breaks, so they agree - but that is currently reasoned, not pinned by a vector.
+  Worth adding one next to the crypto vectors.
+
 ## Gotchas in iOS interop
 
 Collected so nobody pays for them twice. All were found by tests or a crash, not by review.
@@ -162,6 +228,16 @@ Not blockers, and not for the Windows session to fix. Listed so nobody is surpri
   which iOS reports taps but not dismissals. The one caveat left is that it calls
   `setNotificationCategories` with only its own category, so it would clobber categories registered
   elsewhere - nothing else registers any today.
+- **The pairing PIN is not protected from screenshots on iOS.** `blockScreenshotsWhileVisible()`
+  (`plugins/sync/.../clientcontrol/compose/ScreenshotBlocking.kt`) is an `expect` that returns
+  whether the platform really blocked capture. Android applies `FLAG_SECURE` and returns true; the
+  iOS `actual` returns **false**, deliberately, because Apple has no equivalent and a silent no-op
+  would imply a protection that is not there. That PIN wraps the shared secret a paired client signs
+  commands with, so a screenshot sitting in a gallery or a cloud backup is a real exposure. Two
+  things are worth doing on the iOS side: cover the window on `willResignActive` so the app-switcher
+  snapshot does not hold the PIN, and warn on the dialog while the value is false. The screen already
+  has it (`screenshotsBlocked` in `AuthorizedClientsScreen`); it just has nowhere to show it yet, and
+  choosing that wording is a product decision rather than a porting one.
 
 ## Done
 

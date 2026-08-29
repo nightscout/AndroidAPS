@@ -3,14 +3,7 @@ package app.aaps.plugins.sync.nsclientV3
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.sync.SyncStrings
-import android.content.Context
-import android.os.Handler
-import android.os.HandlerThread
 import androidx.annotation.VisibleForTesting
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
 import app.aaps.core.data.model.HR
 import app.aaps.core.data.model.HasIDs
 import app.aaps.core.data.model.SC
@@ -31,7 +24,7 @@ import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileRepository
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppExit
@@ -81,26 +74,23 @@ import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientLongKey
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientStringKey
 import app.aaps.plugins.sync.nsclientV3.ws.NsConnection
+import app.aaps.plugins.sync.nsclientV3.ws.NsLoadExecutor
+import app.aaps.plugins.sync.nsclientV3.ws.NsLoadStep
 import app.aaps.plugins.sync.nsclientV3.services.RunningConfigurationPublisher
-import app.aaps.plugins.sync.nsclientV3.workers.DataSyncWorker
-import app.aaps.plugins.sync.nsclientV3.workers.LoadBgWorker
-import app.aaps.plugins.sync.nsclientV3.workers.LoadDeviceStatusWorker
-import app.aaps.plugins.sync.nsclientV3.workers.LoadFoodsWorker
-import app.aaps.plugins.sync.nsclientV3.workers.LoadLastModificationWorker
-import app.aaps.plugins.sync.nsclientV3.workers.LoadProfileStoreWorker
-import app.aaps.plugins.sync.nsclientV3.workers.LoadSettingsWorker
-import app.aaps.plugins.sync.nsclientV3.workers.LoadStatusWorker
-import app.aaps.plugins.sync.nsclientV3.workers.LoadTreatmentsWorker
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 
+import kotlin.concurrent.Volatile
 import kotlin.concurrent.atomics.AtomicBoolean
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.time.Duration.Companion.milliseconds
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
@@ -134,10 +124,9 @@ import kotlinx.serialization.json.encodeToJsonElement
 @ContributesBinding(AppScope::class, binding = binding<NsClient>())
 class NSClientV3Plugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    override val rh: ResourceHelper,
+    override val rh: TextResolver,
     preferences: Preferences,
     private val rxBus: RxBus,
-    private val context: Context,
     private val receiverDelegate: ReceiverDelegate,
     private val config: Config,
     private val dateUtil: DateUtil,
@@ -157,6 +146,7 @@ class NSClientV3Plugin @Inject constructor(
     private val preferencesClientPublisher: PreferencesClientPublisher,
     private val profileRepository: ProfileRepository,
     private val nsConnection: NsConnection,
+    private val nsLoadExecutor: NsLoadExecutor,
 ) : NsClient, Sync, PluginBaseWithPreferences(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -180,7 +170,6 @@ class NSClientV3Plugin @Inject constructor(
 ) {
 
     @Suppress("PrivatePropertyName")
-    private val JOB_NAME: String = this::class.java.simpleName
 
     companion object {
 
@@ -192,9 +181,7 @@ class NSClientV3Plugin @Inject constructor(
         private val PROBE_MIN_INTERVAL_MS = T.secs(5).msecs()
     }
 
-    private var scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-    private lateinit var runLoop: Runnable
-    private var handler: Handler? = null
+    private var scope = CoroutineScope(aapsIoDispatcher + SupervisorJob())
 
     // Re-run signaling. When a sync request arrives while a cycle is in flight, we set the
     // appropriate flag instead of dropping the request (old `forceNew=false`) or busy-waiting
@@ -213,7 +200,7 @@ class NSClientV3Plugin @Inject constructor(
                 preferences.get(BooleanKey.NsClient3UseWs) && nsConnection.socketConnected == false -> "WS: " + rh.gs(SyncStrings.not_connected)
                 lastOperationError != null                                                            -> rh.gs(CoreUiStrings.error)
                 nsAndroidClient?.lastStatus == null                                                   -> rh.gs(SyncStrings.not_connected)
-                workIsRunning()                                                                       -> rh.gs(SyncStrings.working)
+                nsLoadExecutor.isRunning                                                                       -> rh.gs(SyncStrings.working)
                 nsAndroidClient?.lastStatus?.apiPermissions?.isFull() == true                         -> rh.gs(InterfacesStrings.authorized)
                 nsAndroidClient?.lastStatus?.apiPermissions?.isRead() == true                         -> rh.gs(SyncStrings.read_only)
                 else                                                                                  -> rh.gs(CoreUiStrings.unknown)
@@ -231,18 +218,19 @@ class NSClientV3Plugin @Inject constructor(
     internal var firstLoadContinueTimestamp = LastModified(LastModified.Collections()) // timestamp of last fetched data for every collection during initial load
     internal var initialLoadFinished = false
 
-    private val fullSyncSemaphore = Any()
 
     /**
      * Set to true if full sync is requested from fragment.
      * In this case we must enable accepting all data from NS even when disabled in preferences
      */
-    @VisibleForTesting var fullSyncRequested: Boolean = false
+    // AtomicBoolean, not a flag behind a lock: the only thing the lock did was make "is a full sync
+    // requested" and "claim it" one step, which compareAndSet does directly.
+    @VisibleForTesting val fullSyncRequested = AtomicBoolean(false)
 
     /**
      * Full sync is performed right now
      */
-    var doingFullSync = false
+    @Volatile var doingFullSync = false
         @VisibleForTesting set
 
     // The bind/unbind that used to live here is in ServiceNsConnection now, which is what lets this
@@ -250,14 +238,13 @@ class NSClientV3Plugin @Inject constructor(
 
     override suspend fun onStart() {
         super.onStart()
-        handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
         lastLoadedSrvModified = Json.decodeFromString(preferences.get(NsclientStringKey.V3LastModified))
 
         setClient()
 
         receiverDelegate.grabReceiversState()
-        scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = CoroutineScope(aapsIoDispatcher + SupervisorJob())
         runningConfigurationPublisher.start(scope)
         preferencesClientPublisher.start(scope)
         // Master-side: fallback poll for inbound client-control envelopes. Primary path is the
@@ -291,7 +278,7 @@ class NSClientV3Plugin @Inject constructor(
         rxBus.toFlow(EventAppExit::class)
             .collectResilient(scope, aapsLogger, LTag.NSCLIENT) {
                 nsConnection.stop()
-                WorkManager.getInstance(context).cancelUniqueWork(JOB_NAME)
+                nsLoadExecutor.cancel()
             }
         receiverDelegate.connectivityStatusFlow
             .drop(1) // skip initial value
@@ -325,23 +312,18 @@ class NSClientV3Plugin @Inject constructor(
         // upload (DataSyncWorker is the loop's last step), so loop wins if both are pending.
         // Gated on WorkManager.isInitialized() so unit tests that don't bootstrap WM (and call
         // onStart only to exercise unrelated handlers) don't crash here.
-        if (WorkManager.isInitialized()) {
-            WorkManager.getInstance(context).getWorkInfosForUniqueWorkFlow(JOB_NAME)
-                .map { infos -> infos.any { it.state.isActive() } }
-                .distinctUntilChanged()
-                .filter { active -> !active }
-                .onEach {
-                    when {
-                        pendingLoop.compareAndSet(true, false)   -> {
-                            pendingUpload.store(false)
-                            executeLoop("PENDING_RERUN")
-                        }
-
-                        pendingUpload.compareAndSet(true, false) -> executeUpload("PENDING_RERUN")
+        nsLoadExecutor.idle
+            .onEach {
+                when {
+                    pendingLoop.compareAndSet(true, false)   -> {
+                        pendingUpload.store(false)
+                        executeLoop("PENDING_RERUN")
                     }
+
+                    pendingUpload.compareAndSet(true, false) -> executeUpload("PENDING_RERUN")
                 }
-                .launchIn(scope)
-        }
+            }
+            .launchIn(scope)
 
         // Resilient collection (from dev). forceNew args dropped: this branch replaced the
         // forceNew mechanism with the WorkManager re-run watchdog above (see executeUpload).
@@ -360,22 +342,28 @@ class NSClientV3Plugin @Inject constructor(
         profileRepository.profile.drop(1)
             .collectResilient(scope, aapsLogger, LTag.NSCLIENT) { executeUpload("profileRepository.profile changed") }
 
-        runLoop = Runnable {
-            var refreshInterval = T.mins(5).msecs()
-            if (nsClientSource.isEnabled())
-                runBlocking { persistenceLayer.getLastGlucoseValue() }?.let {
-                    // if last value is older than 5 min or there is no bg
-                    if (it.timestamp < dateUtil.now() - T.mins(5).plus(T.secs(20)).msecs()) {
-                        refreshInterval = T.mins(1).msecs()
+        // The tick. One coroutine that sleeps between rounds, rather than a Runnable reposting
+        // itself on a Handler thread: the delay between rounds is still decided by the round that
+        // just ran, and the last glucose value is now read with a plain suspend call instead of
+        // runBlocking on that thread. Cancelled with the scope in onStop.
+        scope.launch {
+            delay(T.mins(2).msecs())
+            while (isActive) {
+                var refreshInterval = T.mins(5).msecs()
+                if (nsClientSource.isEnabled())
+                    persistenceLayer.getLastGlucoseValue()?.let {
+                        // if last value is older than 5 min or there is no bg
+                        if (it.timestamp < dateUtil.now() - T.mins(5).plus(T.secs(20)).msecs()) {
+                            refreshInterval = T.mins(1).msecs()
+                        }
                     }
-                }
-            if (!preferences.get(BooleanKey.NsClient3UseWs))
-                executeLoop("MAIN_LOOP")
-            else
-                nsClientRepository.addLog("● TICK", "")
-            handler?.postDelayed(runLoop, refreshInterval)
+                if (!preferences.get(BooleanKey.NsClient3UseWs))
+                    executeLoop("MAIN_LOOP")
+                else
+                    nsClientRepository.addLog("● TICK", "")
+                delay(refreshInterval)
+            }
         }
-        handler?.postDelayed(runLoop, T.mins(2).msecs())
     }
 
     /**
@@ -384,7 +372,7 @@ class NSClientV3Plugin @Inject constructor(
      * rejects cleanly with a signed ACK (one place, also covering the poll fallback) rather than silently
      * dropping it, which would time a client out into a false "master offline" alarm in the toggle race window.
      */
-    fun handleClientControlSettingsEvent(identifier: String, doc: JsonObject) {
+    suspend fun handleClientControlSettingsEvent(identifier: String, doc: JsonObject) {
         scope.launch {
             runCatching { clientControlReceiver.onSettingsDocChanged(identifier, doc) }
                 .onFailure { aapsLogger.error(LTag.NSCLIENT, "ClientControl WS dispatch failed for $identifier: ${it.message}", it) }
@@ -396,7 +384,7 @@ class NSClientV3Plugin @Inject constructor(
      * `aaps_clientcontrol_ack_<clientId>` settings events here. Synchronous parse/verify/emit — the
      * round-trip coordinator only re-publishes to an in-process flow, no IO.
      */
-    fun handleClientControlAckEvent(doc: JsonObject) {
+    suspend fun handleClientControlAckEvent(doc: JsonObject) {
         runCatching { clientControlRoundTrip.onAckDoc(doc) }
             .onFailure { aapsLogger.error(LTag.NSCLIENT, "ClientControl ACK dispatch failed: ${it.message}", it) }
     }
@@ -405,7 +393,7 @@ class NSClientV3Plugin @Inject constructor(
      * WS-push entry for a master→client bolus-progress frame (client side). NSClientV3Service routes
      * `aaps_clientcontrol_progress_<clientId>` settings events here; feeds the client's own BolusProgressData.
      */
-    fun handleClientControlProgressEvent(doc: JsonObject) {
+    suspend fun handleClientControlProgressEvent(doc: JsonObject) {
         runCatching { clientControlRoundTrip.onProgressDoc(doc) }
             .onFailure { aapsLogger.error(LTag.NSCLIENT, "ClientControl progress dispatch failed: ${it.message}", it) }
     }
@@ -426,12 +414,12 @@ class NSClientV3Plugin @Inject constructor(
                 .onFailure { aapsLogger.error(LTag.NSCLIENT, "ClientControl ping failed: ${it.message}") }
         }
         // Pull any config we missed while disconnected (the worker no-ops on master / GETs both docs on client).
-        WorkManager.getInstance(context).enqueue(OneTimeWorkRequest.Builder(LoadSettingsWorker::class.java).build())
+        nsLoadExecutor.runDetached(NsLoadStep.SETTINGS)
     }
 
     fun scheduleIrregularExecution(refreshToken: Boolean = false) {
         if (refreshToken) {
-            handler?.post { executeLoop("REFRESH TOKEN") }
+            scope.launch { executeLoop("REFRESH TOKEN") }
             return
         }
         if (config.AAPSCLIENT || nsClientSource.isEnabled()) {
@@ -441,20 +429,22 @@ class NSClientV3Plugin @Inject constructor(
                 toTime = dateUtil.now() + T.mins(1).plus(T.secs(0)).msecs()
                 origin = "1_MIN_OLD_DATA"
             }
-            handler?.postDelayed({ executeLoop(origin) }, toTime - dateUtil.now())
+            // A delayed one-shot. Successive calls stack up, exactly as the Handler posts did;
+            // executeLoop is guarded, and the scope cancels them all on stop.
+            scope.launch {
+                delay(toTime - dateUtil.now())
+                executeLoop(origin)
+            }
             nsClientRepository.addLog("● NEXT", dateUtil.dateAndTimeAndSecondsString(toTime))
         }
     }
 
     override suspend fun onStop() {
-        handler?.removeCallbacksAndMessages(null)
-        handler?.looper?.quit()
-        handler = null
         runningConfigurationPublisher.stop()
         preferencesClientPublisher.stop()
         scope.cancel()
         nsConnection.stop()
-        WorkManager.getInstance(context).cancelUniqueWork(JOB_NAME)
+        nsLoadExecutor.cancel()
         super.onStop()
     }
 
@@ -504,7 +494,7 @@ class NSClientV3Plugin @Inject constructor(
      * the app-level probe to ping + re-pull, reconciling the real state instead of leaving a stale guess.
      * Self-heals: a pong/heartbeat bumps the clock fresh again within seconds if the master is up.
      */
-    internal fun markMasterUnreachable() {
+    internal suspend fun markMasterUnreachable() {
         _lastMasterSignalAt.value = 0L
     }
 
@@ -593,7 +583,11 @@ class NSClientV3Plugin @Inject constructor(
         if (config.AAPSCLIENT) MutableStateFlow(0).asStateFlow()
         else authorizedClientsRepository.observe()
             .map { list -> list.count { it.state == ClientState.Active } }
-            .stateIn(reachableScope, SharingStarted.WhileSubscribed(5000), authorizedClientsRepository.current(dateUtil.now()).count { it.state == ClientState.Active })
+            // Seeded with 0 rather than a synchronous count: current() suspends now, and it also
+            // prunes, so it was doing a write to produce a seed value. preferences.observe() emits
+            // the stored value as soon as this is collected, so the real count lands immediately
+            // instead of on the next change.
+            .stateIn(reachableScope, SharingStarted.WhileSubscribed(5000), 0)
     }
 
     private fun setClient() {
@@ -624,7 +618,7 @@ class NSClientV3Plugin @Inject constructor(
         // Cancel any in-flight WorkManager job so a stuck worker can't keep
         // workIsRunning() == true after unpause and silently block all uploads
         // (every DB_CHANGED would otherwise just log "Already running").
-        if (newState) WorkManager.getInstance(context).cancelUniqueWork(JOB_NAME)
+        if (newState) nsLoadExecutor.cancel()
         preferences.put(NsclientBooleanKey.NsPaused, newState)
     }
 
@@ -655,9 +649,7 @@ class NSClientV3Plugin @Inject constructor(
         initialLoadFinished = false
         storeLastLoadedSrvModified()
         dataSyncSelectorV3.resetToNextFullSync()
-        synchronized(fullSyncSemaphore) {
-            fullSyncRequested = true
-        }
+        fullSyncRequested.store(true)
     }
 
     override fun handleClearAlarm(originalAlarm: NSAlarm, silenceTimeInMilliseconds: Long) {
@@ -722,12 +714,12 @@ class NSClientV3Plugin @Inject constructor(
     private suspend fun dbOperationProfileStore(collection: String = "profile", dataPair: DataSyncSelector.DataPair, progress: String): Boolean {
         val data = (dataPair as DataSyncSelector.PairProfileStore).value
         try {
-            nsClientRepository.addLog("► ADD $collection", "Sent ${dataPair.javaClass.simpleName} $progress", data)
+            nsClientRepository.addLog("► ADD $collection", "Sent ${dataPair::class.simpleName} $progress", data)
             nsAndroidClient?.createProfileStore(data)?.let { result ->
                 when (result.response) {
                     200  -> nsClientRepository.addLog("◄ UPDATED", "OK ProfileStore")
                     201  -> nsClientRepository.addLog("◄ ADDED", "OK ProfileStore")
-                    404  -> nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+                    404  -> nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value::class.simpleName} ${result.errorResponse}")
 
                     else -> {
                         nsClientRepository.addLog("◄ ERROR", "${result.errorResponse}")
@@ -747,12 +739,12 @@ class NSClientV3Plugin @Inject constructor(
     private suspend fun dbOperationDeviceStatus(collection: String = "devicestatus", dataPair: DataSyncSelector.PairDeviceStatus, progress: String): Boolean {
         try {
             val data = dataPair.value.toNSDeviceStatus()
-            nsClientRepository.addLog("► ADD $collection", "Sent ${dataPair.javaClass.simpleName} $progress", Json {}.encodeToJsonElement(data))
+            nsClientRepository.addLog("► ADD $collection", "Sent ${dataPair::class.simpleName} $progress", Json {}.encodeToJsonElement(data))
             nsAndroidClient?.createDeviceStatus(data)?.let { result ->
                 when (result.response) {
-                    200  -> nsClientRepository.addLog("◄ UPDATED", "OK ${dataPair.value.javaClass.simpleName}")
-                    201  -> nsClientRepository.addLog("◄ ADDED", "OK ${dataPair.value.javaClass.simpleName} ${result.identifier}")
-                    404  -> nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+                    200  -> nsClientRepository.addLog("◄ UPDATED", "OK ${dataPair.value::class.simpleName}")
+                    201  -> nsClientRepository.addLog("◄ ADDED", "OK ${dataPair.value::class.simpleName} ${result.identifier}")
+                    404  -> nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value::class.simpleName} ${result.errorResponse}")
 
                     else -> {
                         nsClientRepository.addLog("◄ ERROR", "${result.errorResponse} ")
@@ -788,23 +780,23 @@ class NSClientV3Plugin @Inject constructor(
                     Operation.UPDATE -> "► UPDATE $collection"
                 },
                 when (operation) {
-                    Operation.CREATE -> "Sent ${dataPair.javaClass.simpleName} $progress"
-                    Operation.UPDATE -> "Sent ${dataPair.javaClass.simpleName} $id $progress"
+                    Operation.CREATE -> "Sent ${dataPair::class.simpleName} $progress"
+                    Operation.UPDATE -> "Sent ${dataPair::class.simpleName} $id $progress"
                 },
                 Json {}.encodeToJsonElement(data)
             )
             call?.let { it(data) }?.let { result ->
                 when (result.response) {
                     200  -> {
-                        nsClientRepository.addLog("◄ UPDATED", "OK ${dataPair.value.javaClass.simpleName}")
+                        nsClientRepository.addLog("◄ UPDATED", "OK ${dataPair.value::class.simpleName}")
                         clearUpdateRetry(operation, id)
                     }
 
-                    201  -> nsClientRepository.addLog("◄ ADDED", "OK ${dataPair.value.javaClass.simpleName}")
-                    400  -> nsClientRepository.addLog("◄ FAIL", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+                    201  -> nsClientRepository.addLog("◄ ADDED", "OK ${dataPair.value::class.simpleName}")
+                    400  -> nsClientRepository.addLog("◄ FAIL", "${dataPair.value::class.simpleName} ${result.errorResponse}")
 
                     404  -> {
-                        nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+                        nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value::class.simpleName} ${result.errorResponse}")
                         if (!config.isEnabled(ExternalOptions.IGNORE_NS_V3_ERRORS) &&
                             retryUpdateLater(operation, id, isDeletion = !dataPair.value.isValid)
                         ) return false
@@ -843,23 +835,23 @@ class NSClientV3Plugin @Inject constructor(
                     Operation.UPDATE -> "► UPDATE $collection"
                 },
                 when (operation) {
-                    Operation.CREATE -> "Sent ${dataPair.javaClass.simpleName} $progress"
-                    Operation.UPDATE -> "Sent ${dataPair.javaClass.simpleName} $id $progress"
+                    Operation.CREATE -> "Sent ${dataPair::class.simpleName} $progress"
+                    Operation.UPDATE -> "Sent ${dataPair::class.simpleName} $id $progress"
                 },
                 Json {}.encodeToJsonElement(data)
             )
             call?.let { it(data) }?.let { result ->
                 when (result.response) {
                     200  -> {
-                        nsClientRepository.addLog("◄ UPDATED", "OK ${dataPair.value.javaClass.simpleName}")
+                        nsClientRepository.addLog("◄ UPDATED", "OK ${dataPair.value::class.simpleName}")
                         clearUpdateRetry(operation, id)
                     }
 
-                    201  -> nsClientRepository.addLog("◄ ADDED", "OK ${dataPair.value.javaClass.simpleName}")
-                    400  -> nsClientRepository.addLog("◄ FAIL", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+                    201  -> nsClientRepository.addLog("◄ ADDED", "OK ${dataPair.value::class.simpleName}")
+                    400  -> nsClientRepository.addLog("◄ FAIL", "${dataPair.value::class.simpleName} ${result.errorResponse}")
 
                     404  -> {
-                        nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+                        nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value::class.simpleName} ${result.errorResponse}")
                         if (!config.isEnabled(ExternalOptions.IGNORE_NS_V3_ERRORS) &&
                             retryUpdateLater(operation, id, isDeletion = !dataPair.value.isValid)
                         ) return false
@@ -898,23 +890,23 @@ class NSClientV3Plugin @Inject constructor(
                     Operation.UPDATE -> "► UPDATE $collection"
                 },
                 when (operation) {
-                    Operation.CREATE -> "Sent ${dataPair.javaClass.simpleName} $progress"
-                    Operation.UPDATE -> "Sent ${dataPair.javaClass.simpleName} $id $progress"
+                    Operation.CREATE -> "Sent ${dataPair::class.simpleName} $progress"
+                    Operation.UPDATE -> "Sent ${dataPair::class.simpleName} $id $progress"
                 },
                 Json {}.encodeToJsonElement(data)
             )
             call?.let { it(data) }?.let { result ->
                 when (result.response) {
                     200  -> {
-                        nsClientRepository.addLog("◄ UPDATED", "OK ${dataPair.value.javaClass.simpleName}")
+                        nsClientRepository.addLog("◄ UPDATED", "OK ${dataPair.value::class.simpleName}")
                         clearUpdateRetry(operation, id)
                     }
 
-                    201  -> nsClientRepository.addLog("◄ ADDED", "OK ${dataPair.value.javaClass.simpleName}")
-                    400  -> nsClientRepository.addLog("◄ FAIL", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+                    201  -> nsClientRepository.addLog("◄ ADDED", "OK ${dataPair.value::class.simpleName}")
+                    400  -> nsClientRepository.addLog("◄ FAIL", "${dataPair.value::class.simpleName} ${result.errorResponse}")
 
                     404  -> {
-                        nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+                        nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value::class.simpleName} ${result.errorResponse}")
                         if (!config.isEnabled(ExternalOptions.IGNORE_NS_V3_ERRORS) &&
                             retryUpdateLater(operation, id, isDeletion = !dataPair.value.isValid)
                         ) return false
@@ -974,23 +966,23 @@ class NSClientV3Plugin @Inject constructor(
                         Operation.UPDATE -> "► UPDATE $collection"
                     },
                     when (operation) {
-                        Operation.CREATE -> "Sent ${dataPair.javaClass.simpleName} $progress"
-                        Operation.UPDATE -> "Sent ${dataPair.javaClass.simpleName} $id $progress"
+                        Operation.CREATE -> "Sent ${dataPair::class.simpleName} $progress"
+                        Operation.UPDATE -> "Sent ${dataPair::class.simpleName} $id $progress"
                     },
                     Json.encodeToJsonElement(data)
                 )
                 call?.let { it(data) }?.let { result ->
                     when (result.response) {
                         200  -> {
-                            nsClientRepository.addLog("◄ UPDATED", "OK ${dataPair.value.javaClass.simpleName}")
+                            nsClientRepository.addLog("◄ UPDATED", "OK ${dataPair.value::class.simpleName}")
                             clearUpdateRetry(operation, id)
                         }
 
-                        201  -> nsClientRepository.addLog("◄ ADDED", "OK ${dataPair.value.javaClass.simpleName}")
-                        400  -> nsClientRepository.addLog("◄ FAIL", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+                        201  -> nsClientRepository.addLog("◄ ADDED", "OK ${dataPair.value::class.simpleName}")
+                        400  -> nsClientRepository.addLog("◄ FAIL", "${dataPair.value::class.simpleName} ${result.errorResponse}")
 
                         404  -> {
-                            nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+                            nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value::class.simpleName} ${result.errorResponse}")
                             if (!config.isEnabled(ExternalOptions.IGNORE_NS_V3_ERRORS) &&
                                 retryUpdateLater(operation, id, isDeletion = (dataPair.value as? HasIDs)?.isValid == false)
                             ) return false
@@ -1062,7 +1054,7 @@ class NSClientV3Plugin @Inject constructor(
                     return true
                 }
             } catch (e: Exception) {
-                nsClientRepository.addLog("◄ ERROR", e.localizedMessage)
+                nsClientRepository.addLog("◄ ERROR", e.message)
                 aapsLogger.error(LTag.NSCLIENT, "Upload exception", e)
                 return false
             }
@@ -1109,47 +1101,44 @@ class NSClientV3Plugin @Inject constructor(
             nsClientRepository.addLog("● RUN", "$blockingReason $origin")
             return
         }
-        if (workIsRunning()) {
+        if (nsLoadExecutor.isRunning) {
             // Don't drop: queue a follow-up. Observer in onStart fires it on idle.
             pendingLoop.store(true)
             nsClientRepository.addLog("● RUN", "Already running $origin (queued loop)")
             return
         }
         nsClientRepository.addLog("● RUN", "Starting next round $origin")
-        synchronized(fullSyncSemaphore) {
-            if (fullSyncRequested) {
-                fullSyncRequested = false
-                doingFullSync = true
-                nsClientRepository.addLog("● RUN", "Full sync is requested")
-            }
+        // compareAndSet, not a lock: the same test-and-clear the pending flags above use. It is what
+        // makes "was a full sync requested" and "claim it" one step.
+        if (fullSyncRequested.compareAndSet(true, false)) {
+            doingFullSync = true
+            nsClientRepository.addLog("● RUN", "Full sync is requested")
         }
         nsClientRepository.updateStatus(status)
-        WorkManager.getInstance(context)
-            .beginUniqueWork(
-                JOB_NAME,
-                ExistingWorkPolicy.REPLACE,
-                OneTimeWorkRequest.Builder(LoadStatusWorker::class.java).build()
+        nsLoadExecutor.runChain(
+            listOf(
+                NsLoadStep.STATUS,
+                NsLoadStep.LAST_MODIFICATION,
+                NsLoadStep.BG,
+                NsLoadStep.TREATMENTS,
+                NsLoadStep.FOODS,
+                NsLoadStep.PROFILE_STORE,
+                // No-op stub. When filled in, must update lastLoadedSrvModified.collections.settings,
+                // otherwise isFirstLoad(SETTINGS) stays true forever.
+                NsLoadStep.SETTINGS,
+                NsLoadStep.DEVICE_STATUS,
+                // Last on purpose: a loop subsumes an upload, which is why a pending loop wins over
+                // a pending upload in the idle watchdog.
+                NsLoadStep.DATA_SYNC
             )
-            .then(OneTimeWorkRequest.Builder(LoadLastModificationWorker::class.java).build())
-            .then(OneTimeWorkRequest.Builder(LoadBgWorker::class.java).build())
-            .then(OneTimeWorkRequest.Builder(LoadTreatmentsWorker::class.java).build())
-            .then(OneTimeWorkRequest.Builder(LoadFoodsWorker::class.java).build())
-            .then(OneTimeWorkRequest.Builder(LoadProfileStoreWorker::class.java).build())
-            // No-op stub. When filled in, must update lastLoadedSrvModified.collections.settings,
-            // otherwise isFirstLoad(SETTINGS) stays true forever.
-            .then(OneTimeWorkRequest.Builder(LoadSettingsWorker::class.java).build())
-            .then(OneTimeWorkRequest.Builder(LoadDeviceStatusWorker::class.java).build())
-            .then(OneTimeWorkRequest.Builder(DataSyncWorker::class.java).build())
-            .enqueue()
+        )
     }
 
     fun endFullSync() {
-        synchronized(fullSyncSemaphore) {
-            doingFullSync = false
-        }
+        doingFullSync = false
     }
 
-    private fun executeUpload(origin: String) {
+    internal fun executeUpload(origin: String) {
         if (preferences.get(NsclientBooleanKey.NsPaused)) {
             nsClientRepository.addLog("● RUN", "paused")
             return
@@ -1158,31 +1147,15 @@ class NSClientV3Plugin @Inject constructor(
             nsClientRepository.addLog("● RUN", blockingReason)
             return
         }
-        if (workIsRunning()) {
+        if (nsLoadExecutor.isRunning) {
             // Don't drop: queue a follow-up. Observer in onStart fires it on idle.
             pendingUpload.store(true)
             nsClientRepository.addLog("● RUN", "Already running $origin (queued upload)")
             return
         }
         nsClientRepository.addLog("● RUN", "Starting upload $origin")
-        WorkManager.getInstance(context)
-            .enqueueUniqueWork(
-                JOB_NAME,
-                ExistingWorkPolicy.REPLACE,
-                OneTimeWorkRequest.Builder(DataSyncWorker::class.java).build()
-            )
+        nsLoadExecutor.runReplacing(NsLoadStep.DATA_SYNC)
     }
-
-    private fun workIsRunning(workName: String = JOB_NAME): Boolean {
-        for (workInfo in WorkManager.getInstance(context).getWorkInfosForUniqueWork(workName).get())
-            if (workInfo.state.isActive())
-                return true
-        return false
-    }
-
-    /** Shared with the re-run observer in onStart so both sides agree on "active". */
-    private fun WorkInfo.State.isActive(): Boolean =
-        this == WorkInfo.State.BLOCKED || this == WorkInfo.State.ENQUEUED || this == WorkInfo.State.RUNNING
 
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
         key = "ns_client_v3_settings",

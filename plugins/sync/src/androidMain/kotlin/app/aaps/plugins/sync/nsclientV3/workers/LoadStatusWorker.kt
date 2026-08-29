@@ -2,45 +2,25 @@ package app.aaps.plugins.sync.nsclientV3.workers
 
 import android.content.Context
 import androidx.work.WorkerParameters
-import androidx.work.workDataOf
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.objects.workflow.LoggingWorker
+import app.aaps.core.objects.workflow.RunnerWorker
 import app.aaps.core.objects.workflow.WorkerInstanceFactory
-import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.Dispatchers
 
+/** WorkManager shim. The work itself is [LoadStatusRunner], which is shared. */
 class LoadStatusWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
     aapsLogger: AAPSLogger,
     fabricPrivacy: FabricPrivacy,
-    private val nsClientV3Plugin: NSClientV3Plugin,
-    private val nsClientRepository: NSClientRepository
-) : LoggingWorker(context, params, Dispatchers.IO, aapsLogger, fabricPrivacy) {
+    private val runner: LoadStatusRunner
+) : RunnerWorker(context, params, Dispatchers.IO, aapsLogger, fabricPrivacy) {
 
-    override suspend fun doWorkAndLog(): Result {
-        val nsAndroidClient = nsClientV3Plugin.nsAndroidClient ?: return Result.failure(workDataOf("Error" to "AndroidClient is null"))
-
-        try {
-            val status = nsAndroidClient.getStatus()
-            aapsLogger.debug(LTag.NSCLIENT, "STATUS: $status")
-        } catch (error: Exception) {
-            aapsLogger.error("Error: ", error)
-            nsClientRepository.addLog("◄ ERROR", error.localizedMessage)
-            nsClientV3Plugin.lastOperationError = error.localizedMessage
-            nsClientRepository.updateStatus(nsClientV3Plugin.status)
-            return Result.failure(workDataOf("Error" to error.localizedMessage))
-        }
-        nsClientV3Plugin.lastOperationError = null
-        nsClientRepository.updateStatus(nsClientV3Plugin.status)
-        return Result.success()
-    }
+    override suspend fun runBody(isStopped: () -> Boolean) = runner.run()
 
     /** Metro builds the worker through this - WorkManager supplies context and params. */
     @AssistedFactory

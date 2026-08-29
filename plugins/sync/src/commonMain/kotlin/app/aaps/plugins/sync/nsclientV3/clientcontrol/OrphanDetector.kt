@@ -2,7 +2,6 @@ package app.aaps.plugins.sync.nsclientV3.clientcontrol
 
 import app.aaps.plugins.sync.SyncStrings
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
@@ -54,7 +53,9 @@ class OrphanDetector @Inject constructor(
     private val rh: TextResolver,
     private val config: Config,
     private val aapsLogger: AAPSLogger,
-    @ApplicationScope private val appScope: CoroutineScope
+    // Plain CoroutineScope, not @ApplicationScope: that qualifier is javax and cannot appear in
+    // commonMain. AppCoroutineBindings.unqualifiedAppScope provides the same scope unqualified.
+    private val appScope: CoroutineScope
 ) {
 
     private val _authorized = MutableStateFlow(true)
@@ -89,7 +90,7 @@ class OrphanDetector @Inject constructor(
      *
      * [docSrvModified] is the doc's `srvModified` in ms; 0 if unknown (skip the race guard).
      */
-    fun onSettingsDoc(configuration: NSRunningConfiguration, docSrvModified: Long) {
+    suspend fun onSettingsDoc(configuration: NSRunningConfiguration, docSrvModified: Long) {
         if (!config.AAPSCLIENT) return
         val roster = configuration.authorizedClients ?: return
         val pairing = pairingRepository.currentPairing() ?: return

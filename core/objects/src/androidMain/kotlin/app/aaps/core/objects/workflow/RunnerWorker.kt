@@ -46,6 +46,7 @@ abstract class RunnerWorker(
     final override suspend fun doWorkAndLog(): Result =
         when (val outcome = runBody { isStopped }) {
             is WorkOutcome.Success -> Result.success()
+            is WorkOutcome.Skipped -> Result.success(workDataOf("Result" to outcome.reason))
             is WorkOutcome.Failure -> Result.failure(workDataOf("Error" to outcome.reason))
         }
 }

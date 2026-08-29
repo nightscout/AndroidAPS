@@ -1,5 +1,7 @@
 package app.aaps.plugins.sync.nsclientV3.clientcontrol
 
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.mockito.kotlin.doAnswer
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -51,7 +53,7 @@ internal class OrphanDetectorTest {
     fun setUp() {
         MockitoAnnotations.openMocks(this)
         whenever(config.AAPSCLIENT).thenReturn(true)
-        whenever(pairingRepository.currentPairing()).thenReturn(pairing)
+        runBlocking { whenever(pairingRepository.currentPairing()).thenReturn(pairing) }
         whenever(preferences.get(LongNonKey.NsClientControlPairedAt)).thenAnswer { pairedAt }
         whenever(preferences.get(any<StringNonKey>())).thenAnswer { (it.arguments[0] as StringNonKey).defaultValue }
         whenever(preferences.observe(StringNonKey.NsClientControlClientId)).thenReturn(clientIdFlow)
@@ -69,7 +71,7 @@ internal class OrphanDetectorTest {
      * compatibility marker — clients must not infer orphan status from its absence.
      */
     @Test
-    fun blockAbsentDoesNotFire() {
+    fun blockAbsentDoesNotFire() = runTest {
         sut.onSettingsDoc(configWithoutRosterField(), docSrvModified = now)
         verify(notificationManager, never()).post(any<NotificationId>(), any<String>(), any<NotificationLevel>(), any<Int>(), anyOrNull(), any<List<NotificationAction>>(), anyOrNull())
         verify(notificationManager, never()).dismiss(any<NotificationId>())
@@ -77,7 +79,7 @@ internal class OrphanDetectorTest {
 
     /** We're in the roster — authorized. Dismiss any prior orphan notification (recovery path). */
     @Test
-    fun rosterContainsUsDismissesOrphanNotification() {
+    fun rosterContainsUsDismissesOrphanNotification() = runTest {
         sut.onSettingsDoc(configWithRoster(ourClientId, "another-uuid"), docSrvModified = now)
         verify(notificationManager).dismiss(NotificationId.NSCLIENT_PAIRING_ORPHAN)
         verify(notificationManager, never()).post(any<NotificationId>(), any<String>(), any<NotificationLevel>(), any<Int>(), anyOrNull(), any<List<NotificationAction>>(), anyOrNull())
@@ -85,7 +87,7 @@ internal class OrphanDetectorTest {
 
     /** Roster present, our clientId missing, doc well past the post-pairing race window → fire. */
     @Test
-    fun rosterMissingUsOutsideRaceWindowFiresOrphanNotification() {
+    fun rosterMissingUsOutsideRaceWindowFiresOrphanNotification() = runTest {
         sut.onSettingsDoc(configWithRoster("stranger"), docSrvModified = now)
         verify(notificationManager).post(eq(NotificationId.NSCLIENT_PAIRING_ORPHAN), any<TextRef>(), any<NotificationLevel>(), any<Int>(), any<Long>(), any<Long>(), anyOrNull(), any<List<NotificationAction>>(), anyOrNull())
     }
@@ -96,7 +98,7 @@ internal class OrphanDetectorTest {
      * snapshot in flight — must not false-fire.
      */
     @Test
-    fun rosterMissingUsButDocPredatesPairingDoesNotFire() {
+    fun rosterMissingUsButDocPredatesPairingDoesNotFire() = runTest {
         pairedAt = now
         // Doc published 4s before we paired — well inside the 60s grace window.
         val docSrvModified = now - 4_000L
@@ -106,7 +108,7 @@ internal class OrphanDetectorTest {
 
     /** Doc just outside the grace window — fire (master had time to republish but didn't include us). */
     @Test
-    fun rosterMissingUsDocJustOutsideRaceWindowFires() {
+    fun rosterMissingUsDocJustOutsideRaceWindowFires() = runTest {
         // We paired 2 minutes ago; this doc was just issued, well past the 60s post-pair grace.
         pairedAt = now - 2 * 60_000L
         val docSrvModified = now
@@ -116,14 +118,14 @@ internal class OrphanDetectorTest {
 
     /** Empty roster = master has zero authorized clients (typical post-reinstall). Treat as orphan. */
     @Test
-    fun emptyRosterFires() {
+    fun emptyRosterFires() = runTest {
         sut.onSettingsDoc(configWithRoster(), docSrvModified = now)
         verify(notificationManager).post(eq(NotificationId.NSCLIENT_PAIRING_ORPHAN), any<TextRef>(), any<NotificationLevel>(), any<Int>(), any<Long>(), any<Long>(), anyOrNull(), any<List<NotificationAction>>(), anyOrNull())
     }
 
     /** Master device must never alarm itself. */
     @Test
-    fun masterRoleIsNoOp() {
+    fun masterRoleIsNoOp() = runTest {
         whenever(config.AAPSCLIENT).thenReturn(false)
         sut.onSettingsDoc(configWithRoster("stranger"), docSrvModified = now)
         verify(notificationManager, never()).post(any<NotificationId>(), any<String>(), any<NotificationLevel>(), any<Int>(), anyOrNull(), any<List<NotificationAction>>(), anyOrNull())
@@ -132,7 +134,7 @@ internal class OrphanDetectorTest {
 
     /** Unpaired client has nothing to check — no signal either way. */
     @Test
-    fun unpairedIsNoOp() {
+    fun unpairedIsNoOp() = runTest {
         whenever(pairingRepository.currentPairing()).thenReturn(null)
         sut.onSettingsDoc(configWithRoster("stranger"), docSrvModified = now)
         verify(notificationManager, never()).post(any<NotificationId>(), any<String>(), any<NotificationLevel>(), any<Int>(), anyOrNull(), any<List<NotificationAction>>(), anyOrNull())
@@ -145,7 +147,7 @@ internal class OrphanDetectorTest {
      * during an indeterminate doc.
      */
     @Test
-    fun missingSrvModifiedSkipsRaceGuardButStillFiresIfPairedAtIsZero() {
+    fun missingSrvModifiedSkipsRaceGuardButStillFiresIfPairedAtIsZero() = runTest {
         pairedAt = 0L  // legacy install: never set pairedAt
         sut.onSettingsDoc(configWithRoster("stranger"), docSrvModified = 0L)
         verify(notificationManager).post(eq(NotificationId.NSCLIENT_PAIRING_ORPHAN), any<TextRef>(), any<NotificationLevel>(), any<Int>(), any<Long>(), any<Long>(), anyOrNull(), any<List<NotificationAction>>(), anyOrNull())
@@ -155,20 +157,20 @@ internal class OrphanDetectorTest {
 
     /** Optimistic default before any settings doc is seen — first-ever pairing must stay usable. */
     @Test
-    fun authorizedDefaultsTrue() {
+    fun authorizedDefaultsTrue() = runTest {
         assertThat(sut.authorized.value).isTrue()
     }
 
     /** A confirmed orphan flips authorized to false so masterReachable disables editing. */
     @Test
-    fun orphanFlipsAuthorizedFalse() {
+    fun orphanFlipsAuthorizedFalse() = runTest {
         sut.onSettingsDoc(configWithRoster("stranger"), docSrvModified = now)
         assertThat(sut.authorized.value).isFalse()
     }
 
     /** Being re-listed after an orphan restores authorized to true (recovery path). */
     @Test
-    fun reauthorizationRestoresAuthorizedTrue() {
+    fun reauthorizationRestoresAuthorizedTrue() = runTest {
         sut.onSettingsDoc(configWithRoster("stranger"), docSrvModified = now)
         assertThat(sut.authorized.value).isFalse()
         sut.onSettingsDoc(configWithRoster(ourClientId), docSrvModified = now)
@@ -177,7 +179,7 @@ internal class OrphanDetectorTest {
 
     /** Block-absent (older master) must not flip authorized — the prior verdict is preserved. */
     @Test
-    fun blockAbsentLeavesAuthorizedUnchanged() {
+    fun blockAbsentLeavesAuthorizedUnchanged() = runTest {
         sut.onSettingsDoc(configWithRoster("stranger"), docSrvModified = now)  // → false
         sut.onSettingsDoc(configWithoutRosterField(), docSrvModified = now)    // absent block → no change
         assertThat(sut.authorized.value).isFalse()
@@ -185,7 +187,7 @@ internal class OrphanDetectorTest {
 
     /** Within the post-pairing race window a missing roster must not flip authorized (optimistic). */
     @Test
-    fun withinRaceWindowLeavesAuthorizedTrue() {
+    fun withinRaceWindowLeavesAuthorizedTrue() = runTest {
         pairedAt = now
         sut.onSettingsDoc(configWithRoster("stranger"), docSrvModified = now - 4_000L)
         assertThat(sut.authorized.value).isTrue()
@@ -193,7 +195,7 @@ internal class OrphanDetectorTest {
 
     /** An unpaired client makes no authorization claim — authorized stays at its optimistic default. */
     @Test
-    fun unpairedLeavesAuthorizedTrue() {
+    fun unpairedLeavesAuthorizedTrue() = runTest {
         whenever(pairingRepository.currentPairing()).thenReturn(null)
         sut.onSettingsDoc(configWithRoster("stranger"), docSrvModified = now)
         assertThat(sut.authorized.value).isTrue()
@@ -202,7 +204,7 @@ internal class OrphanDetectorTest {
     /** A pairing change (re-pair writes a new clientId) clears a prior orphan verdict, so masterReachable
      *  isn't left locked after re-pairing within the same process. */
     @Test
-    fun rePairResetsAuthorizedTrue() {
+    fun rePairResetsAuthorizedTrue() = runTest {
         sut.onSettingsDoc(configWithRoster("stranger"), docSrvModified = now)
         assertThat(sut.authorized.value).isFalse()        // orphaned
         clientIdFlow.value = "new-client-uuid"            // user re-pairs → new NsClientControlClientId

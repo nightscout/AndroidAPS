@@ -17,6 +17,7 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.test.runTest
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -81,7 +82,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
     // ---------------------------------------------------------------- create / update
 
     @Test
-    fun `entries document is processed as glucose and queued for storage`() {
+    fun `entries document is processed as glucose and queued for storage`() = runTest {
         sut.onDataCreateUpdate(envelope("entries", sgvDoc()))
 
         verify(nsIncomingDataProcessor).processSgvs(any(), eq(false))
@@ -89,7 +90,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `treatments document is processed and queued without full sync`() {
+    fun `treatments document is processed and queued without full sync`() = runTest {
         val doc = """{"identifier":"t1","srvModified":1000,"date":1000,"eventType":"Note","notes":"x"}"""
 
         sut.onDataCreateUpdate(envelope("treatments", doc))
@@ -98,7 +99,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `devicestatus document goes to the device status handler as live data`() {
+    fun `devicestatus document goes to the device status handler as live data`() = runTest {
         val doc = """{"identifier":"d1","srvModified":1000,"created_at":"2024-01-01T00:00:00Z"}"""
 
         sut.onDataCreateUpdate(envelope("devicestatus", doc))
@@ -112,7 +113,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
      * skip exactly the offline window it is there to backfill.
      */
     @Test
-    fun `srvModified is not advanced while the initial load is still running`() {
+    fun `srvModified is not advanced while the initial load is still running`() = runTest {
         whenever(nsClientV3Plugin.initialLoadFinished).thenReturn(false)
 
         sut.onDataCreateUpdate(envelope("entries", sgvDoc(srvModified = 5000L)))
@@ -122,7 +123,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `srvModified is advanced and stored once the initial load has finished`() {
+    fun `srvModified is advanced and stored once the initial load has finished`() = runTest {
         whenever(nsClientV3Plugin.initialLoadFinished).thenReturn(true)
 
         sut.onDataCreateUpdate(envelope("entries", sgvDoc(srvModified = 5000L)))
@@ -139,7 +140,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
      * verify an ack as an inbound command.
      */
     @Test
-    fun `client routes an ack document to the ack handler and not to the command receiver`() {
+    fun `client routes an ack document to the ack handler and not to the command receiver`() = runTest {
         whenever(config.AAPSCLIENT).thenReturn(true)
         val identifier = ClientControlPublisher.IDENTIFIER_ACK_PREFIX + "123"
         val doc = """{"identifier":"$identifier","srvModified":1000}"""
@@ -151,7 +152,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `master routes a command document to the command receiver`() {
+    fun `master routes a command document to the command receiver`() = runTest {
         whenever(config.AAPSCLIENT).thenReturn(false)
         val identifier = ClientControlPublisher.IDENTIFIER_PREFIX + "cmd1"
         val doc = """{"identifier":"$identifier","srvModified":1000}"""
@@ -166,7 +167,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
      * outgoing command: the master would see an unknown clientId and tombstone the document.
      */
     @Test
-    fun `client ignores the echo of its own outgoing command`() {
+    fun `client ignores the echo of its own outgoing command`() = runTest {
         whenever(config.AAPSCLIENT).thenReturn(true)
         val identifier = ClientControlPublisher.IDENTIFIER_PREFIX + "cmd1"
         val doc = """{"identifier":"$identifier","srvModified":1000}"""
@@ -179,7 +180,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
     // ------------------------------------------------------------------------- delete
 
     @Test
-    fun `deleted treatment is queued for removal`() {
+    fun `deleted treatment is queued for removal`() = runTest {
         sut.onDataDelete("""{"colName":"treatments","identifier":"t1"}""")
 
         verify(storeDataForDb).addToDeleteTreatment("t1")
@@ -187,7 +188,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `deleted entry is queued for removal`() {
+    fun `deleted entry is queued for removal`() = runTest {
         sut.onDataDelete("""{"colName":"entries","identifier":"e1"}""")
 
         verify(storeDataForDb).addToDeleteGlucoseValue("e1")
@@ -196,7 +197,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
 
     /** A document with no collection name matches no branch. It must not delete anything. */
     @Test
-    fun `delete without a collection name removes nothing`() {
+    fun `delete without a collection name removes nothing`() = runTest {
         sut.onDataDelete("""{"identifier":"x1"}""")
 
         assertThat(mockingDetails(storeDataForDb).invocations).isEmpty()
@@ -205,7 +206,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
     // ------------------------------------------------------------------------- alarms
 
     @Test
-    fun `alarm is ignored when alarm notifications are switched off`() {
+    fun `alarm is ignored when alarm notifications are switched off`() = runTest {
         whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(false)
 
         sut.onAlarm("""{"level":1,"title":"Warning HIGH","message":"m"}""")
@@ -214,7 +215,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `alarm is shown when notifications are on and it is not snoozed`() {
+    fun `alarm is shown when notifications are on and it is not snoozed`() = runTest {
         whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(true)
         whenever(preferences.get(eq(LongComposedKey.NotificationSnoozedTo), any())).thenReturn(0L)
 
@@ -224,7 +225,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `alarm is suppressed while its snooze is still running`() {
+    fun `alarm is suppressed while its snooze is still running`() = runTest {
         whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(true)
         whenever(preferences.get(eq(LongComposedKey.NotificationSnoozedTo), any()))
             .thenReturn(System.currentTimeMillis() + 60_000L)
@@ -235,7 +236,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `announcement is ignored when announcement notifications are switched off`() {
+    fun `announcement is ignored when announcement notifications are switched off`() = runTest {
         whenever(preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)).thenReturn(false)
 
         sut.onAnnouncement("""{"level":0,"title":"Announcement","message":"m"}""")
@@ -244,7 +245,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `clear alarm dismisses both the alarm and the urgent alarm`() {
+    fun `clear alarm dismisses both the alarm and the urgent alarm`() = runTest {
         sut.onClearAlarm("""{"clear":true,"title":"All Clear","message":"m"}""")
 
         verify(notificationManager).dismiss(NotificationId.NS_ALARM)

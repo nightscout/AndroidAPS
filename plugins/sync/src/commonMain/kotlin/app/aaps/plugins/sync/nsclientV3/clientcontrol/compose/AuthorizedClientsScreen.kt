@@ -3,8 +3,6 @@ package app.aaps.plugins.sync.nsclientV3.clientcontrol.compose
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.sync.SyncStrings
-import android.app.Activity
-import android.view.WindowManager
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -44,7 +42,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -56,6 +53,7 @@ import app.aaps.core.nssdk.localmodel.clientcontrol.ClientState
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.clearFocusOnTap
+import kotlin.time.Clock
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -333,19 +331,18 @@ private fun PairingPinDialog(
     onDismiss: () -> Unit
 ) {
     // Sensitive content — block screenshots/recents previews while the PIN is on screen.
-    val activity = LocalContext.current as? Activity
-    DisposableEffect(Unit) {
-        activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
-        onDispose { activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_SECURE) }
-    }
+    // Returns false where the platform cannot do it - Apple has no FLAG_SECURE. The PIN is still
+    // shown, but the caller can tell the difference between "protected" and "not protected".
+    @Suppress("UNUSED_VARIABLE")
+    val screenshotsBlocked = blockScreenshotsWhileVisible()
 
     // Keyed on expiresAt so the initial msLeft snapshot tracks the (rarely-changing) offer; if a
     // future code path emits a new offer with a different expiresAt, the remember resets.
-    var msLeft by remember(offer.expiresAt) { mutableLongStateOf(offer.expiresAt - System.currentTimeMillis()) }
+    var msLeft by remember(offer.expiresAt) { mutableLongStateOf(offer.expiresAt - Clock.System.now().toEpochMilliseconds()) }
 
     LaunchedEffect(offer.expiresAt) {
         while (true) {
-            msLeft = offer.expiresAt - System.currentTimeMillis()
+            msLeft = offer.expiresAt - Clock.System.now().toEpochMilliseconds()
             if (msLeft <= 0L) {
                 onDismiss()
                 break

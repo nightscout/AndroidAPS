@@ -70,7 +70,7 @@ internal class LoadDeviceStatusWorkerTest : TestBaseWithProfile() {
         TestListenableWorkerBuilder<LoadDeviceStatusWorker>(context)
             .setWorkerFactory(object : WorkerFactory() {
                 override fun createWorker(appContext: Context, workerClassName: String, workerParameters: WorkerParameters) =
-                    LoadDeviceStatusWorker(appContext, workerParameters, aapsLogger, fabricPrivacy, nsClientV3Plugin, dateUtil, nsDeviceStatusHandler, nsClientRepository)
+                    LoadDeviceStatusWorker(appContext, workerParameters, aapsLogger, fabricPrivacy, LoadDeviceStatusRunner(aapsLogger, nsClientV3Plugin, dateUtil, nsDeviceStatusHandler, nsClientRepository))
             })
             .build()
 
@@ -82,9 +82,9 @@ internal class LoadDeviceStatusWorkerTest : TestBaseWithProfile() {
         whenever(receiverStatusStore.chargingStatusFlow).thenReturn(MutableStateFlow(null))
         receiverDelegate = ReceiverDelegate(rh, preferences, receiverStatusStore)
         nsClientV3Plugin = NSClientV3Plugin(
-            aapsLogger, rh, preferences, rxBus, context,
+            aapsLogger, rh, preferences, rxBus,
             receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
-            nsClientSource, storeDataForDb, decimalFormatter, l, nsClientRepository, uel, mock(), mock(), mock(), mock(), mock(), mock(), profileRepository, mock()
+            nsClientSource, storeDataForDb, decimalFormatter, l, nsClientRepository, uel, mock(), mock(), mock(), mock(), mock(), mock(), profileRepository, mock(), mock()
         )
         nsClientV3Plugin.newestDataOnServer = LastModified(LastModified.Collections())
     }
