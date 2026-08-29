@@ -136,22 +136,26 @@ class AuthorizedClientsViewModel @Inject constructor(
      */
     fun confirmAdd(name: String) {
         _dialogState.value = null
-        val now = dateUtil.now()
-        val result = repository.addPending(name.trim(), PAIR_TTL_MS, now)
-        val payload = PairingPayload(
-            masterInstallId = ownInstallId(),
-            clientId = result.entry.clientId,
-            secretHex = result.secretHex,
-            expiresAt = result.entry.pairExpiresAt
-        )
-        val pin = ClientControlPairingCrypto.newPin()
-        _pairingOffer.value = PendingPairingOffer(
-            pin = pin,
-            expiresAt = result.entry.pairExpiresAt,
-            clientId = result.entry.clientId,
-            publishStatus = PublishStatus.Loading
-        )
+        // One coroutine for the whole thing now that addPending suspends: it takes the repository
+        // mutex across preference I/O. This stays a plain function because the screen passes it as a
+        // click handler, and viewModelScope is Main.immediate, so the state writes below still land
+        // on this frame unless the mutex is actually contended.
         publishJob = viewModelScope.launch {
+            val now = dateUtil.now()
+            val result = repository.addPending(name.trim(), PAIR_TTL_MS, now)
+            val payload = PairingPayload(
+                masterInstallId = ownInstallId(),
+                clientId = result.entry.clientId,
+                secretHex = result.secretHex,
+                expiresAt = result.entry.pairExpiresAt
+            )
+            val pin = ClientControlPairingCrypto.newPin()
+            _pairingOffer.value = PendingPairingOffer(
+                pin = pin,
+                expiresAt = result.entry.pairExpiresAt,
+                clientId = result.entry.clientId,
+                publishStatus = PublishStatus.Loading
+            )
             val ok = offerPublisher.publishOffer(payload, pin)
             // Only update if the dialog is still showing this offer — user may have dismissed already.
             _pairingOffer.update { current ->
@@ -169,23 +173,25 @@ class AuthorizedClientsViewModel @Inject constructor(
     fun retryPublish() {
         val offer = _pairingOffer.value ?: return
         if (offer.publishStatus != PublishStatus.Failed) return
-        val entry = repository.findRaw(offer.clientId) ?: return
-        // Don't re-publish an offer whose PIN window has already closed — surface Failed instead so
-        // the user re-adds for a fresh PIN rather than uploading a doc no client could ever redeem.
-        if (dateUtil.now() >= entry.pairExpiresAt) {
-            _pairingOffer.update { it?.copy(publishStatus = PublishStatus.Failed) }
-            return
-        }
-        val secretHex = repository.secretLookup(entry.clientId)?.secretBytes
-            ?.let { ClientControlCrypto.bytesToHex(it) } ?: return
-        val payload = PairingPayload(
-            masterInstallId = ownInstallId(),
-            clientId = entry.clientId,
-            secretHex = secretHex,
-            expiresAt = entry.pairExpiresAt
-        )
-        _pairingOffer.update { it?.copy(publishStatus = PublishStatus.Loading) }
+        // Same reason as confirmAdd: findRaw and secretLookup take the repository mutex, so the body
+        // moved into the coroutine. The guards keep their order, they just return from the launch.
         publishJob = viewModelScope.launch {
+            val entry = repository.findRaw(offer.clientId) ?: return@launch
+            // Don't re-publish an offer whose PIN window has already closed — surface Failed instead so
+            // the user re-adds for a fresh PIN rather than uploading a doc no client could ever redeem.
+            if (dateUtil.now() >= entry.pairExpiresAt) {
+                _pairingOffer.update { it?.copy(publishStatus = PublishStatus.Failed) }
+                return@launch
+            }
+            val secretHex = repository.secretLookup(entry.clientId)?.secretBytes
+                ?.let { ClientControlCrypto.bytesToHex(it) } ?: return@launch
+            val payload = PairingPayload(
+                masterInstallId = ownInstallId(),
+                clientId = entry.clientId,
+                secretHex = secretHex,
+                expiresAt = entry.pairExpiresAt
+            )
+            _pairingOffer.update { it?.copy(publishStatus = PublishStatus.Loading) }
             val ok = offerPublisher.publishOffer(payload, offer.pin)
             _pairingOffer.update { current ->
                 if (current?.clientId == entry.clientId)
@@ -217,11 +223,15 @@ class AuthorizedClientsViewModel @Inject constructor(
 
     fun confirmDelete() {
         val state = _dialogState.value as? DialogState.ConfirmDelete ?: return
-        repository.delete(state.client.clientId)
-        // Re-check the current state from the repository, not the snapshot in DialogState — between
-        // requestDelete and confirmDelete the entry may have flipped Pending → Active (offer doc
-        // already deleted by the receiver) or already pruned.
-        viewModelScope.launch { offerPublisher.deleteOffer(state.client.clientId) }
+        // delete takes the repository mutex, so it joins the coroutine that was already here. The
+        // order is unchanged: the entry goes first, then its offer doc.
+        viewModelScope.launch {
+            repository.delete(state.client.clientId)
+            // Re-check the current state from the repository, not the snapshot in DialogState — between
+            // requestDelete and confirmDelete the entry may have flipped Pending → Active (offer doc
+            // already deleted by the receiver) or already pruned.
+            offerPublisher.deleteOffer(state.client.clientId)
+        }
         _dialogState.value = null
     }
 
@@ -238,12 +248,11 @@ class AuthorizedClientsViewModel @Inject constructor(
      * not a background ticker — pruning has no value when nobody is watching the list, so this
      * avoids a battery-wasting always-on timer for a purely cosmetic countdown.
      */
-    fun pruneExpired() {
+    // suspend, not a launch: the only caller is a LaunchedEffect, which is already a coroutine.
+    suspend fun pruneExpired() {
         val droppedIds = repository.pruneExpired(dateUtil.now())
         if (droppedIds.isEmpty()) return
-        viewModelScope.launch {
-            droppedIds.forEach { offerPublisher.deleteOffer(it) }
-        }
+        droppedIds.forEach { offerPublisher.deleteOffer(it) }
     }
 
     /** "Last seen 5m ago" / "Never used" — formatted from the entry's lastSeenAt. */

@@ -159,7 +159,7 @@ class ClientControlRoundTrip @Inject constructor(
      * addressed to this client, verifies the signature against the paired master secret (a forged
      * "Ok" must not surface as Applied), and republishes to the in-process [ackEvents].
      */
-    fun onAckDoc(doc: JsonObject) {
+    suspend fun onAckDoc(doc: JsonObject) {
         val ackObj = doc.optJsonObjectCompat("ack") ?: return
         val ack = runCatching { json.decodeFromJsonElement(AckEnvelope.serializer(), ackObj) }.getOrNull() ?: run {
             aapsLogger.error(LTag.NSCLIENT, "ClientControl: malformed ACK doc")
@@ -198,7 +198,7 @@ class ClientControlRoundTrip @Inject constructor(
      * must not be believable), drops a late/out-of-order frame, then drives the client's OWN [BolusProgressData]
      * so the existing (un-gated) progress dialog lights up — no client-specific UI.
      */
-    fun onProgressDoc(doc: JsonObject) {
+    suspend fun onProgressDoc(doc: JsonObject) {
         val obj = doc.optJsonObjectCompat("progress") ?: return
         val env = runCatching { json.decodeFromJsonElement(ProgressEnvelope.serializer(), obj) }.getOrNull() ?: run {
             aapsLogger.error(LTag.NSCLIENT, "ClientControl: malformed progress doc")

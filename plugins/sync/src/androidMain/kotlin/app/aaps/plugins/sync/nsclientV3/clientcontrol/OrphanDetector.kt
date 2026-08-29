@@ -89,7 +89,7 @@ class OrphanDetector @Inject constructor(
      *
      * [docSrvModified] is the doc's `srvModified` in ms; 0 if unknown (skip the race guard).
      */
-    fun onSettingsDoc(configuration: NSRunningConfiguration, docSrvModified: Long) {
+    suspend fun onSettingsDoc(configuration: NSRunningConfiguration, docSrvModified: Long) {
         if (!config.AAPSCLIENT) return
         val roster = configuration.authorizedClients ?: return
         val pairing = pairingRepository.currentPairing() ?: return

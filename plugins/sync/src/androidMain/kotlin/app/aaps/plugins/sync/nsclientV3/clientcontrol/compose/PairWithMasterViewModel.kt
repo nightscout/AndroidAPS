@@ -30,11 +30,18 @@ class PairWithMasterViewModel @Inject constructor(
     private val dateUtil: DateUtil
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<UiState>(initialState())
+    // Starts in Fetching rather than being decided here: currentPairing() suspends now, because it
+    // takes the repository mutex across three preference reads. Defaulting to PinEntry instead
+    // would tell an already-paired user to type a PIN for the moment before the answer arrives.
+    // Fetching already has a renderer, so this needs nothing from the screen.
+    private val _state = MutableStateFlow<UiState>(UiState.Fetching)
     val state: StateFlow<UiState> = _state.asStateFlow()
 
-    private fun initialState(): UiState =
-        repository.currentPairing()?.let { UiState.AlreadyPaired(it) } ?: UiState.PinEntry
+    init {
+        viewModelScope.launch {
+            _state.value = repository.currentPairing()?.let { UiState.AlreadyPaired(it) } ?: UiState.PinEntry
+        }
+    }
 
     /**
      * User submitted a PIN from the entry screen. Looks up matching offers on NS, attempts to
@@ -79,9 +86,11 @@ class PairWithMasterViewModel @Inject constructor(
      */
     fun confirmPair() {
         val payload = (_state.value as? UiState.Confirming)?.payload ?: return
-        repository.pair(payload, dateUtil.now())
-        _state.value = UiState.Sending
+        // pair() takes the repository mutex, so it joins the coroutine that was already here. The
+        // order is unchanged: store the pairing, show Sending, then say hello.
         viewModelScope.launch {
+            repository.pair(payload, dateUtil.now())
+            _state.value = UiState.Sending
             publisher.publish(ClientControlMessage.Hello())
             _state.value = UiState.Success
         }
@@ -99,8 +108,10 @@ class PairWithMasterViewModel @Inject constructor(
 
     /** Wipes the existing pairing and returns the user to the entry screen. */
     fun unpair() {
-        repository.unpair()
-        _state.value = UiState.PinEntry
+        viewModelScope.launch {
+            repository.unpair()
+            _state.value = UiState.PinEntry
+        }
     }
 
     sealed class UiState {

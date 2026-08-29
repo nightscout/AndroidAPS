@@ -29,6 +29,7 @@ import app.aaps.core.nssdk.localmodel.clientcontrol.ProgressPhase
 import app.aaps.core.nssdk.utils.ClientControlCrypto
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -101,8 +102,8 @@ internal class ClientControlRoundTripTest {
         MockitoAnnotations.openMocks(this)
         reachable = MutableStateFlow(true)
         whenever(dateUtil.now()).thenReturn(now)
-        whenever(pairingRepository.currentPairing()).thenReturn(MasterPairing(masterInstallId = "m", clientId = clientId, masterSecretEnc = "enc"))
-        whenever(pairingRepository.secretBytesOrNull()).thenReturn(secret)
+        runBlocking { whenever(pairingRepository.currentPairing()).thenReturn(MasterPairing(masterInstallId = "m", clientId = clientId, masterSecretEnc = "enc")) }
+        runBlocking { whenever(pairingRepository.secretBytesOrNull()).thenReturn(secret) }
         whenever(nsClientV3Plugin.masterReachable).thenReturn(reachable)
         whenever(nsClientV3Plugin.nsAndroidClient).thenReturn(nsAndroidClient)
         whenever(config.AAPSCLIENT).thenReturn(true)
@@ -113,7 +114,7 @@ internal class ClientControlRoundTripTest {
     }
 
     @Test
-    fun onAckDoc_deliveryFailed_raisesUrgentAlarm() {
+    fun onAckDoc_deliveryFailed_raisesUrgentAlarm() = runTest {
         // A late Delivery/Failed ack (an async bolus failure the master relays after its Done ack) → URGENT alarm.
         // The master-authored payload (title + pump detail) is shown as-is — not re-prefixed with the title.
         sut.onAckDoc(ackDoc(AckPhase.Delivery, AckStatus.Failed, reason = "ExecutionFailed", payload = "Treatment delivery error\npump fault"))

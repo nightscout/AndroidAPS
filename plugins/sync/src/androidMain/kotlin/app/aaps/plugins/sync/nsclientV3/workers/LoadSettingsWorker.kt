@@ -81,7 +81,8 @@ class LoadSettingsWorker @AssistedInject constructor(
     private suspend fun load(
         client: NSAndroidClient,
         identifier: String,
-        apply: (NSRunningConfiguration, Long?) -> Unit
+        // suspend: the apply block reaches OrphanDetector, which takes the repository mutex now.
+        apply: suspend (NSRunningConfiguration, Long?) -> Unit
     ) {
         val response = client.getSettings(identifier)
         val doc = response.values

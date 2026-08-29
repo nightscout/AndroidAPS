@@ -312,7 +312,11 @@ class NSClientV3Service : MetroService() {
                     config.AAPSCLIENT && identifier == SettingsIdentifiers.COLD                                   ->
                         docString.toRunningConfiguration()?.let {
                             runningConfiguration.applyCold(it)
-                            orphanDetector.onSettingsDoc(it, docJson.optLong("srvModified", 0L))
+                            // appScope.launch: onSettingsDoc takes the repository mutex now, and this
+                            // handler is driven by the socket, not by a coroutine. Only the orphan
+                            // bookkeeping is deferred; applyCold and the liveness clock stay inline.
+                            val settingsSrvModified = docJson.optLong("srvModified", 0L)
+                            appScope.launch { orphanDetector.onSettingsDoc(it, settingsSrvModified) }
                             // A live config push proves the master is alive now → feed the liveness clock.
                             nsClientV3Plugin.bumpMasterSignal(srvModified)
                         }
@@ -327,17 +331,17 @@ class NSClientV3Service : MetroService() {
                     // IDENTIFIER_PREFIX branch (ack identifiers share that prefix) so the master
                     // receiver never tries to verify an ack as an inbound command envelope.
                     config.AAPSCLIENT && identifier.startsWith(ClientControlPublisher.IDENTIFIER_ACK_PREFIX)      ->
-                        nsClientV3Plugin.handleClientControlAckEvent(docJson.toKotlinxJson())
+                        appScope.launch { nsClientV3Plugin.handleClientControlAckEvent(docJson.toKotlinxJson()) }
                     // Client-side: master→client live bolus-progress mirror. Same ordering rule as ACK (shares
                     // IDENTIFIER_PREFIX) so the master never treats its own progress doc as an inbound command.
                     config.AAPSCLIENT && identifier.startsWith(ClientControlPublisher.IDENTIFIER_PROGRESS_PREFIX) ->
-                        nsClientV3Plugin.handleClientControlProgressEvent(docJson.toKotlinxJson())
+                        appScope.launch { nsClientV3Plugin.handleClientControlProgressEvent(docJson.toKotlinxJson()) }
                     // Master-side: route client-control envelopes (paired-client → master commands)
                     // to the receiver. The plugin gates on the master toggle internally.
                     // !config.AAPSCLIENT: NS WS echoes every write back to the sender too — a client must not
                     // self-process its own outgoing commands (unknown clientId → deleteSettings → HTTP 410 tombstone).
                     !config.AAPSCLIENT && identifier.startsWith(ClientControlPublisher.IDENTIFIER_PREFIX)         ->
-                        nsClientV3Plugin.handleClientControlSettingsEvent(identifier, docJson.toKotlinxJson())
+                        appScope.launch { nsClientV3Plugin.handleClientControlSettingsEvent(identifier, docJson.toKotlinxJson()) }
                 }
             }
         }

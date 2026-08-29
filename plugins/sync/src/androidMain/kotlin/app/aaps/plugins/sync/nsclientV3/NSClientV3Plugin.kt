@@ -379,7 +379,7 @@ class NSClientV3Plugin @Inject constructor(
      * rejects cleanly with a signed ACK (one place, also covering the poll fallback) rather than silently
      * dropping it, which would time a client out into a false "master offline" alarm in the toggle race window.
      */
-    fun handleClientControlSettingsEvent(identifier: String, doc: JsonObject) {
+    suspend fun handleClientControlSettingsEvent(identifier: String, doc: JsonObject) {
         scope.launch {
             runCatching { clientControlReceiver.onSettingsDocChanged(identifier, doc) }
                 .onFailure { aapsLogger.error(LTag.NSCLIENT, "ClientControl WS dispatch failed for $identifier: ${it.message}", it) }
@@ -391,7 +391,7 @@ class NSClientV3Plugin @Inject constructor(
      * `aaps_clientcontrol_ack_<clientId>` settings events here. Synchronous parse/verify/emit — the
      * round-trip coordinator only re-publishes to an in-process flow, no IO.
      */
-    fun handleClientControlAckEvent(doc: JsonObject) {
+    suspend fun handleClientControlAckEvent(doc: JsonObject) {
         runCatching { clientControlRoundTrip.onAckDoc(doc) }
             .onFailure { aapsLogger.error(LTag.NSCLIENT, "ClientControl ACK dispatch failed: ${it.message}", it) }
     }
@@ -400,7 +400,7 @@ class NSClientV3Plugin @Inject constructor(
      * WS-push entry for a master→client bolus-progress frame (client side). NSClientV3Service routes
      * `aaps_clientcontrol_progress_<clientId>` settings events here; feeds the client's own BolusProgressData.
      */
-    fun handleClientControlProgressEvent(doc: JsonObject) {
+    suspend fun handleClientControlProgressEvent(doc: JsonObject) {
         runCatching { clientControlRoundTrip.onProgressDoc(doc) }
             .onFailure { aapsLogger.error(LTag.NSCLIENT, "ClientControl progress dispatch failed: ${it.message}", it) }
     }
@@ -501,7 +501,7 @@ class NSClientV3Plugin @Inject constructor(
      * the app-level probe to ping + re-pull, reconciling the real state instead of leaving a stale guess.
      * Self-heals: a pong/heartbeat bumps the clock fresh again within seconds if the master is up.
      */
-    internal fun markMasterUnreachable() {
+    internal suspend fun markMasterUnreachable() {
         _lastMasterSignalAt.value = 0L
     }
 
@@ -590,7 +590,11 @@ class NSClientV3Plugin @Inject constructor(
         if (config.AAPSCLIENT) MutableStateFlow(0).asStateFlow()
         else authorizedClientsRepository.observe()
             .map { list -> list.count { it.state == ClientState.Active } }
-            .stateIn(reachableScope, SharingStarted.WhileSubscribed(5000), authorizedClientsRepository.current(dateUtil.now()).count { it.state == ClientState.Active })
+            // Seeded with 0 rather than a synchronous count: current() suspends now, and it also
+            // prunes, so it was doing a write to produce a seed value. preferences.observe() emits
+            // the stored value as soon as this is collected, so the real count lands immediately
+            // instead of on the next change.
+            .stateIn(reachableScope, SharingStarted.WhileSubscribed(5000), 0)
     }
 
     private fun setClient() {

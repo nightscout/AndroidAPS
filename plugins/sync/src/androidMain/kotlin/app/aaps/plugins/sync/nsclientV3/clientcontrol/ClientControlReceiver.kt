@@ -410,7 +410,7 @@ class ClientControlReceiver @Inject constructor(
     }
 
     /** Liveness probe: nothing to do but advance the counter and ack Ok — the ack is the pong. */
-    private fun onVerifiedPing(entry: AuthorizedClient, envelope: SignedEnvelope, now: Long): AckOutcome {
+    private suspend fun onVerifiedPing(entry: AuthorizedClient, envelope: SignedEnvelope, now: Long): AckOutcome {
         authorizedRepository.bumpLastSeen(entry.clientId, envelope.counter, now)
         nsClientRepository.addLog("◄ CLIENTCTL", "ping from ${entry.name}")
         return AckOutcome(AckStatus.Ok, null)
@@ -422,7 +422,7 @@ class ClientControlReceiver @Inject constructor(
      * design: the master clearing its alarm does NOT push back to the client (the remote initiator must acknowledge its
      * own failed bolus). dismiss() is a no-op when nothing of that id is showing.
      */
-    private fun onVerifiedDismissAlarm(entry: AuthorizedClient, envelope: SignedEnvelope, now: Long): AckOutcome {
+    private suspend fun onVerifiedDismissAlarm(entry: AuthorizedClient, envelope: SignedEnvelope, now: Long): AckOutcome {
         authorizedRepository.bumpLastSeen(entry.clientId, envelope.counter, now)
         notificationManager.dismiss(NotificationId.BOLUS_DELIVERY_FAILED)
         nsClientRepository.addLog("◄ CLIENTCTL", "dismiss_alarm from ${entry.name}")
@@ -434,7 +434,7 @@ class ClientControlReceiver @Inject constructor(
      * stops the running bolus (or no-ops if none is running); the resulting progress terminal mirrors back. ONE-WAY
      * like DismissAlarm — no ack.
      */
-    private fun onVerifiedStopBolus(entry: AuthorizedClient, envelope: SignedEnvelope, now: Long): AckOutcome {
+    private suspend fun onVerifiedStopBolus(entry: AuthorizedClient, envelope: SignedEnvelope, now: Long): AckOutcome {
         authorizedRepository.bumpLastSeen(entry.clientId, envelope.counter, now)
         commandQueue.cancelAllBoluses(null)
         nsClientRepository.addLog("◄ CLIENTCTL", "stop_bolus from ${entry.name}")
@@ -685,7 +685,7 @@ class ClientControlReceiver @Inject constructor(
      * Value parsing handles Boolean/String/Int/UnitDouble (see the `when` below); extend it per type
      * as new types are marked `Bidirectional`.
      */
-    private fun onVerifiedPreferencesUpdate(entry: AuthorizedClient, envelope: SignedEnvelope, message: ClientControlMessage.PreferencesUpdate, now: Long): AckOutcome {
+    private suspend fun onVerifiedPreferencesUpdate(entry: AuthorizedClient, envelope: SignedEnvelope, message: ClientControlMessage.PreferencesUpdate, now: Long): AckOutcome {
         authorizedRepository.bumpLastSeen(entry.clientId, envelope.counter, now)
         val applied = mutableListOf<String>()
         message.prefs.forEach { (keyString, pushed) ->
@@ -767,7 +767,7 @@ class ClientControlReceiver @Inject constructor(
             else "chain-partial:${endedSceneName ?: "?"}→$targetSceneName($failedCount/$totalCount)"
     }
 
-    private fun onVerifiedUndecodablePayload(entry: AuthorizedClient, envelope: SignedEnvelope, now: Long) {
+    private suspend fun onVerifiedUndecodablePayload(entry: AuthorizedClient, envelope: SignedEnvelope, now: Long) {
         // Advance counter: the secret-holder sent this intentionally, this master just doesn't have a
         // ClientControlMessage variant for type=${envelope.type}. Not advancing would let the same doc
         // replay every WS update.

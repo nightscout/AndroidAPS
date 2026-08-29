@@ -6,6 +6,7 @@ import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientState
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -47,7 +48,7 @@ internal class AuthorizedClientsRepositoryTest {
     }
 
     @Test
-    fun addPendingPersistsEncryptedSecretOnly() {
+    fun addPendingPersistsEncryptedSecretOnly() = runTest {
         val (entry, secretHex) = sut.addPending("phone", pairTtlMs = 60_000L, now = 1_000L)
         assertThat(secretHex).hasLength(64)
         assertThat(entry.encryptedSecret).startsWith("ENC:NsClientControlSecret:")
@@ -56,7 +57,7 @@ internal class AuthorizedClientsRepositoryTest {
     }
 
     @Test
-    fun secretLookupRoundtripsAddedSecret() {
+    fun secretLookupRoundtripsAddedSecret() = runTest {
         val (entry, secretHex) = sut.addPending("phone", pairTtlMs = 60_000L, now = 1_000L)
         val lookup = sut.secretLookup(entry.clientId)!!
         assertThat(lookup.secretBytes).hasLength(32)
@@ -66,39 +67,39 @@ internal class AuthorizedClientsRepositoryTest {
     }
 
     @Test
-    fun secretLookupReturnsCounterAfterMarkActive() {
+    fun secretLookupReturnsCounterAfterMarkActive() = runTest {
         val (entry, _) = sut.addPending("phone", 60_000L, 1_000L)
         sut.markActive(entry.clientId, counterReceived = 7L, now = 5_000L)
         assertThat(sut.secretLookup(entry.clientId)!!.counterReceived).isEqualTo(7L)
     }
 
     @Test
-    fun secretLookupReturnsNullForUnknownClient() {
+    fun secretLookupReturnsNullForUnknownClient() = runTest {
         assertThat(sut.secretLookup("missing")).isNull()
     }
 
     @Test
-    fun secretLookupReturnsNullOnCorruptStorage() {
+    fun secretLookupReturnsNullOnCorruptStorage() = runTest {
         stored = "{not json"
         assertThat(sut.secretLookup("anything")).isNull()
     }
 
     @Test
-    fun secretLookupReturnsNullWhenBlobValidationFails() {
+    fun secretLookupReturnsNullWhenBlobValidationFails() = runTest {
         val (entry, _) = sut.addPending("a", 60_000L, 1_000L)
         rejectsBlobValidation = true // simulate corrupted ciphertext blob
         assertThat(sut.secretLookup(entry.clientId)).isNull()
     }
 
     @Test
-    fun deleteRemovesEntry() {
+    fun deleteRemovesEntry() = runTest {
         val (entry, _) = sut.addPending("a", 60_000L, 1_000L)
         sut.delete(entry.clientId)
         assertThat(sut.current(2_000L)).isEmpty()
     }
 
     @Test
-    fun markActivePromotesPending() {
+    fun markActivePromotesPending() = runTest {
         val (entry, _) = sut.addPending("a", 60_000L, 1_000L)
         sut.markActive(entry.clientId, counterReceived = 1L, now = 5_000L)
         val list = sut.current(5_000L)
@@ -109,7 +110,7 @@ internal class AuthorizedClientsRepositoryTest {
     }
 
     @Test
-    fun markActiveIsNoopForActive() {
+    fun markActiveIsNoopForActive() = runTest {
         val (entry, _) = sut.addPending("a", 60_000L, 1_000L)
         sut.markActive(entry.clientId, 1L, 5_000L)
         val before = stored
@@ -118,7 +119,7 @@ internal class AuthorizedClientsRepositoryTest {
     }
 
     @Test
-    fun bumpLastSeenUpdatesActiveEntry() {
+    fun bumpLastSeenUpdatesActiveEntry() = runTest {
         val (entry, _) = sut.addPending("a", 60_000L, 1_000L)
         sut.markActive(entry.clientId, 1L, 5_000L)
         sut.bumpLastSeen(entry.clientId, counterReceived = 7L, now = 10_000L)
@@ -128,7 +129,7 @@ internal class AuthorizedClientsRepositoryTest {
     }
 
     @Test
-    fun currentPrunesExpiredPending() {
+    fun currentPrunesExpiredPending() = runTest {
         sut.addPending("a", pairTtlMs = 60_000L, now = 1_000L)
         sut.addPending("b", pairTtlMs = 60_000L, now = 1_000L)
         // Both expire at 61_000
@@ -137,7 +138,7 @@ internal class AuthorizedClientsRepositoryTest {
     }
 
     @Test
-    fun currentDoesNotPruneActive() {
+    fun currentDoesNotPruneActive() = runTest {
         val (entry, _) = sut.addPending("a", 60_000L, 1_000L)
         sut.markActive(entry.clientId, 1L, 5_000L)
         // Pretend pairExpiresAt is in the past — Active state must keep the entry
@@ -146,7 +147,7 @@ internal class AuthorizedClientsRepositoryTest {
     }
 
     @Test
-    fun pruneExpiredReturnsRemovedClientIds() {
+    fun pruneExpiredReturnsRemovedClientIds() = runTest {
         val (a, _) = sut.addPending("a", 60_000L, 1_000L)
         val (b, _) = sut.addPending("b", 60_000L, 1_000L)
         val (c, _) = sut.addPending("c", 60_000L, 1_000L)
@@ -157,19 +158,19 @@ internal class AuthorizedClientsRepositoryTest {
     }
 
     @Test
-    fun pruneExpiredReturnsEmptyWhenNothingRemoved() {
+    fun pruneExpiredReturnsEmptyWhenNothingRemoved() = runTest {
         sut.addPending("a", 60_000L, 1_000L)
         assertThat(sut.pruneExpired(now = 5_000L)).isEmpty()
     }
 
     @Test
-    fun decodeReturnsEmptyOnGarbageStorage() {
+    fun decodeReturnsEmptyOnGarbageStorage() = runTest {
         stored = "{not json"
         assertThat(sut.current(0L)).isEmpty()
     }
 
     @Test
-    fun currentSkipsPersistWhenNothingPruned() {
+    fun currentSkipsPersistWhenNothingPruned() = runTest {
         sut.addPending("a", 60_000L, 1_000L) // 1 put
         sut.current(now = 5_000L) // not expired — must not write
         sut.current(now = 5_000L) // again — still must not write
@@ -177,7 +178,7 @@ internal class AuthorizedClientsRepositoryTest {
     }
 
     @Test
-    fun multipleClientsAreUniquelyIdentified() {
+    fun multipleClientsAreUniquelyIdentified() = runTest {
         val (a, _) = sut.addPending("a", 60_000L, 1_000L)
         val (b, _) = sut.addPending("b", 60_000L, 1_000L)
         assertThat(a.clientId).isNotEqualTo(b.clientId)
@@ -185,7 +186,7 @@ internal class AuthorizedClientsRepositoryTest {
     }
 
     @Test
-    fun unknownClientIdInDeleteIsNoOp() {
+    fun unknownClientIdInDeleteIsNoOp() = runTest {
         sut.addPending("a", 60_000L, 1_000L)
         val before = stored
         sut.delete("missing")
