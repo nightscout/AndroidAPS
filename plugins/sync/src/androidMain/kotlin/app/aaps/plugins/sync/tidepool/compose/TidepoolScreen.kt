@@ -1,5 +1,8 @@
 package app.aaps.plugins.sync.tidepool.compose
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.sync.SyncStrings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,7 +31,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -39,7 +41,6 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
-import app.aaps.plugins.sync.R
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -64,7 +65,7 @@ internal fun TidepoolScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     // Only title needs pre-resolving (plain String used in LaunchedEffect suspend block)
-    val title = stringResource(R.string.tidepool)
+    val title = stringResource(SyncStrings.tidepool)
 
     LaunchedEffect(Unit) {
         setToolbarConfig(
@@ -74,7 +75,7 @@ internal fun TidepoolScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(app.aaps.core.ui.R.string.back)
+                            contentDescription = stringResource(CoreUiStrings.back)
                         )
                     }
                 },
@@ -83,7 +84,7 @@ internal fun TidepoolScreen(
                         IconButton(onClick = onSettings) {
                             Icon(
                                 imageVector = Icons.Default.Settings,
-                                contentDescription = stringResource(app.aaps.core.ui.R.string.nav_plugin_preferences)
+                                contentDescription = stringResource(CoreUiStrings.nav_plugin_preferences)
                             )
                         }
                     }
@@ -128,7 +129,7 @@ internal fun TidepoolScreenContent(
             horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
         ) {
             Text(
-                text = stringResource(R.string.status_label),
+                text = stringResource(SyncStrings.status_label),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
@@ -195,7 +196,7 @@ private fun TidepoolMenu(
         IconButton(onClick = { showMenu = true }) {
             Icon(
                 imageVector = Icons.Default.MoreVert,
-                contentDescription = stringResource(app.aaps.core.ui.R.string.more_options)
+                contentDescription = stringResource(CoreUiStrings.more_options)
             )
         }
         DropdownMenu(
@@ -203,42 +204,42 @@ private fun TidepoolMenu(
             onDismissRequest = { showMenu = false }
         ) {
             DropdownMenuItem(
-                text = { Text(stringResource(app.aaps.core.ui.R.string.login)) },
+                text = { Text(stringResource(CoreUiStrings.login)) },
                 onClick = {
                     showMenu = false
                     onLogin()
                 }
             )
             DropdownMenuItem(
-                text = { Text(stringResource(app.aaps.core.ui.R.string.logout)) },
+                text = { Text(stringResource(CoreUiStrings.logout)) },
                 onClick = {
                     showMenu = false
                     onLogout()
                 }
             )
             DropdownMenuItem(
-                text = { Text(stringResource(R.string.upload_now)) },
+                text = { Text(stringResource(SyncStrings.upload_now)) },
                 onClick = {
                     showMenu = false
                     onUploadNow()
                 }
             )
             DropdownMenuItem(
-                text = { Text(stringResource(R.string.full_sync)) },
+                text = { Text(stringResource(SyncStrings.full_sync)) },
                 onClick = {
                     showMenu = false
                     onFullSync()
                 }
             )
             DropdownMenuItem(
-                text = { Text(stringResource(R.string.tidepool_purge_data)) },
+                text = { Text(stringResource(SyncStrings.tidepool_purge_data)) },
                 onClick = {
                     showMenu = false
                     showPurgeConfirm = true
                 }
             )
             DropdownMenuItem(
-                text = { Text(stringResource(R.string.clear_log)) },
+                text = { Text(stringResource(SyncStrings.clear_log)) },
                 onClick = {
                     showMenu = false
                     onClearLog()
@@ -249,8 +250,8 @@ private fun TidepoolMenu(
 
     if (showPurgeConfirm) {
         OkCancelDialog(
-            title = stringResource(R.string.tidepool_purge_data),
-            message = stringResource(R.string.tidepool_purge_data_confirm),
+            title = stringResource(SyncStrings.tidepool_purge_data),
+            message = stringResource(SyncStrings.tidepool_purge_data_confirm),
             onConfirm = {
                 showPurgeConfirm = false
                 onPurge()

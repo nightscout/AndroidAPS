@@ -1,5 +1,7 @@
 package app.aaps.plugins.sync.wear.wearintegration
 
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.plugins.sync.SyncStrings
 import android.os.Binder
 import android.os.Handler
 import android.os.HandlerThread

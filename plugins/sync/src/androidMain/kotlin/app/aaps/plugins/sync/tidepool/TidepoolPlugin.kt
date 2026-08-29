@@ -1,5 +1,7 @@
 package app.aaps.plugins.sync.tidepool
 
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
@@ -23,7 +25,6 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.icons.IcPluginTidepool
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
-import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsclientV3.ReceiverDelegate
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
@@ -70,8 +71,8 @@ class TidepoolPlugin @Inject constructor(
 ) : Sync, Tidepool, PluginBaseWithPreferences(
     PluginDescription()
         .mainType(PluginType.SYNC)
-        .pluginName(TextRef.AndroidRes(R.string.tidepool))
-        .shortName(TextRef.AndroidRes(R.string.tidepool_shortname))
+        .pluginName(SyncStrings.tidepool)
+        .shortName(SyncStrings.tidepool_shortname)
         .icon(IcPluginTidepool)
         .composeContent {
             TidepoolComposeContent(
@@ -87,7 +88,7 @@ class TidepoolPlugin @Inject constructor(
                 onClearLog = { tidepoolRepository.clearLog() }
             )
         }
-        .description(TextRef.AndroidRes(R.string.description_tidepool)),
+        .description(SyncStrings.description_tidepool),
     ownPreferences = TidepoolBooleanKey.entries + TidepoolLongNonKey.entries + TidepoolStringNonKey.entries,
     aapsLogger, rh, preferences
 ) {
@@ -211,11 +212,11 @@ class TidepoolPlugin @Inject constructor(
 
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
         key = "tidepool_settings",
-        titleResId = R.string.tidepool,
+        title = SyncStrings.tidepool,
         items = listOf(
             PreferenceSubScreenDef(
                 key = "tidepool_connection_options",
-                titleResId = R.string.connection_settings_title,
+                title = SyncStrings.connection_settings_title,
                 items = listOf(
                     BooleanKey.NsClientUseCellular,
                     BooleanKey.NsClientUseRoaming,
@@ -227,7 +228,7 @@ class TidepoolPlugin @Inject constructor(
             ),
             PreferenceSubScreenDef(
                 key = "tidepool_advanced",
-                titleResId = app.aaps.core.ui.R.string.advanced_settings_title,
+                title = CoreUiStrings.advanced_settings_title,
                 items = listOf(
                     TidepoolBooleanKey.UseTestServers
                 )

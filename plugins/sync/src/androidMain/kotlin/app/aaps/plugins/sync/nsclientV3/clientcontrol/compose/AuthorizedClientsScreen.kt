@@ -1,5 +1,8 @@
 package app.aaps.plugins.sync.nsclientV3.clientcontrol.compose
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.sync.SyncStrings
 import android.app.Activity
 import android.view.WindowManager
 import androidx.compose.foundation.layout.Arrangement
@@ -43,7 +46,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -54,7 +56,6 @@ import app.aaps.core.nssdk.localmodel.clientcontrol.ClientState
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.clearFocusOnTap
-import app.aaps.plugins.sync.R
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -105,10 +106,10 @@ fun AuthorizedClientsScreen(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(R.string.authorized_clients_title)) },
+                title = { Text(stringResource(SyncStrings.authorized_clients_title)) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(app.aaps.core.ui.R.string.back))
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(CoreUiStrings.back))
                     }
                 }
             )
@@ -116,7 +117,7 @@ fun AuthorizedClientsScreen(
         floatingActionButton = {
             if (featureEnabled) {
                 FloatingActionButton(onClick = viewModel::requestAdd) {
-                    Icon(Icons.Default.Add, contentDescription = stringResource(R.string.authorized_clients_add))
+                    Icon(Icons.Default.Add, contentDescription = stringResource(SyncStrings.authorized_clients_add))
                 }
             }
         }
@@ -133,7 +134,7 @@ fun AuthorizedClientsScreen(
             // editing stays disabled, so say why instead of leaving a switch that reads ON do nothing.
             if (blockedByWebsocket) {
                 Text(
-                    text = stringResource(R.string.authorized_clients_needs_websocket),
+                    text = stringResource(SyncStrings.authorized_clients_needs_websocket),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.error,
                     modifier = Modifier.padding(horizontal = AapsSpacing.medium, vertical = AapsSpacing.small)
@@ -198,7 +199,7 @@ private fun AuthorizedClientCard(
                 StateBadgeAndTimeRow(client = client, timeLabel = timeLabel)
             }
             IconButton(onClick = onDelete) {
-                Icon(Icons.Default.Delete, contentDescription = stringResource(app.aaps.core.ui.R.string.delete))
+                Icon(Icons.Default.Delete, contentDescription = stringResource(CoreUiStrings.delete))
             }
         }
     }
@@ -210,8 +211,8 @@ private fun StateBadgeAndTimeRow(
     timeLabel: String
 ) {
     val stateLabel = when (client.state) {
-        ClientState.Active  -> stringResource(R.string.authorized_clients_state_active)
-        ClientState.Pending -> stringResource(R.string.authorized_clients_state_pending)
+        ClientState.Active  -> stringResource(SyncStrings.authorized_clients_state_active)
+        ClientState.Pending -> stringResource(SyncStrings.authorized_clients_state_pending)
     }
     val stateColor = when (client.state) {
         ClientState.Active  -> MaterialTheme.colorScheme.primary
@@ -238,12 +239,12 @@ private fun ClientControlSwitchRow(
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = stringResource(R.string.authorized_clients_comm_switch_title),
+                text = stringResource(SyncStrings.authorized_clients_comm_switch_title),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
             Text(
-                text = stringResource(R.string.authorized_clients_comm_switch_summary),
+                text = stringResource(SyncStrings.authorized_clients_comm_switch_summary),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -260,11 +261,11 @@ private fun EmptyState(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = stringResource(R.string.authorized_clients_empty_title),
+            text = stringResource(SyncStrings.authorized_clients_empty_title),
             style = MaterialTheme.typography.headlineSmall
         )
         Text(
-            text = stringResource(R.string.authorized_clients_empty_subtitle),
+            text = stringResource(SyncStrings.authorized_clients_empty_subtitle),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(top = AapsSpacing.medium)
@@ -281,14 +282,14 @@ private fun EnterNameDialog(
     val focusManager = LocalFocusManager.current
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.authorized_clients_name_dialog_title)) },
+        title = { Text(stringResource(SyncStrings.authorized_clients_name_dialog_title)) },
         text = {
             Column(modifier = Modifier.clearFocusOnTap(focusManager)) {
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it.take(48) },
                     singleLine = true,
-                    placeholder = { Text(stringResource(R.string.authorized_clients_name_placeholder)) }
+                    placeholder = { Text(stringResource(SyncStrings.authorized_clients_name_placeholder)) }
                 )
             }
         },
@@ -297,11 +298,11 @@ private fun EnterNameDialog(
                 onClick = { if (name.isNotBlank()) onConfirm(name) },
                 enabled = name.isNotBlank()
             ) {
-                Text(stringResource(app.aaps.core.ui.R.string.ok))
+                Text(stringResource(CoreUiStrings.ok))
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text(stringResource(app.aaps.core.ui.R.string.cancel)) }
+            TextButton(onClick = onDismiss) { Text(stringResource(CoreUiStrings.cancel)) }
         }
     )
 }
@@ -314,13 +315,13 @@ private fun ConfirmDeleteDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.authorized_clients_delete_dialog_title)) },
-        text = { Text(stringResource(R.string.authorized_clients_delete_dialog_message, clientName)) },
+        title = { Text(stringResource(SyncStrings.authorized_clients_delete_dialog_title)) },
+        text = { Text(stringResource(SyncStrings.authorized_clients_delete_dialog_message, clientName)) },
         confirmButton = {
-            TextButton(onClick = onConfirm) { Text(stringResource(app.aaps.core.ui.R.string.delete)) }
+            TextButton(onClick = onConfirm) { Text(stringResource(CoreUiStrings.delete)) }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text(stringResource(app.aaps.core.ui.R.string.cancel)) }
+            TextButton(onClick = onDismiss) { Text(stringResource(CoreUiStrings.cancel)) }
         }
     )
 }
@@ -371,12 +372,12 @@ private fun PairingPinDialog(
                 verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
             ) {
                 Text(
-                    text = stringResource(R.string.authorized_clients_pin_dialog_title),
+                    text = stringResource(SyncStrings.authorized_clients_pin_dialog_title),
                     style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    text = stringResource(R.string.authorized_clients_pin_instructions),
+                    text = stringResource(SyncStrings.authorized_clients_pin_instructions),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -389,14 +390,14 @@ private fun PairingPinDialog(
                 PublishStatusBanner(status = offer.publishStatus, onRetry = onRetry)
                 Text(
                     text = stringResource(
-                        R.string.authorized_clients_pin_expires_in,
+                        SyncStrings.authorized_clients_pin_expires_in,
                         (msLeft / 1000L).coerceAtLeast(0L).toString()
                     ),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Button(onClick = onDismiss, modifier = Modifier.fillMaxWidth()) {
-                    Text(stringResource(R.string.authorized_clients_pin_done))
+                    Text(stringResource(SyncStrings.authorized_clients_pin_done))
                 }
             }
         }
@@ -410,13 +411,13 @@ private fun PublishStatusBanner(
 ) {
     when (status) {
         AuthorizedClientsViewModel.PublishStatus.Loading   -> Text(
-            text = stringResource(R.string.authorized_clients_pin_publishing),
+            text = stringResource(SyncStrings.authorized_clients_pin_publishing),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         AuthorizedClientsViewModel.PublishStatus.Published -> Text(
-            text = stringResource(R.string.authorized_clients_pin_published),
+            text = stringResource(SyncStrings.authorized_clients_pin_published),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.primary
         )
@@ -426,12 +427,12 @@ private fun PublishStatusBanner(
             verticalArrangement = Arrangement.spacedBy(AapsSpacing.small)
         ) {
             Text(
-                text = stringResource(R.string.authorized_clients_pin_publish_failed),
+                text = stringResource(SyncStrings.authorized_clients_pin_publish_failed),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.error
             )
             TextButton(onClick = onRetry) {
-                Text(stringResource(R.string.authorized_clients_pin_retry))
+                Text(stringResource(SyncStrings.authorized_clients_pin_retry))
             }
         }
     }

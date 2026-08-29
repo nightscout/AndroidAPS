@@ -1,5 +1,7 @@
 package app.aaps.plugins.sync.smsCommunicator.actions
 
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
@@ -9,7 +11,6 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
-import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.smsCommunicator.SmsAction
 
 /** Delivers an extended bolus: EXTENDED <U> <minutes>. */
@@ -29,8 +30,8 @@ class ExtendedSetAction(
     override suspend fun run() {
         val result = commandQueue.extendedBolus(insulin, durationMinutes)
         if (result.success) {
-            var replyText = rh.gs(R.string.smscommunicator_extended_set, insulin, durationMinutes)
-            if (config.APS) replyText += "\n" + rh.gs(app.aaps.core.interfaces.R.string.loopsuspended)
+            var replyText = rh.gs(SyncStrings.smscommunicator_extended_set, insulin, durationMinutes)
+            if (config.APS) replyText += "\n" + rh.gs(InterfacesStrings.loopsuspended)
             replyText += "\n" + shortStatusBlocking()
             sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
             if (config.APS)
@@ -38,33 +39,33 @@ class ExtendedSetAction(
                     action = Action.EXTENDED_BOLUS,
                     source = Sources.SMS,
                     note = shortStatusBlocking() + "\n" + rh.gs(
-                        R.string.smscommunicator_extended_set,
+                        SyncStrings.smscommunicator_extended_set,
                         insulin,
                         durationMinutes
-                    ) + " / " + rh.gs(app.aaps.core.interfaces.R.string.loopsuspended),
+                    ) + " / " + rh.gs(InterfacesStrings.loopsuspended),
                     listValues = listOf(
                         ValueWithUnit.Insulin(insulin),
                         ValueWithUnit.Minute(durationMinutes),
-                        ValueWithUnit.SimpleString(rh.gsNotLocalised(app.aaps.core.interfaces.R.string.loopsuspended))
+                        ValueWithUnit.SimpleString(rh.gsNotLocalised(InterfacesStrings.loopsuspended))
                     )
                 )
             else
                 uel.log(
                     action = Action.EXTENDED_BOLUS,
                     source = Sources.SMS,
-                    note = shortStatusBlocking() + "\n" + rh.gs(R.string.smscommunicator_extended_set, insulin, durationMinutes),
+                    note = shortStatusBlocking() + "\n" + rh.gs(SyncStrings.smscommunicator_extended_set, insulin, durationMinutes),
                     listValues = listOf(
                         ValueWithUnit.Insulin(insulin),
                         ValueWithUnit.Minute(durationMinutes)
                     )
                 )
         } else {
-            var replyText = rh.gs(R.string.smscommunicator_extended_failed)
+            var replyText = rh.gs(SyncStrings.smscommunicator_extended_failed)
             replyText += "\n" + shortStatusBlocking()
             smsCommunicator.sendSMS(Sms(receivedSms.phoneNumber, replyText))
             uel.log(
-                Action.EXTENDED_BOLUS, Sources.SMS, shortStatusBlocking() + "\n" + rh.gs(R.string.smscommunicator_extended_failed),
-                ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.smscommunicator_extended_failed))
+                Action.EXTENDED_BOLUS, Sources.SMS, shortStatusBlocking() + "\n" + rh.gs(SyncStrings.smscommunicator_extended_failed),
+                ValueWithUnit.SimpleString(rh.gsNotLocalised(SyncStrings.smscommunicator_extended_failed))
             )
         }
     }

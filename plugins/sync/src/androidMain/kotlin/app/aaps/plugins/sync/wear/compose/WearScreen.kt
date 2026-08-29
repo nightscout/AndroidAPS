@@ -1,5 +1,9 @@
 package app.aaps.plugins.sync.wear.compose
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.sync.SyncStrings
 import android.content.Intent
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
@@ -45,7 +49,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
@@ -53,7 +56,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.ToolbarConfig
-import app.aaps.plugins.sync.R
 
 @Composable
 internal fun WearScreen(
@@ -78,8 +80,8 @@ internal fun WearScreen(
     BackHandler(enabled = uiState.showImportList) { viewModel.hideImportList() }
 
     // Only title needs pre-resolving (plain String used in LaunchedEffect suspend block)
-    val wearTitle = stringResource(app.aaps.core.ui.R.string.wear)
-    val importTitle = stringResource(R.string.wear_import_custom_watchface_title)
+    val wearTitle = stringResource(CoreUiStrings.wear)
+    val importTitle = stringResource(SyncStrings.wear_import_custom_watchface_title)
 
     // Determine current sub-screen
     val subScreen = when {
@@ -107,7 +109,7 @@ internal fun WearScreen(
                     }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(app.aaps.core.ui.R.string.back)
+                            contentDescription = stringResource(CoreUiStrings.back)
                         )
                     }
                 },
@@ -116,7 +118,7 @@ internal fun WearScreen(
                         IconButton(onClick = onSettings) {
                             Icon(
                                 imageVector = Icons.Default.Settings,
-                                contentDescription = stringResource(app.aaps.core.ui.R.string.nav_plugin_preferences)
+                                contentDescription = stringResource(CoreUiStrings.nav_plugin_preferences)
                             )
                         }
                     }
@@ -125,7 +127,7 @@ internal fun WearScreen(
         )
     }
 
-    val moreWatchfacesUrl = stringResource(R.string.wear_link_to_more_cwf_doc)
+    val moreWatchfacesUrl = stringResource(SyncStrings.wear_link_to_more_cwf_doc)
 
     AnimatedContent(
         targetState = subScreen,
@@ -211,8 +213,8 @@ internal fun WearMainContent(
                     modifier = Modifier.fillMaxWidth()
                 )
                 ButtonRow(
-                    button1 = ButtonDef(Icons.Default.Refresh, stringResource(R.string.resend_all_data), onResendData),
-                    button2 = ButtonDef(Icons.Default.Settings, stringResource(R.string.open_settings_on_wear), onOpenSettings)
+                    button1 = ButtonDef(Icons.Default.Refresh, stringResource(SyncStrings.resend_all_data), onResendData),
+                    button2 = ButtonDef(Icons.Default.Settings, stringResource(SyncStrings.open_settings_on_wear), onOpenSettings)
                 )
             }
         }
@@ -230,23 +232,23 @@ internal fun WearMainContent(
                     verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
                 ) {
                     Text(
-                        text = stringResource(R.string.wear_custom_watchface, uiState.watchfaceName),
+                        text = stringResource(SyncStrings.wear_custom_watchface, uiState.watchfaceName),
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier.padding(horizontal = AapsSpacing.small)
                     )
 
                     // Row 1: Load + Info
                     ButtonRow(
-                        button1 = ButtonDef(Icons.Default.Upload, stringResource(R.string.wear_load_watchface), onLoadWatchface),
+                        button1 = ButtonDef(Icons.Default.Upload, stringResource(SyncStrings.wear_load_watchface), onLoadWatchface),
                         button2 = if (uiState.hasCustomWatchface)
-                            ButtonDef(Icons.Default.Info, stringResource(R.string.wear_infos_watchface), onInfosWatchface)
+                            ButtonDef(Icons.Default.Info, stringResource(SyncStrings.wear_infos_watchface), onInfosWatchface)
                         else null
                     )
 
                     // Row 2: More Watchfaces + Export
                     ButtonRow(
-                        button1 = ButtonDef(Icons.Default.Public, stringResource(app.aaps.core.interfaces.R.string.wear_more_watchfaces), onMoreWatchfaces),
-                        button2 = ButtonDef(Icons.Default.Download, stringResource(R.string.wear_export_watchface), onExportTemplate)
+                        button1 = ButtonDef(Icons.Default.Public, stringResource(InterfacesStrings.wear_more_watchfaces), onMoreWatchfaces),
+                        button2 = ButtonDef(Icons.Default.Download, stringResource(SyncStrings.wear_export_watchface), onExportTemplate)
                     )
 
                     // Watchface preview image
@@ -363,7 +365,7 @@ internal fun CwfInfosContent(
                         trailingContent = {
                             Icon(
                                 imageVector = if (pref.isEnabled) Icons.Default.Check else Icons.Default.Close,
-                                contentDescription = stringResource(if (pref.isEnabled) R.string.enabled else R.string.disabled),
+                                contentDescription = stringResource(if (pref.isEnabled) SyncStrings.enabled else SyncStrings.disabled),
                                 tint = if (pref.isEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
                                 modifier = Modifier.size(20.dp)
                             )
@@ -377,7 +379,7 @@ internal fun CwfInfosContent(
         if (state.viewElements.isNotEmpty()) {
             HorizontalDivider(modifier = Modifier.padding(vertical = AapsSpacing.small))
             Text(
-                text = stringResource(R.string.cwf_infos_view_title),
+                text = stringResource(SyncStrings.cwf_infos_view_title),
                 style = MaterialTheme.typography.titleSmall
             )
             Column {

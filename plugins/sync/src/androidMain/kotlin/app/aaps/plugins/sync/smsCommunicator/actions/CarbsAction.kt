@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.smsCommunicator.actions
 
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
@@ -9,7 +10,6 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
-import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.smsCommunicator.SmsAction
 
 /** Records carbs at a given timestamp: CARBS <grams> [<time>]. */
@@ -31,19 +31,19 @@ class CarbsAction(
         detailedBolusInfo.timestamp = timestamp
         val result = commandQueue.bolus(detailedBolusInfo)
         if (result.success) {
-            var replyText = rh.gs(R.string.smscommunicator_carbs_set, grams)
+            var replyText = rh.gs(SyncStrings.smscommunicator_carbs_set, grams)
             replyText += "\n" + shortStatusBlocking()
             sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
             uel.log(
-                Action.CARBS, Sources.SMS, shortStatusBlocking() + ": " + rh.gs(R.string.smscommunicator_carbs_set, grams),
+                Action.CARBS, Sources.SMS, shortStatusBlocking() + ": " + rh.gs(SyncStrings.smscommunicator_carbs_set, grams),
                 ValueWithUnit.Gram(grams)
             )
         } else {
-            var replyText = rh.gs(R.string.smscommunicator_carbs_failed, grams)
+            var replyText = rh.gs(SyncStrings.smscommunicator_carbs_failed, grams)
             replyText += "\n" + shortStatusBlocking()
             smsCommunicator.sendSMS(Sms(receivedSms.phoneNumber, replyText))
             uel.log(
-                Action.CARBS, Sources.SMS, shortStatusBlocking() + ": " + rh.gs(R.string.smscommunicator_carbs_failed, grams),
+                Action.CARBS, Sources.SMS, shortStatusBlocking() + ": " + rh.gs(SyncStrings.smscommunicator_carbs_failed, grams),
                 ValueWithUnit.Gram(grams)
             )
         }

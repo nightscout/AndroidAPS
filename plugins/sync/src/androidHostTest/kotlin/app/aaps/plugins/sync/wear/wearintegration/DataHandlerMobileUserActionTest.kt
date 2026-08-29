@@ -1,5 +1,8 @@
 package app.aaps.plugins.sync.wear.wearintegration
 
+import org.mockito.kotlin.doAnswer
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.core.data.model.RM
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
@@ -20,7 +23,6 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.objects.wizard.QuickWizard
-import app.aaps.plugins.sync.R
 import app.aaps.shared.tests.TestBaseWithProfile
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
@@ -89,7 +91,7 @@ class DataHandlerMobileUserActionTest : TestBaseWithProfile() {
             whenever(profileFunction.getProfile()).thenReturn(profile)
         }
         whenever(rh.gs(any<Int>(), any<String>())).thenReturn("err")
-        whenever(rh.gs(any<Int>())).thenReturn("err")
+        doAnswer { "err" }.whenever(rh).gs(any<TextRef>())
         whenever(event.id).thenReturn("evt-uuid")
         whenever(event.userAction).thenReturn(true)
         whenever(event.isEnabled).thenReturn(true)
@@ -103,7 +105,7 @@ class DataHandlerMobileUserActionTest : TestBaseWithProfile() {
         sut.handleUserActionConfirmed(EventData.ActionUserActionConfirmed("evt-uuid", "title"))
 
         verifyBlocking(automation) { processEvent(event) }
-        verify(rh, never()).gs(R.string.user_action_not_available, "title")
+        verify(rh, never()).gs(SyncStrings.user_action_not_available, "title")
     }
 
     /** Event missing → sendError fires, processEvent NOT called. Was silently dropped before fix #3. */
@@ -113,7 +115,7 @@ class DataHandlerMobileUserActionTest : TestBaseWithProfile() {
         sut.handleUserActionConfirmed(EventData.ActionUserActionConfirmed("missing", "title"))
 
         verifyBlocking(automation, never()) { processEvent(any()) }
-        verify(rh).gs(R.string.user_action_not_available, "title")
+        verify(rh).gs(SyncStrings.user_action_not_available, "title")
     }
 
     /** Event exists but userAction flag flipped off mid-flight → sendError fires. */
@@ -124,7 +126,7 @@ class DataHandlerMobileUserActionTest : TestBaseWithProfile() {
         sut.handleUserActionConfirmed(EventData.ActionUserActionConfirmed("evt-uuid", "title"))
 
         verifyBlocking(automation, never()) { processEvent(any()) }
-        verify(rh).gs(R.string.user_action_not_available, "title")
+        verify(rh).gs(SyncStrings.user_action_not_available, "title")
     }
 
     /** Event exists and userAction=true but disabled → sendError fires. */
@@ -135,7 +137,7 @@ class DataHandlerMobileUserActionTest : TestBaseWithProfile() {
         sut.handleUserActionConfirmed(EventData.ActionUserActionConfirmed("evt-uuid", "title"))
 
         verifyBlocking(automation, never()) { processEvent(any()) }
-        verify(rh).gs(R.string.user_action_not_available, "title")
+        verify(rh).gs(SyncStrings.user_action_not_available, "title")
     }
 
     /** canRun() returns false → sendError fires, processEvent NOT called. */
@@ -146,7 +148,7 @@ class DataHandlerMobileUserActionTest : TestBaseWithProfile() {
         sut.handleUserActionConfirmed(EventData.ActionUserActionConfirmed("evt-uuid", "title"))
 
         verifyBlocking(automation, never()) { processEvent(any()) }
-        verify(rh).gs(R.string.user_action_not_available, "title")
+        verify(rh).gs(SyncStrings.user_action_not_available, "title")
     }
 
     /**
@@ -169,7 +171,7 @@ class DataHandlerMobileUserActionTest : TestBaseWithProfile() {
         sut.handleUserActionConfirmed(EventData.ActionUserActionConfirmed("evt-uuid", "title"))
 
         verifyBlocking(automation, never()) { processEvent(any()) }
-        verify(rh).gs(R.string.user_action_not_available, "title")
+        verify(rh).gs(SyncStrings.user_action_not_available, "title")
     }
 
     /** Same race re-check but the re-fetch returns null (event removed during canRun). */
@@ -182,7 +184,7 @@ class DataHandlerMobileUserActionTest : TestBaseWithProfile() {
         sut.handleUserActionConfirmed(EventData.ActionUserActionConfirmed("evt-uuid", "title"))
 
         verifyBlocking(automation, never()) { processEvent(any()) }
-        verify(rh).gs(R.string.user_action_not_available, "title")
+        verify(rh).gs(SyncStrings.user_action_not_available, "title")
     }
 
     /** Pump not initialized → outer guard fails, lookup not attempted. */

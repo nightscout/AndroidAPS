@@ -1,5 +1,8 @@
 package app.aaps.plugins.sync.nsclientV3.compose
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.sync.SyncStrings
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,7 +36,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
@@ -50,7 +52,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.ToolbarConfig
-import app.aaps.plugins.sync.R
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import java.time.Instant
@@ -89,7 +90,7 @@ fun NSClientScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(app.aaps.core.ui.R.string.back)
+                            contentDescription = stringResource(CoreUiStrings.back)
                         )
                     }
                 },
@@ -98,7 +99,7 @@ fun NSClientScreen(
                         IconButton(onClick = onSettings) {
                             Icon(
                                 imageVector = Icons.Default.Settings,
-                                contentDescription = stringResource(app.aaps.core.ui.R.string.nav_plugin_preferences)
+                                contentDescription = stringResource(CoreUiStrings.nav_plugin_preferences)
                             )
                         }
                     }
@@ -143,7 +144,7 @@ fun NSClientScreenContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = stringResource(R.string.ns_client_url),
+                text = stringResource(SyncStrings.ns_client_url),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
@@ -160,8 +161,8 @@ fun NSClientScreenContent(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(AapsSpacing.small)
             ) {
-                LabelValueRow(label = stringResource(R.string.status_label), value = uiState.status)
-                LabelValueRow(label = stringResource(R.string.queue), value = uiState.queue)
+                LabelValueRow(label = stringResource(SyncStrings.status_label), value = uiState.status)
+                LabelValueRow(label = stringResource(SyncStrings.queue), value = uiState.queue)
             }
 
             Row(
@@ -172,7 +173,7 @@ fun NSClientScreenContent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = stringResource(if (uiState.paused) app.aaps.core.ui.R.string.paused else app.aaps.core.ui.R.string.running),
+                    text = stringResource(if (uiState.paused) CoreUiStrings.paused else CoreUiStrings.running),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
@@ -387,7 +388,7 @@ private fun NSClientMenu(
         IconButton(onClick = { showMenu = true }) {
             Icon(
                 imageVector = Icons.Default.MoreVert,
-                contentDescription = stringResource(app.aaps.core.ui.R.string.more_options)
+                contentDescription = stringResource(CoreUiStrings.more_options)
             )
         }
         DropdownMenu(
@@ -395,21 +396,21 @@ private fun NSClientMenu(
             onDismissRequest = { showMenu = false }
         ) {
             DropdownMenuItem(
-                text = { Text(stringResource(R.string.clear_log)) },
+                text = { Text(stringResource(SyncStrings.clear_log)) },
                 onClick = {
                     showMenu = false
                     onClearLog()
                 }
             )
             DropdownMenuItem(
-                text = { Text(stringResource(R.string.deliver_now)) },
+                text = { Text(stringResource(SyncStrings.deliver_now)) },
                 onClick = {
                     showMenu = false
                     onSendNow()
                 }
             )
             DropdownMenuItem(
-                text = { Text(stringResource(R.string.full_sync)) },
+                text = { Text(stringResource(SyncStrings.full_sync)) },
                 onClick = {
                     showMenu = false
                     onFullSync()

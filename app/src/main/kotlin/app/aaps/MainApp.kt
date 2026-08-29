@@ -100,6 +100,7 @@ import app.aaps.plugins.constraints.objectives.keys.ObjectivesLongComposedKey
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import app.aaps.plugins.main.MainStringIds
 import app.aaps.plugins.sensitivity.SensitivityStringIds
+import app.aaps.plugins.sync.SyncStringIds
 import app.aaps.plugins.smoothing.SmoothingStringIds
 import app.aaps.pump.virtual.VirtualStringIds
 import app.aaps.ui.UiStringIds
@@ -1033,5 +1034,6 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         TextRefIdRegistry.register("automation") { name -> AutomationStringIds.idOf(name) }
         TextRefIdRegistry.register("configuration") { name -> ConfigurationStringIds.idOf(name) }
         TextRefIdRegistry.register("constraints") { name -> ConstraintsStringIds.idOf(name) }
+        TextRefIdRegistry.register("sync") { name -> SyncStringIds.idOf(name) }
     }
 }

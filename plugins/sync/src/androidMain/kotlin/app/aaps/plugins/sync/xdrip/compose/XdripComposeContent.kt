@@ -1,5 +1,7 @@
 package app.aaps.plugins.sync.xdrip.compose
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.plugins.sync.SyncStrings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -7,14 +9,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.stringResource
 import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
-import app.aaps.plugins.sync.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -40,8 +40,8 @@ internal class XdripComposeContent(
 
         if (showFullSyncDialog) {
             OkCancelDialog(
-                title = stringResource(R.string.xdrip),
-                message = stringResource(R.string.full_xdrip_sync_comment),
+                title = stringResource(SyncStrings.xdrip),
+                message = stringResource(SyncStrings.full_xdrip_sync_comment),
                 onConfirm = {
                     showFullSyncDialog = false
                     scope.launch(Dispatchers.IO) {

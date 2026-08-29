@@ -1,5 +1,7 @@
 package app.aaps.plugins.sync.xdrip
 
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.sync.SyncStrings
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -51,7 +53,6 @@ import app.aaps.core.ui.compose.icons.IcXDrip
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.extensions.generateCOBString
 import app.aaps.core.ui.extensions.toStringShort
-import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.xdrip.compose.XdripComposeContent
 import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
 import app.aaps.plugins.sync.xdrip.extensions.toJson
@@ -118,9 +119,9 @@ class XdripPlugin @Inject constructor(
             )
         }
         .icon(IcXDrip)
-        .pluginName(TextRef.AndroidRes(R.string.xdrip))
-        .shortName(TextRef.AndroidRes(R.string.xdrip_shortname))
-        .description(TextRef.AndroidRes(R.string.description_xdrip)),
+        .pluginName(SyncStrings.xdrip)
+        .shortName(SyncStrings.xdrip_shortname)
+        .description(SyncStrings.description_xdrip),
     ownPreferences = XdripLongKey.entries + XdripIntentKey.entries,
     aapsLogger, rh, preferences
 ) {
@@ -227,7 +228,7 @@ class XdripPlugin @Inject constructor(
     private fun buildStatusLine(profile: Profile): String {
         val status = StringBuilder()
         if (!runBlocking { loop.runningMode() }.isLoopRunning() && config.APS)
-            status.append(rh.gs(app.aaps.core.ui.R.string.disabled_loop)).append("\n")
+            status.append(rh.gs(CoreUiStrings.disabled_loop)).append("\n")
 
         //Temp basal
         runBlocking { processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis()) }?.let {
@@ -236,7 +237,7 @@ class XdripPlugin @Inject constructor(
         //IOB
         val bolusIob = runBlocking { iobCobCalculator.calculateIobFromBolus() }.round()
         val basalIob = runBlocking { iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended() }.round()
-        status.append(decimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob)).append(rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname))
+        status.append(decimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob)).append(rh.gs(CoreUiStrings.insulin_unit_shortname))
         if (preferences.get(BooleanKey.XdripSendDetailedIob))
             status.append("(")
                 .append(decimalFormatter.to2Decimal(bolusIob.iob))
@@ -265,12 +266,12 @@ class XdripPlugin @Inject constructor(
         context.sendBroadcast(intent)
         val q = context.packageManager.safeQueryBroadcastReceivers(intent, 0)
         return if (q.isEmpty()) {
-            rxBus.send(EventShowSnackbar(rh.gs(R.string.xdrip_not_installed), EventShowSnackbar.Type.Error))
-            aapsLogger.debug(rh.gs(R.string.xdrip_not_installed))
+            rxBus.send(EventShowSnackbar(rh.gs(SyncStrings.xdrip_not_installed), EventShowSnackbar.Type.Error))
+            aapsLogger.debug(rh.gs(SyncStrings.xdrip_not_installed))
             false
         } else {
-            rxBus.send(EventShowSnackbar(rh.gs(R.string.calibration_sent), EventShowSnackbar.Type.Info))
-            aapsLogger.debug(rh.gs(R.string.calibration_sent))
+            rxBus.send(EventShowSnackbar(rh.gs(SyncStrings.calibration_sent), EventShowSnackbar.Type.Info))
+            aapsLogger.debug(rh.gs(SyncStrings.calibration_sent))
             true
         }
     }
@@ -392,13 +393,13 @@ class XdripPlugin @Inject constructor(
 
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
         key = "xdrip_settings",
-        titleResId = R.string.xdrip,
+        title = SyncStrings.xdrip,
         items = listOf(
             XdripIntentKey.Info,
             BooleanKey.XdripSendStatus,
             PreferenceSubScreenDef(
                 key = "xdrip_advanced",
-                titleResId = R.string.xdrip_status_settings,
+                title = SyncStrings.xdrip_status_settings,
                 items = listOf(
                     BooleanKey.XdripSendDetailedIob,
                     BooleanKey.XdripSendBgi

@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.garmin
 
+import app.aaps.plugins.sync.SyncStrings
 import android.content.Context
 import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.model.GV
@@ -17,7 +18,6 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.icons.IcPluginGarmin
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
-import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.garmin.keys.GarminBooleanKey
 import app.aaps.plugins.sync.garmin.keys.GarminIntKey
 import app.aaps.plugins.sync.garmin.keys.GarminStringKey
@@ -69,9 +69,9 @@ class GarminPlugin @Inject constructor(
     pluginDescription = PluginDescription()
         .mainType(PluginType.SYNC)
         .icon(IcPluginGarmin)
-        .pluginName(TextRef.AndroidRes(R.string.garmin))
-        .shortName(TextRef.AndroidRes(R.string.garmin))
-        .description(TextRef.AndroidRes(R.string.garmin_description)),
+        .pluginName(SyncStrings.garmin)
+        .shortName(SyncStrings.garmin)
+        .description(SyncStrings.garmin_description),
     ownPreferences = GarminStringKey.entries + GarminBooleanKey.entries + GarminIntKey.entries,
     aapsLogger, resourceHelper, preferences
 ) {
@@ -473,7 +473,7 @@ class GarminPlugin @Inject constructor(
 
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
         key = "garmin_settings",
-        titleResId = R.string.garmin,
+        title = SyncStrings.garmin,
         items = listOf(
             GarminBooleanKey.LocalHttpServer,
             GarminIntKey.LocalHttpPort,

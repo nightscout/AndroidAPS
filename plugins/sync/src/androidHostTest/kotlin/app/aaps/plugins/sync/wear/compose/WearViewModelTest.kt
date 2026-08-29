@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.wear.compose
 
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -14,7 +15,6 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.wear.WearPlugin
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
@@ -60,7 +60,7 @@ internal class WearViewModelTest {
         whenever(wearPlugin.connectedDevice).thenReturn(connectedDeviceFlow)
         whenever(wearPlugin.savedCustomWatchface).thenReturn(savedCustomWatchfaceFlow)
         whenever(rxBus.toFlow(EventWearUpdateGui::class)).thenReturn(eventWearUpdateGuiFlow)
-        whenever(rh.gs(R.string.no_watch_connected)).thenReturn("No watch connected")
+        whenever(rh.gs(SyncStrings.no_watch_connected)).thenReturn("No watch connected")
         sut = WearViewModel(wearPlugin, rxBus, rh, dateUtil, preferences, versionCheckerUtils, fileListProvider, aapsLogger)
     }
 

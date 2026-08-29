@@ -1,5 +1,9 @@
 package app.aaps.plugins.sync.openhumans.compose
 
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.sync.SyncStrings
 import android.net.Uri
 import androidx.activity.compose.BackHandler
 import androidx.browser.customtabs.CustomTabsIntent
@@ -40,13 +44,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTopAppBar
-import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.openhumans.ui.OHLoginViewModel
 
 @Composable
@@ -63,13 +65,13 @@ internal fun OHLoginScreen(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(R.string.open_humans)) },
+                title = { Text(stringResource(SyncStrings.open_humans)) },
                 navigationIcon = {
                     if (state != OHLoginViewModel.State.FINISHING) {
                         IconButton(onClick = onBack) {
                             Icon(
                                 imageVector = Icons.Filled.Close,
-                                contentDescription = stringResource(app.aaps.core.ui.R.string.close)
+                                contentDescription = stringResource(CoreUiStrings.close)
                             )
                         }
                     }
@@ -117,7 +119,7 @@ internal fun WelcomeStep(onNext: () -> Unit) {
         )
 
         Text(
-            text = stringResource(R.string.welcome_to_open_humans),
+            text = stringResource(SyncStrings.welcome_to_open_humans),
             style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,
@@ -125,14 +127,14 @@ internal fun WelcomeStep(onNext: () -> Unit) {
         )
 
         Text(
-            text = stringResource(R.string.open_humans_description),
+            text = stringResource(SyncStrings.open_humans_description),
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = AapsSpacing.extraLarge)
         )
 
         Text(
-            text = stringResource(R.string.setup_data_upload),
+            text = stringResource(SyncStrings.setup_data_upload),
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.secondary,
             textAlign = TextAlign.Center,
@@ -143,7 +145,7 @@ internal fun WelcomeStep(onNext: () -> Unit) {
             onClick = onNext,
             modifier = Modifier.padding(top = AapsSpacing.extraLarge)
         ) {
-            Text(stringResource(R.string.next))
+            Text(stringResource(SyncStrings.next))
         }
     }
 }
@@ -163,13 +165,13 @@ internal fun ConsentStep(authUrl: String) {
             .padding(AapsSpacing.extraLarge)
     ) {
         Text(
-            text = stringResource(R.string.consent),
+            text = stringResource(SyncStrings.consent),
             style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.primary
         )
 
         Text(
-            text = stringResource(R.string.please_read__information),
+            text = stringResource(SyncStrings.please_read__information),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(top = AapsSpacing.small)
@@ -181,13 +183,13 @@ internal fun ConsentStep(authUrl: String) {
         Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
             Column(modifier = Modifier.padding(AapsSpacing.extraLarge)) {
                 Text(
-                    text = stringResource(R.string.terms_of_use),
+                    text = stringResource(SyncStrings.terms_of_use),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.primary
                 )
                 Spacer(Modifier.height(AapsSpacing.medium))
                 Text(
-                    text = stringResource(R.string.info_openhumans),
+                    text = stringResource(SyncStrings.info_openhumans),
                     style = MaterialTheme.typography.bodySmall
                 )
             }
@@ -199,27 +201,27 @@ internal fun ConsentStep(authUrl: String) {
         Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
             Column(modifier = Modifier.padding(AapsSpacing.extraLarge)) {
                 Text(
-                    text = stringResource(R.string.data_uploaded),
+                    text = stringResource(SyncStrings.data_uploaded),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.primary
                 )
                 Spacer(Modifier.height(AapsSpacing.medium))
                 DataList(
                     listOf(
-                        R.string.glucose_values,
-                        R.string.boluses,
-                        R.string.extended_boluses,
-                        R.string.carbohydrates,
-                        R.string.careportal_events,
-                        R.string.profile_switches,
-                        R.string.total_daily_doses,
-                        R.string.temporary_basal_rates,
-                        R.string.temporary_targets,
-                        R.string.settings,
-                        R.string.application_version,
-                        R.string.device_model,
-                        R.string.screen_dimensions,
-                        R.string.algorithm_debug_data
+                        SyncStrings.glucose_values,
+                        SyncStrings.boluses,
+                        SyncStrings.extended_boluses,
+                        SyncStrings.carbohydrates,
+                        SyncStrings.careportal_events,
+                        SyncStrings.profile_switches,
+                        SyncStrings.total_daily_doses,
+                        SyncStrings.temporary_basal_rates,
+                        SyncStrings.temporary_targets,
+                        SyncStrings.settings,
+                        SyncStrings.application_version,
+                        SyncStrings.device_model,
+                        SyncStrings.screen_dimensions,
+                        SyncStrings.algorithm_debug_data
                     )
                 )
             }
@@ -231,17 +233,17 @@ internal fun ConsentStep(authUrl: String) {
         Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
             Column(modifier = Modifier.padding(AapsSpacing.extraLarge)) {
                 Text(
-                    text = stringResource(R.string.data_not_uploaded),
+                    text = stringResource(SyncStrings.data_not_uploaded),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.error
                 )
                 Spacer(Modifier.height(AapsSpacing.medium))
                 DataList(
                     listOf(
-                        R.string.passwords,
-                        R.string.nightscout_url,
-                        R.string.nightscout_api_secret,
-                        R.string.free_text_fields
+                        SyncStrings.passwords,
+                        SyncStrings.nightscout_url,
+                        SyncStrings.nightscout_api_secret,
+                        SyncStrings.free_text_fields
                     )
                 )
             }
@@ -258,7 +260,7 @@ internal fun ConsentStep(authUrl: String) {
                 .padding(vertical = AapsSpacing.large)
         ) {
             Text(
-                text = stringResource(R.string.agree),
+                text = stringResource(SyncStrings.agree),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.weight(1f)
@@ -278,13 +280,13 @@ internal fun ConsentStep(authUrl: String) {
                 .align(Alignment.CenterHorizontally)
                 .padding(bottom = 32.dp)
         ) {
-            Text(stringResource(R.string.login_open_humans))
+            Text(stringResource(SyncStrings.login_open_humans))
         }
     }
 }
 
 @Composable
-private fun DataList(items: List<Int>) {
+private fun DataList(items: List<TextRef>) {
     val text = items.map { stringResource(it) }.joinToString(separator = "  \u2022  ")
     Text(
         text = text,
@@ -309,14 +311,14 @@ internal fun ConfirmStep(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = stringResource(R.string.final_touches),
+            text = stringResource(SyncStrings.final_touches),
             style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center
         )
 
         Text(
-            text = stringResource(R.string.uploading_proceed),
+            text = stringResource(SyncStrings.uploading_proceed),
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = AapsSpacing.medium)
@@ -327,10 +329,10 @@ internal fun ConfirmStep(
             modifier = Modifier.padding(top = AapsSpacing.extraLarge)
         ) {
             OutlinedButton(onClick = onCancel) {
-                Text(stringResource(R.string.cancel))
+                Text(stringResource(SyncStrings.cancel))
             }
             Button(onClick = onProceed) {
-                Text(stringResource(R.string.proceed))
+                Text(stringResource(SyncStrings.proceed))
             }
         }
     }
@@ -349,14 +351,14 @@ internal fun FinishingStep() {
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = stringResource(R.string.finishing),
+            text = stringResource(SyncStrings.finishing),
             style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center
         )
 
         Text(
-            text = stringResource(R.string.this_may_take_a_few_seconds),
+            text = stringResource(SyncStrings.this_may_take_a_few_seconds),
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = AapsSpacing.medium)
@@ -391,7 +393,7 @@ internal fun DoneStep(onClose: () -> Unit) {
         )
 
         Text(
-            text = stringResource(R.string.we_re_done),
+            text = stringResource(SyncStrings.we_re_done),
             style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,
@@ -399,7 +401,7 @@ internal fun DoneStep(onClose: () -> Unit) {
         )
 
         Text(
-            text = stringResource(R.string.silently_upload_date_note),
+            text = stringResource(SyncStrings.silently_upload_date_note),
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = AapsSpacing.medium)
@@ -409,7 +411,7 @@ internal fun DoneStep(onClose: () -> Unit) {
             onClick = onClose,
             modifier = Modifier.padding(top = AapsSpacing.medium)
         ) {
-            Text(stringResource(R.string.close))
+            Text(stringResource(SyncStrings.close))
         }
     }
 }

@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.wear.compose
 
+import app.aaps.plugins.sync.SyncStrings
 import android.graphics.BitmapFactory
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
@@ -26,7 +27,6 @@ import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.wear.WearPlugin
 import app.aaps.shared.impl.weardata.JsonKeyValues
 import app.aaps.shared.impl.weardata.JsonKeys
@@ -121,7 +121,7 @@ class WearViewModel @Inject constructor(
             wearPlugin.connectedDevice.collect { device ->
                 _uiState.update {
                     it.copy(
-                        connectedDevice = device ?: rh.gs(R.string.no_watch_connected),
+                        connectedDevice = device ?: rh.gs(SyncStrings.no_watch_connected),
                         isDeviceConnected = device != null
                     )
                 }
@@ -141,7 +141,7 @@ class WearViewModel @Inject constructor(
         viewModelScope.launch {
             rxBus.toFlow(EventWearUpdateGui::class).collect { event ->
                 if (event.exportFile) {
-                    _toastEvent.emit(rh.gs(R.string.wear_new_custom_watchface_exported))
+                    _toastEvent.emit(rh.gs(SyncStrings.wear_new_custom_watchface_exported))
                 } else {
                     event.customWatchfaceData?.let { cwfData ->
                         wearPlugin.updateSavedCustomWatchface(cwfData)
@@ -200,7 +200,7 @@ class WearViewModel @Inject constructor(
             isVersionOk = checkCustomVersion(metadata),
             comment = rh.gs(CwfMetadataKey.CWF_COMMENT.label, metadata[CwfMetadataKey.CWF_COMMENT] ?: ""),
             prefTitle = if (metadata.count { it.key.isPref } > 0)
-                rh.gs(if (cwfAuthorization) R.string.cwf_infos_pref_locked else R.string.cwf_infos_pref_required)
+                rh.gs(if (cwfAuthorization) SyncStrings.cwf_infos_pref_locked else SyncStrings.cwf_infos_pref_required)
             else "",
             preferences = prefItems,
             viewElements = viewItems,

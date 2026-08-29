@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.smsCommunicator.actions
 
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.ue.Action
@@ -14,7 +15,6 @@ import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.smsCommunicator.SmsAction
 import kotlin.time.Duration.Companion.minutes
 
@@ -55,7 +55,7 @@ class TempTargetSetAction(
         )
         val ttDisplay = profileUtil.fromMgdlToUnits(ttMgdl, units)
         val ttString = if (units == GlucoseUnit.MMOL) decimalFormatter.to1Decimal(ttDisplay) else decimalFormatter.to0Decimal(ttDisplay)
-        val replyText = rh.gs(R.string.smscommunicator_tt_set, ttString, ttDuration)
+        val replyText = rh.gs(SyncStrings.smscommunicator_tt_set, ttString, ttDuration)
         sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
     }
 }

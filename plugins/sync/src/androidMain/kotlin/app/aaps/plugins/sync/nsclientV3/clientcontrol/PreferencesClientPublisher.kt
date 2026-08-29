@@ -1,10 +1,11 @@
 package app.aaps.plugins.sync.nsclientV3.clientcontrol
 
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.interfaces.BooleanNonPreferenceKey
 import app.aaps.core.keys.interfaces.DoubleNonPreferenceKey
@@ -56,7 +57,7 @@ class PreferencesClientPublisher @Inject constructor(
     private val preferences: Preferences,
     private val clientControlRoundTrip: ClientControlRoundTrip,
     private val config: Config,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val aapsLogger: AAPSLogger
 ) {
 
@@ -83,7 +84,7 @@ class PreferencesClientPublisher @Inject constructor(
                     // edits queue in `pending` and ship next — never two concurrent pref round-trips.
                     clientControlRoundTrip.run(
                         ClientControlActionDispatcher.Command.PreferenceEdit(changes),
-                        rh.gs(app.aaps.core.ui.R.string.clientcontrol_action_update_settings)
+                        rh.gs(CoreUiStrings.clientcontrol_action_update_settings)
                     )
                 }
         }

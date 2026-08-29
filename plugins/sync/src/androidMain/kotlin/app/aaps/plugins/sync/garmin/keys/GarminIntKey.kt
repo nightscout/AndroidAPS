@@ -1,16 +1,16 @@
 package app.aaps.plugins.sync.garmin.keys
 
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.plugins.sync.R
 
 enum class GarminIntKey(
     override val key: String,
     override val defaultValue: Int,
     override val min: Int,
     override val max: Int,
-    private val titleResId: Int,
+    override val title: TextRef,
     override val defaultedBySM: Boolean = false,
     override val calculatedDefaultValue: Boolean = false,
     override val showInApsMode: Boolean = true,
@@ -23,8 +23,7 @@ enum class GarminIntKey(
     override val exportable: Boolean = true
 ) : IntPreferenceKey {
 
-    LocalHttpPort("communication_http_port", 28891, 1001, 65535, dependency = GarminBooleanKey.LocalHttpServer, titleResId = R.string.garmin_local_http_server_port, defaultedBySM = true, hideParentScreenIfHidden = true),
+    LocalHttpPort("communication_http_port", 28891, 1001, 65535, dependency = GarminBooleanKey.LocalHttpServer, title = SyncStrings.garmin_local_http_server_port, defaultedBySM = true, hideParentScreenIfHidden = true),
     ;
 
-    override val title: TextRef = TextRef.AndroidRes(titleResId)
 }

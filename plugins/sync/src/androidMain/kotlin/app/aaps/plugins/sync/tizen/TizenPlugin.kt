@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.tizen
 
+import app.aaps.plugins.sync.SyncStrings
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ResolveInfo
@@ -36,7 +37,6 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.ui.compose.icons.IcPluginTizen
 import app.aaps.core.ui.extensions.toStringFull
-import app.aaps.plugins.sync.R
 import app.aaps.shared.impl.extensions.safeQueryBroadcastReceivers
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
@@ -76,9 +76,9 @@ class TizenPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .icon(IcPluginTizen)
-        .pluginName(TextRef.AndroidRes(R.string.tizen))
-        .shortName(TextRef.AndroidRes(R.string.tizen_short))
-        .description(TextRef.AndroidRes(R.string.tizen_description)),
+        .pluginName(SyncStrings.tizen)
+        .shortName(SyncStrings.tizen_short)
+        .description(SyncStrings.tizen_description),
     aapsLogger, rh
 ) {
 

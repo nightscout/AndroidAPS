@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.nsclientV3.clientcontrol
 
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.data.json.OrgJsonCompat.optJsonObjectCompat
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.data.ui.ConfirmationRole
@@ -17,7 +18,7 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpInsulin
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.scenes.ClientControlSendResult
 import app.aaps.core.interfaces.utils.DateUtil
@@ -85,7 +86,7 @@ class ClientControlRoundTrip @Inject constructor(
     private val config: Config,
     private val dateUtil: DateUtil,
     private val notificationManager: NotificationManager,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val bolusProgressData: BolusProgressData,
     private val aapsLogger: AAPSLogger,
     @ApplicationScope private val appScope: CoroutineScope
@@ -184,7 +185,7 @@ class ClientControlRoundTrip @Inject constructor(
                 notificationManager.post(
                     NotificationId.BOLUS_DELIVERY_FAILED,
                     // payload is the master-authored full text ("title\n<pump detail>"); show it as-is, don't re-prefix the title.
-                    ack.payload ?: rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror),
+                    ack.payload ?: rh.gs(CoreUiStrings.treatmentdeliveryerror),
                     validMinutes = 0, sound = AlarmSound.BOLUS_ERROR
                 )
             return

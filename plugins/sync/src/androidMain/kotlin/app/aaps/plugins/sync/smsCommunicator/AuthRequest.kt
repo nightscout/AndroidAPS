@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.smsCommunicator
 
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -9,7 +10,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.smsCommunicator.otp.OneTimePassword
 import app.aaps.plugins.sync.smsCommunicator.otp.OneTimePasswordValidationResult
 import kotlinx.coroutines.delay
@@ -51,7 +51,7 @@ class AuthRequest(
         if (!codeIsValid(codeReceived)) {
             processed = true
             aapsLogger.debug(LTag.SMS, "Wrong code")
-            smsCommunicator.sendSMS(Sms(requester.phoneNumber, rh.gs(R.string.sms_wrong_code)))
+            smsCommunicator.sendSMS(Sms(requester.phoneNumber, rh.gs(SyncStrings.sms_wrong_code)))
             return
         }
         if (dateUtil.now() - date < Constants.SMS_CONFIRM_TIMEOUT) {
@@ -65,7 +65,7 @@ class AuthRequest(
                 }
                 if (commandQueue.size() != 0) {
                     aapsLogger.debug(LTag.SMS, "Command timed out: " + requester.text)
-                    smsCommunicator.sendSMS(Sms(requester.phoneNumber, rh.gs(R.string.sms_timeout_while_waiting)))
+                    smsCommunicator.sendSMS(Sms(requester.phoneNumber, rh.gs(SyncStrings.sms_timeout_while_waiting)))
                     return
                 }
             }

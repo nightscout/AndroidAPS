@@ -1,5 +1,8 @@
 package app.aaps.plugins.sync.nsclientV3.compose
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.sync.SyncStrings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -7,7 +10,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -27,7 +29,6 @@ import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.OkDialog
-import app.aaps.plugins.sync.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -63,13 +64,13 @@ class NSClientComposeContent(
         LaunchedEffect(Unit) { viewModel.loadInitialData() }
 
         // Pre-resolve strings for use in coroutine callbacks
-        val clearedEntriesText = stringResource(app.aaps.core.ui.R.string.cleared_entries)
+        val clearedEntriesText = stringResource(CoreUiStrings.cleared_entries)
 
         // Full sync confirmation dialog
         if (showFullSyncDialog) {
             OkCancelDialog(
-                title = stringResource(R.string.ns_client),
-                message = stringResource(R.string.full_sync_comment),
+                title = stringResource(SyncStrings.ns_client),
+                message = stringResource(SyncStrings.full_sync_comment),
                 onConfirm = {
                     showFullSyncDialog = false
                     showCleanupDialog = true
@@ -81,8 +82,8 @@ class NSClientComposeContent(
         // Cleanup confirmation dialog
         if (showCleanupDialog) {
             OkCancelDialog(
-                title = stringResource(R.string.ns_client),
-                message = stringResource(app.aaps.core.ui.R.string.cleanup_db_confirm_sync),
+                title = stringResource(SyncStrings.ns_client),
+                message = stringResource(CoreUiStrings.cleanup_db_confirm_sync),
                 onConfirm = {
                     showCleanupDialog = false
                     scope.launch {
@@ -125,7 +126,7 @@ class NSClientComposeContent(
         // Result dialog
         if (showResultDialog) {
             OkDialog(
-                title = stringResource(app.aaps.core.ui.R.string.result),
+                title = stringResource(CoreUiStrings.result),
                 message = resultMessage,
                 onDismiss = { showResultDialog = false }
             )

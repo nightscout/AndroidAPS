@@ -1,13 +1,13 @@
 package app.aaps.plugins.sync.nsclientV3
 
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore.ChargingStatus
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore.NetworkStatus
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.plugins.sync.R
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.onEach
 
 @SingleIn(AppScope::class)
 class ReceiverDelegate @Inject constructor(
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val preferences: Preferences,
     private val receiverStatusStore: ReceiverStatusStore
 ) {
@@ -73,7 +73,7 @@ class ReceiverDelegate @Inject constructor(
         val newChargingState = calculateStatus(ev)
         if (newChargingState != allowedChargingState) {
             allowedChargingState = newChargingState
-            processStateChange(if (!newChargingState) rh.gs(R.string.blocked_by_charging) else null)
+            processStateChange(if (!newChargingState) rh.gs(SyncStrings.blocked_by_charging) else null)
         }
     }
 
@@ -82,8 +82,8 @@ class ReceiverDelegate @Inject constructor(
         if (newNetworkState != allowedNetworkState) {
             allowedNetworkState = newNetworkState
             val reason = if (!newNetworkState) {
-                if (!ev.isAnyConnection) rh.gs(R.string.no_connectivity)
-                else rh.gs(R.string.blocked_by_connectivity)
+                if (!ev.isAnyConnection) rh.gs(SyncStrings.no_connectivity)
+                else rh.gs(SyncStrings.blocked_by_connectivity)
             } else null
             processStateChange(reason)
         }

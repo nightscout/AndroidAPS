@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.nsclientV3.compose
 
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.interfaces.nsclient.NSClientLog
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -38,7 +39,7 @@ internal class NSClientViewModelTest {
     fun setUp() {
         MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(UnconfinedTestDispatcher())
-        whenever(rh.gs(R.string.value_unavailable_short)).thenReturn("UNAVAILABLE")
+        whenever(rh.gs(CoreUiStrings.value_unavailable_short)).thenReturn("UNAVAILABLE")
         whenever(nsClientRepository.queueSize).thenReturn(queueSizeFlow)
         whenever(nsClientRepository.statusUpdate).thenReturn(statusFlow)
         whenever(nsClientRepository.urlUpdate).thenReturn(urlFlow)

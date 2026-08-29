@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.smsCommunicator.actions
 
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
@@ -8,7 +9,6 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
-import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.smsCommunicator.SmsAction
 
 /** Cancels the current temp basal: BASAL CANCEL/STOP. */
@@ -25,20 +25,20 @@ class BasalCancelAction(
     override suspend fun run() {
         val result = commandQueue.cancelTempBasal(enforceNew = true)
         if (result.success) {
-            var replyText = rh.gs(R.string.smscommunicator_tempbasal_canceled)
+            var replyText = rh.gs(SyncStrings.smscommunicator_tempbasal_canceled)
             replyText += "\n" + shortStatusBlocking()
             sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
             uel.log(
-                Action.TEMP_BASAL, Sources.SMS, shortStatusBlocking() + "\n" + rh.gs(R.string.smscommunicator_tempbasal_canceled),
-                ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.smscommunicator_tempbasal_canceled))
+                Action.TEMP_BASAL, Sources.SMS, shortStatusBlocking() + "\n" + rh.gs(SyncStrings.smscommunicator_tempbasal_canceled),
+                ValueWithUnit.SimpleString(rh.gsNotLocalised(SyncStrings.smscommunicator_tempbasal_canceled))
             )
         } else {
-            var replyText = rh.gs(R.string.smscommunicator_tempbasal_cancel_failed)
+            var replyText = rh.gs(SyncStrings.smscommunicator_tempbasal_cancel_failed)
             replyText += "\n" + shortStatusBlocking()
             smsCommunicator.sendSMS(Sms(receivedSms.phoneNumber, replyText))
             uel.log(
-                Action.TEMP_BASAL, Sources.SMS, shortStatusBlocking() + "\n" + rh.gs(R.string.smscommunicator_tempbasal_cancel_failed),
-                ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.smscommunicator_tempbasal_cancel_failed))
+                Action.TEMP_BASAL, Sources.SMS, shortStatusBlocking() + "\n" + rh.gs(SyncStrings.smscommunicator_tempbasal_cancel_failed),
+                ValueWithUnit.SimpleString(rh.gsNotLocalised(SyncStrings.smscommunicator_tempbasal_cancel_failed))
             )
         }
     }

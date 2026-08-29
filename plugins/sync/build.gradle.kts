@@ -8,6 +8,22 @@ plugins {
     alias(libs.plugins.metro)
 }
 
+// Generates SyncStrings (commonMain) and SyncStringIds (androidMain) from this module's res/values,
+// the same generator the other plugins use. The strings themselves do not move, and AAPT keeps
+// resolving them on Android exactly as before.
+val generateSyncStrings = tasks.register<GenerateKeyStringsTask>("generateSyncStrings") {
+    resDir.set(layout.projectDirectory.dir("src/androidMain/res"))
+    packageName.set("app.aaps.plugins.sync")
+    owner.set("sync")
+    objectName.set("SyncStrings")
+    idsObjectName.set("SyncStringIds")
+    reportFile.set(layout.buildDirectory.file("reports/syncStrings/translations.txt"))
+    // Set explicitly: addGeneratedSourceDirectory only derives a convention from the task name, so
+    // both properties would land on one directory and the second file written would delete the first.
+    commonOutputDir.set(layout.buildDirectory.dir("generated/syncStrings/common"))
+    androidOutputDir.set(layout.buildDirectory.dir("generated/syncStrings/android"))
+}
+
 // No Hilt and no Dagger KSP: every class here is Metro now, and the processors were only still
 // listed. Verified by deleting `plugins/sync/build` and rebuilding `:app`.
 metro {
@@ -45,6 +61,7 @@ kotlin {
 
     sourceSets {
         commonMain {
+            kotlin.srcDir(generateSyncStrings.flatMap { it.commonOutputDir })
             dependencies {
                 implementation(project(":core:data"))
                 implementation(project(":core:interfaces"))
@@ -52,6 +69,7 @@ kotlin {
                 implementation(project(":core:objects"))
                 implementation(project(":core:ui"))
                 implementation(project(":core:utils"))
+                implementation(project(":core:nssdk"))
 
                 api(libs.cmp.runtime)
                 api(libs.cmp.foundation)
@@ -66,8 +84,9 @@ kotlin {
         }
 
         androidMain {
+            // Android only: the string name to R.string id map.
+            kotlin.srcDir(generateSyncStrings.flatMap { it.androidOutputDir })
             dependencies {
-                implementation(project(":core:nssdk"))
                 implementation(project(":shared:impl"))
 
                 api(project.dependencies.platform(libs.androidx.compose.bom))

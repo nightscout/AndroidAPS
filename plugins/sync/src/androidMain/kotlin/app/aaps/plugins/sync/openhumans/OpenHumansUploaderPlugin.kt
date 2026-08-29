@@ -1,5 +1,7 @@
 package app.aaps.plugins.sync.openhumans
 
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.sync.SyncStrings
 import android.content.Context
 import android.content.Intent
 import android.util.DisplayMetrics
@@ -27,10 +29,8 @@ import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.icons.IcPluginOpenHumans
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
-import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.di.OpenHumansScope
 import app.aaps.plugins.sync.openhumans.compose.OHComposeContent
 import app.aaps.plugins.sync.openhumans.delegates.OHAppIDDelegate
@@ -80,9 +80,9 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .icon(IcPluginOpenHumans)
-        .pluginName(TextRef.AndroidRes(R.string.open_humans))
-        .shortName(TextRef.AndroidRes(R.string.open_humans_short))
-        .description(TextRef.AndroidRes(R.string.open_humans_description))
+        .pluginName(SyncStrings.open_humans)
+        .shortName(SyncStrings.open_humans_short)
+        .description(SyncStrings.open_humans_description)
         .composeContent { plugin ->
             OHComposeContent(
                 plugin = plugin as OpenHumansUploaderPlugin,
@@ -627,10 +627,10 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
     private suspend fun handleSignOut() {
         notificationManager.post(
             id = NotificationId.OPEN_HUMANS_SIGNED_OUT,
-            text = rh.gs(R.string.you_have_been_signed_out_of_open_humans)
-                + "\n" + rh.gs(R.string.click_here_to_sign_in_again_if_this_wasnt_on_purpose),
+            text = rh.gs(SyncStrings.you_have_been_signed_out_of_open_humans)
+                + "\n" + rh.gs(SyncStrings.click_here_to_sign_in_again_if_this_wasnt_on_purpose),
             actions = listOf(
-                NotificationAction(TextRef.AndroidRes(CoreUiR.string.login)) {
+                NotificationAction(CoreUiStrings.login) {
                     val intent = Intent(context, OHLoginActivity::class.java).apply {
                         flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                     }
@@ -654,7 +654,7 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
 
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
         key = "open_humans_settings",
-        titleResId = R.string.open_humans,
+        title = SyncStrings.open_humans,
         items = listOf(
             BooleanKey.OpenHumansWifiOnly,
             BooleanKey.OpenHumansChargingOnly

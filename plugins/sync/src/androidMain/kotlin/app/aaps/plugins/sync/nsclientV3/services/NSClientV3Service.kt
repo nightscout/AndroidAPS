@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.nsclientV3.services
 
+import app.aaps.core.ui.CoreUiStrings
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Binder
@@ -438,11 +439,11 @@ class NSClientV3Service : MetroService() {
     private fun snoozeActions(nsAlarm: NSAlarmObject): List<NotificationAction> =
         listOf(15, 30, 60).map { minutes ->
             val labelRes = when (minutes) {
-                15   -> app.aaps.core.ui.R.string.snooze_15m
-                30   -> app.aaps.core.ui.R.string.snooze_30m
-                else -> app.aaps.core.ui.R.string.snooze_60m
+                15   -> CoreUiStrings.snooze_15m
+                30   -> CoreUiStrings.snooze_30m
+                else -> CoreUiStrings.snooze_60m
             }
-            NotificationAction(TextRef.AndroidRes(labelRes)) {
+            NotificationAction(labelRes) {
                 val snoozeMs = minutes * 60 * 1000L
                 nsClientV3Plugin.handleClearAlarm(nsAlarm, snoozeMs)
                 // Cascade the snooze across all alarm levels. NS itself cascades a level-2 ack down to

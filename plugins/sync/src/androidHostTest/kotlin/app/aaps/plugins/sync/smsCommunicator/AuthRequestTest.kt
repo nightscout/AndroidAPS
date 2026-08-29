@@ -1,12 +1,12 @@
 package app.aaps.plugins.sync.smsCommunicator
 
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.smsCommunicator.otp.OneTimePassword
 import app.aaps.plugins.sync.smsCommunicator.otp.OneTimePasswordValidationResult
 import app.aaps.shared.tests.TestBase
@@ -32,7 +32,7 @@ class AuthRequestTest : TestBase() {
     private var actionCalled = false
 
     @BeforeEach fun prepareTests() {
-        whenever(rh.gs(R.string.sms_wrong_code)).thenReturn("Wrong code. Command cancelled.")
+        whenever(rh.gs(SyncStrings.sms_wrong_code)).thenReturn("Wrong code. Command cancelled.")
         doAnswer { invocation: InvocationOnMock ->
             sentSms = invocation.getArgument(0)
             null

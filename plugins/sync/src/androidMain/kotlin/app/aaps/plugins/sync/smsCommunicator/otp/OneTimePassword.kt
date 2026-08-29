@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.smsCommunicator.otp
 
+import app.aaps.core.ui.CoreUiStrings
 import android.util.Base64
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -45,7 +46,7 @@ class OneTimePassword @Inject constructor(
      * Name of master device (target of OTP)
      */
     fun name(): String {
-        val defaultUserName = rh.gs(app.aaps.core.ui.R.string.patient_name_default)
+        val defaultUserName = rh.gs(CoreUiStrings.patient_name_default)
         var userName = preferences.get(StringKey.GeneralPatientName).replace(":", "").trim()
         if (userName.isEmpty())
             userName = defaultUserName

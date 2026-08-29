@@ -1,14 +1,14 @@
 package app.aaps.plugins.sync.nsclientV3.compose
 
+import app.aaps.core.ui.CoreUiStrings
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.nsclient.NSClientLog
 import app.aaps.core.interfaces.nsclient.NSClientRepository
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.ui.R
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
@@ -34,7 +34,7 @@ data class NSClientUiState(
 @ViewModelKey
 @Stable
 class NSClientViewModel @Inject constructor(
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val nsClientRepository: NSClientRepository,
     private val preferences: Preferences
 ) : ViewModel() {
@@ -46,7 +46,7 @@ class NSClientViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             nsClientRepository.queueSize.collect { size ->
-                val queueText = if (size >= 0) size.toString() else rh.gs(R.string.value_unavailable_short)
+                val queueText = if (size >= 0) size.toString() else rh.gs(CoreUiStrings.value_unavailable_short)
                 _uiState.update { it.copy(queue = queueText) }
             }
         }

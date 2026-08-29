@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.smsCommunicator.actions
 
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
@@ -8,7 +9,6 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
-import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.smsCommunicator.SmsAction
 
 /** Restarts AAPS: RESTART. */
@@ -23,10 +23,10 @@ class RestartAction(
     override suspend fun run() {
         uel.log(
             Action.EXIT_AAPS, Sources.SMS,
-            rh.gs(R.string.smscommunicator_restarting),
-            ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.smscommunicator_restarting))
+            rh.gs(SyncStrings.smscommunicator_restarting),
+            ValueWithUnit.SimpleString(rh.gsNotLocalised(SyncStrings.smscommunicator_restarting))
         )
-        smsCommunicator.sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.smscommunicator_restarting)))
+        smsCommunicator.sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.smscommunicator_restarting)))
         configBuilder.exitApp("SMS", Sources.SMS, true)
     }
 }

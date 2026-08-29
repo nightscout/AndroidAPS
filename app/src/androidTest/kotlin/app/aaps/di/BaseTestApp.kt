@@ -18,6 +18,7 @@ import app.aaps.plugins.configuration.ConfigurationStringIds
 import app.aaps.plugins.constraints.ConstraintsStringIds
 import app.aaps.plugins.main.MainStringIds
 import app.aaps.plugins.sensitivity.SensitivityStringIds
+import app.aaps.plugins.sync.SyncStringIds
 import app.aaps.plugins.smoothing.SmoothingStringIds
 import app.aaps.pump.virtual.VirtualStringIds
 import app.aaps.ui.UiStringIds
@@ -136,6 +137,7 @@ open class BaseTestApp : Application(), MetroMemberInjector, MetroViewModelFacto
         TextRefIdRegistry.register("automation") { name -> AutomationStringIds.idOf(name) }
         TextRefIdRegistry.register("configuration") { name -> ConfigurationStringIds.idOf(name) }
         TextRefIdRegistry.register("constraints") { name -> ConstraintsStringIds.idOf(name) }
+        TextRefIdRegistry.register("sync") { name -> SyncStringIds.idOf(name) }
     }
 }
 

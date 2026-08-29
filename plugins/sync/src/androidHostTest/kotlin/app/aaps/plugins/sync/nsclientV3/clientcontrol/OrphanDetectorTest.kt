@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.nsclientV3.clientcontrol
 
+import org.mockito.kotlin.doAnswer
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationAction
@@ -54,7 +55,7 @@ internal class OrphanDetectorTest {
         whenever(preferences.get(LongNonKey.NsClientControlPairedAt)).thenAnswer { pairedAt }
         whenever(preferences.get(any<StringNonKey>())).thenAnswer { (it.arguments[0] as StringNonKey).defaultValue }
         whenever(preferences.observe(StringNonKey.NsClientControlClientId)).thenReturn(clientIdFlow)
-        whenever(rh.gs(any<Int>())).thenReturn("orphan")
+        doAnswer { "orphan" }.whenever(rh).gs(any<TextRef>())
         sut = OrphanDetector(pairingRepository, preferences, notificationManager, rh, config, aapsLogger, CoroutineScope(Dispatchers.Unconfined))
     }
 

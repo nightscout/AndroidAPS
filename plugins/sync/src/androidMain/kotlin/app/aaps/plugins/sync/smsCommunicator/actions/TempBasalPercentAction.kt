@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.smsCommunicator.actions
 
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
@@ -10,7 +11,6 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
-import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.smsCommunicator.SmsAction
 
 /** Sets a percentage temp basal: BASAL <pct>% [<minutes>]. */
@@ -31,14 +31,14 @@ class TempBasalPercentAction(
         val result = commandQueue.tempBasalPercent(percent, durationMinutes, true, profile, PumpSync.TemporaryBasalType.NORMAL)
         if (result.success) {
             var replyText =
-                if (result.isPercent) rh.gs(R.string.smscommunicator_tempbasal_set_percent, result.percent, result.duration)
-                else rh.gs(R.string.smscommunicator_tempbasal_set, result.absolute, result.duration)
+                if (result.isPercent) rh.gs(SyncStrings.smscommunicator_tempbasal_set_percent, result.percent, result.duration)
+                else rh.gs(SyncStrings.smscommunicator_tempbasal_set, result.absolute, result.duration)
             replyText += "\n" + shortStatusBlocking()
             sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
             if (result.isPercent)
                 uel.log(
                     action = Action.TEMP_BASAL, source = Sources.SMS,
-                    note = shortStatusBlocking() + "\n" + rh.gs(R.string.smscommunicator_tempbasal_set_percent, result.percent, result.duration),
+                    note = shortStatusBlocking() + "\n" + rh.gs(SyncStrings.smscommunicator_tempbasal_set_percent, result.percent, result.duration),
                     listValues = listOf(
                         ValueWithUnit.Percent(result.percent),
                         ValueWithUnit.Minute(result.duration)
@@ -48,19 +48,19 @@ class TempBasalPercentAction(
                 uel.log(
                     action = Action.TEMP_BASAL,
                     source = Sources.SMS,
-                    note = shortStatusBlocking() + "\n" + rh.gs(R.string.smscommunicator_tempbasal_set, result.absolute, result.duration),
+                    note = shortStatusBlocking() + "\n" + rh.gs(SyncStrings.smscommunicator_tempbasal_set, result.absolute, result.duration),
                     listValues = listOf(
                         ValueWithUnit.UnitPerHour(result.absolute),
                         ValueWithUnit.Minute(result.duration)
                     )
                 )
         } else {
-            var replyText = rh.gs(R.string.smscommunicator_tempbasal_failed)
+            var replyText = rh.gs(SyncStrings.smscommunicator_tempbasal_failed)
             replyText += "\n" + shortStatusBlocking()
             smsCommunicator.sendSMS(Sms(receivedSms.phoneNumber, replyText))
             uel.log(
-                Action.TEMP_BASAL, Sources.SMS, shortStatusBlocking() + "\n" + rh.gs(R.string.smscommunicator_tempbasal_failed),
-                ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.smscommunicator_tempbasal_failed))
+                Action.TEMP_BASAL, Sources.SMS, shortStatusBlocking() + "\n" + rh.gs(SyncStrings.smscommunicator_tempbasal_failed),
+                ValueWithUnit.SimpleString(rh.gsNotLocalised(SyncStrings.smscommunicator_tempbasal_failed))
             )
         }
     }

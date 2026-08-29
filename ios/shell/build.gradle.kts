@@ -37,6 +37,7 @@ val migratedModules = listOf(
     ":plugins:sensitivity",
     ":plugins:smoothing",
     ":plugins:source",
+    ":plugins:sync",
     ":pump:virtual",
     ":shared:impl",
     ":ui",

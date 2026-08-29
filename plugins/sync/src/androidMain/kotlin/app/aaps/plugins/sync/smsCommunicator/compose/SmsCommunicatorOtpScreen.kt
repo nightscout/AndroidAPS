@@ -1,5 +1,8 @@
 package app.aaps.plugins.sync.smsCommunicator.compose
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.sync.SyncStrings
 import android.app.Activity
 import android.graphics.Bitmap
 import android.view.WindowManager
@@ -35,14 +38,12 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
-import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.smsCommunicator.otp.OneTimePassword
 import app.aaps.plugins.sync.smsCommunicator.otp.OneTimePasswordValidationResult
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
@@ -73,10 +74,10 @@ internal fun SmsCommunicatorOtpScreen(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(R.string.smscommunicator_tab_otp_label)) },
+                title = { Text(stringResource(SyncStrings.smscommunicator_tab_otp_label)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Filled.Close, contentDescription = stringResource(app.aaps.core.ui.R.string.close))
+                        Icon(Icons.Filled.Close, contentDescription = stringResource(CoreUiStrings.close))
                     }
                 }
             )
@@ -92,22 +93,22 @@ internal fun SmsCommunicatorOtpScreen(
             verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
         ) {
             // Step 1: Install
-            SectionHeader(stringResource(R.string.smscommunicator_otp_step1_install_header))
+            SectionHeader(stringResource(SyncStrings.smscommunicator_otp_step1_install_header))
             Text(
-                text = stringResource(R.string.smscommunicator_otp_install_info),
+                text = stringResource(SyncStrings.smscommunicator_otp_install_info),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
 
             // Step 2: QR Code
-            SectionHeader(stringResource(R.string.smscommunicator_otp_step2_provisioning_header))
+            SectionHeader(stringResource(SyncStrings.smscommunicator_otp_step2_provisioning_header))
             val qrSizeDp = with(LocalConfiguration.current) {
                 min(screenWidthDp, screenHeightDp) * 0.85
             }.toInt().dp
             qrBitmap?.let { bitmap ->
                 Image(
                     bitmap = bitmap.asImageBitmap(),
-                    contentDescription = stringResource(R.string.a11y_otp_qr_code),
+                    contentDescription = stringResource(SyncStrings.a11y_otp_qr_code),
                     modifier = Modifier
                         .fillMaxWidth()
                         .size(qrSizeDp)
@@ -116,9 +117,9 @@ internal fun SmsCommunicatorOtpScreen(
             }
 
             // Step 3: Verify
-            SectionHeader(stringResource(R.string.smscommunicator_otp_step3_test_header))
+            SectionHeader(stringResource(SyncStrings.smscommunicator_otp_step3_test_header))
             Text(
-                text = stringResource(R.string.smscommunicator_code_verify_info),
+                text = stringResource(SyncStrings.smscommunicator_code_verify_info),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
@@ -130,23 +131,23 @@ internal fun SmsCommunicatorOtpScreen(
                 verticalArrangement = Arrangement.spacedBy(AapsSpacing.small)
             ) {
                 Text(
-                    text = stringResource(R.string.smscommunicator_code_verify_label),
+                    text = stringResource(SyncStrings.smscommunicator_code_verify_label),
                     style = MaterialTheme.typography.bodyMedium
                 )
                 OutlinedTextField(
                     value = verifyText,
                     onValueChange = { if (it.length <= 12) verifyText = it },
-                    placeholder = { Text(stringResource(R.string.smscommunicator_code_verify_hint)) },
+                    placeholder = { Text(stringResource(SyncStrings.smscommunicator_code_verify_hint)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     singleLine = true
                 )
                 if (verifyText.isNotEmpty()) {
                     Text(
                         text = when (checkResult) {
-                            OneTimePasswordValidationResult.OK                 -> stringResource(R.string.smscommunicator_otp_verification_ok)
-                            OneTimePasswordValidationResult.ERROR_WRONG_LENGTH -> stringResource(R.string.smscommunicator_otp_verification_ivalid_size)
-                            OneTimePasswordValidationResult.ERROR_WRONG_PIN    -> stringResource(R.string.smscommunicator_otp_verification_wrong_pin)
-                            OneTimePasswordValidationResult.ERROR_WRONG_OTP    -> stringResource(R.string.smscommunicator_otp_verification_wrong_otp)
+                            OneTimePasswordValidationResult.OK                 -> stringResource(SyncStrings.smscommunicator_otp_verification_ok)
+                            OneTimePasswordValidationResult.ERROR_WRONG_LENGTH -> stringResource(SyncStrings.smscommunicator_otp_verification_ivalid_size)
+                            OneTimePasswordValidationResult.ERROR_WRONG_PIN    -> stringResource(SyncStrings.smscommunicator_otp_verification_wrong_pin)
+                            OneTimePasswordValidationResult.ERROR_WRONG_OTP    -> stringResource(SyncStrings.smscommunicator_otp_verification_wrong_otp)
                         },
                         color = when (checkResult) {
                             OneTimePasswordValidationResult.OK                 -> MaterialTheme.colorScheme.primary
@@ -160,9 +161,9 @@ internal fun SmsCommunicatorOtpScreen(
             }
 
             // Step 4: Reset
-            SectionHeader(stringResource(R.string.smscommunicator_otp_reset_header))
+            SectionHeader(stringResource(SyncStrings.smscommunicator_otp_reset_header))
             Text(
-                text = stringResource(R.string.smscommunicator_otp_reset_warning),
+                text = stringResource(SyncStrings.smscommunicator_otp_reset_warning),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.error
             )
@@ -172,7 +173,7 @@ internal fun SmsCommunicatorOtpScreen(
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
             ) {
                 Text(
-                    text = stringResource(R.string.smscommunicator_otp_reset_btn),
+                    text = stringResource(SyncStrings.smscommunicator_otp_reset_btn),
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
@@ -181,8 +182,8 @@ internal fun SmsCommunicatorOtpScreen(
 
     if (showResetConfirmation) {
         OkCancelDialog(
-            title = stringResource(R.string.smscommunicator_otp_reset_title),
-            message = stringResource(R.string.smscommunicator_otp_reset_prompt),
+            title = stringResource(SyncStrings.smscommunicator_otp_reset_title),
+            message = stringResource(SyncStrings.smscommunicator_otp_reset_prompt),
             onConfirm = {
                 showResetConfirmation = false
                 onReset()

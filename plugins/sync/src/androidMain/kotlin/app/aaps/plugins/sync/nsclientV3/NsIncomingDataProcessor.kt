@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.nsclientV3
 
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.FD
 import app.aaps.core.data.model.GV
@@ -41,7 +42,6 @@ import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryBasal
 import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryTarget
 import app.aaps.core.nssdk.localmodel.treatment.NSTherapyEvent
 import app.aaps.core.nssdk.localmodel.treatment.NSTreatment
-import app.aaps.core.ui.R
 import app.aaps.plugins.sync.nsclientV3.extensions.toBolus
 import app.aaps.plugins.sync.nsclientV3.extensions.toBolusCalculatorResult
 import app.aaps.plugins.sync.nsclientV3.extensions.toCAL
@@ -219,7 +219,7 @@ class NsIncomingDataProcessor @Inject constructor(
                                         text = therapyEvent.note ?: "",
                                         validTo = dateUtil.now() + T.mins(60).msecs(),
                                         sound = AlarmSound.ALARM,
-                                        actions = listOf(NotificationAction(TextRef.AndroidRes(R.string.snooze)) { })
+                                        actions = listOf(NotificationAction(CoreUiStrings.snooze) { })
                                     )
                             }
 

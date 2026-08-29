@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.smsCommunicator.actions
 
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -8,7 +9,6 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
-import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.smsCommunicator.SmsAction
 
 /** Executes a remote loop disable: LOOP DISABLE/STOP. */
@@ -27,8 +27,8 @@ class LoopDisableAction(
             source = Sources.SMS,
             profile = profile
         )
-        val replyText = rh.gs(R.string.smscommunicator_loop_has_been_disabled) + " " +
-            rh.gs(if (result) R.string.smscommunicator_tempbasal_canceled else R.string.smscommunicator_tempbasal_cancel_failed)
+        val replyText = rh.gs(SyncStrings.smscommunicator_loop_has_been_disabled) + " " +
+            rh.gs(if (result) SyncStrings.smscommunicator_tempbasal_canceled else SyncStrings.smscommunicator_tempbasal_cancel_failed)
         smsCommunicator.sendSMS(Sms(receivedSms.phoneNumber, replyText))
     }
 }

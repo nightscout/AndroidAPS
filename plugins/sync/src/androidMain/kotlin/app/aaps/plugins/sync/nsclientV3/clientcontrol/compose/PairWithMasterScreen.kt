@@ -1,5 +1,8 @@
 package app.aaps.plugins.sync.nsclientV3.clientcontrol.compose
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.sync.SyncStrings
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,7 +34,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -39,7 +41,6 @@ import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.clearFocusOnTap
-import app.aaps.plugins.sync.R
 
 private const val PIN_LENGTH = 8
 
@@ -70,10 +71,10 @@ fun PairWithMasterScreen(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(R.string.pair_with_master_title)) },
+                title = { Text(stringResource(SyncStrings.pair_with_master_title)) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(app.aaps.core.ui.R.string.back))
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(CoreUiStrings.back))
                     }
                 }
             )
@@ -129,11 +130,11 @@ private fun PinEntryContent(onSubmit: (String) -> Unit) {
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = stringResource(R.string.pair_with_master_pin_entry_title),
+            text = stringResource(SyncStrings.pair_with_master_pin_entry_title),
             style = MaterialTheme.typography.headlineSmall
         )
         Text(
-            text = stringResource(R.string.pair_with_master_pin_entry_message),
+            text = stringResource(SyncStrings.pair_with_master_pin_entry_message),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(top = AapsSpacing.medium)
@@ -143,7 +144,7 @@ private fun PinEntryContent(onSubmit: (String) -> Unit) {
             // Filter to digits + cap at PIN_LENGTH up-front so the IME shows a clean count and the
             // submit gate stays simple — paste of "1234-5678" still produces 8 digits.
             onValueChange = { raw -> pin = raw.filter(Char::isDigit).take(PIN_LENGTH) },
-            label = { Text(stringResource(R.string.pair_with_master_pin_entry_label)) },
+            label = { Text(stringResource(SyncStrings.pair_with_master_pin_entry_label)) },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword, imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(onDone = { if (complete) onSubmit(pin) }),
@@ -158,7 +159,7 @@ private fun PinEntryContent(onSubmit: (String) -> Unit) {
                 .padding(top = AapsSpacing.large)
                 .fillMaxWidth()
         ) {
-            Text(stringResource(R.string.pair_with_master_pin_entry_submit))
+            Text(stringResource(SyncStrings.pair_with_master_pin_entry_submit))
         }
     }
 }
@@ -174,7 +175,7 @@ private fun FetchingContent() {
     ) {
         CircularProgressIndicator()
         Text(
-            text = stringResource(R.string.pair_with_master_fetching),
+            text = stringResource(SyncStrings.pair_with_master_fetching),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.padding(top = AapsSpacing.large)
@@ -193,7 +194,7 @@ private fun SendingContent() {
     ) {
         CircularProgressIndicator()
         Text(
-            text = stringResource(R.string.pair_with_master_sending),
+            text = stringResource(SyncStrings.pair_with_master_sending),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.padding(top = AapsSpacing.large)
@@ -209,15 +210,15 @@ private fun ConfirmPairingDialog(
 ) {
     AlertDialog(
         onDismissRequest = onCancel,
-        title = { Text(stringResource(R.string.pair_with_master_confirm_title)) },
+        title = { Text(stringResource(SyncStrings.pair_with_master_confirm_title)) },
         text = {
             Column {
                 Text(
-                    text = stringResource(R.string.pair_with_master_confirm_master, masterInstallId),
+                    text = stringResource(SyncStrings.pair_with_master_confirm_master, masterInstallId),
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Text(
-                    text = stringResource(R.string.pair_with_master_confirm_warning),
+                    text = stringResource(SyncStrings.pair_with_master_confirm_warning),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.error,
                     modifier = Modifier.padding(top = AapsSpacing.medium)
@@ -226,12 +227,12 @@ private fun ConfirmPairingDialog(
         },
         confirmButton = {
             TextButton(onClick = onConfirm) {
-                Text(stringResource(R.string.pair_with_master_confirm_pair))
+                Text(stringResource(SyncStrings.pair_with_master_confirm_pair))
             }
         },
         dismissButton = {
             TextButton(onClick = onCancel) {
-                Text(stringResource(app.aaps.core.ui.R.string.cancel))
+                Text(stringResource(CoreUiStrings.cancel))
             }
         }
     )
@@ -244,10 +245,10 @@ private fun ErrorContent(
     onCancel: () -> Unit
 ) {
     val message = when (reason) {
-        PairWithMasterViewModel.ErrorReason.WrongPin           -> stringResource(R.string.pair_with_master_error_wrong_pin)
-        PairWithMasterViewModel.ErrorReason.AmbiguousPin       -> stringResource(R.string.pair_with_master_error_ambiguous_pin)
-        PairWithMasterViewModel.ErrorReason.OfferExpired       -> stringResource(R.string.pair_with_master_error_expired)
-        PairWithMasterViewModel.ErrorReason.NetworkUnavailable -> stringResource(R.string.pair_with_master_error_network)
+        PairWithMasterViewModel.ErrorReason.WrongPin           -> stringResource(SyncStrings.pair_with_master_error_wrong_pin)
+        PairWithMasterViewModel.ErrorReason.AmbiguousPin       -> stringResource(SyncStrings.pair_with_master_error_ambiguous_pin)
+        PairWithMasterViewModel.ErrorReason.OfferExpired       -> stringResource(SyncStrings.pair_with_master_error_expired)
+        PairWithMasterViewModel.ErrorReason.NetworkUnavailable -> stringResource(SyncStrings.pair_with_master_error_network)
     }
     Column(
         modifier = Modifier
@@ -257,7 +258,7 @@ private fun ErrorContent(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = stringResource(R.string.pair_with_master_error_title),
+            text = stringResource(SyncStrings.pair_with_master_error_title),
             style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.error
         )
@@ -273,13 +274,13 @@ private fun ErrorContent(
                 .padding(top = AapsSpacing.large)
                 .fillMaxWidth()
         ) {
-            Text(stringResource(R.string.pair_with_master_retry))
+            Text(stringResource(SyncStrings.pair_with_master_retry))
         }
         TextButton(
             onClick = onCancel,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(stringResource(app.aaps.core.ui.R.string.cancel))
+            Text(stringResource(CoreUiStrings.cancel))
         }
     }
 }
@@ -298,11 +299,11 @@ private fun AlreadyPairedContent(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = stringResource(R.string.pair_with_master_already_paired_title),
+            text = stringResource(SyncStrings.pair_with_master_already_paired_title),
             style = MaterialTheme.typography.headlineSmall
         )
         Text(
-            text = stringResource(R.string.pair_with_master_already_paired_master, masterInstallId),
+            text = stringResource(SyncStrings.pair_with_master_already_paired_master, masterInstallId),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(top = AapsSpacing.medium)
@@ -313,13 +314,13 @@ private fun AlreadyPairedContent(
                 .padding(top = AapsSpacing.large)
                 .fillMaxWidth()
         ) {
-            Text(stringResource(R.string.pair_with_master_unpair))
+            Text(stringResource(SyncStrings.pair_with_master_unpair))
         }
         TextButton(
             onClick = onCancel,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(stringResource(app.aaps.core.ui.R.string.close))
+            Text(stringResource(CoreUiStrings.close))
         }
     }
 }

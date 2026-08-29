@@ -1,5 +1,8 @@
 package app.aaps.plugins.sync.nsclientV3
 
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.sync.SyncStrings
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -59,7 +62,6 @@ import app.aaps.core.nssdk.remotemodel.LastModified
 import app.aaps.core.objects.extensions.freshness
 import app.aaps.core.ui.compose.icons.IcPluginNsClient
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
-import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.AuthorizedClientsRepository
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlReceiver
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlRoundTrip
@@ -160,9 +162,9 @@ class NSClientV3Plugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .icon(IcPluginNsClient)
-        .pluginName(TextRef.AndroidRes(R.string.ns_client_v3_title))
-        .shortName(TextRef.AndroidRes(R.string.ns_client_v3_short_name))
-        .description(TextRef.AndroidRes(R.string.description_ns_client_v3))
+        .pluginName(SyncStrings.ns_client_v3_title)
+        .shortName(SyncStrings.ns_client_v3_short_name)
+        .description(SyncStrings.description_ns_client_v3)
         .composeContent { plugin ->
             NSClientComposeContent(
                 dateUtil = dateUtil,
@@ -171,7 +173,7 @@ class NSClientV3Plugin @Inject constructor(
                 uel = uel,
                 nsClientRepository = nsClientRepository,
                 nsClient = plugin as NsClient,
-                title = rh.gs(R.string.ns_client_v3_title)
+                title = rh.gs(SyncStrings.ns_client_v3_title)
             )
         },
     ownPreferences = NsclientBooleanKey.entries + NsclientStringKey.entries + NsclientLongKey.entries,
@@ -206,16 +208,16 @@ class NSClientV3Plugin @Inject constructor(
     override val status
         get() =
             when {
-                preferences.get(NsclientBooleanKey.NsPaused)                                          -> rh.gs(app.aaps.core.ui.R.string.paused)
+                preferences.get(NsclientBooleanKey.NsPaused)                                          -> rh.gs(CoreUiStrings.paused)
                 isAllowed.not()                                                                       -> blockingReason
-                preferences.get(BooleanKey.NsClient3UseWs) && nsClientV3Service?.wsConnected == true  -> "WS: " + rh.gs(app.aaps.core.interfaces.R.string.connected)
-                preferences.get(BooleanKey.NsClient3UseWs) && nsClientV3Service?.wsConnected == false -> "WS: " + rh.gs(R.string.not_connected)
-                lastOperationError != null                                                            -> rh.gs(app.aaps.core.ui.R.string.error)
-                nsAndroidClient?.lastStatus == null                                                   -> rh.gs(R.string.not_connected)
-                workIsRunning()                                                                       -> rh.gs(R.string.working)
-                nsAndroidClient?.lastStatus?.apiPermissions?.isFull() == true                         -> rh.gs(app.aaps.core.interfaces.R.string.authorized)
-                nsAndroidClient?.lastStatus?.apiPermissions?.isRead() == true                         -> rh.gs(R.string.read_only)
-                else                                                                                  -> rh.gs(app.aaps.core.ui.R.string.unknown)
+                preferences.get(BooleanKey.NsClient3UseWs) && nsClientV3Service?.wsConnected == true  -> "WS: " + rh.gs(InterfacesStrings.connected)
+                preferences.get(BooleanKey.NsClient3UseWs) && nsClientV3Service?.wsConnected == false -> "WS: " + rh.gs(SyncStrings.not_connected)
+                lastOperationError != null                                                            -> rh.gs(CoreUiStrings.error)
+                nsAndroidClient?.lastStatus == null                                                   -> rh.gs(SyncStrings.not_connected)
+                workIsRunning()                                                                       -> rh.gs(SyncStrings.working)
+                nsAndroidClient?.lastStatus?.apiPermissions?.isFull() == true                         -> rh.gs(InterfacesStrings.authorized)
+                nsAndroidClient?.lastStatus?.apiPermissions?.isRead() == true                         -> rh.gs(SyncStrings.read_only)
+                else                                                                                  -> rh.gs(CoreUiStrings.unknown)
             }
     var lastOperationError: String? = null
 
@@ -1228,14 +1230,14 @@ class NSClientV3Plugin @Inject constructor(
 
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
         key = "ns_client_v3_settings",
-        titleResId = R.string.ns_client_v3_title,
+        title = SyncStrings.ns_client_v3_title,
         items = listOf(
             StringKey.NsClientUrl,
             StringKey.NsClientAccessToken,
             BooleanKey.NsClient3UseWs,
             PreferenceSubScreenDef(
                 key = "ns_client_synchronization",
-                titleResId = R.string.ns_sync_options,
+                title = SyncStrings.ns_sync_options,
                 items = listOf(
                     BooleanKey.NsClientUploadData,
                     BooleanKey.BgSourceUploadToNs,
@@ -1252,7 +1254,7 @@ class NSClientV3Plugin @Inject constructor(
             ),
             PreferenceSubScreenDef(
                 key = "ns_client_alarm_options",
-                titleResId = R.string.ns_alarm_options,
+                title = SyncStrings.ns_alarm_options,
                 items = listOf(
                     BooleanKey.NsClientNotificationsFromAlarms,
                     BooleanKey.NsClientNotificationsFromAnnouncements,
@@ -1266,14 +1268,14 @@ class NSClientV3Plugin @Inject constructor(
             // preferences). Empty on a client — the key is hidden there (showInNsClientMode = false).
             PreferenceSubScreenDef(
                 key = "ns_client_remote_control",
-                titleResId = R.string.ns_remote_control_options,
+                title = SyncStrings.ns_remote_control_options,
                 items = listOf(
                     BooleanKey.NsClientAllowClientControl
                 )
             ),
             PreferenceSubScreenDef(
                 key = "ns_client_connection_options",
-                titleResId = R.string.connection_settings_title,
+                title = SyncStrings.connection_settings_title,
                 items = listOf(
                     BooleanKey.NsClientUseCellular,
                     BooleanKey.NsClientUseRoaming,
@@ -1285,7 +1287,7 @@ class NSClientV3Plugin @Inject constructor(
             ),
             PreferenceSubScreenDef(
                 key = "ns_client_advanced",
-                titleResId = app.aaps.core.ui.R.string.advanced_settings_title,
+                title = CoreUiStrings.advanced_settings_title,
                 items = listOf(
                     BooleanKey.NsClientLogAppStart,
                     BooleanKey.NsClientCreateAnnouncementsFromErrors,

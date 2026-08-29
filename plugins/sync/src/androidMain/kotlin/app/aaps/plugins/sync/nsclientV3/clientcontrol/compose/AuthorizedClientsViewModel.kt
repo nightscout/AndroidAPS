@@ -1,9 +1,10 @@
 package app.aaps.plugins.sync.nsclientV3.clientcontrol.compose
 
+import app.aaps.plugins.sync.SyncStrings
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringNonKey
@@ -13,7 +14,6 @@ import app.aaps.core.nssdk.localmodel.clientcontrol.ClientState
 import app.aaps.core.nssdk.localmodel.clientcontrol.PairingPayload
 import app.aaps.core.nssdk.utils.ClientControlCrypto
 import app.aaps.core.nssdk.utils.ClientControlPairingCrypto
-import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.AuthorizedClientsRepository
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.PairingOfferPublisher
 import dev.zacsweers.metro.AppScope
@@ -39,7 +39,7 @@ class AuthorizedClientsViewModel @Inject constructor(
     private val repository: AuthorizedClientsRepository,
     private val offerPublisher: PairingOfferPublisher,
     private val dateUtil: DateUtil,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val preferences: Preferences
 ) : ViewModel() {
 
@@ -248,13 +248,13 @@ class AuthorizedClientsViewModel @Inject constructor(
 
     /** "Last seen 5m ago" / "Never used" — formatted from the entry's lastSeenAt. */
     fun lastSeenLabel(client: AuthorizedClient): String =
-        if (client.lastSeenAt > 0L) rh.gs(R.string.authorized_clients_last_seen, dateUtil.minAgo(rh, client.lastSeenAt))
-        else rh.gs(R.string.authorized_clients_never_seen)
+        if (client.lastSeenAt > 0L) rh.gs(SyncStrings.authorized_clients_last_seen, dateUtil.minAgo(rh, client.lastSeenAt))
+        else rh.gs(SyncStrings.authorized_clients_never_seen)
 
     /** "Pairing expires in 95s" — re-evaluated on each composition while a Pending tick is running. */
     fun pendingExpiresLabel(client: AuthorizedClient): String {
         val secondsLeft = ((client.pairExpiresAt - dateUtil.now()) / 1000L).coerceAtLeast(0L)
-        return rh.gs(R.string.authorized_clients_pending_expires_in, secondsLeft.toString())
+        return rh.gs(SyncStrings.authorized_clients_pending_expires_in, secondsLeft.toString())
     }
 
     /** Lazy UUID generated on first use; persists across app restarts so paired clients keep matching. */

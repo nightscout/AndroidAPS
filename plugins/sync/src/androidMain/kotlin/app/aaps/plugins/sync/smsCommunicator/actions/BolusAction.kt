@@ -1,5 +1,7 @@
 package app.aaps.plugins.sync.smsCommunicator.actions
 
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.ue.Action
@@ -20,7 +22,6 @@ import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.smsCommunicator.SmsAction
 import kotlin.time.Duration.Companion.minutes
 
@@ -51,14 +52,14 @@ class BolusAction(
         val bolusResult = commandQueue.bolus(detailedBolusInfo)
         val resultSuccess = bolusResult.success || bolusProgressData.isStopPressed
         val resultBolusDelivered = bolusResult.bolusDelivered
-        commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.sms))
+        commandQueue.readStatus(rh.gs(CoreUiStrings.sms))
         if (resultSuccess) {
             var replyText = if (isMeal)
-                rh.gs(R.string.smscommunicator_meal_bolus_delivered, resultBolusDelivered)
+                rh.gs(SyncStrings.smscommunicator_meal_bolus_delivered, resultBolusDelivered)
             else
-                rh.gs(R.string.smscommunicator_bolus_delivered, resultBolusDelivered)
+                rh.gs(SyncStrings.smscommunicator_bolus_delivered, resultBolusDelivered)
             if (bolusProgressData.isStopPressed) {
-                replyText = rh.gs(app.aaps.core.ui.R.string.stop_pressed) + " " + replyText
+                replyText = rh.gs(CoreUiStrings.stop_pressed) + " " + replyText
             }
             replyText += "\n" + shortStatusBlocking()
             updateLastRemoteBolusTime(dateUtil.now())
@@ -87,18 +88,18 @@ class BolusAction(
                     val tt = if (currentProfile.units == GlucoseUnit.MMOL) {
                         decimalFormatter.to1Decimal(eatingSoonTTDisplay)
                     } else decimalFormatter.to0Decimal(eatingSoonTTDisplay)
-                    replyText += "\n" + rh.gs(R.string.smscommunicator_meal_bolus_delivered_tt, tt, eatingSoonTTDuration)
+                    replyText += "\n" + rh.gs(SyncStrings.smscommunicator_meal_bolus_delivered_tt, tt, eatingSoonTTDuration)
                 }
             }
             sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
             uel.log(Action.BOLUS, Sources.SMS, replyText)
         } else {
             val status = shortStatusBlocking()
-            val replyText = rh.gs(R.string.smscommunicator_bolus_failed) + "\n" + status
+            val replyText = rh.gs(SyncStrings.smscommunicator_bolus_failed) + "\n" + status
             smsCommunicator.sendSMS(Sms(receivedSms.phoneNumber, replyText))
             uel.log(
-                Action.BOLUS, Sources.SMS, status + "\n" + rh.gs(R.string.smscommunicator_bolus_failed),
-                ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.smscommunicator_bolus_failed))
+                Action.BOLUS, Sources.SMS, status + "\n" + rh.gs(SyncStrings.smscommunicator_bolus_failed),
+                ValueWithUnit.SimpleString(rh.gsNotLocalised(SyncStrings.smscommunicator_bolus_failed))
             )
         }
     }

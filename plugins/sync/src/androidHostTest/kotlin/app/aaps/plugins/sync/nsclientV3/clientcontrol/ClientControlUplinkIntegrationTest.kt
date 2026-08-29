@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.nsclientV3.clientcontrol
 
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -143,7 +144,7 @@ class ClientControlUplinkIntegrationTest {
 
         // ---------- client Preferences fake ----------
         whenever(clientConfig.AAPSCLIENT).thenReturn(true)
-        whenever(rh.gs(any<Int>())).thenReturn("update settings")
+        doAnswer { "update settings" }.whenever(rh).gs(any<TextRef>())
         whenever(clientPrefs.syncedLocalChanges).thenReturn(syncedLocalChanges)
         clientStrings[StringNonKey.AutomationEvents.key] = automationJson
         whenever(clientPrefs.get(any<StringNonPreferenceKey>())).thenAnswer { clientStrings[it.getArgument<StringNonPreferenceKey>(0).key] ?: "" }

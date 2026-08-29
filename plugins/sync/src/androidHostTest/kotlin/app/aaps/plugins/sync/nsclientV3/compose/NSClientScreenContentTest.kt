@@ -1,11 +1,11 @@
 package app.aaps.plugins.sync.nsclientV3.compose
 
+import app.aaps.plugins.sync.SyncStringIds
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import app.aaps.core.interfaces.nsclient.NSClientLog
-import app.aaps.plugins.sync.R
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -33,8 +33,8 @@ class NSClientScreenContentTest {
 
     @Before
     fun setUp() {
-        queueLabel = RuntimeEnvironment.getApplication().getString(R.string.queue)
-        statusLabel = RuntimeEnvironment.getApplication().getString(R.string.status_label)
+        queueLabel = RuntimeEnvironment.getApplication().getString(SyncStringIds.idOf("queue")!!)
+        statusLabel = RuntimeEnvironment.getApplication().getString(SyncStringIds.idOf("status_label")!!)
     }
 
     @Test

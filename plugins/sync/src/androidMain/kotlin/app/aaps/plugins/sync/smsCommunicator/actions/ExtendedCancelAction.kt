@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.smsCommunicator.actions
 
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
@@ -8,7 +9,6 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
-import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.smsCommunicator.SmsAction
 
 /** Cancels an extended bolus: EXTENDED CANCEL/STOP. */
@@ -25,15 +25,15 @@ class ExtendedCancelAction(
     override suspend fun run() {
         val result = commandQueue.cancelExtended()
         if (result.success) {
-            var replyText = rh.gs(R.string.smscommunicator_extended_canceled)
+            var replyText = rh.gs(SyncStrings.smscommunicator_extended_canceled)
             replyText += "\n" + shortStatusBlocking()
             sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
             uel.log(
-                Action.EXTENDED_BOLUS, Sources.SMS, shortStatusBlocking() + "\n" + rh.gs(R.string.smscommunicator_extended_canceled),
-                ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.smscommunicator_extended_canceled))
+                Action.EXTENDED_BOLUS, Sources.SMS, shortStatusBlocking() + "\n" + rh.gs(SyncStrings.smscommunicator_extended_canceled),
+                ValueWithUnit.SimpleString(rh.gsNotLocalised(SyncStrings.smscommunicator_extended_canceled))
             )
         } else {
-            var replyText = rh.gs(R.string.smscommunicator_extended_cancel_failed)
+            var replyText = rh.gs(SyncStrings.smscommunicator_extended_cancel_failed)
             replyText += "\n" + shortStatusBlocking()
             smsCommunicator.sendSMS(Sms(receivedSms.phoneNumber, replyText))
         }

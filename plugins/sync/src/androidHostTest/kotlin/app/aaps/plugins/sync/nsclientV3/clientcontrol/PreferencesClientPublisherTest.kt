@@ -1,5 +1,7 @@
 package app.aaps.plugins.sync.nsclientV3.clientcontrol
 
+import org.mockito.kotlin.doAnswer
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -46,7 +48,7 @@ class PreferencesClientPublisherTest {
     fun setup() {
         MockitoAnnotations.openMocks(this)
         whenever(config.AAPSCLIENT).thenReturn(true)
-        whenever(rh.gs(any<Int>())).thenReturn("update settings")
+        doAnswer { "update settings" }.whenever(rh).gs(any<TextRef>())
         whenever(preferences.syncedLocalChanges).thenReturn(changes)
         whenever(preferences.get(key as BooleanNonPreferenceKey)).thenReturn(true)
         whenever(preferences.get(LongComposedKey.SyncedPrefModified, key.key)).thenReturn(100L)

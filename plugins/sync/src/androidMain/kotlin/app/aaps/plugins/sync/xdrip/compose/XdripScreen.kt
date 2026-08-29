@@ -1,5 +1,8 @@
 package app.aaps.plugins.sync.xdrip.compose
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.sync.SyncStrings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,7 +31,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -38,7 +40,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.ToolbarConfig
-import app.aaps.plugins.sync.R
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -58,7 +59,7 @@ internal fun XdripScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val title = stringResource(R.string.xdrip)
+    val title = stringResource(SyncStrings.xdrip)
 
     // Set up toolbar
     LaunchedEffect(Unit) {
@@ -69,7 +70,7 @@ internal fun XdripScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(app.aaps.core.ui.R.string.back)
+                            contentDescription = stringResource(CoreUiStrings.back)
                         )
                     }
                 },
@@ -78,7 +79,7 @@ internal fun XdripScreen(
                         IconButton(onClick = onSettings) {
                             Icon(
                                 imageVector = Icons.Default.Settings,
-                                contentDescription = stringResource(app.aaps.core.ui.R.string.nav_plugin_preferences)
+                                contentDescription = stringResource(CoreUiStrings.nav_plugin_preferences)
                             )
                         }
                     }
@@ -120,7 +121,7 @@ internal fun XdripScreenContent(
             horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
         ) {
             Text(
-                text = stringResource(R.string.queue),
+                text = stringResource(SyncStrings.queue),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
@@ -185,7 +186,7 @@ private fun XdripMenu(
         IconButton(onClick = { showMenu = true }) {
             Icon(
                 imageVector = Icons.Default.MoreVert,
-                contentDescription = stringResource(app.aaps.core.ui.R.string.more_options)
+                contentDescription = stringResource(CoreUiStrings.more_options)
             )
         }
         DropdownMenu(
@@ -193,14 +194,14 @@ private fun XdripMenu(
             onDismissRequest = { showMenu = false }
         ) {
             DropdownMenuItem(
-                text = { Text(stringResource(R.string.clear_log)) },
+                text = { Text(stringResource(SyncStrings.clear_log)) },
                 onClick = {
                     showMenu = false
                     onClearLog()
                 }
             )
             DropdownMenuItem(
-                text = { Text(stringResource(R.string.full_sync)) },
+                text = { Text(stringResource(SyncStrings.full_sync)) },
                 onClick = {
                     showMenu = false
                     onFullSync()

@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.xdrip.compose
 
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import com.google.common.truth.Truth.assertThat
@@ -33,7 +34,7 @@ internal class XdripViewModelTest {
     fun setUp() {
         MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(UnconfinedTestDispatcher())
-        whenever(rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)).thenReturn("UNAVAILABLE")
+        whenever(rh.gs(CoreUiStrings.value_unavailable_short)).thenReturn("UNAVAILABLE")
         whenever(xdripMvvmRepository.queueSize).thenReturn(queueSizeFlow)
         whenever(xdripMvvmRepository.logList).thenReturn(logListFlow)
         sut = XdripViewModel(rh, xdripMvvmRepository, dataSyncSelector)

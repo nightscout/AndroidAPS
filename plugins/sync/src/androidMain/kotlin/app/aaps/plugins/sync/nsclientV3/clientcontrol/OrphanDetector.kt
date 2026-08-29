@@ -1,18 +1,18 @@
 package app.aaps.plugins.sync.nsclientV3.clientcontrol
 
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.nssdk.localmodel.configuration.NSRunningConfiguration
-import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.OrphanDetector.Companion.POST_PAIRING_GRACE_MS
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
@@ -51,7 +51,7 @@ class OrphanDetector @Inject constructor(
     private val pairingRepository: ClientPairingRepository,
     private val preferences: Preferences,
     private val notificationManager: NotificationManager,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val config: Config,
     private val aapsLogger: AAPSLogger,
     @ApplicationScope private val appScope: CoroutineScope
@@ -111,7 +111,7 @@ class OrphanDetector @Inject constructor(
         }
         _authorized.value = false
         aapsLogger.warn(LTag.NSCLIENT, "ClientControl: clientId=${pairing.clientId} not in master's authorizedClients — orphan")
-        notificationManager.post(NotificationId.NSCLIENT_PAIRING_ORPHAN, TextRef.AndroidRes(R.string.clientcontrol_orphan_notification))
+        notificationManager.post(NotificationId.NSCLIENT_PAIRING_ORPHAN, SyncStrings.clientcontrol_orphan_notification)
     }
 
     companion object {

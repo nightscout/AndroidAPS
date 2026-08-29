@@ -1,5 +1,7 @@
 package app.aaps.plugins.sync.wear
 
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.sync.SyncStrings
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -38,7 +40,6 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.utils.DeferredForegroundStart
-import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.wear.compose.WearComposeContent
 import app.aaps.plugins.sync.wear.receivers.WearDataReceiver
 import app.aaps.plugins.sync.wear.wearintegration.DataHandlerMobile
@@ -79,9 +80,9 @@ class WearPlugin @Inject constructor(
     pluginDescription = PluginDescription()
         .mainType(PluginType.SYNC)
         .icon(Icons.Default.Watch)
-        .pluginName(TextRef.AndroidRes(app.aaps.core.ui.R.string.wear))
-        .shortName(TextRef.AndroidRes(R.string.wear_shortname))
-        .description(TextRef.AndroidRes(R.string.description_wear))
+        .pluginName(CoreUiStrings.wear)
+        .shortName(SyncStrings.wear_shortname)
+        .description(SyncStrings.description_wear)
         .composeContent { WearComposeContent() },
     aapsLogger = aapsLogger, rh = rh, preferences = preferences
 ) {
@@ -258,14 +259,14 @@ class WearPlugin @Inject constructor(
 
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
         key = "wear_settings",
-        titleResId = app.aaps.core.ui.R.string.wear,
+        title = CoreUiStrings.wear,
         items = listOf(
             BooleanKey.WearControl,
             BooleanKey.WearBroadcastData,
             PreferenceSubScreenDef(
                 key = "wear_wizard_settings",
-                titleResId = app.aaps.core.ui.R.string.wear_wizard_settings,
-                summaryResId = R.string.wear_wizard_settings_summary,
+                title = CoreUiStrings.wear_wizard_settings,
+                summary = SyncStrings.wear_wizard_settings_summary,
                 items = listOf(
                     BooleanKey.WearWizardBg,
                     BooleanKey.WearWizardTt,
@@ -276,14 +277,14 @@ class WearPlugin @Inject constructor(
             ),
             PreferenceSubScreenDef(
                 key = "wear_custom_watchface_settings",
-                titleResId = R.string.wear_custom_watchface_settings,
+                title = SyncStrings.wear_custom_watchface_settings,
                 items = listOf(
                     BooleanKey.WearCustomWatchfaceAuthorization
                 )
             ),
             PreferenceSubScreenDef(
                 key = "wear_general_settings",
-                titleResId = R.string.wear_general_settings,
+                title = SyncStrings.wear_general_settings,
                 items = listOf(
                     BooleanKey.WearNotifyOnSmb
                 )
