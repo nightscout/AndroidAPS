@@ -1,91 +1,157 @@
 plugins {
-    alias(libs.plugins.android.library)
+    id("kmp-test-defaults")
+    kotlin("multiplatform")
+    // NOT com.android.library. AGP 9 refuses that plugin together with the multiplatform plugin.
+    alias(libs.plugins.android.kmp.library)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.hilt)
-    // Metro beside Hilt in the same module, so one feature can move while the rest stays on Hilt.
-    // This is what makes the migration incremental.
+    alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.metro)
-    id("android-module-dependencies")
-    id("test-module-dependencies")
-    id("compose-test-module-dependencies")
-    id("jacoco-module-dependencies")
 }
 
+// No Hilt and no Dagger KSP: every class here is Metro now, and the processors were only still
+// listed. Verified by deleting `plugins/sync/build` and rebuilding `:app`.
 metro {
     interop {
-        // Teach Metro to read javax.inject and Dagger annotations, so a class does not have to be
-        // rewritten to
-        // Metro's own @Inject/@Qualifier just to be built by a Metro graph. Without this, Metro
-        // ignores javax qualifiers entirely - five differently qualified Strings here collapsed into
-        // one binding, and the graph failed to compile.
+        // Still on: one `javax.inject.Qualifier` remains, in di/Helpers.kt.
         includeDagger()
     }
 }
 
-android {
-    namespace = "app.aaps.plugins.sync"
-    buildFeatures {
-        compose = true
+kotlin {
+    android {
+        namespace = "app.aaps.plugins.sync"
+        compileSdk = Versions.compileSdk
+        minSdk = Versions.minSdk
+        androidResources { enable = true }
+        withHostTest {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
+        }
+        withDeviceTest { }
+        compilerOptions { jvmTarget.set(Versions.jvmTarget) }
+
+        lint {
+            checkReleaseBuilds = false
+            disable += "MissingTranslation"
+            disable += "ExtraTranslation"
+        }
+    }
+
+    // Declared so an Android import cannot quietly reach shared code. Most of this module stays on
+    // Android for now - okhttp, retrofit, appauth, Play Services and Garmin have no Apple artifacts.
+    // The client-control screens are what needs to move: :appshell routes to them.
+    iosArm64()
+    iosSimulatorArm64()
+
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation(project(":core:data"))
+                implementation(project(":core:interfaces"))
+                implementation(project(":core:keys"))
+                implementation(project(":core:objects"))
+                implementation(project(":core:ui"))
+                implementation(project(":core:utils"))
+
+                api(libs.cmp.runtime)
+                api(libs.cmp.foundation)
+                api(libs.cmp.ui)
+                api(libs.cmp.material3)
+                api(libs.cmp.material.icons.extended)
+                api(libs.jetbrains.lifecycle.viewmodel.compose)
+                api(libs.jetbrains.lifecycle.runtime.compose)
+                implementation(libs.cmp.ui.tooling.preview)
+                implementation(libs.kotlinx.datetime)
+            }
+        }
+
+        androidMain {
+            dependencies {
+                implementation(project(":core:nssdk"))
+                implementation(project(":shared:impl"))
+
+                api(project.dependencies.platform(libs.androidx.compose.bom))
+                api(libs.androidx.compose.material3)
+                api(libs.androidx.compose.material.icons.extended)
+                api(libs.androidx.lifecycle.runtime.compose)
+                api(libs.androidx.ui.tooling.preview)
+                implementation(libs.androidx.compose.ui.tooling)
+
+                // OpenHumans
+                api(libs.com.squareup.okhttp3.okhttp)
+                api(libs.com.squareup.retrofit2.retrofit)
+                implementation(libs.androidx.browser)
+
+                // NSClient, Tidepool
+                api(libs.io.socket.client)
+                implementation(libs.com.squareup.okhttp3.logging.interceptor)
+                implementation(libs.com.squareup.retrofit2.converter.gson)
+                api(libs.com.google.code.gson)
+                api(libs.net.openid.appauth)
+
+                // DataLayerListenerService
+                api(libs.com.google.android.gms.playservices.wearable)
+
+                // SMS Communicator (OTP + QR code)
+                implementation(libs.com.eatthepath.java.otp)
+                implementation(libs.com.github.kenglxn.qrgen.android)
+                // ZXing is pulled transitively by qrgen but SmsCommunicatorOtpScreen imports
+                // ErrorCorrectionLevel directly - declare it so a qrgen upgrade cannot drop it.
+                implementation(libs.com.google.zxing.core)
+
+                // Garmin
+            }
+        }
+
+        // Hand written rather than taken from the test convention plugins, because those apply
+        // com.android.library and so cannot be used by a multiplatform module.
+        getByName("androidHostTest") {
+            dependencies {
+                implementation(project(":shared:tests"))
+                implementation(project(":implementation"))
+                implementation(project(":plugins:aps"))
+
+                implementation(kotlin("test"))
+                implementation(libs.org.junit.jupiter)
+                implementation(libs.org.junit.jupiter.api)
+                implementation(libs.org.mockito.junit.jupiter)
+                implementation(libs.org.mockito.kotlin)
+                implementation(libs.com.google.truth)
+                implementation(libs.kotlinx.coroutines.test)
+                implementation(libs.androidx.work.testing)
+                implementation(libs.joda.time)
+                implementation(libs.org.skyscreamer.jsonassert)
+                implementation(libs.org.robolectric)
+                implementation(project.dependencies.platform(libs.androidx.compose.bom))
+                implementation(libs.androidx.compose.ui.test.junit4)
+                implementation(libs.androidx.compose.ui.test.manifest)
+                // The real org.json: isReturnDefaultValues makes the platform stub answer null
+                // rather than throwing, which NPEs the shared profile fixtures.
+                implementation(libs.org.json.android)
+                runtimeOnly(libs.org.junit.platform.launcher)
+            }
+        }
+
+        getByName("androidDeviceTest") {
+            dependencies {
+                implementation(project(":shared:tests"))
+            }
+        }
     }
 }
 
+tasks.withType<Test> {
+    // useJUnitPlatform() and the heap cap come from kmp-test-defaults; only the JaCoCo part is
+    // specific here. Restated from jacoco-module-dependencies, which applies com.android.library.
+    extensions.configure<JacocoTaskExtension> {
+        isIncludeNoLocationClasses = true
+        excludes = listOf("jdk.internal.*")
+    }
+}
+
+// The Garmin SDK ships as an aar and needs the artifact type spelled out. The source-set dependency
+// DSL has no overload taking a configuration closure, so it is declared by configuration name here.
 dependencies {
-    implementation(project(":core:data"))
-    implementation(project(":core:interfaces"))
-    implementation(project(":core:keys"))
-    implementation(project(":core:objects"))
-    implementation(project(":core:nssdk"))
-    implementation(project(":core:ui"))
-    implementation(project(":core:utils"))
-    implementation(project(":shared:impl"))
-
-    // Compose
-    api(platform(libs.androidx.compose.bom))
-    api(libs.androidx.compose.material3)
-    api(libs.androidx.compose.material.icons.extended)
-    api(libs.androidx.lifecycle.runtime.compose)
-    api(libs.androidx.ui.tooling.preview)
-    debugImplementation(libs.androidx.compose.ui.tooling)
-
-
-    implementation(libs.kotlinx.datetime)
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.androidx.work.testing)
-
-    testImplementation(project(":shared:tests"))
-    testImplementation(project(":implementation"))
-    testImplementation(project(":plugins:aps"))
-    androidTestImplementation(project(":shared:tests"))
-
-    // OpenHuman
-    api(libs.com.squareup.okhttp3.okhttp)
-    api(libs.com.squareup.retrofit2.retrofit)
-    implementation(libs.androidx.browser)
-
-    // NSClient, Tidepool
-    api(libs.io.socket.client)
-    implementation(libs.com.squareup.okhttp3.logging.interceptor)
-    implementation(libs.com.squareup.retrofit2.converter.gson)
-    api(libs.com.google.code.gson)
-    api(libs.net.openid.appauth)
-
-    // DataLayerListenerService
-    api(libs.com.google.android.gms.playservices.wearable)
-
-    // SMS Communicator (OTP + QR code)
-    implementation(libs.com.eatthepath.java.otp)
-    implementation(libs.com.github.kenglxn.qrgen.android)
-    // ZXing is pulled transitively by qrgen but SmsCommunicatorOtpScreen imports ErrorCorrectionLevel
-    // directly — declare it explicitly so a future qrgen upgrade can't silently drop the symbol.
-    implementation(libs.com.google.zxing.core)
-
-    // Garmin
-    api(libs.com.garmin.connectiq) { artifact { type = "aar" } }
-    androidTestImplementation(libs.com.garmin.connectiq) { artifact { type = "aar" } }
-
-    implementation(libs.com.google.dagger.hilt.android)
-
-    ksp(libs.com.google.dagger.compiler)
-    ksp(libs.com.google.dagger.hilt.compiler)
+    "androidMainApi"(libs.com.garmin.connectiq) { artifact { type = "aar" } }
+    "androidDeviceTestImplementation"(libs.com.garmin.connectiq) { artifact { type = "aar" } }
 }
