@@ -228,6 +228,31 @@ exactly as `MainApp` does.
 resource id in the **interface**. A `TextRef` overload exists for `comment`; where one does not, the
 implementation cannot move until the interface changes.
 
+### Kotlin/Native rejects a comma in a backticked test name
+
+`fun \`the tag is appended, making it longer\`()` compiles on JVM and fails Native with
+`Name contains illegal characters: ","`. It only shows up once a test reaches commonTest, so a
+JVM-only test can carry one for years. Rewrite the name; do not rename the test's meaning.
+
+### Moving crypto: the provider is stricter than javax was
+
+`javax.crypto` built a fresh `Cipher` on every call, which hid API misuse. A multiplatform provider
+reuses objects and enforces the rules, so a migration can fail on something that was always wrong.
+Moving `ClientControlCrypto` turned up **two tests reusing one IV with one key** for AES-GCM -
+forbidden, and the provider says so (`Cannot reuse iv for GCM encryption`). Production was fine
+because the IV is generated per use; only the fixtures were wrong.
+
+Two rules when the format is already on the wire:
+
+- **Keep golden vectors and put them in commonTest.** Digests minted by the old implementation are
+  what prove the new one emits the same bytes. On Windows `mingwX64Test` runs them against
+  Kotlin/Native, so the Native path is checked long before a Mac is available.
+- **Watch the packaging, not the algorithm.** The primitives interoperate by definition; the silent
+  breakage is in how they are assembled - whether the AEAD nonce is prepended or stored separately,
+  whether the GCM tag is appended, hex case. In cryptography-kotlin the plain `encryptBlocking`
+  generates and prepends its own nonce; `encryptWithIvBlocking` (behind `@DelicateCryptographyApi`)
+  is the one that matches a format storing the IV separately.
+
 ### Other common blockers
 
 `javax.inject` (swap to `dev.zacsweers.metro.Inject` only for a class Metro already builds),
@@ -247,6 +272,29 @@ Two cautions. Keep the platform maths on the platform where an exact result matt
 whose implementation on some target would be a silent no-op is a safety problem in this app: a rule
 the user relies on would quietly stop firing, so the feature should be visibly absent on that target
 instead.
+
+### Test libraries are JVM-only, so a fixtures module barely moves
+
+JUnit 5, Mockito and RxJava have no Kotlin/Native artifacts. Anything built on them is Android by
+nature, not by accident, and no amount of work moves it. In `:shared:tests` that left exactly one
+file in commonMain out of eleven:
+
+| stays on Android | why |
+|---|---|
+| `TestBase`, `TestBaseWithProfile` | `@ExtendWith(MockitoExtension)`, JUnit 5 lifecycle |
+| `TestAapsSchedulers` | RxJava |
+| `TextRefStubs` | the generated `*StringIds` maps only exist in androidMain |
+| `TestPumpPlugin` | `ResourceHelper` is androidMain; `PumpEnactResultObject` is in `:implementation` |
+| `HardLimitsMock` | `HardLimits` still has abstract `Int` (resource id) overloads |
+| `BundleMock`, `SharedPreferencesMock` | Android types are the point of them |
+| `MemberInjectorCoverage`, `SplitBrainCoverage` | `JarFile` reflection over compiled output |
+
+Flip such a module for the module type and the processor removal, not for the sharing. Say so up
+front rather than discovering it file by file.
+
+**A fixtures module must be excluded from `checkMigratedModules`.** It declares `iosArm64()` so that
+common tests can use it, but `migratedModules` feeds the exported framework header, and test helpers
+do not belong in the API Swift sees. There is a `filterNot` in `ios/shell/build.gradle.kts` for this.
 
 ## `:ios:shell:checkMigratedModules` will fail next
 

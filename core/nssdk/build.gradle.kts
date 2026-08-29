@@ -30,6 +30,12 @@ kotlin {
                 api(libs.kotlinx.datetime)
                 api(libs.kotlinx.coroutines.core)
                 api(libs.kotlinx.serialization.json)
+                // The client-control signing and pairing path. Not javax.crypto: a follower on iOS
+                // signs the commands it sends, and javax does not exist there. `optimal` picks each
+                // platform's own implementation - JCA on the JVM, CryptoKit on Apple, OpenSSL 3 on
+                // the other native targets - so no algorithm is reimplemented here.
+                implementation(libs.cryptography.core)
+                implementation(libs.cryptography.provider.optimal)
             }
         }
         getByName("jvmMain") {
@@ -53,6 +59,15 @@ kotlin {
             dependencies {
                 // CIO is Ktor's own multiplatform engine, enough for the compile proof on Windows.
                 implementation(libs.io.ktor.client.cio)
+            }
+        }
+        // The golden crypto vectors live here so they run on every target, not just the JVM. That is
+        // the whole point of them: they were produced by the old javax implementation, so they prove
+        // the Apple and Windows builds still emit the same bytes. kotlin.test only - JUnit and Truth
+        // are JVM-only and would keep the vectors off Native.
+        getByName("commonTest") {
+            dependencies {
+                implementation(kotlin("test"))
             }
         }
         getByName("jvmTest") {

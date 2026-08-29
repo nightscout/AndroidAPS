@@ -84,7 +84,10 @@ val checkMigratedModules = tasks.register("checkMigratedModules") {
                 }
             }
             .map { ":" + it.parentFile.relativeTo(rootDir).invariantSeparatorsPath.replace('/', ':') }
-            .filterNot { it == ":ios:shell" }
+            // :ios:shell is this module. :shared:tests builds for iOS so that shared test fixtures
+            // are available to common tests, but it is fixtures, not product - linking it would put
+            // test helpers into the framework header Swift sees.
+            .filterNot { it == ":ios:shell" || it == ":shared:tests" }
             .toSet()
 
         val missing = withIosTargets - listed

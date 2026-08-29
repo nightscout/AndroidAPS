@@ -45,6 +45,7 @@ import app.aaps.plugins.sync.nsclientV3.json.JsonBridge.toKotlinxJson
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import app.aaps.plugins.sync.nsclientV3.ws.NsSocket
 import app.aaps.plugins.sync.nsclientV3.ws.NsSocketFactory
+import app.aaps.plugins.sync.nsclientV3.ws.ServiceNsConnection
 import dev.zacsweers.metro.Inject
 import java.lang.ref.WeakReference
 import kotlinx.coroutines.CoroutineScope
@@ -72,6 +73,10 @@ class NSClientV3Service : MetroService() {
     // The sockets are made here rather than handed in, so they are created, driven and closed on
     // this service, while it holds the wake lock.
     @Inject lateinit var nsSocketFactory: NsSocketFactory
+
+    // The concrete type, not the NsConnection interface: the service reports its own websocket
+    // state into it, which is not something every implementation of the port offers.
+    @Inject lateinit var nsConnection: ServiceNsConnection
 
 
     private var wakeLock: PowerManager.WakeLock? = null
@@ -106,13 +111,13 @@ class NSClientV3Service : MetroService() {
     var alarmSocket: NsSocket? = null
 
     /**
-     * WS connection state. Pass-through to [NSClientV3Plugin.wsConnectedFlow] — the plugin is
-     * the singleton that survives service rebinds, so the canonical StateFlow lives there and
-     * UI subscribers don't get torn down across service lifecycles.
+     * WS connection state. Pass-through to [ServiceNsConnection] — that is the singleton which
+     * survives service rebinds, so the canonical StateFlow lives there and UI subscribers don't get
+     * torn down across service lifecycles.
      */
     internal var wsConnected: Boolean
-        get() = nsClientV3Plugin.wsConnectedFlow.value
-        set(value) = nsClientV3Plugin.setWsConnected(value)
+        get() = nsConnection.connected.value
+        set(value) = nsConnection.setConnected(value)
 
     @OpenForTesting
     fun shutdownWebsockets() {

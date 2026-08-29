@@ -42,11 +42,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.dialogs.DatePickerModal
@@ -69,14 +69,11 @@ fun HistoryScreen(
     modifier: Modifier = Modifier,
     viewModel: HistoryViewModel = metroViewModel()
 ) {
+    // viewModelFactory/initializer rather than an anonymous ViewModelProvider.Factory: the factory's
+    // `create` takes a JVM `Class`, which does not exist in shared code. This form is also honest -
+    // it drops the unchecked cast the old one needed.
     val graphViewModel: GraphViewModel = viewModel(
-        factory = remember {
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(modelClass: Class<T>): T =
-                    viewModel.createGraphViewModel() as T
-            }
-        }
+        factory = remember { viewModelFactory { initializer { viewModel.createGraphViewModel() } } }
     )
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()

@@ -10,9 +10,9 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.plugins.sync.nsclientV3.DataSyncSelectorV3
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.compose.NSClientRepositoryImpl
-import app.aaps.plugins.sync.nsclientV3.services.NSClientV3Service
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
@@ -33,7 +33,6 @@ internal class DataSyncWorkerTest : TestBase() {
     @Mock lateinit var dataSyncSelectorV3: DataSyncSelectorV3
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var nsClientV3Plugin: NSClientV3Plugin
-    @Mock lateinit var nsClientV3Service: NSClientV3Service
     @Mock lateinit var context: Context
 
     private lateinit var nsClientMvvmRepository: NSClientRepositoryImpl
@@ -52,7 +51,7 @@ internal class DataSyncWorkerTest : TestBase() {
     fun prepare() {
         nsClientMvvmRepository = NSClientRepositoryImpl(rxBus, aapsLogger)
         whenever(context.applicationContext).thenReturn(context)
-        whenever(nsClientV3Plugin.nsClientV3Service).thenReturn(null)
+        whenever(nsClientV3Plugin.wsConnectedFlow).thenReturn(MutableStateFlow(false))
         whenever(nsClientV3Plugin.doingFullSync).thenReturn(false)
     }
 
@@ -60,8 +59,7 @@ internal class DataSyncWorkerTest : TestBase() {
     fun `doWorkAndLog does not upload when no write permission and not connected`() = runTest(timeout = 30.seconds) {
         sut = buildSut()
         whenever(nsClientV3Plugin.hasWritePermission).thenReturn(false)
-        whenever(nsClientV3Plugin.nsClientV3Service).thenReturn(nsClientV3Service)
-        whenever(nsClientV3Service.wsConnected).thenReturn(false)
+        whenever(nsClientV3Plugin.wsConnectedFlow).thenReturn(MutableStateFlow(false))
 
         val result = sut.doWorkAndLog()
 
@@ -74,8 +72,7 @@ internal class DataSyncWorkerTest : TestBase() {
     fun `doWorkAndLog uploads when has write permission`() = runTest(timeout = 30.seconds) {
         sut = buildSut()
         whenever(nsClientV3Plugin.hasWritePermission).thenReturn(true)
-        whenever(nsClientV3Plugin.nsClientV3Service).thenReturn(nsClientV3Service)
-        whenever(nsClientV3Service.wsConnected).thenReturn(false)
+        whenever(nsClientV3Plugin.wsConnectedFlow).thenReturn(MutableStateFlow(false))
 
         val result = sut.doWorkAndLog()
 
@@ -88,8 +85,7 @@ internal class DataSyncWorkerTest : TestBase() {
     fun `doWorkAndLog uploads when websocket is connected`() = runTest(timeout = 30.seconds) {
         sut = buildSut()
         whenever(nsClientV3Plugin.hasWritePermission).thenReturn(false)
-        whenever(nsClientV3Plugin.nsClientV3Service).thenReturn(nsClientV3Service)
-        whenever(nsClientV3Service.wsConnected).thenReturn(true)
+        whenever(nsClientV3Plugin.wsConnectedFlow).thenReturn(MutableStateFlow(true))
 
         val result = sut.doWorkAndLog()
 
@@ -102,8 +98,7 @@ internal class DataSyncWorkerTest : TestBase() {
     fun `doWorkAndLog uploads when both write permission and websocket connected`() = runTest(timeout = 30.seconds) {
         sut = buildSut()
         whenever(nsClientV3Plugin.hasWritePermission).thenReturn(true)
-        whenever(nsClientV3Plugin.nsClientV3Service).thenReturn(nsClientV3Service)
-        whenever(nsClientV3Service.wsConnected).thenReturn(true)
+        whenever(nsClientV3Plugin.wsConnectedFlow).thenReturn(MutableStateFlow(true))
 
         val result = sut.doWorkAndLog()
 
@@ -142,8 +137,7 @@ internal class DataSyncWorkerTest : TestBase() {
     fun `doWorkAndLog schedules token refresh when no write permission and not connected`() = runTest(timeout = 30.seconds) {
         sut = buildSut()
         whenever(nsClientV3Plugin.hasWritePermission).thenReturn(false)
-        whenever(nsClientV3Plugin.nsClientV3Service).thenReturn(nsClientV3Service)
-        whenever(nsClientV3Service.wsConnected).thenReturn(false)
+        whenever(nsClientV3Plugin.wsConnectedFlow).thenReturn(MutableStateFlow(false))
 
         sut.doWorkAndLog()
 
@@ -151,10 +145,10 @@ internal class DataSyncWorkerTest : TestBase() {
     }
 
     @Test
-    fun `doWorkAndLog handles null nsClientV3Service`() = runTest(timeout = 30.seconds) {
+    fun `doWorkAndLog handles a connection that is not up`() = runTest(timeout = 30.seconds) {
         sut = buildSut()
         whenever(nsClientV3Plugin.hasWritePermission).thenReturn(false)
-        whenever(nsClientV3Plugin.nsClientV3Service).thenReturn(null)
+        whenever(nsClientV3Plugin.wsConnectedFlow).thenReturn(MutableStateFlow(false))
 
         val result = sut.doWorkAndLog()
 
@@ -169,7 +163,7 @@ internal class DataSyncWorkerTest : TestBase() {
 
         // Test with various conditions
         whenever(nsClientV3Plugin.hasWritePermission).thenReturn(false)
-        whenever(nsClientV3Plugin.nsClientV3Service).thenReturn(null)
+        whenever(nsClientV3Plugin.wsConnectedFlow).thenReturn(MutableStateFlow(false))
         assertIs<Success>(sut.doWorkAndLog())
 
         whenever(nsClientV3Plugin.hasWritePermission).thenReturn(true)
