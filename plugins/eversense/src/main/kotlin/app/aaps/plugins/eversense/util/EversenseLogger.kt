@@ -75,6 +75,9 @@ class EversenseLogger {
             instance.error(tag, message)
         }
 
+        // If this path ever changes, also update MaintenanceImpl.getEversenseLogFiles() (implementation
+        // module) - it hardcodes this same path to find these files for the app's log export, since it
+        // has no reference to this constant across the module boundary.
         private const val LOGBACK_XML: String = "<configuration>\n" +
             "    <!-- Create a file appender for a log on external storage, alongside AndroidAPS.log,\n" +
             "         so it's reachable via adb pull / the app's log export without needing run-as or root. -->\n" +
