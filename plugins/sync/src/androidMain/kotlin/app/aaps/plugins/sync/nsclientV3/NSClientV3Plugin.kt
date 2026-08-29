@@ -10,7 +10,6 @@ import android.content.ServiceConnection
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.IBinder
-import android.os.SystemClock
 import androidx.annotation.VisibleForTesting
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
@@ -101,8 +100,9 @@ import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
-import java.security.InvalidParameterException
-import java.util.concurrent.atomic.AtomicBoolean
+
+import kotlin.concurrent.atomics.AtomicBoolean
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -132,6 +132,8 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.encodeToJsonElement
 
+// The new atomics are still experimental; pendingLoop/pendingUpload use load/store/compareAndSet.
+@OptIn(ExperimentalAtomicApi::class)
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class, binding = binding<NsClient>())
 class NSClientV3Plugin @Inject constructor(
@@ -355,7 +357,7 @@ class NSClientV3Plugin @Inject constructor(
                 .onEach {
                     when {
                         pendingLoop.compareAndSet(true, false)   -> {
-                            pendingUpload.set(false)
+                            pendingUpload.store(false)
                             executeLoop("PENDING_RERUN")
                         }
 
@@ -758,9 +760,10 @@ class NSClientV3Plugin @Inject constructor(
 
     enum class Operation { CREATE, UPDATE }
 
-    private fun slowDown() {
-        if (preferences.get(BooleanKey.NsClientSlowSync)) SystemClock.sleep(250)
-        else SystemClock.sleep(10)
+    // suspend + delay, not SystemClock.sleep: every caller is a coroutine, so this used to block a
+    // thread for no reason, and SystemClock does not exist outside Android.
+    private suspend fun slowDown() {
+        if (preferences.get(BooleanKey.NsClientSlowSync)) delay(250) else delay(10)
     }
 
     private suspend fun dbOperationProfileStore(collection: String = "profile", dataPair: DataSyncSelector.DataPair, progress: String): Boolean {
@@ -1098,7 +1101,7 @@ class NSClientV3Plugin @Inject constructor(
                             }
 
                             else                                           -> {
-                                throw InvalidParameterException()
+                                throw IllegalArgumentException()
                             }
                         }
                     }
@@ -1155,7 +1158,7 @@ class NSClientV3Plugin @Inject constructor(
         }
         if (workIsRunning()) {
             // Don't drop: queue a follow-up. Observer in onStart fires it on idle.
-            pendingLoop.set(true)
+            pendingLoop.store(true)
             nsClientRepository.addLog("● RUN", "Already running $origin (queued loop)")
             return
         }
@@ -1204,7 +1207,7 @@ class NSClientV3Plugin @Inject constructor(
         }
         if (workIsRunning()) {
             // Don't drop: queue a follow-up. Observer in onStart fires it on idle.
-            pendingUpload.set(true)
+            pendingUpload.store(true)
             nsClientRepository.addLog("● RUN", "Already running $origin (queued upload)")
             return
         }
