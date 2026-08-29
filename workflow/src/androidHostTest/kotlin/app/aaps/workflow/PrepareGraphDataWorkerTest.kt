@@ -56,7 +56,7 @@ class PrepareGraphDataWorkerTest : TestBaseWithProfile() {
         )
 
     private fun buildData(bgDataReload: Boolean, emitFinalProgress: Boolean) =
-        PrepareGraphDataWorker.PrepareGraphData(
+        PrepareGraphData(
             iobCobCalculator = dataIobCob,
             overviewData = overviewData,
             cache = cache,

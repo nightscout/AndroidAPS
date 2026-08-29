@@ -7,7 +7,9 @@ import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.MAIN_CALC
 import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.UPDATE_PREDICTIONS
 import app.aaps.workflow.WorkflowChainData.Companion.GEN_KEY
 import app.aaps.workflow.WorkflowChainData.Companion.JOB_KEY
-import java.util.concurrent.atomic.AtomicLong
+
+import kotlin.concurrent.atomics.AtomicReference
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -36,6 +38,7 @@ import dev.zacsweers.metro.SingleIn
  * superseded chain dispatches in the narrow window between slot overwrite and
  * WorkManager's REPLACE-cancel taking effect.
  */
+@OptIn(ExperimentalAtomicApi::class)
 @SingleIn(AppScope::class)
 class WorkflowChainData @Inject constructor(
     private val aapsLogger: AAPSLogger
@@ -47,69 +50,74 @@ class WorkflowChainData @Inject constructor(
 
     private data class MainChain(
         override val generation: Long,
-        val prepare: PrepareGraphDataWorker.PrepareGraphData,
-        val post: PostCalculationWorker.PostCalculationData
+        val prepare: PrepareGraphData,
+        val post: PostCalculationData
     ) : ChainSlot
 
     private data class HistoryChain(
         override val generation: Long,
-        val prepare: PrepareGraphDataWorker.PrepareGraphData
+        val prepare: PrepareGraphData
     ) : ChainSlot
 
     private data class PredictionsChain(
         override val generation: Long,
-        val post: PostCalculationWorker.PostCalculationData
+        val post: PostCalculationData
     ) : ChainSlot
 
-    @Volatile private var mainChain: MainChain? = null
-    @Volatile private var historyChain: HistoryChain? = null
-    @Volatile private var predictionsChain: PredictionsChain? = null
-    private val generator = AtomicLong()
+    /**
+     * All three slots and the generation counter in one atomic value.
+     *
+     * They are one value on purpose. The invariant is that a slot always holds the generation the
+     * work was tagged with, and that needs the counter bump and the slot write to happen together.
+     * A lock did that before, but `@Synchronized` is JVM only. A single `updateAndGet` is atomic by
+     * construction, so the invariant survives and the class compiles for every target.
+     */
+    private data class Chains(
+        val generation: Long = 0L,
+        val main: MainChain? = null,
+        val history: HistoryChain? = null,
+        val predictions: PredictionsChain? = null
+    )
 
-    // @Synchronized: `incrementAndGet` + slot write must be atomic together. Otherwise two
-    // concurrent callers can interleave so the slot ends up holding the older generation
-    // while WorkManager runs work tagged with the newer one, causing the worker's gen check
-    // to fail and the calculation to silently drop. Lock contention is negligible — startX
-    // is on the fast path, called at most once per BG cycle.
-    @Synchronized
-    fun startMain(
-        prepare: PrepareGraphDataWorker.PrepareGraphData,
-        post: PostCalculationWorker.PostCalculationData
-    ): Long {
-        val gen = generator.incrementAndGet()
-        mainChain = MainChain(gen, prepare, post)
-        return gen
+    private val chains = AtomicReference(Chains())
+
+    /**
+     * Bumps the generation and writes the slot as one atomic step, retrying on contention.
+     *
+     * [withGen] is called again on every retry, so it must only build a new value from the old one.
+     */
+    private inline fun bump(withGen: (Chains, Long) -> Chains): Long {
+        while (true) {
+            val old = chains.load()
+            val gen = old.generation + 1
+            if (chains.compareAndSet(old, withGen(old, gen))) return gen
+        }
     }
 
-    @Synchronized
-    fun startHistory(prepare: PrepareGraphDataWorker.PrepareGraphData): Long {
-        val gen = generator.incrementAndGet()
-        historyChain = HistoryChain(gen, prepare)
-        return gen
-    }
+    fun startMain(prepare: PrepareGraphData, post: PostCalculationData): Long =
+        bump { old, gen -> old.copy(generation = gen, main = MainChain(gen, prepare, post)) }
 
-    @Synchronized
-    fun startPredictions(post: PostCalculationWorker.PostCalculationData): Long {
-        val gen = generator.incrementAndGet()
-        predictionsChain = PredictionsChain(gen, post)
-        return gen
-    }
+    fun startHistory(prepare: PrepareGraphData): Long =
+        bump { old, gen -> old.copy(generation = gen, history = HistoryChain(gen, prepare)) }
+
+    fun startPredictions(post: PostCalculationData): Long =
+        bump { old, gen -> old.copy(generation = gen, predictions = PredictionsChain(gen, post)) }
 
     // Each safe-call performs a single volatile read of the slot reference and
     // dereferences the snapshot — no double load, no torn reads possible.
-    fun prepareFor(job: String?, expectedGen: Long): PrepareGraphDataWorker.PrepareGraphData? =
+    fun prepareFor(job: String?, expectedGen: Long): PrepareGraphData? =
         when (job) {
-            MAIN_CALCULATION    -> mainChain.validate(expectedGen, job)?.prepare
-            HISTORY_CALCULATION -> historyChain.validate(expectedGen, job)?.prepare
+            MAIN_CALCULATION    -> chains.load().main.validate(expectedGen, job)?.prepare
+            HISTORY_CALCULATION -> chains.load().history.validate(expectedGen, job)?.prepare
             else                -> warnUnknown("prepareFor", job)
         }
 
     // HISTORY_CALCULATION has no post phase — only MAIN and UPDATE_PREDICTIONS enqueue
     // PostCalculationWorker. A HISTORY job key reaching this method would be a wiring bug.
-    fun postFor(job: String?, expectedGen: Long): PostCalculationWorker.PostCalculationData? =
+    fun postFor(job: String?, expectedGen: Long): PostCalculationData? =
         when (job) {
-            MAIN_CALCULATION   -> mainChain.validate(expectedGen, job)?.post
-            UPDATE_PREDICTIONS -> predictionsChain.validate(expectedGen, job)?.post
+            MAIN_CALCULATION   -> chains.load().main.validate(expectedGen, job)?.post
+            UPDATE_PREDICTIONS -> chains.load().predictions.validate(expectedGen, job)?.post
             else               -> warnUnknown("postFor", job)
         }
 

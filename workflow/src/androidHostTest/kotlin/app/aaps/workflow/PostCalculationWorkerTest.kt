@@ -40,10 +40,10 @@ class PostCalculationWorkerTest : TestBaseWithProfile() {
             widgetUpdater, config, processedDeviceStatusData, profileUtil, preferences
         )
 
-    private fun dataWith(triggeredByNewBG: Boolean, runLoopAndWidgetPhase: Boolean): PostCalculationWorker.PostCalculationData {
+    private fun dataWith(triggeredByNewBG: Boolean, runLoopAndWidgetPhase: Boolean): PostCalculationData {
         val cache = mock<OverviewDataCache>()
         whenever(cache.timeRangeFlow).thenReturn(MutableStateFlow(null))
-        return PostCalculationWorker.PostCalculationData(
+        return PostCalculationData(
             overviewData = mock<OverviewData>(),
             cache = cache,
             signals = mock<CalculationSignalsEmitter>(),

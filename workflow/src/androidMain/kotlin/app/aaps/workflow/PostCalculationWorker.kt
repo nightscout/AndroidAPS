@@ -56,13 +56,6 @@ class PostCalculationWorker @AssistedInject constructor(
     private val preferences: Preferences
 ) : LoggingWorker(context, params, Dispatchers.Default, aapsLogger, fabricPrivacy) {
 
-    class PostCalculationData(
-        val overviewData: OverviewData,
-        val cache: OverviewDataCache,
-        val signals: CalculationSignalsEmitter,
-        val triggeredByNewBG: Boolean,
-        val runLoopAndWidgetPhase: Boolean
-    )
 
     override suspend fun doWorkAndLog(): Result {
         val data = workflowChainData.postFor(

@@ -101,7 +101,7 @@ class CalculationWorkflowImpl @Inject constructor(
         aapsLogger.debug(LTag.WORKER, "Starting calculation worker: $reason to ${dateUtil.dateAndTimeAndSecondsString(end)}")
 
         val isMain = job == MAIN_CALCULATION
-        val prepare = PrepareGraphDataWorker.PrepareGraphData(
+        val prepare = PrepareGraphData(
             iobCobCalculator = iobCobCalculator,
             overviewData = overviewData,
             cache = cache,
@@ -116,7 +116,7 @@ class CalculationWorkflowImpl @Inject constructor(
         )
         synchronized(enqueueLock) {
             val generation = if (isMain) {
-                val post = PostCalculationWorker.PostCalculationData(
+                val post = PostCalculationData(
                     overviewData = overviewData,
                     cache = cache,
                     signals = signals,
@@ -154,7 +154,7 @@ class CalculationWorkflowImpl @Inject constructor(
 
         synchronized(enqueueLock) {
             val generation = workflowChainData.startPredictions(
-                PostCalculationWorker.PostCalculationData(
+                PostCalculationData(
                     overviewData = overviewData,
                     cache = mainCache,
                     signals = mainSignals,

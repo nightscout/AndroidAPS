@@ -99,19 +99,6 @@ class PrepareGraphDataWorker @AssistedInject constructor(
     private val autosensDataProvider: () -> AutosensData
 ) : LoggingWorker(context, params, Dispatchers.Default, aapsLogger, fabricPrivacy) {
 
-    class PrepareGraphData(
-        val iobCobCalculator: IobCobCalculator, // cannot be injected : HistoryBrowser uses different instance
-        val overviewData: OverviewData,
-        val cache: OverviewDataCache,
-        val signals: CalculationSignalsEmitter,
-        val reason: String,
-        val end: Long,
-        val bgDataReload: Boolean,
-        val limitDataToOldestAvailable: Boolean,
-        val triggeredByNewBG: Boolean,
-        val emitFinalProgress: Boolean
-    )
-
     override suspend fun doWorkAndLog(): Result {
         val data = workflowChainData.prepareFor(
             inputData.getString(WorkflowChainData.JOB_KEY),
