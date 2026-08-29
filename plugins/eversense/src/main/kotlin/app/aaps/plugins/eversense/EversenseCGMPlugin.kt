@@ -26,6 +26,7 @@ import app.aaps.plugins.eversense.util.EversenseLogger
 import app.aaps.plugins.eversense.util.EversenseScanner
 import app.aaps.plugins.eversense.util.StorageKeys
 import kotlinx.serialization.json.Json
+import java.io.File
 import java.util.concurrent.CopyOnWriteArrayList
 
 /**
@@ -39,6 +40,20 @@ class EversenseCGMPlugin(
     private val bluetoothManager: BluetoothManager,
     val preferences: SharedPreferences
 ) {
+    init {
+        // Must run before anything below (or in EversenseGattCallback's construction) does any
+        // EversenseLogger.* call - EversenseLogger configures Logback on first use, and
+        // configure() has no effect after that point. Points Eversense's own log file at the
+        // app's real, permission-free scoped external-files directory (same one AndroidAPS.log
+        // uses) instead of EversenseLogger's raw-/sdcard fallback, which scoped storage silently
+        // blocks writes to on modern Android without MANAGE_EXTERNAL_STORAGE - see
+        // EversenseLogger.configure() for the full story.
+        val extFilesDir = context.getExternalFilesDir(null)
+        val eversenseLogDir = if (extFilesDir != null) File(extFilesDir, "eversense").absolutePath else "/sdcard/AndroidAPS/eversense"
+        EversenseLogger.configure(eversenseLogDir)
+        EversenseLogger.enableLogging(true)
+    }
+
     private val gattCallback = EversenseGattCallback(this, preferences)
     private val connectionLock = Any()
     private var scanner: EversenseScanner? = null
@@ -52,10 +67,6 @@ class EversenseCGMPlugin(
     // Credentials set by AAPS layer before any login attempt
     var username: String = ""
     var password: String = ""
-
-    init {
-        EversenseLogger.instance.enableLogging(true)
-    }
 
     fun addWatcher(watcher: EversenseWatcher) {
         if (!watchers.contains(watcher)) watchers.add(watcher)

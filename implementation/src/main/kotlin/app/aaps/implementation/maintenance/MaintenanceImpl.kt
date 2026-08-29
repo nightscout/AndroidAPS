@@ -147,17 +147,17 @@ class MaintenanceImpl @Inject constructor(
     }
 
     /**
-     * Eversense writes its own log to a fixed path, "/sdcard/AndroidAPS/eversense" (see the
-     * EXT_FILES_DIR property in EversenseLogger.kt's LOGBACK_XML) - NOT under loggerUtils.logDirectory,
-     * which on modern Android resolves to the app's scoped external-files dir
-     * (.../Android/data/<package>/files), a different location entirely. Using
-     * loggerUtils.logDirectory here silently never found the files, so Eversense.log has never
-     * actually been included in a log export. If EversenseLogger.kt's EXT_FILES_DIR ever changes,
-     * update the path below to match.
+     * Eversense writes its own log to an "eversense" subdirectory of the same scoped
+     * external-files directory AndroidAPS.log itself lives in (loggerUtils.logDirectory) - see
+     * EversenseCGMPlugin's init block, which passes that same directory to
+     * EversenseLogger.configure(). It previously wrote to a hardcoded raw "/sdcard/..." path
+     * instead, which modern Android's scoped storage silently blocks writes to without the
+     * MANAGE_EXTERNAL_STORAGE permission AAPS doesn't otherwise need - so Eversense.log never
+     * actually existed to find, regardless of where this lookup pointed.
      * Capped independently by amount so Eversense files can't get crowded out of the AndroidAPS list.
      */
     private fun getEversenseLogFiles(amount: Int): List<File> {
-        val eversenseDir = File("/sdcard/AndroidAPS/eversense")
+        val eversenseDir = File(loggerUtils.logDirectory, "eversense")
         val files = eversenseDir.listFiles { _: File?, name: String ->
             (name.startsWith("Eversense")
                 && (name.endsWith(".log")

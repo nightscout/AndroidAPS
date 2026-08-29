@@ -6,13 +6,17 @@ import ch.qos.logback.core.joran.spi.JoranException
 import java.io.ByteArrayInputStream
 import java.io.InputStream
 
-class EversenseLogger {
+class EversenseLogger private constructor(logDir: String) {
     private val lc = LoggerContext()
     private var isEnabled: Boolean = true
 
     init {
         val config = JoranConfigurator()
         config.setContext(lc)
+        // Set before doConfigure() so ${EXT_FILES_DIR} in LOGBACK_XML resolves to this directory -
+        // Joran checks context properties during variable substitution even though LOGBACK_XML
+        // itself declares no <property> element for it.
+        lc.putProperty("EXT_FILES_DIR", logDir)
 
         val stream: InputStream = ByteArrayInputStream(LOGBACK_XML.toByteArray())
         try {
@@ -43,7 +47,7 @@ class EversenseLogger {
         lc.getLogger(tag).error(logLocationPrefix() + message)
     }
 
-    fun enableLogging(value: Boolean) {
+    private fun enableLogging(value: Boolean) {
         this.isEnabled = value
     }
 
@@ -57,7 +61,34 @@ class EversenseLogger {
     }
 
     companion object {
-        val instance = EversenseLogger()
+        // Fallback if configure() is never called before the first log call (e.g. a unit test, or
+        // some log call racing plugin construction) - matches this class's original, always-hardcoded
+        // behavior, so nothing regresses in that case; it just won't be reachable by the app's log
+        // export on modern Android (see configure()'s doc below).
+        private const val DEFAULT_LOG_DIR = "/sdcard/AndroidAPS/eversense"
+
+        @Volatile private var configuredInstance: EversenseLogger? = null
+
+        private val instance: EversenseLogger
+            get() = configuredInstance ?: synchronized(this) {
+                configuredInstance ?: EversenseLogger(DEFAULT_LOG_DIR).also { configuredInstance = it }
+            }
+
+        /**
+         * Points Eversense's log file at [logDir] instead of [DEFAULT_LOG_DIR]. Call once, as early
+         * as possible - Logback is configured on first use of [instance], and later calls are a
+         * no-op once that has happened. See EversenseCGMPlugin, the sole caller: it passes the
+         * app's own scoped external-files directory - the same one AndroidAPS.log itself uses -
+         * because [DEFAULT_LOG_DIR] is a raw top-level /sdcard path, and writing there is silently
+         * blocked by scoped storage on modern Android without the MANAGE_EXTERNAL_STORAGE
+         * permission AAPS doesn't otherwise need. That silently produced zero Eversense.log entries
+         * in every log export a user ever sent while diagnosing this.
+         */
+        fun configure(logDir: String) {
+            synchronized(this) {
+                if (configuredInstance == null) configuredInstance = EversenseLogger(logDir)
+            }
+        }
 
         fun debug(tag: String, message: String) {
             instance.debug(tag, message)
@@ -75,13 +106,13 @@ class EversenseLogger {
             instance.error(tag, message)
         }
 
-        // If this path ever changes, also update MaintenanceImpl.getEversenseLogFiles() (implementation
-        // module) - it hardcodes this same path to find these files for the app's log export, since it
-        // has no reference to this constant across the module boundary.
+        fun enableLogging(value: Boolean) {
+            instance.enableLogging(value)
+        }
+
         private const val LOGBACK_XML: String = "<configuration>\n" +
-            "    <!-- Create a file appender for a log on external storage, alongside AndroidAPS.log,\n" +
-            "         so it's reachable via adb pull / the app's log export without needing run-as or root. -->\n" +
-            "    <property name=\"EXT_FILES_DIR\" scope=\"context\" value=\"/sdcard/AndroidAPS/eversense\" />\n" +
+            "    <!-- EXT_FILES_DIR is supplied at runtime via the context property set in init{} above,\n" +
+            "         not hardcoded here - see EversenseLogger.configure(). -->\n" +
             "    <appender name=\"file\" class=\"ch.qos.logback.core.rolling.RollingFileAppender\">\n" +
             "        <file>\${EXT_FILES_DIR}/Eversense.log</file>\n" +
             "        <rollingPolicy class=\"ch.qos.logback.core.rolling.TimeBasedRollingPolicy\">\n" +
