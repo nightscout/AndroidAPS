@@ -78,6 +78,39 @@ fakes before it can move. Expect each module to split into "moves today" and "ne
 realistic. See `implementation/src/commonTest/.../CommonNotificationManagerTest.kt` for the shape,
 and the section above for the source set to add.
 
+## Hint: fourteen classes in :implementation could move to commonMain today
+
+Surveyed 2026-08-29. These are in `implementation/src/androidMain` and import **nothing** from
+`android.*` or `androidx.*`. They are Android only because nobody has moved them, not because of
+anything they do. Nine need no other change at all:
+
+| class | what still stands in the way |
+|---|---|
+| `SceneActionsImpl` | nothing |
+| `SceneAutomationApiImpl` | nothing |
+| `IconsProviderImplementation` | nothing |
+| `InsulinImpl` | nothing |
+| `PasswordCheckImpl` | nothing |
+| `DetailedBolusInfoStorageImpl` | nothing |
+| `TemporaryBasalStorageImpl` | nothing |
+| `CloudDirectoryManagerImpl` | nothing |
+| `LoggerUtilsImpl` | nothing |
+| `DexcomTirCalculatorImpl` | nothing |
+| `ProtectionCheckImpl` | `java.util.concurrent.atomic.AtomicLong` -> `kotlin.concurrent.atomics` |
+| `AutosensDataObject` | `java.util.Locale` |
+| `ActiveSceneManager` | `org.json.JSONObject` -> kotlinx, as `ProfileRepositoryImpl` did |
+| `WizardBolusExecutorImpl` | still `javax.inject`; also `ConcurrentHashMap` and `AtomicLong` |
+
+Left for the kmp session because it is a sweep across one module rather than iOS work. Worth doing
+mostly because each one that moves is one less thing an iOS graph cannot build - `ProtectionCheck`
+and `PasswordCheck` in particular sit under the settings screens.
+
+Two warnings from having done several of these:
+
+- `@Synchronized` does not exist in `commonMain`. Use `AapsLock`, as `PreferencesImpl` does.
+- `Dispatchers.IO` reports itself as `internal` rather than missing. Use `aapsIoDispatcher` from
+  `:core:interfaces`.
+
 ## Gotchas in iOS interop
 
 Collected so nobody pays for them twice. All were found by tests or a crash, not by review.
@@ -93,18 +126,36 @@ Collected so nobody pays for them twice. All were found by tests or a crash, not
 - **Enum constants are not top level.** `UNNotificationInterruptionLevelTimeSensitive` is an entry on
   `UNNotificationInterruptionLevel`, not a standalone `val`.
 - **A backticked test name cannot contain a comma** on Kotlin/Native.
+- **Applying the Compose plugin without a multiplatform Compose runtime breaks the iOS build.**
+  `androidx.compose.*` artifacts are Android only, so a module with iOS targets needs
+  `libs.cmp.runtime` (and `cmp.foundation` / `cmp.ui` / `cmp.material3` if it draws) on a source set
+  the iOS compilation can see. Hit twice now: `ios/shell`, and `:plugins:automation`, which could not compile for iOS
+  at all until `cmp.*` reached its `commonMain`. The failure is
+  `IncompatibleComposeRuntimeVersionException` at compile time, or an `IrLinkageError` at run time if
+  only the declarations resolved.
 
 ## Open
 
-Nothing open. The notification cluster was the last one - see Done.
+Nothing right now.
 
 ## Known gaps on the iOS side
 
 Not blockers, and not for the Windows session to fix. Listed so nobody is surprised by them.
 
-- `IosSystemNotificationPlatform.setAudibleAlarm` only logs. An iOS notification carries its own
-  sound, and reposting one every time the owner is recomputed would re-alert the user. A real
-  ramping alarm needs a critical alert entitlement or an audio session.
+- `IosSystemNotificationPlatform.setAudibleAlarm` only logs, so **an urgent alarm makes no sound on
+  iOS today**. There are two separate paths and they are easy to confuse:
+  - *While the app is alive* - an `AVAudioPlayer` on an `AVAudioSession` with category `.playback`,
+    which ignores the hardware mute switch. **No entitlement needed.** This is the counterpart of
+    `AlarmSoundPlayerImpl`, and it is the missing piece: writing an iOS `AlarmSoundPlayer` and
+    driving it from `setAudibleAlarm` would make alarms work whenever AAPS is running. The four
+    sounds live in `core/ui/res/raw` as Android resources, so they would first have to reach the iOS
+    bundle.
+  - *While the app is not running* - only a Critical Alerts entitlement lets a notification break
+    through silent and Focus. Apple grants it to medical apps on application. This is a project
+    decision, not code.
+
+  Earlier notes here said the entitlement was the only route. That was wrong: it is the only route
+  for a notification-delivered alarm, not for one the app plays itself.
 - `IosSystemNotificationPlatform.onDismissed` **is** wired now. Two things were needed and either
   one missing makes it silently never fire: a delegate on the shared centre, held in a property
   because that slot is weak, and a `UNNotificationCategory` carrying `customDismissAction`, without
@@ -179,6 +230,13 @@ Not blockers, and not for the Windows session to fix. Listed so nobody is surpri
   profile arrives in - so each now has a small private bridge to the kotlinx readers instead of a
   shared production one. `BlockRenderTest`'s `the org json adapter matches the kotlinx renderer` went
   with the adapter it was guarding.
+- The three automation platform interfaces have iOS implementations. `LastKnownLocation` is real -
+  Core Location, with the distance left to `CLLocation.distanceFromLocation` so the geodesic maths
+  stays on the platform, as the migration rules ask. `PairedBtDevices` and `BtConnectionSource`
+  return empty and log why: iOS cannot read the phone's paired devices, and cannot see Bluetooth
+  connections made by anything other than this app. **A Bluetooth automation trigger can be
+  configured on iOS and will never fire** - decided deliberately, and written in both KDocs so it is
+  not mistaken for an oversight later.
 - `ConstraintsCheckerImpl` - moved to `commonMain` (`a76cca9e41`)
 - `ProfileRepositoryImpl` - moved to `commonMain`, off `org.json` (`3252f044b1`)
 - `PluginStore` / `PluginPermissions` - split so the registry is no longer Android
