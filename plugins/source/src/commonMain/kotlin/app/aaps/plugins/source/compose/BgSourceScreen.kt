@@ -33,13 +33,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.source.SourceStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.GV
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
@@ -88,7 +90,7 @@ internal fun BgSourceScreen(
     }
 
     // Delete confirmation dialog
-    val removeRecordTitle = stringResource(app.aaps.core.ui.R.string.removerecord)
+    val removeRecordTitle = stringResource(CoreUiStrings.removerecord)
     if (showDeleteDialog) {
         OkCancelDialog(
             title = removeRecordTitle,
@@ -154,7 +156,7 @@ private fun BgSourceLazyColumn(
     items: List<GV>,
     duplicateIds: Set<Long>,
     dateUtil: DateUtil,
-    rh: ResourceHelper,
+    rh: TextResolver,
     onLoadMore: () -> Unit,
     itemContent: @Composable (GV, Boolean) -> Unit,
     modifier: Modifier = Modifier
@@ -228,7 +230,7 @@ private fun GlucoseValueItem(
     onClick: () -> Unit,
     onLongPress: () -> Unit,
     dateUtil: DateUtil,
-    rh: ResourceHelper,
+    rh: TextResolver,
     formatGlucoseValue: (Double) -> String
 ) {
     val duplicateColor = AapsTheme.generalColors.invalidatedRecord
@@ -309,7 +311,7 @@ private fun GlucoseValueItem(
             if (glucoseValue.ids.nightscoutId != null) {
                 Icon(
                     imageVector = Ns,
-                    contentDescription = stringResource(app.aaps.core.ui.R.string.ns),
+                    contentDescription = stringResource(CoreUiStrings.ns),
                     modifier = Modifier
                         .size(21.dp)
                         .padding(start = 5.dp)
@@ -320,7 +322,7 @@ private fun GlucoseValueItem(
             if (!glucoseValue.isValid) {
                 Icon(
                     imageVector = Icons.Filled.Delete,
-                    contentDescription = stringResource(app.aaps.core.ui.R.string.invalid),
+                    contentDescription = stringResource(CoreUiStrings.invalid),
                     modifier = Modifier
                         .size(21.dp)
                         .padding(start = 5.dp),

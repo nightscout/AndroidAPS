@@ -4,7 +4,9 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlin.time.Clock
 import app.aaps.core.data.model.GV
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -14,17 +16,17 @@ import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.plugins.source.SourceStrings
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.ui.R
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
-import kotlinx.coroutines.Dispatchers
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -45,7 +47,7 @@ import kotlinx.coroutines.launch
 @Stable
 class BgSourceViewModel @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
-    internal val rh: ResourceHelper,
+    internal val rh: TextResolver,
     internal val dateUtil: DateUtil,
     private val profileUtil: ProfileUtil,
     private val aapsLogger: AAPSLogger,
@@ -67,7 +69,7 @@ class BgSourceViewModel @Inject constructor(
      * Load blood glucose readings
      */
     fun loadData() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(aapsIoDispatcher) {
             // Only show loading on initial load, not on refreshes
             val currentState = uiState.value
             if (currentState.glucoseValues.isEmpty()) {
@@ -75,7 +77,7 @@ class BgSourceViewModel @Inject constructor(
             }
 
             try {
-                val now = System.currentTimeMillis()
+                val now = Clock.System.now().toEpochMilliseconds()
                 val millsToThePast = T.hours(currentState.historyHours).msecs()
 
                 val data = persistenceLayer.getBgReadingsDataFromTime(now - millsToThePast, false)
@@ -177,7 +179,7 @@ class BgSourceViewModel @Inject constructor(
             val gv = selected.first()
             "${dateUtil.dateAndTimeString(gv.timestamp)}\n${profileUtil.fromMgdlToUnits(gv.value)}"
         } else {
-            rh.gs(R.string.confirm_remove_multiple_items, selected.size)
+            rh.gs(CoreUiStrings.confirm_remove_multiple_items, selected.size)
         }
     }
 
@@ -188,7 +190,7 @@ class BgSourceViewModel @Inject constructor(
         val selected = uiState.value.selectedItems
         if (selected.isEmpty()) return
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(aapsIoDispatcher) {
             try {
                 selected.forEach { gv ->
                     persistenceLayer.invalidateGlucoseValue(

@@ -101,6 +101,7 @@ import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import app.aaps.plugins.main.MainStringIds
 import app.aaps.plugins.sensitivity.SensitivityStringIds
 import app.aaps.plugins.sync.SyncStringIds
+import app.aaps.plugins.source.SourceStringIds
 import app.aaps.plugins.smoothing.SmoothingStringIds
 import app.aaps.pump.virtual.VirtualStringIds
 import app.aaps.ui.UiStringIds
@@ -1027,6 +1028,7 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
     private fun registerStringOwners() {
         TextRefIdRegistry.register("virtual") { name -> VirtualStringIds.idOf(name) }
         TextRefIdRegistry.register("smoothing") { name -> SmoothingStringIds.idOf(name) }
+        TextRefIdRegistry.register("source") { name -> SourceStringIds.idOf(name) }
         TextRefIdRegistry.register("calibration") { name -> CalibrationStringIds.idOf(name) }
         TextRefIdRegistry.register("sensitivity") { name -> SensitivityStringIds.idOf(name) }
         TextRefIdRegistry.register("main") { name -> MainStringIds.idOf(name) }

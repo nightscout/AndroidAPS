@@ -1,5 +1,6 @@
 package app.aaps.plugins.source.compose
 
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
@@ -9,7 +10,6 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.ui.R
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -124,7 +124,7 @@ internal class BgSourceViewModelTest {
 
     @Test
     fun `getDeleteConfirmationMessage uses the plural string for multiple selection`() {
-        whenever(rh.gs(R.string.confirm_remove_multiple_items, 2)).thenReturn("Remove 2 items")
+        whenever(rh.gs(CoreUiStrings.confirm_remove_multiple_items, 2)).thenReturn("Remove 2 items")
         sut.enterSelectionMode(gv(id = 1L, timestamp = 1_000L))
         sut.toggleSelection(gv(id = 2L, timestamp = 2_000L))
 

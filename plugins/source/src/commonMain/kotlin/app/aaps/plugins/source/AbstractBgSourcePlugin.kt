@@ -4,7 +4,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.NonPreferenceKey
@@ -15,7 +15,7 @@ abstract class AbstractBgSourcePlugin(
     pluginDescription: PluginDescription,
     ownPreferences: List<NonPreferenceKey> = emptyList(),
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    rh: TextResolver,
     preferences: Preferences,
     protected val config: Config
 ) : PluginBaseWithPreferences(pluginDescription, ownPreferences, aapsLogger, rh, preferences), BgSource {

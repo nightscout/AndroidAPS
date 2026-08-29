@@ -5,7 +5,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.keys.interfaces.TextRef
@@ -27,7 +27,7 @@ import dev.zacsweers.metro.binding
 @IntKey(410)
 @SingleIn(AppScope::class)
 class NSClientSourcePlugin @Inject constructor(
-    override val rh: ResourceHelper,
+    override val rh: TextResolver,
     aapsLogger: AAPSLogger,
     config: Config,
 ) : PluginBase(
@@ -35,13 +35,13 @@ class NSClientSourcePlugin @Inject constructor(
         .mainType(PluginType.BGSOURCE)
         .composeContent { plugin ->
             BgSourceComposeContent(
-                title = rh.gs(R.string.ns_client_bg)
+                title = rh.gs(SourceStrings.ns_client_bg)
             )
         }
         .icon(IcPluginNsClientBg)
-        .pluginName(TextRef.AndroidRes(R.string.ns_client_bg))
-        .shortName(TextRef.AndroidRes(R.string.ns_client_bg_short))
-        .description(TextRef.AndroidRes(R.string.description_source_ns_client))
+        .pluginName(SourceStrings.ns_client_bg)
+        .shortName(SourceStrings.ns_client_bg_short)
+        .description(SourceStrings.description_source_ns_client)
         .alwaysEnabled(config.AAPSCLIENT)
         .setDefault(config.AAPSCLIENT),
     aapsLogger, rh

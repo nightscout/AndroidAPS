@@ -64,8 +64,8 @@ private fun resolve(rh: ResourceHelper, ref: TextRef): String = when (ref) {
  * the string. These are the five whose maps `:shared:tests` already depends on, so the mock does
  * exactly what production does.
  *
- * The other owners - `main`, `calibration`, `sensitivity`, `smoothing`, `virtual` - live in modules
- * this one does not depend on, and must NOT be added by taking a new dependency on them just to make
+ * The other owners - `main`, `calibration`, `sensitivity`, `smoothing`, `source`, `virtual` - live in
+ * modules this one does not depend on, and must NOT be added by taking a new dependency just to make
  * a test string resolve. They fall back to the raw name here, which is what the real resolver does
  * when nobody has claimed the owner. A test in one of those modules that needs the real text should
  * stub `gs(Int)` for the ids it cares about.
