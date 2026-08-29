@@ -3,8 +3,6 @@ package app.aaps.plugins.sync.nsclientV3
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.sync.SyncStrings
-import android.os.Handler
-import android.os.HandlerThread
 import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.model.HR
 import app.aaps.core.data.model.HasIDs
@@ -97,7 +95,10 @@ import dev.zacsweers.metro.binding
 import kotlin.concurrent.atomics.AtomicBoolean
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.time.Duration.Companion.milliseconds
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
@@ -188,9 +189,7 @@ class NSClientV3Plugin @Inject constructor(
         private val PROBE_MIN_INTERVAL_MS = T.secs(5).msecs()
     }
 
-    private var scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-    private lateinit var runLoop: Runnable
-    private var handler: Handler? = null
+    private var scope = CoroutineScope(aapsIoDispatcher + SupervisorJob())
 
     // Re-run signaling. When a sync request arrives while a cycle is in flight, we set the
     // appropriate flag instead of dropping the request (old `forceNew=false`) or busy-waiting
@@ -246,14 +245,13 @@ class NSClientV3Plugin @Inject constructor(
 
     override suspend fun onStart() {
         super.onStart()
-        handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
         lastLoadedSrvModified = Json.decodeFromString(preferences.get(NsclientStringKey.V3LastModified))
 
         setClient()
 
         receiverDelegate.grabReceiversState()
-        scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = CoroutineScope(aapsIoDispatcher + SupervisorJob())
         runningConfigurationPublisher.start(scope)
         preferencesClientPublisher.start(scope)
         // Master-side: fallback poll for inbound client-control envelopes. Primary path is the
@@ -351,22 +349,28 @@ class NSClientV3Plugin @Inject constructor(
         profileRepository.profile.drop(1)
             .collectResilient(scope, aapsLogger, LTag.NSCLIENT) { executeUpload("profileRepository.profile changed") }
 
-        runLoop = Runnable {
-            var refreshInterval = T.mins(5).msecs()
-            if (nsClientSource.isEnabled())
-                runBlocking { persistenceLayer.getLastGlucoseValue() }?.let {
-                    // if last value is older than 5 min or there is no bg
-                    if (it.timestamp < dateUtil.now() - T.mins(5).plus(T.secs(20)).msecs()) {
-                        refreshInterval = T.mins(1).msecs()
+        // The tick. One coroutine that sleeps between rounds, rather than a Runnable reposting
+        // itself on a Handler thread: the delay between rounds is still decided by the round that
+        // just ran, and the last glucose value is now read with a plain suspend call instead of
+        // runBlocking on that thread. Cancelled with the scope in onStop.
+        scope.launch {
+            delay(T.mins(2).msecs())
+            while (isActive) {
+                var refreshInterval = T.mins(5).msecs()
+                if (nsClientSource.isEnabled())
+                    persistenceLayer.getLastGlucoseValue()?.let {
+                        // if last value is older than 5 min or there is no bg
+                        if (it.timestamp < dateUtil.now() - T.mins(5).plus(T.secs(20)).msecs()) {
+                            refreshInterval = T.mins(1).msecs()
+                        }
                     }
-                }
-            if (!preferences.get(BooleanKey.NsClient3UseWs))
-                executeLoop("MAIN_LOOP")
-            else
-                nsClientRepository.addLog("● TICK", "")
-            handler?.postDelayed(runLoop, refreshInterval)
+                if (!preferences.get(BooleanKey.NsClient3UseWs))
+                    executeLoop("MAIN_LOOP")
+                else
+                    nsClientRepository.addLog("● TICK", "")
+                delay(refreshInterval)
+            }
         }
-        handler?.postDelayed(runLoop, T.mins(2).msecs())
     }
 
     /**
@@ -422,7 +426,7 @@ class NSClientV3Plugin @Inject constructor(
 
     fun scheduleIrregularExecution(refreshToken: Boolean = false) {
         if (refreshToken) {
-            handler?.post { executeLoop("REFRESH TOKEN") }
+            scope.launch { executeLoop("REFRESH TOKEN") }
             return
         }
         if (config.AAPSCLIENT || nsClientSource.isEnabled()) {
@@ -432,15 +436,17 @@ class NSClientV3Plugin @Inject constructor(
                 toTime = dateUtil.now() + T.mins(1).plus(T.secs(0)).msecs()
                 origin = "1_MIN_OLD_DATA"
             }
-            handler?.postDelayed({ executeLoop(origin) }, toTime - dateUtil.now())
+            // A delayed one-shot. Successive calls stack up, exactly as the Handler posts did;
+            // executeLoop is guarded, and the scope cancels them all on stop.
+            scope.launch {
+                delay(toTime - dateUtil.now())
+                executeLoop(origin)
+            }
             nsClientRepository.addLog("● NEXT", dateUtil.dateAndTimeAndSecondsString(toTime))
         }
     }
 
     override suspend fun onStop() {
-        handler?.removeCallbacksAndMessages(null)
-        handler?.looper?.quit()
-        handler = null
         runningConfigurationPublisher.stop()
         preferencesClientPublisher.stop()
         scope.cancel()
