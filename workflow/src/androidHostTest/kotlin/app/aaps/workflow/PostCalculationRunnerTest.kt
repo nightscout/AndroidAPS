@@ -1,5 +1,6 @@
 package app.aaps.workflow
 
+import app.aaps.core.objects.workflow.WorkOutcome
 import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
@@ -26,7 +27,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import kotlin.test.assertIs
 
-class PostCalculationWorkerTest : TestBaseWithProfile() {
+class PostCalculationRunnerTest : TestBaseWithProfile() {
 
     @Mock lateinit var workflowChainData: WorkflowChainData
     @Mock lateinit var loop: Loop
@@ -34,11 +35,14 @@ class PostCalculationWorkerTest : TestBaseWithProfile() {
     @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
     @Mock lateinit var workerParameters: WorkerParameters
 
-    private fun worker() =
-        PostCalculationWorker(
-            context, workerParameters, aapsLogger, fabricPrivacy, workflowChainData, iobCobCalculator, loop,
+    private fun runner() =
+        PostCalculationRunner(
+            aapsLogger, workflowChainData, iobCobCalculator, loop,
             widgetUpdater, config, processedDeviceStatusData, profileUtil, preferences
         )
+
+    // Nothing in these tests stops a run part way.
+    private suspend fun run() = runner().run(job = "main", generation = 1L, isStopped = { false })
 
     private fun dataWith(triggeredByNewBG: Boolean, runLoopAndWidgetPhase: Boolean): PostCalculationData {
         val cache = mock<OverviewDataCache>()
@@ -62,7 +66,7 @@ class PostCalculationWorkerTest : TestBaseWithProfile() {
     fun `missing or stale data returns failure`() = runTest {
         whenever(workflowChainData.postFor(anyOrNull(), any())).thenReturn(null)
 
-        assertIs<ListenableWorker.Result.Failure>(worker().doWorkAndLog())
+        assertIs<WorkOutcome.Failure>(run())
     }
 
     @Test
@@ -70,9 +74,9 @@ class PostCalculationWorkerTest : TestBaseWithProfile() {
         val data = dataWith(triggeredByNewBG = false, runLoopAndWidgetPhase = false)
         whenever(workflowChainData.postFor(anyOrNull(), any())).thenReturn(data)
 
-        val result = worker().doWorkAndLog()
+        val result = run()
 
-        Assertions.assertEquals(ListenableWorker.Result.success(), result)
+        Assertions.assertEquals(WorkOutcome.Success, result)
         verify(loop, never()).invoke(any(), any(), any())
         verify(widgetUpdater, never()).update(any())
     }
@@ -88,9 +92,9 @@ class PostCalculationWorkerTest : TestBaseWithProfile() {
         val data = dataWith(triggeredByNewBG = true, runLoopAndWidgetPhase = true)
         whenever(workflowChainData.postFor(anyOrNull(), any())).thenReturn(data)
 
-        val result = worker().doWorkAndLog()
+        val result = run()
 
-        Assertions.assertEquals(ListenableWorker.Result.success(), result)
+        Assertions.assertEquals(WorkOutcome.Success, result)
         verify(loop).invoke(any(), any(), any())
         verify(widgetUpdater).update("WorkFlow")
     }

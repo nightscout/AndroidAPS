@@ -1,5 +1,6 @@
 package app.aaps.workflow
 
+import app.aaps.core.objects.workflow.WorkOutcome
 import dev.zacsweers.metro.Inject
 import kotlin.time.Instant
 import kotlinx.datetime.toLocalDateTime
@@ -97,9 +98,9 @@ class PrepareGraphDataRunner @Inject constructor(
      * [isStopped] is asked between phases so a replaced chain gives up promptly. On Android that is
      * the worker's own flag; the maths does not need to know what stopped it.
      */
-    suspend fun run(job: String?, generation: Long, isStopped: () -> Boolean): CalculationOutcome {
+    suspend fun run(job: String?, generation: Long, isStopped: () -> Boolean): WorkOutcome {
         val data = workflowChainData.prepareFor(job, generation)
-            ?: return CalculationOutcome.StaleInput
+            ?: return WorkOutcome.StaleInput
 
         // ===== Phase 1: Load BG into ads + smooth (was LoadBgDataWorker) =====
         if (data.bgDataReload) {
@@ -108,23 +109,23 @@ class PrepareGraphDataRunner @Inject constructor(
             rxBus.send(EventBucketedDataCreated())
             data.iobCobCalculator.clearCache()
         }
-        if (isStopped()) return CalculationOutcome.Stopped
+        if (isStopped()) return WorkOutcome.Stopped
 
         // ===== Phase 2: Bucketed data → cache (was PrepareBucketedDataWorker) =====
         prepareBucketedData(data)
-        if (isStopped()) return CalculationOutcome.Stopped
+        if (isStopped()) return WorkOutcome.Stopped
 
         // ===== Phase 3: BG readings → cache (was PrepareBgDataWorker) =====
         prepareBgData(data)
 
         data.signals.emitProgress(CalculationWorkflow.ProgressData.DRAW_BG, 100)
-        if (isStopped()) return CalculationOutcome.Stopped
+        if (isStopped()) return WorkOutcome.Stopped
 
         // ===== Phases 4 & 5: IOB/COB autosens + graph data prep (was IobCobOref* + PrepareIobAutosens) =====
         if (activePlugin.activeSensitivity.isOref1) runIobCobOref1(data, isStopped) else runIobCobOref(data, isStopped)
-        if (isStopped()) return CalculationOutcome.Stopped
+        if (isStopped()) return WorkOutcome.Stopped
         prepareIobAutosensGraphData(data, isStopped)
-        if (isStopped()) return CalculationOutcome.Stopped
+        if (isStopped()) return WorkOutcome.Stopped
         data.signals.emitProgress(CalculationWorkflow.ProgressData.DRAW_IOB, 100)
 
         // ===== Phase 6: Final progress emit (terminal worker only) =====
@@ -132,7 +133,7 @@ class PrepareGraphDataRunner @Inject constructor(
             data.signals.emitProgress(CalculationWorkflow.ProgressData.DRAW_FINAL, 100)
         }
 
-        return CalculationOutcome.Success
+        return WorkOutcome.Success
     }
 
     // ---------- Phase 1 helpers (LoadBgDataWorker logic) ----------

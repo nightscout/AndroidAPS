@@ -1,5 +1,6 @@
 package app.aaps.workflow
 
+import app.aaps.core.objects.workflow.WorkOutcome
 import kotlinx.coroutines.test.TestScope
 import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
@@ -103,7 +104,7 @@ class PrepareGraphDataRunnerTest : TestBaseWithProfile() {
     fun `missing or stale chain data returns failure`() = runTest {
         whenever(workflowChainData.prepareFor(anyOrNull(), any())).thenReturn(null)
 
-        assertIs<CalculationOutcome.Failure>(run())
+        assertIs<WorkOutcome.Failure>(run())
     }
 
     @Test
@@ -113,7 +114,7 @@ class PrepareGraphDataRunnerTest : TestBaseWithProfile() {
 
         val result = run()
 
-        assertIs<CalculationOutcome.Success>(result)
+        assertIs<WorkOutcome.Success>(result)
         verify(signals).emitProgress(eq(ProgressData.DRAW_BG), any())
         verify(signals).emitProgress(eq(ProgressData.DRAW_IOB), any())
         verify(signals).emitProgress(eq(ProgressData.DRAW_FINAL), any())
@@ -126,7 +127,7 @@ class PrepareGraphDataRunnerTest : TestBaseWithProfile() {
 
         val result = run()
 
-        assertIs<CalculationOutcome.Success>(result)
+        assertIs<WorkOutcome.Success>(result)
         verify(mockedRxBus).send(any<EventBucketedDataCreated>())
         verify(dataIobCob).clearCache()
         // Terminal-only progress not emitted when emitFinalProgress = false
