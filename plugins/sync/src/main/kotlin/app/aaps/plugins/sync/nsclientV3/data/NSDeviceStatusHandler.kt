@@ -107,7 +107,7 @@ class NSDeviceStatusHandler @Inject constructor(
                 updateDeviceData(nsDeviceStatus)
                 updateOpenApsData(nsDeviceStatus)
                 updateUploaderData(nsDeviceStatus)
-                calculationWorkflow.runOnReceivedPredictions(overviewData)
+                appScope.launch { calculationWorkflow.runOnReceivedPredictions(overviewData) }
             }
             if (config.APS) {
                 nsDeviceStatus.pump?.let { preferences.put(BooleanNonKey.ObjectivesPumpStatusIsAvailableInNS, true) }  // Objective 0

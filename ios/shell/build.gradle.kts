@@ -39,7 +39,8 @@ val migratedModules = listOf(
     ":plugins:source",
     ":pump:virtual",
     ":shared:impl",
-    ":ui"
+    ":ui",
+    ":workflow"
 )
 
 // Whether the migrated API is written into the framework header for Swift to call.
@@ -73,7 +74,14 @@ val checkMigratedModules = tasks.register("checkMigratedModules") {
 
     doLast {
         val withIosTargets = buildFiles
-            .filter { it.readText().contains("iosArm64()") }
+            // Skip comment lines: a doc line that merely mentions the target used to count as
+            // declaring it, which is how a KDoc in :appshell once made this fail.
+            .filter { f ->
+                f.readLines().any { line ->
+                    val t = line.trimStart()
+                    !t.startsWith("//") && !t.startsWith("*") && !t.startsWith("/*") && t.contains("iosArm64()")
+                }
+            }
             .map { ":" + it.parentFile.relativeTo(rootDir).invariantSeparatorsPath.replace('/', ':') }
             .filterNot { it == ":ios:shell" }
             .toSet()

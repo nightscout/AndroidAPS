@@ -1,10 +1,10 @@
 package app.aaps.plugins.constraints.objectives.objectives
 
+import app.aaps.plugins.constraints.ConstraintsStrings
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.plugins.constraints.R
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
@@ -22,9 +22,9 @@ class Objective5 @Inject constructor(
     preferences: Preferences,
     rh: ResourceHelper,
     dateUtil: DateUtil,
-) : Objective(preferences, rh, dateUtil, "maxiobzero", R.string.objectives_maxiobzero_objective, R.string.objectives_maxiobzero_gate) {
+) : Objective(preferences, rh, dateUtil, "maxiobzero", ConstraintsStrings.objectives_maxiobzero_objective, ConstraintsStrings.objectives_maxiobzero_gate) {
 
     init {
-        tasks.add(MinimumDurationTask(this, T.days(5).msecs()).learned(Learned(R.string.objectives_maxiobzero_learned)))
+        tasks.add(MinimumDurationTask(this, T.days(5).msecs()).learned(Learned(ConstraintsStrings.objectives_maxiobzero_learned)))
     }
 }

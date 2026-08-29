@@ -1,10 +1,11 @@
 package app.aaps.plugins.constraints.objectives.compose
 
+import app.aaps.core.interfaces.resources.TextRefIdRegistry
+import app.aaps.plugins.constraints.ConstraintsStringIds
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
-import app.aaps.plugins.constraints.R
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -29,11 +30,14 @@ class ObjectivesScreenTest {
 
     @Before
     fun setUp() {
+        // What MainApp does at startup: a TextRef.Named is resolved through this registry, so
+        // without it every label renders as its raw name.
+        TextRefIdRegistry.register("constraints") { name -> ConstraintsStringIds.idOf(name) }
         val ctx = RuntimeEnvironment.getApplication()
-        startLabel = ctx.getString(R.string.objectives_button_start)
-        verifyLabel = ctx.getString(R.string.objectives_button_verify)
-        learnedLabel = ctx.getString(R.string.what_i_ve_learned)
-        expandLabel = ctx.getString(R.string.objectives_expand)
+        startLabel = ctx.getString(ConstraintsStringIds.idOf("objectives_button_start")!!)
+        verifyLabel = ctx.getString(ConstraintsStringIds.idOf("objectives_button_verify")!!)
+        learnedLabel = ctx.getString(ConstraintsStringIds.idOf("what_i_ve_learned")!!)
+        expandLabel = ctx.getString(ConstraintsStringIds.idOf("objectives_expand")!!)
     }
 
     private fun objective(

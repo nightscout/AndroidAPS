@@ -28,7 +28,7 @@ metro {
  * Everything is in **androidMain** for now. The screens the navigation graph routes to
  * (`SetupWizardScreen`, `AutomationRuntime`, ...) are still in their plugins' androidMain, and
  * `:plugins:sync` is not multiplatform at all yet, so there is nothing to gain from an iOS target
- * here today. When those move, this module gains `iosArm64()`/`iosSimulatorArm64()` and the files
+ * here today. When those move, this module gains its Apple targets and the files
  * move to commonMain - the source set is already named for it.
  */
 kotlin {

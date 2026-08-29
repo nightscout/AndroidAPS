@@ -1,7 +1,8 @@
 package app.aaps.plugins.constraints.objectives.objectives
 
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.constraints.ConstraintsStrings
 import android.content.Context
-import androidx.annotation.StringRes
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
@@ -17,8 +18,8 @@ abstract class Objective(
     val rh: ResourceHelper,
     val dateUtil: DateUtil,
     private val spName: String,
-    @StringRes val objective: Int,
-    @StringRes val gate: Int
+    val objective: TextRef,
+    val gate: TextRef
 ) {
 
     var startedOn: Long = 0
@@ -63,7 +64,7 @@ abstract class Objective(
     val isStarted: Boolean
         get() = startedOn != 0L
 
-    abstract inner class Task(var objective: Objective, @StringRes val task: Int) {
+    abstract inner class Task(var objective: Objective, val task: TextRef) {
 
         var hints = ArrayList<Hint>()
         var learned = ArrayList<Learned>()
@@ -73,7 +74,7 @@ abstract class Objective(
         open suspend fun isCompleted(trueTime: Long): Boolean = isCompleted()
 
         open suspend fun progress(): String =
-            rh.gs(if (isCompleted()) R.string.completed_well_done else R.string.not_completed_yet)
+            rh.gs(if (isCompleted()) ConstraintsStrings.completed_well_done else ConstraintsStrings.not_completed_yet)
 
         fun hint(hint: Hint): Task {
             hints.add(hint)
@@ -88,7 +89,7 @@ abstract class Objective(
         open fun shouldBeIgnored(): Boolean = false
     }
 
-    inner class MinimumDurationTask internal constructor(objective: Objective, private val minimumDuration: Long) : Task(objective, R.string.time_elapsed) {
+    inner class MinimumDurationTask internal constructor(objective: Objective, private val minimumDuration: Long) : Task(objective, ConstraintsStrings.time_elapsed) {
 
         override suspend fun isCompleted(): Boolean =
             objective.isStarted && System.currentTimeMillis() - objective.startedOn >= minimumDuration
@@ -113,7 +114,7 @@ abstract class Objective(
         }
     }
 
-    inner class UITask internal constructor(objective: Objective, @StringRes task: Int, private val spIdentifier: String, val code: (context: Context, task: UITask, callback: Runnable, showMessage: (String) -> Unit) -> Unit) : Task(objective, task) {
+    inner class UITask internal constructor(objective: Objective, task: TextRef, private val spIdentifier: String, val code: (context: Context, task: UITask, callback: Runnable, showMessage: (String) -> Unit) -> Unit) : Task(objective, task) {
 
         var answered: Boolean = false
             set(value) {
@@ -128,7 +129,7 @@ abstract class Objective(
         override suspend fun isCompleted(): Boolean = answered
     }
 
-    inner class ExamTask internal constructor(objective: Objective, @StringRes task: Int, @StringRes val question: Int, private val spIdentifier: String) : Task(objective, task) {
+    inner class ExamTask internal constructor(objective: Objective, task: TextRef, val question: TextRef, private val spIdentifier: String) : Task(objective, task) {
 
         var options = ArrayList<Option>()
         var answered: Boolean = false
@@ -157,9 +158,9 @@ abstract class Objective(
         }
     }
 
-    class Option internal constructor(@StringRes var option: Int, var isCorrect: Boolean)
+    class Option internal constructor(var option: TextRef, var isCorrect: Boolean)
 
-    class Hint internal constructor(@StringRes var hint: Int)
+    class Hint internal constructor(var hint: TextRef)
 
-    class Learned internal constructor(@StringRes var learned: Int)
+    class Learned internal constructor(var learned: TextRef)
 }

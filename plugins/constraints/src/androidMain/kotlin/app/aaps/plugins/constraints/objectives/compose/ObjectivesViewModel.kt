@@ -1,5 +1,7 @@
 package app.aaps.plugins.constraints.objectives.compose
 
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.constraints.ConstraintsStrings
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,7 +18,6 @@ import app.aaps.core.interfaces.rx.events.EventSWUpdate
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.plugins.constraints.R
 import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.constraints.objectives.SntpClient
 import app.aaps.plugins.constraints.objectives.events.EventObjectivesUpdateGui
@@ -143,11 +144,11 @@ class ObjectivesViewModel @Inject constructor(
             ObjectiveUiItem(
                 index = index,
                 number = index + 1,
-                title = rh.gs(R.string.nth_objective, index + 1),
-                description = if (objective.objective != 0) rh.gs(objective.objective) else null,
-                gate = if (objective.gate != 0) rh.gs(objective.gate) else null,
+                title = rh.gs(ConstraintsStrings.nth_objective, index + 1),
+                description = rh.gs(objective.objective),
+                gate = rh.gs(objective.gate),
                 state = state,
-                accomplishedOn = if (objective.isAccomplished) rh.gs(R.string.accomplished, dateUtil.dateAndTimeString(objective.accomplishedOn)) else null,
+                accomplishedOn = if (objective.isAccomplished) rh.gs(ConstraintsStrings.accomplished, dateUtil.dateAndTimeString(objective.accomplishedOn)) else null,
                 tasks = tasks,
                 completedTaskCount = completedCount,
                 totalTaskCount = totalCount,
@@ -191,7 +192,7 @@ class ObjectivesViewModel @Inject constructor(
             scope.launch {
                 val result = ntpVerify()
                 if (!result.networkConnected) {
-                    showNtpError(rh.gs(R.string.notconnected))
+                    showNtpError(rh.gs(ConstraintsStrings.notconnected))
                 } else if (result.success) {
                     objective.startedOn = result.time
                     showNtpSuccess()
@@ -199,7 +200,7 @@ class ObjectivesViewModel @Inject constructor(
                     scrollToCurrentObjective()
                     rxBus.send(EventSWUpdate(false))
                 } else {
-                    showNtpError(rh.gs(R.string.failedretrievetime))
+                    showNtpError(rh.gs(ConstraintsStrings.failedretrievetime))
                 }
             }
         }
@@ -221,7 +222,7 @@ class ObjectivesViewModel @Inject constructor(
             scope.launch {
                 val result = ntpVerify()
                 if (!result.networkConnected) {
-                    showNtpError(rh.gs(R.string.notconnected))
+                    showNtpError(rh.gs(ConstraintsStrings.notconnected))
                 } else if (result.success) {
                     if (objective.isCompleted(result.time)) {
                         showNtpSuccess()
@@ -231,10 +232,10 @@ class ObjectivesViewModel @Inject constructor(
                         scrollToCurrentObjective()
                         rxBus.send(EventSWUpdate(false))
                     } else {
-                        showNtpError(rh.gs(R.string.requirementnotmet))
+                        showNtpError(rh.gs(ConstraintsStrings.requirementnotmet))
                     }
                 } else {
-                    showNtpError(rh.gs(R.string.failedretrievetime))
+                    showNtpError(rh.gs(ConstraintsStrings.failedretrievetime))
                 }
             }
         }
@@ -243,7 +244,7 @@ class ObjectivesViewModel @Inject constructor(
     private suspend fun ntpVerify(): SntpClient.NtpResult {
         _uiState.value = _uiState.value.copy(
             ntpVerification = NtpVerificationState(
-                status = rh.gs(app.aaps.core.ui.R.string.timedetection),
+                status = rh.gs(CoreUiStrings.timedetection),
                 percent = 30
             )
         )
@@ -253,7 +254,7 @@ class ObjectivesViewModel @Inject constructor(
     private suspend fun showNtpSuccess() {
         _uiState.value = _uiState.value.copy(
             ntpVerification = NtpVerificationState(
-                status = rh.gs(app.aaps.core.ui.R.string.success),
+                status = rh.gs(CoreUiStrings.success),
                 percent = 100
             )
         )
@@ -331,7 +332,7 @@ class ObjectivesViewModel @Inject constructor(
                 objectiveIndex = objectiveIndex,
                 currentTaskIndex = taskIndex,
                 taskName = rh.gs(task.task),
-                question = if (task.question != 0) rh.gs(task.question) else "",
+                question = rh.gs(task.question),
                 options = task.options.mapIndexed { i, option ->
                     ExamOptionUi(
                         index = i,
@@ -343,7 +344,7 @@ class ObjectivesViewModel @Inject constructor(
                 hints = task.hints.map { HintUiItem(rh.gs(it.hint)) },
                 totalTasks = visibleTasks.size,
                 isAnswered = task.answered,
-                disabledUntil = if (!task.isEnabledAnswer()) rh.gs(R.string.answerdisabledto, dateUtil.timeString(task.disabledTo)) else null,
+                disabledUntil = if (!task.isEnabledAnswer()) rh.gs(ConstraintsStrings.answerdisabledto, dateUtil.timeString(task.disabledTo)) else null,
                 canAnswer = !task.answered && task.isEnabledAnswer(),
                 canGoBack = taskIndex > 0,
                 canGoNext = taskIndex < visibleTasks.size - 1,
@@ -378,7 +379,7 @@ class ObjectivesViewModel @Inject constructor(
         task.answered = allCorrect
         if (!allCorrect) {
             task.disabledTo = dateUtil.now() + T.hours(1).msecs()
-            _snackbarMessage.value = rh.gs(R.string.wronganswer)
+            _snackbarMessage.value = rh.gs(ConstraintsStrings.wronganswer)
         } else {
             task.disabledTo = 0
         }

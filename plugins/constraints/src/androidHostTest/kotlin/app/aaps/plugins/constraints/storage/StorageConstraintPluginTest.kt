@@ -1,5 +1,6 @@
 package app.aaps.plugins.constraints.storage
 
+import app.aaps.shared.tests.stubTextRefResolution
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -23,7 +24,7 @@ class StorageConstraintPluginTest : TestBase() {
 
     @BeforeEach fun prepareMock() {
         storageConstraintPlugin = StorageConstraintPlugin(aapsLogger, rh, notificationManager)
-        whenever(rh.gs(anyInt(), anyLong())).thenReturn("")
+        stubTextRefResolution(rh)
     }
 
     class MockedStorageConstraintPlugin(

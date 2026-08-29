@@ -1,5 +1,7 @@
 package app.aaps.plugins.constraints.objectives.objectives
 
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.constraints.ConstraintsStrings
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
@@ -14,7 +16,6 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.plugins.constraints.R
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
@@ -37,22 +38,22 @@ class Objective0 @Inject constructor(
     private val loop: Loop,
     private val iobCobCalculator: IobCobCalculator,
     private val passwordCheck: PasswordCheck,
-) : Objective(preferences, rh, dateUtil, "config", R.string.objectives_0_objective, R.string.objectives_0_gate) {
+) : Objective(preferences, rh, dateUtil, "config", ConstraintsStrings.objectives_0_objective, ConstraintsStrings.objectives_0_gate) {
 
     val tidepoolPlugin get() = activePlugin.getSpecificPluginsListByInterface(Tidepool::class).firstOrNull() as Tidepool?
 
     init {
-        tasks.add(object : Task(this, R.string.objectives_bgavailableinns) {
+        tasks.add(object : Task(this, ConstraintsStrings.objectives_bgavailableinns) {
             override suspend fun isCompleted(): Boolean {
                 return preferences.get(BooleanNonKey.ObjectivesBgIsAvailableInNs) || tidepoolPlugin?.hasWritePermission == true
             }
         })
-        tasks.add(object : Task(this, R.string.synchaswritepermission) {
+        tasks.add(object : Task(this, ConstraintsStrings.synchaswritepermission) {
             override suspend fun isCompleted(): Boolean {
                 return activePlugin.firstActiveSync?.hasWritePermission == true || tidepoolPlugin?.hasWritePermission == true
             }
         })
-        tasks.add(object : Task(this, app.aaps.core.ui.R.string.virtualpump_uploadstatus_title) {
+        tasks.add(object : Task(this, CoreUiStrings.virtualpump_uploadstatus_title) {
             override suspend fun isCompleted(): Boolean {
                 return preferences.get(BooleanKey.VirtualPumpStatusUpload) || tidepoolPlugin?.hasWritePermission == true
             }
@@ -62,35 +63,35 @@ class Objective0 @Inject constructor(
             }
         })
         tasks.add(
-            object : Task(this, R.string.objectives_pumpstatusavailableinns) {
+            object : Task(this, ConstraintsStrings.objectives_pumpstatusavailableinns) {
                 override suspend fun isCompleted(): Boolean {
                     return preferences.get(BooleanNonKey.ObjectivesPumpStatusIsAvailableInNS) || tidepoolPlugin?.hasWritePermission == true
                 }
-            }.learned(Learned(R.string.objectives_0_learned))
+            }.learned(Learned(ConstraintsStrings.objectives_0_learned))
         )
-        tasks.add(object : Task(this, R.string.hasbgdata) {
+        tasks.add(object : Task(this, ConstraintsStrings.hasbgdata) {
             override suspend fun isCompleted(): Boolean {
                 return iobCobCalculator.ads.lastBg() != null
             }
         })
-        tasks.add(object : Task(this, R.string.loopenabled) {
+        tasks.add(object : Task(this, ConstraintsStrings.loopenabled) {
             override suspend fun isCompleted(): Boolean {
                 return (loop as PluginBase).isEnabled()
             }
         })
-        tasks.add(object : Task(this, R.string.apsselected) {
+        tasks.add(object : Task(this, ConstraintsStrings.apsselected) {
             override suspend fun isCompleted(): Boolean {
                 val usedAPS = activePlugin.activeAPS ?: return false
                 return (usedAPS as PluginBase).isEnabled()
             }
         })
-        tasks.add(object : Task(this, app.aaps.core.ui.R.string.activate_profile) {
+        tasks.add(object : Task(this, CoreUiStrings.activate_profile) {
             override suspend fun isCompleted(): Boolean = persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now()) != null
         })
         tasks.add(
-            UITask(this, R.string.verify_master_password, "master_password") { _, task, callback, showMessage ->
+            UITask(this, ConstraintsStrings.verify_master_password, "master_password") { _, task, callback, showMessage ->
                 if (preferences.get(StringKey.ProtectionMasterPassword) == "") {
-                    showMessage(rh.gs(app.aaps.core.ui.R.string.master_password_not_set))
+                    showMessage(rh.gs(CoreUiStrings.master_password_not_set))
                 } else {
                     passwordCheck.queryPassword(
                         StringKey.ProtectionMasterPassword.title, StringKey.ProtectionMasterPassword,
