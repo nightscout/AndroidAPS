@@ -2,8 +2,11 @@ package app.aaps.database.persistence.converters
 
 import app.aaps.core.data.ue.Action
 import app.aaps.database.entities.UserEntry
-import com.google.common.truth.Truth.assertThat
-import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
+import kotlin.test.Test
 
 internal class ActionExtensionTest {
 
@@ -11,7 +14,7 @@ internal class ActionExtensionTest {
     fun allDomainValuesRoundTripThroughDb() {
         // Domain -> Entity -> Domain must be stable for every value
         Action.entries.forEach { action ->
-            assertThat(action.toDb().fromDb()).isEqualTo(action)
+            assertEquals(action, action.toDb().fromDb())
         }
     }
 
@@ -19,35 +22,35 @@ internal class ActionExtensionTest {
     fun allEntityValuesRoundTripThroughDomain() {
         // Entity -> Domain -> Entity must be stable for every value
         UserEntry.Action.entries.forEach { action ->
-            assertThat(action.fromDb().toDb()).isEqualTo(action)
+            assertEquals(action, action.fromDb().toDb())
         }
     }
 
     @Test
     fun bothEnumsHaveTheSameNumberOfValues() {
         // Guards against a value being added to one enum but not mapped in the converter
-        assertThat(Action.entries.size).isEqualTo(UserEntry.Action.entries.size)
+        assertEquals(UserEntry.Action.entries.size, Action.entries.size)
     }
 
     @Test
     fun mappingPreservesEnumName() {
         // The mapping is name-identity in both directions
         Action.entries.forEach { action ->
-            assertThat(action.toDb().name).isEqualTo(action.name)
+            assertEquals(action.name, action.toDb().name)
         }
         UserEntry.Action.entries.forEach { action ->
-            assertThat(action.fromDb().name).isEqualTo(action.name)
+            assertEquals(action.name, action.fromDb().name)
         }
     }
 
     @Test
     fun representativeValuesMapExplicitly() {
-        assertThat(Action.BOLUS.toDb()).isEqualTo(UserEntry.Action.BOLUS)
-        assertThat(Action.UNKNOWN.toDb()).isEqualTo(UserEntry.Action.UNKNOWN)
-        assertThat(Action.REMOTE_CONFIG_CHANGED.toDb()).isEqualTo(UserEntry.Action.REMOTE_CONFIG_CHANGED)
+        assertEquals(UserEntry.Action.BOLUS, Action.BOLUS.toDb())
+        assertEquals(UserEntry.Action.UNKNOWN, Action.UNKNOWN.toDb())
+        assertEquals(UserEntry.Action.REMOTE_CONFIG_CHANGED, Action.REMOTE_CONFIG_CHANGED.toDb())
 
-        assertThat(UserEntry.Action.BOLUS.fromDb()).isEqualTo(Action.BOLUS)
-        assertThat(UserEntry.Action.UNKNOWN.fromDb()).isEqualTo(Action.UNKNOWN)
-        assertThat(UserEntry.Action.SCENE_ACTIVATED.fromDb()).isEqualTo(Action.SCENE_ACTIVATED)
+        assertEquals(Action.BOLUS, UserEntry.Action.BOLUS.fromDb())
+        assertEquals(Action.UNKNOWN, UserEntry.Action.UNKNOWN.fromDb())
+        assertEquals(Action.SCENE_ACTIVATED, UserEntry.Action.SCENE_ACTIVATED.fromDb())
     }
 }

@@ -2,8 +2,11 @@ package app.aaps.database.persistence.converters
 
 import app.aaps.core.data.ue.Sources
 import app.aaps.database.entities.UserEntry
-import com.google.common.truth.Truth.assertThat
-import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
+import kotlin.test.Test
 
 internal class SourcesExtensionTest {
 
@@ -11,7 +14,7 @@ internal class SourcesExtensionTest {
     fun everyDomainValueRoundTripsThroughDb() {
         // toDb().fromDb() must return the original for every domain enum value
         Sources.entries.forEach { source ->
-            assertThat(source.toDb().fromDb()).isEqualTo(source)
+            assertEquals(source, source.toDb().fromDb())
         }
     }
 
@@ -19,26 +22,26 @@ internal class SourcesExtensionTest {
     fun everyEntityValueRoundTripsThroughDomain() {
         // fromDb().toDb() must return the original for every entity enum value
         UserEntry.Sources.entries.forEach { source ->
-            assertThat(source.fromDb().toDb()).isEqualTo(source)
+            assertEquals(source, source.fromDb().toDb())
         }
     }
 
     @Test
     fun mapsRepresentativeValuesByName() {
-        assertThat(Sources.TreatmentDialog.toDb()).isEqualTo(UserEntry.Sources.TreatmentDialog)
-        assertThat(UserEntry.Sources.TreatmentDialog.fromDb()).isEqualTo(Sources.TreatmentDialog)
+        assertEquals(UserEntry.Sources.TreatmentDialog, Sources.TreatmentDialog.toDb())
+        assertEquals(Sources.TreatmentDialog, UserEntry.Sources.TreatmentDialog.fromDb())
 
-        assertThat(Sources.Unknown.toDb()).isEqualTo(UserEntry.Sources.Unknown)
-        assertThat(UserEntry.Sources.Unknown.fromDb()).isEqualTo(Sources.Unknown)
+        assertEquals(UserEntry.Sources.Unknown, Sources.Unknown.toDb())
+        assertEquals(Sources.Unknown, UserEntry.Sources.Unknown.fromDb())
 
-        assertThat(Sources.Garmin.toDb()).isEqualTo(UserEntry.Sources.Garmin)
-        assertThat(UserEntry.Sources.Garmin.fromDb()).isEqualTo(Sources.Garmin)
+        assertEquals(UserEntry.Sources.Garmin, Sources.Garmin.toDb())
+        assertEquals(Sources.Garmin, UserEntry.Sources.Garmin.fromDb())
     }
 
     @Test
     fun bothEnumsHaveTheSameNumberOfValues() {
         // The mapping is 1:1 by name in both directions; guard against a value being added
         // to one enum without the converter/other enum being updated.
-        assertThat(Sources.entries.size).isEqualTo(UserEntry.Sources.entries.size)
+        assertEquals(UserEntry.Sources.entries.size, Sources.entries.size)
     }
 }

@@ -1,9 +1,12 @@
 package app.aaps.database.persistence.converters
 
 import app.aaps.core.interfaces.aps.APSResult
-import com.google.common.truth.Truth.assertThat
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
+import kotlin.test.Test
+import kotlin.test.assertFailsWith
 import app.aaps.database.entities.APSResult as DbAPSResult
 
 /**
@@ -27,31 +30,31 @@ internal class APSResultExtensionTest {
     @Test
     fun algorithmRoundTripFromDomain() {
         supportedDomain.forEach { algorithm ->
-            assertThat(algorithm.toDb().fromDb()).isEqualTo(algorithm)
+            assertEquals(algorithm, algorithm.toDb().fromDb())
         }
     }
 
     @Test
     fun algorithmRoundTripFromDb() {
         supportedDb.forEach { algorithm ->
-            assertThat(algorithm.fromDb().toDb()).isEqualTo(algorithm)
+            assertEquals(algorithm, algorithm.fromDb().toDb())
         }
     }
 
     @Test
     fun algorithmExplicitMapping() {
-        assertThat(APSResult.Algorithm.AMA.toDb()).isEqualTo(DbAPSResult.Algorithm.AMA)
-        assertThat(APSResult.Algorithm.SMB.toDb()).isEqualTo(DbAPSResult.Algorithm.SMB)
-        assertThat(APSResult.Algorithm.AUTO_ISF.toDb()).isEqualTo(DbAPSResult.Algorithm.AUTO_ISF)
+        assertEquals(DbAPSResult.Algorithm.AMA, APSResult.Algorithm.AMA.toDb())
+        assertEquals(DbAPSResult.Algorithm.SMB, APSResult.Algorithm.SMB.toDb())
+        assertEquals(DbAPSResult.Algorithm.AUTO_ISF, APSResult.Algorithm.AUTO_ISF.toDb())
 
-        assertThat(DbAPSResult.Algorithm.AMA.fromDb()).isEqualTo(APSResult.Algorithm.AMA)
-        assertThat(DbAPSResult.Algorithm.SMB.fromDb()).isEqualTo(APSResult.Algorithm.SMB)
-        assertThat(DbAPSResult.Algorithm.AUTO_ISF.fromDb()).isEqualTo(APSResult.Algorithm.AUTO_ISF)
+        assertEquals(APSResult.Algorithm.AMA, DbAPSResult.Algorithm.AMA.fromDb())
+        assertEquals(APSResult.Algorithm.SMB, DbAPSResult.Algorithm.SMB.fromDb())
+        assertEquals(APSResult.Algorithm.AUTO_ISF, DbAPSResult.Algorithm.AUTO_ISF.fromDb())
     }
 
     @Test
     fun unknownAlgorithmThrows() {
-        assertThrows<IllegalStateException> { APSResult.Algorithm.UNKNOWN.toDb() }
-        assertThrows<IllegalStateException> { DbAPSResult.Algorithm.UNKNOWN.fromDb() }
+        assertFailsWith<IllegalStateException> { APSResult.Algorithm.UNKNOWN.toDb() }
+        assertFailsWith<IllegalStateException> { DbAPSResult.Algorithm.UNKNOWN.fromDb() }
     }
 }

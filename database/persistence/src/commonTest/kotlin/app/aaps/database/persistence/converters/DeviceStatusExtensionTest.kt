@@ -5,8 +5,11 @@ import app.aaps.core.data.model.IDs
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.database.entities.DeviceStatus
 import app.aaps.database.entities.embedments.InterfaceIDs
-import com.google.common.truth.Truth.assertThat
-import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
+import kotlin.test.Test
 
 internal class DeviceStatusExtensionTest {
 
@@ -55,17 +58,17 @@ internal class DeviceStatusExtensionTest {
         val original = fullDomain()
         val back = original.toDb().fromDb()
 
-        assertThat(back.id).isEqualTo(1L)
-        assertThat(back.timestamp).isEqualTo(1_000L)
-        assertThat(back.utcOffset).isEqualTo(3_600_000L)
-        assertThat(back.device).isEqualTo("deviceValue")
-        assertThat(back.pump).isEqualTo("pumpValue")
-        assertThat(back.enacted).isEqualTo("enactedValue")
-        assertThat(back.suggested).isEqualTo("suggestedValue")
-        assertThat(back.iob).isEqualTo("iobValue")
-        assertThat(back.uploaderBattery).isEqualTo(77)
-        assertThat(back.isCharging).isEqualTo(true)
-        assertThat(back.configuration).isEqualTo("configValue")
+        assertEquals(1L, back.id)
+        assertEquals(1_000L, back.timestamp)
+        assertEquals(3_600_000L, back.utcOffset)
+        assertEquals("deviceValue", back.device)
+        assertEquals("pumpValue", back.pump)
+        assertEquals("enactedValue", back.enacted)
+        assertEquals("suggestedValue", back.suggested)
+        assertEquals("iobValue", back.iob)
+        assertEquals(77, back.uploaderBattery)
+        assertEquals(true, back.isCharging)
+        assertEquals("configValue", back.configuration)
     }
 
     @Test
@@ -73,10 +76,10 @@ internal class DeviceStatusExtensionTest {
         val original = fullDomain()
         val back = original.toDb().fromDb()
 
-        assertThat(back.ids).isEqualTo(domainIds())
-        assertThat(back.ids.pumpType).isEqualTo(PumpType.GENERIC_AAPS)
-        assertThat(back.ids.nightscoutId).isEqualTo("nsId")
-        assertThat(back.ids.pumpId).isEqualTo(20L)
+        assertEquals(domainIds(), back.ids)
+        assertEquals(PumpType.GENERIC_AAPS, back.ids.pumpType)
+        assertEquals("nsId", back.ids.nightscoutId)
+        assertEquals(20L, back.ids.pumpId)
     }
 
     @Test
@@ -84,7 +87,7 @@ internal class DeviceStatusExtensionTest {
         val original = fullDomain()
         val back = original.toDb().fromDb()
 
-        assertThat(back).isEqualTo(original)
+        assertEquals(original, back)
     }
 
     @Test
@@ -105,17 +108,17 @@ internal class DeviceStatusExtensionTest {
         )
         val back = original.fromDb().toDb()
 
-        assertThat(back.id).isEqualTo(2L)
-        assertThat(back.timestamp).isEqualTo(2_000L)
-        assertThat(back.utcOffset).isEqualTo(7_200_000L)
-        assertThat(back.device).isEqualTo("d")
-        assertThat(back.pump).isEqualTo("p")
-        assertThat(back.enacted).isEqualTo("e")
-        assertThat(back.suggested).isEqualTo("s")
-        assertThat(back.iob).isEqualTo("i")
-        assertThat(back.uploaderBattery).isEqualTo(42)
-        assertThat(back.isCharging).isEqualTo(false)
-        assertThat(back.configuration).isEqualTo("c")
-        assertThat(back.interfaceIDs_backing).isEqualTo(entityIds())
+        assertEquals(2L, back.id)
+        assertEquals(2_000L, back.timestamp)
+        assertEquals(7_200_000L, back.utcOffset)
+        assertEquals("d", back.device)
+        assertEquals("p", back.pump)
+        assertEquals("e", back.enacted)
+        assertEquals("s", back.suggested)
+        assertEquals("i", back.iob)
+        assertEquals(42, back.uploaderBattery)
+        assertEquals(false, back.isCharging)
+        assertEquals("c", back.configuration)
+        assertEquals(entityIds(), back.interfaceIDs_backing)
     }
 }

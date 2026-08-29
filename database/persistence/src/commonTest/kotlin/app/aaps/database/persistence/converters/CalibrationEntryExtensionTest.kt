@@ -4,8 +4,11 @@ import app.aaps.core.data.model.CAL
 import app.aaps.core.data.model.IDs
 import app.aaps.database.entities.CalibrationEntry
 import app.aaps.database.entities.embedments.InterfaceIDs
-import com.google.common.truth.Truth.assertThat
-import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
+import kotlin.test.Test
 
 internal class CalibrationEntryExtensionTest {
 
@@ -35,20 +38,20 @@ internal class CalibrationEntryExtensionTest {
 
         val back = original.toDb().fromDb()
 
-        assertThat(back.id).isEqualTo(1L)
-        assertThat(back.version).isEqualTo(2)
-        assertThat(back.dateCreated).isEqualTo(3_000L)
-        assertThat(back.isValid).isFalse()
-        assertThat(back.referenceId).isEqualTo(4L)
-        assertThat(back.timestamp).isEqualTo(1_000L)
-        assertThat(back.utcOffset).isEqualTo(3_600_000L)
-        assertThat(back.fingerstickMgdl).isEqualTo(123.4)
-        assertThat(back.sensorMgdlAtPairing).isEqualTo(118.7)
-        assertThat(back.ids.nightscoutId).isEqualTo("nsId")
-        assertThat(back.ids.pumpSerial).isEqualTo("serial-1")
-        assertThat(back.ids.pumpId).isEqualTo(20L)
+        assertEquals(1L, back.id)
+        assertEquals(2, back.version)
+        assertEquals(3_000L, back.dateCreated)
+        assertFalse(back.isValid)
+        assertEquals(4L, back.referenceId)
+        assertEquals(1_000L, back.timestamp)
+        assertEquals(3_600_000L, back.utcOffset)
+        assertEquals(123.4, back.fingerstickMgdl)
+        assertEquals(118.7, back.sensorMgdlAtPairing)
+        assertEquals("nsId", back.ids.nightscoutId)
+        assertEquals("serial-1", back.ids.pumpSerial)
+        assertEquals(20L, back.ids.pumpId)
         // Lossless mapping + value equality on data classes
-        assertThat(back).isEqualTo(original)
+        assertEquals(original, back)
     }
 
     @Test
@@ -77,17 +80,17 @@ internal class CalibrationEntryExtensionTest {
 
         val back = original.fromDb().toDb()
 
-        assertThat(back.id).isEqualTo(5L)
-        assertThat(back.version).isEqualTo(6)
-        assertThat(back.dateCreated).isEqualTo(7_000L)
-        assertThat(back.isValid).isTrue()
-        assertThat(back.referenceId).isEqualTo(8L)
-        assertThat(back.timestamp).isEqualTo(2_000L)
-        assertThat(back.utcOffset).isEqualTo(7_200_000L)
-        assertThat(back.fingerstickMgdl).isEqualTo(99.5)
-        assertThat(back.sensorMgdlAtPairing).isEqualTo(101.2)
-        assertThat(back.interfaceIDs.nightscoutId).isEqualTo("eNsId")
-        assertThat(back.interfaceIDs.pumpId).isEqualTo(21L)
-        assertThat(back).isEqualTo(original)
+        assertEquals(5L, back.id)
+        assertEquals(6, back.version)
+        assertEquals(7_000L, back.dateCreated)
+        assertTrue(back.isValid)
+        assertEquals(8L, back.referenceId)
+        assertEquals(2_000L, back.timestamp)
+        assertEquals(7_200_000L, back.utcOffset)
+        assertEquals(99.5, back.fingerstickMgdl)
+        assertEquals(101.2, back.sensorMgdlAtPairing)
+        assertEquals("eNsId", back.interfaceIDs.nightscoutId)
+        assertEquals(21L, back.interfaceIDs.pumpId)
+        assertEquals(original, back)
     }
 }

@@ -3,8 +3,11 @@ package app.aaps.database.persistence.converters
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.HeartRate
 import app.aaps.database.entities.data.NewEntries
-import com.google.common.truth.Truth.assertThat
-import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
+import kotlin.test.Test
 
 /**
  * Tests for [NewEntries.fromDb] which maps the Room aggregate entity [NewEntries]
@@ -42,19 +45,19 @@ internal class NewEntriesExtensionTest {
     fun emptyEntriesMapToEmptyDomainLists() {
         val ne = emptyEntries().fromDb()
 
-        assertThat(ne.bolusCalculatorResults).isEmpty()
-        assertThat(ne.boluses).isEmpty()
-        assertThat(ne.carbs).isEmpty()
-        assertThat(ne.effectiveProfileSwitches).isEmpty()
-        assertThat(ne.extendedBoluses).isEmpty()
-        assertThat(ne.glucoseValues).isEmpty()
-        assertThat(ne.runningModes).isEmpty()
-        assertThat(ne.profileSwitches).isEmpty()
-        assertThat(ne.temporaryBasals).isEmpty()
-        assertThat(ne.temporaryTarget).isEmpty()
-        assertThat(ne.therapyEvents).isEmpty()
-        assertThat(ne.totalDailyDoses).isEmpty()
-        assertThat(ne.heartRates).isEmpty()
+        assertTrue((ne.bolusCalculatorResults).isEmpty())
+        assertTrue((ne.boluses).isEmpty())
+        assertTrue((ne.carbs).isEmpty())
+        assertTrue((ne.effectiveProfileSwitches).isEmpty())
+        assertTrue((ne.extendedBoluses).isEmpty())
+        assertTrue((ne.glucoseValues).isEmpty())
+        assertTrue((ne.runningModes).isEmpty())
+        assertTrue((ne.profileSwitches).isEmpty())
+        assertTrue((ne.temporaryBasals).isEmpty())
+        assertTrue((ne.temporaryTarget).isEmpty())
+        assertTrue((ne.therapyEvents).isEmpty())
+        assertTrue((ne.totalDailyDoses).isEmpty())
+        assertTrue((ne.heartRates).isEmpty())
     }
 
     @Test
@@ -108,36 +111,36 @@ internal class NewEntriesExtensionTest {
         val ne = entries.fromDb()
 
         // heartRates list routed correctly, size and per-element fields preserved
-        assertThat(ne.heartRates).hasSize(2)
-        assertThat(ne.heartRates[0].id).isEqualTo(1L)
-        assertThat(ne.heartRates[0].timestamp).isEqualTo(1_000L)
-        assertThat(ne.heartRates[0].duration).isEqualTo(60_000L)
-        assertThat(ne.heartRates[0].beatsPerMinute).isEqualTo(72.0)
-        assertThat(ne.heartRates[0].device).isEqualTo("watch-A")
-        assertThat(ne.heartRates[0].isValid).isTrue()
-        assertThat(ne.heartRates[1].id).isEqualTo(2L)
-        assertThat(ne.heartRates[1].beatsPerMinute).isEqualTo(88.0)
-        assertThat(ne.heartRates[1].isValid).isFalse()
+        assertEquals(2, (ne.heartRates).size)
+        assertEquals(1L, ne.heartRates[0].id)
+        assertEquals(1_000L, ne.heartRates[0].timestamp)
+        assertEquals(60_000L, ne.heartRates[0].duration)
+        assertEquals(72.0, ne.heartRates[0].beatsPerMinute)
+        assertEquals("watch-A", ne.heartRates[0].device)
+        assertTrue(ne.heartRates[0].isValid)
+        assertEquals(2L, ne.heartRates[1].id)
+        assertEquals(88.0, ne.heartRates[1].beatsPerMinute)
+        assertFalse(ne.heartRates[1].isValid)
 
         // glucoseValues list routed correctly (not mixed up with any other list)
-        assertThat(ne.glucoseValues).hasSize(1)
-        assertThat(ne.glucoseValues[0].id).isEqualTo(5L)
-        assertThat(ne.glucoseValues[0].value).isEqualTo(123.0)
-        assertThat(ne.glucoseValues[0].timestamp).isEqualTo(3_000L)
-        assertThat(ne.glucoseValues[0].raw).isEqualTo(100.0)
-        assertThat(ne.glucoseValues[0].noise).isEqualTo(0.5)
+        assertEquals(1, (ne.glucoseValues).size)
+        assertEquals(5L, ne.glucoseValues[0].id)
+        assertEquals(123.0, ne.glucoseValues[0].value)
+        assertEquals(3_000L, ne.glucoseValues[0].timestamp)
+        assertEquals(100.0, ne.glucoseValues[0].raw)
+        assertEquals(0.5, ne.glucoseValues[0].noise)
 
         // every unrelated list stays empty (routing did not leak elements sideways)
-        assertThat(ne.boluses).isEmpty()
-        assertThat(ne.carbs).isEmpty()
-        assertThat(ne.bolusCalculatorResults).isEmpty()
-        assertThat(ne.effectiveProfileSwitches).isEmpty()
-        assertThat(ne.extendedBoluses).isEmpty()
-        assertThat(ne.runningModes).isEmpty()
-        assertThat(ne.profileSwitches).isEmpty()
-        assertThat(ne.temporaryBasals).isEmpty()
-        assertThat(ne.temporaryTarget).isEmpty()
-        assertThat(ne.therapyEvents).isEmpty()
-        assertThat(ne.totalDailyDoses).isEmpty()
+        assertTrue((ne.boluses).isEmpty())
+        assertTrue((ne.carbs).isEmpty())
+        assertTrue((ne.bolusCalculatorResults).isEmpty())
+        assertTrue((ne.effectiveProfileSwitches).isEmpty())
+        assertTrue((ne.extendedBoluses).isEmpty())
+        assertTrue((ne.runningModes).isEmpty())
+        assertTrue((ne.profileSwitches).isEmpty())
+        assertTrue((ne.temporaryBasals).isEmpty())
+        assertTrue((ne.temporaryTarget).isEmpty())
+        assertTrue((ne.therapyEvents).isEmpty())
+        assertTrue((ne.totalDailyDoses).isEmpty())
     }
 }

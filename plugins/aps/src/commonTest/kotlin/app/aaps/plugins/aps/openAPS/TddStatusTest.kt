@@ -1,7 +1,11 @@
 package app.aaps.plugins.aps.openAPS
 
-import com.google.common.truth.Truth.assertThat
-import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertNotEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
+import kotlin.test.Test
 
 class TddStatusTest {
 
@@ -15,11 +19,11 @@ class TddStatusTest {
             tddLast8to4H = 8.0
         )
 
-        assertThat(tddStatus.tdd1D).isEqualTo(50.0)
-        assertThat(tddStatus.tdd7D).isEqualTo(48.0)
-        assertThat(tddStatus.tddLast24H).isEqualTo(52.0)
-        assertThat(tddStatus.tddLast4H).isEqualTo(10.0)
-        assertThat(tddStatus.tddLast8to4H).isEqualTo(8.0)
+        assertEquals(50.0, tddStatus.tdd1D)
+        assertEquals(48.0, tddStatus.tdd7D)
+        assertEquals(52.0, tddStatus.tddLast24H)
+        assertEquals(10.0, tddStatus.tddLast4H)
+        assertEquals(8.0, tddStatus.tddLast8to4H)
     }
 
     @Test
@@ -34,9 +38,9 @@ class TddStatusTest {
 
         val copy = original.copy(tdd1D = 55.0)
 
-        assertThat(copy.tdd1D).isEqualTo(55.0)
-        assertThat(copy.tdd7D).isEqualTo(48.0)
-        assertThat(original.tdd1D).isEqualTo(50.0) // Original unchanged
+        assertEquals(55.0, copy.tdd1D)
+        assertEquals(48.0, copy.tdd7D)
+        assertEquals(50.0, original.tdd1D) // Original unchanged
     }
 
     @Test
@@ -45,8 +49,8 @@ class TddStatusTest {
         val status2 = TddStatus(50.0, 48.0, 52.0, 10.0, 8.0)
         val status3 = TddStatus(51.0, 48.0, 52.0, 10.0, 8.0)
 
-        assertThat(status1).isEqualTo(status2)
-        assertThat(status1).isNotEqualTo(status3)
+        assertEquals(status2, status1)
+        assertNotEquals(status3, status1)
     }
 
     @Test
@@ -59,8 +63,8 @@ class TddStatusTest {
             tddLast8to4H = 0.0
         )
 
-        assertThat(tddStatus.tdd1D).isEqualTo(0.0)
-        assertThat(tddStatus.tdd7D).isEqualTo(0.0)
+        assertEquals(0.0, tddStatus.tdd1D)
+        assertEquals(0.0, tddStatus.tdd7D)
     }
 
     @Test
@@ -74,8 +78,8 @@ class TddStatusTest {
             tddLast8to4H = -5.0
         )
 
-        assertThat(tddStatus.tdd1D).isEqualTo(-1.0)
-        assertThat(tddStatus.tddLast4H).isEqualTo(-4.0)
+        assertEquals(-1.0, tddStatus.tdd1D)
+        assertEquals(-4.0, tddStatus.tddLast4H)
     }
 
     @Test
@@ -88,8 +92,8 @@ class TddStatusTest {
             tddLast8to4H = 250000.0
         )
 
-        assertThat(tddStatus.tdd1D).isEqualTo(Double.MAX_VALUE)
-        assertThat(tddStatus.tdd7D).isEqualTo(1000000.0)
+        assertEquals(Double.MAX_VALUE, tddStatus.tdd1D)
+        assertEquals(1000000.0, tddStatus.tdd7D)
     }
 
     @Test
@@ -102,7 +106,7 @@ class TddStatusTest {
             tddLast8to4H = 8.999
         )
 
-        assertThat(tddStatus.tdd1D).isWithin(0.001).of(50.123)
-        assertThat(tddStatus.tddLast8to4H).isWithin(0.001).of(8.999)
+        assertEquals(50.123, tddStatus.tdd1D, 0.001)
+        assertEquals(8.999, tddStatus.tddLast8to4H, 0.001)
     }
 }

@@ -3,8 +3,11 @@ package app.aaps.database.persistence.converters
 import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.SC
 import app.aaps.database.entities.StepsCount
-import com.google.common.truth.Truth.assertThat
-import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
+import kotlin.test.Test
 
 internal class StepsCountExtensionTest {
 
@@ -44,21 +47,21 @@ internal class StepsCountExtensionTest {
 
         val back = original.toDb().fromDb()
 
-        assertThat(back.id).isEqualTo(1L)
-        assertThat(back.duration).isEqualTo(300_000L)
-        assertThat(back.timestamp).isEqualTo(1_000L)
-        assertThat(back.steps5min).isEqualTo(5)
-        assertThat(back.steps10min).isEqualTo(10)
-        assertThat(back.steps15min).isEqualTo(15)
-        assertThat(back.steps30min).isEqualTo(30)
-        assertThat(back.steps60min).isEqualTo(60)
-        assertThat(back.steps180min).isEqualTo(180)
-        assertThat(back.device).isEqualTo("watch")
-        assertThat(back.utcOffset).isEqualTo(3_600_000L)
-        assertThat(back.version).isEqualTo(2)
-        assertThat(back.dateCreated).isEqualTo(2_000L)
-        assertThat(back.isValid).isTrue()
-        assertThat(back.referenceId).isEqualTo(99L)
+        assertEquals(1L, back.id)
+        assertEquals(300_000L, back.duration)
+        assertEquals(1_000L, back.timestamp)
+        assertEquals(5, back.steps5min)
+        assertEquals(10, back.steps10min)
+        assertEquals(15, back.steps15min)
+        assertEquals(30, back.steps30min)
+        assertEquals(60, back.steps60min)
+        assertEquals(180, back.steps180min)
+        assertEquals("watch", back.device)
+        assertEquals(3_600_000L, back.utcOffset)
+        assertEquals(2, back.version)
+        assertEquals(2_000L, back.dateCreated)
+        assertTrue(back.isValid)
+        assertEquals(99L, back.referenceId)
     }
 
     @Test
@@ -67,9 +70,9 @@ internal class StepsCountExtensionTest {
 
         val back = original.toDb().fromDb()
 
-        assertThat(back.ids).isEqualTo(sampleIds())
-        assertThat(back.ids.pumpId).isEqualTo(222L)
-        assertThat(back.ids.pumpSerial).isEqualTo("serial-123")
+        assertEquals(sampleIds(), back.ids)
+        assertEquals(222L, back.ids.pumpId)
+        assertEquals("serial-123", back.ids.pumpSerial)
     }
 
     @Test
@@ -78,7 +81,7 @@ internal class StepsCountExtensionTest {
 
         val back = original.toDb().fromDb()
 
-        assertThat(back).isEqualTo(original)
+        assertEquals(original, back)
     }
 
     @Test
@@ -104,17 +107,17 @@ internal class StepsCountExtensionTest {
 
         val back = original.fromDb().toDb()
 
-        assertThat(back.id).isEqualTo(7L)
-        assertThat(back.duration).isEqualTo(600_000L)
-        assertThat(back.timestamp).isEqualTo(5_000L)
-        assertThat(back.steps5min).isEqualTo(1)
-        assertThat(back.steps180min).isEqualTo(8)
-        assertThat(back.device).isEqualTo("phone")
-        assertThat(back.utcOffset).isEqualTo(7_200_000L)
-        assertThat(back.version).isEqualTo(4)
-        assertThat(back.dateCreated).isEqualTo(9_000L)
-        assertThat(back.isValid).isFalse()
-        assertThat(back.referenceId).isEqualTo(55L)
-        assertThat(back.interfaceIDs_backing).isEqualTo(sampleIds().toDb())
+        assertEquals(7L, back.id)
+        assertEquals(600_000L, back.duration)
+        assertEquals(5_000L, back.timestamp)
+        assertEquals(1, back.steps5min)
+        assertEquals(8, back.steps180min)
+        assertEquals("phone", back.device)
+        assertEquals(7_200_000L, back.utcOffset)
+        assertEquals(4, back.version)
+        assertEquals(9_000L, back.dateCreated)
+        assertFalse(back.isValid)
+        assertEquals(55L, back.referenceId)
+        assertEquals(sampleIds().toDb(), back.interfaceIDs_backing)
     }
 }
