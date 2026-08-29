@@ -254,7 +254,7 @@ class NSClientV3Service : MetroService() {
         nsClientRepository.addLog("◄ WS", "disconnect alarm event")
     }
 
-    private val onDataCreateUpdate = Emitter.Listener { args ->
+    internal val onDataCreateUpdate = Emitter.Listener { args ->
         val response = args[0] as JSONObject
         aapsLogger.debug(LTag.NSCLIENT, "onDataCreateUpdate: $response")
         val collection = response.getString("colName")
@@ -339,7 +339,7 @@ class NSClientV3Service : MetroService() {
         }
     }
 
-    private val onDataDelete = Emitter.Listener { args ->
+    internal val onDataDelete = Emitter.Listener { args ->
         val response = args[0] as JSONObject
         aapsLogger.debug(LTag.NSCLIENT, "onDataDelete: $response")
         // No elvis here: optString never returns null, it returns "" for a missing key. The old
@@ -359,7 +359,7 @@ class NSClientV3Service : MetroService() {
         }
     }
 
-    private val onAnnouncement = Emitter.Listener { args ->
+    internal val onAnnouncement = Emitter.Listener { args ->
 
         /*
         {
@@ -378,7 +378,7 @@ class NSClientV3Service : MetroService() {
         if (preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements))
             postNsAlarm(NSAlarmObject(data))
     }
-    private val onAlarm = Emitter.Listener { args ->
+    internal val onAlarm = Emitter.Listener { args ->
 
         /*
         {
@@ -403,7 +403,7 @@ class NSClientV3Service : MetroService() {
         }
     }
 
-    private val onUrgentAlarm = Emitter.Listener { args: Array<Any> ->
+    internal val onUrgentAlarm = Emitter.Listener { args: Array<Any> ->
         val data = args[0] as JSONObject
         nsClientRepository.addLog("◄ URGENT ALARM", data.optString("message"))
         aapsLogger.debug(LTag.NSCLIENT, data.toString())
@@ -414,7 +414,7 @@ class NSClientV3Service : MetroService() {
         }
     }
 
-    private val onClearAlarm = Emitter.Listener { args ->
+    internal val onClearAlarm = Emitter.Listener { args ->
 
         /*
         {
