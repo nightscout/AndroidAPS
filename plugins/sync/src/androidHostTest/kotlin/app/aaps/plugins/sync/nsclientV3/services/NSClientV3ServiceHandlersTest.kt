@@ -1,0 +1,253 @@
+package app.aaps.plugins.sync.nsclientV3.services
+
+import app.aaps.core.nssdk.interfaces.RunningConfiguration
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.nsclient.StoreDataForDb
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.LongComposedKey
+import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlPublisher
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.OrphanDetector
+import app.aaps.plugins.sync.nsclientV3.compose.NSClientRepositoryImpl
+import app.aaps.plugins.sync.nsclientV3.data.NSDeviceStatusHandler
+import app.aaps.core.nssdk.remotemodel.LastModified
+import app.aaps.shared.tests.TestBaseWithProfile
+import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import org.json.JSONObject
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.mockito.Mock
+import org.mockito.Mockito.mockingDetails
+import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
+
+/**
+ * Pins what the websocket event handlers do with an incoming document.
+ *
+ * These are characterization tests: they describe the behaviour that is live today, so the planned
+ * move of the handlers to commonMain (and the org.json to kotlinx swap underneath them) can be
+ * checked against something. The lifecycle of the sockets themselves is covered by
+ * [NSClientV3ServiceTest]; nothing here connects anything.
+ */
+class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
+
+    @Mock lateinit var nsIncomingDataProcessor: NsIncomingDataProcessor
+    @Mock lateinit var storeDataForDb: StoreDataForDb
+    @Mock lateinit var nsDeviceStatusHandler: NSDeviceStatusHandler
+    @Mock lateinit var nsClientV3Plugin: NSClientV3Plugin
+    @Mock lateinit var runningConfiguration: RunningConfiguration
+    @Mock lateinit var orphanDetector: OrphanDetector
+
+    private lateinit var sut: NSClientV3Service
+    private val wsConnectedState = MutableStateFlow(false)
+    private lateinit var lastModified: LastModified
+
+    @BeforeEach
+    fun init() {
+        lastModified = LastModified(LastModified.Collections())
+        whenever(nsClientV3Plugin.wsConnectedFlow).thenReturn(wsConnectedState)
+        whenever(nsClientV3Plugin.lastLoadedSrvModified).thenReturn(lastModified)
+        sut = NSClientV3Service().also {
+            it.aapsLogger = aapsLogger
+            it.preferences = preferences
+            it.fabricPrivacy = fabricPrivacy
+            it.nsClientV3Plugin = nsClientV3Plugin
+            it.config = config
+            it.nsIncomingDataProcessor = nsIncomingDataProcessor
+            it.storeDataForDb = storeDataForDb
+            it.notificationManager = notificationManager
+            it.nsDeviceStatusHandler = nsDeviceStatusHandler
+            it.nsClientRepository = NSClientRepositoryImpl(rxBus, aapsLogger)
+            it.runningConfiguration = runningConfiguration
+            it.orphanDetector = orphanDetector
+            it.appScope = CoroutineScope(Dispatchers.Unconfined)
+        }
+    }
+
+    /** Wraps a doc the way the Nightscout websocket does: collection name plus the document. */
+    private fun envelope(collection: String, doc: String): String =
+        """{"colName":"$collection","doc":$doc}"""
+
+    private fun sgvDoc(srvModified: Long = 1000L) =
+        """{"identifier":"abc","srvModified":$srvModified,"date":1000,"sgv":100,"units":"mg/dl","device":"test","type":"sgv"}"""
+
+    // ---------------------------------------------------------------- create / update
+
+    @Test
+    fun `entries document is processed as glucose and queued for storage`() {
+        sut.onDataCreateUpdate(envelope("entries", sgvDoc()))
+
+        verify(nsIncomingDataProcessor).processSgvs(any(), eq(false))
+        verify(storeDataForDb).requestStoreGlucoseValues()
+    }
+
+    @Test
+    fun `treatments document is processed and queued without full sync`() {
+        val doc = """{"identifier":"t1","srvModified":1000,"date":1000,"eventType":"Note","notes":"x"}"""
+
+        sut.onDataCreateUpdate(envelope("treatments", doc))
+
+        verify(storeDataForDb).requestStoreTreatments(fullSync = false)
+    }
+
+    @Test
+    fun `devicestatus document goes to the device status handler as live data`() {
+        val doc = """{"identifier":"d1","srvModified":1000,"created_at":"2024-01-01T00:00:00Z"}"""
+
+        sut.onDataCreateUpdate(envelope("devicestatus", doc))
+
+        verify(nsDeviceStatusHandler).handleNewData(any(), eq(true))
+    }
+
+    /**
+     * The high-water mark must not move while the catch-up load after a (re)connect is still
+     * running. If it did, the Load*Worker chain would ask for "modified since <just bumped>" and
+     * skip exactly the offline window it is there to backfill.
+     */
+    @Test
+    fun `srvModified is not advanced while the initial load is still running`() {
+        whenever(nsClientV3Plugin.initialLoadFinished).thenReturn(false)
+
+        sut.onDataCreateUpdate(envelope("entries", sgvDoc(srvModified = 5000L)))
+
+        assertThat(lastModified.collections.entries).isEqualTo(0L)
+        verify(nsClientV3Plugin, never()).storeLastLoadedSrvModified()
+    }
+
+    @Test
+    fun `srvModified is advanced and stored once the initial load has finished`() {
+        whenever(nsClientV3Plugin.initialLoadFinished).thenReturn(true)
+
+        sut.onDataCreateUpdate(envelope("entries", sgvDoc(srvModified = 5000L)))
+
+        assertThat(lastModified.collections.entries).isEqualTo(5000L)
+        verify(nsClientV3Plugin).storeLastLoadedSrvModified()
+    }
+
+    // ------------------------------------------------- settings / client control routing
+
+    /**
+     * An ACK identifier starts with the same prefix as a command envelope, so the ACK branch has to
+     * be tested before the command branch. Getting this order wrong makes the receiver try to
+     * verify an ack as an inbound command.
+     */
+    @Test
+    fun `client routes an ack document to the ack handler and not to the command receiver`() {
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        val identifier = ClientControlPublisher.IDENTIFIER_ACK_PREFIX + "123"
+        val doc = """{"identifier":"$identifier","srvModified":1000}"""
+
+        sut.onDataCreateUpdate(envelope("settings", doc))
+
+        verify(nsClientV3Plugin).handleClientControlAckEvent(any())
+        verify(nsClientV3Plugin, never()).handleClientControlSettingsEvent(any(), any())
+    }
+
+    @Test
+    fun `master routes a command document to the command receiver`() {
+        whenever(config.AAPSCLIENT).thenReturn(false)
+        val identifier = ClientControlPublisher.IDENTIFIER_PREFIX + "cmd1"
+        val doc = """{"identifier":"$identifier","srvModified":1000}"""
+
+        sut.onDataCreateUpdate(envelope("settings", doc))
+
+        verify(nsClientV3Plugin).handleClientControlSettingsEvent(eq(identifier), any())
+    }
+
+    /**
+     * Nightscout echoes every write back to whoever made it. A client must not pick up its own
+     * outgoing command: the master would see an unknown clientId and tombstone the document.
+     */
+    @Test
+    fun `client ignores the echo of its own outgoing command`() {
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        val identifier = ClientControlPublisher.IDENTIFIER_PREFIX + "cmd1"
+        val doc = """{"identifier":"$identifier","srvModified":1000}"""
+
+        sut.onDataCreateUpdate(envelope("settings", doc))
+
+        verify(nsClientV3Plugin, never()).handleClientControlSettingsEvent(any(), any())
+    }
+
+    // ------------------------------------------------------------------------- delete
+
+    @Test
+    fun `deleted treatment is queued for removal`() {
+        sut.onDataDelete("""{"colName":"treatments","identifier":"t1"}""")
+
+        verify(storeDataForDb).addToDeleteTreatment("t1")
+        verify(storeDataForDb).requestUpdateDeletedTreatments()
+    }
+
+    @Test
+    fun `deleted entry is queued for removal`() {
+        sut.onDataDelete("""{"colName":"entries","identifier":"e1"}""")
+
+        verify(storeDataForDb).addToDeleteGlucoseValue("e1")
+        verify(storeDataForDb).requestUpdateDeletedGlucoseValues()
+    }
+
+    /** A document with no collection name matches no branch. It must not delete anything. */
+    @Test
+    fun `delete without a collection name removes nothing`() {
+        sut.onDataDelete("""{"identifier":"x1"}""")
+
+        assertThat(mockingDetails(storeDataForDb).invocations).isEmpty()
+    }
+
+    // ------------------------------------------------------------------------- alarms
+
+    @Test
+    fun `alarm is ignored when alarm notifications are switched off`() {
+        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(false)
+
+        sut.onAlarm("""{"level":1,"title":"Warning HIGH","message":"m"}""")
+
+        assertThat(mockingDetails(notificationManager).invocations).isEmpty()
+    }
+
+    @Test
+    fun `alarm is shown when notifications are on and it is not snoozed`() {
+        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(true)
+        whenever(preferences.get(eq(LongComposedKey.NotificationSnoozedTo), any())).thenReturn(0L)
+
+        sut.onAlarm("""{"level":1,"title":"Warning HIGH","message":"m"}""")
+
+        assertThat(mockingDetails(notificationManager).invocations).isNotEmpty()
+    }
+
+    @Test
+    fun `alarm is suppressed while its snooze is still running`() {
+        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(true)
+        whenever(preferences.get(eq(LongComposedKey.NotificationSnoozedTo), any()))
+            .thenReturn(System.currentTimeMillis() + 60_000L)
+
+        sut.onAlarm("""{"level":1,"title":"Warning HIGH","message":"m"}""")
+
+        assertThat(mockingDetails(notificationManager).invocations).isEmpty()
+    }
+
+    @Test
+    fun `announcement is ignored when announcement notifications are switched off`() {
+        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)).thenReturn(false)
+
+        sut.onAnnouncement("""{"level":0,"title":"Announcement","message":"m"}""")
+
+        assertThat(mockingDetails(notificationManager).invocations).isEmpty()
+    }
+
+    @Test
+    fun `clear alarm dismisses both the alarm and the urgent alarm`() {
+        sut.onClearAlarm("""{"clear":true,"title":"All Clear","message":"m"}""")
+
+        verify(notificationManager).dismiss(NotificationId.NS_ALARM)
+        verify(notificationManager).dismiss(NotificationId.NS_URGENT_ALARM)
+    }
+}

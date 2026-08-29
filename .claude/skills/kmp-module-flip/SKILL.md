@@ -104,6 +104,41 @@ whole list, rather than finding it one compile failure at a time: `kotlin("test"
 `TestBaseWithProfile` then NPE. That once failed **121 of 210 tests** inside the shared base, nowhere
 near the real cause.
 
+### If the module has instrumented tests, it needs a second dependency list
+
+`androidHostTest` is the easy one to remember, because a missing dependency there fails the build you
+are already running. `androidDeviceTest` does not: nothing local compiles it, so a module can look
+completely green and still be broken. `:plugins:sync` was pushed that way and only CI caught it.
+
+Three separate things all have to be restated:
+
+1. **The runner.** `withDeviceTest { instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner" }`.
+   An empty `withDeviceTest { }` builds fine and has nothing to run the tests with.
+2. **JUnit 4 dependencies**, from the `androidTestImplementation` lines of
+   `test-module-dependencies.gradle.kts`: `androidx-test-ext`, `androidx-test-rules`,
+   `com-google-truth`, `org-mockito-android`, `org-mockito-kotlin`, `kotlinx-coroutines-test`.
+   Instrumented tests are JUnit 4; the host tests next to them are JUnit 5.
+3. **An exclusion, if the module depends on `:shared:tests` from the device test.** That project
+   carries JUnit 5, `TestBase` pulls it onto the device classpath, and dexing it fails with
+   `Attempt to create a global synthetic for 'Record desugaring'` - JUnit 6 uses Java records.
+   ```kotlin
+   configurations.named("androidDeviceTestImplementation") {
+       exclude(group = "org.junit.jupiter")
+       exclude(group = "org.junit.platform")
+   }
+   ```
+
+Verify locally before pushing - none of this needs a device:
+
+```
+./gradlew.bat :module:compileAndroidDeviceTest :module:assembleAndroidDeviceTest --no-daemon
+```
+
+Watch for a JUnit 4 test extending a JUnit 5 base class. `GarminDeviceClientTest` extends `TestBase`,
+whose `@BeforeEach` never fires under `@RunWith(AndroidJUnit4)`. It happens to work because it only
+touches a field initialised at construction, but anything relying on `openMocks` in that base would
+get nulls and no warning.
+
 ## Source moves
 
 `src/main` → `src/androidMain`, `src/test` → `src/androidHostTest`,

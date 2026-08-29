@@ -1,0 +1,485 @@
+package app.aaps.plugins.sync.nsclientV3.services
+
+import app.aaps.core.ui.CoreUiStrings
+import android.annotation.SuppressLint
+import android.content.Intent
+import android.os.Binder
+import android.os.IBinder
+import android.os.PowerManager
+import androidx.annotation.OpenForTesting
+import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.di.ApplicationScope
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.AlarmSound
+import app.aaps.core.interfaces.notifications.NotificationAction
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationLevel
+import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.nsclient.NSAlarm
+import app.aaps.core.interfaces.nsclient.NSClientRepository
+import app.aaps.core.interfaces.nsclient.StoreDataForDb
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.LongComposedKey
+import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.nssdk.interfaces.RunningConfiguration
+import app.aaps.core.nssdk.mapper.toCalibrationMbg
+import app.aaps.core.nssdk.mapper.toNSDeviceStatus
+import app.aaps.core.nssdk.mapper.toNSFood
+import app.aaps.core.nssdk.mapper.toNSSgvV3
+import app.aaps.core.nssdk.mapper.toNSTreatment
+import app.aaps.core.objects.workflow.MetroService
+import app.aaps.plugins.sync.nsclientV3.NSAlarmObject
+import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
+import app.aaps.plugins.sync.nsclientV3.SettingsIdentifiers
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlPublisher
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.OrphanDetector
+import app.aaps.plugins.sync.nsclientV3.data.NSDeviceStatusHandler
+import app.aaps.plugins.sync.nsclientV3.extensions.toRunningConfiguration
+import app.aaps.plugins.sync.nsclientV3.json.JsonBridge.toKotlinxJson
+import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
+import app.aaps.plugins.sync.nsclientV3.ws.NsSocket
+import app.aaps.plugins.sync.nsclientV3.ws.NsSocketFactory
+import dev.zacsweers.metro.Inject
+import java.lang.ref.WeakReference
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import org.json.JSONArray
+import org.json.JSONObject
+
+@Suppress("SpellCheckingInspection")
+class NSClientV3Service : MetroService() {
+
+    @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var preferences: Preferences
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var nsClientV3Plugin: NSClientV3Plugin
+    @Inject lateinit var config: Config
+    @Inject lateinit var nsIncomingDataProcessor: NsIncomingDataProcessor
+    @Inject lateinit var storeDataForDb: StoreDataForDb
+    @Inject lateinit var notificationManager: NotificationManager
+    @Inject lateinit var nsDeviceStatusHandler: NSDeviceStatusHandler
+    @Inject lateinit var nsClientRepository: NSClientRepository
+    @Inject lateinit var runningConfiguration: RunningConfiguration
+    @Inject lateinit var orphanDetector: OrphanDetector
+    @Inject @ApplicationScope lateinit var appScope: CoroutineScope
+
+    // The sockets are made here rather than handed in, so they are created, driven and closed on
+    // this service, while it holds the wake lock.
+    @Inject lateinit var nsSocketFactory: NsSocketFactory
+
+
+    private var wakeLock: PowerManager.WakeLock? = null
+    private val binder: IBinder = LocalBinder(this)
+
+    @SuppressLint("WakelockTimeout")
+    override fun onCreate() {
+        super.onCreate()
+        wakeLock = (getSystemService(POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:NSClientService")
+        wakeLock?.acquire()
+        initializeWebSockets("onCreate")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        shutdownWebsockets()
+        if (wakeLock?.isHeld == true) wakeLock?.release()
+    }
+
+    class LocalBinder(service: NSClientV3Service) : Binder() {
+
+        private val serviceRef = WeakReference(service)
+        val serviceInstance: NSClientV3Service?
+            get() = serviceRef.get()
+    }
+
+    override fun onBind(intent: Intent): IBinder = binder
+
+    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int = START_STICKY
+
+    var storageSocket: NsSocket? = null
+    var alarmSocket: NsSocket? = null
+
+    /**
+     * WS connection state. Pass-through to [NSClientV3Plugin.wsConnectedFlow] — the plugin is
+     * the singleton that survives service rebinds, so the canonical StateFlow lives there and
+     * UI subscribers don't get torn down across service lifecycles.
+     */
+    internal var wsConnected: Boolean
+        get() = nsClientV3Plugin.wsConnectedFlow.value
+        set(value) = nsClientV3Plugin.setWsConnected(value)
+
+    @OpenForTesting
+    fun shutdownWebsockets() {
+        // close() drops the listeners and disconnects; the socket is not reused afterwards.
+        storageSocket?.close()
+        alarmSocket?.close()
+        wsConnected = false
+        storageSocket = null
+        alarmSocket = null
+    }
+
+    @Suppress("SameParameterValue")
+    fun initializeWebSockets(reason: String) {
+        if (preferences.get(StringKey.NsClientUrl).isEmpty()) {
+            shutdownWebsockets()
+            return
+        }
+        if (!preferences.get(BooleanKey.NsClient3UseWs)) {
+            shutdownWebsockets()
+            return
+        }
+        if (!nsClientV3Plugin.isAllowed) {
+            shutdownWebsockets()
+            nsClientRepository.addLog("● WS", nsClientV3Plugin.blockingReason)
+            return
+        }
+        if (preferences.get(NsclientBooleanKey.NsPaused)) {
+            shutdownWebsockets()
+            nsClientRepository.addLog("● WS", "paused")
+            return
+        }
+        if (storageSocket != null) {
+            nsClientRepository.addLog("● WS", "already initialized, skip $reason")
+            return
+        }
+        val urlStorage = preferences.get(StringKey.NsClientUrl).lowercase().replace(Regex("/$"), "") + "/storage"
+        val urlAlarm = preferences.get(StringKey.NsClientUrl).lowercase().replace(Regex("/$"), "") + "/alarm"
+        try {
+            // java io.client doesn't support multiplexing. create 2 sockets.
+            // Assign the field BEFORE attaching listeners / connecting: the socket is already in
+            // socket.io's process-static, never-pruned Manager.nsps cache once it exists, so if
+            // anything below throws it must still be reachable by shutdownWebsockets(). Otherwise the
+            // socket is orphaned in nsps with our listeners attached and leaks this service for the
+            // process lifetime (LeakCanary: reconnect Timer → Manager.nsps →
+            // Socket.callbacks["disconnect"] → this service).
+            val storage = nsSocketFactory.create(urlStorage)
+            if (storage == null) {
+                shutdownWebsockets()
+                nsClientRepository.addLog("● WS", "Wrong URL syntax")
+                return
+            }
+            storageSocket = storage
+            storage.on(NsSocket.EVENT_CONNECT, onConnectStorage)
+            storage.on(NsSocket.EVENT_DISCONNECT, onDisconnectStorage)
+            storage.on("create", onDataCreateUpdate)
+            storage.on("update", onDataCreateUpdate)
+            storage.on("delete", onDataDelete)
+            nsClientRepository.addLog("► WS", "do connect storage $reason")
+            storage.connect()
+            if (preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements) ||
+                preferences.get(BooleanKey.NsClientNotificationsFromAlarms)
+            ) {
+                val alarm = nsSocketFactory.create(urlAlarm)
+                if (alarm == null) {
+                    shutdownWebsockets()
+                    nsClientRepository.addLog("● WS", "Wrong URL syntax")
+                    return
+                }
+                alarmSocket = alarm
+                alarm.on(NsSocket.EVENT_CONNECT, onConnectAlarms)
+                alarm.on(NsSocket.EVENT_DISCONNECT, onDisconnectAlarm)
+                alarm.on("announcement", onAnnouncement)
+                alarm.on("alarm", onAlarm)
+                alarm.on("urgent_alarm", onUrgentAlarm)
+                alarm.on("clear_alarm", onClearAlarm)
+                nsClientRepository.addLog("► WS", "do connect alarm $reason")
+                alarm.connect()
+            }
+        } catch (e: RuntimeException) {
+            shutdownWebsockets()
+            nsClientRepository.addLog("● WS", "RuntimeException: ${e.message}")
+        }
+    }
+
+    private val onConnectStorage: (String) -> Unit = {
+        val socketId = storageSocket?.id ?: "NULL"
+        nsClientRepository.addLog("◄ WS", "connected storage ID: $socketId")
+        if (storageSocket != null) {
+            val authMessage = JSONObject().also {
+                it.put("accessToken", preferences.get(StringKey.NsClientAccessToken))
+                it.put("collections", JSONArray(arrayOf("devicestatus", "entries", "profile", "treatments", "foods", "settings")))
+            }
+            nsClientRepository.addLog("► WS", "requesting auth for storage")
+            storageSocket?.emitWithAck("subscribe", authMessage.toString(), { raw ->
+                val response = JSONObject(raw)
+                wsConnected = if (response.optBoolean("success")) {
+                    nsClientRepository.addLog("◄ WS", "Subscribed for: ${response.optString("collections")}")                    // during disconnection updated data is not received
+                    // thus run non WS load to get missing data
+                    nsClientV3Plugin.initialLoadFinished = false
+                    nsClientV3Plugin.executeLoop("WS_CONNECT")
+                    true
+                } else {
+                    nsClientRepository.addLog("◄ WS", "Auth failed")
+                    false
+                }
+                nsClientRepository.updateStatus(nsClientV3Plugin.status)
+            })
+        }
+    }
+
+    private val onConnectAlarms: (String) -> Unit = {
+        val socket = alarmSocket
+        val socketId = socket?.id ?: "NULL"
+        nsClientRepository.addLog("◄ WS", "connected alarms ID: $socketId")
+        if (socket != null) {
+            val authMessage = JSONObject().also {
+                it.put("accessToken", preferences.get(StringKey.NsClientAccessToken))
+            }
+            nsClientRepository.addLog("► WS", "requesting auth for alarms")
+            socket.emitWithAck("subscribe", authMessage.toString(), { raw ->
+                val response = JSONObject(raw)
+                if (response.optBoolean("success")) nsClientRepository.addLog("◄ WS", response.optString("message"))
+                else nsClientRepository.addLog("◄ WS", "Auth failed")
+            })
+        }
+    }
+
+    private val onDisconnectStorage: (String) -> Unit = { reason ->
+        aapsLogger.debug(LTag.NSCLIENT, "disconnect storage reason: $reason")
+        nsClientRepository.addLog("◄ WS", "disconnect storage event")
+        wsConnected = false
+        nsClientV3Plugin.initialLoadFinished = false
+        nsClientRepository.updateStatus(nsClientV3Plugin.status)
+    }
+
+    private val onDisconnectAlarm: (String) -> Unit = { reason ->
+        aapsLogger.debug(LTag.NSCLIENT, "disconnect alarm reason: $reason")
+        nsClientRepository.addLog("◄ WS", "disconnect alarm event")
+    }
+
+    internal val onDataCreateUpdate: (String) -> Unit = { raw ->
+        val response = JSONObject(raw)
+        aapsLogger.debug(LTag.NSCLIENT, "onDataCreateUpdate: $response")
+        val collection = response.getString("colName")
+        val docJson = response.getJSONObject("doc")
+        val docString = response.getString("doc")
+        nsClientRepository.addLog("◄ WS CREATE/UPDATE", collection, docJson.toKotlinxJson())
+        val srvModified = docJson.getLong("srvModified")
+        // Don't advance the high-water-mark until the initial catch-up load chain
+        // has finished after a (re)connect. Otherwise the Load*Worker chain would
+        // query "modifiedSince (just-bumped pointer)" and skip exactly the offline
+        // window we need to backfill.
+        if (nsClientV3Plugin.initialLoadFinished) {
+            nsClientV3Plugin.lastLoadedSrvModified.set(collection, srvModified)
+            nsClientV3Plugin.storeLastLoadedSrvModified()
+        }
+        when (collection) {
+            "devicestatus" -> docString.toNSDeviceStatus().let { nsDeviceStatusHandler.handleNewData(arrayOf(it), live = true) }
+
+            "entries"      -> {
+                docString.toNSSgvV3()?.let {
+                    nsIncomingDataProcessor.processSgvs(listOf(it), doFullSync = false)
+                    storeDataForDb.requestStoreGlucoseValues()
+                }
+                // Same entries collection also carries AAPS calibration mbg entries (marked).
+                docString.toCalibrationMbg()?.let {
+                    nsIncomingDataProcessor.processCalibrations(listOf(it), doFullSync = false)
+                    storeDataForDb.requestStoreCalibrationEntries()
+                }
+            }
+
+            "profile"      ->
+                appScope.launch { nsIncomingDataProcessor.processProfile(docJson.toKotlinxJson(), doFullSync = false) }
+
+            "treatments"   -> docString.toNSTreatment()?.let {
+                nsIncomingDataProcessor.processTreatments(listOf(it), doFullSync = false)
+                storeDataForDb.requestStoreTreatments(fullSync = false)
+            }
+
+            "foods"        -> docString.toNSFood()?.let {
+                nsIncomingDataProcessor.processFood(listOf(it))
+                storeDataForDb.requestStoreFoods()
+            }
+
+            "settings"     -> {
+                val identifier = docJson.optString("identifier")
+                // socket.io hands every payload over as org.json, while the client control handlers
+                // speak the nssdk's kotlinx type. The conversion sits on each branch below, not up
+                // here: only one branch runs per event, and the cold/state branches never need it.
+                when {
+                    // Client-side: cold config doc — apply everything except the active scene.
+                    config.AAPSCLIENT && identifier == SettingsIdentifiers.COLD                                   ->
+                        docString.toRunningConfiguration()?.let {
+                            runningConfiguration.applyCold(it)
+                            orphanDetector.onSettingsDoc(it, docJson.optLong("srvModified", 0L))
+                            // A live config push proves the master is alive now → feed the liveness clock.
+                            nsClientV3Plugin.bumpMasterSignal(srvModified)
+                        }
+                    // Client-side: hot state doc — apply only the active scene + runtime flags.
+                    // Kept distinct from the cold branch so this never clears a running scene.
+                    config.AAPSCLIENT && identifier == SettingsIdentifiers.STATE                                  ->
+                        docString.toRunningConfiguration()?.let {
+                            runningConfiguration.applyHot(it)
+                            nsClientV3Plugin.bumpMasterSignal(srvModified)
+                        }
+                    // Client-side: master→client command ACK. Must be checked BEFORE the generic
+                    // IDENTIFIER_PREFIX branch (ack identifiers share that prefix) so the master
+                    // receiver never tries to verify an ack as an inbound command envelope.
+                    config.AAPSCLIENT && identifier.startsWith(ClientControlPublisher.IDENTIFIER_ACK_PREFIX)      ->
+                        nsClientV3Plugin.handleClientControlAckEvent(docJson.toKotlinxJson())
+                    // Client-side: master→client live bolus-progress mirror. Same ordering rule as ACK (shares
+                    // IDENTIFIER_PREFIX) so the master never treats its own progress doc as an inbound command.
+                    config.AAPSCLIENT && identifier.startsWith(ClientControlPublisher.IDENTIFIER_PROGRESS_PREFIX) ->
+                        nsClientV3Plugin.handleClientControlProgressEvent(docJson.toKotlinxJson())
+                    // Master-side: route client-control envelopes (paired-client → master commands)
+                    // to the receiver. The plugin gates on the master toggle internally.
+                    // !config.AAPSCLIENT: NS WS echoes every write back to the sender too — a client must not
+                    // self-process its own outgoing commands (unknown clientId → deleteSettings → HTTP 410 tombstone).
+                    !config.AAPSCLIENT && identifier.startsWith(ClientControlPublisher.IDENTIFIER_PREFIX)         ->
+                        nsClientV3Plugin.handleClientControlSettingsEvent(identifier, docJson.toKotlinxJson())
+                }
+            }
+        }
+    }
+
+    internal val onDataDelete: (String) -> Unit = { raw ->
+        val response = JSONObject(raw)
+        aapsLogger.debug(LTag.NSCLIENT, "onDataDelete: $response")
+        // No elvis here: optString never returns null, it returns "" for a missing key. The old
+        // `?: return@Listener` looked like a guard but could not fire - Kotlin allowed it only
+        // because org.json is Java and the type is the platform type String!. A doc with no colName
+        // simply matches none of the collection checks below, exactly as it did before.
+        val collection = response.optString("colName")
+        val identifier = response.optString("identifier")
+        nsClientRepository.addLog("◄ WS DELETE", "$collection $identifier")
+        if (collection == "treatments") {
+            storeDataForDb.addToDeleteTreatment(identifier)
+            storeDataForDb.requestUpdateDeletedTreatments()
+        }
+        if (collection == "entries") {
+            storeDataForDb.addToDeleteGlucoseValue(identifier)
+            storeDataForDb.requestUpdateDeletedGlucoseValues()
+        }
+    }
+
+    internal val onAnnouncement: (String) -> Unit = { raw ->
+
+        /*
+        {
+        "level":0,
+        "title":"Announcement",
+        "message":"test",
+        "plugin":{"name":"treatmentnotify","label":"Treatment Notifications","pluginType":"notification","enabled":true},
+        "group":"Announcement",
+        "isAnnouncement":true,
+        "key":"9ac46ad9a1dcda79dd87dae418fce0e7955c68da"
+        }
+         */
+        val data = JSONObject(raw)
+        nsClientRepository.addLog("◄ ANNOUNCEMENT", data.optString("message"))
+        aapsLogger.debug(LTag.NSCLIENT, data.toString())
+        if (preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements))
+            postNsAlarm(NSAlarmObject(data))
+    }
+    internal val onAlarm: (String) -> Unit = { raw ->
+
+        /*
+        {
+        "level":1,
+        "title":"Warning HIGH",
+        "message":"BG Now: 5 -0.2 → mmol\/L\nRaw BG: 4.8 mmol\/L Čistý\nBG 15m: 4.8 mmol\/L\nIOB: -0.02U\nCOB: 0g",
+        "eventName":"high",
+        "plugin":{"name":"simplealarms","label":"Simple Alarms","pluginType":"notification","enabled":true},
+        "pushoverSound":"climb",
+        "debug":{"lastSGV":5,"thresholds":{"bgHigh":180,"bgTargetTop":75,"bgTargetBottom":72,"bgLow":70}},
+        "group":"default",
+        "key":"simplealarms_1"
+        }
+         */
+        val data = JSONObject(raw)
+        nsClientRepository.addLog("◄ ALARM", data.optString("message"))
+        aapsLogger.debug(LTag.NSCLIENT, data.toString())
+        if (preferences.get(BooleanKey.NsClientNotificationsFromAlarms)) {
+            val snoozedTo = preferences.get(LongComposedKey.NotificationSnoozedTo, data.optString("level"))
+            if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo)
+                postNsAlarm(NSAlarmObject(data))
+        }
+    }
+
+    internal val onUrgentAlarm: (String) -> Unit = { raw ->
+        val data = JSONObject(raw)
+        nsClientRepository.addLog("◄ URGENT ALARM", data.optString("message"))
+        aapsLogger.debug(LTag.NSCLIENT, data.toString())
+        if (preferences.get(BooleanKey.NsClientNotificationsFromAlarms)) {
+            val snoozedTo = preferences.get(LongComposedKey.NotificationSnoozedTo, data.optString("level"))
+            if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo)
+                postNsAlarm(NSAlarmObject(data))
+        }
+    }
+
+    internal val onClearAlarm: (String) -> Unit = { raw ->
+
+        /*
+        {
+        "clear":true,
+        "title":"All Clear",
+        "message":"default - Urgent was ack'd",
+        "group":"default"
+        }
+         */
+        val data = JSONObject(raw)
+        nsClientRepository.addLog("◄ CLEARALARM", data.optString("title"))
+        aapsLogger.debug(LTag.NSCLIENT, data.toString())
+        notificationManager.dismiss(NotificationId.NS_ALARM)
+        notificationManager.dismiss(NotificationId.NS_URGENT_ALARM)
+    }
+
+    fun handleClearAlarm(originalAlarm: NSAlarm, silenceTimeInMilliseconds: Long) {
+        alarmSocket?.emitAlarmAck(originalAlarm.level, originalAlarm.group, silenceTimeInMilliseconds)
+        nsClientRepository.addLog("► ALARMACK ", "${originalAlarm.level} ${originalAlarm.group} $silenceTimeInMilliseconds")
+    }
+
+    private fun snoozeActions(nsAlarm: NSAlarmObject): List<NotificationAction> =
+        listOf(15, 30, 60).map { minutes ->
+            val labelRes = when (minutes) {
+                15   -> CoreUiStrings.snooze_15m
+                30   -> CoreUiStrings.snooze_30m
+                else -> CoreUiStrings.snooze_60m
+            }
+            NotificationAction(labelRes) {
+                val snoozeMs = minutes * 60 * 1000L
+                nsClientV3Plugin.handleClearAlarm(nsAlarm, snoozeMs)
+                // Cascade the snooze across all alarm levels. NS itself cascades a level-2 ack down to
+                // level 1, but keeps emitting lower-level forecast alarms (e.g. ar2 WARN) that would
+                // otherwise slip past a single-level local snooze and re-alarm. Snoozing every level
+                // makes the chosen interval authoritative on this device regardless of NS churn.
+                val snoozedUntil = System.currentTimeMillis() + snoozeMs
+                for (level in 0..2)
+                    preferences.put(LongComposedKey.NotificationSnoozedTo, level.toString(), value = snoozedUntil)
+            }
+        }
+
+    private fun postNsAlarm(nsAlarm: NSAlarmObject) {
+        when (nsAlarm.level) {
+            0    -> notificationManager.post(
+                id = NotificationId.NS_ANNOUNCEMENT,
+                text = nsAlarm.message,
+                level = NotificationLevel.ANNOUNCEMENT,
+                validTo = System.currentTimeMillis() + T.mins(60).msecs(),
+                actions = snoozeActions(nsAlarm)
+            )
+
+            1    -> notificationManager.post(
+                id = NotificationId.NS_ALARM,
+                text = nsAlarm.title,
+                sound = AlarmSound.ALARM,
+                actions = snoozeActions(nsAlarm)
+            )
+
+            2    -> notificationManager.post(
+                id = NotificationId.NS_URGENT_ALARM,
+                text = nsAlarm.title,
+                sound = AlarmSound.URGENT_ALARM,
+                actions = snoozeActions(nsAlarm)
+            )
+
+            else -> return
+        }
+    }
+}

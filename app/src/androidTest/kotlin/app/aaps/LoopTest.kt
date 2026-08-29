@@ -36,7 +36,8 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import javax.inject.Inject
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
-import org.json.JSONObject
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -125,7 +126,7 @@ class LoopTest : HiltInstrumentedTest() {
         assertThat((loopStatusEvent.second as EventLoopSetLastRunGui).text).contains("NO PROFILE SET")
 
         // Set Profile in ProfilePlugin
-        nsIncomingDataProcessor.processProfile(JSONObject(profileData), true)
+        nsIncomingDataProcessor.processProfile(Json.parseToJsonElement(profileData).jsonObject, true)
         assertThat(profileRepository.profile.value).isNotNull()
 
         // Create a profile switch
