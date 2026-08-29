@@ -37,6 +37,7 @@ class EversenseHttp365Util {
         internal var tokenBaseUrl = "https://usiamapi.eversensedms.com/"
         internal var uploadBaseUrl = "https://usmobileappmsprod.eversensedms.com/"
         internal var careBaseUrl = "https://usapialpha.eversensedms.com/"
+        internal var vaultBaseUrl = "https://deviceauthorization.eversensedms.com/"
 
         // EU/OUS endpoints, selected per-call via effectiveTokenBaseUrl/effectiveUploadBaseUrl/
         // effectiveCareBaseUrl when EversenseSecureState.isEuropeanRegion is true.
@@ -55,9 +56,20 @@ class EversenseHttp365Util {
         private const val euUploadBaseUrl = "https://ousmobileappmsprod.eversensedms.com/"
         private const val euCareBaseUrl = "https://ousalphaapiservices.eversensedms.com/"
 
+        // euVaultBaseUrl was initially left unrouted (vaultBaseUrl used for both regions) on the
+        // theory that fleet/vault cert issuance is shared, account-independent infrastructure -
+        // wrong: a real EU user's Eversense.log showed getFleetSecretV2() 404ing against
+        // vaultBaseUrl even after the token-host fix made login() succeed. This "ous"-prefixed
+        // host is confirmed live: identical response codes to vaultBaseUrl for every request
+        // tried (401 with no Authorization header, 405 on HEAD), AND both return the exact same
+        // distinctive error body - "Eversense.Link_expired" - to the same unauthenticated GET,
+        // which isn't infrastructure coincidence.
+        private const val euVaultBaseUrl = "https://ousdeviceauthorization.eversensedms.com/"
+
         private fun effectiveTokenBaseUrl(state: EversenseSecureState) = if (state.isEuropeanRegion) euTokenBaseUrl else tokenBaseUrl
         private fun effectiveUploadBaseUrl(state: EversenseSecureState) = if (state.isEuropeanRegion) euUploadBaseUrl else uploadBaseUrl
         private fun effectiveCareBaseUrl(state: EversenseSecureState) = if (state.isEuropeanRegion) euCareBaseUrl else careBaseUrl
+        private fun effectiveVaultBaseUrl(state: EversenseSecureState) = if (state.isEuropeanRegion) euVaultBaseUrl else vaultBaseUrl
 
         fun login(preference: SharedPreferences): LoginResponseModel? {
             val state = getState(preference)
@@ -110,13 +122,7 @@ class EversenseHttp365Util {
             }
         }
 
-        // deviceauthorization.eversensedms.com is deliberately NOT routed by region: it has no
-        // confirmed OUS counterpart (unlike tokenBaseUrl/uploadBaseUrl/careBaseUrl above), and
-        // the fleet/vault operation it performs — issuing a certificate for a transmitter serial
-        // + client public key — is plausibly shared, account-independent infrastructure rather
-        // than region-partitioned like the account-login hosts. Revisit if an EU user's fleet
-        // cert request fails against this host.
-        fun getFleetSecretV2(accessToken: String, serialNumber: ByteArray, nonce: ByteArray, flags: Boolean, publicKey: ByteArray): FleetSecretV2ResponseModel? {
+        fun getFleetSecretV2(preferences: SharedPreferences, accessToken: String, serialNumber: ByteArray, nonce: ByteArray, flags: Boolean, publicKey: ByteArray): FleetSecretV2ResponseModel? {
             try {
                 val publicKeyStr = Base64.getUrlEncoder().withoutPadding()
                     .encodeToString(publicKey.copyOfRange(27, publicKey.count()))
@@ -133,7 +139,7 @@ class EversenseHttp365Util {
                 ).joinToString("&")
 
                 val url =
-                    URL("https://deviceauthorization.eversensedms.com/api/vault/GetTxCertificate?$query")
+                    URL("${effectiveVaultBaseUrl(getState(preferences))}api/vault/GetTxCertificate?$query")
                 val conn = url.openConnection() as HttpURLConnection
                 conn.requestMethod = "GET"
                 conn.setRequestProperty("Authorization", "Bearer $accessToken")
