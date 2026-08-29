@@ -373,8 +373,11 @@ class VisibleRangeReporter(
         }
     }
 
-    override fun equals(other: Any?): Boolean = this === other
-    override fun hashCode(): Int = System.identityHashCode(this)
+    // No equals/hashCode overrides on purpose. Vico compares decorations to decide what to redraw,
+    // and this one must compare by identity: two reporters writing to different holders are not
+    // interchangeable. A plain (non-data) class already gets exactly that from Any - reference
+    // equality and an identity hash - on every platform. The previous explicit pair said the same
+    // thing through System.identityHashCode, which does not exist outside the JVM.
 }
 
 /**
