@@ -228,6 +228,31 @@ exactly as `MainApp` does.
 resource id in the **interface**. A `TextRef` overload exists for `comment`; where one does not, the
 implementation cannot move until the interface changes.
 
+### Kotlin/Native rejects a comma in a backticked test name
+
+`fun \`the tag is appended, making it longer\`()` compiles on JVM and fails Native with
+`Name contains illegal characters: ","`. It only shows up once a test reaches commonTest, so a
+JVM-only test can carry one for years. Rewrite the name; do not rename the test's meaning.
+
+### Moving crypto: the provider is stricter than javax was
+
+`javax.crypto` built a fresh `Cipher` on every call, which hid API misuse. A multiplatform provider
+reuses objects and enforces the rules, so a migration can fail on something that was always wrong.
+Moving `ClientControlCrypto` turned up **two tests reusing one IV with one key** for AES-GCM -
+forbidden, and the provider says so (`Cannot reuse iv for GCM encryption`). Production was fine
+because the IV is generated per use; only the fixtures were wrong.
+
+Two rules when the format is already on the wire:
+
+- **Keep golden vectors and put them in commonTest.** Digests minted by the old implementation are
+  what prove the new one emits the same bytes. On Windows `mingwX64Test` runs them against
+  Kotlin/Native, so the Native path is checked long before a Mac is available.
+- **Watch the packaging, not the algorithm.** The primitives interoperate by definition; the silent
+  breakage is in how they are assembled - whether the AEAD nonce is prepended or stored separately,
+  whether the GCM tag is appended, hex case. In cryptography-kotlin the plain `encryptBlocking`
+  generates and prepends its own nonce; `encryptWithIvBlocking` (behind `@DelicateCryptographyApi`)
+  is the one that matches a format storing the IV separately.
+
 ### Other common blockers
 
 `javax.inject` (swap to `dev.zacsweers.metro.Inject` only for a class Metro already builds),

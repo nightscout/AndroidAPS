@@ -17,6 +17,10 @@ okhttp = "5.5.0"
 retrofit = "3.0.0"
 ktor = "3.3.0"
 kotlinx-serialization = "1.11.0"
+# cryptography-kotlin: HMAC-SHA256, PBKDF2 and AES-256-GCM for the client-control signing and
+# pairing path. It wraps each platform's vetted implementation (JCA, CryptoKit, OpenSSL 3) rather
+# than implementing the algorithms, which is what we want in a signing path.
+cryptographyKotlin = "0.6.0"
 kotlinx-coroutines = "1.11.0"
 work = "2.11.2"
 androidxHilt = "1.4.0"
@@ -101,6 +105,8 @@ kotlin-stdlib-jdk8 = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk
 kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
 
 kotlinx-serialization-bom = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-bom", version.ref = "kotlinx-serialization" }
+cryptography-core = { group = "dev.whyoleg.cryptography", name = "cryptography-core", version.ref = "cryptographyKotlin" }
+cryptography-provider-optimal = { group = "dev.whyoleg.cryptography", name = "cryptography-provider-optimal", version.ref = "cryptographyKotlin" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json" }
 kotlinx-serialization-protobuf = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-protobuf" }
 
