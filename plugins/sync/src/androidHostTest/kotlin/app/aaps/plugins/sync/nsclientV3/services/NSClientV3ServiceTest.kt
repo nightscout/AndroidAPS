@@ -10,6 +10,8 @@ import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
 import app.aaps.plugins.sync.nsclientV3.compose.NSClientRepositoryImpl
 import app.aaps.plugins.sync.nsclientV3.data.NSDeviceStatusHandler
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
+import app.aaps.plugins.sync.nsclientV3.ws.NsSocket
+import app.aaps.plugins.sync.nsclientV3.ws.NsSocketFactory
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,6 +19,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
 class NSClientV3ServiceTest : TestBaseWithProfile() {
@@ -28,8 +31,13 @@ class NSClientV3ServiceTest : TestBaseWithProfile() {
     @Mock lateinit var nsDeviceStatusHandler: NSDeviceStatusHandler
     @Mock lateinit var nsClientV3Plugin: NSClientV3Plugin
 
+    @Mock lateinit var nsSocketFactory: NsSocketFactory
+
     private lateinit var nsClientMvvmRepository: NSClientRepositoryImpl
     private lateinit var sut: NSClientV3Service
+
+    /** Every namespace URL the service asked for a socket, in order. */
+    private val requestedUrls = mutableListOf<String>()
 
     // Service's `wsConnected` property is a pass-through to the plugin's StateFlow — back it
     // with a real one so getter reads and setter writes flow through the mock.
@@ -39,6 +47,13 @@ class NSClientV3ServiceTest : TestBaseWithProfile() {
     fun init() {
         nsClientMvvmRepository = NSClientRepositoryImpl(rxBus, aapsLogger)
         wsConnectedState.value = false
+        // A fresh socket per call, the way the real factory behaves: the service closes a socket and
+        // never reuses it.
+        requestedUrls.clear()
+        whenever(nsSocketFactory.create(any())).thenAnswer { invocation ->
+            requestedUrls.add(invocation.arguments[0] as String)
+            mock<NsSocket>()
+        }
         whenever(nsClientV3Plugin.wsConnectedFlow).thenReturn(wsConnectedState)
         whenever(nsClientV3Plugin.setWsConnected(any())).thenAnswer { invocation ->
             wsConnectedState.value = invocation.arguments[0] as Boolean
@@ -54,6 +69,7 @@ class NSClientV3ServiceTest : TestBaseWithProfile() {
             it.notificationManager = notificationManager
             it.nsDeviceStatusHandler = nsDeviceStatusHandler
             it.nsClientRepository = nsClientMvvmRepository
+            it.nsSocketFactory = nsSocketFactory
         }
     }
 
@@ -190,6 +206,9 @@ class NSClientV3ServiceTest : TestBaseWithProfile() {
         sut.initializeWebSockets("Test")
 
         assertThat(sut.storageSocket).isNotNull()
+        // The URL the socket was actually asked for: lower cased, trailing slash gone, namespace
+        // appended. Before the socket came from a factory this could only be checked as "not null".
+        assertThat(requestedUrls).containsExactly("http://something/storage")
         sut.shutdownWebsockets()
     }
 

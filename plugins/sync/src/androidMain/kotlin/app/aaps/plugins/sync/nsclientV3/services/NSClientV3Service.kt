@@ -43,13 +43,10 @@ import app.aaps.plugins.sync.nsclientV3.data.NSDeviceStatusHandler
 import app.aaps.plugins.sync.nsclientV3.extensions.toRunningConfiguration
 import app.aaps.plugins.sync.nsclientV3.json.JsonBridge.toKotlinxJson
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
+import app.aaps.plugins.sync.nsclientV3.ws.NsSocket
+import app.aaps.plugins.sync.nsclientV3.ws.NsSocketFactory
 import dev.zacsweers.metro.Inject
-import io.socket.client.Ack
-import io.socket.client.IO
-import io.socket.client.Socket
-import io.socket.emitter.Emitter
 import java.lang.ref.WeakReference
-import java.net.URISyntaxException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.json.JSONArray
@@ -71,6 +68,10 @@ class NSClientV3Service : MetroService() {
     @Inject lateinit var runningConfiguration: RunningConfiguration
     @Inject lateinit var orphanDetector: OrphanDetector
     @Inject @ApplicationScope lateinit var appScope: CoroutineScope
+
+    // The sockets are made here rather than handed in, so they are created, driven and closed on
+    // this service, while it holds the wake lock.
+    @Inject lateinit var nsSocketFactory: NsSocketFactory
 
 
     private var wakeLock: PowerManager.WakeLock? = null
@@ -101,8 +102,8 @@ class NSClientV3Service : MetroService() {
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int = START_STICKY
 
-    var storageSocket: Socket? = null
-    var alarmSocket: Socket? = null
+    var storageSocket: NsSocket? = null
+    var alarmSocket: NsSocket? = null
 
     /**
      * WS connection state. Pass-through to [NSClientV3Plugin.wsConnectedFlow] — the plugin is
@@ -115,19 +116,9 @@ class NSClientV3Service : MetroService() {
 
     @OpenForTesting
     fun shutdownWebsockets() {
-        storageSocket?.off(Socket.EVENT_CONNECT, onConnectStorage)
-        storageSocket?.off(Socket.EVENT_DISCONNECT, onDisconnectStorage)
-        storageSocket?.off("create", onDataCreateUpdate)
-        storageSocket?.off("update", onDataCreateUpdate)
-        storageSocket?.off("delete", onDataDelete)
-        storageSocket?.disconnect()
-        alarmSocket?.off(Socket.EVENT_CONNECT, onConnectAlarms)
-        alarmSocket?.off(Socket.EVENT_DISCONNECT, onDisconnectAlarm)
-        alarmSocket?.off("announcement", onAnnouncement)
-        alarmSocket?.off("alarm", onAlarm)
-        alarmSocket?.off("urgent_alarm", onUrgentAlarm)
-        alarmSocket?.off("clear_alarm", onClearAlarm)
-        alarmSocket?.disconnect()
+        // close() drops the listeners and disconnects; the socket is not reused afterwards.
+        storageSocket?.close()
+        alarmSocket?.close()
         wsConnected = false
         storageSocket = null
         alarmSocket = null
@@ -161,15 +152,21 @@ class NSClientV3Service : MetroService() {
         val urlAlarm = preferences.get(StringKey.NsClientUrl).lowercase().replace(Regex("/$"), "") + "/alarm"
         try {
             // java io.client doesn't support multiplexing. create 2 sockets.
-            // Assign the field BEFORE attaching listeners / connecting: IO.socket() has already inserted the
-            // socket into socket.io's process-static, never-pruned Manager.nsps cache, so if anything below
-            // throws it must still be reachable by shutdownWebsockets(). Otherwise the socket is orphaned in
-            // nsps with our listeners attached and leaks this service for the process lifetime
-            // (LeakCanary: reconnect Timer → Manager.nsps → Socket.callbacks["disconnect"] → this service).
-            val storage = IO.socket(urlStorage)
+            // Assign the field BEFORE attaching listeners / connecting: the socket is already in
+            // socket.io's process-static, never-pruned Manager.nsps cache once it exists, so if
+            // anything below throws it must still be reachable by shutdownWebsockets(). Otherwise the
+            // socket is orphaned in nsps with our listeners attached and leaks this service for the
+            // process lifetime (LeakCanary: reconnect Timer → Manager.nsps →
+            // Socket.callbacks["disconnect"] → this service).
+            val storage = nsSocketFactory.create(urlStorage)
+            if (storage == null) {
+                shutdownWebsockets()
+                nsClientRepository.addLog("● WS", "Wrong URL syntax")
+                return
+            }
             storageSocket = storage
-            storage.on(Socket.EVENT_CONNECT, onConnectStorage)
-            storage.on(Socket.EVENT_DISCONNECT, onDisconnectStorage)
+            storage.on(NsSocket.EVENT_CONNECT, onConnectStorage)
+            storage.on(NsSocket.EVENT_DISCONNECT, onDisconnectStorage)
             storage.on("create", onDataCreateUpdate)
             storage.on("update", onDataCreateUpdate)
             storage.on("delete", onDataDelete)
@@ -178,10 +175,15 @@ class NSClientV3Service : MetroService() {
             if (preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements) ||
                 preferences.get(BooleanKey.NsClientNotificationsFromAlarms)
             ) {
-                val alarm = IO.socket(urlAlarm)
+                val alarm = nsSocketFactory.create(urlAlarm)
+                if (alarm == null) {
+                    shutdownWebsockets()
+                    nsClientRepository.addLog("● WS", "Wrong URL syntax")
+                    return
+                }
                 alarmSocket = alarm
-                alarm.on(Socket.EVENT_CONNECT, onConnectAlarms)
-                alarm.on(Socket.EVENT_DISCONNECT, onDisconnectAlarm)
+                alarm.on(NsSocket.EVENT_CONNECT, onConnectAlarms)
+                alarm.on(NsSocket.EVENT_DISCONNECT, onDisconnectAlarm)
                 alarm.on("announcement", onAnnouncement)
                 alarm.on("alarm", onAlarm)
                 alarm.on("urgent_alarm", onUrgentAlarm)
@@ -189,17 +191,14 @@ class NSClientV3Service : MetroService() {
                 nsClientRepository.addLog("► WS", "do connect alarm $reason")
                 alarm.connect()
             }
-        } catch (_: URISyntaxException) {
-            shutdownWebsockets()
-            nsClientRepository.addLog("● WS", "Wrong URL syntax")
         } catch (e: RuntimeException) {
             shutdownWebsockets()
             nsClientRepository.addLog("● WS", "RuntimeException: ${e.message}")
         }
     }
 
-    private val onConnectStorage = Emitter.Listener {
-        val socketId = storageSocket?.id() ?: "NULL"
+    private val onConnectStorage: (String) -> Unit = {
+        val socketId = storageSocket?.id ?: "NULL"
         nsClientRepository.addLog("◄ WS", "connected storage ID: $socketId")
         if (storageSocket != null) {
             val authMessage = JSONObject().also {
@@ -207,8 +206,8 @@ class NSClientV3Service : MetroService() {
                 it.put("collections", JSONArray(arrayOf("devicestatus", "entries", "profile", "treatments", "foods", "settings")))
             }
             nsClientRepository.addLog("► WS", "requesting auth for storage")
-            storageSocket?.emit("subscribe", authMessage, Ack { args ->
-                val response = args[0] as JSONObject
+            storageSocket?.emitWithAck("subscribe", authMessage.toString(), { raw ->
+                val response = JSONObject(raw)
                 wsConnected = if (response.optBoolean("success")) {
                     nsClientRepository.addLog("◄ WS", "Subscribed for: ${response.optString("collections")}")                    // during disconnection updated data is not received
                     // thus run non WS load to get missing data
@@ -224,38 +223,38 @@ class NSClientV3Service : MetroService() {
         }
     }
 
-    private val onConnectAlarms = Emitter.Listener {
+    private val onConnectAlarms: (String) -> Unit = {
         val socket = alarmSocket
-        val socketId = socket?.id() ?: "NULL"
+        val socketId = socket?.id ?: "NULL"
         nsClientRepository.addLog("◄ WS", "connected alarms ID: $socketId")
         if (socket != null) {
             val authMessage = JSONObject().also {
                 it.put("accessToken", preferences.get(StringKey.NsClientAccessToken))
             }
             nsClientRepository.addLog("► WS", "requesting auth for alarms")
-            socket.emit("subscribe", authMessage, Ack { args ->
-                val response = args[0] as JSONObject
+            socket.emitWithAck("subscribe", authMessage.toString(), { raw ->
+                val response = JSONObject(raw)
                 if (response.optBoolean("success")) nsClientRepository.addLog("◄ WS", response.optString("message"))
                 else nsClientRepository.addLog("◄ WS", "Auth failed")
             })
         }
     }
 
-    private val onDisconnectStorage = Emitter.Listener { args ->
-        aapsLogger.debug(LTag.NSCLIENT, "disconnect storage reason: ${args[0]}")
+    private val onDisconnectStorage: (String) -> Unit = { reason ->
+        aapsLogger.debug(LTag.NSCLIENT, "disconnect storage reason: $reason")
         nsClientRepository.addLog("◄ WS", "disconnect storage event")
         wsConnected = false
         nsClientV3Plugin.initialLoadFinished = false
         nsClientRepository.updateStatus(nsClientV3Plugin.status)
     }
 
-    private val onDisconnectAlarm = Emitter.Listener { args ->
-        aapsLogger.debug(LTag.NSCLIENT, "disconnect alarm reason: ${args[0]}")
+    private val onDisconnectAlarm: (String) -> Unit = { reason ->
+        aapsLogger.debug(LTag.NSCLIENT, "disconnect alarm reason: $reason")
         nsClientRepository.addLog("◄ WS", "disconnect alarm event")
     }
 
-    internal val onDataCreateUpdate = Emitter.Listener { args ->
-        val response = args[0] as JSONObject
+    internal val onDataCreateUpdate: (String) -> Unit = { raw ->
+        val response = JSONObject(raw)
         aapsLogger.debug(LTag.NSCLIENT, "onDataCreateUpdate: $response")
         val collection = response.getString("colName")
         val docJson = response.getJSONObject("doc")
@@ -339,8 +338,8 @@ class NSClientV3Service : MetroService() {
         }
     }
 
-    internal val onDataDelete = Emitter.Listener { args ->
-        val response = args[0] as JSONObject
+    internal val onDataDelete: (String) -> Unit = { raw ->
+        val response = JSONObject(raw)
         aapsLogger.debug(LTag.NSCLIENT, "onDataDelete: $response")
         // No elvis here: optString never returns null, it returns "" for a missing key. The old
         // `?: return@Listener` looked like a guard but could not fire - Kotlin allowed it only
@@ -359,7 +358,7 @@ class NSClientV3Service : MetroService() {
         }
     }
 
-    internal val onAnnouncement = Emitter.Listener { args ->
+    internal val onAnnouncement: (String) -> Unit = { raw ->
 
         /*
         {
@@ -372,13 +371,13 @@ class NSClientV3Service : MetroService() {
         "key":"9ac46ad9a1dcda79dd87dae418fce0e7955c68da"
         }
          */
-        val data = args[0] as JSONObject
+        val data = JSONObject(raw)
         nsClientRepository.addLog("◄ ANNOUNCEMENT", data.optString("message"))
         aapsLogger.debug(LTag.NSCLIENT, data.toString())
         if (preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements))
             postNsAlarm(NSAlarmObject(data))
     }
-    internal val onAlarm = Emitter.Listener { args ->
+    internal val onAlarm: (String) -> Unit = { raw ->
 
         /*
         {
@@ -393,7 +392,7 @@ class NSClientV3Service : MetroService() {
         "key":"simplealarms_1"
         }
          */
-        val data = args[0] as JSONObject
+        val data = JSONObject(raw)
         nsClientRepository.addLog("◄ ALARM", data.optString("message"))
         aapsLogger.debug(LTag.NSCLIENT, data.toString())
         if (preferences.get(BooleanKey.NsClientNotificationsFromAlarms)) {
@@ -403,8 +402,8 @@ class NSClientV3Service : MetroService() {
         }
     }
 
-    internal val onUrgentAlarm = Emitter.Listener { args: Array<Any> ->
-        val data = args[0] as JSONObject
+    internal val onUrgentAlarm: (String) -> Unit = { raw ->
+        val data = JSONObject(raw)
         nsClientRepository.addLog("◄ URGENT ALARM", data.optString("message"))
         aapsLogger.debug(LTag.NSCLIENT, data.toString())
         if (preferences.get(BooleanKey.NsClientNotificationsFromAlarms)) {
@@ -414,7 +413,7 @@ class NSClientV3Service : MetroService() {
         }
     }
 
-    internal val onClearAlarm = Emitter.Listener { args ->
+    internal val onClearAlarm: (String) -> Unit = { raw ->
 
         /*
         {
@@ -424,7 +423,7 @@ class NSClientV3Service : MetroService() {
         "group":"default"
         }
          */
-        val data = args[0] as JSONObject
+        val data = JSONObject(raw)
         nsClientRepository.addLog("◄ CLEARALARM", data.optString("title"))
         aapsLogger.debug(LTag.NSCLIENT, data.toString())
         notificationManager.dismiss(NotificationId.NS_ALARM)
@@ -432,7 +431,7 @@ class NSClientV3Service : MetroService() {
     }
 
     fun handleClearAlarm(originalAlarm: NSAlarm, silenceTimeInMilliseconds: Long) {
-        alarmSocket?.emit("ack", originalAlarm.level, originalAlarm.group, silenceTimeInMilliseconds)
+        alarmSocket?.emitAlarmAck(originalAlarm.level, originalAlarm.group, silenceTimeInMilliseconds)
         nsClientRepository.addLog("► ALARMACK ", "${originalAlarm.level} ${originalAlarm.group} $silenceTimeInMilliseconds")
     }
 

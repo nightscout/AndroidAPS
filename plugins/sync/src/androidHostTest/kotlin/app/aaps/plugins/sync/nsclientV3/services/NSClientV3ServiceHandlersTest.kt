@@ -72,8 +72,8 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
     }
 
     /** Wraps a doc the way the Nightscout websocket does: collection name plus the document. */
-    private fun envelope(collection: String, doc: String): Array<Any> =
-        arrayOf(JSONObject("""{"colName":"$collection","doc":$doc}"""))
+    private fun envelope(collection: String, doc: String): String =
+        """{"colName":"$collection","doc":$doc}"""
 
     private fun sgvDoc(srvModified: Long = 1000L) =
         """{"identifier":"abc","srvModified":$srvModified,"date":1000,"sgv":100,"units":"mg/dl","device":"test","type":"sgv"}"""
@@ -82,7 +82,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
 
     @Test
     fun `entries document is processed as glucose and queued for storage`() {
-        sut.onDataCreateUpdate.call(*envelope("entries", sgvDoc()))
+        sut.onDataCreateUpdate(envelope("entries", sgvDoc()))
 
         verify(nsIncomingDataProcessor).processSgvs(any(), eq(false))
         verify(storeDataForDb).requestStoreGlucoseValues()
@@ -92,7 +92,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
     fun `treatments document is processed and queued without full sync`() {
         val doc = """{"identifier":"t1","srvModified":1000,"date":1000,"eventType":"Note","notes":"x"}"""
 
-        sut.onDataCreateUpdate.call(*envelope("treatments", doc))
+        sut.onDataCreateUpdate(envelope("treatments", doc))
 
         verify(storeDataForDb).requestStoreTreatments(fullSync = false)
     }
@@ -101,7 +101,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
     fun `devicestatus document goes to the device status handler as live data`() {
         val doc = """{"identifier":"d1","srvModified":1000,"created_at":"2024-01-01T00:00:00Z"}"""
 
-        sut.onDataCreateUpdate.call(*envelope("devicestatus", doc))
+        sut.onDataCreateUpdate(envelope("devicestatus", doc))
 
         verify(nsDeviceStatusHandler).handleNewData(any(), eq(true))
     }
@@ -115,7 +115,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
     fun `srvModified is not advanced while the initial load is still running`() {
         whenever(nsClientV3Plugin.initialLoadFinished).thenReturn(false)
 
-        sut.onDataCreateUpdate.call(*envelope("entries", sgvDoc(srvModified = 5000L)))
+        sut.onDataCreateUpdate(envelope("entries", sgvDoc(srvModified = 5000L)))
 
         assertThat(lastModified.collections.entries).isEqualTo(0L)
         verify(nsClientV3Plugin, never()).storeLastLoadedSrvModified()
@@ -125,7 +125,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
     fun `srvModified is advanced and stored once the initial load has finished`() {
         whenever(nsClientV3Plugin.initialLoadFinished).thenReturn(true)
 
-        sut.onDataCreateUpdate.call(*envelope("entries", sgvDoc(srvModified = 5000L)))
+        sut.onDataCreateUpdate(envelope("entries", sgvDoc(srvModified = 5000L)))
 
         assertThat(lastModified.collections.entries).isEqualTo(5000L)
         verify(nsClientV3Plugin).storeLastLoadedSrvModified()
@@ -144,7 +144,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
         val identifier = ClientControlPublisher.IDENTIFIER_ACK_PREFIX + "123"
         val doc = """{"identifier":"$identifier","srvModified":1000}"""
 
-        sut.onDataCreateUpdate.call(*envelope("settings", doc))
+        sut.onDataCreateUpdate(envelope("settings", doc))
 
         verify(nsClientV3Plugin).handleClientControlAckEvent(any())
         verify(nsClientV3Plugin, never()).handleClientControlSettingsEvent(any(), any())
@@ -156,7 +156,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
         val identifier = ClientControlPublisher.IDENTIFIER_PREFIX + "cmd1"
         val doc = """{"identifier":"$identifier","srvModified":1000}"""
 
-        sut.onDataCreateUpdate.call(*envelope("settings", doc))
+        sut.onDataCreateUpdate(envelope("settings", doc))
 
         verify(nsClientV3Plugin).handleClientControlSettingsEvent(eq(identifier), any())
     }
@@ -171,7 +171,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
         val identifier = ClientControlPublisher.IDENTIFIER_PREFIX + "cmd1"
         val doc = """{"identifier":"$identifier","srvModified":1000}"""
 
-        sut.onDataCreateUpdate.call(*envelope("settings", doc))
+        sut.onDataCreateUpdate(envelope("settings", doc))
 
         verify(nsClientV3Plugin, never()).handleClientControlSettingsEvent(any(), any())
     }
@@ -180,7 +180,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
 
     @Test
     fun `deleted treatment is queued for removal`() {
-        sut.onDataDelete.call(JSONObject("""{"colName":"treatments","identifier":"t1"}"""))
+        sut.onDataDelete("""{"colName":"treatments","identifier":"t1"}""")
 
         verify(storeDataForDb).addToDeleteTreatment("t1")
         verify(storeDataForDb).requestUpdateDeletedTreatments()
@@ -188,7 +188,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
 
     @Test
     fun `deleted entry is queued for removal`() {
-        sut.onDataDelete.call(JSONObject("""{"colName":"entries","identifier":"e1"}"""))
+        sut.onDataDelete("""{"colName":"entries","identifier":"e1"}""")
 
         verify(storeDataForDb).addToDeleteGlucoseValue("e1")
         verify(storeDataForDb).requestUpdateDeletedGlucoseValues()
@@ -197,7 +197,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
     /** A document with no collection name matches no branch. It must not delete anything. */
     @Test
     fun `delete without a collection name removes nothing`() {
-        sut.onDataDelete.call(JSONObject("""{"identifier":"x1"}"""))
+        sut.onDataDelete("""{"identifier":"x1"}""")
 
         assertThat(mockingDetails(storeDataForDb).invocations).isEmpty()
     }
@@ -208,7 +208,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
     fun `alarm is ignored when alarm notifications are switched off`() {
         whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(false)
 
-        sut.onAlarm.call(JSONObject("""{"level":1,"title":"Warning HIGH","message":"m"}"""))
+        sut.onAlarm("""{"level":1,"title":"Warning HIGH","message":"m"}""")
 
         assertThat(mockingDetails(notificationManager).invocations).isEmpty()
     }
@@ -218,7 +218,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
         whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(true)
         whenever(preferences.get(eq(LongComposedKey.NotificationSnoozedTo), any())).thenReturn(0L)
 
-        sut.onAlarm.call(JSONObject("""{"level":1,"title":"Warning HIGH","message":"m"}"""))
+        sut.onAlarm("""{"level":1,"title":"Warning HIGH","message":"m"}""")
 
         assertThat(mockingDetails(notificationManager).invocations).isNotEmpty()
     }
@@ -229,7 +229,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
         whenever(preferences.get(eq(LongComposedKey.NotificationSnoozedTo), any()))
             .thenReturn(System.currentTimeMillis() + 60_000L)
 
-        sut.onAlarm.call(JSONObject("""{"level":1,"title":"Warning HIGH","message":"m"}"""))
+        sut.onAlarm("""{"level":1,"title":"Warning HIGH","message":"m"}""")
 
         assertThat(mockingDetails(notificationManager).invocations).isEmpty()
     }
@@ -238,14 +238,14 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
     fun `announcement is ignored when announcement notifications are switched off`() {
         whenever(preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)).thenReturn(false)
 
-        sut.onAnnouncement.call(JSONObject("""{"level":0,"title":"Announcement","message":"m"}"""))
+        sut.onAnnouncement("""{"level":0,"title":"Announcement","message":"m"}""")
 
         assertThat(mockingDetails(notificationManager).invocations).isEmpty()
     }
 
     @Test
     fun `clear alarm dismisses both the alarm and the urgent alarm`() {
-        sut.onClearAlarm.call(JSONObject("""{"clear":true,"title":"All Clear","message":"m"}"""))
+        sut.onClearAlarm("""{"clear":true,"title":"All Clear","message":"m"}""")
 
         verify(notificationManager).dismiss(NotificationId.NS_ALARM)
         verify(notificationManager).dismiss(NotificationId.NS_URGENT_ALARM)
