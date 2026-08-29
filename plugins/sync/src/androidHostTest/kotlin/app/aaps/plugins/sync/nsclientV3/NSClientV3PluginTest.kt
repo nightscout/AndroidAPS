@@ -38,7 +38,7 @@ import app.aaps.core.nssdk.localmodel.treatment.CreateUpdateResponse
 import app.aaps.core.nssdk.remotemodel.LastModified
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.OrphanDetector
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientStringKey
-import app.aaps.plugins.sync.nsclientV3.services.NSClientV3Service
+import app.aaps.plugins.sync.nsclientV3.ws.NsConnection
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
@@ -75,7 +75,10 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Mock lateinit var mockedProfileFunction: ProfileFunction
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var l: L
-    @Mock lateinit var nsClientV3Service: NSClientV3Service
+    @Mock lateinit var nsConnection: NsConnection
+
+    /** Backs nsConnection.connected so tests can drive the websocket state. */
+    private val wsConnectedState = MutableStateFlow(false)
     @Mock lateinit var nsClientRepository: NSClientRepository
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var uel: UserEntryLogger
@@ -96,10 +99,10 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
                 aapsLogger, rh, preferences, rxBus, context,
                 receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
                 nsClientSource, storeDataForDb, decimalFormatter, l, nsClientRepository, uel,
-                mock(), mock(), mock(), mock(), mock(), mock(), profileRepository
+                mock(), mock(), mock(), mock(), mock(), mock(), profileRepository, nsConnection
             )
+        whenever(nsConnection.connected).thenReturn(wsConnectedState)
         sut.nsAndroidClient = nsAndroidClient
-        sut.nsClientV3Service = nsClientV3Service
         runBlocking { whenever(mockedProfileFunction.getProfile(anyLong())).thenReturn(effectiveProfile) }
     }
 
@@ -137,7 +140,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
             aapsLogger, rh, preferences, rxBus, context,
             receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
             nsClientSource, storeDataForDb, decimalFormatter, l, nsClientRepository, uel,
-            mock(), mock(), mock(), orphanDetector, mock(), mock(), profileRepository
+            mock(), mock(), mock(), orphanDetector, mock(), mock(), profileRepository, nsConnection
         )
 
     /** Poll the (WhileSubscribed) flow's value until it settles to [expected]; a live collector keeps it computing. */
@@ -176,7 +179,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         val client = buildPlugin(orphanDetector)
         // Heartbeat stays 0L until the first batch — the gate FAILS CLOSED at boot (no optimistic enable).
         assertThat(client.lastDevicestatusReceivedAt.value).isEqualTo(0L)
-        client.setWsConnected(true)                      // ws term true
+        wsConnectedState.value = true                      // ws term true
 
         runBlocking {
             val collector = launch(Dispatchers.Default) { client.masterReachable.collect { } }
@@ -845,8 +848,8 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         sut.handleClearAlarm(mockAlarm, silenceDuration)
 
         // Assert
-        // Verify that the call was passed through to the nsClientV3Service with the correct parameters.
-        verify(nsClientV3Service).handleClearAlarm(mockAlarm, silenceDuration)
+        // Verify that the call was passed through to the connection with the correct parameters.
+        verify(nsConnection).acknowledgeAlarm(mockAlarm, silenceDuration)
     }
 
     @Test
@@ -867,7 +870,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
 
         // Assert
         // Verify that the service was never called.
-        verify(nsClientV3Service, never()).handleClearAlarm(any(), any())
+        verify(nsConnection, never()).acknowledgeAlarm(any(), any())
     }
 
     @Test
@@ -884,6 +887,6 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
 
         // Assert
         // 1. Verify that the service was never called.
-        verify(nsClientV3Service, never()).handleClearAlarm(any(), any())
+        verify(nsConnection, never()).acknowledgeAlarm(any(), any())
     }
 }

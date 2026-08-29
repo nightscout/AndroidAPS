@@ -12,6 +12,7 @@ import app.aaps.plugins.sync.nsclientV3.data.NSDeviceStatusHandler
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import app.aaps.plugins.sync.nsclientV3.ws.NsSocket
 import app.aaps.plugins.sync.nsclientV3.ws.NsSocketFactory
+import app.aaps.plugins.sync.nsclientV3.ws.ServiceNsConnection
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,24 +40,20 @@ class NSClientV3ServiceTest : TestBaseWithProfile() {
     /** Every namespace URL the service asked for a socket, in order. */
     private val requestedUrls = mutableListOf<String>()
 
-    // Service's `wsConnected` property is a pass-through to the plugin's StateFlow — back it
-    // with a real one so getter reads and setter writes flow through the mock.
-    private val wsConnectedState = MutableStateFlow(false)
+    // Service`s `wsConnected` property is a pass-through to ServiceNsConnection. A real one, not a
+    // mock: it is a small object and the getter/setter round trip is the thing under test here.
+    private lateinit var nsConnection: ServiceNsConnection
 
     @BeforeEach
     fun init() {
         nsClientMvvmRepository = NSClientRepositoryImpl(rxBus, aapsLogger)
-        wsConnectedState.value = false
+        nsConnection = ServiceNsConnection(mock(), aapsLogger, preferences)
         // A fresh socket per call, the way the real factory behaves: the service closes a socket and
         // never reuses it.
         requestedUrls.clear()
         whenever(nsSocketFactory.create(any())).thenAnswer { invocation ->
             requestedUrls.add(invocation.arguments[0] as String)
             mock<NsSocket>()
-        }
-        whenever(nsClientV3Plugin.wsConnectedFlow).thenReturn(wsConnectedState)
-        whenever(nsClientV3Plugin.setWsConnected(any())).thenAnswer { invocation ->
-            wsConnectedState.value = invocation.arguments[0] as Boolean
         }
         sut = NSClientV3Service().also {
             it.aapsLogger = aapsLogger
@@ -70,6 +67,7 @@ class NSClientV3ServiceTest : TestBaseWithProfile() {
             it.nsDeviceStatusHandler = nsDeviceStatusHandler
             it.nsClientRepository = nsClientMvvmRepository
             it.nsSocketFactory = nsSocketFactory
+            it.nsConnection = nsConnection
         }
     }
 

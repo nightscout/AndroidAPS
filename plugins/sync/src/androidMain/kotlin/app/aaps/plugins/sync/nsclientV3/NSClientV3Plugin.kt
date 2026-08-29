@@ -3,13 +3,9 @@ package app.aaps.plugins.sync.nsclientV3
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.sync.SyncStrings
-import android.content.ComponentName
 import android.content.Context
-import android.content.Intent
-import android.content.ServiceConnection
 import android.os.Handler
 import android.os.HandlerThread
-import android.os.IBinder
 import androidx.annotation.VisibleForTesting
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
@@ -84,7 +80,7 @@ import app.aaps.plugins.sync.nsclientV3.extensions.toNSTherapyEvent
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientLongKey
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientStringKey
-import app.aaps.plugins.sync.nsclientV3.services.NSClientV3Service
+import app.aaps.plugins.sync.nsclientV3.ws.NsConnection
 import app.aaps.plugins.sync.nsclientV3.services.RunningConfigurationPublisher
 import app.aaps.plugins.sync.nsclientV3.workers.DataSyncWorker
 import app.aaps.plugins.sync.nsclientV3.workers.LoadBgWorker
@@ -160,6 +156,7 @@ class NSClientV3Plugin @Inject constructor(
     private val authorizedClientsRepository: AuthorizedClientsRepository,
     private val preferencesClientPublisher: PreferencesClientPublisher,
     private val profileRepository: ProfileRepository,
+    private val nsConnection: NsConnection,
 ) : NsClient, Sync, PluginBaseWithPreferences(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -212,8 +209,8 @@ class NSClientV3Plugin @Inject constructor(
             when {
                 preferences.get(NsclientBooleanKey.NsPaused)                                          -> rh.gs(CoreUiStrings.paused)
                 isAllowed.not()                                                                       -> blockingReason
-                preferences.get(BooleanKey.NsClient3UseWs) && nsClientV3Service?.wsConnected == true  -> "WS: " + rh.gs(InterfacesStrings.connected)
-                preferences.get(BooleanKey.NsClient3UseWs) && nsClientV3Service?.wsConnected == false -> "WS: " + rh.gs(SyncStrings.not_connected)
+                preferences.get(BooleanKey.NsClient3UseWs) && nsConnection.socketConnected == true  -> "WS: " + rh.gs(InterfacesStrings.connected)
+                preferences.get(BooleanKey.NsClient3UseWs) && nsConnection.socketConnected == false -> "WS: " + rh.gs(SyncStrings.not_connected)
                 lastOperationError != null                                                            -> rh.gs(CoreUiStrings.error)
                 nsAndroidClient?.lastStatus == null                                                   -> rh.gs(SyncStrings.not_connected)
                 workIsRunning()                                                                       -> rh.gs(SyncStrings.working)
@@ -224,7 +221,6 @@ class NSClientV3Plugin @Inject constructor(
     var lastOperationError: String? = null
 
     internal var nsAndroidClient: NSAndroidClient? = null
-    internal var nsClientV3Service: NSClientV3Service? = null
 
     internal val isAllowed get() = receiverDelegate.allowed
     internal val blockingReason get() = receiverDelegate.blockingReason
@@ -249,25 +245,8 @@ class NSClientV3Plugin @Inject constructor(
     var doingFullSync = false
         @VisibleForTesting set
 
-    private val serviceConnection: ServiceConnection = object : ServiceConnection {
-        override fun onServiceDisconnected(name: ComponentName) {
-            aapsLogger.debug(LTag.NSCLIENT, "Service is disconnected")
-            nsClientV3Service = null
-            // Process-death / crash teardown skips shutdownWebsockets, so flip the flag here
-            // so UI gates don't keep showing "connected" until the service rebinds.
-            _wsConnected.value = false
-        }
-
-        override fun onServiceConnected(name: ComponentName, service: IBinder) {
-            aapsLogger.debug(LTag.NSCLIENT, "Service is connected")
-            val localBinder = service as NSClientV3Service.LocalBinder
-            nsClientV3Service = localBinder.serviceInstance
-            // Covers the case where Android reuses an already-alive service on rebind:
-            // onCreate doesn't fire, but onServiceConnected does. The idempotency guard
-            // in initializeWebSockets makes this safe when both fire on a fresh bind.
-            nsClientV3Service?.initializeWebSockets("serviceConnected")
-        }
-    }
+    // The bind/unbind that used to live here is in ServiceNsConnection now, which is what lets this
+    // plugin stop naming a Service at all.
 
     override suspend fun onStart() {
         super.onStart()
@@ -311,7 +290,7 @@ class NSClientV3Plugin @Inject constructor(
         }
         rxBus.toFlow(EventAppExit::class)
             .collectResilient(scope, aapsLogger, LTag.NSCLIENT) {
-                stopService()
+                nsConnection.stop()
                 WorkManager.getInstance(context).cancelUniqueWork(JOB_NAME)
             }
         receiverDelegate.connectivityStatusFlow
@@ -319,8 +298,7 @@ class NSClientV3Plugin @Inject constructor(
             .collectResilient(scope, aapsLogger, LTag.NSCLIENT) { ev ->
                 nsClientRepository.addLog("● CONNECTIVITY", ev.blockingReason)
                 if (ev.connected && isAllowed) {
-                    val service = nsClientV3Service
-                    if (service == null || service.storageSocket == null)
+                    if (!nsConnection.hasLiveSocket)
                         setClient() // (re)create client and WS; WS_CONNECT callback will trigger executeLoop
                     executeLoop("CONNECTIVITY")
                     // Trigger upload of data that accumulated while offline.
@@ -328,14 +306,12 @@ class NSClientV3Plugin @Inject constructor(
                     // but pending outbound data still needs to be pushed.
                     executeUpload("CONNECTIVITY")
                 } else if (ev.connected && !isAllowed) {
-                    nsClientV3Service?.let { service ->
-                        if (service.storageSocket != null) stopService()
-                    }
+                    if (nsConnection.hasLiveSocket) nsConnection.stop()
                 }
                 nsClientRepository.updateStatus(status)
             }
         val restartOnChange: suspend (Any) -> Unit = {
-            stopService()
+            nsConnection.stop()
             // Release the HTTP engine before dropping the reference. The Retrofit client leaked
             // quietly here; a Ktor engine holds real connections, so it is closed explicitly.
             nsAndroidClient?.close()
@@ -441,7 +417,7 @@ class NSClientV3Plugin @Inject constructor(
     // push was missed while out of contact). Uses [reachableScope] so it's safe to call before/around
     // service restarts.
     override fun requestMasterProbe() {
-        if (!config.AAPSCLIENT || !_wsConnected.value) return
+        if (!config.AAPSCLIENT || !nsConnection.connected.value) return
         val now = dateUtil.now()
         if (now - lastProbeAt < PROBE_MIN_INTERVAL_MS) return
         lastProbeAt = now
@@ -477,7 +453,7 @@ class NSClientV3Plugin @Inject constructor(
         runningConfigurationPublisher.stop()
         preferencesClientPublisher.stop()
         scope.cancel()
-        stopService()
+        nsConnection.stop()
         WorkManager.getInstance(context).cancelUniqueWork(JOB_NAME)
         super.onStop()
     }
@@ -485,14 +461,9 @@ class NSClientV3Plugin @Inject constructor(
     override val hasWritePermission: Boolean get() = nsAndroidClient?.lastStatus?.apiPermissions?.isFull() == true
     override val connected: Boolean get() = nsAndroidClient?.lastStatus != null
 
-    // Canonical WS-state holder. Lives on the plugin (singleton) so UI subscribers persist
-    // across service rebinds — the service writes here via [setWsConnected] / reads via
-    // its `wsConnected` pass-through property.
-    private val _wsConnected = MutableStateFlow(false)
-    override val wsConnectedFlow: StateFlow<Boolean> = _wsConnected.asStateFlow()
-    internal fun setWsConnected(value: Boolean) {
-        _wsConnected.value = value
-    }
+    // Canonical WS-state holder. It lives on NsConnection, the singleton that survives service
+    // rebinds, so UI subscribers persist across them.
+    override val wsConnectedFlow: StateFlow<Boolean> get() = nsConnection.connected
 
     // Heartbeat from master's devicestatus stream. Stays 0L until the first batch arrives; combined
     // with freshness(pristine=false) this FAILS CLOSED at boot — masterReachable stays false until a
@@ -633,28 +604,10 @@ class NSClientV3Plugin @Inject constructor(
                 logging = l.findByName(LTag.NSCLIENT.tag).enabled && (config.isEngineeringMode() || config.isDev()),
                 logger = { msg -> aapsLogger.debug(LTag.HTTP, msg) }
             )
-        if (preferences.get(BooleanKey.NsClient3UseWs)) {
-            if (nsClientV3Service == null) startService()
-            else nsClientV3Service?.initializeWebSockets("setClient")
-        }
+        // start() is idempotent: it connects if nothing is up, and re-checks the sockets if
+        // something already is. It also keeps the NsClient3UseWs check, so this stays one call.
+        nsConnection.start("setClient")
         rxBus.send(EventSWSyncStatus(status))
-    }
-
-    private fun startService() {
-        if (preferences.get(BooleanKey.NsClient3UseWs)) {
-            context.bindService(Intent(context, NSClientV3Service::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
-        }
-    }
-
-    private fun stopService() {
-        try {
-            // Tear down sockets synchronously before unbinding so a quick rebind
-            // (e.g. via restartOnChange) doesn't race the async service onDestroy.
-            nsClientV3Service?.shutdownWebsockets()
-            if (nsClientV3Service != null) context.unbindService(serviceConnection)
-        } catch (_: Exception) {
-        }
-        nsClientV3Service = null
     }
 
     override fun resend(reason: String) {
@@ -713,7 +666,7 @@ class NSClientV3Plugin @Inject constructor(
             aapsLogger.debug(LTag.NSCLIENT, "Upload disabled. Message dropped")
             return
         }
-        nsClientV3Service?.handleClearAlarm(originalAlarm, silenceTimeInMilliseconds)
+        nsConnection.acknowledgeAlarm(originalAlarm, silenceTimeInMilliseconds)
     }
 
     // --- Bounded retry for transient NS UPDATE failures ---

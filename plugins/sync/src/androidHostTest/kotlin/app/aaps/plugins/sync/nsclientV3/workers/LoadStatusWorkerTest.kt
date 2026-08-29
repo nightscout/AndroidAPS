@@ -79,7 +79,7 @@ internal class LoadStatusWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin = NSClientV3Plugin(
             aapsLogger, rh, preferences, rxBus, context,
             receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
-            nsClientSource, storeDataForDb, decimalFormatter, l, nsClientMvvmRepository, uel, mock(), mock(), mock(), mock(), mock(), mock(), profileRepository
+            nsClientSource, storeDataForDb, decimalFormatter, l, nsClientMvvmRepository, uel, mock(), mock(), mock(), mock(), mock(), mock(), profileRepository, mock()
         )
         nsClientV3Plugin.newestDataOnServer = LastModified(LastModified.Collections())
     }
