@@ -3,14 +3,9 @@ package app.aaps.plugins.sync.nsclientV3
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.sync.SyncStrings
-import android.content.Context
 import android.os.Handler
 import android.os.HandlerThread
 import androidx.annotation.VisibleForTesting
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
 import app.aaps.core.data.model.HR
 import app.aaps.core.data.model.HasIDs
 import app.aaps.core.data.model.SC
@@ -81,6 +76,8 @@ import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientLongKey
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientStringKey
 import app.aaps.plugins.sync.nsclientV3.ws.NsConnection
+import app.aaps.plugins.sync.nsclientV3.ws.NsLoadExecutor
+import app.aaps.plugins.sync.nsclientV3.ws.NsLoadStep
 import app.aaps.plugins.sync.nsclientV3.services.RunningConfigurationPublisher
 import app.aaps.plugins.sync.nsclientV3.workers.DataSyncWorker
 import app.aaps.plugins.sync.nsclientV3.workers.LoadBgWorker
@@ -137,7 +134,6 @@ class NSClientV3Plugin @Inject constructor(
     override val rh: ResourceHelper,
     preferences: Preferences,
     private val rxBus: RxBus,
-    private val context: Context,
     private val receiverDelegate: ReceiverDelegate,
     private val config: Config,
     private val dateUtil: DateUtil,
@@ -157,6 +153,7 @@ class NSClientV3Plugin @Inject constructor(
     private val preferencesClientPublisher: PreferencesClientPublisher,
     private val profileRepository: ProfileRepository,
     private val nsConnection: NsConnection,
+    private val nsLoadExecutor: NsLoadExecutor,
 ) : NsClient, Sync, PluginBaseWithPreferences(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -180,7 +177,6 @@ class NSClientV3Plugin @Inject constructor(
 ) {
 
     @Suppress("PrivatePropertyName")
-    private val JOB_NAME: String = this::class.java.simpleName
 
     companion object {
 
@@ -213,7 +209,7 @@ class NSClientV3Plugin @Inject constructor(
                 preferences.get(BooleanKey.NsClient3UseWs) && nsConnection.socketConnected == false -> "WS: " + rh.gs(SyncStrings.not_connected)
                 lastOperationError != null                                                            -> rh.gs(CoreUiStrings.error)
                 nsAndroidClient?.lastStatus == null                                                   -> rh.gs(SyncStrings.not_connected)
-                workIsRunning()                                                                       -> rh.gs(SyncStrings.working)
+                nsLoadExecutor.isRunning                                                                       -> rh.gs(SyncStrings.working)
                 nsAndroidClient?.lastStatus?.apiPermissions?.isFull() == true                         -> rh.gs(InterfacesStrings.authorized)
                 nsAndroidClient?.lastStatus?.apiPermissions?.isRead() == true                         -> rh.gs(SyncStrings.read_only)
                 else                                                                                  -> rh.gs(CoreUiStrings.unknown)
@@ -291,7 +287,7 @@ class NSClientV3Plugin @Inject constructor(
         rxBus.toFlow(EventAppExit::class)
             .collectResilient(scope, aapsLogger, LTag.NSCLIENT) {
                 nsConnection.stop()
-                WorkManager.getInstance(context).cancelUniqueWork(JOB_NAME)
+                nsLoadExecutor.cancel()
             }
         receiverDelegate.connectivityStatusFlow
             .drop(1) // skip initial value
@@ -325,23 +321,18 @@ class NSClientV3Plugin @Inject constructor(
         // upload (DataSyncWorker is the loop's last step), so loop wins if both are pending.
         // Gated on WorkManager.isInitialized() so unit tests that don't bootstrap WM (and call
         // onStart only to exercise unrelated handlers) don't crash here.
-        if (WorkManager.isInitialized()) {
-            WorkManager.getInstance(context).getWorkInfosForUniqueWorkFlow(JOB_NAME)
-                .map { infos -> infos.any { it.state.isActive() } }
-                .distinctUntilChanged()
-                .filter { active -> !active }
-                .onEach {
-                    when {
-                        pendingLoop.compareAndSet(true, false)   -> {
-                            pendingUpload.store(false)
-                            executeLoop("PENDING_RERUN")
-                        }
-
-                        pendingUpload.compareAndSet(true, false) -> executeUpload("PENDING_RERUN")
+        nsLoadExecutor.idle
+            .onEach {
+                when {
+                    pendingLoop.compareAndSet(true, false)   -> {
+                        pendingUpload.store(false)
+                        executeLoop("PENDING_RERUN")
                     }
+
+                    pendingUpload.compareAndSet(true, false) -> executeUpload("PENDING_RERUN")
                 }
-                .launchIn(scope)
-        }
+            }
+            .launchIn(scope)
 
         // Resilient collection (from dev). forceNew args dropped: this branch replaced the
         // forceNew mechanism with the WorkManager re-run watchdog above (see executeUpload).
@@ -426,7 +417,7 @@ class NSClientV3Plugin @Inject constructor(
                 .onFailure { aapsLogger.error(LTag.NSCLIENT, "ClientControl ping failed: ${it.message}") }
         }
         // Pull any config we missed while disconnected (the worker no-ops on master / GETs both docs on client).
-        WorkManager.getInstance(context).enqueue(OneTimeWorkRequest.Builder(LoadSettingsWorker::class.java).build())
+        nsLoadExecutor.runDetached(NsLoadStep.SETTINGS)
     }
 
     fun scheduleIrregularExecution(refreshToken: Boolean = false) {
@@ -454,7 +445,7 @@ class NSClientV3Plugin @Inject constructor(
         preferencesClientPublisher.stop()
         scope.cancel()
         nsConnection.stop()
-        WorkManager.getInstance(context).cancelUniqueWork(JOB_NAME)
+        nsLoadExecutor.cancel()
         super.onStop()
     }
 
@@ -624,7 +615,7 @@ class NSClientV3Plugin @Inject constructor(
         // Cancel any in-flight WorkManager job so a stuck worker can't keep
         // workIsRunning() == true after unpause and silently block all uploads
         // (every DB_CHANGED would otherwise just log "Already running").
-        if (newState) WorkManager.getInstance(context).cancelUniqueWork(JOB_NAME)
+        if (newState) nsLoadExecutor.cancel()
         preferences.put(NsclientBooleanKey.NsPaused, newState)
     }
 
@@ -1109,7 +1100,7 @@ class NSClientV3Plugin @Inject constructor(
             nsClientRepository.addLog("● RUN", "$blockingReason $origin")
             return
         }
-        if (workIsRunning()) {
+        if (nsLoadExecutor.isRunning) {
             // Don't drop: queue a follow-up. Observer in onStart fires it on idle.
             pendingLoop.store(true)
             nsClientRepository.addLog("● RUN", "Already running $origin (queued loop)")
@@ -1124,23 +1115,23 @@ class NSClientV3Plugin @Inject constructor(
             }
         }
         nsClientRepository.updateStatus(status)
-        WorkManager.getInstance(context)
-            .beginUniqueWork(
-                JOB_NAME,
-                ExistingWorkPolicy.REPLACE,
-                OneTimeWorkRequest.Builder(LoadStatusWorker::class.java).build()
+        nsLoadExecutor.runChain(
+            listOf(
+                NsLoadStep.STATUS,
+                NsLoadStep.LAST_MODIFICATION,
+                NsLoadStep.BG,
+                NsLoadStep.TREATMENTS,
+                NsLoadStep.FOODS,
+                NsLoadStep.PROFILE_STORE,
+                // No-op stub. When filled in, must update lastLoadedSrvModified.collections.settings,
+                // otherwise isFirstLoad(SETTINGS) stays true forever.
+                NsLoadStep.SETTINGS,
+                NsLoadStep.DEVICE_STATUS,
+                // Last on purpose: a loop subsumes an upload, which is why a pending loop wins over
+                // a pending upload in the idle watchdog.
+                NsLoadStep.DATA_SYNC
             )
-            .then(OneTimeWorkRequest.Builder(LoadLastModificationWorker::class.java).build())
-            .then(OneTimeWorkRequest.Builder(LoadBgWorker::class.java).build())
-            .then(OneTimeWorkRequest.Builder(LoadTreatmentsWorker::class.java).build())
-            .then(OneTimeWorkRequest.Builder(LoadFoodsWorker::class.java).build())
-            .then(OneTimeWorkRequest.Builder(LoadProfileStoreWorker::class.java).build())
-            // No-op stub. When filled in, must update lastLoadedSrvModified.collections.settings,
-            // otherwise isFirstLoad(SETTINGS) stays true forever.
-            .then(OneTimeWorkRequest.Builder(LoadSettingsWorker::class.java).build())
-            .then(OneTimeWorkRequest.Builder(LoadDeviceStatusWorker::class.java).build())
-            .then(OneTimeWorkRequest.Builder(DataSyncWorker::class.java).build())
-            .enqueue()
+        )
     }
 
     fun endFullSync() {
@@ -1149,7 +1140,7 @@ class NSClientV3Plugin @Inject constructor(
         }
     }
 
-    private fun executeUpload(origin: String) {
+    internal fun executeUpload(origin: String) {
         if (preferences.get(NsclientBooleanKey.NsPaused)) {
             nsClientRepository.addLog("● RUN", "paused")
             return
@@ -1158,31 +1149,15 @@ class NSClientV3Plugin @Inject constructor(
             nsClientRepository.addLog("● RUN", blockingReason)
             return
         }
-        if (workIsRunning()) {
+        if (nsLoadExecutor.isRunning) {
             // Don't drop: queue a follow-up. Observer in onStart fires it on idle.
             pendingUpload.store(true)
             nsClientRepository.addLog("● RUN", "Already running $origin (queued upload)")
             return
         }
         nsClientRepository.addLog("● RUN", "Starting upload $origin")
-        WorkManager.getInstance(context)
-            .enqueueUniqueWork(
-                JOB_NAME,
-                ExistingWorkPolicy.REPLACE,
-                OneTimeWorkRequest.Builder(DataSyncWorker::class.java).build()
-            )
+        nsLoadExecutor.runReplacing(NsLoadStep.DATA_SYNC)
     }
-
-    private fun workIsRunning(workName: String = JOB_NAME): Boolean {
-        for (workInfo in WorkManager.getInstance(context).getWorkInfosForUniqueWork(workName).get())
-            if (workInfo.state.isActive())
-                return true
-        return false
-    }
-
-    /** Shared with the re-run observer in onStart so both sides agree on "active". */
-    private fun WorkInfo.State.isActive(): Boolean =
-        this == WorkInfo.State.BLOCKED || this == WorkInfo.State.ENQUEUED || this == WorkInfo.State.RUNNING
 
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
         key = "ns_client_v3_settings",

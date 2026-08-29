@@ -39,6 +39,7 @@ import app.aaps.core.nssdk.remotemodel.LastModified
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.OrphanDetector
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientStringKey
 import app.aaps.plugins.sync.nsclientV3.ws.NsConnection
+import app.aaps.plugins.sync.nsclientV3.ws.NsLoadExecutor
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
@@ -46,6 +47,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
@@ -76,6 +78,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var l: L
     @Mock lateinit var nsConnection: NsConnection
+    @Mock lateinit var nsLoadExecutor: NsLoadExecutor
 
     /** Backs nsConnection.connected so tests can drive the websocket state. */
     private val wsConnectedState = MutableStateFlow(false)
@@ -96,12 +99,14 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         storeDataForDb = StoreDataForDbImpl(aapsLogger, persistenceLayer, preferences, config, nsClientRepository, CoroutineScope(SupervisorJob() + Dispatchers.Unconfined))
         sut =
             NSClientV3Plugin(
-                aapsLogger, rh, preferences, rxBus, context,
+                aapsLogger, rh, preferences, rxBus,
                 receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
                 nsClientSource, storeDataForDb, decimalFormatter, l, nsClientRepository, uel,
-                mock(), mock(), mock(), mock(), mock(), mock(), profileRepository, nsConnection
+                mock(), mock(), mock(), mock(), mock(), mock(), profileRepository, nsConnection, nsLoadExecutor
             )
         whenever(nsConnection.connected).thenReturn(wsConnectedState)
+        // idle is collected in onStart; a mock would hand back null and NPE there.
+        whenever(nsLoadExecutor.idle).thenReturn(emptyFlow())
         sut.nsAndroidClient = nsAndroidClient
         runBlocking { whenever(mockedProfileFunction.getProfile(anyLong())).thenReturn(effectiveProfile) }
     }
@@ -137,10 +142,10 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
 
     private fun buildPlugin(orphanDetector: OrphanDetector): NSClientV3Plugin =
         NSClientV3Plugin(
-            aapsLogger, rh, preferences, rxBus, context,
+            aapsLogger, rh, preferences, rxBus,
             receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
             nsClientSource, storeDataForDb, decimalFormatter, l, nsClientRepository, uel,
-            mock(), mock(), mock(), orphanDetector, mock(), mock(), profileRepository, nsConnection
+            mock(), mock(), mock(), orphanDetector, mock(), mock(), profileRepository, nsConnection, nsLoadExecutor
         )
 
     /** Poll the (WhileSubscribed) flow's value until it settles to [expected]; a live collector keeps it computing. */
