@@ -248,6 +248,29 @@ whose implementation on some target would be a silent no-op is a safety problem 
 the user relies on would quietly stop firing, so the feature should be visibly absent on that target
 instead.
 
+### Test libraries are JVM-only, so a fixtures module barely moves
+
+JUnit 5, Mockito and RxJava have no Kotlin/Native artifacts. Anything built on them is Android by
+nature, not by accident, and no amount of work moves it. In `:shared:tests` that left exactly one
+file in commonMain out of eleven:
+
+| stays on Android | why |
+|---|---|
+| `TestBase`, `TestBaseWithProfile` | `@ExtendWith(MockitoExtension)`, JUnit 5 lifecycle |
+| `TestAapsSchedulers` | RxJava |
+| `TextRefStubs` | the generated `*StringIds` maps only exist in androidMain |
+| `TestPumpPlugin` | `ResourceHelper` is androidMain; `PumpEnactResultObject` is in `:implementation` |
+| `HardLimitsMock` | `HardLimits` still has abstract `Int` (resource id) overloads |
+| `BundleMock`, `SharedPreferencesMock` | Android types are the point of them |
+| `MemberInjectorCoverage`, `SplitBrainCoverage` | `JarFile` reflection over compiled output |
+
+Flip such a module for the module type and the processor removal, not for the sharing. Say so up
+front rather than discovering it file by file.
+
+**A fixtures module must be excluded from `checkMigratedModules`.** It declares `iosArm64()` so that
+common tests can use it, but `migratedModules` feeds the exported framework header, and test helpers
+do not belong in the API Swift sees. There is a `filterNot` in `ios/shell/build.gradle.kts` for this.
+
 ## `:ios:shell:checkMigratedModules` will fail next
 
 Once a module builds for iOS, the ios-branch guard fails until it is listed. It names the module and

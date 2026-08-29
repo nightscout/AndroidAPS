@@ -26,7 +26,7 @@ class AAPSLoggerTest : AAPSLogger {
     }
 
     override fun debug(tag: LTag, format: String, vararg arguments: Any?) {
-        println("DEBUG: : " + tag.tag + " " + String.format(format, arguments))
+        println("DEBUG: : " + tag.tag + " " + withArguments(format, arguments))
     }
 
     override fun warn(tag: LTag, message: String) {
@@ -34,7 +34,7 @@ class AAPSLoggerTest : AAPSLogger {
     }
 
     override fun warn(tag: LTag, format: String, vararg arguments: Any?) {
-        println("INFO: : " + tag.tag + " " + String.format(format, arguments))
+        println("INFO: : " + tag.tag + " " + withArguments(format, arguments))
     }
 
     override fun info(tag: LTag, message: String) {
@@ -42,7 +42,7 @@ class AAPSLoggerTest : AAPSLogger {
     }
 
     override fun info(tag: LTag, format: String, vararg arguments: Any?) {
-        println("INFO: : " + tag.tag + " " + String.format(format, arguments))
+        println("INFO: : " + tag.tag + " " + withArguments(format, arguments))
     }
 
     override fun error(tag: LTag, message: String) {
@@ -58,7 +58,7 @@ class AAPSLoggerTest : AAPSLogger {
     }
 
     override fun error(format: String, vararg arguments: Any?) {
-        println("ERROR: : " + String.format(format, arguments))
+        println("ERROR: : " + withArguments(format, arguments))
     }
 
     override fun error(tag: LTag, message: String, throwable: Throwable) {
@@ -66,7 +66,7 @@ class AAPSLoggerTest : AAPSLogger {
     }
 
     override fun error(tag: LTag, format: String, vararg arguments: Any?) {
-        println("ERROR: : " + tag.tag + " " + String.format(format, arguments))
+        println("ERROR: : " + tag.tag + " " + withArguments(format, arguments))
     }
 
     override fun debug(className: String, methodName: String, lineNumber: Int, tag: LTag, message: String) {
@@ -84,4 +84,15 @@ class AAPSLoggerTest : AAPSLogger {
     override fun error(className: String, methodName: String, lineNumber: Int, tag: LTag, message: String) {
         println("ERROR: : ${tag.tag} $className.$methodName():$lineNumber $message")
     }
+
+    /**
+     * Puts the arguments after the format string instead of substituting them into it.
+     *
+     * `String.format` is JVM only, and nothing needs it here: this logger only prints to stdout for
+     * a person reading a failing test, and no test reads its output back. The old code was in any
+     * case passing the whole `arguments` array as a single value rather than spreading it, so a
+     * line with more than one placeholder never formatted correctly to begin with.
+     */
+    private fun withArguments(format: String, arguments: Array<out Any?>): String =
+        if (arguments.isEmpty()) format else "$format ${arguments.joinToString()}"
 }
