@@ -72,8 +72,9 @@ internal class LoadBgWorkerTest : TestBaseWithProfile() {
             .setWorkerFactory(object : WorkerFactory() {
                 override fun createWorker(appContext: Context, workerClassName: String, workerParameters: WorkerParameters) =
                     LoadBgWorker(
-                        appContext, workerParameters, aapsLogger, fabricPrivacy, preferences, dateUtil,
-                        nsClientV3Plugin, nsClientSource, nsIncomingDataProcessor, storeDataForDb, nsClientRepository
+                        appContext, workerParameters, aapsLogger, fabricPrivacy,
+                        LoadBgRunner(aapsLogger, preferences, dateUtil,
+                        nsClientV3Plugin, nsClientSource, nsIncomingDataProcessor, storeDataForDb, nsClientRepository)
                     )
             })
             .build()

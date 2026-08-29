@@ -60,7 +60,7 @@ internal class LoadLastModificationWorkerTest : TestBaseWithProfile() {
         TestListenableWorkerBuilder<LoadLastModificationWorker>(context)
             .setWorkerFactory(object : WorkerFactory() {
                 override fun createWorker(appContext: Context, workerClassName: String, workerParameters: WorkerParameters) =
-                    LoadLastModificationWorker(appContext, workerParameters, aapsLogger, fabricPrivacy, nsClientV3Plugin, nsClientRepository)
+                    LoadLastModificationWorker(appContext, workerParameters, aapsLogger, fabricPrivacy, LoadLastModificationRunner(aapsLogger, nsClientV3Plugin, nsClientRepository))
             })
             .build()
 

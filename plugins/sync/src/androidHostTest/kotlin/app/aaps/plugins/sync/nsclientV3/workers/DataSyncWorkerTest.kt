@@ -43,7 +43,7 @@ internal class DataSyncWorkerTest : TestBase() {
         TestListenableWorkerBuilder<DataSyncWorker>(context)
             .setWorkerFactory(object : WorkerFactory() {
                 override fun createWorker(appContext: Context, workerClassName: String, workerParameters: WorkerParameters) =
-                    DataSyncWorker(appContext, workerParameters, aapsLogger, fabricPrivacy, dataSyncSelectorV3, activePlugin, nsClientV3Plugin, nsClientMvvmRepository)
+                    DataSyncWorker(appContext, workerParameters, aapsLogger, fabricPrivacy, DataSyncRunner(aapsLogger, dataSyncSelectorV3, activePlugin, nsClientV3Plugin, nsClientMvvmRepository))
             })
             .build()
 

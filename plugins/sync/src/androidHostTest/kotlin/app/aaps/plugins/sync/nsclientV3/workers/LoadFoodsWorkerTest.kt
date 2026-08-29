@@ -68,7 +68,7 @@ internal class LoadFoodsWorkerTest : TestBaseWithProfile() {
         TestListenableWorkerBuilder<LoadFoodsWorker>(context)
             .setWorkerFactory(object : WorkerFactory() {
                 override fun createWorker(appContext: Context, workerClassName: String, workerParameters: WorkerParameters) =
-                    LoadFoodsWorker(appContext, workerParameters, aapsLogger, fabricPrivacy, nsClientV3Plugin, dateUtil, storeDataForDb, nsIncomingDataProcessor, nsClientRepository)
+                    LoadFoodsWorker(appContext, workerParameters, aapsLogger, fabricPrivacy, LoadFoodsRunner(aapsLogger, nsClientV3Plugin, dateUtil, storeDataForDb, nsIncomingDataProcessor, nsClientRepository))
             })
             .build()
 

@@ -64,7 +64,7 @@ internal class LoadStatusWorkerTest : TestBaseWithProfile() {
         TestListenableWorkerBuilder<LoadStatusWorker>(context)
             .setWorkerFactory(object : WorkerFactory() {
                 override fun createWorker(appContext: Context, workerClassName: String, workerParameters: WorkerParameters) =
-                    LoadStatusWorker(appContext, workerParameters, aapsLogger, fabricPrivacy, nsClientV3Plugin, nsClientMvvmRepository)
+                    LoadStatusWorker(appContext, workerParameters, aapsLogger, fabricPrivacy, LoadStatusRunner(aapsLogger, nsClientV3Plugin, nsClientMvvmRepository))
             })
             .build()
 

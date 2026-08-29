@@ -70,7 +70,7 @@ internal class LoadProfileStoreWorkerTest : TestBaseWithProfile() {
         TestListenableWorkerBuilder<LoadProfileStoreWorker>(context)
             .setWorkerFactory(object : WorkerFactory() {
                 override fun createWorker(appContext: Context, workerClassName: String, workerParameters: WorkerParameters) =
-                    LoadProfileStoreWorker(appContext, workerParameters, aapsLogger, fabricPrivacy, nsClientV3Plugin, dateUtil, nsIncomingDataProcessor, nsClientRepository)
+                    LoadProfileStoreWorker(appContext, workerParameters, aapsLogger, fabricPrivacy, LoadProfileStoreRunner(aapsLogger, nsClientV3Plugin, dateUtil, nsIncomingDataProcessor, nsClientRepository))
             })
             .build()
 

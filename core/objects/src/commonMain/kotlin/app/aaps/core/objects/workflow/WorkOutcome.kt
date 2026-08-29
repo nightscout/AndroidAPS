@@ -14,6 +14,15 @@ sealed interface WorkOutcome {
 
     data object Success : WorkOutcome
 
+    /**
+     * Succeeded without doing the work, because there was nothing to do.
+     *
+     * Still a success - it must not be retried and must not fail a chain - but it carries why, so a
+     * run that did nothing can be told apart from one that ran. That distinction is only visible in
+     * the work's output data; nothing in the app reads it.
+     */
+    data class Skipped(val reason: String) : WorkOutcome
+
     /** [reason] is only logged and reported, never shown to the user. */
     data class Failure(val reason: String) : WorkOutcome
 

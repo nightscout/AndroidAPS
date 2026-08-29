@@ -67,7 +67,7 @@ internal class LoadTreatmentsWorkerTest : TestBaseWithProfile() {
         TestListenableWorkerBuilder<LoadTreatmentsWorker>(context)
             .setWorkerFactory(object : WorkerFactory() {
                 override fun createWorker(appContext: Context, workerClassName: String, workerParameters: WorkerParameters) =
-                    LoadTreatmentsWorker(appContext, workerParameters, aapsLogger, fabricPrivacy, nsClientV3Plugin, dateUtil, storeDataForDb, nsIncomingDataProcessor, nsClientRepository)
+                    LoadTreatmentsWorker(appContext, workerParameters, aapsLogger, fabricPrivacy, LoadTreatmentsRunner(aapsLogger, nsClientV3Plugin, dateUtil, storeDataForDb, nsIncomingDataProcessor, nsClientRepository))
             })
             .build()
 
