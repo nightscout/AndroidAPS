@@ -43,7 +43,11 @@ kotlin {
             isIncludeAndroidResources = true
             isReturnDefaultValues = true
         }
-        withDeviceTest { }
+        // The instrumented Garmin tests, in src/androidDeviceTest. Without the runner named here the
+        // device test builds but has nothing to run it.
+        withDeviceTest {
+            instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        }
         compilerOptions { jvmTarget.set(Versions.jvmTarget) }
 
         lint {
@@ -151,9 +155,17 @@ kotlin {
             }
         }
 
+        // Instrumented tests run on JUnit 4, not the JUnit 5 the host tests use. These were supplied
+        // by test-module-dependencies before, which a multiplatform module cannot apply.
         getByName("androidDeviceTest") {
             dependencies {
                 implementation(project(":shared:tests"))
+                implementation(libs.androidx.test.ext)
+                implementation(libs.androidx.test.rules)
+                implementation(libs.com.google.truth)
+                implementation(libs.org.mockito.android)
+                implementation(libs.org.mockito.kotlin)
+                implementation(libs.kotlinx.coroutines.test)
             }
         }
     }
@@ -173,4 +185,12 @@ tasks.withType<Test> {
 dependencies {
     "androidMainApi"(libs.com.garmin.connectiq) { artifact { type = "aar" } }
     "androidDeviceTestImplementation"(libs.com.garmin.connectiq) { artifact { type = "aar" } }
+}
+
+// :shared:tests carries JUnit 5 for the host tests, and it reaches the device test through
+// TestBase. Dexing those jars fails - JUnit 6 uses Java records, which D8 cannot desugar in this
+// configuration - and nothing on the device needs them, because the instrumented tests are JUnit 4.
+configurations.named("androidDeviceTestImplementation") {
+    exclude(group = "org.junit.jupiter")
+    exclude(group = "org.junit.platform")
 }
