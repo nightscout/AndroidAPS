@@ -3,7 +3,9 @@ package app.aaps.plugins.sync.nsclientV3.clientcontrol.compose
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.sync.SyncStrings
-import androidx.activity.compose.BackHandler
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -55,7 +57,13 @@ fun PairWithMasterScreen(
     // While the hello upload is in flight, swallow Back to keep the ViewModel (and therefore
     // viewModelScope) alive until publishHello() completes — otherwise the master never sees
     // the hello and the client is stuck Pending on the master side.
-    BackHandler(enabled = state is PairWithMasterViewModel.UiState.Sending) { /* swallow */ }
+    // Swallow back while the pairing is being sent. NavigationBackHandler, not the androidx.activity
+    // one: that is Android only.
+    NavigationBackHandler(
+        state = rememberNavigationEventState(NavigationEventInfo.None),
+        isBackEnabled = state is PairWithMasterViewModel.UiState.Sending,
+        onBackCompleted = { /* swallow */ }
+    )
 
     // After successful pair, drop back to the previous screen so the user lands wherever they came
     // from. Latched so a recomposition while state is still Success cannot pop twice — the

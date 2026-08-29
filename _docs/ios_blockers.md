@@ -111,6 +111,16 @@ Not blockers, and not for the Windows session to fix. Listed so nobody is surpri
   which iOS reports taps but not dismissals. The one caveat left is that it calls
   `setNotificationCategories` with only its own category, so it would clobber categories registered
   elsewhere - nothing else registers any today.
+- **The pairing PIN is not protected from screenshots on iOS.** `blockScreenshotsWhileVisible()`
+  (`plugins/sync/.../clientcontrol/compose/ScreenshotBlocking.kt`) is an `expect` that returns
+  whether the platform really blocked capture. Android applies `FLAG_SECURE` and returns true; the
+  iOS `actual` returns **false**, deliberately, because Apple has no equivalent and a silent no-op
+  would imply a protection that is not there. That PIN wraps the shared secret a paired client signs
+  commands with, so a screenshot sitting in a gallery or a cloud backup is a real exposure. Two
+  things are worth doing on the iOS side: cover the window on `willResignActive` so the app-switcher
+  snapshot does not hold the PIN, and warn on the dialog while the value is false. The screen already
+  has it (`screenshotsBlocked` in `AuthorizedClientsScreen`); it just has nowhere to show it yet, and
+  choosing that wording is a product decision rather than a porting one.
 
 ## Done
 
