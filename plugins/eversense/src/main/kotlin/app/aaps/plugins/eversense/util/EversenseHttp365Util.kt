@@ -40,13 +40,18 @@ class EversenseHttp365Util {
 
         // EU/OUS endpoints, selected per-call via effectiveTokenBaseUrl/effectiveUploadBaseUrl/
         // effectiveCareBaseUrl when EversenseSecureState.isEuropeanRegion is true.
-        // tokenBaseUrl/uploadBaseUrl confirmed live: both CNAME to a distinctly-named AWS load
-        // balancer ("sens-ous-dms-prod-app-lb", eu-central-1) — the real "us" -> "ous" analogue
-        // of the confirmed-live US hosts above. careBaseUrl reuses the OUS "care" host
-        // EversenseHttpE3Util already uses in production for real EU E3 transmitters — the
-        // naive "us" -> "ous" swap of usapialpha (ousapialpha) is dead, so this is the
-        // confirmed-working OUS care endpoint instead, shared across transmitter generations.
-        private const val euTokenBaseUrl = "https://ousiamapi.eversensedms.com/"
+        // euTokenBaseUrl is the exact host EversenseHttpE3Util.kt already uses for E3 (see its
+        // header comment: confirmed from a decompiled real Eversense EU app, proven working in
+        // production for real EU E3 transmitters). A first attempt at this guessed
+        // "ousiamapi.eversensedms.com" (naive "us"->"ous" swap, no "alpha") purely from a CNAME
+        // match to a distinctly-named AWS load balancer; that host is real infrastructure but
+        // NOT this API - confirmed live via a real EU 365 user's Eversense.log, which showed
+        // every login() call returning a bare IIS 404 (Server: Microsoft-HTTPAPI/2.0), not the
+        // Cloudflare-fronted IdentityServer4 400 the working US host (and this corrected host)
+        // both return to the same bare GET. euUploadBaseUrl and euCareBaseUrl were independently
+        // verified live to give the same healthy app-level responses as their US counterparts, so
+        // they're left as originally set.
+        private const val euTokenBaseUrl = "https://ousiamapialpha.eversensedms.com/"
         private const val euUploadBaseUrl = "https://ousmobileappmsprod.eversensedms.com/"
         private const val euCareBaseUrl = "https://ousalphaapiservices.eversensedms.com/"
 
