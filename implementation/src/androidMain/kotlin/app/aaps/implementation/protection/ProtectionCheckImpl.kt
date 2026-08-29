@@ -20,7 +20,8 @@ import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import java.util.concurrent.atomic.AtomicLong
+import kotlin.concurrent.atomics.AtomicLong
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.time.Duration.Companion.seconds
 
 // Metro builds this now; Dagger gets it through a @Provides delegate in `:app`. Scoped with Metro's
@@ -28,6 +29,7 @@ import kotlin.time.Duration.Companion.seconds
 // a javax scope there is ignored and every read would build a new one.
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
+@OptIn(ExperimentalAtomicApi::class)
 class ProtectionCheckImpl @Inject constructor(
     private val preferences: Preferences,
     private val passwordCheck: PasswordCheck,
@@ -198,7 +200,7 @@ class ProtectionCheckImpl @Inject constructor(
             .maxByOrNull { it.level.level }?.level
 
         _pendingAuthRequest.value = HierarchicalProtectionRequest(
-            id = requestIdCounter.incrementAndGet(),
+            id = requestIdCounter.addAndFetch(1L),
             minimumLevel = minimumLevel,
             availableMethods = methods,
             hasBiometric = hasBiometric,
@@ -295,7 +297,7 @@ class ProtectionCheckImpl @Inject constructor(
         }
 
         _pendingRequest.value = ProtectionRequest(
-            id = requestIdCounter.incrementAndGet(),
+            id = requestIdCounter.addAndFetch(1L),
             protection = protection,
             type = type,
             title = TextRef.AndroidRes(titleRes),

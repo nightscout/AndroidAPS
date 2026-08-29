@@ -1,6 +1,8 @@
 package app.aaps.implementation.pump
 
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.concurrent.AapsLock
+import app.aaps.core.interfaces.concurrent.withLock
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.PumpSync
@@ -21,14 +23,17 @@ class TemporaryBasalStorageImpl @Inject constructor(
 
     val store = ArrayList<PumpSync.PumpState.TemporaryBasal>()
 
-    @Synchronized
-    override fun add(temporaryBasal: PumpSync.PumpState.TemporaryBasal) {
+    // AapsLock, not @Synchronized: that annotation is JVM only. withLock is inline, so the early
+    // returns in findTemporaryBasal still release it through its finally.
+    private val lock = AapsLock()
+
+    override fun add(temporaryBasal: PumpSync.PumpState.TemporaryBasal) = lock.withLock {
         aapsLogger.debug("Stored temporary basal info: $temporaryBasal")
         store.add(temporaryBasal)
+        Unit
     }
 
-    @Synchronized
-    override fun findTemporaryBasal(time: Long, rate: Double): PumpSync.PumpState.TemporaryBasal? {
+    override fun findTemporaryBasal(time: Long, rate: Double): PumpSync.PumpState.TemporaryBasal? = lock.withLock {
         // Look for info with temporary basal
         for (i in store.indices) {
             val d = store[i]

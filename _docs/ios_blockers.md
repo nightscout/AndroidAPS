@@ -84,6 +84,30 @@ and the section above for the source set to add.
 
 ## Hint: fourteen classes in :implementation could move to commonMain today
 
+> **Worked through 2026-08-29 by the kmp session. Three moved; the rest do not qualify.** The survey
+> below was import-based, and an import list does not see two things: a symbol from *another*
+> androidMain class, and JVM-only constructs that are not imports at all (`@Synchronized`,
+> `@Volatile`, `String.format`, `R`). Corrected results:
+>
+> | class | actual state |
+> |---|---|
+> | `TemporaryBasalStorageImpl` | **moved** - `@Synchronized` -> `AapsLock` |
+> | `DexcomTirImpl`, `DexcomTirCalculatorImpl` | **moved** - `Calendar` -> `kotlinx.datetime`, keeping the local hour, which picks the day/night threshold |
+> | `ProtectionCheckImpl` | still blocked: also needs `R` and `@Volatile`. `AtomicLong` is converted, so only those remain |
+> | `SceneActionsImpl` | needs `SceneExecutor`, which is WorkManager + `Context` |
+> | `PasswordCheckImpl` | needs `CryptoUtil`, which is the whole `javax.crypto` stack. Now feasible - cryptography-kotlin is in the build for the client-control crypto - but it hashes stored passwords, so it needs golden vectors first, exactly like `ClientControlCrypto` did |
+> | `DetailedBolusInfoStorageImpl` | uses **Gson**. The survey missed it because `com.google.*` was not in the grep |
+> | `LoggerUtilsImpl` | logback / slf4j |
+> | `IconsProviderImplementation` | Android `R` |
+> | `InsulinImpl` | `ResourceHelper`, `ApplicationScope`, `@Synchronized`, `@Volatile` |
+> | `CloudDirectoryManagerImpl` | needs `CloudStorageManager` |
+> | `SceneAutomationApiImpl` | 21 errors, not surveyed in detail |
+> | `AutosensDataObject` | `String.format` with twelve `%.02f` in `toString()`. `DecimalFormatter.to2Decimal` is in commonMain but is not injected here, so it is a constructor change for one debug string |
+> | `ActiveSceneManager` | `org.json` -> kotlinx, but it is a **stored** format (scene records in preferences), so it wants the same care as the profile migration |
+>
+> Lesson worth keeping: to find what can move, compile for iOS. An import grep gives a candidate
+> list, not an answer.
+
 Surveyed 2026-08-29. These are in `implementation/src/androidMain` and import **nothing** from
 `android.*` or `androidx.*`. They are Android only because nobody has moved them, not because of
 anything they do. Nine need no other change at all:
