@@ -1,5 +1,6 @@
 package app.aaps.workflow
 
+import kotlinx.coroutines.test.TestScope
 import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
@@ -31,7 +32,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import kotlin.test.assertIs
 
-class PrepareGraphDataWorkerTest : TestBaseWithProfile() {
+class PrepareGraphDataRunnerTest : TestBaseWithProfile() {
 
     @Mock lateinit var workflowChainData: WorkflowChainData
     @Mock lateinit var persistenceLayer: PersistenceLayer
@@ -48,12 +49,15 @@ class PrepareGraphDataWorkerTest : TestBaseWithProfile() {
 
     private val autosensDataProvider = { mock<AutosensData>() }
 
-    private fun worker() =
-        PrepareGraphDataWorker(
-            context, workerParameters, aapsLogger, fabricPrivacy, workflowChainData, dateUtil, mockedRxBus, persistenceLayer,
-            activePlugin, profileFunction, profileUtil, preferences, config, profiler, rh, decimalFormatter,
-            processedDeviceStatusData, autosensDataProvider
+    private fun runner() =
+        PrepareGraphDataRunner(
+            aapsLogger, workflowChainData, dateUtil, mockedRxBus, persistenceLayer,
+            activePlugin, profileFunction, profileUtil, preferences, config, profiler, decimalFormatter,
+            processedDeviceStatusData, TestScope(), autosensDataProvider
         )
+
+    // The runner asks this between phases; nothing in these tests stops a run part way.
+    private suspend fun run() = runner().run(job = "main", generation = 1L, isStopped = { false })
 
     private fun buildData(bgDataReload: Boolean, emitFinalProgress: Boolean) =
         PrepareGraphData(
@@ -99,7 +103,7 @@ class PrepareGraphDataWorkerTest : TestBaseWithProfile() {
     fun `missing or stale chain data returns failure`() = runTest {
         whenever(workflowChainData.prepareFor(anyOrNull(), any())).thenReturn(null)
 
-        assertIs<ListenableWorker.Result.Failure>(worker().doWorkAndLog())
+        assertIs<CalculationOutcome.Failure>(run())
     }
 
     @Test
@@ -107,9 +111,9 @@ class PrepareGraphDataWorkerTest : TestBaseWithProfile() {
         stubSuspendCalls()
         whenever(workflowChainData.prepareFor(anyOrNull(), any())).thenReturn(buildData(bgDataReload = false, emitFinalProgress = true))
 
-        val result = worker().doWorkAndLog()
+        val result = run()
 
-        assertIs<ListenableWorker.Result.Success>(result)
+        assertIs<CalculationOutcome.Success>(result)
         verify(signals).emitProgress(eq(ProgressData.DRAW_BG), any())
         verify(signals).emitProgress(eq(ProgressData.DRAW_IOB), any())
         verify(signals).emitProgress(eq(ProgressData.DRAW_FINAL), any())
@@ -120,9 +124,9 @@ class PrepareGraphDataWorkerTest : TestBaseWithProfile() {
         stubSuspendCalls()
         whenever(workflowChainData.prepareFor(anyOrNull(), any())).thenReturn(buildData(bgDataReload = true, emitFinalProgress = false))
 
-        val result = worker().doWorkAndLog()
+        val result = run()
 
-        assertIs<ListenableWorker.Result.Success>(result)
+        assertIs<CalculationOutcome.Success>(result)
         verify(mockedRxBus).send(any<EventBucketedDataCreated>())
         verify(dataIobCob).clearCache()
         // Terminal-only progress not emitted when emitFinalProgress = false
