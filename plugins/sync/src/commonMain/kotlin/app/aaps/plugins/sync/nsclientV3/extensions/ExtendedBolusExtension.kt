@@ -9,12 +9,11 @@ import app.aaps.core.nssdk.localmodel.treatment.EventType
 import app.aaps.core.nssdk.localmodel.treatment.NSExtendedBolus
 import app.aaps.core.nssdk.localmodel.treatment.NSTreatment
 import app.aaps.core.objects.extensions.toTemporaryBasal
-import java.security.InvalidParameterException
 
 fun NSExtendedBolus.toExtendedBolus(): EB =
     EB(
         isValid = isValid,
-        timestamp = date ?: throw InvalidParameterException(),
+        timestamp = date ?: throw IllegalArgumentException(),
         utcOffset = T.mins(utcOffset ?: 0L).msecs(),
         amount = enteredinsulin,
         duration = duration,

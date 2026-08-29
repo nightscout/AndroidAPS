@@ -44,19 +44,19 @@ class LoadProfileStoreWorker @AssistedInject constructor(
                 val response: NSAndroidClient.ReadResponse<List<JsonObject>> =
                     if (isFirstLoad) nsAndroidClient.getLastProfileStore()
                     else nsAndroidClient.getProfileModifiedSince(lastLoaded)
-                // The profile subsystem (ProfileStore, PureProfile, JsonHelper) is built on org.json
-                // well outside this module, so profiles are converted back here at the boundary
-                // rather than migrating all of it. See JsonBridge.
-                val profiles = response.values.map { it.toOrgJson() }
+                val profiles = response.values
                 if (profiles.isNotEmpty()) {
                     val profile = profiles[profiles.size - 1]
+                    // JsonHelper reads org.json, so the timestamp lookups below need a converted copy.
+                    // The profile itself stays kotlinx and goes on untouched. See JsonBridge.
+                    val profileOrgJson = profile.toOrgJson()
                     // if srvModified found in response
                     aapsLogger.debug(LTag.NSCLIENT, "lastLoadedSrvModified: ${response.lastServerModified}")
                     response.lastServerModified?.let { nsClientV3Plugin.lastLoadedSrvModified.collections.profile = it } ?:
                     // if srvModified found in record
-                    JsonHelper.safeGetLongAllowNull(profile, "srvModified")?.let { nsClientV3Plugin.lastLoadedSrvModified.collections.profile = it } ?:
+                    JsonHelper.safeGetLongAllowNull(profileOrgJson, "srvModified")?.let { nsClientV3Plugin.lastLoadedSrvModified.collections.profile = it } ?:
                     // if created_at found in record
-                    JsonHelper.safeGetStringAllowNull(profile, "created_at", null)?.let { nsClientV3Plugin.lastLoadedSrvModified.collections.profile = dateUtil.fromISODateString(it) } ?:
+                    JsonHelper.safeGetStringAllowNull(profileOrgJson, "created_at", null)?.let { nsClientV3Plugin.lastLoadedSrvModified.collections.profile = dateUtil.fromISODateString(it) } ?:
                     // if not found reset to now
                     { nsClientV3Plugin.lastLoadedSrvModified.collections.profile = dateUtil.now() }
                     nsClientV3Plugin.storeLastLoadedSrvModified()

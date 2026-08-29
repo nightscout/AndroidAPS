@@ -30,6 +30,7 @@ import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.json.JSONArray
+import kotlinx.serialization.json.JsonObject
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -259,7 +260,7 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
     @Test
     fun `processProfile with newer remote profile loads it from store`() = runTest {
         val localProfileTime = now - T.days(1).msecs()
-        val profileJson = JSONObject() // Dummy JSON
+        val profileJson = JsonObject(emptyMap())
         whenever(preferences.get(BooleanKey.NsClientAcceptProfileStore)).thenReturn(true)
         whenever(preferences.get(LongNonKey.LocalProfileLastChange)).thenReturn(localProfileTime)
 
@@ -270,7 +271,7 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
     @Test
     fun `processProfile does not load if preference is disabled`() = runTest {
         val localProfileTime = now - T.days(1).msecs()
-        val profileJson = JSONObject()
+        val profileJson = JsonObject(emptyMap())
         // Disable accepting profile from NS
         whenever(preferences.get(BooleanKey.NsClientAcceptProfileStore)).thenReturn(false)
         whenever(preferences.get(LongNonKey.LocalProfileLastChange)).thenReturn(localProfileTime)
@@ -285,7 +286,7 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
         whenever(nsClient.masterOrPairedClientFlow).thenReturn(MutableStateFlow(false))
         whenever(preferences.get(LongNonKey.LocalProfileLastChange)).thenReturn(now - T.days(1).msecs())
 
-        processor.processProfile(JSONObject(), doFullSync = false)
+        processor.processProfile(JsonObject(emptyMap()), doFullSync = false)
 
         // It has no master to receive profiles from, and it still needs them to display and calculate.
         verifyBlocking(profileRepository) { loadFromNs(any()) }
@@ -297,7 +298,7 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
         whenever(nsClient.masterOrPairedClientFlow).thenReturn(MutableStateFlow(true))
         whenever(preferences.get(LongNonKey.LocalProfileLastChange)).thenReturn(now - T.days(1).msecs())
 
-        processor.processProfile(JSONObject(), doFullSync = false)
+        processor.processProfile(JsonObject(emptyMap()), doFullSync = false)
 
         // Profiles arrive from the master over the sync channel; taking the Nightscout copy as well
         // would give one list two writers, fighting through LocalProfileLastChange.

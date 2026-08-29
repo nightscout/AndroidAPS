@@ -285,7 +285,7 @@ class NSClientV3Service : MetroService() {
             }
 
             "profile"      ->
-                appScope.launch { nsIncomingDataProcessor.processProfile(docJson, doFullSync = false) }
+                appScope.launch { nsIncomingDataProcessor.processProfile(docJson.toKotlinxJson(), doFullSync = false) }
 
             "treatments"   -> docString.toNSTreatment()?.let {
                 nsIncomingDataProcessor.processTreatments(listOf(it), doFullSync = false)

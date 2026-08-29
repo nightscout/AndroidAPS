@@ -35,7 +35,8 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import javax.inject.Inject
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
-import org.json.JSONObject
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
 import org.junit.After
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -114,7 +115,7 @@ class CobExtendedCarbsTest : HiltInstrumentedTest() {
         objectivesPlugin.objectives[0].startedOn = 1
 
         (profileFunction as ProfileFunctionImpl).cache.clear()
-        nsIncomingDataProcessor.processProfile(JSONObject(profileData), true)
+        nsIncomingDataProcessor.processProfile(Json.parseToJsonElement(profileData).jsonObject, true)
         assertThat(profileRepository.profile.value).isNotNull()
 
         val store = profileRepository.profile.value ?: error("No profile")

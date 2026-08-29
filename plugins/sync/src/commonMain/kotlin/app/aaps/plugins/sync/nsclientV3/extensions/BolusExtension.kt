@@ -8,7 +8,6 @@ import app.aaps.core.data.time.T
 import app.aaps.core.nssdk.localmodel.treatment.EventType
 import app.aaps.core.nssdk.localmodel.treatment.NSBolus
 import app.aaps.core.nssdk.localmodel.treatment.NSICfg
-import java.security.InvalidParameterException
 
 /** [insulinFallback] stamps records uploaded without one — see `NsIncomingDataProcessor.fallbackICfg`. */
 fun NSBolus.toBolus(insulinFallback: ICfg): BS {
@@ -18,7 +17,7 @@ fun NSBolus.toBolus(insulinFallback: ICfg): BS {
         } ?: insulinFallback
     return BS(
         isValid = isValid,
-        timestamp = date ?: throw InvalidParameterException(),
+        timestamp = date ?: throw IllegalArgumentException(),
         utcOffset = T.mins(utcOffset ?: 0L).msecs(),
         amount = insulin,
         type = type.toBolusType(),

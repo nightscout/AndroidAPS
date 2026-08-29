@@ -55,12 +55,11 @@ import app.aaps.plugins.sync.nsclientV3.extensions.toRunningMode
 import app.aaps.plugins.sync.nsclientV3.extensions.toTemporaryBasal
 import app.aaps.plugins.sync.nsclientV3.extensions.toTemporaryTarget
 import app.aaps.plugins.sync.nsclientV3.extensions.toTherapyEvent
-import app.aaps.plugins.sync.nsclientV3.json.JsonBridge.toKotlinxJson
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
 
 @SingleIn(AppScope::class)
 class NsIncomingDataProcessor @Inject constructor(
@@ -241,7 +240,7 @@ class NsIncomingDataProcessor @Inject constructor(
             return latestDateInReceivedData > 0
         } catch (error: Exception) {
             aapsLogger.error("Error: ", error)
-            nsClientRepository.addLog("◄ ERROR", error.localizedMessage)
+            nsClientRepository.addLog("◄ ERROR", error.message)
         }
         return false
     }
@@ -258,7 +257,7 @@ class NsIncomingDataProcessor @Inject constructor(
             storeDataForDb.addToFoods(foods)
         } catch (error: Exception) {
             aapsLogger.error("Error: ", error)
-            nsClientRepository.addLog("◄ ERROR", error.localizedMessage)
+            nsClientRepository.addLog("◄ ERROR", error.message)
         }
     }
 
@@ -271,12 +270,12 @@ class NsIncomingDataProcessor @Inject constructor(
      * profiles to display and calculate with, so it keeps accepting them (read-only — it cannot edit).
      * A **master** is unchanged: the user's `ns_receive_profile_store` setting decides.
      */
-    suspend fun processProfile(profileJson: JSONObject, doFullSync: Boolean) {
+    suspend fun processProfile(profileJson: JsonObject, doFullSync: Boolean) {
         val accept =
             if (config.AAPSCLIENT) !nsClient.masterOrPairedClientFlow.value
             else preferences.get(BooleanKey.NsClientAcceptProfileStore) || doFullSync
         if (accept) {
-            val store = profileStoreProvider().with(profileJson.toKotlinxJson())
+            val store = profileStoreProvider().with(profileJson)
             val createdAt = store.getStartDate()
             val lastLocalChange = preferences.get(LongNonKey.LocalProfileLastChange)
             aapsLogger.debug(LTag.PROFILE, "Received profileStore: createdAt: $createdAt Local last modification: $lastLocalChange")

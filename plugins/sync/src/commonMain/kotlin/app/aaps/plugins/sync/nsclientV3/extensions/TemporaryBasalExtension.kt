@@ -8,12 +8,11 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.nssdk.localmodel.treatment.EventType
 import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryBasal
 import app.aaps.core.objects.extensions.convertedToAbsolute
-import java.security.InvalidParameterException
 
 fun NSTemporaryBasal.toTemporaryBasal(): TB =
     TB(
         isValid = isValid,
-        timestamp = date ?: throw InvalidParameterException(),
+        timestamp = date ?: throw IllegalArgumentException(),
         utcOffset = T.mins(utcOffset ?: 0L).msecs(),
         type = type.toType(),
         rate = rate,

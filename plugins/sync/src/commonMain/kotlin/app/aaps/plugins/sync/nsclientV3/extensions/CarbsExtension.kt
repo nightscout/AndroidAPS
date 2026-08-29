@@ -7,13 +7,12 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.nssdk.localmodel.treatment.EventType
 import app.aaps.core.nssdk.localmodel.treatment.NSCarbs
-import java.security.InvalidParameterException
 import kotlin.math.min
 
 fun NSCarbs.toCarbs(): CA =
     CA(
         isValid = isValid,
-        timestamp = date ?: throw InvalidParameterException(),
+        timestamp = date ?: throw IllegalArgumentException(),
         utcOffset = T.mins(utcOffset ?: 0L).msecs(),
         amount = min(carbs, HardLimits.MAX_CARBS.toDouble()),
         notes = notes,

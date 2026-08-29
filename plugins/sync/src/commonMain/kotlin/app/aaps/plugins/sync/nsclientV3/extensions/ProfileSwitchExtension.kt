@@ -14,7 +14,6 @@ import app.aaps.core.nssdk.localmodel.treatment.NSProfileSwitch
 import app.aaps.core.objects.extensions.getCustomizedName
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
-import java.security.InvalidParameterException
 
 /** [insulinFallback] stamps records uploaded without one — see `NsIncomingDataProcessor.fallbackICfg`. */
 fun NSProfileSwitch.toProfileSwitch(profileRepository: ProfileRepository, dateUtil: DateUtil, insulinFallback: ICfg): PS? {
@@ -31,7 +30,7 @@ fun NSProfileSwitch.toProfileSwitch(profileRepository: ProfileRepository, dateUt
 
     return PS(
         isValid = isValid,
-        timestamp = date ?: throw InvalidParameterException(),
+        timestamp = date ?: throw IllegalArgumentException(),
         utcOffset = T.mins(utcOffset ?: 0L).msecs(),
         basalBlocks = profileSealed.basalBlocks,
         isfBlocks = profileSealed.isfBlocks,

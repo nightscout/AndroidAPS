@@ -6,12 +6,11 @@ import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.nssdk.localmodel.treatment.EventType
 import app.aaps.core.nssdk.localmodel.treatment.NSOfflineEvent
-import java.security.InvalidParameterException
 
 fun NSOfflineEvent.toRunningMode(): RM =
     RM(
         isValid = isValid,
-        timestamp = date ?: throw InvalidParameterException(),
+        timestamp = date ?: throw IllegalArgumentException(),
         utcOffset = T.mins(utcOffset ?: 0L).msecs(),
         duration = originalDuration ?: duration,
         mode = mode.toMode(),

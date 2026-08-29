@@ -8,11 +8,10 @@ import app.aaps.core.data.time.T
 import app.aaps.core.nssdk.localmodel.entry.Direction
 import app.aaps.core.nssdk.localmodel.entry.NSSgvV3
 import app.aaps.core.nssdk.localmodel.entry.NsUnits
-import java.security.InvalidParameterException
 
 fun NSSgvV3.toGV(): GV {
     return GV(
-        timestamp = date ?: throw InvalidParameterException(),
+        timestamp = date ?: throw IllegalArgumentException(),
         value = sgv,
         noise = noise,
         raw = filtered,

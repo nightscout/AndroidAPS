@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -275,7 +276,7 @@ internal class LoadProfileStoreWorkerTest : TestBaseWithProfile() {
         assertIs<ListenableWorker.Result.Success>(result)
         verifyBlocking(nsIncomingDataProcessor) {
             processProfile(
-                org.mockito.kotlin.argThat { getString("defaultProfile") == "Profile2" },
+                org.mockito.kotlin.argThat { this["defaultProfile"]?.jsonPrimitive?.content == "Profile2" },
                 anyBoolean()
             )
         }

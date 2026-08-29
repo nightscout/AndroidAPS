@@ -1,5 +1,7 @@
 package app.aaps.plugins.sync.nsclientV3.extensions
 
+import kotlin.time.Clock
+
 import app.aaps.core.data.model.FD
 import app.aaps.core.data.model.IDs
 import app.aaps.core.nssdk.localmodel.food.NSFood
@@ -22,7 +24,7 @@ fun NSFood.toFood(): FD =
 
 fun FD.toNSFood(): NSFood =
     NSFood(
-        date = System.currentTimeMillis(),
+        date = Clock.System.now().toEpochMilliseconds(),
         isValid = isValid,
         name = name,
         category = category,

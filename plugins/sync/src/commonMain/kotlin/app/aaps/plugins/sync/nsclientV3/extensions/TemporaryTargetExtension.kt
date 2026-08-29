@@ -7,12 +7,11 @@ import app.aaps.core.data.time.T
 import app.aaps.core.nssdk.localmodel.entry.NsUnits
 import app.aaps.core.nssdk.localmodel.treatment.EventType
 import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryTarget
-import java.security.InvalidParameterException
 
 fun NSTemporaryTarget.toTemporaryTarget(): TT =
     TT(
         isValid = isValid,
-        timestamp = date ?: throw InvalidParameterException(),
+        timestamp = date ?: throw IllegalArgumentException(),
         utcOffset = T.mins(utcOffset ?: 0L).msecs(),
         reason = reason.toReason(),
         highTarget = targetTop.asMgdl(),

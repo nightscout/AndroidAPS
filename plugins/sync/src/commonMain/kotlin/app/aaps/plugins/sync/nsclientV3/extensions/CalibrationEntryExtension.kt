@@ -5,11 +5,10 @@ import app.aaps.core.data.model.IDs
 import app.aaps.core.data.time.T
 import app.aaps.core.nssdk.localmodel.entry.NSMbgV3
 import app.aaps.core.nssdk.localmodel.entry.NsUnits
-import java.security.InvalidParameterException
 
 fun NSMbgV3.toCAL(): CAL =
     CAL(
-        timestamp = date ?: throw InvalidParameterException(),
+        timestamp = date ?: throw IllegalArgumentException(),
         fingerstickMgdl = mbg,
         sensorMgdlAtPairing = sensorMgdlAtPairing,
         ids = IDs(nightscoutId = identifier),

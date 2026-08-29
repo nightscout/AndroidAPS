@@ -8,12 +8,11 @@ import app.aaps.core.data.time.T
 import app.aaps.core.nssdk.localmodel.entry.NsUnits
 import app.aaps.core.nssdk.localmodel.treatment.EventType
 import app.aaps.core.nssdk.localmodel.treatment.NSTherapyEvent
-import java.security.InvalidParameterException
 
 fun NSTherapyEvent.toTherapyEvent(): TE =
     TE(
         isValid = isValid,
-        timestamp = date ?: throw InvalidParameterException(),
+        timestamp = date ?: throw IllegalArgumentException(),
         utcOffset = T.mins(utcOffset ?: 0L).msecs(),
         glucoseUnit = units.toUnits(),
         type = eventType.toType(),
