@@ -3,6 +3,17 @@
 Provisioning the doomsday phone with the eternal AAPS build. Do this **while the internet still
 works**; the phone must end up needing nothing.
 
+## Phone fleet
+
+| Phone | Role | Notes |
+|---|---|---|
+| Galaxy S24+ (SM-S926U1, Android 16) | Primary spare — this runbook | Update fully, then freeze (auto-updates off) |
+| Galaxy A17 5G (SM-A176U) — to buy new, unlocked | Backup spare #2 | 6 yrs updates from Android 15; take it to Android 16 if offered, then freeze. Verify SM-A176U + "Unlocked" on arrival |
+| Galaxy S10e (Android 12 — the minimum) | Test mule + tertiary spare | Battery was deep-discharged and revives slowly: **replace the battery (~$50)** before counting it as a real spare. Rehearse the full pipeline here first: sign, sideload, import, clock tests |
+
+All three are Samsung/One UI: the battery-settings and sideload steps below apply to each.
+Every phone in the bag joins the same ~3-month charge rotation.
+
 ## 1. Sideload the apps
 
 On the S24+ (One UI):
