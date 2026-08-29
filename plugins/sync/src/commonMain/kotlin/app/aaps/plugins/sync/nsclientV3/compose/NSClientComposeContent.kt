@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.nsclientV3.compose
 
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.sync.SyncStrings
@@ -88,7 +89,7 @@ class NSClientComposeContent(
                     showCleanupDialog = false
                     scope.launch {
                         try {
-                            val result = withContext(Dispatchers.IO) {
+                            val result = withContext(aapsIoDispatcher) {
                                 persistenceLayer.cleanupDatabase(CLEANUP_RETENTION_DAYS, deleteTrackedChanges = true)
                             }
                             if (result.isNotEmpty()) {
@@ -100,7 +101,7 @@ class NSClientComposeContent(
                                 showResultDialog = true
                             }
                             aapsLogger.info(LTag.CORE, "Cleaned up databases with result: $result")
-                            withContext(Dispatchers.IO) {
+                            withContext(aapsIoDispatcher) {
                                 nsClient.resetToFullSync()
                                 nsClient.resend("FULL_SYNC")
                             }
@@ -114,7 +115,7 @@ class NSClientComposeContent(
                     showCleanupDialog = false
                     // Cancel means "No" to cleanup but continue with full sync
                     scope.launch {
-                        withContext(Dispatchers.IO) {
+                        withContext(aapsIoDispatcher) {
                             nsClient.resetToFullSync()
                             nsClient.resend("FULL_SYNC")
                         }
@@ -150,7 +151,7 @@ class NSClientComposeContent(
                 nsClientRepository.clearLog()
             },
             onSendNow = {
-                scope.launch(Dispatchers.IO) {
+                scope.launch(aapsIoDispatcher) {
                     nsClient.resend("GUI")
                 }
             },

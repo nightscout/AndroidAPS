@@ -42,6 +42,7 @@ import app.aaps.plugins.sync.nsclientV3.ws.NsConnection
 import app.aaps.plugins.sync.nsclientV3.ws.NsLoadExecutor
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -68,6 +69,7 @@ import org.mockito.kotlin.whenever
 import kotlin.reflect.KClass
 
 @Suppress("SpellCheckingInspection")
+@OptIn(ExperimentalAtomicApi::class)
 internal class NSClientV3PluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var receiverDelegate: ReceiverDelegate
@@ -699,7 +701,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         // Assert
         // 1. Verify the in-memory flags and objects are reset to their default states.
         assertThat(sut.initialLoadFinished).isFalse()
-        assertThat(sut.fullSyncRequested).isTrue()
+        assertThat(sut.fullSyncRequested.load()).isTrue()
         assertThat(sut.lastLoadedSrvModified.collections.treatments).isEqualTo(0L)
         assertThat(sut.firstLoadContinueTimestamp.collections.treatments).isEqualTo(0L)
 

@@ -17,6 +17,9 @@ import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import kotlin.concurrent.Volatile
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
@@ -68,15 +71,20 @@ class PreferencesClientPublisher @Inject constructor(
     // Keys changed since the last round-trip, drained on each debounced trigger.
     private val pending = mutableSetOf<NonPreferenceKey>()
 
+    // Mutex rather than a monitor: `synchronized` is JVM only. debounce runs the upstream and the
+    // collector in different coroutines, so this set genuinely needs guarding - and both sites are
+    // already inside the launch below, so suspending costs nothing.
+    private val pendingMutex = Mutex()
+
     fun start(scope: CoroutineScope) {
         if (!config.AAPSCLIENT) return
         if (job != null) return
         job = scope.launch {
             preferences.syncedLocalChanges
-                .onEach { key -> synchronized(pending) { pending.add(key) } }
+                .onEach { key -> pendingMutex.withLock { pending.add(key) } }
                 .debounce(SETTLE_MS)
                 .collect {
-                    val batch = synchronized(pending) { pending.toList().also { pending.clear() } }
+                    val batch = pendingMutex.withLock { pending.toList().also { pending.clear() } }
                     val changes = batch.mapNotNull { key -> serialize(key)?.let { key.key to it } }.toMap()
                     if (changes.isEmpty()) return@collect
                     aapsLogger.debug(LTag.NSCLIENT, "ClientControl: preferences.update round-trip keys=${changes.keys}")

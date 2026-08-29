@@ -9,7 +9,6 @@ import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.clientcontrol.PendingAction
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AlarmSound
@@ -43,8 +42,10 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicReference
+import kotlin.concurrent.Volatile
+import kotlin.concurrent.atomics.AtomicBoolean
+import kotlin.concurrent.atomics.AtomicReference
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -76,6 +77,7 @@ import kotlinx.serialization.json.JsonObject
  * ACK events are buffered with replay so an ack landing in the narrow window between publish and the
  * collector starting is not lost; the per-counter filter discards anything not for the live request.
  */
+@OptIn(ExperimentalAtomicApi::class)
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class, binding = binding<ClientControlActionDispatcher>())
 class ClientControlRoundTrip @Inject constructor(
@@ -89,7 +91,9 @@ class ClientControlRoundTrip @Inject constructor(
     private val rh: TextResolver,
     private val bolusProgressData: BolusProgressData,
     private val aapsLogger: AAPSLogger,
-    @ApplicationScope private val appScope: CoroutineScope
+    // Plain CoroutineScope, not @ApplicationScope: that qualifier is javax and cannot appear in
+    // commonMain. AppCoroutineBindings.unqualifiedAppScope provides the same scope unqualified.
+    private val appScope: CoroutineScope
 ) : ClientControlActionDispatcher {
 
     companion object {
@@ -280,7 +284,7 @@ class ClientControlRoundTrip @Inject constructor(
 
     override fun dismissActionProgress() {
         _pending.value = null
-        currentRun.getAndSet(null)?.cancel()
+        currentRun.exchange(null)?.cancel()
     }
 
     override suspend fun execute(command: ClientControlActionDispatcher.Command, label: String, localExecute: suspend () -> ActionProgress): ActionProgress =
@@ -303,7 +307,7 @@ class ClientControlRoundTrip @Inject constructor(
         var terminal: ActionProgress = ActionProgress.Unconfirmed(FailureReason.NoReply)
         try {
             coroutineScope {
-                currentRun.set(coroutineContext[Job])
+                currentRun.store(coroutineContext[Job])
                 dispatch(command).collect { p ->
                     terminal = p
                     // Applied is cleared after the loop (with the min-visible hold); show the rest live.
@@ -321,7 +325,7 @@ class ClientControlRoundTrip @Inject constructor(
                 _pending.value = null
             }
         } finally {
-            currentRun.set(null)
+            currentRun.store(null)
             // Cancelled mid-wait (dismiss / scope teardown) — don't leave a stuck spinner.
             val current = _pending.value?.progress
             if (current is ActionProgress.Sending || current is ActionProgress.MasterExecuting)
@@ -399,7 +403,7 @@ class ClientControlRoundTrip @Inject constructor(
             reachJob.cancel()
             send(result)
         } finally {
-            inFlight.set(false)
+            inFlight.store(false)
         }
     }
 

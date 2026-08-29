@@ -24,7 +24,7 @@ import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileRepository
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppExit
@@ -77,21 +77,13 @@ import app.aaps.plugins.sync.nsclientV3.ws.NsConnection
 import app.aaps.plugins.sync.nsclientV3.ws.NsLoadExecutor
 import app.aaps.plugins.sync.nsclientV3.ws.NsLoadStep
 import app.aaps.plugins.sync.nsclientV3.services.RunningConfigurationPublisher
-import app.aaps.plugins.sync.nsclientV3.workers.DataSyncWorker
-import app.aaps.plugins.sync.nsclientV3.workers.LoadBgWorker
-import app.aaps.plugins.sync.nsclientV3.workers.LoadDeviceStatusWorker
-import app.aaps.plugins.sync.nsclientV3.workers.LoadFoodsWorker
-import app.aaps.plugins.sync.nsclientV3.workers.LoadLastModificationWorker
-import app.aaps.plugins.sync.nsclientV3.workers.LoadProfileStoreWorker
-import app.aaps.plugins.sync.nsclientV3.workers.LoadSettingsWorker
-import app.aaps.plugins.sync.nsclientV3.workers.LoadStatusWorker
-import app.aaps.plugins.sync.nsclientV3.workers.LoadTreatmentsWorker
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 
+import kotlin.concurrent.Volatile
 import kotlin.concurrent.atomics.AtomicBoolean
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.time.Duration.Companion.milliseconds
@@ -132,7 +124,7 @@ import kotlinx.serialization.json.encodeToJsonElement
 @ContributesBinding(AppScope::class, binding = binding<NsClient>())
 class NSClientV3Plugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    override val rh: ResourceHelper,
+    override val rh: TextResolver,
     preferences: Preferences,
     private val rxBus: RxBus,
     private val receiverDelegate: ReceiverDelegate,
@@ -226,18 +218,19 @@ class NSClientV3Plugin @Inject constructor(
     internal var firstLoadContinueTimestamp = LastModified(LastModified.Collections()) // timestamp of last fetched data for every collection during initial load
     internal var initialLoadFinished = false
 
-    private val fullSyncSemaphore = Any()
 
     /**
      * Set to true if full sync is requested from fragment.
      * In this case we must enable accepting all data from NS even when disabled in preferences
      */
-    @VisibleForTesting var fullSyncRequested: Boolean = false
+    // AtomicBoolean, not a flag behind a lock: the only thing the lock did was make "is a full sync
+    // requested" and "claim it" one step, which compareAndSet does directly.
+    @VisibleForTesting val fullSyncRequested = AtomicBoolean(false)
 
     /**
      * Full sync is performed right now
      */
-    var doingFullSync = false
+    @Volatile var doingFullSync = false
         @VisibleForTesting set
 
     // The bind/unbind that used to live here is in ServiceNsConnection now, which is what lets this
@@ -656,9 +649,7 @@ class NSClientV3Plugin @Inject constructor(
         initialLoadFinished = false
         storeLastLoadedSrvModified()
         dataSyncSelectorV3.resetToNextFullSync()
-        synchronized(fullSyncSemaphore) {
-            fullSyncRequested = true
-        }
+        fullSyncRequested.store(true)
     }
 
     override fun handleClearAlarm(originalAlarm: NSAlarm, silenceTimeInMilliseconds: Long) {
@@ -723,12 +714,12 @@ class NSClientV3Plugin @Inject constructor(
     private suspend fun dbOperationProfileStore(collection: String = "profile", dataPair: DataSyncSelector.DataPair, progress: String): Boolean {
         val data = (dataPair as DataSyncSelector.PairProfileStore).value
         try {
-            nsClientRepository.addLog("► ADD $collection", "Sent ${dataPair.javaClass.simpleName} $progress", data)
+            nsClientRepository.addLog("► ADD $collection", "Sent ${dataPair::class.simpleName} $progress", data)
             nsAndroidClient?.createProfileStore(data)?.let { result ->
                 when (result.response) {
                     200  -> nsClientRepository.addLog("◄ UPDATED", "OK ProfileStore")
                     201  -> nsClientRepository.addLog("◄ ADDED", "OK ProfileStore")
-                    404  -> nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+                    404  -> nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value::class.simpleName} ${result.errorResponse}")
 
                     else -> {
                         nsClientRepository.addLog("◄ ERROR", "${result.errorResponse}")
@@ -748,12 +739,12 @@ class NSClientV3Plugin @Inject constructor(
     private suspend fun dbOperationDeviceStatus(collection: String = "devicestatus", dataPair: DataSyncSelector.PairDeviceStatus, progress: String): Boolean {
         try {
             val data = dataPair.value.toNSDeviceStatus()
-            nsClientRepository.addLog("► ADD $collection", "Sent ${dataPair.javaClass.simpleName} $progress", Json {}.encodeToJsonElement(data))
+            nsClientRepository.addLog("► ADD $collection", "Sent ${dataPair::class.simpleName} $progress", Json {}.encodeToJsonElement(data))
             nsAndroidClient?.createDeviceStatus(data)?.let { result ->
                 when (result.response) {
-                    200  -> nsClientRepository.addLog("◄ UPDATED", "OK ${dataPair.value.javaClass.simpleName}")
-                    201  -> nsClientRepository.addLog("◄ ADDED", "OK ${dataPair.value.javaClass.simpleName} ${result.identifier}")
-                    404  -> nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+                    200  -> nsClientRepository.addLog("◄ UPDATED", "OK ${dataPair.value::class.simpleName}")
+                    201  -> nsClientRepository.addLog("◄ ADDED", "OK ${dataPair.value::class.simpleName} ${result.identifier}")
+                    404  -> nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value::class.simpleName} ${result.errorResponse}")
 
                     else -> {
                         nsClientRepository.addLog("◄ ERROR", "${result.errorResponse} ")
@@ -789,23 +780,23 @@ class NSClientV3Plugin @Inject constructor(
                     Operation.UPDATE -> "► UPDATE $collection"
                 },
                 when (operation) {
-                    Operation.CREATE -> "Sent ${dataPair.javaClass.simpleName} $progress"
-                    Operation.UPDATE -> "Sent ${dataPair.javaClass.simpleName} $id $progress"
+                    Operation.CREATE -> "Sent ${dataPair::class.simpleName} $progress"
+                    Operation.UPDATE -> "Sent ${dataPair::class.simpleName} $id $progress"
                 },
                 Json {}.encodeToJsonElement(data)
             )
             call?.let { it(data) }?.let { result ->
                 when (result.response) {
                     200  -> {
-                        nsClientRepository.addLog("◄ UPDATED", "OK ${dataPair.value.javaClass.simpleName}")
+                        nsClientRepository.addLog("◄ UPDATED", "OK ${dataPair.value::class.simpleName}")
                         clearUpdateRetry(operation, id)
                     }
 
-                    201  -> nsClientRepository.addLog("◄ ADDED", "OK ${dataPair.value.javaClass.simpleName}")
-                    400  -> nsClientRepository.addLog("◄ FAIL", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+                    201  -> nsClientRepository.addLog("◄ ADDED", "OK ${dataPair.value::class.simpleName}")
+                    400  -> nsClientRepository.addLog("◄ FAIL", "${dataPair.value::class.simpleName} ${result.errorResponse}")
 
                     404  -> {
-                        nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+                        nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value::class.simpleName} ${result.errorResponse}")
                         if (!config.isEnabled(ExternalOptions.IGNORE_NS_V3_ERRORS) &&
                             retryUpdateLater(operation, id, isDeletion = !dataPair.value.isValid)
                         ) return false
@@ -844,23 +835,23 @@ class NSClientV3Plugin @Inject constructor(
                     Operation.UPDATE -> "► UPDATE $collection"
                 },
                 when (operation) {
-                    Operation.CREATE -> "Sent ${dataPair.javaClass.simpleName} $progress"
-                    Operation.UPDATE -> "Sent ${dataPair.javaClass.simpleName} $id $progress"
+                    Operation.CREATE -> "Sent ${dataPair::class.simpleName} $progress"
+                    Operation.UPDATE -> "Sent ${dataPair::class.simpleName} $id $progress"
                 },
                 Json {}.encodeToJsonElement(data)
             )
             call?.let { it(data) }?.let { result ->
                 when (result.response) {
                     200  -> {
-                        nsClientRepository.addLog("◄ UPDATED", "OK ${dataPair.value.javaClass.simpleName}")
+                        nsClientRepository.addLog("◄ UPDATED", "OK ${dataPair.value::class.simpleName}")
                         clearUpdateRetry(operation, id)
                     }
 
-                    201  -> nsClientRepository.addLog("◄ ADDED", "OK ${dataPair.value.javaClass.simpleName}")
-                    400  -> nsClientRepository.addLog("◄ FAIL", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+                    201  -> nsClientRepository.addLog("◄ ADDED", "OK ${dataPair.value::class.simpleName}")
+                    400  -> nsClientRepository.addLog("◄ FAIL", "${dataPair.value::class.simpleName} ${result.errorResponse}")
 
                     404  -> {
-                        nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+                        nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value::class.simpleName} ${result.errorResponse}")
                         if (!config.isEnabled(ExternalOptions.IGNORE_NS_V3_ERRORS) &&
                             retryUpdateLater(operation, id, isDeletion = !dataPair.value.isValid)
                         ) return false
@@ -899,23 +890,23 @@ class NSClientV3Plugin @Inject constructor(
                     Operation.UPDATE -> "► UPDATE $collection"
                 },
                 when (operation) {
-                    Operation.CREATE -> "Sent ${dataPair.javaClass.simpleName} $progress"
-                    Operation.UPDATE -> "Sent ${dataPair.javaClass.simpleName} $id $progress"
+                    Operation.CREATE -> "Sent ${dataPair::class.simpleName} $progress"
+                    Operation.UPDATE -> "Sent ${dataPair::class.simpleName} $id $progress"
                 },
                 Json {}.encodeToJsonElement(data)
             )
             call?.let { it(data) }?.let { result ->
                 when (result.response) {
                     200  -> {
-                        nsClientRepository.addLog("◄ UPDATED", "OK ${dataPair.value.javaClass.simpleName}")
+                        nsClientRepository.addLog("◄ UPDATED", "OK ${dataPair.value::class.simpleName}")
                         clearUpdateRetry(operation, id)
                     }
 
-                    201  -> nsClientRepository.addLog("◄ ADDED", "OK ${dataPair.value.javaClass.simpleName}")
-                    400  -> nsClientRepository.addLog("◄ FAIL", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+                    201  -> nsClientRepository.addLog("◄ ADDED", "OK ${dataPair.value::class.simpleName}")
+                    400  -> nsClientRepository.addLog("◄ FAIL", "${dataPair.value::class.simpleName} ${result.errorResponse}")
 
                     404  -> {
-                        nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+                        nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value::class.simpleName} ${result.errorResponse}")
                         if (!config.isEnabled(ExternalOptions.IGNORE_NS_V3_ERRORS) &&
                             retryUpdateLater(operation, id, isDeletion = !dataPair.value.isValid)
                         ) return false
@@ -975,23 +966,23 @@ class NSClientV3Plugin @Inject constructor(
                         Operation.UPDATE -> "► UPDATE $collection"
                     },
                     when (operation) {
-                        Operation.CREATE -> "Sent ${dataPair.javaClass.simpleName} $progress"
-                        Operation.UPDATE -> "Sent ${dataPair.javaClass.simpleName} $id $progress"
+                        Operation.CREATE -> "Sent ${dataPair::class.simpleName} $progress"
+                        Operation.UPDATE -> "Sent ${dataPair::class.simpleName} $id $progress"
                     },
                     Json.encodeToJsonElement(data)
                 )
                 call?.let { it(data) }?.let { result ->
                     when (result.response) {
                         200  -> {
-                            nsClientRepository.addLog("◄ UPDATED", "OK ${dataPair.value.javaClass.simpleName}")
+                            nsClientRepository.addLog("◄ UPDATED", "OK ${dataPair.value::class.simpleName}")
                             clearUpdateRetry(operation, id)
                         }
 
-                        201  -> nsClientRepository.addLog("◄ ADDED", "OK ${dataPair.value.javaClass.simpleName}")
-                        400  -> nsClientRepository.addLog("◄ FAIL", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+                        201  -> nsClientRepository.addLog("◄ ADDED", "OK ${dataPair.value::class.simpleName}")
+                        400  -> nsClientRepository.addLog("◄ FAIL", "${dataPair.value::class.simpleName} ${result.errorResponse}")
 
                         404  -> {
-                            nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}")
+                            nsClientRepository.addLog("◄ NOT_FOUND", "${dataPair.value::class.simpleName} ${result.errorResponse}")
                             if (!config.isEnabled(ExternalOptions.IGNORE_NS_V3_ERRORS) &&
                                 retryUpdateLater(operation, id, isDeletion = (dataPair.value as? HasIDs)?.isValid == false)
                             ) return false
@@ -1063,7 +1054,7 @@ class NSClientV3Plugin @Inject constructor(
                     return true
                 }
             } catch (e: Exception) {
-                nsClientRepository.addLog("◄ ERROR", e.localizedMessage)
+                nsClientRepository.addLog("◄ ERROR", e.message)
                 aapsLogger.error(LTag.NSCLIENT, "Upload exception", e)
                 return false
             }
@@ -1117,12 +1108,11 @@ class NSClientV3Plugin @Inject constructor(
             return
         }
         nsClientRepository.addLog("● RUN", "Starting next round $origin")
-        synchronized(fullSyncSemaphore) {
-            if (fullSyncRequested) {
-                fullSyncRequested = false
-                doingFullSync = true
-                nsClientRepository.addLog("● RUN", "Full sync is requested")
-            }
+        // compareAndSet, not a lock: the same test-and-clear the pending flags above use. It is what
+        // makes "was a full sync requested" and "claim it" one step.
+        if (fullSyncRequested.compareAndSet(true, false)) {
+            doingFullSync = true
+            nsClientRepository.addLog("● RUN", "Full sync is requested")
         }
         nsClientRepository.updateStatus(status)
         nsLoadExecutor.runChain(
@@ -1145,9 +1135,7 @@ class NSClientV3Plugin @Inject constructor(
     }
 
     fun endFullSync() {
-        synchronized(fullSyncSemaphore) {
-            doingFullSync = false
-        }
+        doingFullSync = false
     }
 
     internal fun executeUpload(origin: String) {

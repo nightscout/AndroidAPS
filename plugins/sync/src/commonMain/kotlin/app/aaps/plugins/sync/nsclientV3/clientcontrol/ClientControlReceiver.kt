@@ -8,7 +8,6 @@ import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -51,8 +50,10 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicReference
+import kotlin.concurrent.Volatile
+import kotlin.concurrent.atomics.AtomicBoolean
+import kotlin.concurrent.atomics.AtomicReference
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -98,6 +99,7 @@ import kotlinx.serialization.json.put
  * an older master version just doesn't know what to do with it). Replay is gated solely by the
  * persistent per-client counter — see the rationale comments in [verifyAndAck].
  */
+@OptIn(ExperimentalAtomicApi::class)
 @SingleIn(AppScope::class)
 class ClientControlReceiver @Inject constructor(
     private val authorizedRepository: AuthorizedClientsRepository,
@@ -117,7 +119,9 @@ class ClientControlReceiver @Inject constructor(
     private val commandQueue: CommandQueue,
     private val rh: TextResolver,
     private val aapsLogger: AAPSLogger,
-    @ApplicationScope private val appScope: CoroutineScope
+    // Plain CoroutineScope, not @ApplicationScope: that qualifier is javax and cannot appear in
+    // commonMain. AppCoroutineBindings.unqualifiedAppScope provides the same scope unqualified.
+    private val appScope: CoroutineScope
 ) {
 
     private val json = Json { ignoreUnknownKeys = true }
@@ -164,7 +168,7 @@ class ClientControlReceiver @Inject constructor(
             var lastWrite = 0L
             bolusProgressData.state.collect { st ->
                 val previous = prev // snapshot: prev is a mutated captured var, so it can't smart-cast in the when
-                val clientId = progressClientId.get()
+                val clientId = progressClientId.load()
                 // TTL guards only the PRE-delivery window (a commit that never starts a pump bolus). Once delivery
                 // has started (progressDelivering) we keep mirroring until the terminal frame regardless of elapsed
                 // time, so long boluses don't lose their Complete/Cleared frame and freeze the client dialog.
@@ -176,14 +180,14 @@ class ClientControlReceiver @Inject constructor(
                     when {
                         st == null && previous != null  -> { // ended before 100 (pump failure / cancel)
                             writeProgress(clientId, ProgressPhase.Cleared, previous)
-                            progressClientId.set(null)
+                            progressClientId.store(null)
                             progressDelivering = false
                             stopProgressHeartbeat()
                         }
 
                         st != null && st.percent >= 100 -> { // delivered
                             writeProgress(clientId, ProgressPhase.Complete, st)
-                            progressClientId.set(null)
+                            progressClientId.store(null)
                             progressDelivering = false
                             stopProgressHeartbeat()
                         }
@@ -215,7 +219,7 @@ class ClientControlReceiver @Inject constructor(
         progressHeartbeatJob = appScope.launch {
             while (true) {
                 delay(progressHeartbeatMs)
-                val clientId = progressClientId.get() ?: continue
+                val clientId = progressClientId.load() ?: continue
                 val st = bolusProgressData.state.value ?: continue
                 // Re-check the live state right before writing so a heartbeat that wins a race with a terminal
                 // frame doesn't re-publish an Active after Complete/Cleared.
@@ -561,7 +565,7 @@ class ClientControlReceiver @Inject constructor(
     private suspend fun onVerifiedBolusCommit(entry: AuthorizedClient, envelope: SignedEnvelope, message: ClientControlMessage.BolusCommit, now: Long): AckOutcome {
         authorizedRepository.bumpLastSeen(entry.clientId, envelope.counter, now)
         // AtomicReference (not a plain captured var): the onError closure CAN, in the microscopic window between
-        // confirm() returning and syncDone.set(true), be invoked on the appScope thread — give the sync-path write a
+        // confirm() returning and syncDone.store(true), be invoked on the appScope thread — give the sync-path write a
         // memory barrier so the read below can never miss it. (Same reason syncDone is an AtomicBoolean.)
         val deliverError = AtomicReference<String?>(null)
         // The onError closure fires BOTH synchronously (a mode-gate reject → feeds THIS command's Done ack) and later,
@@ -571,17 +575,17 @@ class ClientControlReceiver @Inject constructor(
         // Arm the progress mirror to THIS client BEFORE delivery starts (the executor only sees Sources.NSClient,
         // not the clientId). Disarmed below if nothing was parked, on the terminal frame by the observer, and in
         // the onError path if delivery fails before any frame streamed (so a stale arm can't mirror a later bolus).
-        // Order matters: write progressArmedAt (plain @Volatile) BEFORE progressClientId.set() (AtomicReference). The
-        // collector reads progressClientId.get() (acquire) then progressArmedAt; the release fence on .set() publishes
+        // Order matters: write progressArmedAt (plain @Volatile) BEFORE progressClientId.store() (AtomicReference). The
+        // collector reads progressClientId.load() (acquire) then progressArmedAt; the release fence on .store() publishes
         // the prior armedAt write, so the collector can never observe the new clientId with a stale armedAt(0) and
         // wrongly drop the first progress frames (armedFresh=false).
         progressArmedAt = now
         progressDelivering = false // new arm starts in the pre-delivery, TTL-guarded window
-        // Capture the generation now (before .set()'s release fence, like progressArmedAt): the mirror only
+        // Capture the generation now (before .store()'s release fence, like progressArmedAt): the mirror only
         // forwards a bolus whose generation is strictly newer — i.e. one this commit actually starts, not a
         // bolus already delivering on the master (which would otherwise be mis-shown on the client's dialog).
         progressArmedGeneration = bolusProgressData.currentGeneration
-        progressClientId.set(entry.clientId)
+        progressClientId.store(entry.clientId)
         val syncDone = AtomicBoolean(false)
         val result = wizardBolusExecutor.confirm(message.bolusId, Sources.NSClient, { comment ->
             // Delivery failed. If no frame ever streamed for this arm (the bolus never started — e.g. the master was
@@ -589,14 +593,14 @@ class ClientControlReceiver @Inject constructor(
             // mirrored to this client during the remaining arm-TTL. Skip if it IS streaming (its terminal Cleared
             // frame disarms instead); compareAndSet so a newer commit's arm is never clobbered (fires sync OR async).
             if (!progressDelivering) progressClientId.compareAndSet(entry.clientId, null)
-            if (syncDone.get()) appScope.launch { writeDeliveryFailureAck(entry, envelope.counter, comment) }
-            else deliverError.set(comment)
+            if (syncDone.load()) appScope.launch { writeDeliveryFailureAck(entry, envelope.counter, comment) }
+            else deliverError.store(comment)
         }, message.asAdvisor, correctionU = message.correctionU)
-        syncDone.set(true)
+        syncDone.store(true)
         val delivered = result is WizardBolusExecutor.ConfirmResult.Delivered
-        if (!delivered) progressClientId.set(null) // NoPending → nothing starts → don't mirror a future bolus to this client
+        if (!delivered) progressClientId.store(null) // NoPending → nothing starts → don't mirror a future bolus to this client
         nsClientRepository.addLog("◄ CLIENTCTL", "bolus.commit id=${message.bolusId}${if (message.asAdvisor) " advisor" else ""} from ${entry.name}: ${if (delivered) "delivered" else "no-pending"}")
-        val err = deliverError.get()
+        val err = deliverError.load()
         return when {
             result is WizardBolusExecutor.ConfirmResult.NoPending -> AckOutcome(AckStatus.Failed, FailureReason.NoPendingBolus.name)
             err != null                                           -> AckOutcome(AckStatus.Failed, FailureReason.ExecutionFailed.name, err)

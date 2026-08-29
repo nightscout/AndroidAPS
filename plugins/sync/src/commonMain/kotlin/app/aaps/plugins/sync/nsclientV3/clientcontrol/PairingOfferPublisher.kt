@@ -1,6 +1,7 @@
 package app.aaps.plugins.sync.nsclientV3.clientcontrol
 
-import android.util.Base64
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.NSClientRepository
@@ -12,7 +13,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
-import java.io.IOException
+import kotlinx.io.IOException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
@@ -34,6 +35,7 @@ import kotlinx.serialization.json.put
  * The wrap + upload runs on [Dispatchers.Default] — PBKDF2 is ~200ms; on Main it freezes the
  * dialog as it opens.
  */
+@OptIn(ExperimentalEncodingApi::class)
 @SingleIn(AppScope::class)
 class PairingOfferPublisher @Inject constructor(
     private val nsClientV3Plugin: Provider<NSClientV3Plugin>,
@@ -97,16 +99,16 @@ class PairingOfferPublisher @Inject constructor(
     }
 
     private fun buildOfferDoc(payload: PairingPayload, pin: String): JsonObject {
-        val payloadBytes = json.encodeToString(PairingPayload.serializer(), payload).toByteArray(Charsets.UTF_8)
+        val payloadBytes = json.encodeToString(PairingPayload.serializer(), payload).encodeToByteArray()
         val salt = ClientControlPairingCrypto.newSalt()
         val iv = ClientControlPairingCrypto.newIv()
         val wrapped = ClientControlPairingCrypto.wrap(payloadBytes, pin, salt, iv)
         val offer = PairingOffer(
             clientId = payload.clientId,
             expiresAt = payload.expiresAt,
-            kdfSaltB64 = Base64.encodeToString(salt, Base64.NO_WRAP),
-            ivB64 = Base64.encodeToString(iv, Base64.NO_WRAP),
-            wrappedB64 = Base64.encodeToString(wrapped, Base64.NO_WRAP)
+            kdfSaltB64 = Base64.Default.encode(salt),
+            ivB64 = Base64.Default.encode(iv),
+            wrappedB64 = Base64.Default.encode(wrapped)
         )
         return buildJsonObject {
             // Same placeholder convention as ClientControlPublisher.uploadEnvelope — `date` is

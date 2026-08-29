@@ -1,6 +1,7 @@
 package app.aaps.plugins.sync.nsclientV3.clientcontrol
 
-import android.util.Base64
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.json.OrgJsonCompat.optJsonObjectCompat
 import app.aaps.core.data.json.OrgJsonCompat.optStringCompat
@@ -15,7 +16,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
-import java.io.IOException
+import kotlinx.io.IOException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -33,6 +34,7 @@ import kotlinx.serialization.json.Json
  * The unwrap loop runs on [Dispatchers.Default] because each PBKDF2 attempt costs ~200ms;
  * trying it on Main blocks the UI long enough to trigger ANR with a handful of stale offers.
  */
+@OptIn(ExperimentalEncodingApi::class)
 @SingleIn(AppScope::class)
 class PairingOfferFetcher @Inject constructor(
     private val nsClientV3Plugin: Provider<NSClientV3Plugin>,
@@ -110,7 +112,7 @@ class PairingOfferFetcher @Inject constructor(
         val iv = decodeB64(offer.ivB64) ?: return null
         val wrapped = decodeB64(offer.wrappedB64) ?: return null
         val plaintext = ClientControlPairingCrypto.unwrap(wrapped, pin, salt, iv) ?: return null
-        val payloadJson = String(plaintext, Charsets.UTF_8)
+        val payloadJson = plaintext.decodeToString()
         val payload = try {
             json.decodeFromString<PairingPayload>(payloadJson)
         } catch (_: SerializationException) {
@@ -125,7 +127,7 @@ class PairingOfferFetcher @Inject constructor(
     }
 
     private fun decodeB64(s: String): ByteArray? = try {
-        Base64.decode(s, Base64.NO_WRAP)
+        Base64.Default.decode(s)
     } catch (_: IllegalArgumentException) {
         null
     }

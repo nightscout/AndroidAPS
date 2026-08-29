@@ -3,7 +3,6 @@ package app.aaps.plugins.sync.nsclientV3.data
 import app.aaps.core.interfaces.aps.RT
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
@@ -89,7 +88,8 @@ class NSDeviceStatusHandler @Inject constructor(
     private val overviewData: OverviewData,
     private val calculationWorkflow: CalculationWorkflow,
     private val rxBus: RxBus,
-    @ApplicationScope private val appScope: CoroutineScope,
+    // Plain CoroutineScope: @ApplicationScope is a javax qualifier and cannot appear in commonMain.
+    private val appScope: CoroutineScope,
     // Provider to avoid a Dagger init cycle — NSClientV3Plugin itself is constructed before
     // any handler injection completes.
     private val nsClientV3Plugin: Provider<NSClientV3Plugin>
