@@ -230,7 +230,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
 
         // The user is alerted (URGENT) that the carbs were lost — not silently dropped.
         verify(notificationManager).post(
-            eq(NotificationId.CARBS_STORE_FAILED), eq(TextRef.AndroidRes(app.aaps.core.ui.R.string.carbs_not_saved_after_bolus)),
+            eq(NotificationId.CARBS_STORE_FAILED), eq(CoreUiStrings.carbs_not_saved_after_bolus),
             any<NotificationLevel>(), any<Int>(), any<Long>(), any<Long>(), anyOrNull(), any<List<NotificationAction>>(), anyOrNull()
         )
     }
@@ -271,7 +271,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     // TextRef overload (id, textRef, level, validMinutes, date, validTo, sound, actions, validityCheck).
     private fun verifyOkPosted() =
         verify(notificationManager).post(
-            eq(NotificationId.PROFILE_SET_OK), eq(TextRef.AndroidRes(app.aaps.core.ui.R.string.profile_set_ok)),
+            eq(NotificationId.PROFILE_SET_OK), eq(CoreUiStrings.profile_set_ok),
             any<NotificationLevel>(), any<Int>(), any<Long>(), any<Long>(),
             anyOrNull(), any<List<NotificationAction>>(), anyOrNull()
         )

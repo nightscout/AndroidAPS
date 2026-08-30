@@ -15,7 +15,6 @@ import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AlarmSound
@@ -29,14 +28,14 @@ import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.pump.comment
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.Command.CommandType
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
-import app.aaps.core.interfaces.queue.cancel
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.implementation.ImplementationStrings
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
@@ -52,7 +51,6 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.getCustomizedName
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.objects.runningMode.PumpCommandGate
-import app.aaps.implementation.R
 import app.aaps.implementation.profile.ProfileSwitchSilentGate
 import app.aaps.implementation.queue.commands.CommandBolus
 import app.aaps.implementation.queue.commands.CommandCancelExtendedBolus
@@ -75,12 +73,17 @@ import app.aaps.implementation.queue.commands.CommandTempBasalAbsolute
 import app.aaps.implementation.queue.commands.CommandTempBasalPercent
 import app.aaps.implementation.queue.commands.CommandUpdateTime
 import dev.zacsweers.metro.Inject
+import kotlin.concurrent.Volatile
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.withTimeoutOrNull
-import java.util.LinkedList
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.interfaces.concurrent.AapsLock
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
+import app.aaps.core.interfaces.concurrent.withLock
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
@@ -93,7 +96,7 @@ import kotlin.time.Duration.Companion.milliseconds
 class CommandQueueImplementation @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val constraintChecker: ConstraintsChecker,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
@@ -110,17 +113,26 @@ class CommandQueueImplementation @Inject constructor(
     private val localAlertUtils: () -> LocalAlertUtils,
     private val smsCommunicator: () -> SmsCommunicator,
     private val commandExecutor: () -> CommandExecutor,
-    @ApplicationScope private val appScope: CoroutineScope,
+    // Plain CoroutineScope, not @ApplicationScope: that qualifier is javax and cannot appear in
+    // commonMain. AppCoroutineBindings.unqualifiedAppScope binds the very same scope without it.
+    private val appScope: CoroutineScope,
     private val bolusProgressData: BolusProgressData
 ) : CommandQueue {
 
-    private val queue = LinkedList<Command>()
+    private val queue = ArrayDeque<Command>()
+
+    // Guards the queue itself. Was `synchronized(queue)`, which locks the collection object - JVM only.
+    private val queueLock = AapsLock()
+
+    // Replaces `@Synchronized` on the ten queue methods, which locked `this`. Kept as its own lock so
+    // the nesting order stays exactly as it was: instance lock first, then the queue lock inside it.
+    private val instanceLock = AapsLock()
 
     // Serializes every check-then-enqueue sequence (bolus, TBR, extended bolus, cancel*) and
     // cancelAllBoluses. The pre-suspend queue methods were @Synchronized; without this lock two
     // concurrent bolus() calls can both pass isRunning()/removeAll() and enqueue two boluses.
     // Critical sections must not contain suspension points.
-    private val enqueueLock = Any()
+    private val enqueueLock = AapsLock()
     override var waitingForDisconnect = false
 
     @Volatile var performing: Command? = null
@@ -217,19 +229,19 @@ class CommandQueueImplementation @Inject constructor(
         if (result == null || !result.success) {
             notificationManager.post(
                 NotificationId.FAILED_UPDATE_PROFILE,
-                result?.comment?.takeIf { it.isNotBlank() } ?: rh.gs(app.aaps.core.ui.R.string.failed_update_basal_profile),
+                result?.comment?.takeIf { it.isNotBlank() } ?: rh.gs(CoreUiStrings.failed_update_basal_profile),
                 sound = AlarmSound.BOLUS_ERROR
             )
             return false
         }
         notificationManager.dismiss(NotificationId.FAILED_UPDATE_PROFILE)
         if (result.enacted && !silent)
-            notificationManager.post(NotificationId.PROFILE_SET_OK, TextRef.AndroidRes(app.aaps.core.ui.R.string.profile_set_ok), validMinutes = 60)
+            notificationManager.post(NotificationId.PROFILE_SET_OK, CoreUiStrings.profile_set_ok, validMinutes = 60)
         return true
     }
 
     private fun executingNowError(): PumpEnactResult =
-        pumpEnactResultProvider().success(false).enacted(false).comment(R.string.executing_right_now)
+        pumpEnactResultProvider().success(false).enacted(false).comment(ImplementationStrings.executing_right_now)
 
     /**
      * Running-mode gate: reject commands that contradict the currently active running mode.
@@ -247,11 +259,11 @@ class CommandQueueImplementation @Inject constructor(
         val decision = PumpCommandGate.check(mode, kind)
         if (decision is PumpCommandGate.Decision.Reject) {
             val commentRes = when (decision.reason) {
-                PumpCommandGate.Reason.PUMP_DISCONNECTED       -> app.aaps.core.interfaces.R.string.pump_disconnected
+                PumpCommandGate.Reason.PUMP_DISCONNECTED       -> InterfacesStrings.pump_disconnected
                 PumpCommandGate.Reason.LOOP_SUSPENDED_DST,
-                PumpCommandGate.Reason.SUPER_BOLUS_ACTIVE      -> app.aaps.core.interfaces.R.string.loopsuspended
+                PumpCommandGate.Reason.SUPER_BOLUS_ACTIVE      -> InterfacesStrings.loopsuspended
 
-                PumpCommandGate.Reason.PUMP_REPORTED_SUSPENDED -> app.aaps.core.interfaces.R.string.pumpsuspended
+                PumpCommandGate.Reason.PUMP_REPORTED_SUSPENDED -> InterfacesStrings.pumpsuspended
             }
             aapsLogger.debug(
                 LTag.PUMPQUEUE,
@@ -264,13 +276,14 @@ class CommandQueueImplementation @Inject constructor(
 
     override fun isRunning(type: CommandType): Boolean = performing?.commandType == type
 
-    @Synchronized
     private fun removeAll(type: CommandType) {
-        synchronized(queue) {
-            for (i in queue.indices.reversed()) {
-                if (queue[i].commandType == type) {
-                    queue[i].cancel(app.aaps.core.ui.R.string.command_replaced)
-                    queue.removeAt(i)
+        instanceLock.withLock {
+            queueLock.withLock {
+                for (i in queue.indices.reversed()) {
+                    if (queue[i].commandType == type) {
+                        queue[i].cancel(CoreUiStrings.command_replaced)
+                        queue.removeAt(i)
+                    }
                 }
             }
         }
@@ -282,57 +295,58 @@ class CommandQueueImplementation @Inject constructor(
      */
     private var readScheduledDetected: Long? = null
 
-    @Synchronized
     fun isReadStatusScheduled(): Boolean {
-        readScheduledDetected?.let {
-            if (dateUtil.isOlderThan(it, minutes = 15)) {
-                // The app-owned executor cannot be wedged in a WorkManager RUNNING state; a genuine
-                // stall means a driver's execute() is blocking. Nothing here can unblock a blocking
-                // driver, so only surface it (do NOT cancel — that would risk the exact mid-command
-                // teardown this migration removed).
-                fabricPrivacy.logCustom("CommandExecutorStuck")
+        instanceLock.withLock {
+            readScheduledDetected?.let {
+                if (dateUtil.isOlderThan(it, minutes = 15)) {
+                    // The app-owned executor cannot be wedged in a WorkManager RUNNING state; a genuine
+                    // stall means a driver's execute() is blocking. Nothing here can unblock a blocking
+                    // driver, so only surface it (do NOT cancel — that would risk the exact mid-command
+                    // teardown this migration removed).
+                    fabricPrivacy.logCustom("CommandExecutorStuck")
+                }
             }
-        }
 
-        synchronized(queue) {
-            if (queue.isNotEmpty() && queue[queue.size - 1].commandType == CommandType.READSTATUS) {
-                readScheduledDetected = dateUtil.now()
-                return true
+            queueLock.withLock {
+                if (queue.isNotEmpty() && queue[queue.size - 1].commandType == CommandType.READSTATUS) {
+                    readScheduledDetected = dateUtil.now()
+                    return true
+                }
             }
+            readScheduledDetected = null
+            return false
         }
-        readScheduledDetected = null
-        return false
     }
 
-    @Synchronized
     private fun add(command: Command) {
-        aapsLogger.debug(LTag.PUMPQUEUE, "Adding: " + command.javaClass.simpleName + " - " + command.log())
-        synchronized(queue) { queue.add(command) }
+        instanceLock.withLock {
+            aapsLogger.debug(LTag.PUMPQUEUE, "Adding: " + command::class.simpleName + " - " + command.log())
+            queueLock.withLock { queue.add(command) }
+        }
     }
 
-    @Synchronized
     override fun pickup() {
-        synchronized(queue) { performing = queue.poll() }
+        instanceLock.withLock {
+            queueLock.withLock { performing = queue.removeFirstOrNull() }
+        }
     }
 
-    @Synchronized
-    override fun clear() {
+    override fun clear() = instanceLock.withLock {
         performing = null
-        synchronized(queue) {
+        queueLock.withLock {
             for (i in queue.indices) {
                 // Connection-timeout drop: the pump was never reached, so the command was not
                 // executed. Report failure (success = false) so a waiting bolus caller is not told
                 // a dose was delivered. (Supersession via removeAll keeps the default success = true.)
-                queue[i].cancel(app.aaps.core.ui.R.string.connectiontimedout, success = false)
+                queue[i].cancel(CoreUiStrings.connectiontimedout, success = false)
             }
             queue.clear()
         }
     }
 
-    @Synchronized
-    override fun completeAllAsNoOp(comment: TextRef) {
+    override fun completeAllAsNoOp(comment: TextRef) = instanceLock.withLock {
         performing = null
-        synchronized(queue) {
+        queueLock.withLock {
             for (i in queue.indices) {
                 queue[i].callback?.result(
                     pumpEnactResultProvider().success(true).enacted(false).comment(comment)
@@ -358,17 +372,18 @@ class CommandQueueImplementation @Inject constructor(
         return true
     }
 
-    @Synchronized
     override fun bolusInQueue(): Boolean {
-        if (isRunning(CommandType.BOLUS)) return true
-        if (isRunning(CommandType.SMB_BOLUS)) return true
-        synchronized(queue) {
-            for (i in queue.indices) {
-                if (queue[i].commandType == CommandType.BOLUS) return true
-                if (queue[i].commandType == CommandType.SMB_BOLUS) return true
+        instanceLock.withLock {
+            if (isRunning(CommandType.BOLUS)) return true
+            if (isRunning(CommandType.SMB_BOLUS)) return true
+            queueLock.withLock {
+                for (i in queue.indices) {
+                    if (queue[i].commandType == CommandType.BOLUS) return true
+                    if (queue[i].commandType == CommandType.SMB_BOLUS) return true
+                }
             }
+            return false
         }
-        return false
     }
 
     override suspend fun bolus(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
@@ -404,7 +419,7 @@ class CommandQueueImplementation @Inject constructor(
                 deferred.complete(result)
             }
         }
-        synchronized(enqueueLock) {
+        enqueueLock.withLock {
             if (type == CommandType.SMB_BOLUS) {
                 if (bolusInQueue()) {
                     aapsLogger.debug(LTag.PUMPQUEUE, "Rejecting SMB since a bolus is queue/running")
@@ -426,7 +441,7 @@ class CommandQueueImplementation @Inject constructor(
             } else {
                 add(CommandBolus(aapsLogger, rh, activePlugin, pumpEnactResultProvider, bolusProgressData, detailedBolusInfo, cb, type, bolusGeneration))
                 if (type == CommandType.BOLUS) { // Notify Wear about upcoming bolus
-                    rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = 0, status = rh.gs(app.aaps.core.ui.R.string.goingtodeliver, detailedBolusInfo.insulin))))
+                    rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = 0, status = rh.gs(CoreUiStrings.goingtodeliver, detailedBolusInfo.insulin))))
                 }
             }
             notifyAboutNewCommand()
@@ -446,7 +461,7 @@ class CommandQueueImplementation @Inject constructor(
                 aapsLogger.error(LTag.PUMPQUEUE, "Failed to store carbs after bolus", e)
                 // The bolus succeeded but the carbs weren't persisted, so COB/IOB would be wrong and the
                 // loss was previously silent (log-only). Alert the user so they can re-enter the carbs.
-                notificationManager.post(NotificationId.CARBS_STORE_FAILED, TextRef.AndroidRes(app.aaps.core.ui.R.string.carbs_not_saved_after_bolus))
+                notificationManager.post(NotificationId.CARBS_STORE_FAILED, CoreUiStrings.carbs_not_saved_after_bolus)
             }
         }
         return result
@@ -486,7 +501,7 @@ class CommandQueueImplementation @Inject constructor(
     }
 
     override fun cancelAllBoluses(id: Long?) {
-        synchronized(enqueueLock) {
+        enqueueLock.withLock {
             if (isRunning(CommandType.BOLUS)) {
                 bolusProgressData.stopPressed()
             } else {
@@ -495,14 +510,16 @@ class CommandQueueImplementation @Inject constructor(
             removeAll(CommandType.BOLUS)
             removeAll(CommandType.SMB_BOLUS)
         }
-        Thread { activePlugin.activePump.stopBolusDelivering() }.start()
+        // Was `Thread { ... }.start()`: a fire and forget hop off the caller so a blocking driver call
+        // cannot stall the queue. Same intent, on the shared IO dispatcher instead of a raw thread.
+        appScope.launch(aapsIoDispatcher) { activePlugin.activePump.stopBolusDelivering() }
     }
 
     override suspend fun tempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         val gateKind = if (absoluteRate == 0.0) PumpCommandGate.CommandKind.TEMP_BASAL_ZERO else PumpCommandGate.CommandKind.TEMP_BASAL_NONZERO
         rejectedByRunningModeGate(gateKind)?.let { return it }
         val deferred = CompletableDeferred<PumpEnactResult>()
-        synchronized(enqueueLock) {
+        enqueueLock.withLock {
             if (!enforceNew && isRunning(CommandType.TEMPBASAL)) return executingNowError()
             removeAll(CommandType.TEMPBASAL)
             val rateAfterConstraints = constraintChecker.applyBasalConstraints(ConstraintObject(absoluteRate, aapsLogger), profile).value()
@@ -520,7 +537,7 @@ class CommandQueueImplementation @Inject constructor(
         val gateKind = if (percent == 0) PumpCommandGate.CommandKind.TEMP_BASAL_ZERO else PumpCommandGate.CommandKind.TEMP_BASAL_NONZERO
         rejectedByRunningModeGate(gateKind)?.let { return it }
         val deferred = CompletableDeferred<PumpEnactResult>()
-        synchronized(enqueueLock) {
+        enqueueLock.withLock {
             if (!enforceNew && isRunning(CommandType.TEMPBASAL)) return executingNowError()
             removeAll(CommandType.TEMPBASAL)
             val percentAfterConstraints = constraintChecker.applyBasalPercentConstraints(ConstraintObject(percent, aapsLogger), profile).value()
@@ -537,7 +554,7 @@ class CommandQueueImplementation @Inject constructor(
     override suspend fun extendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
         rejectedByRunningModeGate(PumpCommandGate.CommandKind.EXTENDED_BOLUS)?.let { return it }
         val deferred = CompletableDeferred<PumpEnactResult>()
-        synchronized(enqueueLock) {
+        enqueueLock.withLock {
             if (isRunning(CommandType.EXTENDEDBOLUS)) return executingNowError()
             val rateAfterConstraints = constraintChecker.applyExtendedBolusConstraints(ConstraintObject(insulin, aapsLogger)).value()
             removeAll(CommandType.EXTENDEDBOLUS)
@@ -553,7 +570,7 @@ class CommandQueueImplementation @Inject constructor(
 
     override suspend fun cancelTempBasal(enforceNew: Boolean, autoForced: Boolean): PumpEnactResult {
         val deferred = CompletableDeferred<PumpEnactResult>()
-        synchronized(enqueueLock) {
+        enqueueLock.withLock {
             if (!enforceNew && isRunning(CommandType.TEMPBASAL)) return executingNowError()
             removeAll(CommandType.TEMPBASAL)
             add(CommandCancelTempBasal(aapsLogger, rh, activePlugin, pumpSync, dateUtil, pumpEnactResultProvider, enforceNew, autoForced, object : Callback() {
@@ -568,7 +585,7 @@ class CommandQueueImplementation @Inject constructor(
 
     override suspend fun cancelExtended(): PumpEnactResult {
         val deferred = CompletableDeferred<PumpEnactResult>()
-        synchronized(enqueueLock) {
+        enqueueLock.withLock {
             if (isRunning(CommandType.EXTENDEDBOLUS)) return executingNowError()
             removeAll(CommandType.EXTENDEDBOLUS)
             add(CommandCancelExtendedBolus(aapsLogger, rh, activePlugin, pumpEnactResultProvider, object : Callback() {
@@ -594,8 +611,8 @@ class CommandQueueImplementation @Inject constructor(
         val basalValues = profile.getBasalValues()
         for (basalValue in basalValues) {
             if (basalValue.value < activePlugin.activePump.pumpDescription.basalMinimumRate) {
-                notificationManager.post(NotificationId.BASAL_VALUE_BELOW_MINIMUM, TextRef.AndroidRes(R.string.basal_value_below_minimum))
-                return pumpEnactResultProvider().success(false).enacted(false).comment(R.string.basal_value_below_minimum)
+                notificationManager.post(NotificationId.BASAL_VALUE_BELOW_MINIMUM, ImplementationStrings.basal_value_below_minimum)
+                return pumpEnactResultProvider().success(false).enacted(false).comment(ImplementationStrings.basal_value_below_minimum)
             }
         }
         notificationManager.dismiss(NotificationId.BASAL_VALUE_BELOW_MINIMUM)
@@ -629,17 +646,18 @@ class CommandQueueImplementation @Inject constructor(
         return deferred.await()
     }
 
-    @Synchronized
     override fun statusInQueue(): Boolean {
-        if (isRunning(CommandType.READSTATUS)) return true
-        synchronized(queue) {
-            for (i in queue.indices) {
-                if (queue[i].commandType == CommandType.READSTATUS) {
-                    return true
+        instanceLock.withLock {
+            if (isRunning(CommandType.READSTATUS)) return true
+            queueLock.withLock {
+                for (i in queue.indices) {
+                    if (queue[i].commandType == CommandType.READSTATUS) {
+                        return true
+                    }
                 }
             }
+            return false
         }
-        return false
     }
 
     override suspend fun loadHistory(type: Byte): PumpEnactResult {
@@ -745,20 +763,21 @@ class CommandQueueImplementation @Inject constructor(
         return deferred.await()
     }
 
-    @Synchronized
     override fun isCustomCommandInQueue(customCommandType: KClass<out CustomCommand>): Boolean {
-        if (isCustomCommandRunning(customCommandType)) {
-            return true
-        }
-        synchronized(queue) {
-            for (i in queue.indices) {
-                val command = queue[i]
-                if (command is CommandCustomCommand && customCommandType.isInstance(command.customCommand)) {
-                    return true
+        instanceLock.withLock {
+            if (isCustomCommandRunning(customCommandType)) {
+                return true
+            }
+            queueLock.withLock {
+                for (i in queue.indices) {
+                    val command = queue[i]
+                    if (command is CommandCustomCommand && customCommandType.isInstance(command.customCommand)) {
+                        return true
+                    }
                 }
             }
+            return false
         }
-        return false
     }
 
     override fun isCustomCommandRunning(customCommandType: KClass<out CustomCommand>): Boolean {
@@ -779,7 +798,7 @@ class CommandQueueImplementation @Inject constructor(
         if (perf != null) {
             withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append(perf.status()) }
         }
-        synchronized(queue) {
+        queueLock.withLock {
             for (command in queue) {
                 if (length != 0) append('\n')
                 append(command.status())
