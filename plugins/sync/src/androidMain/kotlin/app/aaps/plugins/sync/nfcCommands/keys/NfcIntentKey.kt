@@ -30,7 +30,7 @@ enum class NfcIntentKey(
 
     ClearLog(
         key = "nfccommunicator_clear_log",
-        title = SyncStrings.nfccommands_clear_log,
+        title = SyncStrings.clear_log,
         summary = SyncStrings.nfccommands_clear_log_summary
     )
     ;

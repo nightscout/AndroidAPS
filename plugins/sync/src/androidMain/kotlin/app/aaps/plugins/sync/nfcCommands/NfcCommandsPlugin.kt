@@ -37,6 +37,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.withClick
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.icons.IcPluginNfc
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.plugins.sync.SyncStrings
@@ -111,7 +112,7 @@ class NfcCommandsPlugin @Inject constructor(
         .mainType(PluginType.SYNC)
         .icon(IcPluginNfc)
         .composeContent { NfcCommandsComposeContent(it as NfcCommandsPlugin) }
-        .pluginName(SyncStrings.nfccommands)
+        .pluginName(CoreUiStrings.nfccommands)
         .shortName(SyncStrings.nfccommands_shortname)
         .description(SyncStrings.description_nfc_communicator),
     ownPreferences = emptyList(),
@@ -121,7 +122,7 @@ class NfcCommandsPlugin @Inject constructor(
 ) {
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
         key = "nfccommunicator_settings",
-        title = SyncStrings.nfccommands,
+        title = CoreUiStrings.nfccommands,
         items = listOf(
             BooleanKey.NfcAllowRemoteCommands,
             BooleanKey.NfcForegroundPriority,

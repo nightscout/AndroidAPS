@@ -26,7 +26,7 @@ class LoopLgsAction(
     private val loop: Loop,
     private val profileFunction: ProfileFunction
 ) : NfcAction(aapsLogger, rh, uel) {
-    override val label: TextRef = SyncStrings.nfccommands_cmd_loop_lgs
+    override val label: TextRef = CoreUiStrings.lowglucosesuspend
     override val elementType = ElementType.LOOP
     override val argType = listOf<ArgType>()
     override val icon = IcLoopLgs

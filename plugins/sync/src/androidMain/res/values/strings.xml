@@ -275,7 +275,6 @@
 
     <!-- NFC Commands -->
 
-    <string name="nfccommands">NFC Commands</string>
     <string name="nfccommands_shortname">NFC</string>
     <string name="description_nfc_communicator">Trigger AAPS commands by scanning an NFC tag.</string>
     <string name="nfccommands_write_tag">Register NFC Tag</string>
@@ -317,7 +316,6 @@
     <string name="nfccommands_current_loop_mode">Current loop mode: %1$s</string>
     <string name="nfccommands_reconnect">Pump reconnected</string>
     <string name="nfccommands_profile_switch_created">Profile switch created</string>
-    <string name="nfccommands_extended_canceled">Cancel extended bolus</string>
     <string name="nfccommands_extended_set">Extended bolus %1$.2fU for %2$d min</string>
     <string name="nfccommands_another_bolus_in_queue">There is another bolus in queue. Try again later.</string>
     <string name="nfccommands_remote_bolus_not_allowed">Remote bolus not available. Try again later.</string>
@@ -329,7 +327,6 @@
     <string name="nfccommands_restarting">AAPS is restarting</string>
     <string name="nfccommands_cmd_loop_stop">Stop Loop</string>
     <string name="nfccommands_cmd_loop_close">Close Loop</string>
-    <string name="nfccommands_cmd_loop_lgs">Low Glucose Suspend</string>
     <string name="nfccommands_cmd_run_scene">Run Scene</string>
     <string name="nfccommands_cmd_aapsclient_restart">Restart AAPSClient</string>
     <string name="nfccommands_cmd_pump_connect">Connect Pump</string>
@@ -344,8 +341,6 @@
     <string name="nfccommands_tab_log">Log</string>
     <string name="nfccommands_log_action_read">Read</string>
     <string name="nfccommands_log_action_write">Write</string>
-    <string name="nfccommands_log_action_manual">Manual</string>
-    <string name="nfccommands_clear_log">Clear log</string>
     <string name="nfccommands_clear_log_summary">Remove all activity log entries</string>
     <string name="nfccommands_log_cleared">Log cleared</string>
     <string name="nfccommands_rename_tag_title">Modify Command</string>

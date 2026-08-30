@@ -32,7 +32,7 @@ class ExtendedCancelAction(
                 source = source,
                 note = tagName,
             )
-            NfcExecutionResult(true, rh.gs(SyncStrings.nfccommands_extended_canceled))
+            NfcExecutionResult(true, rh.gs(SyncStrings.nfccommands_cmd_extended_stop))
         } else {
             aapsLogger.error(LTag.NFC, "cancelExtended failed: ${result.comment}")
             commandNotPossible()

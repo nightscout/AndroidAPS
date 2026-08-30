@@ -144,7 +144,7 @@ fun NfcCommandsScreen(
 ) {
     val tabTitles = listOf(
         stringResource(SyncStrings.nfccommands_tab_log),
-        stringResource(SyncStrings.nfccommands),
+        stringResource(CoreUiStrings.nfccommands),
     )
 
     val pagerState = rememberPagerState(initialPage = initialTab) { tabTitles.size }
@@ -154,7 +154,7 @@ fun NfcCommandsScreen(
         onTabChanged(pagerState.currentPage)
     }
 
-    val title = stringResource(SyncStrings.nfccommands)
+    val title = stringResource(CoreUiStrings.nfccommands)
     val backDesc = stringResource(CoreUiStrings.back)
 
     LaunchedEffect(Unit) {
@@ -256,7 +256,7 @@ private fun NfcLogEntryCard(entry: NfcLogEntry) {
     val actionLabel = when (entry.action) {
         "READ" -> stringResource(SyncStrings.nfccommands_log_action_read)
         "WRITE" -> stringResource(SyncStrings.nfccommands_log_action_write)
-        "MANUAL" -> stringResource(SyncStrings.nfccommands_log_action_manual)
+        "MANUAL" -> stringResource(CoreUiStrings.manual)
         else -> entry.action
     }
 

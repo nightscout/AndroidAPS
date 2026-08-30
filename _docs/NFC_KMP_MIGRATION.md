@@ -30,6 +30,7 @@ preparation work can happen without disturbing the main NFC line.
 | Metro DI and the plugin's own manifest (section 1a)         | **done** - `ba1cdbd518`, `009f4087ca`, `42ea9bbad2`. Metro owns the plugin now  |
 | Tier 2, needed only for a multiplatform module (section 4)  | **not started** apart from the `org.json` row, which sections 5 and 9.7 did    |
 | The `:plugins:sync` flip, step 6                            | **done** - upstream flipped it in `077aa2a6e4`, our files moved in `216e31867e` |
+| Strings on `SyncStrings`, step 7                            | **done** - `3aa6e921e5`, and the duplicates it found are section 9b            |
 | Build verification                                         | **green** - 93 NFC tests in `testAndroidHostTest`, 94 app tests, all pass       |
 | `Nightscout/kmp` freshness                                 | merged 2026-08-30 at `d687e33bc2`. Still not in `dev` - more merges are due     |
 
@@ -713,7 +714,8 @@ One thing may still move: follow-up 3 in the KMP note is `PluginDescription.desc
 | 4    | ~~Tier 2~~ - **not needed.** Upstream's own doc and its conversion record say `:plugins:sync` stays Android, so the plugin lives in `androidMain`. See section 6. | -                    |
 | 5    | ~~Decide the NFC hardware seam~~ - **not needed** for the same reason. There is no iOS half to design. | -                    |
 | 6    | ~~When upstream makes `:plugins:sync` multiplatform, the plugin's files move from `src/main` to `src/androidMain`~~ - **done**, `216e31867e`. It happened at merge 8, and it *was* our task after all - see below. | -                    |
-| 7    | Move the NFC strings onto the generated `SyncStrings` names, the way the rest of the module now does. Agreed as the next step. | -                    |
+| 7    | ~~Move the NFC strings onto the generated `SyncStrings` names~~ - **done**, `3aa6e921e5`. No `R.string` is left in the plugin. | -                    |
+| 8    | Propose one generic key for each of the twelve strings NFC and the SMS communicator both own, and retire the two feature-named ones. Better done once the plugin is merged - see 9b. | the plugin landing |
 
 All of section 9 is done as of `57952b8690`, and step 6 is done as of `216e31867e`. The plugin
 compiles and tests inside a multiplatform `:plugins:sync`.
@@ -1003,6 +1005,82 @@ twice is how the others drifted apart.
 
 Left alone on purpose: the fallback for a missing BG reading, and the pump basal duration step, which
 comes from the pump and names a constant only for the case where the pump does not say.
+
+---
+
+## 9b. Strings the plugin repeats, and what was done about each
+
+Found while doing step 7. Comparing the English text of every NFC string against every other string
+in `:plugins:sync`, `:core:ui` and `:core:interfaces` turned up **16 exact matches**, plus one pair
+that repeated itself inside NFC. This section records all of them, because most were deliberately
+left alone.
+
+**Compare case sensitively.** A first pass that lowercased both sides reported four more matches
+that are not matches at all: `:core:ui` writes its user-entry-log labels in capitals, so
+`uel_cancel_extended_bolus` is `CANCEL EXTENDED BOLUS`, `uel_loop_resumed` is `LOOP RESUMED` and
+`carbs_g` is `CARBS %1$d g`. Reusing one of those would put shouting text in the action picker.
+
+### Removed - the string already existed with the same text
+
+| Our string | Now uses | Text |
+|---|---|---|
+| `nfccommands` | `CoreUiStrings.nfccommands` | `NFC Commands` |
+| `nfccommands_cmd_loop_lgs` | `CoreUiStrings.lowglucosesuspend` | `Low Glucose Suspend` |
+| `nfccommands_log_action_manual` | `CoreUiStrings.manual` | `Manual` |
+| `nfccommands_clear_log` | `SyncStrings.clear_log` | `Clear log` |
+| `nfccommands_extended_canceled` | `SyncStrings.nfccommands_cmd_extended_stop` | `Cancel extended bolus` |
+
+The first three are worth taking from `:core:ui`: the text is identical, so reusing it also brings
+its translations. `nfccommands` was ours twice over - this branch added the `:core:ui` copy in
+`25fb743cd4` for `ElementType.NFC` in `ElementTypeStyle.kt`, while the plugin kept its own. One is
+enough, and it has to be the `:core:ui` one, because `commonMain` code there cannot see the plugin.
+
+The last row is the pair that repeated itself: `nfccommands_cmd_extended_stop` labelled the command
+in the picker and `nfccommands_extended_canceled` was the message shown after it ran, both saying
+`Cancel extended bolus`. The label is the more visible of the two and is the one kept. If the result
+message should read differently - `Extended bolus cancelled` would be the natural wording - that is a
+wording change, not a duplicate, and needs its own string.
+
+### Kept on purpose - decide after the plugin lands
+
+Twelve NFC strings repeat a string that `:plugins:sync` already owns, all of them from the SMS
+communicator:
+
+| Our string | Same text as | Text |
+|---|---|---|
+| `nfccommands_another_bolus_in_queue` | `smscommunicator_another_bolus_in_queue` | `There is another bolus in queue. Try again later.` |
+| `nfccommands_loop_has_been_disabled` | `smscommunicator_loop_has_been_disabled` | `Loop has been disabled` |
+| `nfccommands_loop_resumed` | `smscommunicator_loop_resumed` | `Loop resumed` |
+| `nfccommands_profile_switch_created` | `sms_profile_switch_created` | `Profile switch created` |
+| `nfccommands_reconnect` | `smscommunicator_reconnect` | `Pump reconnected` |
+| `nfccommands_remote_bolus_not_allowed` | `smscommunicator_remote_bolus_not_allowed` | `Remote bolus not available. Try again later.` |
+| `nfccommands_remote_command_not_allowed` | `smscommunicator_remote_command_not_allowed` | `Remote command is not allowed` |
+| `nfccommands_remote_command_not_possible` | `smscommunicator_remote_command_not_possible` | `Remote command is not possible` |
+| `nfccommands_restarting` | `smscommunicator_restarting` | `AAPS is restarting` |
+| `nfccommands_tt_set` | `smscommunicator_meal_bolus_delivered_tt` | `Target %1$s for %2$d minutes` |
+| `nfccommands_unknown_command` | `smscommunicator_unknown_command` | `Unknown command or wrong reply` |
+| `nfccommands_wrong_duration` | `smscommunicator_wrong_duration` | `Wrong duration` |
+
+**These stay as they are, and the reason is the key name, not the text.** Each of these is named
+after the feature that owns it - `smscommunicator_`, `sms_` - so pointing NFC at one would leave NFC
+reading a string named after SMS. The right answer is probably a third, generic key that both
+features use, with the SMS and NFC names retired. That is a change to code this branch does not own,
+so it is better proposed once the NFC plugin is merged, when the two callers are visible side by
+side. Until then the repetition is deliberate.
+
+The cost of leaving it is small and worth stating plainly: a translator is asked for the same
+sentence twice, and the two copies can drift apart in a language where only one of them is
+retranslated.
+
+### The near matches, for whoever runs this comparison again
+
+Not duplicates, listed so they are not reported as such a second time:
+
+| Our string | Looks like | Difference |
+|---|---|---|
+| `nfccommands_carbs_set` `Carbs %1$d g` | `carbs_g` `CARBS %1$d g` | case |
+| `nfccommands_cmd_extended_stop` `Cancel extended bolus` | `uel_cancel_extended_bolus` `CANCEL EXTENDED BOLUS` | case |
+| `nfccommands_loop_resumed` `Loop resumed` | `uel_loop_resumed` `LOOP RESUMED` | case |
 
 ---
 

@@ -377,7 +377,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand EXTENDED_STOP should cancel extended bolus`() {
-        whenever(rh.gs(SyncStrings.nfccommands_extended_canceled)).thenReturn("Extended canceled")
+        whenever(rh.gs(SyncStrings.nfccommands_cmd_extended_stop)).thenReturn("Extended canceled")
 
         val result = execute(NfcCommandCode.EXTENDED_STOP)
 
