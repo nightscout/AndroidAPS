@@ -1,14 +1,10 @@
 package app.aaps.implementation.queue
 
-import android.Manifest
-import android.bluetooth.BluetoothManager
-import android.content.Context
-import android.content.pm.PackageManager
-import android.os.PowerManager
-import androidx.annotation.VisibleForTesting
-import androidx.core.content.ContextCompat
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.concurrent.AapsLock
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
+import app.aaps.core.interfaces.concurrent.withLock
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -16,8 +12,8 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.queue.cancel
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventQueueChanged
@@ -26,25 +22,22 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.ui.R
-import app.aaps.core.utils.extensions.safeDisable
-import app.aaps.core.utils.extensions.safeEnable
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CancellationException
+import kotlin.concurrent.Volatile
+import kotlin.time.Clock
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import java.util.concurrent.Executors
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 /**
  * App-owned host for the pump command loop. Replaces the WorkManager `QueueWorker`.
@@ -71,17 +64,27 @@ class CommandExecutor @Inject constructor(
     private val queue: CommandQueue,
     private val rxBus: RxBus,
     private val activePlugin: ActivePlugin,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val preferences: Preferences,
     private val config: Config,
     private val bolusProgressData: BolusProgressData,
-    @ApplicationContext private val context: Context
+    private val platform: CommandExecutionPlatform
 ) {
 
-    // A single dedicated serial thread: guarantees strict command ordering and isolates long blocking
-    // BLE I/O from the shared Dispatchers.Default pool that backs @ApplicationScope.
-    private val dispatcher = Executors.newSingleThreadExecutor { r -> Thread(r, "CommandExecutor") }.asCoroutineDispatcher()
+    // One command at a time: guarantees strict command ordering and isolates long blocking BLE I/O
+    // from the shared pool that backs the application scope.
+    //
+    // Was `Executors.newSingleThreadExecutor { Thread(it, "CommandExecutor") }`, which is JVM only.
+    // `limitedParallelism(1)` keeps the ordering guarantee - at most one task runs at a time - but NOT
+    // thread affinity: successive commands may land on different IO threads. Nothing here depends on a
+    // specific thread; a pump driver that does would already have been broken by the coroutine port.
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val dispatcher = aapsIoDispatcher.limitedParallelism(1)
     private val scope = CoroutineScope(dispatcher + SupervisorJob())
+
+    // Was @Synchronized on ensureRunning, which locks `this` and is JVM only. Same guard: the loop is
+    // launched at most once even if two callers signal at the same moment.
+    private val lock = AapsLock()
 
     // Conflated: many notifyAboutNewCommand() signals during one drain collapse to a single pending
     // wake. A duplicate signal while the loop is busy is a no-op.
@@ -97,10 +100,9 @@ class CommandExecutor @Inject constructor(
      * Idempotent. Launches the single drain loop at most once. A duplicate call while the loop is
      * alive is a no-op by construction — this is the single-owner guarantee WorkManager could not give.
      */
-    @Synchronized
-    fun ensureRunning() {
+    fun ensureRunning(): Unit = lock.withLock {
         val j = loopJob
-        if (j != null && j.isActive) return
+        if (j != null && j.isActive) return@withLock
         loopJob = scope.launch { runLoop() }
     }
 
@@ -129,28 +131,24 @@ class CommandExecutor @Inject constructor(
         draining = true
         queue.waitingForDisconnect = false
         var connectLogged = false
-        val wakeLock = (context.getSystemService(Context.POWER_SERVICE) as PowerManager?)
-            ?.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, rh.gs(config.appName) + ":CommandExecutor")
-        wakeLock?.acquire(T.mins(10).msecs())
+        val wakeLock = platform.acquireWakeLock(rh.gs(config.appName) + ":CommandExecutor", T.mins(10).msecs())
         rxBus.send(EventQueueChanged())
-        var lastCommandTime = System.currentTimeMillis()
+        var lastCommandTime = Clock.System.now().toEpochMilliseconds()
         var connectionStartTime = lastCommandTime
         try {
             while (true) {
                 currentCoroutineContext().ensureActive()    // cooperative cancel = app shutdown only
-                val secondsElapsed = (System.currentTimeMillis() - connectionStartTime) / 1000
+                val secondsElapsed = (Clock.System.now().toEpochMilliseconds() - connectionStartTime) / 1000
                 val pump = activePlugin.activePump
                 if (!pump.isConfigured()) {
                     aapsLogger.debug(LTag.PUMPQUEUE, "pump not configured - completing queue as no-op")
-                    queue.completeAllAsNoOp(R.string.pump_not_configured)
+                    queue.completeAllAsNoOp(CoreUiStrings.pump_not_configured)
                     rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
                     return
                 }
                 if (config.PUMPDRIVERS && pump.selectedActivePump() !is VirtualPump)
-                    if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED ||
-                        ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED
-                    ) {
-                        rxBus.send(EventShowSnackbar(rh.gs(R.string.need_connect_permission), EventShowSnackbar.Type.Error))
+                    if (!platform.hasBluetoothPermission()) {
+                        rxBus.send(EventShowSnackbar(rh.gs(CoreUiStrings.need_connect_permission), EventShowSnackbar.Type.Error))
                         aapsLogger.debug(LTag.PUMPQUEUE, "no permission")
                         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING))
                         delay(5000)
@@ -158,27 +156,26 @@ class CommandExecutor @Inject constructor(
                     }
                 if (!pump.isConnected() && secondsElapsed > Constants.PUMP_MAX_CONNECTION_TIME_IN_SECONDS) {
                     bolusProgressData.clear()
-                    rxBus.send(EventPumpStatusChanged(rh.gs(R.string.connectiontimedout)))
+                    rxBus.send(EventPumpStatusChanged(rh.gs(CoreUiStrings.connectiontimedout)))
                     aapsLogger.debug(LTag.PUMPQUEUE, "timed out")
                     pump.stopConnecting()
 
                     // BLUETOOTH-WATCHDOG
                     var watchdog = preferences.get(BooleanKey.PumpBtWatchdog)
                     val lastWatchdog = preferences.get(LongNonKey.BtWatchdogLastBark)
-                    watchdog = watchdog && System.currentTimeMillis() - lastWatchdog > Constants.MIN_WATCHDOG_INTERVAL_IN_SECONDS * 1000
+                    // canRestartBluetooth is part of the condition, not a check inside the branch: where
+                    // the platform cannot toggle the radio this must behave exactly as it does when the
+                    // user has the watchdog switched off, rather than "barking" and doing nothing.
+                    watchdog = watchdog && platform.canRestartBluetooth &&
+                        Clock.System.now().toEpochMilliseconds() - lastWatchdog > Constants.MIN_WATCHDOG_INTERVAL_IN_SECONDS * 1000
                     if (watchdog) {
                         aapsLogger.debug(LTag.PUMPQUEUE, "BT watchdog - toggling the phone bluetooth")
-                        preferences.put(LongNonKey.BtWatchdogLastBark, System.currentTimeMillis())
+                        preferences.put(LongNonKey.BtWatchdogLastBark, Clock.System.now().toEpochMilliseconds())
                         pump.disconnect("watchdog")
                         delay(1000)
-                        (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter?.let { bluetoothAdapter ->
-                            bluetoothAdapter.safeDisable(0)
-                            delay(1000)
-                            bluetoothAdapter.safeEnable(0)
-                            delay(1000)
-                        }
+                        platform.restartBluetooth()
                         // start over again once after watchdog barked
-                        lastCommandTime = System.currentTimeMillis()
+                        lastCommandTime = Clock.System.now().toEpochMilliseconds()
                         connectionStartTime = lastCommandTime
                         pump.connect("watchdog")
                     } else {
@@ -237,21 +234,21 @@ class CommandExecutor @Inject constructor(
                                 // failure result and carry on so the remaining queue + disconnect run.
                                 aapsLogger.error(LTag.PUMPQUEUE, "Command threw during execution: " + cmd.log(), e)
                                 fabricPrivacy.logException(e)
-                                cmd.cancel(R.string.error, success = false)
+                                cmd.cancel(CoreUiStrings.error, success = false)
                             } finally {
                                 // Honest `performing`: cleared on EVERY exit path (normal, driver throw,
                                 // cancellation) — never leaked, so no defensive entry-reset is needed.
                                 queue.resetPerforming()
                             }
                             rxBus.send(EventQueueChanged())
-                            lastCommandTime = System.currentTimeMillis()
+                            lastCommandTime = Clock.System.now().toEpochMilliseconds()
                             delay(100)
                             continue
                         }
                     }
                 }
                 if (queue.size() == 0 && queue.performing() == null) {
-                    val secondsFromLastCommand = (System.currentTimeMillis() - lastCommandTime) / 1000
+                    val secondsFromLastCommand = (Clock.System.now().toEpochMilliseconds() - lastCommandTime) / 1000
                     if (secondsFromLastCommand >= pump.waitForDisconnectionInSeconds()) {
                         // A command may have been enqueued during the linger. Consume a pending wake and
                         // keep draining instead of disconnecting, to avoid a needless disconnect+reconnect.
@@ -275,13 +272,12 @@ class CommandExecutor @Inject constructor(
                 }
             }
         } finally {
-            if (wakeLock?.isHeld == true) wakeLock.release()
+            wakeLock?.release()
             draining = false
             aapsLogger.debug(LTag.PUMPQUEUE, "drain end")
         }
     }
 
     /** Test seam: run exactly one drain synchronously on the caller's dispatcher. */
-    @VisibleForTesting
     suspend fun drainQueueForTest() = drainOnce()
 }
