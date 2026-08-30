@@ -133,11 +133,11 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         // create
         whenever(nsAndroidClient.createDeviceStatus(anyOrNull())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("devicestatus", dataPair, "1/3")
-        assertThat(storeDataForDb.nsIdDeviceStatuses).hasSize(1)
+        assertThat(storeDataForDb.nsIdDeviceStatuses.snapshot()).hasSize(1)
         // update
         whenever(nsAndroidClient.createDeviceStatus(anyOrNull())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsAdd("devicestatus", dataPair, "1/3")
-        assertThat(storeDataForDb.nsIdDeviceStatuses).hasSize(2) // still only 1
+        assertThat(storeDataForDb.nsIdDeviceStatuses.snapshot()).hasSize(2) // still only 1
     }
 
     // ---- masterReachable (client→master edit/control gating) ----
@@ -229,11 +229,11 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         // create
         whenever(nsAndroidClient.createSgv(anyOrNull())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("entries", dataPair, "1/3")
-        assertThat(storeDataForDb.nsIdGlucoseValues).hasSize(1)
+        assertThat(storeDataForDb.nsIdGlucoseValues.snapshot()).hasSize(1)
         // update
         whenever(nsAndroidClient.updateSvg(anyOrNull())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("entries", dataPair, "1/3")
-        assertThat(storeDataForDb.nsIdGlucoseValues).hasSize(2)
+        assertThat(storeDataForDb.nsIdGlucoseValues.snapshot()).hasSize(2)
     }
 
     @Test
@@ -259,11 +259,11 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         // create
         whenever(nsAndroidClient.createFood(anyOrNull())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("food", dataPair, "1/3")
-        assertThat(storeDataForDb.nsIdFoods).hasSize(1)
+        assertThat(storeDataForDb.nsIdFoods.snapshot()).hasSize(1)
         // update
         whenever(nsAndroidClient.updateFood(anyOrNull())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("food", dataPair, "1/3")
-        assertThat(storeDataForDb.nsIdFoods).hasSize(2)
+        assertThat(storeDataForDb.nsIdFoods.snapshot()).hasSize(2)
     }
 
     @Test
@@ -288,11 +288,11 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         // create
         whenever(nsAndroidClient.createTreatment(anyOrNull())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("treatments", dataPair, "1/3")
-        assertThat(storeDataForDb.nsIdBoluses).hasSize(1)
+        assertThat(storeDataForDb.nsIdBoluses.snapshot()).hasSize(1)
         // update
         whenever(nsAndroidClient.updateTreatment(anyOrNull())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("treatments", dataPair, "1/3")
-        assertThat(storeDataForDb.nsIdBoluses).hasSize(2)
+        assertThat(storeDataForDb.nsIdBoluses.snapshot()).hasSize(2)
     }
 
     @Test
@@ -315,11 +315,11 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         // create
         whenever(nsAndroidClient.createTreatment(anyOrNull())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("treatments", dataPair, "1/3")
-        assertThat(storeDataForDb.nsIdCarbs).hasSize(1)
+        assertThat(storeDataForDb.nsIdCarbs.snapshot()).hasSize(1)
         // update
         whenever(nsAndroidClient.updateTreatment(anyOrNull())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("treatments", dataPair, "1/3")
-        assertThat(storeDataForDb.nsIdCarbs).hasSize(2)
+        assertThat(storeDataForDb.nsIdCarbs.snapshot()).hasSize(2)
     }
 
     @Test
@@ -368,11 +368,11 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         // create
         whenever(nsAndroidClient.createTreatment(anyOrNull())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("treatments", dataPair, "1/3")
-        assertThat(storeDataForDb.nsIdBolusCalculatorResults).hasSize(1)
+        assertThat(storeDataForDb.nsIdBolusCalculatorResults.snapshot()).hasSize(1)
         // update
         whenever(nsAndroidClient.updateTreatment(anyOrNull())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("treatments", dataPair, "1/3")
-        assertThat(storeDataForDb.nsIdBolusCalculatorResults).hasSize(2)
+        assertThat(storeDataForDb.nsIdBolusCalculatorResults.snapshot()).hasSize(2)
     }
 
     @Test
@@ -406,11 +406,11 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         // create
         whenever(nsAndroidClient.createTreatment(anyOrNull())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("treatments", dataPair, "1/3")
-        assertThat(storeDataForDb.nsIdEffectiveProfileSwitches).hasSize(1)
+        assertThat(storeDataForDb.nsIdEffectiveProfileSwitches.snapshot()).hasSize(1)
         // update
         whenever(nsAndroidClient.updateTreatment(anyOrNull())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("treatments", dataPair, "1/3")
-        assertThat(storeDataForDb.nsIdEffectiveProfileSwitches).hasSize(2)
+        assertThat(storeDataForDb.nsIdEffectiveProfileSwitches.snapshot()).hasSize(2)
     }
 
     @Test
@@ -442,11 +442,11 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         // create
         whenever(nsAndroidClient.createTreatment(anyOrNull())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("treatments", dataPair, "1/3")
-        assertThat(storeDataForDb.nsIdProfileSwitches).hasSize(1)
+        assertThat(storeDataForDb.nsIdProfileSwitches.snapshot()).hasSize(1)
         // update
         whenever(nsAndroidClient.updateTreatment(anyOrNull())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("treatments", dataPair, "1/3")
-        assertThat(storeDataForDb.nsIdProfileSwitches).hasSize(2)
+        assertThat(storeDataForDb.nsIdProfileSwitches.snapshot()).hasSize(2)
     }
 
     @Test
@@ -469,11 +469,11 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         // create
         whenever(nsAndroidClient.createTreatment(anyOrNull())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("treatments", dataPair, "1/3", validProfile)
-        assertThat(storeDataForDb.nsIdExtendedBoluses).hasSize(1)
+        assertThat(storeDataForDb.nsIdExtendedBoluses.snapshot()).hasSize(1)
         // update
         whenever(nsAndroidClient.updateTreatment(anyOrNull())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("treatments", dataPair, "1/3", validProfile)
-        assertThat(storeDataForDb.nsIdExtendedBoluses).hasSize(2)
+        assertThat(storeDataForDb.nsIdExtendedBoluses.snapshot()).hasSize(2)
     }
 
     @Test
@@ -495,11 +495,11 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         // create
         whenever(nsAndroidClient.createTreatment(anyOrNull())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("treatments", dataPair, "1/3")
-        assertThat(storeDataForDb.nsIdRunningModes).hasSize(1)
+        assertThat(storeDataForDb.nsIdRunningModes.snapshot()).hasSize(1)
         // update
         whenever(nsAndroidClient.updateTreatment(anyOrNull())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("treatments", dataPair, "1/3")
-        assertThat(storeDataForDb.nsIdRunningModes).hasSize(2)
+        assertThat(storeDataForDb.nsIdRunningModes.snapshot()).hasSize(2)
     }
 
     // ---- 404/400-on-UPDATE bounded retry (NS read-after-write race fix) ----
@@ -593,11 +593,11 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         // create
         whenever(nsAndroidClient.createTreatment(anyOrNull())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("treatments", dataPair, "1/3", validProfile)
-        assertThat(storeDataForDb.nsIdTemporaryBasals).hasSize(1)
+        assertThat(storeDataForDb.nsIdTemporaryBasals.snapshot()).hasSize(1)
         // update
         whenever(nsAndroidClient.updateTreatment(anyOrNull())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("treatments", dataPair, "1/3", validProfile)
-        assertThat(storeDataForDb.nsIdTemporaryBasals).hasSize(2)
+        assertThat(storeDataForDb.nsIdTemporaryBasals.snapshot()).hasSize(2)
     }
 
     @Test
@@ -621,11 +621,11 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         // create
         whenever(nsAndroidClient.createTreatment(anyOrNull())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("treatments", dataPair, "1/3")
-        assertThat(storeDataForDb.nsIdTemporaryTargets).hasSize(1)
+        assertThat(storeDataForDb.nsIdTemporaryTargets.snapshot()).hasSize(1)
         // update
         whenever(nsAndroidClient.updateTreatment(anyOrNull())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("treatments", dataPair, "1/3")
-        assertThat(storeDataForDb.nsIdTemporaryTargets).hasSize(2)
+        assertThat(storeDataForDb.nsIdTemporaryTargets.snapshot()).hasSize(2)
     }
 
     @Test
@@ -652,11 +652,11 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         // create
         whenever(nsAndroidClient.createTreatment(anyOrNull())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("treatments", dataPair, "1/3")
-        assertThat(storeDataForDb.nsIdTherapyEvents).hasSize(1)
+        assertThat(storeDataForDb.nsIdTherapyEvents.snapshot()).hasSize(1)
         // update
         whenever(nsAndroidClient.updateTreatment(anyOrNull())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("treatments", dataPair, "1/3")
-        assertThat(storeDataForDb.nsIdTherapyEvents).hasSize(2)
+        assertThat(storeDataForDb.nsIdTherapyEvents.snapshot()).hasSize(2)
     }
 
     @Test
