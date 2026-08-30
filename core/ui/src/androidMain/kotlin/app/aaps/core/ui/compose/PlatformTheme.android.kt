@@ -1,6 +1,6 @@
 package app.aaps.core.ui.compose
 
-import android.app.Activity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.platform.LocalConfiguration
@@ -10,10 +10,13 @@ import androidx.core.view.WindowInsetsControllerCompat
 @Composable
 actual fun SystemBarAppearance(isDark: Boolean) {
     val view = LocalView.current
-    if (!view.isInEditMode) {
+    // LocalActivity rather than `view.context as Activity`: that cast is unchecked, and the view's
+    // context is usually a ContextWrapper, so it would throw rather than return null. Skipping the
+    // bar styling is the right fallback - there is no window to style.
+    val activity = LocalActivity.current
+    if (!view.isInEditMode && activity != null) {
         SideEffect {
-            val window = (view.context as Activity).window
-            val controller = WindowInsetsControllerCompat(window, view)
+            val controller = WindowInsetsControllerCompat(activity.window, view)
             controller.isAppearanceLightStatusBars = !isDark
             controller.isAppearanceLightNavigationBars = !isDark
         }

@@ -1,12 +1,12 @@
 package app.aaps.core.ui.compose
 
+import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -40,8 +40,9 @@ fun ProtectionHost(
     showBiometric: (FragmentActivity, String, () -> Unit, () -> Unit, () -> Unit) -> Unit,
     showBiometricSimple: (FragmentActivity, String, () -> Unit, () -> Unit, () -> Unit) -> Unit = showBiometric
 ) {
-    val context = LocalContext.current
-    val activity = context as? FragmentActivity
+    // LocalActivity, not a cast of LocalContext: that context is usually a ContextWrapper, where
+    // `as? FragmentActivity` is null - and then the biometric prompt cannot be shown at all.
+    val activity = LocalActivity.current as? FragmentActivity
 
     // --- Handle hierarchical auth requests (new API) ---
     val authRequest by protectionCheck.pendingAuthRequest.collectAsStateWithLifecycle()

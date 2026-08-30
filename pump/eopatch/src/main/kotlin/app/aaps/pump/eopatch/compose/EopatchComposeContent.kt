@@ -1,8 +1,8 @@
 package app.aaps.pump.eopatch.compose
 
-import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.view.WindowManager
+import androidx.activity.compose.LocalActivity
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Settings
@@ -15,7 +15,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.interfaces.protection.ProtectionCheck
@@ -38,7 +37,6 @@ class EopatchComposeContent(
         onNavigateBack: () -> Unit,
         onSettings: (() -> Unit)?
     ) {
-        val context = LocalContext.current
         val overviewViewModel: EopatchOverviewViewModel = metroViewModel()
 
         // Patch workflow state
@@ -92,8 +90,10 @@ class EopatchComposeContent(
         }
 
         if (showPatchWorkflow) {
-            // Keep screen on and lock orientation during patch workflow
-            val activity = context as? Activity
+            // Keep screen on and lock orientation during patch workflow.
+            // LocalActivity, not a cast of LocalContext: that context is usually a ContextWrapper,
+            // where `as? Activity` is null and the screen would time out mid patch activation.
+            val activity = LocalActivity.current
             DisposableEffect(Unit) {
                 activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
                 val previousOrientation = activity?.requestedOrientation
