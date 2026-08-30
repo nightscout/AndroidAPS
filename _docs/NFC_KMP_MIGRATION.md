@@ -1,6 +1,6 @@
 # NFC plugin - migration to Kotlin Multiplatform
 
-Written 2026-08-20, updated 2026-08-23. What the NFC Commands plugin needs in order to fit the
+Written 2026-08-20, updated 2026-08-30. What the NFC Commands plugin needs in order to fit the
 Kotlin Multiplatform refactoring going on in `Nightscout/kmp`, and to line up with the architecture
 the other plugins already follow.
 
@@ -23,14 +23,15 @@ preparation work can happen without disturbing the main NFC line.
 
 | Step                                                       | State                                                                       |
 |------------------------------------------------------------|-----------------------------------------------------------------------------|
-| Merge `Nightscout/kmp` into the branch                     | **done seven times** - latest `31889dde7a`, 30 commits, no conflicts           |
+| Merge `Nightscout/kmp` into the branch                     | **done eight times** - latest `f1b0a38d39`, 64 commits, one conflict           |
 | Tier 1, the changes needed to compile at all (section 3)    | **done** - `9cd204b8da` "NFC Fix build after kmp merge"                        |
 | Architecture alignment (section 9)                         | **all done** - 9.1 to 9.8, the last being 9.5 in `57952b8690`                  |
 | The command format and the store blobs (section 5)          | **done** - `28305e0af6` and `ff1916852f`. No `org.json` left in the plugin      |
 | Metro DI and the plugin's own manifest (section 1a)         | **done** - `ba1cdbd518`, `009f4087ca`, `42ea9bbad2`. Metro owns the plugin now  |
 | Tier 2, needed only for a multiplatform module (section 4)  | **not started** apart from the `org.json` row, which sections 5 and 9.7 did    |
-| Build verification                                         | **green** - compile clean, 93 NFC tests and 54 app DI tests pass                |
-| `Nightscout/kmp` freshness                                 | merged 2026-08-28 at `2c62ecad75`. Still not in `dev` - more merges are due     |
+| The `:plugins:sync` flip, step 6                            | **done** - upstream flipped it in `077aa2a6e4`, our files moved in `216e31867e` |
+| Build verification                                         | **green** - 93 NFC tests in `testAndroidHostTest`, 94 app tests, all pass       |
+| `Nightscout/kmp` freshness                                 | merged 2026-08-30 at `d687e33bc2`. Still not in `dev` - more merges are due     |
 
 Sections 3.7 to 3.12 are six breaks that only a compiler found, after an import-derived list had
 missed them. The lesson is recorded there because it will repeat on the next merge: **grepping imports
@@ -70,6 +71,8 @@ anything was pushed, so that each one builds on its own:
 | `0ef1155b65`  | **merge 6**, 34 upstream commits, no conflicts                | nothing to fix afterwards                |
 | `57952b8690`  | section 9.5 - snackbar events, no more Context, 7 files        | last alignment item, **builds**          |
 | `31889dde7a`  | **merge 7**, 30 upstream commits, no conflicts                | nothing to fix afterwards                |
+| `f1b0a38d39`  | **merge 8**, 64 upstream commits, 1 conflict                  | leaves nfcCommands outside every source set |
+| `216e31867e`  | fix build after merge 8 - into androidMain, 49 files          | pure move, recorded as renames, **builds** |
 
 Keeping these apart matters for review: the fix-build commit only has to answer "did the merge really
 force this?", and the alignment commit carries its own rationale. `f9e51ec06c` is also the one that
@@ -81,9 +84,11 @@ is cleanly cherry-pickable - see section 10.
 
 | Branch                           | HEAD          | Date       | Note                                      |
 |----------------------------------|---------------|------------|-------------------------------------------|
-| `nfc/new-nfc-plugin_kmp` (ours)  | -             | -          | merged `kmp` at `4957c26eb8`               |
-| `Nightscout/kmp`                 | `c9ca405f39`  | 2026-08-26 | **109 commits newer** than what we merged  |
+| `nfc/new-nfc-plugin_kmp` (ours)  | `216e31867e`  | 2026-08-30 | merged `kmp` at `d687e33bc2`               |
+| `Nightscout/kmp`                 | `d687e33bc2`  | 2026-08-30 | fully merged as of merge 8                 |
 | `Nightscout/dev`                 | `283a184f60`  | 2026-08-25 | `kmp` has **not** landed here yet          |
+
+The rest of this section is the picture as it was on 2026-08-26, kept for the reasoning it records.
 
 Shared base: `7fc8205e9a7` ("Fix scenes expiration", on `dev`).
 
@@ -241,6 +246,10 @@ Measured from the branch, not assumed:
 | `:database:*`, `:implementation` | `main` `test`                                               | no         |
 
 **`:plugins:sync`, where the NFC plugin lives, is not converted and is not next in line.**
+
+**Out of date as of merge 8.** That table was measured before merges 5 to 8, and every "no" row in it
+has since been converted. `:plugins:sync` now has `commonMain` `androidMain` `iosMain`
+`androidHostTest` `androidDeviceTest` - see section 6 for what is in each.
 
 ---
 
@@ -407,7 +416,23 @@ This cannot move: registering an `ElementType` means touching the registry, and 
 
 ---
 
-## 4. Tier 2 - only needed if the module itself becomes multiplatform
+## 4. Tier 2 - only needed if the NFC code itself goes to `commonMain`
+
+**The title used to say "if the module itself becomes multiplatform". The module became
+multiplatform at merge 8 and none of this became due**, because the NFC code went to `androidMain`.
+Read every row below as "needed only if someone decides NFC should be shared", which nothing
+suggests - see section 6.
+
+Two rows have since moved on their own, for reasons that are not about Tier 2:
+
+- **`R.string` to `TextRef`** is now worth doing anyway. Upstream moved almost all of `:plugins:sync`
+  onto a generated `SyncStrings`, and only one upstream file still uses `R.string.`, which makes the
+  NFC code the largest `R.string` user left in the module. This is agreed as the next step - step 7
+  in section 8. It is alignment, not a build need: `R` exists in `androidMain` and the current code
+  compiles.
+- **Tests** landed exactly as the last row predicted. They are in `androidHostTest`, and the
+  dependencies really are written out by hand in the module build file, because
+  `test-module-dependencies` applies `com.android.library`.
 
 | Item                                                                        | Sites                                     | Notes                                                                                                                                                                                                                                              |
 |-----------------------------------------------------------------------------|-------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -583,6 +608,26 @@ rejects.
 
 ## 6. The open question: does NFC belong in shared code at all?
 
+**Settled at merge 8, and half of the reasoning below was wrong.** Upstream did flip
+`:plugins:sync` to multiplatform - `077aa2a6e4`, in merge 8 - so the "sync is Android only by
+nature" quote further down no longer describes the module. It now has a real `commonMain` with the
+NS client in it, and an `iosMain`:
+
+| source set        | files | what is in it                                        |
+|-------------------|-------|------------------------------------------------------|
+| `commonMain`      | 60    | only `nsclientV3` - the client core and the client-control screens |
+| `androidMain`     | 233   | everything else, including `R` and all of `res/`      |
+| `iosMain`         | 3     | the iOS half of the NS client                         |
+| `androidHostTest` | 114   | was `src/test`                                        |
+| `androidDeviceTest` | 1   | was `src/androidTest`                                 |
+
+What survived is the **answer**, not the reason for it: NFC belongs in `androidMain`, the first row
+of the table below. The module being multiplatform does not pull NFC into `commonMain`, because the
+argument for keeping it on Android was never about the module - it was about NDEF intent dispatch not
+existing on iOS. Tier 2 is still not needed.
+
+The original reasoning follows, kept because it is what the decision was made on at the time.
+
 This changes the cost by roughly ten times and has not been decided.
 
 **The case for Android only:**
@@ -648,8 +693,9 @@ the Dagger work in both.
 Still to wait for:
 
 1. **The `kmp` to `dev` merge** - open decision 11 in the KMP note, and its follow-up 1.
-2. **The `:plugins:sync` flip** - not started, not next. That is where the NFC hardware
-   `expect` / `actual` question belongs, and section 6 suggests it may never need answering.
+2. ~~**The `:plugins:sync` flip**~~ - **done upstream at merge 8**, `077aa2a6e4`. The NFC hardware
+   `expect` / `actual` question did not need answering: the plugin is in `androidMain` and the
+   module's `commonMain` holds only the NS client. See section 6.
 
 One thing may still move: follow-up 3 in the KMP note is `PluginDescription.description: Int`, the
 `-1` sentinel set by 57 files. That is one line in `NfcCommandsPlugin.kt`.
@@ -666,29 +712,39 @@ One thing may still move: follow-up 3 in the KMP note is `PluginDescription.desc
 | 3    | **Keep merging `kmp` as it moves**, roughly daily while it is this active. Five merges in, the conflict set is small and always the same shared files, and `nfcCommands/` has never been touched by one. Waiting costs more than merging - see the merge notes in section 10. | -                    |
 | 4    | ~~Tier 2~~ - **not needed.** Upstream's own doc and its conversion record say `:plugins:sync` stays Android, so the plugin lives in `androidMain`. See section 6. | -                    |
 | 5    | ~~Decide the NFC hardware seam~~ - **not needed** for the same reason. There is no iOS half to design. | -                    |
-| 6    | When upstream makes `:plugins:sync` multiplatform, the plugin's files move from `src/main` to `src/androidMain`. **Not our task** - see below. | upstream flipping the module |
+| 6    | ~~When upstream makes `:plugins:sync` multiplatform, the plugin's files move from `src/main` to `src/androidMain`~~ - **done**, `216e31867e`. It happened at merge 8, and it *was* our task after all - see below. | -                    |
+| 7    | Move the NFC strings onto the generated `SyncStrings` names, the way the rest of the module now does. Agreed as the next step. | -                    |
 
-All of section 9 is done as of `57952b8690`. **The NFC work is finished.** What is left is not work on
-the plugin at all - it is step 6, and step 6 is not ours to do.
+All of section 9 is done as of `57952b8690`, and step 6 is done as of `216e31867e`. The plugin
+compiles and tests inside a multiplatform `:plugins:sync`.
 
-**Why step 6 is not our task, and why `androidMain` needs no other plugin to justify it.** Two facts
-settle both halves:
+**Step 6 was our task after all. This is the prediction that failed, and why.** The note used to say
+that whoever converts the module moves all of `src/main` and our files travel with it, so there would
+be nothing for us to do. The first half held - `077aa2a6e4` moved 233 files - but the second half did
+not.
 
-1. `androidMain` is created because the **module** becomes multiplatform, not because some file needs a
-   home. Upstream already has modules that are multiplatform with **no `commonMain` at all** -
-   `:plugins:source` and `:plugins:configuration` keep every line in `androidMain`. `:plugins:sync` is
-   full of Android-only code already (WorkManager, `NSClientV3Service`, `DataLayerListenerServiceMobile`,
-   the activities), so nothing about NFC is needed to justify the source set.
-2. The conversion is a **pure path move**, done in one commit by whoever converts the module.
-   `0628ea8c2d` "Make `:plugins:source` a multiplatform module" is **101 detected renames with zero line
-   changes**. Whoever converts `:plugins:sync` moves all of `src/main`, and our files go with it because
-   by then they are just part of the module.
+What actually happened at merge 8:
 
-So there is no NFC step waiting on the other side. What there is, is a **merge event to expect**: if
-`:plugins:sync` is converted before this branch lands, upstream's tree will have `src/androidMain` where
-ours has `src/main`. Git's directory rename detection normally carries new files across a renamed
-directory, but it can report a `CONFLICT (file location)` for files upstream never had - which is exactly
-what all of `nfcCommands/` is. Expect to confirm the placement once, not to do the move by hand.
+- The files we had **edited** followed the rename by themselves, and our changes merged into them:
+  the manifest entry, the `NfcControlActivity` member injector, and the NFC strings in
+  `res/values/strings.xml`. Git treats those as content changes to files it can follow.
+- The files we **added** did not move. All 49 stayed in `src/main` and `src/test`, which are no
+  longer source sets, so nothing in `nfcCommands/` was compiled at all. Git did not even report the
+  `CONFLICT (file location)` the note expected - it said nothing, and the merge looked clean.
+
+**The lesson, and it is the same one as section 3 and as the merge 7 trap: a clean merge is not a
+correct merge.** After any merge that renames a directory we have files in, check where our files
+actually are, not whether git complained. `git ls-files plugins/sync/src/main` answers it in one
+line.
+
+The move itself was as cheap as predicted - 49 files, every one a rename, zero lines changed - once
+two things were checked first:
+
+1. `R` still exists in `androidMain`, so the roughly 40 NFC files on `R.string` and `rh.gs(Int)`
+   compile unchanged.
+2. The hand written `androidHostTest` source set already declares `:shared:tests`,
+   `:implementation`, `:plugins:aps`, Robolectric and the Compose test artifacts, which used to come
+   from the test convention plugins a multiplatform module cannot apply.
 
 Where section 9 lands: **all of it is done** - 9.1 to 9.4, 9.6, 9.7 and 9.8, and 9.5 last in
 `57952b8690`.
@@ -1158,6 +1214,26 @@ our Android-only `androidx.compose.ui.res.stringResource` import into a `commonM
 no reason to flag it because kmp never touched those lines. A clean merge is not proof of a correct
 merge - grep the `commonMain` source sets for `android` imports after any future merge.
 
+### Merge 8 outcome, for reference
+
+Commit `f1b0a38d39`, **64 upstream commits**, one conflict. The big one: upstream flipped
+`:plugins:sync` to multiplatform (`077aa2a6e4`), which is the event step 6 was waiting for. Merge 7's
+trap repeated in a new shape - the merge was almost silent, and still left the plugin uncompiled.
+
+- **The one conflict** was `plugins/sync/build.gradle.kts`, and only because upstream rewrote the
+  whole file. Our single line in it was `kotlin("plugin.serialization")`, kept as
+  `id("kotlinx-serialization")`, the form the converted modules use. It is genuinely needed:
+  `NfcCommand.kt` and `NfcTagStore.kt` use `@Serializable`.
+- **`nfcCommands/` was touched by a merge for the first time** - not in content, in placement. See
+  section 8 for what git did and did not do, and `216e31867e` for the move.
+- Nothing else broke. No `core/` module changed in these 64 commits, so none of the signature churn
+  of sections 3.7 to 3.12 repeated.
+
+Also in this merge, and worth knowing even though none of it touches NFC: the `ios` branch is now
+merged into `kmp` regularly, the NS client core and the client-control screens moved to `commonMain`
+with an `iosMain` half, `:workflow` and `:shared:tests` were flipped, and the sync strings moved onto
+a generated `SyncStrings` - see the next step in section 8.
+
 ---
 
 ## Appendix - measured numbers
@@ -1204,6 +1280,34 @@ unchanged. The failure this produces is not a compile error and says nothing abo
 reports *"Cannot locate tasks that match ... task 'compileFullDebugKotlin' not found in project
 ':plugins:sync'"*.
 
+### Build commands changed at merge 8
+
+`:plugins:sync` is a multiplatform module now, so its variant tasks are gone in turn. `:app` is
+unaffected again.
+
+| From merge 7 | From merge 8 |
+|---|---|
+| `:plugins:sync:compileDebugKotlin` | built by `:plugins:sync:allTests` |
+| `:plugins:sync:testDebugUnitTest` | `:plugins:sync:allTests` |
+| test results under `build/test-results/testDebugUnitTest/` | `.../testAndroidHostTest/` |
+
+`runtests.sh` already covers this - it runs `testFullDebugUnitTest testDebugUnitTest allTests`, and
+`allTests` is the multiplatform one.
+
+### TLS failure on this machine, and the flag that fixes it
+
+Gradle cannot download anything new here: every repository fails with
+*"Got SSL handshake exception ... PKIX path building failed"*. It is not the network - `curl` fetches
+the same URL with a 200. The JDK truststore does not have the certificate the local TLS interception
+presents, and `git fetch` fails for the same reason.
+
+Adding `-Djavax.net.ssl.trustStoreType=Windows-ROOT` to the Gradle command makes it read the Windows
+certificate store instead, and the build downloads normally. Nothing in the repository is changed by
+it. Merge 8 needed it because upstream added a new dependency,
+`dev.whyoleg.cryptography:cryptography-provider-optimal`, which was not in the local cache yet.
+
+    ./gradlew.bat :plugins:sync:allTests --no-daemon -Djavax.net.ssl.trustStoreType=Windows-ROOT
+
 ### Reading build output
 
 Two traps that make a failing build look green. Both were hit in this work and produced wrong
@@ -1212,10 +1316,10 @@ Two traps that make a failing build look green. Both were hit in this work and p
 - **Kotlin errors are not `e:` lines.** They come as `Problem found: Kotlin compiler error` blocks with
   the message and `Location:` on following lines. Grepping only `^e: ` returns 0 on a build with a
   dozen errors. Grep for both.
-- **Test result XMLs survive a failed compile.** If `compileFullDebugUnitTestKotlin` fails,
-  `build/test-results/` still holds the *previous* run, so the counts read like a pass. Check the file
-  timestamps, or delete
-  `plugins/sync/build/test-results/testFullDebugUnitTest/TEST-*.nfcCommands.*.xml` first.
+- **Test result XMLs survive a failed compile.** If the test compile fails, `build/test-results/`
+  still holds the *previous* run, so the counts read like a pass. Check the file timestamps, or
+  delete `plugins/sync/build/test-results/` first. The NFC files are now
+  `.../testAndroidHostTest/TEST-app.aaps.plugins.sync.nfcCommands.*.xml`.
 
 Also use redirect, not pipe, for gradle output - a pipe reports the *pipe's* exit code, so a failed
 build looks like it passed.
