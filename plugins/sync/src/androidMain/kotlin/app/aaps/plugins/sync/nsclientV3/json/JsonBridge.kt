@@ -6,27 +6,25 @@ import kotlinx.serialization.json.jsonObject
 import org.json.JSONObject
 
 /**
- * Conversions between `org.json` and kotlinx JSON, for the places where the two still meet.
+ * Converts an `org.json` payload into a kotlinx one, at the one place the two still meet.
  *
  * `:core:nssdk` no longer speaks `org.json` - it cannot, because `org.json` is a JVM and Android API
- * and the module has to build for iOS. Two things on the Android side still do, and neither is worth
- * changing yet:
+ * and the module has to build for iOS. What still does is **socket.io**:
+ * `io.socket:socket.io-client` hands every event payload over as `org.json.JSONObject`. That is the
+ * library's API, so the conversion happens as the event arrives and everything downstream is kotlinx.
  *
- * 1. **socket.io.** `io.socket:socket.io-client` hands every event payload over as
- *    `org.json.JSONObject`. That is the library's API, so the conversion happens as the event
- *    arrives and everything downstream is kotlinx.
- * 2. **The profile subsystem.** `ProfileStore`, `PureProfile` and `DataSyncSelector.PairProfileStore`
- *    are built on `org.json` throughout, far outside this module. Profiles are converted where they
- *    cross into or out of the client instead of migrating that subsystem here.
+ * This is androidMain on purpose and has no iOS counterpart. On iOS the socket delivers payloads as
+ * text and the handlers parse them with kotlinx directly, so there is nothing to bridge.
  *
- * Both conversions go through text, which is exactly what the old code did internally, so nothing
- * about the parsed result changes. They are not free - do not put them on a hot path.
+ * The conversion goes through text, which is exactly what the old code did internally, so nothing
+ * about the parsed result changes. It is not free - do not put it on a hot path.
+ *
+ * There used to be a `toOrgJson` going the other way, for reading profile timestamps with the
+ * `org.json`-based `JsonHelper`. `LoadProfileStoreRunner` reads them with the kotlinx
+ * `safeGetLongAllowNull` / `safeGetStringAllowNull` instead, so nothing converts back any more.
  */
 object JsonBridge {
 
     /** `org.json` tree -> kotlinx tree. Throws if the text is somehow not a JSON object. */
     fun JSONObject.toKotlinxJson(): JsonObject = Json.parseToJsonElement(toString()).jsonObject
-
-    /** kotlinx tree -> `org.json` tree. */
-    fun JsonObject.toOrgJson(): JSONObject = JSONObject(toString())
 }
