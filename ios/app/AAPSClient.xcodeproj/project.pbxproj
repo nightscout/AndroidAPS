@@ -8,15 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		AA2000300000000000000 /* ClientApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1000100000000000000 /* ClientApp.swift */; };
+		AA2009900000000000000 /* NsSocketBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1009900000000000000 /* NsSocketBridge.swift */; };
 		AA2000400000000000000 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA2000200000000000000 /* Assets.xcassets */; };
 		AA2000500000000000000 /* AapsShared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA1000200000000000000 /* AapsShared.framework */; };
 		AA3000300000000000000 /* ClientApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1000100000000000000 /* ClientApp.swift */; };
+		AA3009900000000000000 /* NsSocketBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1009900000000000000 /* NsSocketBridge.swift */; };
 		AA3000400000000000000 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA3000200000000000000 /* Assets.xcassets */; };
 		AA3000500000000000000 /* AapsShared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA1000200000000000000 /* AapsShared.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		AA1000100000000000000 /* ClientApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ClientApp.swift; path = Shared/ClientApp.swift; sourceTree = "<group>"; };
+		AA1009900000000000000 /* NsSocketBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NsSocketBridge.swift; path = Shared/NsSocketBridge.swift; sourceTree = "<group>"; };
 		AA1000200000000000000 /* AapsShared.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AapsShared.framework; path = ../shell/build/bin/iosSimulatorArm64/debugFramework/AapsShared.framework; sourceTree = "<group>"; };
 		AA1000300000000000000 /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.xcconfig; sourceTree = "<group>"; };
 		AA2000100000000000000 /* AAPSClient.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AAPSClient.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -49,6 +52,7 @@
 			isa = PBXGroup;
 			children = (
 				AA1000100000000000000 /* ClientApp.swift */,
+				AA1009900000000000000 /* NsSocketBridge.swift */,
 				AA2001200000000000000 /* AAPSClient */,
 				AA3001200000000000000 /* AAPSClient2 */,
 				AA1000300000000000000 /* Signing.xcconfig */,
@@ -99,6 +103,9 @@
 			dependencies = (
 			);
 			name = AAPSClient;
+			packageProductDependencies = (
+				AA00SP02000000000000001 /* SocketIO */,
+			);
 			productName = AAPSClient;
 			productReference = AA2000100000000000000 /* AAPSClient.app */;
 			productType = "com.apple.product-type.application";
@@ -117,6 +124,9 @@
 			dependencies = (
 			);
 			name = AAPSClient2;
+			packageProductDependencies = (
+				AA00SP02000000000000002 /* SocketIO */,
+			);
 			productName = AAPSClient2;
 			productReference = AA3000100000000000000 /* AAPSClient2.app */;
 			productType = "com.apple.product-type.application";
@@ -141,6 +151,9 @@
 			);
 			mainGroup = AA1001300000000000000;
 			productRefGroup = AA1001400000000000000 /* Products */;
+			packageReferences = (
+				AA00SP01000000000000001 /* XCRemoteSwiftPackageReference "socket.io-client-swift" */,
+			);
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -206,6 +219,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA2000300000000000000 /* ClientApp.swift in Sources */,
+				AA2009900000000000000 /* NsSocketBridge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -214,10 +228,35 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA3000300000000000000 /* ClientApp.swift in Sources */,
+				AA3009900000000000000 /* NsSocketBridge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		AA00SP01000000000000001 /* XCRemoteSwiftPackageReference "socket.io-client-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/socketio/socket.io-client-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 16.1.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AA00SP02000000000000001 /* SocketIO */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA00SP01000000000000001 /* XCRemoteSwiftPackageReference "socket.io-client-swift" */;
+			productName = SocketIO;
+		};
+		AA00SP02000000000000002 /* SocketIO */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA00SP01000000000000001 /* XCRemoteSwiftPackageReference "socket.io-client-swift" */;
+			productName = SocketIO;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCBuildConfiguration section */
 		AA1001100000000000000 /* Debug */ = {
