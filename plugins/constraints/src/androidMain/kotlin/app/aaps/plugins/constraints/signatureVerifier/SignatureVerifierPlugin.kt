@@ -1,5 +1,6 @@
 package app.aaps.plugins.constraints.signatureVerifier
 
+import app.aaps.plugins.constraints.ConstraintsStrings
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Handler
@@ -17,7 +18,6 @@ import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.plugins.constraints.R
 import app.aaps.plugins.constraints.signatureVerifier.keys.SignatureVerifierLongKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
@@ -63,7 +63,7 @@ class SignatureVerifierPlugin @Inject constructor(
         .mainType(PluginType.CONSTRAINTS)
         .alwaysEnabled(true)
         .showInList { false }
-        .pluginName(TextRef.AndroidRes(R.string.signature_verifier)),
+        .pluginName(ConstraintsStrings.signature_verifier),
     ownPreferences = SignatureVerifierLongKey.entries,
     aapsLogger, rh, preferences
 ), PluginConstraints {
@@ -118,7 +118,7 @@ class SignatureVerifierPlugin @Inject constructor(
     }
 
     private fun showNotification() {
-        notificationManager.post(NotificationId.INVALID_VERSION, TextRef.AndroidRes(R.string.running_invalid_version))
+        notificationManager.post(NotificationId.INVALID_VERSION, ConstraintsStrings.running_invalid_version)
     }
 
     private fun hasIllegalSignature(): Boolean {

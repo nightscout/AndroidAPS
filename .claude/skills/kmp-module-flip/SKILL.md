@@ -104,6 +104,41 @@ whole list, rather than finding it one compile failure at a time: `kotlin("test"
 `TestBaseWithProfile` then NPE. That once failed **121 of 210 tests** inside the shared base, nowhere
 near the real cause.
 
+### If the module has instrumented tests, it needs a second dependency list
+
+`androidHostTest` is the easy one to remember, because a missing dependency there fails the build you
+are already running. `androidDeviceTest` does not: nothing local compiles it, so a module can look
+completely green and still be broken. `:plugins:sync` was pushed that way and only CI caught it.
+
+Three separate things all have to be restated:
+
+1. **The runner.** `withDeviceTest { instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner" }`.
+   An empty `withDeviceTest { }` builds fine and has nothing to run the tests with.
+2. **JUnit 4 dependencies**, from the `androidTestImplementation` lines of
+   `test-module-dependencies.gradle.kts`: `androidx-test-ext`, `androidx-test-rules`,
+   `com-google-truth`, `org-mockito-android`, `org-mockito-kotlin`, `kotlinx-coroutines-test`.
+   Instrumented tests are JUnit 4; the host tests next to them are JUnit 5.
+3. **An exclusion, if the module depends on `:shared:tests` from the device test.** That project
+   carries JUnit 5, `TestBase` pulls it onto the device classpath, and dexing it fails with
+   `Attempt to create a global synthetic for 'Record desugaring'` - JUnit 6 uses Java records.
+   ```kotlin
+   configurations.named("androidDeviceTestImplementation") {
+       exclude(group = "org.junit.jupiter")
+       exclude(group = "org.junit.platform")
+   }
+   ```
+
+Verify locally before pushing - none of this needs a device:
+
+```
+./gradlew.bat :module:compileAndroidDeviceTest :module:assembleAndroidDeviceTest --no-daemon
+```
+
+Watch for a JUnit 4 test extending a JUnit 5 base class. `GarminDeviceClientTest` extends `TestBase`,
+whose `@BeforeEach` never fires under `@RunWith(AndroidJUnit4)`. It happens to work because it only
+touches a field initialised at construction, but anything relying on `openMocks` in that base would
+get nulls and no warning.
+
 ## Source moves
 
 `src/main` → `src/androidMain`, `src/test` → `src/androidHostTest`,
@@ -193,6 +228,73 @@ exactly as `MainApp` does.
 resource id in the **interface**. A `TextRef` overload exists for `comment`; where one does not, the
 implementation cannot move until the interface changes.
 
+### Kotlin/Native rejects a comma in a backticked test name
+
+`fun \`the tag is appended, making it longer\`()` compiles on JVM and fails Native with
+`Name contains illegal characters: ","`. It only shows up once a test reaches commonTest, so a
+JVM-only test can carry one for years. Rewrite the name; do not rename the test's meaning.
+
+### Moving crypto: the provider is stricter than javax was
+
+`javax.crypto` built a fresh `Cipher` on every call, which hid API misuse. A multiplatform provider
+reuses objects and enforces the rules, so a migration can fail on something that was always wrong.
+Moving `ClientControlCrypto` turned up **two tests reusing one IV with one key** for AES-GCM -
+forbidden, and the provider says so (`Cannot reuse iv for GCM encryption`). Production was fine
+because the IV is generated per use; only the fixtures were wrong.
+
+Two rules when the format is already on the wire:
+
+- **Keep golden vectors and put them in commonTest.** Digests minted by the old implementation are
+  what prove the new one emits the same bytes. On Windows `mingwX64Test` runs them against
+  Kotlin/Native, so the Native path is checked long before a Mac is available.
+- **Watch the packaging, not the algorithm.** The primitives interoperate by definition; the silent
+  breakage is in how they are assembled - whether the AEAD nonce is prepended or stored separately,
+  whether the GCM tag is appended, hex case. In cryptography-kotlin the plain `encryptBlocking`
+  generates and prepends its own nonce; `encryptWithIvBlocking` (behind `@DelicateCryptographyApi`)
+  is the one that matches a format storing the IV separately.
+
+### Positional `mock()` constructor arguments hide a wrong wiring
+
+Tests here build big plugins positionally, with long runs of bare `mock()`. Adding or removing a
+constructor parameter shifts everything after it, and nothing complains: `mock()` fits any type.
+
+The failure surfaces far away and looks nothing like the cause. Passing an unstubbed `mock()` where
+the class collects a `Flow` gives a **null** upstream, which fails as
+`UncaughtExceptionsBeforeTest` in whatever test happens to run next - not in the test that caused
+it, and not with a message naming the parameter.
+
+- Do not target these lines with `sed -i '<line>s/.../.../'`. Line numbers shift as soon as an
+  import or a field is added above, and the edit then lands on the wrong call.
+- After changing a constructor, grep every construction site and check the argument that matters is
+  the **named field**, not a fresh `mock()`.
+- `git stash` and re-run to tell "my change broke this" from "this was already flaky". The suite has
+  a real `UncaughtExceptionsBeforeTest` flake, so the two are easy to confuse.
+
+### Splitting a WorkManager worker
+
+A worker is almost always a body wrapped in a class WorkManager can construct. `RunnerWorker` and
+`WorkOutcome` in `:core:objects` exist for this: the body becomes a `XxxRunner` in commonMain with
+`suspend fun run(): WorkOutcome`, and the worker keeps only the `@AssistedInject` scaffolding.
+
+The nine NS client workers all transformed the same way, so it is scriptable - drop the
+`@Assisted context`/`params` and `fabricPrivacy` parameters, make `aapsLogger` a `private val`, swap
+`@AssistedInject constructor` for `@Inject`, drop the `LoggingWorker` supertype and the
+`@AssistedFactory`, and map the returns:
+
+| worker | runner |
+|---|---|
+| `Result.success()` | `WorkOutcome.Success` |
+| `Result.success(workDataOf("Result" to x))` | `WorkOutcome.Skipped(x)` |
+| `Result.failure(workDataOf("Error" to x))` | `WorkOutcome.Failure(x)` |
+
+**Review the mapping table by hand afterwards** - it is the only part that carries meaning. A
+`Result.success` with output data is not the same as a bare one: `WorkOutcome.Skipped` was added
+precisely because `LoadBgWorker` reported "Load not enabled" that way, and collapsing it into
+`Success` silently dropped a signal a test was asserting on.
+
+Worker tests construct the worker directly, so each needs its argument list wrapped:
+`XxxWorker(appContext, params, aapsLogger, fabricPrivacy, XxxRunner(aapsLogger, ...rest))`.
+
 ### Other common blockers
 
 `javax.inject` (swap to `dev.zacsweers.metro.Inject` only for a class Metro already builds),
@@ -212,6 +314,29 @@ Two cautions. Keep the platform maths on the platform where an exact result matt
 whose implementation on some target would be a silent no-op is a safety problem in this app: a rule
 the user relies on would quietly stop firing, so the feature should be visibly absent on that target
 instead.
+
+### Test libraries are JVM-only, so a fixtures module barely moves
+
+JUnit 5, Mockito and RxJava have no Kotlin/Native artifacts. Anything built on them is Android by
+nature, not by accident, and no amount of work moves it. In `:shared:tests` that left exactly one
+file in commonMain out of eleven:
+
+| stays on Android | why |
+|---|---|
+| `TestBase`, `TestBaseWithProfile` | `@ExtendWith(MockitoExtension)`, JUnit 5 lifecycle |
+| `TestAapsSchedulers` | RxJava |
+| `TextRefStubs` | the generated `*StringIds` maps only exist in androidMain |
+| `TestPumpPlugin` | `ResourceHelper` is androidMain; `PumpEnactResultObject` is in `:implementation` |
+| `HardLimitsMock` | `HardLimits` still has abstract `Int` (resource id) overloads |
+| `BundleMock`, `SharedPreferencesMock` | Android types are the point of them |
+| `MemberInjectorCoverage`, `SplitBrainCoverage` | `JarFile` reflection over compiled output |
+
+Flip such a module for the module type and the processor removal, not for the sharing. Say so up
+front rather than discovering it file by file.
+
+**A fixtures module must be excluded from `checkMigratedModules`.** It declares `iosArm64()` so that
+common tests can use it, but `migratedModules` feeds the exported framework header, and test helpers
+do not belong in the API Swift sees. There is a `filterNot` in `ios/shell/build.gradle.kts` for this.
 
 ## `:ios:shell:checkMigratedModules` will fail next
 

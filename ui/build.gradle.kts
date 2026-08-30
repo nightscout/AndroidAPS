@@ -82,6 +82,10 @@ kotlin {
                 api(libs.jetbrains.lifecycle.runtime.compose)
                 api(libs.kotlinx.datetime)
                 implementation(libs.cmp.ui.tooling.preview)
+                // A Compose Multiplatform library - it publishes iosArm64, jvm and wasm too, so the
+                // reorderable list works everywhere and does not pin a screen to Android.
+                // Same choice as :plugins:automation.
+                implementation(libs.sh.calvin.reorderable)
             }
         }
 
@@ -98,7 +102,6 @@ kotlin {
                 api(libs.androidx.ui.tooling.preview)
                 // Was debugImplementation; the multiplatform library target has no build types.
                 implementation(libs.androidx.ui.tooling)
-                implementation(libs.sh.calvin.reorderable)
                 implementation(libs.androidx.glance.appwidget)
                 implementation(libs.androidx.work.runtime)
                 implementation(libs.androidx.core)

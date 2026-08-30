@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.R
 import app.aaps.plugins.aps.loop.events.EventLoopSetLastRunGui
+import app.aaps.shared.tests.stubTextRefResolution
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -36,6 +37,9 @@ internal class LoopViewModelTest {
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.openMocks(this)
+        // The view model names its strings instead of numbering them, so the mock has to answer the
+        // TextRef form. This routes it back to the gs(Int) stubs the tests below already write.
+        stubTextRefResolution(rh)
         whenever(rxBus.toFlow(EventLoopUpdateGui::class)).thenReturn(updateGuiFlow)
         whenever(rxBus.toFlow(EventLoopSetLastRunGui::class)).thenReturn(lastRunGuiFlow)
     }

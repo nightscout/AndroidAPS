@@ -29,7 +29,7 @@ interface CalculationWorkflow {
         }
     }
 
-    fun stopCalculation(job: String, from: String)
+    suspend fun stopCalculation(job: String, from: String)
 
     /**
      * Block the caller until the data-producing (autosens/IOB/COB) stage of [job] has finished,
@@ -42,7 +42,7 @@ interface CalculationWorkflow {
      * @param job [MAIN_CALCULATION] or [HISTORY_CALCULATION]
      * @param reason for logging
      */
-    fun waitForCalculationFinish(job: String, reason: String)
+    suspend fun waitForCalculationFinish(job: String, reason: String)
 
     /**
      * Start calculation of data needed for displaying graphs
@@ -56,7 +56,7 @@ interface CalculationWorkflow {
      *   graph-update events into it so the owning scope (main/history) gets them
      *   without any job-name filtering.
      */
-    fun runCalculation(
+    suspend fun runCalculation(
         job: String,
         iobCobCalculator: IobCobCalculator,
         overviewData: OverviewData,
@@ -71,5 +71,5 @@ interface CalculationWorkflow {
     /**
      * Update predictions in graph ofter new data from device status
      */
-    fun runOnReceivedPredictions(overviewData: OverviewData)
+    suspend fun runOnReceivedPredictions(overviewData: OverviewData)
 }

@@ -1,5 +1,7 @@
 package app.aaps.plugins.configuration.setupwizard.elements
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.CoreUiStrings
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
@@ -13,20 +15,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.protection.PasswordCheck
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.objects.crypto.CryptoUtil
-import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsSpacing
 import dev.zacsweers.metro.Inject
 
-class SWEditEncryptedPassword @Inject constructor(aapsLogger: AAPSLogger, rh: ResourceHelper, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck, private val cryptoUtil: CryptoUtil) :
+class SWEditEncryptedPassword @Inject constructor(aapsLogger: AAPSLogger, rh: TextResolver, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck, private val cryptoUtil: CryptoUtil) :
     SWItem(aapsLogger, rh, rxBus, preferences, passwordCheck) {
 
     private var onSetPassword: (() -> Unit)? = null
@@ -58,12 +58,12 @@ class SWEditEncryptedPassword @Inject constructor(aapsLogger: AAPSLogger, rh: Re
             )
             Spacer(modifier = Modifier.width(AapsSpacing.large))
             Text(
-                text = stringResource(if (hasPassword) R.string.password_set else R.string.password_not_set),
+                text = stringResource(if (hasPassword) CoreUiStrings.password_set else CoreUiStrings.password_not_set),
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.weight(1f)
             )
             OutlinedButton(onClick = { onSetPassword?.invoke() }) {
-                Text(stringResource(if (hasPassword) R.string.change else R.string.set))
+                Text(stringResource(if (hasPassword) CoreUiStrings.change else CoreUiStrings.set))
             }
         }
     }

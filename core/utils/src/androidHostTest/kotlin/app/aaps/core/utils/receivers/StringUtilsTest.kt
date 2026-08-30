@@ -1,18 +1,23 @@
 package app.aaps.core.utils.receivers
 
-import com.google.common.truth.Truth.assertThat
-import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertNotEquals
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
+import kotlin.test.Test
 
 class StringUtilsTest {
 
     @Test fun removeSurroundingQuotesTest() {
         var compareString = "test"
-        assertThat(StringUtils.removeSurroundingQuotes(compareString)).isEqualTo(compareString)
-        assertThat(StringUtils.removeSurroundingQuotes("\"" + compareString + "\"")).isEqualTo(compareString)
-        assertThat(StringUtils.removeSurroundingQuotes("\"" + compareString)).isEqualTo("\"" + compareString)
+        assertEquals(compareString, StringUtils.removeSurroundingQuotes(compareString))
+        assertEquals(compareString, StringUtils.removeSurroundingQuotes("\"" + compareString + "\""))
+        assertEquals("\"" + compareString, StringUtils.removeSurroundingQuotes("\"" + compareString))
         compareString = """te"st"""
-        assertThat(StringUtils.removeSurroundingQuotes(compareString)).isEqualTo(compareString)
-        assertThat(StringUtils.removeSurroundingQuotes("\"" + compareString + "\"")).isEqualTo(compareString)
-        assertThat(StringUtils.removeSurroundingQuotes("\"" + compareString)).isEqualTo("\"" + compareString)
+        assertEquals(compareString, StringUtils.removeSurroundingQuotes(compareString))
+        assertEquals(compareString, StringUtils.removeSurroundingQuotes("\"" + compareString + "\""))
+        assertEquals("\"" + compareString, StringUtils.removeSurroundingQuotes("\"" + compareString))
     }
 }

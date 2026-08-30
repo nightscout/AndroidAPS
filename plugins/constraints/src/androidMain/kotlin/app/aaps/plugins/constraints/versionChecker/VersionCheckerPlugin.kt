@@ -1,5 +1,6 @@
 package app.aaps.plugins.constraints.versionChecker
 
+import app.aaps.plugins.constraints.ConstraintsStrings
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
@@ -15,7 +16,6 @@ import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.plugins.constraints.R
 import app.aaps.plugins.constraints.versionChecker.keys.VersionCheckerLongKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
@@ -43,7 +43,7 @@ class VersionCheckerPlugin @Inject constructor(
         .mainType(PluginType.CONSTRAINTS)
         .alwaysEnabled(true)
         .showInList { false }
-        .pluginName(TextRef.AndroidRes(R.string.version_checker)),
+        .pluginName(ConstraintsStrings.version_checker),
     ownPreferences = VersionCheckerLongKey.entries,
     aapsLogger, rh, preferences
 ), PluginConstraints {
@@ -52,7 +52,7 @@ class VersionCheckerPlugin @Inject constructor(
         versionCheckerUtils.triggerCheckVersion()
         val endDate = preferences.get(LongComposedKey.AppExpiration, config.VERSION_NAME)
         return if (endDate != 0L && dateUtil.now() > endDate)
-            maxIob.set(0.0, rh.gs(R.string.application_expired), this)
+            maxIob.set(0.0, rh.gs(ConstraintsStrings.application_expired), this)
         else
             maxIob
     }

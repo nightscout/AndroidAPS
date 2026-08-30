@@ -80,6 +80,14 @@ kotlin {
 
         // Hand written rather than taken from test-module-dependencies, which applies
         // com.android.library and so cannot be used here. Same approach as :core:keys.
+        // Tests of commonMain classes belong here: androidHostTest runs on the JVM only.
+        getByName("commonTest") {
+            dependencies {
+                implementation(kotlin("test"))
+
+            }
+        }
+
         getByName("androidHostTest") {
             dependencies {
                 implementation(libs.org.junit.jupiter)

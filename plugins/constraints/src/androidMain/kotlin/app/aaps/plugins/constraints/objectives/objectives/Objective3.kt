@@ -1,11 +1,11 @@
 package app.aaps.plugins.constraints.objectives.objectives
 
+import app.aaps.plugins.constraints.ConstraintsStrings
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.IntNonKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.plugins.constraints.R
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
@@ -23,21 +23,21 @@ class Objective3 @Inject constructor(
     preferences: Preferences,
     rh: ResourceHelper,
     dateUtil: DateUtil,
-) : Objective(preferences, rh, dateUtil, "openloop", R.string.objectives_openloop_objective, R.string.objectives_openloop_gate) {
+) : Objective(preferences, rh, dateUtil, "openloop", ConstraintsStrings.objectives_openloop_objective, ConstraintsStrings.objectives_openloop_gate) {
 
     init {
         tasks.add(MinimumDurationTask(this, T.days(7).msecs()))
         tasks.add(
-            object : Task(this, R.string.objectives_manualenacts) {
+            object : Task(this, ConstraintsStrings.objectives_manualenacts) {
                 override suspend fun isCompleted(): Boolean {
                     return preferences.get(IntNonKey.ObjectivesManualEnacts) >= MANUAL_ENACTS_NEEDED
                 }
 
                 override suspend fun progress(): String =
                     if (preferences.get(IntNonKey.ObjectivesManualEnacts) >= MANUAL_ENACTS_NEEDED)
-                        rh.gs(R.string.completed_well_done)
+                        rh.gs(ConstraintsStrings.completed_well_done)
                     else preferences.get(IntNonKey.ObjectivesManualEnacts).toString() + " / " + MANUAL_ENACTS_NEEDED
-            }.learned(Learned(R.string.objectives_openloop_learned))
+            }.learned(Learned(ConstraintsStrings.objectives_openloop_learned))
         )
     }
 

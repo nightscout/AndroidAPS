@@ -1,5 +1,7 @@
 package app.aaps.plugins.configuration.configBuilder
 
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.configuration.ConfigurationStrings
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
@@ -31,7 +33,6 @@ import app.aaps.core.keys.BooleanComposedKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.plugins.configuration.R
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -194,14 +195,14 @@ class ConfigBuilderImpl @Inject constructor(
 
     override fun requestPluginSwitch(plugin: PluginBase, enabled: Boolean, type: PluginType): String? {
         return when {
-            plugin.getType() == PluginType.PUMP && plugin.name != rh.gs(app.aaps.core.ui.R.string.virtual_pump) -> {
+            plugin.getType() == PluginType.PUMP && plugin.name != rh.gs(CoreUiStrings.virtual_pump) -> {
                 val allowHardwarePump = preferences.get(BooleanNonKey.AllowHardwarePump)
                 if (allowHardwarePump) {
                     performPluginSwitch(plugin, enabled, type)
                     pumpSync.connectNewPump()
                     null
                 } else {
-                    rh.gs(R.string.allow_hardware_pump_text)
+                    rh.gs(ConfigurationStrings.allow_hardware_pump_text)
                 }
             }
 

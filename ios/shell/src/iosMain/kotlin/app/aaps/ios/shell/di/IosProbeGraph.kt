@@ -5,6 +5,7 @@ import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
+import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
 import app.aaps.core.interfaces.utils.DateUtil
@@ -91,6 +92,7 @@ interface IosProbeGraph {
     val repository: AppRepository
     val notificationManager: NotificationManager
     val logger: AAPSLogger
+    val alarmSoundPlayer: AlarmSoundPlayer
     val preferences: Preferences
 
     /** The real iOS logger: NSLog for the console, a rotating file for afterwards. */
@@ -136,7 +138,8 @@ interface IosProbeGraph {
     /** Notifications through UNUserNotificationCenter, with the shared registry above it. */
     @Provides
     @SingleIn(AppScope::class)
-    fun systemNotificationPlatform(logger: AAPSLogger): SystemNotificationPlatform = IosSystemNotificationPlatform(logger)
+    fun systemNotificationPlatform(logger: AAPSLogger, alarmSoundPlayer: AlarmSoundPlayer): SystemNotificationPlatform =
+        IosSystemNotificationPlatform(logger, alarmSoundPlayer)
 
     @Provides
     @SingleIn(AppScope::class)

@@ -36,7 +36,9 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import javax.inject.Inject
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
-import org.json.JSONObject
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -125,7 +127,12 @@ class LoopTest : HiltInstrumentedTest() {
         assertThat((loopStatusEvent.second as EventLoopSetLastRunGui).text).contains("NO PROFILE SET")
 
         // Set Profile in ProfilePlugin
-        nsIncomingDataProcessor.processProfile(JSONObject(profileData), true)
+        // profileData holds two profile documents separated by a comma, the way a Nightscout profile
+        // collection returns them. JSONObject(String) read the first and threw the rest away without
+        // saying so; kotlinx refuses trailing content, so the first one is now picked explicitly.
+        // Same document as before - only the choice is written down now.
+        val firstProfile = Json.parseToJsonElement("[$profileData]").jsonArray.first().jsonObject
+        nsIncomingDataProcessor.processProfile(firstProfile, true)
         assertThat(profileRepository.profile.value).isNotNull()
 
         // Create a profile switch

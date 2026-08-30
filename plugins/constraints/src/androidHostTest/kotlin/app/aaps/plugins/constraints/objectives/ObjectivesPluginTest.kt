@@ -1,5 +1,6 @@
 package app.aaps.plugins.constraints.objectives
 
+import app.aaps.plugins.constraints.ConstraintsStrings
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -10,7 +11,6 @@ import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.implementation.sharedPreferences.PreferencesImpl
-import app.aaps.plugins.constraints.R
 import app.aaps.plugins.constraints.objectives.objectives.Objective0
 import app.aaps.plugins.constraints.objectives.objectives.Objective1
 import app.aaps.plugins.constraints.objectives.objectives.Objective2
@@ -65,8 +65,8 @@ class ObjectivesPluginTest : TestBaseWithProfile() {
         )
         objectivesPlugin = ObjectivesPlugin(aapsLogger, rh, emulatedPreferences, config, objectives)
         runBlocking { objectivesPlugin.onStart() }
-        whenever(rh.gs(R.string.objectivenotstarted)).thenReturn("Objective %1\$d not started")
-        whenever(rh.gs(R.string.objectivenotfinished)).thenReturn("Objective %1\$d not finished")
+        whenever(rh.gs(ConstraintsStrings.objectivenotstarted)).thenReturn("Objective %1\$d not started")
+        whenever(rh.gs(ConstraintsStrings.objectivenotfinished)).thenReturn("Objective %1\$d not finished")
     }
 
     @Test fun notStartedObjectivesShouldLimitLoopInvocation() {

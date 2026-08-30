@@ -1,10 +1,10 @@
 package app.aaps.plugins.constraints.objectives.objectives
 
+import app.aaps.plugins.constraints.ConstraintsStrings
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.plugins.constraints.R
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
@@ -21,12 +21,12 @@ class Objective9 @Inject constructor(
     preferences: Preferences,
     rh: ResourceHelper,
     dateUtil: DateUtil,
-) : Objective(preferences, rh, dateUtil, "auto", R.string.objectives_auto_objective, R.string.objectives_auto_gate) {
+) : Objective(preferences, rh, dateUtil, "auto", ConstraintsStrings.objectives_auto_objective, ConstraintsStrings.objectives_auto_gate) {
 
     init {
         tasks.add(
             MinimumDurationTask(this, T.days(28).msecs())
-                .learned(Learned(R.string.objectives_auto_learned))
+                .learned(Learned(ConstraintsStrings.objectives_auto_learned))
         )
     }
 }

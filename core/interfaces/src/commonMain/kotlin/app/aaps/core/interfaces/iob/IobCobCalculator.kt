@@ -15,7 +15,7 @@ interface IobCobCalculator {
     var ads: AutosensDataStore
 
     suspend fun getMealDataWithWaitingForCalculationFinish(): MealData
-    fun getLastAutosensDataWithWaitForCalculationFinish(reason: String): AutosensData?
+    suspend fun getLastAutosensDataWithWaitForCalculationFinish(reason: String): AutosensData?
 
     suspend fun calculateFromTreatmentsAndTemps(toTime: Long, profile: EffectiveProfile): IobTotal
 

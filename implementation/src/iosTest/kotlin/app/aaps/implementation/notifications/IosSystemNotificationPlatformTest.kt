@@ -2,6 +2,8 @@ package app.aaps.implementation.notifications
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.AlarmSound
+import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -40,7 +42,22 @@ class IosSystemNotificationPlatformTest {
         override fun error(className: String, methodName: String, lineNumber: Int, tag: LTag, message: String) {}
     }
 
-    private val platform = IosSystemNotificationPlatform(SilentLogger)
+    /** Records what the alarm player was asked to do, in order. */
+    private class RecordingAlarmPlayer : AlarmSoundPlayer {
+
+        val calls = mutableListOf<String>()
+
+        override fun play(sound: AlarmSound, ownerTag: String, postedAtElapsedRealtime: Long) {
+            calls.add("play:${sound.name}")
+        }
+
+        override fun stop(ownerTag: String) {
+            calls.add("stop")
+        }
+    }
+
+    private val alarmPlayer = RecordingAlarmPlayer()
+    private val platform = IosSystemNotificationPlatform(SilentLogger, alarmPlayer)
 
     @Test
     fun `an instance key survives the round trip`() {
@@ -65,5 +82,47 @@ class IosSystemNotificationPlatformTest {
     fun `a malformed identifier is not a key`() {
         assertNull(platform.instanceKeyOf("aaps-"))
         assertNull(platform.instanceKeyOf("aaps-abc"))
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // Alarm audio
+    // ---------------------------------------------------------------------------------------------
+
+    @Test
+    fun `an alarm owner starts the sound`() {
+        platform.setAudibleAlarm(7, AlarmSound.ERROR)
+
+        assertEquals(listOf("play:ERROR"), alarmPlayer.calls)
+    }
+
+    /**
+     * The reason the owner key is tracked at all.
+     *
+     * The registry recomputes the owner after every change, so the same alarm is offered again and
+     * again. Restarting the sound each time would reset the volume ramp and make an alarm quieter
+     * the more the registry churns - the opposite of what a ramp is for.
+     */
+    @Test
+    fun `the same owner offered twice does not restart the sound`() {
+        platform.setAudibleAlarm(7, AlarmSound.ERROR)
+        platform.setAudibleAlarm(7, AlarmSound.ERROR)
+
+        assertEquals(listOf("play:ERROR"), alarmPlayer.calls)
+    }
+
+    @Test
+    fun `a different owner takes the sound over`() {
+        platform.setAudibleAlarm(7, AlarmSound.ERROR)
+        platform.setAudibleAlarm(8, AlarmSound.ALARM)
+
+        assertEquals(listOf("play:ERROR", "play:ALARM"), alarmPlayer.calls)
+    }
+
+    @Test
+    fun `no owner silences the alarm`() {
+        platform.setAudibleAlarm(7, AlarmSound.ERROR)
+        platform.setAudibleAlarm(null, null)
+
+        assertEquals(listOf("play:ERROR", "stop"), alarmPlayer.calls)
     }
 }

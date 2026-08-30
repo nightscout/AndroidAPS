@@ -1,9 +1,12 @@
 package app.aaps.core.data.pump.defs
 
+import kotlinx.serialization.Serializable
+
 @Suppress("unused")
 /**
  * Description of pump capabilities
  */
+@Serializable
 enum class PumpType(
     val description: String,
     private val manufacturer: ManufacturerType? = null,

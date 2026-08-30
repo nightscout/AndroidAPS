@@ -97,6 +97,16 @@ kotlin {
 
         // Hand written rather than taken from test-module-dependencies, which applies
         // com.android.library and so cannot be used here. Same approach as :plugins:main.
+        // Tests of commonMain classes belong here, not in androidHostTest: that source set runs on the
+        // JVM only, so code that ships to iOS would be verified on Android alone. Mockito is JVM
+        // only, so anything moved here uses hand written fakes instead.
+        getByName("commonTest") {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(libs.kotlinx.coroutines.test)
+            }
+        }
+
         getByName("androidHostTest") {
             dependencies {
                 implementation(project(":shared:tests"))

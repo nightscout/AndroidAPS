@@ -1,5 +1,7 @@
 package app.aaps.plugins.constraints.objectives
 
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.constraints.ConstraintsStrings
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
@@ -23,7 +25,6 @@ import app.aaps.core.keys.IntNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.icons.IcPluginObjectives
-import app.aaps.plugins.constraints.R
 import app.aaps.plugins.constraints.objectives.compose.ObjectivesComposeContent
 import app.aaps.plugins.constraints.objectives.keys.ObjectivesBooleanComposedKey
 import app.aaps.plugins.constraints.objectives.keys.ObjectivesLongComposedKey
@@ -53,10 +54,10 @@ class ObjectivesPlugin @Inject constructor(
         .mainType(PluginType.CONSTRAINTS)
         .composeContent { ObjectivesComposeContent() }
         .icon(IcPluginObjectives)
-        .pluginName(TextRef.AndroidRes(app.aaps.core.ui.R.string.objectives))
-        .shortName(TextRef.AndroidRes(R.string.objectives_shortname))
+        .pluginName(CoreUiStrings.objectives)
+        .shortName(ConstraintsStrings.objectives_shortname)
         .enableByDefault(config.APS)
-        .description(TextRef.AndroidRes(R.string.description_objectives)),
+        .description(ConstraintsStrings.description_objectives),
     ownPreferences = ObjectivesBooleanComposedKey.entries + ObjectivesLongComposedKey.entries,
     aapsLogger, rh, preferences
 ), PluginConstraints, Objectives {
@@ -92,7 +93,7 @@ class ObjectivesPlugin @Inject constructor(
         // Check if initialized
         if (objectives.isEmpty()) return value
         if (!objectives[FIRST_OBJECTIVE].isStarted)
-            value.set(false, rh.gs(R.string.objectivenotstarted, FIRST_OBJECTIVE + 1), this)
+            value.set(false, rh.gs(ConstraintsStrings.objectivenotstarted, FIRST_OBJECTIVE + 1), this)
         return value
     }
 
@@ -100,7 +101,7 @@ class ObjectivesPlugin @Inject constructor(
         // Check if initialized
         if (objectives.isEmpty()) return value
         if (objectives[LGS_OBJECTIVE].isStarted && !objectives[LGS_OBJECTIVE].isAccomplished)
-            value.set(true, rh.gs(R.string.objectivenotfinished, LGS_OBJECTIVE + 1), this)
+            value.set(true, rh.gs(ConstraintsStrings.objectivenotfinished, LGS_OBJECTIVE + 1), this)
         return value
     }
 
@@ -108,7 +109,7 @@ class ObjectivesPlugin @Inject constructor(
         // Check if initialized
         if (objectives.isEmpty()) return value
         if (!objectives[CLOSED_LOOP_OBJECTIVE].isStarted)
-            value.set(false, rh.gs(R.string.objectivenotstarted, CLOSED_LOOP_OBJECTIVE + 1), this)
+            value.set(false, rh.gs(ConstraintsStrings.objectivenotstarted, CLOSED_LOOP_OBJECTIVE + 1), this)
         return value
     }
 
@@ -116,7 +117,7 @@ class ObjectivesPlugin @Inject constructor(
         // Check if initialized
         if (objectives.isEmpty()) return value
         if (!objectives[AUTOSENS_OBJECTIVE].isStarted)
-            value.set(false, rh.gs(R.string.objectivenotstarted, AUTOSENS_OBJECTIVE + 1), this)
+            value.set(false, rh.gs(ConstraintsStrings.objectivenotstarted, AUTOSENS_OBJECTIVE + 1), this)
         return value
     }
 
@@ -124,7 +125,7 @@ class ObjectivesPlugin @Inject constructor(
         // Check if initialized
         if (objectives.isEmpty()) return value
         if (!objectives[SMB_OBJECTIVE].isStarted)
-            value.set(false, rh.gs(R.string.objectivenotstarted, SMB_OBJECTIVE + 1), this)
+            value.set(false, rh.gs(ConstraintsStrings.objectivenotstarted, SMB_OBJECTIVE + 1), this)
         return value
     }
 
@@ -132,14 +133,14 @@ class ObjectivesPlugin @Inject constructor(
         // Check if initialized
         if (objectives.isEmpty()) return value
         if (!objectives[AUTO_OBJECTIVE].isStarted)
-            value.set(false, rh.gs(R.string.objectivenotstarted, AUTO_OBJECTIVE + 1), this)
+            value.set(false, rh.gs(ConstraintsStrings.objectivenotstarted, AUTO_OBJECTIVE + 1), this)
         return value
     }
 
     override fun isConcentrationEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         if (objectives.isEmpty()) return value
         if (!objectives[EXAM_OBJECTIVE].isAccomplished) {
-            value.set(false, rh.gs(R.string.objectivenotfinished, EXAM_OBJECTIVE + 1), this)
+            value.set(false, rh.gs(ConstraintsStrings.objectivenotfinished, EXAM_OBJECTIVE + 1), this)
         }
         return value
     }

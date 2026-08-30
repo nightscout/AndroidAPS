@@ -1,7 +1,9 @@
 package app.aaps.core.data.model
 
 import app.aaps.core.data.time.systemUtcOffsetAt
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class BCR(
     override var id: Long = 0,
     override var version: Int = 0,

@@ -4,6 +4,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
+import app.aaps.core.interfaces.resources.TextRefIdRegistry
+import app.aaps.plugins.aps.ApsStringIds
 import app.aaps.plugins.aps.R
 import org.junit.Before
 import org.junit.Rule
@@ -26,6 +28,9 @@ class LoopScreenTest {
 
     @Before
     fun setUp() {
+        // What MainApp does at startup: a TextRef.Named is resolved through this registry, so
+        // without it every label renders as its raw name.
+        TextRefIdRegistry.register("aps") { name -> ApsStringIds.idOf(name) }
         lastRunLabel = RuntimeEnvironment.getApplication().getString(R.string.last_run_label)
     }
 

@@ -1,9 +1,9 @@
 package app.aaps.plugins.constraints.versionChecker
 
+import app.aaps.plugins.constraints.ConstraintsStrings
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.objects.constraints.ConstraintObject
-import app.aaps.plugins.constraints.R
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
@@ -20,7 +20,7 @@ class VersionCheckerPluginTest : TestBaseWithProfile() {
     @Test
     fun applyMaxIOBConstraintsTest() = runTest {
         versionCheckerPlugin = VersionCheckerPlugin(aapsLogger, rh, preferences, versionCheckerUtils, config, dateUtil)
-        whenever(rh.gs(R.string.application_expired)).thenReturn("")
+        whenever(rh.gs(ConstraintsStrings.application_expired)).thenReturn("")
 
         // No expiration
         whenever(preferences.get(LongComposedKey.AppExpiration, config.VERSION_NAME)).thenReturn(0)

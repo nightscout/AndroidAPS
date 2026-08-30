@@ -1,7 +1,9 @@
 package app.aaps.core.data.model
 
 import app.aaps.core.data.pump.defs.PumpType
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class IDs(
     var nightscoutSystemId: String? = null,
     var nightscoutId: String? = null,

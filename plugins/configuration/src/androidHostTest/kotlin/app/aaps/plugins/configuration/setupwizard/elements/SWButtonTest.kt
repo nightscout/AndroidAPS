@@ -1,5 +1,6 @@
 package app.aaps.plugins.configuration.setupwizard.elements
 
+import app.aaps.core.ui.CoreUiStrings
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
@@ -43,12 +44,12 @@ class SWButtonTest {
 
     @Before
     fun setUp() {
-        buttonLabel = RuntimeEnvironment.getApplication().getString(R.string.result)
+        buttonLabel = RuntimeEnvironment.getApplication().getString(app.aaps.core.ui.R.string.result)
     }
 
     @Test
     fun rendersButtonLabel_fromResource() {
-        val item = newButton().text(R.string.result).action { }
+        val item = newButton().text(CoreUiStrings.result).action { }
         compose.setContent {
             MaterialTheme { item.Compose() }
         }
@@ -59,7 +60,7 @@ class SWButtonTest {
     @Test
     fun click_runsAction() {
         var runs = 0
-        val item = newButton().text(R.string.result).action { runs++ }
+        val item = newButton().text(CoreUiStrings.result).action { runs++ }
         compose.setContent {
             MaterialTheme { item.Compose() }
         }
@@ -72,7 +73,7 @@ class SWButtonTest {
     @Test
     fun disabledByVisibility_doesNotRunAction() {
         var runs = 0
-        val item = newButton().text(R.string.result).action { runs++ }.visibility { false }
+        val item = newButton().text(CoreUiStrings.result).action { runs++ }.visibility { false }
         compose.setContent {
             MaterialTheme { item.Compose() }
         }

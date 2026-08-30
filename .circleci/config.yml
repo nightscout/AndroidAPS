@@ -122,7 +122,21 @@ jobs:
           command: |
             APK=app/build/outputs/apk/full/debug/app-full-debug.apk
             TST=app/build/outputs/apk/androidTest/full/debug/app-full-debug-androidTest.apk
-            for s in emulator-5554 emulator-5556 emulator-5558; do adb -s $s install -r -d "$APK"; adb -s $s install -r -d "$TST"; done
+            PKG=info.nightscout.androidaps
+            # Two reasons this used to fail silently. `adb install` prints "Failure [...]" and still exits
+            # 0, and in a one-line for loop only the LAST command sets the step status - so a failed
+            # install on 5554 or 5556 was swallowed whole. The symptom appeared 15 minutes later as a
+            # shard reporting "Unable to find instrumentation info", which points nowhere near the cause.
+            # So check the output text, and then assert the postcondition the shards actually depend on.
+            for s in emulator-5554 emulator-5556 emulator-5558; do
+              for a in "$APK" "$TST"; do
+                out=$(adb -s $s install -r -d "$a" 2>&1)
+                echo "$s: $out"
+                case "$out" in *Success*) ;; *) echo "INSTALL FAILED on $s: $a"; exit 1 ;; esac
+              done
+              adb -s $s shell pm list instrumentation | grep -q "$PKG.test/app.aaps.runners.HiltTestRunner" \
+                || { echo "INSTRUMENTATION MISSING on $s after a reported-successful install"; exit 1; }
+            done
 
       # Each shard runs its am instrument with a PROCESS-LEVEL retry: if the run crashes the app process
       # (SetupWizardE2EHiltTest intermittently dies in a Compose/ViewRootImpl traversal - a process death

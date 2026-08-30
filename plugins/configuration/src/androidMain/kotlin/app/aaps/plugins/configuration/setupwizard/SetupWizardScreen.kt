@@ -1,5 +1,8 @@
 package app.aaps.plugins.configuration.setupwizard
 
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.configuration.ConfigurationStrings
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
@@ -27,7 +30,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventSWRLStatus
@@ -39,7 +41,6 @@ import app.aaps.core.ui.compose.preference.ProvidePreferenceTheme
 import app.aaps.core.ui.compose.pump.StepProgressIndicator
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
-import app.aaps.plugins.configuration.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.withContext
@@ -175,8 +176,8 @@ fun SetupWizardScreen(
 
     if (showExitDialog) {
         OkCancelDialog(
-            title = stringResource(app.aaps.core.ui.R.string.confirmation),
-            message = stringResource(R.string.exitwizard),
+            title = stringResource(CoreUiStrings.confirmation),
+            message = stringResource(ConfigurationStrings.exitwizard),
             onConfirm = {
                 showExitDialog = false
                 onBack()
@@ -189,10 +190,10 @@ fun SetupWizardScreen(
         Scaffold(
             topBar = {
                 AapsTopAppBar(
-                    title = { Text(currentScreen?.getHeaderCompose() ?: stringResource(app.aaps.core.ui.R.string.nav_setupwizard)) },
+                    title = { Text(currentScreen?.getHeaderCompose() ?: stringResource(CoreUiStrings.nav_setupwizard)) },
                     navigationIcon = {
                         IconButton(onClick = { showExitDialog = true }) {
-                            Icon(Icons.Filled.Close, contentDescription = stringResource(app.aaps.core.ui.R.string.close))
+                            Icon(Icons.Filled.Close, contentDescription = stringResource(CoreUiStrings.close))
                         }
                     }
                 )
@@ -220,19 +221,19 @@ fun SetupWizardScreen(
                     WizardStepLayout(
                         primaryButton = when {
                             isLastPage && canProceed -> WizardButton(
-                                text = stringResource(R.string.setupwizard_finish),
+                                text = stringResource(ConfigurationStrings.setupwizard_finish),
                                 onClick = onFinish
                             )
 
                             canProceed               -> WizardButton(
-                                text = stringResource(R.string.next_button),
+                                text = stringResource(ConfigurationStrings.next_button),
                                 onClick = { currentPage = nextPage() }
                             )
 
                             else                     -> null
                         },
                         secondaryButton = if (!isFirstPage) WizardButton(
-                            text = stringResource(R.string.previous_button),
+                            text = stringResource(ConfigurationStrings.previous_button),
                             onClick = { currentPage = previousPage() }
                         ) else null
                     ) {

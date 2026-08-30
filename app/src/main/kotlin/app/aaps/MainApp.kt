@@ -92,12 +92,17 @@ import app.aaps.implementation.receivers.TimeDateOrTZChangeReceiver
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
 import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler
 import app.aaps.plugins.automation.AutomationRuntime
+import app.aaps.plugins.aps.ApsStringIds
 import app.aaps.plugins.automation.AutomationStringIds
 import app.aaps.plugins.calibration.CalibrationStringIds
+import app.aaps.plugins.configuration.ConfigurationStringIds
+import app.aaps.plugins.constraints.ConstraintsStringIds
 import app.aaps.plugins.constraints.objectives.keys.ObjectivesLongComposedKey
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import app.aaps.plugins.main.MainStringIds
 import app.aaps.plugins.sensitivity.SensitivityStringIds
+import app.aaps.plugins.sync.SyncStringIds
+import app.aaps.plugins.source.SourceStringIds
 import app.aaps.plugins.smoothing.SmoothingStringIds
 import app.aaps.pump.virtual.VirtualStringIds
 import app.aaps.ui.UiStringIds
@@ -1024,10 +1029,15 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
     private fun registerStringOwners() {
         TextRefIdRegistry.register("virtual") { name -> VirtualStringIds.idOf(name) }
         TextRefIdRegistry.register("smoothing") { name -> SmoothingStringIds.idOf(name) }
+        TextRefIdRegistry.register("source") { name -> SourceStringIds.idOf(name) }
         TextRefIdRegistry.register("calibration") { name -> CalibrationStringIds.idOf(name) }
         TextRefIdRegistry.register("sensitivity") { name -> SensitivityStringIds.idOf(name) }
         TextRefIdRegistry.register("main") { name -> MainStringIds.idOf(name) }
         TextRefIdRegistry.register("ui") { name -> UiStringIds.idOf(name) }
         TextRefIdRegistry.register("automation") { name -> AutomationStringIds.idOf(name) }
+        TextRefIdRegistry.register("configuration") { name -> ConfigurationStringIds.idOf(name) }
+        TextRefIdRegistry.register("constraints") { name -> ConstraintsStringIds.idOf(name) }
+        TextRefIdRegistry.register("sync") { name -> SyncStringIds.idOf(name) }
+        TextRefIdRegistry.register("aps") { name -> ApsStringIds.idOf(name) }
     }
 }

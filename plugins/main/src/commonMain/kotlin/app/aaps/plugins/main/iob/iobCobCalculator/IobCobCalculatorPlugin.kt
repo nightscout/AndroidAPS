@@ -202,7 +202,7 @@ class IobCobCalculatorPlugin(
         super.onStop()
     }
 
-    private fun resetDataAndRunCalculation(reason: String) {
+    private suspend fun resetDataAndRunCalculation(reason: String) {
         calculationWorkflow.stopCalculation(CalculationWorkflow.MAIN_CALCULATION, reason)
         clearCache()
         ads.reset()
@@ -339,7 +339,7 @@ class IobCobCalculatorPlugin(
         return retVal
     }
 
-    override fun getLastAutosensDataWithWaitForCalculationFinish(reason: String): AutosensData? {
+    override suspend fun getLastAutosensDataWithWaitForCalculationFinish(reason: String): AutosensData? {
         calculationWorkflow.waitForCalculationFinish(CalculationWorkflow.MAIN_CALCULATION, reason)
         return ads.getLastAutosensData(reason, aapsLogger, dateUtil)
     }
@@ -493,7 +493,7 @@ class IobCobCalculatorPlugin(
     }
 
     // When historical data is changed (coming from NS etc.) finished calculations after this date must be invalidated
-    private fun newHistoryData(oldDataTimestamp: Long, bgDataReload: Boolean, triggeredByNewBG: Boolean) {
+    private suspend fun newHistoryData(oldDataTimestamp: Long, bgDataReload: Boolean, triggeredByNewBG: Boolean) {
         calculationWorkflow.stopCalculation(CalculationWorkflow.MAIN_CALCULATION, "onEventNewHistoryData")
         dataLock.withLock {
 

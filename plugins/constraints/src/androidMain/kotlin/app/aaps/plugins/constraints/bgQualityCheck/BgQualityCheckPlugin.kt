@@ -1,5 +1,6 @@
 package app.aaps.plugins.constraints.bgQualityCheck
 
+import app.aaps.plugins.constraints.ConstraintsStrings
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
@@ -16,7 +17,6 @@ import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventBucketedDataCreated
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.plugins.constraints.R
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
@@ -52,7 +52,7 @@ class BgQualityCheckPlugin @Inject constructor(
         .mainType(PluginType.CONSTRAINTS)
         .alwaysEnabled(true)
         .showInList { false }
-        .pluginName(TextRef.AndroidRes(R.string.bg_quality)),
+        .pluginName(ConstraintsStrings.bg_quality),
     aapsLogger, rh
 ), PluginConstraints, BgQualityCheck {
 
@@ -95,7 +95,7 @@ class BgQualityCheckPlugin @Inject constructor(
     // running mode to CLOSED_LOOP_LGS via LoopPlugin.runningModePreCheck() when in closed loop.
     override fun isLgsForced(value: Constraint<Boolean>): Constraint<Boolean> =
         if (state == BgQualityCheck.State.DOUBLED)
-            value.set(true, rh.gs(R.string.bg_doubled_lgs), this)
+            value.set(true, rh.gs(ConstraintsStrings.bg_doubled_lgs), this)
         else
             value
 
@@ -108,18 +108,18 @@ class BgQualityCheckPlugin @Inject constructor(
                 if (abs(readings[i].timestamp - readings[i + 1].timestamp) <= T.secs(20).msecs()) {
                     state = BgQualityCheck.State.DOUBLED
                     aapsLogger.debug(LTag.CORE, "BG similar. Turning on red state.\n${readings[i]}\n${readings[i + 1]}")
-                    message = rh.gs(R.string.bg_too_close, dateUtil.dateAndTimeAndSecondsString(readings[i].timestamp), dateUtil.dateAndTimeAndSecondsString(readings[i + 1].timestamp))
+                    message = rh.gs(ConstraintsStrings.bg_too_close, dateUtil.dateAndTimeAndSecondsString(readings[i].timestamp), dateUtil.dateAndTimeAndSecondsString(readings[i + 1].timestamp))
                     return
                 }
         if (lastBg?.sourceSensor?.isLibre1() == true && isBgFlatForInterval(staleBgCheckPeriodMinutes, staleBgMaxDeltaMgdl) == true) {
             state = BgQualityCheck.State.FLAT
-            message = rh.gs(R.string.a11y_bg_quality_flat)
+            message = rh.gs(ConstraintsStrings.a11y_bg_quality_flat)
         } else if (iobCobCalculator.ads.lastUsed5minCalculation == true) {
             state = BgQualityCheck.State.FIVE_MIN_DATA
             message = "Data is clean"
         } else if (iobCobCalculator.ads.lastUsed5minCalculation == false) {
             state = BgQualityCheck.State.RECALCULATED
-            message = rh.gs(R.string.recalculated_data_used)
+            message = rh.gs(ConstraintsStrings.recalculated_data_used)
         } else {
             state = BgQualityCheck.State.UNKNOWN
             message = ""
@@ -153,9 +153,9 @@ class BgQualityCheckPlugin @Inject constructor(
 
     override fun stateDescription(): String =
         when (state) {
-            BgQualityCheck.State.RECALCULATED -> rh.gs(R.string.a11y_bg_quality_recalculated)
-            BgQualityCheck.State.DOUBLED      -> rh.gs(R.string.a11y_bg_quality_doubles)
-            BgQualityCheck.State.FLAT         -> rh.gs(R.string.a11y_bg_quality_flat)
+            BgQualityCheck.State.RECALCULATED -> rh.gs(ConstraintsStrings.a11y_bg_quality_recalculated)
+            BgQualityCheck.State.DOUBLED      -> rh.gs(ConstraintsStrings.a11y_bg_quality_doubles)
+            BgQualityCheck.State.FLAT         -> rh.gs(ConstraintsStrings.a11y_bg_quality_flat)
             else                              -> ""
         }
 

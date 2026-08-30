@@ -3,6 +3,10 @@
 Things the iOS branch needs from the phone side. Written by the macOS session, for the Windows
 session to pick up. Newest findings at the top of each list.
 
+It now carries a little traffic the other way too - see **Ready for iOS**, written by the Windows
+session for the macOS one. Those sections say what has landed in `commonMain` and what is left to
+implement on the Apple side, so neither session has to re-derive it from the diff.
+
 This file lives at `_docs/ios_blockers.md`. It arrived once as `_dcs/ios_blockers.md` and was moved -
 please write it here, so both sessions look in the same place.
 
@@ -78,6 +82,125 @@ fakes before it can move. Expect each module to split into "moves today" and "ne
 realistic. See `implementation/src/commonTest/.../CommonNotificationManagerTest.kt` for the shape,
 and the section above for the source set to add.
 
+## Hint: fourteen classes in :implementation could move to commonMain today
+
+> **Worked through 2026-08-29 by the kmp session. Three moved; the rest do not qualify.** The survey
+> below was import-based, and an import list does not see two things: a symbol from *another*
+> androidMain class, and JVM-only constructs that are not imports at all (`@Synchronized`,
+> `@Volatile`, `String.format`, `R`). Corrected results:
+>
+> | class | actual state |
+> |---|---|
+> | `TemporaryBasalStorageImpl` | **moved** - `@Synchronized` -> `AapsLock` |
+> | `DexcomTirImpl`, `DexcomTirCalculatorImpl` | **moved** - `Calendar` -> `kotlinx.datetime`, keeping the local hour, which picks the day/night threshold |
+> | `ProtectionCheckImpl` | still blocked: also needs `R` and `@Volatile`. `AtomicLong` is converted, so only those remain |
+> | `SceneActionsImpl` | needs `SceneExecutor`, which is WorkManager + `Context` |
+> | `PasswordCheckImpl` | needs `CryptoUtil`, which is the whole `javax.crypto` stack. Now feasible - cryptography-kotlin is in the build for the client-control crypto - but it hashes stored passwords, so it needs golden vectors first, exactly like `ClientControlCrypto` did |
+> | `DetailedBolusInfoStorageImpl` | uses **Gson**. The survey missed it because `com.google.*` was not in the grep |
+> | `LoggerUtilsImpl` | logback / slf4j |
+> | `IconsProviderImplementation` | Android `R` |
+> | `InsulinImpl` | `ResourceHelper`, `ApplicationScope`, `@Synchronized`, `@Volatile` |
+> | `CloudDirectoryManagerImpl` | needs `CloudStorageManager` |
+> | `SceneAutomationApiImpl` | 21 errors, not surveyed in detail |
+> | `AutosensDataObject` | `String.format` with twelve `%.02f` in `toString()`. `DecimalFormatter.to2Decimal` is in commonMain but is not injected here, so it is a constructor change for one debug string |
+> | `ActiveSceneManager` | `org.json` -> kotlinx, but it is a **stored** format (scene records in preferences), so it wants the same care as the profile migration |
+>
+> Lesson worth keeping: to find what can move, compile for iOS. An import grep gives a candidate
+> list, not an answer.
+
+Surveyed 2026-08-29. These are in `implementation/src/androidMain` and import **nothing** from
+`android.*` or `androidx.*`. They are Android only because nobody has moved them, not because of
+anything they do. Nine need no other change at all:
+
+| class | what still stands in the way |
+|---|---|
+| `SceneActionsImpl` | nothing |
+| `SceneAutomationApiImpl` | nothing |
+| `IconsProviderImplementation` | nothing |
+| `InsulinImpl` | nothing |
+| `PasswordCheckImpl` | nothing |
+| `DetailedBolusInfoStorageImpl` | nothing |
+| `TemporaryBasalStorageImpl` | nothing |
+| `CloudDirectoryManagerImpl` | nothing |
+| `LoggerUtilsImpl` | nothing |
+| `DexcomTirCalculatorImpl` | nothing |
+| `ProtectionCheckImpl` | `java.util.concurrent.atomic.AtomicLong` -> `kotlin.concurrent.atomics` |
+| `AutosensDataObject` | `java.util.Locale` |
+| `ActiveSceneManager` | `org.json.JSONObject` -> kotlinx, as `ProfileRepositoryImpl` did |
+| `WizardBolusExecutorImpl` | still `javax.inject`; also `ConcurrentHashMap` and `AtomicLong` |
+
+Left for the kmp session because it is a sweep across one module rather than iOS work. Worth doing
+mostly because each one that moves is one less thing an iOS graph cannot build - `ProtectionCheck`
+and `PasswordCheck` in particular sit under the settings screens.
+
+Two warnings from having done several of these:
+
+- `@Synchronized` does not exist in `commonMain`. Use `AapsLock`, as `PreferencesImpl` does.
+- `Dispatchers.IO` reports itself as `internal` rather than missing. Use `aapsIoDispatcher` from
+  `:core:interfaces`.
+
+## Ready for iOS: the Nightscout client
+
+Written by the Windows session, for the macOS one - the other direction from the rest of this file.
+
+`plugins/sync/nsclientV3` is **60 files in commonMain, 17 on Android**. The plugin, the whole
+client-control subsystem (receiver, round trip, both repositories, pairing offer fetch/publish,
+preferences publisher, orphan detector), the incoming data processor, all sixteen NS extensions,
+the nine load/upload bodies and all three screens now build for `iosArm64`.
+
+What is still on Android is there because it has to be: the nine `Worker` shims, `NSClientV3Service`
+(wake lock + `START_STICKY`), `SocketIoNsSocket`, `JsonBridge` (org.json), `StoreDataForDbImpl`,
+`NSAlarmObject`, and the Android halves of the two ports below.
+
+### Three interfaces need an iOS implementation
+
+Nothing else blocks the NS client on iOS. All three are in
+`plugins/sync/src/commonMain/.../nsclientV3/ws/`, each with a working Android implementation to read.
+
+| interface | what it does | iOS side |
+|---|---|---|
+| `NsSocket` | one Nightscout websocket namespace. `on(event, listener)`, `connect`, `close`, `emitWithAck`, `emitAlarmAck`. Payloads cross as **JSON text**, so no socket.io types leak | a Ktor websocket client. `SocketIoNsSocket` shows the exact event names and the ack shape |
+| `NsLoadExecutor` | runs the load round: `runChain(steps)`, `runReplacing`, `runDetached`, `cancel`, `isRunning`, `idle` | a coroutine sequence over `NsLoadStep`, calling the shared `XxxRunner` for each step. `CoroutineCalculationExecutor` in `:workflow` is the same shape |
+| `NsConnection` | owns the connection's lifetime: `start`, `stop`, `connected`, `socketConnected`, `hasLiveSocket` | **needs a product decision first - see below** |
+
+Two behaviours are part of the `NsConnection` contract and are easy to lose:
+
+- **`start(reason)` is idempotent.** On Android both the service's own creation and the bind callback
+  ask for it, and calling it on a live connection must not tear anything down.
+- **`stop()` closes the sockets *before* releasing whatever carries them.** A quick restart otherwise
+  races the teardown and finds the old sockets still attached. `ServiceNsConnectionTest` pins both,
+  and mutating either one fails exactly one test.
+
+### The decision that is blocking `NsConnection` on iOS
+
+iOS will not hold a websocket open in the background, so the port cannot simply be implemented the
+way Android does it. Three options, and this is a product call rather than a porting one:
+
+1. **Foreground only** - connect when active, disconnect on background, and *show* that state. Honest
+   and simple; a follower is stale while backgrounded.
+2. **Foreground websocket plus REST polling when backgrounded** - reuses the `Load*Runner` chain,
+   which is already shared, and `initialLoadFinished` already handles backfilling the offline window.
+   More work, no silent gap.
+3. **Push-driven** - needs Nightscout-side push. Out of scope today.
+
+Option 1 then 2 is the suggested order. Whichever is chosen, the rule this codebase already follows
+applies: an implementation that silently does nothing is worse than a feature that is visibly absent,
+because a user relying on NS data would simply stop receiving it without being told.
+
+### Wire formats that must not drift
+
+Two things in this subsystem are exchanged with deployed AAPS instances, so they are contracts:
+
+- **The client-control crypto** is now shared (`:core:nssdk`, cryptography-kotlin over
+  JCA / CryptoKit / OpenSSL 3). `ClientControlCryptoVectorsTest` lives in `commonTest`, so it runs on
+  every target - `mingwX64Test` already proves the Kotlin/Native path on Windows. Run
+  `iosSimulatorArm64Test` on the Mac to cover CryptoKit; a failure there is a real incompatibility,
+  not a stale test.
+- **The pairing offer's Base64** (`kdfSaltB64`, `ivB64`, `wrappedB64`) moved from
+  `android.util.Base64` with `NO_WRAP` to `kotlin.io.encoding.Base64.Default`. Both are RFC 4648 with
+  padding and no line breaks, so they agree - but that is currently reasoned, not pinned by a vector.
+  Worth adding one next to the crypto vectors.
+
 ## Gotchas in iOS interop
 
 Collected so nobody pays for them twice. All were found by tests or a crash, not by review.
@@ -93,24 +216,113 @@ Collected so nobody pays for them twice. All were found by tests or a crash, not
 - **Enum constants are not top level.** `UNNotificationInterruptionLevelTimeSensitive` is an entry on
   `UNNotificationInterruptionLevel`, not a standalone `val`.
 - **A backticked test name cannot contain a comma** on Kotlin/Native.
+- **Applying the Compose plugin without a multiplatform Compose runtime breaks the iOS build.**
+  `androidx.compose.*` artifacts are Android only, so a module with iOS targets needs
+  `libs.cmp.runtime` (and `cmp.foundation` / `cmp.ui` / `cmp.material3` if it draws) on a source set
+  the iOS compilation can see. Hit twice now: `ios/shell`, and `:plugins:automation`, which could not compile for iOS
+  at all until `cmp.*` reached its `commonMain`. The failure is
+  `IncompatibleComposeRuntimeVersionException` at compile time, or an `IrLinkageError` at run time if
+  only the declarations resolved.
 
 ## Open
 
-Nothing open. The notification cluster was the last one - see Done.
+### Request: StoreDataForDb blocks the whole NS client on iOS
+
+`plugins/sync/src/androidMain/.../nsclientV3/StoreDataForDbImpl.kt` - 543 lines, **one** Android
+import.
+
+This is the one to do first, ahead of the service itself. Every incoming websocket event ends in
+`storeDataForDb.requestStoreX(...)` - glucose values, treatments, food, calibrations, device status.
+An iOS `NsConnection` written today would connect, subscribe, receive and parse, and then drop every
+record, because there is nothing to hand them to. That is the silent no-op the migration rules warn
+about, and on the data path.
+
+Two smaller ones go with it, both reached from the same handlers:
+
+| class | lines | what is in the way |
+|---|---|---|
+| `StoreDataForDbImpl` | 543 | 1 android import, 3 jvm |
+| `NSAlarmObject` | 48 | 1 jvm import |
+| `JsonBridge` | 32 | `org.json`, by definition - it is the bridge |
+
+`JsonBridge` may simply not need an iOS counterpart: the iOS handlers will parse with
+kotlinx.serialization directly, the way `ProfileRepositoryImpl` was converted, so the bridge is only
+needed while Android still speaks `org.json`.
+
+### Then: the socket wiring in NSClientV3Service
+
+`plugins/sync/src/androidMain/.../services/NSClientV3Service.kt` - 494 lines, 6 Android imports
+(`Intent`, `Binder`, `IBinder`, `PowerManager`, two annotations).
+
+The iOS side will write its **own** `NsConnection` rather than wait for this to be lifted - a
+separate implementation is the point of the port, and the two platforms genuinely differ here. What
+it needs from you is only the three classes above; the wiring itself will be rewritten on the iOS
+side with kotlinx.serialization instead of `org.json`.
+
+For reference while that is written, these are the parts of the contract that are easy to get wrong,
+and both are already pinned by `ServiceNsConnectionTest`:
+
+- `start(reason)` is idempotent - calling it on a live connection must not tear anything down.
+- `stop()` closes the sockets **before** releasing whatever carries them, or a quick restart races
+  the teardown.
+
+One more, from reading the handlers: `onDataCreateUpdate` must not advance
+`lastLoadedSrvModified` until `initialLoadFinished` is true, or the next load chain skips exactly the
+offline window it is supposed to backfill. That one is a comment in the Android code rather than a
+test, and it would be easy to lose in a rewrite.
+
+## Ready for Android: what the iOS side has built
+
+- **`NsLoadExecutor` is done** - `CoroutineNsLoadExecutor` in `plugins/sync/iosMain`. The nine steps
+  run as a coroutine sequence under one `Job`, so a new round replaces one in flight. Two details
+  worth keeping if it is ever moved to `commonMain`: the chain stops at the first step that does not
+  succeed, as the WorkManager chain does, and `idle` is emitted from `invokeOnCompletion` so a
+  *cancelled* round reports idle too - otherwise the plugin's follow-up queue sticks.
+- **`NsSocket`/`NsSocketFactory` are done, in Swift.** `ios/app/Shared/NsSocketBridge.swift` on
+  `socket.io-client-swift`, the same project's official client as the `socket.io-client-java` used on
+  Android, so both platforms speak to Nightscout the same way. It is added through Swift Package
+  Manager - the first external dependency in the iOS app - and the Kotlin side never mentions
+  socket.io, because `NsSocket` was already exported as an Obj-C protocol for Swift to conform to.
+- **`IosForegroundWatcher`** drives start/stop from the app lifecycle, closing the socket inside a
+  background task assertion so it is not cut mid-frame.
+
+
+Nothing right now.
 
 ## Known gaps on the iOS side
 
 Not blockers, and not for the Windows session to fix. Listed so nobody is surprised by them.
 
-- `IosSystemNotificationPlatform.setAudibleAlarm` only logs. An iOS notification carries its own
-  sound, and reposting one every time the owner is recomputed would re-alert the user. A real
-  ramping alarm needs a critical alert entitlement or an audio session.
+- `IosSystemNotificationPlatform.setAudibleAlarm` only logs, so **an urgent alarm makes no sound on
+  iOS today**. There are two separate paths and they are easy to confuse:
+  - *While the app is alive* - an `AVAudioPlayer` on an `AVAudioSession` with category `.playback`,
+    which ignores the hardware mute switch. **No entitlement needed.** This is the counterpart of
+    `AlarmSoundPlayerImpl`, and it is the missing piece: writing an iOS `AlarmSoundPlayer` and
+    driving it from `setAudibleAlarm` would make alarms work whenever AAPS is running. The four
+    sounds live in `core/ui/res/raw` as Android resources, so they would first have to reach the iOS
+    bundle.
+  - *While the app is not running* - only a Critical Alerts entitlement lets a notification break
+    through silent and Focus. Apple grants it to medical apps on application. This is a project
+    decision, not code.
+
+  Earlier notes here said the entitlement was the only route. That was wrong: it is the only route
+  for a notification-delivered alarm, not for one the app plays itself.
 - `IosSystemNotificationPlatform.onDismissed` **is** wired now. Two things were needed and either
   one missing makes it silently never fire: a delegate on the shared centre, held in a property
   because that slot is weak, and a `UNNotificationCategory` carrying `customDismissAction`, without
   which iOS reports taps but not dismissals. The one caveat left is that it calls
   `setNotificationCategories` with only its own category, so it would clobber categories registered
   elsewhere - nothing else registers any today.
+- **The pairing PIN is not protected from screenshots on iOS.** `blockScreenshotsWhileVisible()`
+  (`plugins/sync/.../clientcontrol/compose/ScreenshotBlocking.kt`) is an `expect` that returns
+  whether the platform really blocked capture. Android applies `FLAG_SECURE` and returns true; the
+  iOS `actual` returns **false**, deliberately, because Apple has no equivalent and a silent no-op
+  would imply a protection that is not there. That PIN wraps the shared secret a paired client signs
+  commands with, so a screenshot sitting in a gallery or a cloud backup is a real exposure. Two
+  things are worth doing on the iOS side: cover the window on `willResignActive` so the app-switcher
+  snapshot does not hold the PIN, and warn on the dialog while the value is false. The screen already
+  has it (`screenshotsBlocked` in `AuthorizedClientsScreen`); it just has nowhere to show it yet, and
+  choosing that wording is a product decision rather than a porting one.
 
 ## Done
 
@@ -169,6 +381,13 @@ Not blockers, and not for the Windows session to fix. Listed so nobody is surpri
   profile arrives in - so each now has a small private bridge to the kotlinx readers instead of a
   shared production one. `BlockRenderTest`'s `the org json adapter matches the kotlinx renderer` went
   with the adapter it was guarding.
+- The three automation platform interfaces have iOS implementations. `LastKnownLocation` is real -
+  Core Location, with the distance left to `CLLocation.distanceFromLocation` so the geodesic maths
+  stays on the platform, as the migration rules ask. `PairedBtDevices` and `BtConnectionSource`
+  return empty and log why: iOS cannot read the phone's paired devices, and cannot see Bluetooth
+  connections made by anything other than this app. **A Bluetooth automation trigger can be
+  configured on iOS and will never fire** - decided deliberately, and written in both KDocs so it is
+  not mistaken for an oversight later.
 - `ConstraintsCheckerImpl` - moved to `commonMain` (`a76cca9e41`)
 - `ProfileRepositoryImpl` - moved to `commonMain`, off `org.json` (`3252f044b1`)
 - `PluginStore` / `PluginPermissions` - split so the registry is no longer Android

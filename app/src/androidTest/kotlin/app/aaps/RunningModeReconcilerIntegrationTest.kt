@@ -33,7 +33,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.yield
-import org.json.JSONObject
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
 import org.junit.After
 import org.junit.Before
 import org.junit.Ignore
@@ -399,7 +400,7 @@ class RunningModeReconcilerIntegrationTest : HiltInstrumentedTest() {
             pumpSync.expectedPumpState().profile != null
         ) return
 
-        nsIncomingDataProcessor.processProfile(JSONObject(profileData), true)
+        nsIncomingDataProcessor.processProfile(Json.parseToJsonElement(profileData).jsonObject, true)
         val store = profileRepository.profile.value ?: error("no profile store after NS import")
         val defaultName = store.getDefaultProfileName() ?: error("no default profile name")
         profileFunction.createProfileSwitch(

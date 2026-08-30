@@ -1,5 +1,6 @@
 package app.aaps.plugins.configuration.setupwizard.elements
 
+import app.aaps.core.ui.CoreUiStrings
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
@@ -17,14 +18,13 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.protection.PasswordCheck
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.stringResource
@@ -32,7 +32,7 @@ import app.aaps.plugins.configuration.setupwizard.SWDefinition
 import dev.zacsweers.metro.Inject
 
 class SWPermissions @Inject constructor(
-    aapsLogger: AAPSLogger, rh: ResourceHelper, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck
+    aapsLogger: AAPSLogger, rh: TextResolver, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck
 ) : SWItem(aapsLogger, rh, rxBus, preferences, passwordCheck) {
 
     private var swDefinition: SWDefinition? = null
@@ -102,8 +102,8 @@ private fun PermissionRow(
                 TextButton(onClick = onGrant) {
                     Text(
                         stringResource(
-                            if (granted) app.aaps.core.ui.R.string.change
-                            else app.aaps.core.ui.R.string.grant
+                            if (granted) CoreUiStrings.change
+                            else CoreUiStrings.grant
                         )
                     )
                 }

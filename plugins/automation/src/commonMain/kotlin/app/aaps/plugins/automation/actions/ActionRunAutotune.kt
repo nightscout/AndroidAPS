@@ -43,9 +43,11 @@ class ActionRunAutotune(
 
 
     private var defaultValue = 0
-    private var inputProfileName = InputProfileName("")
-    private var daysBack = InputDuration(0, InputDuration.TimeUnit.DAYS)
-    private val days = InputWeekDay().also { it.setAll(true) }
+    // Not private: the editor binds to these. They used to be read by Java reflection, which is JVM
+    // only and reached past the visibility anyway.
+    var inputProfileName = InputProfileName("")
+    var daysBack = InputDuration(0, InputDuration.TimeUnit.DAYS)
+    val days = InputWeekDay().also { it.setAll(true) }
 
     override fun friendlyName(): TextRef = AutomationStrings.autotune_run
     override fun shortDescription(): String = resourceHelper.gs(AutomationStrings.autotune_profile_name, inputProfileName.value)

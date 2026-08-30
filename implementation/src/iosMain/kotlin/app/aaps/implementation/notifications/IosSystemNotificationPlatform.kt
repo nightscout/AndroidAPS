@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.interfaces.notifications.AlarmSound
+import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
 import platform.UserNotifications.UNAuthorizationOptionAlert
@@ -35,8 +36,12 @@ import platform.UserNotifications.UNUserNotificationCenter
  * app wants it.
  */
 class IosSystemNotificationPlatform(
-    private val aapsLogger: AAPSLogger
+    private val aapsLogger: AAPSLogger,
+    private val alarmSoundPlayer: AlarmSoundPlayer
 ) : SystemNotificationPlatform {
+
+    /** The alarm currently owning the audio, so an unchanged owner does not restart the sound. */
+    private var soundingKey: Int? = null
 
     /**
      * Resolved on first use, not in the constructor.
@@ -100,15 +105,22 @@ class IosSystemNotificationPlatform(
     }
 
     /**
-     * On iOS the delivered notification carries the sound, so there is no separate player to own.
+     * Hands the ramping alarm to [AlarmSoundPlayer], or silences it.
      *
-     * The ramping alarm Android builds by hand has no counterpart here yet. Posting a fresh sound
-     * on every change would re-alert the user each time the registry recomputes the owner, which is
-     * exactly what the owner handoff exists to avoid, so this stays a no-op beyond the log line
-     * until iOS grows a real alarm path (a critical alert entitlement, or an audio session).
+     * The registry calls this after every change with whichever alarm owns the sound, so calling it
+     * again with the same key must not restart the audio - that is what stops a second alarm
+     * cutting the first one off, and why the owner key is compared here rather than in the player.
      */
     override fun setAudibleAlarm(instanceKey: Int?, sound: AlarmSound?) {
-        aapsLogger.debug(LTag.NOTIFICATION, "Audible alarm owner is now $instanceKey ($sound)")
+        if (instanceKey == soundingKey) return
+        soundingKey = instanceKey
+        if (instanceKey == null || sound == null) {
+            alarmSoundPlayer.stop(AlarmSoundPlayer.OWNER_INTERNAL)
+            aapsLogger.debug(LTag.NOTIFICATION, "Alarm audio stopped")
+        } else {
+            alarmSoundPlayer.play(sound, AlarmSoundPlayer.OWNER_INTERNAL)
+            aapsLogger.debug(LTag.NOTIFICATION, "Alarm audio owner is now $instanceKey ($sound)")
+        }
     }
 
     /**

@@ -1,5 +1,9 @@
 package app.aaps.plugins.constraints.bgQualityCheck
 
+import app.aaps.shared.tests.stubTextRefResolution
+import org.mockito.kotlin.anyVararg
+import org.mockito.kotlin.doAnswer
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
@@ -39,8 +43,7 @@ class BgQualityCheckPluginTest : TestBase() {
         plugin =
             BgQualityCheckPlugin(aapsLogger, rh, rxBus, iobCobCalculator, dateUtil)
         whenever(iobCobCalculator.ads).thenReturn(autosensDataStore)
-        whenever(rh.gs(anyInt())).thenReturn("")
-        whenever(rh.gs(anyInt(), any(), any())).thenReturn("")
+        stubTextRefResolution(rh)
         whenever(dateUtil.now()).thenReturn(now)
     }
 
