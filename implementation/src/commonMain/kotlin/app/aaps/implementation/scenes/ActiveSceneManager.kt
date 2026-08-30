@@ -7,6 +7,7 @@ import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.SceneLifecycle
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -20,13 +21,18 @@ import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import org.json.JSONObject
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonNull
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.put
 
 /**
  * Manages the currently active scene state.
@@ -53,7 +59,7 @@ class ActiveSceneManager @Inject constructor(
     private val aapsLogger: AAPSLogger
 ) : ActiveSceneSync {
 
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private val scope = CoroutineScope(SupervisorJob() + aapsIoDispatcher)
 
     private val _activeSceneState = MutableStateFlow<ActiveSceneState?>(null)
 
@@ -229,7 +235,7 @@ class ActiveSceneManager @Inject constructor(
     // --- Persistence ---
 
     private fun persistActiveState(state: ActiveSceneState) {
-        val json = JSONObject().apply {
+        val json = buildJsonObject {
             put("sceneId", state.scene.id)
             put("activatedAt", state.activatedAt)
             put("durationMs", state.durationMs)
@@ -240,22 +246,29 @@ class ActiveSceneManager @Inject constructor(
         preferences.put(StringNonKey.ActiveScene, json.toString())
     }
 
+    /**
+     * Reads what [persistActiveState] wrote, and what the previous `org.json` version wrote - the field
+     * names and the json shape are unchanged, so an upgrade does not lose a running scene.
+     *
+     * Still returns null rather than throwing on anything unreadable. Losing the record means a scene
+     * that was running is never reverted, which is worth a log line, but it is not worth failing here.
+     */
     private fun loadActiveState(): ActiveSceneState? {
         val raw = preferences.get(StringNonKey.ActiveScene)
         if (raw.isEmpty()) return null
         return try {
-            val json = JSONObject(raw)
-            val sceneId = json.getString("sceneId")
+            val json = Json.parseToJsonElement(raw).jsonObject
+            val sceneId = json.stringOrNull("sceneId") ?: return null
             val scene = sceneRepository.getScene(sceneId) ?: return null
             ActiveSceneState(
                 scene = scene,
-                activatedAt = json.getLong("activatedAt"),
-                durationMs = json.getLong("durationMs"),
-                lifecycle = json.optStringOrNull("lifecycle")
+                activatedAt = json.longOrNull("activatedAt") ?: return null,
+                durationMs = json.longOrNull("durationMs") ?: return null,
+                lifecycle = json.stringOrNull("lifecycle")
                     ?.let { runCatching { SceneLifecycle.valueOf(it) }.getOrNull() }
                     ?: SceneLifecycle.ACTIVE,
-                priorSmb = if (json.has("priorSmb")) json.getBoolean("priorSmb") else null,
-                scopedRecords = json.optJSONObject("scopedRecords")?.toScopedRecords() ?: ScopedRecords()
+                priorSmb = json.booleanOrNull("priorSmb"),
+                scopedRecords = (json["scopedRecords"] as? JsonObject)?.toScopedRecords() ?: ScopedRecords()
             )
         } catch (_: Exception) {
             null
@@ -265,7 +278,7 @@ class ActiveSceneManager @Inject constructor(
 
 // --- ScopedRecords serialization ---
 
-private fun ScopedRecords.toJson(): JSONObject = JSONObject().apply {
+private fun ScopedRecords.toJson(): JsonObject = buildJsonObject {
     ttId?.let { put("ttId", it) }
     ttNsId?.let { put("ttNsId", it) }
     psId?.let { put("psId", it) }
@@ -276,20 +289,24 @@ private fun ScopedRecords.toJson(): JSONObject = JSONObject().apply {
     teNsId?.let { put("teNsId", it) }
 }
 
-private fun JSONObject.toScopedRecords(): ScopedRecords =
+private fun JsonObject.toScopedRecords(): ScopedRecords =
     ScopedRecords(
-        ttId = optLongOrNull("ttId"),
-        ttNsId = optStringOrNull("ttNsId"),
-        psId = optLongOrNull("psId"),
-        psNsId = optStringOrNull("psNsId"),
-        rmId = optLongOrNull("rmId"),
-        rmNsId = optStringOrNull("rmNsId"),
-        teId = optLongOrNull("teId"),
-        teNsId = optStringOrNull("teNsId")
+        ttId = longOrNull("ttId"),
+        ttNsId = stringOrNull("ttNsId"),
+        psId = longOrNull("psId"),
+        psNsId = stringOrNull("psNsId"),
+        rmId = longOrNull("rmId"),
+        rmNsId = stringOrNull("rmNsId"),
+        teId = longOrNull("teId"),
+        teNsId = stringOrNull("teNsId")
     )
 
-private fun JSONObject.optLongOrNull(key: String): Long? =
-    if (has(key)) getLong(key) else null
+// A missing key and an explicit null both mean "not recorded", as they did with org.json's has()/isNull().
+private fun JsonObject.primitiveOrNull(key: String): JsonPrimitive? =
+    (this[key] as? JsonPrimitive)?.takeIf { it !is JsonNull }
 
-private fun JSONObject.optStringOrNull(key: String): String? =
-    if (has(key) && !isNull(key)) getString(key) else null
+private fun JsonObject.longOrNull(key: String): Long? = primitiveOrNull(key)?.content?.toLongOrNull()
+
+private fun JsonObject.stringOrNull(key: String): String? = primitiveOrNull(key)?.content
+
+private fun JsonObject.booleanOrNull(key: String): Boolean? = primitiveOrNull(key)?.content?.toBooleanStrictOrNull()
