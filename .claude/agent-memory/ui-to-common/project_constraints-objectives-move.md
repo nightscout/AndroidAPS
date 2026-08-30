@@ -1,33 +1,43 @@
 ---
 name: constraints-objectives-move
-description: State of the :plugins:constraints androidMain -> commonMain Compose move, and exactly what blocks the two files that did not move
+description: State of the :plugins:constraints androidMain -> commonMain Compose move, and the three exact root causes that pin the remaining 14 objectives files
 metadata:
   type: project
 ---
 
-`ObjectivesScreen.kt` (713 lines) moved to commonMain and compiles for iosArm64. The only blocker
-in the whole file was a dead `android.content.Context` parameter threaded
-Screen -> ViewModel -> `Objective.UITask.code`.
+`ObjectivesScreen.kt`, `ExamBottomSheet`, `LearnedBottomSheet`, `NtpProgressDialog`,
+`ObjectivesUiState`, the events and the keys are already in commonMain and compile for iosArm64.
+104 androidHostTest tests, 0 failures (2026-08-30).
 
-**Why:** the `context` was live when `UITask` was added (commit `44c5089d08`, Oct 2024) — it fed
-`ToastUtils.errorToast(context, ...)` and the old `passwordCheck.queryPassword(context, ...)`.
-Both consumers were later migrated to context-free APIs (`showMessage` snackbar lambda, and
-`PasswordCheckHost` which is already commonMain), leaving the parameter ignored as `_` at the only
-UITask in the app (Objective0 "verify_master_password"). So it is migration residue, not a lost
-caller.
+Still in androidMain: `ObjectivesComposeContent`, `ObjectivesViewModel`, `ObjectivesPlugin`,
+`SntpClient`, `Objective` + `Objective0..9`.
 
-**How to apply:** the two files still in androidMain are blocked by different, larger things —
-do not retry them as a small increment:
+**Why:** measured with three probe moves in Aug 2026 (moved, compiled `:plugins:constraints:
+compileKotlinIosArm64`, reverted). A raw move of the whole cluster gives 88 errors; applying only the
+mechanical fixes leaves **exactly 25, and they are three root causes, one per file**:
 
-- `ObjectivesComposeContent.kt` needs `MetroViewModelFactoryOwner`, which only exists in
-  `core/ui/src/androidMain`. Moving it needs a **shared ViewModel-factory port in `:core:ui`** —
-  a cross-module design decision, not a screen move. `plugins/sync`'s `OHComposeContent.kt` has
-  the identical blocker, so the port would serve at least two callers.
-- `ObjectivesViewModel.kt` drags `ObjectivesPlugin` -> `Objective` + `Objective0..9` (11 files,
-  all androidMain) and `objectives/SntpClient.kt`, which is real JVM/Android
-  (`java.net.DatagramSocket`, `android.os.SystemClock`) and needs an expect/actual or a port.
+1. `Objective.kt` - `rh.gq(app.aaps.core.ui.R.plurals.days/hours/minutes, ...)` in
+   `MinimumDurationTask.getDurationText`. See [[no-plural-api-in-commonmain]].
+2. `ObjectivesPlugin.kt` - the `@APS` multibinding qualifier is in
+   `core/interfaces/src/androidMain/.../di/APS.kt` and carries `javax.inject.Qualifier`.
+3. `SntpClient.kt` - `java.net.DatagramSocket`, `SecureRandom`, `android.os.SystemClock`.
+   iOS *can* do SNTP (it is plain UDP), so this is a work-sizing question, not a capability gap.
+   `ktor-network` (UDP on JVM+Native) is not in the version catalog; only the ktor *client* is.
 
-Related: [[cmp-what-crosses-unchanged]], [[feedback-mutation-restore-proof]]
+Everything else in the cluster is cascade. `ObjectivesComposeContent` and `Objective0..9` produced
+**zero** errors of their own - they are pinned only by transitive references, so they cannot move
+before 1-3 are settled. There is **no safe movable subset**; a run that tries one will move nothing.
 
-Loose end found, not touched: `commonMain/.../objectives/objectives/SntpClient.kt` is an empty
-file containing only a `package` line — leftover debris from an earlier move.
+**How to apply:** do not reopen this as "a screen move". It is three separate decisions, and 2 and 3
+are `:core:*` / new-library questions. Verified mechanical, if the cluster ever does move:
+`ResourceHelper` -> `TextResolver` everywhere (`PluginBase.rh` is already `TextResolver`, so
+`ObjectivesPlugin`'s `override val rh: ResourceHelper` is a narrowing accident);
+`import kotlin.jvm.JvmSuppressWildcards` added explicitly; the unused
+`import app.aaps.plugins.constraints.R` in `Objective.kt` deleted; `System.currentTimeMillis()` ->
+`dateUtil.now()` (a behaviour change under a faked clock - name it).
+
+Superseded: an earlier note here claimed `ObjectivesComposeContent` was blocked by
+`MetroViewModelFactoryOwner`. It is not - see [[metroviewmodel-is-not-a-blocker]].
+
+Related: [[cmp-what-crosses-unchanged]], [[feedback-mutation-restore-proof]],
+[[move-breaks-two-test-harnesses]]

@@ -97,6 +97,27 @@ Rules that follow from this:
 This costs more than moving first. It is the only thing that makes the move honest, and in this
 codebase a screen that silently changes what it says is a real harm.
 
+## Budget: one feature per run, and moving beats testing more
+
+You have a limited number of turns, and **writing characterisation tests is far more expensive than
+moving files**. Three runs in a row have spent their entire budget in step 1 and moved nothing. That
+is a wasted run: the tests are useful, but the deliverable was the move.
+
+So:
+
+- **Take one feature unit per run.** If you are handed a batch of a dozen files, do not try to test
+  all of them first. Take the first unit through the whole cycle - cover, prove, move, gate - and
+  only then start the next. Finishing two units completely beats starting twelve.
+- **Check your remaining turns after each unit.** If you are past half your budget with nothing
+  moved, stop adding tests and move what you have covered.
+- **A run that moves nothing is a failed run**, unless the honest answer is that nothing *can* move
+  (a blocker or a decision) - which is a good outcome, and different from running out of time.
+- If the batch you were given is too big for one run, say so in the report and name the split you
+  would use. Do not silently attempt all of it.
+
+Never respond to running short by skipping the restore of a mutation, or by leaving a move
+half-applied. Out of time is recoverable; a broken tree is not.
+
 ## The method
 
 Work one feature at a time. A feature is **a screen, its ViewModel, and its state, moved together**.
@@ -204,6 +225,15 @@ unclaimed owners fall back to the raw name on purpose.
 - **Positional `mock()` arguments** in test constructors silently land on the wrong parameter when a
   constructor changes. A null Flow then NPEs in an unrelated test as `UncaughtExceptionsBeforeTest`.
 - **`sed -i '<line>s/...'` is unsafe** - line numbers shift as soon as you add an import above.
+- **`mv <dir> <dir>` nests instead of replacing** when the target directory already exists, and the
+  `rm -rf` you then use to undo it deletes the files that were already there. This destroyed **106
+  tracked commonMain files** in one probe. **Move files one at a time, by full path**, never a
+  directory. If it happens, the files show as clean ` D` entries: restore exactly that list with
+  `xargs git checkout --` on explicit paths - never `git checkout .`, which would also destroy
+  unrelated work in the tree.
+- **Do not invent a name to make a test compile.** A guessed `CompositionLocal` or helper name fails
+  at compile time here, but the same habit applied to a string name or a resource fails silently.
+  Find the real definition, or leave the block out and say why.
 - After any bulk edit, **read the diff before trusting it**: `git -C E:/GitHub/AndroidAPS diff --stat`
   and inspect anything you did not intend.
 
