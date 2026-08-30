@@ -4,15 +4,16 @@ import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.concurrent.AapsLock
+import app.aaps.core.interfaces.concurrent.withLock
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.insulin.ConcentrationType
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.StringNonKey
@@ -23,6 +24,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import kotlin.concurrent.Volatile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
@@ -44,14 +46,21 @@ import kotlinx.serialization.json.buildJsonObject
 @SingleIn(AppScope::class)
 class InsulinImpl @Inject constructor(
     private val preferences: Preferences,
-    val rh: ResourceHelper,
+    val rh: TextResolver,
     val profileFunction: ProfileFunction,
     val aapsLogger: AAPSLogger,
     val config: Config,
     val hardLimits: HardLimits,
     val uel: UserEntryLogger,
-    @ApplicationScope private val appScope: CoroutineScope
+    // Plain CoroutineScope, not @ApplicationScope: that qualifier is javax and cannot appear in
+    // commonMain. AppCoroutineBindings.unqualifiedAppScope binds the very same scope without it.
+    private val appScope: CoroutineScope
 ) : InsulinManager {
+
+    // Replaces `@Synchronized` on every method that touches [insulins] or persists it. Those all locked
+    // `this`, and nothing outside ever locked this object, so one lock is the same guard. It is reentrant,
+    // which these need - applyConfiguration() calls addNewInsulin(), and bootstrap() calls loadSettings().
+    private val lock = AapsLock()
 
     // True while the one-time init normalization rebuilds the list via [applyConfiguration]; suppresses
     // the per-insulin [storeSettings] so the normalize persists at most once (via putRemote) at the end.
@@ -89,8 +98,7 @@ class InsulinImpl @Inject constructor(
         ConcentrationType.U200
     )
 
-    @Synchronized
-    override fun addNewInsulin(newICfg: ICfg, ue: Boolean, keepName: Boolean): ICfg {
+    override fun addNewInsulin(newICfg: ICfg, ue: Boolean, keepName: Boolean): ICfg = lock.withLock {
         val template = InsulinType.fromPeak(newICfg.insulinPeakTime)
         val nickname = newICfg.insulinNickname.ifBlank { rh.gs(template.label) }
         val fullName = buildFullName(
@@ -109,13 +117,12 @@ class InsulinImpl @Inject constructor(
         }
 
         storeSettings()
-        return newInsulin
+        newInsulin
     }
 
-    @Synchronized
-    override fun removeInsulin(index: Int) {
-        if (insulins.size <= 1) return // the catalogue is never emptied — the pickers must always have something to offer
-        val insulinRemoved = insulins.getOrNull(index)?.insulinLabel ?: return
+    override fun removeInsulin(index: Int) = lock.withLock {
+        if (insulins.size <= 1) return@withLock // the catalogue is never emptied — the pickers must always have something to offer
+        val insulinRemoved = insulins.getOrNull(index)?.insulinLabel ?: return@withLock
         insulins.removeAt(index)
         uel.log(Action.INSULIN_REMOVED, Sources.Insulin, value = ValueWithUnit.SimpleString(insulinRemoved))
         storeSettings()
@@ -170,8 +177,7 @@ class InsulinImpl @Inject constructor(
     // Verbatim mirror of the persisted config — parse only, NO normalization, NO store. Normalization
     // happens once at init ([normalizeAndSeedOnce]) and at edit time ([addNewInsulin]); a master push is
     // already normalized, so applying it is a pure re-parse → no re-store → no echo loop.
-    @Synchronized
-    override fun loadSettings() {
+    override fun loadSettings(): Unit = lock.withLock {
         insulins.clear()
         val insulinArray = runCatching {
             (Json.parseToJsonElement(preferences.get(StringNonKey.InsulinConfiguration)) as? JsonObject)?.get("insulin") as? JsonArray
@@ -189,8 +195,7 @@ class InsulinImpl @Inject constructor(
     // MASTER: normalize legacy data (fill nicknames, dedup, regenerate labels, seed default) and persist
     // the canonical form once.
     // Either branch persists via putRemote: no client→master echo, stamp floored to the current value.
-    @Synchronized
-    private fun bootstrap() {
+    private fun bootstrap(): Unit = lock.withLock {
         if (config.AAPSCLIENT) {
             loadSettings() // verbatim — master data stays untouched
             if (insulins.isEmpty()) {
@@ -225,9 +230,8 @@ class InsulinImpl @Inject constructor(
         )
     }
 
-    @Synchronized
-    override fun storeSettings() {
-        if (applying) return // the one-time init normalize persists once at the end via putRemote
+    override fun storeSettings(): Unit = lock.withLock {
+        if (applying) return@withLock // the one-time init normalize persists once at the end via putRemote
         // Genuine edit → local put. The generic sync layer stamps SyncedPrefModified and signals the
         // client→master publisher on this write; no manual version bump needed.
         // Stamp lastStoredConfiguration BEFORE the put so an observer that receives the change
@@ -238,8 +242,7 @@ class InsulinImpl @Inject constructor(
         preferences.put(StringNonKey.InsulinConfiguration, cfg)
     }
 
-    @Synchronized
-    private fun configuration(): JsonObject {
+    private fun configuration(): JsonObject = lock.withLock {
         val jsonArray = buildJsonArray {
             insulins.forEach {
                 try {
@@ -254,14 +257,13 @@ class InsulinImpl @Inject constructor(
         }
     }
 
-    @Synchronized
-    private fun applyConfiguration(configuration: JsonObject) {
+    private fun applyConfiguration(configuration: JsonObject): Unit = lock.withLock {
         insulins.clear()
 
         val insulinArray = configuration["insulin"] as? JsonArray
         if (insulinArray.isNullOrEmpty()) {
             addNewInsulin(InsulinType.OREF_RAPID_ACTING.getICfg(rh))
-            return
+            return@withLock
         }
 
         insulinArray.forEach { jsonElement ->
