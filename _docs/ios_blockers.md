@@ -226,6 +226,67 @@ Collected so nobody pays for them twice. All were found by tests or a crash, not
 
 ## Open
 
+### Request: StoreDataForDb blocks the whole NS client on iOS
+
+`plugins/sync/src/androidMain/.../nsclientV3/StoreDataForDbImpl.kt` - 543 lines, **one** Android
+import.
+
+This is the one to do first, ahead of the service itself. Every incoming websocket event ends in
+`storeDataForDb.requestStoreX(...)` - glucose values, treatments, food, calibrations, device status.
+An iOS `NsConnection` written today would connect, subscribe, receive and parse, and then drop every
+record, because there is nothing to hand them to. That is the silent no-op the migration rules warn
+about, and on the data path.
+
+Two smaller ones go with it, both reached from the same handlers:
+
+| class | lines | what is in the way |
+|---|---|---|
+| `StoreDataForDbImpl` | 543 | 1 android import, 3 jvm |
+| `NSAlarmObject` | 48 | 1 jvm import |
+| `JsonBridge` | 32 | `org.json`, by definition - it is the bridge |
+
+`JsonBridge` may simply not need an iOS counterpart: the iOS handlers will parse with
+kotlinx.serialization directly, the way `ProfileRepositoryImpl` was converted, so the bridge is only
+needed while Android still speaks `org.json`.
+
+### Then: the socket wiring in NSClientV3Service
+
+`plugins/sync/src/androidMain/.../services/NSClientV3Service.kt` - 494 lines, 6 Android imports
+(`Intent`, `Binder`, `IBinder`, `PowerManager`, two annotations).
+
+The iOS side will write its **own** `NsConnection` rather than wait for this to be lifted - a
+separate implementation is the point of the port, and the two platforms genuinely differ here. What
+it needs from you is only the three classes above; the wiring itself will be rewritten on the iOS
+side with kotlinx.serialization instead of `org.json`.
+
+For reference while that is written, these are the parts of the contract that are easy to get wrong,
+and both are already pinned by `ServiceNsConnectionTest`:
+
+- `start(reason)` is idempotent - calling it on a live connection must not tear anything down.
+- `stop()` closes the sockets **before** releasing whatever carries them, or a quick restart races
+  the teardown.
+
+One more, from reading the handlers: `onDataCreateUpdate` must not advance
+`lastLoadedSrvModified` until `initialLoadFinished` is true, or the next load chain skips exactly the
+offline window it is supposed to backfill. That one is a comment in the Android code rather than a
+test, and it would be easy to lose in a rewrite.
+
+## Ready for Android: what the iOS side has built
+
+- **`NsLoadExecutor` is done** - `CoroutineNsLoadExecutor` in `plugins/sync/iosMain`. The nine steps
+  run as a coroutine sequence under one `Job`, so a new round replaces one in flight. Two details
+  worth keeping if it is ever moved to `commonMain`: the chain stops at the first step that does not
+  succeed, as the WorkManager chain does, and `idle` is emitted from `invokeOnCompletion` so a
+  *cancelled* round reports idle too - otherwise the plugin's follow-up queue sticks.
+- **`NsSocket`/`NsSocketFactory` are done, in Swift.** `ios/app/Shared/NsSocketBridge.swift` on
+  `socket.io-client-swift`, the same project's official client as the `socket.io-client-java` used on
+  Android, so both platforms speak to Nightscout the same way. It is added through Swift Package
+  Manager - the first external dependency in the iOS app - and the Kotlin side never mentions
+  socket.io, because `NsSocket` was already exported as an Obj-C protocol for Swift to conform to.
+- **`IosForegroundWatcher`** drives start/stop from the app lifecycle, closing the socket inside a
+  background task assertion so it is not cut mid-frame.
+
+
 Nothing right now.
 
 ## Known gaps on the iOS side
