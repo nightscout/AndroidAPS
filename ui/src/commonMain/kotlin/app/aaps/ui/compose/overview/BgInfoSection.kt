@@ -28,6 +28,7 @@ import app.aaps.core.interfaces.overview.graph.BgRange
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalAapsScale
+import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -130,11 +131,13 @@ fun BgInfoSection(
                     val triHalfBase = strokeWidth * 1.6f
                     val n = indicator.triangleCount
                     val baseDist = ringRadius + strokeWidth * 0.2f
-                    val angularSpacing = Math.toDegrees((triHalfBase * 1.6 / ringRadius)).toFloat()
+                    // Same expressions the JDK's Math.toDegrees / Math.toRadians use, written out
+                    // so they work on every platform. Note the order: toRadians divides first.
+                    val angularSpacing = ((triHalfBase * 1.6 / ringRadius) * 180.0 / PI).toFloat()
 
                     for (i in 0 until n) {
                         val triAngle = indicator.centerAngle + (i - (n - 1) / 2f) * angularSpacing
-                        val triRad = Math.toRadians(triAngle.toDouble())
+                        val triRad = triAngle.toDouble() / 180.0 * PI
                         val dirX = cos(triRad).toFloat()
                         val dirY = sin(triRad).toFloat()
                         val perpX = -dirY
