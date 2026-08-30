@@ -27,6 +27,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -120,10 +122,10 @@ fun InputDateTimeEditor(
                         onChange(cal.timeInMillis)
                     }
                     showDate = false
-                }) { Text(stringResource(android.R.string.ok)) }
+                }) { Text(stringResource(CoreUiStrings.ok)) }
             },
             dismissButton = {
-                TextButton(onClick = { showDate = false }) { Text(stringResource(android.R.string.cancel)) }
+                TextButton(onClick = { showDate = false }) { Text(stringResource(CoreUiStrings.cancel)) }
             }
         ) { DatePicker(state = dpState) }
     }
@@ -167,8 +169,8 @@ private fun TimePickerModal(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    TextButton(onClick = onDismiss) { Text(stringResource(android.R.string.cancel)) }
-                    TextButton(onClick = onConfirm) { Text(stringResource(android.R.string.ok)) }
+                    TextButton(onClick = onDismiss) { Text(stringResource(CoreUiStrings.cancel)) }
+                    TextButton(onClick = onConfirm) { Text(stringResource(CoreUiStrings.ok)) }
                 }
             }
         }

@@ -26,10 +26,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -85,8 +83,6 @@ class AutomationComposeContent(
         }
 
         val route by holder.route.collectAsStateWithLifecycle()
-        val context = LocalContext.current
-        val activity = context as? FragmentActivity
         val ioScope = rememberCoroutineScope()
 
         when (route) {
@@ -95,14 +91,12 @@ class AutomationComposeContent(
                 setToolbarConfig = setToolbarConfig,
                 onNavigateBack = onNavigateBack,
                 onSettings = onSettings,
-                onRun = { ioScope.launch(Dispatchers.IO) { plugin.processActions() } },
-                activity = activity
+                onRun = { ioScope.launch(Dispatchers.IO) { plugin.processActions() } }
             )
 
             is AutomationRoute.Edit -> EditRoute(
                 holder = holder,
-                setToolbarConfig = setToolbarConfig,
-                activity = activity
+                setToolbarConfig = setToolbarConfig
             )
 
             is AutomationRoute.EditTrigger -> EditTriggerRoute(
@@ -124,8 +118,7 @@ class AutomationComposeContent(
         setToolbarConfig: (ToolbarConfig) -> Unit,
         onNavigateBack: () -> Unit,
         onSettings: (() -> Unit)?,
-        onRun: () -> Unit,
-        activity: FragmentActivity?
+        onRun: () -> Unit
     ) {
         val state by holder.state.collectAsStateWithLifecycle()
         var deleteTarget by remember { mutableStateOf<Int?>(null) }
@@ -180,17 +173,15 @@ class AutomationComposeContent(
                         target?.let { uel.log(Action.AUTOMATION_REMOVED, Sources.Automation, it.title) }
                         holder.remove(pos)
                         deleteTarget = null
-                    }) { Text(stringResource(android.R.string.ok)) }
+                    }) { Text(stringResource(CoreUiStrings.ok)) }
                 },
                 dismissButton = {
                     TextButton(onClick = { deleteTarget = null }) {
-                        Text(stringResource(android.R.string.cancel))
+                        Text(stringResource(CoreUiStrings.cancel))
                     }
                 }
             )
         }
-        // silence unused activity
-        @Suppress("UNUSED_EXPRESSION") activity
     }
 
     @Composable
@@ -256,7 +247,7 @@ class AutomationComposeContent(
                 },
                 dismissButton = {
                     TextButton(onClick = { showDiscardConfirm = false }) {
-                        Text(stringResource(android.R.string.cancel))
+                        Text(stringResource(CoreUiStrings.cancel))
                     }
                 }
             )
@@ -343,8 +334,7 @@ class AutomationComposeContent(
     @Composable
     private fun EditRoute(
         holder: AutomationStateHolder,
-        setToolbarConfig: (ToolbarConfig) -> Unit,
-        activity: FragmentActivity?
+        setToolbarConfig: (ToolbarConfig) -> Unit
     ) {
         val focusManager = LocalFocusManager.current
         val editState by holder.editState.collectAsStateWithLifecycle()
@@ -416,7 +406,7 @@ class AutomationComposeContent(
                 },
                 dismissButton = {
                     TextButton(onClick = { showDiscardConfirm = false }) {
-                        Text(stringResource(android.R.string.cancel))
+                        Text(stringResource(CoreUiStrings.cancel))
                     }
                 }
             )
@@ -462,8 +452,6 @@ class AutomationComposeContent(
             )
         }
 
-        // silence unused activity (kept for future use)
-        @Suppress("UNUSED_EXPRESSION") activity
     }
 
     // Fully qualified: `Action` here is app.aaps.core.data.ue.Action, imported for the UserEntry logging.
