@@ -26,7 +26,7 @@ class DetailedBolusInfoStorageImplTest : TestBase() {
     @BeforeEach
     fun setup() {
         whenever(preferences.get(StringNonKey.BolusInfoStorage)).thenReturn("")
-        sut = DetailedBolusInfoStorageImpl(aapsLogger, preferences, rh)
+        sut = DetailedBolusInfoStorageImpl(aapsLogger, preferences)
     }
 
     private fun info(time: Long, insulin: Double) = DetailedBolusInfo().apply {
@@ -66,7 +66,32 @@ class DetailedBolusInfoStorageImplTest : TestBase() {
     fun loadStore_parsesExistingJson() {
         val json = Gson().toJson(listOf(info(5000L, 2.5)))
         whenever(preferences.get(StringNonKey.BolusInfoStorage)).thenReturn(json)
-        val loaded = DetailedBolusInfoStorageImpl(aapsLogger, preferences, rh)
+        val loaded = DetailedBolusInfoStorageImpl(aapsLogger, preferences)
         assertThat(loaded.findDetailedBolusInfo(5000L, 2.5)).isNotNull()
+    }
+
+    /**
+     * `loadStore` runs from a property initializer, so it executes while the object graph is built.
+     * Before this it could throw there, which does not lose a bolus record - it stops the app from
+     * starting. Half written preferences are the realistic cause, and starting with an empty store is
+     * recoverable: it is a cache of at most two pending boluses.
+     */
+    @Test
+    fun loadStore_startsEmptyOnUnreadableJson_ratherThanThrowing() {
+        whenever(preferences.get(StringNonKey.BolusInfoStorage)).thenReturn("{ this is not json")
+
+        val loaded = DetailedBolusInfoStorageImpl(aapsLogger, preferences)
+
+        assertThat(loaded.store).isEmpty()
+    }
+
+    @Test
+    fun loadStore_startsEmptyWhenTheJsonIsValidButTheWrongShape() {
+        // A preference left behind by a different writer parses as JSON but not as a list of records.
+        whenever(preferences.get(StringNonKey.BolusInfoStorage)).thenReturn("""{"unexpected":"object"}""")
+
+        val loaded = DetailedBolusInfoStorageImpl(aapsLogger, preferences)
+
+        assertThat(loaded.store).isEmpty()
     }
 }

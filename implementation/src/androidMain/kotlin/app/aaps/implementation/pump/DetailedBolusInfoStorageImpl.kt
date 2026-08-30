@@ -5,7 +5,6 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import com.google.gson.Gson
@@ -22,8 +21,7 @@ import kotlin.math.abs
 @SingleIn(AppScope::class)
 class DetailedBolusInfoStorageImpl @Inject constructor(
     val aapsLogger: AAPSLogger,
-    val preferences: Preferences,
-    val rh: ResourceHelper
+    val preferences: Preferences
 ) : DetailedBolusInfoStorage {
 
     val store = loadStore()
@@ -83,12 +81,21 @@ class DetailedBolusInfoStorageImpl @Inject constructor(
         preferences.put(StringNonKey.BolusInfoStorage, jsonString)
     }
 
+    /**
+     * Never throws. This runs from a property initializer, so it happens while the object graph is
+     * being built - an exception here does not lose a bolus record, it stops the app from starting.
+     * A half written or otherwise unreadable preference is recoverable: the store is a short lived
+     * cache of at most two pending boluses, so starting empty costs the matching of a bolus that is
+     * already in flight, which is what happens on any fresh install anyway.
+     */
     private fun loadStore(): ArrayList<DetailedBolusInfo> {
         val jsonString = preferences.get(StringNonKey.BolusInfoStorage)
-        return if (jsonString.isNotEmpty()) {
+        if (jsonString.isEmpty()) return ArrayList()
+        return runCatching {
             val type = object : TypeToken<List<DetailedBolusInfo>>() {}.type
-            Gson().fromJson(jsonString, type)
-        } else {
+            Gson().fromJson<ArrayList<DetailedBolusInfo>>(jsonString, type)
+        }.getOrElse { error ->
+            aapsLogger.error(LTag.PUMP, "Unreadable bolus info storage, starting empty: $error")
             ArrayList()
         }
     }
