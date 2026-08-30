@@ -217,12 +217,12 @@ internal class LoopViewModelFormattingTest {
     // ---------------------------------------------------------------- updateState
 
     @Test
-    fun constraints_showOnlyClosedLoopReasons_notTheProcessedOnes() = runTest {
-        // Documents today's behaviour, which is not what the code reads as. The view model copies the
-        // rate and smb reasons into a fresh ConstraintObject, but copyReasons fills `reasons` while
-        // getMostLimitedReasons reads `mostLimiting`, so the copied reasons never appear. Only the
-        // closed loop reasons reach the screen. If someone repairs that, this test must go red rather
-        // than the change slipping through unnoticed.
+    fun constraints_showRateAndSmbBindingReasons_thenClosedLoopReasons() = runTest {
+        // The Loop tab shows why the loop executed what it did: the binding reason from the rate and
+        // smb constraints, then the closed loop reasons. Until 2026 this section silently showed only
+        // the closed loop part - the view model collected the rate and smb reasons with copyReasons,
+        // which fills `reasons`, but read them back with getMostLimitedReasons, which returns
+        // `mostLimiting`. That list was never written, so the result was always empty.
         val processed = mock<APSResult> {
             whenever(it.rateConstraint).thenReturn(FakeConstraint(0.0, "rate limited"))
             whenever(it.smbConstraint).thenReturn(FakeConstraint(0.0, "smb limited"))
@@ -233,7 +233,7 @@ internal class LoopViewModelFormattingTest {
 
         val sut = viewModel()
 
-        assertThat(sut.uiState.value.constraints).isEqualTo("loop disabled")
+        assertThat(sut.uiState.value.constraints).isEqualTo("rate limited\nsmb limited\nloop disabled")
         assertThat(sut.uiState.value.constraintsProcessed).isEqualTo("processed text")
     }
 

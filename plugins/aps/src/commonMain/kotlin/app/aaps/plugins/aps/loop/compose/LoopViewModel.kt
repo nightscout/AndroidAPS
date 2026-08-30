@@ -11,7 +11,6 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import kotlinx.coroutines.CoroutineScope
@@ -84,14 +83,17 @@ class LoopViewModel(
             return
         }
 
-        var constraints =
+        // The Loop tab shows why the loop ended up executing what it did, so it takes the binding
+        // reason from each constraint - the one that actually limited the final value. The APS tabs
+        // show the constraints that went into the algorithm, which is a different and longer list.
+        val executionReasons =
             lastRun.constraintsProcessed?.let { constraintsProcessed ->
-                val allConstraints = ConstraintObject(0.0, aapsLogger)
-                constraintsProcessed.rateConstraint?.let { allConstraints.copyReasons(it) }
-                constraintsProcessed.smbConstraint?.let { allConstraints.copyReasons(it) }
-                allConstraints.getMostLimitedReasons()
-            } ?: ""
-        constraints += loop.closedLoopEnabled?.getReasons() ?: ""
+                constraintsProcessed.rateConstraint?.mostLimitedReasonList.orEmpty() +
+                    constraintsProcessed.smbConstraint?.mostLimitedReasonList.orEmpty()
+            } ?: emptyList()
+        val constraints = (executionReasons + listOfNotNull(loop.closedLoopEnabled?.getReasons()))
+            .filter { it.isNotEmpty() }
+            .joinToString("\n")
 
         _uiState.value = LoopUiState(
             lastRun = dateUtil.dateAndTimeString(lastRun.lastAPSRun),
