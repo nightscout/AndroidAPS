@@ -6,7 +6,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -17,7 +17,7 @@ import app.aaps.core.ui.compose.ToolbarConfig
 class LoopComposeContent(
     private val loop: Loop,
     private val rxBus: RxBus,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val dateUtil: DateUtil,
     private val decimalFormatter: DecimalFormatter,
     private val aapsLogger: AAPSLogger,

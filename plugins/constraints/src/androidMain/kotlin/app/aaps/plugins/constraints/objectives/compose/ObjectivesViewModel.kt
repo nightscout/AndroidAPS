@@ -2,7 +2,6 @@ package app.aaps.plugins.constraints.objectives.compose
 
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.constraints.ConstraintsStrings
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.time.T
@@ -435,11 +434,11 @@ class ObjectivesViewModel @Inject constructor(
     }
 
     /** Invoke UITask code (e.g. password check) */
-    fun onInvokeUITask(context: Context, objectiveIndex: Int, taskIndex: Int) {
+    fun onInvokeUITask(objectiveIndex: Int, taskIndex: Int) {
         val objective = objectivesPlugin.objectives[objectiveIndex]
         val visibleTasks = objective.tasks.filter { !it.shouldBeIgnored() }
         val task = visibleTasks[taskIndex] as? UITask ?: return
-        task.code.invoke(context, task, { scope.launch { updateState() } }) { message ->
+        task.code.invoke(task, { scope.launch { updateState() } }) { message ->
             _snackbarMessage.value = message
         }
     }

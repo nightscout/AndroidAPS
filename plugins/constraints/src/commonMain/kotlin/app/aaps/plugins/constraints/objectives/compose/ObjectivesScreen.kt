@@ -54,7 +54,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -72,7 +71,7 @@ fun ObjectivesScreen(
     onUnfinish: (Int) -> Unit,
     onShowLearned: (Int) -> Unit,
     onOpenExam: (objectiveIndex: Int, taskIndex: Int) -> Unit,
-    onInvokeUITask: (android.content.Context, objectiveIndex: Int, taskIndex: Int) -> Unit,
+    onInvokeUITask: (objectiveIndex: Int, taskIndex: Int) -> Unit,
     scrollToIndex: Int,
     onScrollHandled: () -> Unit
 ) {
@@ -116,7 +115,7 @@ fun ObjectivesScreen(
                     onUnfinish = { onUnfinish(objective.index) },
                     onShowLearned = { onShowLearned(objective.index) },
                     onOpenExam = { taskIndex -> onOpenExam(objective.index, taskIndex) },
-                    onInvokeUITask = { context, taskIndex -> onInvokeUITask(context, objective.index, taskIndex) }
+                    onInvokeUITask = { taskIndex -> onInvokeUITask(objective.index, taskIndex) }
                 )
             }
             item { Spacer(modifier = Modifier.height(16.dp)) }
@@ -175,7 +174,7 @@ private fun ObjectiveTimelineItem(
     onUnfinish: () -> Unit,
     onShowLearned: () -> Unit,
     onOpenExam: (taskIndex: Int) -> Unit,
-    onInvokeUITask: (android.content.Context, taskIndex: Int) -> Unit
+    onInvokeUITask: (taskIndex: Int) -> Unit
 ) {
     val accomplishedColor = MaterialTheme.colorScheme.primary
     val activeColor = MaterialTheme.colorScheme.tertiary
@@ -404,10 +403,8 @@ private fun ActiveObjectiveContent(
     onVerify: () -> Unit,
     onRequestUnstart: () -> Unit,
     onOpenExam: (taskIndex: Int) -> Unit,
-    onInvokeUITask: (android.content.Context, taskIndex: Int) -> Unit
+    onInvokeUITask: (taskIndex: Int) -> Unit
 ) {
-    val context = LocalContext.current
-
     Column {
         // Title
         Text(
@@ -449,7 +446,7 @@ private fun ActiveObjectiveContent(
                     TaskRow(
                         task = task,
                         onOpenExam = { onOpenExam(task.index) },
-                        onInvokeUITask = { onInvokeUITask(context, task.index) }
+                        onInvokeUITask = { onInvokeUITask(task.index) }
                     )
                     if (index < objective.tasks.lastIndex) {
                         HorizontalDivider(

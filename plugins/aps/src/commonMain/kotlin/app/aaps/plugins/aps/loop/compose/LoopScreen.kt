@@ -15,12 +15,12 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.compose.AapsCard
-import app.aaps.plugins.aps.R
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.plugins.aps.ApsStrings
 
 @Composable
 fun LoopScreen(
@@ -56,22 +56,22 @@ fun LoopScreen(
                 // General info card
                 AapsCard(modifier = Modifier.fillMaxWidth()) {
                     Column(modifier = Modifier.padding(16.dp)) {
-                        LoopInfoRow(label = stringResource(R.string.last_run_label), value = state.lastRun)
+                        LoopInfoRow(label = stringResource(ApsStrings.last_run_label), value = state.lastRun)
                         if (state.source.isNotEmpty()) {
                             LoopDivider()
-                            LoopInfoRow(label = stringResource(R.string.loop_aps_label), value = state.source)
+                            LoopInfoRow(label = stringResource(ApsStrings.loop_aps_label), value = state.source)
                         }
                         if (state.request.isNotEmpty()) {
                             LoopDivider()
-                            LoopFullWidthRow(label = stringResource(R.string.request_label), value = state.request)
+                            LoopFullWidthRow(label = stringResource(ApsStrings.request_label), value = state.request)
                         }
                         if (state.constraintsProcessed.isNotEmpty()) {
                             LoopDivider()
-                            LoopFullWidthRow(label = stringResource(R.string.loop_constraints_processed_label), value = state.constraintsProcessed)
+                            LoopFullWidthRow(label = stringResource(ApsStrings.loop_constraints_processed_label), value = state.constraintsProcessed)
                         }
                         if (state.constraints.isNotEmpty()) {
                             LoopDivider()
-                            LoopFullWidthRow(label = stringResource(R.string.constraints), value = state.constraints)
+                            LoopFullWidthRow(label = stringResource(ApsStrings.constraints), value = state.constraints)
                         }
                     }
                 }
@@ -79,12 +79,12 @@ fun LoopScreen(
                 // TBR card
                 AapsCard(modifier = Modifier.fillMaxWidth()) {
                     Column(modifier = Modifier.padding(16.dp)) {
-                        LoopInfoRow(label = stringResource(R.string.loop_tbr_request_time_label), value = state.tbrRequestTime)
+                        LoopInfoRow(label = stringResource(ApsStrings.loop_tbr_request_time_label), value = state.tbrRequestTime)
                         LoopDivider()
-                        LoopInfoRow(label = stringResource(R.string.loop_tbr_execution_time_label), value = state.tbrExecutionTime)
+                        LoopInfoRow(label = stringResource(ApsStrings.loop_tbr_execution_time_label), value = state.tbrExecutionTime)
                         if (state.tbrSetByPump.isNotEmpty()) {
                             LoopDivider()
-                            LoopFullWidthRow(label = stringResource(R.string.loop_tbr_set_by_pump_label), value = state.tbrSetByPump)
+                            LoopFullWidthRow(label = stringResource(ApsStrings.loop_tbr_set_by_pump_label), value = state.tbrSetByPump)
                         }
                     }
                 }
@@ -92,12 +92,12 @@ fun LoopScreen(
                 // SMB card
                 AapsCard(modifier = Modifier.fillMaxWidth()) {
                     Column(modifier = Modifier.padding(16.dp)) {
-                        LoopInfoRow(label = stringResource(R.string.loop_smb_request_time_label), value = state.smbRequestTime)
+                        LoopInfoRow(label = stringResource(ApsStrings.loop_smb_request_time_label), value = state.smbRequestTime)
                         LoopDivider()
-                        LoopInfoRow(label = stringResource(R.string.loop_smb_execution_time_label), value = state.smbExecutionTime)
+                        LoopInfoRow(label = stringResource(ApsStrings.loop_smb_execution_time_label), value = state.smbExecutionTime)
                         if (state.smbSetByPump.isNotEmpty()) {
                             LoopDivider()
-                            LoopFullWidthRow(label = stringResource(R.string.loop_smb_set_by_pump_label), value = state.smbSetByPump)
+                            LoopFullWidthRow(label = stringResource(ApsStrings.loop_smb_set_by_pump_label), value = state.smbSetByPump)
                         }
                     }
                 }

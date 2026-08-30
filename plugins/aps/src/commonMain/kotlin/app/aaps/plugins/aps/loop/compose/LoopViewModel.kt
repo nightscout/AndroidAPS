@@ -4,7 +4,7 @@ import androidx.compose.runtime.Immutable
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
 import app.aaps.core.interfaces.utils.DateUtil
@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,7 +42,7 @@ data class LoopUiState(
 class LoopViewModel(
     private val loop: Loop,
     private val rxBus: RxBus,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val dateUtil: DateUtil,
     private val decimalFormatter: DecimalFormatter,
     private val aapsLogger: AAPSLogger,
@@ -78,7 +79,7 @@ class LoopViewModel(
         val lastRun = loop.lastRun
         if (lastRun == null) {
             _uiState.value = LoopUiState(
-                statusMessage = rh.gs(app.aaps.core.ui.R.string.not_available_full)
+                statusMessage = rh.gs(CoreUiStrings.not_available_full)
             )
             return
         }
@@ -109,39 +110,39 @@ class LoopViewModel(
     }
 
     private fun PumpEnactResult.toPlainText(): String {
-        var ret = rh.gs(app.aaps.core.ui.R.string.success) + ": " + success
+        var ret = rh.gs(CoreUiStrings.success) + ": " + success
         if (queued) {
-            ret = rh.gs(app.aaps.core.ui.R.string.waitingforpumpresult)
+            ret = rh.gs(CoreUiStrings.waitingforpumpresult)
         } else if (enacted) {
             when {
                 bolusDelivered > 0         -> {
-                    ret += "\n" + rh.gs(app.aaps.core.ui.R.string.enacted) + ": " + enacted
-                    if (comment.isNotEmpty()) ret += "\n" + rh.gs(app.aaps.core.ui.R.string.comment) + ": " + comment
-                    ret += "\n" + rh.gs(app.aaps.core.ui.R.string.smb_shortname) + ": " + bolusDelivered + " " + rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname)
+                    ret += "\n" + rh.gs(CoreUiStrings.enacted) + ": " + enacted
+                    if (comment.isNotEmpty()) ret += "\n" + rh.gs(CoreUiStrings.comment) + ": " + comment
+                    ret += "\n" + rh.gs(CoreUiStrings.smb_shortname) + ": " + bolusDelivered + " " + rh.gs(CoreUiStrings.insulin_unit_shortname)
                 }
 
                 isTempCancel               -> {
-                    ret += "\n" + rh.gs(app.aaps.core.ui.R.string.enacted) + ": " + enacted
-                    ret += "\n" + rh.gs(app.aaps.core.ui.R.string.comment) + ": " + comment +
-                        "\n" + rh.gs(app.aaps.core.ui.R.string.cancel_temp)
+                    ret += "\n" + rh.gs(CoreUiStrings.enacted) + ": " + enacted
+                    ret += "\n" + rh.gs(CoreUiStrings.comment) + ": " + comment +
+                        "\n" + rh.gs(CoreUiStrings.cancel_temp)
                 }
 
                 isPercent && percent != -1 -> {
-                    ret += "\n" + rh.gs(app.aaps.core.ui.R.string.enacted) + ": " + enacted
-                    if (comment.isNotEmpty()) ret += "\n" + rh.gs(app.aaps.core.ui.R.string.comment) + ": " + comment
-                    ret += "\n" + rh.gs(app.aaps.core.ui.R.string.duration) + ": " + duration + " min"
-                    ret += "\n" + rh.gs(app.aaps.core.ui.R.string.percent) + ": " + percent + "%"
+                    ret += "\n" + rh.gs(CoreUiStrings.enacted) + ": " + enacted
+                    if (comment.isNotEmpty()) ret += "\n" + rh.gs(CoreUiStrings.comment) + ": " + comment
+                    ret += "\n" + rh.gs(CoreUiStrings.duration) + ": " + duration + " min"
+                    ret += "\n" + rh.gs(CoreUiStrings.percent) + ": " + percent + "%"
                 }
 
                 absolute != -1.0           -> {
-                    ret += "\n" + rh.gs(app.aaps.core.ui.R.string.enacted) + ": " + enacted
-                    if (comment.isNotEmpty()) ret += "\n" + rh.gs(app.aaps.core.ui.R.string.comment) + ": " + comment
-                    ret += "\n" + rh.gs(app.aaps.core.ui.R.string.duration) + ": " + duration + " min"
-                    ret += "\n" + rh.gs(app.aaps.core.ui.R.string.absolute) + ": " + decimalFormatter.to2Decimal(absolute) + " U/h"
+                    ret += "\n" + rh.gs(CoreUiStrings.enacted) + ": " + enacted
+                    if (comment.isNotEmpty()) ret += "\n" + rh.gs(CoreUiStrings.comment) + ": " + comment
+                    ret += "\n" + rh.gs(CoreUiStrings.duration) + ": " + duration + " min"
+                    ret += "\n" + rh.gs(CoreUiStrings.absolute) + ": " + decimalFormatter.to2Decimal(absolute) + " U/h"
                 }
             }
         } else {
-            if (comment.isNotEmpty()) ret += "\n" + rh.gs(app.aaps.core.ui.R.string.comment) + ": " + comment
+            if (comment.isNotEmpty()) ret += "\n" + rh.gs(CoreUiStrings.comment) + ": " + comment
         }
         return ret
     }
