@@ -7,6 +7,9 @@ plugins {
     // Metro is the only DI framework in this module now. Dagger's processor is gone - the last
     // `@InstallIn` module moved to :app - which is what made the multiplatform flip possible at all.
     alias(libs.plugins.metro)
+    // The compiler plugin that generates serializers. The kotlinx json runtime was already here and is
+    // used to parse trees, which needs no plugin - but StoredBolusInfo is @Serializable and does.
+    id("kotlinx-serialization")
     // The Compose COMPILER, which ships with Kotlin and compiles @Composable for every target.
     alias(libs.plugins.compose.compiler)
     // The Compose Multiplatform framework. The compiler plugin above is applied per project rather
