@@ -6,6 +6,7 @@ import app.aaps.core.data.model.RM
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -19,7 +20,9 @@ import app.aaps.core.interfaces.scenes.SceneAutomationResult
 import app.aaps.core.interfaces.scenes.SceneIconResolver
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringNonKey
-import app.aaps.plugins.sync.R
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.plugins.sync.nfcCommands.NfcCommand
 import app.aaps.plugins.sync.nfcCommands.NfcParams
 import app.aaps.shared.tests.TestBaseWithProfile
@@ -32,13 +35,12 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argThat
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import app.aaps.core.interfaces.R as InterfacesR
-import app.aaps.core.ui.R as CoreUiR
 
 class NfcCommandsPluginTest : TestBaseWithProfile() {
     @Mock lateinit var commandQueue: CommandQueue
@@ -120,16 +122,13 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
             whenever(commandQueue.extendedBolus(any(), any())).thenReturn(pumpEnactResultProvider.get().success(true))
         }
         whenever(preferences.get(BooleanKey.NfcAllowRemoteCommands)).thenReturn(true)
-        whenever(rh.gs(any<Int>())).thenReturn("Mock String")
-        whenever(rh.gs(any<Int>(), any())).thenReturn("Mock String")
-        whenever(rh.gs(any<Int>(), any(), any())).thenReturn("Mock String")
-        whenever(rh.gsNotLocalised(any<Int>())).thenReturn("Mock String")
-        whenever(rh.gsNotLocalised(any<Int>(), any())).thenReturn("Mock String")
-        whenever(rh.gs(R.string.wrong_format)).thenReturn("Wrong format")
-        whenever(rh.gs(R.string.nfccommands_wrong_duration)).thenReturn("Wrong duration")
-        whenever(rh.gs(InterfacesR.string.pump_disconnected)).thenReturn("Pump disconnected")
-        whenever(rh.gs(CoreUiR.string.noprofile)).thenReturn("No profile")
-        whenever(rh.gs(CoreUiR.string.ok)).thenReturn("OK")
+        whenever(rh.gs(any<TextRef>())).thenReturn("Mock String")
+        whenever(rh.gsNotLocalised(any<TextRef>())).thenReturn("Mock String")
+        whenever(rh.gs(SyncStrings.wrong_format)).thenReturn("Wrong format")
+        whenever(rh.gs(SyncStrings.nfccommands_wrong_duration)).thenReturn("Wrong duration")
+        whenever(rh.gs(InterfacesStrings.pump_disconnected)).thenReturn("Pump disconnected")
+        whenever(rh.gs(CoreUiStrings.noprofile)).thenReturn("No profile")
+        whenever(rh.gs(CoreUiStrings.ok)).thenReturn("OK")
     }
 
     private fun execute(command: String): NfcExecutionResult = runBlocking { plugin.executeCommand(command) }
@@ -144,12 +143,12 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
         val categories = NfcCategories.build(plugin.actionFactory)
 
-        assertThat(categories.any { it.labelResId == CoreUiR.string.scenes }).isTrue()
+        assertThat(categories.any { it.label == CoreUiStrings.scenes }).isTrue()
         
-        val scenesCat = categories.find { it.labelResId == CoreUiR.string.scenes }
+        val scenesCat = categories.find { it.label == CoreUiStrings.scenes }
         assertThat(scenesCat?.commands).contains(NfcCommandCode.RUN_SCENE)
         
-        val treatmentsCat = categories.find { it.labelResId == CoreUiR.string.treatments }
+        val treatmentsCat = categories.find { it.label == CoreUiStrings.treatments }
         assertThat(treatmentsCat?.commands).contains(NfcCommandCode.BOLUS_WIZARD)
     }
 
@@ -160,7 +159,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         val cmd = NfcCommand(NfcCommandCode.LOOP_STOP).encode()
         val tag = NfcCreatedTag(tagUid = tagUid, name = "Test", commands = listOf(cmd), createdAtMillis = 0L)
         plugin.nfcTagStore.saveCreatedTag(tag)
-        whenever(rh.gs(R.string.nfccommands_tag_not_registered)).thenReturn("Not registered")
+        whenever(rh.gs(SyncStrings.nfccommands_tag_not_registered)).thenReturn("Not registered")
 
         val result = plugin.prepareExecution(tagUid)
 
@@ -173,7 +172,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     @Test
     fun `prepareExecution returns Error when plugin disabled`() {
         plugin.setPluginEnabledBlocking(PluginType.SYNC, false)
-        whenever(rh.gs(R.string.nfccommands_plugin_disabled)).thenReturn("Plugin disabled")
+        whenever(rh.gs(SyncStrings.nfccommands_plugin_disabled)).thenReturn("Plugin disabled")
 
         val result = plugin.prepareExecution(tagUid)
 
@@ -186,7 +185,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     fun `executeCommand LOOP_STOP should disable loop`() {
         runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.DISABLED_LOOP)) }
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
-        whenever(rh.gs(R.string.nfccommands_loop_has_been_disabled)).thenReturn("Loop disabled")
+        whenever(rh.gs(SyncStrings.nfccommands_loop_has_been_disabled)).thenReturn("Loop disabled")
 
         val result = execute(NfcCommandCode.LOOP_STOP)
 
@@ -207,7 +206,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     fun `executeCommand LOOP_RESUME should resume loop`() {
         runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.RESUME)) }
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
-        whenever(rh.gs(R.string.nfccommands_loop_resumed)).thenReturn("Loop resumed")
+        whenever(rh.gs(SyncStrings.nfccommands_loop_resumed)).thenReturn("Loop resumed")
 
         val result = execute(NfcCommandCode.LOOP_RESUME)
 
@@ -228,7 +227,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     fun `executeCommand LOOP_SUSPEND should call handleRunningModeChange directly`() {
         runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.SUSPENDED_BY_USER)) }
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
-        whenever(rh.gs(InterfacesR.string.loopsuspended)).thenReturn("Loop suspended")
+        whenever(rh.gs(InterfacesStrings.loopsuspended)).thenReturn("Loop suspended")
 
         val result = execute(NfcCommandCode.LOOP_SUSPEND, NfcParams(duration = 30))
 
@@ -249,8 +248,8 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     fun `executeCommand LOOP_LGS should switch to LGS mode`() {
         runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.CLOSED_LOOP_LGS)) }
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
-        whenever(rh.gs(CoreUiR.string.lowglucosesuspend)).thenReturn("LGS")
-        whenever(rh.gs(eq(R.string.nfccommands_current_loop_mode), any())).thenReturn("LGS mode")
+        whenever(rh.gs(CoreUiStrings.lowglucosesuspend)).thenReturn("LGS")
+        whenever(rh.gs(refNamed(SyncStrings.nfccommands_current_loop_mode))).thenReturn("LGS mode")
 
         val result = execute(NfcCommandCode.LOOP_LGS)
 
@@ -271,8 +270,8 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     fun `executeCommand LOOP_CLOSED should switch to closed loop`() {
         runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.CLOSED_LOOP)) }
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
-        whenever(rh.gs(CoreUiR.string.closedloop)).thenReturn("Closed")
-        whenever(rh.gs(eq(R.string.nfccommands_current_loop_mode), any())).thenReturn("Closed loop")
+        whenever(rh.gs(CoreUiStrings.closedloop)).thenReturn("Closed")
+        whenever(rh.gs(refNamed(SyncStrings.nfccommands_current_loop_mode))).thenReturn("Closed loop")
 
         val result = execute(NfcCommandCode.LOOP_CLOSED)
 
@@ -293,7 +292,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     /* Command removed
     @Test
     fun `executeCommand AAPSCLIENT_RESTART should send restart event`() {
-        whenever(rh.gs(R.string.nfccommands_aapsclient_restart_sent)).thenReturn("AAPSClient restart sent")
+        whenever(rh.gs(SyncStrings.nfccommands_aapsclient_restart_sent)).thenReturn("AAPSClient restart sent")
 
         val result = execute(NfcCommandCode.AAPSCLIENT_RESTART)
 
@@ -308,7 +307,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     @Test
     fun `executeCommand PUMP_DISCONNECT should disconnect pump`() {
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
-        whenever(rh.gs(InterfacesR.string.pump_disconnected)).thenReturn("Pump disconnected")
+        whenever(rh.gs(InterfacesStrings.pump_disconnected)).thenReturn("Pump disconnected")
 
         val result = execute(NfcCommandCode.PUMP_DISCONNECT, NfcParams(duration = 180))
 
@@ -328,7 +327,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     @Test
     fun `executeCommand PUMP_CONNECT returns connected when reconnect is not needed`() {
         runTest { whenever(loop.allowedNextModes()).thenReturn(emptyList()) }
-        whenever(rh.gs(app.aaps.core.interfaces.R.string.connected)).thenReturn("Connected")
+        whenever(rh.gs(InterfacesStrings.connected)).thenReturn("Connected")
 
         val result = execute(NfcCommandCode.PUMP_CONNECT)
 
@@ -340,7 +339,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand BASAL_STOP should cancel temp basal`() {
-        whenever(rh.gs(CoreUiR.string.stoptemptarget)).thenReturn("Temp basal canceled")
+        whenever(rh.gs(CoreUiStrings.stoptemptarget)).thenReturn("Temp basal canceled")
 
         val result = execute(NfcCommandCode.BASAL_STOP)
 
@@ -353,7 +352,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(constraintsChecker.applyBasalPercentConstraints(any(), any())).thenReturn(
             app.aaps.core.objects.constraints.ConstraintObject(120, aapsLogger),
         )
-        whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
+        whenever(rh.gs(refNamed(SyncStrings.nfccommands_command_executed))).thenReturn("Command executed")
 
         val result = execute(NfcCommandCode.BASAL_PCT, NfcParams(percent = 120, duration = 30))
 
@@ -366,7 +365,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(constraintsChecker.applyBasalConstraints(any(), any())).thenReturn(
             app.aaps.core.objects.constraints.ConstraintObject(1.5, aapsLogger),
         )
-        whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
+        whenever(rh.gs(refNamed(SyncStrings.nfccommands_command_executed))).thenReturn("Command executed")
 
         val result = execute(NfcCommandCode.BASAL_ABS, NfcParams(rate = 1.5, duration = 30))
 
@@ -378,7 +377,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand EXTENDED_STOP should cancel extended bolus`() {
-        whenever(rh.gs(R.string.nfccommands_extended_canceled)).thenReturn("Extended canceled")
+        whenever(rh.gs(SyncStrings.nfccommands_extended_canceled)).thenReturn("Extended canceled")
 
         val result = execute(NfcCommandCode.EXTENDED_STOP)
 
@@ -391,7 +390,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(constraintsChecker.applyExtendedBolusConstraints(any())).thenReturn(
             app.aaps.core.objects.constraints.ConstraintObject(2.0, aapsLogger),
         )
-        whenever(rh.gs(eq(R.string.nfccommands_extended_set), any(), any())).thenReturn("Extended set")
+        whenever(rh.gs(refNamed(SyncStrings.nfccommands_extended_set))).thenReturn("Extended set")
 
         val result = execute(NfcCommandCode.EXTENDED_SET, NfcParams(insulin = 2.0, duration = 60))
 
@@ -409,7 +408,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(commandQueue.bolusInQueue()).thenReturn(false)
         whenever(bolusProgressData.isStopPressed).thenReturn(false)
         runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
-        whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
+        whenever(rh.gs(refNamed(SyncStrings.nfccommands_command_executed))).thenReturn("Command executed")
 
         val result = execute(NfcCommandCode.BOLUS, NfcParams(insulin = 1.0))
 
@@ -432,7 +431,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
                 pumpEnactResultProvider.get().success(false).bolusDelivered(0.5)
             )
         }
-        whenever(rh.gs(eq(CoreUiR.string.stop_pressed), any())).thenReturn("Stop pressed")
+        whenever(rh.gs(refNamed(CoreUiStrings.stop_pressed))).thenReturn("Stop pressed")
 
         val result = execute(NfcCommandCode.BOLUS, NfcParams(insulin = 1.0))
 
@@ -448,7 +447,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         )
         whenever(commandQueue.bolusInQueue()).thenReturn(false)
         runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
-        whenever(rh.gs(eq(R.string.nfccommands_command_executed), any())).thenReturn("Command executed")
+        whenever(rh.gs(refNamed(SyncStrings.nfccommands_command_executed))).thenReturn("Command executed")
         whenever(preferences.get(StringNonKey.TempTargetPresets)).thenReturn("[]")
         runTest {
             whenever(persistenceLayer.insertAndCancelCurrentTemporaryTarget(any(), any(), any(), anyOrNull(), any()))
@@ -469,7 +468,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(constraintsChecker.applyCarbsConstraints(any())).thenReturn(
             app.aaps.core.objects.constraints.ConstraintObject(20, aapsLogger),
         )
-        whenever(rh.gs(eq(R.string.nfccommands_carbs_set), any())).thenReturn("Carbs set")
+        whenever(rh.gs(refNamed(SyncStrings.nfccommands_carbs_set))).thenReturn("Carbs set")
 
         val result = execute(NfcCommandCode.CARBS, NfcParams(carbs = 20))
 
@@ -486,7 +485,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
             whenever(persistenceLayer.insertAndCancelCurrentTemporaryTarget(any(), any(), any(), anyOrNull(), any()))
                 .thenReturn(PersistenceLayer.TransactionResult())
         }
-        whenever(rh.gs(eq(R.string.nfccommands_tt_set), any(), any())).thenReturn("Target set")
+        whenever(rh.gs(refNamed(SyncStrings.nfccommands_tt_set))).thenReturn("Target set")
 
         val result = execute(NfcCommandCode.TARGET_MEAL)
 
@@ -499,8 +498,8 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
             whenever(persistenceLayer.cancelCurrentTemporaryTargetIfAny(any(), any(), any(), anyOrNull(), any()))
                 .thenReturn(PersistenceLayer.TransactionResult())
         }
-        whenever(rh.gs(R.string.nfccommands_tt_canceled)).thenReturn("TT canceled")
-        whenever(rh.gsNotLocalised(R.string.nfccommands_tt_canceled)).thenReturn("TT canceled")
+        whenever(rh.gs(SyncStrings.nfccommands_tt_canceled)).thenReturn("TT canceled")
+        whenever(rh.gsNotLocalised(SyncStrings.nfccommands_tt_canceled)).thenReturn("TT canceled")
 
         val result = execute(NfcCommandCode.TARGET_STOP)
 
@@ -515,7 +514,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
             whenever(persistenceLayer.insertAndCancelCurrentTemporaryTarget(any(), any(), any(), anyOrNull(), any()))
                 .thenReturn(PersistenceLayer.TransactionResult())
         }
-        whenever(rh.gs(eq(R.string.nfccommands_tt_set), any(), any())).thenReturn("Target set")
+        whenever(rh.gs(refNamed(SyncStrings.nfccommands_tt_set))).thenReturn("Target set")
 
         val result = execute(NfcCommandCode.TARGET_ACTIVITY)
 
@@ -529,7 +528,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
             whenever(persistenceLayer.insertAndCancelCurrentTemporaryTarget(any(), any(), any(), anyOrNull(), any()))
                 .thenReturn(PersistenceLayer.TransactionResult())
         }
-        whenever(rh.gs(eq(R.string.nfccommands_tt_set), any(), any())).thenReturn("Target set")
+        whenever(rh.gs(refNamed(SyncStrings.nfccommands_tt_set))).thenReturn("Target set")
 
         val result = execute(NfcCommandCode.TARGET_HYPO)
 
@@ -542,7 +541,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
             whenever(persistenceLayer.insertAndCancelCurrentTemporaryTarget(any(), any(), any(), anyOrNull(), any()))
                 .thenReturn(PersistenceLayer.TransactionResult())
         }
-        whenever(rh.gs(eq(R.string.nfccommands_tt_set), any(), any())).thenReturn("Target set")
+        whenever(rh.gs(refNamed(SyncStrings.nfccommands_tt_set))).thenReturn("Target set")
 
         val result = execute(NfcCommandCode.TARGET_MANUAL, NfcParams(glucose = 100.0, duration = 30))
 
@@ -554,7 +553,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         runTest {
             whenever(sceneAutomationApi.runScene(any(), anyOrNull())).thenReturn(SceneAutomationResult.Success)
         }
-        whenever(rh.gs(CoreUiR.string.ok)).thenReturn("OK")
+        whenever(rh.gs(CoreUiStrings.ok)).thenReturn("OK")
 
         val result = execute(NfcCommandCode.RUN_SCENE, NfcParams(sceneId = "scene1"))
 
@@ -572,7 +571,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
             whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP)
             whenever(wizardBolusExecutor.confirm(eq(123L), any(), any(), any(), any())).thenReturn(WizardBolusExecutor.ConfirmResult.Delivered)
         }
-        whenever(rh.gs(eq(R.string.smscommunicator_bolus_delivered), any())).thenReturn("Bolus delivered")
+        whenever(rh.gs(refNamed(SyncStrings.smscommunicator_bolus_delivered))).thenReturn("Bolus delivered")
 
         val result = execute(NfcCommandCode.BOLUS_WIZARD, params)
 
@@ -589,8 +588,8 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(profileFunction.getOriginalProfileName()).thenReturn("Default")
         val prepared = WizardBolusExecutor.PrepareResult.Preview(insulin = 1.5, carbs = 20, bolusId = 123L)
         whenever(wizardBolusExecutor.prepareWizard(any())).thenReturn(prepared)
-        whenever(rh.gs(any<Int>(), eq(1.5))).thenReturn("Going to deliver 1.5U")
-        whenever(rh.gs(any<Int>(), eq(20))).thenReturn("20g carbs")
+        whenever(rh.gs(refNamed(CoreUiStrings.goingtodeliver))).thenReturn("Going to deliver 1.5U")
+        whenever(rh.gs(refNamed(InterfacesStrings.format_carbs))).thenReturn("20g carbs")
 
         val result = action.formatParams("Test tag")
 
@@ -609,7 +608,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
             whenever(profileFunction.createProfileSwitch(any(), any(), any(), any(), any(), any(), any(), any(), anyOrNull(), any(), any()))
                 .thenReturn(mock())
         }
-        whenever(rh.gs(R.string.nfccommands_profile_switch_created)).thenReturn("Profile switch created")
+        whenever(rh.gs(SyncStrings.nfccommands_profile_switch_created)).thenReturn("Profile switch created")
 
         val result = execute(NfcCommandCode.PROFILE_SWITCH, NfcParams(profileName = "Default", percent = 100))
 
@@ -636,7 +635,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     @Test
     fun `executeCommand should fail when remote commands not allowed`() {
         whenever(preferences.get(BooleanKey.NfcAllowRemoteCommands)).thenReturn(false)
-        whenever(rh.gs(R.string.nfccommands_remote_command_not_allowed)).thenReturn("Remote commands not allowed")
+        whenever(rh.gs(SyncStrings.nfccommands_remote_command_not_allowed)).thenReturn("Remote commands not allowed")
 
         val result = execute(NfcCommandCode.LOOP_STOP)
 
@@ -647,7 +646,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     fun `executeCommand BOLUS MEAL should respect cooldown`() {
         whenever(commandQueue.bolusInQueue()).thenReturn(false)
         runTest { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
-        whenever(rh.gs(R.string.nfccommands_remote_bolus_not_allowed)).thenReturn("Remote bolus not allowed")
+        whenever(rh.gs(SyncStrings.nfccommands_remote_bolus_not_allowed)).thenReturn("Remote bolus not allowed")
         val now = Constants.REMOTE_BOLUS_MIN_DISTANCE * 2
         whenever(dateUtil.now()).thenReturn(now)
         runtimeState.lastRemoteBolusTime = now
@@ -660,7 +659,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     /* COmmand Remonved
     @Test
     fun `executeCommand RESTART should exit app`() {
-        whenever(rh.gs(R.string.nfccommands_restarting)).thenReturn("Restarting")
+        whenever(rh.gs(SyncStrings.nfccommands_restarting)).thenReturn("Restarting")
 
         val result = execute(NfcCommandCode.RESTART)
 
@@ -675,8 +674,8 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     fun `executeCascade all succeed returns success with combined message`() {
         runTest { whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.DISABLED_LOOP)) }
         runTest { whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true) }
-        whenever(rh.gs(R.string.nfccommands_loop_has_been_disabled)).thenReturn("Loop disabled")
-        whenever(rh.gs(CoreUiR.string.stoptemptarget)).thenReturn("Temp basal canceled")
+        whenever(rh.gs(SyncStrings.nfccommands_loop_has_been_disabled)).thenReturn("Loop disabled")
+        whenever(rh.gs(CoreUiStrings.stoptemptarget)).thenReturn("Temp basal canceled")
 
         val cmd1 = NfcCommand(NfcCommandCode.LOOP_STOP).encode()
         val cmd2 = NfcCommand(NfcCommandCode.BASAL_STOP).encode()
@@ -693,7 +692,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand BOLUS with no insulin value is refused and no bolus is enqueued`() {
-        whenever(rh.gs(R.string.nfccommands_command_incomplete)).thenReturn("Command incomplete")
+        whenever(rh.gs(SyncStrings.nfccommands_command_incomplete)).thenReturn("Command incomplete")
 
         val result = execute(NfcCommandCode.BOLUS, NfcParams())
 
@@ -704,7 +703,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `executeCommand CARBS with no carbs value is refused`() {
-        whenever(rh.gs(R.string.nfccommands_command_incomplete)).thenReturn("Command incomplete")
+        whenever(rh.gs(SyncStrings.nfccommands_command_incomplete)).thenReturn("Command incomplete")
 
         val result = execute(NfcCommandCode.CARBS, NfcParams())
 
@@ -714,7 +713,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `a command written with the old parameter names is refused, not run on a default`() {
-        whenever(rh.gs(R.string.nfccommands_command_incomplete)).thenReturn("Command incomplete")
+        whenever(rh.gs(SyncStrings.nfccommands_command_incomplete)).thenReturn("Command incomplete")
         // How a bolus looked before the typed format: the amount was under "amount", which is not a
         // field any more, so it is dropped and the command has no insulin value at all.
         val stored = """{"code":"BOLUS","params":{"amount":2.5,"tagname":"Kitchen"}}"""
@@ -728,7 +727,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `a command with a blank profile name is refused`() {
-        whenever(rh.gs(R.string.nfccommands_command_incomplete)).thenReturn("Command incomplete")
+        whenever(rh.gs(SyncStrings.nfccommands_command_incomplete)).thenReturn("Command incomplete")
 
         val result = execute(NfcCommandCode.PROFILE_SWITCH, NfcParams(profileName = "", percent = 100))
 
@@ -742,5 +741,18 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         action.params = NfcParams(insulin = 1.0)
 
         assertThat(action.missingArgs()).isEmpty()
+    }
+
+    /**
+     * Matches a [TextRef] by owner and name.
+     *
+     * A stub written against `gs(ref, vararg args)` is never matched here. Whatever the call site
+     * passes, the mock is asked for the **single argument** `gs(ref)` and the reference it receives
+     * carries **no arguments** - measured, not assumed. So a stub has to be written against the
+     * single argument form, and it cannot tell two calls apart by the values passed. Name them
+     * apart instead, which is clearer anyway, and let the assertions check the values.
+     */
+    private fun refNamed(ref: TextRef): TextRef = argThat { actual ->
+        actual is TextRef.Named && ref is TextRef.Named && actual.owner == ref.owner && actual.name == ref.name
     }
 }

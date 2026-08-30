@@ -1,6 +1,5 @@
 package app.aaps.plugins.sync.nfcCommands.actions
 
-import androidx.annotation.StringRes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -12,25 +11,26 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.navigation.icon
-import app.aaps.plugins.sync.R
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.plugins.sync.nfcCommands.ArgType
 import app.aaps.plugins.sync.nfcCommands.NfcDefaults
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.plugins.sync.nfcCommands.NfcParams
 
 class ProfileSwitchAction(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    rh: TextResolver,
     uel: UserEntryLogger,
     private val dateUtil: DateUtil,
     private val profileFunction: ProfileFunction,
     private val profileRepository: ProfileRepository
 ) : NfcAction(aapsLogger, rh, uel) {
-    @StringRes override val labelResId = CoreUiR.string.careportal_profileswitch
+    override val label: TextRef = CoreUiStrings.careportal_profileswitch
     override val elementType = ElementType.PROFILE_MANAGEMENT
     override val argType = listOf(ArgType.PROFILE_NAME, ArgType.PERCENT)
     override val icon
@@ -57,10 +57,10 @@ class ProfileSwitchAction(
         val percentage = (params.percent ?: return invalidFormat())
             .coerceIn(NfcDefaults.PROFILE_SWITCH_PERCENT_RANGE)
         
-        val profileStore = profileRepository.profile.value ?: return NfcExecutionResult(false, rh.gs(CoreUiR.string.notconfigured))
+        val profileStore = profileRepository.profile.value ?: return NfcExecutionResult(false, rh.gs(CoreUiStrings.notconfigured))
         
         val iCfg = profileFunction.getRunningOrRequestedICfg()
-            ?: return NfcExecutionResult(false, rh.gs(CoreUiR.string.profile_switch_no_insulin))
+            ?: return NfcExecutionResult(false, rh.gs(CoreUiStrings.profile_switch_no_insulin))
 
         val created = profileFunction.createProfileSwitch(
             profileStore = profileStore,
@@ -71,8 +71,8 @@ class ProfileSwitchAction(
             timestamp = dateUtil.now(),
             action = Action.PROFILE_SWITCH,
             source = source,
-            note = rh.gs(R.string.nfccommands_profile_switch_created),
-            listValues = listOf(ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.nfccommands_profile_switch_created))),
+            note = rh.gs(SyncStrings.nfccommands_profile_switch_created),
+            listValues = listOf(ValueWithUnit.SimpleString(rh.gsNotLocalised(SyncStrings.nfccommands_profile_switch_created))),
             iCfg = iCfg,
         )
         return if (created != null) {
@@ -88,7 +88,7 @@ class ProfileSwitchAction(
             )
             NfcExecutionResult(true, resultMessage)
         } else {
-            NfcExecutionResult(false, rh.gs(CoreUiR.string.invalid_profile))
+            NfcExecutionResult(false, rh.gs(CoreUiStrings.invalid_profile))
         }
     }
 }

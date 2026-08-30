@@ -1,6 +1,5 @@
 package app.aaps.plugins.sync.nfcCommands.actions
 
-import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -9,6 +8,7 @@ import app.aaps.core.data.model.TT
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -21,28 +21,28 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.tempTargets.ttDurationMinutes
 import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.icons.IcTtEatingSoon
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.icon
-import app.aaps.plugins.sync.R
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.plugins.sync.nfcCommands.ArgType
 import app.aaps.plugins.sync.nfcCommands.NfcDefaults
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
-import java.util.concurrent.TimeUnit
-import app.aaps.core.interfaces.R as InterfacesR
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.plugins.sync.nfcCommands.NfcParams
 import app.aaps.plugins.sync.nfcCommands.NfcRuntimeState
+import java.util.concurrent.TimeUnit
 
 class BolusAction(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    rh: TextResolver,
     uel: UserEntryLogger,
     private val bolusProgressData: BolusProgressData,
     private val commandQueue: CommandQueue,
@@ -55,7 +55,7 @@ class BolusAction(
     private val profileUtil: ProfileUtil,
     private val runtimeState: NfcRuntimeState
 ) : NfcAction(aapsLogger, rh, uel) {
-    @StringRes override val labelResId = InterfacesR.string.bolus
+    override val label: TextRef = InterfacesStrings.bolus
     override val elementType = ElementType.INSULIN
     override val argType = listOf(ArgType.INSULIN, ArgType.MEAL_CHECK)
     override val icon
@@ -74,9 +74,9 @@ class BolusAction(
     override suspend fun formatParams(tagName: String): String {
         val amount = (params.insulin ?: NfcDefaults.BOLUS_INSULIN)
         val isMeal = params.isMeal
-        val base = rh.gs(CoreUiR.string.goingtodeliver, amount)
+        val base = rh.gs(CoreUiStrings.goingtodeliver, amount)
         return if (isMeal) {
-            rh.gs(CoreUiR.string.text_with_detail, base, rh.gs(CoreUiR.string.eatingsoon))
+            rh.gs(CoreUiStrings.text_with_detail, base, rh.gs(CoreUiStrings.eatingsoon))
         } else {
             base
         }
@@ -84,13 +84,13 @@ class BolusAction(
 
     override suspend fun execute(tagName: String): NfcExecutionResult {
         if (commandQueue.bolusInQueue()) {
-            return NfcExecutionResult(false, rh.gs(R.string.nfccommands_another_bolus_in_queue))
+            return NfcExecutionResult(false, rh.gs(SyncStrings.nfccommands_another_bolus_in_queue))
         }
         if (dateUtil.now() - runtimeState.lastRemoteBolusTime < Constants.REMOTE_BOLUS_MIN_DISTANCE) {
-            return NfcExecutionResult(false, rh.gs(R.string.nfccommands_remote_bolus_not_allowed))
+            return NfcExecutionResult(false, rh.gs(SyncStrings.nfccommands_remote_bolus_not_allowed))
         }
         if (loop.runningMode().pausesLoopExecution()) {
-            return NfcExecutionResult(false, rh.gs(InterfacesR.string.pumpsuspended))
+            return NfcExecutionResult(false, rh.gs(InterfacesStrings.pumpsuspended))
         }
         
         var bolus = params.insulin ?: return invalidFormat()
@@ -145,10 +145,10 @@ class BolusAction(
             }
         }
         
-        val resId = if (userStop) CoreUiR.string.stop_pressed
-        else if (isMeal) R.string.smscommunicator_meal_bolus_delivered
-        else R.string.smscommunicator_bolus_delivered
+        val message = if (userStop) CoreUiStrings.stop_pressed
+        else if (isMeal) SyncStrings.smscommunicator_meal_bolus_delivered
+        else SyncStrings.smscommunicator_bolus_delivered
         
-        return NfcExecutionResult(true, rh.gs(resId, delivered))
+        return NfcExecutionResult(true, rh.gs(message, delivered))
     }
 }

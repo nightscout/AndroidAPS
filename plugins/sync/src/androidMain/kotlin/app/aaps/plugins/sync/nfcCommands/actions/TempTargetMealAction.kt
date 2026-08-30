@@ -1,6 +1,5 @@
 package app.aaps.plugins.sync.nfcCommands.actions
 
-import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import app.aaps.core.data.model.GlucoseUnit
@@ -12,23 +11,24 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.tempTargets.ttDurationMinutes
 import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.icons.IcTtEatingSoon
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.plugins.sync.nfcCommands.ArgType
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
-import app.aaps.plugins.sync.R
 import java.util.concurrent.TimeUnit
-import app.aaps.core.ui.R as CoreUiR
 
 class TempTargetMealAction(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    rh: TextResolver,
     uel: UserEntryLogger,
     private val dateUtil: DateUtil,
     private val decimalFormatter: DecimalFormatter,
@@ -36,7 +36,7 @@ class TempTargetMealAction(
     private val preferences: Preferences,
     private val profileUtil: ProfileUtil
 ) : NfcAction(aapsLogger, rh, uel) {
-    @StringRes override val labelResId = CoreUiR.string.eatingsoon
+    override val label: TextRef = CoreUiStrings.eatingsoon
     override val elementType = ElementType.TEMP_TARGET_MANAGEMENT
     override val argType = listOf<ArgType>()
     override val icon = IcTtEatingSoon
@@ -75,6 +75,6 @@ class TempTargetMealAction(
             ),
         )
         val ttString = if (units == GlucoseUnit.MMOL) decimalFormatter.to1Decimal(tt) else decimalFormatter.to0Decimal(tt)
-        return NfcExecutionResult(true, rh.gs(R.string.nfccommands_tt_set, ttString, ttDuration))
+        return NfcExecutionResult(true, rh.gs(SyncStrings.nfccommands_tt_set, ttString, ttDuration))
     }
 }

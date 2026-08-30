@@ -1,6 +1,5 @@
 package app.aaps.plugins.sync.nfcCommands.actions
 
-import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import app.aaps.core.data.model.RM
@@ -11,29 +10,30 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.icons.IcLoopClosed
-import app.aaps.plugins.sync.R
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.plugins.sync.nfcCommands.ArgType
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
-import app.aaps.core.ui.R as CoreUiR
 
 class LoopClosedAction(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    rh: TextResolver,
     uel: UserEntryLogger,
     private val loop: Loop,
     private val profileFunction: ProfileFunction
 ) : NfcAction(aapsLogger, rh, uel) {
-    @StringRes override val labelResId = R.string.nfccommands_cmd_loop_close
+    override val label: TextRef = SyncStrings.nfccommands_cmd_loop_close
     override val elementType = ElementType.LOOP
     override val argType = listOf<ArgType>()
     override val icon = IcLoopClosed
     override val customIconColor: @Composable () -> Color = { AapsTheme.elementColors.loopClosed }
 
     override suspend fun execute(tagName: String): NfcExecutionResult {
-        val profile = profileFunction.getProfile() ?: return NfcExecutionResult(false, rh.gs(CoreUiR.string.noprofile))
+        val profile = profileFunction.getProfile() ?: return NfcExecutionResult(false, rh.gs(CoreUiStrings.noprofile))
         if (!loop.allowedNextModes().contains(RM.Mode.CLOSED_LOOP)) {
             return commandNotPossible()
         }
@@ -54,9 +54,9 @@ class LoopClosedAction(
             )
         }
         val message = if (result) {
-            rh.gs(R.string.nfccommands_current_loop_mode, rh.gs(CoreUiR.string.closedloop))
+            rh.gs(SyncStrings.nfccommands_current_loop_mode, rh.gs(CoreUiStrings.closedloop))
         } else {
-            rh.gs(R.string.nfccommands_remote_command_not_possible)
+            rh.gs(SyncStrings.nfccommands_remote_command_not_possible)
         }
         return NfcExecutionResult(result, message)
     }

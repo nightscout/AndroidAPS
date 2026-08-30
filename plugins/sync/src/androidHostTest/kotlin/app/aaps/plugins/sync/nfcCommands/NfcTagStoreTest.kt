@@ -1,8 +1,8 @@
 package app.aaps.plugins.sync.nfcCommands
 
 import app.aaps.core.keys.StringNonKey
-import app.aaps.shared.tests.AAPSLoggerTest
 import app.aaps.plugins.sync.nfcCommands.NfcCommand
+import app.aaps.shared.tests.AAPSLoggerTest
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

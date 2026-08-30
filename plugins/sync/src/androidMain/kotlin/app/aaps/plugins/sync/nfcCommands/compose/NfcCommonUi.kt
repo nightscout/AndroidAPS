@@ -17,7 +17,6 @@ import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -25,10 +24,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.icons.IcPluginNfc
 import app.aaps.core.ui.compose.navigation.color
-import app.aaps.plugins.sync.R
-import app.aaps.core.ui.R as CoreUiR
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.plugins.sync.nfcCommands.NfcCommand
 import app.aaps.plugins.sync.nfcCommands.NfcCommandCode
 import app.aaps.plugins.sync.nfcCommands.NfcCommandsPlugin
@@ -70,12 +70,12 @@ fun NfcExecutionConfirmationDialog(
         },
         confirmButton = {
             TextButton(onClick = onConfirm) {
-                Text(stringResource(CoreUiR.string.ok))
+                Text(stringResource(CoreUiStrings.ok))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(CoreUiR.string.cancel))
+                Text(stringResource(CoreUiStrings.cancel))
             }
         },
         properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = false)
@@ -131,7 +131,7 @@ fun NfcCommandDisplay(
             text = buildAnnotatedString {
                 withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
                     append(" ")
-                    append(stringResource(action.labelResId))
+                    append(stringResource(action.label))
                 }
                 if (detail != null) {
                     append(" ")
@@ -142,7 +142,7 @@ fun NfcCommandDisplay(
         )
         if (isIncomplete) {
             Text(
-                text = stringResource(R.string.nfccommands_value_missing),
+                text = stringResource(SyncStrings.nfccommands_value_missing),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.error
             )

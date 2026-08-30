@@ -6,12 +6,12 @@ import android.content.Intent
 import android.nfc.NfcAdapter
 import android.nfc.NfcManager
 import android.os.Build
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.keys.BooleanKey
-import app.aaps.plugins.sync.R
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.plugins.sync.SyncStrings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
@@ -63,14 +63,14 @@ class NfcForegroundDispatch(
         })
     }
 
-    fun observeWarning(scope: CoroutineScope, rxBus: RxBus, rh: ResourceHelper) {
+    fun observeWarning(scope: CoroutineScope, rxBus: RxBus, rh: TextResolver) {
         scope.launch {
             preferences.observe(BooleanKey.NfcForegroundPriority).drop(1).collect { enabled ->
                 if (enabled) {
                     rxBus.send(
                         EventShowDialog.Ok(
-                            title = rh.gs(R.string.nfc_foreground_priority_warning_title),
-                            message = rh.gs(R.string.nfc_foreground_priority_warning_message),
+                            title = rh.gs(SyncStrings.nfc_foreground_priority_warning_title),
+                            message = rh.gs(SyncStrings.nfc_foreground_priority_warning_message),
                         )
                     )
                 }

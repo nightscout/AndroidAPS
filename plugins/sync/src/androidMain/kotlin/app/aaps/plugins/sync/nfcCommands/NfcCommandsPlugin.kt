@@ -11,22 +11,22 @@ import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.di.NotNSClient
+import app.aaps.core.interfaces.iob.GlucoseStatusProvider
+import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.iob.GlucoseStatusProvider
-import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.di.NotNSClient
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
@@ -39,17 +39,17 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.withClick
 import app.aaps.core.ui.compose.icons.IcPluginNfc
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
-import app.aaps.plugins.sync.R
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.plugins.sync.nfcCommands.actions.NfcAction
 import app.aaps.plugins.sync.nfcCommands.actions.pumpBasalDurationStep
 import app.aaps.plugins.sync.nfcCommands.compose.NfcCommandsComposeContent
 import app.aaps.plugins.sync.nfcCommands.keys.NfcIntentKey
-import java.nio.charset.StandardCharsets
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
+import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 
 /**
@@ -82,9 +82,7 @@ data class NfcExecutionResult(
 @SingleIn(AppScope::class)
 class NfcCommandsPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    // Narrows PluginBase.rh, which is a TextResolver and so only takes TextRef. This module still owns
-    // AAPT resources, so it needs the resource id overloads. Same as SmsCommunicatorPlugin.
-    override val rh: ResourceHelper,
+    rh: TextResolver,
     preferences: Preferences,
     val nfcTagStore: NfcTagStore,
     val actionFactory: NfcActionFactory,
@@ -113,9 +111,9 @@ class NfcCommandsPlugin @Inject constructor(
         .mainType(PluginType.SYNC)
         .icon(IcPluginNfc)
         .composeContent { NfcCommandsComposeContent(it as NfcCommandsPlugin) }
-        .pluginName(TextRef.AndroidRes(R.string.nfccommands))
-        .shortName(TextRef.AndroidRes(R.string.nfccommands_shortname))
-        .description(TextRef.AndroidRes(R.string.description_nfc_communicator)),
+        .pluginName(SyncStrings.nfccommands)
+        .shortName(SyncStrings.nfccommands_shortname)
+        .description(SyncStrings.description_nfc_communicator),
     ownPreferences = emptyList(),
     aapsLogger,
     rh,
@@ -123,13 +121,13 @@ class NfcCommandsPlugin @Inject constructor(
 ) {
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
         key = "nfccommunicator_settings",
-        titleResId = R.string.nfccommands,
+        title = SyncStrings.nfccommands,
         items = listOf(
             BooleanKey.NfcAllowRemoteCommands,
             BooleanKey.NfcForegroundPriority,
             NfcIntentKey.ClearLog.withClick {
                 nfcTagStore.clearLog()
-                showMessage(rh.gs(R.string.nfccommands_log_cleared), EventShowSnackbar.Type.Success)
+                showMessage(rh.gs(SyncStrings.nfccommands_log_cleared), EventShowSnackbar.Type.Success)
             },
         ),
         icon = pluginDescription.icon,
@@ -142,12 +140,12 @@ class NfcCommandsPlugin @Inject constructor(
      */
     fun prepareExecution(tagUid: String): NfcPrepareResult {
         runtimeState.clearWizardPreviews()
-        if (!isEnabled()) return NfcPrepareResult.Error(rh.gs(R.string.nfccommands_plugin_disabled))
+        if (!isEnabled()) return NfcPrepareResult.Error(rh.gs(SyncStrings.nfccommands_plugin_disabled))
         
         val tag = nfcTagStore.findTagByUid(tagUid)
         if (tag == null) {
             aapsLogger.debug(LTag.NFC, "No registered tag found for UID: $tagUid")
-            return NfcPrepareResult.Error(rh.gs(R.string.nfccommands_tag_not_registered))
+            return NfcPrepareResult.Error(rh.gs(SyncStrings.nfccommands_tag_not_registered))
         }
         return NfcPrepareResult.Ready(tagUid = tagUid, tagName = tag.name, commands = tag.commands)
     }
@@ -211,7 +209,7 @@ class NfcCommandsPlugin @Inject constructor(
     suspend fun executeCommand(command: String, tagName: String = ""): NfcExecutionResult {
         aapsLogger.debug(LTag.NFC, "Executing NFC command: $command")
         val decoded = NfcCommand.decode(command)
-            ?: return NfcExecutionResult(false, rh.gs(R.string.nfccommands_unknown_command))
+            ?: return NfcExecutionResult(false, rh.gs(SyncStrings.nfccommands_unknown_command))
         return routeAction(decoded.code, decoded.params, tagName)
     }
 
@@ -228,7 +226,7 @@ class NfcCommandsPlugin @Inject constructor(
     private suspend fun requireRemoteCommands(block: suspend () -> NfcExecutionResult): NfcExecutionResult {
         val remoteAllowed = preferences.get(BooleanKey.NfcAllowRemoteCommands)
         if (!remoteAllowed) {
-            return NfcExecutionResult(false, rh.gs(R.string.nfccommands_remote_command_not_allowed))
+            return NfcExecutionResult(false, rh.gs(SyncStrings.nfccommands_remote_command_not_allowed))
         }
         return block()
     }
@@ -237,7 +235,7 @@ class NfcCommandsPlugin @Inject constructor(
      * Entry point for processing Android NFC Intents.
      */
     fun processIntent(intent: Intent?): NfcPrepareResult {
-        if (!isEnabled()) return NfcPrepareResult.Error(rh.gs(R.string.nfccommands_plugin_disabled))
+        if (!isEnabled()) return NfcPrepareResult.Error(rh.gs(SyncStrings.nfccommands_plugin_disabled))
         if (intent == null) return NfcPrepareResult.Error("")
 
         @Suppress("DEPRECATION")

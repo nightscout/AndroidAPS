@@ -1,25 +1,25 @@
 package app.aaps.plugins.sync.nfcCommands.actions
 
-import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.icons.IcAaps
+import app.aaps.plugins.sync.SyncStrings
+import app.aaps.plugins.sync.nfcCommands.ArgType
 import app.aaps.plugins.sync.nfcCommands.NfcCommand
 import app.aaps.plugins.sync.nfcCommands.NfcCommandCode
-import app.aaps.plugins.sync.nfcCommands.NfcParams
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
-import app.aaps.plugins.sync.R
-import app.aaps.plugins.sync.nfcCommands.ArgType
+import app.aaps.plugins.sync.nfcCommands.NfcParams
 import app.aaps.plugins.sync.nfcCommands.isSetIn
 
 /**
@@ -34,7 +34,7 @@ import app.aaps.plugins.sync.nfcCommands.isSetIn
  */
 abstract class NfcAction(
     protected val aapsLogger: AAPSLogger,
-    protected val rh: ResourceHelper,
+    protected val rh: TextResolver,
     protected val uel: UserEntryLogger
 ) {
 
@@ -43,8 +43,8 @@ abstract class NfcAction(
     /** Parameters for this action instance. Uses Compose State to trigger UI updates. */
     var params: NfcParams by mutableStateOf(NfcParams())
 
-    /** Resource ID for the user-facing label of the action. */
-    @StringRes open val labelResId: Int = 0
+    /** The user-facing label of the action. */
+    abstract val label: TextRef
     
     /** UI theme element type for icon coloring. */
     open val elementType: ElementType = ElementType.AAPS
@@ -101,7 +101,7 @@ abstract class NfcAction(
             LTag.NFC,
             "Not running ${this::class.simpleName}: the stored command has no value for $missing"
         )
-        return NfcExecutionResult(false, rh.gs(R.string.nfccommands_command_incomplete))
+        return NfcExecutionResult(false, rh.gs(SyncStrings.nfccommands_command_incomplete))
     }
 
     /**
@@ -129,9 +129,9 @@ abstract class NfcAction(
 
     /** Helper for reporting invalid parameter formats. */
     protected fun invalidFormat(): NfcExecutionResult =
-        NfcExecutionResult(false, rh.gs(R.string.wrong_format))
+        NfcExecutionResult(false, rh.gs(SyncStrings.wrong_format))
 
     /** Helper for reporting that a command cannot be executed in the current state. */
     protected fun commandNotPossible(): NfcExecutionResult =
-        NfcExecutionResult(false, rh.gs(R.string.nfccommands_remote_command_not_possible))
+        NfcExecutionResult(false, rh.gs(SyncStrings.nfccommands_remote_command_not_possible))
 }

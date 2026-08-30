@@ -5,19 +5,16 @@ import android.nfc.NdefMessage
 import android.nfc.NdefRecord
 import android.nfc.NfcAdapter
 import android.nfc.Tag
-import app.aaps.core.interfaces.iob.GlucoseStatusProvider
-import app.aaps.core.interfaces.pump.BolusProgressData
-import app.aaps.core.interfaces.scenes.SceneAutomationApi
-import app.aaps.core.interfaces.scenes.SceneIconResolver
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.shared.tests.TestBaseWithProfile
+import com.google.common.truth.Truth.assertThat
+import java.nio.charset.StandardCharsets
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import java.nio.charset.StandardCharsets
-import com.google.common.truth.Truth.assertThat
 
 class NfcControlActivityTest : TestBaseWithProfile() {
     private lateinit var pluginUnderTest: NfcCommandsPlugin
@@ -77,10 +74,8 @@ class NfcControlActivityTest : TestBaseWithProfile() {
             ),
         )
         pluginUnderTest.setPluginEnabledBlocking(app.aaps.core.data.plugin.PluginType.SYNC, true)
-        whenever(rh.gs(any<Int>())).thenReturn("Mock String")
-        whenever(rh.gs(any<Int>(), any())).thenReturn("Mock String")
-        whenever(rh.gsNotLocalised(any<Int>())).thenReturn("Mock String")
-        whenever(rh.gsNotLocalised(any<Int>(), any())).thenReturn("Mock String")
+        whenever(rh.gs(any<TextRef>())).thenReturn("Mock String")
+        whenever(rh.gsNotLocalised(any<TextRef>())).thenReturn("Mock String")
     }
 
     private val runtimeState = NfcRuntimeState()
@@ -105,7 +100,7 @@ class NfcControlActivityTest : TestBaseWithProfile() {
     @Test
     fun `processIntent does nothing when plugin disabled`() {
         pluginUnderTest.setPluginEnabledBlocking(app.aaps.core.data.plugin.PluginType.SYNC, false)
-        whenever(rh.gs(any<Int>())).thenReturn("Disabled")
+        whenever(rh.gs(any<TextRef>())).thenReturn("Disabled")
 
         val result = process(createNfcIntent(mockNfcTag(fakeUid)))
 

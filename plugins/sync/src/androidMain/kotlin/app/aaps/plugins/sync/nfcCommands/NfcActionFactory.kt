@@ -13,7 +13,7 @@ import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.scenes.SceneIconResolver
 import app.aaps.core.interfaces.utils.DateUtil
@@ -76,7 +76,7 @@ class NfcActionFactory @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val profileRepository: ProfileRepository,
     private val profileUtil: ProfileUtil,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val runtimeState: NfcRuntimeState,
     private val sceneAutomationApi: SceneAutomationApi,
     private val sceneIconResolver: SceneIconResolver,

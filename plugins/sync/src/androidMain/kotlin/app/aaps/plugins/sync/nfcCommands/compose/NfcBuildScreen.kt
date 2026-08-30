@@ -80,7 +80,6 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -88,6 +87,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.keys.DoubleKey
@@ -100,14 +100,15 @@ import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.compose.icons.IcTtManual
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.icon
-import app.aaps.plugins.sync.R
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.plugins.sync.nfcCommands.ArgType
 import app.aaps.plugins.sync.nfcCommands.NfcCategories
 import app.aaps.plugins.sync.nfcCommands.NfcCommand
 import app.aaps.plugins.sync.nfcCommands.NfcCommandCode
-import app.aaps.plugins.sync.nfcCommands.NfcDefaults
 import app.aaps.plugins.sync.nfcCommands.NfcCommandsPlugin
 import app.aaps.plugins.sync.nfcCommands.NfcCreatedTag
+import app.aaps.plugins.sync.nfcCommands.NfcDefaults
 import app.aaps.plugins.sync.nfcCommands.NfcLogEntry
 import app.aaps.plugins.sync.nfcCommands.NfcParams
 import app.aaps.plugins.sync.nfcCommands.NfcTagStore
@@ -115,8 +116,6 @@ import app.aaps.plugins.sync.nfcCommands.NfcUiCategory
 import app.aaps.plugins.sync.nfcCommands.actions.NfcAction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import app.aaps.core.interfaces.R as InterfacesR
-import app.aaps.core.ui.R as CoreUiR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -187,9 +186,9 @@ fun NfcBuildScreen(
         }
     }
 
-    val title = if (isEditMode) stringResource(R.string.nfccommands_rename_tag_title) else stringResource(R.string.nfccommands_write_tag)
-    val backDesc = stringResource(CoreUiR.string.back)
-    val saveDesc = stringResource(CoreUiR.string.save)
+    val title = if (isEditMode) stringResource(SyncStrings.nfccommands_rename_tag_title) else stringResource(SyncStrings.nfccommands_write_tag)
+    val backDesc = stringResource(CoreUiStrings.back)
+    val saveDesc = stringResource(CoreUiStrings.save)
 
     val onSave: () -> Unit = {
         if (initialTag != null) {
@@ -247,23 +246,23 @@ fun NfcBuildScreen(
     if (state.showDiscardConfirm) {
         AlertDialog(
             onDismissRequest = { state.showDiscardConfirm = false },
-            title = { Text(stringResource(R.string.nfccommands_discard_title)) },
-            text = { Text(stringResource(R.string.nfccommands_discard_message)) },
+            title = { Text(stringResource(SyncStrings.nfccommands_discard_title)) },
+            text = { Text(stringResource(SyncStrings.nfccommands_discard_message)) },
             confirmButton = {
                 Row {
                     TextButton(onClick = {
                         state.showDiscardConfirm = false
                         onBack()
-                    }) { Text(stringResource(CoreUiR.string.confirm)) }
+                    }) { Text(stringResource(CoreUiStrings.confirm)) }
                     TextButton(onClick = {
                         state.showDiscardConfirm = false
                         onSave()
-                    }) { Text(stringResource(CoreUiR.string.save)) }
+                    }) { Text(stringResource(CoreUiStrings.save)) }
                 }
             },
             dismissButton = {
                 TextButton(onClick = { state.showDiscardConfirm = false }) {
-                    Text(stringResource(R.string.cancel))
+                    Text(stringResource(SyncStrings.cancel))
                 }
             },
         )
@@ -302,8 +301,8 @@ fun NfcBuildScreen(
                     val ndefWritten = buildAndWriteNdef(tag, plugin)
                     val outcome = if (ndefWritten) WriteOutcome.NDEF_WRITTEN else WriteOutcome.GENERIC_ASSIGNED
                     val message = when (outcome) {
-                        WriteOutcome.NDEF_WRITTEN -> plugin.rh.gs(R.string.nfccommands_tag_written)
-                        else -> plugin.rh.gs(R.string.nfccommands_tag_assigned_generic)
+                        WriteOutcome.NDEF_WRITTEN -> plugin.rh.gs(SyncStrings.nfccommands_tag_written)
+                        else -> plugin.rh.gs(SyncStrings.nfccommands_tag_assigned_generic)
                     }
                     plugin.nfcTagStore.appendLogEntry(
                         NfcLogEntry(
@@ -347,17 +346,17 @@ fun NfcBuildScreen(
     if (state.showBlankNameDialog) {
         AlertDialog(
             onDismissRequest = { state.showBlankNameDialog = false },
-            title = { Text(stringResource(R.string.nfccommands_blank_name_confirm_title)) },
-            text = { Text(stringResource(R.string.nfccommands_blank_name_confirm_message)) },
+            title = { Text(stringResource(SyncStrings.nfccommands_blank_name_confirm_title)) },
+            text = { Text(stringResource(SyncStrings.nfccommands_blank_name_confirm_message)) },
             confirmButton = {
                 TextButton(onClick = {
                     state.showBlankNameDialog = false
                     state.isWritingMode = true
-                }) { Text(stringResource(R.string.nfccommands_blank_name_confirm_write_anyway)) }
+                }) { Text(stringResource(SyncStrings.nfccommands_blank_name_confirm_write_anyway)) }
             },
             dismissButton = {
                 TextButton(onClick = { state.showBlankNameDialog = false }) {
-                    Text(stringResource(R.string.cancel))
+                    Text(stringResource(SyncStrings.cancel))
                 }
             },
         )
@@ -366,14 +365,14 @@ fun NfcBuildScreen(
     if (state.showOverwriteConfirm) {
         AlertDialog(
             onDismissRequest = { state.showOverwriteConfirm = false },
-            title = { Text(stringResource(R.string.nfccommands_tag_already_registered_title)) },
+            title = { Text(stringResource(SyncStrings.nfccommands_tag_already_registered_title)) },
             text = {
                 val newName = state.tagName.ifBlank {
-                    state.chain.firstOrNull()?.meta?.labelResId?.let { stringResource(it) } ?: ""
+                    state.chain.firstOrNull()?.meta?.label?.let { stringResource(it) } ?: ""
                 }
                 Text(
                     stringResource(
-                        R.string.nfccommands_tag_already_registered_message,
+                        SyncStrings.nfccommands_tag_already_registered_message,
                         state.overwriteExistingName,
                         newName
                     )
@@ -385,7 +384,7 @@ fun NfcBuildScreen(
                         state.showOverwriteConfirm = false
                         onBack()
                     }) {
-                        Text(stringResource(R.string.nfccommands_discard_and_exit))
+                        Text(stringResource(SyncStrings.nfccommands_discard_and_exit))
                     }
                     TextButton(onClick = {
                         state.showOverwriteConfirm = false
@@ -409,19 +408,19 @@ fun NfcBuildScreen(
                                 tagName = name,
                                 action = "WRITE",
                                 success = true,
-                                message = plugin.rh.gs(R.string.nfccommands_tag_reassigned),
+                                message = plugin.rh.gs(SyncStrings.nfccommands_tag_reassigned),
                             ),
                         )
                         state.chain.clear()
                         onTagWritten()
                     }) {
-                        Text(stringResource(R.string.nfccommands_overwrite))
+                        Text(stringResource(SyncStrings.nfccommands_overwrite))
                     }
                 }
             },
             dismissButton = {
                 TextButton(onClick = { state.showOverwriteConfirm = false }) {
-                    Text(stringResource(R.string.nfccommands_cancel_scan))
+                    Text(stringResource(SyncStrings.nfccommands_cancel_scan))
                 }
             },
         )
@@ -460,7 +459,7 @@ fun NfcBuildScreen(
             onValueChange = { 
                 state.tagName = it
             },
-            label = { Text(stringResource(R.string.nfccommands_tag_name_hint)) },
+            label = { Text(stringResource(SyncStrings.nfccommands_tag_name_hint)) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
@@ -469,26 +468,26 @@ fun NfcBuildScreen(
 
         if (initialTag != null) {
             Text(
-                text = stringResource(R.string.nfccommands_tag_id_label, initialTag.tagUid),
+                text = stringResource(SyncStrings.nfccommands_tag_id_label, initialTag.tagUid),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(horizontal = 4.dp)
             )
         } else if (initialTagUid != null) {
             Text(
-                text = stringResource(R.string.nfccommands_tag_id_label, initialTagUid),
+                text = stringResource(SyncStrings.nfccommands_tag_id_label, initialTagUid),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(horizontal = 4.dp)
             )
         }
 
-        SectionDivider(label = stringResource(R.string.nfccommands_chain_title))
+        SectionDivider(label = stringResource(SyncStrings.nfccommands_chain_title))
 
         // Section 2: Command state.chain (Editable list)
         if (state.chain.isEmpty()) {
             Text(
-                text = stringResource(R.string.nfccommands_cascade_empty),
+                text = stringResource(SyncStrings.nfccommands_cascade_empty),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp)
@@ -517,7 +516,7 @@ fun NfcBuildScreen(
         ) {
             Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(18.dp))
             Spacer(Modifier.size(8.dp))
-            Text(stringResource(CoreUiR.string.add))
+            Text(stringResource(CoreUiStrings.add))
         }
 
         Spacer(Modifier.height(16.dp))
@@ -531,7 +530,7 @@ fun NfcBuildScreen(
                 enabled = state.chain.isNotEmpty(),
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text(stringResource(R.string.nfccommands_write_tag))
+                Text(stringResource(SyncStrings.nfccommands_write_tag))
             }
         }
 
@@ -592,7 +591,7 @@ private fun InlineActionCard(
                 }
                 Spacer(modifier = Modifier.size(2.dp))
                 Text(
-                    text = stringResource(meta.labelResId),
+                    text = stringResource(meta.label),
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.weight(1f)
@@ -633,14 +632,14 @@ private fun ChooseActionSheet(
                 .verticalScroll(rememberScrollState())
         ) {
             Text(
-                text = stringResource(R.string.nfccommands_add_action),
+                text = stringResource(SyncStrings.nfccommands_add_action),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold
             )
             Spacer(Modifier.height(16.dp))
             categories.forEach { cat ->
                 Text(
-                    text = stringResource(cat.labelResId),
+                    text = stringResource(cat.label),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(vertical = 6.dp)
@@ -657,7 +656,7 @@ private fun ChooseActionSheet(
                                 onPick(code)
                                 onDismiss()
                             },
-                            label = { Text(stringResource(action.labelResId)) },
+                            label = { Text(stringResource(action.label)) },
                             leadingIcon = {
                                 Icon(
                                     imageVector = action.icon,
@@ -704,7 +703,7 @@ private fun NfcWriteDialog(
         onDismissRequest = {},
         title = {
             Text(
-                stringResource(R.string.nfccommands_write_ready),
+                stringResource(SyncStrings.nfccommands_write_ready),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -755,7 +754,7 @@ private fun NfcWriteDialog(
                     text =
                         chain
                             .mapIndexed { i, cmd ->
-                                stringResource(R.string.nfccommands_cascade_step_label, i + 1, cmd)
+                                stringResource(SyncStrings.nfccommands_cascade_step_label, i + 1, cmd)
                             }.joinToString("\n"),
                     style = MaterialTheme.typography.bodySmall,
                     textAlign = TextAlign.Center,
@@ -765,7 +764,7 @@ private fun NfcWriteDialog(
         },
         confirmButton = {},
         dismissButton = {
-            TextButton(onClick = onCancel) { Text(stringResource(R.string.cancel)) }
+            TextButton(onClick = onCancel) { Text(stringResource(SyncStrings.cancel)) }
         },
     )
 }
@@ -923,7 +922,7 @@ class GenericNfcUiAction(
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
             if (argTypes.isEmpty()) {
                 Text(
-                    text = stringResource(R.string.nfccommands_no_args_needed),
+                    text = stringResource(SyncStrings.nfccommands_no_args_needed),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -957,13 +956,13 @@ class GenericNfcUiAction(
                         value = profileName.ifEmpty { profileNames.firstOrNull() ?: "" },
                         options = profileNames.map { it to it },
                         onValueChange = { profileName = it; onChange() },
-                        label = stringResource(CoreUiR.string.profile)
+                        label = stringResource(CoreUiStrings.profile)
                     )
                     ArgType.SCENE_ID -> NfcDropdown(
                         value = sceneId.ifEmpty { sceneNames.firstOrNull()?.first ?: "" },
                         options = sceneNames,
                         onValueChange = { sceneId = it; onChange() },
-                        label = stringResource(CoreUiR.string.scenes)
+                        label = stringResource(CoreUiStrings.scenes)
                     )
                     ArgType.GLUCOSE_TARGET -> GlucoseInputRow(plugin, glucose) { glucose = it; onChange() }
                     ArgType.BOLUS_WIZARD_OPTIONS -> CalculatorOptions(useBg, useTT, useTrend, useIOB, useCOB,
@@ -1024,7 +1023,7 @@ fun NfcDropdown(
 private fun InsulinInputRow(plugin: NfcCommandsPlugin, value: Double, onValueChange: (Double) -> Unit) {
     val bolusStep = plugin.activePlugin.activePump.pumpDescription.bolusStep
     NumberInputRow(
-        labelResId = CoreUiR.string.overview_insulin_label,
+        labelRef = CoreUiStrings.overview_insulin_label,
         value = value,
         onValueChange = onValueChange,
         valueRange = 0.0..30.0,
@@ -1043,7 +1042,7 @@ private fun InsulinInputRow(plugin: NfcCommandsPlugin, value: Double, onValueCha
 @Composable
 private fun AmountGramsInputRow(plugin: NfcCommandsPlugin, value: Int, onValueChange: (Int) -> Unit) {
     NumberInputRow(
-        labelResId = InterfacesR.string.carbs,
+        labelRef = InterfacesStrings.carbs,
         value = value.toDouble(),
         onValueChange = { onValueChange(it.toInt()) },
         valueRange = 0.0..200.0,
@@ -1062,7 +1061,7 @@ private fun AmountGramsInputRow(plugin: NfcCommandsPlugin, value: Int, onValueCh
 @Composable
 private fun DurationInputRow(value: Double, range: ClosedFloatingPointRange<Double>, step: Double, onValueChange: (Double) -> Unit) {
     NumberInputRow(
-        labelResId = CoreUiR.string.duration_label,
+        labelRef = CoreUiStrings.duration_label,
         value = value,
         onValueChange = onValueChange,
         valueRange = range,
@@ -1075,7 +1074,7 @@ private fun DurationInputRow(value: Double, range: ClosedFloatingPointRange<Doub
 @Composable
 private fun RateInputRow(value: Double, onValueChange: (Double) -> Unit) {
     NumberInputRow(
-        labelResId = R.string.nfccommands_basal_rate_label,
+        labelRef = SyncStrings.nfccommands_basal_rate_label,
         value = value,
         onValueChange = onValueChange,
         valueRange = 0.0..10.0,
@@ -1088,7 +1087,7 @@ private fun RateInputRow(value: Double, onValueChange: (Double) -> Unit) {
 @Composable
 private fun PercentInputRow(value: Double, range: ClosedFloatingPointRange<Double> = 0.0..200.0, step: Double = 10.0, onValueChange: (Double) -> Unit) {
     NumberInputRow(
-        labelResId = CoreUiR.string.percent,
+        labelRef = CoreUiStrings.percent,
         value = value,
         onValueChange = onValueChange,
         valueRange = range,
@@ -1102,7 +1101,7 @@ private fun PercentInputRow(value: Double, range: ClosedFloatingPointRange<Doubl
 private fun MealCheckRow(checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Checkbox(checked = checked, onCheckedChange = onCheckedChange)
-        Text(stringResource(R.string.nfccommands_meal_bolus))
+        Text(stringResource(SyncStrings.nfccommands_meal_bolus))
     }
 }
 
@@ -1186,7 +1185,7 @@ private fun GlucoseInputRow(plugin: NfcCommandsPlugin, value: Double, onValueCha
     val format = if (isMmol) NumberFormat.DECIMAL_1 else NumberFormat.INTEGER
     
     NumberInputRow(
-        labelResId = CoreUiR.string.target_label,
+        labelRef = CoreUiStrings.target_label,
         value = value,
         onValueChange = onValueChange,
         valueRange = range,

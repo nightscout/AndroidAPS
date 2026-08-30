@@ -1,8 +1,8 @@
 package app.aaps.plugins.sync.nfcCommands.actions
 
-import androidx.annotation.StringRes
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -13,25 +13,25 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.navigation.icon
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.plugins.sync.nfcCommands.ArgType
 import app.aaps.plugins.sync.nfcCommands.NfcDefaults
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
-import app.aaps.plugins.sync.R
-import app.aaps.core.interfaces.R as InterfacesR
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.plugins.sync.nfcCommands.NfcParams
 import app.aaps.plugins.sync.nfcCommands.NfcRuntimeState
 
 class BolusWizardAction(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    rh: TextResolver,
     uel: UserEntryLogger,
     private val commandQueue: CommandQueue,
     private val dateUtil: DateUtil,
@@ -43,7 +43,7 @@ class BolusWizardAction(
     private val runtimeState: NfcRuntimeState,
     private val wizardBolusExecutor: WizardBolusExecutor
 ) : NfcAction(aapsLogger, rh, uel) {
-    @StringRes override val labelResId = CoreUiR.string.boluswizard
+    override val label: TextRef = CoreUiStrings.boluswizard
     override val elementType = ElementType.BOLUS_WIZARD
     override val argType = listOf(ArgType.BOLUS_WIZARD_OPTIONS, ArgType.AMOUNT_GRAMS, ArgType.PERCENT)
     override val icon
@@ -78,8 +78,8 @@ class BolusWizardAction(
                 // execute() commits it by id through the shared WizardBolusExecutor (identical to wear /
                 // client-control), instead of re-driving a shared/leftover BolusWizard instance.
                 runtimeState.setWizardPreview(params.toString(), prepared)
-                val base = rh.gs(CoreUiR.string.goingtodeliver, prepared.insulin)
-                val carbs = rh.gs(InterfacesR.string.format_carbs, amount)
+                val base = rh.gs(CoreUiStrings.goingtodeliver, prepared.insulin)
+                val carbs = rh.gs(InterfacesStrings.format_carbs, amount)
                 "$base ($carbs)"
             }
             is WizardBolusExecutor.PrepareResult.Error   -> prepared.message
@@ -89,13 +89,13 @@ class BolusWizardAction(
 
     override suspend fun execute(tagName: String): NfcExecutionResult {
         if (commandQueue.bolusInQueue()) {
-            return NfcExecutionResult(false, rh.gs(R.string.nfccommands_another_bolus_in_queue))
+            return NfcExecutionResult(false, rh.gs(SyncStrings.nfccommands_another_bolus_in_queue))
         }
         if (dateUtil.now() - runtimeState.lastRemoteBolusTime < Constants.REMOTE_BOLUS_MIN_DISTANCE) {
-            return NfcExecutionResult(false, rh.gs(R.string.nfccommands_remote_bolus_not_allowed))
+            return NfcExecutionResult(false, rh.gs(SyncStrings.nfccommands_remote_bolus_not_allowed))
         }
         if (loop.runningMode().pausesLoopExecution()) {
-            return NfcExecutionResult(false, rh.gs(InterfacesR.string.pumpsuspended))
+            return NfcExecutionResult(false, rh.gs(InterfacesStrings.pumpsuspended))
         }
 
         val prepared = runtimeState.getWizardPreview(params.toString())
@@ -118,7 +118,7 @@ class BolusWizardAction(
         }
 
         runtimeState.lastRemoteBolusTime = dateUtil.now()
-        return NfcExecutionResult(true, rh.gs(R.string.smscommunicator_bolus_delivered, prepared.insulin))
+        return NfcExecutionResult(true, rh.gs(SyncStrings.smscommunicator_bolus_delivered, prepared.insulin))
     }
 
     /**

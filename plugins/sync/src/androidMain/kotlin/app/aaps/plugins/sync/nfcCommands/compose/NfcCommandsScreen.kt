@@ -48,32 +48,32 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsFab
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.navigation.color
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.text.DateFormat
-import app.aaps.plugins.sync.R
-import app.aaps.core.ui.R as CoreUiR
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.plugins.sync.nfcCommands.NfcCommand
 import app.aaps.plugins.sync.nfcCommands.NfcCommandCode
 import app.aaps.plugins.sync.nfcCommands.NfcCommandsPlugin
-import app.aaps.plugins.sync.nfcCommands.vibrateForNfcResult
-import app.aaps.plugins.sync.nfcCommands.NfcParams
 import app.aaps.plugins.sync.nfcCommands.NfcCreatedTag
 import app.aaps.plugins.sync.nfcCommands.NfcLogEntry
+import app.aaps.plugins.sync.nfcCommands.NfcParams
 import app.aaps.plugins.sync.nfcCommands.NfcTagStore
+import app.aaps.plugins.sync.nfcCommands.vibrateForNfcResult
+import java.text.DateFormat
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 private sealed class NfcRoute {
     object Main : NfcRoute()
@@ -143,8 +143,8 @@ fun NfcCommandsScreen(
     onTabChanged: (Int) -> Unit,
 ) {
     val tabTitles = listOf(
-        stringResource(R.string.nfccommands_tab_log),
-        stringResource(R.string.nfccommands),
+        stringResource(SyncStrings.nfccommands_tab_log),
+        stringResource(SyncStrings.nfccommands),
     )
 
     val pagerState = rememberPagerState(initialPage = initialTab) { tabTitles.size }
@@ -154,8 +154,8 @@ fun NfcCommandsScreen(
         onTabChanged(pagerState.currentPage)
     }
 
-    val title = stringResource(R.string.nfccommands)
-    val backDesc = stringResource(CoreUiR.string.back)
+    val title = stringResource(SyncStrings.nfccommands)
+    val backDesc = stringResource(CoreUiStrings.back)
 
     LaunchedEffect(Unit) {
         setToolbarConfig(
@@ -169,7 +169,7 @@ fun NfcCommandsScreen(
                 actions = {
                     if (onSettings != null) {
                         IconButton(onClick = onSettings) {
-                            Icon(Icons.Default.Settings, contentDescription = stringResource(CoreUiR.string.settings))
+                            Icon(Icons.Default.Settings, contentDescription = stringResource(CoreUiStrings.settings))
                         }
                     }
                 },
@@ -226,12 +226,12 @@ private fun NfcLogScreen(nfcTagStore: NfcTagStore) {
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
-                    text = stringResource(R.string.nfccommands_log_empty_title),
+                    text = stringResource(SyncStrings.nfccommands_log_empty_title),
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.padding(bottom = 8.dp),
                 )
                 Text(
-                    text = stringResource(R.string.nfccommands_log_empty_body),
+                    text = stringResource(SyncStrings.nfccommands_log_empty_body),
                     style = MaterialTheme.typography.bodyMedium,
                 )
             }
@@ -254,9 +254,9 @@ private fun NfcLogEntryCard(entry: NfcLogEntry) {
     val dateFormatter = remember { DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT) }
     val color = if (entry.success) Color(0xFF4CAF50) else Color(0xFFF44336)
     val actionLabel = when (entry.action) {
-        "READ" -> stringResource(R.string.nfccommands_log_action_read)
-        "WRITE" -> stringResource(R.string.nfccommands_log_action_write)
-        "MANUAL" -> stringResource(R.string.nfccommands_log_action_manual)
+        "READ" -> stringResource(SyncStrings.nfccommands_log_action_read)
+        "WRITE" -> stringResource(SyncStrings.nfccommands_log_action_write)
+        "MANUAL" -> stringResource(SyncStrings.nfccommands_log_action_manual)
         else -> entry.action
     }
 
@@ -324,18 +324,18 @@ private fun NfcTagsScreen(
     deleteTarget?.let { tag ->
         AlertDialog(
             onDismissRequest = { deleteTarget = null },
-            title = { Text(stringResource(R.string.nfccommands_delete_confirm_title)) },
-            text = { Text(stringResource(R.string.nfccommands_delete_confirm_msg)) },
+            title = { Text(stringResource(SyncStrings.nfccommands_delete_confirm_title)) },
+            text = { Text(stringResource(SyncStrings.nfccommands_delete_confirm_msg)) },
             confirmButton = {
                 TextButton(onClick = {
                     nfcTagStore.deleteCreatedTag(tag.tagUid)
                     refreshKey++
                     deleteTarget = null
-                }) { Text(stringResource(CoreUiR.string.delete)) }
+                }) { Text(stringResource(CoreUiStrings.delete)) }
             },
             dismissButton = {
                 TextButton(onClick = { deleteTarget = null }) {
-                    Text(stringResource(R.string.cancel))
+                    Text(stringResource(SyncStrings.cancel))
                 }
             },
         )
@@ -370,12 +370,12 @@ private fun NfcTagsScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
-                    text = stringResource(R.string.nfccommands_empty_state_title),
+                    text = stringResource(SyncStrings.nfccommands_empty_state_title),
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.padding(bottom = 8.dp),
                 )
                 Text(
-                    text = stringResource(R.string.nfccommands_empty_state_body),
+                    text = stringResource(SyncStrings.nfccommands_empty_state_body),
                     style = MaterialTheme.typography.bodyMedium,
                 )
             }
@@ -404,7 +404,7 @@ private fun NfcTagsScreen(
         ) {
             Icon(
                 imageVector = Icons.Filled.Add,
-                contentDescription = stringResource(R.string.nfccommands_add_tag),
+                contentDescription = stringResource(SyncStrings.nfccommands_add_tag),
             )
         }
     }
@@ -458,13 +458,13 @@ private fun NfcTagCard(
                 }
             }
             IconButton(onClick = onExecute) {
-                Icon(Icons.Filled.PlayArrow, contentDescription = stringResource(R.string.nfccommands_execute_tag))
+                Icon(Icons.Filled.PlayArrow, contentDescription = stringResource(SyncStrings.nfccommands_execute_tag))
             }
             IconButton(onClick = onEdit) {
                 Icon(Icons.Default.Edit, contentDescription = null)
             }
             IconButton(onClick = onDelete) {
-                Icon(Icons.Filled.Delete, contentDescription = stringResource(R.string.nfccommands_disable_tag))
+                Icon(Icons.Filled.Delete, contentDescription = stringResource(SyncStrings.nfccommands_disable_tag))
             }
         }
     }

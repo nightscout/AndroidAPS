@@ -1,8 +1,8 @@
 package app.aaps.plugins.sync.nfcCommands
 
-import androidx.annotation.StringRes
-import app.aaps.plugins.sync.R
-import app.aaps.core.ui.R as CoreUiR
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.sync.SyncStrings
 
 /**
  * Defines elementary argument types for NFC Actions.
@@ -27,22 +27,22 @@ enum class ArgType {
 /**
  * Categories for grouping NFC commands in the picker UI.
  */
-enum class NfcCategory(@StringRes val labelResId: Int) {
-    LOOP(CoreUiR.string.loop),
-    PUMP(CoreUiR.string.pump),
-    BASAL(CoreUiR.string.basal),
-    TREATMENTS(CoreUiR.string.treatments),
-    PROFILE(CoreUiR.string.profile),
-    SCENES(CoreUiR.string.scenes),
-    TARGETS(R.string.nfccommands_cat_targets),
-    SYSTEM(R.string.nfccommands_cat_system)
+enum class NfcCategory(val label: TextRef) {
+    LOOP(CoreUiStrings.loop),
+    PUMP(CoreUiStrings.pump),
+    BASAL(CoreUiStrings.basal),
+    TREATMENTS(CoreUiStrings.treatments),
+    PROFILE(CoreUiStrings.profile),
+    SCENES(CoreUiStrings.scenes),
+    TARGETS(SyncStrings.nfccommands_cat_targets),
+    SYSTEM(SyncStrings.nfccommands_cat_system)
 }
 
 /**
  * Data structure representing a group of commands in the NFC action picker.
  */
 data class NfcUiCategory(
-    val labelResId: Int,
+    val label: TextRef,
     val commands: List<NfcCommandCode>,
 )
 
@@ -111,7 +111,7 @@ object NfcCategories {
             .groupBy { it.first.category }
             .map { (cat, pairs) ->
                 NfcUiCategory(
-                    labelResId = cat.labelResId,
+                    label = cat.label,
                     commands = pairs.map { it.first }
                 )
             }

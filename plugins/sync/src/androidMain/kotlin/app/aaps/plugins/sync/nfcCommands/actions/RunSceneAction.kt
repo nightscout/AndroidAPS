@@ -1,31 +1,31 @@
 package app.aaps.plugins.sync.nfcCommands.actions
 
-import androidx.annotation.StringRes
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.scenes.SceneAutomationResult
 import app.aaps.core.interfaces.scenes.SceneIconResolver
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.navigation.icon
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.plugins.sync.nfcCommands.ArgType
 import app.aaps.plugins.sync.nfcCommands.NfcExecutionResult
-import app.aaps.plugins.sync.R
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.plugins.sync.nfcCommands.NfcParams
 
 class RunSceneAction(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    rh: TextResolver,
     uel: UserEntryLogger,
     private val sceneAutomationApi: SceneAutomationApi,
     private val sceneIconResolver: SceneIconResolver
 ) : NfcAction(aapsLogger, rh, uel) {
-    @StringRes override val labelResId = R.string.nfccommands_cmd_run_scene
+    override val label: TextRef = SyncStrings.nfccommands_cmd_run_scene
     override val elementType = ElementType.SCENE
     override val argType = listOf(ArgType.SCENE_ID)
     override val icon
@@ -61,13 +61,13 @@ class RunSceneAction(
             }
 
             SceneAutomationResult.SceneNotFound ->
-                NfcExecutionResult(false, rh.gs(R.string.nfccommands_scene_not_found))
+                NfcExecutionResult(false, rh.gs(SyncStrings.nfccommands_scene_not_found))
 
             SceneAutomationResult.SceneDisabled ->
-                NfcExecutionResult(false, rh.gs(R.string.nfccommands_scene_disabled))
+                NfcExecutionResult(false, rh.gs(SyncStrings.nfccommands_scene_disabled))
 
             is SceneAutomationResult.Failed ->
-                NfcExecutionResult(false, result.message ?: rh.gs(CoreUiR.string.error))
+                NfcExecutionResult(false, result.message ?: rh.gs(CoreUiStrings.error))
 
             is SceneAutomationResult.ChainCompleted -> {
                 uel.log(

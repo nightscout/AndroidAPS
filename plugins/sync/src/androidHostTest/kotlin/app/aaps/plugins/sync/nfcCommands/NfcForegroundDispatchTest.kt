@@ -6,7 +6,7 @@ import android.nfc.NfcAdapter
 import android.nfc.NfcManager
 import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.keys.BooleanKey
-import app.aaps.plugins.sync.R
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.shared.tests.TestBaseWithProfile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -185,8 +185,8 @@ class NfcForegroundDispatchTest : TestBaseWithProfile() {
 
     @Test
     fun `observeWarning sends dialog when preference changes to true`() {
-        whenever(rh.gs(R.string.nfc_foreground_priority_warning_title)).thenReturn("NFC Foreground Priority")
-        whenever(rh.gs(R.string.nfc_foreground_priority_warning_message)).thenReturn("Warning message")
+        whenever(rh.gs(SyncStrings.nfc_foreground_priority_warning_title)).thenReturn("NFC Foreground Priority")
+        whenever(rh.gs(SyncStrings.nfc_foreground_priority_warning_message)).thenReturn("Warning message")
         val scope = unconfinedScope()
         val prefFlow = MutableStateFlow(false)
         whenever(preferences.observe(BooleanKey.NfcForegroundPriority)).thenReturn(prefFlow)
