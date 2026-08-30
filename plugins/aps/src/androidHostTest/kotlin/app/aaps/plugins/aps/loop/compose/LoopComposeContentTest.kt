@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.R
 import app.aaps.plugins.aps.loop.events.EventLoopSetLastRunGui
+import app.aaps.shared.tests.stubTextRefResolution
 import kotlinx.coroutines.flow.emptyFlow
 import org.junit.Rule
 import org.junit.Test
@@ -44,6 +45,9 @@ class LoopComposeContentTest {
             whenever(it.toFlow(EventLoopSetLastRunGui::class)).thenReturn(emptyFlow())
         }
         val rh = mock<ResourceHelper> { whenever(it.gs(R.string.not_available_full)).thenReturn("N/A") }
+        // The view model names its strings instead of numbering them, so the mock has to answer the
+        // TextRef form. This routes it back to the gs(Int) stub above.
+        stubTextRefResolution(rh)
         val content = LoopComposeContent(
             loop = loop,
             rxBus = rxBus,

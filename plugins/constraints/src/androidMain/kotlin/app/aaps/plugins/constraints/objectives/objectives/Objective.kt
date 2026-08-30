@@ -2,7 +2,6 @@ package app.aaps.plugins.constraints.objectives.objectives
 
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.plugins.constraints.ConstraintsStrings
-import android.content.Context
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
@@ -114,7 +113,7 @@ abstract class Objective(
         }
     }
 
-    inner class UITask internal constructor(objective: Objective, task: TextRef, private val spIdentifier: String, val code: (context: Context, task: UITask, callback: Runnable, showMessage: (String) -> Unit) -> Unit) : Task(objective, task) {
+    inner class UITask internal constructor(objective: Objective, task: TextRef, private val spIdentifier: String, val code: (task: UITask, callback: Runnable, showMessage: (String) -> Unit) -> Unit) : Task(objective, task) {
 
         var answered: Boolean = false
             set(value) {

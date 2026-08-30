@@ -6,13 +6,11 @@ import app.aaps.plugins.constraints.ConstraintsStrings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.LocalSnackbarHostState
-import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import app.aaps.core.ui.compose.ToolbarConfig
+import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 
 class ObjectivesComposeContent : ComposablePluginContent {
@@ -23,11 +21,7 @@ class ObjectivesComposeContent : ComposablePluginContent {
         onNavigateBack: () -> Unit,
         onSettings: (() -> Unit)?
     ) {
-        // hiltViewModel() only worked because the host activity is @AndroidEntryPoint. The Metro factory
-        // is reached through the Application, the same way member injection is.
-        val viewModel: ObjectivesViewModel = viewModel(
-            factory = (LocalContext.current.applicationContext as MetroViewModelFactoryOwner).metroViewModelFactory
-        )
+        val viewModel: ObjectivesViewModel = metroViewModel()
 
         val state by viewModel.uiState.collectAsStateWithLifecycle()
         val scrollToIndex by viewModel.scrollToIndex.collectAsStateWithLifecycle()
