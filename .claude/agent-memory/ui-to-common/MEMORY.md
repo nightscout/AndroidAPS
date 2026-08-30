@@ -8,6 +8,7 @@
 
 - [APS Loop move](project_aps-loop-move.md) — Loop screen+VM+ComposeContent are in commonMain with no build file edit; the duplicated `constraints` string trap.
 - [:ui 12-file batch moved](project_ui-twelve-file-batch-moved.md) — done and kept with 46 mutation-proven tests; :ui 36→24, and the Robolectric setup that survives a move.
+- [Overview three variants covered](project_overview-three-variants-covered.md) — 10 mutation-proven tests pin what differs between the stacked/split/tablet layouts; what is still only rendered.
 
 ## Reference
 

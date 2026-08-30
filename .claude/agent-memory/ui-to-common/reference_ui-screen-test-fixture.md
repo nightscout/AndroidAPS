@@ -19,10 +19,34 @@ client-with-unreachable-master state. Use `compose.setAapsContent(fixture) { Scr
 resources and then calls `stubTextRefResolution`, so a ViewModel that formats text gets words, not
 nulls.
 
+`AapsScreenFixture` also provides `LocalDecimalFormatter` (added for the overview). Any screen that
+contains a graph needs it - `SecondaryGraphCompose` reads it for axis labels and the default throws
+"No DecimalFormatter provided" from inside the chart, which reads as a theme problem and is not.
+
 **Per-screen builders** (`TempTargetManagementViewModelFixture`,
-`QuickLaunchConfigViewModelFixture`) build the **real** ViewModel with mocked dependencies, sharing
-`preferences`/`dateUtil`/`profileUtil` with the host so the ViewModel and the composables cannot
-drift apart. A new screen gets its own builder next to these; do not grow one god-object.
+`QuickLaunchConfigViewModelFixture`, `OverviewViewModelFixture`) build the **real** ViewModel with
+mocked dependencies, sharing `preferences`/`dateUtil`/`profileUtil`/`decimalFormatter` with the host
+so the ViewModel and the composables cannot drift apart. A new screen gets its own builder next to
+these; do not grow one god-object.
+
+**Four things the overview builder needed that the other two did not:**
+
+- **A real fake, not a mock, for a wide interface.** `OverviewDataCache` has ~25 flows that the
+  view models read while being constructed; one missing `whenever` lands as an NPE inside a
+  `combine`, nowhere near the gap. `FakeOverviewDataCache` is ~90 lines of `MutableStateFlow` and
+  cannot have a gap. Use the same shape for any interface with more than about five flows.
+- **`ActivePlugin.activePump` and `activePumpInternal` are different types** -
+  `PumpWithConcentration` and `Pump`. `StatusViewModel` reads the first, `ManageViewModel` casts the
+  second to `PluginBase`. One mock cannot serve both: use `mock<PumpWithConcentration>()` plus
+  `mock<FakePumpPlugin>()` (the `internal abstract class` already in `ManageViewModelTest.kt`,
+  reachable from any androidHostTest package), backed by one shared `PumpDescription()`.
+- **`StatusViewModel.refreshState()` really hops to `aapsIoDispatcher`**, so the status card is empty
+  for a moment after construction and `OverviewStatusSection` returns without drawing. Block on
+  `uiState.first { it.sensorStatus != null }` before `setContent` instead of racing it.
+- **Robolectric's default window is a portrait phone.** A landscape or tablet layout puts its
+  side-by-side columns at near-zero width there, and a widget reports as *"is not displayed"* - the
+  node exists, it just fails the displayed check, so the message looks like a wiring bug. Put
+  `@Config(qualifiers = "w1280dp-h800dp")` on those tests.
 
 **Two traps that cost the most time:**
 
