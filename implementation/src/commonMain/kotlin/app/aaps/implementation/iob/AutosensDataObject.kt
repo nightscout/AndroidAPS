@@ -7,7 +7,8 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
-import java.util.Locale
+import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.data.format.NumberFormatPlatform
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -57,25 +58,29 @@ class AutosensDataObject @Inject constructor(
             remaining = other.remaining
         )
 
+    /**
+     * A debug line, so the separator must not follow the phone's locale.
+     *
+     * `String.format(Locale.ENGLISH, "%.02f", …)` is JVM only. [NumberFormat.withDecimalsHalfUp] is
+     * the multiplatform equivalent: same two fixed decimals, and the same ties-away-from-zero rounding
+     * that `%.02f` does - `DECIMAL_2` would round half to even instead. [SEPARATOR_DOT] stands in for
+     * `Locale.ENGLISH`, so a Czech phone keeps logging `1.50` rather than `1,50`.
+     *
+     * `AutosensDataObjectTest` pins the whole line, spacing included.
+     */
     override fun toString(): String {
-        return String.format(
-            Locale.ENGLISH,
-            "AutosensData: %s pastSensitivity=%s  delta=%.02f  avgDelta=%.02f bgi=%.02f deviation=%.02f avgDeviation=%.02f absorbed=%.02f carbsFromBolus=%.02f cob=%.02f autosensRatio=%.02f slopeFromMaxDeviation=%.02f slopeFromMinDeviation=%.02f activeCarbsList=%s",
-            dateUtil.dateAndTimeString(time),
-            pastSensitivity,
-            delta,
-            avgDelta,
-            bgi,
-            deviation,
-            avgDeviation,
-            this5MinAbsorption,
-            carbsFromBolus,
-            cob,
-            autosensResult.ratio,
-            slopeFromMaxDeviation,
-            slopeFromMinDeviation,
-            activeCarbsList.toString()
-        )
+        fun d(value: Double) = twoDecimals.format(value, NumberFormatPlatform.SEPARATOR_DOT)
+        return "AutosensData: ${dateUtil.dateAndTimeString(time)} pastSensitivity=$pastSensitivity " +
+            " delta=${d(delta)}  avgDelta=${d(avgDelta)} bgi=${d(bgi)} deviation=${d(deviation)}" +
+            " avgDeviation=${d(avgDeviation)} absorbed=${d(this5MinAbsorption)}" +
+            " carbsFromBolus=${d(carbsFromBolus)} cob=${d(cob)} autosensRatio=${d(autosensResult.ratio)}" +
+            " slopeFromMaxDeviation=${d(slopeFromMaxDeviation)} slopeFromMinDeviation=${d(slopeFromMinDeviation)}" +
+            " activeCarbsList=$activeCarbsList"
+    }
+
+    private companion object {
+
+        val twoDecimals = NumberFormat.withDecimalsHalfUp(2)
     }
 
     override fun cloneCarbsList(): MutableList<AutosensData.CarbsInPast> {

@@ -77,4 +77,42 @@ class AutosensDataObjectTest : TestBase() {
         assertThat(o.toString()).contains("2023-01-01 12:00")
         assertThat(o.toString()).contains("pastSensitivity=S")
     }
+
+    /**
+     * Pins the whole line, not two fragments of it.
+     *
+     * This is a log line built by `String.format(Locale.ENGLISH, "%.02f", ...)` across twelve doubles.
+     * Replacing that with a multiplatform formatter could silently change a separator (a comma on a
+     * Czech phone), drop a trailing zero, or reorder a field, and nothing here would have noticed.
+     *
+     * One value below is deliberately a decimal tie. `4.005` is really `4.00499…` as a double, and the
+     * two formatters disagree about it: `String.format` rounds from the shortest decimal text that
+     * round-trips ("4.005", so up to 4.01), while [app.aaps.core.data.format.NumberFormat] rounds the
+     * binary value it is given (below the tie, so down to 4.00). The 4.00 below is therefore a known,
+     * accepted change from the JVM original - kept in the test on purpose so it stays visible rather
+     * than being discovered again later. It only affects this debug line.
+     */
+    @Test
+    fun toString_rendersEveryFieldInOrderWithTwoDecimalsAndADot() {
+        whenever(dateUtil.dateAndTimeString(anyLong())).thenReturn("2023-01-01 12:00")
+        val o = sut().apply {
+            pastSensitivity = "S"
+            delta = 1.5
+            avgDelta = -2.25
+            bgi = 0.0
+            deviation = 3.456
+            avgDeviation = 10.0
+            this5MinAbsorption = 4.005
+            carbsFromBolus = 7.0
+            cob = 12.0
+            slopeFromMaxDeviation = -0.125
+            slopeFromMinDeviation = 100.0
+        }
+
+        assertThat(o.toString()).isEqualTo(
+            "AutosensData: 2023-01-01 12:00 pastSensitivity=S  delta=1.50  avgDelta=-2.25 bgi=0.00 " +
+                "deviation=3.46 avgDeviation=10.00 absorbed=4.00 carbsFromBolus=7.00 cob=12.00 " +
+                "autosensRatio=1.00 slopeFromMaxDeviation=-0.13 slopeFromMinDeviation=100.00 activeCarbsList=[]"
+        )
+    }
 }
