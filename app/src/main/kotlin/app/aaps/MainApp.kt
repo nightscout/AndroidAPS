@@ -92,6 +92,7 @@ import app.aaps.implementation.receivers.TimeDateOrTZChangeReceiver
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
 import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler
 import app.aaps.plugins.automation.AutomationRuntime
+import app.aaps.plugins.aps.ApsStringIds
 import app.aaps.plugins.automation.AutomationStringIds
 import app.aaps.plugins.calibration.CalibrationStringIds
 import app.aaps.plugins.configuration.ConfigurationStringIds
@@ -1037,5 +1038,6 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         TextRefIdRegistry.register("configuration") { name -> ConfigurationStringIds.idOf(name) }
         TextRefIdRegistry.register("constraints") { name -> ConstraintsStringIds.idOf(name) }
         TextRefIdRegistry.register("sync") { name -> SyncStringIds.idOf(name) }
+        TextRefIdRegistry.register("aps") { name -> ApsStringIds.idOf(name) }
     }
 }
