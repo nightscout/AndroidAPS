@@ -94,6 +94,12 @@ kotlin {
             }
         }
 
+        iosTest {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
+
         androidMain {
             // Android only: the string name to R.string id map.
             kotlin.srcDir(generateAutomationStrings.flatMap { it.androidOutputDir })
