@@ -18,6 +18,7 @@ import app.aaps.core.nssdk.mapper.toNSDeviceStatus
 import app.aaps.core.nssdk.mapper.toNSFood
 import app.aaps.core.nssdk.mapper.toNSSgvV3
 import app.aaps.core.nssdk.mapper.toNSTreatment
+import app.aaps.plugins.sync.nsclientV3.NSAlarmObject
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
 import app.aaps.plugins.sync.nsclientV3.data.NSDeviceStatusHandler
@@ -279,13 +280,13 @@ class IosNsConnection @Inject constructor(
     internal fun onAnnouncement(raw: String) {
         val data = parse(raw) ?: return
         nsClientRepository.addLog("◄ ANNOUNCEMENT", data.str("message") ?: "")
-        if (preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)) post(KotlinxNsAlarm(data))
+        if (preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)) post(NSAlarmObject(data))
     }
 
     internal fun onAlarm(raw: String, gate: BooleanKey) {
         val data = parse(raw) ?: return
         nsClientRepository.addLog("◄ ALARM", data.str("title") ?: "")
-        if (preferences.get(gate)) post(KotlinxNsAlarm(data))
+        if (preferences.get(gate)) post(NSAlarmObject(data))
     }
 
     internal fun onClearAlarm(raw: String) {
