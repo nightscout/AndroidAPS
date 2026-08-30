@@ -83,6 +83,11 @@ class DetailedBolusInfo {
         n.pumpType = pumpType
         n.pumpSerial = pumpSerial
         n.bolusPumpId = bolusPumpId
+        // Was missing: createBolus() reads `bolusTimestamp ?: timestamp`, so a copy that dropped it
+        // would record the bolus at the wrong time. Nothing sets the field today, which is why the
+        // omission stayed invisible. DetailedBolusInfoCopyTest names every field so the next one
+        // added is not lost the same way. `id` is left out on purpose - see that test.
+        n.bolusTimestamp = bolusTimestamp
         n.carbsTimestamp = carbsTimestamp
         return n
     }
