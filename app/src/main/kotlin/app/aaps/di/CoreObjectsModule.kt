@@ -122,6 +122,7 @@ import app.aaps.di.metro.AapsLeaves
 import app.aaps.di.metro.MetroGraphs
 import app.aaps.implementation.maintenance.cloud.CloudStorageManager
 import app.aaps.implementation.plugin.PluginStore
+import app.aaps.implementation.profile.ProfileSwitchExpiryScheduler
 import app.aaps.implementation.profile.ProfileSwitchSilentGate
 import app.aaps.implementation.scenes.ActiveSceneManager
 import app.aaps.implementation.scenes.SceneExecutor
@@ -371,6 +372,8 @@ class CoreObjectsModule {
     // One flag, two frameworks: SceneExecutor (Metro) marks it, CommandQueueImplementation (Dagger)
     // consumes it. Without this they get one each and the mark is never seen.
     @Provides @Singleton fun provideProfileSwitchSilentGate(graphs: MetroGraphs): ProfileSwitchSilentGate = graphs.profileSwitchSilentGate
+    // Same reason: MainApp (Dagger) starts it, Metro owns the single instance.
+    @Provides @Singleton fun provideProfileSwitchExpiryScheduler(graphs: MetroGraphs): ProfileSwitchExpiryScheduler = graphs.profileSwitchExpiryScheduler
     @Provides @Singleton fun provideRunningConfiguration(graphs: MetroGraphs): RunningConfiguration = graphs.runningConfiguration
     @Provides @Singleton fun provideRunningConfigurationKeys(graphs: MetroGraphs): RunningConfigurationKeys = graphs.runningConfigurationKeys
     @Provides @Singleton fun provideActivePlugin(graphs: MetroGraphs): ActivePlugin = graphs.activePlugin

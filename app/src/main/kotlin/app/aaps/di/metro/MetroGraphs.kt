@@ -117,6 +117,7 @@ import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.database.AppRepository
 import app.aaps.implementation.maintenance.cloud.CloudStorageManager
 import app.aaps.implementation.plugin.PluginStore
+import app.aaps.implementation.profile.ProfileSwitchExpiryScheduler
 import app.aaps.implementation.profile.ProfileSwitchSilentGate
 import app.aaps.implementation.scenes.ActiveSceneManager
 import app.aaps.implementation.scenes.SceneExecutor
@@ -413,6 +414,7 @@ class MetroGraphs @Inject constructor(
     val apsResult: APSResult get() = root.apsResult
     val pumpEnactResult: PumpEnactResult get() = root.pumpEnactResult
     val profileSwitchSilentGate: ProfileSwitchSilentGate get() = root.profileSwitchSilentGate
+    val profileSwitchExpiryScheduler: ProfileSwitchExpiryScheduler get() = root.profileSwitchExpiryScheduler
     val runningConfiguration: RunningConfiguration get() = root.runningConfiguration
     val runningConfigurationKeys: RunningConfigurationKeys get() = root.runningConfigurationKeys
     val activePlugin: ActivePlugin get() = root.activePlugin

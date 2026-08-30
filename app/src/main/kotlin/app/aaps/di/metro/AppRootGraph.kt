@@ -119,6 +119,7 @@ import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.database.AppRepository
 import app.aaps.implementation.maintenance.cloud.CloudStorageManager
 import app.aaps.implementation.plugin.PluginStore
+import app.aaps.implementation.profile.ProfileSwitchExpiryScheduler
 import app.aaps.implementation.profile.ProfileSwitchSilentGate
 import app.aaps.implementation.scenes.ActiveSceneManager
 import app.aaps.implementation.scenes.SceneExecutor
@@ -355,6 +356,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val apsResult: APSResult
     val pumpEnactResult: PumpEnactResult
     val profileSwitchSilentGate: ProfileSwitchSilentGate
+    val profileSwitchExpiryScheduler: ProfileSwitchExpiryScheduler
     val runningConfiguration: RunningConfiguration
     val runningConfigurationKeys: RunningConfigurationKeys
     val activePlugin: ActivePlugin

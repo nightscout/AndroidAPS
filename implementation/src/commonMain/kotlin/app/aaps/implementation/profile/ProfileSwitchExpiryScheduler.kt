@@ -3,7 +3,6 @@ package app.aaps.implementation.profile
 import app.aaps.core.data.model.PS
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -13,8 +12,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Fires [EventProfileChangeRequested] at the exact end of an active *temporary* ProfileSwitch.
@@ -34,14 +34,21 @@ import javax.inject.Singleton
  * Master-only: gated by `!config.AAPSCLIENT` to match CommandQueueImplementation.onProfileChanged,
  * which creates the EffectiveProfileSwitch on master while clients sync it over NS.
  */
-@Singleton
+// Metro's @SingleIn, not javax @Singleton: the graph is generated in `:app`, which runs without Dagger
+// interop, so a javax scope there is ignored and every read would build another one. There must be
+// exactly one - it collects PS changes and arms a timer, so a second copy means duplicate profile
+// change requests. MainApp is Dagger, so it receives this one through
+// `CoreObjectsModule.provideProfileSwitchExpiryScheduler`. SplitBrainTest is the guard.
+@SingleIn(AppScope::class)
 class ProfileSwitchExpiryScheduler @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val rxBus: RxBus,
     private val dateUtil: DateUtil,
     private val config: Config,
     private val aapsLogger: AAPSLogger,
-    @ApplicationScope private val appScope: CoroutineScope
+    // Plain CoroutineScope, not @ApplicationScope: that qualifier is javax and cannot appear in
+    // commonMain. AppCoroutineBindings.unqualifiedAppScope binds the very same scope without it.
+    private val appScope: CoroutineScope
 ) {
 
     private var started = false

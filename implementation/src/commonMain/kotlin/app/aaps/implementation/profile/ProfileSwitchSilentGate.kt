@@ -3,7 +3,8 @@ package app.aaps.implementation.profile
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.concurrent.atomics.AtomicBoolean
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 
 /**
  * One-shot flag used to suppress the central "Basal profile in pump updated" ([app.aaps.core.interfaces.notifications.NotificationId.PROFILE_SET_OK])
@@ -27,6 +28,8 @@ import java.util.concurrent.atomic.AtomicBoolean
  * own gate and the scene's mark was never the one the queue read. The flag then did nothing: a scene
  * profile switch showed the notification it exists to suppress. There must be exactly one of these.
  */
+// kotlin.concurrent.atomics rather than java.util.concurrent: same semantics, and it exists off the JVM.
+@OptIn(ExperimentalAtomicApi::class)
 @SingleIn(AppScope::class)
 class ProfileSwitchSilentGate @Inject constructor() {
 
@@ -34,9 +37,9 @@ class ProfileSwitchSilentGate @Inject constructor() {
 
     /** Mark the next profile write (the one this caller is about to trigger) as silent. */
     fun markNextSilent() {
-        silentNext.set(true)
+        silentNext.store(true)
     }
 
     /** Read and clear the flag. Returns true exactly once after a [markNextSilent]. */
-    fun consumeSilent(): Boolean = silentNext.getAndSet(false)
+    fun consumeSilent(): Boolean = silentNext.exchange(false)
 }
