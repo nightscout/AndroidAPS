@@ -89,6 +89,15 @@ kotlin {
             }
         }
 
+        // Tests for the iOS websocket implementation. They run on the simulator, which is the only
+        // place the Kotlin/Native behaviour is actually exercised.
+        iosTest {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(libs.kotlinx.coroutines.test)
+            }
+        }
+
         androidMain {
             // Android only: the string name to R.string id map.
             kotlin.srcDir(generateSyncStrings.flatMap { it.androidOutputDir })
