@@ -8,11 +8,13 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.resources.TextRefIdRegistry
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.LocalDateUtil
+import app.aaps.core.ui.compose.LocalDecimalFormatter
 import app.aaps.core.ui.compose.LocalMasterReachable
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalProfileUtil
@@ -24,6 +26,8 @@ import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.robolectric.RuntimeEnvironment
+import kotlin.math.pow
+import kotlin.math.round
 
 /**
  * The ambient environment a `:ui` screen needs before it will render in a Robolectric test.
@@ -48,7 +52,8 @@ class AapsScreenFixture(
     val preferences: Preferences = mock(),
     val config: Config = mock(),
     val dateUtil: DateUtil = mock(),
-    val profileUtil: ProfileUtil = mock()
+    val profileUtil: ProfileUtil = mock(),
+    val decimalFormatter: DecimalFormatter = mock()
 ) {
 
     /** Mirrors `NsClient.masterReachable`. Only gates anything when [config] says AAPSCLIENT. */
@@ -58,6 +63,20 @@ class AapsScreenFixture(
         TextRefIdRegistry.register("ui") { name -> UiStringIds.idOf(name) }
         whenever(preferences.observe(StringKey.GeneralDarkMode)).thenReturn(MutableStateFlow("light"))
         whenever(config.AAPSCLIENT).thenReturn(false)
+        // Graph axis labels go through this, and a mock's null lands as an NPE inside the chart.
+        whenever(decimalFormatter.to0Decimal(any())).thenAnswer { fixed(it.arguments[0] as Double, 0) }
+        whenever(decimalFormatter.to1Decimal(any())).thenAnswer { fixed(it.arguments[0] as Double, 1) }
+        whenever(decimalFormatter.to2Decimal(any())).thenAnswer { fixed(it.arguments[0] as Double, 2) }
+        whenever(decimalFormatter.to3Decimal(any())).thenAnswer { fixed(it.arguments[0] as Double, 3) }
+        whenever(decimalFormatter.to0Decimal(any(), any())).thenAnswer { fixed(it.arguments[0] as Double, 0) + it.arguments[1] }
+        whenever(decimalFormatter.to1Decimal(any(), any())).thenAnswer { fixed(it.arguments[0] as Double, 1) + it.arguments[1] }
+        whenever(decimalFormatter.to2Decimal(any(), any())).thenAnswer { fixed(it.arguments[0] as Double, 2) + it.arguments[1] }
+        whenever(decimalFormatter.to3Decimal(any(), any())).thenAnswer { fixed(it.arguments[0] as Double, 3) + it.arguments[1] }
+    }
+
+    private fun fixed(value: Double, decimals: Int): String {
+        val rounded = round(value * 10.0.pow(decimals)) / 10.0.pow(decimals)
+        return if (decimals == 0) rounded.toInt().toString() else rounded.toString()
     }
 
     /** Renders as a client whose master cannot be reached - the state that disables master-bound actions. */
@@ -74,6 +93,7 @@ class AapsScreenFixture(
             LocalConfig provides config,
             LocalDateUtil provides dateUtil,
             LocalProfileUtil provides profileUtil,
+            LocalDecimalFormatter provides decimalFormatter,
             LocalMasterReachable provides masterReachable
         ) {
             AapsTheme { content() }
