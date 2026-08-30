@@ -54,7 +54,7 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import javax.inject.Provider
+import dev.zacsweers.metro.Provider
 
 /**
  * Focused tests for the canonical [WizardBolusExecutorImpl.deliverWizardBolus] entry point — the shared
