@@ -3,9 +3,9 @@ package app.aaps.plugins.sync.smsCommunicator.compose
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.sync.SyncStrings
-import android.app.Activity
 import android.graphics.Bitmap
 import android.view.WindowManager
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -36,7 +36,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -57,8 +56,10 @@ internal fun SmsCommunicatorOtpScreen(
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Prevent screenshots of TOTP QR code
-    val activity = LocalContext.current as? Activity
+    // Prevent screenshots of TOTP QR code.
+    // LocalActivity, not a cast of LocalContext: that context is usually a ContextWrapper, where
+    // `as? Activity` is null - and then FLAG_SECURE is never set and the QR code is screenshotable.
+    val activity = LocalActivity.current
     DisposableEffect(Unit) {
         activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         onDispose {

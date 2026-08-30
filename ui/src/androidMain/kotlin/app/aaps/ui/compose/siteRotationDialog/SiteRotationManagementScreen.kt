@@ -1,6 +1,7 @@
 package app.aaps.ui.compose.siteRotationDialog
 
 import android.content.pm.ActivityInfo
+import androidx.activity.compose.LocalActivity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,7 +45,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.TE
@@ -77,8 +77,9 @@ fun SiteRotationManagementScreen(
     siteRotationDef: PreferenceSubScreenDef
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val context = LocalContext.current
-    val activity = context as? AppCompatActivity
+    // LocalActivity, not a cast of LocalContext: that context is usually a ContextWrapper, where
+    // `as? AppCompatActivity` is null.
+    val activity = LocalActivity.current as? AppCompatActivity
 
     // Settings open as a bottom sheet (no back-button navigation) — mirrors the Carbs dialog's settings cog.
     var showSettings by rememberSaveable { mutableStateOf(false) }
