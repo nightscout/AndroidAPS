@@ -3,7 +3,7 @@ package app.aaps.interfaces.pump
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.implementation.pump.PumpEnactResultObject
-import app.aaps.plugins.aps.loop.extensions.json
+import app.aaps.plugins.aps.loop.extensions.jsonObject
 import app.aaps.pump.virtual.extensions.toText
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -147,20 +147,19 @@ class PumpEnactResultTest : TestBaseWithProfile() {
         )
     }
 
+    /**
+     * The document is kotlinx now, so a whole number prints as `10.0` where `org.json` printed `10`.
+     * Nothing of this document is uploaded - the caller reads two values out of it - so the change is
+     * confined to these expectations. The cancel branch still reports integer `0`, and must.
+     */
     @Test fun jsonTest() {
-        var o: JSONObject?
-
         var per: PumpEnactResult = PumpEnactResultObject(rh).enacted(true).bolusDelivered(10.0).comment("AAA")
-        o = per.json(validProfile.getBasal())
-        JSONAssert.assertEquals("""{"smb":10}""", o, false)
+        assertThat(per.jsonObject(validProfile.getBasal()).toString()).isEqualTo("""{"smb":10.0}""")
         per = PumpEnactResultObject(rh).enacted(true).isTempCancel(true).comment("AAA")
-        o = per.json(validProfile.getBasal())
-        JSONAssert.assertEquals("""{"rate":0,"duration":0}""", o, false)
+        assertThat(per.jsonObject(validProfile.getBasal()).toString()).isEqualTo("""{"rate":0,"duration":0}""")
         per = PumpEnactResultObject(rh).enacted(true).isPercent(true).percent(90).duration(20).comment("AAA")
-        o = per.json(validProfile.getBasal())
-        JSONAssert.assertEquals("""{"rate":0.9,"duration":20}""", o, false)
+        assertThat(per.jsonObject(validProfile.getBasal()).toString()).isEqualTo("""{"rate":0.9,"duration":20}""")
         per = PumpEnactResultObject(rh).enacted(true).isPercent(false).absolute(1.0).duration(30).comment("AAA")
-        o = per.json(validProfile.getBasal())
-        JSONAssert.assertEquals("""{"rate":1,"duration":30}""", o, false)
+        assertThat(per.jsonObject(validProfile.getBasal()).toString()).isEqualTo("""{"rate":1.0,"duration":30}""")
     }
 }

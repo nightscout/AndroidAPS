@@ -65,9 +65,6 @@ class LoopPluginTest : TestBaseWithProfile() {
     @Mock lateinit var pumpStatusProvider: PumpStatusProvider
     @Mock lateinit var loopNotifier: LoopNotifier
 
-    // The real one, not a mock: these tests are the record of what Nightscout receives, and the
-    // rendering is the thing being pinned.
-    private val deviceStatusJson by lazy { AndroidDeviceStatusJson(dateUtil) }
 
     private lateinit var loopPlugin: LoopPlugin
     private val testScope = CoroutineScope(Dispatchers.Unconfined)
@@ -80,7 +77,7 @@ class LoopPluginTest : TestBaseWithProfile() {
             // The shared test base still hands out a javax Provider, which other tests rely on;
             // LoopPlugin takes Metro's now, so it is adapted here rather than flipping the base.
             persistenceLayer, uiInteraction, notificationManager, Provider { pumpEnactResultProvider() },
-            processedDeviceStatusData, pumpStatusProvider, decimalFormatter, ch, loopNotifier, deviceStatusJson, testScope
+            processedDeviceStatusData, pumpStatusProvider, decimalFormatter, ch, loopNotifier, testScope
         )
         whenever(activePlugin.activePump).thenReturn(virtualPumpPlugin)
     }
@@ -629,16 +626,22 @@ class LoopPluginTest : TestBaseWithProfile() {
     }
 
     /**
-     * A pump result that only delivered an SMB carries no rate/duration, and reading them throws. That
-     * predates the move to an immutable document - it is pinned here so the behaviour is at least known
-     * rather than discovered from a crash report.
+     * A pump result that only delivered an SMB carries no rate/duration, and reading them throws.
+     *
+     * Pinned so the behaviour is known rather than discovered from a crash report. **It is not
+     * reachable in production**: `lastRun.tbrSetByPump` is only ever assigned null, a queued result, or
+     * the return of `applyTBRRequest`, and only a delivered bolus produces a document without a rate.
+     * The exception is a contract guard, so do not "fix" it into returning zeros - that would upload a
+     * temp basal the pump never enacted.
+     *
+     * `NoSuchElementException`, not `JSONException`, since the document became kotlinx.
      */
     @Test
     fun `an smb only pump result has no rate to report and throws`() = runTest {
         val smbOnly = pumpEnactResultProvider().enacted(true).bolusDelivered(0.3)
         prepareDeviceStatus(apsResultReturning("eventualBG" to 120), tbrSetByPump = smbOnly)
 
-        assertThrows<JSONException> { loopPlugin.buildAndStoreDeviceStatus("test") }
+        assertThrows<NoSuchElementException> { loopPlugin.buildAndStoreDeviceStatus("test") }
     }
 
     /** Older than 5 minutes: the run is stale, so neither document is sent. */

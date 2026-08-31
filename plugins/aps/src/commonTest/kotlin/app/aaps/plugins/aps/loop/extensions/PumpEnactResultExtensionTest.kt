@@ -3,11 +3,17 @@ package app.aaps.plugins.aps.loop.extensions
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.comment
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.shared.tests.TestBase
-import com.google.common.truth.Truth.assertThat
-import org.junit.jupiter.api.Test
 
-class PumpEnactResultExtensionTest : TestBase() {
+import kotlinx.serialization.json.int
+import kotlinx.serialization.json.double
+import kotlinx.serialization.json.jsonPrimitive
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
+
+
+class PumpEnactResultExtensionTest {
 
     // Simple test implementation of PumpEnactResult
     private class TestPumpEnactResult : PumpEnactResult {
@@ -41,11 +47,11 @@ class PumpEnactResultExtensionTest : TestBase() {
             bolusDelivered = 2.5
         }
 
-        val json = result.json(baseBasal = 1.0)
+        val json = result.jsonObject(baseBasal = 1.0)
 
-        assertThat(json.getDouble("smb")).isEqualTo(2.5)
-        assertThat(json.has("rate")).isFalse()
-        assertThat(json.has("duration")).isFalse()
+        assertEquals(2.5, json.getValue("smb").jsonPrimitive.double)
+        assertFalse(json.containsKey("rate"))
+        assertFalse(json.containsKey("duration"))
     }
 
     @Test
@@ -54,9 +60,9 @@ class PumpEnactResultExtensionTest : TestBase() {
             bolusDelivered = 0.0
         }
 
-        val json = result.json(baseBasal = 1.0)
+        val json = result.jsonObject(baseBasal = 1.0)
 
-        assertThat(json.has("smb")).isFalse()
+        assertFalse(json.containsKey("smb"))
     }
 
     @Test
@@ -65,11 +71,11 @@ class PumpEnactResultExtensionTest : TestBase() {
             isTempCancel = true
         }
 
-        val json = result.json(baseBasal = 1.0)
+        val json = result.jsonObject(baseBasal = 1.0)
 
-        assertThat(json.getInt("rate")).isEqualTo(0)
-        assertThat(json.getInt("duration")).isEqualTo(0)
-        assertThat(json.has("smb")).isFalse()
+        assertEquals(0, json.getValue("rate").jsonPrimitive.int)
+        assertEquals(0, json.getValue("duration").jsonPrimitive.int)
+        assertFalse(json.containsKey("smb"))
     }
 
     @Test
@@ -80,12 +86,12 @@ class PumpEnactResultExtensionTest : TestBase() {
             duration = 30
         }
 
-        val json = result.json(baseBasal = 1.0)
+        val json = result.jsonObject(baseBasal = 1.0)
 
         // 150% of 1.0 = 1.5
-        assertThat(json.getDouble("rate")).isEqualTo(1.5)
-        assertThat(json.getInt("duration")).isEqualTo(30)
-        assertThat(json.has("smb")).isFalse()
+        assertEquals(1.5, json.getValue("rate").jsonPrimitive.double)
+        assertEquals(30, json.getValue("duration").jsonPrimitive.int)
+        assertFalse(json.containsKey("smb"))
     }
 
     @Test
@@ -96,11 +102,11 @@ class PumpEnactResultExtensionTest : TestBase() {
             duration = 30
         }
 
-        val json = result.json(baseBasal = 0.9)
+        val json = result.jsonObject(baseBasal = 0.9)
 
         // 133% of 0.9 = 1.197, rounded to 1.2
-        assertThat(json.getDouble("rate")).isEqualTo(1.2)
-        assertThat(json.getInt("duration")).isEqualTo(30)
+        assertEquals(1.2, json.getValue("rate").jsonPrimitive.double)
+        assertEquals(30, json.getValue("duration").jsonPrimitive.int)
     }
 
     @Test
@@ -111,11 +117,11 @@ class PumpEnactResultExtensionTest : TestBase() {
             duration = 30
         }
 
-        val json = result.json(baseBasal = 1.5)
+        val json = result.jsonObject(baseBasal = 1.5)
 
         // 0% of 1.5 = 0.0
-        assertThat(json.getDouble("rate")).isEqualTo(0.0)
-        assertThat(json.getInt("duration")).isEqualTo(30)
+        assertEquals(0.0, json.getValue("rate").jsonPrimitive.double)
+        assertEquals(30, json.getValue("duration").jsonPrimitive.int)
     }
 
     @Test
@@ -125,12 +131,12 @@ class PumpEnactResultExtensionTest : TestBase() {
             duration = 45
         }
 
-        val json = result.json(baseBasal = 1.0)
+        val json = result.jsonObject(baseBasal = 1.0)
 
         // Absolute temp puts value in "rate" field, not "absolute"
-        assertThat(json.getDouble("rate")).isEqualTo(2.0)
-        assertThat(json.getInt("duration")).isEqualTo(45)
-        assertThat(json.has("smb")).isFalse()
+        assertEquals(2.0, json.getValue("rate").jsonPrimitive.double)
+        assertEquals(45, json.getValue("duration").jsonPrimitive.int)
+        assertFalse(json.containsKey("smb"))
     }
 
     @Test
@@ -141,12 +147,12 @@ class PumpEnactResultExtensionTest : TestBase() {
         }
 
         // baseBasal should not affect absolute temp
-        val json1 = result.json(baseBasal = 1.0)
-        val json2 = result.json(baseBasal = 2.0)
+        val json1 = result.jsonObject(baseBasal = 1.0)
+        val json2 = result.jsonObject(baseBasal = 2.0)
 
         // Absolute temp puts value in "rate" field, not "absolute"
-        assertThat(json1.getDouble("rate")).isEqualTo(2.5)
-        assertThat(json2.getDouble("rate")).isEqualTo(2.5)
+        assertEquals(2.5, json1.getValue("rate").jsonPrimitive.double)
+        assertEquals(2.5, json2.getValue("rate").jsonPrimitive.double)
     }
 
     @Test
@@ -157,13 +163,13 @@ class PumpEnactResultExtensionTest : TestBase() {
             duration = 30
         }
 
-        val json1 = result.json(baseBasal = 1.0)
-        val json2 = result.json(baseBasal = 2.0)
+        val json1 = result.jsonObject(baseBasal = 1.0)
+        val json2 = result.jsonObject(baseBasal = 2.0)
 
         // 200% of 1.0 = 2.0
-        assertThat(json1.getDouble("rate")).isEqualTo(2.0)
+        assertEquals(2.0, json1.getValue("rate").jsonPrimitive.double)
         // 200% of 2.0 = 4.0
-        assertThat(json2.getDouble("rate")).isEqualTo(4.0)
+        assertEquals(4.0, json2.getValue("rate").jsonPrimitive.double)
     }
 
     @Test
@@ -174,12 +180,12 @@ class PumpEnactResultExtensionTest : TestBase() {
             duration = 30
         }
 
-        val json = result.json(baseBasal = 1.0)
+        val json = result.jsonObject(baseBasal = 1.0)
 
         // Should have smb, not rate/duration
-        assertThat(json.getDouble("smb")).isEqualTo(3.0)
-        assertThat(json.has("rate")).isFalse()
-        assertThat(json.has("duration")).isFalse()
+        assertEquals(3.0, json.getValue("smb").jsonPrimitive.double)
+        assertFalse(json.containsKey("rate"))
+        assertFalse(json.containsKey("duration"))
     }
 
     @Test
@@ -191,11 +197,11 @@ class PumpEnactResultExtensionTest : TestBase() {
             duration = 30
         }
 
-        val json = result.json(baseBasal = 1.0)
+        val json = result.jsonObject(baseBasal = 1.0)
 
         // Should have zero rate and duration, not calculated percent
-        assertThat(json.getInt("rate")).isEqualTo(0)
-        assertThat(json.getInt("duration")).isEqualTo(0)
+        assertEquals(0, json.getValue("rate").jsonPrimitive.int)
+        assertEquals(0, json.getValue("duration").jsonPrimitive.int)
     }
 
     @Test
@@ -204,9 +210,9 @@ class PumpEnactResultExtensionTest : TestBase() {
             bolusDelivered = 0.1
         }
 
-        val json = result.json(baseBasal = 1.0)
+        val json = result.jsonObject(baseBasal = 1.0)
 
-        assertThat(json.getDouble("smb")).isEqualTo(0.1)
+        assertEquals(0.1, json.getValue("smb").jsonPrimitive.double)
     }
 
     @Test
@@ -215,9 +221,9 @@ class PumpEnactResultExtensionTest : TestBase() {
             bolusDelivered = 25.0
         }
 
-        val json = result.json(baseBasal = 1.0)
+        val json = result.jsonObject(baseBasal = 1.0)
 
-        assertThat(json.getDouble("smb")).isEqualTo(25.0)
+        assertEquals(25.0, json.getValue("smb").jsonPrimitive.double)
     }
 
     @Test
@@ -227,10 +233,10 @@ class PumpEnactResultExtensionTest : TestBase() {
             duration = 30
         }
 
-        val json = result.json(baseBasal = 1.0)
+        val json = result.jsonObject(baseBasal = 1.0)
 
         // Absolute temp puts value in "rate" field, not "absolute"
-        assertThat(json.getDouble("rate")).isEqualTo(0.05)
+        assertEquals(0.05, json.getValue("rate").jsonPrimitive.double)
     }
 
     @Test
@@ -240,10 +246,10 @@ class PumpEnactResultExtensionTest : TestBase() {
             duration = 30
         }
 
-        val json = result.json(baseBasal = 1.0)
+        val json = result.jsonObject(baseBasal = 1.0)
 
         // Absolute temp puts value in "rate" field, not "absolute"
-        assertThat(json.getDouble("rate")).isEqualTo(15.0)
+        assertEquals(15.0, json.getValue("rate").jsonPrimitive.double)
     }
 
     @Test
@@ -253,11 +259,11 @@ class PumpEnactResultExtensionTest : TestBase() {
             duration = 0
         }
 
-        val json = result.json(baseBasal = 1.0)
+        val json = result.jsonObject(baseBasal = 1.0)
 
         // Absolute temp puts value in "rate" field, not "absolute"
-        assertThat(json.getDouble("rate")).isEqualTo(2.0)
-        assertThat(json.getInt("duration")).isEqualTo(0)
+        assertEquals(2.0, json.getValue("rate").jsonPrimitive.double)
+        assertEquals(0, json.getValue("duration").jsonPrimitive.int)
     }
 
     @Test
@@ -268,10 +274,10 @@ class PumpEnactResultExtensionTest : TestBase() {
             duration = 30
         }
 
-        val json = result.json(baseBasal = 0.85)
+        val json = result.jsonObject(baseBasal = 0.85)
 
         // 120% of 0.85 = 1.02
-        assertThat(json.getDouble("rate")).isEqualTo(1.02)
+        assertEquals(1.02, json.getValue("rate").jsonPrimitive.double)
     }
 
     @Test
@@ -282,10 +288,10 @@ class PumpEnactResultExtensionTest : TestBase() {
             duration = 30
         }
 
-        val json = result.json(baseBasal = 1.25)
+        val json = result.jsonObject(baseBasal = 1.25)
 
         // 100% of 1.25 = 1.25
-        assertThat(json.getDouble("rate")).isEqualTo(1.25)
+        assertEquals(1.25, json.getValue("rate").jsonPrimitive.double)
     }
 
     @Test
@@ -296,9 +302,9 @@ class PumpEnactResultExtensionTest : TestBase() {
             duration = 30
         }
 
-        val json = result.json(baseBasal = 2.0)
+        val json = result.jsonObject(baseBasal = 2.0)
 
         // 50% of 2.0 = 1.0
-        assertThat(json.getDouble("rate")).isEqualTo(1.0)
+        assertEquals(1.0, json.getValue("rate").jsonPrimitive.double)
     }
 }
