@@ -1,7 +1,6 @@
 package app.aaps.plugins.aps.loop.extensions
 
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.core.interfaces.pump.comment
 import app.aaps.core.keys.interfaces.TextRef
 
 import kotlinx.serialization.json.int

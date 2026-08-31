@@ -4,18 +4,17 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.interfaces.notifications.AlarmSound
+import app.aaps.core.interfaces.notifications.IosNotificationDelegate
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
 import platform.UserNotifications.UNAuthorizationOptionAlert
 import platform.UserNotifications.UNAuthorizationOptionBadge
 import platform.UserNotifications.UNAuthorizationOptionSound
-import platform.darwin.NSObject
 import platform.UserNotifications.UNNotificationCategory
 import platform.UserNotifications.UNNotificationCategoryOptionCustomDismissAction
 import platform.UserNotifications.UNNotificationDismissActionIdentifier
 import platform.UserNotifications.UNNotificationResponse
-import platform.UserNotifications.UNUserNotificationCenterDelegateProtocol
 import platform.UserNotifications.UNMutableNotificationContent
 import platform.UserNotifications.UNNotificationInterruptionLevel.UNNotificationInterruptionLevelActive
 import platform.UserNotifications.UNNotificationInterruptionLevel.UNNotificationInterruptionLevelTimeSensitive
@@ -53,9 +52,6 @@ class IosSystemNotificationPlatform(
      */
     private val center by lazy { UNUserNotificationCenter.currentNotificationCenter() }
     private var authorizationAsked = false
-
-    /** Strong reference: the centre holds its delegate weakly. */
-    private var delegate: DismissDelegate? = null
 
     /**
      * iOS shows every notification, unlike Android.
@@ -126,19 +122,22 @@ class IosSystemNotificationPlatform(
     /**
      * Learn about notifications the user swiped away outside the app.
      *
-     * Two things are needed, and missing either one makes this silently never fire:
+     * Two things are needed, and missing either one makes this silently never fire: a delegate on
+     * the shared centre, and a category carrying `customDismissAction` - without that iOS reports
+     * taps but not dismissals, which is the trap, because the code looks right and nothing arrives.
      *
-     * 1. A delegate on the shared centre. The slot is app wide and **weak**, so the delegate is held
-     *    in a property here - a local would be collected and the callbacks would simply stop.
-     * 2. A category carrying `customDismissAction`. Without it iOS reports taps but not dismissals,
-     *    which is the trap: the code looks right and nothing ever arrives.
+     * The delegate is not set here. There is one slot for the whole app and `setDelegate` replaces
+     * whatever was in it, so [IosNotificationDelegate] owns it and routes; a second owner would
+     * silently stop the first one's callbacks.
      */
     override fun onDismissed(callback: (instanceKey: Int) -> Unit) {
-        center.setNotificationCategories(setOf(dismissibleCategory()))
-        delegate = DismissDelegate { identifier ->
-            instanceKeyOf(identifier)?.let(callback)
+        IosNotificationDelegate.register(setOf(dismissibleCategory())) { actionId, notificationId ->
+            if (actionId != UNNotificationDismissActionIdentifier) return@register false
+            // A tap is deliberately not a dismissal: the notification goes away, but the user asked
+            // to *see* the thing, so it stays in the in-app list.
+            instanceKeyOf(notificationId)?.let(callback)
+            true
         }
-        center.setDelegate(delegate)
     }
 
     private fun dismissibleCategory(): UNNotificationCategory =
@@ -148,28 +147,6 @@ class IosSystemNotificationPlatform(
             intentIdentifiers = emptyList<Any>(),
             options = UNNotificationCategoryOptionCustomDismissAction
         )
-
-    /**
-     * Only reacts to a dismissal, and hands every other response straight back to iOS.
-     *
-     * A tap is deliberately not treated as a dismissal: the notification does go away, but the user
-     * asked to *see* the thing, so it must stay in the in-app list.
-     */
-    private class DismissDelegate(
-        private val onDismiss: (String) -> Unit
-    ) : NSObject(), UNUserNotificationCenterDelegateProtocol {
-
-        override fun userNotificationCenter(
-            center: UNUserNotificationCenter,
-            didReceiveNotificationResponse: UNNotificationResponse,
-            withCompletionHandler: () -> Unit
-        ) {
-            if (didReceiveNotificationResponse.actionIdentifier == UNNotificationDismissActionIdentifier) {
-                onDismiss(didReceiveNotificationResponse.notification.request.identifier)
-            }
-            withCompletionHandler()
-        }
-    }
 
     internal fun identifier(instanceKey: Int) = "$IDENTIFIER_PREFIX$instanceKey"
 
