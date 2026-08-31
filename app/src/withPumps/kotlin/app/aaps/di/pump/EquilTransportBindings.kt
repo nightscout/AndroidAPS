@@ -1,4 +1,4 @@
-package app.aaps.di
+package app.aaps.di.pump
 
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
@@ -10,18 +10,28 @@ import app.aaps.pump.equil.ble.EquilBleTransportImpl
 import app.aaps.pump.equil.emulator.EquilEmulatorBleTransport
 import app.aaps.pump.equil.emulator.EquilPumpEmulator
 import app.aaps.pump.equil.keys.EquilStringKey
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.BindingContainer
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.Provides
+import dev.zacsweers.metro.SingleIn
 
-@Module
-@InstallIn(SingletonComponent::class)
-class EquilModules {
+/**
+ * Picks the Equil transport: the in-tree emulator when that option is on, otherwise the real BLE one.
+ *
+ * Metro's, not Dagger's, for the same reason as [DanaTransportBindings]: the transport is what the
+ * driver talks to, and the driver is Metro owned. A Dagger copy here would leave the emulator tests and
+ * the running driver on two different transports.
+ *
+ * `EquilBleTransportImpl` carries `@SingleIn(AppScope::class)` but no `@ContributesBinding` - the
+ * binding for `EquilBleTransport` has to be this function, or the emulator branch would be bypassed.
+ */
+@ContributesTo(AppScope::class)
+@BindingContainer
+object EquilTransportBindings {
 
     @Provides
-    @Singleton
+    @SingleIn(AppScope::class)
     fun provideEquilBleTransport(
         config: Config,
         equilBleTransportImpl: EquilBleTransportImpl,

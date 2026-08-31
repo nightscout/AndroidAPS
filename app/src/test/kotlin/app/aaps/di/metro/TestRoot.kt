@@ -41,5 +41,5 @@ fun testRoot(configure: (AapsLeaves) -> Unit = {}): AppRootGraph {
     // PumpLeaves is mocked like AapsLeaves: the test source set compiles against the `full` flavour, so
     // this is the pump-bearing copy, and no test needs a real BLE transport.
     return createGraphFactory<AppRootGraph.Factory>()
-        .create(scope, mock<Context>(defaultAnswer = Answers.RETURNS_MOCKS), leaves, CoreObjectsGraph, mock<PumpLeaves>(defaultAnswer = Answers.RETURNS_MOCKS))
+        .create(scope, mock<Context>(defaultAnswer = Answers.RETURNS_MOCKS), leaves, CoreObjectsGraph)
 }

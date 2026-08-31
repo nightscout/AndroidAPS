@@ -130,7 +130,7 @@ class EquilEmulatorActivationTest {
     @Inject lateinit var profileRepository: ProfileRepository
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var insulinManager: InsulinManager
-    @Inject lateinit var bleTransport: EquilBleTransport
+    private val bleTransport get() = metroGraphs.pumps.equilBleTransport
     @Inject lateinit var hardLimits: HardLimits
 
     // Test-harness singletons (active-pump selection, profile activation, teardown).

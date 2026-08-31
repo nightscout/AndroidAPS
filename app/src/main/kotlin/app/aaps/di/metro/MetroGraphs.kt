@@ -196,8 +196,7 @@ import javax.inject.Singleton
 class MetroGraphs @Inject constructor(
 
     private val leaves: Provider<AapsLeaves>,
-    @ApplicationContext private val contextProvider: Provider<Context>,
-    private val pumpLeaves: Provider<PumpLeaves>
+    @ApplicationContext private val contextProvider: Provider<Context>
 ) {
 
 
@@ -222,7 +221,7 @@ class MetroGraphs @Inject constructor(
 
     /** The one Metro root. Sub-graphs are extensions of it rather than roots of their own. */
     private val root: AppRootGraph by lazy {
-        createGraphFactory<AppRootGraph.Factory>().create(applicationScope, contextProvider.get(), leaves.get(), CoreObjectsGraph, pumpLeaves.get())
+        createGraphFactory<AppRootGraph.Factory>().create(applicationScope, contextProvider.get(), leaves.get(), CoreObjectsGraph)
     }
 
     /**

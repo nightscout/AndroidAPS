@@ -49,11 +49,15 @@ import java.util.Date
 import java.util.EnumSet
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.time.Duration.Companion.hours
 
-@Singleton
+@ContributesBinding(AppScope::class, binding = binding<OmnipodDashManager>())
+@SingleIn(AppScope::class)
 class OmnipodDashManagerImpl @Inject constructor(
     private val logger: AAPSLogger,
     private val podStateManager: OmnipodDashPodStateManager,

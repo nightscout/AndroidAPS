@@ -535,8 +535,7 @@ interface AppRootGraph : MetroViewModelMultibindings, PumpAccessors {
             /** The application context. Android owns it, so it is passed in rather than bound. */
             @Provides context: Context,
             @Includes leaves: AapsLeaves,
-            @Includes coreObjects: CoreObjectsGraph,
-            @Includes pumpLeaves: PumpLeaves
+            @Includes coreObjects: CoreObjectsGraph
         ): AppRootGraph
     }
 }

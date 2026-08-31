@@ -9,6 +9,7 @@ import app.aaps.pump.danarkorean.DanaRKoreanPlugin
 import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danarv2.DanaRv2Plugin
 import app.aaps.pump.equil.EquilPumpPlugin
+import app.aaps.pump.equil.ble.EquilBleTransport
 import app.aaps.pump.equil.database.EquilHistoryPumpDao
 import app.aaps.pump.equil.database.EquilHistoryRecordDao
 import app.aaps.pump.equil.manager.EquilManager
@@ -55,6 +56,7 @@ interface PumpAccessors {
 
     val rfcommTransport: RfcommTransport
     val bleTransport: BleTransport
+    val equilBleTransport: EquilBleTransport
 
     val danaHistoryRecordDao: DanaHistoryRecordDao
     val equilHistoryRecordDao: EquilHistoryRecordDao

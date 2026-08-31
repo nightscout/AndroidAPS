@@ -146,17 +146,17 @@ class SplitBrainTest {
      * excuse it is exactly the hole that let this test pass over a reverted ProfileSwitchSilentGate.
      */
     private fun daggerOwnedTypes(): Set<Class<*>> {
-        val leaves = (AapsLeaves::class.java.declaredMethods + PumpLeaves::class.java.declaredMethods)
+        // `PumpLeaves` used to be read here too. It is gone: every pump object is Metro owned now, so
+        // there was nothing left for it to hand over and the class was empty.
+        val leaves = AapsLeaves::class.java.declaredMethods
             .filter { it.parameterCount == 0 }
             .map { it.returnType }
             .toSet()
 
         // A floor, not a target: it tells "nothing is handed over" apart from "the reflection stopped
         // finding anything". It has to come DOWN as the leaves are converted to Metro ownership - when
-        // the last one goes this check goes with it, along with both leaf classes.
-        // Nearly done: this floor exists only to tell "nothing to report" from "the reflection broke",
-        // and it dies with both leaf classes. Keep lowering it as leaves go; never raise it.
-        check(leaves.size > 4) { "Only ${leaves.size} leaf types found - the reflection broke" }
+        // the last one goes this check goes with it, and so does `AapsLeaves`. Never raise it.
+        check(leaves.size > 2) { "Only ${leaves.size} leaf types found - the reflection broke" }
         return leaves
     }
 }
