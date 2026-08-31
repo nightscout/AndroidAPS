@@ -87,6 +87,15 @@ kotlin {
             }
         }
 
+        // Only the iOS SecureEncrypt needs this - AES-GCM and SHA-256 through the same library the
+        // client-control crypto already uses, so both platforms share one vetted implementation.
+        iosMain {
+            dependencies {
+                implementation(libs.cryptography.core)
+                implementation(libs.cryptography.provider.optimal)
+            }
+        }
+
         // Tests for commonMain classes belong here, not in androidHostTest: a test that only runs on
         // the JVM says nothing about the target the code was moved to common for.
         commonTest {
