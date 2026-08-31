@@ -42,6 +42,7 @@ import app.aaps.pump.medtrum.MedtrumPump
 import app.aaps.pump.medtrum.ble.MedtrumBleTransport
 import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
 import app.aaps.pump.omnipod.dash.OmnipodDashPumpPlugin
+import app.aaps.pump.omnipod.eros.OmnipodErosPumpPlugin
 import app.aaps.pump.omnipod.dash.driver.OmnipodDashManager
 import app.aaps.pump.omnipod.dash.history.database.DashHistoryDatabase
 import app.aaps.pump.omnipod.dash.history.database.HistoryRecordDao
@@ -113,7 +114,8 @@ class PumpLeavesModule {
         preferenceManager: Provider<PreferenceManager>,
         alarmRegistry: Provider<IAlarmRegistry>,
         rxAction: Provider<RxAction>,
-        omnipodDashPumpPlugin: Provider<OmnipodDashPumpPlugin>
+        omnipodDashPumpPlugin: Provider<OmnipodDashPumpPlugin>,
+        omnipodErosPumpPlugin: Provider<OmnipodErosPumpPlugin>
     ): PumpLeaves = PumpLeaves(
         bleTransport, rfcommTransport, danaHistoryRecordDao, diaconnHistoryRecordDao, diaconnHistoryDatabase,
         equilBleTransport, equilHistoryPumpDao, equilHistoryRecordDao, dashHistoryDatabase, historyMapper, historyRecordDao,
@@ -126,6 +128,6 @@ class PumpLeavesModule {
         serviceTaskExecutor, medtronicHistoryData, medtronicPumpStatus, medtronicUtil,
         patchManager, patchManagerExecutor, patchConfig, tempBasalManager, normalBasalManager,
         preferenceManager, alarmRegistry, rxAction,
-        omnipodDashPumpPlugin
+        omnipodDashPumpPlugin, omnipodErosPumpPlugin
     )
 }

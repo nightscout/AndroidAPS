@@ -23,9 +23,11 @@ class OmnipodErosHistoryModule {
     internal fun provideHistoryRecordDao(erosHistoryDatabase: ErosHistoryDatabase): ErosHistoryRecordDao =
         erosHistoryDatabase.historyRecordDao()
 
+    // Explicit return type: Metro reads this module through Dagger interop and rejects an inferred one,
+    // because the type a binding provides has to be readable without compiling the body.
     @Provides
     @Singleton
-    internal fun provideErosHistory(dao: ErosHistoryRecordDao) =
+    internal fun provideErosHistory(dao: ErosHistoryRecordDao): ErosHistory =
         ErosHistory(dao)
 
 }

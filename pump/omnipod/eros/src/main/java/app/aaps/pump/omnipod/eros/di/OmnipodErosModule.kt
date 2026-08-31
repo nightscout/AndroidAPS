@@ -1,33 +1,29 @@
 package app.aaps.pump.omnipod.eros.di
 
-import app.aaps.core.interfaces.di.PumpDriver
-import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.pump.omnipod.eros.OmnipodErosPumpPlugin
 import app.aaps.pump.omnipod.eros.driver.manager.ErosPodStateManager
 import app.aaps.pump.omnipod.eros.manager.AapsErosPodStateManager
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dagger.multibindings.IntKey
-import dagger.multibindings.IntoMap
 
+/**
+ * A plain class, not an `abstract class` with a companion object.
+ *
+ * It held one `@Binds` for the plugin registration, which is why it was abstract; that moved onto
+ * [app.aaps.pump.omnipod.eros.OmnipodErosPumpPlugin] as Metro's `@ContributesIntoMap`. It had to move:
+ * the Dagger plugin buckets were deleted while this module was out of the build, so a `@Binds @IntoMap`
+ * here would now feed a map nothing reads - and the driver would just be missing from the plugin list,
+ * with nothing failing to say so.
+ *
+ * Left abstract with only a companion, this crashed Metro's code generator outright
+ * (`companionObject(...) is null` while processing `AppRootGraph`).
+ */
 @Module(includes = [OmnipodErosHistoryModule::class])
 @InstallIn(SingletonComponent::class)
 @Suppress("unused")
-abstract class OmnipodErosModule {
+class OmnipodErosModule {
 
-    companion object {
-
-        @Provides
-        fun erosPodStateManagerProvider(aapsErosPodStateManager: AapsErosPodStateManager): ErosPodStateManager = aapsErosPodStateManager
-    }
-
-    // Pump plugin registration — @IntKey range 1000–1200, see `mergePlugins` for the overview
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @IntKey(1070)
-    abstract fun bindOmnipodErosPumpPlugin(plugin: OmnipodErosPumpPlugin): PluginBase
+    @Provides
+    fun erosPodStateManagerProvider(aapsErosPodStateManager: AapsErosPodStateManager): ErosPodStateManager = aapsErosPodStateManager
 }

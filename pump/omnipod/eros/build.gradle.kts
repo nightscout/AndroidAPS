@@ -1,11 +1,19 @@
 plugins {
     alias(libs.plugins.android.library)
+    alias(libs.plugins.metro)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.hilt)
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("jacoco-module-dependencies")
+}
+
+metro {
+    interop {
+        // The classes here keep their javax annotations; interop is what lets Metro read them.
+        includeDagger()
+    }
 }
 
 android {
@@ -48,6 +56,6 @@ dependencies {
 
 
     ksp(libs.com.google.dagger.compiler)
-    ksp(libs.com.google.dagger.hilt.compiler)
+    ksp(libs.com.google.dagger.hilt.compiler)
     ksp(libs.androidx.room.compiler)
 }

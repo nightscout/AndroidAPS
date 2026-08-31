@@ -42,6 +42,7 @@ import app.aaps.pump.medtrum.MedtrumPump
 import app.aaps.pump.medtrum.ble.MedtrumBleTransport
 import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
 import app.aaps.pump.omnipod.dash.OmnipodDashPumpPlugin
+import app.aaps.pump.omnipod.eros.OmnipodErosPumpPlugin
 import app.aaps.pump.omnipod.dash.driver.OmnipodDashManager
 import app.aaps.pump.omnipod.dash.history.database.DashHistoryDatabase
 import app.aaps.pump.omnipod.dash.history.database.HistoryRecordDao
@@ -118,7 +119,8 @@ class PumpLeaves(
     private val preferenceManagerProvider: Provider<PreferenceManager>,
     private val alarmRegistryProvider: Provider<IAlarmRegistry>,
     private val rxActionProvider: Provider<RxAction>,
-    private val omnipodDashPumpPluginProvider: Provider<OmnipodDashPumpPlugin>
+    private val omnipodDashPumpPluginProvider: Provider<OmnipodDashPumpPlugin>,
+    private val omnipodErosPumpPluginProvider: Provider<OmnipodErosPumpPlugin>
 ) {
 
     @Provides fun bleTransport(): BleTransport = bleTransportProvider.get()
@@ -190,4 +192,5 @@ class PumpLeaves(
     @Provides fun preferenceManager(): PreferenceManager = preferenceManagerProvider.get()
     @Provides fun alarmRegistry(): IAlarmRegistry = alarmRegistryProvider.get()
     @Provides fun rxAction(): RxAction = rxActionProvider.get()
+    @Provides fun omnipodErosPumpPlugin(): OmnipodErosPumpPlugin = omnipodErosPumpPluginProvider.get()
 }

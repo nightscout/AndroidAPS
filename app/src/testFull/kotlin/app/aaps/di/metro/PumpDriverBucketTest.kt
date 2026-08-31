@@ -12,6 +12,7 @@ import app.aaps.pump.insight.InsightPlugin
 import app.aaps.pump.medtronic.MedtronicPumpPlugin
 import app.aaps.pump.medtrum.MedtrumPlugin
 import app.aaps.pump.omnipod.dash.OmnipodDashPumpPlugin
+import app.aaps.pump.omnipod.eros.OmnipodErosPumpPlugin
 import info.nightscout.pump.combov2.ComboV2Plugin
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mockingDetails
@@ -41,7 +42,7 @@ class PumpDriverBucketTest {
     @Test
     fun `the pump bucket holds exactly the known drivers`() {
         assertThat(testRoot().contributedPumpDriverPlugins.keys)
-            .containsExactly(1010, 1020, 1030, 1040, 1050, 1060, 1080, 1090, 1100, 1110, 1120, 1130)
+            .containsExactly(1010, 1020, 1030, 1040, 1050, 1060, 1070, 1080, 1090, 1100, 1110, 1120, 1130)
     }
 
     @Test
@@ -54,6 +55,7 @@ class PumpDriverBucketTest {
         assertThat(drivers[1040]).isInstanceOf(DanaRSPlugin::class.java)
         assertThat(drivers[1050]).isInstanceOf(InsightPlugin::class.java)
         assertThat(drivers[1060]).isInstanceOf(ComboV2Plugin::class.java)
+        assertThat(drivers[1070]).isInstanceOf(OmnipodErosPumpPlugin::class.java)
         assertThat(drivers[1080]).isInstanceOf(OmnipodDashPumpPlugin::class.java)
         assertThat(drivers[1090]).isInstanceOf(MedtronicPumpPlugin::class.java)
         assertThat(drivers[1100]).isInstanceOf(DiaconnG8Plugin::class.java)
@@ -88,6 +90,6 @@ class PumpDriverBucketTest {
         // would report it.
         val everyBuild = testRoot().contributedPlugins.keys
 
-        assertThat(everyBuild).containsNoneOf(1010, 1020, 1030, 1040, 1050, 1060, 1080, 1090, 1100, 1110, 1120, 1130)
+        assertThat(everyBuild).containsNoneOf(1010, 1020, 1030, 1040, 1050, 1060, 1070, 1080, 1090, 1100, 1110, 1120, 1130)
     }
 }
