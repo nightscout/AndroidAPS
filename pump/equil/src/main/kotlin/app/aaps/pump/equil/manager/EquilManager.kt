@@ -68,10 +68,11 @@ import java.util.Calendar
 import java.util.Optional
 import javax.inject.Inject
 import javax.inject.Provider
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import kotlin.math.min
 
-@Singleton
+@SingleIn(AppScope::class)
 class EquilManager @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,

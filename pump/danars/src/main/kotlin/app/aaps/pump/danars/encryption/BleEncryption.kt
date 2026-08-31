@@ -1,9 +1,10 @@
 package app.aaps.pump.danars.encryption
 
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class BleEncryption @Inject constructor() {
 
     val deviceName = UByteArray(10)

@@ -151,7 +151,10 @@ class SplitBrainTest {
             .map { it.returnType }
             .toSet()
 
-        check(leaves.size > 50) { "Only ${leaves.size} leaf types found - the reflection broke" }
+        // A floor, not a target: it tells "nothing is handed over" apart from "the reflection stopped
+        // finding anything". It has to come DOWN as the leaves are converted to Metro ownership - when
+        // the last one goes this check goes with it, along with both leaf classes.
+        check(leaves.size > 40) { "Only ${leaves.size} leaf types found - the reflection broke" }
         return leaves
     }
 }
