@@ -11,8 +11,10 @@ import android.content.SharedPreferences
 import android.os.Handler
 import android.os.Looper
 import androidx.core.content.edit
+import app.aaps.plugins.eversense.enums.EversenseAlarm
 import app.aaps.plugins.eversense.enums.EversenseSecurityType
 import app.aaps.plugins.eversense.exceptions.EversenseWriteException
+import app.aaps.plugins.eversense.models.ActiveAlarm
 import app.aaps.plugins.eversense.packets.Eversense365Communicator
 import app.aaps.plugins.eversense.packets.EversenseBasePacket
 import app.aaps.plugins.eversense.packets.EversenseE3Communicator
@@ -545,8 +547,15 @@ class EversenseGattCallback(
         } else if (data.size >= 4 && data[0] == Eversense365Packets.NotificationResponseId && data[1] == 0x03.toByte()) {
             // Push alarm notification
             val alarmCode = data[2].toInt() and 0xFF
-            val alarm = app.aaps.plugins.eversense.models.ActiveAlarm(
-                code = app.aaps.plugins.eversense.enums.EversenseAlarm.from(alarmCode),
+            val alarmType = EversenseAlarm.from(alarmCode)
+            if (alarmType == EversenseAlarm.UNKNOWN) {
+                // Unrecognized/bogus codes (e.g. the removed TxDocked/TxUndocked 68/69) must not
+                // surface as a real alarm - matches the upstream iOS EversenseKit fix.
+                EversenseLogger.warning(TAG, "Received unknown push alarm code: $alarmCode")
+                return
+            }
+            val alarm = ActiveAlarm(
+                code = alarmType,
                 codeRaw = alarmCode,
                 flag = 0,
                 priority = 0

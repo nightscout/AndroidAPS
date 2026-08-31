@@ -30,8 +30,6 @@ import app.aaps.plugins.eversense.packets.e3.GetInsertionDatePacket
 import app.aaps.plugins.eversense.packets.e3.GetInsertionTimePacket
 import app.aaps.plugins.eversense.packets.e3.GetLastCalibrationDatePacket
 import app.aaps.plugins.eversense.packets.e3.GetLastCalibrationTimePacket
-import app.aaps.plugins.eversense.packets.e3.GetNextCalibrationDatePacket
-import app.aaps.plugins.eversense.packets.e3.GetNextCalibrationTimePacket
 import app.aaps.plugins.eversense.packets.e3.GetSettingGlucoseHighEnabled
 import app.aaps.plugins.eversense.packets.e3.GetSettingGlucoseHighThresholdPacket
 import app.aaps.plugins.eversense.packets.e3.GetSettingGlucoseLowThresholdPacket
@@ -105,7 +103,9 @@ class EversenseE3Communicator {
                     rawResponseHex = glucoseData.rawResponseHex
                 )
 
-                // TODO: read history for backfill
+                // TODO: read history for backfill - deliberately not implemented. Eversense is
+                // phasing out E3 in favor of 365 (its EU/OUS successor), so this isn't worth
+                // building for a shrinking user base.
 
                 preferences.edit(commit = true) {
                     putString(StorageKeys.STATE, JSON.encodeToString(state))
@@ -213,28 +213,25 @@ class EversenseE3Communicator {
                     EversenseLogger.debug(TAG, "Reading calibration info...")
                     val calibrationPhase = gatt.writePacket<GetCalibrationPhasePacket.Response>(GetCalibrationPhasePacket())
                     val calibrationReadiness = gatt.writePacket<GetCalibrationReadinessPacket.Response>(GetCalibrationReadinessPacket())
-                    val nextCalibrationDate = gatt.writePacket<GetNextCalibrationDatePacket.Response>(GetNextCalibrationDatePacket())
-                    val nextCalibrationTime = gatt.writePacket<GetNextCalibrationTimePacket.Response>(GetNextCalibrationTimePacket())
                     val lastCalibrationDate = gatt.writePacket<GetLastCalibrationDatePacket.Response>(GetLastCalibrationDatePacket())
                     val lastCalibrationTime = gatt.writePacket<GetLastCalibrationTimePacket.Response>(GetLastCalibrationTimePacket())
                     state.calibrationPhase = calibrationPhase.phase
                     state.calibrationReadiness = calibrationReadiness.readiness
                     val minCalDate = 1577836800000L  // 2020-01-01
                     val maxCalDate = 1893456000000L  // 2030-01-01
-                    val newNextCal = nextCalibrationDate.date + nextCalibrationTime.time
                     val newLastCal = lastCalibrationDate.date + lastCalibrationTime.time
-                    if (newNextCal in minCalDate..maxCalDate) {
-                        state.nextCalibrationDate = newNextCal
-                        EversenseLogger.info(TAG, "nextCalibrationDate accepted: $newNextCal")
-                    } else {
-                        EversenseLogger.warning(TAG, "nextCalibrationDate out of plausible range, ignoring: $newNextCal")
-                    }
                     if (newLastCal in minCalDate..maxCalDate) {
                         if (newLastCal != prevLastCalibrationDate && prevLastCalibrationDate != 0L) {
                             EversenseLogger.info(TAG, "Calibration detected from external source: lastCalibrationDate changed from $prevLastCalibrationDate to $newLastCal")
                         }
                         state.lastCalibrationDate = newLastCal
-                        EversenseLogger.info(TAG, "lastCalibrationDate accepted: $newLastCal")
+                        // E3's calibration cadence is a fixed 24h - derive nextCalibrationDate from
+                        // lastCalibrationDate instead of querying the transmitter for it. The device's
+                        // own GetNextCalibrationDate/TimePacket registers proved unreliable in practice
+                        // (matches the upstream iOS EversenseKit fix, which dropped the same two BLE
+                        // reads for the identical reason - see EversenseKit commit d71d14564f).
+                        state.nextCalibrationDate = newLastCal + TimeUnit.HOURS.toMillis(24)
+                        EversenseLogger.info(TAG, "lastCalibrationDate accepted: $newLastCal, nextCalibrationDate derived: ${state.nextCalibrationDate}")
                     } else {
                         EversenseLogger.warning(TAG, "lastCalibrationDate out of plausible range, ignoring: $newLastCal")
                     }

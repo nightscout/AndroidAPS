@@ -6,6 +6,7 @@ import android.os.Looper
 import androidx.core.content.edit
 import app.aaps.plugins.eversense.EversenseGattCallback
 import app.aaps.plugins.eversense.callbacks.EversenseWatcher
+import app.aaps.plugins.eversense.enums.EversenseAlarm
 import app.aaps.plugins.eversense.enums.EversenseType
 import app.aaps.plugins.eversense.models.EversenseCGMResult
 import app.aaps.plugins.eversense.models.EversenseState
@@ -205,8 +206,11 @@ class Eversense365Communicator {
                 // Read active alarms
                 try {
                     val activeAlarms = gatt.writePacket<GetActiveAlarmsPacket.Response>(GetActiveAlarmsPacket())
-                    state.activeAlarms = activeAlarms.alarms
-                    EversenseLogger.info(TAG, "Active alarms: ${activeAlarms.alarms.map { it.code.title }}")
+                    // Drop unrecognized codes (e.g. the removed TxDocked/TxUndocked 68/69) so they
+                    // can't masquerade as a real ongoing alarm - matches the upstream iOS EversenseKit fix.
+                    val filteredAlarms = activeAlarms.alarms.filter { it.code != EversenseAlarm.UNKNOWN }
+                    state.activeAlarms = filteredAlarms
+                    EversenseLogger.info(TAG, "Active alarms: ${filteredAlarms.map { it.code.title }}")
                 } catch (e: Exception) {
                     EversenseLogger.warning(TAG, "Could not read active alarms: $e")
                 }

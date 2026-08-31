@@ -27,8 +27,11 @@ class GetCurrentGlucosePacket : EversenseBasePacket() {
         val glucoseInMgDl = EversenseE3Parser.readGlucose(receivedData, 9)
         // Reject implausible glucose values — the transmitter occasionally sends
         // unsolicited 0x88 packets after calibration with different byte layout
-        // that produce out-of-range values when parsed at offset 9.
-        if (glucoseInMgDl < 20 || glucoseInMgDl > 600) {
+        // that produce out-of-range values when parsed at offset 9. The 450 mg/dl
+        // ceiling matches the 365 transmitter's safety limit and the upstream iOS
+        // EversenseKit fix, which tightened E3's own ceiling from 1000 to the same
+        // 450 mg/dl (see EversenseKit's TransmitterE3.swift maxGlucose).
+        if (glucoseInMgDl < 20 || glucoseInMgDl > 450) {
             return null
         }
         return Response(
