@@ -7,9 +7,10 @@ import app.aaps.pump.eopatch.core.response.LotNumberResponse
 import app.aaps.pump.eopatch.core.scan.IBleDevice
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class GetLOT @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<LotNumberResponse>(PatchFunc.GET_LOT_NUMBER, patch, aapsLogger) {
     override fun parse(bytes: ByteArray): LotNumberResponse {
         if (bytes[DATA0].toInt() == 0) {

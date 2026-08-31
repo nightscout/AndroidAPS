@@ -9,9 +9,10 @@ import io.reactivex.rxjava3.functions.Function
 import io.reactivex.rxjava3.functions.Predicate
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class StartBondTask @Inject constructor() : TaskBase(TaskFunc.START_BOND) {
 
     @Inject lateinit var startBond: StartBonding

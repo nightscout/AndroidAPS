@@ -8,9 +8,10 @@ import app.aaps.pump.eopatch.core.response.PumpDurationResponse
 import app.aaps.pump.eopatch.core.scan.IBleDevice
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class GetPumpDuration @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<PumpDurationResponse>(PatchFunc.GET_PUMP_DURATION, patch, aapsLogger) {
     override fun parse(bytes: ByteArray) = PumpDurationResponse(
         BytesConverter.toUInt(bytes[DATA0], bytes[DATA1]),

@@ -12,9 +12,10 @@ import app.aaps.pump.eopatch.core.response.ComboBolusStartResponse
 import app.aaps.pump.eopatch.core.scan.IBleDevice
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class ComboBolusStart @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<ComboBolusStartResponse>(PatchFunc.START_COMBO_BOLUS, patch, aapsLogger) {
     override fun parse(bytes: ByteArray): ComboBolusStartResponse {
         if (bytes[DATA0].toInt() != 0) return ComboBolusStartResponse(false, 0, 0)

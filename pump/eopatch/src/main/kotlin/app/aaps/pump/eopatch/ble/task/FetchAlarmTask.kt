@@ -9,9 +9,10 @@ import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class FetchAlarmTask @Inject constructor(
     private val alarmRegistry: IAlarmRegistry
 ) : TaskBase(TaskFunc.FETCH_ALARM) {

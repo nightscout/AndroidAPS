@@ -50,10 +50,13 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 import kotlin.time.Duration.Companion.hours
 
-@Singleton
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class PatchManager @Inject constructor(
     private val aapsPatchManager: PatchManagerExecutor,
     private val pm: PreferenceManager,
@@ -77,7 +80,11 @@ class PatchManager @Inject constructor(
     // App lifetime, like the CompositeDisposable above: this is a singleton that never tears down.
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
-    private var patchScanner: IPatchScanner = PatchScanner(context, aapsLogger)
+    // `by lazy`, and never reassigned - `scan()` is its only reader. `PatchScanner`'s constructor calls
+    // `RxBleClient.create(context)`, which reaches through RxAndroidBle's own Dagger for a
+    // `BluetoothManager`; doing that while this class is constructed opened a BLE client for every user
+    // and broke the plain-JVM graph tests once Metro owned the class.
+    private val patchScanner: IPatchScanner by lazy { PatchScanner(context, aapsLogger) }
     private var mConnectingDisposable: Disposable? = null
 
     // Was an @Inject fun, which is Dagger method injection - Metro does not support it and crashes the

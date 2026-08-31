@@ -7,9 +7,10 @@ import app.aaps.pump.eopatch.core.response.KeyResponse
 import app.aaps.pump.eopatch.core.scan.IBleDevice
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class SequenceGet @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<KeyResponse>(PatchFunc.GET_SEQ_NUM, patch, aapsLogger) {
     override fun parse(bytes: ByteArray): KeyResponse = KeyResponse.create(bytes[SEQ_INDEX], bytes[SEQ_INDEX + 1])
     fun get(): Single<KeyResponse> = writeAndRead(generate())

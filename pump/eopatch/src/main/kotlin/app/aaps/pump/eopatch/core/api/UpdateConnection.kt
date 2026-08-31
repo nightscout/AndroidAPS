@@ -7,9 +7,10 @@ import app.aaps.pump.eopatch.core.response.UpdateConnectionResponse
 import app.aaps.pump.eopatch.core.scan.IBleDevice
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class UpdateConnection @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<UpdateConnectionResponse>(PatchFunc.UPDATE_CONNECTION, patch, aapsLogger) {
     override fun parse(bytes: ByteArray): UpdateConnectionResponse {
         val newState = ByteArray(SIZE)

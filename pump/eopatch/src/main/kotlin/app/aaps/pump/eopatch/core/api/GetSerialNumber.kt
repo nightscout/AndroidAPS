@@ -7,9 +7,10 @@ import app.aaps.pump.eopatch.core.response.SerialNumberResponse
 import app.aaps.pump.eopatch.core.scan.IBleDevice
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class GetSerialNumber @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<SerialNumberResponse>(PatchFunc.GET_SERIAL_NUMBER, patch, aapsLogger) {
     override fun parse(bytes: ByteArray): SerialNumberResponse {
         if (bytes[DATA0].toInt() == 0) {

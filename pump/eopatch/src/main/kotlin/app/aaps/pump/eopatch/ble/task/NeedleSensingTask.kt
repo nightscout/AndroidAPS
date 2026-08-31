@@ -13,10 +13,11 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
 @Suppress("PropertyName")
-@Singleton
+@SingleIn(AppScope::class)
 class NeedleSensingTask @Inject constructor(
     private val alarmRegistry: IAlarmRegistry
 ) : TaskBase(TaskFunc.NEEDLE_SENSING) {

@@ -95,7 +95,8 @@ import java.util.concurrent.Callable
 import java.util.concurrent.TimeUnit
 import javax.crypto.KeyAgreement
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import kotlin.Any
 import kotlin.Boolean
 import kotlin.ByteArray
@@ -108,7 +109,7 @@ import kotlin.Throws
 import kotlin.check
 import kotlin.synchronized
 
-@Singleton
+@SingleIn(AppScope::class)
 class PatchManagerExecutor @Inject constructor(
     private val pm: PreferenceManager,
     private val patchConfig: PatchConfig,

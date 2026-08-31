@@ -83,14 +83,6 @@ class PumpLeaves(
     private val omnipodDashManagerProvider: Provider<OmnipodDashManager>,
     private val omnipodDashPodStateManagerProvider: Provider<OmnipodDashPodStateManager>,
     // The pump state holders and driver plugins - see the note above their @Provides below.
-    private val eopatchPumpPluginProvider: Provider<EopatchPumpPlugin>,
-    private val patchManagerProvider: Provider<IPatchManager>,
-    private val patchManagerExecutorProvider: Provider<PatchManagerExecutor>,
-    private val patchConfigProvider: Provider<PatchConfig>,
-    private val tempBasalManagerProvider: Provider<TempBasalManager>,
-    private val normalBasalManagerProvider: Provider<NormalBasalManager>,
-    private val preferenceManagerProvider: Provider<PreferenceManager>,
-    private val alarmRegistryProvider: Provider<IAlarmRegistry>,
     private val omnipodErosPumpPluginProvider: Provider<OmnipodErosPumpPlugin>,
     private val erosHistoryProvider: Provider<ErosHistory>,
     private val erosPodStateManagerProvider: Provider<ErosPodStateManager>,
@@ -126,14 +118,6 @@ class PumpLeaves(
      * them, because the services do; this hands its instance to Metro. `PumpLeavesTest` fails if a new
      * one is added to a view model without being listed here.
      */
-    @Provides fun eopatchPumpPlugin(): EopatchPumpPlugin = eopatchPumpPluginProvider.get()
-    @Provides fun patchManager(): IPatchManager = patchManagerProvider.get()
-    @Provides fun patchManagerExecutor(): PatchManagerExecutor = patchManagerExecutorProvider.get()
-    @Provides fun patchConfig(): PatchConfig = patchConfigProvider.get()
-    @Provides fun tempBasalManager(): TempBasalManager = tempBasalManagerProvider.get()
-    @Provides fun normalBasalManager(): NormalBasalManager = normalBasalManagerProvider.get()
-    @Provides fun preferenceManager(): PreferenceManager = preferenceManagerProvider.get()
-    @Provides fun alarmRegistry(): IAlarmRegistry = alarmRegistryProvider.get()
     @Provides fun omnipodErosPumpPlugin(): OmnipodErosPumpPlugin = omnipodErosPumpPluginProvider.get()
     // The eros view models are Metro built now, so Metro needs these two - Dagger still provides them,
     // from `app.aaps.di.pump.OmnipodErosHistoryModule`.

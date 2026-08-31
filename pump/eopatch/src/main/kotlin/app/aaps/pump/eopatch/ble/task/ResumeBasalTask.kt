@@ -11,9 +11,10 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class ResumeBasalTask @Inject constructor(
     val alarmRegistry: IAlarmRegistry,
     val startNormalBasalTask: StartNormalBasalTask,

@@ -7,10 +7,11 @@ import app.aaps.pump.eopatch.core.response.PatchBooleanResponse
 import app.aaps.pump.eopatch.core.scan.IBleDevice
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import kotlin.math.roundToInt
 
-@Singleton
+@SingleIn(AppScope::class)
 class BasalPause @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseBooleanAPI(PatchFunc.PAUSE_BASAL, patch, aapsLogger) {
     fun pause(hour: Float): Single<PatchBooleanResponse> {
         var h = (hour * 2).roundToInt()

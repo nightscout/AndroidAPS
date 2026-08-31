@@ -78,14 +78,6 @@ class PumpLeavesModule {
         medtrumBleTransport: Provider<MedtrumBleTransport>,
         omnipodDashManager: Provider<OmnipodDashManager>,
         omnipodDashPodStateManager: Provider<OmnipodDashPodStateManager>,
-        eopatchPumpPlugin: Provider<EopatchPumpPlugin>,
-        patchManager: Provider<IPatchManager>,
-        patchManagerExecutor: Provider<PatchManagerExecutor>,
-        patchConfig: Provider<PatchConfig>,
-        tempBasalManager: Provider<TempBasalManager>,
-        normalBasalManager: Provider<NormalBasalManager>,
-        preferenceManager: Provider<PreferenceManager>,
-        alarmRegistry: Provider<IAlarmRegistry>,
         omnipodErosPumpPlugin: Provider<OmnipodErosPumpPlugin>,
         erosHistory: Provider<ErosHistory>,
         erosPodStateManager: Provider<ErosPodStateManager>,
@@ -97,10 +89,7 @@ class PumpLeavesModule {
 
         equilBleTransport,
         medtrumBleTransport, omnipodDashManager, omnipodDashPodStateManager,
-        eopatchPumpPlugin,
 
-        patchManager, patchManagerExecutor, patchConfig, tempBasalManager, normalBasalManager,
-        preferenceManager, alarmRegistry,
         omnipodErosPumpPlugin, erosHistory, erosPodStateManager,
         aapsErosPodStateManager, aapsOmnipodErosManager, aapsOmnipodUtil, omnipodAlertUtil
     )

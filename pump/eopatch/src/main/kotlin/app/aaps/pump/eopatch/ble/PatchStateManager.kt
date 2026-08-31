@@ -19,9 +19,10 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.Callable
 import java.util.stream.Stream
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class PatchStateManager @Inject constructor(
     private val pm: PreferenceManager,
     private val patchConfig: PatchConfig,

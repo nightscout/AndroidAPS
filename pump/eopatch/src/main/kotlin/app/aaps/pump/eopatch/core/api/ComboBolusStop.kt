@@ -9,9 +9,10 @@ import app.aaps.pump.eopatch.core.response.ComboBolusStopResponse
 import app.aaps.pump.eopatch.core.scan.IBleDevice
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class ComboBolusStop @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<ComboBolusStopResponse>(PatchFunc.STOP_COMBO_BOLUS, patch, aapsLogger) {
     override fun parse(bytes: ByteArray): ComboBolusStopResponse {
         val ret = bytes[DATA0].toInt()

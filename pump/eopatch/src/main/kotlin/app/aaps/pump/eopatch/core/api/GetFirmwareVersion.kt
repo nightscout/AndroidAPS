@@ -8,9 +8,10 @@ import app.aaps.pump.eopatch.core.response.FirmwareVersionResponse
 import app.aaps.pump.eopatch.core.scan.IBleDevice
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class GetFirmwareVersion @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<FirmwareVersionResponse>(PatchFunc.GET_FIRMWARE_VERSION, patch, aapsLogger) {
     override fun parse(bytes: ByteArray): FirmwareVersionResponse {
         val success = bytes[DATA0].toInt() == 0

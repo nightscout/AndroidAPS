@@ -7,9 +7,10 @@ import app.aaps.pump.eopatch.core.response.TemperatureResponse
 import app.aaps.pump.eopatch.core.scan.IBleDevice
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class GetTemperature @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<TemperatureResponse>(PatchFunc.GET_TEMPERATURE, patch, aapsLogger) {
     override fun parse(bytes: ByteArray) = TemperatureResponse(bytes[DATA0].toInt())
     fun get(): Single<TemperatureResponse> = writeAndRead(generate())

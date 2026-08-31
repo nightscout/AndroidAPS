@@ -25,7 +25,9 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 import kotlin.time.Duration.Companion.hours
 
 /**
@@ -36,7 +38,8 @@ import kotlin.time.Duration.Companion.hours
  *
  * Nothing outside this class read those fields; callers only use the [IAlarmRegistry] methods.
  */
-@Singleton
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class AlarmRegistry @Inject constructor(
     private val mContext: Context,
     private val pm: PreferenceManager,
@@ -49,7 +52,11 @@ class AlarmRegistry @Inject constructor(
     private val alarms: Alarms
 ) : IAlarmRegistry {
 
-    private val mOsAlarmManager: AlarmManager = mContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    // `by lazy`, not a direct assignment: Metro owns this class now, and a contributed class is built
+    // for real in the plain-JVM graph tests, where `getSystemService` returns a stand-in that cannot be
+    // cast ("java.lang.Object cannot be cast to android.app.AlarmManager"). Deferring to first use is
+    // also simply better - building the DI graph should not be reaching for a system service.
+    private val mOsAlarmManager: AlarmManager by lazy { mContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager }
     private var mDisposable: Disposable? = null
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
 

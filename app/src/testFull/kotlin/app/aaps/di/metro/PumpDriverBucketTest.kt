@@ -104,11 +104,19 @@ class PumpDriverBucketTest {
 
     /** The two that are still handed over, so a silent flip of either is noticed here. */
     @Test
-    fun `eros and eopatch are still handed over by PumpLeaves`() {
+    fun `eros is the last driver still handed over by PumpLeaves`() {
         val drivers = testRoot().contributedPumpDriverPlugins
 
+        // Eros: two of its @Inject classes are Java, and Metro cannot generate a factory for a class it
+        // has no Kotlin IR for. It is the only one left.
         assertThat(mockingDetails(drivers[1070]).isMock).isTrue()
-        assertThat(mockingDetails(drivers[1110]).isMock).isTrue()
+        // Eopatch used to be here. It could not be Metro owned while three classes did Android work
+        // while being constructed - `PatchManagerExecutor` opened the patch BLE client in an `init`
+        // block, `PatchManager` built an `RxBleClient` through a property, and `AlarmRegistry` cast the
+        // system alarm service. The first became `EopatchPumpPlugin.onStart`, which is the correct
+        // lifecycle anyway (it now runs only when eopatch is the enabled pump, not for every user); the
+        // other two are `by lazy`.
+        assertThat(mockingDetails(drivers[1110]).isMock).isFalse()
     }
 
     @Test
