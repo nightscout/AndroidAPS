@@ -2,6 +2,7 @@ package app.aaps.pump.omnipod.eros.ui.wizard.compose
 
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Stable
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
@@ -27,7 +28,10 @@ import app.aaps.pump.omnipod.eros.R
 import app.aaps.pump.omnipod.eros.driver.definition.ActivationProgress
 import app.aaps.pump.omnipod.eros.manager.AapsErosPodStateManager
 import app.aaps.pump.omnipod.eros.manager.AapsOmnipodErosManager
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,7 +42,10 @@ import javax.inject.Provider
 import app.aaps.pump.omnipod.common.R as CommonR
 
 @Stable
-@HiltViewModel
+// Registers itself: @ViewModelKey infers the key from the class. Deliberately unscoped, so each screen
+// gets its own - the same shape the other pump view models use.
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 class ErosOmnipodWizardViewModel @Inject constructor(
     private val aapsOmnipodManager: AapsOmnipodErosManager,
     private val podStateManager: AapsErosPodStateManager,

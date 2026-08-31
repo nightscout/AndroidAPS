@@ -43,6 +43,12 @@ import app.aaps.pump.medtrum.ble.MedtrumBleTransport
 import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
 import app.aaps.pump.omnipod.dash.OmnipodDashPumpPlugin
 import app.aaps.pump.omnipod.eros.OmnipodErosPumpPlugin
+import app.aaps.pump.omnipod.eros.driver.manager.ErosPodStateManager
+import app.aaps.pump.omnipod.eros.history.ErosHistory
+import app.aaps.pump.omnipod.eros.manager.AapsErosPodStateManager
+import app.aaps.pump.omnipod.eros.manager.AapsOmnipodErosManager
+import app.aaps.pump.omnipod.eros.util.AapsOmnipodUtil
+import app.aaps.pump.omnipod.eros.util.OmnipodAlertUtil
 import app.aaps.pump.omnipod.dash.driver.OmnipodDashManager
 import app.aaps.pump.omnipod.dash.history.database.DashHistoryDatabase
 import app.aaps.pump.omnipod.dash.history.database.HistoryRecordDao
@@ -115,7 +121,13 @@ class PumpLeavesModule {
         alarmRegistry: Provider<IAlarmRegistry>,
         rxAction: Provider<RxAction>,
         omnipodDashPumpPlugin: Provider<OmnipodDashPumpPlugin>,
-        omnipodErosPumpPlugin: Provider<OmnipodErosPumpPlugin>
+        omnipodErosPumpPlugin: Provider<OmnipodErosPumpPlugin>,
+        erosHistory: Provider<ErosHistory>,
+        erosPodStateManager: Provider<ErosPodStateManager>,
+        aapsErosPodStateManager: Provider<AapsErosPodStateManager>,
+        aapsOmnipodErosManager: Provider<AapsOmnipodErosManager>,
+        aapsOmnipodUtil: Provider<AapsOmnipodUtil>,
+        omnipodAlertUtil: Provider<OmnipodAlertUtil>
     ): PumpLeaves = PumpLeaves(
         bleTransport, rfcommTransport, danaHistoryRecordDao, diaconnHistoryRecordDao, diaconnHistoryDatabase,
         equilBleTransport, equilHistoryPumpDao, equilHistoryRecordDao, dashHistoryDatabase, historyMapper, historyRecordDao,
@@ -128,6 +140,7 @@ class PumpLeavesModule {
         serviceTaskExecutor, medtronicHistoryData, medtronicPumpStatus, medtronicUtil,
         patchManager, patchManagerExecutor, patchConfig, tempBasalManager, normalBasalManager,
         preferenceManager, alarmRegistry, rxAction,
-        omnipodDashPumpPlugin, omnipodErosPumpPlugin
+        omnipodDashPumpPlugin, omnipodErosPumpPlugin, erosHistory, erosPodStateManager,
+        aapsErosPodStateManager, aapsOmnipodErosManager, aapsOmnipodUtil, omnipodAlertUtil
     )
 }
