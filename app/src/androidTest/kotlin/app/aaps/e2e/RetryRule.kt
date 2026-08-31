@@ -18,7 +18,7 @@ import org.junit.runners.model.Statement
  * Wire it as the **outermost** rule so each attempt is a fully fresh test (Hilt setup/teardown included):
  * ```
  * val hiltRule = HiltAndroidRule(this)
- * @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(hiltRule)
+ * @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(ResetGraphRule())
  * ```
  *
  * Assumption failures (skips) are never retried.

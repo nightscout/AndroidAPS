@@ -2,6 +2,8 @@ package app.aaps
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import app.aaps.di.newStaticInjector
+import app.aaps.di.testGraphs
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.aps.APSResult
@@ -35,7 +37,6 @@ import app.aaps.plugins.aps.openAPSSMBAutoISF.DetermineBasalAdapterAutoISFJS
 import app.aaps.plugins.aps.openAPSSMBDynamicISF.DetermineBasalAdapterSMBDynamicISFJS
 import app.aaps.plugins.aps.utils.ScriptReader
 import com.google.common.truth.Truth.assertThat
-import dagger.hilt.android.testing.HiltAndroidTest
 import org.json.JSONObject
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -45,22 +46,20 @@ import org.skyscreamer.jsonassert.JSONCompareMode
 import org.skyscreamer.jsonassert.comparator.CustomComparator
 import java.io.File
 import java.nio.charset.StandardCharsets
-import javax.inject.Inject
 import kotlin.math.floor
 
-@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class ReplayApsResultsTest : HiltInstrumentedTest() {
+class ReplayApsResultsTest : AapsInstrumentedTest() {
 
-    @Inject lateinit var fileListProvider: FileListProvider
-    @Inject lateinit var storage: Storage
-    @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var injector: StaticInjector
-    @Inject lateinit var determineBasalAMA: DetermineBasalAMA
-    @Inject lateinit var determineBasalSMBDynamicISF: DetermineBasalSMB
-    @Inject lateinit var determineBasalAutoISF: DetermineBasalAutoISF
-    @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var preferences: Preferences
+    private val fileListProvider get() = testGraphs.fileListProvider
+    private val storage get() = testGraphs.storage
+    private val aapsLogger get() = testGraphs.aapsLogger
+    private val injector by lazy { newStaticInjector() }
+    private val determineBasalAMA get() = testGraphs.determineBasalAMA
+    private val determineBasalSMBDynamicISF get() = testGraphs.determineBasalSMB
+    private val determineBasalAutoISF get() = testGraphs.determineBasalAutoISF
+    private val dateUtil get() = testGraphs.dateUtil
+    private val preferences get() = testGraphs.preferences
 
     private var ktTime = 0L
     private var jsTime = 0L

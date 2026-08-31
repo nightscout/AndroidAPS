@@ -10,6 +10,7 @@ import androidx.test.uiautomator.StaleObjectException
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject2
 import androidx.work.WorkManager
+import app.aaps.di.testGraphs
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.Config
@@ -34,13 +35,11 @@ import app.aaps.implementation.plugin.PluginStore
 import app.aaps.plugins.aps.utils.StaticInjector
 import app.aaps.pump.dana.DanaPump
 import com.google.common.truth.Truth.assertThat
-import dev.zacsweers.metro.HasMemberInjections
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
 import java.io.File
 import java.util.regex.Pattern
-import javax.inject.Inject
 
 /**
  * Pump-agnostic base for the Dana **UI** E2E tests: everything that reaches the emulated pump through
@@ -61,34 +60,30 @@ import javax.inject.Inject
  * read is in flight, so every interaction with it waits for [waitForQueueIdle] first.
  *
  * The `@Inject` fields here are inherited: Hilt injects them when the concrete subclass calls
- * `hiltRule.inject()` (via [injectHilt]).
+ * the graph, which the application owns from the moment the process starts.
  */
-// See the note on `HiltInstrumentedTest`: Hilt does the injecting, Metro's interop only needs telling.
-@HasMemberInjections
+// See the note on `AapsInstrumentedTest`: Hilt does the injecting, Metro's interop only needs telling.
 abstract class AbstractDanaEmulatorUiTest {
 
     // Public rather than protected: Dagger's generated member injector cannot write Kotlin
     // `protected` fields. Still accessible to subclasses as inherited members.
-    @Inject lateinit var preferences: Preferences
-    @Inject lateinit var pluginStore: PluginStore
-    @Inject lateinit var commandQueue: CommandQueue
-    @Inject lateinit var pluginList: List<@JvmSuppressWildcards PluginBase>
-    @Inject lateinit var configBuilder: ConfigBuilder
-    @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var profileRepository: ProfileRepository
-    @Inject lateinit var insulinManager: InsulinManager
-    @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var config: Config
-    @Suppress("unused") @Inject lateinit var staticInjector: StaticInjector
+    protected val preferences get() = testGraphs.preferences
+    protected val pluginStore get() = testGraphs.pluginStore
+    protected val commandQueue get() = testGraphs.commandQueue
+    protected val pluginList get() = testGraphs.allPlugins(testGraphs.aapsLogger)
+    protected val configBuilder get() = testGraphs.configBuilder
+    protected val profileFunction get() = testGraphs.profileFunction
+    protected val profileRepository get() = testGraphs.profileRepository
+    protected val insulinManager get() = testGraphs.insulinManager
+    protected val dateUtil get() = testGraphs.dateUtil
+    protected val activePlugin get() = testGraphs.activePlugin
+    protected val config get() = testGraphs.config
 
     protected val instrumentation get() = InstrumentationRegistry.getInstrumentation()
     protected val device: UiDevice get() = UiDevice.getInstance(instrumentation)
 
     // ---- pump-specific hooks (implemented per Dana family) --------------------------------------
 
-    /** Subclass body: `hiltRule.inject()`. Kept a hook because the `HiltAndroidRule` lives on the concrete test. */
-    protected abstract fun injectHilt()
 
     /** Seeds the transport/pairing/active-pump/maxDaily/history state for [variant] on the concrete pump. */
     protected abstract fun seedPairedPump(variant: ExternalOptions)
@@ -137,7 +132,6 @@ abstract class AbstractDanaEmulatorUiTest {
      */
     protected fun bringUp(variant: ExternalOptions) {
         EmulatedOptions.enabled = setOf(variant)
-        injectHilt()
 
         // BLEComm.connect gates on this before it ever reaches the transport.
         instrumentation.uiAutomation.grantRuntimePermission(PKG, Manifest.permission.BLUETOOTH_CONNECT)

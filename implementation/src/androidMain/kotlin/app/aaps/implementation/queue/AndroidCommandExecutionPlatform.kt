@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.PowerManager
 import androidx.core.content.ContextCompat
-import dagger.hilt.android.qualifiers.ApplicationContext
 import app.aaps.core.utils.extensions.safeDisable
 import app.aaps.core.utils.extensions.safeEnable
 import dev.zacsweers.metro.AppScope
@@ -18,7 +17,7 @@ import kotlinx.coroutines.delay
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 class AndroidCommandExecutionPlatform @Inject constructor(
-    @ApplicationContext private val context: Context
+    private val context: Context
 ) : CommandExecutionPlatform {
 
     override fun acquireWakeLock(tag: String, durationMs: Long): WakeLockHandle? {

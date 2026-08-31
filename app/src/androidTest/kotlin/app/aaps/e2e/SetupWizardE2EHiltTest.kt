@@ -12,6 +12,8 @@ import androidx.test.uiautomator.StaleObjectException
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject2
 import androidx.test.uiautomator.Until
+import app.aaps.di.ResetGraphRule
+import app.aaps.di.testGraphs
 import app.aaps.ComposeMainActivity
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
@@ -21,8 +23,6 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.plugins.aps.utils.StaticInjector
 import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
-import dagger.hilt.android.testing.HiltAndroidRule
-import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -31,7 +31,6 @@ import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import java.io.File
 import java.util.regex.Pattern
-import javax.inject.Inject
 
 /**
  * **In-process** end-to-end UI test: drives a fresh AAPS setup wizard all the way to a running,
@@ -58,25 +57,22 @@ import javax.inject.Inject
  * navigation is **verified-with-retry** ([tapNext]/[openVia]); profile number fields use **real key
  * events**; confirm buttons behind the IME are reached only after [hideKeyboard]. English-only.
  */
-@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class SetupWizardE2EHiltTest {
 
-    val hiltRule = HiltAndroidRule(this)
 
     // RetryRule outermost: a flaky timeout self-heals on a fresh attempt; see [RetryRule].
-    @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(hiltRule)
+    @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(ResetGraphRule())
 
     // The plugin/config init that MainApp does in onCreate (the Hilt test app can't). Inlined rather
-    // than inherited from HiltInstrumentedTest so SharedPreferences can be cleared BEFORE the graph
+    // than inherited from AapsInstrumentedTest so SharedPreferences can be cleared BEFORE the graph
     // initializes (see setUp) — order matters for a clean fresh-app boot.
-    @Inject lateinit var pluginStore: PluginStore
-    @Inject lateinit var pluginList: List<@JvmSuppressWildcards PluginBase>
-    @Inject lateinit var configBuilder: ConfigBuilder
-    @Suppress("unused") @Inject lateinit var staticInjector: StaticInjector
-    @Inject lateinit var config: Config
-    @Inject lateinit var preferences: Preferences
-    @Inject lateinit var objectivesPlugin: ObjectivesPlugin
+    private val pluginStore get() = testGraphs.pluginStore
+    private val pluginList get() = testGraphs.allPlugins(testGraphs.aapsLogger)
+    private val configBuilder get() = testGraphs.configBuilder
+    private val config get() = testGraphs.config
+    private val preferences get() = testGraphs.preferences
+    private val objectivesPlugin get() = testGraphs.objectivesPlugin
 
     private val instrumentation get() = InstrumentationRegistry.getInstrumentation()
     private val device: UiDevice get() = UiDevice.getInstance(instrumentation)
@@ -89,7 +85,6 @@ class SetupWizardE2EHiltTest {
         // (e.g. InsulinImpl seeds a default insulin; clearing AFTER init left its list empty → AppContent
         // crashed in getICfg). Then reproduce the bits of MainApp.onCreate the UI needs.
         clearAllSharedPrefs()
-        hiltRule.inject()
         preferences.put(BooleanNonKey.GeneralSetupWizardProcessed, false) // force the wizard to show
         pluginStore.plugins = pluginList
         configBuilder.initialize()

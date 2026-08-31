@@ -80,6 +80,8 @@ import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.database.AppRepository
 import app.aaps.di.metro.MetroGraphs
+import app.aaps.database.di.DatabaseConfig
+import app.aaps.di.ExternalOptionsOverride
 import app.aaps.di.metro.MetroWorkerFactory
 import app.aaps.implementation.lifecycle.ProcessLifecycleListener
 import app.aaps.implementation.plugin.PluginStore
@@ -115,7 +117,6 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.firebase.remoteconfig.remoteConfig
-import dagger.hilt.android.HiltAndroidApp
 import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
 import io.reactivex.rxjava3.exceptions.UndeliverableException
 import io.reactivex.rxjava3.plugins.RxJavaPlugins
@@ -137,7 +138,6 @@ import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.time.Duration.Companion.milliseconds
 
-@HiltAndroidApp
 class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, Configuration.Provider {
 
     // Every Android entry point on the phone is filled by Metro now - dagger.android is gone from this
@@ -152,54 +152,70 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
     // returns null and falls back to WorkManager's default reflective factory, which is what builds
     // WorkManager's own internal workers. The default androidx.startup WorkManagerInitializer is removed
     // in AndroidManifest.xml so this config wins.
-    @Inject lateinit var metroGraphs: MetroGraphs
+    /**
+     * The one Metro root, built here rather than handed in by Dagger.
+     *
+     * `by lazy` so nothing is resolved before `onCreate` runs - the graph reaches Android services, and
+     * an Application field initialiser runs before the framework is ready for that.
+     *
+     * The last two arguments are the only things an instrumented test does differently; see
+     * `AppRootGraph.Factory`. Production wants the real database and no forced options.
+     */
+    private val metroGraphs by lazy {
+        MetroGraphs(
+            context = this,
+            memberInjector = this,
+            databaseConfig = DatabaseConfig.PRODUCTION,
+            externalOptionsOverride = ExternalOptionsOverride.NONE
+        )
+    }
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder()
             .setWorkerFactory(MetroWorkerFactory(metroGraphs))
             .build()
 
-    @Inject lateinit var pluginStore: PluginStore
-    @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var activityMonitor: ActivityMonitor
-    @Inject lateinit var versionCheckersUtils: VersionCheckerUtils
-    @Inject lateinit var sp: SP
-    @Inject lateinit var preferences: Preferences
-    @Inject lateinit var config: Config
-    @Inject lateinit var configBuilder: ConfigBuilder
-    @Inject lateinit var plugins: List<@JvmSuppressWildcards PluginBase>
-    @Inject lateinit var persistenceLayer: PersistenceLayer
-    @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var uiInteraction: UiInteraction
-    @Inject lateinit var processLifecycleListener: Provider<ProcessLifecycleListener>
-    @Inject lateinit var localAlertUtils: LocalAlertUtils
-    @Inject lateinit var notificationManager: NotificationManager
-    @Inject lateinit var rh: Provider<ResourceHelper>
-    @Inject lateinit var loop: Loop
-    @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var profileUtil: ProfileUtil
-    @Inject lateinit var fabricPrivacy: FabricPrivacy
+    private val pluginStore get() = metroGraphs.pluginStore
+    private val aapsLogger get() = metroGraphs.aapsLogger
+    private val activityMonitor get() = metroGraphs.activityMonitor
+    private val versionCheckersUtils get() = metroGraphs.versionCheckerUtils
+    private val sp get() = metroGraphs.sp
+    private val preferences get() = metroGraphs.preferences
+    private val config get() = metroGraphs.config
+    private val configBuilder get() = metroGraphs.configBuilder
+    private val plugins get() = metroGraphs.allPlugins(aapsLogger)
+    private val persistenceLayer get() = metroGraphs.persistenceLayer
+    private val dateUtil get() = metroGraphs.dateUtil
+    private val uiInteraction get() = metroGraphs.uiInteraction
+    private val processLifecycleListener get() = metroGraphs.processLifecycleListener
+    private val localAlertUtils get() = metroGraphs.localAlertUtils
+    private val notificationManager get() = metroGraphs.notificationManager
+    private val rh get() = metroGraphs.resourceHelper
+    private val loop get() = metroGraphs.loop
+    private val profileFunction get() = metroGraphs.profileFunction
+    private val profileUtil get() = metroGraphs.profileUtil
+    private val fabricPrivacy get() = metroGraphs.fabricPrivacy
     // The concrete types, only so their start() can be called below. Both are @Singleton, so these are
     // the same objects the interface bindings hand out. `rh` is a Provider already - kept that way here
     // rather than risking the cycle that shape exists to avoid.
-    @Inject lateinit var resourceHelperImpl: Provider<ResourceHelperImpl>
-    @Inject lateinit var fabricPrivacyImpl: FabricPrivacyImpl
-    @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var repository: AppRepository
-    @Inject lateinit var hardLimits: HardLimits
-    @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var profileRepository: ProfileRepository
-    @Inject lateinit var localInsulinManager: InsulinManager
-    @Inject lateinit var constraintChecker: ConstraintsChecker
-    @Inject lateinit var signatureVerifierPlugin: SignatureVerifierPlugin
-    @Inject lateinit var fileListProvider: FileListProvider
-    @Inject lateinit var cryptoUtil: CryptoUtil
-    @Inject lateinit var exportPasswordDataStore: ExportPasswordDataStore
-    @Inject lateinit var widgetUpdater: WidgetUpdater
-    @Inject lateinit var runningModeReconciler: RunningModeReconciler
-    @Inject lateinit var runningModeExpiryScheduler: RunningModeExpiryScheduler
-    @Inject lateinit var profileSwitchExpiryScheduler: ProfileSwitchExpiryScheduler
-    @Inject lateinit var automationRuntime: AutomationRuntime
-    @Inject @ApplicationScope lateinit var appScope: CoroutineScope
+    private val resourceHelperImpl get() = metroGraphs.resourceHelperImpl
+    private val fabricPrivacyImpl get() = metroGraphs.fabricPrivacyImpl
+    private val rxBus get() = metroGraphs.rxBus
+    private val repository get() = metroGraphs.appRepository
+    private val hardLimits get() = metroGraphs.hardLimits
+    private val activePlugin get() = metroGraphs.activePlugin
+    private val profileRepository get() = metroGraphs.profileRepository
+    private val localInsulinManager get() = metroGraphs.insulinManager
+    private val constraintChecker get() = metroGraphs.constraintsChecker
+    private val signatureVerifierPlugin get() = metroGraphs.signatureVerifier
+    private val fileListProvider get() = metroGraphs.fileListProvider
+    private val cryptoUtil get() = metroGraphs.cryptoUtil
+    private val exportPasswordDataStore get() = metroGraphs.exportPasswordDataStore
+    private val widgetUpdater get() = metroGraphs.widgetUpdater
+    private val runningModeReconciler get() = metroGraphs.runningModeReconciler
+    private val runningModeExpiryScheduler get() = metroGraphs.runningModeExpiryScheduler
+    private val profileSwitchExpiryScheduler get() = metroGraphs.profileSwitchExpiryScheduler
+    private val automationRuntime get() = metroGraphs.automationRuntime
+    private val appScope get() = metroGraphs.applicationScope
 
     private lateinit var insulinLabel: String
     private var insulinPeakTime: Long = 0L
@@ -217,14 +233,14 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         // own constructor until now, which meant they landed whenever something first injected it -
         // not a defined moment, and it kept the class on Dagger, because a Metro owned class is built
         // for real in the plain-JVM graph tests where its Android lookups fail.
-        resourceHelperImpl.get().start()
+        resourceHelperImpl.start()
         // Applies the analytics opt-out. Must come before configureLeakCanary below, which reports
         // through fabricPrivacy.
         fabricPrivacyImpl.start()
 
         // Here should be everything injected
         aapsLogger.debug("onCreate")
-        ProcessLifecycleOwner.get().lifecycle.addObserver(processLifecycleListener.get())
+        ProcessLifecycleOwner.get().lifecycle.addObserver(processLifecycleListener)
 
         // Background fallback for EventShowSnackbar: when no activity is STARTED
         // (app in background / process alive but UI offscreen), promote the
@@ -404,7 +420,7 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
                             therapyEvent = TE(
                                 timestamp = dateUtil.now(),
                                 type = TE.Type.NOTE,
-                                note = rh.get().gs(app.aaps.core.ui.R.string.androidaps_start) + " - " + Build.MANUFACTURER + " " + Build.MODEL,
+                                note = rh.gs(app.aaps.core.ui.R.string.androidaps_start) + " - " + Build.MANUFACTURER + " " + Build.MODEL,
                                 glucoseUnit = GlucoseUnit.MGDL
                             ),
                             action = Action.START_AAPS,
@@ -739,7 +755,7 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         migrateTempTargetPresets()
 
         // Get Insulin plugin information for database migration
-        insulinLabel = rh.get().gs(
+        insulinLabel = rh.gs(
             when {
                 sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinOrefRapidActingPlugin", false)      -> InsulinType.OREF_RAPID_ACTING.label
                 sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinOrefUltraRapidActingPlugin", false) -> InsulinType.OREF_ULTRA_RAPID_ACTING.label
@@ -895,13 +911,13 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         val peak = runningICfg.insulinPeakTime
         val conc = runningICfg.concentration
 
-        config.updateInitProgress(rh.get().gs(R.string.migrating_profile_switches))
+        config.updateInitProgress(rh.gs(R.string.migrating_profile_switches))
         val migratedPs = repository.bulkMigrateProfileSwitchInsulinConfig(label, end, peak, conc)
 
-        config.updateInitProgress(rh.get().gs(R.string.migrating_effective_profile_switches))
+        config.updateInitProgress(rh.gs(R.string.migrating_effective_profile_switches))
         val migratedEps = repository.bulkMigrateEffectiveProfileSwitchInsulinConfig(label, end, peak, conc)
 
-        config.updateInitProgress(rh.get().gs(R.string.migrating_boluses))
+        config.updateInitProgress(rh.gs(R.string.migrating_boluses))
         val migratedBoluses = repository.bulkMigrateBolusInsulinConfig(label, end, peak, conc)
 
         val totalMigrated = migratedPs + migratedEps + migratedBoluses
@@ -941,11 +957,11 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
      * concentration entirely, so 1.0 is the identity that leaves historical doses unscaled.
      */
     private fun substituteICfgForMigration(): ICfg =
-        InsulinType.OREF_ULTRA_RAPID_ACTING.getICfg(rh.get()).also {
+        InsulinType.OREF_ULTRA_RAPID_ACTING.getICfg(rh).also {
             aapsLogger.warn(LTag.CORE, "Migration to DB 33: no profile and no legacy DIA, substituting ${it.insulinLabel}")
             notificationManager.post(
                 id = NotificationId.INSULIN_MIGRATION_DEFAULT_USED,
-                rh.get().gs(R.string.insulin_migration_default_used, it.insulinLabel),
+                rh.gs(R.string.insulin_migration_default_used, it.insulinLabel),
                 level = NotificationLevel.IMPORTANT
             )
         }

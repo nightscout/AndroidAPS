@@ -2,6 +2,8 @@ package app.aaps.e2e
 
 import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import app.aaps.di.ResetGraphRule
+import app.aaps.di.testGraphs
 import app.aaps.ComposeMainActivity
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.plugin.PluginType
@@ -18,15 +20,12 @@ import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danars.emulator.EmulatorBleTransport
 import app.aaps.testcategories.ShardA
 import com.google.common.truth.Truth.assertThat
-import dagger.hilt.android.testing.HiltAndroidRule
-import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import java.util.Base64
-import javax.inject.Inject
 
 /**
  * Drives the **Dana-i UI** against the in-tree pump emulator, with no Bluetooth hardware and no
@@ -66,27 +65,21 @@ import javax.inject.Inject
  * button ([openDanaPlugin]), and the Dana overview's action list vanishes and returns while a status
  * read is in flight, so every interaction with it waits for [waitForQueueIdle] first.
  */
-@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 @ShardA
 class DanaRsEmulatorUiTest : AbstractDanaEmulatorUiTest() {
 
-    val hiltRule = HiltAndroidRule(this)
 
     // RetryRule outermost: a flaky UI timeout self-heals on a fresh attempt; see [RetryRule].
-    @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(hiltRule)
+    @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(ResetGraphRule())
 
-    // Pump objects come from the Metro graph, not Hilt: they are `@SingleIn(AppScope::class)`, which
-    // Dagger does not read, so it would build the test its own second copy of each.
-    @Inject lateinit var metroGraphs: MetroGraphs
-    private val bleTransport get() = metroGraphs.pumps.bleTransport
-    private val danaRSPlugin get() = metroGraphs.pumps.danaRSPlugin
+    private val bleTransport get() = testGraphs.pumps.bleTransport
+    private val danaRSPlugin get() = testGraphs.pumps.danaRSPlugin
 
     private lateinit var emulator: EmulatorBleTransport
 
     // ---- pump-specific hooks --------------------------------------------------------------------
 
-    override fun injectHilt() = hiltRule.inject()
 
     override fun seedPairedPump(variant: ExternalOptions) {
         seedPairedDanaPump(variant)

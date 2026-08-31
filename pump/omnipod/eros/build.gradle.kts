@@ -27,7 +27,6 @@ android {
 }
 
 dependencies {
-    ksp(libs.com.google.dagger.compiler)
     implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
     implementation(project(":core:keys"))
@@ -42,7 +41,6 @@ dependencies {
 
     implementation(libs.kotlinx.coroutines.rx3)
 
-    implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.compose.ui.tooling.preview)
     debugImplementation(libs.androidx.compose.ui.tooling)
 

@@ -7,7 +7,6 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -25,7 +24,7 @@ import java.util.concurrent.TimeUnit
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 class WorkManagerSceneExpiryScheduler @Inject constructor(
-    @ApplicationContext private val context: Context,
+    private val context: Context,
     private val aapsLogger: AAPSLogger
 ) : SceneExpiryScheduler {
 

@@ -44,7 +44,6 @@ import app.aaps.pump.medtronic.driver.MedtronicPumpStatus
 import app.aaps.pump.medtronic.events.EventMedtronicPumpConfigurationChanged
 import app.aaps.pump.medtronic.events.EventMedtronicPumpValuesChanged
 import app.aaps.pump.medtronic.util.MedtronicUtil
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -88,7 +87,7 @@ class MedtronicOverviewViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val resetRileyLinkConfigurationTaskProvider: Provider<ResetRileyLinkConfigurationTask>,
     private val wakeAndTuneTaskProvider: Provider<WakeAndTuneTask>,
-    @ApplicationContext private val context: Context
+    private val context: Context
 ) : ViewModel() {
 
     companion object {

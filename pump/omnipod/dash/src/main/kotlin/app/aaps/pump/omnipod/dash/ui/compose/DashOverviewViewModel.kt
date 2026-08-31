@@ -52,7 +52,6 @@ import app.aaps.pump.omnipod.common.ui.wizard.compose.ActivationType
 import app.aaps.pump.omnipod.common.ui.wizard.compose.OmnipodOverviewEvent
 import app.aaps.pump.omnipod.dash.OmnipodDashPumpPlugin
 import app.aaps.pump.omnipod.dash.R
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding
@@ -97,7 +96,7 @@ class DashOverviewViewModel @Inject constructor(
     private val config: Config,
     private val aapsLogger: AAPSLogger,
     private val ch: ConcentrationHelper,
-    @ApplicationContext private val context: Context
+    private val context: Context
 ) : ViewModel() {
 
     companion object {

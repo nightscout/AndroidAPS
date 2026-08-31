@@ -5,6 +5,8 @@ import android.os.SystemClock
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.work.WorkManager
+import app.aaps.di.ResetGraphRule
+import app.aaps.di.testGraphs
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
@@ -23,15 +25,12 @@ import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danar.emulator.EmulatorRfcommTransport
 import app.aaps.testcategories.ShardB
 import com.google.common.truth.Truth.assertThat
-import dagger.hilt.android.testing.HiltAndroidRule
-import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
-import javax.inject.Inject
 
 /**
  * Drives the **DanaR family drivers** against the in-tree pump emulator, with no Bluetooth hardware:
@@ -46,40 +45,36 @@ import javax.inject.Inject
  * `DanaModules.provideRfcommTransport` picks the emulator, and the variant *also* decides which
  * plugin it auto-enables — so unlike the RS side, choosing the option here chooses the driver.
  */
-@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 @ShardB
 class DanaREmulatorPumpTest {
 
-    val hiltRule = HiltAndroidRule(this)
 
     // RetryRule outermost: a flaky timeout self-heals on a fresh attempt; see [RetryRule].
-    @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(hiltRule)
+    @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(ResetGraphRule())
 
-    @Inject lateinit var preferences: Preferences
-    @Inject lateinit var pluginStore: PluginStore
-    @Inject lateinit var commandQueue: CommandQueue
-    @Inject lateinit var pluginList: List<@JvmSuppressWildcards PluginBase>
-    @Inject lateinit var config: Config
-    @Suppress("unused") @Inject lateinit var staticInjector: StaticInjector
+    private val preferences get() = testGraphs.preferences
+    private val pluginStore get() = testGraphs.pluginStore
+    private val commandQueue get() = testGraphs.commandQueue
+    private val pluginList get() = testGraphs.allPlugins(testGraphs.aapsLogger)
+    private val config get() = testGraphs.config
 
     // The pump objects come from the Metro graph, not from Hilt. They are `@SingleIn(AppScope::class)`,
     // and Dagger does not read that scope - it saw the `@Inject` constructor and built the test a
     // *second* `DanaRv2Plugin`, so the test drove an object the running app had never heard of. Reading
     // through the graph gives the one instance that is really in the plugin list.
-    @Inject lateinit var metroGraphs: MetroGraphs
 
-    private val danaRPlugin get() = metroGraphs.pumps.danaRPlugin
-    private val danaRKoreanPlugin get() = metroGraphs.pumps.danaRKoreanPlugin
-    private val danaRv2Plugin get() = metroGraphs.pumps.danaRv2Plugin
-    private val danaPump get() = metroGraphs.pumps.danaPump
-    private val danaHistoryRecordDao get() = metroGraphs.pumps.danaHistoryRecordDao
+    private val danaRPlugin get() = testGraphs.pumps.danaRPlugin
+    private val danaRKoreanPlugin get() = testGraphs.pumps.danaRKoreanPlugin
+    private val danaRv2Plugin get() = testGraphs.pumps.danaRv2Plugin
+    private val danaPump get() = testGraphs.pumps.danaPump
+    private val danaHistoryRecordDao get() = testGraphs.pumps.danaHistoryRecordDao
 
     // Resolved per access, not once: `provideRfcommTransport` enables the target plugin (storeSettings),
     // which needs `pluginStore.plugins` - set only after `hiltRule.inject()`. Reading it after connect
     // returns the scoped instance the execution service already built by then. This is what the old
     // `Provider<RfcommTransport>` was for.
-    private val rfcommTransport get() = metroGraphs.pumps.rfcommTransport
+    private val rfcommTransport get() = testGraphs.pumps.rfcommTransport
 
     private val instrumentation get() = InstrumentationRegistry.getInstrumentation()
 
@@ -251,7 +246,6 @@ class DanaREmulatorPumpTest {
      */
     private fun bringUpConnected(variant: ExternalOptions, plugin: () -> PluginBase): Pump {
         EmulatedOptions.enabled = setOf(variant)
-        hiltRule.inject()
 
         instrumentation.uiAutomation.grantRuntimePermission(PKG, Manifest.permission.BLUETOOTH_CONNECT)
 

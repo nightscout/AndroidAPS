@@ -6,6 +6,8 @@ import android.os.SystemClock
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.work.WorkManager
+import app.aaps.di.ResetGraphRule
+import app.aaps.di.testGraphs
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
@@ -58,8 +60,6 @@ import app.aaps.pump.equil.emulator.EquilEmulatorBleTransport
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.command.CmdModelSet
 import com.google.common.truth.Truth.assertThat
-import dagger.hilt.android.testing.HiltAndroidRule
-import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -70,7 +70,6 @@ import org.junit.Test
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import java.io.File
-import javax.inject.Inject
 
 /**
  * Drives the **real Equil activation wizard** against the in-tree Equil emulator, headlessly (no
@@ -100,46 +99,40 @@ import javax.inject.Inject
  * test reports that rather than dropping the production marker file. It must be set before
  * `hiltRule.inject()` because `EquilBleTransport` is a `@Singleton` the graph binds once.
  */
-@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class EquilEmulatorActivationTest {
 
-    val hiltRule = HiltAndroidRule(this)
 
     // RetryRule outermost: a flaky timeout self-heals on a fresh attempt; see [RetryRule].
-    @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(hiltRule)
+    @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(ResetGraphRule())
 
     // ViewModel dependencies — injected here and passed to a manually-constructed EquilWizardViewModel.
-    @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var preferences: Preferences
-    @Inject lateinit var commandQueue: CommandQueue
-    // Pump objects come from the Metro graph, not Hilt: they are `@SingleIn(AppScope::class)`, which
-    // Dagger does not read, so it would build the test its own second copy of each.
-    @Inject lateinit var metroGraphs: MetroGraphs
-    private val equilPumpPlugin get() = metroGraphs.pumps.equilPumpPlugin
-    private val equilManager get() = metroGraphs.pumps.equilManager
-    @Inject lateinit var pumpSync: PumpSync
-    @Inject lateinit var persistenceLayer: PersistenceLayer
-    private val equilHistoryRecordDao get() = metroGraphs.pumps.equilHistoryRecordDao
-    private val equilHistoryPumpDao get() = metroGraphs.pumps.equilHistoryPumpDao
-    @Inject lateinit var profileUtil: ProfileUtil
-    @Inject lateinit var constraintsChecker: ConstraintsChecker
-    @Inject lateinit var ch: ConcentrationHelper
-    @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var profileRepository: ProfileRepository
-    @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var insulinManager: InsulinManager
-    private val bleTransport get() = metroGraphs.pumps.equilBleTransport
-    @Inject lateinit var hardLimits: HardLimits
+    private val rh get() = testGraphs.resourceHelper
+    private val aapsLogger get() = testGraphs.aapsLogger
+    private val preferences get() = testGraphs.preferences
+    private val commandQueue get() = testGraphs.commandQueue
+    private val equilPumpPlugin get() = testGraphs.pumps.equilPumpPlugin
+    private val equilManager get() = testGraphs.pumps.equilManager
+    private val pumpSync get() = testGraphs.pumpSync
+    private val persistenceLayer get() = testGraphs.persistenceLayer
+    private val equilHistoryRecordDao get() = testGraphs.pumps.equilHistoryRecordDao
+    private val equilHistoryPumpDao get() = testGraphs.pumps.equilHistoryPumpDao
+    private val profileUtil get() = testGraphs.profileUtil
+    private val constraintsChecker get() = testGraphs.constraintsChecker
+    private val ch get() = testGraphs.concentrationHelper
+    private val profileFunction get() = testGraphs.profileFunction
+    private val profileRepository get() = testGraphs.profileRepository
+    private val rxBus get() = testGraphs.rxBus
+    private val insulinManager get() = testGraphs.insulinManager
+    private val bleTransport get() = testGraphs.pumps.equilBleTransport
+    private val hardLimits get() = testGraphs.hardLimits
 
     // Test-harness singletons (active-pump selection, profile activation, teardown).
-    @Inject lateinit var pluginStore: PluginStore
-    @Inject lateinit var pluginList: List<@JvmSuppressWildcards PluginBase>
-    @Inject lateinit var configBuilder: ConfigBuilder
-    @Inject lateinit var config: Config
-    @Inject lateinit var dateUtil: DateUtil
-    @Suppress("unused") @Inject lateinit var staticInjector: StaticInjector
+    private val pluginStore get() = testGraphs.pluginStore
+    private val pluginList get() = testGraphs.allPlugins(testGraphs.aapsLogger)
+    private val configBuilder get() = testGraphs.configBuilder
+    private val config get() = testGraphs.config
+    private val dateUtil get() = testGraphs.dateUtil
 
     private val instrumentation get() = InstrumentationRegistry.getInstrumentation()
     private val appContext: Context get() = instrumentation.targetContext.applicationContext
@@ -153,7 +146,6 @@ class EquilEmulatorActivationTest {
         // EquilManager reads back a COMPLETED pod and the test starts already-activated.
         clearAllSharedPrefs()
         EmulatedOptions.enabled = setOf(ExternalOptions.EMULATE_EQUIL)
-        hiltRule.inject()
 
         instrumentation.uiAutomation.grantRuntimePermission(PKG, Manifest.permission.BLUETOOTH_CONNECT)
         runCatching { instrumentation.uiAutomation.grantRuntimePermission(PKG, Manifest.permission.BLUETOOTH_SCAN) }

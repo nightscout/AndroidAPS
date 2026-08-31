@@ -59,7 +59,6 @@ import app.aaps.pump.equil.manager.command.CmdSettingSet
 import app.aaps.pump.equil.manager.command.CmdStepSet
 import app.aaps.pump.equil.manager.command.CmdTimeSet
 import app.aaps.pump.equil.manager.command.CmdUnPair
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding
@@ -80,7 +79,7 @@ import javax.inject.Inject
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 class EquilWizardViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
+    private val context: Context,
     private val rh: ResourceHelper,
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,

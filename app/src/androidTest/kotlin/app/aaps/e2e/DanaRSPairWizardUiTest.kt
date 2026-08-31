@@ -12,6 +12,8 @@ import androidx.test.uiautomator.StaleObjectException
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject2
 import androidx.work.WorkManager
+import app.aaps.di.ResetGraphRule
+import app.aaps.di.testGraphs
 import app.aaps.ComposeMainActivity
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.ue.Action
@@ -43,8 +45,6 @@ import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danars.emulator.EmulatorBleTransport
 import app.aaps.testcategories.ShardB
 import com.google.common.truth.Truth.assertThat
-import dagger.hilt.android.testing.HiltAndroidRule
-import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
@@ -54,7 +54,6 @@ import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import java.io.File
 import java.util.regex.Pattern
-import javax.inject.Inject
 
 /**
  * Drives the **Dana-i pairing wizard UI** (`DanaRSPairWizardScreen`), which was at 0% coverage
@@ -73,33 +72,27 @@ import javax.inject.Inject
  * that maps a `PairingStep` to a `WizardStep` is covered directly by `DanaRSPairWizardViewModelTest`.
  * Injecting onto the same `pairingState` the wizard collects is the seam between the two.
  */
-@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 @ShardB
 class DanaRSPairWizardUiTest {
 
-    val hiltRule = HiltAndroidRule(this)
 
     // RetryRule outermost: a flaky timeout self-heals on a fresh attempt; see [RetryRule].
-    @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(hiltRule)
+    @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(ResetGraphRule())
 
-    @Inject lateinit var preferences: Preferences
-    // Pump objects come from the Metro graph, not Hilt: they are `@SingleIn(AppScope::class)`, which
-    // Dagger does not read, so it would build the test its own second copy of each.
-    @Inject lateinit var metroGraphs: MetroGraphs
-    private val bleTransport get() = metroGraphs.pumps.bleTransport
-    @Inject lateinit var pluginStore: PluginStore
-    @Inject lateinit var commandQueue: CommandQueue
-    private val danaRSPlugin get() = metroGraphs.pumps.danaRSPlugin
-    @Inject lateinit var pluginList: List<@JvmSuppressWildcards PluginBase>
-    @Inject lateinit var configBuilder: ConfigBuilder
-    @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var profileRepository: ProfileRepository
-    @Inject lateinit var insulinManager: InsulinManager
-    @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var config: Config
-    @Suppress("unused") @Inject lateinit var staticInjector: StaticInjector
+    private val preferences get() = testGraphs.preferences
+    private val bleTransport get() = testGraphs.pumps.bleTransport
+    private val pluginStore get() = testGraphs.pluginStore
+    private val commandQueue get() = testGraphs.commandQueue
+    private val danaRSPlugin get() = testGraphs.pumps.danaRSPlugin
+    private val pluginList get() = testGraphs.allPlugins(testGraphs.aapsLogger)
+    private val configBuilder get() = testGraphs.configBuilder
+    private val profileFunction get() = testGraphs.profileFunction
+    private val profileRepository get() = testGraphs.profileRepository
+    private val insulinManager get() = testGraphs.insulinManager
+    private val dateUtil get() = testGraphs.dateUtil
+    private val activePlugin get() = testGraphs.activePlugin
+    private val config get() = testGraphs.config
 
     private val instrumentation get() = InstrumentationRegistry.getInstrumentation()
     private val device: UiDevice get() = UiDevice.getInstance(instrumentation)
@@ -110,7 +103,6 @@ class DanaRSPairWizardUiTest {
     fun setUp() {
         clearAllSharedPrefs()
         EmulatedOptions.enabled = setOf(ExternalOptions.EMULATE_DANA_BLE5)
-        hiltRule.inject()
 
         instrumentation.uiAutomation.grantRuntimePermission(PKG, Manifest.permission.BLUETOOTH_CONNECT)
         runCatching { instrumentation.uiAutomation.grantRuntimePermission(PKG, Manifest.permission.BLUETOOTH_SCAN) }

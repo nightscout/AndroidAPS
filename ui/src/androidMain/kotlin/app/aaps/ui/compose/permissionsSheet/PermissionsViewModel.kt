@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PluginPermissions
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
@@ -25,7 +24,7 @@ import kotlinx.coroutines.launch
 @ViewModelKey
 @Stable
 class PermissionsViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
+    private val context: Context,
     private val pluginPermissions: PluginPermissions,
 ) : ViewModel() {
 

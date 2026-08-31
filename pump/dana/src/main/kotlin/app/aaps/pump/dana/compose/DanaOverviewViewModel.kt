@@ -41,7 +41,6 @@ import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.events.EventDanaRNewStatus
 import app.aaps.pump.dana.keys.DanaStringNonKey
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding
@@ -86,7 +85,7 @@ open class DanaOverviewViewModel @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     protected val uel: UserEntryLogger,
     protected val preferences: Preferences,
-    @ApplicationContext private val context: Context
+    private val context: Context
 ) : ViewModel() {
 
 

@@ -5,6 +5,8 @@ import android.os.SystemClock
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.work.WorkManager
+import app.aaps.di.ResetGraphRule
+import app.aaps.di.testGraphs
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.configuration.Config
@@ -25,8 +27,6 @@ import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danars.emulator.EmulatorBleTransport
 import app.aaps.testcategories.ShardB
 import com.google.common.truth.Truth.assertThat
-import dagger.hilt.android.testing.HiltAndroidRule
-import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Rule
@@ -34,7 +34,6 @@ import org.junit.Test
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import java.util.Base64
-import javax.inject.Inject
 
 /**
  * Drives the **real Dana-i driver** against the in-tree pump emulator, with no Bluetooth hardware:
@@ -60,27 +59,21 @@ import javax.inject.Inject
  * The emulator is selected purely by the `EMULATE_*` option — see [EmulatedOptions] for why a test
  * has to report that rather than drop the production marker file.
  */
-@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 @ShardB
 class DanaRsEmulatorPumpTest {
 
-    val hiltRule = HiltAndroidRule(this)
 
     // RetryRule outermost: a flaky timeout self-heals on a fresh attempt; see [RetryRule].
-    @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(hiltRule)
+    @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(ResetGraphRule())
 
-    @Inject lateinit var preferences: Preferences
-    // Pump objects come from the Metro graph, not Hilt: they are `@SingleIn(AppScope::class)`, which
-    // Dagger does not read, so it would build the test its own second copy of each.
-    @Inject lateinit var metroGraphs: MetroGraphs
-    private val bleTransport get() = metroGraphs.pumps.bleTransport
-    private val danaRSPlugin get() = metroGraphs.pumps.danaRSPlugin
-    @Inject lateinit var pluginStore: PluginStore
-    @Inject lateinit var commandQueue: CommandQueue
-    @Inject lateinit var pluginList: List<@JvmSuppressWildcards PluginBase>
-    @Inject lateinit var config: Config
-    @Suppress("unused") @Inject lateinit var staticInjector: StaticInjector
+    private val preferences get() = testGraphs.preferences
+    private val bleTransport get() = testGraphs.pumps.bleTransport
+    private val danaRSPlugin get() = testGraphs.pumps.danaRSPlugin
+    private val pluginStore get() = testGraphs.pluginStore
+    private val commandQueue get() = testGraphs.commandQueue
+    private val pluginList get() = testGraphs.allPlugins(testGraphs.aapsLogger)
+    private val config get() = testGraphs.config
 
     private val instrumentation get() = InstrumentationRegistry.getInstrumentation()
 
@@ -97,7 +90,6 @@ class DanaRsEmulatorPumpTest {
      */
     private fun bringUpPump(variant: ExternalOptions) {
         EmulatedOptions.enabled = setOf(variant)
-        hiltRule.inject()
 
         // BLEComm.connect gates on BLUETOOTH_CONNECT before it ever reaches the transport, so an
         // emulated pump needs it granted just as a real one does — without it connect() only logs

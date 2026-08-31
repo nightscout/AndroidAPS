@@ -23,6 +23,7 @@ import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.di.APS
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.di.FeatureMemberInjectors
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.di.NotNSClient
 import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.dst.DstHelper
@@ -113,6 +114,8 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.objects.crypto.CryptoUtil
+import app.aaps.database.di.DatabaseConfig
+import app.aaps.di.ExternalOptionsOverride
 import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.objects.wizard.BolusWizard
@@ -120,6 +123,9 @@ import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.database.AppRepository
 import app.aaps.implementation.maintenance.cloud.CloudStorageManager
+import app.aaps.implementation.lifecycle.ProcessLifecycleListener
+import app.aaps.implementation.resources.ResourceHelperImpl
+import app.aaps.implementation.utils.fabric.FabricPrivacyImpl
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.implementation.profile.ProfileSwitchExpiryScheduler
 import app.aaps.implementation.profile.ProfileSwitchSilentGate
@@ -393,6 +399,14 @@ interface AppRootGraph : MetroViewModelMultibindings, PumpAccessors {
     val alarmSoundPlayer: AlarmSoundPlayer
     val wizardExecutor: WizardExecutor
     val configBuilder: ConfigBuilder
+
+    // Read by MainApp, which builds this graph and then starts these itself. The two `*Impl` types are
+    // here rather than their interfaces because only the concrete class has `start()`; both are
+    // `@SingleIn`, so it is the same object the interface binding hands out.
+    val config: Config
+    val resourceHelperImpl: ResourceHelperImpl
+    val fabricPrivacyImpl: FabricPrivacyImpl
+    val processLifecycleListener: ProcessLifecycleListener
     val dataSyncSelectorXdrip: DataSyncSelectorXdrip
     val activeSceneSync: ActiveSceneSync
 
@@ -520,9 +534,14 @@ interface AppRootGraph : MetroViewModelMultibindings, PumpAccessors {
     fun interface Factory {
 
         /**
-         * One parameter, not thirty-five. [AapsLeaves] carries everything Dagger still owns, and its
-         * @Provides functions are called only when something needs that type - so the deferral that
-         * DeferredRef used to do by hand is now just the shape of a binding container.
+         * The graph's inputs. `AapsLeaves` used to be one of them, carrying whatever Dagger still owned;
+         * it is gone, and what is left here is only what the **caller** genuinely decides.
+         *
+         * The last two are how an instrumented test differs from production, and they are parameters
+         * rather than replaced bindings for a reason worth keeping: contributions declared in
+         * `androidTest` never reach this graph, because it is compiled during
+         * `:app:compileFullDebugKotlin` and androidTest is a later, separate compilation. Metro's
+         * `replaces` is real, but it cannot help from there. The factory is the only way in.
          */
         fun create(
             /**
@@ -534,7 +553,19 @@ interface AppRootGraph : MetroViewModelMultibindings, PumpAccessors {
 
             /** The application context. Android owns it, so it is passed in rather than bound. */
             @Provides context: Context,
-            @Includes leaves: AapsLeaves,
+
+            /**
+             * The Application, handed back to the graph as the injector for anything Android builds
+             * itself - a service or a receiver filling its own fields.
+             */
+            @Provides memberInjector: MetroMemberInjector,
+
+            /** Which database to open. `DatabaseConfig.IN_MEMORY` is what the instrumented tests pass. */
+            @Provides databaseConfig: DatabaseConfig,
+
+            /** Extra external options to report enabled. `ExternalOptionsOverride.NONE` in production. */
+            @Provides externalOptionsOverride: ExternalOptionsOverride,
+
             @Includes coreObjects: CoreObjectsGraph
         ): AppRootGraph
     }

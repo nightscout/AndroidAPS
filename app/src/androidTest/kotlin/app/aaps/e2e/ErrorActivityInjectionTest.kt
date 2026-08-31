@@ -6,13 +6,12 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
-import app.aaps.HiltInstrumentedTest
+import app.aaps.di.testGraphs
+import app.aaps.AapsInstrumentedTest
 import app.aaps.core.interfaces.ui.UiInteraction
 import com.google.common.truth.Truth.assertThat
-import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 import org.junit.runner.RunWith
-import javax.inject.Inject
 
 /**
  * `ErrorActivity` still gets its dependencies after moving to `MetroAppCompatActivity`.
@@ -26,11 +25,10 @@ import javax.inject.Inject
  * field. Nothing appears on screen unless `MetroAppCompatActivity.onCreate` filled those fields first -
  * and if the member-injector entry were missing, that `check` throws by name instead.
  */
-@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class ErrorActivityInjectionTest : HiltInstrumentedTest() {
+class ErrorActivityInjectionTest : AapsInstrumentedTest() {
 
-    @Inject lateinit var uiInteraction: UiInteraction
+    private val uiInteraction get() = testGraphs.uiInteraction
 
     private val instrumentation get() = InstrumentationRegistry.getInstrumentation()
     private val device: UiDevice get() = UiDevice.getInstance(instrumentation)

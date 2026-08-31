@@ -30,7 +30,6 @@ import app.aaps.pump.dana.R
 import app.aaps.pump.dana.compose.DanaOverviewViewModel
 import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danars.DanaRSPlugin
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding
@@ -56,7 +55,7 @@ class DanaRSOverviewViewModel @Inject constructor(
     uel: UserEntryLogger,
     preferences: Preferences,
     private val bleTransport: BleTransport,
-    @ApplicationContext context: Context
+    context: Context
 ) : DanaOverviewViewModel(
     aapsLogger = aapsLogger,
     rh = rh,

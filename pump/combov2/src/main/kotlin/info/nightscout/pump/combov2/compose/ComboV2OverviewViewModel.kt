@@ -23,7 +23,6 @@ import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.core.ui.compose.pump.PumpOverviewUiState
 import app.aaps.core.ui.compose.pump.StatusBanner
 import app.aaps.core.ui.compose.pump.tickerFlow
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding
@@ -75,7 +74,7 @@ class ComboV2OverviewViewModel @Inject constructor(
     private val commandQueue: CommandQueue,
     private val combov2Plugin: ComboV2Plugin,
     private val ch: ConcentrationHelper,
-    @ApplicationContext context: Context
+    context: Context
 ) : ViewModel() {
 
     private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, rh, viewModelScope)

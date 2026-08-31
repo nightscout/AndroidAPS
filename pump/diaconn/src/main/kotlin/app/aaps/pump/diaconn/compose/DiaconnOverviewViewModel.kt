@@ -41,7 +41,6 @@ import app.aaps.pump.diaconn.R
 import app.aaps.pump.diaconn.events.EventDiaconnG8DeviceChange
 import app.aaps.pump.diaconn.events.EventDiaconnG8NewStatus
 import app.aaps.pump.diaconn.keys.DiaconnStringNonKey
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding
@@ -86,7 +85,7 @@ class DiaconnOverviewViewModel @Inject constructor(
     private val uel: UserEntryLogger,
     private val preferences: Preferences,
     private val ch: ConcentrationHelper,
-    @ApplicationContext private val context: Context
+    private val context: Context
 ) : ViewModel() {
 
 

@@ -111,7 +111,6 @@ kotlin {
 
                 // Dependency Injection
                 api(libs.com.google.dagger.android)
-                api(libs.com.google.dagger.hilt.android)
 
                 api(libs.androidx.appcompat)
                 api(libs.androidx.compose.ui)

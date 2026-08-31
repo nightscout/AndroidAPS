@@ -21,7 +21,6 @@ import app.aaps.pump.diaconn.R
 import app.aaps.pump.diaconn.common.RecordTypes
 import app.aaps.pump.diaconn.database.DiaconnHistoryRecord
 import app.aaps.pump.diaconn.database.DiaconnHistoryRecordDao
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding
@@ -49,7 +48,7 @@ class DiaconnHistoryViewModel @Inject constructor(
     private val decimalFormatter: DecimalFormatter,
     private val rxBus: RxBus,
     private val aapsSchedulers: AapsSchedulers,
-    @ApplicationContext private val context: Context
+    private val context: Context
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PumpHistoryUiState<DiaconnHistoryRecord>())

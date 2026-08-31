@@ -2,6 +2,8 @@ package app.aaps.e2e
 
 import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import app.aaps.di.ResetGraphRule
+import app.aaps.di.testGraphs
 import app.aaps.ComposeMainActivity
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.ExternalOptions
@@ -17,14 +19,11 @@ import app.aaps.pump.danar.emulator.EmulatorRfcommTransport
 import app.aaps.pump.danarv2.DanaRv2Plugin
 import app.aaps.testcategories.ShardB
 import com.google.common.truth.Truth.assertThat
-import dagger.hilt.android.testing.HiltAndroidRule
-import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
-import javax.inject.Inject
 import javax.inject.Provider
 
 /**
@@ -44,24 +43,19 @@ import javax.inject.Provider
  * and DanaR's non-idempotent `connect()` must not be re-called once connected.
  */
 // @ShardB: part of the DanaR/RFCOMM family that runs together on emulator B - see ShardB for the balance.
-@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 @ShardB
 class DanaREmulatorUiTest : AbstractDanaEmulatorUiTest() {
 
-    val hiltRule = HiltAndroidRule(this)
 
     // RetryRule outermost: a flaky timeout self-heals on a fresh attempt; see [RetryRule].
-    @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(hiltRule)
+    @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(ResetGraphRule())
 
     // A Provider, not the transport directly: provideRfcommTransport enables the target plugin
     // (storeSettings), which needs pluginStore.plugins - set only after hiltRule.inject(). Resolving it
     // lazily (first state read, well after bringUp) returns the @Singleton the service already built.
-    // Pump objects come from the Metro graph, not Hilt: they are `@SingleIn(AppScope::class)`, which
-    // Dagger does not read, so it would build the test its own second copy of each.
-    @Inject lateinit var metroGraphs: MetroGraphs
-    private val rfcommTransport get() = metroGraphs.pumps.rfcommTransport
-    private val danaRv2Plugin get() = metroGraphs.pumps.danaRv2Plugin
+    private val rfcommTransport get() = testGraphs.pumps.rfcommTransport
+    private val danaRv2Plugin get() = testGraphs.pumps.danaRv2Plugin
 
     // The emulated pump's state, resolved lazily: the transport is an EmulatorRfcommTransport whose
     // `emulator` (a DanaRPumpEmulator) holds the `state` the driver reads and writes.
@@ -69,7 +63,6 @@ class DanaREmulatorUiTest : AbstractDanaEmulatorUiTest() {
 
     // ---- hooks -------------------------------------------------------------------------------------
 
-    override fun injectHilt() = hiltRule.inject()
 
     override fun seedPairedPump(variant: ExternalOptions) {
         // The emulated pump answers as this device; the driver looks it up by name.

@@ -30,6 +30,7 @@ import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.local.LocaleDependentSetting
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.LoggerUtils
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.maintenance.CloudDirectoryManager
@@ -110,6 +111,11 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.objects.crypto.CryptoUtil
+import app.aaps.core.interfaces.di.MetroMemberInjector
+import app.aaps.database.di.DatabaseConfig
+import app.aaps.di.ExternalOptionsOverride
+import app.aaps.di.PluginSource
+import app.aaps.di.mergePlugins
 import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.objects.wizard.BolusWizard
@@ -118,6 +124,9 @@ import app.aaps.core.objects.workflow.MetroWorkerCreator
 import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.database.AppRepository
 import app.aaps.implementation.maintenance.cloud.CloudStorageManager
+import app.aaps.implementation.lifecycle.ProcessLifecycleListener
+import app.aaps.implementation.resources.ResourceHelperImpl
+import app.aaps.implementation.utils.fabric.FabricPrivacyImpl
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.implementation.profile.ProfileSwitchExpiryScheduler
 import app.aaps.implementation.profile.ProfileSwitchSilentGate
@@ -159,15 +168,12 @@ import app.aaps.ui.activityMonitor.ActivityMonitor
 import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.workflow.WorkflowChainData
 import dev.zacsweers.metro.MembersInjector
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.zacsweers.metro.createGraphFactory
 import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import javax.inject.Inject
 import javax.inject.Provider
-import javax.inject.Singleton
 
 /**
  * The Metro half of the object graph, beside Dagger. Counterpart of `KoinGraph` on `koin-spike` and
@@ -192,11 +198,20 @@ import javax.inject.Singleton
  * hand, survives only for Open Humans - a plain `() -> T` cannot be used because Metro treats a
  * parameterless function type as its own provider type and rejects it as a factory parameter.
  */
-@Singleton
-class MetroGraphs @Inject constructor(
+/**
+ * Built by the Application, not by Dagger.
+ *
+ * It used to be `@Singleton @Inject constructor(Provider<AapsLeaves>, ...)`, because the objects the
+ * graph needed still belonged to Dagger. They do not any more, so this takes the plain values the
+ * caller decides and nothing else - and a single instance is guaranteed by there being one
+ * Application, rather than by a scope annotation nothing reads.
+ */
+class MetroGraphs(
 
-    private val leaves: Provider<AapsLeaves>,
-    @ApplicationContext private val contextProvider: Provider<Context>
+    private val context: Context,
+    private val memberInjector: MetroMemberInjector,
+    private val databaseConfig: DatabaseConfig,
+    private val externalOptionsOverride: ExternalOptionsOverride
 ) {
 
 
@@ -217,11 +232,12 @@ class MetroGraphs @Inject constructor(
      * The application scope. Built here rather than borrowed from Dagger, which is what `AapsLeaves`
      * used to do; Dagger consumers now get this same instance back through `CoreObjectsModule`.
      */
-    private val applicationScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    val applicationScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
     /** The one Metro root. Sub-graphs are extensions of it rather than roots of their own. */
     private val root: AppRootGraph by lazy {
-        createGraphFactory<AppRootGraph.Factory>().create(applicationScope, contextProvider.get(), leaves.get(), CoreObjectsGraph)
+        createGraphFactory<AppRootGraph.Factory>()
+            .create(applicationScope, context, memberInjector, databaseConfig, externalOptionsOverride, CoreObjectsGraph)
     }
 
     /**
@@ -289,6 +305,35 @@ class MetroGraphs @Inject constructor(
      */
     fun plugins(): Map<Int, PluginBase> =
         root.contributedPlugins
+
+    /**
+     * The whole plugin list, in order - what `PluginStore.plugins` is set to.
+     *
+     * Was `AppModule.Provide.providesPlugins`, a Dagger `@Provides`, though its body had been pure
+     * Metro for a while: the four Dagger buckets it used to merge were removed when the last Dagger
+     * plugin registration went, and nothing replaced them.
+     *
+     * The qualified buckets are merged **only** under the condition that build should have them.
+     * Keeping them apart is what stops a plugin appearing in a build that never had it - a follower
+     * showing Objectives, say. `mergePlugins` names which bucket a clashing plugin came from, which is
+     * why the sources are listed rather than merged directly.
+     */
+    fun allPlugins(aapsLogger: AAPSLogger): List<PluginBase> {
+        val sources = buildList {
+            add(PluginSource("Metro", plugins()))
+            if (config.APS) add(PluginSource("Metro @APS", apsPlugins()))
+            if (config.PUMPDRIVERS) add(PluginSource("Metro @PumpDriver", pumpDriverPlugins()))
+            if (!config.AAPSCLIENT) add(PluginSource("Metro @NotNSClient", notNsClientPlugins()))
+        }
+
+        val (plugins, problems) = mergePlugins(sources)
+        // Two buckets can still collide on one order key, which loses a plugin silently. Logged rather
+        // than thrown: a wrong plugin list must not stop the app from starting, and this is loud enough
+        // to find in a log.
+        problems.forEach { aapsLogger.error(LTag.CORE, "PLUGIN LIST: $it") }
+
+        return plugins
+    }
 
     /**
      * Plugins that must NOT appear in an AAPSCLIENT build.
@@ -478,6 +523,11 @@ class MetroGraphs @Inject constructor(
     val pumpSync: PumpSync get() = root.pumpSync
     val iconsProvider: IconsProvider get() = root.iconsProvider
     val insulinManager: InsulinManager get() = root.insulinManager
+
+    val config: Config get() = root.config
+    val resourceHelperImpl: ResourceHelperImpl get() = root.resourceHelperImpl
+    val fabricPrivacyImpl: FabricPrivacyImpl get() = root.fabricPrivacyImpl
+    val processLifecycleListener: ProcessLifecycleListener get() = root.processLifecycleListener
     val profileRepository: ProfileRepository get() = root.profileRepository
     val profileStore: ProfileStore get() = root.profileStore
 }

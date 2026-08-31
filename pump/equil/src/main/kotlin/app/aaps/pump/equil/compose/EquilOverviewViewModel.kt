@@ -35,7 +35,6 @@ import app.aaps.pump.equil.events.EventEquilDataChanged
 import app.aaps.pump.equil.events.EventEquilModeChanged
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.command.CmdModelSet
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding
@@ -73,7 +72,7 @@ class EquilOverviewViewModel @Inject constructor(
     private val commandQueue: CommandQueue,
     private val preferences: Preferences,
     private val rxBus: RxBus,
-    @ApplicationContext private val context: Context
+    private val context: Context
 ) : ViewModel() {
 
     private val _events = MutableSharedFlow<EquilOverviewEvent>(extraBufferCapacity = 5)
