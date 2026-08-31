@@ -29,6 +29,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.toColorInt
+import androidx.core.graphics.withRotation
 import androidx.core.view.forEach
 import androidx.core.view.isVisible
 import androidx.viewbinding.ViewBinding
@@ -585,7 +586,14 @@ class CustomWatchface : BaseWatchFace() {
         if (simpleUi.isEnabled(currentWatchMode)) return
         // Draws the view's background colour and its image. View.draw() does not care that the view
         // has no parent, only that resolveBackgroundDrawable() measured and laid it out.
-        backgroundView.draw(canvas)
+        // It does not apply the view's rotation though: a View's transform is applied by its parent
+        // in drawChild(), and this one deliberately has no parent. So rotate the canvas instead,
+        // about the pivot a parent would have used - View defaults pivotX/pivotY to its centre -
+        // otherwise the json's ROTATION and DynProvider's rotationOffset are silently dropped for
+        // background alone, while working on every other view.
+        canvas.withRotation(backgroundView.rotation, backgroundView.pivotX, backgroundView.pivotY) {
+            backgroundView.draw(this)
+        }
         // super.onDraw() has just laid out mainLayout, so the placeholders hold this frame's geometry
         // and the slots' declared bounds can follow it. Not in complicationRender(): that runs per
         // slot, while one pushed option covers every slot at once.

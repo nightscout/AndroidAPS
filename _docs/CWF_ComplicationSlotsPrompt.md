@@ -110,6 +110,25 @@ Investigations):
   would paint it over them). `resolveBackgroundDrawable()` now mirrors `customizeImageView`'s
   three steps, and `onDraw()` paints a flat colour when no drawable resolves.
 
+**Background rotation regression — same root cause as above, found later, fixed**
+- [x] Symptom: a CWF rotating its `background` (static `ROTATION`, or `DynProvider`'s
+  `rotationOffset` driving it from the BG value) showed the image unrotated. Every other view
+  rotated correctly.
+- [x] Root cause: `customizeViewCommon` applies rotation as a **View property**
+  (`view.rotation = ROTATION + rotationOffset + rotationOffsetStep`), and a View's transform is
+  applied by its **parent** in `ViewGroup.drawChild()`. Since the manual-canvas move, `background`
+  has no parent - `onDraw()` calls `backgroundView.draw(canvas)` directly, and `View.draw(Canvas)`
+  renders content **without** the transform. So rotation was silently dropped for `background`
+  alone. Same class of bug as the colour/dynPref regression above: a value that reaches every other
+  view through the View hierarchy stops arriving once the view is drawn by hand.
+- [x] Fix: rotate the canvas around the draw, about the pivot a parent would have used
+  (`View` defaults `pivotX`/`pivotY` to the view's centre), via `Canvas.withRotation`. Position and
+  size stay force-set by `resolveBackgroundDrawable()` as before - that override is deliberate, only
+  the rotation was being lost.
+- [x] Worth remembering for any future hand-drawn view: `draw(Canvas)` gives you content only.
+  Rotation, scale and translation all live in the parent's `drawChild()` and must be reproduced by
+  hand.
+
 **Styling parameter audit — Phase 2 (real CWF json keys, not placeholders)**
 - [x] `JsonKeys` added: `ICONCOLOR`, `TITLESIZE`, `TITLESTYLE`, `FONTTITLE`, `FONTTITLECOLOR`,
   `BORDERRADIUS`, `RINGWIDTH` (see the units change below), `RINGPRIMARYCOLOR`,
