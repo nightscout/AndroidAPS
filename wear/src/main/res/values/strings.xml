@@ -159,6 +159,21 @@
     <string name="pref_simplify_ui">Simplify UI</string>
     <string name="pref_vibrate_hourly">Vibrate hourly</string>
     <string name="pref_show_weeknumber">Show Week number</string>
+    <string name="pref_complication_1">Complication 1</string>
+    <string name="pref_complication_2">Complication 2</string>
+    <string name="pref_complication_3">Complication 3</string>
+    <string name="pref_complication_4">Complication 4</string>
+    <string name="pref_complication_5">Complication 5</string>
+    <string name="complication_summary_none">Tap to select a data source</string>
+    <string name="pref_complication_type_priority">Complication type priority</string>
+    <string name="pref_complication_type_priority_all">Default for all slots</string>
+    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">A change here applies the next time you pick a data source. Picking the same one again is not enough: pick a different data source first, then pick the one you want.</string>
+    <string name="complication_type_priority_value">Value or gauge</string>
+    <string name="complication_type_priority_text">Text</string>
+    <string name="complication_type_priority_icon">Icon</string>
+    <string name="complication_type_priority_use_default">Use default</string>
+    <string name="cwf_complication_layout">Complication layout</string>
+    <string name="cwf_complication_layout_description">Position and size of the complications, taken from the loaded custom watch face.</string>
     <string name="pref_include_external">Include external views in template</string>
     <string name="pref_switch_external">Switch external datas in Watchface</string>
     <string name="custom_pref_show_seconds">Show seconds</string>
@@ -240,9 +255,27 @@
     <string name="key_complication_tap_action" translatable="false">complication_tap_action</string>
     <string name="key_complication_bg_graph_hours" translatable="false">complication_bg_graph_hours</string>
     <string name="key_show_seconds" translatable="false">show_second</string>
+    <string name="key_show_complication_1" translatable="false">show_complication_1</string>
+    <string name="key_show_complication_2" translatable="false">show_complication_2</string>
+    <string name="key_show_complication_3" translatable="false">show_complication_3</string>
+    <string name="key_show_complication_4" translatable="false">show_complication_4</string>
+    <string name="key_show_complication_5" translatable="false">show_complication_5</string>
     <string name="key_include_external" translatable="false">include_external</string>
     <string name="key_switch_external" translatable="false">switch_external</string>
     <string name="key_last_selected_watchface" translatable="false">last_selected_watchface</string>
+    <string name="key_complication_1" translatable="false">complication_1</string>
+    <string name="key_complication_2" translatable="false">complication_2</string>
+    <string name="key_complication_3" translatable="false">complication_3</string>
+    <string name="key_complication_4" translatable="false">complication_4</string>
+    <string name="key_complication_5" translatable="false">complication_5</string>
+    <string name="key_complication_type_priority_screen" translatable="false">complication_type_priority_screen</string>
+    <string name="key_complication_type_priority_warning" translatable="false">complication_type_priority_warning</string>
+    <string name="key_complication_type_priority_default" translatable="false">complication_type_priority_default</string>
+    <string name="key_complication_type_priority_1" translatable="false">complication_type_priority_1</string>
+    <string name="key_complication_type_priority_2" translatable="false">complication_type_priority_2</string>
+    <string name="key_complication_type_priority_3" translatable="false">complication_type_priority_3</string>
+    <string name="key_complication_type_priority_4" translatable="false">complication_type_priority_4</string>
+    <string name="key_complication_type_priority_5" translatable="false">complication_type_priority_5</string>
     <string name="abbreviation_average">avg</string>
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>

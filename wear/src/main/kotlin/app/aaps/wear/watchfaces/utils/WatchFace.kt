@@ -21,6 +21,7 @@ import android.view.SurfaceHolder
 import androidx.wear.watchface.CanvasType
 import androidx.wear.watchface.ComplicationSlotsManager
 import androidx.wear.watchface.DrawMode
+import androidx.wear.watchface.RenderParameters
 import androidx.wear.watchface.Renderer
 import androidx.wear.watchface.WatchFace
 import androidx.wear.watchface.WatchFaceService
@@ -53,6 +54,10 @@ abstract class WatchFace : WatchFaceService() {
     protected var burnInProtection = false
     protected var watchShape = WatchShape.UNKNOWN
     protected var layoutComplete = false
+
+    // Stores the manager passed into createWatchFace() (previously discarded). Empty for every
+    // watch face except those that override createComplicationSlotsManager() with real slots.
+    protected var complicationSlotsManager: ComplicationSlotsManager? = null
 
     protected val currentWatchMode: WatchMode
         get() = when {
@@ -186,8 +191,42 @@ abstract class WatchFace : WatchFaceService() {
      */
     protected open fun onTapCommand(tapType: Int, x: Int, y: Int, eventTime: Long) {}
 
+    /**
+     * Called after complications have rendered, so a subclass can draw content that must sit on top
+     * of them - e.g. mainLayout's own draw, deferred via [BaseWatchFace.deferMainLayoutDraw]. No-op
+     * for watch faces that draw everything inside [onDraw].
+     */
+    protected open fun onDrawOverlay(canvas: Canvas) {}
+
+    /**
+     * Decides how [slot] is painted this frame, letting a subclass supply bounds per frame instead of
+     * being stuck with the ones the slot was created with. A slot's own bounds and enabled flag have
+     * `internal` setters, so they cannot be changed after [createComplicationSlotsManager]; rendering
+     * has no such restriction, since `CanvasComplication.render` takes bounds per call.
+     *
+     * **Tap hit-testing still uses the slot's declared bounds, not these.** A subclass that paints a
+     * slot away from where it was declared must also bring the declared bounds up to date, or taps
+     * land on the wrong complication - see [WatchFaceComplications.syncGeometry].
+     *
+     * `internal` rather than `protected` because [ComplicationRender] is an internal type and a
+     * protected member of a public class may not expose one.
+     */
+    internal open fun complicationRender(slot: ComplicationSlot): ComplicationRender = ComplicationRender.Declared
+
     // Renderer instance
     private var renderer: WatchFaceRenderer? = null
+
+    /**
+     * Asks the system to re-render the thumbnail it caches for this watch face. Needed by a watch face
+     * whose appearance comes from outside the style schema - a loaded template, say - since the system
+     * otherwise has no reason to redo it.
+     *
+     * Call only when the appearance really changed: the system may rate limit these requests. Safe at
+     * any time, though - the library queues the request until a renderer exists.
+     */
+    protected fun requestPreviewImageUpdate() {
+        renderer?.sendPreviewImageNeedsUpdateRequest()
+    }
 
     override suspend fun createWatchFace(
         surfaceHolder: SurfaceHolder,
@@ -195,6 +234,8 @@ abstract class WatchFace : WatchFaceService() {
         complicationSlotsManager: ComplicationSlotsManager,
         currentUserStyleRepository: CurrentUserStyleRepository
     ): WatchFace {
+        this.complicationSlotsManager = complicationSlotsManager
+
         // Create renderer that delegates to abstract methods
         renderer = WatchFaceRenderer(
             context = applicationContext,
@@ -300,6 +341,22 @@ abstract class WatchFace : WatchFaceService() {
 
             // Delegate to abstract onDraw method
             onDraw(canvas)
+
+            // Generic render pass for whatever complication slots exist. Empty/no-op for every
+            // watch face that doesn't declare any (the default). What each slot's bounds are - and
+            // whether it is painted at all - is the subclass's call, see [complicationRender].
+            complicationSlotsManager?.complicationSlots?.values?.forEach { slot ->
+                if (!slot.enabled) return@forEach
+                when (val render = complicationRender(slot)) {
+                    ComplicationRender.Declared -> slot.render(canvas, zonedDateTime, renderParameters)
+                    ComplicationRender.Skip     -> Unit
+                    is ComplicationRender.At    -> withRotation(canvas, render) {
+                        slot.renderer.render(canvas, render.bounds, zonedDateTime, renderParameters, slot.id)
+                    }
+                }
+            }
+
+            onDrawOverlay(canvas)
         }
 
         override fun renderHighlightLayer(
@@ -309,6 +366,48 @@ abstract class WatchFace : WatchFaceService() {
             sharedAssets: RendererSharedAssets
         ) {
             canvas.drawColor(renderParameters.highlightLayer!!.backgroundTint)
+            complicationSlotsManager?.complicationSlots?.values?.forEach { slot ->
+                if (!slot.enabled) return@forEach
+                when (val render = complicationRender(slot)) {
+                    ComplicationRender.Declared -> slot.renderHighlightLayer(canvas, zonedDateTime, renderParameters)
+                    ComplicationRender.Skip     -> Unit
+                    is ComplicationRender.At    -> withRotation(canvas, render) {
+                        drawComplicationHighlight(canvas, slot, render.bounds, zonedDateTime)
+                    }
+                }
+            }
+        }
+
+        /**
+         * The [ComplicationSlot.renderHighlightLayer] logic, with the bounds supplied by
+         * [complicationRender] instead of the slot's own, so the editor's selection highlight lands
+         * on the complication where it was actually painted.
+         */
+        private fun drawComplicationHighlight(canvas: Canvas, slot: ComplicationSlot, bounds: Rect, zonedDateTime: ZonedDateTime) {
+            // Only sensible for editable slots - a fixed data source can't be picked, so the system
+            // never highlights it.
+            if (slot.fixedComplicationDataSource) return
+            val highlightLayer = renderParameters.highlightLayer ?: return
+            val highlighted = when (val element = highlightLayer.highlightedElement) {
+                is RenderParameters.HighlightedElement.AllComplicationSlots -> true
+                is RenderParameters.HighlightedElement.ComplicationSlot     -> element.id == slot.id
+                else                                                       -> false
+            }
+            if (highlighted)
+                slot.renderer.drawHighlight(canvas, bounds, slot.boundsType, zonedDateTime, highlightLayer.highlightTint)
+        }
+
+        /** Runs [draw] with the canvas rotated as [render] asks, matching what every other CWF view
+         *  already does with its own `rotation`. A no-op save/restore when there's no rotation. */
+        private inline fun withRotation(canvas: Canvas, render: ComplicationRender.At, draw: () -> Unit) {
+            if (render.rotation == 0f) {
+                draw()
+                return
+            }
+            canvas.save()
+            canvas.rotate(render.rotation, render.bounds.exactCenterX(), render.bounds.exactCenterY())
+            draw()
+            canvas.restore()
         }
 
         private fun updateTime(zonedDateTime: ZonedDateTime) {

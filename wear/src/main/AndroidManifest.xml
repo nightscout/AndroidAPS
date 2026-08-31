@@ -733,6 +733,11 @@
             android:exported="true"
             android:label="@string/menu_settings"
             android:taskAffinity="" />
+        <!-- Not exported: only ever opened from the watch face's own settings screen, in-process. -->
+        <activity
+            android:name=".interaction.ComplicationTypeSettingsActivity"
+            android:exported="false"
+            android:label="@string/pref_complication_type_priority" />
         <!-- taskAffinity="": activities launched from tiles/complications (NEW_TASK) get their own
              task, so back returns to the tile/watchface instead of a lingering main menu. Launches
              from within the app (no NEW_TASK) still stack in the caller's task as before. -->

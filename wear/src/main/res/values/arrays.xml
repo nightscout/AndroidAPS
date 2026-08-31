@@ -117,4 +117,32 @@
         <item>15</item>
     </string-array>
 
+    <!-- Complication type priority. The values are ComplicationTypePriority enum names, and
+         "default" means "follow the all-slots default" - see CustomWatchface.USE_DEFAULT_TYPE_PRIORITY. -->
+    <string-array name="complication_type_priority_name">
+        <item>@string/complication_type_priority_value</item>
+        <item>@string/complication_type_priority_text</item>
+        <item>@string/complication_type_priority_icon</item>
+    </string-array>
+
+    <string-array name="complication_type_priority_values" translatable="false">
+        <item>VALUE</item>
+        <item>TEXT</item>
+        <item>ICON</item>
+    </string-array>
+
+    <string-array name="complication_type_priority_slot_name">
+        <item>@string/complication_type_priority_use_default</item>
+        <item>@string/complication_type_priority_value</item>
+        <item>@string/complication_type_priority_text</item>
+        <item>@string/complication_type_priority_icon</item>
+    </string-array>
+
+    <string-array name="complication_type_priority_slot_values" translatable="false">
+        <item>default</item>
+        <item>VALUE</item>
+        <item>TEXT</item>
+        <item>ICON</item>
+    </string-array>
+
 </resources>

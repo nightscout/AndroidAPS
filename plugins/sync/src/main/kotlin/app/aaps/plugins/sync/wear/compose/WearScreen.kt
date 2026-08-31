@@ -33,7 +33,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -354,21 +353,26 @@ internal fun CwfInfosContent(
                 text = state.prefTitle,
                 style = MaterialTheme.typography.titleSmall
             )
-            Column {
+            // Plain rows rather than ListItem: ListItem enforces its own 56dp minimum height, which
+            // left these lines spread far wider apart than the metadata lines just above them.
+            Column(verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
                 state.preferences.forEach { pref ->
-                    ListItem(
-                        headlineContent = {
-                            Text(text = pref.label, style = MaterialTheme.typography.bodyMedium)
-                        },
-                        trailingContent = {
-                            Icon(
-                                imageVector = if (pref.isEnabled) Icons.Default.Check else Icons.Default.Close,
-                                contentDescription = stringResource(if (pref.isEnabled) R.string.enabled else R.string.disabled),
-                                tint = if (pref.isEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        }
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = pref.label,
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Icon(
+                            imageVector = if (pref.isEnabled) Icons.Default.Check else Icons.Default.Close,
+                            contentDescription = stringResource(if (pref.isEnabled) R.string.enabled else R.string.disabled),
+                            tint = if (pref.isEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
                 }
             }
         }
@@ -380,20 +384,21 @@ internal fun CwfInfosContent(
                 text = stringResource(R.string.cwf_infos_view_title),
                 style = MaterialTheme.typography.titleSmall
             )
-            Column {
+            // Same reason as the preference rows above - see there.
+            Column(verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
                 state.viewElements.forEach { viewItem ->
-                    ListItem(
-                        headlineContent = {
-                            Text(text = viewItem.comment, style = MaterialTheme.typography.bodySmall)
-                        },
-                        leadingContent = {
-                            Text(
-                                text = viewItem.key,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(AapsSpacing.small),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = viewItem.key,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Text(text = viewItem.comment, style = MaterialTheme.typography.bodySmall)
+                    }
                 }
             }
         }
