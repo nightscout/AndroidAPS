@@ -10,12 +10,13 @@ import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType
 import app.aaps.pump.common.hw.rileylink.data.RLHistoryItem
 import java.util.concurrent.CopyOnWriteArrayList
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Created by andy on 17/05/2018.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class RileyLinkUtil @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val context: Context

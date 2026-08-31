@@ -46,7 +46,8 @@ import org.joda.time.LocalDateTime
 import java.util.GregorianCalendar
 import java.util.Locale
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Created by andy on 10/12/18.
@@ -57,7 +58,7 @@ import javax.inject.Singleton
 //  all times that time changed (TZ, DST, etc.). Data needs to be returned in batches (time_changed batches, so that we can
 //  handle it. It would help to assign sort_ids to items (from oldest (1) to newest (x)
 //
-@Singleton
+@SingleIn(AppScope::class)
 class MedtronicHistoryData @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,

@@ -9,9 +9,10 @@ import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.core.Single
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class RxAction @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     private val aapsLogger: AAPSLogger

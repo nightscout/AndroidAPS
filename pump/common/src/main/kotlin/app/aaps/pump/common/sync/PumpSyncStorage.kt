@@ -12,12 +12,13 @@ import com.thoughtworks.xstream.XStream
 import com.thoughtworks.xstream.security.AnyTypePermission
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
 /**
  * This class is intended for Pump Drivers that use temporaryId and need way to pair records
  */
-@Singleton
+@SingleIn(AppScope::class)
 class PumpSyncStorage @Inject constructor(
     val pumpSync: PumpSync,
     val preferences: Preferences,

@@ -12,11 +12,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import kotlin.math.max
 import kotlin.math.roundToInt
 
-@Singleton
+@SingleIn(AppScope::class)
 class DiaconnG8Pump @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,

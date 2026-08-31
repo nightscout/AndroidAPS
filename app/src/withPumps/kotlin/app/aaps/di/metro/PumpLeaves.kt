@@ -97,13 +97,10 @@ class PumpLeaves(
     // The pump state holders and driver plugins - see the note above their @Provides below.
     private val bleCommProvider: Provider<BLEComm>,
     private val comboV2PluginProvider: Provider<ComboV2Plugin>,
-    private val danaPumpProvider: Provider<DanaPump>,
     private val danaRSPluginProvider: Provider<DanaRSPlugin>,
-    private val diaconnG8PumpProvider: Provider<DiaconnG8Pump>,
     private val equilManagerProvider: Provider<EquilManager>,
     private val equilPumpPluginProvider: Provider<EquilPumpPlugin>,
     private val medtrumPluginProvider: Provider<MedtrumPlugin>,
-    private val medtrumPumpProvider: Provider<MedtrumPump>,
     private val danaRPluginProvider: Provider<DanaRPlugin>,
     private val danaRKoreanPluginProvider: Provider<DanaRKoreanPlugin>,
     private val danaRv2PluginProvider: Provider<DanaRv2Plugin>,
@@ -111,12 +108,6 @@ class PumpLeaves(
     private val medtronicPumpPluginProvider: Provider<MedtronicPumpPlugin>,
     private val diaconnG8PluginProvider: Provider<DiaconnG8Plugin>,
     private val eopatchPumpPluginProvider: Provider<EopatchPumpPlugin>,
-    private val rileyLinkUtilProvider: Provider<RileyLinkUtil>,
-    private val rileyLinkServiceDataProvider: Provider<RileyLinkServiceData>,
-    private val serviceTaskExecutorProvider: Provider<ServiceTaskExecutor>,
-    private val medtronicHistoryDataProvider: Provider<MedtronicHistoryData>,
-    private val medtronicPumpStatusProvider: Provider<MedtronicPumpStatus>,
-    private val medtronicUtilProvider: Provider<MedtronicUtil>,
     private val patchManagerProvider: Provider<IPatchManager>,
     private val patchManagerExecutorProvider: Provider<PatchManagerExecutor>,
     private val patchConfigProvider: Provider<PatchConfig>,
@@ -124,7 +115,6 @@ class PumpLeaves(
     private val normalBasalManagerProvider: Provider<NormalBasalManager>,
     private val preferenceManagerProvider: Provider<PreferenceManager>,
     private val alarmRegistryProvider: Provider<IAlarmRegistry>,
-    private val rxActionProvider: Provider<RxAction>,
     private val omnipodDashPumpPluginProvider: Provider<OmnipodDashPumpPlugin>,
     private val omnipodErosPumpPluginProvider: Provider<OmnipodErosPumpPlugin>,
     private val erosHistoryProvider: Provider<ErosHistory>,
@@ -175,13 +165,10 @@ class PumpLeaves(
      */
     @Provides fun bleComm(): BLEComm = bleCommProvider.get()
     @Provides fun comboV2Plugin(): ComboV2Plugin = comboV2PluginProvider.get()
-    @Provides fun danaPump(): DanaPump = danaPumpProvider.get()
     @Provides fun danaRSPlugin(): DanaRSPlugin = danaRSPluginProvider.get()
-    @Provides fun diaconnG8Pump(): DiaconnG8Pump = diaconnG8PumpProvider.get()
     @Provides fun equilManager(): EquilManager = equilManagerProvider.get()
     @Provides fun equilPumpPlugin(): EquilPumpPlugin = equilPumpPluginProvider.get()
     @Provides fun medtrumPlugin(): MedtrumPlugin = medtrumPluginProvider.get()
-    @Provides fun medtrumPump(): MedtrumPump = medtrumPumpProvider.get()
     @Provides fun omnipodDashPumpPlugin(): OmnipodDashPumpPlugin = omnipodDashPumpPluginProvider.get()
     @Provides fun danaRPlugin(): DanaRPlugin = danaRPluginProvider.get()
     @Provides fun danaRKoreanPlugin(): DanaRKoreanPlugin = danaRKoreanPluginProvider.get()
@@ -190,12 +177,6 @@ class PumpLeaves(
     @Provides fun medtronicPumpPlugin(): MedtronicPumpPlugin = medtronicPumpPluginProvider.get()
     @Provides fun diaconnG8Plugin(): DiaconnG8Plugin = diaconnG8PluginProvider.get()
     @Provides fun eopatchPumpPlugin(): EopatchPumpPlugin = eopatchPumpPluginProvider.get()
-    @Provides fun rileyLinkUtil(): RileyLinkUtil = rileyLinkUtilProvider.get()
-    @Provides fun rileyLinkServiceData(): RileyLinkServiceData = rileyLinkServiceDataProvider.get()
-    @Provides fun serviceTaskExecutor(): ServiceTaskExecutor = serviceTaskExecutorProvider.get()
-    @Provides fun medtronicHistoryData(): MedtronicHistoryData = medtronicHistoryDataProvider.get()
-    @Provides fun medtronicPumpStatus(): MedtronicPumpStatus = medtronicPumpStatusProvider.get()
-    @Provides fun medtronicUtil(): MedtronicUtil = medtronicUtilProvider.get()
     @Provides fun patchManager(): IPatchManager = patchManagerProvider.get()
     @Provides fun patchManagerExecutor(): PatchManagerExecutor = patchManagerExecutorProvider.get()
     @Provides fun patchConfig(): PatchConfig = patchConfigProvider.get()
@@ -203,7 +184,6 @@ class PumpLeaves(
     @Provides fun normalBasalManager(): NormalBasalManager = normalBasalManagerProvider.get()
     @Provides fun preferenceManager(): PreferenceManager = preferenceManagerProvider.get()
     @Provides fun alarmRegistry(): IAlarmRegistry = alarmRegistryProvider.get()
-    @Provides fun rxAction(): RxAction = rxActionProvider.get()
     @Provides fun omnipodErosPumpPlugin(): OmnipodErosPumpPlugin = omnipodErosPumpPluginProvider.get()
     // The eros view models are Metro built now, so Metro needs these two - Dagger still provides them,
     // from `app.aaps.di.pump.OmnipodErosHistoryModule`.

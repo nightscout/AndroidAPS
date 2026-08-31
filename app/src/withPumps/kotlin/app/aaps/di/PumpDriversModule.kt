@@ -1,6 +1,5 @@
 package app.aaps.di
 
-import app.aaps.di.pump.PumpCommonModule
 
 import app.aaps.di.pump.EopatchModule
 import app.aaps.di.pump.EquilHistoryModule
@@ -15,7 +14,6 @@ import dagger.hilt.components.SingletonComponent
         DanaModules::class,
         EopatchModule::class,
         OmnipodDashModule::class,
-        PumpCommonModule::class,
         MedtrumModule::class,
         EquilHistoryModule::class,
         EquilModules::class,

@@ -1,9 +1,17 @@
 plugins {
     alias(libs.plugins.android.library)
+    alias(libs.plugins.metro)
     alias(libs.plugins.ksp)
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("jacoco-module-dependencies")
+}
+
+metro {
+    interop {
+        // The classes here keep their javax annotations; interop is what lets Metro read them.
+        includeDagger()
+    }
 }
 
 android {

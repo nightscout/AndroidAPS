@@ -29,14 +29,15 @@ import org.json.JSONObject
 import java.security.InvalidParameterException
 import javax.inject.Inject
 import javax.inject.Provider
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 import kotlin.time.Duration.Companion.milliseconds
 
-@Singleton
+@SingleIn(AppScope::class)
 class DanaPump @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
