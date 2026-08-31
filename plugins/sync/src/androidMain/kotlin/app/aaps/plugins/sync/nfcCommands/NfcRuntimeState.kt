@@ -2,8 +2,8 @@ package app.aaps.plugins.sync.nfcCommands
 
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import javax.inject.Inject
 
 /**
  * State that outlives a single [app.aaps.plugins.sync.nfcCommands.actions.NfcAction] but belongs to no

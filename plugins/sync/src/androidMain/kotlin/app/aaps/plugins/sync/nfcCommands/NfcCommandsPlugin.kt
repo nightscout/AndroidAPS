@@ -47,11 +47,11 @@ import app.aaps.plugins.sync.nfcCommands.compose.NfcCommandsComposeContent
 import app.aaps.plugins.sync.nfcCommands.keys.NfcIntentKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 import java.nio.charset.StandardCharsets
-import javax.inject.Inject
 
 /**
  * Result of the pre-execution phase when an NFC tag is detected.

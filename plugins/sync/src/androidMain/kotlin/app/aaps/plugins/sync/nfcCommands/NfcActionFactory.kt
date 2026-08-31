@@ -43,8 +43,8 @@ import app.aaps.plugins.sync.nfcCommands.actions.TempTargetHypoAction
 import app.aaps.plugins.sync.nfcCommands.actions.TempTargetManualAction
 import app.aaps.plugins.sync.nfcCommands.actions.TempTargetMealAction
 import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import javax.inject.Inject
 
 /**
  * Builds an [NfcAction] for a [NfcCommandCode].

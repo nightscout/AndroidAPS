@@ -114,12 +114,12 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
 
         runTest {
             whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
-            whenever(commandQueue.cancelTempBasal(any(), any())).thenReturn(pumpEnactResultProvider.get().success(true))
-            whenever(commandQueue.cancelExtended()).thenReturn(pumpEnactResultProvider.get().success(true))
-            whenever(commandQueue.bolus(any())).thenReturn(pumpEnactResultProvider.get().success(true))
-            whenever(commandQueue.tempBasalPercent(any(), any(), any(), any(), any())).thenReturn(pumpEnactResultProvider.get().success(true))
-            whenever(commandQueue.tempBasalAbsolute(any(), any(), any(), any(), any())).thenReturn(pumpEnactResultProvider.get().success(true))
-            whenever(commandQueue.extendedBolus(any(), any())).thenReturn(pumpEnactResultProvider.get().success(true))
+            whenever(commandQueue.cancelTempBasal(any(), any())).thenReturn(pumpEnactResultProvider().success(true))
+            whenever(commandQueue.cancelExtended()).thenReturn(pumpEnactResultProvider().success(true))
+            whenever(commandQueue.bolus(any())).thenReturn(pumpEnactResultProvider().success(true))
+            whenever(commandQueue.tempBasalPercent(any(), any(), any(), any(), any())).thenReturn(pumpEnactResultProvider().success(true))
+            whenever(commandQueue.tempBasalAbsolute(any(), any(), any(), any(), any())).thenReturn(pumpEnactResultProvider().success(true))
+            whenever(commandQueue.extendedBolus(any(), any())).thenReturn(pumpEnactResultProvider().success(true))
         }
         whenever(preferences.get(BooleanKey.NfcAllowRemoteCommands)).thenReturn(true)
         whenever(rh.gs(any<TextRef>())).thenReturn("Mock String")
@@ -428,7 +428,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         // Mock a failure from commandQueue (which happens on stop on some pumps)
         runTest {
             whenever(commandQueue.bolus(any())).thenReturn(
-                pumpEnactResultProvider.get().success(false).bolusDelivered(0.5)
+                pumpEnactResultProvider().success(false).bolusDelivered(0.5)
             )
         }
         whenever(rh.gs(refNamed(CoreUiStrings.stop_pressed))).thenReturn("Stop pressed")
