@@ -90,16 +90,6 @@ class PumpLeavesModule {
         omnipodDashPodStateManager: Provider<OmnipodDashPodStateManager>,
         danaHistoryDatabase: Provider<DanaHistoryDatabase>,
         danaRSPackets: Provider<Set<DanaRSPacket>>,
-        comboV2Plugin: Provider<ComboV2Plugin>,
-        danaRSPlugin: Provider<DanaRSPlugin>,
-        equilPumpPlugin: Provider<EquilPumpPlugin>,
-        medtrumPlugin: Provider<MedtrumPlugin>,
-        danaRPlugin: Provider<DanaRPlugin>,
-        danaRKoreanPlugin: Provider<DanaRKoreanPlugin>,
-        danaRv2Plugin: Provider<DanaRv2Plugin>,
-        insightPlugin: Provider<InsightPlugin>,
-        medtronicPumpPlugin: Provider<MedtronicPumpPlugin>,
-        diaconnG8Plugin: Provider<DiaconnG8Plugin>,
         eopatchPumpPlugin: Provider<EopatchPumpPlugin>,
         patchManager: Provider<IPatchManager>,
         patchManagerExecutor: Provider<PatchManagerExecutor>,
@@ -108,7 +98,6 @@ class PumpLeavesModule {
         normalBasalManager: Provider<NormalBasalManager>,
         preferenceManager: Provider<PreferenceManager>,
         alarmRegistry: Provider<IAlarmRegistry>,
-        omnipodDashPumpPlugin: Provider<OmnipodDashPumpPlugin>,
         omnipodErosPumpPlugin: Provider<OmnipodErosPumpPlugin>,
         erosHistory: Provider<ErosHistory>,
         erosPodStateManager: Provider<ErosPodStateManager>,
@@ -120,15 +109,11 @@ class PumpLeavesModule {
         bleTransport, rfcommTransport, danaHistoryRecordDao, diaconnHistoryRecordDao, diaconnHistoryDatabase,
         equilBleTransport, equilHistoryPumpDao, equilHistoryRecordDao, dashHistoryDatabase, historyMapper, historyRecordDao,
         medtrumBleTransport, omnipodDashManager, omnipodDashPodStateManager, danaHistoryDatabase, danaRSPackets,
-        comboV2Plugin, danaRSPlugin, equilPumpPlugin,
-        medtrumPlugin,
-        danaRPlugin, danaRKoreanPlugin, danaRv2Plugin, insightPlugin, medtronicPumpPlugin, diaconnG8Plugin,
         eopatchPumpPlugin,
-
 
         patchManager, patchManagerExecutor, patchConfig, tempBasalManager, normalBasalManager,
         preferenceManager, alarmRegistry,
-        omnipodDashPumpPlugin, omnipodErosPumpPlugin, erosHistory, erosPodStateManager,
+        omnipodErosPumpPlugin, erosHistory, erosPodStateManager,
         aapsErosPodStateManager, aapsOmnipodErosManager, aapsOmnipodUtil, omnipodAlertUtil
     )
 }

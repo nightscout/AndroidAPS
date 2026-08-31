@@ -106,7 +106,7 @@ import org.joda.time.DateTime
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Provider
-import javax.inject.Singleton
+import dev.zacsweers.metro.SingleIn
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -123,7 +123,7 @@ internal const val PUMP_ERROR_TIMEOUT_INTERVAL_MSECS = 1000L * 60 * 5
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @PumpDriver
 @MetroIntKey(1060)
-@Singleton
+@SingleIn(AppScope::class)
 class ComboV2Plugin @Inject constructor(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,

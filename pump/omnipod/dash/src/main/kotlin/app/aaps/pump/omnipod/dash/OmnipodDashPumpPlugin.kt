@@ -104,7 +104,7 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.binding
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Provider
 import kotlin.concurrent.thread
 import kotlin.math.ceil
@@ -113,7 +113,7 @@ import kotlin.time.Duration.Companion.hours
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @PumpDriver
 @IntKey(1080)
-@Singleton
+@SingleIn(AppScope::class)
 class OmnipodDashPumpPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,

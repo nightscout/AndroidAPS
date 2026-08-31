@@ -64,23 +64,51 @@ class PumpDriverBucketTest {
         assertThat(drivers[1130]).isInstanceOf(EquilPumpPlugin::class.java)
     }
 
+    /**
+     * There is exactly one of each driver, whichever framework built it.
+     *
+     * **This assertion used to be the opposite.** It demanded that *no* driver was built by Metro,
+     * because Dagger owned them all: the pump services were `DaggerService`s writing to Dagger's copy,
+     * so a Metro-built second one left the plugin list holding an object the pump never touched
+     * ("DanaR pump never reported initialized", which is what it cost on CI).
+     *
+     * That premise is gone. `dagger.android` is off the phone and every pump service is filled by a
+     * Metro member injector, so Metro's copy is the one the pump writes to. Eleven drivers carry
+     * `@SingleIn(AppScope::class)` now and are no longer handed over.
+     *
+     * Two are deliberately still Dagger's and still handed over by `PumpLeaves`:
+     *  - **eros**, because `AapsOmnipodErosManager` and `OmnipodRileyLinkCommunicationManager` are Java
+     *    and Metro cannot generate a factory for a class it has no Kotlin IR for.
+     *  - **eopatch**, because `PatchManagerExecutor` calls `Patch.init` at construction, and a Metro
+     *    owned class is built for real in these plain-JVM tests - it fails on the Bluetooth service.
+     *
+     * What still has to hold either way is **one instance**: reading a driver twice must give the same
+     * object. Two would put the plugin list and the pump service on different state, which is the whole
+     * failure this file exists to prevent.
+     */
     @Test
-    fun `no pump driver in the bucket is built by Metro itself`() {
-        // The rule PumpLeaves exists to enforce, applied to the plugins rather than to what a view model
-        // injects: Dagger owns every pump driver, because the pump services are still DaggerServices and
-        // write to Dagger's copy. If Metro builds its own for this map, the list holds an object the pump
-        // never touches - "DanaR pump never reported initialized", which is exactly what this cost on CI.
-        //
-        // `testRoot()` mocks PumpLeaves with RETURNS_MOCKS, so anything handed over comes back a mock and
-        // anything Metro constructed comes back real. That difference is the whole check.
-        //
-        // Getting there needs BOTH halves and neither fails to compile on its own: keep javax @Singleton
-        // on the plugin (never @SingleIn - that tells Metro to own it) AND list it in PumpLeaves.
-        val builtByMetro = testRoot().contributedPumpDriverPlugins
-            .filterValues { !mockingDetails(it).isMock }
-            .map { (key, plugin) -> "$key -> ${plugin.javaClass.simpleName}" }
+    fun `each Metro owned pump driver is a single instance`() {
+        val root = testRoot()
+        val first = root.contributedPumpDriverPlugins
+        val second = root.contributedPumpDriverPlugins
 
-        assertThat(builtByMetro).isEmpty()
+        // Only the Metro owned ones can be compared. The two still handed over come through a
+        // RETURNS_MOCKS `PumpLeaves`, which mints a fresh mock on every call - that says nothing about
+        // the real instance, which Dagger scopes.
+        val rebuilt = first.keys
+            .filterNot { key -> mockingDetails(first[key]).isMock }
+            .filter { key -> first[key] !== second[key] }
+
+        assertThat(rebuilt).isEmpty()
+    }
+
+    /** The two that are still handed over, so a silent flip of either is noticed here. */
+    @Test
+    fun `eros and eopatch are still handed over by PumpLeaves`() {
+        val drivers = testRoot().contributedPumpDriverPlugins
+
+        assertThat(mockingDetails(drivers[1070]).isMock).isTrue()
+        assertThat(mockingDetails(drivers[1110]).isMock).isTrue()
     }
 
     @Test

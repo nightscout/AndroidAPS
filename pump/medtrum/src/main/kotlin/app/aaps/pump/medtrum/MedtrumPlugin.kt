@@ -68,14 +68,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.drop
 import javax.inject.Inject
 import javax.inject.Provider
-import javax.inject.Singleton
+import dev.zacsweers.metro.SingleIn
 import kotlin.math.abs
 import kotlin.math.min
 
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @PumpDriver
 @MetroIntKey(1120)
-@Singleton
+@SingleIn(AppScope::class)
 class MedtrumPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,

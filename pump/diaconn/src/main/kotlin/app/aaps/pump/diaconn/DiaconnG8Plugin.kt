@@ -68,7 +68,7 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.binding
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Provider
 import kotlin.math.abs
 import kotlin.math.max
@@ -76,7 +76,7 @@ import kotlin.math.max
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @PumpDriver
 @IntKey(1100)
-@Singleton
+@SingleIn(AppScope::class)
 class DiaconnG8Plugin @Inject constructor(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,

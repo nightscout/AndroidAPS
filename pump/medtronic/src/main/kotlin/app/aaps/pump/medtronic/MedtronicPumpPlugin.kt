@@ -113,7 +113,7 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.IntKey as MetroIntKey
 import dev.zacsweers.metro.binding
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Provider
 import kotlin.math.abs
 import kotlin.math.floor
@@ -126,7 +126,7 @@ import kotlin.math.floor
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @PumpDriver
 @MetroIntKey(1090)
-@Singleton
+@SingleIn(AppScope::class)
 class MedtronicPumpPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,

@@ -50,7 +50,7 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.IntKey as MetroIntKey
 import dev.zacsweers.metro.binding
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.SingleIn
 import javax.inject.Provider
 import kotlin.math.abs
 import kotlin.math.max
@@ -58,7 +58,7 @@ import kotlin.math.max
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @PumpDriver
 @MetroIntKey(1020)
-@Singleton
+@SingleIn(AppScope::class)
 class DanaRKoreanPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rxBus: RxBus,

@@ -95,16 +95,6 @@ class PumpLeaves(
     private val danaHistoryDatabaseProvider: Provider<DanaHistoryDatabase>,
     private val danaRSPacketsProvider: Provider<Set<DanaRSPacket>>,
     // The pump state holders and driver plugins - see the note above their @Provides below.
-    private val comboV2PluginProvider: Provider<ComboV2Plugin>,
-    private val danaRSPluginProvider: Provider<DanaRSPlugin>,
-    private val equilPumpPluginProvider: Provider<EquilPumpPlugin>,
-    private val medtrumPluginProvider: Provider<MedtrumPlugin>,
-    private val danaRPluginProvider: Provider<DanaRPlugin>,
-    private val danaRKoreanPluginProvider: Provider<DanaRKoreanPlugin>,
-    private val danaRv2PluginProvider: Provider<DanaRv2Plugin>,
-    private val insightPluginProvider: Provider<InsightPlugin>,
-    private val medtronicPumpPluginProvider: Provider<MedtronicPumpPlugin>,
-    private val diaconnG8PluginProvider: Provider<DiaconnG8Plugin>,
     private val eopatchPumpPluginProvider: Provider<EopatchPumpPlugin>,
     private val patchManagerProvider: Provider<IPatchManager>,
     private val patchManagerExecutorProvider: Provider<PatchManagerExecutor>,
@@ -113,7 +103,6 @@ class PumpLeaves(
     private val normalBasalManagerProvider: Provider<NormalBasalManager>,
     private val preferenceManagerProvider: Provider<PreferenceManager>,
     private val alarmRegistryProvider: Provider<IAlarmRegistry>,
-    private val omnipodDashPumpPluginProvider: Provider<OmnipodDashPumpPlugin>,
     private val omnipodErosPumpPluginProvider: Provider<OmnipodErosPumpPlugin>,
     private val erosHistoryProvider: Provider<ErosHistory>,
     private val erosPodStateManagerProvider: Provider<ErosPodStateManager>,
@@ -161,17 +150,6 @@ class PumpLeaves(
      * them, because the services do; this hands its instance to Metro. `PumpLeavesTest` fails if a new
      * one is added to a view model without being listed here.
      */
-    @Provides fun comboV2Plugin(): ComboV2Plugin = comboV2PluginProvider.get()
-    @Provides fun danaRSPlugin(): DanaRSPlugin = danaRSPluginProvider.get()
-    @Provides fun equilPumpPlugin(): EquilPumpPlugin = equilPumpPluginProvider.get()
-    @Provides fun medtrumPlugin(): MedtrumPlugin = medtrumPluginProvider.get()
-    @Provides fun omnipodDashPumpPlugin(): OmnipodDashPumpPlugin = omnipodDashPumpPluginProvider.get()
-    @Provides fun danaRPlugin(): DanaRPlugin = danaRPluginProvider.get()
-    @Provides fun danaRKoreanPlugin(): DanaRKoreanPlugin = danaRKoreanPluginProvider.get()
-    @Provides fun danaRv2Plugin(): DanaRv2Plugin = danaRv2PluginProvider.get()
-    @Provides fun insightPlugin(): InsightPlugin = insightPluginProvider.get()
-    @Provides fun medtronicPumpPlugin(): MedtronicPumpPlugin = medtronicPumpPluginProvider.get()
-    @Provides fun diaconnG8Plugin(): DiaconnG8Plugin = diaconnG8PluginProvider.get()
     @Provides fun eopatchPumpPlugin(): EopatchPumpPlugin = eopatchPumpPluginProvider.get()
     @Provides fun patchManager(): IPatchManager = patchManagerProvider.get()
     @Provides fun patchManagerExecutor(): PatchManagerExecutor = patchManagerExecutorProvider.get()

@@ -80,13 +80,13 @@ import org.joda.time.DateTime
 import org.joda.time.Duration
 import javax.inject.Inject
 import javax.inject.Provider
-import javax.inject.Singleton
+import dev.zacsweers.metro.SingleIn
 import kotlin.math.max
 
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @PumpDriver
 @MetroIntKey(1130)
-@Singleton
+@SingleIn(AppScope::class)
 class EquilPumpPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,
