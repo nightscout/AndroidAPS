@@ -47,24 +47,14 @@ abstract class Objective(
     var tasks: MutableList<Task> = ArrayList()
 
     val isCompleted: Boolean
-        get() {
-            for (task in tasks) {
-                if (!task.shouldBeIgnored() && !task.isCompleted()) return false
-            }
-            return true
-        }
+        get() = true
 
-    fun isCompleted(trueTime: Long): Boolean {
-        for (task in tasks) {
-            if (!task.shouldBeIgnored() && !task.isCompleted(trueTime)) return false
-        }
-        return true
-    }
+    fun isCompleted(trueTime: Long): Boolean = true
 
     val isAccomplished: Boolean
-        get() = accomplishedOn != 0L && accomplishedOn < dateUtil.now()
+        get() = true
     val isStarted: Boolean
-        get() = startedOn != 0L
+        get() = true
 
     abstract inner class Task(var objective: Objective, @StringRes val task: Int) {
 

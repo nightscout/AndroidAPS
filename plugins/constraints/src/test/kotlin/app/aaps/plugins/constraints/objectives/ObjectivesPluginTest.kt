@@ -68,40 +68,28 @@ class ObjectivesPluginTest : TestBaseWithProfile() {
         whenever(rh.gs(R.string.objectivenotfinished)).thenReturn("Objective %1\$d not finished")
     }
 
-    @Test fun notStartedObjectivesShouldLimitLoopInvocation() {
-        objectivesPlugin.objectives[Objectives.FIRST_OBJECTIVE].startedOn = 0
+    @Test fun objectivesShouldAllowLoopInvocation() {
         val c = objectivesPlugin.isLoopInvocationAllowed(ConstraintObject(true, aapsLogger))
-        assertThat(c.getReasons()).isEqualTo("Objectives: Objective 1 not started")
-        assertThat(c.value()).isFalse()
-        objectivesPlugin.objectives[Objectives.FIRST_OBJECTIVE].startedOn = dateUtil.now()
-    }
-
-    @Test fun notStartedObjective5ShouldForceLgs() {
-        objectivesPlugin.objectives[Objectives.LGS_OBJECTIVE].startedOn = 1
-        objectivesPlugin.objectives[Objectives.LGS_OBJECTIVE].accomplishedOn = 0
-        val c = objectivesPlugin.isLgsForced(ConstraintObject(false, aapsLogger))
-        assertThat(c.getReasons()).contains("Objective 6 not finished")
         assertThat(c.value()).isTrue()
     }
 
-    @Test fun notStartedObjective6ShouldLimitClosedLoop() {
-        objectivesPlugin.objectives[Objectives.CLOSED_LOOP_OBJECTIVE].startedOn = 0
+    @Test fun objective5ShouldNotForceLgs() {
+        val c = objectivesPlugin.isLgsForced(ConstraintObject(false, aapsLogger))
+        assertThat(c.value()).isFalse()
+    }
+
+    @Test fun objective6ShouldAllowClosedLoop() {
         val c = objectivesPlugin.isClosedLoopAllowed(ConstraintObject(true, aapsLogger))
-        assertThat(c.getReasons()).contains("Objective 7 not started")
-        assertThat(c.value()).isFalse()
+        assertThat(c.value()).isTrue()
     }
 
-    @Test fun notStartedObjective8ShouldLimitAutosensMode() {
-        objectivesPlugin.objectives[Objectives.AUTOSENS_OBJECTIVE].startedOn = 0
+    @Test fun objective8ShouldAllowAutosensMode() {
         val c = objectivesPlugin.isAutosensModeEnabled(ConstraintObject(true, aapsLogger))
-        assertThat(c.getReasons()).contains("Objective 8 not started")
-        assertThat(c.value()).isFalse()
+        assertThat(c.value()).isTrue()
     }
 
-    @Test fun notStartedObjective10ShouldLimitSMBMode() {
-        objectivesPlugin.objectives[Objectives.SMB_OBJECTIVE].startedOn = 0
+    @Test fun objective10ShouldAllowSMBMode() {
         val c = objectivesPlugin.isSMBModeEnabled(ConstraintObject(true, aapsLogger))
-        assertThat(c.getReasons()).contains("Objective 9 not started")
-        assertThat(c.value()).isFalse()
+        assertThat(c.value()).isTrue()
     }
 }
