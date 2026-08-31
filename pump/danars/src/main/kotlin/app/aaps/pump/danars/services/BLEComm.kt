@@ -39,7 +39,7 @@ import app.aaps.pump.danars.encryption.BleEncryption
 import app.aaps.pump.danars.encryption.EncryptionType
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.ScheduledFuture
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 

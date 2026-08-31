@@ -48,9 +48,10 @@ import org.joda.time.LocalDateTime
 import java.util.Calendar
 import java.util.GregorianCalendar
 import java.util.Locale
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Original file created by geoff on 5/30/16.
@@ -60,7 +61,7 @@ import javax.inject.Singleton
  * This was mostly rewritten from Original version, and lots of commands and
  * functionality added.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class MedtronicCommunicationManager @Inject constructor(
     private val medtronicPumpStatus: MedtronicPumpStatus,
     private val medtronicPumpPlugin: MedtronicPumpPlugin,
@@ -135,7 +136,7 @@ class MedtronicCommunicationManager @Inject constructor(
         if (!canPreventTuneUp) {
             val diff = System.currentTimeMillis() - medtronicPumpStatus.lastConnection
             if (diff > RILEYLINK_TIMEOUT) {
-                serviceTaskExecutor.startTask(wakeAndTuneTaskProvider.get())
+                serviceTaskExecutor.startTask(wakeAndTuneTaskProvider())
             }
         }
         return false
@@ -153,7 +154,7 @@ class MedtronicCommunicationManager @Inject constructor(
         if (rfSpyResponse?.wasTimeout() == true) {
             aapsLogger.error(LTag.PUMPCOMM, "isDeviceReachable. Failed to find pump (timeout).")
         } else if (rfSpyResponse?.looksLikeRadioPacket() == true) {
-            val radioResponse = radioResponseProvider.get()
+            val radioResponse = radioResponseProvider()
             try {
                 radioResponse.init(rfSpyResponse.raw)
                 if (radioResponse.isValid()) {

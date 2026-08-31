@@ -20,7 +20,7 @@ import app.aaps.pump.medtrum.extension.toLong
 import app.aaps.pump.medtrum.util.MedtrumTimeUtil
 import app.aaps.core.interfaces.di.MetroMemberInjector
 import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class GetRecordPacket(injector: MetroMemberInjector, private val recordIndex: Int) : MedtrumPacket(injector) {
 

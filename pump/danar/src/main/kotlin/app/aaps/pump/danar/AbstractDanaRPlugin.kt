@@ -53,7 +53,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import javax.inject.Provider
+import dev.zacsweers.metro.Provider
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -129,7 +129,7 @@ abstract class AbstractDanaRPlugin protected constructor(
 
     // Pump interface
     override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (executionService == null) {
             aapsLogger.error("setNewBasalProfile sExecutionService is null")
             // Service not bound yet — deferred, not a genuine error; re-pushed on reconnect. success=true keeps
@@ -190,7 +190,7 @@ abstract class AbstractDanaRPlugin protected constructor(
 
     override suspend fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
         var percentReq = percent
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (percentReq < 0) {
             result.isTempCancel(false).enacted(false).success(false).comment(app.aaps.core.ui.R.string.invalid_input)
             aapsLogger.error("setTempBasalPercent: Invalid input")
@@ -239,7 +239,7 @@ abstract class AbstractDanaRPlugin protected constructor(
         val durationInHalfHours = max(durationInMinutes / 30, 1)
         // round to the pump's native extended-bolus step (cU)
         var insulinReq = roundTo(insulin, pumpDescription.extendedBolusStep)
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (danaPump.isExtendedInProgress && abs(danaPump.extendedBolusAmount - insulinReq) < pumpDescription.extendedBolusStep) {
             result.enacted(false)
                 .success(true)
@@ -288,7 +288,7 @@ abstract class AbstractDanaRPlugin protected constructor(
     }
 
     override suspend fun cancelExtendedBolus(): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (danaPump.isExtendedInProgress) {
             executionService?.extendedBolusStop()
             if (!danaPump.isExtendedInProgress) {
@@ -343,7 +343,7 @@ abstract class AbstractDanaRPlugin protected constructor(
      * DanaR interface
      */
     override fun loadHistory(type: Byte): PumpEnactResult =
-        executionService?.loadHistory(type) ?: pumpEnactResultProvider.get()
+        executionService?.loadHistory(type) ?: pumpEnactResultProvider()
 
     /**
      * Constraint interface

@@ -121,18 +121,18 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         )
         smsCommunicatorPlugin.setPluginEnabledBlocking(PluginType.SYNC, true)
         runBlocking {
-            whenever(commandQueue.cancelTempBasal(anyBoolean(), anyBoolean())).thenReturn(pumpEnactResultProvider.get().success(true))
-            whenever(commandQueue.cancelExtended()).thenReturn(pumpEnactResultProvider.get().success(true))
-            whenever(commandQueue.readStatus(anyString())).thenReturn(pumpEnactResultProvider.get().success(true))
-            whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider.get().success(true).bolusDelivered(1.0))
+            whenever(commandQueue.cancelTempBasal(anyBoolean(), anyBoolean())).thenReturn(pumpEnactResultProvider().success(true))
+            whenever(commandQueue.cancelExtended()).thenReturn(pumpEnactResultProvider().success(true))
+            whenever(commandQueue.readStatus(anyString())).thenReturn(pumpEnactResultProvider().success(true))
+            whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true).bolusDelivered(1.0))
             whenever(commandQueue.tempBasalPercent(anyInt(), anyInt(), anyBoolean(), anyOrNull(), anyOrNull())).thenAnswer { invocation ->
-                pumpEnactResultProvider.get().success(true).isPercent(true).percent(invocation.getArgument(0)).duration(invocation.getArgument(1))
+                pumpEnactResultProvider().success(true).isPercent(true).percent(invocation.getArgument(0)).duration(invocation.getArgument(1))
             }
             whenever(commandQueue.tempBasalAbsolute(anyDouble(), anyInt(), anyBoolean(), anyOrNull(), anyOrNull())).thenAnswer { invocation ->
-                pumpEnactResultProvider.get().success(true).isPercent(false).absolute(invocation.getArgument(0)).duration(invocation.getArgument(1))
+                pumpEnactResultProvider().success(true).isPercent(false).absolute(invocation.getArgument(0)).duration(invocation.getArgument(1))
             }
             whenever(commandQueue.extendedBolus(anyDouble(), anyInt())).thenAnswer { invocation ->
-                pumpEnactResultProvider.get().success(true).isPercent(false).absolute(invocation.getArgument(0)).duration(invocation.getArgument(1))
+                pumpEnactResultProvider().success(true).isPercent(false).absolute(invocation.getArgument(0)).duration(invocation.getArgument(1))
             }
         }
 

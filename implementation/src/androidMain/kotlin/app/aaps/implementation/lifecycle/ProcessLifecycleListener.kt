@@ -3,7 +3,7 @@ package app.aaps.implementation.lifecycle
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import app.aaps.core.interfaces.protection.ProtectionCheck
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class ProcessLifecycleListener @Inject constructor(private val protectionCheck: ProtectionCheck) : DefaultLifecycleObserver {
 

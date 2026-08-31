@@ -25,13 +25,14 @@ import app.aaps.pump.medtronic.driver.MedtronicPumpStatus
 import app.aaps.pump.medtronic.keys.MedtronicIntPreferenceKey
 import app.aaps.pump.medtronic.keys.MedtronicStringPreferenceKey
 import app.aaps.pump.medtronic.util.MedtronicUtil
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
 /**
  * RileyLinkMedtronicService is intended to stay running when the gui-app is closed.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class RileyLinkMedtronicService : RileyLinkService() {
 
     @Inject lateinit var medtronicPumpPlugin: MedtronicPumpPlugin

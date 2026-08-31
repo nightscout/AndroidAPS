@@ -95,7 +95,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
     @Test
     fun deliverWizardBolus_recordsCanonicalBolusWizardAndPersistsBcrOnce() = runTest {
         whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
-        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider.get().success(true))
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
         val bcr = mock<BCR>()
         val executor = create()
 
@@ -142,7 +142,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
     @Test
     fun deliverWizardBolus_bolusOnly_omitsGlucoseAndDoesNotPersistNullBcr() = runTest {
         whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
-        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider.get().success(true))
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
         val executor = create()
 
         executor.deliverWizardBolus(
@@ -179,7 +179,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
     @Test
     fun deliverBolusAdvisor_recordsCorrectionBolus_schedulesEatReminderOnSuccess() = runTest {
         whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
-        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider.get().success(true))
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
         val bcr = mock<BCR>()
         val executor = create()
         var errored = false
@@ -222,7 +222,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
     @Test
     fun confirm_drainsSlotAndDeliversOnce_secondConfirmIsNoPending() = runTest {
         whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
-        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider.get().success(true))
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
         val executor = create()
         // confirm() now constraint-caps the (insulin + correctionU) dose, so the passthrough must be stubbed
         // even on the setPending path (which bypasses prepare()'s own constraint stubbing).
@@ -252,7 +252,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
     @Test
     fun confirm_parkedDosesAreIsolatedByBolusId_aSecondPrepareDoesNotClobberTheFirst() = runTest {
         whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
-        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider.get().success(true))
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
         val executor = create()
         // confirm() now constraint-caps the (insulin + correctionU) dose, so the passthrough must be stubbed
         // even on the setPending path (which bypasses prepare()'s own constraint stubbing).
@@ -275,7 +275,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
     @Test
     fun prepareBatch_raisingTtFirstThenBolus_bothAppliedOnConfirm() = runTest {
         whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
-        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider.get().success(true))
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
         stubPassthroughConstraints()
         val executor = create()
         val actions = listOf(
@@ -296,7 +296,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         // The master (SOT) marks the QuickWizard used on a successful commit — the client never writes the synced
         // QuickWizard pref itself (which previously raced the commit → "Update settings … Another action in progress").
         whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
-        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider.get().success(true))
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
         stubPassthroughConstraints()
         val entry = mock<QuickWizardEntry>()
         whenever(quickWizard.get("qw-1")).thenReturn(entry)
@@ -318,7 +318,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
     fun prepareBatch_noQuickWizardGuid_marksNothing() = runTest {
         // A dialog / wear batch (no guid) must not resolve or mark any entry — guards against a false-positive mark.
         whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
-        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider.get().success(true))
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
         stubPassthroughConstraints()
         val executor = create()
         val actions = listOf(
@@ -643,7 +643,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         whenever(activePlugin.activePump).thenReturn(pump)
         whenever(pump.isInitialized()).thenReturn(true)
         whenever(pump.pumpDescription).thenReturn(PumpDescription().also { it.isTempBasalCapable = true; it.tempBasalStyle = PumpDescription.PERCENT })
-        whenever(commandQueue.tempBasalPercent(any(), any(), any(), any(), any())).thenReturn(pumpEnactResultProvider.get().success(true))
+        whenever(commandQueue.tempBasalPercent(any(), any(), any(), any(), any())).thenReturn(pumpEnactResultProvider().success(true))
         val executor = create()
 
         val prepared = executor.prepareBatch(listOf(BatchAction.TempBasal(rate = 150.0, isPercent = true, durationMinutes = 30))) as WizardBolusExecutor.PrepareResult.Preview
@@ -681,7 +681,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         whenever(activePlugin.activePump).thenReturn(pump)
         whenever(pump.isInitialized()).thenReturn(true)
         whenever(pump.pumpDescription).thenReturn(PumpDescription().also { it.isExtendedBolusCapable = true })
-        whenever(commandQueue.extendedBolus(any(), any())).thenReturn(pumpEnactResultProvider.get().success(true))
+        whenever(commandQueue.extendedBolus(any(), any())).thenReturn(pumpEnactResultProvider().success(true))
         val executor = create()
 
         val prepared = executor.prepareBatch(listOf(BatchAction.ExtendedBolus(insulin = 1.5, durationMinutes = 120))) as WizardBolusExecutor.PrepareResult.Preview
@@ -702,7 +702,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         whenever(activePlugin.activePump).thenReturn(pump)
         whenever(pump.isInitialized()).thenReturn(true)
         whenever(pump.pumpDescription).thenReturn(PumpDescription().also { it.isTempBasalCapable = true; it.tempBasalStyle = PumpDescription.ABSOLUTE })
-        whenever(commandQueue.tempBasalAbsolute(any(), any(), any(), any(), any())).thenReturn(pumpEnactResultProvider.get().success(true))
+        whenever(commandQueue.tempBasalAbsolute(any(), any(), any(), any(), any())).thenReturn(pumpEnactResultProvider().success(true))
         val executor = create()
 
         val prepared = executor.prepareBatch(listOf(BatchAction.TempBasal(rate = 1.25, isPercent = false, durationMinutes = 45))) as WizardBolusExecutor.PrepareResult.Preview
@@ -724,7 +724,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         whenever(activePlugin.activePump).thenReturn(pump)
         whenever(pump.isInitialized()).thenReturn(true)
         whenever(pump.pumpDescription).thenReturn(PumpDescription().also { it.isTempBasalCapable = true; it.tempBasalStyle = PumpDescription.PERCENT })
-        whenever(commandQueue.tempBasalPercent(any(), any(), any(), any(), any())).thenReturn(pumpEnactResultProvider.get().success(true))
+        whenever(commandQueue.tempBasalPercent(any(), any(), any(), any(), any())).thenReturn(pumpEnactResultProvider().success(true))
         val executor = create()
 
         val prepared = executor.prepareBatch(listOf(BatchAction.TempBasal(rate = 0.0, isPercent = true, durationMinutes = 30))) as WizardBolusExecutor.PrepareResult.Preview
@@ -760,7 +760,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         whenever(activePlugin.activePump).thenReturn(pump)
         whenever(pump.isInitialized()).thenReturn(true)
         whenever(pump.pumpDescription).thenReturn(PumpDescription().also { it.isTempBasalCapable = true })
-        whenever(commandQueue.cancelTempBasal(any(), any())).thenReturn(pumpEnactResultProvider.get().success(true))
+        whenever(commandQueue.cancelTempBasal(any(), any())).thenReturn(pumpEnactResultProvider().success(true))
         val executor = create()
 
         val prepared = executor.prepareBatch(listOf(BatchAction.CancelTempBasal)) as WizardBolusExecutor.PrepareResult.Preview
@@ -778,7 +778,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         whenever(activePlugin.activePump).thenReturn(pump)
         whenever(pump.isInitialized()).thenReturn(true)
         whenever(pump.pumpDescription).thenReturn(PumpDescription().also { it.isExtendedBolusCapable = true })
-        whenever(commandQueue.cancelExtended()).thenReturn(pumpEnactResultProvider.get().success(true))
+        whenever(commandQueue.cancelExtended()).thenReturn(pumpEnactResultProvider().success(true))
         val executor = create()
 
         val prepared = executor.prepareBatch(listOf(BatchAction.CancelExtendedBolus)) as WizardBolusExecutor.PrepareResult.Preview
@@ -846,7 +846,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
     @Test
     fun confirm_asAdvisor_deliversCorrectionAdvisorNotCarbWizardBolus() = runTest {
         whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
-        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider.get().success(true))
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
         val executor = create()
         // Parked WITH carbs, but the user took the high-BG advisor branch → correction-only delivery.
         executor.setPending(insulin = 1.5, carbs = 40, bolusCalculatorResult = null, bolusId = 999L)
@@ -865,7 +865,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
     @Test
     fun deliverBolusAdvisor_onFailure_routesToErrorAndSkipsEatReminder() = runTest {
         whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
-        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider.get().success(false))
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(false))
         val executor = create()
         var errorMsg: String? = null
 
@@ -885,7 +885,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
     @Test
     fun bolus_onCommandFailure_postsUrgentBolusFailedAlarm() = runTest {
         whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
-        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider.get().success(false))
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(false))
         val executor = create()
 
         executor.deliverWizardBolus(
@@ -903,7 +903,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
     @Test
     fun bolus_onCommandFailure_whenStopPressed_doesNotPostAlarm() = runTest {
         whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
-        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider.get().success(false))
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(false))
         whenever(bolusProgressData.isStopPressed).thenReturn(true)
         val executor = create()
 
@@ -922,7 +922,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
     @Test
     fun deliverInsulin_recordsCorrectionBolusWithNoteOnUserEntry() = runTest {
         whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
-        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider.get().success(true))
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
         val executor = create()
 
         executor.deliverInsulin(

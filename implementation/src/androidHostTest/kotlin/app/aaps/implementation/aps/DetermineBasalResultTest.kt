@@ -25,7 +25,7 @@ class DetermineBasalResultTest : TestBaseWithProfile() {
 
     @Test
     fun `json reports the offending non-finite field to Crashlytics and still throws`() {
-        val result = apsResultProvider.get()
+        val result = apsResultProvider()
             .with(RT(runningDynamicIsf = false, algorithm = APSResult.Algorithm.SMB, insulinReq = Double.NaN))
 
         // Not swallowed: the default Json still rejects the NaN and json() propagates the crash as before.
@@ -40,7 +40,7 @@ class DetermineBasalResultTest : TestBaseWithProfile() {
 
     @Test
     fun `json reports infinity too`() {
-        val result = apsResultProvider.get()
+        val result = apsResultProvider()
             .with(RT(runningDynamicIsf = true, algorithm = APSResult.Algorithm.AUTO_ISF, variable_sens = Double.POSITIVE_INFINITY))
 
         assertThrows<Exception> { result.json() }
@@ -53,7 +53,7 @@ class DetermineBasalResultTest : TestBaseWithProfile() {
 
     @Test
     fun `json does not report or throw when all result fields are finite`() {
-        val result = apsResultProvider.get()
+        val result = apsResultProvider()
             .with(RT(runningDynamicIsf = false, algorithm = APSResult.Algorithm.SMB, eventualBG = 120.0, insulinReq = 0.5, variable_sens = 45.0))
 
         result.json() // valid JSON — no crash
@@ -67,7 +67,7 @@ class DetermineBasalResultTest : TestBaseWithProfile() {
      */
     @Test
     fun `json carries the result fields`() {
-        val result = apsResultProvider.get()
+        val result = apsResultProvider()
             .with(RT(runningDynamicIsf = false, algorithm = APSResult.Algorithm.SMB, eventualBG = 120.0, insulinReq = 0.5, rate = 1.5, duration = 30))
 
         val json = result.json()!!
@@ -81,7 +81,7 @@ class DetermineBasalResultTest : TestBaseWithProfile() {
     /** A field the result did not set stays out of the document rather than going out as null. */
     @Test
     fun `json omits fields that were not set`() {
-        val result = apsResultProvider.get()
+        val result = apsResultProvider()
             .with(RT(runningDynamicIsf = false, algorithm = APSResult.Algorithm.SMB, eventualBG = 120.0))
 
         assertThat(result.json()!!.containsKey("insulinReq")).isFalse()
@@ -97,7 +97,7 @@ class DetermineBasalResultTest : TestBaseWithProfile() {
      */
     @Test
     fun `a whole number keeps its decimal point`() {
-        val result = apsResultProvider.get()
+        val result = apsResultProvider()
             .with(RT(runningDynamicIsf = false, algorithm = APSResult.Algorithm.SMB, rate = 1.0, duration = 30))
 
         assertThat(result.json().toString()).contains("\"rate\":1.0")

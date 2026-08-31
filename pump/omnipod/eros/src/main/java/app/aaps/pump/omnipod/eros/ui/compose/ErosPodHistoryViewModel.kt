@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.util.Calendar
 import java.util.GregorianCalendar
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 @Stable
 // Registers itself: @ViewModelKey infers the key from the class. Deliberately unscoped, so each screen

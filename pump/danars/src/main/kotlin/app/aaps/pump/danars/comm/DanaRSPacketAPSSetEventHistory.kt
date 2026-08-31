@@ -7,7 +7,7 @@ import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danars.encryption.BleEncryption
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class DanaRSPacketAPSSetEventHistory @Inject constructor(
     private val aapsLogger: AAPSLogger,

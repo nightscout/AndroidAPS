@@ -14,7 +14,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.io.ObjectInputStream
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn

@@ -46,7 +46,7 @@ import org.mozilla.javascript.Undefined
 import java.io.IOException
 import java.lang.reflect.InvocationTargetException
 import java.nio.charset.StandardCharsets
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class DetermineBasalAdapterAutoISFJS(private val scriptReader: ScriptReader, private val injector: MetroMemberInjector) : DetermineBasalAdapter {
 

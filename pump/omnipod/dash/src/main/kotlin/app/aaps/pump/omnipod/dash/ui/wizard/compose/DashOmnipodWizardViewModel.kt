@@ -56,8 +56,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx3.await
 import kotlinx.coroutines.rx3.rxSingle
-import javax.inject.Inject
-import javax.inject.Provider
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
 import app.aaps.pump.omnipod.common.R as CommonR
 
 @Stable
@@ -169,14 +169,14 @@ class DashOmnipodWizardViewModel @Inject constructor(
                     onError = { throwable ->
                         logger.error(LTag.PUMP, "Error in Pod activation part 1", throwable)
                         source.onSuccess(
-                            pumpEnactResultProvider.get()
+                            pumpEnactResultProvider()
                                 .success(false)
                                 .comment(I8n.textFromException(throwable, rh))
                         )
                     },
                     onComplete = {
                         logger.debug("Pod activation part 1 completed")
-                        source.onSuccess(pumpEnactResultProvider.get().success(true))
+                        source.onSuccess(pumpEnactResultProvider().success(true))
                     }
                 )
         }
@@ -239,10 +239,10 @@ class DashOmnipodWizardViewModel @Inject constructor(
             // Without this it stays 0.0 (wrong reservoir display, and bolus/basal gates that read it) until the next
             // loop poll. Fire-and-forget so the activation-complete UI isn't delayed by the BLE round-trip.
             viewModelScope.launch { commandQueue.readStatus(rh.gs(CommonR.string.omnipod_common_pod_activation_wizard_pod_activated_title)) }
-            pumpEnactResultProvider.get().success(true)
+            pumpEnactResultProvider().success(true)
         } catch (throwable: Throwable) {
             logger.error(LTag.PUMP, "Error in Pod activation part 2", throwable)
-            pumpEnactResultProvider.get().success(false).comment(I8n.textFromException(throwable, rh))
+            pumpEnactResultProvider().success(false).comment(I8n.textFromException(throwable, rh))
         }
     }
 

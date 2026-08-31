@@ -24,7 +24,7 @@ import app.aaps.pump.omnipod.dash.history.mapper.HistoryMapper
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import java.lang.System.currentTimeMillis
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class DashHistory @Inject constructor(
     private val dao: HistoryRecordDao,

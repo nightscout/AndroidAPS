@@ -34,7 +34,7 @@ import kotlinx.coroutines.flow.StateFlow
 import java.util.UUID
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 @SuppressLint("MissingPermission")
 @SingleIn(AppScope::class)

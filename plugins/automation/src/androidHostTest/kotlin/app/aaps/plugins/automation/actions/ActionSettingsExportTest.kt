@@ -25,7 +25,7 @@ class ActionSettingsExportTest : ActionsTestBase() {
     @BeforeEach
     fun setup() {
         whenever(rh.gs(any<TextRef>(), anyVararg())).thenReturn("desc")
-        sut = ActionSettingsExport(aapsLogger, rh, Provider { pumpEnactResultProvider.get() }, rxBus, notificationManager, dateUtil, config, persistenceLayer, importExportPrefs, exportPasswordDataStore, preferences)
+        sut = ActionSettingsExport(aapsLogger, rh, Provider { pumpEnactResultProvider() }, rxBus, notificationManager, dateUtil, config, persistenceLayer, importExportPrefs, exportPasswordDataStore, preferences)
     }
 
     @Test fun friendlyName() {

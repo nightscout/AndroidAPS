@@ -12,7 +12,7 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.util.LinkedList
 import java.util.Queue
 import java.util.concurrent.Callable
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 

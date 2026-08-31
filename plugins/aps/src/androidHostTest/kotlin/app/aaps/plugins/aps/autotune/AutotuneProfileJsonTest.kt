@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test
 class AutotuneProfileJsonTest : TestBaseWithProfile() {
 
     private fun atProfile(): ATProfile =
-        ATProfile(preferences, profileUtil, dateUtil, rh, { profileStoreProvider.get() }, aapsLogger)
+        ATProfile(preferences, profileUtil, dateUtil, rh, { profileStoreProvider() }, aapsLogger)
             .with(validProfile, someICfg)
 
     @Test

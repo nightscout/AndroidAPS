@@ -35,7 +35,7 @@ import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import javax.inject.Provider
+import dev.zacsweers.metro.Provider
 
 /**
  * Unit test for [DashOmnipodWizardViewModel]'s synchronous, pure wizard-navigation and selection

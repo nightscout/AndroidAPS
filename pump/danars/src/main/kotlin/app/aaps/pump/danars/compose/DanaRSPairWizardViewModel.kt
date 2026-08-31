@@ -35,7 +35,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.experimental.xor
 
 enum class WizardStep {

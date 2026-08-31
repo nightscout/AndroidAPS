@@ -25,8 +25,8 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.rawRes
 import app.aaps.implementation.androidNotification.AlarmNotificationManager.Companion.CHANNEL_FULL_SCREEN_SILENT
-import javax.inject.Inject
-import javax.inject.Provider
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
@@ -225,7 +225,7 @@ class AlarmNotificationManager @Inject constructor(
     }
 
     private fun openAppPendingIntent(): PendingIntent? {
-        val mainActivity = uiInteractionProvider.get().mainActivity
+        val mainActivity = uiInteractionProvider().mainActivity
         return TaskStackBuilder.create(context).run {
             addParentStack(mainActivity.java)
             addNextIntent(Intent(context, mainActivity.java))
@@ -265,7 +265,7 @@ class AlarmNotificationManager @Inject constructor(
         // double-audio; if ErrorActivity does launch, it re-requests the same owner+sound, which the
         // player treats as idempotent (no restart glitch).
         val postedAt = SystemClock.elapsedRealtime()
-        val intent = Intent(context, uiInteractionProvider.get().errorHelperActivity.java).apply {
+        val intent = Intent(context, uiInteractionProvider().errorHelperActivity.java).apply {
             putExtra(AlarmIntent.EXTRA_SOUND, sound?.name)
             putExtra(AlarmIntent.EXTRA_STATUS, status)
             putExtra(AlarmIntent.EXTRA_TITLE, title)
@@ -347,7 +347,7 @@ class AlarmNotificationManager @Inject constructor(
         val triggerAt = System.currentTimeMillis() + SCREEN_WAKE_DELAY_MS
         val show = PendingIntent.getActivity(
             context, WAKE_REQUEST_CODE,
-            Intent(context, uiInteractionProvider.get().mainActivity.java),
+            Intent(context, uiInteractionProvider().mainActivity.java),
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
         val wakeOp = PendingIntent.getBroadcast(

@@ -59,7 +59,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Locale
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import app.aaps.core.ui.R as CoreUiR
 
 sealed class MedtrumOverviewEvent {

@@ -6,7 +6,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.diaconn.DiaconnG8Pump
 import app.aaps.pump.diaconn.keys.DiaconnStringNonKey
 import app.aaps.core.interfaces.di.MetroMemberInjector
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 /**
  * SerialNumInquireResponsePacket

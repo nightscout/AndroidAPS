@@ -90,7 +90,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.atLeast
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import javax.inject.Provider
+import dev.zacsweers.metro.Provider
 
 /**
  * Integration tests for DanaRSService through the full emulator stack.

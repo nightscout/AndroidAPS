@@ -78,8 +78,8 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import org.joda.time.Duration
-import javax.inject.Inject
-import javax.inject.Provider
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import kotlin.math.max
 
@@ -251,7 +251,7 @@ class EquilPumpPlugin @Inject constructor(
             if (pumpEnactResult.success) equilManager.equilState?.basalSchedule = basalSchedule
             return pumpEnactResult
         }
-        return pumpEnactResultProvider.get().enacted(false).success(false).comment(rh.gs(R.string.equil_pump_not_run))
+        return pumpEnactResultProvider().enacted(false).success(false).comment(rh.gs(R.string.equil_pump_not_run))
     }
 
     override fun isThisProfileSet(profile: PumpProfile): Boolean {
@@ -275,17 +275,17 @@ class EquilPumpPlugin @Inject constructor(
         if (detailedBolusInfo.insulin == 0.0) {
             // bolus requested
             aapsLogger.error("deliverTreatment: Invalid input: neither carbs nor insulin are set in treatment")
-            return pumpEnactResultProvider.get().success(false).enacted(false)
+            return pumpEnactResultProvider().success(false).enacted(false)
                 .bolusDelivered(0.0).comment("Invalid input")
         }
         val mode = equilManager.equilState?.runMode
         if (mode !== RunMode.RUN) {
-            return pumpEnactResultProvider.get().enacted(false).success(false)
+            return pumpEnactResultProvider().enacted(false).success(false)
                 .bolusDelivered(0.0).comment(rh.gs(R.string.equil_pump_not_run))
         }
         val lastInsulin = equilManager.equilState?.currentInsulin ?: 0
         return if (detailedBolusInfo.insulin > lastInsulin) {
-            pumpEnactResultProvider.get().success(false).enacted(false).bolusDelivered(0.0)
+            pumpEnactResultProvider().success(false).enacted(false).bolusDelivered(0.0)
                 .comment(R.string.equil_not_enough_insulin)
         } else deliverBolus(detailedBolusInfo)
     }
@@ -303,15 +303,15 @@ class EquilPumpPlugin @Inject constructor(
     ): PumpEnactResult {
         aapsLogger.debug(LTag.PUMPCOMM, "setTempBasalAbsolute=====$absoluteRate====$durationInMinutes===$enforceNew")
         if (durationInMinutes <= 0 || durationInMinutes % BASAL_STEP_DURATION.standardMinutes != 0L) {
-            return pumpEnactResultProvider.get().success(false)
+            return pumpEnactResultProvider().success(false)
                 .comment(rh.gs(R.string.equil_error_set_temp_basal_failed_validation, BASAL_STEP_DURATION.standardMinutes))
         }
         val mode = equilManager.equilState?.runMode
         if (mode !== RunMode.RUN) {
-            return pumpEnactResultProvider.get().enacted(false).success(false)
+            return pumpEnactResultProvider().enacted(false).success(false)
                 .comment(rh.gs(R.string.equil_pump_not_run))
         }
-        var pumpEnactResult = pumpEnactResultProvider.get()
+        var pumpEnactResult = pumpEnactResultProvider()
         pumpEnactResult.success(false)
         pumpEnactResult = equilManager.getTempBasalPump()
         if (pumpEnactResult.success) {
@@ -334,7 +334,7 @@ class EquilPumpPlugin @Inject constructor(
 
     override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
         aapsLogger.debug(LTag.PUMPCOMM, "cancelTempBasal=====$enforceNew")
-        if (!isInitialized()) return pumpEnactResultProvider.get().success(false).enacted(false)
+        if (!isInitialized()) return pumpEnactResultProvider().success(false).enacted(false)
         val pumpEnactResult = equilManager.setTempBasal(0.0, 0, true)
         if (pumpEnactResult.success) {
             pumpEnactResult.isTempCancel = true
@@ -391,7 +391,7 @@ class EquilPumpPlugin @Inject constructor(
 
     override suspend fun loadTDDs(): PumpEnactResult {
         aapsLogger.debug(LTag.PUMPCOMM, "loadTDDs")
-        return pumpEnactResultProvider.get().success(false).enacted(false)
+        return pumpEnactResultProvider().success(false).enacted(false)
     }
 
     override fun isBatteryChangeLoggingEnabled(): Boolean = false

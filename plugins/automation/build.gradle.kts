@@ -26,14 +26,6 @@ val generateAutomationStrings = tasks.register<GenerateKeyStringsTask>("generate
     androidOutputDir.set(layout.buildDirectory.dir("generated/automationStrings/android"))
 }
 
-metro {
-    interop {
-        // Still on for the Android side: this module takes `@ApplicationScope CoroutineScope` and the
-        // qualified plugin buckets, both javax qualifiers that Metro ignores without it. The classes
-        // themselves carry Metro annotations now - no javax.inject import is left in the module.
-        includeDagger()
-    }
-}
 
 kotlin {
     android {

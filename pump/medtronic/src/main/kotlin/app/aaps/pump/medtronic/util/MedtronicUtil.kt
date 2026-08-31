@@ -22,7 +22,7 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.security.InvalidParameterException
 import java.util.Locale
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 import kotlin.experimental.or

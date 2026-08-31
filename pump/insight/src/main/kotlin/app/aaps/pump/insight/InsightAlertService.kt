@@ -32,7 +32,7 @@ import app.aaps.pump.insight.exceptions.InsightException
 import app.aaps.pump.insight.exceptions.app_layer_errors.AppLayerErrorException
 import app.aaps.pump.insight.utils.AlertUtils
 import app.aaps.pump.insight.utils.ExceptionTranslator
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class InsightAlertService : Service(), InsightConnectionService.StateCallback {
 

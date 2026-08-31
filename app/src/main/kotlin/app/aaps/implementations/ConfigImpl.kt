@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 // @Singleton (not @Reusable): Config owns the single app-global init-progress flow that
 // ComposeMainActivity's splash gate observes; a guaranteed single instance keeps that flow shared

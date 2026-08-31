@@ -94,7 +94,7 @@ import java.util.Arrays
 import java.util.concurrent.Callable
 import java.util.concurrent.TimeUnit
 import javax.crypto.KeyAgreement
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 import kotlin.Any

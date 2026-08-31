@@ -27,7 +27,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import java.util.UUID
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 enum class DiaconnPairStep {
     BLE_SCAN,

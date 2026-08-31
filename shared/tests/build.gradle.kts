@@ -3,6 +3,9 @@ plugins {
     kotlin("multiplatform")
     // NOT com.android.library. AGP 9 refuses that plugin together with the multiplatform plugin.
     alias(libs.plugins.android.kmp.library)
+    // Metro, only for its annotations: the fixtures here mock `Provider<T>` fields that production
+    // constructors take, so the type has to be the same one production uses.
+    alias(libs.plugins.metro)
 }
 
 // The convention plugins are gone with the flip. Only `test-module-dependencies` mattered here and

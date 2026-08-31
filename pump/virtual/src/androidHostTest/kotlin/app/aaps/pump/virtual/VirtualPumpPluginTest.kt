@@ -44,7 +44,7 @@ class VirtualPumpPluginTest : TestBaseWithProfile() {
     fun prepareMocks() {
         virtualPumpPlugin = VirtualPumpPlugin(
             aapsLogger, rxBus, rh, preferences,
-            commandQueue, pumpSync, config, dateUtil, persistenceLayer, { pumpEnactResultProvider.get() }, ch, profileFunction, bolusProgressData, testScope
+            commandQueue, pumpSync, config, dateUtil, persistenceLayer, { pumpEnactResultProvider() }, ch, profileFunction, bolusProgressData, testScope
         )
     }
 

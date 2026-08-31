@@ -56,8 +56,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import java.io.IOException
-import javax.inject.Inject
-import javax.inject.Provider
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -226,7 +226,7 @@ abstract class AbstractDanaRExecutionService : MetroService() {
     }
 
     fun loadHistory(type: Byte): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (!isConnected) return result
         val msg: MessageBase = when (type) {
             RecordTypes.RECORD_TYPE_ALARM     -> MsgHistoryAlarm(injector)

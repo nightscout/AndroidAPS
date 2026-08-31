@@ -1,38 +1,31 @@
 package app.aaps.di.metro
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import app.aaps.shared.tests.metroScopedProviderTypes
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
-import javax.inject.Singleton
+import dev.zacsweers.metro.SingleIn
 import kotlin.reflect.KClass
 import kotlin.reflect.full.primaryConstructor
 
 /**
  * Every pump object a view model injects has exactly one owner.
  *
- * A class with a javax `@Singleton` and an `@Inject` constructor is buildable by Dagger AND, because
- * `:app` runs Metro with Dagger interop, by Metro. A javax scope does not cross the two, so each gets
- * its own instance and neither is wrong on its own. The damage only shows at runtime: whichever
- * framework the pump service writes through fills one object while a Compose view model reads the
- * other, and the screen watches a pump that never connects.
+ * Two instances of a pump state holder is not a slow screen, it is a screen watching an object the pump
+ * never writes to. That cost CI shards A and C - "Pump never reported initialized", "Command queue
+ * never went idle" - across ten types, while shard B drove the same transport with no UI and stayed green.
  *
- * That is not theory. It turned CI shards A and C red - "Pump never reported initialized", "Command
- * queue never went idle" - across ten types in every converted pump driver, while shard B drove the
- * same transport with no UI and stayed green.
+ * **This test has been rewritten twice as the premise moved.** It began as `PumpLeavesTest`, demanding
+ * that every such type be *handed over by `PumpLeaves`*, because Dagger owned the pump objects. Then
+ * `PumpLeaves` was deleted and it asked that they be Metro owned. It selected candidates by javax
+ * `@Singleton`, which was the mark of "buildable by both frameworks" - and javax is gone now, so that
+ * filter would select nothing and the test would pass over anything.
  *
- * **This test was called `PumpLeavesTest` and asserted the opposite.** Its rule was that every such
- * type must be *handed over by `PumpLeaves`*, because Dagger owned the pump objects: the services were
- * `DaggerService`s, so Dagger's copy was the real one and Metro had to borrow it. `dagger.android` is
- * off the phone now, every pump service is filled by a Metro member injector, and `PumpLeaves` was
- * deleted once the last binding left it. The rule that survives the reversal is the one that mattered
- * all along: **someone owns it, and there is one.**
- *
- * Ownership can be either annotation on the class or a scoped `@Provides` in a Metro binding container.
- * The second is not a loophole, it is how a class Metro cannot generate a factory for gets owned - the
- * Java eros managers, and the Omnipod common BLE classes whose module has no Metro plugin. A container
- * that calls the constructor itself needs no generated factory, and a scope on that provider means one
- * instance, which is all this test is really about.
+ * What it asks now does not depend on either framework: **every concrete class a pump view model
+ * injects must have an owner.** Either `@SingleIn` on the class, or a scoped `@Provides` in a binding
+ * container - the second is how classes Metro cannot generate a factory for are owned. Interfaces are
+ * skipped: they have to be bound somewhere explicit, so they cannot be duplicated by accident.
  */
 class PumpOwnershipTest {
 
@@ -50,7 +43,14 @@ class PumpOwnershipTest {
                 val type = (parameter.type.classifier as? KClass<*>)?.java ?: continue
                 // Only concrete classes carrying a javax scope can be built twice. An interface has to be
                 // bound somewhere explicit, so it cannot be duplicated by accident.
-                if (!type.isAnnotationPresent(Singleton::class.java)) continue
+                // A graph INPUT, not a binding: the Application hands it to `AppRootGraph.Factory`, so
+                // there is exactly one and no annotation says so. It is the only one of these.
+                if (type == Context::class.java) continue
+                // Interfaces are bound somewhere explicit, so they cannot be duplicated by accident.
+                if (type.isInterface) continue
+                // Owned by an annotation on the class itself - the common case.
+                if (type.isAnnotationPresent(SingleIn::class.java)) continue
+                // Otherwise the only other owner is a scoped @Provides in a binding container.
                 if (type !in owned) offenders += "${vm.simpleName} injects ${type.simpleName}, which nobody owns"
             }
         }

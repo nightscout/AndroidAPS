@@ -11,7 +11,7 @@ import app.aaps.pump.omnipod.eros.event.EventOmnipodErosFaultEventChanged
 import app.aaps.pump.omnipod.eros.event.EventOmnipodErosTbrChanged
 import app.aaps.pump.omnipod.eros.event.EventOmnipodErosUncertainTbrRecovered
 import app.aaps.pump.omnipod.eros.keys.ErosStringNonPreferenceKey
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 

@@ -7,7 +7,7 @@ import app.aaps.pump.medtrum.comm.enums.MedtrumPumpState
 import app.aaps.pump.medtrum.extension.toByteArray
 import app.aaps.pump.medtrum.extension.toInt
 import app.aaps.core.interfaces.di.MetroMemberInjector
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class SynchronizePacket(injector: MetroMemberInjector) : MedtrumPacket(injector) {
 

@@ -33,7 +33,7 @@ class ActionNotificationTest : TestBaseWithProfile() {
                 .thenReturn(PersistenceLayer.TransactionResult())
         }
 
-        sut = ActionNotification(aapsLogger, rh, Provider { pumpEnactResultProvider.get() }, rxBus, notificationManager, persistenceLayer, dateUtil)
+        sut = ActionNotification(aapsLogger, rh, Provider { pumpEnactResultProvider() }, rxBus, notificationManager, persistenceLayer, dateUtil)
     }
 
     @Test fun friendlyNameTest() {

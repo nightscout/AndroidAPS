@@ -1,7 +1,6 @@
 package app.aaps.core.interfaces.di
 
-import javax.inject.Qualifier
-import dev.zacsweers.metro.Qualifier as MetroQualifier
+import dev.zacsweers.metro.Qualifier
 
 /**
  * Multibinding qualifier for plugins that are present in every build config.
@@ -14,5 +13,4 @@ import dev.zacsweers.metro.Qualifier as MetroQualifier
 // `@BindingContainer` in Metro 1.4.2. Without both, the three plugin buckets collapse into one map and
 // every plugin appears in every build, silently. See ConstraintsBucketsTest.
 @Qualifier
-@MetroQualifier
 annotation class AllConfigs

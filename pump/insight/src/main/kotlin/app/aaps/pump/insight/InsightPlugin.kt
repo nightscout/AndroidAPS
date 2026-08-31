@@ -135,9 +135,9 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.binding
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import javax.inject.Provider
+import dev.zacsweers.metro.Provider
 import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
@@ -453,7 +453,7 @@ class InsightPlugin @Inject constructor(
     }
 
     override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         val profileBlocks: MutableList<BasalProfileBlock> = ArrayList()
         for (i in profile.getBasalValues().indices) {
             val basalValue = profile.getBasalValues()[i]
@@ -542,7 +542,7 @@ class InsightPlugin @Inject constructor(
         if (detailedBolusInfo.insulin.equals(0.0) || detailedBolusInfo.carbs > 0) {
             throw IllegalArgumentException(detailedBolusInfo.toString(), Exception())
         }
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         connectionService?.let { service ->
             val insulin = (detailedBolusInfo.insulin / 0.01).roundToInt() * 0.01
             if (insulin > 0) {
@@ -662,7 +662,7 @@ class InsightPlugin @Inject constructor(
     }
 
     override suspend fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (activeBasalRate?.activeBasalRate == 0.0) return result
         activeBasalRate?.let { activeBasalRate ->
             val percent = 100.0 / activeBasalRate.activeBasalRate * absoluteRate
@@ -713,7 +713,7 @@ class InsightPlugin @Inject constructor(
     }
 
     override suspend fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         var percentage = (percent.toDouble() / 10.0).roundToInt() * 10
         if (percentage == 100) return cancelTempBasal(true) else if (percentage > 250) percentage = 250
         try {
@@ -766,7 +766,7 @@ class InsightPlugin @Inject constructor(
     }
 
     fun setExtendedBolusOnly(insulin: Double, durationInMinutes: Int, disableVibration: Boolean): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         connectionService?.let { service ->
             try {
                 val bolusMessage = DeliverBolusMessage()
@@ -799,7 +799,7 @@ class InsightPlugin @Inject constructor(
     }
 
     override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         var cancelEBResult: PumpEnactResult? = null
         if (isFakingTempsByExtendedBoluses) cancelEBResult = cancelExtendedBolusOnly()
         val cancelTBRResult = cancelTempBasalOnly()
@@ -820,7 +820,7 @@ class InsightPlugin @Inject constructor(
     }
 
     private fun cancelTempBasalOnly(): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         connectionService?.let { service ->
             try {
                 alertService?.ignore(AlertType.WARNING_36)
@@ -864,7 +864,7 @@ class InsightPlugin @Inject constructor(
     }
 
     private fun cancelExtendedBolusOnly(): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         connectionService?.let { service ->
             try {
                 activeBoluses?.forEach { activeBolus ->
@@ -932,7 +932,7 @@ class InsightPlugin @Inject constructor(
     }
 
     override fun stopPump(): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         connectionService?.let { service ->
             try {
                 val operatingModeMessage = SetOperatingModeMessage()
@@ -956,7 +956,7 @@ class InsightPlugin @Inject constructor(
     }
 
     override fun startPump(): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         connectionService?.let { service ->
             try {
                 val operatingModeMessage = SetOperatingModeMessage()
@@ -980,7 +980,7 @@ class InsightPlugin @Inject constructor(
     }
 
     override fun setTBROverNotification(enabled: Boolean): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         tBROverNotificationBlock?.let { tBROverNotificationBlock ->
             val valueBefore = tBROverNotificationBlock.isEnabled
             tBROverNotificationBlock.isEnabled = enabled
@@ -1010,7 +1010,7 @@ class InsightPlugin @Inject constructor(
         get() = preferences.get(InsightBooleanKey.EnableTbrEmulation)
 
     override suspend fun loadTDDs(): PumpEnactResult =
-        pumpEnactResultProvider.get().success(true)
+        pumpEnactResultProvider().success(true)
 
     private fun readHistory() {
         connectionService?.let { service ->

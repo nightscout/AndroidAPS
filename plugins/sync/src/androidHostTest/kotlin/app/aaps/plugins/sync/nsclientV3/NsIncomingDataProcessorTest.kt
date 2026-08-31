@@ -77,7 +77,7 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
             profileRepository = profileRepository,
             storeDataForDb = storeDataForDb,
             config = config,
-            profileStoreProvider = Provider { profileStoreProvider.get() },
+            profileStoreProvider = Provider { profileStoreProvider() },
             notificationManager = notificationManager,
             nsClientRepository = nsClientRepository
         )

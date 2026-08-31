@@ -83,8 +83,8 @@ import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import org.joda.time.Duration
 import java.util.TimeZone
-import javax.inject.Inject
-import javax.inject.Provider
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
 import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.common.hw.rileylink.R as RileyLinkR
 import app.aaps.pump.omnipod.common.R as CommonR
@@ -385,7 +385,7 @@ class ErosOverviewViewModel @Inject constructor(
                 icon = Icons.Filled.RestartAlt,
                 category = ActionCategory.MANAGEMENT,
                 onClick = {
-                    serviceTaskExecutor.startTask(resetRileyLinkConfigurationTaskProvider.get())
+                    serviceTaskExecutor.startTask(resetRileyLinkConfigurationTaskProvider())
                     _events.tryEmit(OmnipodOverviewEvent.ShowSnackbar(rh.gs(RileyLinkR.string.rileylink_config_reset)))
                 }
             ),

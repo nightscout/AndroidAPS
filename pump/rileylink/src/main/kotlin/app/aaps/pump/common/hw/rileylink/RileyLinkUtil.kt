@@ -9,7 +9,7 @@ import app.aaps.pump.common.hw.rileylink.ble.data.encoding.Encoding4b6bGeoff
 import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType
 import app.aaps.pump.common.hw.rileylink.data.RLHistoryItem
 import java.util.concurrent.CopyOnWriteArrayList
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 

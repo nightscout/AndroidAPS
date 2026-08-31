@@ -45,11 +45,12 @@ import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
 import app.aaps.plugins.aps.utils.ScriptReader
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import app.aaps.di.metro.AlgTestScope
+import dev.zacsweers.metro.SingleIn
 import kotlin.math.floor
 
-@Singleton
+@SingleIn(AlgTestScope::class)
 open class TestOpenAPSSMBPlugin @Inject constructor(
     private val injector: StaticInjector,
     aapsLogger: AAPSLogger,

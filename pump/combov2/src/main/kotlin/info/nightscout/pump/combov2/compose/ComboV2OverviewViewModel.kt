@@ -44,7 +44,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Locale
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.math.max
 import kotlin.time.ExperimentalTime
 import app.aaps.core.ui.R as CoreUiR

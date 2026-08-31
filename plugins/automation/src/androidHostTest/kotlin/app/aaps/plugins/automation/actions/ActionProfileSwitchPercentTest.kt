@@ -29,7 +29,7 @@ class ActionProfileSwitchPercentTest : ActionsTestBase() {
         whenever(rh.gs(AutomationStrings.startprofileforever)).thenReturn("Start profile %d%%")
         whenever(rh.gs(CoreUiStrings.startprofile)).thenReturn("Start profile %d%% for %d min")
 
-        sut = ActionProfileSwitchPercent(aapsLogger, rh, Provider { pumpEnactResultProvider.get() }, profileFunction, triggerDeps)
+        sut = ActionProfileSwitchPercent(aapsLogger, rh, Provider { pumpEnactResultProvider() }, profileFunction, triggerDeps)
     }
 
     @Test fun friendlyNameTest() = runTest {

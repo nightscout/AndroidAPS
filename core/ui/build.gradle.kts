@@ -112,8 +112,6 @@ kotlin {
                 api(libs.androidx.activity.compose)
                 api(libs.androidx.lifecycle.runtime.compose)
 
-                api(libs.com.google.dagger.android)
-                api(libs.com.google.dagger.android.support)
 
                 implementation(libs.androidx.compose.ui.tooling.preview)
                 // Was debugImplementation. The AGP multiplatform library target has no build types,

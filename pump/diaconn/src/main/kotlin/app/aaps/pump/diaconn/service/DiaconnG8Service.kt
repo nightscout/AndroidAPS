@@ -87,8 +87,8 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
-import javax.inject.Inject
-import javax.inject.Provider
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -287,7 +287,7 @@ class DiaconnG8Service : MetroService() {
 
     fun loadHistory(): PumpEnactResult {
         if (!diaconnG8Plugin.isInitialized()) {
-            val result = pumpEnactResultProvider.get().success(false)
+            val result = pumpEnactResultProvider().success(false)
             result.comment = "pump not initialized"
             return result
         }
@@ -297,7 +297,7 @@ class DiaconnG8Service : MetroService() {
             sendMessage(IncarnationInquirePacket(injector))
         }
 
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         var apsLastLogNum = 9999
         var apsWrappingCount = -1
         // get saved last log info
@@ -443,7 +443,7 @@ class DiaconnG8Service : MetroService() {
     }
 
     fun setUserSettings(): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
 
         val msg: DiaconnG8Packet = when (diaconnG8Pump.setUserOptionType) {
             DiaconnG8Pump.ALARM       -> SoundSettingPacket(injector, diaconnG8Pump.beepAndAlarm, diaconnG8Pump.alarmIntensity)

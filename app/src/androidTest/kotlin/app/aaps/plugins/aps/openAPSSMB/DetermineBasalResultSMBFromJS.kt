@@ -10,7 +10,7 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
 import org.json.JSONException
 import org.json.JSONObject
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class DetermineBasalResultSMBFromJS private constructor(injector: MetroMemberInjector) : APSResultObject(injector) {
 

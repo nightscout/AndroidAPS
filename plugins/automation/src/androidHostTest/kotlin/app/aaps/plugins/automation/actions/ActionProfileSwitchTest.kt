@@ -40,7 +40,7 @@ class ActionProfileSwitchTest : ActionsTestBase() {
         // Automation keeps whatever insulin is in force; it never picks one from the catalogue.
         runBlocking { whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(iCfg) }
 
-        sut = ActionProfileSwitch(aapsLogger, rh, Provider { pumpEnactResultProvider.get() }, profileRepository, profileFunction, dateUtil)
+        sut = ActionProfileSwitch(aapsLogger, rh, Provider { pumpEnactResultProvider() }, profileRepository, profileFunction, dateUtil)
     }
 
     @Test fun friendlyName() = runTest {

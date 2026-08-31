@@ -104,8 +104,8 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import org.joda.time.DateTime
 import java.util.Locale
-import javax.inject.Inject
-import javax.inject.Provider
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import kotlin.math.max
 import kotlin.math.min
@@ -790,7 +790,7 @@ class ComboV2Plugin @Inject constructor(
             // Not initialized yet — deferred, not a genuine error. success=true keeps this out of the central
             // failure alarm; the profile is re-pushed on reconnect. enacted=false => no PROFILE_SET_OK. Profile-set
             // notifications are owned centrally by CommandQueueImplementation.onProfileChanged.
-            return pumpEnactResultProvider.get().apply {
+            return pumpEnactResultProvider().apply {
                 success = true
                 enacted = false
                 comment = rh.gs(app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set)
@@ -799,7 +799,7 @@ class ComboV2Plugin @Inject constructor(
 
         val acquiredPump = getAcquiredPump()
 
-        val pumpEnactResult = pumpEnactResultProvider.get()
+        val pumpEnactResult = pumpEnactResultProvider()
 
         val requestedBasalProfile = profile.toComboCtlBasalProfile()
         aapsLogger.debug(LTag.PUMP, "Basal profile to set: $requestedBasalProfile")
@@ -938,7 +938,7 @@ class ComboV2Plugin @Inject constructor(
             BS.Type.PRIMING -> ComboCtlPump.StandardBolusReason.PRIMING_INFUSION_SET
         }
 
-        val pumpEnactResult = pumpEnactResultProvider.get()
+        val pumpEnactResult = pumpEnactResultProvider()
         pumpEnactResult.success = false
 
         if (isSuspended()) {
@@ -1067,7 +1067,7 @@ class ComboV2Plugin @Inject constructor(
     }
 
     override suspend fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
-        val pumpEnactResult = pumpEnactResultProvider.get()
+        val pumpEnactResult = pumpEnactResultProvider()
         pumpEnactResult.isPercent = false
 
         // Corner case: Current base basal rate is 0 IU. We cannot do
@@ -1118,7 +1118,7 @@ class ComboV2Plugin @Inject constructor(
     }
 
     override suspend fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
-        val pumpEnactResult = pumpEnactResultProvider.get()
+        val pumpEnactResult = pumpEnactResultProvider()
         pumpEnactResult.isPercent = true
 
         val roundedPercentage = ((percent + 5) / 10) * 10
@@ -1150,7 +1150,7 @@ class ComboV2Plugin @Inject constructor(
     }
 
     override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
-        val pumpEnactResult = pumpEnactResultProvider.get()
+        val pumpEnactResult = pumpEnactResultProvider()
         pumpEnactResult.isPercent = true
         pumpEnactResult.isTempCancel = enforceNew
         setTbrInternal(100, 0, tbrType = ComboCtlTbr.Type.NORMAL, force100Percent = enforceNew, pumpEnactResult)
@@ -1276,7 +1276,7 @@ class ComboV2Plugin @Inject constructor(
 
     @OptIn(ExperimentalTime::class)
     override suspend fun loadTDDs(): PumpEnactResult {
-        val pumpEnactResult = pumpEnactResultProvider.get()
+        val pumpEnactResult = pumpEnactResultProvider()
         val acquiredPump = getAcquiredPump()
 
         try {
@@ -2183,7 +2183,7 @@ class ComboV2Plugin @Inject constructor(
         reportFinishedBolus(rh.gs(stringId), id, pumpEnactResult, succeeded)
 
     private fun createFailurePumpEnactResult(comment: Int) =
-        pumpEnactResultProvider.get()
+        pumpEnactResultProvider()
             .success(false)
             .enacted(false)
             .comment(comment)

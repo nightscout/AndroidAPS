@@ -48,11 +48,12 @@ import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
 import app.aaps.plugins.aps.utils.ScriptReader
 import kotlinx.serialization.json.put
 import org.json.JSONException
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import app.aaps.di.metro.AlgTestScope
+import dev.zacsweers.metro.SingleIn
 import kotlin.math.floor
 
-@Singleton
+@SingleIn(AlgTestScope::class)
 class TestOpenAPSAMAPlugin @Inject constructor(
     private val injector: StaticInjector,
     aapsLogger: AAPSLogger,

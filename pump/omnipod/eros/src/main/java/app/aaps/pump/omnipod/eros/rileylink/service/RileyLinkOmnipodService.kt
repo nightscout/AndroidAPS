@@ -17,7 +17,7 @@ import app.aaps.pump.omnipod.eros.OmnipodErosPumpPlugin
 import app.aaps.pump.omnipod.eros.R
 import app.aaps.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager
 import app.aaps.pump.omnipod.eros.util.AapsOmnipodUtil
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 /**
  * Created by andy on 4.8.2019

@@ -64,7 +64,7 @@ import org.joda.time.DateTime
 import retrofit2.Call
 import retrofit2.Response
 import java.util.UUID
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 /**
  * BigLogInquireResponsePacket

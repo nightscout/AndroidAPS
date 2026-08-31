@@ -57,8 +57,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
-import javax.inject.Inject
-import javax.inject.Provider
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
 import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.common.hw.rileylink.R as RileyLinkR
 
@@ -347,7 +347,7 @@ class MedtronicOverviewViewModel @Inject constructor(
                 category = ActionCategory.MANAGEMENT,
                 onClick = {
                     if (isConfigured) {
-                        serviceTaskExecutor.startTask(wakeAndTuneTaskProvider.get())
+                        serviceTaskExecutor.startTask(wakeAndTuneTaskProvider())
                         _events.tryEmit(MedtronicOverviewEvent.ShowSnackbar(rh.gs(R.string.medtronic_custom_action_wake_and_tune)))
                     } else {
                         emitNotConfiguredDialog()
@@ -369,7 +369,7 @@ class MedtronicOverviewViewModel @Inject constructor(
                 icon = Icons.Filled.RestartAlt,
                 category = ActionCategory.MANAGEMENT,
                 onClick = {
-                    serviceTaskExecutor.startTask(resetRileyLinkConfigurationTaskProvider.get())
+                    serviceTaskExecutor.startTask(resetRileyLinkConfigurationTaskProvider())
                     _events.tryEmit(MedtronicOverviewEvent.ShowSnackbar(rh.gs(RileyLinkR.string.rileylink_config_reset)))
                 }
             )

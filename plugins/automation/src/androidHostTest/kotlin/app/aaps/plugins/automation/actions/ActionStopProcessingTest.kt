@@ -17,7 +17,7 @@ class ActionStopProcessingTest : ActionsTestBase() {
     fun setup() {
 
         whenever(rh.gs(AutomationStrings.stop_processing)).thenReturn("Stop processing")
-        sut = ActionStopProcessing(aapsLogger, rh, Provider { pumpEnactResultProvider.get() })
+        sut = ActionStopProcessing(aapsLogger, rh, Provider { pumpEnactResultProvider() })
     }
 
     @Test

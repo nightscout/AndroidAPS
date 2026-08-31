@@ -109,7 +109,7 @@ internal class AapsOmnipodErosManagerBehaviourTest {
             pumpSync,
             mock<UiInteraction>(),
             mock<NotificationManager>(),
-            javax.inject.Provider { enactResult },
+            { enactResult },
             mock<ConcentrationHelper>(),
             mock<BolusProgressData>()
         )

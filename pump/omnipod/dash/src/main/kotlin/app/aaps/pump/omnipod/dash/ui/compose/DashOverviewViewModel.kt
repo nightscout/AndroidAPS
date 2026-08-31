@@ -73,7 +73,7 @@ import java.time.ZonedDateTime
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.omnipod.common.R as CommonR
 

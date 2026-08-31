@@ -50,9 +50,9 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.IntKey as MetroIntKey
 import dev.zacsweers.metro.binding
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import javax.inject.Provider
+import dev.zacsweers.metro.Provider
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -163,7 +163,7 @@ class DanaRPlugin @Inject constructor(
         // Already constrained in IU (queue) and in cU (PumpWithConcentration boundary); no re-apply here.
         var resultOK = false
         if (detailedBolusInfo.insulin > 0) resultOK = executionService?.bolus(detailedBolusInfo) == true
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         val delivered = bolusProgressData.state.value?.delivered ?: PumpInsulin(0.0)
         result.success(resultOK && (abs(detailedBolusInfo.insulin - delivered.cU) < pumpDescription.bolusStep || danaPump.bolusStopped))
             .bolusDelivered(delivered.cU)
@@ -202,7 +202,7 @@ class DanaRPlugin @Inject constructor(
     override suspend fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
         // Recheck pump status if older than 30 min
         //This should not be needed while using queue because connection should be done before calling this
-        var result = pumpEnactResultProvider.get()
+        var result = pumpEnactResultProvider()
         var doTempOff = baseBasalRate.cU - absoluteRate == 0.0 && absoluteRate >= 0.10
         val doLowTemp = absoluteRate < baseBasalRate.cU || absoluteRate < 0.10
         val doHighTemp = absoluteRate > baseBasalRate.cU && !preferences.get(DanaBooleanKey.UseExtended)
@@ -317,7 +317,7 @@ class DanaRPlugin @Inject constructor(
         if (danaPump.isExtendedInProgress && preferences.get(DanaBooleanKey.UseExtended)) {
             return cancelExtendedBolus()
         }
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         result.success(true).enacted(false).comment(app.aaps.core.ui.R.string.ok).isTempCancel(true)
         return result
     }
@@ -327,7 +327,7 @@ class DanaRPlugin @Inject constructor(
     }
 
     private suspend fun cancelRealTempBasal(): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (danaPump.isTempBasalInProgress) {
             executionService?.tempBasalStop()
             if (!danaPump.isTempBasalInProgress) {
@@ -347,7 +347,7 @@ class DanaRPlugin @Inject constructor(
     }
 
     override fun loadEvents(): PumpEnactResult =
-        pumpEnactResultProvider.get() // no history, not needed
+        pumpEnactResultProvider() // no history, not needed
 
     override fun setUserOptions(): PumpEnactResult =
         executionService?.setUserOptions() ?: throw Exception("No execution service")

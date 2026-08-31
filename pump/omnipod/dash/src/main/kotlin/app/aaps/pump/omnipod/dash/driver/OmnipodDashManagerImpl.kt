@@ -53,7 +53,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.time.Duration.Companion.hours
 
 @ContributesBinding(AppScope::class, binding = binding<OmnipodDashManager>())

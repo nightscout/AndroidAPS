@@ -6,7 +6,7 @@ import android.content.Intent
 import androidx.annotation.VisibleForTesting
 import app.aaps.core.objects.workflow.MetroBroadcastReceiver
 import app.aaps.persistentNotification.DummyServiceHelper
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class AutoStartReceiver : MetroBroadcastReceiver() {
 

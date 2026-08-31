@@ -43,7 +43,7 @@ import app.aaps.pump.danarkorean.comm.MsgCheckValueK
 import app.aaps.pump.danarkorean.comm.MsgSettingBasal_k
 import app.aaps.pump.danarkorean.comm.MsgStatusBasic_k
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.math.abs
 
 class DanaRKoreanExecutionService : AbstractDanaRExecutionService() {

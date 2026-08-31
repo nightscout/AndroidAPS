@@ -7,13 +7,6 @@ plugins {
     alias(libs.plugins.metro)
 }
 
-metro {
-    interop {
-        // The plugins this links against still carry javax annotations in places.
-        includeDagger()
-    }
-}
-
 /**
  * The app's shell: navigation and the composable root.
  *

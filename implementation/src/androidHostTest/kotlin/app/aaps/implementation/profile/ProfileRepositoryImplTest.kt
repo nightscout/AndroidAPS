@@ -70,7 +70,7 @@ class ProfileRepositoryImplTest : TestBaseWithProfile() {
         whenever(preferences.observe(StringNonKey.LocalProfileData)).thenReturn(syncedPayloads)
         return ProfileRepositoryImpl(
             aapsLogger, rh, preferences, Provider { profileFunction }, profileUtil, activePlugin,
-            hardLimits, dateUtil, config, Provider { profileStoreProvider.get() }, notificationManager,
+            hardLimits, dateUtil, config, Provider { profileStoreProvider() }, notificationManager,
             CoroutineScope(UnconfinedTestDispatcher())
         )
     }

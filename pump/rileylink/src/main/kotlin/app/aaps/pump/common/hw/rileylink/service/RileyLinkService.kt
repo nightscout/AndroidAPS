@@ -22,7 +22,7 @@ import app.aaps.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import app.aaps.pump.common.hw.rileylink.keys.RileyLinkDoubleKey
 import java.util.Locale
 import dev.zacsweers.metro.HasMemberInjections
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 /**
  * Created by andy on 5/6/18.

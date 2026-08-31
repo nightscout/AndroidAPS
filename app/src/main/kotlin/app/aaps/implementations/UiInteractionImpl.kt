@@ -25,8 +25,8 @@ import app.aaps.implementation.androidNotification.AlarmNotificationManager
 import app.aaps.ui.activities.ErrorActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Provider
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
@@ -110,7 +110,7 @@ class UiInteractionImpl @Inject constructor(
         // Route through the registry owner so all audible alarms are actually silenced: clears the
         // internal AlarmSoundPlayer (Wear snooze used to only cancel the system notification, leaving
         // the ramping audio playing), stops the full-screen audio, and cancels the notifications.
-        notificationManager.get().muteAllAlarms()
+        notificationManager().muteAllAlarms()
     }
 
     /**

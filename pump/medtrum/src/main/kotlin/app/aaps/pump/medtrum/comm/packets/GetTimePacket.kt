@@ -5,7 +5,7 @@ import app.aaps.pump.medtrum.comm.enums.CommandType.GET_TIME
 import app.aaps.pump.medtrum.extension.toLong
 import app.aaps.pump.medtrum.util.MedtrumTimeUtil
 import app.aaps.core.interfaces.di.MetroMemberInjector
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class GetTimePacket(injector: MetroMemberInjector) : MedtrumPacket(injector) {
 

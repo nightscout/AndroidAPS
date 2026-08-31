@@ -26,12 +26,6 @@ val generateSyncStrings = tasks.register<GenerateKeyStringsTask>("generateSyncSt
 
 // No Hilt and no Dagger KSP: every class here is Metro now, and the processors were only still
 // listed. Verified by deleting `plugins/sync/build` and rebuilding `:app`.
-metro {
-    interop {
-        // Still on: one `javax.inject.Qualifier` remains, in di/Helpers.kt.
-        includeDagger()
-    }
-}
 
 kotlin {
     android {

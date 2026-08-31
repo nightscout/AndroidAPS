@@ -1,6 +1,6 @@
 package app.aaps.pump.eopatch.di
 
-import javax.inject.Scope
+import dev.zacsweers.metro.Scope
 
 @MustBeDocumented
 @Scope

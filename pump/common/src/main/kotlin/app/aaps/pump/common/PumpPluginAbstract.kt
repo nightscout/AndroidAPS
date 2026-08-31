@@ -52,7 +52,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.runBlocking
-import javax.inject.Provider
+import dev.zacsweers.metro.Provider
 
 /**
  * Created by andy on 23.04.18.
@@ -294,7 +294,7 @@ abstract class PumpPluginAbstract protected constructor(
             if (detailedBolusInfo.insulin == 0.0 && detailedBolusInfo.carbs == 0.0) {
                 // neither carbs nor bolus requested
                 aapsLogger.error("deliverTreatment: Invalid input")
-                pumpEnactResultProvider.get().success(false).enacted(false)
+                pumpEnactResultProvider().success(false).enacted(false)
                     .bolusDelivered(0.0)
                     .comment(app.aaps.core.ui.R.string.invalid_input)
             } else if (detailedBolusInfo.insulin > 0) {
@@ -308,7 +308,7 @@ abstract class PumpPluginAbstract protected constructor(
 
                 bolusProgressData.updateProgress(percent = 100)
                 aapsLogger.debug(LTag.PUMP, "deliverTreatment: Carb only treatment.")
-                pumpEnactResultProvider.get().success(true).enacted(true)
+                pumpEnactResultProvider().success(true).enacted(true)
                     .bolusDelivered(0.0)
                     .comment(app.aaps.core.ui.R.string.ok)
             }
@@ -330,7 +330,7 @@ abstract class PumpPluginAbstract protected constructor(
     protected abstract fun triggerUIChange()
 
     private fun getOperationNotSupportedWithCustomText(resourceId: Int): PumpEnactResult =
-        pumpEnactResultProvider.get().success(false).enacted(false).comment(resourceId)
+        pumpEnactResultProvider().success(false).enacted(false).comment(resourceId)
 
     init {
         pumpDescription.fillFor(pumpType)

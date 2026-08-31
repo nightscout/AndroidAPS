@@ -8,13 +8,6 @@ plugins {
     id("jacoco-module-dependencies")
 }
 
-metro {
-    interop {
-        // The classes here keep their javax annotations; interop is what lets Metro read them.
-        includeDagger()
-    }
-}
-
 android {
 
     namespace = "app.aaps.pump.dana"

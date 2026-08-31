@@ -173,7 +173,7 @@ import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import javax.inject.Provider
+import dev.zacsweers.metro.Provider
 
 /**
  * The Metro half of the object graph, beside Dagger. Counterpart of `KoinGraph` on `koin-spike` and

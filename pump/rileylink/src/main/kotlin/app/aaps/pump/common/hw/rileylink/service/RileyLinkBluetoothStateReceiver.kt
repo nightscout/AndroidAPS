@@ -9,7 +9,7 @@ import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.pump.common.hw.rileylink.RileyLinkConst
 import app.aaps.pump.common.hw.rileylink.RileyLinkUtil
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class RileyLinkBluetoothStateReceiver : BroadcastReceiver() {
 

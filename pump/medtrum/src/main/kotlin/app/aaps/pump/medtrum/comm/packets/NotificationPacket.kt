@@ -10,7 +10,7 @@ import app.aaps.pump.medtrum.extension.toInt
 import app.aaps.pump.medtrum.extension.toLong
 import app.aaps.pump.medtrum.util.MedtrumTimeUtil
 import app.aaps.core.interfaces.di.MetroMemberInjector
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class NotificationPacket(val injector: MetroMemberInjector) {
 

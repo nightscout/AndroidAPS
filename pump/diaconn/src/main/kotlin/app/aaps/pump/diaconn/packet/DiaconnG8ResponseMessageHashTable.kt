@@ -1,10 +1,11 @@
 package app.aaps.pump.diaconn.packet
 
 import app.aaps.core.interfaces.di.MetroMemberInjector
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class DiaconnG8ResponseMessageHashTable @Inject constructor(
     private val injector: MetroMemberInjector
 ) {

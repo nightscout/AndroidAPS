@@ -11,7 +11,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import com.thoughtworks.xstream.XStream
 import com.thoughtworks.xstream.security.AnyTypePermission
 import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 

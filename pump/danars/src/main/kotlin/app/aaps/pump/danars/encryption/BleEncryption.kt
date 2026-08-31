@@ -1,6 +1,6 @@
 package app.aaps.pump.danars.encryption
 
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 

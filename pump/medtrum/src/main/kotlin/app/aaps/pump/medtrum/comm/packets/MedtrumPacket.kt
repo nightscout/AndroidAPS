@@ -5,7 +5,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.medtrum.extension.toInt
 import app.aaps.core.interfaces.di.MetroMemberInjector
 import dev.zacsweers.metro.HasMemberInjections
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 // Metro reads this class now that interop is on for the module. It is subclassable, so it has to
 // say its injected fields are meant to be filled - Metro will not infer that for an open type.

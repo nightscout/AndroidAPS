@@ -30,7 +30,7 @@ class ActionStartTempTargetTest : ActionsTestBase() {
         whenever(rh.gs(AutomationStrings.starttemptarget)).thenReturn("Start temp target")
         whenever(rh.gs(CoreUiStrings.format_mins)).thenReturn("%1\$d min")
 
-        sut = ActionStartTempTarget(aapsLogger, rh, Provider { pumpEnactResultProvider.get() }, activePlugin, persistenceLayer, profileFunction, dateUtil, profileUtil, triggerDeps)
+        sut = ActionStartTempTarget(aapsLogger, rh, Provider { pumpEnactResultProvider() }, activePlugin, persistenceLayer, profileFunction, dateUtil, profileUtil, triggerDeps)
     }
 
     @Test fun friendlyNameTest() {

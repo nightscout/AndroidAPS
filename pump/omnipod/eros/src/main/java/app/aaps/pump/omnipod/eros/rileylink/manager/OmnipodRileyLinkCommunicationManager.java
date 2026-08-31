@@ -8,9 +8,7 @@ import org.joda.time.DateTime;
 import java.util.Collections;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.inject.Singleton;
+import dev.zacsweers.metro.Provider;
 
 import app.aaps.core.interfaces.logging.AAPSLogger;
 import app.aaps.core.interfaces.logging.LTag;
@@ -61,11 +59,11 @@ import app.aaps.pump.omnipod.eros.driver.manager.ErosPodStateManager;
 /**
  * Created by andy on 6/29/18.
  */
-@Singleton
+
 public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunicationManager<OmnipodPacket> {
 
     // This empty constructor must be kept, otherwise dagger injection might break!
-    @Inject
+
     public OmnipodRileyLinkCommunicationManager(
             AAPSLogger aapsLogger,
             Preferences preferences,

@@ -2,8 +2,8 @@ package app.aaps.pump.common.hw.rileylink.ble.data
 
 import app.aaps.pump.common.hw.rileylink.ble.command.RileyLinkCommand
 import app.aaps.pump.common.hw.rileylink.ble.defs.RFSpyRLResponse
-import javax.inject.Inject
-import javax.inject.Provider
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
 
 /**
  * Created by geoff on 5/26/16.
@@ -30,10 +30,10 @@ class RFSpyResponse @Inject constructor(
 
     fun getRadioResponse(): RadioResponse {
         if (looksLikeRadioPacket()) {
-            radioResponse = radioResponseProvider.get().with(command)
+            radioResponse = radioResponseProvider().with(command)
             radioResponse?.init(raw)
         } else {
-            radioResponse = radioResponseProvider.get()
+            radioResponse = radioResponseProvider()
         }
         return radioResponse ?: throw IllegalStateException()
     }

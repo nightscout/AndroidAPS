@@ -30,7 +30,7 @@ import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
-import javax.inject.Provider
+import dev.zacsweers.metro.Provider
 
 /**
  * The eros classes that are still **Java**, constructed by hand.
@@ -82,7 +82,7 @@ object ErosJavaBindings {
     ): AapsOmnipodErosManager =
         AapsOmnipodErosManager(
             delegate, podStateManager, erosHistory, aapsOmnipodUtil, aapsLogger, rxBus, preferences,
-            rh, omnipodAlertUtil, pumpSync, uiInteraction, notificationManager, pumpEnactResultProvider,
+            rh, omnipodAlertUtil, pumpSync, uiInteraction, notificationManager, { pumpEnactResultProvider() },
             ch, bolusProgressData
         )
 

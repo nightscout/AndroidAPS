@@ -34,11 +34,9 @@ import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManag
 import io.reactivex.rxjava3.core.Observable
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicBoolean
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
 import kotlin.reflect.KClass
 
-@Singleton
 class OmnipodDashBleManagerImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val podState: OmnipodDashPodStateManager,

@@ -45,7 +45,7 @@ import org.apache.commons.lang3.StringUtils
 import org.joda.time.LocalDateTime
 import java.util.GregorianCalendar
 import java.util.Locale
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 

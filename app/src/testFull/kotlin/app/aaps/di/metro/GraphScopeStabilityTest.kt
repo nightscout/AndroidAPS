@@ -6,6 +6,10 @@ import org.junit.jupiter.api.Test
 /**
  * Which graph accessors hand back the **same instance** on two reads, pinned.
  *
+ * In `src/testFull`, not `src/test`: the pinned names include the pump bindings, and `src/test` is
+ * compiled for every flavour - including the followers, whose graph has no pumps at all. It would fail
+ * there by design, which is exactly how `PumpDriverBucketTest` once went red on a follower unnoticed.
+ *
  * This exists for one change in particular: removing Metro's Dagger interop. With
  * `metro { interop { includeDagger() } }` on, Metro reads a `javax.inject.@Singleton` as a scope. Turn
  * interop off and every one of those has to have become `@SingleIn(AppScope::class)` first - and

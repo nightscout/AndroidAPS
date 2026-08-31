@@ -53,9 +53,9 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.IntKey as MetroIntKey
 import dev.zacsweers.metro.binding
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import javax.inject.Provider
+import dev.zacsweers.metro.Provider
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -176,7 +176,7 @@ class DanaRv2Plugin @Inject constructor(
         detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
         var connectionOK = false
         if (detailedBolusInfo.insulin > 0) connectionOK = executionService?.bolus(detailedBolusInfo) == true
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         val delivered = bolusProgressData.state.value?.delivered ?: PumpInsulin(0.0)
         result.success(connectionOK && (abs(detailedBolusInfo.insulin - delivered.cU) < pumpDescription.bolusStep || danaPump.bolusStopped))
             .bolusDelivered(delivered.cU)
@@ -197,7 +197,7 @@ class DanaRv2Plugin @Inject constructor(
 
     // This is called from APS
     override suspend fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
-        var result = pumpEnactResultProvider.get()
+        var result = pumpEnactResultProvider()
         var doTempOff = baseBasalRate.cU - absoluteRate == 0.0 && absoluteRate >= 0.10
         val doLowTemp = absoluteRate < baseBasalRate.cU || absoluteRate < 0.10
         val doHighTemp = absoluteRate > baseBasalRate.cU
@@ -257,7 +257,7 @@ class DanaRv2Plugin @Inject constructor(
     override suspend fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
         var percentReq = percent
         val pump = danaPump
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (percentReq < 0) {
             result.isTempCancel(false).enacted(false).success(false).comment(app.aaps.core.ui.R.string.invalid_input)
             aapsLogger.error("setTempBasalPercent: Invalid input")
@@ -288,7 +288,7 @@ class DanaRv2Plugin @Inject constructor(
 
     private fun setHighTempBasalPercent(percent: Int, durationInMinutes: Int): PumpEnactResult {
         val pump = danaPump
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         val connectionOK = executionService?.highTempBasal(percent, durationInMinutes) == true
         if (connectionOK && pump.isTempBasalInProgress && pump.tempBasalPercent == percent) {
             result.enacted(true).success(true).comment(app.aaps.core.ui.R.string.ok).isTempCancel(false).duration(pump.tempBasalRemainingMin).percent(pump.tempBasalPercent).isPercent(true)
@@ -301,7 +301,7 @@ class DanaRv2Plugin @Inject constructor(
     }
 
     override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (danaPump.isTempBasalInProgress) {
             executionService?.tempBasalStop()
             result.success(true).enacted(true).isTempCancel(true)
@@ -318,7 +318,7 @@ class DanaRv2Plugin @Inject constructor(
         val durationInHalfHours = max(durationInMinutes / 30, 1)
         // round to the pump's native extended-bolus step (cU)
         var insulinReq = roundTo(insulin, pumpDescription.extendedBolusStep)
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (danaPump.isExtendedInProgress && abs(danaPump.extendedBolusAmount - insulinReq) < pumpDescription.extendedBolusStep) {
             result.enacted(false)
                 .success(true)
@@ -349,7 +349,7 @@ class DanaRv2Plugin @Inject constructor(
     }
 
     override suspend fun cancelExtendedBolus(): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (danaPump.isExtendedInProgress) {
             executionService?.extendedBolusStop()
             result.enacted(true).success(!danaPump.isExtendedInProgress).isTempCancel(true)

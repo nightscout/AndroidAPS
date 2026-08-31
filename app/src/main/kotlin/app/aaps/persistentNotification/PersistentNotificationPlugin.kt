@@ -59,7 +59,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 @Suppress("PrivatePropertyName", "DEPRECATION")
 // Registers itself into the every-build plugin bucket at order 0, replacing the @Binds @IntKey(0) in

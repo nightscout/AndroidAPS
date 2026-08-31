@@ -17,7 +17,7 @@ import app.aaps.pump.medtronic.keys.MedtronicLongNonKey
 import app.aaps.pump.medtronic.keys.MedtronicStringPreferenceKey
 import java.util.Calendar
 import java.util.GregorianCalendar
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 

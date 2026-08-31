@@ -13,7 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelChildren
 import java.util.concurrent.atomic.AtomicBoolean
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.reflect.KClass
 
 /**

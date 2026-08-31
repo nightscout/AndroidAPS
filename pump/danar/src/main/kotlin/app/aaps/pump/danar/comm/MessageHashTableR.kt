@@ -1,10 +1,11 @@
 package app.aaps.pump.danar.comm
 
 import app.aaps.core.interfaces.di.MetroMemberInjector
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class MessageHashTableR @Inject constructor(
     private val injector: MetroMemberInjector
 ) : MessageHashTableBase {

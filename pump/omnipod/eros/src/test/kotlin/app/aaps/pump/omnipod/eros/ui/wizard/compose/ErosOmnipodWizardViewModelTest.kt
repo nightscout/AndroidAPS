@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.mock
-import javax.inject.Provider
+import dev.zacsweers.metro.Provider
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class ErosOmnipodWizardViewModelTest {

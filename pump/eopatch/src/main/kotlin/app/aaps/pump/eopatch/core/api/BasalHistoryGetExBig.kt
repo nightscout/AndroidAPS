@@ -11,7 +11,7 @@ import app.aaps.pump.eopatch.core.response.BasalHistoryResponse
 import app.aaps.pump.eopatch.core.scan.IBleDevice
 import app.aaps.pump.eopatch.core.util.FloatAdjusters
 import io.reactivex.rxjava3.core.Single
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 import kotlin.math.min

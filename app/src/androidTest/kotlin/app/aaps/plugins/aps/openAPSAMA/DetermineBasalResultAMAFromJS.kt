@@ -9,7 +9,7 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
 import org.json.JSONObject
 import org.mozilla.javascript.NativeObject
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class DetermineBasalResultAMAFromJS @Inject constructor(injector: MetroMemberInjector) : APSResultObject(injector) {
 

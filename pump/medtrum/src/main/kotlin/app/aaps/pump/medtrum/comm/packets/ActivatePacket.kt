@@ -12,7 +12,7 @@ import app.aaps.pump.medtrum.extension.toLong
 import app.aaps.pump.medtrum.util.MedtrumTimeUtil
 import app.aaps.core.interfaces.di.MetroMemberInjector
 import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.math.round
 
 class ActivatePacket(injector: MetroMemberInjector, private val basalProfile: ByteArray) : MedtrumPacket(injector) {

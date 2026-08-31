@@ -68,8 +68,8 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Provider
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import kotlin.math.abs
 import kotlin.math.max
@@ -203,15 +203,15 @@ class DanaRSPlugin @Inject constructor(
 
     // DanaR interface
     override fun loadHistory(type: Byte): PumpEnactResult {
-        return danaRSService?.loadHistory(type) ?: pumpEnactResultProvider.get().success(false)
+        return danaRSService?.loadHistory(type) ?: pumpEnactResultProvider().success(false)
     }
 
     override fun loadEvents(): PumpEnactResult {
-        return danaRSService?.loadEvents() ?: pumpEnactResultProvider.get().success(false)
+        return danaRSService?.loadEvents() ?: pumpEnactResultProvider().success(false)
     }
 
     override fun setUserOptions(): PumpEnactResult {
-        return danaRSService?.setUserSettings() ?: pumpEnactResultProvider.get().success(false)
+        return danaRSService?.setUserSettings() ?: pumpEnactResultProvider().success(false)
     }
 
     // Constraints interface
@@ -238,7 +238,7 @@ class DanaRSPlugin @Inject constructor(
     override fun isBusy(): Boolean = false
 
     override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (!isInitialized()) {
             aapsLogger.error("setNewBasalProfile not initialized")
             // Not initialized yet — deferred, not a genuine error; re-pushed on reconnect. success=true keeps it
@@ -299,7 +299,7 @@ class DanaRSPlugin @Inject constructor(
         detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
         var connectionOK = false
         if (detailedBolusInfo.insulin > 0) connectionOK = danaRSService?.bolus(detailedBolusInfo) == true
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         val delivered = bolusProgressData.state.value?.delivered ?: PumpInsulin(0.0)
         result.success = connectionOK && (abs(detailedBolusInfo.insulin - delivered.cU) < pumpDescription.bolusStep || danaPump.bolusStopped)
         result.bolusDelivered = delivered.cU
@@ -347,7 +347,7 @@ class DanaRSPlugin @Inject constructor(
                 return cancelTempBasal(false)
             }
             aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: doTempOff OK")
-            return pumpEnactResultProvider.get()
+            return pumpEnactResultProvider()
                 .success(true)
                 .enacted(false)
                 .percent(100)
@@ -362,7 +362,7 @@ class DanaRSPlugin @Inject constructor(
                 if (danaPump.tempBasalPercent == percentRate && danaPump.tempBasalRemainingMin > 4) {
                     if (!enforceNew) {
                         aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Correct temp basal already set (doLowTemp || doHighTemp)")
-                        return pumpEnactResultProvider.get()
+                        return pumpEnactResultProvider()
                             .success(true)
                             .percent(percentRate)
                             .enacted(false)
@@ -390,14 +390,14 @@ class DanaRSPlugin @Inject constructor(
         }
         // We should never end here
         aapsLogger.error("setTempBasalAbsolute: Internal error")
-        return pumpEnactResultProvider.get()
+        return pumpEnactResultProvider()
             .success(false)
             .comment("Internal error")
     }
 
     override suspend fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         var percent = percent
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (percent < 0) {
             result.isTempCancel = false
             result.enacted = false
@@ -444,7 +444,7 @@ class DanaRSPlugin @Inject constructor(
     }
 
     private suspend fun setHighTempBasalPercent(percent: Int): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         val connectionOK = danaRSService?.highTempBasal(percent) == true
         if (connectionOK && danaPump.isTempBasalInProgress && danaPump.tempBasalPercent == percent) {
             result.enacted = true
@@ -469,7 +469,7 @@ class DanaRSPlugin @Inject constructor(
         val durationInHalfHours = max(durationInMinutes / 30, 1)
         // round to the pump's native extended-bolus step (cU)
         val insulinAfterConstraint = Round.roundTo(insulin, pumpDescription.extendedBolusStep)
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (danaPump.isExtendedInProgress && abs(danaPump.extendedBolusAmount - insulinAfterConstraint) < pumpDescription.extendedBolusStep) {
             result.enacted = false
             result.success = true
@@ -505,14 +505,14 @@ class DanaRSPlugin @Inject constructor(
         if (danaPump.isTempBasalInProgress) {
             aapsLogger.debug(LTag.PUMP, "cancelRealTempBasal: Failed")
             danaRSService?.tempBasalStop()
-            return pumpEnactResultProvider.get()
+            return pumpEnactResultProvider()
                 .success(!danaPump.isTempBasalInProgress)
                 .enacted(true)
                 .isTempCancel(true)
                 .comment(app.aaps.core.ui.R.string.canceling_tbr_failed)
         } else {
             aapsLogger.debug(LTag.PUMP, "cancelRealTempBasal: OK")
-            return pumpEnactResultProvider.get()
+            return pumpEnactResultProvider()
                 .success(true)
                 .enacted(false)
                 .isTempCancel(true)
@@ -524,13 +524,13 @@ class DanaRSPlugin @Inject constructor(
         if (danaPump.isExtendedInProgress) {
             danaRSService?.extendedBolusStop()
             aapsLogger.debug(LTag.PUMP, "cancelExtendedBolus: Failed")
-            return pumpEnactResultProvider.get()
+            return pumpEnactResultProvider()
                 .success(!danaPump.isExtendedInProgress)
                 .enacted(true)
                 .comment(app.aaps.core.ui.R.string.canceling_eb_failed)
         } else {
             aapsLogger.debug(LTag.PUMP, "cancelExtendedBolus: OK")
-            return pumpEnactResultProvider.get()
+            return pumpEnactResultProvider()
                 .success(true)
                 .enacted(false)
                 .isTempCancel(true)

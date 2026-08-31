@@ -20,15 +20,6 @@ plugins {
     kotlin("plugin.allopen")
 }
 
-metro {
-    interop {
-        // Lets Metro read the javax annotations still on this module's classes. They are JVM only,
-        // so a class keeping them also stays in androidMain - that is the order of work, not a
-        // blocker.
-        includeDagger()
-    }
-}
-
 allOpen {
     annotation("app.aaps.annotations.OpenForTesting")
 }

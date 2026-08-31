@@ -17,20 +17,6 @@ plugins {
     alias(libs.plugins.metro)
 }
 
-metro {
-    interop {
-        // Lets Metro read the javax and Dagger annotations on classes from other modules. Without this,
-        // a graph generated here silently ignores a javax @Singleton (so a contributed class is rebuilt
-        // on every read) and cannot read a javax Provider or a Dagger Lazy at all.
-        //
-        // This could not be switched on while `AapsLeaves` had a javax @Inject constructor: interop
-        // makes Metro see the binding container as something it can also construct, and the compiler
-        // crashes with "Transforming after locked!". The container is built by hand in
-        // `CoreObjectsModule` for exactly that reason.
-        includeDagger()
-    }
-}
-
 repositories {
     mavenCentral()
     google()

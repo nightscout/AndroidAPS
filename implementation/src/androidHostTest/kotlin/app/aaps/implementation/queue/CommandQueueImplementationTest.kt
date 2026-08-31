@@ -126,7 +126,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
                 notificationManager,
                 persistenceLayer,
                 decimalFormatter,
-                { pumpEnactResultProvider.get() },
+                { pumpEnactResultProvider() },
                 pumpSync,
                 preferences,
                 profileSwitchSilentGate,
@@ -174,7 +174,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         lateinit var executor: CommandExecutor
         commandQueue = CommandQueueImplementation(
             aapsLogger, rxBus, rh, constraintChecker, profileFunction, activePlugin, config, dateUtil,
-            fabricPrivacy, notificationManager, persistenceLayer, decimalFormatter, { pumpEnactResultProvider.get() },
+            fabricPrivacy, notificationManager, persistenceLayer, decimalFormatter, { pumpEnactResultProvider() },
             pumpSync, preferences, profileSwitchSilentGate, localAlertUtilsProvider, smsCommunicatorProvider,
             { executor }, testScope, bolusProgressData
         )
@@ -205,7 +205,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         lateinit var executor: CommandExecutor
         commandQueue = CommandQueueImplementation(
             aapsLogger, rxBus, rh, constraintChecker, profileFunction, activePlugin, config, dateUtil,
-            fabricPrivacy, notificationManager, persistenceLayer, decimalFormatter, { pumpEnactResultProvider.get() },
+            fabricPrivacy, notificationManager, persistenceLayer, decimalFormatter, { pumpEnactResultProvider() },
             pumpSync, preferences, profileSwitchSilentGate, localAlertUtilsProvider, smsCommunicatorProvider,
             { executor }, testScope, bolusProgressData
         )

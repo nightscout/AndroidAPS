@@ -57,7 +57,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.math.max
 import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.hours

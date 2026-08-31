@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 data class DiaconnUserOptionsUiState(
     val beepAndAlarm: Int = 1,      // 1=sound, 2=vibrate, 3=silent

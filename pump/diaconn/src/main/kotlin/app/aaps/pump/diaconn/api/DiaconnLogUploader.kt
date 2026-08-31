@@ -5,10 +5,11 @@ import app.aaps.core.interfaces.logging.LTag
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class DiaconnLogUploader @Inject constructor(
     private val aapsLogger: AAPSLogger,
 ) {

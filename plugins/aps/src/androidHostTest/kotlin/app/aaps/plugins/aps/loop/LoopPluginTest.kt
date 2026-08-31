@@ -77,7 +77,7 @@ class LoopPluginTest : TestBaseWithProfile() {
             constraintChecker, rh, profileFunction, context, commandQueue, activePlugin, processedTbrEbData, receiverStatusStore, fabricPrivacy, dateUtil, uel,
             // The shared test base still hands out a javax Provider, which other tests rely on;
             // LoopPlugin takes Metro's now, so it is adapted here rather than flipping the base.
-            persistenceLayer, uiInteraction, notificationManager, Provider { pumpEnactResultProvider.get() },
+            persistenceLayer, uiInteraction, notificationManager, Provider { pumpEnactResultProvider() },
             processedDeviceStatusData, pumpStatusProvider, decimalFormatter, ch, carbSuggestionActions, testScope
         )
         whenever(activePlugin.activePump).thenReturn(virtualPumpPlugin)
@@ -609,7 +609,7 @@ class LoopPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `enacted carries the pump rate and duration, the request and the delivered smb`() = runTest {
-        val tbr = pumpEnactResultProvider.get().enacted(true).isPercent(false).absolute(1.25).duration(45).bolusDelivered(0.0)
+        val tbr = pumpEnactResultProvider().enacted(true).isPercent(false).absolute(1.25).duration(45).bolusDelivered(0.0)
         prepareDeviceStatus(apsResultReturning("eventualBG" to 120), tbrSetByPump = tbr)
 
         val enacted = JSONObject(storedDeviceStatus().enacted!!)
@@ -634,7 +634,7 @@ class LoopPluginTest : TestBaseWithProfile() {
      */
     @Test
     fun `an smb only pump result has no rate to report and throws`() = runTest {
-        val smbOnly = pumpEnactResultProvider.get().enacted(true).bolusDelivered(0.3)
+        val smbOnly = pumpEnactResultProvider().enacted(true).bolusDelivered(0.3)
         prepareDeviceStatus(apsResultReturning("eventualBG" to 120), tbrSetByPump = smbOnly)
 
         assertThrows<JSONException> { loopPlugin.buildAndStoreDeviceStatus("test") }

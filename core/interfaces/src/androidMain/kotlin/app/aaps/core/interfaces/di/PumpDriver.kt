@@ -1,7 +1,6 @@
 package app.aaps.core.interfaces.di
 
-import dev.zacsweers.metro.Qualifier as MetroQualifier
-import javax.inject.Qualifier
+import dev.zacsweers.metro.Qualifier
 
 /**
  * Multibinding qualifier for the pump drivers, which only a build with pump support merges.
@@ -15,5 +14,4 @@ import javax.inject.Qualifier
  * is simply empty, which is exactly what a follower should see.
  */
 @Qualifier
-@MetroQualifier
 annotation class PumpDriver

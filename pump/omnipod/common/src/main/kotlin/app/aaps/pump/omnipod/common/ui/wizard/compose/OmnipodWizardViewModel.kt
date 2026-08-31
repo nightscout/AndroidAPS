@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Provider
+import dev.zacsweers.metro.Provider
 
 /**
  * Activation type: LONG (full 5-step) or SHORT (3-step, resume after prime).

@@ -110,7 +110,6 @@ kotlin {
                 // only, which is exactly why they belong to this source set rather than commonMain.
 
                 // Dependency Injection
-                api(libs.com.google.dagger.android)
 
                 api(libs.androidx.appcompat)
                 api(libs.androidx.compose.ui)

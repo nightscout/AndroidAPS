@@ -15,7 +15,7 @@ import app.aaps.pump.eopatch.vo.PatchLifecycleEvent
 import app.aaps.pump.eopatch.vo.PatchState
 import app.aaps.pump.eopatch.vo.TempBasalManager
 import io.reactivex.rxjava3.core.Observable
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn

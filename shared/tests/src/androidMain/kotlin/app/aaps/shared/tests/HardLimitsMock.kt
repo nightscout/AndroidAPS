@@ -5,7 +5,7 @@ import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.math.max
 import kotlin.math.min
 

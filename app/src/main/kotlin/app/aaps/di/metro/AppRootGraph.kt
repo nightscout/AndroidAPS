@@ -180,7 +180,6 @@ import dev.zacsweers.metro.Provides
 import dev.zacsweers.metrox.viewmodel.MetroViewModelMultibindings
 import kotlinx.coroutines.CoroutineScope
 import kotlin.reflect.KClass
-import javax.inject.Singleton
 
 /**
  * The one Metro root. Everything else hangs off it as a graph extension.
@@ -202,11 +201,8 @@ import javax.inject.Singleton
  * `@Provides` functions run only on demand, which is the re-entrancy guard written up in [MetroGraphs].
  * When Dagger is gone the factory below goes with it and these become ordinary bindings.
  */
-// Two scopes on purpose. AppScope is Metro's own; javax @Singleton is declared as well because, with
-// Dagger interop on, Metro READS the javax scope on classes from other modules. Without this the graph
-// refuses any @Singleton class with "may not reference bindings from different scopes" - and with it,
-// an existing class can be contributed without retagging its scope annotation at all.
-@Singleton
+// One scope. `javax ` used to be declared here as well, because Metro's Dagger interop
+// needed it to agree with the javax scopes it was reading off other modules. There is no interop now.
 /**
  * [PumpAccessors] is a supertype rather than a `@ContributesTo` interface: a contributed interface
  * reaches the *generated* graph, so `root as PumpAccessors` would only work at runtime. Extending it

@@ -34,7 +34,7 @@ import app.aaps.plugins.source.XdripInbox
 import app.aaps.plugins.source.instara.InstaraPlugin
 import app.aaps.plugins.sync.smsCommunicator.SmsInbox
 import dev.zacsweers.metro.HasMemberInjections
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 // Metro reads this class now that interop is on for `:app`. It is `open`, so it has to say its injected
 // fields are meant to be filled - Metro will not infer that for a subclassable type.

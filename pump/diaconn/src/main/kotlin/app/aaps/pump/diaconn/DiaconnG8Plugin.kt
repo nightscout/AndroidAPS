@@ -67,9 +67,9 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.binding
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import javax.inject.Provider
+import dev.zacsweers.metro.Provider
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -218,11 +218,11 @@ class DiaconnG8Plugin @Inject constructor(
 
     // Diaconn Pump Interface
     override fun loadHistory(): PumpEnactResult {
-        return diaconnG8Service?.loadHistory() ?: pumpEnactResultProvider.get().success(false)
+        return diaconnG8Service?.loadHistory() ?: pumpEnactResultProvider().success(false)
     }
 
     override fun setUserOptions(): PumpEnactResult {
-        return diaconnG8Service?.setUserSettings() ?: pumpEnactResultProvider.get().success(false)
+        return diaconnG8Service?.setUserSettings() ?: pumpEnactResultProvider().success(false)
     }
 
     // Constraints interface
@@ -249,7 +249,7 @@ class DiaconnG8Plugin @Inject constructor(
     override fun isBusy(): Boolean = false
 
     override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (!isInitialized()) {
             // Not initialized yet — deferred, not a genuine error; re-pushed on reconnect. success=true keeps it
             // out of the central failure alarm; enacted stays false so nothing is shown. Profile-set notifications
@@ -303,7 +303,7 @@ class DiaconnG8Plugin @Inject constructor(
         detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
         var connectionOK = false
         if (detailedBolusInfo.insulin > 0) connectionOK = diaconnG8Service?.bolus(detailedBolusInfo) == true
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         result.success = connectionOK
         result.bolusDelivered = bolusProgressData.state.value?.delivered?.cU ?: 0.0
 
@@ -321,7 +321,7 @@ class DiaconnG8Plugin @Inject constructor(
 
     // This is called from APS
     override suspend fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         val doTempOff = baseBasalRate.cU - absoluteRate == 0.0
         val doLowTemp = absoluteRate < baseBasalRate.cU
         val doHighTemp = absoluteRate > baseBasalRate.cU
@@ -397,7 +397,7 @@ class DiaconnG8Plugin @Inject constructor(
         // Already constrained in IU (queue) and in cU (PumpWithConcentration boundary); no re-apply here.
         // round to the pump's native extended-bolus step (cU)
         val insulinAfterConstraint = Round.roundTo(insulin, pumpDescription.extendedBolusStep)
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
 
         if (diaconnG8Pump.isExtendedInProgress && abs(diaconnG8Pump.extendedBolusAmount - insulinAfterConstraint) < pumpDescription.extendedBolusStep) {
             result.enacted = false
@@ -433,7 +433,7 @@ class DiaconnG8Plugin @Inject constructor(
     }
 
     override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (diaconnG8Pump.isTempBasalInProgress) {
             diaconnG8Service?.tempBasalStop()
             result.success = !diaconnG8Pump.isTempBasalInProgress
@@ -451,7 +451,7 @@ class DiaconnG8Plugin @Inject constructor(
     }
 
     override suspend fun cancelExtendedBolus(): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (diaconnG8Pump.isExtendedInProgress) {
             diaconnG8Service?.extendedBolusStop()
             result.success = !diaconnG8Pump.isExtendedInProgress
