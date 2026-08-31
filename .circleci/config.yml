@@ -134,12 +134,12 @@ jobs:
                 echo "$s: $out"
                 case "$out" in *Success*) ;; *) echo "INSTALL FAILED on $s: $a"; exit 1 ;; esac
               done
-              adb -s $s shell pm list instrumentation | grep -q "$PKG.test/app.aaps.runners.HiltTestRunner" \
+              adb -s $s shell pm list instrumentation | grep -q "$PKG.test/app.aaps.runners.AapsTestRunner" \
                 || { echo "INSTRUMENTATION MISSING on $s after a reported-successful install"; exit 1; }
             done
 
       # Each shard runs its am instrument with a PROCESS-LEVEL retry: if the run crashes the app process
-      # (SetupWizardE2EHiltTest intermittently dies in a Compose/ViewRootImpl traversal - a process death
+      # (SetupWizardE2ETest intermittently dies in a Compose/ViewRootImpl traversal - a process death
       # that the in-process RetryRule cannot catch) or yields no coverage, it re-runs once with a fresh
       # process, which self-heals. A genuine test failure (FAILURES!!! with coverage present) is NOT
       # retried - RetryRule already tried it in-process - so it fails fast. The step ends with `exit $RC`
@@ -155,7 +155,7 @@ jobs:
             RC=1
             for attempt in 1 2 3; do
               # PRIMARY stability mechanism for the shards. A shard's app intermittently dies at startup under
-              # the concurrent unit+shards load — the documented SetupWizardE2EHiltTest Compose/ViewRootImpl
+              # the concurrent unit+shards load — the documented SetupWizardE2ETest Compose/ViewRootImpl
               # process death (it also hits the Dana shards). It is NOT host OOM (still occurs on the 64 GB box
               # with >5 GB free) and NOT catchable in-process; it lands on a random shard in most runs. So retry
               # — but first wait for the box to calm (1-min load < ncores/2 = the unit forks drained): the old
@@ -171,7 +171,7 @@ jobs:
               fi
               adb -s $DEV shell am instrument -w -r -e annotation app.aaps.testcategories.ShardA \
                 -e coverage true -e coverageFile /data/data/$PKG/cov-A.ec \
-                $PKG.test/app.aaps.runners.HiltTestRunner > shard-A-$attempt.txt 2>&1 || true
+                $PKG.test/app.aaps.runners.AapsTestRunner > shard-A-$attempt.txt 2>&1 || true
               tail -n 200 shard-A-$attempt.txt
               adb -s $DEV exec-out run-as $PKG cat cov-A.ec > "$COVDIR/cov-A.ec" 2>/dev/null || true
               sz=$(wc -c < "$COVDIR/cov-A.ec" 2>/dev/null || echo 0)
@@ -196,7 +196,7 @@ jobs:
             RC=1
             for attempt in 1 2 3; do
               # PRIMARY stability mechanism for the shards. A shard's app intermittently dies at startup under
-              # the concurrent unit+shards load — the documented SetupWizardE2EHiltTest Compose/ViewRootImpl
+              # the concurrent unit+shards load — the documented SetupWizardE2ETest Compose/ViewRootImpl
               # process death (it also hits the Dana shards). It is NOT host OOM (still occurs on the 64 GB box
               # with >5 GB free) and NOT catchable in-process; it lands on a random shard in most runs. So retry
               # — but first wait for the box to calm (1-min load < ncores/2 = the unit forks drained): the old
@@ -212,7 +212,7 @@ jobs:
               fi
               adb -s $DEV shell am instrument -w -r -e annotation app.aaps.testcategories.ShardB \
                 -e coverage true -e coverageFile /data/data/$PKG/cov-B.ec \
-                $PKG.test/app.aaps.runners.HiltTestRunner > shard-B-$attempt.txt 2>&1 || true
+                $PKG.test/app.aaps.runners.AapsTestRunner > shard-B-$attempt.txt 2>&1 || true
               tail -n 200 shard-B-$attempt.txt
               adb -s $DEV exec-out run-as $PKG cat cov-B.ec > "$COVDIR/cov-B.ec" 2>/dev/null || true
               sz=$(wc -c < "$COVDIR/cov-B.ec" 2>/dev/null || echo 0)
@@ -237,7 +237,7 @@ jobs:
             RC=1
             for attempt in 1 2 3; do
               # PRIMARY stability mechanism for the shards. A shard's app intermittently dies at startup under
-              # the concurrent unit+shards load — the documented SetupWizardE2EHiltTest Compose/ViewRootImpl
+              # the concurrent unit+shards load — the documented SetupWizardE2ETest Compose/ViewRootImpl
               # process death (it also hits the Dana shards). It is NOT host OOM (still occurs on the 64 GB box
               # with >5 GB free) and NOT catchable in-process; it lands on a random shard in most runs. So retry
               # — but first wait for the box to calm (1-min load < ncores/2 = the unit forks drained): the old
@@ -253,7 +253,7 @@ jobs:
               fi
               adb -s $DEV shell am instrument -w -r -e notAnnotation app.aaps.testcategories.ShardA,app.aaps.testcategories.ShardB \
                 -e coverage true -e coverageFile /data/data/$PKG/cov-C.ec \
-                $PKG.test/app.aaps.runners.HiltTestRunner > shard-C-$attempt.txt 2>&1 || true
+                $PKG.test/app.aaps.runners.AapsTestRunner > shard-C-$attempt.txt 2>&1 || true
               tail -n 200 shard-C-$attempt.txt
               adb -s $DEV exec-out run-as $PKG cat cov-C.ec > "$COVDIR/cov-C.ec" 2>/dev/null || true
               sz=$(wc -c < "$COVDIR/cov-C.ec" 2>/dev/null || echo 0)

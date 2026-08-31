@@ -140,24 +140,13 @@ import kotlin.time.Duration.Companion.milliseconds
 
 class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, Configuration.Provider {
 
-    // Every Android entry point on the phone is filled by Metro now - dagger.android is gone from this
-    // module. `injectMetroMembers` fails loudly on a missing binding, where dagger.android skipped it.
     override fun injectMembers(target: Any): Boolean = metroGraphs.injectMembers(target)
 
-    // The @HiltViewModel replacement, reached by activities the same way.
     override val metroViewModelFactory: MetroViewModelFactory get() = metroGraphs.viewModelFactory
 
-    // WorkManager on-demand initialization. MetroWorkerFactory builds every worker in the app; there is
-    // no HiltWorkerFactory beside it any more, because no @HiltWorker is left. Anything it does not know
-    // returns null and falls back to WorkManager's default reflective factory, which is what builds
-    // WorkManager's own internal workers. The default androidx.startup WorkManagerInitializer is removed
-    // in AndroidManifest.xml so this config wins.
     /**
-     * The one Metro root, built here rather than handed in by Dagger.
-     *
      * `by lazy` so nothing is resolved before `onCreate` runs - the graph reaches Android services, and
      * an Application field initialiser runs before the framework is ready for that.
-     *
      * The last two arguments are the only things an instrumented test does differently; see
      * `AppRootGraph.Factory`. Production wants the real database and no forced options.
      */
@@ -169,6 +158,10 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
             externalOptionsOverride = ExternalOptionsOverride.NONE
         )
     }
+    // WorkManager on-demand initialization. `MetroWorkerFactory` builds every worker in the app; what
+    // it does not know returns null and falls back to WorkManager's default reflective factory, which
+    // is what builds WorkManager's own internal workers. The default androidx.startup
+    // WorkManagerInitializer is removed in AndroidManifest.xml so this config wins.
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder()
             .setWorkerFactory(MetroWorkerFactory(metroGraphs))
@@ -229,10 +222,6 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         super.onCreate()
 
         registerStringOwners()
-        // The two owners :core:ui and :implementation own. ResourceHelperImpl registered these from its
-        // own constructor until now, which meant they landed whenever something first injected it -
-        // not a defined moment, and it kept the class on Dagger, because a Metro owned class is built
-        // for real in the plain-JVM graph tests where its Android lookups fail.
         resourceHelperImpl.start()
         // Applies the analytics opt-out. Must come before configureLeakCanary below, which reports
         // through fabricPrivacy.
@@ -943,7 +932,6 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
      * Insulin config stamped onto legacy records when neither legacy preferences nor a running profile
      * can tell us what was actually used: no active profile switch at first start, or — the case that
      * matters — a running profile whose own row still carries the v33 sentinel.
-     *
      * That second case is why this must not read the running profile unguarded. The SQL step of the
      * migration stamps `insulinEndTime = -1` onto every pre-ICfg row *including the active one*, so
      * reading it back yields a DIA of 0.0 and writes the sentinel straight back over itself. The rows stay
@@ -951,7 +939,6 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
      * cycle. [app.aaps.core.interfaces.profile.ProfileFunction.getRunningOrRequestedICfg] rejects an
      * unusable [ICfg] so that path lands here instead — and because the repair re-runs on every start and
      * still matches the sentinel rows, an install already broken this way heals on its next launch.
-     *
      * Ultra-rapid: an 8h DIA is the same across every [InsulinType] template, so the only real choice is
      * the peak. Concentration is 1.0 by construction, which is not a guess — these records predate
      * concentration entirely, so 1.0 is the identity that leaves historical doses unscaled.
@@ -1047,13 +1034,11 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
 
     /**
      * Teaches the resolvers which module owns which string names.
-     *
      * A `TextRef.Named` carries an owner and a name, and both the Compose and the ResourceHelper
      * paths need a way to turn that into an `R.string` id. `:core:keys`, `:core:interfaces` and
      * `:core:ui` are resolved directly because `:core:ui` sits above them, but a plugin or pump
      * module sits ABOVE `:core:ui`, so it can only be reached from here - `:app` is the one place
      * that depends on all of them.
-     *
      * Without this the lookup answers null and the raw name is drawn: `virtual_pump_shortname`
      * instead of "Virtual Pump".
      */

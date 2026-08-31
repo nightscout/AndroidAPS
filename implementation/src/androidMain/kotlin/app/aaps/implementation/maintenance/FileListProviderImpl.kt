@@ -42,8 +42,6 @@ import kotlin.math.abs
 @SingleIn(AppScope::class)
 class FileListProviderImpl @Inject constructor(
     private val rh: ResourceHelper,
-    // A plain factory, not dagger.Lazy: that type is Dagger vocabulary. Both of these are @Singleton, so
-    // calling through each time returns the same instance - Lazy's caching bought nothing here.
     private val config: () -> Config,
     private val encryptedPrefsFormat: EncryptedPrefsFormat,
     private val storage: Storage,

@@ -22,18 +22,10 @@ import org.junit.jupiter.api.Test
 
 /**
  * The app-wide workers Metro builds, keyed by class.
- *
- * `MetroWorkerFactory` looks a worker up here and, on a miss, hands it to Hilt. That fallback is what
- * let workers move a few at a time - and it is also why a mistake here is silent: a worker that lost
- * its `@HiltWorker` but never reached this map is not a crash, it is a worker WorkManager can no longer
- * construct. The job simply stops running and nothing in the build says so. For the nsclientV3 loaders
- * that would mean Nightscout data quietly never syncing.
- *
  * Each worker registers itself - `@ContributesIntoMap` plus `@WorkerKey` on its nested
  * `@AssistedFactory` - so nothing central lists them any more, and this is the only place that states
  * which ones exist. Note the contribution targets `AppScope` while this map lives on a graph extension:
  * that it arrives here at all is the thing worth asserting.
- *
  * Same shape as `SourceGraphTest` does for the twelve source workers.
  */
 class AppWorkersGraphTest {

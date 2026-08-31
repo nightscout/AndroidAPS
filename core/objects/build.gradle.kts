@@ -6,8 +6,7 @@ plugins {
     // NOT com.android.library. AGP 9 refuses that plugin together with the multiplatform plugin.
     alias(libs.plugins.android.kmp.library)
     kotlin("plugin.allopen")
-    // Metro, a Kotlin compiler plugin - no KSP, no generated sources. The comment below was written
-    // when this module's DI had to live in :app because Dagger cannot run in a multiplatform module.
+    // Metro, a Kotlin compiler plugin - no KSP, no generated sources.
     alias(libs.plugins.metro)
 }
 

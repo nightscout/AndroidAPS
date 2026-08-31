@@ -66,8 +66,6 @@ class PumpViewModelsTest {
             EquilWizardViewModel::class,
             MedtrumOverviewViewModel::class,
             MedtrumPatchViewModel::class,
-            // The last six off Hilt. Their dependencies are Dagger-owned pump state, so PumpLeavesTest
-            // is the other half of this: it checks the graph hands those over instead of rebuilding them.
             EopatchOverviewViewModel::class,
             EopatchPatchViewModel::class,
             MedtronicHistoryViewModel::class,

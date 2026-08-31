@@ -9,9 +9,6 @@ plugins {
     alias(libs.plugins.metro)
 }
 
-// No `metro { interop { includeDagger() } }` here, unlike :plugins:aps. Nothing in this module carries
-// a javax annotation any more - the Dagger processors and the last 18 `javax.inject.Inject` went in the
-// same change that made it multiplatform.
 
 // Generates SourceStrings (commonMain) and SourceStringIds (androidMain) from this module's
 // res/values, the same generator the other plugins use. The strings themselves do not move, and AAPT

@@ -29,13 +29,11 @@ import kotlin.reflect.KClass
 
 /**
  * Scope marker for the Open Humans uploader.
- *
  * This graph is still a root rather than an extension of `AppRootGraph`, and that is deliberate. A
  * graph extension is generated in the **parent's** module, so its interface must be public - and this
  * one exposes view models whose own types are `internal` to this module. Making them public to satisfy
  * the injector would widen the module's API surface for no other reason, and the exposure cascades:
  * the view model drags its state delegate, which drags its state class.
- *
  * Declaring a scope of its own gets the property that mattered anyway. The danger was never "more than
  * one graph", it was **two graphs declaring the same scope**, which silently gives each its own copy of
  * everything scoped there. `AppScope` now means exactly one graph, so contributed bindings have one
@@ -45,18 +43,6 @@ abstract class OpenHumansScope private constructor()
 
 /**
  * All of Open Humans, on Metro.
- *
- * The point of this graph is that the feature keeps **no** Dagger. The plugin, its three preference
- * delegates, its HTTP client, its upload worker, its activity and its view model are all built here,
- * and `OpenHumansModule` - the Dagger module that used to provide the URLs and the client id - is
- * gone, its five constants now living below.
- *
- * That matters more than converting the plugin alone would. The expensive part of this migration is
- * the bridge between the two frameworks, so the way to make progress is to finish a feature rather
- * than to half-convert several. What still crosses from Dagger is only app-wide infrastructure -
- * logger, resources, preferences, context, database, notifications - which is by definition the last
- * thing that can move.
- *
  * All four Android entry points appear here, which makes this the worked example: a worker
  * ([OpenHumansWorker]), a member-injected activity ([OHLoginActivity], including a qualified
  * `String`), a view model ([OHLoginViewModel]) and a plugin ([OpenHumansUploaderPlugin]).
@@ -65,9 +51,7 @@ abstract class OpenHumansScope private constructor()
 internal interface OpenHumansMetroGraph : MetroViewModelMultibindings {
 
     /**
-     * Contributed under [NotNSClient], exactly as the Dagger binding was.
-     *
-     * The qualifier is not decoration: `AppModule.providesPlugins` merges this bucket only when the
+     * The qualifier is not decoration: `MetroGraphs.allPlugins` merges this bucket only when the
      * build is not an AAPSCLIENT one. Dropping it would put Open Humans into follower builds that have
      * never shown it.
      */
@@ -77,7 +61,7 @@ internal interface OpenHumansMetroGraph : MetroViewModelMultibindings {
     /** Fills [OHLoginActivity]'s fields - the `@AndroidEntryPoint` replacement. */
     val memberInjectors: Map<KClass<*>, MembersInjector<*>>
 
-    /** Builds [OpenHumansWorker] - the `@HiltWorker` replacement. */
+    /** Builds [OpenHumansWorker]. */
     val workerCreators: Map<KClass<out ListenableWorker>, MetroWorkerCreator>
 
     @DependencyGraph.Factory
@@ -130,11 +114,6 @@ internal interface OpenHumansMetroGraph : MetroViewModelMultibindings {
     @ClassKey(OHLoginActivity::class)
     fun bindOHLoginActivity(injector: MembersInjector<OHLoginActivity>): MembersInjector<*> = injector
 
-    /**
-     * The plugin's own screen. Note this class still declares `javax.inject.Inject` - with Dagger
-     * interop switched on for this module, Metro reads it, so converting a class means removing the
-     * Hilt annotation and adding a binding here, not rewriting its annotations.
-     */
 
     @Provides
     @IntoMap

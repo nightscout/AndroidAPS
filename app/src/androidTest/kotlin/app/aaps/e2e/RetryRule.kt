@@ -7,20 +7,12 @@ import org.junit.runners.model.Statement
 
 /**
  * Retries a failed test up to [attempts] total tries before giving up.
- *
  * The Dana E2E instrumentation tests are timing-sensitive and flake **intermittently** under CI load:
  * uiautomator element look-ups (`find`, `openManageAction`, …) time out when the emulator is briefly
  * starved by the concurrent unit suite and the other shard. The flakes are single, uncorrelated
  * failures (a different one test of ~18 per run), so a later attempt — often after the unit step has
  * finished and freed the box — succeeds. A genuine, deterministic failure still fails every attempt and
  * stays red, so this hides flakiness without masking real breakage.
- *
- * Wire it as the **outermost** rule so each attempt is a fully fresh test (Hilt setup/teardown included):
- * ```
- * val hiltRule = HiltAndroidRule(this)
- * @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(ResetGraphRule())
- * ```
- *
  * Assumption failures (skips) are never retried.
  */
 class RetryRule(private val attempts: Int = 3) : TestRule {

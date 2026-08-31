@@ -75,7 +75,6 @@ import java.io.File
  * Drives the **real Equil activation wizard** against the in-tree Equil emulator, headlessly (no
  * Compose UI): the genuine `EquilWizardViewModel` → `CommandQueue` → `EquilPumpPlugin` →
  * `EquilManager` → `EquilBLE` → [EquilEmulatorBleTransport], with no Bluetooth hardware and no pod.
- *
  * ## What this covers that the JVM tests don't
  * `:pump:equil-emulator`'s own `EquilPumpEmulatorTest` exercises the emulator's command handling with
  * a hand-built protocol and no plugin. It cannot cover the driver above it: the `EquilManager`
@@ -84,20 +83,9 @@ import java.io.File
  * ~11-command PAIR activation chain (`CmdDevicesOldGet` → `CmdPair` → `CmdSettingSet` → fill/air →
  * `CmdAlarmSet`/`CmdBasalSet`/`CmdTimeSet`/`CmdDevicesGet` → `CmdInsulinGet`/`CmdModelSet` → final
  * `CmdSettingSet` → `saveActivation`). This is the first test of that whole stack.
- *
- * ## Why the wizard is driven at the ViewModel level (not through the UI)
- * The `EquilWizardViewModel` is a `@HiltViewModel` with an `@Inject constructor` whose dependencies
- * are all themselves injectable, so the test constructs the *real* ViewModel from injected singletons
- * and calls its public step-advance functions (`startDeviceScan`/`onDeviceSelected`/`startPairing`/
- * `startFill`/`startAirRemoval`/`startConfirm`) in the same order the Compose screens' buttons do —
- * exercising the identical command chain without the flakier uiautomator navigation. The through-UI
- * wizard is a later increment. Each ViewModel call is dispatched on the main thread (its coroutines
- * run on `viewModelScope` = `Dispatchers.Main`); the test thread then polls the exposed StateFlows to
- * await each async step.
- *
  * The emulator is selected purely by the `EMULATE_EQUIL` option — see [EmulatedOptions] for why a
  * test reports that rather than dropping the production marker file. It must be set before
- * `hiltRule.inject()` because `EquilBleTransport` is a `@Singleton` the graph binds once.
+ * the graph is built because `EquilBleTransport` is scoped - the graph binds it once.
  */
 @RunWith(AndroidJUnit4::class)
 class EquilEmulatorActivationTest {
@@ -142,7 +130,7 @@ class EquilEmulatorActivationTest {
 
     private fun bringUp() {
         // A prior activation persists the pod state (EquilStringKey.State) to SharedPreferences, which
-        // outlives the per-test Hilt component — so clear it before inject(), or the freshly-built
+        // outlives the per-test graph — so clear it before inject(), or the freshly-built
         // EquilManager reads back a COMPLETED pod and the test starts already-activated.
         clearAllSharedPrefs()
         EmulatedOptions.enabled = setOf(ExternalOptions.EMULATE_EQUIL)
@@ -222,13 +210,11 @@ class EquilEmulatorActivationTest {
     /**
      * Activates the pod through the whole PAIR wizard, then delivers through it — bolus, temp basal
      * and extended bolus — asserting each on the emulator's own `PumpState`, the true far side.
-     *
      * Each `startXxx` launches a `viewModelScope` coroutine that submits its command(s) through the
      * command queue and advances the wizard state on success; the test awaits the resulting state
      * transition before driving the next step. The final `CmdSettingSet` in [startConfirm] is a
      * pair-step — the command whose `executeCmd` wait can lose its wakeup against the fast emulator —
      * so the completion timeout is generous; increment work will tighten it once the race is fixed.
-     *
      * The delivery leg reuses the pod this activation just paired: only a real pairing establishes the
      * shared keys `EquilManager.executeCmd` encrypts with, so a seeded-activated pod could not deliver.
      * Driven directly on the plugin (as a queue worker would), asserted on the emulator, not the

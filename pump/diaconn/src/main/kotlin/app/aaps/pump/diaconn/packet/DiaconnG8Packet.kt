@@ -24,8 +24,6 @@ open class DiaconnG8Packet(protected val injector: MetroMemberInjector) {
     open val friendlyName = "UNKNOWN_PACKET"
 
     init {
-        // Loud on a missing entry. dagger.android silently left the fields unset, which surfaced later as
-        // an unrelated NPE; a packet that is not registered in `DiaconnMemberInjectors` fails here, once.
         check(injector.injectMembers(this)) { "No member injector for ${this::class.java.name}" }
     }
 

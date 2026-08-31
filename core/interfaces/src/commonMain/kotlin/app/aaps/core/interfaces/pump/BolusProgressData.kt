@@ -24,7 +24,7 @@ import kotlin.concurrent.atomics.incrementAndFetch
  *
  * Deliberately carries no DI annotations. `javax.inject` is a JVM library and does not resolve in
  * commonMain, so a class meant to be shared cannot be annotated - the Android graph provides it
- * instead (`ImplementationModule.provideBolusProgressData`, which keeps the singleton scope and
+ * instead (a scoped binding, which keeps the single instance and
  * supplies the application-scoped CoroutineScope).
  */
 @OptIn(ExperimentalAtomicApi::class)

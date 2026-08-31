@@ -32,7 +32,7 @@ class OpenHumansWorker @AssistedInject constructor(
         }
     }
 
-    /** Metro builds the worker through this, replacing what `@HiltWorker` did. */
+    /** Metro builds the worker through this. */
     @AssistedFactory
     fun interface Factory : MetroWorkerCreator {
 

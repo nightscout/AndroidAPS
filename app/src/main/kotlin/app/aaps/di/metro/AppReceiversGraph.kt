@@ -19,18 +19,10 @@ import kotlin.reflect.KClass
 /**
  * Metro wiring for Android classes that inject their own fields - the `@ContributesAndroidInjector`
  * replacement, and the biggest of the four categories at 294 sites.
- *
- * Android constructs receivers, services and activities itself, so they cannot take dependencies in a
- * constructor. dagger.android answers this with `DispatchingAndroidInjector`, a runtime map looked up
- * by class. The map below is the same idea built at compile time out of Metro's own [MembersInjector],
- * so a class that is registered but has an unsatisfiable dependency fails the build rather than the
- * launch.
- *
  * This is a [GraphExtension] of [AppRootGraph], so it declares only what it adds. Everything it needs -
  * logger, event bus, plugin list, application scope - is bound once in the root and inherited. It used
  * to be a root graph of its own, with a factory restating five dependencies and five functions
  * unwrapping them.
- *
  * Cost per converted class is one `@Provides @IntoMap @ClassKey` line, the same order of work as the
  * `@ContributesAndroidInjector` line it replaces.
  */
@@ -60,8 +52,6 @@ interface AppReceiversGraph {
     @ClassKey(CarbSuggestionReceiver::class)
     fun bindCarbSuggestionReceiver(injector: MembersInjector<CarbSuggestionReceiver>): MembersInjector<*> = injector
 
-    /** A Service, not a receiver - but the map is just class-keyed, and `MetroService` looks it up the
-     * same way. */
     @Provides
     @IntoMap
     @ClassKey(DummyService::class)
@@ -77,8 +67,6 @@ interface AppReceiversGraph {
     @ClassKey(DataReceiver::class)
     fun bindDataReceiver(injector: MembersInjector<DataReceiver>): MembersInjector<*> = injector
 
-    /** SmsReceiver subclasses DataReceiver and adds no fields, but the map is keyed on the RUNTIME
-     * class, so it needs its own entry or nothing fills it. */
     @Provides
     @IntoMap
     @ClassKey(SmsReceiver::class)

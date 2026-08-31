@@ -11,10 +11,6 @@ plugins {
 // The convention plugins are gone with the flip. Only `test-module-dependencies` mattered here and
 // it contributed nothing: every line in it is testImplementation or androidTestImplementation, and
 // this module has no tests of its own - it is the fixtures other modules test with.
-//
-// No Dagger KSP either. Nothing here needs a generated factory; the one `@Inject` left is an
-// annotation nobody processes. Verified by deleting `shared/tests/build` and rebuilding.
-
 kotlin {
     android {
         namespace = "app.aaps.shared.tests"

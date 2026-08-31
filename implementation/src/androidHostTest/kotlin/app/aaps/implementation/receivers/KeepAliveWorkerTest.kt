@@ -80,8 +80,6 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
         whenever(preferences.get(LongNonKey.LastCleanupRun)).thenReturn(now)
     }
 
-    // KeepAliveWorker uses constructor injection (@HiltWorker / @AssistedInject), so dependencies
-    // are passed as constructor arguments.
     private fun createWorker(): KeepAliveWorker =
         KeepAliveWorker(
             context = context,

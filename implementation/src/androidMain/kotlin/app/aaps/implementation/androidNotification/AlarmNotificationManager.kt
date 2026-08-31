@@ -33,7 +33,6 @@ import dev.zacsweers.metro.SingleIn
 /**
  * Builds and posts Android notifications for AAPS alarms. Replaces the old `AlarmSoundService` /
  * `AlarmSoundServiceHelper` foreground-service-based path.
- *
  * Two alarm modalities:
  *  - [postFullScreenAlarm]: posts an FSI notification on a sound-bearing channel; Android auto-launches
  *    ErrorActivity when the device is idle AND the FSI permission is held, otherwise shows a heads-up.
@@ -42,7 +41,6 @@ import dev.zacsweers.metro.SingleIn
  *    takes over with looping/ramped audio, deferring its loop past the channel one-shot to avoid overlap.
  *  - [postSoundOnlyAlarm]: posts on a sound-bearing channel chosen by the
  *    [BooleanKey.AlertOverrideDoNotDisturb] preference. No activity, system plays channel sound.
- *
  * Channels are created on the first post rather than at construction - see the `channels` field. Both
  * posting methods touch it before building anything, so a post can still never race their creation.
  */
@@ -52,8 +50,6 @@ class AlarmNotificationManager @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val iconsProvider: IconsProvider,
-    // Provider breaks a Dagger cycle: UiInteractionImpl injects this class, but we need
-    // UiInteraction.errorHelperActivity for the FSI target. Provider defers resolution.
     private val uiInteractionProvider: Provider<UiInteraction>,
     private val alarmSoundPlayer: AlarmSoundPlayer,
     private val rh: ResourceHelper
@@ -120,7 +116,6 @@ class AlarmNotificationManager @Inject constructor(
      * Per-AAPS-notification cancel goes through [cancelSoundAlarm] and only touches one id —
      * avoids the "dismissing notification A stops notification B's sound" bug that comes from
      * a shared singleton notification id.
-     *
      * IMPORTANT: every read/write of this field — AND the paired `mgr.notify`/`mgr.cancel`
      * call — must run inside `synchronized(activeSoundKeys)`. The post and cancel paths can be
      * called concurrently from unrelated threads (post comes from `NotificationManagerImpl`
@@ -128,7 +123,6 @@ class AlarmNotificationManager @Inject constructor(
      * outer lock). Without pairing the notify/add (and remove/cancel) in one critical section
      * a global cancel can iterate-and-clear in between, leaving the just-posted system
      * notification orphaned.
-     *
      * Note on OS-driven dismissal: notifications are `setOngoing(true)` so the user can't
      * swipe to dismiss, but the OS may still trim notifications under memory pressure. In
      * that rare case `activeSoundKeys` will hold stale entries until the next `cancelAlarm()`
@@ -138,17 +132,10 @@ class AlarmNotificationManager @Inject constructor(
 
     /**
      * The channels, created once on first use rather than in an `init` block.
-     *
      * Android requires a channel to exist before anything posts to it, and **every** post goes through
      * [postFullScreenAlarm] or [postSilentAlarmNotification], both of which touch this first. So the
      * guarantee is the same as creating them in the constructor - and stronger in one way: it cannot be
      * missed by a code path that gets an instance some other way.
-     *
-     * It has to move out of construction because `createChannels` reaches for the system
-     * `NotificationManager`, and this class is built for real in the plain-JVM graph tests once Metro
-     * owns it - "java.lang.Object cannot be cast to android.app.NotificationManager". That is what kept
-     * `UiInteractionImpl`, which injects this, on Dagger.
-     *
      * `lazy` is synchronized by default, so two threads posting at once still create them once.
      */
     private val channels: Unit by lazy { createChannels() }
@@ -338,7 +325,6 @@ class AlarmNotificationManager @Inject constructor(
      *     the screen on;
      *  2. [activityPendingIntent] (a `getActivity` at ErrorActivity), which the OS holds until the
      *     screen is on and then presents — over the keyguard when AAPS is the foreground task.
-     *
      * A small delay lets the alarms register before firing. `setAlarmClock` does not require
      * `SCHEDULE_EXACT_ALARM` (alarm clocks are exempt).
      */
@@ -364,10 +350,8 @@ class AlarmNotificationManager @Inject constructor(
      * Post a **silent** alarm notification on the [CHANNEL_FULL_SCREEN_SILENT] channel
      * (heads-up + vibration, no channel sound). The audio is owned by [AlarmSoundPlayer]; this
      * notification provides shade/lock-screen visibility and a tap target to open the app.
-     *
      * Tracked in [activeSoundKeys] exactly like [postSoundAlarmNotification], so
      * [cancelSoundAlarm] / [cancelAlarm] clear it.
-     *
      * @param notificationKey unique-per-AAPS-notification identifier (the `AapsNotification.instanceKey`)
      * @param urgent          true for URGENT-level alerts (stronger vibration)
      */

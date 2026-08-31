@@ -21,7 +21,7 @@ class CommandCustomCommandTest : TestBaseWithProfile() {
     }
 
     private fun newCommand(callback: Callback? = null) =
-        CommandCustomCommand(aapsLogger, activePlugin, pumpEnactResultProvider::get, customCommand, callback)
+        CommandCustomCommand(aapsLogger, activePlugin, pumpEnactResultProvider::invoke, customCommand, callback)
 
     @Test
     fun `execute returns pump's executeCustomCommand result`() = runTest {

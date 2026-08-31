@@ -184,30 +184,20 @@ import kotlin.reflect.KClass
 /**
  * The one Metro root. Everything else hangs off it as a graph extension.
  *
- * Before this there were nine independent root graphs, each with its own factory restating the
- * app-wide objects it needed and its own set of one-line functions unwrapping them - around 150 lines
- * of declare-then-unwrap. Worse, it was **unsafe by construction**: two root graphs that both scope the
- * same type get one instance each, silently. `MetroScopingTest` shows exactly that - two roots built
- * from the same factory share nothing at all. It only held together because every shared object still
- * belongs to Dagger, which keeps it single. The first `@SingleIn(AppScope::class)` binding to appear in
- * two roots would have been a quiet duplicate, and in this app a duplicated calculator or command queue
- * is not a cosmetic problem.
+ * **There is exactly one root, and that is the safety property.** Several root graphs would be unsafe
+ * by construction: two roots that both scope the same type get one instance each, silently.
+ * `MetroScopingTest` shows exactly that - two roots built from the same factory share nothing at all.
+ * A duplicated calculator or command queue is not a cosmetic problem in this app.
  *
  * With one root that cannot happen: a scoped binding lives here once and every extension sees the same
  * instance. An extension that declares its own scope gets its own instances of what it scopes, which is
  * what the history browser needs and what the same test verifies.
- *
- * The app-wide objects arrive as one [AapsLeaves] container because they still belong to Dagger. Its
- * `@Provides` functions run only on demand, which is the re-entrancy guard written up in [MetroGraphs].
- * When Dagger is gone the factory below goes with it and these become ordinary bindings.
  */
-// One scope. `javax ` used to be declared here as well, because Metro's Dagger interop
-// needed it to agree with the javax scopes it was reading off other modules. There is no interop now.
 /**
  * [PumpAccessors] is a supertype rather than a `@ContributesTo` interface: a contributed interface
  * reaches the *generated* graph, so `root as PumpAccessors` would only work at runtime. Extending it
  * makes the accessors part of this type, and it compiles for every flavour because both flavour source
- * sets declare a `PumpAccessors` (empty in a follower), exactly as they both declare a `PumpLeaves`.
+ * sets declare a `PumpAccessors` - empty in a follower, which has no pump module on its classpath.
  */
 @DependencyGraph(AppScope::class)
 interface AppRootGraph : MetroViewModelMultibindings, PumpAccessors {
@@ -288,7 +278,7 @@ interface AppRootGraph : MetroViewModelMultibindings, PumpAccessors {
      * exists. A map declared here instead can be filled from anywhere with `@ContributesTo`, and nothing
      * pump-specific appears in its type, so a follower simply sees fewer entries.
      *
-     * This is what replaces `dagger.android`'s `HasAndroidInjector` for the pump protocol classes: a
+     * How the pump protocol classes are member-injected: a
      * packet is built with `new`, then fills its own fields from this map.
      */
     @Multibinds(allowEmpty = true)
@@ -304,12 +294,11 @@ interface AppRootGraph : MetroViewModelMultibindings, PumpAccessors {
         objectives.toList().sortedBy { it.first }.map { it.second }
 
     /**
-     * Constraint plugins that are also bound to an interface, or injected directly. Dagger delegates
-     * to these instances in `CoreObjectsModule` rather than building its own.
+     * Constraint plugins that are also bound to an interface, or injected directly.
+     * to these instances rather than building their own.
      */
     /**
-     * Objects Metro builds that Dagger consumers still ask for. Each has a @Provides delegate in
-     * `CoreObjectsModule`; Dagger must never construct its own, or there would be two.
+     * Objects the graph exposes for code that resolves them by hand rather than by injection.
      */
     val trendCalculator: TrendCalculator
     val resourceHelper: ResourceHelper
@@ -358,10 +347,10 @@ interface AppRootGraph : MetroViewModelMultibindings, PumpAccessors {
     val nsClientRepository: NSClientRepository
     val builtInSearchables: BuiltInSearchables
 
-    /** Metro builds it now, but `MainApp` still injects it through Dagger, so it is handed back. */
+    /** Read by `MainApp`. */
     val activityMonitor: ActivityMonitor
 
-    /** The one application scope. Metro owns it; Dagger consumers get this same instance. */
+    /** The one application scope. */
     @ApplicationScope val appScope: CoroutineScope
     val notificationManager: NotificationManager
     val apsResult: APSResult
@@ -410,7 +399,7 @@ interface AppRootGraph : MetroViewModelMultibindings, PumpAccessors {
      * The same object as [activeSceneSync], by class.
      *
      * `SceneExecutor`, `SceneAutomationApiImpl` and `SceneExpiryRunner` all ask for the concrete type and
-     * are built by Dagger, so without this they got a copy of their own - and an unscoped one, since the
+     * would otherwise get a copy of their own - and an unscoped one, since the
      * class carries only Metro's `@SingleIn`. The scene then activated on an object no screen was reading.
      */
     val activeSceneManager: ActiveSceneManager
@@ -466,7 +455,7 @@ interface AppRootGraph : MetroViewModelMultibindings, PumpAccessors {
     /**
      * Automation, and the permission providers it is the only contributor to.
      *
-     * Metro owns `AutomationRuntime` now, so Dagger reads it back through `CoreObjectsModule`
+     * `AutomationRuntime` lives here.
      * instead of the other way round.
      */
     val automation: Automation
@@ -478,18 +467,18 @@ interface AppRootGraph : MetroViewModelMultibindings, PumpAccessors {
     /** The live loop's calculator. A history window has its own, at `HistoryWindowScope`. */
     val iobCobCalculator: IobCobCalculator
 
-    /** The loop. Built here now; Dagger receives it through `CoreObjectsModule.provideLoop`. */
+    /** The loop. */
     val loop: Loop
 
-    /** Autotune, for the automation actions Dagger still builds. */
+    /** Autotune, for the automation actions. */
     val autotune: Autotune
 
-    /** Running-mode helpers, from commonMain - `MainApp` still injects the reconciler through Dagger. */
+    /** Running-mode helpers, from commonMain. `MainApp` reads the reconciler. */
     val runningModeReconciler: RunningModeReconciler
     val runningModeExpiryJob: RunningModeExpiryJob
 
     /**
-     * openAPS pieces Metro builds, for the Dagger side to borrow.
+     * The openAPS pieces.
      *
      * Only the four the instrumented APS tests inject. `DeltaCalculator` and the AutoISF glucose status
      * calculator are reached through these, so nothing outside Metro ever asks for them by name.
@@ -505,7 +494,7 @@ interface AppRootGraph : MetroViewModelMultibindings, PumpAccessors {
     /**
      * Source plugins that are also bound to an interface for other callers.
      *
-     * Metro builds these, so Dagger must delegate rather than construct - see `CoreObjectsModule`.
+     * Built here, so nothing constructs a second copy.
      */
     val xdripSourcePlugin: XdripSourcePlugin
     val nsClientSourcePlugin: NSClientSourcePlugin
@@ -530,8 +519,7 @@ interface AppRootGraph : MetroViewModelMultibindings, PumpAccessors {
     fun interface Factory {
 
         /**
-         * The graph's inputs. `AapsLeaves` used to be one of them, carrying whatever Dagger still owned;
-         * it is gone, and what is left here is only what the **caller** genuinely decides.
+         * The graph's inputs - what the **caller** genuinely decides.
          *
          * The last two are how an instrumented test differs from production, and they are parameters
          * rather than replaced bindings for a reason worth keeping: contributions declared in

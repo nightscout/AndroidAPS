@@ -37,8 +37,6 @@ import kotlin.reflect.KClass
 class UiInteractionImpl @Inject constructor(
     private val context: Context,
     private val alarmNotificationManager: AlarmNotificationManager,
-    // Provider breaks a Dagger cycle: NotificationManagerImpl injects NotificationHolder, which
-    // injects this UiInteraction. notificationManager is only needed lazily in stopAlarm().
     private val notificationManager: Provider<NotificationManager>,
     private val aapsLogger: AAPSLogger,
     private val persistenceLayer: PersistenceLayer,

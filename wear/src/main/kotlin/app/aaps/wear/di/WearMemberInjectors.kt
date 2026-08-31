@@ -74,21 +74,13 @@ import dev.zacsweers.metro.Provides
 /**
  * Member injectors for every Android entry point in this module - the `@ContributesAndroidInjector`
  * replacement, one line per class exactly as before.
- *
  * Android builds activities, services and watch faces itself, so they cannot take dependencies in a
  * constructor. `WearMetroActivity` and `WearMetroService` call `injectMetroMembers` and land here.
- *
- * A class missing from this map fails on launch with its own name, where `dagger.android` left the
- * fields unset and failed later at the first use.
  */
 @ContributesTo(AppScope::class)
 @BindingContainer
 object WearMemberInjectors {
 
-    /**
-     * The application itself. `DaggerApplication` injected it through `applicationInjector()`; with that
-     * gone it goes through the same map as everything else.
-     */
     @Provides
     @FeatureMemberInjectors
     @IntoMap

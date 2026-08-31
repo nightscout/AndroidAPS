@@ -23,7 +23,6 @@ import dev.zacsweers.metro.SingleIn
 
 /**
  * The shared-implementation wiring for **:wear only**.
- *
  * The phone builds all five of these in Metro too, in its own `SharedImplBindings` - the classes are
  * shared, the wiring is not. Wear has its own graph, so it needs its own copy of these bindings.
  */
@@ -36,10 +35,6 @@ object SharedImplModule {
     fun provideSP(context: Context): SP =
         SPImpl(defaultPreferences(context), context)
 
-    /**
-     * Deferred on purpose: `Preferences` is `PreferencesImpl`, which needs `L` to log, so asking for it
-     * directly here would be a cycle. `Provider` is Metro's `dagger.Lazy` - it just defers the lookup.
-     */
     @Provides
     @SingleIn(AppScope::class)
     fun provideL(preferences: Provider<Preferences>): L = LImpl { preferences() }

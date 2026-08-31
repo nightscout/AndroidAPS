@@ -17,7 +17,7 @@ import org.mockito.kotlin.whenever
 class CommandCancelExtendedBolusTest : TestBaseWithProfile() {
 
     private fun newCommand(callback: Callback? = null) =
-        CommandCancelExtendedBolus(aapsLogger, rh, activePlugin, pumpEnactResultProvider::get, callback)
+        CommandCancelExtendedBolus(aapsLogger, rh, activePlugin, pumpEnactResultProvider::invoke, callback)
 
     @Test
     fun `execute returns pump's cancelExtendedBolus result`() = runTest {

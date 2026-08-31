@@ -18,11 +18,8 @@ import dev.zacsweers.metro.SingleIn
 
 /**
  * Created by andy on 4/8/19. Was Java.
- *
  * Gson stays: this is JVM only code and the pod state it serialises is an existing stored format, so
  * swapping the serializer would change what is written to disk.
- *
- * javax `@Singleton`, not Metro's `@SingleIn`: Dagger owns this and hands it to Metro via `PumpLeaves`.
  */
 @SingleIn(AppScope::class)
 class AapsOmnipodUtil @Inject constructor(

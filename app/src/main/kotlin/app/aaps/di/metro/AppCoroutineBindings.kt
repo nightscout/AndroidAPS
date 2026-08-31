@@ -9,12 +9,6 @@ import kotlinx.coroutines.CoroutineScope
 
 /**
  * The application scope, owned by Metro.
- *
- * The qualified scope is a factory parameter of `AppRootGraph`, not a binding here: production passes
- * `SupervisorJob() + Dispatchers.Default`, and the unit tests pass an Unconfined one so that work
- * launched during graph construction runs on the calling thread. It used to be a Dagger `@Provides`
- * borrowed back through `AapsLeaves`.
- *
  * There must be exactly one. A second scope would not fail anything loudly: it would simply never be
  * cancelled with the first, so work started on it would outlive what was supposed to stop it.
  */

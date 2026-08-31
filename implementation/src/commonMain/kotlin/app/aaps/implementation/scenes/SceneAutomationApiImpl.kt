@@ -18,8 +18,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
-// Metro builds this; Dagger receives it via a @Provides delegate in `:app`. Metro's @SingleIn,
-// not javax @Singleton, because the graph is generated in `:app`.
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 class SceneAutomationApiImpl @Inject constructor(

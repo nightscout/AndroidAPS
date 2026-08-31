@@ -70,8 +70,6 @@ import kotlin.math.ceil
  * **internal** here (`:implementation` sees `core:objects`); the interface exposes only the primitive
  * result, so it can live in `core:interfaces` with no `core:objects` dependency.
  */
-// Metro builds this; Dagger receives it via a @Provides delegate in `:app`. Metro's @SingleIn, not
-// javax @Singleton, because the graph is generated in `:app` - same as its sibling BatchExecutorImpl.
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 class WizardBolusExecutorImpl @Inject constructor(

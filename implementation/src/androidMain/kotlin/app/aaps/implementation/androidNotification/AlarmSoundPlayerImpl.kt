@@ -34,7 +34,6 @@ import kotlin.math.pow
  * MediaPlayer call + callback runs on that single thread. This makes the player race-free even
  * though [play] may be invoked from any thread (e.g. NotificationManagerImpl's IO dispatcher).
  */
-// Metro builds this; Dagger consumers get it via the @Provides delegate in `:app`.
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 class AlarmSoundPlayerImpl @Inject constructor(

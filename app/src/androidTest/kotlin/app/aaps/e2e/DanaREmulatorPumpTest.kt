@@ -36,12 +36,6 @@ import org.junit.runner.RunWith
  * Drives the **DanaR family drivers** against the in-tree pump emulator, with no Bluetooth hardware:
  * `DanaRPlugin` / `DanaRKoreanPlugin` / `DanaRv2Plugin` → their execution service →
  * `EmulatorRfcommTransport`.
- *
- * The RFCOMM counterpart to [DanaRsEmulatorPumpTest]: three separate drivers here, rather than one
- * driver with three handshakes, so each variant gets its own connect. What they share is the reason
- * this cannot be a JVM test — an execution service is a dagger-android `DaggerService` that only
- * exists on a device (see [DanaRsEmulatorPumpTest] for the full argument).
- *
  * `DanaModules.provideRfcommTransport` picks the emulator, and the variant *also* decides which
  * plugin it auto-enables — so unlike the RS side, choosing the option here chooses the driver.
  */
@@ -59,11 +53,9 @@ class DanaREmulatorPumpTest {
     private val pluginList get() = testGraphs.allPlugins(testGraphs.aapsLogger)
     private val config get() = testGraphs.config
 
-    // The pump objects come from the Metro graph, not from Hilt. They are `@SingleIn(AppScope::class)`,
-    // and Dagger does not read that scope - it saw the `@Inject` constructor and built the test a
-    // *second* `DanaRv2Plugin`, so the test drove an object the running app had never heard of. Reading
-    // through the graph gives the one instance that is really in the plugin list.
 
+    // Read from the graph so the test drives the same instance the app does - a second copy would mean
+    // asserting against a plugin the running app has never heard of.
     private val danaRPlugin get() = testGraphs.pumps.danaRPlugin
     private val danaRKoreanPlugin get() = testGraphs.pumps.danaRKoreanPlugin
     private val danaRv2Plugin get() = testGraphs.pumps.danaRv2Plugin
@@ -71,7 +63,7 @@ class DanaREmulatorPumpTest {
     private val danaHistoryRecordDao get() = testGraphs.pumps.danaHistoryRecordDao
 
     // Resolved per access, not once: `provideRfcommTransport` enables the target plugin (storeSettings),
-    // which needs `pluginStore.plugins` - set only after `hiltRule.inject()`. Reading it after connect
+    // which needs `pluginStore.plugins` - set only after the graph is built. Reading it after connect
     // returns the scoped instance the execution service already built by then. This is what the old
     // `Provider<RfcommTransport>` was for.
     private val rfcommTransport get() = testGraphs.pumps.rfcommTransport
@@ -99,7 +91,6 @@ class DanaREmulatorPumpTest {
      * DanaRv2 (the most command-capable variant) drives a temp basal, an extended bolus and a bolus to
      * the emulator; each must land on the emulated pump's state. DanaRv2 is used because it supports all
      * three - the connect tests above already cover the other variants' handshakes.
-     *
      * Commands run through the execution service on its own thread, so assertions poll the emulator
      * state rather than reading it immediately after the call returns.
      */
@@ -239,10 +230,9 @@ class DanaREmulatorPumpTest {
 
     /**
      * Brings [plugin] up against the emulated [variant] and requires it to connect.
-     *
      * Per test rather than in `@Before`: `RfcommTransport` is `@Singleton` and reads
      * `config.isEnabled` once, when the graph first constructs it, so the variant has to be chosen
-     * before `hiltRule.inject()`. Each test method gets a fresh Hilt component, and so a fresh pump.
+     * before the graph is built. Each test method gets a fresh graph, and so a fresh pump.
      */
     private fun bringUpConnected(variant: ExternalOptions, plugin: () -> PluginBase): Pump {
         EmulatedOptions.enabled = setOf(variant)
@@ -256,7 +246,7 @@ class DanaREmulatorPumpTest {
         preferences.put(DanaStringNonKey.EmulatorDeviceName, DEVICE_NAME)
         preferences.put(DanaStringNonKey.RName, DEVICE_NAME)
 
-        // The plugin/config init MainApp.onCreate does, which the Hilt test app doesn't.
+        // The plugin/config init MainApp.onCreate does, which the test app doesn't.
         pluginStore.plugins = pluginList
         config.initCompleted()
 
@@ -290,14 +280,14 @@ class DanaREmulatorPumpTest {
     fun tearDown() {
         // Drain queued work before anything else: left running it keeps talking to the pump and
         // posts notifications into whichever test comes next, whose UI then recomposes under
-        // uiautomator (SetupWizardE2EHiltTest died that way, CI build 40253).
+        // uiautomator (SetupWizardE2ETest died that way, CI build 40253).
         runCatching { commandQueue.clear() }
         runCatching { WorkManager.getInstance(instrumentation.targetContext).cancelAllWork() }
         runCatching { (activePlugin as? Pump)?.disconnect("test end") }
         // Unbind before the component dies — onStop calls unbindService.
         runCatching { activePlugin?.setPluginEnabledBlocking(PluginType.PUMP, false) }
         activePlugin = null
-        // SharedPreferences outlive the Hilt component, so don't leave sibling tests in this
+        // SharedPreferences outlive the graph, so don't leave sibling tests in this
         // process believing a DanaR is configured.
         runCatching {
             preferences.remove(DanaStringNonKey.RName)

@@ -12,7 +12,7 @@ import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 
-/** The Dash history database. In `:app` so the pump module needs no Dagger processor; Metro owns it. */
+/** The Dash history database, owned here in `:app`. */
 @ContributesTo(AppScope::class)
 @BindingContainer
 object OmnipodDashHistoryBindings {

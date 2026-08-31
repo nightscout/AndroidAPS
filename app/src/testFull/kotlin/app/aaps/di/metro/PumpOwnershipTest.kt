@@ -11,17 +11,9 @@ import kotlin.reflect.full.primaryConstructor
 
 /**
  * Every pump object a view model injects has exactly one owner.
- *
  * Two instances of a pump state holder is not a slow screen, it is a screen watching an object the pump
  * never writes to. That cost CI shards A and C - "Pump never reported initialized", "Command queue
  * never went idle" - across ten types, while shard B drove the same transport with no UI and stayed green.
- *
- * **This test has been rewritten twice as the premise moved.** It began as `PumpLeavesTest`, demanding
- * that every such type be *handed over by `PumpLeaves`*, because Dagger owned the pump objects. Then
- * `PumpLeaves` was deleted and it asked that they be Metro owned. It selected candidates by javax
- * `@Singleton`, which was the mark of "buildable by both frameworks" - and javax is gone now, so that
- * filter would select nothing and the test would pass over anything.
- *
  * What it asks now does not depend on either framework: **every concrete class a pump view model
  * injects must have an owner.** Either `@SingleIn` on the class, or a scoped `@Provides` in a binding
  * container - the second is how classes Metro cannot generate a factory for are owned. Interfaces are

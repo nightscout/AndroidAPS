@@ -99,7 +99,7 @@ android {
         buildConfigField("String", "HEAD", "\"${generateGitBuild()}\"")
         buildConfigField("String", "COMMITTED", "\"${allCommitted()}\"")
 
-        // For Hilt injected instrumentation tests in app module
+        // Runner for instrumentation tests in this module.
         testInstrumentationRunner = "app.aaps.runners.AapsTestRunner"
     }
 
@@ -250,10 +250,10 @@ dependencies {
     androidTestImplementation(project(":shared:tests"))
     androidTestImplementation(libs.androidx.test.rules)
     // UiAutomator for the in-process E2E UI test (app/src/androidTest/.../e2e). Drives the real
-    // Compose UI (booted under the Hilt test app) via the accessibility bridge.
+    // Compose UI via the accessibility bridge.
     androidTestImplementation(libs.androidx.test.uiautomator)
     // Initializes WorkManager for instrumented tests (BaseTestApp), since the production
-    // Configuration.Provider/manifest initializer don't apply under the Hilt test application.
+    // Configuration.Provider/manifest initializer do not apply under the test application.
     androidTestImplementation(libs.androidx.work.testing)
     androidTestImplementation(libs.org.skyscreamer.jsonassert)
     androidTestImplementation(libs.kotlinx.coroutines.test)
@@ -263,8 +263,8 @@ dependencies {
 
     debugImplementation(libs.com.squareup.leakcanary.android)
 
-    // No Dagger and no Hilt. Every binding in this module is Metro's, MainApp and BaseTestApp each
-    // build the one graph themselves, and nothing here runs an annotation processor for DI any more.
+
+
 
     // MainApp
     implementation(libs.com.uber.rxdogtag2.rxdogtag)
@@ -274,15 +274,6 @@ dependencies {
     api(libs.androidx.compose.navigation)
 }
 
-// `HiltTestInjectionTest` reads the androidTest sources, because androidTest classes are not on the
-// unit-test classpath and there is nothing to reflect over. Gradle cannot know that, so without this
-// the task stays UP-TO-DATE when someone edits an androidTest file and the guard never fires. It was
-// written, passed, and only a mutation run showed it had never actually looked at the changed file.
-tasks.withType<Test>().configureEach {
-    inputs.dir(layout.projectDirectory.dir("src/androidTest"))
-        .withPropertyName("androidTestSources")
-        .withPathSensitivity(PathSensitivity.RELATIVE)
-}
 
 println("-------------------")
 println("isMaster: ${isMaster()}")

@@ -90,8 +90,6 @@ class NSDeviceStatusHandler @Inject constructor(
     private val rxBus: RxBus,
     // Plain CoroutineScope: @ApplicationScope is a javax qualifier and cannot appear in commonMain.
     private val appScope: CoroutineScope,
-    // Provider to avoid a Dagger init cycle — NSClientV3Plugin itself is constructed before
-    // any handler injection completes.
     private val nsClientV3Plugin: Provider<NSClientV3Plugin>
 ) {
 

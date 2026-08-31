@@ -36,12 +36,7 @@ class ContributedPluginsTest {
             10,
             // sensitivity
             100, 110, 120,
-            // the loop, the three openAPS algorithms and autotune. Unqualified, matching the @AllConfigs
-            // bucket the Dagger binds used - NOT @APS, despite the module they came from being called
-            // ApsPluginsModule.
             200, 210, 220, 230, 240,
-            // source - all sixteen. 400, 410 and 440 are also bound to an interface; Dagger delegates
-            // to these instances in CoreObjectsModule rather than building its own.
             400, 410, 420, 430, 440, 450, 460, 470, 480, 490, 500, 510, 520, 530, 540, 550,
             // sync - the every-build part of the 300 block. SmsCommunicator 300 and Tidepool 320 are
             // @NotNSClient; 340 (OpenHumans) comes from its own graph extension.
@@ -52,9 +47,6 @@ class ContributedPluginsTest {
             700, 710,
             // constraints, every-build bucket only
             800, 850, 860,
-            // virtual pump. Contributed from commonMain in :pump:virtual, unqualified on purpose: the
-            // Dagger binding carried @AllConfigs, but nothing reads a Metro @AllConfigs map, and :app
-            // merges this bucket unconditionally anyway.
             1000
         )
     }
@@ -65,14 +57,6 @@ class ContributedPluginsTest {
 
     @Test
     fun `the three sync plugins are built by Metro, once each`() {
-        // These used to be Dagger's, borrowed through AapsLeaves, and this test asserted they came back
-        // as mocks. Metro owns them now, so it asserts the property that actually matters instead: the
-        // object in the plugin list is the same one the interface binding hands out. Two copies would
-        // leave the started plugin in the list while every caller talked to an unstarted twin.
-        //
-        // The old justification - "AuthRequest, the nine @HiltWorker loaders and the wear data layer
-        // inject the concrete class" - no longer holds: there is not a single @HiltWorker left in the
-        // tree, and :wear has its own graph.
         val root = testRoot()
 
         assertThat(root.contributedNotNsClientPlugins[300]).isSameInstanceAs(root.smsCommunicatorPlugin)
@@ -85,25 +69,18 @@ class ContributedPluginsTest {
 
     @Test
     fun `the xdrip plugin and the XDripBroadcast binding are the same object`() {
-        // XdripPlugin carries two contributions: into the plugin map, and as XDripBroadcast. Under
-        // Dagger these were two @Binds to the same @Singleton class, so callers shared one object.
-        // Two separate instances would look fine at every call site and quietly broadcast from a
-        // plugin that is not the one in the list.
         val root = testRoot()
         assertThat(root.xDripBroadcast).isSameInstanceAs(root.contributedPlugins[330])
     }
 
     @Test
     fun `the DST plugin and the DstHelper binding are the same object`() {
-        // Same shape as the xdrip case above. It used to reach Dagger and come back through a leaf,
-        // which was one hop for the same object; the binding is direct now, so pin the identity.
         val root = testRoot()
         assertThat(root.dstHelper).isSameInstanceAs(root.contributedPlugins[850])
     }
 
     @Test
     fun `the NS client source plugin and the NSClientSource binding are the same object`() {
-        // Same shape again: the interface used to come back from Dagger through a leaf.
         val root = testRoot()
         assertThat(root.nsClientSource).isSameInstanceAs(root.contributedPlugins[410])
     }
@@ -173,13 +150,16 @@ class ContributedPluginsTest {
         assertThat(plugins[710]).isInstanceOf(LinearCalibrationPlugin::class.java)
     }
 
+    /**
+     * A plugin bound to an interface as well as into the plugin map must be **one object**.
+     *
+     * `XdripPlugin` is the shape to watch: it is contributed into the map and as `XDripBroadcast`. Two
+     * instances would look fine at every call site and quietly broadcast from a plugin that is not the
+     * one in the list - and the one in the list is the one that gets started, so the other is an
+     * unstarted twin.
+     */
     @Test
     fun `an interface-bound plugin is the SAME instance as the one in the plugin list`() {
-        // The whole point of the delegates in CoreObjectsModule. These plugins carry javax @Singleton,
-        // which Metro reads through the source module's Dagger interop - but the graph that builds them
-        // is generated in `:app`, where interop is off. If the scope were lost, each read would build a
-        // new one and Dagger consumers of XDripSource would get an unstarted twin of the plugin that is
-        // actually in the list.
         val root = testRoot()
         assertThat(root.xdripSourcePlugin).isSameInstanceAs(root.contributedPlugins[400])
         assertThat(root.nsClientSourcePlugin).isSameInstanceAs(root.contributedPlugins[410])

@@ -30,11 +30,7 @@ class ContributedViewModelsTest {
     }
 
     @Test
-    fun `every sync view model moved off Hilt reaches the factory`() {
-        // These seven were @HiltViewModel until the move to metrox's factory. The annotation swap and
-        // the call-site swap are separate edits: this covers the first one. The second - a screen still
-        // calling hiltViewModel() for a view model that is no longer @HiltViewModel - is NOT covered
-        // here and fails only when the screen opens, so grep for hiltViewModel() when converting one.
+    fun `every sync view model reaches the factory`() {
         val registered = testRoot().viewModelProviders.keys
 
         assertThat(registered).containsAtLeast(

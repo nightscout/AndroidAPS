@@ -34,11 +34,6 @@ import dev.zacsweers.metro.SingleIn
  * Master-only: gated by `!config.AAPSCLIENT` to match CommandQueueImplementation.onProfileChanged,
  * which creates the EffectiveProfileSwitch on master while clients sync it over NS.
  */
-// Metro's @SingleIn, not javax @Singleton: the graph is generated in `:app`, which runs without Dagger
-// interop, so a javax scope there is ignored and every read would build another one. There must be
-// exactly one - it collects PS changes and arms a timer, so a second copy means duplicate profile
-// change requests. MainApp is Dagger, so it receives this one through
-// `CoreObjectsModule.provideProfileSwitchExpiryScheduler`. SplitBrainTest is the guard.
 @SingleIn(AppScope::class)
 class ProfileSwitchExpiryScheduler @Inject constructor(
     private val persistenceLayer: PersistenceLayer,

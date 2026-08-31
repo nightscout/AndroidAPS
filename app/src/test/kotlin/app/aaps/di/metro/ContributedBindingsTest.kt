@@ -10,14 +10,16 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
 /**
- * Implementations that moved from a Dagger `@Binds` to a Metro `@ContributesBinding`.
+ * Every `@ContributesBinding` implementation reaches the graph, and is scoped.
  *
- * Two things have to hold for each one, and neither fails the build:
+ * Neither of those fails the build if it stops being true:
  *
- *  - the binding reaches the root graph at all, so anything Metro builds can depend on it;
- *  - it is scoped, so the `@Provides` delegate in `CoreObjectsModule` hands Dagger consumers the same
- *    object the Metro side uses. An unscoped binding gives every caller its own, which for a class
- *    holding state is a bug that only shows up as two halves of the app disagreeing.
+ *  - a binding that does not reach the root graph means nothing can depend on it;
+ *  - an unscoped binding gives **every caller its own copy**, which for a class holding state shows up
+ *    only as two parts of the app disagreeing. `RxBus` is the sharpest example: a second bus means
+ *    events posted on one side are never seen by the other. `ProfileSwitchSilentGate` is the one that
+ *    actually shipped - the flag was marked on one instance and read on another, so a scene profile
+ *    switch raised the notification the gate exists to suppress.
  */
 class ContributedBindingsTest {
 
@@ -28,9 +30,6 @@ class ContributedBindingsTest {
 
     @Test
     fun `every contributed implementation is scoped`() {
-        // Same property as the plugins: an unscoped binding means the @Provides delegate hands Dagger a
-        // different object than the Metro side holds, and for a class with state the two halves of the
-        // app then disagree. Nothing about that fails the build.
         val root = testRoot()
         assertThat(root.trendCalculator).isSameInstanceAs(root.trendCalculator)
         assertThat(root.decimalFormatter).isSameInstanceAs(root.decimalFormatter)
@@ -71,8 +70,6 @@ class ContributedBindingsTest {
         assertThat(root.calculationWorkflow).isSameInstanceAs(root.calculationWorkflow)
         // Holds the chain generation counter, so a second copy would silently break the race guard.
         assertThat(root.workflowChainData).isSameInstanceAs(root.workflowChainData)
-        // Moved off :shared:impl's Dagger modules, which :wear still uses. RxBus especially: a second
-        // bus means events posted on one half are never seen by the other.
         assertThat(root.aapsLogger).isSameInstanceAs(root.aapsLogger)
         assertThat(root.rxBus).isSameInstanceAs(root.rxBus)
         assertThat(root.dateUtil).isSameInstanceAs(root.dateUtil)
@@ -93,9 +90,6 @@ class ContributedBindingsTest {
         // One object bound to two interfaces, as the two @Binds were. It holds the config it read from
         // Nightscout, so a second copy would answer from an empty one.
         assertThat(root.runningConfigurationKeys).isSameInstanceAs(root.runningConfiguration)
-        // SceneExecutor (Metro) marks the flag, CommandQueueImplementation (Dagger) consumes it. Two
-        // instances means the mark is never seen and a scene profile switch shows the notification the
-        // gate exists to suppress - which is exactly what happened when SceneExecutor moved to Metro.
         assertThat(root.profileSwitchSilentGate).isSameInstanceAs(root.profileSwitchSilentGate)
         // Holds the queue of pending pump commands and the one being performed. A second copy would
         // accept commands that the copy the pump driver reads never sees.
@@ -146,7 +140,7 @@ class ContributedBindingsTest {
     )
 
     @Test
-    fun `the unscoped bindings stay UNSCOPED, as they were under Dagger`() {
+    fun `the unscoped bindings stay UNSCOPED`() {
         // The @Binds they replaced had no @Singleton, so every injection site got its own. Scoping them
         // now would be a silent behaviour change - and for the two pump ones, in classes that talk to
         // the pump.

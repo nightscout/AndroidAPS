@@ -30,8 +30,6 @@ class PumpSyncStorage @Inject constructor(
 
     @Volatile private var storageInitialized: Boolean = false
 
-    // XStream construction is heavy (Class.forName chain in setupSecurity) — defer it so it
-    // doesn't run on the main thread during Dagger eager-construct in MainApp.onCreate.
     private val xstream: XStream by lazy {
         XStream().apply { addPermission(AnyTypePermission.ANY) }
     }

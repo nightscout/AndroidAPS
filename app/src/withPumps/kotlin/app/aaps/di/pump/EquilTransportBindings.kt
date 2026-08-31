@@ -18,11 +18,6 @@ import dev.zacsweers.metro.SingleIn
 
 /**
  * Picks the Equil transport: the in-tree emulator when that option is on, otherwise the real BLE one.
- *
- * Metro's, not Dagger's, for the same reason as [DanaTransportBindings]: the transport is what the
- * driver talks to, and the driver is Metro owned. A Dagger copy here would leave the emulator tests and
- * the running driver on two different transports.
- *
  * `EquilBleTransportImpl` carries `@SingleIn(AppScope::class)` but no `@ContributesBinding` - the
  * binding for `EquilBleTransport` has to be this function, or the emulator branch would be bypassed.
  */

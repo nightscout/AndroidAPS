@@ -9,12 +9,6 @@ import org.junit.rules.RuleChain
 
 /**
  * Base for instrumented tests that need the app's plugins registered and its config initialised.
- *
- * Was `HiltInstrumentedTest`. It carried `HiltAndroidRule` and four `@Inject lateinit var` fields, plus
- * a `@HasMemberInjections` annotation that existed only to stop Metro's Dagger interop rejecting an
- * open class with `@Inject` fields. None of that is needed: [app.aaps.di.BaseTestApp] owns one graph
- * for the process, so the objects are simply read from it.
- *
  * The superclass `@Before` still runs before any subclass `@Before`, so subclasses may use these in
  * their own setup.
  */

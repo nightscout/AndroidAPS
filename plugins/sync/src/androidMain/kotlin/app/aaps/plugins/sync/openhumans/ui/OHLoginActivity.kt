@@ -25,15 +25,6 @@ import app.aaps.plugins.sync.di.AuthUrl
 import app.aaps.plugins.sync.openhumans.compose.OHLoginScreen
 import dev.zacsweers.metro.Inject
 
-/**
- * Converted off Hilt to Metro, as the proof that `@AndroidEntryPoint` and `@HiltViewModel` can both be
- * replaced.
- *
- * This activity needed both at once, which is why it was chosen. `@AndroidEntryPoint` filled the three
- * fields below - including [authUrl], which is qualified - and it is also what made `by viewModels()`
- * resolve [OHLoginViewModel] through Hilt's factory. Now the fields come from [MetroMemberInjector]
- * and the view model from [MetroViewModelFactory], both backed by `OpenHumansMetroGraph`.
- */
 class OHLoginActivity : MetroAppCompatActivity() {
 
     @Inject

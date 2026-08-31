@@ -31,12 +31,6 @@ import kotlinx.serialization.json.JsonObject
 
 /**
  * Builds [Action]s from their stored JSON.
- *
- * Automations are persisted as a JSON string in which each action names its type, so actions cannot
- * be constructed by Dagger. They used to be handed a `HasAndroidInjector` and inject themselves,
- * which needed a generated members injector - Java, and therefore impossible in a multiplatform
- * module - and hid each action's real dependencies behind `@Inject lateinit`.
- *
  * This holds the dependencies instead and passes each action exactly what it asks for. The union
  * below looks wide, but it is the same set that was reachable through the injector before; the
  * difference is that it is now visible, and each action's constructor states its own needs.

@@ -176,35 +176,13 @@ import kotlinx.coroutines.SupervisorJob
 import dev.zacsweers.metro.Provider
 
 /**
- * The Metro half of the object graph, beside Dagger. Counterpart of `KoinGraph` on `koin-spike` and
- * `KotlinInjectGraph` on `kotlin-inject-spike`, written the same way so the three can be compared.
+ * The object graph, owned by the Application.
  *
- * This is now a thin reader. It builds [AppRootGraph] once and hands out what the extensions below it
- * contain; the only graph it still creates separately is Open Humans, which stays a root for the reason
- * written up in [OpenHumansMetroBridge].
+ * A thin reader: it builds [AppRootGraph] once and hands out what the extensions below it contain. The
+ * only graph it creates separately is Open Humans, which stays a root for the reason written up in
+ * [OpenHumansMetroBridge].
  *
- * ## The hazard this shape exists to avoid
- *
- * Creating a graph must not resolve Dagger providers, because Dagger reaches back - `Loop` leads to the
- * plugin list, which asks these graphs. On the kotlin-inject branch that cycle across the framework
- * boundary showed up as a StackOverflowError on device; it happened here too, when the guess that
- * nothing would touch [coreObjects] until well after startup turned out to be wrong. Three frameworks,
- * three identical StackOverflowErrors: the hazard belongs to Dagger-plus-anything coexistence, not to
- * any one framework, and compile-time checking does not help because the cycle is invisible to both
- * sides.
- *
- * [AapsLeaves] is what breaks it now. Its `@Provides` functions are called only when something asks for
- * that type, so building the root resolves nothing. [DeferredRef], the wrapper that used to do this by
- * hand, survives only for Open Humans - a plain `() -> T` cannot be used because Metro treats a
- * parameterless function type as its own provider type and rejects it as a factory parameter.
- */
-/**
- * Built by the Application, not by Dagger.
- *
- * It used to be `@Singleton @Inject constructor(Provider<AapsLeaves>, ...)`, because the objects the
- * graph needed still belonged to Dagger. They do not any more, so this takes the plain values the
- * caller decides and nothing else - and a single instance is guaranteed by there being one
- * Application, rather than by a scope annotation nothing reads.
+ * A single instance is guaranteed by there being one Application, rather than by a scope annotation.
  */
 class MetroGraphs(
 
@@ -219,9 +197,9 @@ class MetroGraphs(
      * Workers Metro can build, keyed by class name because that is all WorkManager gives us.
      *
      * Resolved on each call rather than cached, so nothing here runs until a worker is really built -
-     * WorkManager can initialise during startup and this must not resolve Dagger providers then.
+     * WorkManager can initialise during startup, so nothing here runs until a worker is really built.
      */
-    /** Handed to Dagger consumers - it is built by Metro, in the module that owns the worker. */
+    /** Built in the module that owns the worker. */
     val runningModeExpiryScheduler: RunningModeExpiryScheduler get() = workers.runningModeExpiryScheduler
 
     fun workerCreators(): Map<String, MetroWorkerCreator> =
@@ -229,8 +207,7 @@ class MetroGraphs(
             .mapKeys { (klass, _) -> klass.java.name }
 
     /**
-     * The application scope. Built here rather than borrowed from Dagger, which is what `AapsLeaves`
-     * used to do; Dagger consumers now get this same instance back through `CoreObjectsModule`.
+     * The one application scope.
      */
     val applicationScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
@@ -241,10 +218,10 @@ class MetroGraphs(
     }
 
     /**
-     * Metro-owned pump types, for the Dagger side.
+     * The pump types, for code outside `src/withPumps`.
      *
      * Declared in the flavour source sets rather than here, because `src/main` has no pump module on
-     * its classpath - the same split [PumpLeaves] uses, in the opposite direction. Empty in a follower.
+     * its classpath. Empty in a follower.
      */
     val pumps: PumpAccessors get() = root
 
@@ -254,7 +231,7 @@ class MetroGraphs(
     private val workers: AppWorkersGraph get() = root.workersGraph
 
     // The module owns its own bridge, because its DI qualifiers are internal to it.
-    // Metro owns the bridge now, so it comes from the root graph rather than being handed in by Dagger.
+    // The bridge comes from the root graph.
     private val openHumans: OpenHumansMetroBridge get() = root.openHumansMetroBridge
     private val automationGraph: AutomationMetroGraph get() = root.automationGraph
 
@@ -268,9 +245,7 @@ class MetroGraphs(
     fun newHistoryWindow(): HistoryWindowGraph = root.historyWindowFactory.create()
 
     /**
-     * Fills the `@Inject` fields of an Android class Metro knows about - the `HasAndroidInjector`
-     * replacement. Returns false when the class has not been converted yet, so the caller falls back
-     * to dagger.android.
+     * Fills the `@Inject` fields of an Android class the graph knows about.
      */
     @Suppress("UNCHECKED_CAST")
     fun injectMembers(target: Any): Boolean {
@@ -287,12 +262,12 @@ class MetroGraphs(
     }
 
     /**
-     * The `@HiltViewModel` replacement. Built once, from every module graph that contributes view
-     * models - one map, the same way Hilt presents one factory for the whole app.
+     * The one `ViewModelProvider.Factory`. Built once, from every module graph that contributes view
+     * models, so the whole app reads one map.
      */
     val viewModelFactory: MetroViewModelFactory by lazy { AapsViewModelFactory(root, openHumans) }
 
-    /** Handed back to Dagger consumers that have not moved - Dagger delegates, never constructs. */
+    /** Read by name rather than injected. */
     val runningModeGuard: RunningModeGuard get() = root.runningModeGuard
     val quickWizard: QuickWizard get() = root.quickWizard
     val bolusWizard: BolusWizard get() = root.bolusWizard
@@ -301,17 +276,13 @@ class MetroGraphs(
      * Plugins contributed by Metro graphs, keyed by order.
      *
      * A real `@IntoMap @IntKey(n)` multibinding built this map at compile time - the same annotation
-     * shape the Dagger module used, unlike the Koin branch which had to invent a registration object.
+     * shape, built at compile time.
      */
     fun plugins(): Map<Int, PluginBase> =
         root.contributedPlugins
 
     /**
      * The whole plugin list, in order - what `PluginStore.plugins` is set to.
-     *
-     * Was `AppModule.Provide.providesPlugins`, a Dagger `@Provides`, though its body had been pure
-     * Metro for a while: the four Dagger buckets it used to merge were removed when the last Dagger
-     * plugin registration went, and nothing replaced them.
      *
      * The qualified buckets are merged **only** under the condition that build should have them.
      * Keeping them apart is what stops a plugin appearing in a build that never had it - a follower
@@ -338,8 +309,8 @@ class MetroGraphs(
     /**
      * Plugins that must NOT appear in an AAPSCLIENT build.
      *
-     * Kept apart from [plugins] because the Dagger bindings these replace carried a `@NotNSClient`
-     * qualifier, and `AppModule.providesPlugins` merges that bucket only when the build is not a
+     * Kept apart from [plugins] because these carry a `@NotNSClient`
+     * qualifier, and [allPlugins] merges that bucket only when the build is not a
      * follower. Merging it unconditionally would quietly add Open Humans to follower builds.
      */
     fun notNsClientPlugins(): Map<Int, PluginBase> =
@@ -357,14 +328,13 @@ class MetroGraphs(
      * Pump drivers, merged only by a build that has them.
      *
      * Empty in a follower, because no pump module is on that classpath to contribute - so the caller can
-     * merge this under the same `config.PUMPDRIVERS` condition as the Dagger bucket beside it.
+     * merge this only under `config.PUMPDRIVERS`.
      */
     fun pumpDriverPlugins(): Map<Int, PluginBase> = root.contributedPumpDriverPlugins
 
     /**
-     * Constraint plugins that are also bound to an interface, handed to Dagger in `CoreObjectsModule`.
+     * Constraint plugins that are also bound to an interface.
      *
-     * Metro builds these, so Dagger must delegate rather than construct - see there for what goes
      * wrong otherwise.
      */
     val xDripSource: XDripSource get() = root.xdripSourcePlugin
@@ -402,16 +372,16 @@ class MetroGraphs(
     /** Same plugin as [objectives], by class. The instrumented tests ask for the concrete type. */
     val objectivesPlugin: ObjectivesPlugin get() = root.objectivesPlugin
 
-    /** The live loop's calculator, for the Dagger consumers - not the history browser's. */
+    /** The live loop's calculator - not the history browser's. */
     val iobCobCalculator: IobCobCalculator get() = root.iobCobCalculator
 
-    /** The loop, for the Dagger half. */
+    /** The loop. */
     val loop: Loop get() = root.loop
     val autotune: Autotune get() = root.autotune
     val runningModeReconciler: RunningModeReconciler get() = root.runningModeReconciler
     val runningModeExpiryJob: RunningModeExpiryJob get() = root.runningModeExpiryJob
 
-    /** openAPS pieces Metro builds; only those the instrumented APS tests inject through Dagger. */
+    /** The openAPS pieces the instrumented APS tests read. */
     val glucoseStatusCalculatorSMB: GlucoseStatusCalculatorSMB get() = root.glucoseStatusCalculatorSMB
     val determineBasalSMB: DetermineBasalSMB get() = root.determineBasalSMB
     val determineBasalAMA: DetermineBasalAMA get() = root.determineBasalAMA
@@ -506,7 +476,7 @@ class MetroGraphs(
     val scenes: Scenes get() = root.scenes
     val sceneActions: SceneActions get() = root.sceneActions
 
-    /** Metro's one scene state holder, for the Dagger-built classes that ask for the concrete type. */
+    /** The one scene state holder, for classes that ask for the concrete type. */
     val activeSceneManager: ActiveSceneManager get() = root.activeSceneManager
     val sceneAutomationApi: SceneAutomationApi get() = root.sceneAutomationApi
     val decimalFormatter: DecimalFormatter get() = root.decimalFormatter

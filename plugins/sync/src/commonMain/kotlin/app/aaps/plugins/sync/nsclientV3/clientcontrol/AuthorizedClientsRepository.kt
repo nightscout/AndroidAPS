@@ -51,11 +51,6 @@ class AuthorizedClientsRepository @Inject constructor(
 
     private val json = Json { ignoreUnknownKeys = true }
 
-    // Explicit serializer on purpose. The reified decodeFromString<T> / encodeToString(T) overloads
-    // resolve the serializer through typeOf(), and because kotlin-reflect is on the classpath that
-    // loads the whole kotlin-reflect metadata machinery - seconds on a cold start. This repository is
-    // read from the NSClientV3Plugin constructor (main thread, Dagger graph in MainApp.onCreate) and
-    // on every incoming client command, so both paths must stay free of reflection.
     private val listSerializer = ListSerializer(AuthorizedClient.serializer())
     // A coroutine Mutex, not a monitor: `synchronized` is JVM only, and every caller is already a
     // coroutine. The old lock was held across preference reads and writes, so it parked a

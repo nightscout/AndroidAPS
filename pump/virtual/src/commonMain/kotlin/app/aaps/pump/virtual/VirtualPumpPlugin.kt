@@ -67,13 +67,11 @@ import kotlin.time.Clock
 /*
  * Built AND registered by the graph, from common code.
  *
- * Every annotation here is Metro's, and Metro's are multiplatform, so this file still compiles for iOS.
- * That is the whole point: `:app` used to construct this plugin by hand in `VirtualPumpModule` and bind
- * it there, for the single reason that one Dagger annotation in a KMP module would have pinned it to the
- * JVM. Nothing about this plugin lives in `:app` any more.
+ * Every annotation here is Metro's, and Metro's are multiplatform, so this file compiles for iOS.
+ * Nothing about this plugin lives in `:app`.
  *
- * No `@AllConfigs` qualifier on the map entry, even though the Dagger binding had one. `:app` merges the
- * unqualified Metro bucket unconditionally - see `PluginSource("Metro", ...)` in `AppModule` - which is
+ * No `@AllConfigs` qualifier on the map entry. `:app` merges the
+ * unqualified Metro bucket unconditionally - see `MetroGraphs.allPlugins` - which is
  * exactly what `@AllConfigs` meant. Using the qualifier would have been worse than redundant: nothing
  * reads a Metro `@AllConfigs` map, so the plugin would have vanished from the list without an error.
  *

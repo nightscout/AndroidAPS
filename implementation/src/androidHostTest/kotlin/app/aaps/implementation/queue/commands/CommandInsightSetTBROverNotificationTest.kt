@@ -18,7 +18,7 @@ import org.mockito.kotlin.whenever
 class CommandInsightSetTBROverNotificationTest : TestBaseWithProfile() {
 
     private fun newCommand(enabled: Boolean = true, callback: Callback? = null) =
-        CommandInsightSetTBROverNotification(aapsLogger, rh, activePlugin, pumpEnactResultProvider::get, enabled, callback)
+        CommandInsightSetTBROverNotification(aapsLogger, rh, activePlugin, pumpEnactResultProvider::invoke, enabled, callback)
 
     @Test
     fun `execute on Insight pump returns pump's setTBROverNotification result`() = runTest {

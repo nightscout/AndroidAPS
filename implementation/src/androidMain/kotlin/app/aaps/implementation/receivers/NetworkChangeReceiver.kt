@@ -18,14 +18,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-/**
- * Converted off dagger.android to Metro, together with [ChargingStateReceiver].
- *
- * `DaggerBroadcastReceiver` used to call `AndroidInjection.inject(this, context)` from its `onReceive`.
- * The call below does the same job through [MetroMemberInjector], which the `Application` implements.
- * This one is the receiver the proof was run against, because it both logs through an injected field
- * and can be triggered from a shell, so a working injection and a broken one look different.
- */
 class NetworkChangeReceiver : MetroBroadcastReceiver() {
 
     @Inject lateinit var aapsLogger: AAPSLogger

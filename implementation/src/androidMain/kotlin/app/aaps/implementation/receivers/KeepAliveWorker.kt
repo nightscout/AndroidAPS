@@ -71,10 +71,6 @@ class KeepAliveWorker @AssistedInject constructor(
     private val ch: ConcentrationHelper
 ) : LoggingWorker(context, params, Dispatchers.Default, aapsLogger, fabricPrivacy) {
 
-    /**
-     * Metro builds the worker through this. WorkManager supplies the context and parameters, the graph
-     * supplies the other nineteen - the same split `@HiltWorker` expressed, without Hilt.
-     */
     @AssistedFactory
     fun interface Factory : MetroWorkerCreator {
 

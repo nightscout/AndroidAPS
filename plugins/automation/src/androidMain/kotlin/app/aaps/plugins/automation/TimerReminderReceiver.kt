@@ -30,8 +30,6 @@ class TimerReminderReceiver : MetroBroadcastReceiver() {
     @Inject lateinit var aapsLogger: AAPSLogger
 
     override fun onReceive(context: Context, intent: Intent) {
-        // Was `DaggerBroadcastReceiver`, which did this from its own onReceive. Metro has no base
-        // class for it, so the call is written out - see [MetroMemberInjector].
         super.onReceive(context, intent)
         val text = intent.getStringExtra(EXTRA_TEXT)?.takeIf { it.isNotBlank() } ?: rh.gs(config.appName)
         aapsLogger.debug(LTag.AUTOMATION, "TimerReminderReceiver fired: $text")

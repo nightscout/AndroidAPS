@@ -131,9 +131,6 @@ import dev.zacsweers.metro.SingleIn
  *
  * @author Andy Rozman (andy.rozman@gmail.com)
  */
-// Registered in Metro's pump bucket, like the other twelve drivers. The instance stays Dagger's -
-// handed over by `PumpLeaves` - because the Eros services are Dagger-built, and two copies of a pump
-// plugin means a screen watching an object the pump never writes to.
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @PumpDriver
 @MetroIntKey(1070)

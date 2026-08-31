@@ -10,12 +10,6 @@ import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 
-/**
- * The Insight history database, on Metro. Was a Dagger module.
- *
- * `InsightPlugin` is Metro owned now, so Metro has to be able to build what it injects. Nothing on the
- * Dagger side reads these any more.
- */
 @ContributesTo(AppScope::class)
 @BindingContainer
 object InsightDatabaseBindings {

@@ -12,8 +12,6 @@ import dev.zacsweers.metro.SingleIn
 
 /**
  * The eopatch value objects, on Metro. Was `EopatchPrefModule`.
- *
- * Plain no-argument state holders - they were on the Dagger side only because the whole driver was.
  */
 @ContributesTo(AppScope::class)
 @BindingContainer

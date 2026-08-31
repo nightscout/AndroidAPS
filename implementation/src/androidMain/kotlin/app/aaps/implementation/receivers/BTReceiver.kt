@@ -14,10 +14,6 @@ import app.aaps.core.objects.workflow.MetroBroadcastReceiver
 import app.aaps.core.utils.extensions.safeGetParcelableExtra
 import dev.zacsweers.metro.Inject
 
-/**
- * Converted off dagger.android to Metro. See [MetroMemberInjector] for why the injection call is
- * written out here instead of coming from a base class.
- */
 class BTReceiver : MetroBroadcastReceiver() {
 
     @Inject lateinit var rxBus: RxBus

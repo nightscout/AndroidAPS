@@ -13,12 +13,6 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
-/**
- * Render tests for the shared stateless [PumpOverviewScreen]. Every pump plugin's ComposeContent
- * builds a ViewModel (via hiltViewModel + heavy concrete pump collaborators, not unit-testable) and
- * hands the resulting [PumpOverviewUiState] to this one screen — so the rendering contract is covered
- * here, once, at its home in :core:ui instead of being duplicated across each pump module.
- */
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [35])

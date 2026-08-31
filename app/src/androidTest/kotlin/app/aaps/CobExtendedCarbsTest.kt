@@ -44,15 +44,6 @@ import org.junit.runner.RunWith
 
 /**
  * Integration tests verifying COB calculation with real worker pipeline.
- *
- * Uses full Dagger DI with real:
- * - Room database (in-memory)
- * - AppRepository (expandCarbs + fromTo filter)
- * - PersistenceLayerImpl
- * - IobCobCalculator → PrepareGraphDataWorker (COB calculation phase)
- * - AutosensDataObject (deductAbsorbedCarbs, removeOldCarbs, cloneCarbsList)
- * - fromCarbs() extension
- *
  * The fix (issue #4596): the IOB/COB autosens pass queries carbs with exclusive start
  * (bgTime - 5min + 1ms) to prevent double-counting at window boundaries.
  */

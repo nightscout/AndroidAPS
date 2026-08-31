@@ -19,14 +19,10 @@ import kotlin.concurrent.atomics.ExperimentalAtomicApi
  * lost race only mis-shows/mis-hides one informational notification — never a dosing or safety effect.
  */
 /*
- * Scoped with Metro's `@SingleIn`, not javax `@Singleton`, and handed to Dagger through
- * `CoreObjectsModule.provideProfileSwitchSilentGate`.
- *
- * The two halves of the flag live in different frameworks: `SceneExecutor` sets it and is built by
- * Metro, `CommandQueueImplementation` consumes it and is built by Dagger. A javax scope does not cross
- * the two - the graph in `:app` runs without Dagger interop and ignores it - so each framework built its
- * own gate and the scene's mark was never the one the queue read. The flag then did nothing: a scene
- * profile switch showed the notification it exists to suppress. There must be exactly one of these.
+ * `@SingleIn(AppScope::class)`, and that scope is load-bearing. `SceneExecutor` sets the flag and
+ * `CommandQueueImplementation` reads it; two instances mean the mark is never the one the queue reads,
+ * the flag does nothing, and a scene profile switch shows the notification it exists to suppress.
+ * There must be exactly one of these.
  */
 // kotlin.concurrent.atomics rather than java.util.concurrent: same semantics, and it exists off the JVM.
 @OptIn(ExperimentalAtomicApi::class)

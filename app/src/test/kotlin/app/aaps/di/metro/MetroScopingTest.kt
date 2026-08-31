@@ -30,7 +30,7 @@ class MetroScopingTest {
     /** Stands in for an object the history window must have its own copy of. */
     class PerWindow
 
-    /** Scope marker for the history window, the equivalent of a Dagger subcomponent scope. */
+    /** Scope marker for the history window. */
     abstract class HistoryWindowScope private constructor()
 
     @GraphExtension(HistoryWindowScope::class)

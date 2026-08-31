@@ -5,39 +5,17 @@ import java.util.jar.JarFile
 
 /**
  * Reflection helpers for checking who owns a singleton.
- *
  * ## What used to be here, and why it is gone
- *
- * This file existed for the **split-brain** bug class, the most expensive thing in the Dagger→Metro
- * migration. A class with a javax `@Singleton` and an `@Inject` constructor was buildable by both
- * frameworks, and a javax scope did not cross them: the graph in `:app` ran without Dagger interop, so
- * it ignored `@Singleton` and built a fresh instance per injection point while Dagger kept its own.
- * Nothing failed to compile and no test noticed; the damage was at runtime, when one half wrote to an
- * object the other half never read. Four shipped that way - `ProfileSwitchSilentGate` (a scene profile
- * switch raised the notification the gate exists to hide), `ReceiverDelegate`, `RateLimit`, and
- * `AutotuneIob`/`AutotuneFS`.
- *
- * `unbridgedSingletons` scanned for that, and `metroOwnedRebuiltByDagger` for its mirror - a Metro
- * `@SingleIn` class a Dagger `@Provides` still took as a parameter, which is how the Dana emulator
- * ended up enabling plugins that were not the ones in the plugin list.
- *
- * **Both are deleted, because there is no second framework left to disagree with.** `:app` has no
- * Dagger modules, no Hilt, and builds one Metro graph; there is nothing for a javax scope to be
- * ignored *by*. A guard whose premise is gone is worse than no guard, because it still reads as
- * coverage.
- *
  * What survives is the one piece that is about Metro alone: telling "nobody owns this" from "a
  * container owns it".
  */
 
 /**
  * Types a Metro binding container provides with a scope - i.e. Metro owns exactly one of them.
- *
  * A class can be owned by Metro without carrying `@SingleIn` itself: a `@Provides` in a
  * `@BindingContainer` constructs it, and a scope on that provider means one instance. That is how the
  * classes Metro cannot generate a factory for are owned - the Java eros managers, and the Omnipod
  * common BLE classes whose module does not apply the Metro plugin.
- *
  * Exposed so a guard can tell "nobody owns this" from "a container owns it". Missing this distinction
  * once reported `DataInbox` as a split when it is not.
  */

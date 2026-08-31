@@ -32,12 +32,6 @@ class OneTimePassword @Inject constructor(
 
     /**
      * Runs [configure] once, on first use rather than at construction.
-     *
-     * This was an `init` block. That was harmless while Dagger owned `SmsCommunicatorPlugin` and this
-     * class was never built in a unit test, but [configure] **generates and persists an OTP secret** -
-     * building the object graph must not do that. Metro constructs the plugin now, so an `init` here
-     * ran `Base64.encodeToString` on a plain JVM, got null back and failed every graph test.
-     *
      * [checkOTP] still calls [configure] directly, because it must re-read the PIN each time.
      */
     private val configured: Unit by lazy { configure() }

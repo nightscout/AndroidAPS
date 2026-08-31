@@ -11,9 +11,6 @@ import dev.zacsweers.metro.SingleIn
 
 /**
  * The Dana history database, provided from `:app` rather than from `:pump:dana`.
- *
- * Lives in `:app` so the pump module needs no Dagger processor, and is a Metro container because its
- * consumers - the pump plugins - are Metro owned now. It is no longer handed across through `PumpLeaves`.
  */
 @ContributesTo(AppScope::class)
 @BindingContainer

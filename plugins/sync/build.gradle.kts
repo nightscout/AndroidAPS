@@ -24,9 +24,6 @@ val generateSyncStrings = tasks.register<GenerateKeyStringsTask>("generateSyncSt
     androidOutputDir.set(layout.buildDirectory.dir("generated/syncStrings/android"))
 }
 
-// No Hilt and no Dagger KSP: every class here is Metro now, and the processors were only still
-// listed. Verified by deleting `plugins/sync/build` and rebuilding `:app`.
-
 kotlin {
     android {
         namespace = "app.aaps.plugins.sync"

@@ -16,14 +16,6 @@ import dev.zacsweers.metro.Provides
 
 /**
  * The DanaRS command set and the Bluetooth adapter, on Metro. Was `DanaRSModule` + `DanaRSCommModule`.
- *
- * The set is built directly rather than through a qualified multibinding. The old shape used a javax
- * `@Qualifier` (`DanaRSCommModule.DanaRSCommand`) to keep these four packets apart from any other
- * `Set<DanaRSPacket>`, but `:app` runs Metro **without** Dagger interop, so a javax qualifier here would
- * simply not be read - the exact failure that put every constraint plugin in all three buckets once.
- * There is only one `Set<DanaRSPacket>` in the graph, so naming the four packets in one provider says
- * the same thing with nothing to misread.
- *
  * Only packets which are not a response to a sent packet belong here.
  */
 @ContributesTo(AppScope::class)

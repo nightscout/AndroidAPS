@@ -52,7 +52,7 @@ class DanaREmulatorUiTest : AbstractDanaEmulatorUiTest() {
     @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(ResetGraphRule())
 
     // A Provider, not the transport directly: provideRfcommTransport enables the target plugin
-    // (storeSettings), which needs pluginStore.plugins - set only after hiltRule.inject(). Resolving it
+    // (storeSettings), which needs pluginStore.plugins - set only after the graph is built. Resolving it
     // lazily (first state read, well after bringUp) returns the @Singleton the service already built.
     private val rfcommTransport get() = testGraphs.pumps.rfcommTransport
     private val danaRv2Plugin get() = testGraphs.pumps.danaRv2Plugin

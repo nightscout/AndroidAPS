@@ -31,13 +31,6 @@ import dev.zacsweers.metro.SingleIn
 
 /**
  * The Dana transports, on Metro.
- *
- * Was `DanaModules`, a Dagger module - and it had to move. `provideRfcommTransport` does not merely
- * read the three DanaR plugins, it calls `setPluginEnabled` on them. Once those plugins became Metro
- * owned, Dagger went on building its **own** copies here (it ignores `@SingleIn` and just sees the
- * `@Inject` constructor), so with a Dana emulator option on, the auto-enable would have flipped objects
- * that are not the ones in the plugin list. Nothing failed to compile and no guard caught it -
- * `SplitBrainTest` looks for javax `@Singleton` classes Metro also builds, not the mirror case.
  */
 @ContributesTo(AppScope::class)
 @BindingContainer

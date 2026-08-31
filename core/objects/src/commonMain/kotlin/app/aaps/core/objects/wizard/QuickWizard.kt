@@ -20,8 +20,6 @@ import kotlin.concurrent.Volatile
 
 class QuickWizard(
     private val preferences: Preferences,
-    // A plain factory, not a javax.inject.Provider: that type is JVM only and would pin this class
-    // to one platform. Dagger still supplies it, as a method reference, from the Android side.
     private val quickWizardEntryProvider: () -> QuickWizardEntry
 ) {
 

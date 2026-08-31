@@ -10,8 +10,8 @@ implement on the Apple side, so neither session has to re-derive it from the dif
 This file lives at `_docs/ios_blockers.md`. It arrived once as `_dcs/ios_blockers.md` and was moved -
 please write it here, so both sessions look in the same place.
 
-The pattern behind almost every entry: a class can only move to `commonMain` after it is off Dagger
-and off Android types. The Metro migration has to land first, then the move is usually small.
+The pattern behind almost every entry: a class can only move to `commonMain` after it is off Android
+types. The move is usually small once it is.
 
 ## How to find the next one
 

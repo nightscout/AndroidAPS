@@ -31,22 +31,14 @@ import dev.zacsweers.metro.SingleIn
 
 /**
  * The live loop's `IobCobCalculatorPlugin`, replacing the hand-construction in `MainPluginsModule`.
- *
- * `:plugins:main` is multiplatform, so the plugin carries no DI annotation of its own and something has
- * to assemble it. That used to be Dagger, here it is Metro, and this file is the only thing about the
- * plugin that lives in `:app`.
- *
  * ## Why the class is not simply annotated
- *
  * `VirtualPumpPlugin` took `@Inject` and `@ContributesIntoMap` directly, which is tidier. This one
  * cannot: it is built **twice**, on purpose. `HistoryWindowGraph` builds a second one at
  * `HistoryWindowScope` over a fixed time range, so the history browser can calculate without disturbing
  * the live loop. A `@SingleIn(AppScope::class)` on the class would put a binding for the same type in
  * the parent of that extension, and which one a window saw would stop being obvious. Each graph naming
  * its own is what keeps the two apart - the shape `HistoryWindowGraph` already uses.
- *
  * ## The cycle
- *
  * The calculator and the cache need each other. [Provider] defers the lookup, so the graph accepts here
  * what a direct reference would reject, and `runCalculation` only ever runs after construction. The
  * plugin takes a plain lambda rather than a [Provider] because it is common code and Metro's own
@@ -82,13 +74,6 @@ object MainPluginsBindings {
     @Provides
     fun iobCobCalculator(plugin: IobCobCalculatorPlugin): IobCobCalculator = plugin
 
-    /**
-     * Order key 10, as under Dagger.
-     *
-     * Unqualified, though the Dagger binding said `@AllConfigs`: `:app` merges this bucket
-     * unconditionally, which is what that qualifier meant, and nothing reads a Metro `@AllConfigs` map -
-     * so using it would drop the plugin from the list with no error at all.
-     */
     @Provides
     @IntoMap
     @IntKey(10)
@@ -96,7 +81,6 @@ object MainPluginsBindings {
 
     /**
      * The `Objectives` interface, unqualified.
-     *
      * `ObjectivesPlugin` carries `@APS` for the plugin-list multibinding, and @ContributesBinding on
      * the class would inherit that qualifier - so the interface would only be readable as
      * `@APS Objectives`, which is not what a reader asks for. Providing it here keeps the qualifier on

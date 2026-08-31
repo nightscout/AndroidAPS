@@ -62,7 +62,6 @@ import app.aaps.pump.omnipod.eros.driver.manager.ErosPodStateManager;
 
 public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunicationManager<OmnipodPacket> {
 
-    // This empty constructor must be kept, otherwise dagger injection might break!
 
     public OmnipodRileyLinkCommunicationManager(
             AAPSLogger aapsLogger,

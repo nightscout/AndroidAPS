@@ -17,8 +17,6 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
-// Metro requires this on a non-final class with injected fields, so it knows subclasses are meant to
-// have those fields filled too. Inert for Dagger.
 @HasMemberInjections
 @SingleIn(AppScope::class)
 open class TaskBase @Inject constructor(val func: TaskFunc) {

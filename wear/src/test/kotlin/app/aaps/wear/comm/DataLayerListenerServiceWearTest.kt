@@ -20,12 +20,6 @@ import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-/**
- * Covers [DataLayerListenerServiceWear.onMessageReceived] — the wear-side message router that
- * deserializes an [EventData] command from the phone and republishes it on the [RxBus], tagged with
- * the sender node. The service is built via [Robolectric] (attaches a Context but skips onCreate's
- * Dagger injection); the @Inject fields are set directly since the test shares the package.
- */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35])
 internal class DataLayerListenerServiceWearTest {

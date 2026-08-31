@@ -19,12 +19,10 @@ import org.mockito.Mockito.mockingDetails
 
 /**
  * Pump drivers reach the `@PumpDriver` bucket, and only that bucket.
- *
  * The bucket is new: before this there was no Metro `@PumpDriver` map at all, so a pump plugin
- * contributed under that qualifier went nowhere - `AppModule` never read it, and the plugin simply did
+ * contributed under that qualifier went nowhere - nothing read it, and the plugin simply did
  * not appear in the list. That is the same silent failure the virtual pump hit with `@AllConfigs`, and
  * it cannot be seen from the annotation on the plugin.
- *
  * `:app` merges this bucket only when `config.PUMPDRIVERS`, so a driver landing in the unqualified map
  * instead would show up in a follower build that has no pump at all.
  */
@@ -35,7 +33,6 @@ class PumpDriverBucketTest {
      * flavour - including the followers, which have no pump module on the classpath and an empty bucket
      * by design. It could only ever fail there, and did: `:app:testAapsclientDebugUnitTest` was red on
      * its own, unnoticed because CI runs the `full` variant.
-     *
      * `containsExactly`, not a per-key check: it is the only assertion that catches a driver quietly
      * *disappearing* from the bucket.
      */
@@ -66,16 +63,6 @@ class PumpDriverBucketTest {
 
     /**
      * There is exactly one of each driver, whichever framework built it.
-     *
-     * **This assertion used to be the opposite.** It demanded that *no* driver was built by Metro,
-     * because Dagger owned them all: the pump services were `DaggerService`s writing to Dagger's copy,
-     * so a Metro-built second one left the plugin list holding an object the pump never touched
-     * ("DanaR pump never reported initialized", which is what it cost on CI).
-     *
-     * That premise is gone. `dagger.android` is off the phone and every pump service is filled by a
-     * Metro member injector, so Metro's copy is the one the pump writes to. All thirteen drivers carry
-     * `@SingleIn(AppScope::class)` now and none is handed over.
-     *
      * What still has to hold is **one instance**: reading a driver twice must give the same object. Two
      * would put the plugin list and the pump service on different state, which is the whole failure this
      * file exists to prevent.
@@ -92,12 +79,6 @@ class PumpDriverBucketTest {
     }
 
     /**
-     * Nothing comes from `PumpLeaves` any more, so a driver falling back to Dagger is noticed here.
-     *
-     * A handed-over driver arrives through a `RETURNS_MOCKS` `PumpLeaves`, so it is a mock - which is
-     * also why the single-instance test above cannot see it: the leaf mints a fresh mock per call and
-     * says nothing about the real object Dagger scopes. This test is what keeps that hole shut.
-     *
      * Eros was the last one out, and how it got out is worth recording: `AapsOmnipodErosManager` and
      * `OmnipodRileyLinkCommunicationManager` are still Java, and Metro cannot generate a factory from an
      * `@Inject` constructor it has no Kotlin IR for. It does not need to. A hand written `@Provides` in

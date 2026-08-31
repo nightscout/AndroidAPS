@@ -231,11 +231,6 @@ class ComposeMainActivity : MetroAppCompatActivity() {
 
     /**
      * The factory `by viewModels()` uses.
-     *
-     * Without this override the delegate asks Hilt, which no longer knows these classes and falls back
-     * to `NewInstanceFactory` - that wants a no-arg constructor and throws
-     * "Cannot create an instance of class ...". It fails in `onResume`, not at startup, so a cold launch
-     * looks fine.
      */
     override val defaultViewModelProviderFactory: ViewModelProvider.Factory
         get() = (applicationContext as MetroViewModelFactoryOwner).metroViewModelFactory

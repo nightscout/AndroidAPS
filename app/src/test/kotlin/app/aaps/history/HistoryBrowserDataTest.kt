@@ -19,7 +19,6 @@ import org.mockito.kotlin.whenever
 
 /**
  * The History Browser must not share calculation objects with the running loop.
- *
  * These assertions used to run against `HistoryBrowserData`, which built the objects by hand. The
  * objects now come from [HistoryWindowGraph], so the tests build the graph instead - the same
  * guarantees, checked one layer closer to where they are now decided.
@@ -37,12 +36,6 @@ class HistoryBrowserDataTest : TestBaseWithProfile() {
 
     /**
      * The window's cache, as the concrete type.
-     *
-     * `OverviewDataCacheFactory` is a Metro `@AssistedFactory` now, so it cannot be swapped for a mock
-     * the way it was when Dagger owned it and `AapsLeaves` handed it over. These tests read the real
-     * object's assisted inputs instead, which checks the same three things - the window's own signals,
-     * its own calculator, and no database observation - one step closer to the truth than verifying the
-     * arguments of a call to a mock.
      */
     private val HistoryWindowGraph.cacheImpl: OverviewDataCacheImpl get() = cache as OverviewDataCacheImpl
 
@@ -51,7 +44,6 @@ class HistoryBrowserDataTest : TestBaseWithProfile() {
      * the point of the check now: the root binds the app-wide IobCobCalculator, the window binds its
      * own, and the window must win. If the extension quietly resolved the parent's calculator instead,
      * history browsing would compute into the running loop's state.
-     *
      * Only the leaves this test really needs are stubbed - see [testRoot].
      */
     // No leaf stub for ResourceHelper any more: Metro owns it, and the Android work that made building

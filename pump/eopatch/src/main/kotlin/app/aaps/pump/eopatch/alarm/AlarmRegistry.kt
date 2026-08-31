@@ -31,11 +31,6 @@ import dev.zacsweers.metro.SingleIn
 import kotlin.time.Duration.Companion.hours
 
 /**
- * These were `@Inject lateinit var` fields filled after construction, with the setup below in an
- * `@Inject fun onInit()`. That is Dagger method injection, which Metro does not support - it crashes the
- * compiler on it (ZacSweers/metro#2735). Constructor parameters give the same objects at the same point
- * and let the setup move into `init`, where the fields are guaranteed to be there.
- *
  * Nothing outside this class read those fields; callers only use the [IAlarmRegistry] methods.
  */
 @ContributesBinding(AppScope::class)

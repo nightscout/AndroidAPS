@@ -174,7 +174,7 @@
             android:required="false" />
 
         <!-- WorkManager on-demand initialization: remove the default initializer so MainApp's
-             Configuration.Provider (with HiltWorkerFactory) is used instead. -->
+             Configuration.Provider (with MetroWorkerFactory) is used instead. -->
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"

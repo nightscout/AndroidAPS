@@ -10,13 +10,6 @@ import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-/**
- * Covers [WallpaperDarkComplication] and the wallpaper-specific overrides it inherits from
- * [WallpaperComplication]: the PHOTO_IMAGE-only [buildComplicationData], the tap action and the
- * canonical provider name. Built via [Robolectric] so a Context is attached without running
- * onCreate's Dagger injection; the `@Inject` [aapsLogger][ModernBaseComplicationProviderService.aapsLogger]
- * field is set directly (buildComplicationData does not use displayFormat).
- */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35])
 internal class WallpaperDarkComplicationTest {

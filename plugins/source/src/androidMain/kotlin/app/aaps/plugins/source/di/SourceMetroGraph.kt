@@ -25,7 +25,6 @@ import kotlin.reflect.KClass
 
 /**
  * Scope marker for this module's workers and member injectors.
- *
  * The graph used to be a second root on `AppScope`, which was unsafe: two graphs declaring one scope
  * each get their own copy of anything scoped there, silently. Now it is an extension with a scope of
  * its own, so `AppScope` means exactly one graph.
@@ -34,16 +33,9 @@ abstract class SourceScope private constructor()
 
 /**
  * Metro wiring for the blood-glucose source workers and the notification reader service.
- *
- * Twelve workers is the first real volume test of the worker seam - the ones before this were single
- * cases proving it worked at all. Each is one `@Provides @IntoMap @WorkerKey` line here plus a nested
- * `@AssistedFactory` on the worker, and nothing else about the workers changed: they keep their
- * `javax.inject` dependencies, which Dagger interop lets Metro read.
- *
  * One thing this batch taught: Metro matches assisted parameters **by name**, and
  * `InstaraStaleCheckWorker` called its context `ctx`. That is a compile error rather than a silent
  * mismatch, but it is a rename every worker conversion has to check.
- *
  * [NotificationCollectorService] is a member-injection case rather than a worker, and it cannot use
  * `MetroService`, because it already extends `NotificationListenerService`. It calls the injector
  * itself, which is all `MetroService` does.

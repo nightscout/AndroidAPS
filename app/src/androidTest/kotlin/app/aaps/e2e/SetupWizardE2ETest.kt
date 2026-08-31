@@ -42,12 +42,12 @@ import java.util.regex.Pattern
  *  enable Open Loop (assert mode + DB).
  *
  * ## Why this lives in `:app/androidTest` (vs the standalone `:e2e` module)
- * Running here, the test executes **in the app process** under the Hilt test application. That has two
+ * Running here, the test executes **in the app process** under the test application. That has two
  * payoffs the black-box `:e2e` module can't give: it **produces app code coverage** (collected from the
  * app process by jacoco) and it is **runnable from the Studio gutter**. It rides the existing
  * `:app:connectedFullDebugAndroidTest` in CI with no extra config.
  *
- * The cost is that the Hilt test app doesn't run `MainApp.onCreate`, so [setUp] reproduces the minimum
+ * The cost is that the test app doesn't run `MainApp.onCreate`, so [setUp] reproduces the minimum
  * the UI needs: register the plugins, flip the init-complete gate [ComposeMainActivity]'s splash reads,
  * and clear SharedPreferences for a fresh wizard (there is no `pm clear` in-process — it would kill the
  * test). [Config] is `@Singleton` so the instance we flip is the one the activity observes.
@@ -58,13 +58,13 @@ import java.util.regex.Pattern
  * events**; confirm buttons behind the IME are reached only after [hideKeyboard]. English-only.
  */
 @RunWith(AndroidJUnit4::class)
-class SetupWizardE2EHiltTest {
+class SetupWizardE2ETest {
 
 
     // RetryRule outermost: a flaky timeout self-heals on a fresh attempt; see [RetryRule].
     @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(ResetGraphRule())
 
-    // The plugin/config init that MainApp does in onCreate (the Hilt test app can't). Inlined rather
+    // The plugin/config init that MainApp does in onCreate (the test app can't). Inlined rather
     // than inherited from AapsInstrumentedTest so SharedPreferences can be cleared BEFORE the graph
     // initializes (see setUp) — order matters for a clean fresh-app boot.
     private val pluginStore get() = testGraphs.pluginStore
@@ -79,8 +79,8 @@ class SetupWizardE2EHiltTest {
 
     @Before
     fun setUp() {
-        // Clear SharedPreferences for a fresh wizard BEFORE the Hilt graph reads any prefs (there is no
-        // pm clear in-process — it would kill the test). Doing it before hiltRule.inject() matters: every
+        // Clear SharedPreferences for a fresh wizard BEFORE the graph reads any prefs (there is no
+        // pm clear in-process — it would kill the test). Doing it before the graph is built matters: every
         // singleton then initializes against empty prefs and seeds its defaults exactly like a fresh app
         // (e.g. InsulinImpl seeds a default insulin; clearing AFTER init left its list empty → AppContent
         // crashed in getICfg). Then reproduce the bits of MainApp.onCreate the UI needs.
@@ -91,7 +91,7 @@ class SetupWizardE2EHiltTest {
         config.initCompleted()                                            // flip splash gate → AppContent renders
         // Pre-seed objective 1 as started: the wizard gates its FINISH button on
         // objectives[FIRST].isStarted, and the UI "Start" runs an NTP network-time check that can't
-        // complete under the Hilt test app (no connectivity wiring from MainApp.onCreate).
+        // complete under the test app (no connectivity wiring from MainApp.onCreate).
         objectivesPlugin.objectives.firstOrNull()?.startedOn = System.currentTimeMillis()
         // Heads-up banners (e.g. the profile-switch "loop disabled" toast) must not cover the UI.
         device.executeShellCommand("settings put global heads_up_notifications_enabled 0")
@@ -319,7 +319,7 @@ class SetupWizardE2EHiltTest {
     private fun activateTempTarget() {
         openVia("Manage", expect = "Temp Target")      // overview quick-launch → manage sheet
         openVia("Temp Target", expect = "Activate")    // → temp-target screen
-        // The real app seeds default presets (Eating Soon = 90 …) on first run; the Hilt test app
+        // The real app seeds default presets (Eating Soon = 90 …) on first run; the test app
         // doesn't, so the screen has no presets and "Activate" applies a temp target at the profile
         // target (100, set in createLocalProfile) instead.
         openVia("Activate", expect = "OK")             // activate → confirmation

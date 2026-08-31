@@ -28,11 +28,6 @@ plugins {
     id(libs.plugins.android.test.get().pluginId) apply false
 }
 
-// Dagger/Hilt (≥2.57 unshades kotlin-metadata-jvm) ships a metadata reader that lags new Kotlin releases.
-// Pin it to the Kotlin version so the Hilt KSP processor can parse current class metadata; captured here
-// (where the `libs` catalog accessor is in scope) and forced per-configuration below.
-val kotlinMetadataVersion = libs.versions.kotlin.get()
-
 allprojects {
     repositories {
         mavenCentral()
@@ -60,14 +55,6 @@ allprojects {
 
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
     apply(plugin = "jacoco")
-
-    // Only affects configurations that actually pull kotlin-metadata-jvm (the Hilt/Dagger KSP processor
-    // classpath), so it's a no-op elsewhere. Keeps the metadata reader in sync with future Kotlin bumps.
-    configurations.configureEach {
-        resolutionStrategy {
-            force("org.jetbrains.kotlin:kotlin-metadata-jvm:$kotlinMetadataVersion")
-        }
-    }
 }
 
 // Setup all reports aggregation

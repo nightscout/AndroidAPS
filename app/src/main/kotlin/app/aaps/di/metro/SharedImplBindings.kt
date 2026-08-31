@@ -24,20 +24,10 @@ import dev.zacsweers.metro.SingleIn
 
 /**
  * The phone's half of `:shared:impl`.
- *
- * `:shared:impl` is shared with `:wear`, and the two have diverged: wear is still classic Dagger while
- * the phone is moving to Metro. What was actually coupling them was not the code but the wiring - the
- * same `@InstallIn(SingletonComponent::class)` modules were auto-installed into both. Those two modules
- * now carry no `@InstallIn`, so wear keeps them through its own `includes` and the phone builds the
- * same implementation classes here instead. The implementations stay shared; only the wiring is split.
- *
  * Keep this in step with `SharedImplModule` and `LoggerModule`. A binding that only exists on one side
  * is harmless - the other side fails to compile the moment it needs it. The danger is a binding that
  * exists on both sides but is *built differently*: change the preferences file name in one and the
  * phone and the watch quietly disagree, with nothing failing.
- *
- * Dagger consumers reach these through the delegates in `CoreObjectsModule`, so there is exactly one
- * instance of each either way.
  */
 @ContributesTo(AppScope::class)
 @BindingContainer
@@ -50,7 +40,6 @@ object SharedImplBindings {
 
     /**
      * The same object, seen as the platform neutral half of itself.
-     *
      * Common code such as `PreferencesImpl` asks for [KeyValueStore] rather than [SP], because a
      * resource id overload means nothing off Android. `SP` extends it, so this hands over the one
      * instance rather than building a second store.

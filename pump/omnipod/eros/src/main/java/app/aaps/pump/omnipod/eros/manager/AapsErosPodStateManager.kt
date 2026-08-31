@@ -17,10 +17,6 @@ import dev.zacsweers.metro.SingleIn
 
 /**
  * Was Java.
- *
- * javax `@Singleton`, not Metro's `@SingleIn`: Dagger owns this and hands it to Metro through
- * `PumpLeaves`. This is the pod state - two copies would mean the pump writing to one object while the
- * screens read another.
  */
 @SingleIn(AppScope::class)
 class AapsErosPodStateManager @Inject constructor(

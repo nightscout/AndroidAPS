@@ -22,7 +22,7 @@ class CommandReadStatusTest : TestBaseWithProfile() {
     @Mock lateinit var localAlertUtils: LocalAlertUtils
 
     private fun newCommand(reason: String = "test reason", callback: Callback? = null) =
-        CommandReadStatus(aapsLogger, rh, activePlugin, localAlertUtils, pumpEnactResultProvider::get, reason, callback)
+        CommandReadStatus(aapsLogger, rh, activePlugin, localAlertUtils, pumpEnactResultProvider::invoke, reason, callback)
 
     private fun pumpWithLastData(lastDataTime: Long): PumpWithConcentration {
         val pump = mock<PumpWithConcentration>()

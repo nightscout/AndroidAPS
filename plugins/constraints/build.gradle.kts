@@ -17,9 +17,8 @@ allOpen {
     annotation("app.aaps.annotations.OpenForTesting")
 }
 
-// No `metro { interop { includeDagger() } }`: nothing here carries a javax annotation any more. The
-// three qualified plugin buckets keep working because @AllConfigs, @APS and @NotNSClient each carry
-// Metro's own @Qualifier alongside the javax one - ConstraintsBucketsTest is the guard.
+// The three qualified plugin buckets are keyed by @AllConfigs, @APS and @NotNSClient, each carrying
+// Metro's @Qualifier - ConstraintsBucketsTest is the guard.
 
 // Generates ConstraintsStrings (commonMain) and ConstraintsStringIds (androidMain) from this module's
 // res/values, the same generator the other plugins use. The objectives and exam text is the bulk of

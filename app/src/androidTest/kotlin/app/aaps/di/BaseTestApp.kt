@@ -8,7 +8,6 @@ import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 import androidx.work.testing.SynchronousExecutor
 import androidx.work.testing.WorkManagerTestInitHelper
-import app.aaps.di.testGraphs
 import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.resources.TextRefIdRegistry
 import app.aaps.core.ui.CoreUiStringIds
@@ -37,19 +36,13 @@ import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
  * Base application for instrumented tests. Mirrors [app.aaps.MainApp]: both build the one Metro root
  * themselves and act as its member injector.
  *
- * It used to be wrapped by `@CustomTestApplication(BaseTestApp::class)`, whose generated
- * `HiltTestApplication_Application` the runner installed, and the graph could not exist in [onCreate]
- * because `HiltAndroidRule` built a Hilt component per test. That is gone: `AapsTestRunner` installs
- * this class directly and the graph lives for the whole process, so [onCreate] can use it.
+ * `AapsTestRunner` installs this class, and the graph lives for the whole process, so [onCreate] can
+ * use it.
  */
 open class BaseTestApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner {
 
     /**
      * The Metro root for the test process, built here exactly as `MainApp` builds its own.
-     *
-     * It used to come from Hilt, through an `@EntryPoint`, and could not exist until `HiltAndroidRule`
-     * had built a component per test - which is why everything used to resolve it lazily and cope with
-     * it being absent.
      *
      * The two arguments are the whole of how a test graph differs from the real one.
      */
@@ -68,8 +61,7 @@ open class BaseTestApp : Application(), MetroMemberInjector, MetroViewModelFacto
     /**
      * Throw the graph away so the next read builds a fresh one. Called between tests by [ResetGraphRule].
      *
-     * **This is not a tidiness measure, it replaces something the removed Hilt rule was doing.**
-     * `HiltAndroidRule` built a new component - and so a new Metro root - for every test method. Some
+     * **This is not a tidiness measure.** Each test method needs its own instances. Some
      * objects read `config.isEnabled` exactly once, when they are constructed: `RfcommTransport` and
      * `BleTransport` pick the emulator or the real transport there and never look again. The Dana tests
      * select a different pump variant per test method, so without a fresh graph every test after the
@@ -87,9 +79,8 @@ open class BaseTestApp : Application(), MetroMemberInjector, MetroViewModelFacto
         // The same owners MainApp registers. This application replaces MainApp for instrumented tests,
         // so without this every TextRef.Named has no id to resolve to and the screens render blank
         // text - which fails as "the text is not displayed", a long way from the cause.
-        // `coreUi` and `implementation` are here now too. ResourceHelperImpl used to register them from
-        // its own constructor; that ran at an undefined moment and kept the class on Dagger, so it moved
-        // to an explicit start() called by the Application - which means this app has to do it as well.
+        // `coreUi` and `implementation` are here too: ResourceHelperImpl registers them from an
+        // explicit start() called by the Application, so this app has to do it as well.
         registerStringOwners()
         TextRefIdRegistry.register("coreUi") { name -> CoreUiStringIds.idOf(name) }
         TextRefIdRegistry.register("implementation") { name -> ImplementationStringIds.idOf(name) }
@@ -125,14 +116,14 @@ open class BaseTestApp : Application(), MetroMemberInjector, MetroViewModelFacto
         WorkManagerTestInitHelper.initializeTestWorkManager(this, configuration)
     }
 
-    /** What a test reads its objects from, in place of the `@Inject` fields Hilt used to fill. */
+    /** What a test reads its objects from. */
     val graphs: MetroGraphs get() = metroGraphs
 
     // Mirrors MainApp. Without these, anything Metro injects crashes the moment the system creates it
     // outside a test - a started service or a broadcast receiver - because the application it looks at
     // is this one, not MainApp. `DummyService` did exactly that and took the whole run down with it.
     //
-    // This used to swallow an IllegalStateException, because between tests there was no Hilt component
+    // This used to swallow an IllegalStateException, because between tests there was no graph
     // and a broadcast could still arrive - MY_PACKAGE_REPLACED lands right after `adb install -r` and
     // reached AutoStartReceiver. That cannot happen now: the application owns the graph, so it exists
     // for the whole process and a missing binding fails loudly, which is the point of the check.

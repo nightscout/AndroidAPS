@@ -8,17 +8,9 @@ import kotlin.reflect.KClass
 
 /**
  * What a worker wired by Metro contributes so the app's `WorkerFactory` can build it.
- *
- * `@HiltWorker` is the part of Hilt that has to be replaced before Dagger can be removed - 42 of them
- * in this tree. WorkManager constructs a worker itself and only hands over a class name, so dependency
- * injection has to hook in through a `WorkerFactory` rather than a constructor call in our code. Hilt
- * ships one; Metro does not, so the app supplies `MetroWorkerFactory` and every converted worker
- * contributes one of these into a class-keyed multibinding.
- *
  * The two arguments are the ones only WorkManager has, which makes every worker an assisted-injection
  * case: graph dependencies plus a caller-supplied [Context] and [WorkerParameters]. Metro generates the
  * implementation from `@AssistedFactory`, so a worker only declares a nested factory extending this.
- *
  * It lives beside [LoggingWorker] rather than in `:app` because workers live in many modules and none
  * of them can depend on `:app`.
  */
@@ -29,12 +21,10 @@ fun interface MetroWorkerCreator {
 
 /**
  * What a worker's nested `@AssistedFactory` extends, so it does not have to restate `create`.
- *
  * The shape Metro's own Android sample uses. Naming the worker as the type argument is what makes the
  * return type right by construction - with a bare [MetroWorkerCreator] each factory repeats the
  * signature and could declare the wrong worker type, which still compiles because the map only asks for
  * a [ListenableWorker].
- *
  * ```kotlin
  * @AssistedFactory
  * abstract class Factory : WorkerInstanceFactory<LoadBgWorker>()
@@ -47,7 +37,6 @@ abstract class WorkerInstanceFactory<T : ListenableWorker> : MetroWorkerCreator 
 
 /**
  * The map key for the worker multibinding.
- *
  * A key of its own rather than Metro's general `@ClassKey`, because `@ClassKey` produces a
  * `KClass<*>`: the map has to be declared as `Map<KClass<*>, MetroWorkerCreator>` and any class at all
  * type-checks as a key. This one only accepts a [ListenableWorker], so keying a worker binding with the

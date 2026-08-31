@@ -48,8 +48,6 @@ import kotlinx.serialization.json.put
  * have only one half populated; chips that depend on the local Room id fade in once it
  * arrives.
  */
-// Metro builds this; Dagger receives it via a @Provides delegate in `:app`. Metro's @SingleIn,
-// not javax @Singleton, because the graph is generated in `:app`.
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 class ActiveSceneManager @Inject constructor(

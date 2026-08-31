@@ -4,8 +4,7 @@ plugins {
     // NOT com.android.library. AGP 9 refuses that plugin together with the multiplatform plugin.
     // Same reason as :core:ui, :core:interfaces and the other multiplatform modules.
     alias(libs.plugins.android.kmp.library)
-    // Metro is the only DI framework in this module now. Dagger's processor is gone - the last
-    // `@InstallIn` module moved to :app - which is what made the multiplatform flip possible at all.
+    // Metro, the DI framework for this module.
     alias(libs.plugins.metro)
     // The compiler plugin that generates serializers. The kotlinx json runtime was already here and is
     // used to parse trees, which needs no plugin - but StoredBolusInfo is @Serializable and does.

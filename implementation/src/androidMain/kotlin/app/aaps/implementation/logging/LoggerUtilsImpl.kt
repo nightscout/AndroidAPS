@@ -11,7 +11,6 @@ import dev.zacsweers.metro.SingleIn
 /**
  * This class provides several methods for log-handling (eg. sending logs as emails).
  */
-// Metro builds this; Dagger consumers (MaintenanceImpl) get it via the @Provides delegate in `:app`.
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 class LoggerUtilsImpl @Inject constructor() : LoggerUtils {

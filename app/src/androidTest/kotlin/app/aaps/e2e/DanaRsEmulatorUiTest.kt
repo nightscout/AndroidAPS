@@ -39,7 +39,7 @@ import java.util.Base64
  *
  * The variant (which `EMULATE_DANA_*` handshake) is chosen per test in [bringUp], not `@Before`,
  * because `BleTransport` is a `@Singleton` the graph binds once — so the option has to be set before
- * `hiltRule.inject()`. The BLE5 test walks every screen; [danaInsulinDelivery_overV1Handshake] and
+ * the graph is built. The BLE5 test walks every screen; [danaInsulinDelivery_overV1Handshake] and
  * [danaInsulinDelivery_overV3Handshake] run only the insulin-delivery flow, which is pump-agnostic
  * (Manage → `CommandQueue` → active pump), so the *same* body proves each handshake — the reuse that
  * makes an E2E worth more than a per-plugin unit test. `DanaRsEmulatorPumpTest` covers the same
@@ -50,7 +50,7 @@ import java.util.Base64
  * (RS) wiring — the pairing seed, the emulator-state reads, and the RS-only screen legs.
  *
  * ## Why this is seeded rather than wizard-driven
- * `SetupWizardE2EHiltTest` walks the whole setup wizard because that is what it tests; it costs
+ * `SetupWizardE2ETest` walks the whole setup wizard because that is what it tests; it costs
  * ~140s and ends on **Virtual Pump**, so no pump-driver UI is ever rendered. This test wants the
  * pump screens, not the wizard, so it seeds that end state directly — mg/dL units, the wizard marked
  * done, an active local profile, and a paired Dana-i as the active pump — in a few seconds instead
@@ -92,7 +92,7 @@ class DanaRsEmulatorUiTest : AbstractDanaEmulatorUiTest() {
         // (v1's pairing key most of all); sendResponse drops them once disconnected, and this makes
         // sure they are actually done before the next test seeds a fresh pump.
         runCatching { if (::emulator.isInitialized) emulator.awaitPendingCallbacks() }
-        // Unbind before the Hilt component dies, or the service crashes the process.
+        // Unbind before the graph dies, or the service crashes the process.
         runCatching { danaRSPlugin.setPluginEnabledBlocking(PluginType.PUMP, false) }
     }
 

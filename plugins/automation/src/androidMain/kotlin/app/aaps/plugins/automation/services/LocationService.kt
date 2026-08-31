@@ -114,7 +114,6 @@ class LocationService : MetroService() {
     }
 
     override fun onCreate() {
-        // MetroService injects from its own onCreate, exactly as DaggerService did.
         super.onCreate()
 
         // Get last location once until we get regular update

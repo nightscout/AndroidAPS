@@ -31,8 +31,6 @@ import dev.zacsweers.metro.SingleIn
  * conservative on AAPSClient is the safe direction — never offers a chain that would later
  * fail at execution.
  */
-// Metro builds this; Dagger receives it via a @Provides delegate in `:app`. Metro's @SingleIn,
-// not javax @Singleton, because the graph is generated in `:app`.
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 class SceneChainTargetResolver @Inject constructor(
