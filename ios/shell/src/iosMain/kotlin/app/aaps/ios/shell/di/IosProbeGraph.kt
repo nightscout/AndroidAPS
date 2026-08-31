@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.workflow.CalculationExecutor
 import app.aaps.workflow.CoroutineCalculationExecutor
 import app.aaps.workflow.PostCalculationRunner
@@ -39,6 +40,7 @@ import app.aaps.plugins.smoothing.NoSmoothingPlugin
 import app.aaps.plugins.smoothing.UnscentedKalmanFilterPlugin
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
+import dev.zacsweers.metro.Includes
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 
@@ -174,6 +176,12 @@ interface IosProbeGraph {
     @DependencyGraph.Factory
     fun interface Factory {
 
-        fun create(): IosProbeGraph
+        /**
+         * [CoreObjectsGraph] is a `@BindingContainer`, so its `@Provides` are only visible to a graph
+         * that includes it - the same way `AppRootGraph` takes it on Android. Without this, four
+         * shared classes it already builds (the bolus wizard, the quick wizard and its entry, and the
+         * running mode guard) look like missing bindings rather than ones Metro cannot see.
+         */
+        fun create(@Includes coreObjects: CoreObjectsGraph): IosProbeGraph
     }
 }

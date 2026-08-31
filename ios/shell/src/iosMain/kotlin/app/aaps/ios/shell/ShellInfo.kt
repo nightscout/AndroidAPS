@@ -14,6 +14,7 @@ import dev.zacsweers.metro.createGraphFactory
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
+import app.aaps.core.objects.di.CoreObjectsGraph
 
 /**
  * A small entry point the iOS side can call to prove the framework loaded and runs.
@@ -61,8 +62,8 @@ object ShellInfo {
      *   caller sees which step broke instead of only a crash.
      */
     fun checkDi(): String = try {
-        val graph = createGraphFactory<IosProbeGraph.Factory>().create()
-        val other = createGraphFactory<IosProbeGraph.Factory>().create()
+        val graph = createGraphFactory<IosProbeGraph.Factory>().create(CoreObjectsGraph)
+        val other = createGraphFactory<IosProbeGraph.Factory>().create(CoreObjectsGraph)
 
         val built = listOf(
             graph.noSmoothing, graph.avgSmoothing, graph.exponentialSmoothing, graph.noCalibration
@@ -188,7 +189,7 @@ object ShellInfo {
     fun checkAlarm(): String = try {
         val found = listOf("alarm", "urgentalarm", "error", "boluserror")
             .count { NSBundle.mainBundle.URLForResource(it, withExtension = "mp3") != null }
-        val graph = createGraphFactory<IosProbeGraph.Factory>().create()
+        val graph = createGraphFactory<IosProbeGraph.Factory>().create(CoreObjectsGraph)
         val player = graph.alarmSoundPlayer
         // Started and stopped straight away: this is a check that it runs, not a demonstration.
         player.play(AlarmSound.ERROR, AlarmSoundPlayer.OWNER_INTERNAL)

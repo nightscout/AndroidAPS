@@ -25,6 +25,7 @@ import app.aaps.ios.shell.ShellInfo
 import app.aaps.ios.shell.di.IosProbeGraph
 import dev.zacsweers.metro.createGraphFactory
 import platform.UIKit.UIViewController
+import app.aaps.core.objects.di.CoreObjectsGraph
 
 /**
  * The first AAPS composables that iOS actually runs.
@@ -48,7 +49,7 @@ import platform.UIKit.UIViewController
 fun aapsComposeViewController(): UIViewController {
     // Built once, outside the composition: a graph rebuilt on every recomposition would hand out a
     // new NSUserDefaults wrapper each time.
-    val preferences = createGraphFactory<IosProbeGraph.Factory>().create().preferences
+    val preferences = createGraphFactory<IosProbeGraph.Factory>().create(CoreObjectsGraph).preferences
     return ComposeUIViewController {
         CompositionLocalProvider(LocalPreferences provides preferences) {
             AapsTheme {
