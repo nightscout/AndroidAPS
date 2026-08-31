@@ -43,6 +43,9 @@ internal class ResourceHelperImplNamedRefTest {
         MockitoAnnotations.openMocks(this)
         whenever(preferences.observe(BooleanKey.GeneralSimpleMode)).thenReturn(MutableStateFlow(true))
         sut = ResourceHelperImpl(ApplicationProvider.getApplicationContext(), fabricPrivacy, preferences)
+        // The `coreUi` and `implementation` owners are registered by start(), not by the constructor -
+        // they moved so the Application controls when it happens and Metro can own this class.
+        sut.start()
     }
 
     @Test

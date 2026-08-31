@@ -15,24 +15,40 @@ import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.io.ObjectInputStream
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Some users do not wish to be tracked, Fabric Answers and Crashlytics do not provide an easy way
  * to disable them and make calls from a potentially invalid singleton reference. This wrapper
  * emulates the methods but ignores the request if the instance is null or invalid.
  */
-@Singleton
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class FabricPrivacyImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sharedPreferences: SharedPreferences // Injecting Preferences is causing circular dependencies
 ) : FabricPrivacy {
 
-    private val firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
+    // Resolved on first use. `Firebase.analytics` needs an initialized FirebaseApp, and this class is
+    // built for real in the plain-JVM graph tests once Metro owns it.
+    private val firebaseAnalytics: FirebaseAnalytics by lazy { Firebase.analytics }
 
-    init {
-        firebaseAnalytics.setAnalyticsCollectionEnabled(!java.lang.Boolean.getBoolean("disableFirebase") && fabricEnabled())
-        FirebaseCrashlytics.getInstance().isCrashlyticsCollectionEnabled = !java.lang.Boolean.getBoolean("disableFirebase") && fabricEnabled()
+    /**
+     * Applies the user's opt-out to Firebase. Called from `MainApp.onCreate`, before anything logs.
+     *
+     * **Was an `init` block**, which tied it to whenever this class happened to be injected.
+     * `BaseTestApp` documents what that cost: "the only thing that ever turns it off is
+     * FabricPrivacyImpl's init - which runs when that class is injected, far too late here and often
+     * not at all", so instrumented runs reported into the production Crashlytics dashboard until that
+     * file set the flags itself. An explicit call from the `Application` is a defined moment; being
+     * constructed is not.
+     */
+    fun start() {
+        val enabled = !java.lang.Boolean.getBoolean("disableFirebase") && fabricEnabled()
+        firebaseAnalytics.setAnalyticsCollectionEnabled(enabled)
+        FirebaseCrashlytics.getInstance().isCrashlyticsCollectionEnabled = enabled
     }
 
     override fun setUserProperty(key: String, value: String) {

@@ -31,6 +31,4 @@ interface ImplementationModule {
     // set through the `permissionProviders` leaf, so this declaration stays here.
     @Multibinds fun permissionProviders(): Set<PermissionProvider>
 
-    @Binds fun bindFabricPrivacy(fabricPrivacyImpl: FabricPrivacyImpl): FabricPrivacy
-    @Binds fun bindResourceHelper(resourceHelperImpl: ResourceHelperImpl): ResourceHelper
 }

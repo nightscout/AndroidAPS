@@ -152,6 +152,9 @@ class EopatchPumpPlugin @Inject constructor(
         // event was racy under the suspend onStart() migration (the event could fire before the
         // subscription was registered), causing the patch to appear deactivated after an app update.
         preferenceManager.init()
+        // Opens the patch BLE client and its observers. Was an `init` block on the class, so it ran for
+        // every user at construction; on this lifecycle it runs only when eopatch is the enabled pump.
+        patchManagerExecutor.init()
         patchManager.init()
         alarmManager.init()
 

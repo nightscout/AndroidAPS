@@ -54,9 +54,9 @@ class HistoryBrowserDataTest : TestBaseWithProfile() {
      *
      * Only the leaves this test really needs are stubbed - see [testRoot].
      */
-    private fun root() = testRoot { leaves ->
-        whenever(leaves.rh()).thenReturn(rh)
-    }
+    // No leaf stub for ResourceHelper any more: Metro owns it, and the Android work that made building
+    // it here unsafe moved out of the constructor into `start()`, which only the Application calls.
+    private fun root() = testRoot()
 
     private fun createSut(): HistoryWindowGraph = root().historyWindowFactory.create()
 

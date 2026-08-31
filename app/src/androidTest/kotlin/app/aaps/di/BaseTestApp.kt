@@ -10,6 +10,8 @@ import androidx.work.testing.SynchronousExecutor
 import androidx.work.testing.WorkManagerTestInitHelper
 import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.resources.TextRefIdRegistry
+import app.aaps.core.ui.CoreUiStringIds
+import app.aaps.implementation.ImplementationStringIds
 import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import app.aaps.di.metro.MetroGraphs
 import app.aaps.plugins.aps.ApsStringIds
@@ -52,8 +54,12 @@ open class BaseTestApp : Application(), MetroMemberInjector, MetroViewModelFacto
         // The same owners MainApp registers. This application replaces MainApp for instrumented tests,
         // so without this every TextRef.Named has no id to resolve to and the screens render blank
         // text - which fails as "the text is not displayed", a long way from the cause.
-        // `coreUi` and `implementation` are not here because ResourceHelperImpl registers those itself.
+        // `coreUi` and `implementation` are here now too. ResourceHelperImpl used to register them from
+        // its own constructor; that ran at an undefined moment and kept the class on Dagger, so it moved
+        // to an explicit start() called by the Application - which means this app has to do it as well.
         registerStringOwners()
+        TextRefIdRegistry.register("coreUi") { name -> CoreUiStringIds.idOf(name) }
+        TextRefIdRegistry.register("implementation") { name -> ImplementationStringIds.idOf(name) }
         // Instrumented tests run under the production applicationId with Firebase auto-initialized (via
         // FirebaseInitProvider, before onCreate), so a crash on a CI emulator — e.g. an activity launched
         // outside a HiltAndroidRule scope whose graph access then fails (RequestDexcomPermissionActivity /

@@ -70,6 +70,7 @@ import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.scenes.ActiveSceneSync
@@ -366,6 +367,8 @@ class MetroGraphs @Inject constructor(
     val deltaCalculator: DeltaCalculator get() = root.deltaCalculator
     val signatureVerifier: SignatureVerifierPlugin get() = root.signatureVerifierPlugin
     val trendCalculator: TrendCalculator get() = root.trendCalculator
+    val resourceHelper: ResourceHelper get() = root.resourceHelper
+    val fabricPrivacy: FabricPrivacy get() = root.fabricPrivacy
     val carbSuggestionActions: CarbSuggestionActions get() = root.carbSuggestionActions
     val temporaryBasalStorage: TemporaryBasalStorage get() = root.temporaryBasalStorage
     val detailedBolusInfoStorage: DetailedBolusInfoStorage get() = root.detailedBolusInfoStorage

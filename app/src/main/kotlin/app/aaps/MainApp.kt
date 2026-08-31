@@ -83,6 +83,8 @@ import app.aaps.di.metro.MetroGraphs
 import app.aaps.di.metro.MetroWorkerFactory
 import app.aaps.implementation.lifecycle.ProcessLifecycleListener
 import app.aaps.implementation.plugin.PluginStore
+import app.aaps.implementation.resources.ResourceHelperImpl
+import app.aaps.implementation.utils.fabric.FabricPrivacyImpl
 import app.aaps.implementation.profile.ProfileSwitchExpiryScheduler
 import app.aaps.implementation.receivers.BTReceiver
 import app.aaps.implementation.receivers.ChargingStateReceiver
@@ -176,6 +178,11 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var fabricPrivacy: FabricPrivacy
+    // The concrete types, only so their start() can be called below. Both are @Singleton, so these are
+    // the same objects the interface bindings hand out. `rh` is a Provider already - kept that way here
+    // rather than risking the cycle that shape exists to avoid.
+    @Inject lateinit var resourceHelperImpl: Provider<ResourceHelperImpl>
+    @Inject lateinit var fabricPrivacyImpl: FabricPrivacyImpl
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var hardLimits: HardLimits
@@ -206,6 +213,14 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         super.onCreate()
 
         registerStringOwners()
+        // The two owners :core:ui and :implementation own. ResourceHelperImpl registered these from its
+        // own constructor until now, which meant they landed whenever something first injected it -
+        // not a defined moment, and it kept the class on Dagger, because a Metro owned class is built
+        // for real in the plain-JVM graph tests where its Android lookups fail.
+        resourceHelperImpl.get().start()
+        // Applies the analytics opt-out. Must come before configureLeakCanary below, which reports
+        // through fabricPrivacy.
+        fabricPrivacyImpl.start()
 
         // Here should be everything injected
         aapsLogger.debug("onCreate")

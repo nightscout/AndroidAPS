@@ -133,10 +133,20 @@ class PatchManagerExecutor @Inject constructor(
 
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
-    // Was an @Inject fun, which is Dagger method injection - Metro does not support it and crashes the
-    // compiler on it (ZacSweers/metro#2735). Everything below is a constructor parameter, so it can run
-    // here instead. The injected task fields are not touched, by this or by monitorPatchNotification.
-    init {
+    /**
+     * Opens the patch BLE client and wires the observers. Called from [EopatchPumpPlugin.onStart],
+     * beside `preferenceManager.init()`, `patchManager.init()` and `alarmManager.init()`.
+     *
+     * **This used to be an `init` block**, so it ran the moment the class was constructed - which meant
+     * `RxBleClient.create(context)` and a bond-state receiver for *every* user, whether or not eopatch
+     * was their pump, and it made the class impossible for Metro to own (a contributed class is built
+     * for real in the plain-JVM graph tests, where the Bluetooth service is a stand-in and the cast
+     * fails). On the plugin's own lifecycle it starts only when eopatch is actually enabled.
+     *
+     * Idempotent: `Patch.init` already guards on its own `initDone`, and the disposables are added to a
+     * `CompositeDisposable` that `onStop` clears.
+     */
+    fun init() {
         patch.init(context)
         patch.setSeq(patchConfig.seq15)
 

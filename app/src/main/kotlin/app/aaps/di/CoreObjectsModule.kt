@@ -342,6 +342,10 @@ class CoreObjectsModule {
     @Provides @Singleton fun provideProcessedDeviceStatusData(graphs: MetroGraphs): ProcessedDeviceStatusData = graphs.processedDeviceStatusData
     @Provides @Singleton fun provideLastLocationDataContainer(graphs: MetroGraphs): LastLocationDataContainer = graphs.lastLocationDataContainer
     @Provides @Singleton fun provideStoreDataForDb(graphs: MetroGraphs): StoreDataForDb = graphs.storeDataForDb
+    // Metro owns these two now. They stayed on Dagger until their construction-time work moved to an
+    // explicit start() - a contributed class is built for real in the plain-JVM graph tests.
+    @Provides @Singleton fun provideResourceHelper(graphs: MetroGraphs): ResourceHelper = graphs.resourceHelper
+    @Provides @Singleton fun provideFabricPrivacy(graphs: MetroGraphs): FabricPrivacy = graphs.fabricPrivacy
     @Provides @Singleton fun provideSceneExecutor(graphs: MetroGraphs): SceneExecutor = graphs.sceneExecutor
     @Provides @Singleton fun provideDataInbox(graphs: MetroGraphs): DataInbox = graphs.dataInbox
     // Unscoped on purpose - a fresh value object per caller, as the @Binds it replaces was.
@@ -534,18 +538,14 @@ class CoreObjectsModule {
     @Suppress("LongParameterList")
     fun provideAapsLeaves(
         metroMemberInjectorProvider: Provider<MetroMemberInjector>,
-        fabricPrivacyProvider: Provider<FabricPrivacy>,
         configProvider: Provider<Config>,
         databaseConfigProvider: Provider<DatabaseConfig>,
-        rhProvider: Provider<ResourceHelper>,
         uiInteractionProvider: Provider<UiInteraction>,
         historyScopeProvider: Provider<HistoryScope>,
     ): AapsLeaves = AapsLeaves(
         metroMemberInjectorProvider,
-        fabricPrivacyProvider,
         configProvider,
         databaseConfigProvider,
-        rhProvider,
         uiInteractionProvider,
         historyScopeProvider,
     )
