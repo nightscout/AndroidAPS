@@ -61,6 +61,15 @@ interface Config {
     val APPLICATION_ID: String
     val DEBUG: Boolean
     val currentDeviceModelString: String
+
+    /**
+     * `"<manufacturer> <model>"` - the device name Nightscout stores, as `"openaps://$deviceModelForUpload"`.
+     *
+     * **A transmitted format: do not change it.** Deliberately not [currentDeviceModelString], which
+     * appends `" (<device>)"` and is for the export metadata and the preference screen. The two have
+     * always differed; sharing one would silently rewrite what every existing installation uploads.
+     */
+    val deviceModelForUpload: String
     val appName: TextRef
 
     val initProgressFlow: StateFlow<InitProgress>

@@ -22,7 +22,6 @@ import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
-import app.aaps.core.interfaces.ui.CarbSuggestionActions
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.interfaces.TextRef
@@ -59,13 +58,16 @@ class LoopPluginTest : TestBaseWithProfile() {
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var virtualPumpPlugin: PumpWithConcentration
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
-    @Mock lateinit var androidNotificationManager: NotificationManager
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
     @Mock lateinit var pumpStatusProvider: PumpStatusProvider
-    @Mock lateinit var carbSuggestionActions: CarbSuggestionActions
+    @Mock lateinit var loopNotifier: LoopNotifier
+
+    // The real one, not a mock: these tests are the record of what Nightscout receives, and the
+    // rendering is the thing being pinned.
+    private val deviceStatusJson by lazy { AndroidDeviceStatusJson(dateUtil) }
 
     private lateinit var loopPlugin: LoopPlugin
     private val testScope = CoroutineScope(Dispatchers.Unconfined)
@@ -74,14 +76,13 @@ class LoopPluginTest : TestBaseWithProfile() {
         whenever(config.APS).thenReturn(true)
         loopPlugin = LoopPlugin(
             aapsLogger, rxBus, preferences, config,
-            constraintChecker, rh, profileFunction, context, commandQueue, activePlugin, processedTbrEbData, receiverStatusStore, fabricPrivacy, dateUtil, uel,
+            constraintChecker, rh, profileFunction, commandQueue, activePlugin, processedTbrEbData, receiverStatusStore, fabricPrivacy, dateUtil, uel,
             // The shared test base still hands out a javax Provider, which other tests rely on;
             // LoopPlugin takes Metro's now, so it is adapted here rather than flipping the base.
             persistenceLayer, uiInteraction, notificationManager, Provider { pumpEnactResultProvider() },
-            processedDeviceStatusData, pumpStatusProvider, decimalFormatter, ch, carbSuggestionActions, testScope
+            processedDeviceStatusData, pumpStatusProvider, decimalFormatter, ch, loopNotifier, deviceStatusJson, testScope
         )
         whenever(activePlugin.activePump).thenReturn(virtualPumpPlugin)
-        whenever(context.getSystemService(Context.NOTIFICATION_SERVICE)).thenReturn(androidNotificationManager)
     }
 
     @Test

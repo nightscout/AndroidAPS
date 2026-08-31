@@ -52,6 +52,7 @@ class ConfigImpl @Inject constructor(
     override val DEBUG = BuildConfig.DEBUG
 
     override val currentDeviceModelString = Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ")"
+    override val deviceModelForUpload = Build.MANUFACTURER + " " + Build.MODEL
     override val appName: TextRef = TextRef.AndroidRes(R.string.app_name)
 
     private val _initProgressFlow = MutableStateFlow(InitProgress())
