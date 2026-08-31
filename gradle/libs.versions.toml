@@ -15,7 +15,7 @@ junit = "6.1.3"
 robolectric = "4.16.1"
 okhttp = "5.5.0"
 retrofit = "3.0.0"
-ktor = "3.3.0"
+ktor = "3.5.2"
 kotlinx-serialization = "1.11.0"
 # cryptography-kotlin: HMAC-SHA256, PBKDF2 and AES-256-GCM for the client-control signing and
 # pairing path. It wraps each platform's vetted implementation (JCA, CryptoKit, OpenSSL 3) rather
@@ -31,11 +31,11 @@ activityCompose = "1.13.0"
 composeBom = "2026.08.00"
 wearCompose = "1.6.2"
 hiltNavigationCompose = "1.4.0"
-navigationCompose = "2.9.8"
+navigationCompose = "2.10.0"
 lifecycleRuntimeKtx = "2.11.0"
 vico = "3.3.0"
-composeUi = "1.11.4"
-glance = "1.1.1"
+composeUi = "1.12.0"
+glance = "1.2.0"
 
 # Compose Multiplatform - spike only, see :spike:cmp. Separate from the androidx Compose above:
 # CMP publishes the same androidx.compose.* package names and its Android variants delegate to
@@ -43,8 +43,8 @@ glance = "1.1.1"
 # 1.11.1 rather than 1.12.0-beta03 on purpose: the beta's Android side delegates to androidx
 # 1.12.0-beta02, which would drag a pre-release androidx into an app pinned to stable 1.11.x.
 composeMultiplatform = "1.11.1"
-navigationEvent = "1.0.1"
-jetbrainsLifecycle = "2.9.6"
+navigationEvent = "1.1.0"
+jetbrainsLifecycle = "2.11.0"
 # material3 and material-icons-extended are separate, lagging version lines in CMP.
 cmpMaterial3 = "1.9.0"
 cmpIcons = "1.7.3"
@@ -81,7 +81,7 @@ com-google-dagger-hilt-android = { group = "com.google.dagger", name = "hilt-and
 com-google-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "dagger" }
 com-google-dagger-hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "dagger" }
 
-com-google-firebase-gradle = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version = "3.0.7" }
+com-google-firebase-gradle = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version = "3.0.8" }
 com-google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version = "34.18.0" }
 com-google-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 com-google-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
@@ -93,7 +93,7 @@ com-google-android-gms-playservices-location = { group = "com.google.android.gms
 # https://github.com/material-components/material-components-android/issues/4373
 com-google-android-material = { group = "com.google.android.material", name = "material", version = "1.14.0" }
 
-com-google-guava = { group = "com.google.guava", name = "guava", version = "33.6.0-jre" }
+com-google-guava = { group = "com.google.guava", name = "guava", version = "33.7.1-jre" }
 com-google-code-gson = { group = "com.google.code.gson", name = "gson", version = "2.14.0" }
 com-google-crypto-tink = { group = "com.google.crypto.tink", name = "tink-android", version = "1.23.0" }
 com-google-truth = { group = "com.google.truth", name = "truth", version = "1.4.5" }
