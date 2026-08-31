@@ -1,4 +1,4 @@
-package app.aaps.di
+package app.aaps.di.pump
 
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
@@ -10,7 +10,6 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.core.interfaces.pump.rfcomm.RfcommTransport
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.di.pump.DanaHistoryModule
 import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danar.DanaRPlugin
 import app.aaps.pump.danar.emulator.DanaRPumpEmulator
@@ -19,29 +18,33 @@ import app.aaps.pump.danar.emulator.DanaRVariant
 import app.aaps.pump.danar.emulator.EmulatorRfcommTransport
 import app.aaps.pump.danar.services.RealRfcommTransport
 import app.aaps.pump.danarkorean.DanaRKoreanPlugin
-import app.aaps.di.pump.DanaRSModule
 import app.aaps.pump.danars.emulator.EmulatorBleTransport
 import app.aaps.pump.danars.emulator.NotificationPumpDisplay
 import app.aaps.pump.danars.encryption.EncryptionType
 import app.aaps.pump.danars.services.BleTransportImpl
 import app.aaps.pump.danarv2.DanaRv2Plugin
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.BindingContainer
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.Provides
+import dev.zacsweers.metro.SingleIn
 
-@Module(
-    includes = [
-        DanaHistoryModule::class,
-        DanaRSModule::class,
-    ]
-)
-@InstallIn(SingletonComponent::class)
-class DanaModules {
+/**
+ * The Dana transports, on Metro.
+ *
+ * Was `DanaModules`, a Dagger module - and it had to move. `provideRfcommTransport` does not merely
+ * read the three DanaR plugins, it calls `setPluginEnabled` on them. Once those plugins became Metro
+ * owned, Dagger went on building its **own** copies here (it ignores `@SingleIn` and just sees the
+ * `@Inject` constructor), so with a Dana emulator option on, the auto-enable would have flipped objects
+ * that are not the ones in the plugin list. Nothing failed to compile and no guard caught it -
+ * `SplitBrainTest` looks for javax `@Singleton` classes Metro also builds, not the mirror case.
+ */
+@ContributesTo(AppScope::class)
+@BindingContainer
+object DanaTransportBindings {
 
     @Provides
-    @Singleton
+    @SingleIn(AppScope::class)
     fun provideBleTransport(
         config: Config,
         bleTransportImpl: BleTransportImpl,
@@ -75,7 +78,7 @@ class DanaModules {
     }
 
     @Provides
-    @Singleton
+    @SingleIn(AppScope::class)
     fun provideRfcommTransport(
         config: Config,
         realRfcommTransport: RealRfcommTransport,

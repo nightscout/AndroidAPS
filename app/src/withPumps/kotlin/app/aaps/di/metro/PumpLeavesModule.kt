@@ -74,22 +74,10 @@ class PumpLeavesModule {
     @Provides
     @Singleton
     fun providePumpLeaves(
-        bleTransport: Provider<BleTransport>,
-        rfcommTransport: Provider<RfcommTransport>,
-        danaHistoryRecordDao: Provider<DanaHistoryRecordDao>,
-        diaconnHistoryRecordDao: Provider<DiaconnHistoryRecordDao>,
-        diaconnHistoryDatabase: Provider<DiaconnHistoryDatabase>,
         equilBleTransport: Provider<EquilBleTransport>,
-        equilHistoryPumpDao: Provider<EquilHistoryPumpDao>,
-        equilHistoryRecordDao: Provider<EquilHistoryRecordDao>,
-        dashHistoryDatabase: Provider<DashHistoryDatabase>,
-        historyMapper: Provider<HistoryMapper>,
-        historyRecordDao: Provider<HistoryRecordDao>,
         medtrumBleTransport: Provider<MedtrumBleTransport>,
         omnipodDashManager: Provider<OmnipodDashManager>,
         omnipodDashPodStateManager: Provider<OmnipodDashPodStateManager>,
-        danaHistoryDatabase: Provider<DanaHistoryDatabase>,
-        danaRSPackets: Provider<Set<DanaRSPacket>>,
         eopatchPumpPlugin: Provider<EopatchPumpPlugin>,
         patchManager: Provider<IPatchManager>,
         patchManagerExecutor: Provider<PatchManagerExecutor>,
@@ -106,9 +94,9 @@ class PumpLeavesModule {
         aapsOmnipodUtil: Provider<AapsOmnipodUtil>,
         omnipodAlertUtil: Provider<OmnipodAlertUtil>
     ): PumpLeaves = PumpLeaves(
-        bleTransport, rfcommTransport, danaHistoryRecordDao, diaconnHistoryRecordDao, diaconnHistoryDatabase,
-        equilBleTransport, equilHistoryPumpDao, equilHistoryRecordDao, dashHistoryDatabase, historyMapper, historyRecordDao,
-        medtrumBleTransport, omnipodDashManager, omnipodDashPodStateManager, danaHistoryDatabase, danaRSPackets,
+
+        equilBleTransport,
+        medtrumBleTransport, omnipodDashManager, omnipodDashPodStateManager,
         eopatchPumpPlugin,
 
         patchManager, patchManagerExecutor, patchConfig, tempBasalManager, normalBasalManager,

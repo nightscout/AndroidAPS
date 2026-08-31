@@ -6,34 +6,34 @@ import app.aaps.pump.omnipod.dash.history.DashHistory
 import app.aaps.pump.omnipod.dash.history.database.DashHistoryDatabase
 import app.aaps.pump.omnipod.dash.history.database.HistoryRecordDao
 import app.aaps.pump.omnipod.dash.history.mapper.HistoryMapper
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.BindingContainer
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.Provides
+import dev.zacsweers.metro.SingleIn
 
-/** The Dash history database, provided from `:app` so `:pump:omnipod:dash` needs no Dagger processor. */
-@Module
-@InstallIn(SingletonComponent::class)
-class OmnipodDashHistoryModule {
+/** The Dash history database. In `:app` so the pump module needs no Dagger processor; Metro owns it. */
+@ContributesTo(AppScope::class)
+@BindingContainer
+object OmnipodDashHistoryBindings {
 
     @Provides
-    @Singleton
+    @SingleIn(AppScope::class)
     fun provideDatabase(context: Context): DashHistoryDatabase = DashHistoryDatabase.build(context)
 
     @Provides
-    @Singleton
+    @SingleIn(AppScope::class)
     fun provideHistoryRecordDao(dashHistoryDatabase: DashHistoryDatabase): HistoryRecordDao =
         dashHistoryDatabase.historyRecordDao()
 
     // Was @Reusable, which Metro does not support. HistoryMapper holds no state, so @Singleton is the
     // safe replacement: one instance instead of "one or more", never fewer.
     @Provides
-    @Singleton
+    @SingleIn(AppScope::class)
     fun provideHistoryMapper(): HistoryMapper = HistoryMapper()
 
     @Provides
-    @Singleton
+    @SingleIn(AppScope::class)
     fun provideDashHistory(dao: HistoryRecordDao, historyMapper: HistoryMapper, logger: AAPSLogger): DashHistory =
         DashHistory(dao, historyMapper, logger)
 }

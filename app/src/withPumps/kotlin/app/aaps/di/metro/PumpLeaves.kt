@@ -77,23 +77,11 @@ import javax.inject.Provider
  */
 @BindingContainer
 class PumpLeaves(
-    private val bleTransportProvider: Provider<BleTransport>,
     // Same emulator seam as BleTransport: DanaModules picks EmulatorRfcommTransport by config.
-    private val rfcommTransportProvider: Provider<RfcommTransport>,
-    private val danaHistoryRecordDaoProvider: Provider<DanaHistoryRecordDao>,
-    private val diaconnHistoryRecordDaoProvider: Provider<DiaconnHistoryRecordDao>,
-    private val diaconnHistoryDatabaseProvider: Provider<DiaconnHistoryDatabase>,
     private val equilBleTransportProvider: Provider<EquilBleTransport>,
-    private val equilHistoryPumpDaoProvider: Provider<EquilHistoryPumpDao>,
-    private val equilHistoryRecordDaoProvider: Provider<EquilHistoryRecordDao>,
-    private val dashHistoryDatabaseProvider: Provider<DashHistoryDatabase>,
-    private val historyMapperProvider: Provider<HistoryMapper>,
-    private val historyRecordDaoProvider: Provider<HistoryRecordDao>,
     private val medtrumBleTransportProvider: Provider<MedtrumBleTransport>,
     private val omnipodDashManagerProvider: Provider<OmnipodDashManager>,
     private val omnipodDashPodStateManagerProvider: Provider<OmnipodDashPodStateManager>,
-    private val danaHistoryDatabaseProvider: Provider<DanaHistoryDatabase>,
-    private val danaRSPacketsProvider: Provider<Set<DanaRSPacket>>,
     // The pump state holders and driver plugins - see the note above their @Provides below.
     private val eopatchPumpPluginProvider: Provider<EopatchPumpPlugin>,
     private val patchManagerProvider: Provider<IPatchManager>,
@@ -112,26 +100,14 @@ class PumpLeaves(
     private val omnipodAlertUtilProvider: Provider<OmnipodAlertUtil>
 ) {
 
-    @Provides fun bleTransport(): BleTransport = bleTransportProvider.get()
-    @Provides fun rfcommTransport(): RfcommTransport = rfcommTransportProvider.get()
-    @Provides fun danaHistoryRecordDao(): DanaHistoryRecordDao = danaHistoryRecordDaoProvider.get()
-    @Provides fun diaconnHistoryRecordDao(): DiaconnHistoryRecordDao = diaconnHistoryRecordDaoProvider.get()
-    @Provides fun diaconnHistoryDatabase(): DiaconnHistoryDatabase = diaconnHistoryDatabaseProvider.get()
     @Provides fun equilBleTransport(): EquilBleTransport = equilBleTransportProvider.get()
-    @Provides fun equilHistoryPumpDao(): EquilHistoryPumpDao = equilHistoryPumpDaoProvider.get()
-    @Provides fun equilHistoryRecordDao(): EquilHistoryRecordDao = equilHistoryRecordDaoProvider.get()
-    @Provides fun dashHistoryDatabase(): DashHistoryDatabase = dashHistoryDatabaseProvider.get()
-    @Provides fun historyMapper(): HistoryMapper = historyMapperProvider.get()
-    @Provides fun historyRecordDao(): HistoryRecordDao = historyRecordDaoProvider.get()
     @Provides fun medtrumBleTransport(): MedtrumBleTransport = medtrumBleTransportProvider.get()
     @Provides fun omnipodDashManager(): OmnipodDashManager = omnipodDashManagerProvider.get()
     @Provides fun omnipodDashPodStateManager(): OmnipodDashPodStateManager = omnipodDashPodStateManagerProvider.get()
 
 
-    @Provides fun danaHistoryDatabase(): DanaHistoryDatabase = danaHistoryDatabaseProvider.get()
 
     /** The command set, already assembled by Dagger's @IntoSet multibinding in `DanaRSModule`. */
-    @Provides fun danaRSPackets(): Set<DanaRSPacket> = danaRSPacketsProvider.get()
 
     /*
      * Pump state holders and driver plugins, handed over from Dagger so there is exactly ONE of each.

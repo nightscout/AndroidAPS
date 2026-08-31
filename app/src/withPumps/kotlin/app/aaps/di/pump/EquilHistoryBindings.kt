@@ -4,28 +4,28 @@ import android.content.Context
 import app.aaps.pump.equil.database.EquilHistoryDatabase
 import app.aaps.pump.equil.database.EquilHistoryPumpDao
 import app.aaps.pump.equil.database.EquilHistoryRecordDao
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.BindingContainer
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.Provides
+import dev.zacsweers.metro.SingleIn
 
-/** The Equil history database, provided from `:app` so `:pump:equil` needs no Dagger processor. */
-@Module
-@InstallIn(SingletonComponent::class)
-class EquilHistoryModule {
+/** The Equil history database. In `:app` so the pump module needs no Dagger processor; Metro owns it. */
+@ContributesTo(AppScope::class)
+@BindingContainer
+object EquilHistoryBindings {
 
     @Provides
-    @Singleton
+    @SingleIn(AppScope::class)
     fun provideDatabase(context: Context): EquilHistoryDatabase = EquilHistoryDatabase.build(context)
 
     @Provides
-    @Singleton
+    @SingleIn(AppScope::class)
     fun provideHistoryRecordDao(equilHistoryDatabase: EquilHistoryDatabase): EquilHistoryRecordDao =
         equilHistoryDatabase.historyRecordDao()
 
     @Provides
-    @Singleton
+    @SingleIn(AppScope::class)
     fun provideHistoryPumpDao(equilHistoryDatabase: EquilHistoryDatabase): EquilHistoryPumpDao =
         equilHistoryDatabase.historyPumpDao()
 }
