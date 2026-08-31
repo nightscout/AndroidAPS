@@ -333,4 +333,16 @@
     <string name="cal_precheck_delta_too_high">Glucose is changing too fast (Δ %1$s %3$s per 5 min, limit %2$s). Wait for stability.</string>
     <string name="cal_precheck_mark_sensor_change">Mark sensor change</string>
 
+    <!-- Afrezza Inhaled Insulin -->
+    <string name="log_afrezza_dose">Log Afrezza Dose</string>
+    <string name="afrezza_confirm_title">Confirm Afrezza Dose</string>
+    <string name="afrezza_select_dose">Select Afrezza Dose</string>
+    <string name="afrezza_confirm_log">Log %1$dU Afrezza?</string>
+    <string name="afrezza_logged">%1$dU Afrezza logged</string>
+    <string name="afrezza_inhaled">Afrezza inhaled</string>
+    <string name="afrezza_not_configured">Add Afrezza insulin in Insulin Management first</string>
+    <string name="afrezza_carb_prompt_title">Enter Carbs?</string>
+    <string name="afrezza_carb_prompt_message">Open the Bolus Calculator to enter carbs for this meal?</string>
+    <string name="afrezza_no_profile">No active profile — cannot set temp basal</string>
+
 </resources>

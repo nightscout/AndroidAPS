@@ -145,6 +145,19 @@ class HardLimitsImplTest : TestBase() {
     }
 
     @Test
+    fun `diaInhaledRange and peakInhaledRange use the inhaled limits`() {
+        // Inhaled insulin (e.g. Afrezza) has its own, much narrower limits, and they are the same
+        // for every age type - see HardLimits.LIMIT_DIA_INHALED / LIMIT_PEAK_INHALED.
+        whenever(preferences.get(StringKey.SafetyAge)).thenReturn("child")
+        assertThat(hardLimits.diaInhaledRange()).isEqualTo(1.0..3.0)
+        assertThat(hardLimits.peakInhaledRange()).isEqualTo(10..30)
+
+        whenever(preferences.get(StringKey.SafetyAge)).thenReturn("pregnant")
+        assertThat(hardLimits.diaInhaledRange()).isEqualTo(1.0..3.0)
+        assertThat(hardLimits.peakInhaledRange()).isEqualTo(10..30)
+    }
+
+    @Test
     fun `icRange returns correct values for all ages`() {
         whenever(preferences.get(StringKey.SafetyAge)).thenReturn("child")
         assertThat(hardLimits.icRange()).isEqualTo(2.0..100.0)

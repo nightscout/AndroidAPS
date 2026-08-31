@@ -2,6 +2,7 @@ package app.aaps.plugins.sync.nsclientV3.extensions
 
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.ICfg
+import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.data.model.IDs
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
@@ -14,7 +15,12 @@ import java.security.InvalidParameterException
 fun NSBolus.toBolus(insulinFallback: ICfg): BS {
     val iCfg =
         iCfg?.let {
-            ICfg(insulinLabel = it.insulinLabel, insulinEndTime = it.insulinEndTime, insulinPeakTime = it.insulinPeakTime, concentration = it.concentration)
+            ICfg(
+                insulinLabel = it.insulinLabel, insulinEndTime = it.insulinEndTime, insulinPeakTime = it.insulinPeakTime,
+                concentration = it.concentration,
+                // Null from a build before the field existed: reconstruct from the peak.
+                isInhaled = it.isInhaled ?: InsulinType.isInhaledPeak(it.insulinPeakTime)
+            )
         } ?: insulinFallback
     return BS(
         isValid = isValid,
@@ -47,7 +53,10 @@ fun BS.toNSBolus(): NSBolus =
         pumpType = ids.pumpType?.name,
         pumpSerial = ids.pumpSerial,
         endId = ids.endId,
-        iCfg = NSICfg(insulinLabel = iCfg.insulinLabel, insulinEndTime = iCfg.insulinEndTime, insulinPeakTime = iCfg.insulinPeakTime, concentration = iCfg.concentration)
+        iCfg = NSICfg(
+            insulinLabel = iCfg.insulinLabel, insulinEndTime = iCfg.insulinEndTime, insulinPeakTime = iCfg.insulinPeakTime,
+            concentration = iCfg.concentration, isInhaled = iCfg.isInhaled
+        )
     )
 
 fun BS.Type?.toBolusType(): NSBolus.BolusType =

@@ -28,6 +28,9 @@ enum class ElementType(
     BOLUS_WIZARD(category = ElementCategory.TREATMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT),
     QUICK_WIZARD(protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT),
     TREATMENT(category = ElementCategory.TREATMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT),
+    // Afrezza is local-only (inhaled directly by the user, never relayed - see DataHandlerMobile.kt), so it is
+    // intentionally NOT gated by pairing, same as CALIBRATION below: it works identically on master or client.
+    AFREZZA(category = ElementCategory.TREATMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS),
 
     // CGM
     CGM_XDRIP(category = ElementCategory.CGM, searchable = true),

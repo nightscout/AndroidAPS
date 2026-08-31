@@ -1,0 +1,27 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24"
+    android:tint="?attr/colorControlNormal">
+    <!-- Simplified inhaler icon: mouthpiece + cartridge body + puff lines -->
+    <!-- Inhaler body -->
+    <path
+        android:pathData="M7,8 L11,8 L11,4 L15,4 L15,8 L17,8 L17,18 L7,18 Z"
+        android:fillColor="@android:color/white" />
+    <!-- Mouthpiece -->
+    <path
+        android:pathData="M9,18 L15,18 L14,22 L10,22 Z"
+        android:fillColor="@android:color/white" />
+    <!-- Puff cloud lines -->
+    <path
+        android:pathData="M5,6 C4,5 4,4 5,3"
+        android:strokeWidth="1"
+        android:strokeColor="@android:color/white"
+        android:fillColor="#00000000" />
+    <path
+        android:pathData="M3,7 C2,6 2,5 3,4"
+        android:strokeWidth="1"
+        android:strokeColor="@android:color/white"
+        android:fillColor="#00000000" />
+</vector>

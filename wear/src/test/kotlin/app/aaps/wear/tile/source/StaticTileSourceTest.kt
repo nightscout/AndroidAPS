@@ -50,6 +50,10 @@ class StaticTileSourceTest {
         whenever(resources.getString(R.string.menu_treatment_short)).thenReturn("treat")
         whenever(resources.getString(R.string.menu_treatment)).thenReturn("Treatment")
         whenever(resources.getString(R.string.action_insulin)).thenReturn("Insulin")
+        // Afrezza (our fork's addition - upstream has no Afrezza action, so this stub doesn't
+        // exist in their version of this test).
+        whenever(resources.getString(R.string.action_afrezza_short)).thenReturn("Afrezza")
+        whenever(resources.getString(R.string.action_afrezza)).thenReturn("Afrezza label")
         whenever(resources.getString(R.string.action_carbs)).thenReturn("Carbs")
         whenever(resources.getString(R.string.action_ecarbs)).thenReturn("eCarbs")
         whenever(resources.getString(R.string.menu_tempt)).thenReturn("TT")
@@ -98,8 +102,9 @@ class StaticTileSourceTest {
         val actions = source.getSelectedActions()
 
         assertThat(actions).hasSize(4)
-        // getActions().take(4) => first four settingNames in declaration order.
-        assertThat(actions.map { it.buttonText }).containsExactly("wizard", "treat", "Insulin", "Carbs").inOrder()
+        // getActions().take(4) => first four settingNames in declaration order. Afrezza (our
+        // fork's addition, "Afrezza" per the stub above) sits 4th, ahead of Carbs.
+        assertThat(actions.map { it.buttonText }).containsExactly("wizard", "treat", "Insulin", "Afrezza").inOrder()
     }
 
     /** The default config is written exactly once, only when the first default key is absent. */

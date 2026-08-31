@@ -228,6 +228,7 @@
     <string name="select_site_location">Select site location</string>
     <string name="site_location">Site location</string>
     <string name="overview_insulin_label">Insulin</string>
+    <string name="overview_afrezza_label">Afrezza</string>
     <string name="stoptemptarget">Stop temp target</string>
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
@@ -345,6 +346,7 @@
     <string name="profile_management">Profile</string>
     <string name="careportal_snackbolus">Snack Bolus</string>
     <string name="careportal_mealbolus">Meal Bolus</string>
+    <string name="afrezza_type_shortname">Afrezza</string>
     <string name="careportal_correctionbolus">Correction Bolus</string>
     <string name="careportal_combobolus">Combo Bolus</string>
     <string name="careportal_tempbasalstart">Temp Basal Start</string>
@@ -461,6 +463,7 @@
     <string name="boluswizard">Bolus wizard</string>
     <string name="treatment_desc">Record insulin and carbs together</string>
     <string name="treatment_insulin_desc">Deliver bolus manually</string>
+    <string name="treatment_afrezza_desc">Log inhaled Afrezza dose</string>
     <string name="treatment_carbs_desc">Record carbs without insulin</string>
     <string name="treatment_calculator_desc">Calculate bolus</string>
     <string name="insulin_management">Insulin</string>
@@ -791,6 +794,7 @@
     <string name="wizard_trend_detail">15min trend (%1$s %2$s)</string>
     <string name="wizard_constraint_bolus_size">Insulin constraint violation!\nCannot deliver %1$.2fU</string>
     <string name="wizard_pump_not_available">No pump available!</string>
+    <string name="afrezza_not_configured">Add Afrezza insulin in Insulin Management first</string>
     <string name="quick_wizard_not_available">Selected quickwizard no longer available, please refresh your tile</string>
     <string name="quickwizard_managemnt">QuickWizard</string>
 

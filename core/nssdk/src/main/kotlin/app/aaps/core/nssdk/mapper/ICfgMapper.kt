@@ -11,7 +11,10 @@ internal fun RemoteICfg?.toNSICfg(): NSICfg? {
         insulinLabel = insulinLabel,
         insulinEndTime = insulinEndTime,
         insulinPeakTime = insulinPeakTime,
-        concentration = concentration
+        concentration = concentration,
+        // Passed through as-is, null included: this SDK module cannot see HardLimits, so callers
+        // reconstruct an absent flag from the peak (see the nsclientV3 extensions).
+        isInhaled = isInhaled
     )
 }
 
@@ -23,6 +26,7 @@ internal fun NSICfg?.toRemoteICfg(): RemoteICfg? {
         insulinLabel = insulinLabel,
         insulinEndTime = insulinEndTime,
         insulinPeakTime = insulinPeakTime,
-        concentration = concentration
+        concentration = concentration,
+        isInhaled = isInhaled
     )
 }

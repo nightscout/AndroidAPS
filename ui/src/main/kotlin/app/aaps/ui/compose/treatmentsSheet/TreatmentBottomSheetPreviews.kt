@@ -20,6 +20,7 @@ internal fun TreatmentBottomSheetPreview() {
             showCalibration = true,
             showTreatment = true,
             showInsulin = true,
+            showAfrezza = true,
             showCarbs = true,
             showCalculator = true,
             isDexcomSource = false,

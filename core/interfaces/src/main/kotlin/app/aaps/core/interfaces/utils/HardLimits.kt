@@ -38,7 +38,20 @@ interface HardLimits {
             AgeType.RESISTANT_ADULT to 5.0..9.0,
             AgeType.PREGNANT to 5.0..10.0
         )
+
+        // Inhaled insulin (e.g. Afrezza) acts far faster than injected insulin, so it needs its
+        // own limits - the ranges above would reject every valid inhaled profile. Both ranges are
+        // widened toward Afrezza's own clinical data (duration of action 1.5-3 h, peak effect
+        // 35-45 min) while leaving room for person-to-person variability.
+        val LIMIT_DIA_INHALED = mapOf(
+            AgeType.CHILD to 1.0..3.0,
+            AgeType.TEENAGE to 1.0..3.0,
+            AgeType.ADULT to 1.0..3.0,
+            AgeType.RESISTANT_ADULT to 1.0..3.0,
+            AgeType.PREGNANT to 1.0..3.0
+        )
         val LIMIT_PEAK = 35..120 // min
+        val LIMIT_PEAK_INHALED = 10..30 // min
         val LIMIT_IC = mapOf(
             AgeType.CHILD to 2.0..100.0,
             AgeType.TEENAGE to 2.0..100.0,
@@ -82,7 +95,13 @@ interface HardLimits {
     fun maxIobSMB(): Double
     fun maxBasal(): Double
     fun diaRange(): ClosedFloatingPointRange<Double>
+
+    /** DIA limits for inhaled insulin (e.g. Afrezza) - see [LIMIT_DIA_INHALED]. */
+    fun diaInhaledRange(): ClosedFloatingPointRange<Double>
     fun peakRange(): IntRange
+
+    /** Peak limits for inhaled insulin (e.g. Afrezza) - see [LIMIT_PEAK_INHALED]. */
+    fun peakInhaledRange(): IntRange
     fun icRange(): ClosedFloatingPointRange<Double>
 
     // safety checks

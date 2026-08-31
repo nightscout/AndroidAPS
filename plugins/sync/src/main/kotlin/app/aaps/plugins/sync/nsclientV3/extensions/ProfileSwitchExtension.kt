@@ -1,6 +1,7 @@
 package app.aaps.plugins.sync.nsclientV3.extensions
 
 import app.aaps.core.data.model.ICfg
+import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.PS
 import app.aaps.core.data.pump.defs.PumpType
@@ -26,7 +27,12 @@ fun NSProfileSwitch.toProfileSwitch(profileRepository: ProfileRepository, dateUt
     val profileSealed = ProfileSealed.Pure(value = pureProfile, activePlugin = null)
     val iCfg =
         iCfg?.let {
-            ICfg(insulinLabel = it.insulinLabel, insulinEndTime = it.insulinEndTime, insulinPeakTime = it.insulinPeakTime, concentration = it.concentration)
+            ICfg(
+                insulinLabel = it.insulinLabel, insulinEndTime = it.insulinEndTime, insulinPeakTime = it.insulinPeakTime,
+                concentration = it.concentration,
+                // Null from a build before the field existed: reconstruct from the peak.
+                isInhaled = it.isInhaled ?: InsulinType.isInhaledPeak(it.insulinPeakTime)
+            )
         } ?: insulinFallback
 
 
@@ -75,6 +81,9 @@ fun PS.toNSProfileSwitch(dateUtil: DateUtil, decimalFormatter: DecimalFormatter)
         pumpType = ids.pumpType?.name,
         pumpSerial = ids.pumpSerial,
         endId = ids.endId,
-        iCfg = NSICfg(insulinLabel = iCfg.insulinLabel, insulinEndTime = iCfg.insulinEndTime, insulinPeakTime = iCfg.insulinPeakTime, concentration = iCfg.concentration)
+        iCfg = NSICfg(
+            insulinLabel = iCfg.insulinLabel, insulinEndTime = iCfg.insulinEndTime, insulinPeakTime = iCfg.insulinPeakTime,
+            concentration = iCfg.concentration, isInhaled = iCfg.isInhaled
+        )
     )
 }

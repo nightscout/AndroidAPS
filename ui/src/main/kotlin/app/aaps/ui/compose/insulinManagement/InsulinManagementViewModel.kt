@@ -255,7 +255,10 @@ class InsulinManagementViewModel @Inject constructor(
     private fun applyCardSwitch(index: Int) {
         val insulins = uiState.value.insulins
         val iCfg = insulins.getOrNull(index) ?: return
-        val editorTemplate = InsulinType.fromPeak(iCfg.insulinPeakTime)
+        // The stored flag is authoritative for the inhaled identity: fromPeak only matches the exact
+        // factory peak (15 min for Afrezza), so a user-chosen peak anywhere else inside the valid
+        // 10-30 min range would silently load as a non-inhaled insulin.
+        val editorTemplate = if (iCfg.isInhaled) InsulinType.OREF_INHALED_AFREZZA else InsulinType.fromPeak(iCfg.insulinPeakTime)
         val editorNickname = iCfg.insulinNickname.takeIf { it.isNotBlank() } ?: rh.gs(editorTemplate.label)
         val defaultNickname = rh.gs(editorTemplate.label)
         val autoNameEnabled = editorNickname == defaultNickname
@@ -344,6 +347,18 @@ class InsulinManagementViewModel @Inject constructor(
     }
 
     fun updateEditorPeak(peakMinutes: Int) {
+        // Inhaled insulins (e.g. Afrezza) are only recognised by fromPeak() at their exact
+        // factory-default peak (15 min for Afrezza). Re-deriving the template on every edit would
+        // drop out of the inhaled identity the moment the value moves even 1 minute within its own
+        // valid 10-30 range, silently reverting isInhaled to false and, with it, the inhaled-specific
+        // peak/DIA hard limits and the auto-generated nickname. Once editing an inhaled template,
+        // keep that identity - only non-inhaled templates re-derive from peak (this preserves the
+        // existing "drag peak to switch between Novorapid/Fiasp/Lyumjev" auto-naming behavior).
+        val currentTemplate = uiState.value.editorTemplate
+        if (currentTemplate?.isInhaled == true) {
+            _uiState.update { it.copy(editorPeakMinutes = peakMinutes) }
+            return
+        }
         val editorTemplate = InsulinType.fromPeak(peakMinutes.toLong() * 60_000L)
         _uiState.update {
             it.copy(
@@ -414,18 +429,23 @@ class InsulinManagementViewModel @Inject constructor(
             insulinLabel = fullName,
             insulinEndTime = 0,
             insulinPeakTime = 0,
-            concentration = state.editorConcentration.value
+            concentration = state.editorConcentration.value,
+            // Persist the identity the editor has been holding in view state. Everything downstream
+            // reads this instead of re-deriving it from the peak.
+            isInhaled = state.editorTemplate?.isInhaled == true
         )
         editedICfg.insulinNickname = nickname
         editedICfg.setDia(state.editorDiaHours)
         editedICfg.setPeak(state.editorPeakMinutes)
 
-        // Validation
-        if (editedICfg.dia !in hardLimits.diaRange()) {
+        // Validation. Inhaled insulin (e.g. Afrezza) is checked against its own, much narrower
+        // ranges - see HardLimits.LIMIT_DIA_INHALED / LIMIT_PEAK_INHALED.
+        val isInhaled = state.editorTemplate?.isInhaled == true
+        if (editedICfg.dia !in (if (isInhaled) hardLimits.diaInhaledRange() else hardLimits.diaRange())) {
             showSnackbar(rh.gs(CoreUiR.string.value_out_of_hard_limits, rh.gs(CoreUiR.string.insulin_dia), editedICfg.dia))
             return false
         }
-        if (editedICfg.peak !in hardLimits.peakRange()) {
+        if (editedICfg.peak !in (if (isInhaled) hardLimits.peakInhaledRange() else hardLimits.peakRange())) {
             showSnackbar(rh.gs(CoreUiR.string.value_out_of_hard_limits, rh.gs(CoreUiR.string.insulin_peak), editedICfg.peak.toDouble()))
             return false
         }
@@ -564,7 +584,15 @@ class InsulinManagementViewModel @Inject constructor(
     val concentrationEnabled: Boolean
         get() = preferences.get(BooleanKey.GeneralInsulinConcentration)
 
-    fun diaRange(): ClosedFloatingPointRange<Double> = hardLimits.diaRange()
+    /** Slider limits for the template being edited. Inhaled insulin (e.g. Afrezza) uses its own
+     *  ranges, so the slider cannot be dragged outside what validation would then reject. */
+    private val editorIsInhaled: Boolean get() = _uiState.value.editorTemplate?.isInhaled == true
+
+    fun diaRange(): ClosedFloatingPointRange<Double> =
+        if (editorIsInhaled) hardLimits.diaInhaledRange() else hardLimits.diaRange()
+
     /** Peak limits as a Double range, because the sliders work with Double. */
-    fun peakRange(): ClosedFloatingPointRange<Double> = hardLimits.peakRange().let { it.first.toDouble()..it.last.toDouble() }
+    fun peakRange(): ClosedFloatingPointRange<Double> =
+        (if (editorIsInhaled) hardLimits.peakInhaledRange() else hardLimits.peakRange())
+            .let { it.first.toDouble()..it.last.toDouble() }
 }

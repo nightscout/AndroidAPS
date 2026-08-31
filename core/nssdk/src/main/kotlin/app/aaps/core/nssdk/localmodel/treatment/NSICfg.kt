@@ -7,5 +7,7 @@ data class NSICfg(
     val insulinLabel: String,
     val insulinEndTime: Long,
     val insulinPeakTime: Long,
-    val concentration: Double
+    val concentration: Double,
+    /** Null in payloads from builds before the field existed - callers reconstruct from the peak. */
+    val isInhaled: Boolean? = null
 )

@@ -6,5 +6,6 @@ data class RemoteICfg(
     @SerializedName("insulinLabel") val insulinLabel: String,
     @SerializedName("insulinEndTime") val insulinEndTime: Long,
     @SerializedName("insulinPeakTime") val insulinPeakTime: Long,
-    @SerializedName("concentration") val concentration: Double
+    @SerializedName("concentration") val concentration: Double,
+    @SerializedName("isInhaled") val isInhaled: Boolean? = null
 )

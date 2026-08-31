@@ -7,6 +7,8 @@ import androidx.compose.ui.graphics.toArgb
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.BS
+// Afrezza: used to build the IDs(pumpId = ...) record in doAfrezzaBolus below.
+import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.HR
@@ -19,6 +21,9 @@ import app.aaps.core.data.model.TDD
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.time.T
+// Afrezza: uel.log(...) user-entry line in doAfrezzaBolus below - not used elsewhere in this file.
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.data.ui.ConfirmationRole
@@ -36,10 +41,15 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
+// Afrezza: cartridge-to-ICfg lookup in handleAfrezzaPreCheck/doAfrezzaBolus below.
+import app.aaps.core.interfaces.insulin.InsulinManager
+import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+// Afrezza: user-entry log line in doAfrezzaBolus below.
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -153,6 +163,12 @@ class DataHandlerMobile @Inject constructor(
     // wizardBolusExecutor stays on the wear path for Fill ONLY (no relay command for Fill).
     private val batchExecutor: BatchExecutor,
     private val wizardExecutor: WizardExecutor,
+    // Afrezza: cartridge-to-ICfg lookup and dose logging (handleAfrezzaPreCheck/doAfrezzaBolus). Afrezza is
+    // inhaled by the user directly - it is documentation of a dose that already physically happened, not a
+    // remote-deliverable action, so it deliberately stays off the batchExecutor/wizardExecutor relay (same
+    // local-only category as Fill) and is guarded by rejectIfAapsClient() below.
+    private val insulinManager: InsulinManager,
+    private val uel: UserEntryLogger,
 ) {
 
     @Inject lateinit var automation: Automation
@@ -278,6 +294,12 @@ class DataHandlerMobile @Inject constructor(
             // Commit the parked eCarbs through the relay (MASTER → local deliverECarbs; CLIENT → master records them).
             contacting() // CLIENT: show the spinner during the commit round-trip too (no-op on master).
             onCommitResult(batchExecutor.commit(it.bolusId, Sources.Wear, rh.gs(app.aaps.core.ui.R.string.overview_treatment_label)))
+        }
+        // Afrezza: local-only, same category as Fill below (see constructor comment).
+        onEvent<EventData.ActionAfrezzaPreCheck> { handleAfrezzaPreCheck(it) }
+        onEvent<EventData.ActionAfrezzaConfirmed> {
+            if (rejectIfAapsClient()) return@onEvent
+            doAfrezzaBolus(it.units)
         }
         onEvent<EventData.ActionFillPresetPreCheck> { handleFillPresetPreCheck(it) }
         onEvent<EventData.ActionFillPreCheck> { handleFillPreCheck(it) }
@@ -843,6 +865,69 @@ class DataHandlerMobile @Inject constructor(
         is ActionProgress.Unconfirmed -> rh.gs(app.aaps.core.ui.R.string.clientcontrol_unconfirmed_wear)
         is ActionProgress.Rejected    -> progress.detail ?: rh.gs(progress.reason.failTextResId())
         else                          -> rh.gs(app.aaps.core.ui.R.string.error)
+    }
+
+    private suspend fun handleAfrezzaPreCheck(command: EventData.ActionAfrezzaPreCheck) {
+        val units = command.units
+        if (units !in listOf(4, 8, 12)) {
+            sendError("Invalid Afrezza cartridge: ${units}U")
+            return
+        }
+        // Find the Afrezza ICfg from InsulinManager
+        val afrezzaPeak = InsulinType.OREF_INHALED_AFREZZA.insulinPeakTime
+        val afrezzaIcfg = insulinManager.insulins.firstOrNull { it.insulinPeakTime == afrezzaPeak }
+            ?: insulinManager.insulins.firstOrNull { it.isInhaled }
+        if (afrezzaIcfg == null) {
+            sendError(rh.gs(app.aaps.core.ui.R.string.afrezza_not_configured))
+            return
+        }
+        val message = "Afrezza: ${units}U"
+        sendToWear(
+            EventData.ConfirmAction(
+                rh.gs(app.aaps.core.ui.R.string.confirm).uppercase(), message,
+                returnCommand = EventData.ActionAfrezzaConfirmed(units)
+            )
+        )
+    }
+
+    private suspend fun doAfrezzaBolus(units: Int) {
+        // Defense-in-depth: Afrezza is inhaled directly by the user and is documentation of a dose that already
+        // happened, not a remote-deliverable action - it must never be recorded on a client (which would silently
+        // desync from the master). Same category as Fill (see constructor comment).
+        if (rejectIfAapsClient()) return
+        val afrezzaPeak = InsulinType.OREF_INHALED_AFREZZA.insulinPeakTime
+        val afrezzaIcfg = insulinManager.insulins.firstOrNull { it.insulinPeakTime == afrezzaPeak }
+            ?: insulinManager.insulins.firstOrNull { it.isInhaled }
+        if (afrezzaIcfg == null) {
+            sendError(rh.gs(app.aaps.core.ui.R.string.afrezza_not_configured))
+            return
+        }
+        val now = dateUtil.now()
+        // Mirror the phone path (AfrezzaDialogViewModel.confirmAndLog): Afrezza inhaled cartridges
+        // are stored as U100-equivalent IU. cartridge units / 2.0  ->  4U->2.0, 8U->4.0, 12U->6.0.
+        // Keep BOTH paths in sync: if you change the divisor here, change confirmAndLog too.
+        val effectiveAmount = units.toDouble() / 2.0
+        val logNote = "Afrezza inhaled (${units}U)"
+        val bolus = BS(
+            timestamp = now,
+            amount = effectiveAmount,
+            type = BS.Type.NORMAL,
+            notes = logNote,
+            iCfg = afrezzaIcfg,
+            ids = IDs(pumpId = now)
+        )
+        persistenceLayer.insertOrUpdateBolus(
+            bolus = bolus,
+            action = Action.BOLUS,
+            source = Sources.Wear,
+            note = logNote
+        )
+        uel.log(
+            action = Action.BOLUS, source = Sources.Wear,
+            logNote,
+            ValueWithUnit.Insulin(effectiveAmount)
+        )
+        aapsLogger.info(LTag.WEAR, "Afrezza cartridge ${units}U logged via Wear as ${effectiveAmount}U with ICfg: ${afrezzaIcfg.insulinLabel}")
     }
 
     private suspend fun handleFillPresetPreCheck(command: EventData.ActionFillPresetPreCheck) {

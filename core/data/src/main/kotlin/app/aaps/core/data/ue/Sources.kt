@@ -25,6 +25,7 @@ enum class Sources {
     SettingsExport,
     Actions,            //From Actions plugin
     Automation,         //From Automation plugin
+    AfrezzaDialog,
     Autotune,           //From Autotune plugin
     BG,                 //From BG plugin => Add One Source per BG Source for Calibration or Sensor Change
     Aidex,
