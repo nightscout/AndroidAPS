@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.maintenance.PrefMetadata
 import app.aaps.core.interfaces.maintenance.PrefMetadataMap
 import app.aaps.core.interfaces.maintenance.PrefsFile
+import app.aaps.core.interfaces.maintenance.PrefsFileInfo
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -33,12 +34,14 @@ import org.joda.time.format.DateTimeFormat
 import java.io.File
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.binding
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.Inject
 import kotlin.math.abs
 
 @Suppress("SpellCheckingInspection")
 @ContributesBinding(AppScope::class)
+@ContributesBinding(AppScope::class, binding = binding<PrefsFileInfo>())
 @SingleIn(AppScope::class)
 class FileListProviderImpl @Inject constructor(
     private val rh: ResourceHelper,

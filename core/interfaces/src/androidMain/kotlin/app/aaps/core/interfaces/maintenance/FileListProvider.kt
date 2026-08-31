@@ -4,7 +4,7 @@ import androidx.documentfile.provider.DocumentFile
 import app.aaps.core.interfaces.rx.weardata.CwfFile
 import java.io.File
 
-interface FileListProvider {
+interface FileListProvider : PrefsFileInfo {
 
     val resultPath: File
     fun ensurePreferenceDirExists(): DocumentFile?
@@ -21,6 +21,4 @@ interface FileListProvider {
     fun listPreferenceFiles(): MutableList<PrefsFile>
     fun listCustomWatchfaceFiles(): MutableList<CwfFile>
     fun checkMetadata(metadata: Map<PrefsMetadataKey, PrefMetadata>): Map<PrefsMetadataKey, PrefMetadata>
-    fun formatExportedAgo(utcTime: String): String
-    fun isDirectoryAccessGranted(): Boolean
 }

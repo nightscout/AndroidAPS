@@ -804,6 +804,7 @@
     <string name="initializing">Initializing…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Warning</string>
+    <string name="alert" comment="Generic alert dialog title">Alert</string>
     <string name="retry" comment="Button label to retry a failed operation">Retry</string>
     <string name="finish" comment="Button label to complete a wizard/setup flow">Finish</string>
     <string name="firmware" comment="Pump firmware version label">Firmware</string>

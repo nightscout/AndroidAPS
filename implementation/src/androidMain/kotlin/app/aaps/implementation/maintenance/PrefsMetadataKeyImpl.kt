@@ -1,6 +1,6 @@
 package app.aaps.implementation.maintenance
 
-import androidx.annotation.StringRes
+import app.aaps.implementation.ImplementationStrings
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Badge
 import androidx.compose.material.icons.filled.Description
@@ -15,15 +15,15 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.implementation.R
 import app.aaps.implementation.maintenance.data.PrefsFormat
 
-enum class PrefsMetadataKeyImpl(override val key: String, override val icon: ImageVector, @StringRes override val label: Int) : PrefsMetadataKey {
+enum class PrefsMetadataKeyImpl(override val key: String, override val icon: ImageVector, override val label: TextRef) : PrefsMetadataKey {
 
-    FILE_FORMAT("format", Icons.Default.Description, R.string.metadata_label_format),
-    CREATED_AT("created_at", Icons.Default.Event, R.string.metadata_label_created_at),
-    AAPS_VERSION("aaps_version", Icons.Default.Info, R.string.metadata_label_aaps_version),
-    AAPS_FLAVOUR("aaps_flavour", Icons.Default.Style, R.string.metadata_label_aaps_flavour),
-    DEVICE_NAME("device_name", Icons.Default.Badge, R.string.metadata_label_device_name),
-    DEVICE_MODEL("device_model", Icons.Default.PhoneAndroid, R.string.metadata_label_device_model),
-    ENCRYPTION("encryption", Icons.Default.Lock, R.string.metadata_label_encryption);
+    FILE_FORMAT("format", Icons.Default.Description, ImplementationStrings.metadata_label_format),
+    CREATED_AT("created_at", Icons.Default.Event, ImplementationStrings.metadata_label_created_at),
+    AAPS_VERSION("aaps_version", Icons.Default.Info, ImplementationStrings.metadata_label_aaps_version),
+    AAPS_FLAVOUR("aaps_flavour", Icons.Default.Style, ImplementationStrings.metadata_label_aaps_flavour),
+    DEVICE_NAME("device_name", Icons.Default.Badge, ImplementationStrings.metadata_label_device_name),
+    DEVICE_MODEL("device_model", Icons.Default.PhoneAndroid, ImplementationStrings.metadata_label_device_model),
+    ENCRYPTION("encryption", Icons.Default.Lock, ImplementationStrings.metadata_label_encryption);
 
     companion object {
 

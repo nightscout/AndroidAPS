@@ -1,5 +1,8 @@
 package app.aaps.core.ui.compose
 
+import app.aaps.core.ui.compose.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.material3.AlertDialog
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,8 +22,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.maintenance.PrefMetadata
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
@@ -39,7 +40,6 @@ fun ImportSummaryItem(
     rxBus: RxBus,
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
     val colors = AapsTheme.generalColors
     val textColor = when {
         metaEntry.status.isOk      -> colors.statusNormal
@@ -47,15 +47,18 @@ fun ImportSummaryItem(
         metaEntry.status.isError   -> MaterialTheme.colorScheme.error
         else                       -> MaterialTheme.colorScheme.onSurface
     }
+    // Resolved here rather than in the click handler: stringResource is a composable call and the
+    // lambda below is not composable.
+    val label = stringResource(metaKey.label)
 
     Row(
         modifier = modifier
             .fillMaxWidth()
             .clickable {
                 val msg = if (metaEntry.info != null) {
-                    "[${context.getString(metaKey.label)}] ${metaEntry.info}"
+                    "[$label] ${metaEntry.info}"
                 } else {
-                    context.getString(metaKey.label)
+                    label
                 }
                 val type = when {
                     metaEntry.status.isWarning -> EventShowSnackbar.Type.Warning
@@ -105,13 +108,13 @@ private fun ImportDetailsDialog(
     details: List<Triple<String, String, String>>,
     onDismiss: () -> Unit
 ) {
-    androidx.compose.material3.AlertDialog(
+    AlertDialog(
         onDismissRequest = onDismiss,
         title = {
             Text(
-                text = stringResource(android.R.string.dialog_alert_title),
+                text = stringResource(CoreUiStrings.alert),
                 modifier = Modifier.fillMaxWidth(),
-                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                textAlign = TextAlign.Center
             )
         },
         text = {
@@ -141,7 +144,7 @@ private fun ImportDetailsDialog(
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
                             text = info,
-                            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                            textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                         )

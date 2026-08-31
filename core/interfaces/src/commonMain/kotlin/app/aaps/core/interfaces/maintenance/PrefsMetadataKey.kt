@@ -7,7 +7,7 @@ interface PrefsMetadataKey {
 
     val key: String
     val icon: ImageVector
-    val label: Int
+    val label: TextRef
 
     /**
      * The value as it should be shown, as a reference rather than resolved text - the layer that
