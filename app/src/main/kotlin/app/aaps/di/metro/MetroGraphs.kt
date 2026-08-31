@@ -94,6 +94,7 @@ import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.ui.CarbSuggestionActions
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
@@ -369,6 +370,7 @@ class MetroGraphs @Inject constructor(
     val trendCalculator: TrendCalculator get() = root.trendCalculator
     val resourceHelper: ResourceHelper get() = root.resourceHelper
     val fabricPrivacy: FabricPrivacy get() = root.fabricPrivacy
+    val uiInteraction: UiInteraction get() = root.uiInteraction
     val carbSuggestionActions: CarbSuggestionActions get() = root.carbSuggestionActions
     val temporaryBasalStorage: TemporaryBasalStorage get() = root.temporaryBasalStorage
     val detailedBolusInfoStorage: DetailedBolusInfoStorage get() = root.detailedBolusInfoStorage

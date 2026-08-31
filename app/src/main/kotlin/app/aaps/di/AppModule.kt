@@ -87,7 +87,6 @@ abstract class AppModule {
 
         @Binds fun bindConfigInterface(config: ConfigImpl): Config
 
-        @Binds fun bindActivityNames(activityNames: UiInteractionImpl): UiInteraction
 
         // Scope on the implementation, not on the binding: Metro reads this module now that interop is
         // on for `:app`, and it rejects a scoped @Binds. `HistoryBrowserData` carries @Singleton itself,

@@ -27,7 +27,8 @@ import app.aaps.core.ui.rawRes
 import app.aaps.implementation.androidNotification.AlarmNotificationManager.Companion.CHANNEL_FULL_SCREEN_SILENT
 import javax.inject.Inject
 import javax.inject.Provider
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Builds and posts Android notifications for AAPS alarms. Replaces the old `AlarmSoundService` /
@@ -42,10 +43,10 @@ import javax.inject.Singleton
  *  - [postSoundOnlyAlarm]: posts on a sound-bearing channel chosen by the
  *    [BooleanKey.AlertOverrideDoNotDisturb] preference. No activity, system plays channel sound.
  *
- * Channels are created eagerly when this @Singleton is first injected so that the first post
- * doesn't race channel creation.
+ * Channels are created on the first post rather than at construction - see the `channels` field. Both
+ * posting methods touch it before building anything, so a post can still never race their creation.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class AlarmNotificationManager @Inject constructor(
     private val context: Context,
     private val aapsLogger: AAPSLogger,
@@ -135,9 +136,22 @@ class AlarmNotificationManager @Inject constructor(
      */
     private val activeSoundKeys: MutableSet<Int> = mutableSetOf()
 
-    init {
-        createChannels()
-    }
+    /**
+     * The channels, created once on first use rather than in an `init` block.
+     *
+     * Android requires a channel to exist before anything posts to it, and **every** post goes through
+     * [postFullScreenAlarm] or [postSilentAlarmNotification], both of which touch this first. So the
+     * guarantee is the same as creating them in the constructor - and stronger in one way: it cannot be
+     * missed by a code path that gets an instance some other way.
+     *
+     * It has to move out of construction because `createChannels` reaches for the system
+     * `NotificationManager`, and this class is built for real in the plain-JVM graph tests once Metro
+     * owns it - "java.lang.Object cannot be cast to android.app.NotificationManager". That is what kept
+     * `UiInteractionImpl`, which injects this, on Dagger.
+     *
+     * `lazy` is synchronized by default, so two threads posting at once still create them once.
+     */
+    private val channels: Unit by lazy { createChannels() }
 
     private fun createChannels() {
         mgr.createNotificationChannelGroup(NotificationChannelGroup(GROUP_ID, "AAPS Alarms"))
@@ -232,6 +246,7 @@ class AlarmNotificationManager @Inject constructor(
      * The activity is responsible for sound playback.
      */
     fun postFullScreenAlarm(status: String, title: String, sound: AlarmSound?) {
+        channels // created on first post, see the field
         // Reached only from the background / off-main branches of UiInteraction.runAlarm.
         //
         // Screen-wake + full-screen ErrorActivity launch no longer rely on USE_FULL_SCREEN_INTENT
@@ -362,6 +377,7 @@ class AlarmNotificationManager @Inject constructor(
         body: String,
         urgent: Boolean
     ) {
+        channels // created on first post, see the field
         val builder = NotificationCompat.Builder(context, CHANNEL_FULL_SCREEN_SILENT)
             .setSmallIcon(iconsProvider.getNotificationIcon())
             .setLargeIcon(BitmapFactory.decodeResource(context.resources, iconsProvider.getIcon()))

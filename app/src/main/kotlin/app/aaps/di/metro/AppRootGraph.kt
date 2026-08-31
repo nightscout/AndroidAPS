@@ -96,6 +96,7 @@ import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.ui.CarbSuggestionActions
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
@@ -305,6 +306,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val trendCalculator: TrendCalculator
     val resourceHelper: ResourceHelper
     val fabricPrivacy: FabricPrivacy
+    val uiInteraction: UiInteraction
     val carbSuggestionActions: CarbSuggestionActions
     val temporaryBasalStorage: TemporaryBasalStorage
     val detailedBolusInfoStorage: DetailedBolusInfoStorage

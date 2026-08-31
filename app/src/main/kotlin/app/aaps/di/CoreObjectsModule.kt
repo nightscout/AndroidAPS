@@ -346,6 +346,7 @@ class CoreObjectsModule {
     // explicit start() - a contributed class is built for real in the plain-JVM graph tests.
     @Provides @Singleton fun provideResourceHelper(graphs: MetroGraphs): ResourceHelper = graphs.resourceHelper
     @Provides @Singleton fun provideFabricPrivacy(graphs: MetroGraphs): FabricPrivacy = graphs.fabricPrivacy
+    @Provides @Singleton fun provideUiInteraction(graphs: MetroGraphs): UiInteraction = graphs.uiInteraction
     @Provides @Singleton fun provideSceneExecutor(graphs: MetroGraphs): SceneExecutor = graphs.sceneExecutor
     @Provides @Singleton fun provideDataInbox(graphs: MetroGraphs): DataInbox = graphs.dataInbox
     // Unscoped on purpose - a fresh value object per caller, as the @Binds it replaces was.
@@ -540,13 +541,11 @@ class CoreObjectsModule {
         metroMemberInjectorProvider: Provider<MetroMemberInjector>,
         configProvider: Provider<Config>,
         databaseConfigProvider: Provider<DatabaseConfig>,
-        uiInteractionProvider: Provider<UiInteraction>,
         historyScopeProvider: Provider<HistoryScope>,
     ): AapsLeaves = AapsLeaves(
         metroMemberInjectorProvider,
         configProvider,
         databaseConfigProvider,
-        uiInteractionProvider,
         historyScopeProvider,
     )
 }

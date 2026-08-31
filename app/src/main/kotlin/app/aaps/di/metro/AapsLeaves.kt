@@ -101,7 +101,6 @@ class AapsLeaves(
     // graph extension is generated in the parent's module, so Metro cannot read a container from the
     // module the extension is declared in.
     // Automation.
-    private val uiInteractionProvider: Provider<UiInteraction>,
     // Constraints.
     // Still Dagger-owned, and needed by the scene classes that moved to Metro.
     // Dagger-owned on purpose: it is bound from XdripPlugin, which is still in the Dagger plugin list.
@@ -145,7 +144,6 @@ class AapsLeaves(
     @Provides fun textResolver(rh: ResourceHelper): TextResolver = rh
 
 
-    @Provides fun uiInteraction(): UiInteraction = uiInteractionProvider.get()
 
 
     /** A value object: unscoped, as its Dagger binding is. */
