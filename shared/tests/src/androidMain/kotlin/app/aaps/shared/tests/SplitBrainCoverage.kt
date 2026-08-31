@@ -120,3 +120,81 @@ private fun classNamesInJar(jar: File): List<String> =
             .map { it.name.removeSuffix(".class").replace('/', '.') }
             .toList()
     }
+
+/**
+ * The mirror of [unbridgedSingletons]: classes **Metro** owns that **Dagger** is still asked to build.
+ *
+ * [unbridgedSingletons] looks one way only - a javax `@Singleton` that Metro also builds. The opposite
+ * is just as damaging and was invisible until it cost a real defect: when the pump drivers moved to
+ * `@SingleIn`, `DanaModules.provideRfcommTransport` went on taking `DanaRPlugin`, `DanaRKoreanPlugin`
+ * and `DanaRv2Plugin` as parameters. Dagger does not understand `@SingleIn`; it saw an `@Inject`
+ * constructor and built its own copies. That provider calls `setPluginEnabled` on them, so with a Dana
+ * emulator option on, the auto-switch enabled objects that were not the ones in the plugin list.
+ * Nothing failed to compile, and no test noticed.
+ *
+ * The rule this enforces: **a Dagger `@Provides` or `@Binds` may not take a parameter whose type Metro
+ * owns.** To read a Metro owned object from the Dagger side, take the graph (`MetroGraphs`) and ask it
+ * for the instance - that is what the `CoreObjectsModule` delegates do.
+ *
+ * `Provider<X>` and `Lazy<X>` parameters are unwrapped, because deferring the lookup does not change
+ * who builds the object.
+ *
+ * @param anchors one class per compiled output to scan, as for [unbridgedSingletons]
+ * @param daggerAnnotations fully qualified names of `dagger.Module`, `dagger.Provides`, `dagger.Binds`
+ * @param graphTypes types that are legitimate parameters because they *are* the bridge (MetroGraphs)
+ */
+fun metroOwnedRebuiltByDagger(
+    anchors: List<Class<*>>,
+    daggerAnnotations: List<String> = listOf("dagger.Module", "dagger.Provides", "dagger.Binds"),
+    graphTypes: Set<Class<*>> = emptySet(),
+    metroAnnotations: List<String> = DEFAULT_METRO_ANNOTATIONS
+): List<String> {
+    val classes = anchors.flatMap { classesIn(it) }.distinct()
+    check(classes.isNotEmpty()) { "Found no classes to scan - the class walk broke" }
+
+    @Suppress("UNCHECKED_CAST")
+    val dagger = daggerAnnotations.map { Class.forName(it) as Class<out Annotation> }
+    check(dagger.size == 3) { "Expected Module, Provides and Binds - got $daggerAnnotations" }
+    val (moduleAnn, providesAnn, bindsAnn) = dagger
+
+    @Suppress("UNCHECKED_CAST")
+    val singleIn = metroAnnotations.mapNotNull { runCatching { Class.forName(it) as Class<out Annotation> }.getOrNull() }
+        .firstOrNull { it.name.endsWith(".SingleIn") }
+    check(singleIn != null) { "Metro's @SingleIn is not on the test classpath" }
+
+    val modules = classes.filter { it.isAnnotationPresent(moduleAnn) }
+    check(modules.isNotEmpty()) { "Found no Dagger modules to scan - this guard has stopped guarding" }
+
+    return modules.flatMap { module ->
+        module.declaredMethods
+            .filter { it.isAnnotationPresent(providesAnn) || it.isAnnotationPresent(bindsAnn) }
+            .flatMap { method ->
+                method.genericParameterTypes.map { unwrapDeferred(it) }
+                    .filterNotNull()
+                    .filter { it !in graphTypes && it.isAnnotationPresent(singleIn) }
+                    .map { "${it.name} is Metro owned (@SingleIn) but ${module.simpleName}.${method.name} makes Dagger build it" }
+            }
+    }.distinct().sorted()
+}
+
+/**
+ * `Provider<X>` / `Lazy<X>` to `X`; anything else to itself. Deferring does not change who builds it.
+ *
+ * **Wildcards have to be resolved, not cast away.** Kotlin emits `Provider<? extends X>` for a
+ * parameter of this shape, so the type argument is a `WildcardType` rather than a `Class`, and an
+ * `as? Class<*>` on it quietly yields null. That is exactly how the first version of this guard
+ * managed to detect nothing at all while looking perfectly correct - caught only by mutating a real
+ * class and watching the test still pass.
+ */
+private fun unwrapDeferred(type: java.lang.reflect.Type): Class<*>? = when (type) {
+    is Class<*>                            -> type
+    is java.lang.reflect.WildcardType      -> type.upperBounds.firstOrNull()?.let(::unwrapDeferred)
+    is java.lang.reflect.ParameterizedType -> {
+        val raw = type.rawType as? Class<*>
+        if (raw?.name == "javax.inject.Provider" || raw?.name == "dagger.Lazy")
+            type.actualTypeArguments.firstOrNull()?.let(::unwrapDeferred)
+        else raw
+    }
+
+    else                                   -> null
+}
