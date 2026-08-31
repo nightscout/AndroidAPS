@@ -70,6 +70,14 @@ interface Config {
      * always differed; sharing one would silently rewrite what every existing installation uploads.
      */
     val deviceModelForUpload: String
+
+    /**
+     * The device maker alone, as the platform reports it - `"Google"`, `"samsung"`, `"Xiaomi"`.
+     *
+     * Separate from [deviceModelForUpload] because that one is a transmitted format and must not be
+     * taken apart by callers. Used to build the per-manufacturer battery-settings help link.
+     */
+    val deviceManufacturer: String
     val appName: TextRef
 
     val initProgressFlow: StateFlow<InitProgress>

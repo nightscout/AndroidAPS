@@ -105,6 +105,7 @@ fun MainScreen(
     onNavigate: (NavigationRequest) -> Unit,
     onDrawerClosed: () -> Unit,
     onAboutDialogDismiss: () -> Unit,
+    onOpenBatteryHelp: () -> Unit,
     onMaintenanceSheetDismiss: () -> Unit,
     onDirectoryClick: () -> Unit,
     onLaunchBrowser: (String) -> Unit,
@@ -549,7 +550,8 @@ fun MainScreen(
     if (uiState.showAboutDialog && aboutDialogData != null) {
         AboutAlertDialog(
             data = aboutDialogData,
-            onDismiss = onAboutDialogDismiss
+            onDismiss = onAboutDialogDismiss,
+            onOpenBatteryHelp = onOpenBatteryHelp
         )
     }
 }

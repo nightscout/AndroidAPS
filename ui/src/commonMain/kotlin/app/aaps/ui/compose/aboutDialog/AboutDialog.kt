@@ -1,7 +1,5 @@
 package app.aaps.ui.compose.aboutDialog
 
-import android.content.Intent
-import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -19,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
@@ -30,7 +27,6 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import androidx.core.net.toUri
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.LocalAppIcon
@@ -50,9 +46,9 @@ data class AboutDialogData(
 @Composable
 fun AboutAlertDialog(
     data: AboutDialogData,
+    onOpenBatteryHelp: () -> Unit,
     onDismiss: () -> Unit
 ) {
-    val context = LocalContext.current
     val annotatedMessage = buildClickableMessage(data.message)
 
     AlertDialog(
@@ -103,14 +99,7 @@ fun AboutAlertDialog(
         },
         dismissButton = {
             TextButton(
-                onClick = {
-                    context.startActivity(
-                        Intent(
-                            Intent.ACTION_VIEW,
-                            ("https://dontkillmyapp.com/" + Build.MANUFACTURER.lowercase().replace(" ", "-")).toUri()
-                        )
-                    )
-                }
+                onClick = onOpenBatteryHelp
             ) {
                 Text(stringResource(CoreUiStrings.cta_dont_kill_my_app_info))
             }

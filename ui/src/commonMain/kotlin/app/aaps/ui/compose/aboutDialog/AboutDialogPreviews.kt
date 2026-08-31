@@ -4,7 +4,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import app.aaps.core.interfaces.configuration.ExternalOptions
-import app.aaps.core.ui.R
 
 @Preview(showBackground = true)
 @Composable
@@ -16,7 +15,8 @@ internal fun AboutAlertDialogPreview() {
                 message = "Build: 3.3.0-dev\nFlavor: full\n\nhttps://androidaps.org",
                 enabledOptions = listOf(ExternalOptions.ENGINEERING_MODE, ExternalOptions.UNFINISHED_MODE)
             ),
-            onDismiss = {}
+            onDismiss = {},
+            onOpenBatteryHelp = {}
         )
     }
 }

@@ -48,6 +48,7 @@ import app.aaps.core.interfaces.scenes.ActiveSceneSync
 import app.aaps.core.interfaces.scenes.SceneActions
 import app.aaps.core.interfaces.scenes.SceneChainResolver
 import app.aaps.core.interfaces.sync.NsClient
+import app.aaps.core.interfaces.ui.UrlOpener
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
@@ -110,6 +111,7 @@ import kotlinx.coroutines.launch
 class MainViewModel @Inject constructor(
     private val activePlugin: ActivePlugin,
     val config: Config,
+    private val urlOpener: UrlOpener,
     val preferences: Preferences,
     private val fabricPrivacy: FabricPrivacy,
     private val rh: TextResolver,
@@ -599,6 +601,16 @@ class MainViewModel @Inject constructor(
     }
 
     // Build about dialog data
+    /**
+     * Opens the page explaining how to stop this maker's phone from killing background apps.
+     *
+     * Lives here rather than in the dialog so the dialog stays platform neutral: this is the only
+     * part of it that needs a browser and the device maker.
+     */
+    fun openBatteryHelp() {
+        urlOpener.open("https://dontkillmyapp.com/" + config.deviceManufacturer.lowercase().replace(" ", "-"))
+    }
+
     fun buildAboutDialogData(appName: String): AboutDialogData {
         var message = "Build: ${config.BUILD_VERSION}\n"
         message += "Flavor: ${config.FLAVOR}${config.BUILD_TYPE}\n"

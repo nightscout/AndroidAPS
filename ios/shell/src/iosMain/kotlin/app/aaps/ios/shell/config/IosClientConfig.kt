@@ -56,6 +56,8 @@ class IosClientConfig(
 
     /** Nightscout stores this verbatim, so keep it to the device identity - no OS version. */
     override val deviceModelForUpload: String = UIDevice.currentDevice.model
+    // Apple is the only maker of iOS devices, so there is nothing to look up.
+    override val deviceManufacturer: String = "Apple"
 
     /** Android returns a string resource id here. iOS has no resource table, so nothing to name. */
     override val appName: TextRef = TextRef.Literal("AAPS")
