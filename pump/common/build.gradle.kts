@@ -20,6 +20,4 @@ dependencies {
     implementation(libs.com.google.code.gson)
     implementation(project(":core:keys"))
 
-    ksp(libs.com.google.dagger.compiler)
-    ksp(libs.com.google.dagger.hilt.compiler)
 }

@@ -1,4 +1,4 @@
-package app.aaps.pump.danars.di
+package app.aaps.di.pump
 
 import app.aaps.pump.danars.comm.DanaRSPacket
 import app.aaps.pump.danars.comm.DanaRSPacketNotifyAlarm
@@ -12,6 +12,7 @@ import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoSet
 import javax.inject.Qualifier
 
+/** Provided from `:app` so `:pump:danars` needs no Dagger processor. */
 @Module
 @InstallIn(SingletonComponent::class)
 @Suppress("unused")
