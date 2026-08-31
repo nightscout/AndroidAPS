@@ -7,7 +7,6 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.interfaces.Preferences
@@ -28,14 +27,17 @@ import app.aaps.pump.omnipod.eros.driver.exception.NotEnoughDataException
 import app.aaps.pump.omnipod.eros.driver.exception.PodFaultException
 import app.aaps.pump.omnipod.eros.driver.exception.PodReturnedErrorResponseException
 import app.aaps.pump.omnipod.eros.driver.manager.ErosPodStateManager
+import app.aaps.pump.omnipod.eros.driver.manager.OmnipodManager
 import app.aaps.pump.omnipod.eros.history.ErosHistory
 import app.aaps.pump.omnipod.eros.history.database.ErosHistoryRecordEntity
-import app.aaps.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager
 import app.aaps.pump.omnipod.eros.util.AapsOmnipodUtil
 import app.aaps.pump.omnipod.eros.util.OmnipodAlertUtil
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.doAnswer
@@ -43,6 +45,7 @@ import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.stub
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 
@@ -75,6 +78,13 @@ internal class AapsOmnipodErosManagerBehaviourTest {
     private val rh: ResourceHelper = mock()
     private val preferences: Preferences = mock()
 
+    /** Injected now, so the whole command surface can be driven from a test. */
+    private val delegate: OmnipodManager = mock()
+
+    // RETURNS_SELF because PumpEnactResult is a builder - `.success(x).enacted(y)` has to chain. One
+    // shared instance, so a test can verify what the command reported on it.
+    private val enactResult: PumpEnactResult = mock(defaultAnswer = Mockito.RETURNS_SELF)
+
     /**
      * Resolves a string to the **id** that was asked for.
      *
@@ -87,12 +97,11 @@ internal class AapsOmnipodErosManagerBehaviourTest {
         whenever(rh.gs(any<Int>())).doAnswer { it.getArgument<Int>(0).toString() }
         whenever(rh.gs(any<Int>(), anyVararg())).doAnswer { it.getArgument<Int>(0).toString() }
         return AapsOmnipodErosManager(
-            mock<OmnipodRileyLinkCommunicationManager>(),
+            delegate,
             podStateManager,
             erosHistory,
             mock<AapsOmnipodUtil>(),
             mock<AAPSLogger>(),
-            mock<AapsSchedulers>(),
             mock<RxBus>(),
             preferences,
             rh,
@@ -100,7 +109,7 @@ internal class AapsOmnipodErosManagerBehaviourTest {
             pumpSync,
             mock<UiInteraction>(),
             mock<NotificationManager>(),
-            javax.inject.Provider { mock<PumpEnactResult>() },
+            javax.inject.Provider { enactResult },
             mock<ConcentrationHelper>(),
             mock<BolusProgressData>()
         )
@@ -238,6 +247,81 @@ internal class AapsOmnipodErosManagerBehaviourTest {
 
         verifyBlocking(pumpSync, never()) {
             syncStopTemporaryBasalWithPumpId(any(), any(), any(), any(), any())
+        }
+    }
+
+    // ---- command paths ---------------------------------------------------------------------------
+
+    /**
+     * Every command follows one shape: run it on the delegate, then write a history record and report
+     * the outcome. These pin that shape rather than the pod protocol, because the shape is what a
+     * rewrite restructures - and a lost history record or an inverted success flag is invisible.
+     */
+    private fun historyRecords(): List<ErosHistoryRecordEntity> {
+        val captor = argumentCaptor<ErosHistoryRecordEntity>()
+        verify(erosHistory, atLeastOnce()).create(captor.capture())
+        return captor.allValues
+    }
+
+    @Test fun `acknowledging alerts records a success when the pod accepts it`() {
+        val result = sut().acknowledgeAlerts()
+
+        verify(result).success(true)
+        verify(result).enacted(true)
+        assertThat(historyRecords().single().isSuccess).isTrue()
+        assertThat(historyRecords().single().podEntryTypeCode)
+            .isEqualTo(PodHistoryEntryType.ACKNOWLEDGE_ALERTS.code.toLong())
+    }
+
+    /**
+     * The failure branch has to do three things and a rewrite can drop any one silently: report failure,
+     * carry the translated message back to the user, and still leave a record in the pod history.
+     */
+    @Test fun `a failed command reports the translated message and still records the failure`() {
+        whenever(delegate.acknowledgeAlerts()).thenThrow(NonceOutOfSyncException())
+
+        val result = sut().acknowledgeAlerts()
+
+        verify(result).success(false)
+        verify(result).enacted(false)
+        verify(result).comment(R.string.omnipod_eros_error_nonce_out_of_sync.toString())
+        assertThat(historyRecords().single().isSuccess).isFalse()
+    }
+
+    /**
+     * Telling AAPS the TBR is gone is a separate call from cancelling it on the pod. If a rewrite keeps
+     * the pod call and loses this one, the pod stops the TBR while the app goes on showing it running.
+     */
+    @Test fun `cancelling a temporary basal tells AAPS the tbr stopped`() {
+        sut().cancelTemporaryBasal()
+
+        verifyBlocking(pumpSync) {
+            syncStopTemporaryBasalWithPumpId(any(), any(), any(), any(), any())
+        }
+    }
+
+    @Test fun `a failed temporary basal cancel does not tell AAPS the tbr stopped`() {
+        whenever(delegate.cancelTemporaryBasal(any())).thenThrow(NonceOutOfSyncException())
+
+        val result = sut().cancelTemporaryBasal()
+
+        verify(result).success(false)
+        verifyBlocking(pumpSync, never()) {
+            syncStopTemporaryBasalWithPumpId(any(), any(), any(), any(), any())
+        }
+    }
+
+    /**
+     * Discarding the pod has to raise the fake suspended TBR, because from that moment nothing is
+     * delivering. Without it AAPS keeps calculating as though basal were still running.
+     */
+    @Test fun `discarding the pod raises the suspended fake tbr`() {
+        givenPumpState(pumpStateWith(pumpId = null))
+
+        sut().discardPodState()
+
+        verifyBlocking(pumpSync) {
+            syncTemporaryBasalWithPumpId(any(), any(), any(), any(), any(), any(), any(), anyOrNull())
         }
     }
 

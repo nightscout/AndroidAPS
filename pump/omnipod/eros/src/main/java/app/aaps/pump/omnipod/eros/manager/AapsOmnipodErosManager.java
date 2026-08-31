@@ -132,12 +132,11 @@ public class AapsOmnipodErosManager {
     private boolean batteryChangeLoggingEnabled;
 
     @Inject
-    public AapsOmnipodErosManager(@NonNull OmnipodRileyLinkCommunicationManager communicationService,
+    public AapsOmnipodErosManager(@NonNull OmnipodManager delegate,
                                   @NonNull ErosPodStateManager podStateManager,
                                   ErosHistory erosHistory,
                                   AapsOmnipodUtil aapsOmnipodUtil,
                                   AAPSLogger aapsLogger,
-                                  AapsSchedulers aapsSchedulers,
                                   RxBus rxBus,
                                   Preferences preferences,
                                   ResourceHelper rh,
@@ -165,7 +164,9 @@ public class AapsOmnipodErosManager {
         this.ch = ch;
         this.bolusProgressData = bolusProgressData;
 
-        delegate = new OmnipodManager(aapsLogger, aapsSchedulers, communicationService, podStateManager);
+        // Injected rather than built here. `communicationService` and `aapsSchedulers` were constructor
+        // parameters used for nothing else, so both are gone; see `app.aaps.di.pump.OmnipodErosModule`.
+        this.delegate = delegate;
 
         reloadSettings();
     }
