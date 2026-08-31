@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.rfcomm.RfcommTransport
 import app.aaps.core.keys.BooleanComposedKey
+import app.aaps.di.metro.MetroGraphs
 import app.aaps.pump.dana.comm.RecordTypes
 import app.aaps.pump.dana.keys.DanaIntNonKey
 import app.aaps.pump.dana.keys.DanaStringNonKey
@@ -56,12 +57,15 @@ class DanaREmulatorUiTest : AbstractDanaEmulatorUiTest() {
     // A Provider, not the transport directly: provideRfcommTransport enables the target plugin
     // (storeSettings), which needs pluginStore.plugins - set only after hiltRule.inject(). Resolving it
     // lazily (first state read, well after bringUp) returns the @Singleton the service already built.
-    @Inject lateinit var rfcommTransportProvider: Provider<RfcommTransport>
-    @Inject lateinit var danaRv2Plugin: DanaRv2Plugin
+    // Pump objects come from the Metro graph, not Hilt: they are `@SingleIn(AppScope::class)`, which
+    // Dagger does not read, so it would build the test its own second copy of each.
+    @Inject lateinit var metroGraphs: MetroGraphs
+    private val rfcommTransport get() = metroGraphs.pumps.rfcommTransport
+    private val danaRv2Plugin get() = metroGraphs.pumps.danaRv2Plugin
 
     // The emulated pump's state, resolved lazily: the transport is an EmulatorRfcommTransport whose
     // `emulator` (a DanaRPumpEmulator) holds the `state` the driver reads and writes.
-    private val emulatorState by lazy { (rfcommTransportProvider.get() as EmulatorRfcommTransport).emulator.state }
+    private val emulatorState by lazy { (rfcommTransport as EmulatorRfcommTransport).emulator.state }
 
     // ---- hooks -------------------------------------------------------------------------------------
 

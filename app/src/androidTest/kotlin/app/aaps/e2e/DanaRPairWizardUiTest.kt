@@ -34,6 +34,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.singleBlock
 import app.aaps.core.objects.extensions.singleTargetBlock
 import app.aaps.di.EmulatedOptions
+import app.aaps.di.metro.MetroGraphs
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.plugins.aps.utils.StaticInjector
 import app.aaps.pump.dana.keys.DanaIntNonKey
@@ -86,7 +87,10 @@ class DanaRPairWizardUiTest {
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var pluginStore: PluginStore
     @Inject lateinit var commandQueue: CommandQueue
-    @Inject lateinit var danaRv2Plugin: DanaRv2Plugin
+    // Pump objects come from the Metro graph, not Hilt: they are `@SingleIn(AppScope::class)`, which
+    // Dagger does not read, so it would build the test its own second copy of each.
+    @Inject lateinit var metroGraphs: MetroGraphs
+    private val danaRv2Plugin get() = metroGraphs.pumps.danaRv2Plugin
     @Inject lateinit var pluginList: List<@JvmSuppressWildcards PluginBase>
     @Inject lateinit var configBuilder: ConfigBuilder
     @Inject lateinit var profileFunction: ProfileFunction

@@ -12,20 +12,15 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.pump.rfcomm.RfcommTransport
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.di.EmulatedOptions
+import app.aaps.di.metro.MetroGraphs
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.plugins.aps.utils.StaticInjector
-import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.comm.RecordTypes
-import app.aaps.pump.dana.database.DanaHistoryRecordDao
 import app.aaps.pump.dana.keys.DanaStringNonKey
-import app.aaps.pump.danar.DanaRPlugin
 import app.aaps.pump.danar.emulator.EmulatorRfcommTransport
-import app.aaps.pump.danarkorean.DanaRKoreanPlugin
-import app.aaps.pump.danarv2.DanaRv2Plugin
 import app.aaps.testcategories.ShardB
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -37,7 +32,6 @@ import org.junit.Test
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import javax.inject.Inject
-import javax.inject.Provider
 
 /**
  * Drives the **DanaR family drivers** against the in-tree pump emulator, with no Bluetooth hardware:
@@ -63,20 +57,29 @@ class DanaREmulatorPumpTest {
     @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(hiltRule)
 
     @Inject lateinit var preferences: Preferences
-    @Inject lateinit var danaRPlugin: DanaRPlugin
-    @Inject lateinit var danaRKoreanPlugin: DanaRKoreanPlugin
-    @Inject lateinit var danaRv2Plugin: DanaRv2Plugin
     @Inject lateinit var pluginStore: PluginStore
     @Inject lateinit var commandQueue: CommandQueue
-    @Inject lateinit var danaPump: DanaPump
-    @Inject lateinit var danaHistoryRecordDao: DanaHistoryRecordDao
     @Inject lateinit var pluginList: List<@JvmSuppressWildcards PluginBase>
     @Inject lateinit var config: Config
-    // A Provider, not the transport directly: provideRfcommTransport enables the target plugin
-    // (storeSettings), which needs pluginStore.plugins - set only after hiltRule.inject(). Resolving it
-    // lazily (after connect) returns the @Singleton the execution service already built by then.
-    @Inject lateinit var rfcommTransportProvider: Provider<RfcommTransport>
     @Suppress("unused") @Inject lateinit var staticInjector: StaticInjector
+
+    // The pump objects come from the Metro graph, not from Hilt. They are `@SingleIn(AppScope::class)`,
+    // and Dagger does not read that scope - it saw the `@Inject` constructor and built the test a
+    // *second* `DanaRv2Plugin`, so the test drove an object the running app had never heard of. Reading
+    // through the graph gives the one instance that is really in the plugin list.
+    @Inject lateinit var metroGraphs: MetroGraphs
+
+    private val danaRPlugin get() = metroGraphs.pumps.danaRPlugin
+    private val danaRKoreanPlugin get() = metroGraphs.pumps.danaRKoreanPlugin
+    private val danaRv2Plugin get() = metroGraphs.pumps.danaRv2Plugin
+    private val danaPump get() = metroGraphs.pumps.danaPump
+    private val danaHistoryRecordDao get() = metroGraphs.pumps.danaHistoryRecordDao
+
+    // Resolved per access, not once: `provideRfcommTransport` enables the target plugin (storeSettings),
+    // which needs `pluginStore.plugins` - set only after `hiltRule.inject()`. Reading it after connect
+    // returns the scoped instance the execution service already built by then. This is what the old
+    // `Provider<RfcommTransport>` was for.
+    private val rfcommTransport get() = metroGraphs.pumps.rfcommTransport
 
     private val instrumentation get() = InstrumentationRegistry.getInstrumentation()
 
@@ -108,7 +111,7 @@ class DanaREmulatorPumpTest {
     @Test
     fun pumpCommands_reachTheEmulator() {
         val pump = bringUpConnected(ExternalOptions.EMULATE_DANA_R_V2) { danaRv2Plugin }
-        val state = (rfcommTransportProvider.get() as EmulatorRfcommTransport).emulator.state
+        val state = (rfcommTransport as EmulatorRfcommTransport).emulator.state
 
         runBlocking {
             pump.setTempBasalPercent(TBR_PERCENT, TBR_DURATION_MIN, enforceNew = true, tbrType = PumpSync.TemporaryBasalType.NORMAL)
@@ -143,7 +146,7 @@ class DanaREmulatorPumpTest {
     }
 
     private fun deliverTempBasalAndBolus(pump: Pump) {
-        val state = (rfcommTransportProvider.get() as EmulatorRfcommTransport).emulator.state
+        val state = (rfcommTransport as EmulatorRfcommTransport).emulator.state
 
         runBlocking {
             pump.setTempBasalPercent(TBR_PERCENT, TBR_DURATION_MIN, enforceNew = true, tbrType = PumpSync.TemporaryBasalType.NORMAL)
@@ -166,7 +169,7 @@ class DanaREmulatorPumpTest {
     @Test
     fun danaRv2_readsReviewBolusHistory() {
         bringUpConnected(ExternalOptions.EMULATE_DANA_R_V2) { danaRv2Plugin }
-        val emulatorState = (rfcommTransportProvider.get() as EmulatorRfcommTransport).emulator.state
+        val emulatorState = (rfcommTransport as EmulatorRfcommTransport).emulator.state
         // Minute-aligned (seconds=0) so MsgHistoryAll's bolus branch reads byte 6 as duration 0; param2
         // 0x80 is the standard-bolus sub-code, param1 the amount in hundredths (150 = 1.50 U).
         val timestamp = System.currentTimeMillis() / 60_000L * 60_000L - 2 * 60 * 60 * 1000L
@@ -200,7 +203,7 @@ class DanaREmulatorPumpTest {
     @Test
     fun danaRv2_readsReviewHistoryTypes() {
         bringUpConnected(ExternalOptions.EMULATE_DANA_R_V2) { danaRv2Plugin }
-        val store = (rfcommTransportProvider.get() as EmulatorRfcommTransport).emulator.state.reviewHistoryStore
+        val store = (rfcommTransport as EmulatorRfcommTransport).emulator.state.reviewHistoryStore
         // Distinct minutes, 3h back so they don't collide with the bolus test's record.
         val base = System.currentTimeMillis() / 60_000L * 60_000L - 3 * 60 * 60 * 1000L
         val alarmTs = base + 60_000; val glucoseTs = base + 120_000; val carboTs = base + 180_000

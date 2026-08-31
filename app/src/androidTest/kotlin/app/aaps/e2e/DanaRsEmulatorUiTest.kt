@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.core.keys.BooleanComposedKey
 import app.aaps.e2e.DanaRsEmulatorUiTest.Companion.MAX_DAILY_UNITS
+import app.aaps.di.metro.MetroGraphs
 import app.aaps.pump.dana.emulator.ReviewRecordCodes
 import app.aaps.pump.dana.keys.DanaStringComposedKey
 import app.aaps.pump.dana.keys.DanaStringNonKey
@@ -75,8 +76,11 @@ class DanaRsEmulatorUiTest : AbstractDanaEmulatorUiTest() {
     // RetryRule outermost: a flaky UI timeout self-heals on a fresh attempt; see [RetryRule].
     @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(hiltRule)
 
-    @Inject lateinit var bleTransport: BleTransport
-    @Inject lateinit var danaRSPlugin: DanaRSPlugin
+    // Pump objects come from the Metro graph, not Hilt: they are `@SingleIn(AppScope::class)`, which
+    // Dagger does not read, so it would build the test its own second copy of each.
+    @Inject lateinit var metroGraphs: MetroGraphs
+    private val bleTransport get() = metroGraphs.pumps.bleTransport
+    private val danaRSPlugin get() = metroGraphs.pumps.danaRSPlugin
 
     private lateinit var emulator: EmulatorBleTransport
 

@@ -60,7 +60,10 @@ class EmulatedOptionsConfig(private val delegate: Config) : Config by delegate {
 @TestInstallIn(components = [SingletonComponent::class], replaces = [AppModule::class, AppModule.AppBindings::class])
 abstract class TestAppBindingsInstallModule {
 
-    @Binds abstract fun bindActivityNames(activityNames: UiInteractionImpl): UiInteraction
+    // `UiInteraction` used to be bound here too, copied from `AppModule.AppBindings`. It moved to Metro,
+    // and `CoreObjectsModule.provideUiInteraction(graphs)` hands it to Dagger - a module this one does
+    // NOT replace, so keeping the copy left two live bindings and `[Dagger/DuplicateBindings]`. Anything
+    // this module replaces that later moves to Metro has to be deleted here in the same change.
 
     // No @Singleton here: Metro rejects a scope on @Binds, and it was always redundant - the scope that
     // matters is on `HistoryBrowserData` itself, so the interface still resolves to that one instance.

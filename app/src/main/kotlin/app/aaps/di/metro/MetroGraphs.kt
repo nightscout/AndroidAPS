@@ -225,6 +225,14 @@ class MetroGraphs @Inject constructor(
         createGraphFactory<AppRootGraph.Factory>().create(applicationScope, contextProvider.get(), leaves.get(), CoreObjectsGraph, pumpLeaves.get())
     }
 
+    /**
+     * Metro-owned pump types, for the Dagger side.
+     *
+     * Declared in the flavour source sets rather than here, because `src/main` has no pump module on
+     * its classpath - the same split [PumpLeaves] uses, in the opposite direction. Empty in a follower.
+     */
+    val pumps: PumpAccessors get() = root
+
     private val source: SourceMetroGraph get() = root.sourceGraph
 
     private val receivers: AppReceiversGraph get() = root.receiversGraph

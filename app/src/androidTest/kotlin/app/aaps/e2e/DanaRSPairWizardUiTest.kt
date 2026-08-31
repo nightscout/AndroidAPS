@@ -36,6 +36,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.singleBlock
 import app.aaps.core.objects.extensions.singleTargetBlock
 import app.aaps.di.EmulatedOptions
+import app.aaps.di.metro.MetroGraphs
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.plugins.aps.utils.StaticInjector
 import app.aaps.pump.dana.keys.DanaStringNonKey
@@ -83,10 +84,13 @@ class DanaRSPairWizardUiTest {
     @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(hiltRule)
 
     @Inject lateinit var preferences: Preferences
-    @Inject lateinit var bleTransport: BleTransport
+    // Pump objects come from the Metro graph, not Hilt: they are `@SingleIn(AppScope::class)`, which
+    // Dagger does not read, so it would build the test its own second copy of each.
+    @Inject lateinit var metroGraphs: MetroGraphs
+    private val bleTransport get() = metroGraphs.pumps.bleTransport
     @Inject lateinit var pluginStore: PluginStore
     @Inject lateinit var commandQueue: CommandQueue
-    @Inject lateinit var danaRSPlugin: app.aaps.pump.danars.DanaRSPlugin
+    private val danaRSPlugin get() = metroGraphs.pumps.danaRSPlugin
     @Inject lateinit var pluginList: List<@JvmSuppressWildcards PluginBase>
     @Inject lateinit var configBuilder: ConfigBuilder
     @Inject lateinit var profileFunction: ProfileFunction

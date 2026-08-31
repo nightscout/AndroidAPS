@@ -5,6 +5,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.di.EmulatedOptions
+import app.aaps.di.metro.MetroGraphs
 import app.aaps.pump.danars.emulator.EmulatorBleTransport
 import app.aaps.testcategories.ShardB
 import com.google.common.truth.Truth.assertThat
@@ -37,7 +38,10 @@ class DanaRsEmulatorTransportTest {
     // RetryRule outermost: a flaky timeout self-heals on a fresh attempt; see [RetryRule].
     @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(hiltRule)
 
-    @Inject lateinit var bleTransport: BleTransport
+    // Pump objects come from the Metro graph, not Hilt: they are `@SingleIn(AppScope::class)`, which
+    // Dagger does not read, so it would build the test its own second copy of each.
+    @Inject lateinit var metroGraphs: MetroGraphs
+    private val bleTransport get() = metroGraphs.pumps.bleTransport
     @Inject lateinit var config: Config
 
     @Before

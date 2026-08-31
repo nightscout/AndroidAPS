@@ -39,6 +39,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.singleBlock
 import app.aaps.core.objects.extensions.singleTargetBlock
 import app.aaps.di.EmulatedOptions
+import app.aaps.di.metro.MetroGraphs
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.plugins.aps.utils.StaticInjector
 import app.aaps.pump.equil.EquilPumpPlugin
@@ -113,12 +114,15 @@ class EquilEmulatorActivationTest {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var commandQueue: CommandQueue
-    @Inject lateinit var equilPumpPlugin: EquilPumpPlugin
-    @Inject lateinit var equilManager: EquilManager
+    // Pump objects come from the Metro graph, not Hilt: they are `@SingleIn(AppScope::class)`, which
+    // Dagger does not read, so it would build the test its own second copy of each.
+    @Inject lateinit var metroGraphs: MetroGraphs
+    private val equilPumpPlugin get() = metroGraphs.pumps.equilPumpPlugin
+    private val equilManager get() = metroGraphs.pumps.equilManager
     @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var persistenceLayer: PersistenceLayer
-    @Inject lateinit var equilHistoryRecordDao: EquilHistoryRecordDao
-    @Inject lateinit var equilHistoryPumpDao: EquilHistoryPumpDao
+    private val equilHistoryRecordDao get() = metroGraphs.pumps.equilHistoryRecordDao
+    private val equilHistoryPumpDao get() = metroGraphs.pumps.equilHistoryPumpDao
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var constraintsChecker: ConstraintsChecker
     @Inject lateinit var ch: ConcentrationHelper

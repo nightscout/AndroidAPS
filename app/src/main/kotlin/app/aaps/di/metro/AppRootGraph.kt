@@ -201,8 +201,14 @@ import javax.inject.Singleton
 // refuses any @Singleton class with "may not reference bindings from different scopes" - and with it,
 // an existing class can be contributed without retagging its scope annotation at all.
 @Singleton
+/**
+ * [PumpAccessors] is a supertype rather than a `@ContributesTo` interface: a contributed interface
+ * reaches the *generated* graph, so `root as PumpAccessors` would only work at runtime. Extending it
+ * makes the accessors part of this type, and it compiles for every flavour because both flavour source
+ * sets declare a `PumpAccessors` (empty in a follower), exactly as they both declare a `PumpLeaves`.
+ */
 @DependencyGraph(AppScope::class)
-interface AppRootGraph : MetroViewModelMultibindings {
+interface AppRootGraph : MetroViewModelMultibindings, PumpAccessors {
 
     /** Android classes that fill their own fields. */
     val receiversGraph: AppReceiversGraph
