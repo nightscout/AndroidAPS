@@ -46,6 +46,18 @@ When performing large-scale code migrations (e.g., XML→Compose, old API→new 
     - After claiming a phase is "done", search for old patterns
     - Count migrated files vs. initial count
     - User will verify - assume accountability
+- **For any DI change, also run `:app:assembleFullDebugAndroidTest`:**
+    - The instrumented Hilt component is a **separate Dagger component**, generated only by that task.
+      `assembleFullDebug` and every unit test can be green while it is broken - this has reached CI
+      twice. It costs about a minute.
+    - It also catches the silent half: Dagger does not read Metro's `@SingleIn`, so an
+      `@Inject lateinit var` in `androidTest` makes Hilt build a **second copy** of a Metro-owned class.
+      The test then drives an object the app has never heard of, and no assertion can see it. Read such
+      objects from the graph (`MetroGraphs`) instead of injecting them.
+- **Mutation-test every new guard, and do it WITHOUT `--rerun-tasks`:**
+    - A guard that passes proves nothing until you have watched it fail on a deliberate break.
+    - If the guard reads files Gradle does not know are inputs (source scanning, generated output), the
+      task stays `UP-TO-DATE` and the guard never fires. Declare them with `inputs.dir(...)`.
 - **Document decisions in PLAN.md:**
     - Why certain approaches were chosen
     - What patterns emerged during migration
