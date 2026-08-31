@@ -30,6 +30,4 @@ dependencies {
 
     runtimeOnly(libs.net.danlew.android.joda)
 
-    ksp(libs.com.google.dagger.compiler)
-    ksp(libs.com.google.dagger.hilt.compiler)
 }

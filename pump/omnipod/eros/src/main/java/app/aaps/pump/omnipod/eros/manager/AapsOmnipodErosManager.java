@@ -215,7 +215,7 @@ public class AapsOmnipodErosManager {
             result.success(res).enacted(res);
 
             if (!res) {
-                result.comment(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_failed_to_initialize_pod);
+                result.comment(rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_failed_to_initialize_pod));
             }
         } catch (Exception ex) {
             result.success(false).enacted(false).comment(translateException(ex));
@@ -242,7 +242,7 @@ public class AapsOmnipodErosManager {
 
             result.success(res).enacted(res);
             if (!res) {
-                result.comment(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_failed_to_insert_cannula);
+                result.comment(rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_failed_to_insert_cannula));
             }
         } catch (Exception ex) {
             result.success(false).enacted(false).comment(translateException(ex));

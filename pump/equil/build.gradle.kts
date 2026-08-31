@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.metro)
-    alias(libs.plugins.hilt)
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("jacoco-module-dependencies")
@@ -41,12 +40,9 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     debugImplementation(libs.androidx.ui.tooling)
     implementation(libs.com.github.bumptech.glide.compose)
-    implementation(libs.com.google.dagger.hilt.android)
     implementation(libs.com.google.code.gson)
 
     api(libs.androidx.room.runtime)
     api(libs.androidx.room.rxjava3)
     ksp(libs.androidx.room.compiler)
-    ksp(libs.com.google.dagger.compiler)
-    ksp(libs.com.google.dagger.hilt.compiler)
 }

@@ -1,4 +1,4 @@
-package app.aaps.pump.omnipod.eros.di
+package app.aaps.di.pump
 
 import android.content.Context
 import app.aaps.pump.omnipod.eros.history.ErosHistory
@@ -10,22 +10,21 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+/** The Eros history database, provided from `:app` so `:pump:omnipod:eros` needs no Hilt. */
 @Module
 @InstallIn(SingletonComponent::class)
 class OmnipodErosHistoryModule {
 
     @Provides
     @Singleton
-    internal fun provideDatabase(context: Context): ErosHistoryDatabase = ErosHistoryDatabase.build(context)
+    fun provideDatabase(context: Context): ErosHistoryDatabase = ErosHistoryDatabase.build(context)
 
     @Provides
     @Singleton
-    internal fun provideHistoryRecordDao(erosHistoryDatabase: ErosHistoryDatabase): ErosHistoryRecordDao =
+    fun provideHistoryRecordDao(erosHistoryDatabase: ErosHistoryDatabase): ErosHistoryRecordDao =
         erosHistoryDatabase.historyRecordDao()
 
     @Provides
     @Singleton
-    internal fun provideErosHistory(dao: ErosHistoryRecordDao) =
-        ErosHistory(dao)
-
+    fun provideErosHistory(dao: ErosHistoryRecordDao): ErosHistory = ErosHistory(dao)
 }

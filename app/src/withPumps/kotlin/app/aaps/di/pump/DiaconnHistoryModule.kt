@@ -1,4 +1,4 @@
-package app.aaps.pump.diaconn.di
+package app.aaps.di.pump
 
 import android.content.Context
 import app.aaps.pump.diaconn.database.DiaconnHistoryDatabase
@@ -9,16 +9,17 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+/** The Diaconn history database, provided from `:app` so `:pump:diaconn` needs no Dagger processor. */
 @Module
 @InstallIn(SingletonComponent::class)
 class DiaconnHistoryModule {
 
     @Provides
     @Singleton
-    internal fun provideDatabase(context: Context): DiaconnHistoryDatabase = DiaconnHistoryDatabase.build(context)
+    fun provideDatabase(context: Context): DiaconnHistoryDatabase = DiaconnHistoryDatabase.build(context)
 
     @Provides
     @Singleton
-    internal fun provideHistoryRecordDao(diaconnHistoryDatabase: DiaconnHistoryDatabase): DiaconnHistoryRecordDao =
+    fun provideHistoryRecordDao(diaconnHistoryDatabase: DiaconnHistoryDatabase): DiaconnHistoryRecordDao =
         diaconnHistoryDatabase.historyRecordDao()
 }

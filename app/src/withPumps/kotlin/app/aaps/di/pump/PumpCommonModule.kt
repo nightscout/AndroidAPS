@@ -1,4 +1,4 @@
-package app.aaps.pump.common.di
+package app.aaps.di.pump
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.pump.PumpSync
@@ -10,6 +10,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+/** Provided from `:app` so `:pump:common` needs no Dagger processor. */
 @Module
 @InstallIn(SingletonComponent::class)
 @Suppress("unused")

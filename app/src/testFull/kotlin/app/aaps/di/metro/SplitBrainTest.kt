@@ -23,6 +23,7 @@ import app.aaps.pump.equil.compose.EquilHistoryViewModel
 import app.aaps.pump.insight.InsightPlugin
 import app.aaps.pump.medtrum.compose.MedtrumOverviewViewModel
 import app.aaps.pump.omnipod.dash.OmnipodDashPumpPlugin
+import app.aaps.pump.omnipod.eros.OmnipodErosPumpPlugin
 import app.aaps.pump.virtual.VirtualPumpPlugin
 import app.aaps.ui.compose.calibrationDialog.CalibrationDialogViewModel
 import app.aaps.workflow.CalculationWorkflowImpl
@@ -124,6 +125,7 @@ class SplitBrainTest {
             EopatchOverviewViewModel::class.java,            // :pump:eopatch
             InsightPlugin::class.java,                       // :pump:insight
             OmnipodDashPumpPlugin::class.java,               // :pump:omnipod:dash
+            OmnipodErosPumpPlugin::class.java,               // :pump:omnipod:eros
             DiaconnHistoryViewModel::class.java,             // :pump:diaconn
             EquilHistoryViewModel::class.java,               // :pump:equil
             MedtrumOverviewViewModel::class.java,            // :pump:medtrum

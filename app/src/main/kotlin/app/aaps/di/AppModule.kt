@@ -3,10 +3,6 @@ package app.aaps.di
 import android.content.Context
 import android.content.SharedPreferences
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.di.APS
-import app.aaps.core.interfaces.di.AllConfigs
-import app.aaps.core.interfaces.di.NotNSClient
-import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -18,7 +14,6 @@ import app.aaps.implementations.UiInteractionImpl
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
 import app.aaps.ui.compose.history.HistoryScope
 import dagger.Binds
-import dagger.Lazy
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,38 +38,29 @@ abstract class AppModule {
         @Provides
         fun providesPlugins(
             config: Config,
-            @AllConfigs allConfigs: Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>,
-            @PumpDriver pumpDrivers: Lazy<Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>>,
-            @NotNSClient notNsClient: Lazy<Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>>,
-            @APS aps: Lazy<Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>>,
             metroGraphs: MetroGraphs,
-            aapsLogger: AAPSLogger,
-            //@PluginsListModule.Unfinished unfinished: Lazy<Map<@JvmSuppressWildcards Int,  @JvmSuppressWildcards PluginBase>>
-        )
-            : List<@JvmSuppressWildcards PluginBase> {
-            // Sources are listed rather than merged directly, so mergePlugins can see which one a
-            // plugin came from and report a clash by name. Modules migrated to Metro contribute a
-            // compile-time @IntoMap multibinding of the same shape, on the same Int order, so modules
-            // can move one at a time.
+            aapsLogger: AAPSLogger
+        ): List<@JvmSuppressWildcards PluginBase> {
+            // Every plugin is contributed by Metro now. The four Dagger buckets that used to be merged
+            // here are gone: nothing had contributed to them since the eros module left the build, so
+            // they added four always-empty maps and four ways for the merge to go wrong unnoticed.
+            //
+            // Sources are still listed rather than merged directly, so mergePlugins can name which
+            // bucket a clashing plugin came from.
             val sources = buildList {
-                add(PluginSource("Dagger @AllConfigs", allConfigs))
-                if (config.PUMPDRIVERS) add(PluginSource("Dagger @PumpDriver", pumpDrivers.get()))
-                if (config.APS) add(PluginSource("Dagger @APS", aps.get()))
-                if (!config.AAPSCLIENT) add(PluginSource("Dagger @NotNSClient", notNsClient.get()))
-                //if (config.isEnabled(ExternalOptions.UNFINISHED_MODE)) add(PluginSource("Dagger unfinished", unfinished.get()))
                 add(PluginSource("Metro", metroGraphs.plugins()))
-                // Metro's qualified buckets, each merged under the same condition as the matching
-                // Dagger one above. Keeping them apart is what stops a converted plugin appearing in
-                // a build that never had it - a follower showing Objectives, say.
+                // Each qualified bucket is merged only under the condition that build should have it.
+                // Keeping them apart is what stops a plugin appearing in a build that never had it -
+                // a follower showing Objectives, say.
                 if (config.APS) add(PluginSource("Metro @APS", metroGraphs.apsPlugins()))
                 if (config.PUMPDRIVERS) add(PluginSource("Metro @PumpDriver", metroGraphs.pumpDriverPlugins()))
                 if (!config.AAPSCLIENT) add(PluginSource("Metro @NotNSClient", metroGraphs.notNsClientPlugins()))
             }
 
             val (plugins, problems) = mergePlugins(sources)
-            // While Dagger and Metro both contribute, a plugin can be lost or doubled without either
-            // framework noticing. Logged rather than thrown: a wrong plugin list must not stop the app
-            // from starting, and this is loud enough to find in a log.
+            // Two buckets can still collide on one order key, which loses a plugin silently. Logged
+            // rather than thrown: a wrong plugin list must not stop the app from starting, and this is
+            // loud enough to find in a log.
             problems.forEach { aapsLogger.error(LTag.CORE, "PLUGIN LIST: $it") }
 
             return plugins

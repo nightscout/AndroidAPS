@@ -5,15 +5,36 @@ import app.aaps.core.interfaces.plugin.PluginBase
 /**
  * One source of plugins, so a problem can name where it came from.
  *
- * @param name shown in the error message, for example "Dagger @AllConfigs" or "Metro".
+ * @param name shown in the error message, for example "Metro @APS" or "Metro".
  * @param plugins the plugins that source contributes, keyed by their display order.
  */
 data class PluginSource(val name: String, val plugins: Map<Int, PluginBase>)
 
 /**
- * Merges the plugin maps from Dagger and Metro and reports anything wrong with the result.
+ * Merges the plugin maps and reports anything wrong with the result.
  *
- * While both frameworks contribute plugins, two mistakes are possible and **both are silent**:
+ * A plugin registers itself on its own class with `@ContributesIntoMap(AppScope::class, binding =
+ * binding<PluginBase>())`, an `@IntKey` for its position, and the qualifier for its bucket -
+ * `@APS`, `@PumpDriver`, `@NotNSClient`, or none at all, which is the "all configs" bucket. The
+ * scope must be Metro's `@SingleIn(AppScope::class)`, not javax `@Singleton`: the graph is generated
+ * in `:app`, which has no Dagger interop, so a javax scope there is ignored and every read builds a
+ * fresh plugin.
+ *
+ * Global `@IntKey` ordering - one contiguous block per feature module, step 10 within a block:
+ * ```
+ *   0-10      general (persistent notification, iob)      :plugins:main
+ *   100-120   sensitivity                                 :plugins:sensitivity
+ *   200-240   aps (loop, openAPS engines, autotune)       :plugins:aps
+ *   300-370   sync (sms, nsclient, upload, wear, …)       :plugins:sync
+ *   400-550   bg sources                                  :plugins:source
+ *   600-630   smoothing                                   :plugins:smoothing
+ *   700-710   calibration                                 :plugins:calibration
+ *   800-860   constraints (safety, objectives, …)         :plugins:constraints
+ *   1000      VirtualPump (all configs)                   :pump:virtual
+ *   1010+     real pump drivers (@PumpDriver, step 10)    :pump:* modules
+ * ```
+ *
+ * Two mistakes are possible across the buckets, and **both are silent**:
  *
  *  1. **Two sources use the same order key.** The later map wins and the earlier plugin simply
  *     disappears from the app. This is the more dangerous of the two, because it also hides the
@@ -23,7 +44,8 @@ data class PluginSource(val name: String, val plugins: Map<Int, PluginBase>)
  *     listed twice, and two instances of it run - which for a plugin that talks to the pump or
  *     uploads data is not a cosmetic problem.
  *
- * Neither framework can see the other's contributions, so neither can detect either case. Hence this.
+ * A bucket cannot see the other buckets' contributions, so the framework cannot detect either case
+ * on its own. Hence this.
  *
  * @return the merged plugins in display order, plus a list of problems. An empty problem list means
  *   the merge is healthy.

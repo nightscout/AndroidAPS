@@ -39,6 +39,4 @@ dependencies {
     api(libs.androidx.room.runtime)
 
     ksp(libs.androidx.room.compiler)
-    ksp(libs.com.google.dagger.compiler)
-    ksp(libs.com.google.dagger.hilt.compiler)
 }

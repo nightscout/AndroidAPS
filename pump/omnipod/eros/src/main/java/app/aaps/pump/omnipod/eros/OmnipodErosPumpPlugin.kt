@@ -116,6 +116,12 @@ import org.joda.time.Duration
 import org.joda.time.Instant
 import java.util.Optional
 import java.util.function.Supplier
+import app.aaps.core.interfaces.di.PumpDriver
+import app.aaps.core.interfaces.plugin.PluginBase
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.IntKey as MetroIntKey
+import dev.zacsweers.metro.binding
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -125,6 +131,12 @@ import javax.inject.Singleton
  *
  * @author Andy Rozman (andy.rozman@gmail.com)
  */
+// Registered in Metro's pump bucket, like the other twelve drivers. The instance stays Dagger's -
+// handed over by `PumpLeaves` - because the Eros services are Dagger-built, and two copies of a pump
+// plugin means a screen watching an object the pump never writes to.
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@PumpDriver
+@MetroIntKey(1070)
 @Singleton
 class OmnipodErosPumpPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
@@ -884,8 +896,10 @@ class OmnipodErosPumpPlugin @Inject constructor(
         return runBlocking { pumpSync.expectedPumpState() }.temporaryBasal
     }
 
+    // `comment` stopped taking a resource id while this module was out of the build - it takes a String
+    // or a TextRef now. Resolved through `rh` here, the same way OmnipodDashPumpPlugin does it.
     private fun getOperationNotSupportedWithCustomText(resourceId: Int): PumpEnactResult {
-        return pumpEnactResultProvider.get().success(false).enacted(false).comment(resourceId)
+        return pumpEnactResultProvider.get().success(false).enacted(false).comment(rh.gs(resourceId))
     }
 
     override fun clearAllTables() {

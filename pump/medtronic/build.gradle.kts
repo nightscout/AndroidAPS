@@ -31,6 +31,4 @@ dependencies {
     testImplementation(project(":core:keys"))
     testImplementation(project(":shared:tests"))
 
-    ksp(libs.com.google.dagger.compiler)
-    ksp(libs.com.google.dagger.hilt.compiler)
 }

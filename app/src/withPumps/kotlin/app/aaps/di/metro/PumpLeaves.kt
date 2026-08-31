@@ -42,6 +42,13 @@ import app.aaps.pump.medtrum.MedtrumPump
 import app.aaps.pump.medtrum.ble.MedtrumBleTransport
 import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
 import app.aaps.pump.omnipod.dash.OmnipodDashPumpPlugin
+import app.aaps.pump.omnipod.eros.OmnipodErosPumpPlugin
+import app.aaps.pump.omnipod.eros.driver.manager.ErosPodStateManager
+import app.aaps.pump.omnipod.eros.history.ErosHistory
+import app.aaps.pump.omnipod.eros.manager.AapsErosPodStateManager
+import app.aaps.pump.omnipod.eros.manager.AapsOmnipodErosManager
+import app.aaps.pump.omnipod.eros.util.AapsOmnipodUtil
+import app.aaps.pump.omnipod.eros.util.OmnipodAlertUtil
 import app.aaps.pump.omnipod.dash.driver.OmnipodDashManager
 import app.aaps.pump.omnipod.dash.history.database.DashHistoryDatabase
 import app.aaps.pump.omnipod.dash.history.database.HistoryRecordDao
@@ -118,7 +125,14 @@ class PumpLeaves(
     private val preferenceManagerProvider: Provider<PreferenceManager>,
     private val alarmRegistryProvider: Provider<IAlarmRegistry>,
     private val rxActionProvider: Provider<RxAction>,
-    private val omnipodDashPumpPluginProvider: Provider<OmnipodDashPumpPlugin>
+    private val omnipodDashPumpPluginProvider: Provider<OmnipodDashPumpPlugin>,
+    private val omnipodErosPumpPluginProvider: Provider<OmnipodErosPumpPlugin>,
+    private val erosHistoryProvider: Provider<ErosHistory>,
+    private val erosPodStateManagerProvider: Provider<ErosPodStateManager>,
+    private val aapsErosPodStateManagerProvider: Provider<AapsErosPodStateManager>,
+    private val aapsOmnipodErosManagerProvider: Provider<AapsOmnipodErosManager>,
+    private val aapsOmnipodUtilProvider: Provider<AapsOmnipodUtil>,
+    private val omnipodAlertUtilProvider: Provider<OmnipodAlertUtil>
 ) {
 
     @Provides fun bleTransport(): BleTransport = bleTransportProvider.get()
@@ -190,4 +204,16 @@ class PumpLeaves(
     @Provides fun preferenceManager(): PreferenceManager = preferenceManagerProvider.get()
     @Provides fun alarmRegistry(): IAlarmRegistry = alarmRegistryProvider.get()
     @Provides fun rxAction(): RxAction = rxActionProvider.get()
+    @Provides fun omnipodErosPumpPlugin(): OmnipodErosPumpPlugin = omnipodErosPumpPluginProvider.get()
+    // The eros view models are Metro built now, so Metro needs these two - Dagger still provides them,
+    // from `app.aaps.di.pump.OmnipodErosHistoryModule`.
+    @Provides fun erosHistory(): ErosHistory = erosHistoryProvider.get()
+    @Provides fun erosPodStateManager(): ErosPodStateManager = erosPodStateManagerProvider.get()
+    // The eros pump state, handed over for the same reason as every other pump's: these carry javax
+    // @Singleton and the eros service writes to Dagger's copy, so a Metro built second one would leave
+    // the screens reading an object the pump never touches. SplitBrainTest caught exactly that here.
+    @Provides fun aapsErosPodStateManager(): AapsErosPodStateManager = aapsErosPodStateManagerProvider.get()
+    @Provides fun aapsOmnipodErosManager(): AapsOmnipodErosManager = aapsOmnipodErosManagerProvider.get()
+    @Provides fun aapsOmnipodUtil(): AapsOmnipodUtil = aapsOmnipodUtilProvider.get()
+    @Provides fun omnipodAlertUtil(): OmnipodAlertUtil = omnipodAlertUtilProvider.get()
 }

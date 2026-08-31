@@ -264,9 +264,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
      * classpath, nothing contributes, and the map is empty - which is the correct answer for a follower.
      *
      * `@Multibinds(allowEmpty = true)` is what makes that legal. Without it Metro reports "no binding
-     * found" for the follower flavours, because a map with no contributions has no binding at all. The
-     * Dagger side says the same thing in `PluginsListModule`, which declares these maps so they may be
-     * empty; this is that declaration, for the other framework.
+     * found" for the follower flavours, because a map with no contributions has no binding at all.
      */
     @Multibinds(allowEmpty = true)
     @PumpDriver
