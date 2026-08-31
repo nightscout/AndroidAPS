@@ -8,6 +8,8 @@ import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.insulin.InsulinManager
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.profile.EffectiveProfile
@@ -62,6 +64,8 @@ class DataHandlerMobileUserActionTest : TestBaseWithProfile() {
     @Mock private lateinit var wizardBolusExecutor: WizardBolusExecutor
     @Mock private lateinit var batchExecutor: BatchExecutor
     @Mock private lateinit var wizardExecutor: WizardExecutor
+    @Mock private lateinit var insulinManager: InsulinManager
+    @Mock private lateinit var uel: UserEntryLogger
     @Mock private lateinit var pump: PumpWithConcentration
     @Mock private lateinit var automation: Automation
     @Mock private lateinit var event: AutomationEvent
@@ -76,7 +80,8 @@ class DataHandlerMobileUserActionTest : TestBaseWithProfile() {
             loop, processedDeviceStatusData, receiverStatusStore, quickWizard, trendCalculator, dateUtil,
             constraintsChecker, activePlugin, commandQueue, fabricPrivacy, uiInteraction,
             persistenceLayer, importExportPrefs, decimalFormatter, pumpStatusProvider,
-            ch, runningModeGuard, wizardBolusExecutor, batchExecutor, wizardExecutor
+            ch, runningModeGuard, wizardBolusExecutor, batchExecutor, wizardExecutor,
+            insulinManager, uel
         )
         // @Inject lateinit field — Dagger is not running, set manually.
         sut.automation = automation

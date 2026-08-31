@@ -49,6 +49,10 @@ internal class ActionSourceTest {
         whenever(resources.getString(R.string.menu_treatment_short)).thenReturn("Treat")
         whenever(resources.getString(R.string.menu_treatment)).thenReturn("Treatment label")
         whenever(resources.getString(R.string.action_insulin)).thenReturn("Insulin")
+        // Afrezza (our fork's addition - upstream has no Afrezza action, so this stub doesn't
+        // exist in their version of this test).
+        whenever(resources.getString(R.string.action_afrezza_short)).thenReturn("Afrezza")
+        whenever(resources.getString(R.string.action_afrezza)).thenReturn("Afrezza label")
         whenever(resources.getString(R.string.action_carbs)).thenReturn("Carbs")
         whenever(resources.getString(R.string.action_ecarbs)).thenReturn("eCarbs")
         whenever(resources.getString(R.string.menu_tempt)).thenReturn("TT")
@@ -78,12 +82,13 @@ internal class ActionSourceTest {
     }
 
     @Test
-    fun getActionsReturnsSevenActionsWithExpectedSettingNames() {
+    fun getActionsReturnsEightActionsWithExpectedSettingNames() {
         val actions = actionSource.getActions(resources)
 
-        assertThat(actions).hasSize(7)
+        // 8, not upstream's 7 - our fork adds "afrezza" between "bolus" and "carbs" (see ActionSource.kt).
+        assertThat(actions).hasSize(8)
         assertThat(actions.map { it.settingName })
-            .containsExactly("wizard", "treatment", "bolus", "carbs", "ecarbs", "temp_target", "profile_switch")
+            .containsExactly("wizard", "treatment", "bolus", "afrezza", "carbs", "ecarbs", "temp_target", "profile_switch")
             .inOrder()
     }
 
@@ -176,9 +181,11 @@ internal class ActionSourceTest {
         val selected = actionSource.getSelectedActions()
 
         // Empty result path -> fall back to getActions().take(4)
+        // Our fork's afrezza action sits 4th (between bolus and carbs), so it - not carbs - is
+        // what the first-four fallback picks up.
         assertThat(selected).hasSize(4)
         assertThat((selected as List<StaticAction>).map { it.settingName })
-            .containsExactly("wizard", "treatment", "bolus", "carbs")
+            .containsExactly("wizard", "treatment", "bolus", "afrezza")
             .inOrder()
     }
 
@@ -186,11 +193,13 @@ internal class ActionSourceTest {
     fun getResourceReferencesMapsIconResOfAllActions() {
         val refs = actionSource.getResourceReferences(resources)
 
+        // ic_afrezza sits 4th, between bolus and the two carbs icons - our fork's addition.
         assertThat(refs)
             .containsExactly(
                 R.drawable.ic_calculator,
                 R.drawable.ic_bolus_carbs,
                 R.drawable.ic_bolus,
+                R.drawable.ic_afrezza,
                 R.drawable.ic_carbs_orange,
                 R.drawable.ic_carbs_orange,
                 R.drawable.ic_temptarget_flat,

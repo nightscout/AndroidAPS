@@ -13,6 +13,7 @@ data class TreatmentUiState(
     val showCalibration: Boolean = false,
     val showTreatment: Boolean = true,
     val showInsulin: Boolean = true,
+    val showAfrezza: Boolean = false,
     val showCarbs: Boolean = true,
     val showCalculator: Boolean = true,
 

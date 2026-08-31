@@ -10,6 +10,7 @@ import app.aaps.wear.interaction.actions.BackgroundActionActivity
 import app.aaps.wear.interaction.actions.BolusActivity
 import app.aaps.wear.interaction.actions.CarbActivity
 import app.aaps.wear.interaction.actions.ECarbActivity
+import app.aaps.wear.interaction.actions.AfrezzaActivity
 import app.aaps.wear.interaction.actions.TempTargetActivity
 import app.aaps.wear.interaction.actions.TreatmentActivity
 import app.aaps.wear.interaction.actions.WizardActivity
@@ -42,6 +43,13 @@ class ActionSource @Inject constructor(context: Context, sp: SP, aapsLogger: AAP
                 buttonText = resources.getString(R.string.action_insulin),
                 iconRes = R.drawable.ic_bolus,
                 activityClass = BolusActivity::class.java.name,
+            ),
+            StaticAction(
+                settingName = "afrezza",
+                buttonText = resources.getString(R.string.action_afrezza_short),
+                settingLabel = resources.getString(R.string.action_afrezza),
+                iconRes = R.drawable.ic_afrezza,
+                activityClass = AfrezzaActivity::class.java.name,
             ),
             StaticAction(
                 settingName = "carbs",

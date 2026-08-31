@@ -17,6 +17,8 @@ import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.insulin.InsulinManager
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.pump.PumpStatusProvider
@@ -85,6 +87,8 @@ class DataHandlerMobileWearBolusTest : TestBaseWithProfile() {
     @Mock private lateinit var wizardBolusExecutor: WizardBolusExecutor
     @Mock private lateinit var batchExecutor: BatchExecutor
     @Mock private lateinit var wizardExecutor: WizardExecutor
+    @Mock private lateinit var insulinManager: InsulinManager
+    @Mock private lateinit var uel: UserEntryLogger
     @Mock private lateinit var pump: PumpWithConcentration
     @Mock private lateinit var automation: Automation
 
@@ -97,7 +101,8 @@ class DataHandlerMobileWearBolusTest : TestBaseWithProfile() {
             loop, processedDeviceStatusData, receiverStatusStore, quickWizard, trendCalculator, dateUtil,
             constraintsChecker, activePlugin, commandQueue, fabricPrivacy, uiInteraction,
             persistenceLayer, importExportPrefs, decimalFormatter, pumpStatusProvider,
-            ch, runningModeGuard, wizardBolusExecutor, batchExecutor, wizardExecutor
+            ch, runningModeGuard, wizardBolusExecutor, batchExecutor, wizardExecutor,
+            insulinManager, uel
         )
         sut.automation = automation
         // Confirm-title + error-title + client-reject string all go through the single-arg gs().

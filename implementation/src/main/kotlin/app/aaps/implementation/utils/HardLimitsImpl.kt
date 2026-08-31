@@ -50,7 +50,9 @@ class HardLimitsImpl @Inject constructor(
     override fun maxIobSMB(): Double = HardLimits.MAX_IOB_SMB.getValue(loadAge())
     override fun maxBasal(): Double = HardLimits.MAX_BASAL.getValue(loadAge())
     override fun diaRange(): ClosedFloatingPointRange<Double> = HardLimits.LIMIT_DIA.getValue(loadAge())
+    override fun diaInhaledRange(): ClosedFloatingPointRange<Double> = HardLimits.LIMIT_DIA_INHALED.getValue(loadAge())
     override fun peakRange(): IntRange = HardLimits.LIMIT_PEAK
+    override fun peakInhaledRange(): IntRange = HardLimits.LIMIT_PEAK_INHALED
     override fun icRange(): ClosedFloatingPointRange<Double> = HardLimits.LIMIT_IC.getValue(loadAge())
 
     // safety checks
