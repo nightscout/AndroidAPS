@@ -8,23 +8,28 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.configuration.InitProgress
 import app.aaps.core.interfaces.maintenance.FileListProvider
-import dagger.Lazy
+import app.aaps.di.ExternalOptionsOverride
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
 
 // @Singleton (not @Reusable): Config owns the single app-global init-progress flow that
 // ComposeMainActivity's splash gate observes; a guaranteed single instance keeps that flow shared
 // (also required so an instrumented test can flip initCompleted() on the same instance the UI reads).
 @Suppress("KotlinConstantConditions")
-@Singleton
+@ContributesBinding(AppScope::class, binding = binding<Config>())
+@SingleIn(AppScope::class)
 class ConfigImpl @Inject constructor(
-    private val fileListProvider: Lazy<FileListProvider>
+    private val fileListProvider: () -> FileListProvider,
+    private val externalOptionsOverride: ExternalOptionsOverride
 ) : Config {
 
     override val SUPPORTED_NS_VERSION = 150000 // 15.0.0
@@ -47,6 +52,7 @@ class ConfigImpl @Inject constructor(
     override val DEBUG = BuildConfig.DEBUG
 
     override val currentDeviceModelString = Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ")"
+    override val deviceModelForUpload = Build.MANUFACTURER + " " + Build.MODEL
     override val appName: TextRef = TextRef.AndroidRes(R.string.app_name)
 
     private val _initProgressFlow = MutableStateFlow(InitProgress())
@@ -74,8 +80,12 @@ class ConfigImpl @Inject constructor(
     override fun isEngineeringModeOrRelease(): Boolean = if (!APS) true else isEngineeringMode() || !isDev()
     override fun isEngineeringMode(): Boolean = isEnabled(ExternalOptions.ENGINEERING_MODE)
     override fun isDev(): Boolean = (VERSION.contains("-") || VERSION.matches(Regex(".*[a-zA-Z]+.*"))) && !VERSION.contains("-beta") && !VERSION.contains("-rc")
+    // The override is read first and never cached. The instrumented tests change which options they
+    // want between tests, so a cached answer from the first one would stick for the whole run. The file
+    // lookup below stays cached - that really is fixed for the life of the process.
     override fun isEnabled(option: ExternalOptions): Boolean =
-        enabledOptionsCache.getOrPut(option) {
-            fileListProvider.get().ensureExtraDirExists()?.findFile(option.filename) != null
-        }
+        option in externalOptionsOverride.enabled() ||
+            enabledOptionsCache.getOrPut(option) {
+                fileListProvider().ensureExtraDirExists()?.findFile(option.filename) != null
+            }
 }

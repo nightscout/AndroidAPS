@@ -116,16 +116,25 @@ import org.joda.time.Duration
 import org.joda.time.Instant
 import java.util.Optional
 import java.util.function.Supplier
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
+import app.aaps.core.interfaces.di.PumpDriver
+import app.aaps.core.interfaces.plugin.PluginBase
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.IntKey as MetroIntKey
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Created by andy on 23.04.18.
  *
  * @author Andy Rozman (andy.rozman@gmail.com)
  */
-@Singleton
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@PumpDriver
+@MetroIntKey(1070)
+@SingleIn(AppScope::class)
 class OmnipodErosPumpPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,
@@ -500,7 +509,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
     override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
         // No pod yet — deferred, not a genuine error; the profile is applied when a pod is activated (see
         // isThisProfileSet). success=true keeps it out of the central failure alarm; enacted=false => no OK.
-        if (!podStateManager.hasPodState()) return pumpEnactResultProvider.get().enacted(false).success(true).comment("Null pod state")
+        if (!podStateManager.hasPodState()) return pumpEnactResultProvider().enacted(false).success(true).comment("Null pod state")
         val result: PumpEnactResult = executeCommand(OmnipodCommandType.SET_BASAL_PROFILE) { aapsOmnipodErosManager.setBasalProfile(profile) }!!
 
         aapsLogger.info(LTag.PUMP, "Basal Profile was set: " + result.success)
@@ -551,7 +560,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
         aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute: rate: {}, duration={}", absoluteRate, durationInMinutes)
 
         if (durationInMinutes <= 0 || durationInMinutes % OmnipodConstants.BASAL_STEP_DURATION.standardMinutes != 0L) {
-            return pumpEnactResultProvider.get().success(false).comment(rh.gs(R.string.omnipod_eros_error_set_temp_basal_failed_validation, OmnipodConstants.BASAL_STEP_DURATION.standardMinutes))
+            return pumpEnactResultProvider().success(false).comment(rh.gs(R.string.omnipod_eros_error_set_temp_basal_failed_validation, OmnipodConstants.BASAL_STEP_DURATION.standardMinutes))
         }
 
         // read current TBR
@@ -567,7 +576,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
         if (tbrCurrent != null && !enforceNew) {
             if (isSame(tbrCurrent.rate, absoluteRate)) {
                 aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute - No enforceNew and same rate. Exiting.")
-                return pumpEnactResultProvider.get().success(true).enacted(false)
+                return pumpEnactResultProvider().success(true).enacted(false)
             }
         }
 
@@ -588,7 +597,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
 
         if (tbrCurrent == null) {
             aapsLogger.info(LTag.PUMP, "cancelTempBasal - TBR already cancelled.")
-            return pumpEnactResultProvider.get().success(true).enacted(false)
+            return pumpEnactResultProvider().success(true).enacted(false)
         }
 
         return executeCommand<PumpEnactResult?>(OmnipodCommandType.CANCEL_TEMPORARY_BASAL) { aapsOmnipodErosManager.cancelTemporaryBasal() }!!
@@ -603,7 +612,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
     }
 
     override fun executeCustomCommand(customCommand: CustomCommand): PumpEnactResult? {
-        if (!podStateManager.hasPodState()) return pumpEnactResultProvider.get().enacted(false).success(false).comment("Null pod state")
+        if (!podStateManager.hasPodState()) return pumpEnactResultProvider().enacted(false).success(false).comment("Null pod state")
         if (customCommand is CommandSilenceAlerts) {
             return executeCommand<PumpEnactResult?>(OmnipodCommandType.ACKNOWLEDGE_ALERTS) { aapsOmnipodErosManager.acknowledgeAlerts() }
         }
@@ -633,7 +642,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
         }
 
         aapsLogger.warn(LTag.PUMP, "Unsupported custom command: " + customCommand.javaClass.getName())
-        return pumpEnactResultProvider.get().success(false).enacted(false).comment(rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_unsupported_custom_command, customCommand.javaClass.getName()))
+        return pumpEnactResultProvider().success(false).enacted(false).comment(rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_unsupported_custom_command, customCommand.javaClass.getName()))
     }
 
     private fun retrievePulseLog(): PumpEnactResult {
@@ -641,11 +650,11 @@ class OmnipodErosPumpPlugin @Inject constructor(
         try {
             result = executeCommand(OmnipodCommandType.READ_POD_PULSE_LOG) { aapsOmnipodErosManager.readPulseLog() }!!
         } catch (ex: Exception) {
-            return pumpEnactResultProvider.get().success(false).enacted(false).comment(aapsOmnipodErosManager.translateException(ex))
+            return pumpEnactResultProvider().success(false).enacted(false).comment(aapsOmnipodErosManager.translateException(ex))
         }
 
         uiInteraction.runAlarm(rh.gs(R.string.omnipod_eros_pod_management_pulse_log_value) + ":\n" + result.toString(), rh.gs(R.string.omnipod_eros_pod_management_pulse_log), null)
-        return pumpEnactResultProvider.get().success(true).enacted(false)
+        return pumpEnactResultProvider().success(true).enacted(false)
     }
 
     private fun updateAlertConfiguration(): PumpEnactResult {
@@ -884,8 +893,10 @@ class OmnipodErosPumpPlugin @Inject constructor(
         return runBlocking { pumpSync.expectedPumpState() }.temporaryBasal
     }
 
+    // `comment` stopped taking a resource id while this module was out of the build - it takes a String
+    // or a TextRef now. Resolved through `rh` here, the same way OmnipodDashPumpPlugin does it.
     private fun getOperationNotSupportedWithCustomText(resourceId: Int): PumpEnactResult {
-        return pumpEnactResultProvider.get().success(false).enacted(false).comment(resourceId)
+        return pumpEnactResultProvider().success(false).enacted(false).comment(rh.gs(resourceId))
     }
 
     override fun clearAllTables() {

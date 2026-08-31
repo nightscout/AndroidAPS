@@ -8,7 +8,7 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danars.encryption.BleEncryption
 import java.util.Locale
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class DanaRSPacketBasalGetBasalRate @Inject constructor(
     private val aapsLogger: AAPSLogger,

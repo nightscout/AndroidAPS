@@ -34,16 +34,9 @@ import android.app.NotificationManager as AndroidNotificationManager
 
 /**
  * The Android half of notification handling: the channel, the system tray and the alarm audio.
- *
  * The registry that decides *which* notifications exist is shared - see `CommonNotificationManager`.
  * This class only answers "given this notification, what does Android actually do", which is the
  * question `NotificationManagerImpl` used to answer inline.
- *
- * Nothing happens in the constructor. Metro builds a contributed class when the graph is built, and
- * creating a channel or registering a receiver then would reach Android while the graph is still
- * being assembled - the trap that keeps `ResourceHelperImpl` and friends on Dagger. Start up work is
- * done in [onDismissed], which the registry calls once while it is being constructed and always
- * before the first [show].
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
@@ -81,7 +74,6 @@ class AndroidSystemNotificationPlatform @Inject constructor(
     /**
      * Three outcomes, and the whole reason this method takes the notification rather than a few
      * chosen fields:
-     *
      * 1. an URGENT notification **carrying a sound** is posted **silently**, because the ramping
      *    audio belongs to [AlarmSoundPlayer] through [setAudibleAlarm]. Posting it normally would
      *    alert the user twice for one alarm.
@@ -112,7 +104,6 @@ class AndroidSystemNotificationPlatform @Inject constructor(
 
     /**
      * Every **alarm** this app posted, not literally every notification.
-     *
      * `AndroidNotificationManager.cancelAll()` would also take down the ongoing foreground service
      * notification that shows the loop status, which is not what "mute all alarms" means. This is the
      * same set `NotificationManagerImpl` cleared on that path.
@@ -143,7 +134,6 @@ class AndroidSystemNotificationPlatform @Inject constructor(
 
     /**
      * Create the channel and register the dismiss receiver, once, on the first notification.
-     *
      * Deliberately not done when this class is built, and not in [onDismissed] either. The registry
      * calls `onDismissed` from its own constructor, so doing it there means building the object
      * graph touches Android - and the plain-JVM graph tests, which resolve every binding, fail on

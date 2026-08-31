@@ -26,9 +26,6 @@ import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 
 @OpenForTesting
-// Registers itself into the plugin list. Scoped with Metro's @SingleIn, not javax @Singleton: a
-// contributed class is built by the graph generated in `:app`, which has no Dagger interop, so a javax
-// scope there is ignored and every read would build a new plugin.
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @APS
 @IntKey(820)

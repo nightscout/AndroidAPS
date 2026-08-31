@@ -41,7 +41,6 @@ import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.events.EventDanaRNewStatus
 import app.aaps.pump.dana.keys.DanaStringNonKey
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding
@@ -59,7 +58,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import app.aaps.core.ui.R as CoreUiR
 
 sealed class DanaOverviewEvent {
@@ -86,7 +85,7 @@ open class DanaOverviewViewModel @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     protected val uel: UserEntryLogger,
     protected val preferences: Preferences,
-    @ApplicationContext private val context: Context
+    private val context: Context
 ) : ViewModel() {
 
 

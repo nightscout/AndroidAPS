@@ -41,23 +41,15 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 
 /**
- *
  * This client uses suspend functions and therefore is only visible in Kotlin (@JvmSynthetic).
- *
  * @param baseUrl the baseURL of the NightScout Instance
  * @param accessToken the access token of a role found in the admin panel of the NightScout instance
  * @param logging if set to true, all network communication will be logged to logcat
  * @param dispatcher the coroutine dispatcher used for network calls.
  * Per default all network calls will be done on the IO thread pool. Change for Unit-Tests
  * @param context the application context.
- *
  * Todo: retry parameters (maxRetries, backoffFactor)?
- *
- * Todo: functions to modify baseUrl and accessToken?
- *  (not necessarily needed but might come handy if Client is provided by a DI framework like dagger)
- *
  * Todo: internal methods are still visible in Java bytecode -> tag @JvmSynthetic
- *
  * TODO: add message to Exceptions? wrap them?
  * */
 
@@ -80,7 +72,6 @@ class NSAndroidClientImpl(
 
     /**
      * Releases the HTTP engine.
-     *
      * `NSClientV3Plugin` builds a new client whenever the URL, token or WebSocket setting changes,
      * and the old one used to be dropped without being closed - a leak that was invisible with
      * Retrofit but real with a Ktor engine holding connections.
@@ -115,7 +106,6 @@ class NSAndroidClientImpl(
 
     /**
      * `v3/status`, or a [UnsuccessfulNightscoutException].
-     *
      * These two used to read `api.statusSimple().result!!`, which threw `retrofit2.HttpException`
      * for a non-2xx and `NullPointerException` for a 200 without a `result` - neither of them a
      * `NightscoutException`, and the first one impossible to keep once Retrofit is gone. Both now

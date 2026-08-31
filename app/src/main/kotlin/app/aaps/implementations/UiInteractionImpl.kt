@@ -25,17 +25,18 @@ import app.aaps.implementation.androidNotification.AlarmNotificationManager
 import app.aaps.ui.activities.ErrorActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 import kotlin.reflect.KClass
 
-@Singleton
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class UiInteractionImpl @Inject constructor(
     private val context: Context,
     private val alarmNotificationManager: AlarmNotificationManager,
-    // Provider breaks a Dagger cycle: NotificationManagerImpl injects NotificationHolder, which
-    // injects this UiInteraction. notificationManager is only needed lazily in stopAlarm().
     private val notificationManager: Provider<NotificationManager>,
     private val aapsLogger: AAPSLogger,
     private val persistenceLayer: PersistenceLayer,
@@ -107,7 +108,7 @@ class UiInteractionImpl @Inject constructor(
         // Route through the registry owner so all audible alarms are actually silenced: clears the
         // internal AlarmSoundPlayer (Wear snooze used to only cancel the system notification, leaving
         // the ramping audio playing), stops the full-screen audio, and cancels the notifications.
-        notificationManager.get().muteAllAlarms()
+        notificationManager().muteAllAlarms()
     }
 
     /**

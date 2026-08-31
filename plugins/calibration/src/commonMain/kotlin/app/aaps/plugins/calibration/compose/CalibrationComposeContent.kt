@@ -13,13 +13,6 @@ import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
 import kotlin.reflect.KClass
 
-/**
- * The dependencies arrive from the plugin rather than from Hilt.
- *
- * `hiltViewModel()` is Android only, which would keep this file and the view model it builds out of
- * common code. `viewModel { }` is the multiplatform equivalent and keeps what actually matters: the
- * view model still outlives a configuration change, which a plain `remember` would not.
- */
 internal class CalibrationComposeContent(
     private val persistenceLayer: PersistenceLayer,
     private val profileUtil: ProfileUtil,

@@ -11,11 +11,12 @@ import app.aaps.pump.eopatch.core.response.BasalHistoryResponse
 import app.aaps.pump.eopatch.core.scan.IBleDevice
 import app.aaps.pump.eopatch.core.util.FloatAdjusters
 import io.reactivex.rxjava3.core.Single
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import kotlin.math.min
 
-@Singleton
+@SingleIn(AppScope::class)
 class BasalHistoryGetExBig @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<BasalHistoryResponse>(PatchFunc.GET_BASAL_HISTORY_EX, patch, aapsLogger) {
     private var mCount = 0
 

@@ -37,11 +37,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.runBlocking
 import java.util.EnumSet
 import java.util.GregorianCalendar
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import kotlin.math.round
 
-@Singleton
+@SingleIn(AppScope::class)
 class MedtrumPump @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,

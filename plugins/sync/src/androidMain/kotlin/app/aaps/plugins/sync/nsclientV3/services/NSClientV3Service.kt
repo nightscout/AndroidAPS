@@ -384,7 +384,7 @@ class NSClientV3Service : MetroService() {
         nsClientRepository.addLog("◄ ANNOUNCEMENT", data.optString("message"))
         aapsLogger.debug(LTag.NSCLIENT, data.toString())
         if (preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements))
-            postNsAlarm(NSAlarmObject(data))
+            postNsAlarm(NSAlarmObject(data.toKotlinxJson()))
     }
     internal val onAlarm: (String) -> Unit = { raw ->
 
@@ -407,7 +407,7 @@ class NSClientV3Service : MetroService() {
         if (preferences.get(BooleanKey.NsClientNotificationsFromAlarms)) {
             val snoozedTo = preferences.get(LongComposedKey.NotificationSnoozedTo, data.optString("level"))
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo)
-                postNsAlarm(NSAlarmObject(data))
+                postNsAlarm(NSAlarmObject(data.toKotlinxJson()))
         }
     }
 
@@ -418,7 +418,7 @@ class NSClientV3Service : MetroService() {
         if (preferences.get(BooleanKey.NsClientNotificationsFromAlarms)) {
             val snoozedTo = preferences.get(LongComposedKey.NotificationSnoozedTo, data.optString("level"))
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo)
-                postNsAlarm(NSAlarmObject(data))
+                postNsAlarm(NSAlarmObject(data.toKotlinxJson()))
         }
     }
 

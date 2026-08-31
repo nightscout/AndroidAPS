@@ -5,8 +5,8 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.medtronic.comm.MedtronicCommunicationManager
 import app.aaps.pump.medtronic.defs.MedtronicCommandType
 import app.aaps.pump.medtronic.util.MedtronicUtil
-import javax.inject.Inject
-import javax.inject.Provider
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
 
 /**
  * Created by andy on 6/14/18.
@@ -27,7 +27,7 @@ class MedtronicUIComm @Inject constructor(
     fun executeCommand(commandType: MedtronicCommandType, parameters: ArrayList<Any>?): MedtronicUITask {
 
         aapsLogger.info(LTag.PUMP, "Execute Command: " + commandType.name)
-        val task = medtronicUITaskProvider.get().with(commandType, parameters)
+        val task = medtronicUITaskProvider().with(commandType, parameters)
         medtronicUtil.setCurrentCommand(commandType)
         task.execute(medtronicCommunicationManager)
 

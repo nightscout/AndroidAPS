@@ -7,7 +7,7 @@ import app.aaps.pump.medtrum.encryption.Crypt
 import app.aaps.pump.medtrum.extension.toByteArray
 import app.aaps.pump.medtrum.extension.toInt
 import app.aaps.core.interfaces.di.MetroMemberInjector
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class AuthorizePacket(injector: MetroMemberInjector) : MedtrumPacket(injector) {
 

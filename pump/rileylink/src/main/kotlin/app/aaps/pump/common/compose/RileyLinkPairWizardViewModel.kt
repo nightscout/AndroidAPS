@@ -20,7 +20,6 @@ import app.aaps.pump.common.hw.rileylink.RileyLinkUtil
 import app.aaps.pump.common.hw.rileylink.ble.data.GattAttributes
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkPumpDevice
 import app.aaps.pump.common.hw.rileylink.keys.RileyLinkStringKey
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -30,7 +29,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 enum class RileyLinkPairStep {
     BLE_SCAN,
@@ -55,7 +54,7 @@ class RileyLinkPairWizardViewModel @Inject constructor(
     private val preferences: Preferences,
     private val activePlugin: ActivePlugin,
     private val rileyLinkUtil: RileyLinkUtil,
-    @ApplicationContext private val context: Context
+    private val context: Context
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(RileyLinkPairWizardUiState())

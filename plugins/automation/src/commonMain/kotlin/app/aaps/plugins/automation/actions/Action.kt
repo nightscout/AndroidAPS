@@ -18,12 +18,6 @@ import kotlinx.serialization.json.put
 
 /**
  * One step an automation performs.
- *
- * Actions are built from JSON rather than by Dagger - the automation list is stored as a string and
- * each entry names its type - so they used to reach back through `HasAndroidInjector` and inject
- * themselves. That needs a generated members injector, which is Java, so it cannot happen in a
- * multiplatform module; and self-injection hides what an action actually depends on.
- *
  * Dependencies now arrive through the constructor, supplied by [ActionFactory], which owns the
  * type-name-to-constructor mapping. The three below are needed by every action; anything else a
  * specific action needs is on its own constructor, where it is visible.

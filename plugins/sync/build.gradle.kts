@@ -26,15 +26,6 @@ val generateSyncStrings = tasks.register<GenerateKeyStringsTask>("generateSyncSt
     androidOutputDir.set(layout.buildDirectory.dir("generated/syncStrings/android"))
 }
 
-// No Hilt and no Dagger KSP: every class here is Metro now, and the processors were only still
-// listed. Verified by deleting `plugins/sync/build` and rebuilding `:app`.
-metro {
-    interop {
-        // Still on: one `javax.inject.Qualifier` remains, in di/Helpers.kt.
-        includeDagger()
-    }
-}
-
 kotlin {
     android {
         namespace = "app.aaps.plugins.sync"
@@ -88,6 +79,15 @@ kotlin {
                 api(libs.jetbrains.lifecycle.runtime.compose)
                 implementation(libs.cmp.ui.tooling.preview)
                 implementation(libs.kotlinx.datetime)
+            }
+        }
+
+        // Tests for the iOS websocket implementation. They run on the simulator, which is the only
+        // place the Kotlin/Native behaviour is actually exercised.
+        iosTest {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(libs.kotlinx.coroutines.test)
             }
         }
 

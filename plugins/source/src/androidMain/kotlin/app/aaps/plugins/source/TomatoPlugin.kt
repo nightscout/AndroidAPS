@@ -34,8 +34,6 @@ import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 import kotlinx.coroutines.Dispatchers
 
-// Registers itself into the plugin list. javax @Singleton stays: this module has Dagger interop on, so
-// Metro reads it as the scope, and the class is still built by Metro only once.
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @IntKey(470)
 @SingleIn(AppScope::class)

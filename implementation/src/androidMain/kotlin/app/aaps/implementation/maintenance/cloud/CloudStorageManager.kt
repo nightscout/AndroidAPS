@@ -10,24 +10,14 @@ import dev.zacsweers.metro.SingleIn
 
 /**
  * Cloud Storage Manager - Factory class for managing cloud storage providers.
- * 
  * This class provides a unified interface for accessing cloud storage providers.
  * It manages provider registration, selection, and lifecycle.
- * 
- * The providers are automatically registered via Dagger multi-binding.
- * To add a new cloud provider:
- * 1. Create a class that implements CloudStorageProvider
- * 2. Add a @Binds @IntoSet binding in CloudStorageModule
- * 3. Add the storage type to StorageTypes
- * 
  * Usage:
  * ```
  * // Get the active provider (based on user settings)
  * val provider = cloudStorageManager.getActiveProvider()
- * 
  * // Get a specific provider by type
  * val googleDrive = cloudStorageManager.getProvider(StorageTypes.GOOGLE_DRIVE)
- * 
  * // List all available providers
  * val providers = cloudStorageManager.getAvailableProviders()
  * ```
@@ -37,10 +27,6 @@ import dev.zacsweers.metro.SingleIn
 class CloudStorageManager(
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
-    /**
-     * Set of all cloud storage providers, injected via Dagger multi-binding.
-     * This allows adding new providers without modifying this class.
-     */
     cloudStorageProviders: Set<@JvmSuppressWildcards CloudStorageProvider>
 ) {
 

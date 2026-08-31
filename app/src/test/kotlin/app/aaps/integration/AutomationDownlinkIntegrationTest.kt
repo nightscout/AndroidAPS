@@ -1,5 +1,6 @@
 package app.aaps.integration
 
+import app.aaps.plugins.automation.LocationPermissions
 import app.aaps.core.interfaces.alerts.ReminderScheduler
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
@@ -116,12 +117,12 @@ class AutomationDownlinkIntegrationTest : TestBaseWithProfile() {
             .whenever(preferences).putRemote(eq(StringNonKey.AutomationEvents), any<String>(), any<Long>())
 
         masterRuntime = AutomationRuntime(
-            eventFactory, aapsLogger, rh, masterPreferences, loop, rxBus, constraintsChecker,
+            mock<LocationPermissions>(), eventFactory, aapsLogger, rh, masterPreferences, loop, rxBus, constraintsChecker,
             masterConfig, locationServiceController, dateUtil, activePlugin, reminderScheduler, actionFactory, triggerFactory, triggerDeps, receiverStatusStore,
             uel, profileRepository, sceneApi, mock()
         )
         clientRuntime = AutomationRuntime(
-            eventFactory, aapsLogger, rh, preferences, loop, rxBus, constraintsChecker,
+            mock<LocationPermissions>(), eventFactory, aapsLogger, rh, preferences, loop, rxBus, constraintsChecker,
             config, locationServiceController, dateUtil, activePlugin, reminderScheduler, actionFactory, triggerFactory, triggerDeps, receiverStatusStore,
             uel, profileRepository, sceneApi, mock()
         )

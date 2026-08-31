@@ -42,7 +42,6 @@ project.afterEvaluate {
             "android/**/*.*",
             "androidx/**/*.*",
             "**/*\$ViewInjector*.*",
-            "**/*Dagger*.*",
             "**/*MembersInjector*.*",
             "**/*_Factory.*",
             "**/*_Provide*Factory*.*",

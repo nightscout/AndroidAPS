@@ -12,6 +12,7 @@ import app.aaps.pump.common.hw.rileylink.service.RileyLinkBroadcastReceiver
 import app.aaps.pump.danars.services.DanaRSService
 import app.aaps.pump.medtrum.services.MedtrumService
 import app.aaps.pump.medtronic.service.RileyLinkMedtronicService
+import app.aaps.pump.omnipod.eros.rileylink.service.RileyLinkOmnipodService
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
@@ -57,7 +58,10 @@ class PumpEntryPointInjectorsTest {
         assertThat(injectors.keys).containsAtLeast(
             RileyLinkBluetoothStateReceiver::class,
             RileyLinkBroadcastReceiver::class,
-            RileyLinkMedtronicService::class
+            RileyLinkMedtronicService::class,
+            // Eros's entry is hand written (the service is Java, which crashes Metro's codegen) - so it is
+            // the one that most needs asserting, because nothing else checks it exists.
+            RileyLinkOmnipodService::class
         )
     }
 

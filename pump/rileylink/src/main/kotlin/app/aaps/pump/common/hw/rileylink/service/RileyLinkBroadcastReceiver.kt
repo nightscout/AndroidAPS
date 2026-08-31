@@ -21,8 +21,8 @@ import app.aaps.pump.common.hw.rileylink.service.tasks.InitializePumpManagerTask
 import app.aaps.pump.common.hw.rileylink.service.tasks.ServiceTask
 import app.aaps.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor
 import app.aaps.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask
-import javax.inject.Inject
-import javax.inject.Provider
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
 
 class RileyLinkBroadcastReceiver : BroadcastReceiver() {
 
@@ -113,7 +113,7 @@ class RileyLinkBroadcastReceiver : BroadcastReceiver() {
 
                 aapsLogger.debug(LTag.PUMPBTCOMM, "RfSpy Radio version (CC110): ${rlVersion?.name}")
                 rileyLinkServiceData.firmwareVersion = rlVersion
-                val task: ServiceTask = initializePumpManagerTaskProvider.get()
+                val task: ServiceTask = initializePumpManagerTaskProvider()
                 serviceTaskExecutor.startTask(task)
                 aapsLogger.info(LTag.PUMPBTCOMM, "Announcing RileyLink open For business")
                 true
@@ -138,14 +138,14 @@ class RileyLinkBroadcastReceiver : BroadcastReceiver() {
         when (action) {
             RileyLinkConst.Intents.BluetoothConnected   -> {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "Bluetooth - Connected")
-                serviceTaskExecutor.startTask(discoverGattServicesTaskProvider.get())
+                serviceTaskExecutor.startTask(discoverGattServicesTaskProvider())
                 true
             }
 
             RileyLinkConst.Intents.BluetoothReconnected -> {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "Bluetooth - Reconnecting")
                 rileyLinkService?.bluetoothInit()
-                serviceTaskExecutor.startTask(discoverGattServicesTaskProvider.get().with(true))
+                serviceTaskExecutor.startTask(discoverGattServicesTaskProvider().with(true))
                 true
             }
 
@@ -154,7 +154,7 @@ class RileyLinkBroadcastReceiver : BroadcastReceiver() {
 
     private fun processTuneUpBroadcasts(action: String): Boolean =
         if (broadcastIdentifiers["TuneUp"]?.contains(action) == true) {
-            if (rileyLinkServiceData.targetDevice.tuneUpEnabled) serviceTaskExecutor.startTask(wakeAndTuneTaskProvider.get())
+            if (rileyLinkServiceData.targetDevice.tuneUpEnabled) serviceTaskExecutor.startTask(wakeAndTuneTaskProvider())
             true
         } else false
 }

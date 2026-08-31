@@ -37,9 +37,6 @@ import kotlinx.coroutines.Dispatchers
 import org.json.JSONArray
 import org.json.JSONException
 
-// Registers itself into the plugin list. Scoped with Metro's own @SingleIn, NOT javax @Singleton: the
-// graph that builds a contributed class is generated in `:app`, which has no Dagger interop, so a javax
-// scope there is silently ignored and every read builds a new plugin.
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @IntKey(520)
 @SingleIn(AppScope::class)

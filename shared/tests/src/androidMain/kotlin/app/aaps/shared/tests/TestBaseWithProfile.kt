@@ -66,7 +66,7 @@ import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.spy
 import org.mockito.kotlin.whenever
-import javax.inject.Provider
+import dev.zacsweers.metro.Provider
 
 @Suppress("SpellCheckingInspection")
 open class TestBaseWithProfile : TestBase() {
@@ -163,7 +163,7 @@ open class TestBaseWithProfile : TestBase() {
         whenever(profileRepository.revision).thenReturn(MutableStateFlow(0L))
         whenever(profileRepository.profile).thenReturn(MutableStateFlow(getValidProfileStore()))
         deltaCalculator = DeltaCalculator(aapsLogger)
-        apsResultProvider = Provider { DetermineBasalResult(aapsLogger, fabricPrivacy, constraintsChecker, preferences, activePlugin, processedTbrEbData, profileFunction, rh, decimalFormatter, dateUtil, { apsResultProvider.get() }, ch) }
+        apsResultProvider = Provider { DetermineBasalResult(aapsLogger, fabricPrivacy, constraintsChecker, preferences, activePlugin, processedTbrEbData, profileFunction, rh, decimalFormatter, dateUtil, { apsResultProvider() }, ch) }
         validProfile = ProfileSealed.Pure(pureProfileFromJson(validProfileJSON, dateUtil)!!, activePlugin)
         effectiveProfileSwitch = EPS(
             timestamp = dateUtil.now(),

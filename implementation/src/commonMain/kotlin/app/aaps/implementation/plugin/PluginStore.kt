@@ -36,9 +36,6 @@ class PluginStore @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val pumpWithConcentration: () -> PumpWithConcentration,
-    // A factory, not an eager Set: a PermissionProvider (e.g. AutomationRuntime) transitively depends
-    // on ActivePlugin (= this PluginStore), so asking for the set here would close the cycle. Was
-    // dagger.Lazy; a plain lambda defers the same way without naming Dagger.
 ) : ActivePlugin {
 
 

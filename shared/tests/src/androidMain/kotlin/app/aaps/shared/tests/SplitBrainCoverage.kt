@@ -4,73 +4,35 @@ import java.io.File
 import java.util.jar.JarFile
 
 /**
- * Finds classes that Dagger and Metro would each build a copy of.
- *
- * A class with a javax `@Singleton` and an `@Inject` constructor is buildable by both frameworks, and
- * **a javax scope does not cross them**: the graph in `:app` runs without Dagger interop, so it ignores
- * `@Singleton` and builds a fresh instance for every injection point. Neither half is wrong on its own
- * and nothing fails to compile - the damage is at runtime, when one half writes to an object the other
- * half never reads.
- *
- * That is not hypothetical. Three shipped this way in one day:
- *
- *  - `ProfileSwitchSilentGate` - `SceneExecutor` (Metro) marked the flag, `CommandQueueImplementation`
- *    (Dagger) consumed it, so a scene profile switch raised the notification the gate exists to hide.
- *  - `ReceiverDelegate` - `TidepoolPlugin` read an upload gate that nothing updated.
- *  - `RateLimit` - the same plugin held an empty map, so nothing was ever rate limited.
- *
- * The fix is always to name an owner: give the class Metro's `@SingleIn` and hand it to Dagger with a
- * `@Provides` delegate, or leave it Dagger's and hand it to Metro through a leaf. Either way there is
- * one object; this reports the classes where nobody has chosen yet.
- *
- * @param daggerOwned types a leaf hands from Dagger to Metro. **Only leaves count as safe.** A
- *   `CoreObjectsModule` delegate does not: it returns whatever Metro built at that moment, so if the
- *   Metro side is unscoped, Dagger caches one instance while every other Metro consumer gets its own -
- *   still split, just harder to see. A delegated class must carry `@SingleIn` as well, which is what
- *   this function checks for.
- * @param metroAnnotations the annotations that mark a class Metro builds itself
+ * Reflection helpers for checking who owns a singleton.
+ * ## What used to be here, and why it is gone
+ * What survives is the one piece that is about Metro alone: telling "nobody owns this" from "a
+ * container owns it".
  */
-fun unbridgedSingletons(
+
+/**
+ * Types a Metro binding container provides with a scope - i.e. Metro owns exactly one of them.
+ * A class can be owned by Metro without carrying `@SingleIn` itself: a `@Provides` in a
+ * `@BindingContainer` constructs it, and a scope on that provider means one instance. That is how the
+ * classes Metro cannot generate a factory for are owned - the Java eros managers, and the Omnipod
+ * common BLE classes whose module does not apply the Metro plugin.
+ * Exposed so a guard can tell "nobody owns this" from "a container owns it". Missing this distinction
+ * once reported `DataInbox` as a split when it is not.
+ */
+fun metroScopedProviderTypes(
     anchors: List<Class<*>>,
-    daggerOwned: Set<Class<*>>,
     metroAnnotations: List<String> = DEFAULT_METRO_ANNOTATIONS
-): List<String> {
+): Set<Class<*>> {
     val classes = anchors.flatMap { classesIn(it) }.distinct()
     // Guard the guard: an empty scan reports perfect coverage of nothing.
     check(classes.isNotEmpty()) { "Found no classes to scan - the class walk broke" }
 
-    val metroMarkers = metroAnnotations.mapNotNull { name ->
-        @Suppress("UNCHECKED_CAST")
-        runCatching { Class.forName(name) as Class<out Annotation> }.getOrNull()
-    }
-    check(metroMarkers.isNotEmpty()) { "None of $metroAnnotations resolved - Metro annotations are not on the test classpath" }
+    @Suppress("UNCHECKED_CAST")
+    val singleIn = metroAnnotations.mapNotNull { runCatching { Class.forName(it) as Class<out Annotation> }.getOrNull() }
+        .firstOrNull { it.name.endsWith(".SingleIn") }
+    check(singleIn != null) { "Metro's @SingleIn is not on the test classpath" }
 
-    val singleIn = metroMarkers.first { it.name.endsWith(".SingleIn") }
-    val javaxSingleton = Class.forName("javax.inject.Singleton") as Class<out Annotation>
-
-    // A class can also be owned by a scoped `@Provides` in a `@BindingContainer` rather than by an
-    // annotation on itself - that is how the Android-only types are built. Metro still holds exactly one,
-    // so those are owned too, and missing this reported DataInbox as a split when it is not.
-    val scopedByContainer = scopedContainerProviders(classes, singleIn)
-
-    // What Metro constructs: anything it is told to contribute or scope, minus anything a leaf hands
-    // over - a leaf means Dagger built it and Metro only borrows, so its dependencies are Dagger's too.
-    val metroBuilt = classes.filter { candidate ->
-        metroMarkers.any { candidate.isAnnotationPresent(it) } && candidate !in daggerOwned
-    }
-    check(metroBuilt.isNotEmpty()) { "Found no Metro-built classes - the annotation lookup broke" }
-
-    return metroBuilt.flatMap { owner ->
-        owner.declaredConstructors.flatMap { it.parameterTypes.toList() }
-            .distinct()
-            .filter { param ->
-                param.isAnnotationPresent(javaxSingleton) &&
-                    !param.isAnnotationPresent(singleIn) &&
-                    param !in daggerOwned &&
-                    param !in scopedByContainer
-            }
-            .map { "${it.name} is javax @Singleton but Metro builds it for ${owner.simpleName}" }
-    }.distinct().sorted()
+    return scopedContainerProviders(classes, singleIn)
 }
 
 /** Return types of `@SingleIn`-annotated provider functions on Metro binding containers. */

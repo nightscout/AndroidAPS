@@ -45,9 +45,6 @@ import kotlin.time.Duration.Companion.days
  * Self-compiled APKs with privately held certificates cannot and will not be disabled.
  */
 @Suppress("PrivatePropertyName")
-// Registers itself into the plugin list. Scoped with Metro's @SingleIn, not javax @Singleton: a
-// contributed class is built by the graph generated in `:app`, which has no Dagger interop, so a javax
-// scope there is ignored and every read would build a new plugin.
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @APS
 @IntKey(830)

@@ -73,8 +73,6 @@ kotlin {
                 // ProcessLifecycleOwner for DeferredForegroundStart
                 implementation(libs.androidx.lifecycle.process)
 
-                api(libs.com.google.dagger.android) // for javax.inject annotations
-                api(libs.com.google.dagger.android.support)
             }
         }
 

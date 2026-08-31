@@ -23,6 +23,7 @@ import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.di.APS
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.di.FeatureMemberInjectors
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.di.NotNSClient
 import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.dst.DstHelper
@@ -96,11 +97,13 @@ import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.ui.CarbSuggestionActions
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.interfaces.utils.TrendCalculator
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.interfaces.widget.WidgetUpdater
@@ -111,6 +114,8 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.objects.crypto.CryptoUtil
+import app.aaps.database.di.DatabaseConfig
+import app.aaps.di.ExternalOptionsOverride
 import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.objects.wizard.BolusWizard
@@ -118,7 +123,11 @@ import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.database.AppRepository
 import app.aaps.implementation.maintenance.cloud.CloudStorageManager
+import app.aaps.implementation.lifecycle.ProcessLifecycleListener
+import app.aaps.implementation.resources.ResourceHelperImpl
+import app.aaps.implementation.utils.fabric.FabricPrivacyImpl
 import app.aaps.implementation.plugin.PluginStore
+import app.aaps.implementation.profile.ProfileSwitchExpiryScheduler
 import app.aaps.implementation.profile.ProfileSwitchSilentGate
 import app.aaps.implementation.scenes.ActiveSceneManager
 import app.aaps.implementation.scenes.SceneExecutor
@@ -171,35 +180,27 @@ import dev.zacsweers.metro.Provides
 import dev.zacsweers.metrox.viewmodel.MetroViewModelMultibindings
 import kotlinx.coroutines.CoroutineScope
 import kotlin.reflect.KClass
-import javax.inject.Singleton
 
 /**
  * The one Metro root. Everything else hangs off it as a graph extension.
  *
- * Before this there were nine independent root graphs, each with its own factory restating the
- * app-wide objects it needed and its own set of one-line functions unwrapping them - around 150 lines
- * of declare-then-unwrap. Worse, it was **unsafe by construction**: two root graphs that both scope the
- * same type get one instance each, silently. `MetroScopingTest` shows exactly that - two roots built
- * from the same factory share nothing at all. It only held together because every shared object still
- * belongs to Dagger, which keeps it single. The first `@SingleIn(AppScope::class)` binding to appear in
- * two roots would have been a quiet duplicate, and in this app a duplicated calculator or command queue
- * is not a cosmetic problem.
+ * **There is exactly one root, and that is the safety property.** Several root graphs would be unsafe
+ * by construction: two roots that both scope the same type get one instance each, silently.
+ * `MetroScopingTest` shows exactly that - two roots built from the same factory share nothing at all.
+ * A duplicated calculator or command queue is not a cosmetic problem in this app.
  *
  * With one root that cannot happen: a scoped binding lives here once and every extension sees the same
  * instance. An extension that declares its own scope gets its own instances of what it scopes, which is
  * what the history browser needs and what the same test verifies.
- *
- * The app-wide objects arrive as one [AapsLeaves] container because they still belong to Dagger. Its
- * `@Provides` functions run only on demand, which is the re-entrancy guard written up in [MetroGraphs].
- * When Dagger is gone the factory below goes with it and these become ordinary bindings.
  */
-// Two scopes on purpose. AppScope is Metro's own; javax @Singleton is declared as well because, with
-// Dagger interop on, Metro READS the javax scope on classes from other modules. Without this the graph
-// refuses any @Singleton class with "may not reference bindings from different scopes" - and with it,
-// an existing class can be contributed without retagging its scope annotation at all.
-@Singleton
+/**
+ * [PumpAccessors] is a supertype rather than a `@ContributesTo` interface: a contributed interface
+ * reaches the *generated* graph, so `root as PumpAccessors` would only work at runtime. Extending it
+ * makes the accessors part of this type, and it compiles for every flavour because both flavour source
+ * sets declare a `PumpAccessors` - empty in a follower, which has no pump module on its classpath.
+ */
 @DependencyGraph(AppScope::class)
-interface AppRootGraph : MetroViewModelMultibindings {
+interface AppRootGraph : MetroViewModelMultibindings, PumpAccessors {
 
     /** Android classes that fill their own fields. */
     val receiversGraph: AppReceiversGraph
@@ -263,9 +264,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
      * classpath, nothing contributes, and the map is empty - which is the correct answer for a follower.
      *
      * `@Multibinds(allowEmpty = true)` is what makes that legal. Without it Metro reports "no binding
-     * found" for the follower flavours, because a map with no contributions has no binding at all. The
-     * Dagger side says the same thing in `PluginsListModule`, which declares these maps so they may be
-     * empty; this is that declaration, for the other framework.
+     * found" for the follower flavours, because a map with no contributions has no binding at all.
      */
     @Multibinds(allowEmpty = true)
     @PumpDriver
@@ -279,7 +278,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
      * exists. A map declared here instead can be filled from anywhere with `@ContributesTo`, and nothing
      * pump-specific appears in its type, so a follower simply sees fewer entries.
      *
-     * This is what replaces `dagger.android`'s `HasAndroidInjector` for the pump protocol classes: a
+     * How the pump protocol classes are member-injected: a
      * packet is built with `new`, then fills its own fields from this map.
      */
     @Multibinds(allowEmpty = true)
@@ -295,14 +294,16 @@ interface AppRootGraph : MetroViewModelMultibindings {
         objectives.toList().sortedBy { it.first }.map { it.second }
 
     /**
-     * Constraint plugins that are also bound to an interface, or injected directly. Dagger delegates
-     * to these instances in `CoreObjectsModule` rather than building its own.
+     * Constraint plugins that are also bound to an interface, or injected directly.
+     * to these instances rather than building their own.
      */
     /**
-     * Objects Metro builds that Dagger consumers still ask for. Each has a @Provides delegate in
-     * `CoreObjectsModule`; Dagger must never construct its own, or there would be two.
+     * Objects the graph exposes for code that resolves them by hand rather than by injection.
      */
     val trendCalculator: TrendCalculator
+    val resourceHelper: ResourceHelper
+    val fabricPrivacy: FabricPrivacy
+    val uiInteraction: UiInteraction
     val carbSuggestionActions: CarbSuggestionActions
     val temporaryBasalStorage: TemporaryBasalStorage
     val detailedBolusInfoStorage: DetailedBolusInfoStorage
@@ -346,15 +347,16 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val nsClientRepository: NSClientRepository
     val builtInSearchables: BuiltInSearchables
 
-    /** Metro builds it now, but `MainApp` still injects it through Dagger, so it is handed back. */
+    /** Read by `MainApp`. */
     val activityMonitor: ActivityMonitor
 
-    /** The one application scope. Metro owns it; Dagger consumers get this same instance. */
+    /** The one application scope. */
     @ApplicationScope val appScope: CoroutineScope
     val notificationManager: NotificationManager
     val apsResult: APSResult
     val pumpEnactResult: PumpEnactResult
     val profileSwitchSilentGate: ProfileSwitchSilentGate
+    val profileSwitchExpiryScheduler: ProfileSwitchExpiryScheduler
     val runningConfiguration: RunningConfiguration
     val runningConfigurationKeys: RunningConfigurationKeys
     val activePlugin: ActivePlugin
@@ -382,14 +384,22 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val alarmSoundPlayer: AlarmSoundPlayer
     val wizardExecutor: WizardExecutor
     val configBuilder: ConfigBuilder
+
+    // Read by MainApp, which builds this graph and then starts these itself. The two `*Impl` types are
+    // here rather than their interfaces because only the concrete class has `start()`; both are
+    // `@SingleIn`, so it is the same object the interface binding hands out.
+    val config: Config
+    val resourceHelperImpl: ResourceHelperImpl
+    val fabricPrivacyImpl: FabricPrivacyImpl
+    val processLifecycleListener: ProcessLifecycleListener
     val dataSyncSelectorXdrip: DataSyncSelectorXdrip
     val activeSceneSync: ActiveSceneSync
 
     /**
      * The same object as [activeSceneSync], by class.
      *
-     * `SceneExecutor`, `SceneAutomationApiImpl` and `SceneExpiryWorker` all ask for the concrete type and
-     * are built by Dagger, so without this they got a copy of their own - and an unscoped one, since the
+     * `SceneExecutor`, `SceneAutomationApiImpl` and `SceneExpiryRunner` all ask for the concrete type and
+     * would otherwise get a copy of their own - and an unscoped one, since the
      * class carries only Metro's `@SingleIn`. The scene then activated on an object no screen was reading.
      */
     val activeSceneManager: ActiveSceneManager
@@ -445,7 +455,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
     /**
      * Automation, and the permission providers it is the only contributor to.
      *
-     * Metro owns `AutomationRuntime` now, so Dagger reads it back through `CoreObjectsModule`
+     * `AutomationRuntime` lives here.
      * instead of the other way round.
      */
     val automation: Automation
@@ -457,18 +467,18 @@ interface AppRootGraph : MetroViewModelMultibindings {
     /** The live loop's calculator. A history window has its own, at `HistoryWindowScope`. */
     val iobCobCalculator: IobCobCalculator
 
-    /** The loop. Built here now; Dagger receives it through `CoreObjectsModule.provideLoop`. */
+    /** The loop. */
     val loop: Loop
 
-    /** Autotune, for the automation actions Dagger still builds. */
+    /** Autotune, for the automation actions. */
     val autotune: Autotune
 
-    /** Running-mode helpers, from commonMain - `MainApp` still injects the reconciler through Dagger. */
+    /** Running-mode helpers, from commonMain. `MainApp` reads the reconciler. */
     val runningModeReconciler: RunningModeReconciler
     val runningModeExpiryJob: RunningModeExpiryJob
 
     /**
-     * openAPS pieces Metro builds, for the Dagger side to borrow.
+     * The openAPS pieces.
      *
      * Only the four the instrumented APS tests inject. `DeltaCalculator` and the AutoISF glucose status
      * calculator are reached through these, so nothing outside Metro ever asks for them by name.
@@ -484,7 +494,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
     /**
      * Source plugins that are also bound to an interface for other callers.
      *
-     * Metro builds these, so Dagger must delegate rather than construct - see `CoreObjectsModule`.
+     * Built here, so nothing constructs a second copy.
      */
     val xdripSourcePlugin: XdripSourcePlugin
     val nsClientSourcePlugin: NSClientSourcePlugin
@@ -509,9 +519,13 @@ interface AppRootGraph : MetroViewModelMultibindings {
     fun interface Factory {
 
         /**
-         * One parameter, not thirty-five. [AapsLeaves] carries everything Dagger still owns, and its
-         * @Provides functions are called only when something needs that type - so the deferral that
-         * DeferredRef used to do by hand is now just the shape of a binding container.
+         * The graph's inputs - what the **caller** genuinely decides.
+         *
+         * The last two are how an instrumented test differs from production, and they are parameters
+         * rather than replaced bindings for a reason worth keeping: contributions declared in
+         * `androidTest` never reach this graph, because it is compiled during
+         * `:app:compileFullDebugKotlin` and androidTest is a later, separate compilation. Metro's
+         * `replaces` is real, but it cannot help from there. The factory is the only way in.
          */
         fun create(
             /**
@@ -523,9 +537,20 @@ interface AppRootGraph : MetroViewModelMultibindings {
 
             /** The application context. Android owns it, so it is passed in rather than bound. */
             @Provides context: Context,
-            @Includes leaves: AapsLeaves,
-            @Includes coreObjects: CoreObjectsGraph,
-            @Includes pumpLeaves: PumpLeaves
+
+            /**
+             * The Application, handed back to the graph as the injector for anything Android builds
+             * itself - a service or a receiver filling its own fields.
+             */
+            @Provides memberInjector: MetroMemberInjector,
+
+            /** Which database to open. `DatabaseConfig.IN_MEMORY` is what the instrumented tests pass. */
+            @Provides databaseConfig: DatabaseConfig,
+
+            /** Extra external options to report enabled. `ExternalOptionsOverride.NONE` in production. */
+            @Provides externalOptionsOverride: ExternalOptionsOverride,
+
+            @Includes coreObjects: CoreObjectsGraph
         ): AppRootGraph
     }
 }

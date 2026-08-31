@@ -29,7 +29,7 @@ class ActionCarePortalEventTest : ActionsTestBase() {
             whenever(persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(anyOrNull(), anyLong(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()))
                 .thenReturn(PersistenceLayer.TransactionResult())
         }
-        sut = ActionCarePortalEvent(aapsLogger, rh, Provider { pumpEnactResultProvider.get() }, persistenceLayer, profileFunction, dateUtil, glucoseStatusProvider)
+        sut = ActionCarePortalEvent(aapsLogger, rh, Provider { pumpEnactResultProvider() }, persistenceLayer, profileFunction, dateUtil, glucoseStatusProvider)
         sut.cpEvent = InputCarePortalMenu()
         sut.cpEvent.value = InputCarePortalMenu.EventType.NOTE
         sut.note = InputString("Asd")

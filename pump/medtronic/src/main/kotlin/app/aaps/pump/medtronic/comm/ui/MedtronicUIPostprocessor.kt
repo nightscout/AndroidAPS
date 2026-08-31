@@ -18,13 +18,14 @@ import org.joda.time.DateTimeZone
 import org.joda.time.Duration
 import java.util.Date
 import java.util.Locale
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Created by andy on 6/15/18.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class MedtronicUIPostprocessor @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,

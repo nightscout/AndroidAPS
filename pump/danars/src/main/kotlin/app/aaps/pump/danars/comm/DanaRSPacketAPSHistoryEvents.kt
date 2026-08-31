@@ -21,7 +21,7 @@ import app.aaps.pump.danars.encryption.BleEncryption
 import kotlinx.coroutines.runBlocking
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 open class DanaRSPacketAPSHistoryEvents @Inject constructor(
     private val aapsLogger: AAPSLogger,

@@ -4,8 +4,8 @@ import android.content.Context
 import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.extensions.combine
-import app.aaps.core.objects.extensions.determineBasalJson
-import app.aaps.core.objects.extensions.json
+import app.aaps.shared.tests.extensions.determineBasalJson
+import app.aaps.shared.tests.extensions.json
 import app.aaps.core.objects.extensions.plus
 import app.aaps.core.objects.extensions.round
 import app.aaps.shared.impl.utils.DateUtilImpl

@@ -39,12 +39,15 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 import kotlin.math.max
 import kotlin.time.Duration.Companion.hours
 
-@Singleton
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class AlarmManager @Inject constructor() : IAlarmManager {
 
     @Inject lateinit var patchManager: IPatchManager
@@ -64,10 +67,6 @@ class AlarmManager @Inject constructor() : IAlarmManager {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var pumpSync: PumpSync
 
-    // Was built in an @Inject fun, which is Dagger method injection - Metro does not support it and
-    // crashes the compiler on it (ZacSweers/metro#2735). It cannot move to `init`, because it reads two
-    // injected fields that are still unset there. `lazy` waits until first use instead, which is after
-    // injection either way.
     private val mAlarmProcess: AlarmProcess by lazy { AlarmProcess(patchManager, patchManagerExecutor) }
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 

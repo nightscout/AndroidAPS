@@ -24,18 +24,9 @@ import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactory
 import kotlin.reflect.KClass
 
 /**
- * Hands app-wide infrastructure from Dagger to [OpenHumansMetroGraph], and passes back what the
- * feature contributes.
- *
- * Only infrastructure crosses here now - logger, resources, preferences, context, database,
- * notifications, event bus. Everything belonging to Open Humans itself is built inside the graph, so
- * this class is the entire remaining contact between the feature and Dagger. When the app-wide
- * objects move to Metro, this file is deleted and the graph becomes an extension of the root graph.
- *
  * The bridge lives here rather than in `:app` because this module's DI qualifiers are `internal`, so
  * `:app` cannot name them. That is also the better arrangement: the module exposes its maps, never its
  * graph type, and `:app` merges them without knowing what is inside.
- *
  * Dependencies are wrapped in [DeferredRef] rather than resolved here, for the re-entrancy reason
  * written up in `MetroGraphs`.
  */
@@ -66,9 +57,6 @@ class OpenHumansMetroBridge @Inject constructor(
 
     /**
      * What the module contributes to the app - the maps, not the graph.
-     *
-     * [notNsClientPlugins] carries the `@NotNSClient` meaning by name: `:app` must merge it only into
-     * builds that are not AAPSCLIENT, which is what the Dagger qualifier did.
      */
     val notNsClientPlugins: Map<Int, PluginBase> get() = graph.notNsClientPlugins
     val memberInjectors: Map<KClass<*>, MembersInjector<*>> get() = graph.memberInjectors

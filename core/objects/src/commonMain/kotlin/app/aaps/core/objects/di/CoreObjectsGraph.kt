@@ -31,17 +31,12 @@ import kotlinx.coroutines.CoroutineScope
 
 /**
  * Metro wiring for `:core:objects`, the module with the dependency cycle.
- *
  * `QuickWizard` needs a `QuickWizardEntry`, and an entry needs the `QuickWizard` back plus a
  * `BolusWizard`. This is the case that most stresses a compile-time-checked graph, because a strict
  * checker has to be told where the cycle is legitimately broken rather than rejecting it outright.
- *
  * Both AAPS classes already take `() -> T` lambdas rather than `javax.inject.Provider`, since
  * javax.inject is JVM-only and these are multiplatform classes. Metro's own [Provider] is the
  * deferred handle the graph understands, and it converts to the lambda the constructors want.
- *
- * `CryptoUtil` is deliberately absent - its class is in this module's **androidMain**, so it cannot be
- * part of a commonMain graph and stays on Dagger. Source set decides.
  */
 @BindingContainer
 object CoreObjectsGraph {

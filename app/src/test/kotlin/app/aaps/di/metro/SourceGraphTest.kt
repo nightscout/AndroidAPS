@@ -19,15 +19,8 @@ import org.junit.jupiter.api.Test
 
 /**
  * Every blood-glucose source worker must be registered, under its own class.
- *
- * These workers cannot be exercised on a test phone unless that phone actually runs the matching CGM
- * app, so this is where the wiring gets checked. A worker missing from the map is not a build error:
- * `MetroWorkerFactory` would simply hand it back to Hilt, and once Hilt is gone it would fail at the
- * moment a CGM delivers a reading - the worst possible time for a glucose source to stop working.
- *
  * Nothing is dereferenced here on purpose. Reading the map only builds the assisted factories, not the
  * workers, so no leaf has to be stubbed at all - see [testRoot].
- *
  * The graph is opened from the root rather than built directly, because it is a `@GraphExtension` and
  * that is the only way to reach one.
  */

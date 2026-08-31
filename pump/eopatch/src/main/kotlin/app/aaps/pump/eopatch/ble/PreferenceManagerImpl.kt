@@ -15,13 +15,16 @@ import app.aaps.pump.eopatch.vo.PatchLifecycleEvent
 import app.aaps.pump.eopatch.vo.PatchState
 import app.aaps.pump.eopatch.vo.TempBasalManager
 import io.reactivex.rxjava3.core.Observable
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 
 /**
  * patch2 패키지에서 사용하는 프리퍼런스의 작업을 대신 처리하는 클래스
  */
-@Singleton
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class PreferenceManagerImpl @Inject constructor() : PreferenceManager {
 
     @Inject lateinit var preferences: Preferences
@@ -34,9 +37,6 @@ class PreferenceManagerImpl @Inject constructor() : PreferenceManager {
 
     override var patchState = PatchState()
     override var bolusCurrent = BolusCurrent()
-    // Was built in an @Inject fun, which is Dagger method injection - Metro does not support it and
-    // crashes the compiler on it (ZacSweers/metro#2735). It cannot move to `init`, because patchConfig is
-    // an injected field and is still unset there. `lazy` waits until first use, which is after injection.
     private val observePatchLifeCycle: Observable<PatchLifecycle> by lazy {
         patchConfig.observe()
             .map { patchConfig -> patchConfig.lifecycleEvent.lifeCycle }

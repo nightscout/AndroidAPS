@@ -39,14 +39,15 @@ import org.apache.commons.lang3.StringUtils
 import java.util.Locale
 import java.util.UUID
 import java.util.concurrent.Semaphore
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Created by geoff on 5/26/16.
  * Added: State handling, configuration of RF for different configuration ranges, connection handling
  */
-@Singleton
+@SingleIn(AppScope::class)
 class RileyLinkBLE @Inject constructor(
     private val context: Context,
     private val aapsLogger: AAPSLogger,

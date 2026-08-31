@@ -14,7 +14,6 @@ import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 
-// Metro builds this; Dagger receives it via a @Provides delegate in `:app`.
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 class CloudDirectoryManagerImpl @Inject constructor(

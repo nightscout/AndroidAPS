@@ -21,10 +21,6 @@ import org.mockito.kotlin.whenever
 /**
  * Covers the receiver that rings a reminder scheduled through
  * [app.aaps.core.interfaces.alerts.ReminderScheduler].
- *
- * The receiver now lives in this module, beside the automation code that schedules it. It used to be
- * in `:app`, because Dagger answers `@Inject lateinit` with generated Java and a multiplatform module
- * has no Java compile step. Metro generates no Java, so that restriction is gone.
  */
 class TimerReminderReceiverTest : TestBase() {
 

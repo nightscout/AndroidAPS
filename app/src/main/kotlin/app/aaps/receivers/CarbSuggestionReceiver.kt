@@ -11,15 +11,10 @@ import app.aaps.core.objects.workflow.MetroBroadcastReceiver
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 /**
  * Moved here from :plugins:aps so that module could become multiplatform.
- *
- * Nothing about the receiver needed Android APIs that `androidMain` lacks - it was the field
- * injection. Dagger answers `@Inject lateinit` with a generated members injector written in Java, and
- * a multiplatform module has no Java compilation step, so the file would be generated and silently
- * dropped. See `_docs/KMP_IOS_FEASIBILITY.md`, under "Decisions taken".
  */
 class CarbSuggestionReceiver : MetroBroadcastReceiver() {
 

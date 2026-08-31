@@ -5,6 +5,9 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import app.aaps.di.newIntegrationWaits
+import app.aaps.di.newRxHelper
+import app.aaps.di.testGraphs
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.time.T
@@ -28,7 +31,6 @@ import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler
 import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
 import app.aaps.testcategories.ShardB
 import com.google.common.truth.Truth.assertThat
-import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
@@ -40,7 +42,6 @@ import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
-import javax.inject.Inject
 import kotlin.time.Duration.Companion.minutes
 
 /**
@@ -63,23 +64,22 @@ import kotlin.time.Duration.Companion.minutes
  * budgets below legitimately exceed that on a loaded box (CI build 40565 turned the whole job red this
  * way, on a commons-codec version bump, and the identical SHA passed in 40566).
  */
-@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 @ShardB
-class RunningModeReconcilerIntegrationTest : HiltInstrumentedTest() {
+class RunningModeReconcilerIntegrationTest : AapsInstrumentedTest() {
 
-    @Inject lateinit var persistenceLayer: PersistenceLayer
-    @Inject lateinit var commandQueue: CommandQueue
-    @Inject lateinit var runningModeReconciler: RunningModeReconciler
-    @Inject lateinit var runningModeExpiryScheduler: RunningModeExpiryScheduler
-    @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var rxHelper: RxHelper
-    @Inject lateinit var integrationWaits: IntegrationWaits
-    @Inject lateinit var loop: Loop
-    @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var profileRepository: ProfileRepository
-    @Inject lateinit var nsIncomingDataProcessor: NsIncomingDataProcessor
-    @Inject lateinit var pumpSync: PumpSync
+    private val persistenceLayer get() = testGraphs.persistenceLayer
+    private val commandQueue get() = testGraphs.commandQueue
+    private val runningModeReconciler get() = testGraphs.runningModeReconciler
+    private val runningModeExpiryScheduler get() = testGraphs.runningModeExpiryScheduler
+    private val dateUtil get() = testGraphs.dateUtil
+    private val rxHelper by lazy { newRxHelper() }
+    private val integrationWaits by lazy { newIntegrationWaits() }
+    private val loop get() = testGraphs.loop
+    private val profileFunction get() = testGraphs.profileFunction
+    private val profileRepository get() = testGraphs.profileRepository
+    private val nsIncomingDataProcessor get() = testGraphs.nsIncomingDataProcessor
+    private val pumpSync get() = testGraphs.pumpSync
 
     private val context = ApplicationProvider.getApplicationContext<Context>()
 

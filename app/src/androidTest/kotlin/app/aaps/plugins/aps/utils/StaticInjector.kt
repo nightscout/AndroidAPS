@@ -16,16 +16,11 @@ import app.aaps.di.metro.AlgTestGraph
 import app.aaps.di.metro.AlgTestLeaves
 import dev.zacsweers.metro.MembersInjector
 import dev.zacsweers.metro.createGraphFactory
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
 
 /**
  * Fills the fields of the reference algorithm helpers, which are built with `new` rather than by a graph.
- *
- * Hilt injects the objects below, this hands them to [AlgTestGraph], and the graph produces the member
- * injectors. Nothing here is constructed by that graph - see [AlgTestLeaves].
  */
-@Singleton
 class StaticInjector @Inject constructor(
     aapsLogger: AAPSLogger,
     constraintChecker: ConstraintsChecker,
@@ -66,7 +61,6 @@ class StaticInjector @Inject constructor(
 
     /**
      * Throws rather than returning false for a class with no entry.
-     *
      * The callers here fill their fields from their own `init` and ignore the result, so returning false
      * would leave a `lateinit` unset and surface later as an unrelated failure - inside tests that check
      * algorithm output against recorded results, where a quietly wrong value is the worst outcome. A

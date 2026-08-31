@@ -54,6 +54,9 @@ class IosClientConfig(
     override val currentDeviceModelString: String =
         UIDevice.currentDevice.let { "${it.model} ${it.systemName} ${it.systemVersion}" }
 
+    /** Nightscout stores this verbatim, so keep it to the device identity - no OS version. */
+    override val deviceModelForUpload: String = UIDevice.currentDevice.model
+
     /** Android returns a string resource id here. iOS has no resource table, so nothing to name. */
     override val appName: TextRef = TextRef.Literal("AAPS")
 

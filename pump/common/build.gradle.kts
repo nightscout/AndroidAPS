@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
+    alias(libs.plugins.metro)
     alias(libs.plugins.ksp)
     id("android-module-dependencies")
     id("test-module-dependencies")
@@ -20,6 +21,4 @@ dependencies {
     implementation(libs.com.google.code.gson)
     implementation(project(":core:keys"))
 
-    ksp(libs.com.google.dagger.compiler)
-    ksp(libs.com.google.dagger.hilt.compiler)
 }

@@ -22,15 +22,16 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.security.InvalidParameterException
 import java.util.Locale
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import kotlin.experimental.or
 import kotlin.math.abs
 
 /**
  * Created by andy on 5/9/18.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class MedtronicUtil @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,

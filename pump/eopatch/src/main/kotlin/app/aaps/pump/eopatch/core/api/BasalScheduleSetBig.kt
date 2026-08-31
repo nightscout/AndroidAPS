@@ -8,10 +8,11 @@ import app.aaps.pump.eopatch.core.code.PatchBleResultCode
 import app.aaps.pump.eopatch.core.response.BasalScheduleSetResponse
 import app.aaps.pump.eopatch.core.scan.IBleDevice
 import io.reactivex.rxjava3.core.Single
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class BasalScheduleSetBig @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<BasalScheduleSetResponse>(PatchFunc.SET_BASAL_SCHEDULE, patch, aapsLogger) {
     override fun parse(bytes: ByteArray): BasalScheduleSetResponse {
         val ret = bytes[DATA0].toInt() and 0xFF

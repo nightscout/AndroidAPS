@@ -11,11 +11,6 @@ import dev.zacsweers.metro.SingleIn
 
 /**
  * Builds [AutomationEventObject]s and holds what they need.
- *
- * Events are stored as JSON, so Dagger cannot build them. They used to be handed a
- * `HasAndroidInjector` and inject themselves, which needed a generated members injector - Java, and
- * therefore impossible in a multiplatform module.
- *
  * This holds the dependencies instead and passes them in. The event reads them back through the
  * factory, so a new event can be created from an existing one without carrying a second bundle.
  */

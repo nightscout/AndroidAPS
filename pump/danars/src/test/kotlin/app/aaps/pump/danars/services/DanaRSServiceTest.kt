@@ -25,7 +25,7 @@ import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
-import javax.inject.Provider
+import dev.zacsweers.metro.Provider
 
 class DanaRSServiceTest : TestBaseWithProfile() {
 
@@ -79,11 +79,11 @@ class DanaRSServiceTest : TestBaseWithProfile() {
         `when`(danaRSPlugin.pumpDescription).thenReturn(mockPumpDescription())
 
         // Setup packet providers
-        `when`(danaRSPacketGeneralInitialScreenInformationProvider.get()).thenReturn(packetGeneralInitialScreenInfo)
-        `when`(danaRSPacketOptionSetUserOptionProvider.get()).thenReturn(packetOptionSetUserOption)
-        `when`(danaRSPacketBolusSetStepBolusStopProvider.get()).thenReturn(packetBolusSetStepBolusStop)
-        `when`(danaRSPacketAPSBasalSetTemporaryBasalProvider.get()).thenReturn(packetAPSBasalSetTemporaryBasal)
-        `when`(danaRSPacketBasalSetCancelTemporaryBasalProvider.get()).thenReturn(packetBasalSetCancelTemporaryBasal)
+        `when`(danaRSPacketGeneralInitialScreenInformationProvider()).thenReturn(packetGeneralInitialScreenInfo)
+        `when`(danaRSPacketOptionSetUserOptionProvider()).thenReturn(packetOptionSetUserOption)
+        `when`(danaRSPacketBolusSetStepBolusStopProvider()).thenReturn(packetBolusSetStepBolusStop)
+        `when`(danaRSPacketAPSBasalSetTemporaryBasalProvider()).thenReturn(packetAPSBasalSetTemporaryBasal)
+        `when`(danaRSPacketBasalSetCancelTemporaryBasalProvider()).thenReturn(packetBasalSetCancelTemporaryBasal)
 
         // Setup packet behavior
         `when`(packetGeneralInitialScreenInfo.failed).thenReturn(true)

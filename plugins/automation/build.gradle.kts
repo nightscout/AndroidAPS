@@ -26,14 +26,6 @@ val generateAutomationStrings = tasks.register<GenerateKeyStringsTask>("generate
     androidOutputDir.set(layout.buildDirectory.dir("generated/automationStrings/android"))
 }
 
-metro {
-    interop {
-        // Still on for the Android side: this module takes `@ApplicationScope CoroutineScope` and the
-        // qualified plugin buckets, both javax qualifiers that Metro ignores without it. The classes
-        // themselves carry Metro annotations now - no javax.inject import is left in the module.
-        includeDagger()
-    }
-}
 
 kotlin {
     android {
@@ -86,11 +78,18 @@ kotlin {
                 api(libs.jetbrains.lifecycle.viewmodel.compose)
                 api(libs.jetbrains.lifecycle.runtime.compose)
                 implementation(libs.kotlinx.serialization.json)
+                implementation(libs.kotlinx.datetime)
                 // A Compose Multiplatform library - it publishes iosArm64, jvm and wasm too, so the
                 // reorderable list works everywhere and does not pin a screen to Android.
                 implementation(libs.sh.calvin.reorderable)
                 // The JetBrains republish of the Preview annotation - same package name, with iOS.
                 implementation(libs.cmp.ui.tooling.preview)
+            }
+        }
+
+        iosTest {
+            dependencies {
+                implementation(kotlin("test"))
             }
         }
 

@@ -11,14 +11,11 @@
     <uses-permission
         android:name="android.permission.BLUETOOTH_SCAN"
         android:usesPermissionFlags="neverForLocation" />
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
 
     <application>
 
-        <!-- The location trigger's service. Declared here, in the module that owns it. It sat in
-             :app while Dagger wired it, because Dagger answers injection with generated Java and a
-             multiplatform module has no Java compile step. Metro generates none, so it came home. -->
+        <!-- The location trigger's service. Declared here, in the module that owns it. -->
         <service
             android:name="app.aaps.plugins.automation.services.LocationService"
             android:exported="false"

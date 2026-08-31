@@ -6,11 +6,6 @@ plugins {
     alias(libs.plugins.metro)
 }
 
-// No `metro { interop { includeDagger() } }` and no Dagger KSP: the two workers here are
-// `@AssistedInject` from Metro, and nothing in the module carries a javax or Dagger annotation.
-// Verified by deleting `workflow/build` and rebuilding `:app` - a stale `hilt_aggregated_deps` is
-// what usually makes a dead processor look necessary.
-
 kotlin {
     android {
         namespace = "app.aaps.workflow"

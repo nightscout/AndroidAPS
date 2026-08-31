@@ -4,6 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import app.aaps.di.newIntegrationWaits
+import app.aaps.di.newRxHelper
+import app.aaps.di.testGraphs
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.RM
@@ -32,8 +35,6 @@ import app.aaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
 import com.google.common.truth.Truth.assertThat
-import dagger.hilt.android.testing.HiltAndroidTest
-import javax.inject.Inject
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
@@ -44,22 +45,21 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
-@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class LoopTest : HiltInstrumentedTest() {
+class LoopTest : AapsInstrumentedTest() {
 
-    @Inject lateinit var loop: Loop
-    @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var nsIncomingDataProcessor: NsIncomingDataProcessor
-    @Inject lateinit var profileRepository: ProfileRepository
-    @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var rxHelper: RxHelper
-    @Inject lateinit var l: L
-    @Inject lateinit var config: Config
-    @Inject lateinit var objectivesPlugin: ObjectivesPlugin
-    @Inject lateinit var persistenceLayer: PersistenceLayer
-    @Inject lateinit var pumpSync: PumpSync
-    @Inject lateinit var iobCobCalculator: IobCobCalculator
+    private val loop get() = testGraphs.loop
+    private val profileFunction get() = testGraphs.profileFunction
+    private val nsIncomingDataProcessor get() = testGraphs.nsIncomingDataProcessor
+    private val profileRepository get() = testGraphs.profileRepository
+    private val dateUtil get() = testGraphs.dateUtil
+    private val rxHelper by lazy { newRxHelper() }
+    private val l get() = testGraphs.l
+    private val config get() = testGraphs.config
+    private val objectivesPlugin get() = testGraphs.objectivesPlugin
+    private val persistenceLayer get() = testGraphs.persistenceLayer
+    private val pumpSync get() = testGraphs.pumpSync
+    private val iobCobCalculator get() = testGraphs.iobCobCalculator
 
     private val context = ApplicationProvider.getApplicationContext<Context>()
 

@@ -6,7 +6,7 @@ import app.aaps.pump.medtrum.comm.enums.CommandType.SET_PATCH
 import app.aaps.pump.medtrum.extension.toByte
 import app.aaps.pump.medtrum.extension.toByteArray
 import app.aaps.core.interfaces.di.MetroMemberInjector
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.math.round
 
 class SetPatchPacket(injector: MetroMemberInjector) : MedtrumPacket(injector) {

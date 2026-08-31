@@ -18,13 +18,9 @@ import dev.zacsweers.metro.Provides
 
 /**
  * Member injectors for this module's activities and home screen widgets.
- *
  * Android constructs an activity, so it cannot take its dependencies in a constructor - it fills its own
  * fields once it exists. `MetroAppCompatActivity` does that in `onCreate` from this map, which is the
  * same shape the pump packets use, only reached through the application rather than a passed injector.
- *
- * An activity missing from here fails on launch with its own name, where `dagger.android` left the
- * fields unset and failed later at the first use.
  */
 @ContributesTo(AppScope::class)
 @BindingContainer
@@ -69,8 +65,6 @@ object UiMemberInjectors {
     @ClassKey(SmallWidget::class)
     fun bindSmallWidget(injector: MembersInjector<SmallWidget>): MembersInjector<*> = injector
 
-    // Glance builds its widgets itself, so they take no dependencies at all: WidgetDependencies asks
-    // the graph from inside provideGlance. It replaced a Hilt @EntryPoint.
     @Provides
     @FeatureMemberInjectors
     @IntoMap

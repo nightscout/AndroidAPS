@@ -38,11 +38,12 @@ import app.aaps.pump.diaconn.packet.InsulinLackReportPacket
 import app.aaps.core.interfaces.di.MetroMemberInjector
 import java.util.UUID
 import java.util.concurrent.ScheduledFuture
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
 @Suppress("SpellCheckingInspection")
-@Singleton
+@SingleIn(AppScope::class)
 class BLECommonService @Inject internal constructor(
     private val injector: MetroMemberInjector,
     private val aapsLogger: AAPSLogger,

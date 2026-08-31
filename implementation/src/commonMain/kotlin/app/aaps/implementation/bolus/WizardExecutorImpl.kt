@@ -18,8 +18,6 @@ import dev.zacsweers.metro.SingleIn
  * [BatchExecutorImpl]. The compute/deliver logic lives once in the executor, so a client's request lands in that
  * same executor on the master and both roles render the master's identical lines.
  */
-// Metro builds this; Dagger receives it via a @Provides delegate in `:app`. Metro's @SingleIn,
-// not javax @Singleton, because the graph is generated in `:app`.
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 class WizardExecutorImpl @Inject constructor(

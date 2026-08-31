@@ -10,10 +10,6 @@ interface Command {
 
     /**
      * Makes a fresh [PumpEnactResult].
-     *
-     * A plain factory function rather than a `javax.inject.Provider`: that type is Dagger vocabulary,
-     * and it appeared in the public API of this interface, which pinned every implementer and this
-     * whole file to a JVM-only DI framework. Android still injects a `Provider` and passes its `::get`.
      */
     val pumpEnactResultProvider: () -> PumpEnactResult
 

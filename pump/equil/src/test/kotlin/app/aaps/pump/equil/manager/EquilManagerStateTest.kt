@@ -25,7 +25,7 @@ import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
-import javax.inject.Provider
+import dev.zacsweers.metro.Provider
 
 /**
  * How the pod state survives a plugin restart.

@@ -19,7 +19,7 @@ import org.mockito.kotlin.whenever
 class CommandLoadHistoryTest : TestBaseWithProfile() {
 
     private fun newCommand(type: Byte = 0, callback: Callback? = null) =
-        CommandLoadHistory(aapsLogger, rh, activePlugin, pumpEnactResultProvider::get, type, callback)
+        CommandLoadHistory(aapsLogger, rh, activePlugin, pumpEnactResultProvider::invoke, type, callback)
 
     @Test
     fun `execute on Dana pump returns pump's loadHistory result and passes type`() = runTest {

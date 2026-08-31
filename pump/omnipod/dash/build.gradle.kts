@@ -3,17 +3,9 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.metro)
-    alias(libs.plugins.hilt)
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("jacoco-module-dependencies")
-}
-
-metro {
-    interop {
-        // The classes here keep their javax annotations; interop is what lets Metro read them.
-        includeDagger()
-    }
 }
 
 android {
@@ -41,7 +33,6 @@ dependencies {
 
     implementation(libs.kotlinx.coroutines.rx3)
 
-    implementation(libs.com.google.dagger.hilt.android)
     implementation(libs.androidx.compose.ui.tooling.preview)
     debugImplementation(libs.androidx.compose.ui.tooling)
 
@@ -49,7 +40,5 @@ dependencies {
     testImplementation(project(":shared:tests"))
     testImplementation(libs.commons.codec)
 
-    ksp(libs.com.google.dagger.compiler)
-    ksp(libs.com.google.dagger.hilt.compiler)
     ksp(libs.androidx.room.compiler)
 }

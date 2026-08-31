@@ -10,8 +10,8 @@ implement on the Apple side, so neither session has to re-derive it from the dif
 This file lives at `_docs/ios_blockers.md`. It arrived once as `_dcs/ios_blockers.md` and was moved -
 please write it here, so both sessions look in the same place.
 
-The pattern behind almost every entry: a class can only move to `commonMain` after it is off Dagger
-and off Android types. The Metro migration has to land first, then the move is usually small.
+The pattern behind almost every entry: a class can only move to `commonMain` after it is off Android
+types. The move is usually small once it is.
 
 ## How to find the next one
 
@@ -52,23 +52,28 @@ containing a comma, which Kotlin/Native rejects outright.
 
 ## Hint: most common code still has no iOS test coverage
 
-Measured 2026-08-27, after `:implementation` got its `commonTest`. This is a survey, not a claim that
+Measured 2026-08-27 and refreshed 2026-08-31. This is a survey, not a claim that
 anything is broken - but the one module that was converted immediately turned up three real faults,
 so it is worth working through.
 
 | module | commonMain files | commonTest | test files that never run on iOS |
 |---|---|---|---|
-| `plugins/aps` | 23 | none | 33 |
+| `plugins/aps` | 32 | 2 files | 33 |
 | `core/objects` | 26 | none | 27 |
 | `database/persistence` | 32 | none | 16 |
 | `core/interfaces` | 255 | none | 13 |
 | `plugins/sensitivity`, `smoothing`, `calibration` | 22 | none | 9 |
 | `core/utils` | 6 | none | 5 |
 
-Only `core/data`, `shared/impl` and `implementation` have a `commonTest` at all. Everything else
-tests `commonMain` classes from `androidHostTest`, which runs on the JVM only - so code that ships to
-iOS is verified only on Android. `plugins/aps` is the dosing algorithm and `database/persistence` is
-what writes user data, so those two are worth the most.
+Only `core/data`, `shared/impl`, `implementation` and now `plugins/aps` have a `commonTest` at all.
+Everything else tests `commonMain` classes from `androidHostTest`, which runs on the JVM only - so
+code that ships to iOS is verified only on Android. `plugins/aps` is the dosing algorithm and
+`database/persistence` is what writes user data, so those two are worth the most.
+
+`plugins/aps` got its first two `commonTest` files with `PumpEnactResultExtensionTest` (19 tests),
+which moved there when the extension became kotlinx and multiplatform. The other 33 test files in
+that module still run on the JVM only - `LoopPluginTest` among them, which is now testing a
+`commonMain` class.
 
 What converting one module found, none of which the JVM could have shown: a fake that did not
 implement every interface member because Mockito had been filling it in, a backticked test name
@@ -226,50 +231,39 @@ Collected so nobody pays for them twice. All were found by tests or a crash, not
 
 ## Open
 
-### Request: StoreDataForDb blocks the whole NS client on iOS
+### Twelve bindings stand between the NS client and iOS
 
-`plugins/sync/src/androidMain/.../nsclientV3/StoreDataForDbImpl.kt` - 543 lines, **one** Android
-import.
+Measured with the probe procedure above. `StoreDataForDb`, `NSAlarmObject`, `ReceiverStatusStore`,
+`SecureEncrypt`, `SceneExpiryScheduler`, `SmsCommunicator`, `CalculationExecutor` and `Loop` have all
+been cleared since this list was first written; `IosNsConnection` itself is written and compiling.
 
-This is the one to do first, ahead of the service itself. Every incoming websocket event ends in
-`storeDataForDb.requestStoreX(...)` - glucose values, treatments, food, calibrations, device status.
-An iOS `NsConnection` written today would connect, subscribe, receive and parse, and then drop every
-record, because there is nothing to hand them to. That is the silent no-op the migration rules warn
-about, and on the data path.
+`DeviceStatusJson` is off the list for a different reason: the port was deleted rather than
+implemented. `LoopPlugin` renders that JSON with kotlinx directly now, so there is no binding left
+to satisfy - do not go looking for `AndroidDeviceStatusJson`.
 
-Two smaller ones go with it, both reached from the same handlers:
+`Automation` is unblocked but not cleared. `AutomationRuntime` and the whole automation Compose UI
+are in commonMain and compile for iOS, so the class itself is no longer in the way. The binding still
+does not resolve, because three of its constructor dependencies are Android-only with no iOS side
+yet: `LocationServiceController` (`LocationServiceControllerImpl`), `LocationPermissions`
+(`AndroidLocationPermissions`) and `ReminderScheduler` (`ReminderSchedulerImpl`). Those three are the
+remaining work, and each is far smaller than the class that used to be the obstacle.
 
-| class | lines | what is in the way |
-|---|---|---|
-| `StoreDataForDbImpl` | 543 | 1 android import, 3 jvm |
-| `NSAlarmObject` | 48 | 1 jvm import |
-| `JsonBridge` | 32 | `org.json`, by definition - it is the bridge |
+**Has an Android implementation to lift or port** - your side:
+`LoopNotifier` (`AndroidLoopNotifier`), `WidgetUpdater` (`WidgetUpdaterImpl`), and `UiInteraction`,
+which currently lives in `:app` and so needs somewhere to go first.
 
-`JsonBridge` may simply not need an iOS counterpart: the iOS handlers will parse with
-kotlinx.serialization directly, the way `ProfileRepositoryImpl` was converted, so the bridge is only
-needed while Android still speaks `org.json`.
+**Ours, and only wiring:** `NsSocketFactory` - see the note in the gaps section.
 
-### Then: the socket wiring in NSClientV3Service
+**No Kotlin implementation anywhere, and worth questioning rather than porting:**
+`BolusWizard`, `BolusProgressData`, `QuickWizard`, `IobCobCalculator`, `RunningModeGuard`, `L`.
 
-`plugins/sync/src/androidMain/.../services/NSClientV3Service.kt` - 494 lines, 6 Android imports
-(`Intent`, `Binder`, `IBinder`, `PowerManager`, two annotations).
-
-The iOS side will write its **own** `NsConnection` rather than wait for this to be lifted - a
-separate implementation is the point of the port, and the two platforms genuinely differ here. What
-it needs from you is only the three classes above; the wiring itself will be rewritten on the iOS
-side with kotlinx.serialization instead of `org.json`.
-
-For reference while that is written, these are the parts of the contract that are easy to get wrong,
-and both are already pinned by `ServiceNsConnectionTest`:
-
-- `start(reason)` is idempotent - calling it on a live connection must not tear anything down.
-- `stop()` closes the sockets **before** releasing whatever carries them, or a quick restart races
-  the teardown.
-
-One more, from reading the handlers: `onDataCreateUpdate` must not advance
-`lastLoadedSrvModified` until `initialLoadFinished` is true, or the next load chain skips exactly the
-offline window it is supposed to backfill. That one is a comment in the Android code rather than a
-test, and it would be easy to lose in a rewrite.
+That last group is the interesting one. A Nightscout **connection** should not need the bolus wizard,
+the quick wizard or the IOB/COB calculator bound, and `DeviceStatusJson` and `LoopNotifier` only
+appeared once `Loop` resolved - so the graph is walking into loop territory by way of
+`NSClientV3Plugin` rather than anything the connection touches. Before implementing six more classes
+it is worth checking whether the plugin can take them lazily, the way `AapsLeaves` does on Android
+with `Provider`. A follower client that has to construct the loop to sync Nightscout data is carrying
+weight it does not use.
 
 ## Ready for Android: what the iOS side has built
 
@@ -289,9 +283,72 @@ test, and it would be easy to lose in a rewrite.
 
 Nothing right now.
 
+## Two iOS behaviours a user would notice
+
+Both are implemented and both work as designed. They are here because the design has a cost that is
+invisible from the code, and someone should decide whether to accept it before iOS ships.
+
+### A roaming user may be charged for data
+
+`IosReceiverStatusStore.roaming` is **always false**, because iOS exposes no roaming state at all -
+not through `CTTelephonyNetworkInfo`, not anywhere public.
+
+That would be harmless if nothing read it, but `ReceiverDelegate` does:
+
+```kotlin
+ev.mobileConnected && preferences.get(BooleanKey.NsClientUseCellular) && !ev.roaming || ...
+```
+
+So on iOS the first branch always matches: **a user who turned off "sync while roaming" still syncs
+over cellular abroad.** False is the least bad of two wrong answers - reporting true instead would
+stop cellular sync working for everyone, everywhere.
+
+If that is not acceptable, the options are a preference the user sets by hand when travelling, or
+suppressing the cellular-sync option on iOS entirely. Both are product decisions.
+
+### A timed scene activated on iOS never ends
+
+`IosSceneExpiryScheduler` deliberately does not schedule, and logs at error when asked to. Scenes
+compile and the editor works, which is what was wanted for now, but activating a **timed** scene on
+iOS has a real consequence.
+
+`SceneExpiryRunner` is not a UI refresh. At expiry it reverts the two actions whose effect does not
+end on its own:
+
+- the **SMB toggle**, a preference with no duration model
+- the **profile switch**, whose `EffectiveProfileSwitch` outlives the timed record that created it -
+  `getEffectiveProfileSwitchActiveAt()` picks the newest EPS and ignores `originalEnd`, so the base
+  profile only resumes once a new base-profile EPS exists
+
+Without the callback both stay applied indefinitely, and a chained follow-up scene never starts.
+Temp target, loop mode and care portal entries are safe - those self-expire from their own
+timestamps.
+
+**So activation of a timed scene has to be gated in the UI before scenes ship on iOS.**
+
+A real implementation is possible later, but not as a plain timer - the interface is right to forbid
+that. It needs three parts together: an in-process timer (works whenever the app is alive, which for
+a looper holding a BLE connection is most of the time), a `UNTimeIntervalNotificationTrigger` at the
+deadline (fires even if the app was killed, but only shows a notification - it cannot run code), and
+an overdue sweep when the app next comes to the foreground so the runner executes late rather than
+never. That ends the scene on time when possible and always tells the user otherwise, which is a
+weaker promise than the Android one and should be agreed before it is built.
+
 ## Known gaps on the iOS side
 
 Not blockers, and not for the Windows session to fix. Listed so nobody is surprised by them.
+
+- `IosSecureEncrypt` keeps its AES key in the Keychain, marked `ThisDeviceOnly`, but **not in the
+  Secure Enclave** - the Enclave holds EC keys, not the AES key wanted here, so the key is protected
+  by the Keychain and device encryption rather than being non-exportable like the Android TEE key.
+  Wrapping the AES key with an Enclave EC key would close that gap and is a larger change.
+- `IosReceiverStatusStore.ssid` is always empty: reading it needs the Access WiFi Information
+  entitlement plus location permission. Until that is arranged, a Wi-Fi SSID automation trigger can
+  be configured on iOS and will never match - the same shape as the Bluetooth trigger.
+- `NsSocketFactory` can never be bound inside the Kotlin graph. The implementation is
+  `SwiftNsSocketFactory`, on the official `socket.io-client-swift` - the same project's client as the
+  `socket.io-client-java` Android uses, which is what keeps both platforms speaking to Nightscout
+  identically. The graph has to take it as a factory parameter from the app at start up.
 
 - `IosSystemNotificationPlatform.setAudibleAlarm` only logs, so **an urgent alarm makes no sound on
   iOS today**. There are two separate paths and they are easy to confuse:
@@ -388,6 +445,12 @@ Not blockers, and not for the Windows session to fix. Listed so nobody is surpri
   connections made by anything other than this app. **A Bluetooth automation trigger can be
   configured on iOS and will never fire** - decided deliberately, and written in both KDocs so it is
   not mistaken for an oversight later.
+- The map picker is a fourth automation seam, added from the Android side: `MapPickerScreen` is an
+  `expect` composable (osmdroid on Android), with `expect val isMapPickerAvailable` next to it. iOS
+  returns false and `TriggerLocationEditor` hides the "pick from map" button, because the editor has
+  **no manual latitude/longitude field** - so on iOS a location trigger can only be set from the
+  current position until a MapKit picker exists. Same reasoning as the Bluetooth trigger above, but
+  the opposite decision: the feature is hidden rather than present and dead.
 - `ConstraintsCheckerImpl` - moved to `commonMain` (`a76cca9e41`)
 - `ProfileRepositoryImpl` - moved to `commonMain`, off `org.json` (`3252f044b1`)
 - `PluginStore` / `PluginPermissions` - split so the registry is no longer Android

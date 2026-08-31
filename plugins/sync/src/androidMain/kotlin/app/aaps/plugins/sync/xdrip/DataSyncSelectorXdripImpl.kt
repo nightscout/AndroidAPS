@@ -22,8 +22,6 @@ import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 
 @Suppress("unused")
-// Metro builds this; Dagger receives it via a @Provides delegate in `:app`. Metro's @SingleIn,
-// not javax @Singleton, because the graph is generated in `:app`.
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 class DataSyncSelectorXdripImpl @Inject constructor(

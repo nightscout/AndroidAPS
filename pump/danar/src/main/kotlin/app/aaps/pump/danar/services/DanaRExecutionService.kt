@@ -50,7 +50,7 @@ import app.aaps.pump.danar.comm.MsgStatusBolusExtended
 import app.aaps.pump.danar.comm.MsgStatusTempBasal
 import app.aaps.pump.danarkorean.DanaRKoreanPlugin
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.math.abs
 
 class DanaRExecutionService : AbstractDanaRExecutionService() {
@@ -193,7 +193,7 @@ class DanaRExecutionService : AbstractDanaRExecutionService() {
         return true
     }
 
-    override fun loadEvents(): PumpEnactResult = pumpEnactResultProvider.get()
+    override fun loadEvents(): PumpEnactResult = pumpEnactResultProvider()
 
     override fun bolus(detailedBolusInfo: DetailedBolusInfo): Boolean {
         if (!isConnected) return false
@@ -302,12 +302,12 @@ class DanaRExecutionService : AbstractDanaRExecutionService() {
     }
 
     override fun setUserOptions(): PumpEnactResult {
-        if (!isConnected) return pumpEnactResultProvider.get().success(false)
+        if (!isConnected) return pumpEnactResultProvider().success(false)
         SystemClock.sleep(300)
         val msg = MsgSetUserOptions(injector)
         mSerialIOThread?.sendMessage(msg)
         SystemClock.sleep(200)
-        return pumpEnactResultProvider.get().success(!msg.failed)
+        return pumpEnactResultProvider().success(!msg.failed)
     }
 
     inner class LocalBinder : Binder() {

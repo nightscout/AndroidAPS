@@ -60,7 +60,7 @@ class AutomationRuntimeTest : TestBaseWithProfile() {
 
     @BeforeEach fun prepare() {
         automationRuntime = AutomationRuntime(
-            eventFactory, aapsLogger, rh, preferences, loop, rxBus, constraintChecker,
+            AndroidLocationPermissions(), eventFactory, aapsLogger, rh, preferences, loop, rxBus, constraintChecker,
             config, locationServiceController, dateUtil, activePlugin, reminderScheduler, actionFactory, triggerFactory, triggerDeps, receiverStatusStore,
             uel, profileRepository, sceneApi, mock()
         )

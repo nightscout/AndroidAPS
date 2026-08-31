@@ -29,8 +29,6 @@ import kotlinx.coroutines.launch
  * This class bridges the gap between the preference key definitions (which declare
  * visibility conditions) and the runtime state of the app (pump type, BG source, etc.).
  */
-// Metro builds this; Dagger receives it via a @Provides delegate in `:app`. Metro's @SingleIn,
-// not javax @Singleton, because the graph is generated in `:app`.
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 class VisibilityContextImpl @Inject constructor(

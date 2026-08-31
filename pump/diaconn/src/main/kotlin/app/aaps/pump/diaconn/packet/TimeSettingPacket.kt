@@ -5,7 +5,7 @@ import app.aaps.pump.diaconn.DiaconnG8Pump
 import app.aaps.core.interfaces.di.MetroMemberInjector
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 /**
  * TimeSettingPacket Request Packet

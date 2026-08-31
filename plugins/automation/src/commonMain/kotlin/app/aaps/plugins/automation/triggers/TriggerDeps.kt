@@ -18,17 +18,12 @@ import dev.zacsweers.metro.SingleIn
 
 /**
  * The dependencies every [Trigger] can reach.
- *
  * A parameter object rather than twelve constructor parameters, because all twelve live on the base
  * class and would otherwise have to be threaded through all 29 subclasses and their secondary
  * constructors. [TriggerFactory] builds one and hands it out.
- *
  * Note the difference from actions: an `Action` lists its own dependencies on its own constructor, so
  * reading one tells you what it touches. A trigger does not - it can reach any of these. That is the
  * price of the smaller change, and it is the thing to revisit if triggers are ever split up.
- *
- * What it is NOT is the old `HasAndroidInjector`: this is typed, built by Dagger in one place, and
- * needs no generated members injector, so trigger code can be multiplatform.
  */
 @SingleIn(AppScope::class)
 class TriggerDeps @Inject constructor(

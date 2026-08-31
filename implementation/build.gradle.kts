@@ -4,9 +4,11 @@ plugins {
     // NOT com.android.library. AGP 9 refuses that plugin together with the multiplatform plugin.
     // Same reason as :core:ui, :core:interfaces and the other multiplatform modules.
     alias(libs.plugins.android.kmp.library)
-    // Metro is the only DI framework in this module now. Dagger's processor is gone - the last
-    // `@InstallIn` module moved to :app - which is what made the multiplatform flip possible at all.
+    // Metro, the DI framework for this module.
     alias(libs.plugins.metro)
+    // The compiler plugin that generates serializers. The kotlinx json runtime was already here and is
+    // used to parse trees, which needs no plugin - but StoredBolusInfo is @Serializable and does.
+    id("kotlinx-serialization")
     // The Compose COMPILER, which ships with Kotlin and compiles @Composable for every target.
     alias(libs.plugins.compose.compiler)
     // The Compose Multiplatform framework. The compiler plugin above is applied per project rather
@@ -15,15 +17,6 @@ plugins {
     // Opens @OpenForTesting classes for Mockito. Applied directly rather than through
     // all-open-dependencies, which applies com.android.library and so cannot be used here.
     kotlin("plugin.allopen")
-}
-
-metro {
-    interop {
-        // Lets Metro read the javax annotations still on this module's classes. They are JVM only,
-        // so a class keeping them also stays in androidMain - that is the order of work, not a
-        // blocker.
-        includeDagger()
-    }
 }
 
 allOpen {
@@ -91,6 +84,15 @@ kotlin {
                 implementation(project(":core:objects"))
                 // For CoreUiStrings: the command queue names its user text instead of numbering it.
                 implementation(project(":core:ui"))
+            }
+        }
+
+        // Only the iOS SecureEncrypt needs this - AES-GCM and SHA-256 through the same library the
+        // client-control crypto already uses, so both platforms share one vetted implementation.
+        iosMain {
+            dependencies {
+                implementation(libs.cryptography.core)
+                implementation(libs.cryptography.provider.optimal)
             }
         }
 

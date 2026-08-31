@@ -24,7 +24,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.objects.extensions.convertToJSONArray
+import app.aaps.shared.tests.extensions.convertToJSONArray
 import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.plannedRemainingMinutes
 import app.aaps.core.objects.profile.ProfileSealed
@@ -46,7 +46,7 @@ import org.mozilla.javascript.Undefined
 import java.io.IOException
 import java.lang.reflect.InvocationTargetException
 import java.nio.charset.StandardCharsets
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class DetermineBasalAdapterAutoISFJS(private val scriptReader: ScriptReader, private val injector: MetroMemberInjector) : DetermineBasalAdapter {
 

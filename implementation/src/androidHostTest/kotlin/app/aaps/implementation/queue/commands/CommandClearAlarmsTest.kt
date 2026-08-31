@@ -17,7 +17,7 @@ import org.mockito.kotlin.whenever
 class CommandClearAlarmsTest : TestBaseWithProfile() {
 
     private fun newCommand(callback: Callback? = null) =
-        CommandClearAlarms(aapsLogger, rh, activePlugin, pumpEnactResultProvider::get, callback)
+        CommandClearAlarms(aapsLogger, rh, activePlugin, pumpEnactResultProvider::invoke, callback)
 
     @Test
     fun `execute on Medtrum pump returns pump's clearAlarms result`() = runTest {

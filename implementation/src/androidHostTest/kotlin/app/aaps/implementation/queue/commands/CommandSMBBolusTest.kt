@@ -30,7 +30,7 @@ class CommandSMBBolusTest : TestBaseWithProfile() {
     private fun newCommand(info: DetailedBolusInfo, callback: Callback? = null) =
         CommandSMBBolus(
             aapsLogger, rh, dateUtil, activePlugin, persistenceLayer, preferences, bolusProgressData,
-            pumpEnactResultProvider::get, info, callback, BOLUS_GENERATION
+            pumpEnactResultProvider::invoke, info, callback, BOLUS_GENERATION
         )
 
     private fun smbInfo(deliverAtTheLatest: Long = System.currentTimeMillis()) =

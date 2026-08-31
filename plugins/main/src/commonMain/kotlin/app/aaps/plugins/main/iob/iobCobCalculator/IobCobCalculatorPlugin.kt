@@ -90,11 +90,6 @@ class IobCobCalculatorPlugin(
     private val decimalFormatter: DecimalFormatter,
     private val processedTbrEbData: ProcessedTbrEbData,
     private val signals: CalculationSignalsEmitter,
-    // Lazy cache reference: IobCobCalculator and OverviewDataCache form a Dagger cycle (Loop
-    // transitively pulls IobCobCalculator). Deferring the lookup breaks it; runCalculation is only
-    // invoked post-construction, so calling this is always safe. A plain lambda rather than
-    // javax.inject.Provider, which is JVM only - the :app side adapts Dagger's Provider to it, the
-    // same shape OverviewDataCacheImpl already uses for the other direction of the cycle.
     private val cache: () -> OverviewDataCache
 ) : PluginBase(
     PluginDescription()

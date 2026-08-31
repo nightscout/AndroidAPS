@@ -39,10 +39,11 @@ import app.aaps.pump.danars.encryption.BleEncryption
 import app.aaps.pump.danars.encryption.EncryptionType
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.ScheduledFuture
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class BLEComm @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,

@@ -20,9 +20,6 @@ class TimeDateOrTZChangeReceiver : MetroBroadcastReceiver() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var activePlugin: ActivePlugin
-    // The graph binds the application scope here. The @ApplicationScope qualifier is gone because
-    // this module has no Dagger interop yet, so Metro would ignore it - and the graph holds exactly
-    // one CoroutineScope, so there is nothing to disambiguate.
     @Inject lateinit var appScope: CoroutineScope
 
     private var isDST = calculateDST()

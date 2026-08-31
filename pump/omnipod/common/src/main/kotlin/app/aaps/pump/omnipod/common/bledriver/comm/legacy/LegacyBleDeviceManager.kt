@@ -14,11 +14,9 @@ import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.ConnectException
 import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.device.BleDeviceManager
 import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.scan.PodScanner
 import app.aaps.pump.omnipod.common.keys.DashBooleanPreferenceKey
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
 import app.aaps.pump.omnipod.common.bledriver.comm.legacy.scan.PodScanner as LegacyPodScanner
 
-@Singleton
 class LegacyBleDeviceManager @Inject constructor(
     private val context: Context,
     private val aapsLogger: AAPSLogger,

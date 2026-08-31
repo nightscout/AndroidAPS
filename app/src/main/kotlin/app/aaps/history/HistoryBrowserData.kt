@@ -4,10 +4,8 @@ import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
-import app.aaps.di.metro.MetroGraphs
+import app.aaps.di.metro.HistoryWindowGraph
 import app.aaps.ui.compose.history.HistoryScope
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * The calculation objects behind the History Browser.
@@ -22,12 +20,14 @@ import javax.inject.Singleton
  * the isolation those objects rely on, and the cycle between the cache and the calculator is expressed
  * with Metro's `Provider` rather than a hand-written lambda.
  */
-@Singleton
-class HistoryBrowserData @Inject constructor(
-    metroGraphs: MetroGraphs
+/*
+ * Takes the window itself rather than `MetroGraphs`. It used to ask the graph holder for one, which
+ * made a domain class depend on the DI plumbing to reach a single object. `AppAndroidBindings` calls
+ * the extension factory instead, and the scope lives on that provider.
+ */
+class HistoryBrowserData(
+    window: HistoryWindowGraph
 ) : HistoryScope {
-
-    private val window = metroGraphs.newHistoryWindow()
 
     override val overviewData: OverviewData = window.overviewData
     override val signals: CalculationSignalsEmitter = window.signals

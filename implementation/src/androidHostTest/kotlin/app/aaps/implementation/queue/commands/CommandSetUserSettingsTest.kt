@@ -19,7 +19,7 @@ import org.mockito.kotlin.whenever
 class CommandSetUserSettingsTest : TestBaseWithProfile() {
 
     private fun newCommand(callback: Callback? = null) =
-        CommandSetUserSettings(aapsLogger, rh, activePlugin, pumpEnactResultProvider::get, callback)
+        CommandSetUserSettings(aapsLogger, rh, activePlugin, pumpEnactResultProvider::invoke, callback)
 
     @Test
     fun `execute on Dana pump returns pump's setUserOptions result`() = runTest {

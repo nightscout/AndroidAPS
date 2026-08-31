@@ -56,7 +56,7 @@ import app.aaps.pump.danarv2.comm.MsgCheckValueV2
 import app.aaps.pump.danarv2.comm.MsgHistoryEventsV2
 import app.aaps.pump.danarv2.comm.MsgSetAPSTempBasalStartV2
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.math.abs
 
 class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
@@ -312,11 +312,11 @@ class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
 
     override fun loadEvents(): PumpEnactResult {
         if (!danaRv2Plugin.isInitialized()) {
-            val result = pumpEnactResultProvider.get().success(false)
+            val result = pumpEnactResultProvider().success(false)
             result.comment("pump not initialized")
             return result
         }
-        if (!isConnected) return pumpEnactResultProvider.get().success(false)
+        if (!isConnected) return pumpEnactResultProvider().success(false)
         SystemClock.sleep(300)
         val msg = MsgHistoryEventsV2(injector, danaPump.readHistoryFrom)
         aapsLogger.debug(LTag.PUMP, "Loading event history from: " + dateUtil.dateAndTimeString(danaPump.readHistoryFrom))
@@ -327,7 +327,7 @@ class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
         SystemClock.sleep(200)
         if (danaPump.lastEventTimeLoaded != 0L) danaPump.readHistoryFrom = danaPump.lastEventTimeLoaded - mins(1).msecs() else danaPump.readHistoryFrom = 0
         danaPump.lastConnection = System.currentTimeMillis()
-        return pumpEnactResultProvider.get().success(true)
+        return pumpEnactResultProvider().success(true)
     }
 
     override suspend fun updateBasalsInPump(profile: Profile): Boolean {
@@ -348,12 +348,12 @@ class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
     }
 
     override fun setUserOptions(): PumpEnactResult {
-        if (!isConnected) return pumpEnactResultProvider.get().success(false)
+        if (!isConnected) return pumpEnactResultProvider().success(false)
         SystemClock.sleep(300)
         val msg = MsgSetUserOptions(injector)
         mSerialIOThread?.sendMessage(msg)
         SystemClock.sleep(200)
-        return pumpEnactResultProvider.get().success(!msg.failed)
+        return pumpEnactResultProvider().success(!msg.failed)
     }
 
     inner class LocalBinder : Binder() {

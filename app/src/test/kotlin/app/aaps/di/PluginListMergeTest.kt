@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 
 /**
- * Guards the two silent ways the plugin list can go wrong while Dagger and Metro both contribute.
- *
  * Both cases nearly happened during the migration, so these are regression tests, not hypotheticals.
  */
 class PluginListMergeTest {
@@ -20,7 +18,7 @@ class PluginListMergeTest {
         val a = PluginA()
         val b = PluginB()
         val (plugins, problems) = mergePlugins(
-            listOf(PluginSource("Dagger", mapOf(20 to b)), PluginSource("Metro", mapOf(10 to a)))
+            listOf(PluginSource("BucketA", mapOf(20 to b)), PluginSource("BucketB", mapOf(10 to a)))
         )
 
         assertThat(plugins).containsExactly(a, b).inOrder()
@@ -30,7 +28,7 @@ class PluginListMergeTest {
     @Test
     fun `reports the same plugin class arriving from both frameworks`() {
         val (_, problems) = mergePlugins(
-            listOf(PluginSource("Dagger", mapOf(10 to PluginA())), PluginSource("Metro", mapOf(20 to PluginA())))
+            listOf(PluginSource("BucketA", mapOf(10 to PluginA())), PluginSource("BucketB", mapOf(20 to PluginA())))
         )
 
         assertThat(problems).hasSize(1)
@@ -42,22 +40,22 @@ class PluginListMergeTest {
     fun `reports two sources fighting over one order key`() {
         // The dangerous case: the loser vanishes, and the overwrite also hides a double contribution.
         val (plugins, problems) = mergePlugins(
-            listOf(PluginSource("Dagger", mapOf(340 to PluginA())), PluginSource("Metro", mapOf(340 to PluginB())))
+            listOf(PluginSource("BucketA", mapOf(340 to PluginA())), PluginSource("BucketB", mapOf(340 to PluginB())))
         )
 
         assertThat(plugins).hasSize(1)
         assertThat(problems).hasSize(1)
         assertThat(problems.single()).contains("340")
-        assertThat(problems.single()).contains("Dagger")
-        assertThat(problems.single()).contains("Metro")
+        assertThat(problems.single()).contains("BucketA")
+        assertThat(problems.single()).contains("BucketB")
     }
 
     @Test
     fun `a healthy list of several sources reports nothing`() {
         val (plugins, problems) = mergePlugins(
             listOf(
-                PluginSource("Dagger @AllConfigs", mapOf(10 to PluginA(), 30 to PluginB())),
-                PluginSource("Metro", mapOf(20 to PluginA()))
+                PluginSource("BucketA", mapOf(10 to PluginA(), 30 to PluginB())),
+                PluginSource("BucketB", mapOf(20 to PluginA()))
             )
         )
 
@@ -70,8 +68,8 @@ class PluginListMergeTest {
     fun `distinct classes under distinct keys are healthy`() {
         val (plugins, problems) = mergePlugins(
             listOf(
-                PluginSource("Dagger @AllConfigs", mapOf(10 to PluginA())),
-                PluginSource("Metro", mapOf(20 to PluginB()))
+                PluginSource("BucketA", mapOf(10 to PluginA())),
+                PluginSource("BucketB", mapOf(20 to PluginB()))
             )
         )
 

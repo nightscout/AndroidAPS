@@ -88,16 +88,9 @@ import kotlin.reflect.KClass
 
 /**
  * Member injectors for the Diaconn protocol packets - the `@ContributesAndroidInjector` replacement.
- *
- * A packet is built with `new` by the service, not by a graph, so it cannot take its dependencies in a
- * constructor. dagger.android answered that with `HasAndroidInjector`, a runtime map the packet used to
- * fill its own `@Inject` fields. This is the same idea, built at compile time: an entry here is checked
- * when the module compiles, so a packet with an unsatisfiable dependency fails the build.
- *
  * The entries land in `AppRootGraph.contributedMemberInjectors` through `@ContributesTo`. That matters:
  * a graph extension would have to be named by `MetroGraphs`, which is compiled for follower builds where
  * this module does not exist. Contributing into the root instead needs no mention anywhere in `:app`.
- *
  * One line per packet, the same as the `@ContributesAndroidInjector` line it replaces. If a packet is
  * missing, `DiaconnG8Packet`'s init throws by name rather than leaving fields null.
  */

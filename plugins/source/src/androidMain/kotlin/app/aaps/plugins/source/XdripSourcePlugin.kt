@@ -47,9 +47,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlin.math.abs
 import kotlin.math.round
 
-// Registers itself into the plugin list. Scoped with Metro's own @SingleIn, not javax @Singleton - see
-// the note on the other source plugins. It is also bound to an interface, and that binding is a
-// @Provides delegate in `:app` rather than a Dagger @Binds, so Dagger hands out THIS instance.
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @IntKey(400)
 @SingleIn(AppScope::class)

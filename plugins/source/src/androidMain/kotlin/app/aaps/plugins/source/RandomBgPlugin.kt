@@ -48,9 +48,6 @@ import kotlin.math.cos
 import kotlin.math.sin
 import dev.zacsweers.metro.IntKey as MetroIntKey
 
-// Registers itself into the plugin list. Scoped with Metro's own @SingleIn, NOT javax @Singleton: the
-// graph that builds a contributed class is generated in `:app`, which has no Dagger interop, so a javax
-// scope there is silently ignored and every read builds a new plugin.
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @MetroIntKey(550)
 @SingleIn(AppScope::class)

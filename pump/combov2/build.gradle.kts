@@ -8,12 +8,6 @@ plugins {
     id("jacoco-module-dependencies")
 }
 
-metro {
-    interop {
-        // The classes here keep their javax annotations; interop is what lets Metro read them.
-        includeDagger()
-    }
-}
 
 android {
     namespace = "info.nightscout.pump.combov2"
@@ -31,6 +25,4 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     debugImplementation(libs.androidx.compose.ui.tooling)
 
-    ksp(libs.com.google.dagger.compiler)
-    ksp(libs.com.google.dagger.hilt.compiler)
 }

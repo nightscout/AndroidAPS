@@ -9,12 +9,6 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
-/**
- * Base class for WorkManager workers. Subclasses are `@HiltWorker`s whose `@AssistedInject`
- * constructor supplies [aapsLogger] and [fabricPrivacy] (plus the worker's own dependencies) and
- * are instantiated by `HiltWorkerFactory`. [doWork] runs [doWorkAndLog] on [dispatcher] and logs
- * the result.
- */
 abstract class LoggingWorker(
     context: Context,
     workerParams: WorkerParameters,

@@ -48,8 +48,7 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
 
-// Metro builds this; Dagger receives it via a @Provides delegate in `:app`. Metro's @SingleIn,
-// not javax @Singleton, because the graph is generated in `:app`.
+// Scoped, so every caller shares one config builder.
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 class ConfigBuilderImpl @Inject constructor(

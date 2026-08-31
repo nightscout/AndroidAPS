@@ -19,7 +19,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.objects.extensions.convertToJSONArray
+import app.aaps.shared.tests.extensions.convertToJSONArray
 import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.plannedRemainingMinutes
 import app.aaps.plugins.aps.logger.LoggerCallback
@@ -39,7 +39,7 @@ import org.mozilla.javascript.Undefined
 import java.io.IOException
 import java.lang.reflect.InvocationTargetException
 import java.nio.charset.StandardCharsets
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.math.min
 
 class DetermineBasalAdapterAMAJS(private val scriptReader: ScriptReader, private val injector: MetroMemberInjector) : DetermineBasalAdapter {

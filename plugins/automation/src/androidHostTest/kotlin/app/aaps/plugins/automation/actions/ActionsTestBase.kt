@@ -49,7 +49,7 @@ ActionsTestBase : TestBaseWithProfile() {
 
     val actionFactory: ActionFactory by lazy {
         ActionFactory(
-            triggerDeps, aapsLogger, rh, Provider { pumpEnactResultProvider.get() }, rxBus, dateUtil, mock<ReminderScheduler>(),
+            triggerDeps, aapsLogger, rh, Provider { pumpEnactResultProvider() }, rxBus, dateUtil, mock<ReminderScheduler>(),
             config, persistenceLayer, profileFunction, profileRepository, profileUtil, glucoseStatusProvider,
             notificationManager, activePlugin, preferences, sceneApi, sceneIconResolver, smsCommunicator,
             autotunePlugin, importExportPrefs, exportPasswordDataStore

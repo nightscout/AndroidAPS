@@ -1,16 +1,19 @@
 package app.aaps.implementation.scenes
 
+import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.PS
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.Scene
 import app.aaps.core.data.model.SceneAction
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.SingleProfile
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.utils.Translator
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.implementation.profile.ProfileSwitchSilentGate
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -37,8 +40,8 @@ class SceneExecutorTest : TestBaseWithProfile() {
     @Mock lateinit var profileSwitchSilentGate: ProfileSwitchSilentGate
 
     private lateinit var sut: SceneExecutor
+    private val expiryScheduler = TestSceneExpiryScheduler()
 
-    // Duration 0 keeps activate() off the expiry-worker (WorkManager) path, which a JVM unit test cannot run.
     private val scene = Scene(
         id = "s1",
         name = "Test scene",
@@ -46,11 +49,19 @@ class SceneExecutorTest : TestBaseWithProfile() {
         actions = listOf(SceneAction.ProfileSwitch(profileName = TESTPROFILENAME, percentage = 90))
     )
 
+    /** A scene whose only action needs nothing stubbed, so a test can look at the scheduling alone. */
+    private val smbScene = Scene(
+        id = "s2",
+        name = "Exercise",
+        defaultDurationMinutes = 0,
+        actions = listOf(SceneAction.SmbToggle(enabled = false))
+    )
+
     @BeforeEach fun prepare() {
         sut = SceneExecutor(
-            context, persistenceLayer, profileFunction, profileRepository, preferences, activeSceneManager,
+            persistenceLayer, profileFunction, profileRepository, preferences, activeSceneManager,
             uel, dateUtil, aapsLogger, rh, rxBus, loop, activePlugin, profileUtil, translator,
-            profileSwitchSilentGate, notificationManager
+            profileSwitchSilentGate, notificationManager, expiryScheduler
         )
         runBlocking {
             // Everything validateActivation() gates on, so the run reaches the action itself.
@@ -65,8 +76,8 @@ class SceneExecutorTest : TestBaseWithProfile() {
             whenever(profileRepository.profiles).thenReturn(MutableStateFlow(listOf(singleProfile)))
             whenever(activeSceneManager.isActive()).thenReturn(false)
         }
-        whenever(rh.gs(app.aaps.core.ui.R.string.profile_switch_no_insulin)).thenReturn("No insulin in use")
-        whenever(rh.gs(app.aaps.core.ui.R.string.scene_some_actions_failed)).thenReturn("Some actions failed")
+        whenever(rh.gs(CoreUiStrings.profile_switch_no_insulin)).thenReturn("No insulin in use")
+        whenever(rh.gs(CoreUiStrings.scene_some_actions_failed)).thenReturn("Some actions failed")
     }
 
     // A scene runs unattended, so with nothing in force there is nobody to ask which insulin to record: the action
@@ -105,5 +116,37 @@ class SceneExecutorTest : TestBaseWithProfile() {
             )
         }
         assertThat(captor.firstValue).isEqualTo(someICfg)
+    }
+
+    /**
+     * The expiry is the ONLY thing that takes a scene's temp target, profile switch and SMB setting off
+     * again. If it is not armed, the scene runs forever. This could not be asserted while the executor
+     * called `WorkManager.getInstance(context)` itself - that threw on a mocked context and the executor
+     * logged and carried on, so every test ran the "scheduling failed" path without saying so.
+     */
+    // Block body, not `= runBlocking { ... }`: `containsExactly` returns `Ordered`, so the expression form
+    // would give this method a return value, and JUnit 5 skips a @Test that returns one WITHOUT reporting it.
+    @Test fun `a timed scene arms its expiry for the requested duration`() {
+        runBlocking { sut.activate(smbScene, durationMinutes = 30) }
+
+        assertThat(expiryScheduler.scheduled).containsExactly("Exercise" to T.mins(30).msecs())
+    }
+
+    // An indefinite scene ends only when the user ends it, so arming a timer would end it behind their back.
+    @Test fun `an indefinite scene arms no expiry`() = runBlocking {
+        sut.activate(smbScene, durationMinutes = 0)
+
+        assertThat(expiryScheduler.scheduled).isEmpty()
+    }
+
+    // Ending a scene early has to drop the pending expiry, or it fires later against whatever is active then.
+    @Test fun `deactivate cancels the pending expiry`() = runBlocking {
+        whenever(activeSceneManager.getActiveState()).thenReturn(
+            ActiveSceneState(scene = smbScene, activatedAt = 1000L, durationMs = T.mins(30).msecs())
+        )
+
+        sut.deactivate()
+
+        assertThat(expiryScheduler.cancelCount).isEqualTo(1)
     }
 }

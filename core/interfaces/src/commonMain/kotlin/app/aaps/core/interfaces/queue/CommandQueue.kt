@@ -1,5 +1,6 @@
 package app.aaps.core.interfaces.queue
 
+import app.aaps.core.keys.interfaces.TextRef
 import androidx.compose.ui.text.AnnotatedString
 import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.Profile
@@ -31,7 +32,9 @@ interface CommandQueue {
     fun isRunning(type: Command.CommandType): Boolean
     fun pickup()
     fun clear()
-    fun completeAllAsNoOp(commentResId: Int)
+    // TextRef, not an @StringRes Int: this interface is commonMain, and a resource id here would pin
+    // every implementation and every caller to Android. `comment` already has a TextRef overload.
+    fun completeAllAsNoOp(comment: TextRef)
     fun size(): Int
     fun performing(): Command?
     fun resetPerforming()

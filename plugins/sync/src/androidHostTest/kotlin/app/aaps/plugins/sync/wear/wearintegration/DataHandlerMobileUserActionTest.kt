@@ -80,7 +80,6 @@ class DataHandlerMobileUserActionTest : TestBaseWithProfile() {
             persistenceLayer, importExportPrefs, decimalFormatter, pumpStatusProvider,
             ch, runningModeGuard, wizardBolusExecutor, batchExecutor, wizardExecutor
         )
-        // @Inject lateinit field — Dagger is not running, set manually.
         sut.automation = automation
         // Happy-path gating preconditions. Suspend mocks wrapped in runBlocking — matches the
         // project convention used in SmsCommunicatorPluginTest etc.

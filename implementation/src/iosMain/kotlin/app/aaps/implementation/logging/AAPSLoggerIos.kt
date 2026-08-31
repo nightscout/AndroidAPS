@@ -112,14 +112,20 @@ class AAPSLoggerIos(
      * same thing here. Extra arguments are dropped and missing ones are left as `{}`, which is what
      * logback does rather than throwing - a broken log line must never take the app down.
      */
-    private fun String.fill(arguments: Array<out Any?>): String {
-        var result = this
+    internal fun String.fill(arguments: Array<out Any?>): String {
+        val out = StringBuilder()
+        // Scans forward rather than searching the result again each time. Re-searching meant an
+        // argument that itself contained "{}" was treated as the next placeholder, so it swallowed
+        // the argument after it.
+        var from = 0
         for (argument in arguments) {
-            val at = result.indexOf("{}")
+            val at = indexOf("{}", from)
             if (at < 0) break
-            result = result.replaceRange(at, at + 2, argument.toString())
+            out.append(this, from, at).append(argument.toString())
+            from = at + 2
         }
-        return result
+        out.append(this, from, length)
+        return out.toString()
     }
 
     private fun appendToFile(line: String) {

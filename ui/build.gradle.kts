@@ -26,14 +26,6 @@ val generateUiStrings = tasks.register<GenerateKeyStringsTask>("generateUiString
     androidOutputDir.set(layout.buildDirectory.dir("generated/uiStrings/android"))
 }
 
-metro {
-    interop {
-        // PermissionsViewModel still reads Hilt's @ApplicationContext qualifier. Everything else in this
-        // module is Metro now, but without interop that one qualifier would be ignored silently.
-        includeDagger()
-    }
-}
-
 kotlin {
     android {
         namespace = "app.aaps.ui"

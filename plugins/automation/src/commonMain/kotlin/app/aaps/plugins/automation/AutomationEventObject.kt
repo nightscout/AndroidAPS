@@ -22,10 +22,13 @@ import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.put
+import kotlin.concurrent.atomics.AtomicLong
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
+import kotlin.concurrent.atomics.incrementAndFetch
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalAtomicApi::class)
 class AutomationEventObject(private val factory: AutomationEventFactory) : AutomationEvent {
 
     private val aapsLogger: AAPSLogger get() = factory.aapsLogger
@@ -46,6 +49,16 @@ class AutomationEventObject(private val factory: AutomationEventFactory) : Autom
     val actions: MutableList<Action> = ArrayList()
 
     var lastRun: Long = 0
+
+    /**
+     * A number that stays the same for as long as this object lives. The Compose list uses it as the
+     * reorder key, so it must not change while a row is being dragged.
+     *
+     * Replaces `System.identityHashCode`, which is JVM only. Deliberately not [id]: that one is
+     * restored from JSON and so is shared by two objects loaded from the same stored event, while a
+     * list key only has to tell apart the objects on screen right now.
+     */
+    val uiKey: Long = nextUiKey()
 
     override suspend fun canRun(): Boolean = trigger.shouldRun()
     override suspend fun preconditionCanRun(): Boolean = getPreconditions().shouldRun()
@@ -141,5 +154,11 @@ class AutomationEventObject(private val factory: AutomationEventFactory) : Autom
 
     fun shouldRun(): Boolean {
         return lastRun <= dateUtil.now() - T.mins(5).msecs()
+    }
+
+    private companion object {
+
+        private val uiKeyCounter = AtomicLong(0)
+        fun nextUiKey(): Long = uiKeyCounter.incrementAndFetch()
     }
 }

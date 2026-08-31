@@ -27,10 +27,11 @@ import org.json.JSONObject
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.util.LinkedList
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class EncryptedPrefsFormat @Inject constructor(
     private val rh: ResourceHelper,
     private val cryptoUtil: CryptoUtil,

@@ -6,6 +6,8 @@ import android.os.SystemClock
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.work.WorkManager
+import app.aaps.di.ResetGraphRule
+import app.aaps.di.testGraphs
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
@@ -39,6 +41,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.singleBlock
 import app.aaps.core.objects.extensions.singleTargetBlock
 import app.aaps.di.EmulatedOptions
+import app.aaps.di.metro.MetroGraphs
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.plugins.aps.utils.StaticInjector
 import app.aaps.pump.equil.EquilPumpPlugin
@@ -57,8 +60,6 @@ import app.aaps.pump.equil.emulator.EquilEmulatorBleTransport
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.command.CmdModelSet
 import com.google.common.truth.Truth.assertThat
-import dagger.hilt.android.testing.HiltAndroidRule
-import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -69,13 +70,11 @@ import org.junit.Test
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import java.io.File
-import javax.inject.Inject
 
 /**
  * Drives the **real Equil activation wizard** against the in-tree Equil emulator, headlessly (no
  * Compose UI): the genuine `EquilWizardViewModel` → `CommandQueue` → `EquilPumpPlugin` →
  * `EquilManager` → `EquilBLE` → [EquilEmulatorBleTransport], with no Bluetooth hardware and no pod.
- *
  * ## What this covers that the JVM tests don't
  * `:pump:equil-emulator`'s own `EquilPumpEmulatorTest` exercises the emulator's command handling with
  * a hand-built protocol and no plugin. It cannot cover the driver above it: the `EquilManager`
@@ -84,58 +83,44 @@ import javax.inject.Inject
  * ~11-command PAIR activation chain (`CmdDevicesOldGet` → `CmdPair` → `CmdSettingSet` → fill/air →
  * `CmdAlarmSet`/`CmdBasalSet`/`CmdTimeSet`/`CmdDevicesGet` → `CmdInsulinGet`/`CmdModelSet` → final
  * `CmdSettingSet` → `saveActivation`). This is the first test of that whole stack.
- *
- * ## Why the wizard is driven at the ViewModel level (not through the UI)
- * The `EquilWizardViewModel` is a `@HiltViewModel` with an `@Inject constructor` whose dependencies
- * are all themselves injectable, so the test constructs the *real* ViewModel from injected singletons
- * and calls its public step-advance functions (`startDeviceScan`/`onDeviceSelected`/`startPairing`/
- * `startFill`/`startAirRemoval`/`startConfirm`) in the same order the Compose screens' buttons do —
- * exercising the identical command chain without the flakier uiautomator navigation. The through-UI
- * wizard is a later increment. Each ViewModel call is dispatched on the main thread (its coroutines
- * run on `viewModelScope` = `Dispatchers.Main`); the test thread then polls the exposed StateFlows to
- * await each async step.
- *
  * The emulator is selected purely by the `EMULATE_EQUIL` option — see [EmulatedOptions] for why a
  * test reports that rather than dropping the production marker file. It must be set before
- * `hiltRule.inject()` because `EquilBleTransport` is a `@Singleton` the graph binds once.
+ * the graph is built because `EquilBleTransport` is scoped - the graph binds it once.
  */
-@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class EquilEmulatorActivationTest {
 
-    val hiltRule = HiltAndroidRule(this)
 
     // RetryRule outermost: a flaky timeout self-heals on a fresh attempt; see [RetryRule].
-    @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(hiltRule)
+    @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(ResetGraphRule())
 
     // ViewModel dependencies — injected here and passed to a manually-constructed EquilWizardViewModel.
-    @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var preferences: Preferences
-    @Inject lateinit var commandQueue: CommandQueue
-    @Inject lateinit var equilPumpPlugin: EquilPumpPlugin
-    @Inject lateinit var equilManager: EquilManager
-    @Inject lateinit var pumpSync: PumpSync
-    @Inject lateinit var persistenceLayer: PersistenceLayer
-    @Inject lateinit var equilHistoryRecordDao: EquilHistoryRecordDao
-    @Inject lateinit var equilHistoryPumpDao: EquilHistoryPumpDao
-    @Inject lateinit var profileUtil: ProfileUtil
-    @Inject lateinit var constraintsChecker: ConstraintsChecker
-    @Inject lateinit var ch: ConcentrationHelper
-    @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var profileRepository: ProfileRepository
-    @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var insulinManager: InsulinManager
-    @Inject lateinit var bleTransport: EquilBleTransport
-    @Inject lateinit var hardLimits: HardLimits
+    private val rh get() = testGraphs.resourceHelper
+    private val aapsLogger get() = testGraphs.aapsLogger
+    private val preferences get() = testGraphs.preferences
+    private val commandQueue get() = testGraphs.commandQueue
+    private val equilPumpPlugin get() = testGraphs.pumps.equilPumpPlugin
+    private val equilManager get() = testGraphs.pumps.equilManager
+    private val pumpSync get() = testGraphs.pumpSync
+    private val persistenceLayer get() = testGraphs.persistenceLayer
+    private val equilHistoryRecordDao get() = testGraphs.pumps.equilHistoryRecordDao
+    private val equilHistoryPumpDao get() = testGraphs.pumps.equilHistoryPumpDao
+    private val profileUtil get() = testGraphs.profileUtil
+    private val constraintsChecker get() = testGraphs.constraintsChecker
+    private val ch get() = testGraphs.concentrationHelper
+    private val profileFunction get() = testGraphs.profileFunction
+    private val profileRepository get() = testGraphs.profileRepository
+    private val rxBus get() = testGraphs.rxBus
+    private val insulinManager get() = testGraphs.insulinManager
+    private val bleTransport get() = testGraphs.pumps.equilBleTransport
+    private val hardLimits get() = testGraphs.hardLimits
 
     // Test-harness singletons (active-pump selection, profile activation, teardown).
-    @Inject lateinit var pluginStore: PluginStore
-    @Inject lateinit var pluginList: List<@JvmSuppressWildcards PluginBase>
-    @Inject lateinit var configBuilder: ConfigBuilder
-    @Inject lateinit var config: Config
-    @Inject lateinit var dateUtil: DateUtil
-    @Suppress("unused") @Inject lateinit var staticInjector: StaticInjector
+    private val pluginStore get() = testGraphs.pluginStore
+    private val pluginList get() = testGraphs.allPlugins(testGraphs.aapsLogger)
+    private val configBuilder get() = testGraphs.configBuilder
+    private val config get() = testGraphs.config
+    private val dateUtil get() = testGraphs.dateUtil
 
     private val instrumentation get() = InstrumentationRegistry.getInstrumentation()
     private val appContext: Context get() = instrumentation.targetContext.applicationContext
@@ -145,11 +130,10 @@ class EquilEmulatorActivationTest {
 
     private fun bringUp() {
         // A prior activation persists the pod state (EquilStringKey.State) to SharedPreferences, which
-        // outlives the per-test Hilt component — so clear it before inject(), or the freshly-built
+        // outlives the per-test graph — so clear it before inject(), or the freshly-built
         // EquilManager reads back a COMPLETED pod and the test starts already-activated.
         clearAllSharedPrefs()
         EmulatedOptions.enabled = setOf(ExternalOptions.EMULATE_EQUIL)
-        hiltRule.inject()
 
         instrumentation.uiAutomation.grantRuntimePermission(PKG, Manifest.permission.BLUETOOTH_CONNECT)
         runCatching { instrumentation.uiAutomation.grantRuntimePermission(PKG, Manifest.permission.BLUETOOTH_SCAN) }
@@ -226,13 +210,11 @@ class EquilEmulatorActivationTest {
     /**
      * Activates the pod through the whole PAIR wizard, then delivers through it — bolus, temp basal
      * and extended bolus — asserting each on the emulator's own `PumpState`, the true far side.
-     *
      * Each `startXxx` launches a `viewModelScope` coroutine that submits its command(s) through the
      * command queue and advances the wizard state on success; the test awaits the resulting state
      * transition before driving the next step. The final `CmdSettingSet` in [startConfirm] is a
      * pair-step — the command whose `executeCmd` wait can lose its wakeup against the fast emulator —
      * so the completion timeout is generous; increment work will tighten it once the race is fixed.
-     *
      * The delivery leg reuses the pod this activation just paired: only a real pairing establishes the
      * shared keys `EquilManager.executeCmd` encrypts with, so a seeded-activated pod could not deliver.
      * Driven directly on the plugin (as a queue worker would), asserted on the emulator, not the

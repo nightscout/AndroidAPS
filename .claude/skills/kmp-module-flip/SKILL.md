@@ -32,12 +32,12 @@ androidMain, 1 in iosMain, tests in androidHostTest. Aim at that.
 | targets | `iosArm64()` and `iosSimulatorArm64()` declared from the start |
 
 A module written against the old architecture - a pump driver from another fork, say - will arrive as
-`com.android.library` with Dagger or Hilt, XML layouts and ViewBinding, `R.string` throughout,
-`javax.inject`, and a `Context` threaded through its classes. Convert in this order, so each step is
-green on its own and the DI stays working:
+`com.android.library` with an annotation-processor DI framework, XML layouts and ViewBinding,
+`R.string` throughout, and a `Context` threaded through its classes. Convert in this order, so each
+step is green on its own and the DI stays working:
 
-1. **DI first.** Dagger or Hilt out, Metro in. Nothing else can proceed while the processor is in the
-   module, and this is where the constructor traps below bite.
+1. **DI first.** Any annotation-processor DI out, Metro in. Nothing else can proceed while a processor
+   is in the module, and this is where the constructor traps below bite.
 2. **UI to Compose**, if it still has XML. A View-based screen cannot move to common code at all.
 3. **Strings** to the generated `TextRef`s.
 4. **Platform ports** - replace `Context` and other Android types with interfaces, checking first
@@ -49,22 +49,14 @@ Then wire it up: `include` in `settings.gradle`; add it to `:appshell` as `api(.
 screens the navigation graph reaches; add it to `migratedModules` in `ios/shell/build.gradle.kts`
 once it builds for iOS; register its string owner in `MainApp` and `BaseTestApp`.
 
-## The hard precondition: no Dagger or Hilt processor in the module
+## The hard precondition: no annotation-processor DI in the module
 
-No KMP module in this tree runs Dagger or Hilt KSP, and that is not a coincidence. Without
-`ksp(hilt.compiler)` the module's `hilt_aggregated_deps` are not generated, `:app`'s Hilt never sees
-its `@InstallIn` modules, and the build fails with `MissingBinding` for everything they bound.
+No KMP module in this tree runs a DI annotation processor, and that is not a coincidence - a processor
+that generates Java has nothing to generate into in a multiplatform module. Metro is a **compiler
+plugin**, so it works everywhere and is the only DI here.
 
 An earlier "it still builds" is usually stale generated output. **Always `rm -rf <module>/build`
 before believing a processor is unnecessary.**
-
-Two ways out, both used here:
-
-- **Move the `@InstallIn` module to `:app`.** Works when the bound classes are public.
-- **Give the binding to Metro.** Needed when a constructor parameter is `internal` to the module,
-  because Dagger would have to generate the factory in `:app`, where it cannot see the type.
-
-A Hilt `@EntryPoint` counts as a Dagger module.
 
 ## Build file
 
@@ -161,10 +153,9 @@ directory per module. If you change a module's shape, check both.
 
 ## The Metro construction trap
 
-This is the worst one, and it has happened four times. While a class is Dagger-owned, `testRoot()` in
-`app/src/test/.../di/metro/TestRoot.kt` mocks `AapsLeaves` with `Answers.RETURNS_MOCKS`, so the class
-is **never constructed** in unit tests. The moment it gets `@ContributesBinding`, Metro builds it for
-real, with every dependency coming from those mocks.
+This is the worst one, and it has happened four times. A class that nothing contributes is **never**
+constructed by `app/src/test/.../di/metro/TestRoot.kt`. The moment it gets `@ContributesBinding`,
+Metro builds it for real in every graph test, with every dependency resolved for real.
 
 | class | work done at construction | symptom |
 |---|---|---|
@@ -186,7 +177,7 @@ that passes in about a minute against a run that never finishes is unambiguous.
 
 ## Moving code to commonMain
 
-Counting files with no `android`/`androidx`/`java`/`javax`/`dagger` import over-estimates badly: a
+Counting files with no `android`/`androidx`/`java` import over-estimates badly: a
 file can name `app.aaps.core.ui.R` or take a `Context` indirectly. Compile for iOS to find out.
 
 Beware the grep, too: `^import android` also matches `androidx`, so it hides every Compose file.
@@ -308,6 +299,20 @@ implement it in androidMain, rather than leaving the whole class on Android. `Pa
 `LastKnownLocation` in `:plugins:automation` are the pattern: the trigger keeps its inputs,
 serialization and matching logic in shared code, and only the Bluetooth or location call is
 platform-specific. Implement the Android side straight away; other platforms can follow later.
+
+A port must express *intent*, not steps. If the caller is coordinating platform timing on the
+implementation.s behalf, the port is drawn in the wrong place. `LocationServiceController` was
+`startService(): Boolean` / `stopService()`, and `AutomationRuntime` wrapped it in a
+`DeferredForegroundStart` (Android 12 blocks `startForegroundService` from the background) plus its
+own latch to retry after a location permission grant - two Android rules living in the rule engine.
+Collapsing it to one idempotent `setLocationUpdatesEnabled(enabled)`, with the deferral and the latch
+inside the Android implementation, removed the last non-UI blocker from the class. The test for a
+suspicious port: ask whether iOS would need the same dance. If not, it belongs on the other side.
+
+A related tell is an event that carries a platform type it does not need. `EventLocationChange` held
+an `android.location.Location` but only ever fed a debug log - the distance a trigger compares comes
+from `LastKnownLocation.distanceTo`, set separately. Check what a payload actually decides before
+assuming it has to stay.
 
 Two cautions. Keep the platform maths on the platform where an exact result matters -
 `LastKnownLocation.distanceTo` still calls `Location.distanceTo`, so no distance changes. And a port

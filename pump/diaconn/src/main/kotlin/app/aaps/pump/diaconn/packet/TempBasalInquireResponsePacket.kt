@@ -5,7 +5,7 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.pump.diaconn.DiaconnG8Pump
 import app.aaps.core.interfaces.di.MetroMemberInjector
 import dev.zacsweers.metro.HasMemberInjections
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 /**
  * TempBasalInquireResponsePacket

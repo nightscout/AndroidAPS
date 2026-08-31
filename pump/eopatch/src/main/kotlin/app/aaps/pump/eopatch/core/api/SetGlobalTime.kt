@@ -7,11 +7,12 @@ import app.aaps.pump.eopatch.core.response.PatchBooleanResponse
 import app.aaps.pump.eopatch.core.scan.IBleDevice
 import io.reactivex.rxjava3.core.Single
 import java.util.TimeZone
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import kotlin.time.Duration.Companion.milliseconds
 
-@Singleton
+@SingleIn(AppScope::class)
 class SetGlobalTime @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseBooleanAPI(PatchFunc.SET_GLOBAL_TIME, patch, aapsLogger) {
 
     fun set(): Single<PatchBooleanResponse> = writeAndRead(generate())

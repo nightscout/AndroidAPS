@@ -32,7 +32,6 @@ import kotlin.reflect.KClass
 
 /**
  * Scope of [AlgTestGraph]. Its own, deliberately.
- *
  * `AppScope` would make this graph aggregate every `@ContributesTo(AppScope::class)` container in the
  * tree and try to build the whole application a second time. A private scope keeps it to the handful of
  * classes below.
@@ -41,11 +40,6 @@ abstract class AlgTestScope private constructor()
 
 /**
  * The app-wide objects the reference algorithm helpers need, handed in rather than built.
- *
- * This graph builds **nothing**. Every binding arrives through this container, filled from the Hilt
- * component the instrumented test already has, so the helpers see the same instances as the rest of the
- * app. A graph that constructed its own would be a second set of singletons - the split-brain problem
- * that took CI red earlier in this migration.
  */
 @BindingContainer
 class AlgTestLeaves(
@@ -78,7 +72,6 @@ class AlgTestLeaves(
 /**
  * Member injectors for the reference algorithm helpers, replacing `AlgModule`'s
  * `@ContributesAndroidInjector` entries.
- *
  * The lookup is by **runtime** class, so the two `APSResultObject` subclasses need their own entries -
  * the base class is injected from its own `init`, where `this` is already the subclass. `APSResultObject`
  * is here too because a bare one is created when a result copies itself.
@@ -126,11 +119,6 @@ object AlgMemberInjectors {
 
 /**
  * Metro graph for the reference algorithm helpers in `androidTest`.
- *
- * It exists because `AppRootGraph` is compiled in `src/main`: by the time `androidTest` compiles, that
- * graph is sealed, so a `@ClassKey` entry declared here could never reach it. Hilt has no such problem -
- * its test component is generated in this compilation - which is why `AlgModule` could simply be
- * `@InstallIn(SingletonComponent::class)`.
  */
 @DependencyGraph(AlgTestScope::class)
 interface AlgTestGraph {

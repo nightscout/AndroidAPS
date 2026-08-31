@@ -9,7 +9,6 @@ plugins {
     alias(libs.plugins.metro)
 }
 
-// No `metro { interop { includeDagger() } }`: nothing here carries a javax annotation any more.
 
 // Generates ConfigurationStrings (commonMain) and ConfigurationStringIds (androidMain) from this
 // module's strings.xml, the same generator :ui, :plugins:automation and the :core modules use. The

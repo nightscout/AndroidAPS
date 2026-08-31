@@ -11,9 +11,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.function.Supplier;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.inject.Singleton;
+import java.util.function.Supplier;
 
 import app.aaps.core.data.model.BS;
 import app.aaps.core.data.model.TE;
@@ -98,7 +96,7 @@ import io.reactivex.rxjava3.subjects.SingleSubject;
 import kotlin.coroutines.EmptyCoroutineContext;
 import kotlinx.coroutines.BuildersKt;
 
-@Singleton
+
 public class AapsOmnipodErosManager {
 
     private final ErosPodStateManager podStateManager;
@@ -113,7 +111,7 @@ public class AapsOmnipodErosManager {
     private final PumpSync pumpSync;
     private final UiInteraction uiInteraction;
     private final NotificationManager notificationManager;
-    private final Provider<PumpEnactResult> pumpEnactResultProvider;
+    private final Supplier<PumpEnactResult> pumpEnactResultProvider;
     private final ConcentrationHelper ch;
     private final BolusProgressData bolusProgressData;
     private boolean basalBeepsEnabled;
@@ -131,13 +129,12 @@ public class AapsOmnipodErosManager {
     private boolean showRileyLinkBatteryLevel;
     private boolean batteryChangeLoggingEnabled;
 
-    @Inject
-    public AapsOmnipodErosManager(@NonNull OmnipodRileyLinkCommunicationManager communicationService,
+
+    public AapsOmnipodErosManager(@NonNull OmnipodManager delegate,
                                   @NonNull ErosPodStateManager podStateManager,
                                   ErosHistory erosHistory,
                                   AapsOmnipodUtil aapsOmnipodUtil,
                                   AAPSLogger aapsLogger,
-                                  AapsSchedulers aapsSchedulers,
                                   RxBus rxBus,
                                   Preferences preferences,
                                   ResourceHelper rh,
@@ -145,7 +142,7 @@ public class AapsOmnipodErosManager {
                                   PumpSync pumpSync,
                                   UiInteraction uiInteraction,
                                   NotificationManager notificationManager,
-                                  Provider<PumpEnactResult> pumpEnactResultProvider,
+                                  Supplier<PumpEnactResult> pumpEnactResultProvider,
                                   ConcentrationHelper ch,
                                   BolusProgressData bolusProgressData
     ) {
@@ -165,7 +162,9 @@ public class AapsOmnipodErosManager {
         this.ch = ch;
         this.bolusProgressData = bolusProgressData;
 
-        delegate = new OmnipodManager(aapsLogger, aapsSchedulers, communicationService, podStateManager);
+        // Injected rather than built here. `communicationService` and `aapsSchedulers` were constructor
+        // parameters used for nothing else, so both are gone; see `app.aaps.di.pump.OmnipodErosModule`.
+        this.delegate = delegate;
 
         reloadSettings();
     }
@@ -215,7 +214,7 @@ public class AapsOmnipodErosManager {
             result.success(res).enacted(res);
 
             if (!res) {
-                result.comment(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_failed_to_initialize_pod);
+                result.comment(rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_failed_to_initialize_pod));
             }
         } catch (Exception ex) {
             result.success(false).enacted(false).comment(translateException(ex));
@@ -242,7 +241,7 @@ public class AapsOmnipodErosManager {
 
             result.success(res).enacted(res);
             if (!res) {
-                result.comment(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_failed_to_insert_cannula);
+                result.comment(rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_failed_to_insert_cannula));
             }
         } catch (Exception ex) {
             result.success(false).enacted(false).comment(translateException(ex));

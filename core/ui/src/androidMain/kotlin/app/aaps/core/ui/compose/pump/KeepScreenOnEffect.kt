@@ -1,11 +1,10 @@
 package app.aaps.core.ui.compose.pump
 
-import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.view.WindowManager
+import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.ui.platform.LocalContext
 
 /**
  * Keeps the screen on and locks orientation while this composable is in the composition.
@@ -15,7 +14,9 @@ import androidx.compose.ui.platform.LocalContext
  */
 @Composable
 fun KeepScreenOnEffect() {
-    val activity = LocalContext.current as? Activity
+    // LocalActivity, not a cast of LocalContext: that context is usually a ContextWrapper, where
+    // `as? Activity` is null and the screen would quietly time out mid pump activation.
+    val activity = LocalActivity.current
     DisposableEffect(Unit) {
         activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         val previousOrientation = activity?.requestedOrientation

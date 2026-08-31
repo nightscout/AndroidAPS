@@ -5,15 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import app.aaps.core.interfaces.di.MetroMemberInjector
 
 /**
- * Metro's answer to `DaggerAppCompatActivity` and to Hilt's `@AndroidEntryPoint` on an activity.
- * Subclasses must call `super.onCreate(...)` first.
- *
  * It lives here rather than beside `MetroBroadcastReceiver` and `MetroService` in `:core:objects`,
  * because AppCompat is a `:core:ui` dependency and adding it to `:core:objects` would buy nothing.
- *
- * 34 activities use `DaggerAppCompatActivity` today. For those, converting is a one word change.
- * An activity that also needs a view model gets it from [MetroViewModelFactoryOwner], the same way.
- *
  * A missing binding fails loudly here too - see `MetroAndroidEntryPoints` for why.
  */
 abstract class MetroAppCompatActivity : AppCompatActivity() {

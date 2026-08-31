@@ -8,13 +8,6 @@ plugins {
     id("jacoco-module-dependencies")
 }
 
-metro {
-    interop {
-        // The classes here keep their javax annotations; interop is what lets Metro read them.
-        includeDagger()
-    }
-}
-
 android {
 
     namespace = "app.aaps.pump.diaconn"
@@ -47,6 +40,4 @@ dependencies {
     testImplementation(project(":shared:tests"))
     testImplementation(project(":core:objects"))
 
-    ksp(libs.com.google.dagger.compiler)
-    ksp(libs.com.google.dagger.hilt.compiler)
 }

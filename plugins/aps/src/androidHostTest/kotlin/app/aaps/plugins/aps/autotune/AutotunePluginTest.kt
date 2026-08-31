@@ -43,7 +43,7 @@ class AutotunePluginTest : TestBaseWithProfile() {
 
     @BeforeEach fun prepare() {
         val atProfileProvider = Provider {
-            ATProfile(preferences, profileUtil, dateUtil, rh, { profileStoreProvider.get() }, aapsLogger)
+            ATProfile(preferences, profileUtil, dateUtil, rh, { profileStoreProvider() }, aapsLogger)
         }
         autotunePlugin = AutotunePlugin(
             aapsLogger = aapsLogger,
@@ -61,7 +61,7 @@ class AutotunePluginTest : TestBaseWithProfile() {
             config = config,
             uel = uel,
             loop = loop,
-            profileStoreProvider = { profileStoreProvider.get() },
+            profileStoreProvider = { profileStoreProvider() },
             atProfileProvider = atProfileProvider
         )
         runBlocking {
@@ -116,7 +116,7 @@ class AutotunePluginTest : TestBaseWithProfile() {
 
     /** Drives a complete one-day run so the trailing autoSwitch block is reached. */
     private suspend fun runOneTunedDay(autoSwitch: Boolean) {
-        val tuned = ATProfile(preferences, profileUtil, dateUtil, rh, { profileStoreProvider.get() }, aapsLogger).with(validProfile, someICfg)
+        val tuned = ATProfile(preferences, profileUtil, dateUtil, rh, { profileStoreProvider() }, aapsLogger).with(validProfile, someICfg)
         whenever(autotuneIob.boluses).thenReturn(arrayListOf(BS(timestamp = 0, amount = 1.0, type = BS.Type.NORMAL, iCfg = someICfg)))
         whenever(autotunePrep.categorize(any())).thenReturn(mock())
         whenever(autotuneCore.tuneAllTheThings(any(), any(), any())).thenReturn(tuned)

@@ -14,12 +14,6 @@ import kotlinx.coroutines.Dispatchers
 /**
  * WorkManager trigger for [RunningModeExpiryJob]. The job holds what happens and why; this holds only
  * when.
- *
- * It used to live in `:app`, because `@HiltWorker` and `@AssistedInject` are answered with generated
- * Java and a multiplatform module has no Java compile step - so the annotations produced nothing here
- * and the build still passed. Metro is a Kotlin compiler plugin and generates no Java, so the worker
- * can sit beside the job it triggers.
- *
  * Note that Android types were never the problem: [LoggingWorker], which this extends, has always
  * lived in a multiplatform module. `androidMain` compiles against the Android SDK like any other
  * Android source set. The line was the annotation processor, not WorkManager.
@@ -37,10 +31,6 @@ class RunningModeExpiryWorker @AssistedInject constructor(
         return Result.success()
     }
 
-    /**
-     * Metro builds the worker through this. WorkManager supplies the context and parameters, the
-     * graph supplies the rest - the same split `@HiltWorker` expressed, without Hilt.
-     */
     @AssistedFactory
     fun interface Factory : MetroWorkerCreator {
 

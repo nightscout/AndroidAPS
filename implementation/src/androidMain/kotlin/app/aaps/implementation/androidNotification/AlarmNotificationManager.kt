@@ -25,14 +25,14 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.rawRes
 import app.aaps.implementation.androidNotification.AlarmNotificationManager.Companion.CHANNEL_FULL_SCREEN_SILENT
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Builds and posts Android notifications for AAPS alarms. Replaces the old `AlarmSoundService` /
  * `AlarmSoundServiceHelper` foreground-service-based path.
- *
  * Two alarm modalities:
  *  - [postFullScreenAlarm]: posts an FSI notification on a sound-bearing channel; Android auto-launches
  *    ErrorActivity when the device is idle AND the FSI permission is held, otherwise shows a heads-up.
@@ -41,18 +41,15 @@ import javax.inject.Singleton
  *    takes over with looping/ramped audio, deferring its loop past the channel one-shot to avoid overlap.
  *  - [postSoundOnlyAlarm]: posts on a sound-bearing channel chosen by the
  *    [BooleanKey.AlertOverrideDoNotDisturb] preference. No activity, system plays channel sound.
- *
- * Channels are created eagerly when this @Singleton is first injected so that the first post
- * doesn't race channel creation.
+ * Channels are created on the first post rather than at construction - see the `channels` field. Both
+ * posting methods touch it before building anything, so a post can still never race their creation.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class AlarmNotificationManager @Inject constructor(
     private val context: Context,
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val iconsProvider: IconsProvider,
-    // Provider breaks a Dagger cycle: UiInteractionImpl injects this class, but we need
-    // UiInteraction.errorHelperActivity for the FSI target. Provider defers resolution.
     private val uiInteractionProvider: Provider<UiInteraction>,
     private val alarmSoundPlayer: AlarmSoundPlayer,
     private val rh: ResourceHelper
@@ -119,7 +116,6 @@ class AlarmNotificationManager @Inject constructor(
      * Per-AAPS-notification cancel goes through [cancelSoundAlarm] and only touches one id —
      * avoids the "dismissing notification A stops notification B's sound" bug that comes from
      * a shared singleton notification id.
-     *
      * IMPORTANT: every read/write of this field — AND the paired `mgr.notify`/`mgr.cancel`
      * call — must run inside `synchronized(activeSoundKeys)`. The post and cancel paths can be
      * called concurrently from unrelated threads (post comes from `NotificationManagerImpl`
@@ -127,7 +123,6 @@ class AlarmNotificationManager @Inject constructor(
      * outer lock). Without pairing the notify/add (and remove/cancel) in one critical section
      * a global cancel can iterate-and-clear in between, leaving the just-posted system
      * notification orphaned.
-     *
      * Note on OS-driven dismissal: notifications are `setOngoing(true)` so the user can't
      * swipe to dismiss, but the OS may still trim notifications under memory pressure. In
      * that rare case `activeSoundKeys` will hold stale entries until the next `cancelAlarm()`
@@ -135,9 +130,15 @@ class AlarmNotificationManager @Inject constructor(
      */
     private val activeSoundKeys: MutableSet<Int> = mutableSetOf()
 
-    init {
-        createChannels()
-    }
+    /**
+     * The channels, created once on first use rather than in an `init` block.
+     * Android requires a channel to exist before anything posts to it, and **every** post goes through
+     * [postFullScreenAlarm] or [postSilentAlarmNotification], both of which touch this first. So the
+     * guarantee is the same as creating them in the constructor - and stronger in one way: it cannot be
+     * missed by a code path that gets an instance some other way.
+     * `lazy` is synchronized by default, so two threads posting at once still create them once.
+     */
+    private val channels: Unit by lazy { createChannels() }
 
     private fun createChannels() {
         mgr.createNotificationChannelGroup(NotificationChannelGroup(GROUP_ID, "AAPS Alarms"))
@@ -211,7 +212,7 @@ class AlarmNotificationManager @Inject constructor(
     }
 
     private fun openAppPendingIntent(): PendingIntent? {
-        val mainActivity = uiInteractionProvider.get().mainActivity
+        val mainActivity = uiInteractionProvider().mainActivity
         return TaskStackBuilder.create(context).run {
             addParentStack(mainActivity.java)
             addNextIntent(Intent(context, mainActivity.java))
@@ -232,6 +233,7 @@ class AlarmNotificationManager @Inject constructor(
      * The activity is responsible for sound playback.
      */
     fun postFullScreenAlarm(status: String, title: String, sound: AlarmSound?) {
+        channels // created on first post, see the field
         // Reached only from the background / off-main branches of UiInteraction.runAlarm.
         //
         // Screen-wake + full-screen ErrorActivity launch no longer rely on USE_FULL_SCREEN_INTENT
@@ -250,7 +252,7 @@ class AlarmNotificationManager @Inject constructor(
         // double-audio; if ErrorActivity does launch, it re-requests the same owner+sound, which the
         // player treats as idempotent (no restart glitch).
         val postedAt = SystemClock.elapsedRealtime()
-        val intent = Intent(context, uiInteractionProvider.get().errorHelperActivity.java).apply {
+        val intent = Intent(context, uiInteractionProvider().errorHelperActivity.java).apply {
             putExtra(AlarmIntent.EXTRA_SOUND, sound?.name)
             putExtra(AlarmIntent.EXTRA_STATUS, status)
             putExtra(AlarmIntent.EXTRA_TITLE, title)
@@ -323,7 +325,6 @@ class AlarmNotificationManager @Inject constructor(
      *     the screen on;
      *  2. [activityPendingIntent] (a `getActivity` at ErrorActivity), which the OS holds until the
      *     screen is on and then presents — over the keyguard when AAPS is the foreground task.
-     *
      * A small delay lets the alarms register before firing. `setAlarmClock` does not require
      * `SCHEDULE_EXACT_ALARM` (alarm clocks are exempt).
      */
@@ -332,7 +333,7 @@ class AlarmNotificationManager @Inject constructor(
         val triggerAt = System.currentTimeMillis() + SCREEN_WAKE_DELAY_MS
         val show = PendingIntent.getActivity(
             context, WAKE_REQUEST_CODE,
-            Intent(context, uiInteractionProvider.get().mainActivity.java),
+            Intent(context, uiInteractionProvider().mainActivity.java),
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
         val wakeOp = PendingIntent.getBroadcast(
@@ -349,10 +350,8 @@ class AlarmNotificationManager @Inject constructor(
      * Post a **silent** alarm notification on the [CHANNEL_FULL_SCREEN_SILENT] channel
      * (heads-up + vibration, no channel sound). The audio is owned by [AlarmSoundPlayer]; this
      * notification provides shade/lock-screen visibility and a tap target to open the app.
-     *
      * Tracked in [activeSoundKeys] exactly like [postSoundAlarmNotification], so
      * [cancelSoundAlarm] / [cancelAlarm] clear it.
-     *
      * @param notificationKey unique-per-AAPS-notification identifier (the `AapsNotification.instanceKey`)
      * @param urgent          true for URGENT-level alerts (stronger vibration)
      */
@@ -362,6 +361,7 @@ class AlarmNotificationManager @Inject constructor(
         body: String,
         urgent: Boolean
     ) {
+        channels // created on first post, see the field
         val builder = NotificationCompat.Builder(context, CHANNEL_FULL_SCREEN_SILENT)
             .setSmallIcon(iconsProvider.getNotificationIcon())
             .setLargeIcon(BitmapFactory.decodeResource(context.resources, iconsProvider.getIcon()))

@@ -28,7 +28,7 @@ import app.aaps.pump.insight.compose.InsightAlertUiState
 import app.aaps.pump.insight.descriptors.Alert
 import app.aaps.pump.insight.utils.AlertUtils
 import app.aaps.core.ui.compose.MetroAppCompatActivity
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class InsightAlertActivity : MetroAppCompatActivity() {
 

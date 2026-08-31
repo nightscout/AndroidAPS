@@ -23,9 +23,6 @@ class CarbSuggestionReceiverTest : TestBase() {
 
     @BeforeEach
     fun prepare() {
-        // The receiver injects through the Application, which implements MetroMemberInjector now. The
-        // check in `injectMetroMembers` throws when it does not, so the mock has to answer both the
-        // interface and the field filling - the same job the Dagger AndroidInjector did before.
         whenever(context.applicationContext).thenReturn(context)
         whenever(context.injectMembers(any())).thenAnswer {
             val target = it.getArgument<Any>(0)

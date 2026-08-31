@@ -8,7 +8,7 @@ import app.aaps.pump.diaconn.keys.DiaconnStringNonKey
 import app.aaps.pump.diaconn.pumplog.PumpLogUtil
 import app.aaps.core.interfaces.di.MetroMemberInjector
 import org.joda.time.DateTime
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.math.floor
 
 /**

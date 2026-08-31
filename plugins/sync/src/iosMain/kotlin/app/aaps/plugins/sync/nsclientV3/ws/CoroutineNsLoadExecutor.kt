@@ -67,8 +67,9 @@ class CoroutineNsLoadExecutor @Inject constructor(
             for (step in steps) {
                 if (!isActive) return@replaceRound
                 // Stops at the first step that fails, as the WorkManager chain does: a later step
-                // usually depends on what an earlier one wrote.
-                if (runStep(step) !is WorkOutcome.Success) return@replaceRound
+                // usually depends on what an earlier one wrote. A *skipped* step is not a failure -
+                // see NsLoadChain, which is where that rule is tested.
+                if (!NsLoadChain.shouldContinue(runStep(step))) return@replaceRound
             }
         }
     }
@@ -112,8 +113,8 @@ class CoroutineNsLoadExecutor @Inject constructor(
             NsLoadStep.DEVICE_STATUS     -> loadDeviceStatus.run()
             NsLoadStep.DATA_SYNC         -> dataSync.run()
         }
-        if (outcome !is WorkOutcome.Success) {
-            aapsLogger.debug(LTag.NSCLIENT, "Load step $step did not succeed: $outcome")
+        if (outcome is WorkOutcome.Failure) {
+            aapsLogger.debug(LTag.NSCLIENT, "Load step $step failed, stopping the round: ${outcome.reason}")
         }
         return outcome
     }

@@ -122,7 +122,7 @@ class AutotuneCoreTest : TestBaseWithProfile() {
                 glucoseUnit = units,
                 utcOffset = zone.offsetAt(Instant.fromEpochMilliseconds(dateUtil.now())).totalSeconds * 1000L
             )
-            return ATProfile(preferences, profileUtil, dateUtil, rh, { profileStoreProvider.get() }, aapsLogger).with(ProfileSealed.Pure(pure, activePlugin), iCfg)
+            return ATProfile(preferences, profileUtil, dateUtil, rh, { profileStoreProvider() }, aapsLogger).with(ProfileSealed.Pure(pure, activePlugin), iCfg)
         } catch (_: Exception) {
             return null
         }

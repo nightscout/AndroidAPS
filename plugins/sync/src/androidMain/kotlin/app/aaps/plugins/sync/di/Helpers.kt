@@ -1,6 +1,6 @@
 package app.aaps.plugins.sync.di
 
-import javax.inject.Qualifier
+import dev.zacsweers.metro.Qualifier
 
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)

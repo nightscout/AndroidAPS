@@ -9,7 +9,6 @@ android {
         versionCode = Versions.versionCode
         version = Versions.appVersion
 
-        // Removed after Dagger injection setup in instrumentation tests
         //testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 

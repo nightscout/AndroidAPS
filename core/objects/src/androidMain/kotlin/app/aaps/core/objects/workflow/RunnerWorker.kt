@@ -48,5 +48,6 @@ abstract class RunnerWorker(
             is WorkOutcome.Success -> Result.success()
             is WorkOutcome.Skipped -> Result.success(workDataOf("Result" to outcome.reason))
             is WorkOutcome.Failure -> Result.failure(workDataOf("Error" to outcome.reason))
+            is WorkOutcome.Retry   -> Result.retry()
         }
 }

@@ -34,7 +34,7 @@ class DetailedBolusInfoStorageTest : TestBase() {
     @BeforeEach
     fun prepare() {
         whenever(preferences.get(StringNonKey.BolusInfoStorage)).thenReturn("")
-        detailedBolusInfoStorage = DetailedBolusInfoStorageImpl(aapsLogger, preferences, rh)
+        detailedBolusInfoStorage = DetailedBolusInfoStorageImpl(aapsLogger, preferences)
     }
 
     private fun setUp() {

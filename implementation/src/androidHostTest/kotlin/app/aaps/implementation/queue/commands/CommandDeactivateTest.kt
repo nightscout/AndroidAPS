@@ -17,7 +17,7 @@ import org.mockito.kotlin.whenever
 class CommandDeactivateTest : TestBaseWithProfile() {
 
     private fun newCommand(callback: Callback? = null) =
-        CommandDeactivate(aapsLogger, rh, activePlugin, pumpEnactResultProvider::get, callback)
+        CommandDeactivate(aapsLogger, rh, activePlugin, pumpEnactResultProvider::invoke, callback)
 
     @Test
     fun `execute on Medtrum pump returns pump's deactivate result`() = runTest {

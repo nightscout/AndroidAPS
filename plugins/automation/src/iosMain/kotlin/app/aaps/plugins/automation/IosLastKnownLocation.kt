@@ -54,7 +54,7 @@ class IosLastKnownLocation @Inject constructor(
 
     override fun position(): GeoPosition? {
         val last = manager.location ?: return noFix()
-        return last.coordinate.useContents { GeoPosition(latitude = latitude, longitude = longitude) }
+        return last.toGeoPosition()
     }
 
     private fun <T> noFix(): T? {
@@ -62,3 +62,14 @@ class IosLastKnownLocation @Inject constructor(
         return null
     }
 }
+
+/**
+ * A Core Location fix as AAPS's own point type.
+ *
+ * Its own function so it can be tested: `CLLocationCoordinate2D` is a C struct read through
+ * `useContents`, and the two fields are both doubles, so swapping them compiles perfectly and puts
+ * every location trigger somewhere else on earth.
+ */
+@OptIn(ExperimentalForeignApi::class)
+internal fun CLLocation.toGeoPosition(): GeoPosition =
+    coordinate.useContents { GeoPosition(latitude = latitude, longitude = longitude) }

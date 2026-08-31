@@ -17,11 +17,12 @@ import app.aaps.pump.common.hw.rileylink.ble.data.GattAttributes
 import app.aaps.pump.common.hw.rileylink.ble.operations.BLECommOperationResult
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData
 import java.util.UUID
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class OrangeLinkImpl @Inject constructor(
     var aapsLogger: AAPSLogger,
     var rileyLinkServiceData: RileyLinkServiceData,
@@ -31,7 +32,7 @@ class OrangeLinkImpl @Inject constructor(
     private val rileyLinkBLEProvider: Provider<RileyLinkBLE>
 ) {
 
-    private val rileyLinkBLE: RileyLinkBLE get() = rileyLinkBLEProvider.get()
+    private val rileyLinkBLE: RileyLinkBLE get() = rileyLinkBLEProvider()
 
     fun onCharacteristicChanged(characteristic: BluetoothGattCharacteristic, data: ByteArray) {
         if (characteristic.uuid.toString() == GattAttributes.CHARA_NOTIFICATION_ORANGE) {

@@ -87,12 +87,6 @@ import kotlinx.serialization.json.putJsonObject
  * Exceptions from JSON / preferences I/O are surfaced via [Result.failure] so callers can
  * render them as UI feedback rather than receiving an uncaught coroutine failure.
  */
-// Metro annotations throughout, no javax and no Dagger. Dagger does not build this class any more -
-// it gets the instance from a @Provides delegate in `:app` - so nothing here needs to be readable by
-// Dagger, and Metro reads its own annotations without interop wherever the graph is generated.
-//
-// `Provider` replaces Dagger's `Lazy`: both defer, and ProfileFunction is a singleton, so the caching
-// difference between them cannot be observed here.
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
@@ -112,7 +106,7 @@ class ProfileRepositoryImpl @Inject constructor(
     // Hosts the [StringNonKey.LocalProfileData] collector: the repository is a @Singleton that lives
     // as long as the process, so the collector must live that long too.
     // Unqualified on purpose: @ApplicationScope is a javax.inject.Qualifier, so it cannot cross
-    // into commonMain. `AapsLeaves.unqualifiedAppScope` hands out the very same scope object, so
+    // into commonMain. The graph hands out the very same scope object, so
     // this is the same instance the qualifier used to select.
     private val appScope: CoroutineScope
 ) : ProfileRepository {
@@ -140,13 +134,6 @@ class ProfileRepositoryImpl @Inject constructor(
     override val revision: StateFlow<Long> = _revision.asStateFlow()
 
     init {
-        // Synchronous initial load. Dagger constructs this @Singleton before any other
-        // coroutine can run, so no mutex is needed here. Once init returns, the StateFlow
-        // initial values reflect persisted state.
-        //
-        // Do NOT move this off the calling thread — snapshot() must complete before any
-        // coroutine subscriber can observe the StateFlows, otherwise collectors would see
-        // the empty defaults before the persisted state appears.
         loadSettingsInternal()
         snapshot()
         observeSyncedProfileData()

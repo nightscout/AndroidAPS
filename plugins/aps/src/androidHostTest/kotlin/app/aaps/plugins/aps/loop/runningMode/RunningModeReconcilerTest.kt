@@ -43,9 +43,9 @@ class RunningModeReconcilerTest : TestBaseWithProfile() {
         whenever(config.APS).thenReturn(true)
         whenever(persistenceLayer.observeChanges(anyOrNull<KClass<*>>())).thenReturn(emptyFlow())
         runBlocking {
-            whenever(commandQueue.cancelTempBasal(anyBoolean(), anyBoolean())).thenReturn(pumpEnactResultProvider.get().success(true))
-            whenever(commandQueue.tempBasalAbsolute(anyDouble(), anyInt(), anyBoolean(), anyOrNull(), anyOrNull())).thenReturn(pumpEnactResultProvider.get().success(true))
-            whenever(commandQueue.cancelExtended()).thenReturn(pumpEnactResultProvider.get().success(true))
+            whenever(commandQueue.cancelTempBasal(anyBoolean(), anyBoolean())).thenReturn(pumpEnactResultProvider().success(true))
+            whenever(commandQueue.tempBasalAbsolute(anyDouble(), anyInt(), anyBoolean(), anyOrNull(), anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
+            whenever(commandQueue.cancelExtended()).thenReturn(pumpEnactResultProvider().success(true))
         }
         reconciler = RunningModeReconciler(
             persistenceLayer = persistenceLayer,

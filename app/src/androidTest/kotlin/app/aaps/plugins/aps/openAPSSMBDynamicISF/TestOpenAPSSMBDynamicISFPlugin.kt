@@ -32,10 +32,11 @@ import app.aaps.plugins.aps.openAPSSMB.DetermineBasalAdapterSMBJS
 import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
 import app.aaps.plugins.aps.openAPSSMB.TestOpenAPSSMBPlugin
 import app.aaps.plugins.aps.utils.ScriptReader
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import app.aaps.di.metro.AlgTestScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AlgTestScope::class)
 class TestOpenAPSSMBDynamicISFPlugin @Inject constructor(
     private val injector: StaticInjector,
     aapsLogger: AAPSLogger,

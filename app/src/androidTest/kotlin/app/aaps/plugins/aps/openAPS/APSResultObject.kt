@@ -35,7 +35,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.math.abs
 import kotlin.math.max
 

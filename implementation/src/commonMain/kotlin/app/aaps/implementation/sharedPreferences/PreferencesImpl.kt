@@ -65,9 +65,6 @@ import kotlin.math.min
 @SingleIn(AppScope::class)
 class PreferencesImpl @Inject constructor(
     private val sp: KeyValueStore,
-    // Plain factories, not dagger.Lazy: that type is Dagger vocabulary. These three are only reached
-    // through a lambda to break the cycle back to Preferences - all three are singletons, so calling
-    // through each time returns the same instance and Lazy's caching bought nothing.
     private val profileUtil: () -> ProfileUtil,
     private val profileFunction: () -> ProfileFunction,
     private val hardLimits: () -> HardLimits,

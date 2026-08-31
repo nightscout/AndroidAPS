@@ -22,7 +22,7 @@ class ActionSendSMSTest : ActionsTestBase() {
         whenever(rh.gs(AutomationStrings.sendsmsactionlabel)).thenReturn("Send SMS: %s")
         whenever(rh.gs(AutomationStrings.sendsmsactiondescription)).thenReturn("Send SMS to all numbers")
 
-        sut = ActionSendSMS(aapsLogger, rh, Provider { pumpEnactResultProvider.get() }, smsCommunicator)
+        sut = ActionSendSMS(aapsLogger, rh, Provider { pumpEnactResultProvider() }, smsCommunicator)
     }
 
     @Test fun friendlyNameTest() = runTest {

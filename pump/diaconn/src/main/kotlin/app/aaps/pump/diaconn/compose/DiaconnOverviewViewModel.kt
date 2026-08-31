@@ -41,7 +41,6 @@ import app.aaps.pump.diaconn.R
 import app.aaps.pump.diaconn.events.EventDiaconnG8DeviceChange
 import app.aaps.pump.diaconn.events.EventDiaconnG8NewStatus
 import app.aaps.pump.diaconn.keys.DiaconnStringNonKey
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding
@@ -59,7 +58,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import app.aaps.core.ui.R as CoreUiR
 
 sealed class DiaconnOverviewEvent {
@@ -86,7 +85,7 @@ class DiaconnOverviewViewModel @Inject constructor(
     private val uel: UserEntryLogger,
     private val preferences: Preferences,
     private val ch: ConcentrationHelper,
-    @ApplicationContext private val context: Context
+    private val context: Context
 ) : ViewModel() {
 
 

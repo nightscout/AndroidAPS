@@ -9,6 +9,10 @@ import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.workflow.CalculationExecutor
+import app.aaps.workflow.CoroutineCalculationExecutor
+import app.aaps.workflow.PostCalculationRunner
+import app.aaps.workflow.PrepareGraphDataRunner
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.database.AppRepository
@@ -149,6 +153,23 @@ interface IosProbeGraph {
         platform: SystemNotificationPlatform,
         scope: CoroutineScope
     ): NotificationManager = CommonNotificationManager(logger, textResolver, platform, scope)
+
+    /**
+     * The shared coroutine executor, stated rather than contributed.
+     *
+     * `CoroutineCalculationExecutor` lives in `commonMain` and is already the right one for iOS -
+     * its own docs say a coroutine is enough anywhere that is not Android. It carries no
+     * `@ContributesBinding` on purpose, so it cannot collide with the WorkManager one Android
+     * contributes, which is why the binding has to be named here.
+     */
+    @Provides
+    @SingleIn(AppScope::class)
+    fun calculationExecutor(
+        scope: CoroutineScope,
+        logger: AAPSLogger,
+        prepare: PrepareGraphDataRunner,
+        post: PostCalculationRunner
+    ): CalculationExecutor = CoroutineCalculationExecutor(scope, logger, prepare, post)
 
     @DependencyGraph.Factory
     fun interface Factory {

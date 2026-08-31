@@ -28,7 +28,7 @@ import dev.zacsweers.metro.Provides
  * quietly dropped these plugins from every follower build. The mirror of that mistake is the virtual
  * pump's, where carrying `@AllConfigs` over would have dropped the plugin from the list entirely, since
  * nothing reads a Metro map under that qualifier. Neither is visible from the annotation: the only way
- * to know is to read which bucket `AppModule` merges, and under what condition.
+ * to know is to read which bucket `MetroGraphs.allPlugins` merges, and under what condition.
  *
  * Keys 210-230, unchanged. Loop keeps 200 and Autotune 240; both also bind an interface much of the app
  * depends on, so they move separately.

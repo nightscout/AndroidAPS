@@ -4,7 +4,7 @@ import app.aaps.pump.medtrum.comm.enums.CommandType.SET_TIME
 import app.aaps.pump.medtrum.extension.toByteArray
 import app.aaps.pump.medtrum.util.MedtrumTimeUtil
 import app.aaps.core.interfaces.di.MetroMemberInjector
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class SetTimePacket(injector: MetroMemberInjector) : MedtrumPacket(injector) {
 

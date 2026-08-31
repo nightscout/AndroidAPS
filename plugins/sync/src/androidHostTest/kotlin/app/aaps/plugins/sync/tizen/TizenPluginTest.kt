@@ -82,7 +82,7 @@ internal class TizenPluginTest : TestBaseWithProfile() {
         whenever(processedDeviceStatusData.uploaderStatus).thenReturn("100%")
         whenever(loop.lastRun).thenReturn(Loop.LastRun().also {
             it.lastTBREnact = 1000
-            it.tbrSetByPump = pumpEnactResultProvider.get().success(true).enacted(true)
+            it.tbrSetByPump = pumpEnactResultProvider().success(true).enacted(true)
         }
         )
         whenever(activePlugin.activePump).thenReturn(testPumpPlugin)

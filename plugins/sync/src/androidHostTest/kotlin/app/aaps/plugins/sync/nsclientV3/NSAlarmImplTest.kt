@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.nsclientV3
 
+import app.aaps.plugins.sync.nsclientV3.json.JsonBridge.toKotlinxJson
 import app.aaps.shared.tests.TestBase
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -21,7 +22,7 @@ class NSAlarmImplTest : TestBase() {
         }
 
         // Act
-        val alarm = NSAlarmObject(json)
+        val alarm = NSAlarmObject(json.toKotlinxJson())
 
         // Assert
         assertEquals(2, alarm.level)
@@ -44,7 +45,7 @@ class NSAlarmImplTest : TestBase() {
         }
 
         // Act
-        val alarm = NSAlarmObject(json)
+        val alarm = NSAlarmObject(json.toKotlinxJson())
 
         // Assert
         assertEquals(1, alarm.level)
@@ -65,7 +66,7 @@ class NSAlarmImplTest : TestBase() {
         }
 
         // Act
-        val alarm = NSAlarmObject(json)
+        val alarm = NSAlarmObject(json.toKotlinxJson())
 
         // Assert
         assertEquals(0, alarm.level)
@@ -88,7 +89,7 @@ class NSAlarmImplTest : TestBase() {
         }
 
         // Act
-        val alarm = NSAlarmObject(json)
+        val alarm = NSAlarmObject(json.toKotlinxJson())
 
         // Assert
         assertEquals(0, alarm.level, "Level should default to 0 for non-integer value")
@@ -100,13 +101,52 @@ class NSAlarmImplTest : TestBase() {
         assertFalse(alarm.timeAgo, "TimeAgo should be false when eventName is missing")
     }
 
+    // The four below pin coercion rather than defaults. Nothing asserted it before, and it is exactly
+    // what a stricter parser would change: these inputs would throw instead of being read or defaulted.
+    // A Nightscout server is not under our control, so an alarm must never fail to fire over a type.
+
+    @Test
+    fun `reads a numeric level sent as a string`() {
+        val json = JSONObject().apply { put("level", "2") }
+
+        assertEquals(2, NSAlarmObject(json.toKotlinxJson()).level)
+    }
+
+    @Test
+    fun `truncates a level sent as a decimal`() {
+        val json = JSONObject().apply { put("level", 2.9) }
+
+        assertEquals(2, NSAlarmObject(json.toKotlinxJson()).level)
+    }
+
+    @Test
+    fun `reads a title sent as a number`() {
+        val json = JSONObject().apply { put("title", 5) }
+
+        assertEquals("5", NSAlarmObject(json.toKotlinxJson()).title)
+    }
+
+    @Test
+    fun `renders an object valued string field as its json text and defaults a numeric one`() {
+        // Not what you would guess: a string field holding an object is NOT defaulted, it is rendered
+        // as the object's json text. A numeric field holding one does fall back. Documented because it
+        // is current behaviour that a port must keep, not because either is desirable on screen.
+        val json = JSONObject().apply {
+            put("title", JSONObject().apply { put("nested", "value") })
+            put("level", JSONObject())
+        }
+
+        assertEquals("{\"nested\":\"value\"}", NSAlarmObject(json.toKotlinxJson()).title)
+        assertEquals(0, NSAlarmObject(json.toKotlinxJson()).level)
+    }
+
     @Test
     fun `handles completely empty JSON object`() {
         // Arrange
         val emptyJson = JSONObject()
 
         // Act
-        val alarm = NSAlarmObject(emptyJson)
+        val alarm = NSAlarmObject(emptyJson.toKotlinxJson())
 
         // Assert
         assertEquals(0, alarm.level)

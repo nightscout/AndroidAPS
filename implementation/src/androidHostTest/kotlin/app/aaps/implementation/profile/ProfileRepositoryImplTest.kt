@@ -70,7 +70,7 @@ class ProfileRepositoryImplTest : TestBaseWithProfile() {
         whenever(preferences.observe(StringNonKey.LocalProfileData)).thenReturn(syncedPayloads)
         return ProfileRepositoryImpl(
             aapsLogger, rh, preferences, Provider { profileFunction }, profileUtil, activePlugin,
-            hardLimits, dateUtil, config, Provider { profileStoreProvider.get() }, notificationManager,
+            hardLimits, dateUtil, config, Provider { profileStoreProvider() }, notificationManager,
             CoroutineScope(UnconfinedTestDispatcher())
         )
     }
@@ -352,9 +352,6 @@ class ProfileRepositoryImplTest : TestBaseWithProfile() {
 
         createSut()
 
-        // The load runs from init(). Resolving the ProfileFunction Lazy there closes a Dagger cycle
-        // back into this repository and the app dies on start — and only on the SECOND start, once a
-        // document exists to parse.
         verify(profileFunction, never()).getUnits()
     }
 

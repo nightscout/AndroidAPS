@@ -13,12 +13,6 @@ import kotlinx.serialization.json.JsonObject
 
 /**
  * Builds [Trigger]s from their stored JSON.
- *
- * Same reason as [app.aaps.plugins.automation.actions.ActionFactory]: triggers are named by type in
- * the persisted automation list, so they cannot be constructed by Dagger, and they used to inject
- * themselves through `HasAndroidInjector` - which needs generated Java and so cannot happen in a
- * multiplatform module.
- *
  * Most triggers need only [TriggerDeps]. The three that need more take it on their own constructor.
  */
 @SingleIn(AppScope::class)
@@ -39,10 +33,8 @@ class TriggerFactory @Inject constructor(
 
     /**
      * A new, empty trigger of the named type, or null when the name is not one of ours.
-     *
      * [type] may be a simple name or the full class name a previous version stored; the package is
      * dropped either way.
-     *
      * The list is written out rather than reflected over. `Class.forName` and `primaryConstructor`
      * are JVM only, so reflection would keep this file on Android for no other reason - and an
      * explicit list fails to compile when a trigger is renamed, where reflection would have gone on

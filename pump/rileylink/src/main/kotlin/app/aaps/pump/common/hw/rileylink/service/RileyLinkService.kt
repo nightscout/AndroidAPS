@@ -22,14 +22,12 @@ import app.aaps.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import app.aaps.pump.common.hw.rileylink.keys.RileyLinkDoubleKey
 import java.util.Locale
 import dev.zacsweers.metro.HasMemberInjections
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 /**
  * Created by andy on 5/6/18.
  * Split from original file and renamed.
  */
-// Metro requires this on a non-final class with injected fields, so it knows subclasses are meant to
-// have those fields filled too. Inert for Dagger.
 @HasMemberInjections
 abstract class RileyLinkService : Service() {
 

@@ -7,10 +7,11 @@ import app.aaps.pump.eopatch.core.ble.PatchFunc
 import app.aaps.pump.eopatch.core.response.BatteryVoltageLevelPairingResponse
 import app.aaps.pump.eopatch.core.scan.IBleDevice
 import io.reactivex.rxjava3.core.Single
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class GetVoltageLevelB4Priming @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<BatteryVoltageLevelPairingResponse>(PatchFunc.GET_VOLTAGE_B4_PRIMING, patch, aapsLogger) {
     override fun parse(bytes: ByteArray) = BatteryVoltageLevelPairingResponse(
         BytesConverter.toUInt(bytes[DATA0], bytes[DATA1]),

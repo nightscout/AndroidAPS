@@ -17,7 +17,7 @@ import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 /**
  * Keeps AndroidAPS in foreground state, so it won't be terminated by Android nor get restricted by the background execution limits

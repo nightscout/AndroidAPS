@@ -19,8 +19,6 @@ import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import kotlinx.serialization.json.JsonObject
 
-// Unscoped, matching the Dagger @Binds it replaces: a profile store is a value object and each caller
-// builds its own with `with(...)`.
 @ContributesBinding(AppScope::class)
 class ProfileStoreObject @Inject constructor(
     private val aapsLogger: AAPSLogger,
