@@ -29,6 +29,21 @@ import org.mockito.Mockito.mockingDetails
  */
 class PumpDriverBucketTest {
 
+    /**
+     * Moved here from `ContributedPluginsTest`, which lives in `src/test` and so is compiled for every
+     * flavour - including the followers, which have no pump module on the classpath and an empty bucket
+     * by design. It could only ever fail there, and did: `:app:testAapsclientDebugUnitTest` was red on
+     * its own, unnoticed because CI runs the `full` variant.
+     *
+     * `containsExactly`, not a per-key check: it is the only assertion that catches a driver quietly
+     * *disappearing* from the bucket.
+     */
+    @Test
+    fun `the pump bucket holds exactly the known drivers`() {
+        assertThat(testRoot().contributedPumpDriverPlugins.keys)
+            .containsExactly(1010, 1020, 1030, 1040, 1050, 1060, 1080, 1090, 1100, 1110, 1120, 1130)
+    }
+
     @Test
     fun `every converted pump driver is in the pump bucket, under its own key`() {
         val drivers = testRoot().contributedPumpDriverPlugins

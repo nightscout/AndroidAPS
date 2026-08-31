@@ -42,5 +42,5 @@ abstract class EopatchModule {
     @Binds
     abstract fun bindPreferenceManager(preferenceManager: PreferenceManagerImpl): PreferenceManager
 
-    // Pump plugin registration — @IntKey range 1000–1200, see PluginsListModule for overview
+    // Pump plugin registration — @IntKey range 1000–1200, see `mergePlugins` for the overview
 }

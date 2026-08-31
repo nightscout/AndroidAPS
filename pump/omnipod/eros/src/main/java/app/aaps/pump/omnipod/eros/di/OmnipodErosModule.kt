@@ -17,14 +17,14 @@ import dagger.multibindings.IntoMap
 @InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class OmnipodErosModule {
-
+
     companion object {
 
         @Provides
         fun erosPodStateManagerProvider(aapsErosPodStateManager: AapsErosPodStateManager): ErosPodStateManager = aapsErosPodStateManager
     }
 
-    // Pump plugin registration — @IntKey range 1000–1200, see PluginsListModule for overview
+    // Pump plugin registration — @IntKey range 1000–1200, see `mergePlugins` for the overview
     @Binds
     @PumpDriver
     @IntoMap
