@@ -20,5 +20,9 @@ internal object NsLoadChain {
         is WorkOutcome.Success -> true
         is WorkOutcome.Skipped -> true
         is WorkOutcome.Failure -> false
+        // No NS runner asks to be retried today. Treated like a failure rather than a skip because the
+        // step did not do its work, so a later step would read state that is not there. This round
+        // stops; the next scheduled round runs the step again, which is what a retry asks for.
+        is WorkOutcome.Retry   -> false
     }
 }

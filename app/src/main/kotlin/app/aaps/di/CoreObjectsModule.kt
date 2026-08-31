@@ -489,7 +489,7 @@ class CoreObjectsModule {
     /*
      * The scene state holder, by class, from Metro.
      *
-     * `SceneExecutor`, `SceneAutomationApiImpl` and `SceneExpiryWorker` are built by Dagger and ask for
+     * `SceneExecutor`, `SceneAutomationApiImpl` and `SceneExpiryRunner` are built by Dagger and ask for
      * `ActiveSceneManager` itself. The class carries Metro's `@SingleIn` and no javax scope, so without
      * this Dagger built its own - a NEW one per injection point, since an unscoped `@Inject` constructor
      * is not shared. Activating a scene then wrote to an object nothing was reading, and the overview

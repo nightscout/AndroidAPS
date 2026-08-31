@@ -390,7 +390,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
     /**
      * The same object as [activeSceneSync], by class.
      *
-     * `SceneExecutor`, `SceneAutomationApiImpl` and `SceneExpiryWorker` all ask for the concrete type and
+     * `SceneExecutor`, `SceneAutomationApiImpl` and `SceneExpiryRunner` all ask for the concrete type and
      * are built by Dagger, so without this they got a copy of their own - and an unscoped one, since the
      * class carries only Metro's `@SingleIn`. The scene then activated on an object no screen was reading.
      */

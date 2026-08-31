@@ -1,10 +1,5 @@
 package app.aaps.implementation.scenes
 
-import android.content.Context
-import androidx.work.Data
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkManager
 import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.RM
@@ -20,6 +15,8 @@ import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.data.ui.ConfirmationRole
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.concurrent.AapsLock
+import app.aaps.core.interfaces.concurrent.withLock
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -30,24 +27,21 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.objects.extensions.profileNames
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.formatMinutesAsDuration
 import app.aaps.implementation.profile.ProfileSwitchSilentGate
-import dagger.hilt.android.qualifiers.ApplicationContext
-import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.TimeUnit
 import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import javax.inject.Inject
-import app.aaps.core.interfaces.R as InterfacesR
-import app.aaps.core.ui.R as CoreUiR
 
 /**
  * Executes scene activation and deactivation.
@@ -55,7 +49,6 @@ import app.aaps.core.ui.R as CoreUiR
  */
 @SingleIn(AppScope::class)
 class SceneExecutor @Inject constructor(
-    @ApplicationContext private val context: Context,
     private val persistenceLayer: PersistenceLayer,
     private val profileFunction: ProfileFunction,
     private val profileRepository: ProfileRepository,
@@ -64,22 +57,46 @@ class SceneExecutor @Inject constructor(
     private val uel: UserEntryLogger,
     private val dateUtil: DateUtil,
     private val aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val rxBus: RxBus,
     private val loop: Loop,
     private val activePlugin: ActivePlugin,
     private val profileUtil: ProfileUtil,
     private val translator: Translator,
     private val profileSwitchSilentGate: ProfileSwitchSilentGate,
-    private val notificationManager: NotificationManager
+    private val notificationManager: NotificationManager,
+    private val sceneExpiryScheduler: SceneExpiryScheduler
 ) {
 
     /** A parked scene activation awaiting [commitScene] — the two-step master-authoritative path. */
     private data class ParkedScene(val scene: Scene, val durationMinutes: Int, val parkedAt: Long)
 
-    // Consume-once parked scenes keyed by bolusId (its OWN id-space, separate from the bolus executor's `pending`,
-    // so a scene commit and a bolus commit can never drain each other). remove() is atomic → no double-activate.
-    private val pendingScenes = ConcurrentHashMap<Long, ParkedScene>()
+    /**
+     * Consume-once parked scenes keyed by bolusId (its OWN id-space, separate from the bolus executor's `pending`,
+     * so a scene commit and a bolus commit can never drain each other). [take] is atomic → no double-activate.
+     *
+     * A `ConcurrentHashMap` before, which does not exist outside the JVM. The guarantee that matters here is
+     * that a commit either gets the parked scene or gets nothing, so a plain map behind one lock is the same
+     * promise; there is no per-entry contention to lose, at most a couple of parks at a time.
+     */
+    private class ParkedScenes {
+
+        private val lock = AapsLock()
+        private val slots = mutableMapOf<Long, ParkedScene>()
+
+        fun park(id: Long, scene: ParkedScene) {
+            lock.withLock { slots[id] = scene }
+        }
+
+        fun take(id: Long): ParkedScene? = lock.withLock { slots.remove(id) }
+
+        /** Drops parks older than [cutoff], so a prepare the user walked away from cannot be committed later. */
+        fun evictParkedBefore(cutoff: Long) {
+            lock.withLock { slots.entries.removeAll { it.value.parkedAt < cutoff } }
+        }
+    }
+
+    private val pendingScenes = ParkedScenes()
 
     /**
      * Single source of truth for "can this scene activate right now?".
@@ -93,16 +110,16 @@ class SceneExecutor @Inject constructor(
      */
     suspend fun validateActivation(scene: Scene): String? {
         if (loop.runningMode().pausesLoopExecution())
-            return rh.gs(InterfacesR.string.pump_disconnected)
+            return rh.gs(InterfacesStrings.pump_disconnected)
         if (!activePlugin.activePump.isInitialized() || profileFunction.getProfile() == null)
-            return rh.gs(CoreUiR.string.pump_not_initialized_profile_not_set)
+            return rh.gs(CoreUiStrings.pump_not_initialized_profile_not_set)
         if (scene.actions.isEmpty())
-            return rh.gs(CoreUiR.string.scene_no_actions)
+            return rh.gs(CoreUiStrings.scene_no_actions)
         val profileList = profileRepository.profileNames()
         for (action in scene.actions) {
             if (action is SceneAction.ProfileSwitch && action.profileName.isNotEmpty() &&
                 action.profileName !in profileList
-            ) return rh.gs(CoreUiR.string.scene_profile_not_found, action.profileName)
+            ) return rh.gs(CoreUiStrings.scene_profile_not_found, action.profileName)
         }
         return null
     }
@@ -117,8 +134,8 @@ class SceneExecutor @Inject constructor(
         val effective = durationMinutes ?: scene.defaultDurationMinutes
         val bolusId = dateUtil.now()
         // Trim abandoned parks (user cancelled / app killed) so a stale prepare can't be committed minutes later.
-        pendingScenes.entries.removeAll { bolusId - it.value.parkedAt > PARK_TTL_MS }
-        pendingScenes[bolusId] = ParkedScene(scene, effective, bolusId)
+        pendingScenes.evictParkedBefore(bolusId - PARK_TTL_MS)
+        pendingScenes.park(bolusId, ParkedScene(scene, effective, bolusId))
         return WizardBolusExecutor.PrepareResult.Preview(
             insulin = 0.0, carbs = 0, bolusId = bolusId,
             lines = buildSceneLines(scene, effective), advisorApplies = false, advisorLines = emptyList()
@@ -131,9 +148,9 @@ class SceneExecutor @Inject constructor(
      * failure rides back through [onError]. Mirrors [WizardBolusExecutor.confirm].
      */
     suspend fun commitScene(bolusId: Long, onError: (String) -> Unit): WizardBolusExecutor.ConfirmResult {
-        val parked = pendingScenes.remove(bolusId) ?: return WizardBolusExecutor.ConfirmResult.NoPending
+        val parked = pendingScenes.take(bolusId) ?: return WizardBolusExecutor.ConfirmResult.NoPending
         val result = activate(parked.scene, parked.durationMinutes)
-        if (!result.success) onError(result.errorMessage ?: rh.gs(CoreUiR.string.scene_some_actions_failed))
+        if (!result.success) onError(result.errorMessage ?: rh.gs(CoreUiStrings.scene_some_actions_failed))
         return WizardBolusExecutor.ConfirmResult.Delivered
     }
 
@@ -141,19 +158,19 @@ class SceneExecutor @Inject constructor(
     private fun buildSceneLines(scene: Scene, durationMinutes: Int): List<ConfirmationLine> = buildList {
         add(ConfirmationLine(ConfirmationRole.SCENE, scene.name))
         if (durationMinutes > 0)
-            add(ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(InterfacesR.string.confirmation_line, rh.gs(CoreUiR.string.duration), formatMinutesAsDuration(durationMinutes, rh))))
+            add(ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.duration), formatMinutesAsDuration(durationMinutes, rh))))
         scene.actions.forEach { add(ConfirmationLine(ConfirmationRole.NORMAL, sceneActionLine(it))) }
     }
 
     private fun sceneActionLine(action: SceneAction): String = when (action) {
-        is SceneAction.TempTarget      -> rh.gs(CoreUiR.string.scene_action_tt, profileUtil.fromMgdlToStringWithUnits(action.targetMgdl))
+        is SceneAction.TempTarget      -> rh.gs(CoreUiStrings.scene_action_tt, profileUtil.fromMgdlToStringWithUnits(action.targetMgdl))
         is SceneAction.ProfileSwitch   -> if (action.profileName.isNotEmpty())
-            rh.gs(CoreUiR.string.scene_action_profile, action.profileName, action.percentage)
+            rh.gs(CoreUiStrings.scene_action_profile, action.profileName, action.percentage)
         else
-            rh.gs(CoreUiR.string.scene_action_profile_pct_only, action.percentage)
-        is SceneAction.SmbToggle       -> if (action.enabled) rh.gs(CoreUiR.string.scene_action_smb_on) else rh.gs(CoreUiR.string.scene_action_smb_off)
-        is SceneAction.LoopModeChange  -> rh.gs(CoreUiR.string.scene_action_running_mode, translator.translate(action.mode))
-        is SceneAction.CarePortalEvent -> rh.gs(CoreUiR.string.scene_action_careportal, translator.translate(action.type))
+            rh.gs(CoreUiStrings.scene_action_profile_pct_only, action.percentage)
+        is SceneAction.SmbToggle       -> if (action.enabled) rh.gs(CoreUiStrings.scene_action_smb_on) else rh.gs(CoreUiStrings.scene_action_smb_off)
+        is SceneAction.LoopModeChange  -> rh.gs(CoreUiStrings.scene_action_running_mode, translator.translate(action.mode))
+        is SceneAction.CarePortalEvent -> rh.gs(CoreUiStrings.scene_action_careportal, translator.translate(action.type))
     }
 
     /**
@@ -187,7 +204,6 @@ class SceneExecutor @Inject constructor(
             } else {
                 activeSceneManager.clearActive()
             }
-        } else {
         }
 
         val now = dateUtil.now()
@@ -222,10 +238,7 @@ class SceneExecutor @Inject constructor(
         activeSceneManager.setActive(activeState)
 
         // Schedule expiry notification if duration-based
-        if (durationMs > 0) {
-            scheduleExpiryWorker(scene.name, durationMs)
-        } else {
-        }
+        if (durationMs > 0) sceneExpiryScheduler.schedule(scene.name, durationMs)
 
         // Log user entry
         uel.log(
@@ -242,7 +255,7 @@ class SceneExecutor @Inject constructor(
         return SceneExecutionResult(
             success = allSuccess,
             actionResults = actionResults,
-            errorMessage = if (!allSuccess) rh.gs(CoreUiR.string.scene_some_actions_failed) else null
+            errorMessage = if (!allSuccess) rh.gs(CoreUiStrings.scene_some_actions_failed) else null
         )
     }
 
@@ -252,7 +265,7 @@ class SceneExecutor @Inject constructor(
      */
     suspend fun deactivate(): SceneExecutionResult {
         val activeState = activeSceneManager.getActiveState()
-            ?: return SceneExecutionResult(success = false, errorMessage = rh.gs(CoreUiR.string.scene_no_active))
+            ?: return SceneExecutionResult(success = false, errorMessage = rh.gs(CoreUiStrings.scene_no_active))
 
         val now = dateUtil.now()
         val actionResults = mutableListOf<SceneExecutionResult.ActionResult>()
@@ -265,7 +278,7 @@ class SceneExecutor @Inject constructor(
 
         // Clear active state and cancel expiry worker
         activeSceneManager.clearActive()
-        cancelExpiryWorker()
+        sceneExpiryScheduler.cancel()
 
         // Log user entry
         uel.log(
@@ -279,7 +292,7 @@ class SceneExecutor @Inject constructor(
         return SceneExecutionResult(
             success = allSuccess,
             actionResults = actionResults,
-            errorMessage = if (!allSuccess) rh.gs(CoreUiR.string.scene_some_reverts_failed) else null
+            errorMessage = if (!allSuccess) rh.gs(CoreUiStrings.scene_some_reverts_failed) else null
         )
     }
 
@@ -441,9 +454,9 @@ class SceneExecutor @Inject constructor(
                             errorMessage = if (ps == null) "createProfileSwitch returned null for '$profileName'" else null
                         )
                     } else if (store == null) {
-                        SceneExecutionResult.ActionResult(action, success = false, errorMessage = rh.gs(CoreUiR.string.scene_no_profile_store))
+                        SceneExecutionResult.ActionResult(action, success = false, errorMessage = rh.gs(CoreUiStrings.scene_no_profile_store))
                     } else {
-                        SceneExecutionResult.ActionResult(action, success = false, errorMessage = rh.gs(CoreUiR.string.profile_switch_no_insulin))
+                        SceneExecutionResult.ActionResult(action, success = false, errorMessage = rh.gs(CoreUiStrings.profile_switch_no_insulin))
                     }
                 }
 
@@ -607,36 +620,7 @@ class SceneExecutor @Inject constructor(
         }
     }
 
-    private fun scheduleExpiryWorker(sceneName: String, delayMs: Long) {
-        try {
-            // Direct reference now that the worker lives in this module (was Class.forName when this
-            // engine was in :ui and couldn't see the :app worker).
-            val request = OneTimeWorkRequest.Builder(SceneExpiryWorker::class.java)
-                .setInitialDelay(delayMs, TimeUnit.MILLISECONDS)
-                .setInputData(
-                    Data.Builder()
-                        .putString(SceneExpiryWorker.KEY_SCENE_NAME, sceneName)
-                        .build()
-                )
-                .build()
-            WorkManager.getInstance(context)
-                .enqueueUniqueWork(WORK_NAME_SCENE_EXPIRY, ExistingWorkPolicy.REPLACE, request)
-        } catch (e: Exception) {
-            aapsLogger.error(LTag.UI, "Failed to schedule scene expiry worker", e)
-        }
-    }
-
-    private fun cancelExpiryWorker() {
-        try {
-            WorkManager.getInstance(context).cancelUniqueWork(WORK_NAME_SCENE_EXPIRY)
-        } catch (e: Exception) {
-            aapsLogger.error(LTag.UI, "Failed to cancel scene expiry worker", e)
-        }
-    }
-
     companion object {
-
-        private const val WORK_NAME_SCENE_EXPIRY = "SceneExpiry"
 
         // A parked (prepared-but-not-committed) scene older than this is discarded on the next prepare — an
         // abandoned confirmation can't be committed long after the fact. Comfortably covers the round-trip window.

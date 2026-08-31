@@ -26,6 +26,17 @@ sealed interface WorkOutcome {
     /** [reason] is only logged and reported, never shown to the user. */
     data class Failure(val reason: String) : WorkOutcome
 
+    /**
+     * Did nothing, and must be run again later.
+     *
+     * Not a [Failure]: a failure is permanent, so work that reports one is never re-run. Work that
+     * fired before the app finished starting has not failed at all - it simply could not read the
+     * state it needed yet, and dropping it would lose whatever it was scheduled to do. Scene expiry
+     * is the case that needs this: it is the only thing that ends a running scene, so a lost run
+     * leaves the scene's temp target and profile switch applied indefinitely.
+     */
+    data class Retry(val reason: String) : WorkOutcome
+
     companion object {
 
         /** The work was cancelled or replaced part way through. */
