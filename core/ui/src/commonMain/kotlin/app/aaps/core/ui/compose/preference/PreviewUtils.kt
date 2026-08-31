@@ -160,6 +160,7 @@ private object PreviewConfig : Config {
     override val APPLICATION_ID: String = "preview"
     override val DEBUG: Boolean = true
     override val currentDeviceModelString: String = "Preview"
+    override val deviceModelForUpload: String = "Preview"
     override val appName: TextRef = TextRef.Literal("AAPS")
     override val initProgressFlow: StateFlow<InitProgress> = MutableStateFlow(InitProgress(done = true))
     override val initSnackbarFlow: SharedFlow<String> = MutableSharedFlow()
