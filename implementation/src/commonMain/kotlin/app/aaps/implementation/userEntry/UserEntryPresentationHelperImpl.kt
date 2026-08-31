@@ -16,14 +16,16 @@ import app.aaps.core.data.model.UE
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Translator
-import app.aaps.core.ui.R
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.icons.IcAaps
 import app.aaps.core.ui.compose.icons.IcAction
 import app.aaps.core.ui.compose.icons.IcActivity
@@ -88,14 +90,13 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import app.aaps.core.interfaces.R as InterfacesR
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 class UserEntryPresentationHelperImpl @Inject constructor(
     private val translator: Translator,
     private val profileUtil: ProfileUtil,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val dateUtil: DateUtil,
     private val decimalFormatter: DecimalFormatter
 ) : UserEntryPresentationHelper {
@@ -282,7 +283,7 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         is ValueWithUnit.Minute               -> "${valueWithUnit.value}${translator.translate(valueWithUnit)}"
         is ValueWithUnit.Percent              -> "${valueWithUnit.value}${translator.translate(valueWithUnit)}"
         is ValueWithUnit.Insulin              -> decimalFormatter.to2Decimal(valueWithUnit.value) + translator.translate(valueWithUnit)
-        is ValueWithUnit.InsulinConcentration -> "${rh.gs(R.string.ins_concentration_confirmed, valueWithUnit.value)}"
+        is ValueWithUnit.InsulinConcentration -> rh.gs(CoreUiStrings.ins_concentration_confirmed, valueWithUnit.value)
         is ValueWithUnit.UnitPerHour          -> decimalFormatter.to2Decimal(valueWithUnit.value) + translator.translate(valueWithUnit)
         is ValueWithUnit.SimpleInt            -> valueWithUnit.value.toString()
         is ValueWithUnit.SimpleString         -> valueWithUnit.value
@@ -307,24 +308,24 @@ class UserEntryPresentationHelperImpl @Inject constructor(
     }
 
     private fun getCsvHeader() = rh.gs(
-        R.string.ue_csv_header,
-        csvString(R.string.ue_timestamp),
-        csvString(R.string.date),
-        csvString(R.string.ue_utc_offset),
-        csvString(R.string.ue_action),
-        csvString(R.string.event_type),
-        csvString(R.string.ue_source),
-        csvString(R.string.careportal_note),
-        csvString(R.string.ue_string),
-        csvString(R.string.event_time_label),
-        csvString(if (profileUtil.units == GlucoseUnit.MGDL) R.string.mgdl else R.string.mmol),
-        csvString(R.string.shortgram),
-        csvString(R.string.insulin_unit_shortname),
-        csvString(InterfacesR.string.profile_ins_units_per_hour),
-        csvString(R.string.shortpercent),
-        csvString(app.aaps.core.interfaces.R.string.shorthour),
-        csvString(app.aaps.core.interfaces.R.string.shortminute),
-        csvString(R.string.ue_none)
+        CoreUiStrings.ue_csv_header,
+        csvString(CoreUiStrings.ue_timestamp),
+        csvString(CoreUiStrings.date),
+        csvString(CoreUiStrings.ue_utc_offset),
+        csvString(CoreUiStrings.ue_action),
+        csvString(CoreUiStrings.event_type),
+        csvString(CoreUiStrings.ue_source),
+        csvString(CoreUiStrings.careportal_note),
+        csvString(CoreUiStrings.ue_string),
+        csvString(CoreUiStrings.event_time_label),
+        csvString(if (profileUtil.units == GlucoseUnit.MGDL) CoreUiStrings.mgdl else CoreUiStrings.mmol),
+        csvString(CoreUiStrings.shortgram),
+        csvString(CoreUiStrings.insulin_unit_shortname),
+        csvString(InterfacesStrings.profile_ins_units_per_hour),
+        csvString(CoreUiStrings.shortpercent),
+        csvString(InterfacesStrings.shorthour),
+        csvString(InterfacesStrings.shortminute),
+        csvString(CoreUiStrings.ue_none)
     ) + "\n"
 
     private fun getCsvEntry(entry: UE): String {
@@ -354,7 +355,7 @@ class UserEntryPresentationHelperImpl @Inject constructor(
                 is ValueWithUnit.Minute               -> minute = valueWithUnit.value.toString()
                 is ValueWithUnit.Percent              -> percent = valueWithUnit.value.toString()
                 is ValueWithUnit.Insulin              -> insulin = decimalFormatter.to2Decimal(valueWithUnit.value)
-                is ValueWithUnit.InsulinConcentration -> simpleString = simpleString.addWithSeparator(rh.gs(R.string.ins_concentration_confirmed, valueWithUnit.value))
+                is ValueWithUnit.InsulinConcentration -> simpleString = simpleString.addWithSeparator(rh.gs(CoreUiStrings.ins_concentration_confirmed, valueWithUnit.value))
                 is ValueWithUnit.UnitPerHour          -> unitPerHour = decimalFormatter.to2Decimal(valueWithUnit.value)
                 is ValueWithUnit.SimpleInt            -> noUnit = noUnit.addWithSeparator(valueWithUnit.value)
                 is ValueWithUnit.SimpleString         -> simpleString = simpleString.addWithSeparator(valueWithUnit.value)
@@ -383,7 +384,10 @@ class UserEntryPresentationHelperImpl @Inject constructor(
     }
 
     private fun csvString(action: Action): String = "\"" + translator.translate(action).replace("\"", "\"\"").replace("\n", " / ") + "\""
-    private fun csvString(id: Int): String = if (id != 0) "\"" + rh.gs(id).replace("\"", "\"\"").replace("\n", " / ") + "\"" else ""
+    // Took a `@StringRes Int` and returned "" for id 0. No caller ever passed 0 - every one is a literal
+    // from the header list - so the empty branch was unreachable, and a TextRef has no zero to stand in
+    // for "no string" anyway.
+    private fun csvString(ref: TextRef): String = "\"" + rh.gs(ref).replace("\"", "\"\"").replace("\n", " / ") + "\""
     private fun csvString(s: String): String = if (s != "") "\"" + s.replace("\"", "\"\"").replace("\n", " / ") + "\"" else ""
 
     private fun String.addWithSeparator(add: Any) =

@@ -19,8 +19,10 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import java.time.Instant
-import java.time.ZoneId
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.plus
+import kotlin.time.Instant
 
 /**
  * Implementation of Total Daily Dose (TDD) calculator for insulin usage statistics.
@@ -83,9 +85,7 @@ class TddCalculatorImpl @Inject constructor(
 
     override suspend fun calculate(timestamp: Long, days: Long, allowMissingDays: Boolean): LongSparseArray<TDD>? {
         var startTime = MidnightTime.calcDaysBack(timestamp, days)
-        val endTime = Instant.ofEpochMilli(startTime).atZone(ZoneId.systemDefault())
-            .plusDays(days)
-            .toInstant().toEpochMilli()
+        val endTime = addDaysInLocalZone(startTime, days)
 
         aapsLogger.debug(LTag.APS, "Calculating TotalDailyDose from ${dateUtil.dateString(startTime)} to ${dateUtil.dateString(endTime)}")
 
@@ -132,8 +132,13 @@ class TddCalculatorImpl @Inject constructor(
         calculateDaily(dateUtil.now(), startHours, endHours)
 
     override suspend fun calculateDaily(timestamp: Long, startHours: Long, endHours: Long): TDD? {
-        assert(startHours < 0)
-        assert(endHours <= 0)
+        // `require`, not `assert`: Android never ran these (the JVM disables assertions unless asked, and
+        // ART ignores them outright) while Kotlin/Native always runs them, so keeping `assert` would mean a
+        // crash on iOS and nothing on Android from the same call. Every caller today passes a negative
+        // literal, so nothing changes - but a future caller that gets the window backwards would otherwise
+        // get a silently wrong daily insulin total instead of being told.
+        require(startHours < 0) { "startHours must be negative, was $startHours" }
+        require(endHours <= 0) { "endHours must not be positive, was $endHours" }
         val startTime = timestamp + T.hours(hour = startHours).msecs()
         val endTime = timestamp + T.hours(hour = endHours).msecs()
         return calculateInterval(startTime, endTime, allowMissingData = false)
@@ -200,3 +205,16 @@ class TddCalculatorImpl @Inject constructor(
         return AverageTDD(data = totalTdd, allDaysHaveCarbs = hasCarbs)
     }
 }
+
+/**
+ * Moves [startMs] on by [days] **calendar** days in [zone], not by `days * 24h`.
+ *
+ * The difference only shows on a day that a DST change makes 23 or 25 hours long, and it is the same
+ * care the `+ 27h` midnight steps in [TddCalculatorImpl] take: a window that ends an hour off would
+ * take a day of boluses in or leave one out, and a TDD is what dynamic ISF dosing is scaled from.
+ *
+ * Replaced `java.time`'s `Instant.ofEpochMilli(startMs).atZone(zone).plusDays(days)`, which cannot be
+ * used outside the JVM. `TddCalculatorImplTest` pins the two against each other.
+ */
+internal fun addDaysInLocalZone(startMs: Long, days: Long, zone: TimeZone = TimeZone.currentSystemDefault()): Long =
+    Instant.fromEpochMilliseconds(startMs).plus(days, DateTimeUnit.DAY, zone).toEpochMilliseconds()

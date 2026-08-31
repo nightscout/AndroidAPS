@@ -13,6 +13,10 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
+import kotlinx.datetime.TimeZone
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -376,5 +380,38 @@ class TddCalculatorImplTest : TestBase() {
         assertThat(result).isNotNull()
         assertThat(result?.data?.basalAmount).isWithin(0.0001).of(20.0015)
         assertThat(result?.data?.bolusAmount).isWithin(0.0001).of(10.0015)
+    }
+
+    /**
+     * [addDaysInLocalZone] replaced `java.time`'s `atZone(zone).plusDays(days)`, which cannot leave the
+     * JVM. This runs both and demands the same millisecond, so the claim that the translation is exact
+     * is checked rather than asserted in a comment.
+     *
+     * The zones and dates are chosen so the window crosses a DST change in each direction, plus Lord Howe
+     * for its half-hour shift. A `days * 24h` shortcut would be an hour out on every one of these, and an
+     * hour at a window edge moves a bolus in or out of a TDD.
+     */
+    @Test
+    fun `adding calendar days matches the java time arithmetic it replaced`() {
+        val cases = listOf(
+            // zone, local midnight the window starts at, days
+            Triple("Europe/Prague", "2026-03-27T00:00:00", 5L),      // spring forward on the 29th
+            Triple("Europe/Prague", "2026-10-23T00:00:00", 5L),      // fall back on the 25th
+            Triple("America/New_York", "2026-03-06T00:00:00", 3L),   // spring forward on the 8th
+            Triple("America/New_York", "2026-10-30T00:00:00", 7L),   // fall back on Nov 1st
+            Triple("Australia/Lord_Howe", "2026-04-03T00:00:00", 2L) // 30-minute shift on the 5th
+        )
+
+        for ((zoneId, localStart, days) in cases) {
+            val javaZone = ZoneId.of(zoneId)
+            val startMs = LocalDateTime.parse(localStart).atZone(javaZone).toInstant().toEpochMilli()
+
+            val expected = Instant.ofEpochMilli(startMs).atZone(javaZone)
+                .plusDays(days)
+                .toInstant().toEpochMilli()
+            val actual = addDaysInLocalZone(startMs, days, TimeZone.of(zoneId))
+
+            assertThat(actual).isEqualTo(expected)
+        }
     }
 }
