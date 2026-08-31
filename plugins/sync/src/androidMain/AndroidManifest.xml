@@ -26,13 +26,8 @@
             android:enabled="true"
             android:exported="false" />
 
-        <!-- These two were declared from :plugins:main's manifest, which merging made work but which
-             put them a module away from the classes they name. -->
-        <activity
-            android:name=".wear.activities.CwfInfosActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme" />
-
+        <!-- Was declared from :plugins:main's manifest, which merging made work but which put it a
+             module away from the class it names. -->
         <service
             android:name=".wear.wearintegration.DataLayerListenerServiceMobile"
             android:foregroundServiceType="connectedDevice"

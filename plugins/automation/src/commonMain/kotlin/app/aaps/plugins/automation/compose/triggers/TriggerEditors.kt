@@ -23,6 +23,7 @@ import app.aaps.plugins.automation.compose.elements.CompareRow
 import app.aaps.plugins.automation.compose.elements.InputDateTimeEditor
 import app.aaps.plugins.automation.compose.elements.InputLocationModeEditor
 import app.aaps.plugins.automation.compose.elements.InputStringEditor
+import app.aaps.plugins.automation.compose.isMapPickerAvailable
 import app.aaps.plugins.automation.compose.elements.InputTimeEditor
 import app.aaps.plugins.automation.compose.elements.InputTimeRangeEditor
 import app.aaps.plugins.automation.compose.elements.InputWeekDayEditor
@@ -558,8 +559,12 @@ fun TriggerLocationEditor(
             Text(stringResource(AutomationStrings.currentlocation))
         }
     }
-    OutlinedButton(onClick = { onPickLocationFromMap(t) }, modifier = Modifier.fillMaxWidth()) {
-        Text(stringResource(AutomationStrings.pick_from_map))
+    // Hidden where the platform cannot draw a map: a button that leads to a "not available" screen
+    // is worse than no button. The current-location path above still sets the position.
+    if (isMapPickerAvailable) {
+        OutlinedButton(onClick = { onPickLocationFromMap(t) }, modifier = Modifier.fillMaxWidth()) {
+            Text(stringResource(AutomationStrings.pick_from_map))
+        }
     }
     NumberInputRow(
         labelRef = null,

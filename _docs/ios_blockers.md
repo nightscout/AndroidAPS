@@ -237,8 +237,18 @@ Measured with the probe procedure above. `StoreDataForDb`, `NSAlarmObject`, `Rec
 `SecureEncrypt`, `SceneExpiryScheduler`, `SmsCommunicator`, `CalculationExecutor` and `Loop` have all
 been cleared since this list was first written; `IosNsConnection` itself is written and compiling.
 
+`DeviceStatusJson` is off the list for a different reason: the port was deleted rather than
+implemented. `LoopPlugin` renders that JSON with kotlinx directly now, so there is no binding left
+to satisfy - do not go looking for `AndroidDeviceStatusJson`.
+
+`Automation` is unblocked but not cleared. `AutomationRuntime` and the whole automation Compose UI
+are in commonMain and compile for iOS, so the class itself is no longer in the way. The binding still
+does not resolve, because three of its constructor dependencies are Android-only with no iOS side
+yet: `LocationServiceController` (`LocationServiceControllerImpl`), `LocationPermissions`
+(`AndroidLocationPermissions`) and `ReminderScheduler` (`ReminderSchedulerImpl`). Those three are the
+remaining work, and each is far smaller than the class that used to be the obstacle.
+
 **Has an Android implementation to lift or port** - your side:
-`Automation` (`AutomationRuntime`), `DeviceStatusJson` (`AndroidDeviceStatusJson`),
 `LoopNotifier` (`AndroidLoopNotifier`), `WidgetUpdater` (`WidgetUpdaterImpl`), and `UiInteraction`,
 which currently lives in `:app` and so needs somewhere to go first.
 
@@ -435,6 +445,12 @@ Not blockers, and not for the Windows session to fix. Listed so nobody is surpri
   connections made by anything other than this app. **A Bluetooth automation trigger can be
   configured on iOS and will never fire** - decided deliberately, and written in both KDocs so it is
   not mistaken for an oversight later.
+- The map picker is a fourth automation seam, added from the Android side: `MapPickerScreen` is an
+  `expect` composable (osmdroid on Android), with `expect val isMapPickerAvailable` next to it. iOS
+  returns false and `TriggerLocationEditor` hides the "pick from map" button, because the editor has
+  **no manual latitude/longitude field** - so on iOS a location trigger can only be set from the
+  current position until a MapKit picker exists. Same reasoning as the Bluetooth trigger above, but
+  the opposite decision: the feature is hidden rather than present and dead.
 - `ConstraintsCheckerImpl` - moved to `commonMain` (`a76cca9e41`)
 - `ProfileRepositoryImpl` - moved to `commonMain`, off `org.json` (`3252f044b1`)
 - `PluginStore` / `PluginPermissions` - split so the registry is no longer Android
