@@ -198,3 +198,27 @@ private fun unwrapDeferred(type: java.lang.reflect.Type): Class<*>? = when (type
 
     else                                   -> null
 }
+
+/**
+ * Types a Metro binding container provides with a scope - i.e. Metro owns exactly one of them.
+ *
+ * A class can be owned by Metro without carrying `@SingleIn` itself: a `@Provides` in a
+ * `@BindingContainer` constructs it, and a scope on that provider means one instance. That is how the
+ * Java classes are owned, since Metro cannot read an `@Inject` constructor it has no Kotlin IR for.
+ *
+ * Exposed so a guard can tell "nobody owns this" from "a container owns it".
+ */
+fun metroScopedProviderTypes(
+    anchors: List<Class<*>>,
+    metroAnnotations: List<String> = DEFAULT_METRO_ANNOTATIONS
+): Set<Class<*>> {
+    val classes = anchors.flatMap { classesIn(it) }.distinct()
+    check(classes.isNotEmpty()) { "Found no classes to scan - the class walk broke" }
+
+    @Suppress("UNCHECKED_CAST")
+    val singleIn = metroAnnotations.mapNotNull { runCatching { Class.forName(it) as Class<out Annotation> }.getOrNull() }
+        .firstOrNull { it.name.endsWith(".SingleIn") }
+    check(singleIn != null) { "Metro's @SingleIn is not on the test classpath" }
+
+    return scopedContainerProviders(classes, singleIn)
+}

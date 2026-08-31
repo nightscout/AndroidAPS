@@ -12,7 +12,8 @@ import app.aaps.pump.omnipod.eros.event.EventOmnipodErosTbrChanged
 import app.aaps.pump.omnipod.eros.event.EventOmnipodErosUncertainTbrRecovered
 import app.aaps.pump.omnipod.eros.keys.ErosStringNonPreferenceKey
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Was Java.
@@ -21,7 +22,7 @@ import javax.inject.Singleton
  * `PumpLeaves`. This is the pod state - two copies would mean the pump writing to one object while the
  * screens read another.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class AapsErosPodStateManager @Inject constructor(
     aapsLogger: AAPSLogger,
     private val preferences: Preferences,

@@ -73,50 +73,43 @@ class PumpDriverBucketTest {
      * ("DanaR pump never reported initialized", which is what it cost on CI).
      *
      * That premise is gone. `dagger.android` is off the phone and every pump service is filled by a
-     * Metro member injector, so Metro's copy is the one the pump writes to. Eleven drivers carry
-     * `@SingleIn(AppScope::class)` now and are no longer handed over.
+     * Metro member injector, so Metro's copy is the one the pump writes to. All thirteen drivers carry
+     * `@SingleIn(AppScope::class)` now and none is handed over.
      *
-     * Two are deliberately still Dagger's and still handed over by `PumpLeaves`:
-     *  - **eros**, because `AapsOmnipodErosManager` and `OmnipodRileyLinkCommunicationManager` are Java
-     *    and Metro cannot generate a factory for a class it has no Kotlin IR for.
-     *  - **eopatch**, because `PatchManagerExecutor` calls `Patch.init` at construction, and a Metro
-     *    owned class is built for real in these plain-JVM tests - it fails on the Bluetooth service.
-     *
-     * What still has to hold either way is **one instance**: reading a driver twice must give the same
-     * object. Two would put the plugin list and the pump service on different state, which is the whole
-     * failure this file exists to prevent.
+     * What still has to hold is **one instance**: reading a driver twice must give the same object. Two
+     * would put the plugin list and the pump service on different state, which is the whole failure this
+     * file exists to prevent.
      */
     @Test
-    fun `each Metro owned pump driver is a single instance`() {
+    fun `each pump driver is a single instance`() {
         val root = testRoot()
         val first = root.contributedPumpDriverPlugins
         val second = root.contributedPumpDriverPlugins
 
-        // Only the Metro owned ones can be compared. The two still handed over come through a
-        // RETURNS_MOCKS `PumpLeaves`, which mints a fresh mock on every call - that says nothing about
-        // the real instance, which Dagger scopes.
-        val rebuilt = first.keys
-            .filterNot { key -> mockingDetails(first[key]).isMock }
-            .filter { key -> first[key] !== second[key] }
+        val rebuilt = first.keys.filter { key -> first[key] !== second[key] }
 
         assertThat(rebuilt).isEmpty()
     }
 
-    /** The two that are still handed over, so a silent flip of either is noticed here. */
+    /**
+     * Nothing comes from `PumpLeaves` any more, so a driver falling back to Dagger is noticed here.
+     *
+     * A handed-over driver arrives through a `RETURNS_MOCKS` `PumpLeaves`, so it is a mock - which is
+     * also why the single-instance test above cannot see it: the leaf mints a fresh mock per call and
+     * says nothing about the real object Dagger scopes. This test is what keeps that hole shut.
+     *
+     * Eros was the last one out, and how it got out is worth recording: `AapsOmnipodErosManager` and
+     * `OmnipodRileyLinkCommunicationManager` are still Java, and Metro cannot generate a factory from an
+     * `@Inject` constructor it has no Kotlin IR for. It does not need to. A hand written `@Provides` in
+     * `ErosJavaBindings` calls the constructor itself, and a scope on that provider makes Metro the
+     * owner. Java is not a blocker; only an *unwritten* binding is.
+     */
     @Test
-    fun `eros is the last driver still handed over by PumpLeaves`() {
+    fun `every pump driver is Metro owned`() {
         val drivers = testRoot().contributedPumpDriverPlugins
 
-        // Eros: two of its @Inject classes are Java, and Metro cannot generate a factory for a class it
-        // has no Kotlin IR for. It is the only one left.
-        assertThat(mockingDetails(drivers[1070]).isMock).isTrue()
-        // Eopatch used to be here. It could not be Metro owned while three classes did Android work
-        // while being constructed - `PatchManagerExecutor` opened the patch BLE client in an `init`
-        // block, `PatchManager` built an `RxBleClient` through a property, and `AlarmRegistry` cast the
-        // system alarm service. The first became `EopatchPumpPlugin.onStart`, which is the correct
-        // lifecycle anyway (it now runs only when eopatch is the enabled pump, not for every user); the
-        // other two are `by lazy`.
-        assertThat(mockingDetails(drivers[1110]).isMock).isFalse()
+        val handedOver = drivers.filterValues { mockingDetails(it).isMock }.keys
+        assertThat(handedOver).isEmpty()
     }
 
     @Test

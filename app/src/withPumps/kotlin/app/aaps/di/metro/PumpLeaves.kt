@@ -83,13 +83,6 @@ class PumpLeaves(
     private val omnipodDashManagerProvider: Provider<OmnipodDashManager>,
     private val omnipodDashPodStateManagerProvider: Provider<OmnipodDashPodStateManager>,
     // The pump state holders and driver plugins - see the note above their @Provides below.
-    private val omnipodErosPumpPluginProvider: Provider<OmnipodErosPumpPlugin>,
-    private val erosHistoryProvider: Provider<ErosHistory>,
-    private val erosPodStateManagerProvider: Provider<ErosPodStateManager>,
-    private val aapsErosPodStateManagerProvider: Provider<AapsErosPodStateManager>,
-    private val aapsOmnipodErosManagerProvider: Provider<AapsOmnipodErosManager>,
-    private val aapsOmnipodUtilProvider: Provider<AapsOmnipodUtil>,
-    private val omnipodAlertUtilProvider: Provider<OmnipodAlertUtil>
 ) {
 
     @Provides fun equilBleTransport(): EquilBleTransport = equilBleTransportProvider.get()
@@ -118,16 +111,9 @@ class PumpLeaves(
      * them, because the services do; this hands its instance to Metro. `PumpLeavesTest` fails if a new
      * one is added to a view model without being listed here.
      */
-    @Provides fun omnipodErosPumpPlugin(): OmnipodErosPumpPlugin = omnipodErosPumpPluginProvider.get()
     // The eros view models are Metro built now, so Metro needs these two - Dagger still provides them,
     // from `app.aaps.di.pump.OmnipodErosHistoryModule`.
-    @Provides fun erosHistory(): ErosHistory = erosHistoryProvider.get()
-    @Provides fun erosPodStateManager(): ErosPodStateManager = erosPodStateManagerProvider.get()
     // The eros pump state, handed over for the same reason as every other pump's: these carry javax
     // @Singleton and the eros service writes to Dagger's copy, so a Metro built second one would leave
     // the screens reading an object the pump never touches. SplitBrainTest caught exactly that here.
-    @Provides fun aapsErosPodStateManager(): AapsErosPodStateManager = aapsErosPodStateManagerProvider.get()
-    @Provides fun aapsOmnipodErosManager(): AapsOmnipodErosManager = aapsOmnipodErosManagerProvider.get()
-    @Provides fun aapsOmnipodUtil(): AapsOmnipodUtil = aapsOmnipodUtilProvider.get()
-    @Provides fun omnipodAlertUtil(): OmnipodAlertUtil = omnipodAlertUtilProvider.get()
 }

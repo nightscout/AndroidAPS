@@ -5,7 +5,8 @@ import app.aaps.pump.omnipod.common.keys.OmnipodBooleanPreferenceKey
 import app.aaps.pump.omnipod.common.keys.OmnipodIntPreferenceKey
 import org.joda.time.Duration
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Was Java. Kept as functions rather than turned into properties, so the existing `getX()` call sites -
@@ -15,7 +16,7 @@ import javax.inject.Singleton
  * through `PumpLeaves`. `@SingleIn` here would have Metro build a second copy, which is the split brain
  * `SplitBrainTest` exists to catch.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class OmnipodAlertUtil @Inject constructor(
     private val preferences: Preferences
 ) {

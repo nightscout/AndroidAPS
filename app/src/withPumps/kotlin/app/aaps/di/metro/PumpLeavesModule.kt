@@ -78,19 +78,10 @@ class PumpLeavesModule {
         medtrumBleTransport: Provider<MedtrumBleTransport>,
         omnipodDashManager: Provider<OmnipodDashManager>,
         omnipodDashPodStateManager: Provider<OmnipodDashPodStateManager>,
-        omnipodErosPumpPlugin: Provider<OmnipodErosPumpPlugin>,
-        erosHistory: Provider<ErosHistory>,
-        erosPodStateManager: Provider<ErosPodStateManager>,
-        aapsErosPodStateManager: Provider<AapsErosPodStateManager>,
-        aapsOmnipodErosManager: Provider<AapsOmnipodErosManager>,
-        aapsOmnipodUtil: Provider<AapsOmnipodUtil>,
-        omnipodAlertUtil: Provider<OmnipodAlertUtil>
     ): PumpLeaves = PumpLeaves(
 
         equilBleTransport,
         medtrumBleTransport, omnipodDashManager, omnipodDashPodStateManager,
 
-        omnipodErosPumpPlugin, erosHistory, erosPodStateManager,
-        aapsErosPodStateManager, aapsOmnipodErosManager, aapsOmnipodUtil, omnipodAlertUtil
     )
 }

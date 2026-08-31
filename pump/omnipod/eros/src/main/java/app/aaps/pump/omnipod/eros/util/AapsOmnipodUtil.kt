@@ -13,7 +13,8 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.format.ISODateTimeFormat
 import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Created by andy on 4/8/19. Was Java.
@@ -23,7 +24,7 @@ import javax.inject.Singleton
  *
  * javax `@Singleton`, not Metro's `@SingleIn`: Dagger owns this and hands it to Metro via `PumpLeaves`.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class AapsOmnipodUtil @Inject constructor(
     private val rh: ResourceHelper
 ) {

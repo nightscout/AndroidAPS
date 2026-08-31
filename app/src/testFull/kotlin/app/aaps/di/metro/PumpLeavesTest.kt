@@ -1,5 +1,6 @@
 package app.aaps.di.metro
 
+import app.aaps.shared.tests.metroScopedProviderTypes
 import androidx.lifecycle.ViewModel
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
@@ -29,7 +30,12 @@ class PumpLeavesTest {
 
     @Test
     fun `every singleton a pump view model injects is handed over by PumpLeaves`() {
-        val handedOver = PumpLeaves::class.java.declaredMethods.map { it.returnType }.toSet()
+        // Handed over by a leaf, OR owned by a scoped `@Provides` in a Metro binding container. The
+        // second case is how the Java eros classes are owned: Metro cannot generate a factory from an
+        // `@Inject` constructor it has no Kotlin IR for, so a container calls the constructor instead.
+        // Either way there is exactly one instance, which is all this test is really about.
+        val handedOver = PumpLeaves::class.java.declaredMethods.map { it.returnType }.toSet() +
+            metroScopedProviderTypes(anchors = listOf(PumpLeaves::class.java))
 
         val offenders = mutableListOf<String>()
         for (vm in pumpViewModels()) {

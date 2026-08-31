@@ -154,7 +154,9 @@ class SplitBrainTest {
         // A floor, not a target: it tells "nothing is handed over" apart from "the reflection stopped
         // finding anything". It has to come DOWN as the leaves are converted to Metro ownership - when
         // the last one goes this check goes with it, along with both leaf classes.
-        check(leaves.size > 10) { "Only ${leaves.size} leaf types found - the reflection broke" }
+        // Nearly done: this floor exists only to tell "nothing to report" from "the reflection broke",
+        // and it dies with both leaf classes. Keep lowering it as leaves go; never raise it.
+        check(leaves.size > 4) { "Only ${leaves.size} leaf types found - the reflection broke" }
         return leaves
     }
 }

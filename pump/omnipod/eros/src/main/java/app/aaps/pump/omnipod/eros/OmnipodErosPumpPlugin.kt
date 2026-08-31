@@ -124,7 +124,7 @@ import dev.zacsweers.metro.IntKey as MetroIntKey
 import dev.zacsweers.metro.binding
 import javax.inject.Inject
 import javax.inject.Provider
-import javax.inject.Singleton
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Created by andy on 23.04.18.
@@ -137,7 +137,7 @@ import javax.inject.Singleton
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @PumpDriver
 @MetroIntKey(1070)
-@Singleton
+@SingleIn(AppScope::class)
 class OmnipodErosPumpPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,
