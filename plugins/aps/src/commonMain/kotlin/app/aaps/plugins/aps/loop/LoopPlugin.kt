@@ -89,6 +89,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.JsonObject
+import app.aaps.core.objects.extensions.jsonObject
+import app.aaps.plugins.aps.loop.extensions.jsonObject
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonObject
 import kotlin.experimental.ExperimentalNativeApi
@@ -123,7 +125,7 @@ class LoopPlugin @Inject constructor(
     private val decimalFormatter: DecimalFormatter,
     private val ch: ConcentrationHelper,
     private val loopNotifier: LoopNotifier,
-    private val deviceStatusJson: DeviceStatusJson,
+
     @ApplicationScope private val appScope: CoroutineScope
 ) : PluginBase(
     PluginDescription()
@@ -869,7 +871,7 @@ class LoopPlugin @Inject constructor(
         val profile = profileFunction.getProfile() ?: return
 
         var apsResult: JsonObject? = null
-        var iob: String? = null
+        var iob: JsonObject? = null
         var enacted: JsonObject? = null
         lastRun?.let { lastRun ->
             if (lastRun.lastAPSRun > dateUtil.now() - 300 * 1000L) {
@@ -878,19 +880,23 @@ class LoopPlugin @Inject constructor(
                     put("timestamp", dateUtil.toISOString(lastRun.lastAPSRun))
                     put("isfMgdlForCarbs", profile.getIsfMgdlForCarbs(dateUtil.now(), "LoopPlugin", config, processedDeviceStatusData))
                 }
-                iob = lastRun.request?.iob?.let { deviceStatusJson.iob(it, lastRun.lastAPSRun) }
+                iob = lastRun.request?.iob?.jsonObject(dateUtil)?.with {
+                    put("time", dateUtil.toISOString(lastRun.lastAPSRun))
+                }
                 // Snapshot the mutable field once: the APS loop (invoke()) can null/reassign
                 // lastRun.tbrSetByPump concurrently, so re-dereferencing it with !! below raced and
                 // threw NPE. A single read is also a consistent snapshot (it was read 3x before).
                 val tbrSetByPump = lastRun.tbrSetByPump
                 if (tbrSetByPump?.enacted == true) { // enacted
-                    val (enactedRate, enactedDuration) = deviceStatusJson.enactedRateAndDuration(tbrSetByPump, profile.getBasal())
+                    val pumpJson = tbrSetByPump.jsonObject(profile.getBasal())
                     enacted = lastRun.request?.let { request ->
                         request.json()?.with {
-                            // Numbers, not Doubles: a cancelled temp reports integer 0 and rendering
-                            // that as 0.0 would change what is uploaded.
-                            put("rate", enactedRate)
-                            put("duration", enactedDuration)
+                            // The elements straight through, not the numbers: a cancelled temp reports
+                            // integer 0 and re-reading it as a Double would upload 0.0. `getValue`
+                            // throws when the result carries neither, as it always has - that is an
+                            // SMB only result, which `tbrSetByPump` never holds.
+                            put("rate", pumpJson.getValue("rate"))
+                            put("duration", pumpJson.getValue("duration"))
                             put("received", true)
                             putJsonObject("requested") {
                                 put("duration", request.duration)
@@ -911,7 +917,7 @@ class LoopPlugin @Inject constructor(
             DS(
                 timestamp = dateUtil.now(),
                 suggested = apsResult?.toString(),
-                iob = iob,
+                iob = iob?.toString(),
                 enacted = enacted?.toString(),
                 device = "openaps://" + config.deviceModelForUpload,
                 pump = pumpStatusProvider.generatePumpJsonStatus().toString(),

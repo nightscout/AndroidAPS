@@ -52,23 +52,28 @@ containing a comma, which Kotlin/Native rejects outright.
 
 ## Hint: most common code still has no iOS test coverage
 
-Measured 2026-08-27, after `:implementation` got its `commonTest`. This is a survey, not a claim that
+Measured 2026-08-27 and refreshed 2026-08-31. This is a survey, not a claim that
 anything is broken - but the one module that was converted immediately turned up three real faults,
 so it is worth working through.
 
 | module | commonMain files | commonTest | test files that never run on iOS |
 |---|---|---|---|
-| `plugins/aps` | 23 | none | 33 |
+| `plugins/aps` | 32 | 2 files | 33 |
 | `core/objects` | 26 | none | 27 |
 | `database/persistence` | 32 | none | 16 |
 | `core/interfaces` | 255 | none | 13 |
 | `plugins/sensitivity`, `smoothing`, `calibration` | 22 | none | 9 |
 | `core/utils` | 6 | none | 5 |
 
-Only `core/data`, `shared/impl` and `implementation` have a `commonTest` at all. Everything else
-tests `commonMain` classes from `androidHostTest`, which runs on the JVM only - so code that ships to
-iOS is verified only on Android. `plugins/aps` is the dosing algorithm and `database/persistence` is
-what writes user data, so those two are worth the most.
+Only `core/data`, `shared/impl`, `implementation` and now `plugins/aps` have a `commonTest` at all.
+Everything else tests `commonMain` classes from `androidHostTest`, which runs on the JVM only - so
+code that ships to iOS is verified only on Android. `plugins/aps` is the dosing algorithm and
+`database/persistence` is what writes user data, so those two are worth the most.
+
+`plugins/aps` got its first two `commonTest` files with `PumpEnactResultExtensionTest` (19 tests),
+which moved there when the extension became kotlinx and multiplatform. The other 33 test files in
+that module still run on the JVM only - `LoopPluginTest` among them, which is now testing a
+`commonMain` class.
 
 What converting one module found, none of which the JVM could have shown: a fake that did not
 implement every interface member because Mockito had been filling it in, a backticked test name
