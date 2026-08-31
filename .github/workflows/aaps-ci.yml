@@ -193,16 +193,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Fetch selected tag from upstream
-        run: |
-          git remote add upstream https://github.com/nightscout/AndroidAPS.git || true
-          git fetch upstream refs/tags/${{ github.event.inputs.tagName }}:refs/tags/${{ github.event.inputs.tagName }}
-          echo "✅ Tag ${{ github.event.inputs.tagName }} fetched from upstream."
-
       - name: Determine JVM version from tag
         run: |
-          # jdk-map.json must be read before switching to the upstream tag,
-          # as the upstream tag does not contain this file.
           TAG="${{ github.event.inputs.tagName }}"
           JAVA_VERSION=$(jq -r '.default' .github/jdk-map.json)
           while IFS=$'\t' read -r pattern jdk; do
@@ -213,11 +205,6 @@ jobs:
           done < <(jq -r '.mappings[] | "\(.pattern)\t\(.jdk)"' .github/jdk-map.json)
           echo "JAVA_VERSION=$JAVA_VERSION" >> $GITHUB_ENV
           echo "ℹ️ Tag $TAG → JDK $JAVA_VERSION (from jdk-map.json)"
-
-      - name: Switch to selected tag
-        run: |
-          git checkout refs/tags/${{ github.event.inputs.tagName }}
-          echo "✅ Checked out tag ${{ github.event.inputs.tagName }}"
 
       - name: Set BUILD_VARIANT
         run: |
