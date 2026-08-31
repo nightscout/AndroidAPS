@@ -1,8 +1,6 @@
 package app.aaps.plugins.automation
 
 import app.aaps.core.ui.CoreUiStrings
-import android.Manifest
-import androidx.annotation.VisibleForTesting
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -22,12 +20,19 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import kotlin.concurrent.atomics.AtomicInt
+import kotlin.concurrent.atomics.incrementAndFetch
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.plugins.automation.AutomationStrings
+import app.aaps.core.interfaces.concurrent.AapsLock
+import app.aaps.core.interfaces.concurrent.withLock
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PermissionProvider
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventBTChange
@@ -122,10 +127,12 @@ import kotlin.time.Duration.Companion.seconds
 @ContributesBinding(AppScope::class, binding = binding<BtConnectionSource>())
 @ContributesIntoSet(AppScope::class, binding = binding<PermissionProvider>())
 @SingleIn(AppScope::class)
+@OptIn(ExperimentalAtomicApi::class)
 class AutomationRuntime @Inject constructor(
+    private val locationPermissions: LocationPermissions,
     private val automationEventFactory: AutomationEventFactory,
     private val aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val preferences: Preferences,
     private val loop: Loop,
     private val rxBus: RxBus,
@@ -177,6 +184,16 @@ class AutomationRuntime @Inject constructor(
     @Volatile private var locationServiceRunning = false
 
     private val automationEvents = ArrayList<AutomationEventObject>()
+
+    /**
+     * Guards [automationEvents]. Was `@Synchronized` on every accessor plus `synchronized(this)` at the
+     * read sites, which is JVM only. [AapsLock] is reentrant and blocking, so the behaviour is
+     * unchanged - `markEdited()` is called from inside other guarded methods and relies on that.
+     *
+     * A dedicated lock rather than the instance monitor: nothing outside this class ever locked on the
+     * runtime, and the list it guards is a `val` that is never swapped.
+     */
+    private val eventsLock = AapsLock()
     // AnnotatedString, not HTML in a String: the only entry that carries formatting is built below, and
     // the screen renders this list directly. Nothing here ever leaves the app.
     var executionLog: MutableList<AnnotatedString> = ArrayList()
@@ -208,9 +225,10 @@ class AutomationRuntime @Inject constructor(
     private val _persist = MutableSharedFlow<Unit>(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
 
     /** Emit a fresh snapshot for UI/wear collectors. Does NOT persist (see [requestPersist]). */
-    @Synchronized
     fun notifyChanged() {
-        _events.value = IdentityList(automationEvents.toList())
+        eventsLock.withLock {
+            _events.value = IdentityList(automationEvents.toList())
+        }
     }
 
     /** Request a debounced persist. Only genuine edits / last-run call this — never a load. */
@@ -223,10 +241,11 @@ class AutomationRuntime @Inject constructor(
      * persist. The client→master sync version is stamped automatically by PreferencesImpl when
      * storeToSP writes the bidirectionally-synced AutomationEvents key.
      */
-    @Synchronized
     fun markEdited() {
-        notifyChanged()
-        requestPersist()
+        eventsLock.withLock {
+            notifyChanged()
+            requestPersist()
+        }
     }
 
     /**
@@ -239,10 +258,21 @@ class AutomationRuntime @Inject constructor(
      */
     private class IdentityList<T>(private val delegate: List<T>) : AbstractList<T>() {
 
+        // A per-instance number, because `AbstractList` hashes by content and `equals` here is identity.
+        // Was `System.identityHashCode`, which is JVM only; the contract only needs a value that is
+        // stable per instance and consistent with an identity `equals`.
+        private val identity = nextIdentity()
+
         override val size: Int get() = delegate.size
         override fun get(index: Int): T = delegate[index]
         override fun equals(other: Any?): Boolean = this === other
-        override fun hashCode(): Int = System.identityHashCode(this)
+        override fun hashCode(): Int = identity
+
+        private companion object {
+
+            private val counter = AtomicInt(0)
+            fun nextIdentity(): Int = counter.incrementAndFetch()
+        }
     }
 
     companion object {
@@ -257,22 +287,11 @@ class AutomationRuntime @Inject constructor(
      * collection pass, so the permission appears/disappears as the event set changes.
      */
     override fun requiredPermissions(): List<PermissionGroup> =
-        if (config.APS && usesLocationTrigger()) listOf(
-            PermissionGroup(
-                permissions = listOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
-                rationaleTitle = TextRef.AndroidRes(R.string.permission_location_title),
-                rationaleDescription = TextRef.AndroidRes(R.string.permission_location_description),
-            ),
-            PermissionGroup(
-                permissions = listOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION),
-                rationaleTitle = TextRef.AndroidRes(R.string.permission_location_title),
-                rationaleDescription = TextRef.AndroidRes(R.string.permission_background_location_description),
-            ),
-        ) else emptyList()
+        if (config.APS && usesLocationTrigger()) locationPermissions.groups() else emptyList()
 
     /** True when any enabled event's trigger tree contains a [TriggerLocation]. */
     private fun usesLocationTrigger(): Boolean =
-        synchronized(this) { automationEvents.toList() }
+        eventsLock.withLock { automationEvents.toList() }
             .any { it.isEnabled && connectorHasLocation(it.trigger) }
 
     private fun connectorHasLocation(connector: TriggerConnector): Boolean =
@@ -385,18 +404,19 @@ class AutomationRuntime @Inject constructor(
         }
     }
 
-    @Synchronized
     private fun updateLocationService() {
-        val need = usesLocationTrigger()
-        if (need && !locationServiceRunning) {
-            // startService() returns false when the location permission isn't granted yet; only
-            // latch the flag once it actually started, so a later permission grant — reconciled on
-            // the next processActions tick — retries instead of leaving the service stuck off.
-            deferredStart.start { if (locationServiceController.startService()) locationServiceRunning = true }
-        } else if (!need && locationServiceRunning) {
-            deferredStart.cancel()
-            locationServiceController.stopService()
-            locationServiceRunning = false
+        eventsLock.withLock {
+            val need = usesLocationTrigger()
+            if (need && !locationServiceRunning) {
+                // startService() returns false when the location permission isn't granted yet; only
+                // latch the flag once it actually started, so a later permission grant — reconciled on
+                // the next processActions tick — retries instead of leaving the service stuck off.
+                deferredStart.start { if (locationServiceController.startService()) locationServiceRunning = true }
+            } else if (!need && locationServiceRunning) {
+                deferredStart.cancel()
+                locationServiceController.stopService()
+                locationServiceRunning = false
+            }
         }
     }
 
@@ -418,7 +438,7 @@ class AutomationRuntime @Inject constructor(
     /** Serialize the in-memory event list to the persisted JSON shape (what [storeToSP] writes). */
     private fun eventsToJson(): String {
         val elements = mutableListOf<JsonElement>()
-        synchronized(this) { automationEvents.toMutableList() }.forEach { event ->
+        eventsLock.withLock { automationEvents.toMutableList() }.forEach { event ->
             runCatching { Json.parseToJsonElement(event.toJSON()) }
                 .onSuccess { elements.add(it) }
                 .onFailure { aapsLogger.error(LTag.AUTOMATION, "Cannot serialize event ${event.title}", it) }
@@ -430,25 +450,25 @@ class AutomationRuntime @Inject constructor(
     // Id-backfill + the EMPTY_EVENT starter happen once in [bootstrap] (master); a master push is already
     // canonical, so applying it is a pure reparse → no store → no echo. @VisibleForTesting + internal:
     // production reaches this only via start()/self-observe; tests drive it to assert the load behavior.
-    @VisibleForTesting
-    @Synchronized
     internal fun loadFromSP() {
-        // Carry run-timers across the reparse: lastRun isn't serialized, so a naive reload would reset
-        // every event's timer and (on a master that executes) risk re-firing automations right after a
-        // remote push. Preserve it by id for events that still exist; new/changed ids start fresh.
-        val previousLastRun = automationEvents.associate { it.id to it.lastRun }
-        automationEvents.clear()
-        val data = preferences.get(StringNonKey.AutomationEvents)
-        if (data != "")
-            runCatching {
-                val array = Json.parseToJsonElement(data).jsonArray
-                for (element in array) {
-                    val event = automationEventFactory.fromJSON(element.toString())
-                    previousLastRun[event.id]?.let { event.lastRun = it }
-                    automationEvents.add(event)
-                }
-            }.onFailure { aapsLogger.error(LTag.AUTOMATION, "Cannot parse stored automation list", it) }
-        notifyChanged() // fan out to UI/wear collectors; does NOT persist
+        eventsLock.withLock {
+            // Carry run-timers across the reparse: lastRun isn't serialized, so a naive reload would reset
+            // every event's timer and (on a master that executes) risk re-firing automations right after a
+            // remote push. Preserve it by id for events that still exist; new/changed ids start fresh.
+            val previousLastRun = automationEvents.associate { it.id to it.lastRun }
+            automationEvents.clear()
+            val data = preferences.get(StringNonKey.AutomationEvents)
+            if (data != "")
+                runCatching {
+                    val array = Json.parseToJsonElement(data).jsonArray
+                    for (element in array) {
+                        val event = automationEventFactory.fromJSON(element.toString())
+                        previousLastRun[event.id]?.let { event.lastRun = it }
+                        automationEvents.add(event)
+                    }
+                }.onFailure { aapsLogger.error(LTag.AUTOMATION, "Cannot parse stored automation list", it) }
+            notifyChanged() // fan out to UI/wear collectors; does NOT persist
+        }
     }
 
     // One-time at init (from [start]).
@@ -457,22 +477,23 @@ class AutomationRuntime @Inject constructor(
     // MASTER: id-backfill legacy id-less events (fromJSON assigns ids in-memory) and seed the EMPTY_EVENT
     // starter on a fresh install (pref never initialized = ""), then persist once via putRemote if the
     // canonical form changed. Idempotent for already-canonical data.
-    @Synchronized
     private fun bootstrap() {
-        if (config.AAPSCLIENT) {
+        eventsLock.withLock {
+            if (config.AAPSCLIENT) {
+                loadFromSP()
+                return
+            }
+            val before = preferences.get(StringNonKey.AutomationEvents)
             loadFromSP()
-            return
+            if (before == "") automationEvents.add(automationEventFactory.fromJSON(EMPTY_EVENT))
+            notifyChanged()
+            val after = eventsToJson()
+            if (after != before)
+                preferences.putRemote(
+                    StringNonKey.AutomationEvents, after,
+                    preferences.get(LongComposedKey.SyncedPrefModified, StringNonKey.AutomationEvents.key)
+                )
         }
-        val before = preferences.get(StringNonKey.AutomationEvents)
-        loadFromSP()
-        if (before == "") automationEvents.add(automationEventFactory.fromJSON(EMPTY_EVENT))
-        notifyChanged()
-        val after = eventsToJson()
-        if (after != before)
-            preferences.putRemote(
-                StringNonKey.AutomationEvents, after,
-                preferences.get(LongComposedKey.SyncedPrefModified, StringNonKey.AutomationEvents.key)
-            )
     }
 
     internal suspend fun processActions() {
@@ -492,7 +513,7 @@ class AutomationRuntime @Inject constructor(
         val runningMode = loop.runningMode()
         if (runningMode.pausesLoopExecution() || !runningMode.isLoopRunning()) {
             aapsLogger.debug(LTag.AUTOMATION, "Loop suspended")
-            executionLog.add(AnnotatedString(rh.gs(app.aaps.core.interfaces.R.string.loopsuspended)))
+            executionLog.add(AnnotatedString(rh.gs(InterfacesStrings.loopsuspended)))
             rxBus.send(EventAutomationUpdateGui())
             commonEventsEnabled = false
         }
@@ -517,7 +538,7 @@ class AutomationRuntime @Inject constructor(
         }
 
         aapsLogger.debug(LTag.AUTOMATION, "processActions")
-        val iterator = synchronized(this) { automationEvents.toMutableList().iterator() }
+        val iterator = eventsLock.withLock { automationEvents.toMutableList().iterator() }
         while (iterator.hasNext()) {
             val event = iterator.next()
             if (event.isEnabled && !event.userAction && event.shouldRun())
@@ -572,58 +593,64 @@ class AutomationRuntime @Inject constructor(
         }
     }
 
-    @Synchronized
     fun add(event: AutomationEventObject) {
-        automationEvents.add(event)
-        markEdited()
-    }
-
-    @Synchronized
-    fun addIfNotExists(event: AutomationEventObject) {
-        for (e in automationEvents) {
-            if (event.title == e.title) return
+        eventsLock.withLock {
+            automationEvents.add(event)
+            markEdited()
         }
-        automationEvents.add(event)
-        markEdited()
     }
 
-    @Synchronized
+    fun addIfNotExists(event: AutomationEventObject) {
+        eventsLock.withLock {
+            for (e in automationEvents) {
+                if (event.title == e.title) return
+            }
+            automationEvents.add(event)
+            markEdited()
+        }
+    }
+
     fun removeIfExists(event: AutomationEvent) {
-        for (e in automationEvents.reversed()) {
-            if (event.title == e.title) {
-                automationEvents.remove(e)
-                markEdited()
+        eventsLock.withLock {
+            for (e in automationEvents.reversed()) {
+                if (event.title == e.title) {
+                    automationEvents.remove(e)
+                    markEdited()
+                }
             }
         }
     }
 
-    @Synchronized
     fun set(event: AutomationEventObject, index: Int) {
-        automationEvents[index] = event
-        markEdited()
+        eventsLock.withLock {
+            automationEvents[index] = event
+            markEdited()
+        }
     }
 
-    @Synchronized
     fun remove(event: AutomationEvent) {
-        if (automationEvents.remove(event)) markEdited()
+        eventsLock.withLock {
+            if (automationEvents.remove(event)) markEdited()
+        }
     }
 
     fun at(index: Int) = automationEvents[index]
 
     fun size() = automationEvents.size
 
-    @Synchronized
     fun swap(fromPosition: Int, toPosition: Int) {
-        val moved = automationEvents[fromPosition]
-        automationEvents[fromPosition] = automationEvents[toPosition]
-        automationEvents[toPosition] = moved
-        // Reorder is a config change — persisted ordering decides processing order in
-        // processActions, so collectors and storeToSP both need to see it.
-        markEdited()
+        eventsLock.withLock {
+            val moved = automationEvents[fromPosition]
+            automationEvents[fromPosition] = automationEvents[toPosition]
+            automationEvents[toPosition] = moved
+            // Reorder is a config change — persisted ordering decides processing order in
+            // processActions, so collectors and storeToSP both need to see it.
+            markEdited()
+        }
     }
 
     override fun findEventById(id: String): AutomationEvent? {
-        return synchronized(this) { automationEvents.find { it.id == id } }
+        return eventsLock.withLock { automationEvents.find { it.id == id } }
     }
 
     fun getActionDummyObjects(): List<Action> {
