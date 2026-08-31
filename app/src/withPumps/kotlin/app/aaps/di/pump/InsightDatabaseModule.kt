@@ -1,4 +1,4 @@
-package app.aaps.pump.insight.di
+package app.aaps.di.pump
 
 import android.content.Context
 import app.aaps.pump.insight.database.InsightDatabase
@@ -10,21 +10,21 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+/** The Insight history database, provided from `:app` so `:pump:insight` needs no Dagger processor. */
 @Module
 @InstallIn(SingletonComponent::class)
 class InsightDatabaseModule {
 
     @Provides
     @Singleton
-    internal fun provideDatabase(context: Context): InsightDatabase = InsightDatabase.build(context)
+    fun provideDatabase(context: Context): InsightDatabase = InsightDatabase.build(context)
 
     @Provides
     @Singleton
-    internal fun provideInsightDatabaseDao(insightDatabase: InsightDatabase): InsightDatabaseDao =
+    fun provideInsightDatabaseDao(insightDatabase: InsightDatabase): InsightDatabaseDao =
         insightDatabase.insightDatabaseDao()
 
     @Provides
     @Singleton
-    internal fun provideInsightDbHelper(insightDatabaseDao: InsightDatabaseDao): InsightDbHelper = InsightDbHelper(insightDatabaseDao)
-
+    fun provideInsightDbHelper(insightDatabaseDao: InsightDatabaseDao): InsightDbHelper = InsightDbHelper(insightDatabaseDao)
 }

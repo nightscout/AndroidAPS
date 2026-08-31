@@ -10,7 +10,7 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.core.interfaces.pump.rfcomm.RfcommTransport
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.pump.dana.di.DanaHistoryModule
+import app.aaps.di.pump.DanaHistoryModule
 import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danar.DanaRPlugin
 import app.aaps.pump.danar.emulator.DanaRPumpEmulator

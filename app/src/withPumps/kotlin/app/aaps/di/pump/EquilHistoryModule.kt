@@ -1,4 +1,4 @@
-package app.aaps.pump.equil.di
+package app.aaps.di.pump
 
 import android.content.Context
 import app.aaps.pump.equil.database.EquilHistoryDatabase
@@ -10,22 +10,22 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+/** The Equil history database, provided from `:app` so `:pump:equil` needs no Dagger processor. */
 @Module
 @InstallIn(SingletonComponent::class)
-@Suppress("unused")
 class EquilHistoryModule {
 
     @Provides
     @Singleton
-    internal fun provideDatabase(context: Context): EquilHistoryDatabase = EquilHistoryDatabase.build(context)
+    fun provideDatabase(context: Context): EquilHistoryDatabase = EquilHistoryDatabase.build(context)
 
     @Provides
     @Singleton
-    internal fun provideHistoryRecordDao(equilHistoryDatabase: EquilHistoryDatabase): EquilHistoryRecordDao =
+    fun provideHistoryRecordDao(equilHistoryDatabase: EquilHistoryDatabase): EquilHistoryRecordDao =
         equilHistoryDatabase.historyRecordDao()
 
     @Provides
     @Singleton
-    internal fun provideHistoryPumpDao(equilHistoryDatabase: EquilHistoryDatabase): EquilHistoryPumpDao =
+    fun provideHistoryPumpDao(equilHistoryDatabase: EquilHistoryDatabase): EquilHistoryPumpDao =
         equilHistoryDatabase.historyPumpDao()
 }

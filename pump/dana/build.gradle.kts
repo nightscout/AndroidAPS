@@ -44,6 +44,4 @@ dependencies {
     testImplementation(project(":core:objects"))
     // create profile from json
 
-    ksp(libs.com.google.dagger.compiler)
-    ksp(libs.com.google.dagger.hilt.compiler)
 }
