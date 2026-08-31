@@ -226,50 +226,29 @@ Collected so nobody pays for them twice. All were found by tests or a crash, not
 
 ## Open
 
-### Request: StoreDataForDb blocks the whole NS client on iOS
+### Twelve bindings stand between the NS client and iOS
 
-`plugins/sync/src/androidMain/.../nsclientV3/StoreDataForDbImpl.kt` - 543 lines, **one** Android
-import.
+Measured with the probe procedure above. `StoreDataForDb`, `NSAlarmObject`, `ReceiverStatusStore`,
+`SecureEncrypt`, `SceneExpiryScheduler`, `SmsCommunicator`, `CalculationExecutor` and `Loop` have all
+been cleared since this list was first written; `IosNsConnection` itself is written and compiling.
 
-This is the one to do first, ahead of the service itself. Every incoming websocket event ends in
-`storeDataForDb.requestStoreX(...)` - glucose values, treatments, food, calibrations, device status.
-An iOS `NsConnection` written today would connect, subscribe, receive and parse, and then drop every
-record, because there is nothing to hand them to. That is the silent no-op the migration rules warn
-about, and on the data path.
+**Has an Android implementation to lift or port** - your side:
+`Automation` (`AutomationRuntime`), `DeviceStatusJson` (`AndroidDeviceStatusJson`),
+`LoopNotifier` (`AndroidLoopNotifier`), `WidgetUpdater` (`WidgetUpdaterImpl`), and `UiInteraction`,
+which currently lives in `:app` and so needs somewhere to go first.
 
-Two smaller ones go with it, both reached from the same handlers:
+**Ours, and only wiring:** `NsSocketFactory` - see the note in the gaps section.
 
-| class | lines | what is in the way |
-|---|---|---|
-| `StoreDataForDbImpl` | 543 | 1 android import, 3 jvm |
-| `NSAlarmObject` | 48 | 1 jvm import |
-| `JsonBridge` | 32 | `org.json`, by definition - it is the bridge |
+**No Kotlin implementation anywhere, and worth questioning rather than porting:**
+`BolusWizard`, `BolusProgressData`, `QuickWizard`, `IobCobCalculator`, `RunningModeGuard`, `L`.
 
-`JsonBridge` may simply not need an iOS counterpart: the iOS handlers will parse with
-kotlinx.serialization directly, the way `ProfileRepositoryImpl` was converted, so the bridge is only
-needed while Android still speaks `org.json`.
-
-### Then: the socket wiring in NSClientV3Service
-
-`plugins/sync/src/androidMain/.../services/NSClientV3Service.kt` - 494 lines, 6 Android imports
-(`Intent`, `Binder`, `IBinder`, `PowerManager`, two annotations).
-
-The iOS side will write its **own** `NsConnection` rather than wait for this to be lifted - a
-separate implementation is the point of the port, and the two platforms genuinely differ here. What
-it needs from you is only the three classes above; the wiring itself will be rewritten on the iOS
-side with kotlinx.serialization instead of `org.json`.
-
-For reference while that is written, these are the parts of the contract that are easy to get wrong,
-and both are already pinned by `ServiceNsConnectionTest`:
-
-- `start(reason)` is idempotent - calling it on a live connection must not tear anything down.
-- `stop()` closes the sockets **before** releasing whatever carries them, or a quick restart races
-  the teardown.
-
-One more, from reading the handlers: `onDataCreateUpdate` must not advance
-`lastLoadedSrvModified` until `initialLoadFinished` is true, or the next load chain skips exactly the
-offline window it is supposed to backfill. That one is a comment in the Android code rather than a
-test, and it would be easy to lose in a rewrite.
+That last group is the interesting one. A Nightscout **connection** should not need the bolus wizard,
+the quick wizard or the IOB/COB calculator bound, and `DeviceStatusJson` and `LoopNotifier` only
+appeared once `Loop` resolved - so the graph is walking into loop territory by way of
+`NSClientV3Plugin` rather than anything the connection touches. Before implementing six more classes
+it is worth checking whether the plugin can take them lazily, the way `AapsLeaves` does on Android
+with `Provider`. A follower client that has to construct the loop to sync Nightscout data is carrying
+weight it does not use.
 
 ## Ready for Android: what the iOS side has built
 
@@ -289,9 +268,72 @@ test, and it would be easy to lose in a rewrite.
 
 Nothing right now.
 
+## Two iOS behaviours a user would notice
+
+Both are implemented and both work as designed. They are here because the design has a cost that is
+invisible from the code, and someone should decide whether to accept it before iOS ships.
+
+### A roaming user may be charged for data
+
+`IosReceiverStatusStore.roaming` is **always false**, because iOS exposes no roaming state at all -
+not through `CTTelephonyNetworkInfo`, not anywhere public.
+
+That would be harmless if nothing read it, but `ReceiverDelegate` does:
+
+```kotlin
+ev.mobileConnected && preferences.get(BooleanKey.NsClientUseCellular) && !ev.roaming || ...
+```
+
+So on iOS the first branch always matches: **a user who turned off "sync while roaming" still syncs
+over cellular abroad.** False is the least bad of two wrong answers - reporting true instead would
+stop cellular sync working for everyone, everywhere.
+
+If that is not acceptable, the options are a preference the user sets by hand when travelling, or
+suppressing the cellular-sync option on iOS entirely. Both are product decisions.
+
+### A timed scene activated on iOS never ends
+
+`IosSceneExpiryScheduler` deliberately does not schedule, and logs at error when asked to. Scenes
+compile and the editor works, which is what was wanted for now, but activating a **timed** scene on
+iOS has a real consequence.
+
+`SceneExpiryRunner` is not a UI refresh. At expiry it reverts the two actions whose effect does not
+end on its own:
+
+- the **SMB toggle**, a preference with no duration model
+- the **profile switch**, whose `EffectiveProfileSwitch` outlives the timed record that created it -
+  `getEffectiveProfileSwitchActiveAt()` picks the newest EPS and ignores `originalEnd`, so the base
+  profile only resumes once a new base-profile EPS exists
+
+Without the callback both stay applied indefinitely, and a chained follow-up scene never starts.
+Temp target, loop mode and care portal entries are safe - those self-expire from their own
+timestamps.
+
+**So activation of a timed scene has to be gated in the UI before scenes ship on iOS.**
+
+A real implementation is possible later, but not as a plain timer - the interface is right to forbid
+that. It needs three parts together: an in-process timer (works whenever the app is alive, which for
+a looper holding a BLE connection is most of the time), a `UNTimeIntervalNotificationTrigger` at the
+deadline (fires even if the app was killed, but only shows a notification - it cannot run code), and
+an overdue sweep when the app next comes to the foreground so the runner executes late rather than
+never. That ends the scene on time when possible and always tells the user otherwise, which is a
+weaker promise than the Android one and should be agreed before it is built.
+
 ## Known gaps on the iOS side
 
 Not blockers, and not for the Windows session to fix. Listed so nobody is surprised by them.
+
+- `IosSecureEncrypt` keeps its AES key in the Keychain, marked `ThisDeviceOnly`, but **not in the
+  Secure Enclave** - the Enclave holds EC keys, not the AES key wanted here, so the key is protected
+  by the Keychain and device encryption rather than being non-exportable like the Android TEE key.
+  Wrapping the AES key with an Enclave EC key would close that gap and is a larger change.
+- `IosReceiverStatusStore.ssid` is always empty: reading it needs the Access WiFi Information
+  entitlement plus location permission. Until that is arranged, a Wi-Fi SSID automation trigger can
+  be configured on iOS and will never match - the same shape as the Bluetooth trigger.
+- `NsSocketFactory` can never be bound inside the Kotlin graph. The implementation is
+  `SwiftNsSocketFactory`, on the official `socket.io-client-swift` - the same project's client as the
+  `socket.io-client-java` Android uses, which is what keeps both platforms speaking to Nightscout
+  identically. The graph has to take it as a factory parameter from the app at start up.
 
 - `IosSystemNotificationPlatform.setAudibleAlarm` only logs, so **an urgent alarm makes no sound on
   iOS today**. There are two separate paths and they are easy to confuse:
