@@ -35,11 +35,11 @@ import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
 
 @Composable
-fun MapPickerScreen(
+actual fun MapPickerScreen(
     initialLat: Double?,
     initialLon: Double?,
     onLocationTapped: (Double, Double) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier
 ) {
     val initialLocation = remember(initialLat, initialLon) {
         if (initialLat != null && initialLon != null) GeoPoint(initialLat, initialLon) else null
@@ -153,3 +153,6 @@ private fun OsmdroidMapView(
         }
     )
 }
+
+/** Android draws the picker with osmdroid, so the map is always available here. */
+actual val isMapPickerAvailable: Boolean = true

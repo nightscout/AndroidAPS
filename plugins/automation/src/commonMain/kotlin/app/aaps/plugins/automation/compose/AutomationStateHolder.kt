@@ -276,7 +276,7 @@ class AutomationStateHolder(
             AutomationEventUi(
                 // Identity of the persistent event object — stable across in-place swaps so the
                 // reorder key doesn't change mid-drag (position does).
-                key = System.identityHashCode(a).toLong(),
+                key = a.uiKey,
                 position = i,
                 title = a.title,
                 isEnabled = a.isEnabled,

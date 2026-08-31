@@ -8,8 +8,11 @@ import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.IBinder
 import androidx.core.app.ActivityCompat
+import app.aaps.core.interfaces.concurrent.AapsLock
+import app.aaps.core.interfaces.concurrent.withLock
 import app.aaps.core.interfaces.location.LocationServiceController
 import app.aaps.core.interfaces.notifications.NotificationHolder
+import app.aaps.core.utils.DeferredForegroundStart
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -31,9 +34,39 @@ class LocationServiceControllerImpl @Inject constructor(
     private val notificationHolder: NotificationHolder
 ) : LocationServiceController {
 
-    /** @return true if the service start was issued; false if it was skipped because the location
-     *  permission isn't granted yet (so the caller can retry once it is). */
-    override fun startService(): Boolean {
+    private val deferredStart = DeferredForegroundStart()
+
+    /** Guards [running] against the caller thread racing the deferred main-thread callback. */
+    private val lock = AapsLock()
+
+    /** Whether the foreground service is actually up, as opposed to merely wanted. */
+    private var running = false
+
+    override fun setLocationUpdatesEnabled(enabled: Boolean) {
+        lock.withLock {
+            if (enabled) {
+                if (running) return@withLock
+                // Wait until the process is in foreground: Android 12+ refuses startForegroundService
+                // from the background. Re-check under the lock inside the callback, because several
+                // reconcile ticks can queue a start before the first one runs.
+                deferredStart.start { lock.withLock { if (!running) running = startService() } }
+            } else {
+                // Cancel first, and unconditionally: a start can still be queued while [running] is
+                // false, and it would otherwise fire later and bring the service up after the last
+                // location trigger was already gone.
+                deferredStart.cancel()
+                if (!running) return@withLock
+                stopService()
+                running = false
+            }
+        }
+    }
+
+    /**
+     * @return true if the service start was issued; false if it was skipped because the location
+     *   permission isn't granted yet, so [running] stays false and the next enable retries.
+     */
+    internal fun startService(): Boolean {
         if (!hasLocationPermission(context)) return false
         val connection = object : ServiceConnection {
             override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
@@ -68,7 +101,7 @@ class LocationServiceControllerImpl @Inject constructor(
         return true
     }
 
-    override fun stopService() {
+    internal fun stopService() {
         context.stopService(Intent(context, LocationService::class.java))
     }
 

@@ -1,6 +1,5 @@
 package app.aaps.plugins.automation
 
-import app.aaps.core.ui.CoreUiStrings
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -9,10 +8,13 @@ import androidx.compose.ui.text.withStyle
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.alerts.ReminderScheduler
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.automation.AutomationEvent
+import app.aaps.core.interfaces.concurrent.AapsLock
+import app.aaps.core.interfaces.concurrent.withLock
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.location.LocationServiceController
@@ -20,13 +22,6 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import kotlin.concurrent.atomics.AtomicInt
-import kotlin.concurrent.atomics.incrementAndFetch
-import kotlin.concurrent.atomics.ExperimentalAtomicApi
-import app.aaps.core.interfaces.InterfacesStrings
-import app.aaps.plugins.automation.AutomationStrings
-import app.aaps.core.interfaces.concurrent.AapsLock
-import app.aaps.core.interfaces.concurrent.withLock
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PermissionProvider
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -43,9 +38,8 @@ import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.ComposablePluginContent
-import app.aaps.core.utils.DeferredForegroundStart
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.actions.ActionFactory
 import app.aaps.plugins.automation.compose.AutomationComposeContent
@@ -108,6 +102,10 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonArray
+import kotlin.concurrent.Volatile
+import kotlin.concurrent.atomics.AtomicInt
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
+import kotlin.concurrent.atomics.incrementAndFetch
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
@@ -174,14 +172,6 @@ class AutomationRuntime @Inject constructor(
         )
 
     private var scope: CoroutineScope? = null
-    private val deferredStart = DeferredForegroundStart()
-
-    /**
-     * Whether the location foreground service has actually been started (driven by
-     * [updateLocationService]). Volatile because it's written from the deferred main-thread start
-     * callback and read from the IO-dispatched reconcilers.
-     */
-    @Volatile private var locationServiceRunning = false
 
     private val automationEvents = ArrayList<AutomationEventObject>()
 
@@ -194,6 +184,7 @@ class AutomationRuntime @Inject constructor(
      * runtime, and the list it guards is a `val` that is never swapped.
      */
     private val eventsLock = AapsLock()
+
     // AnnotatedString, not HTML in a String: the only entry that carries formatting is built below, and
     // the screen renders this list directly. Nothing here ever leaves the app.
     var executionLog: MutableList<AnnotatedString> = ArrayList()
@@ -313,7 +304,10 @@ class AutomationRuntime @Inject constructor(
 
         // externalScope is injected by tests to drive the debounced persistence deterministically;
         // production passes nothing and gets the long-lived IO scope.
-        val newScope = externalScope ?: CoroutineScope(Dispatchers.IO + SupervisorJob())
+        // Default, not IO: IO does not exist in common code, and the work here does not need it - the
+        // only write is `storeToSP`, a JSON serialize plus a preference put, debounced to 300 ms. The
+        // same shape every other multiplatform plugin uses.
+        val newScope = externalScope ?: CoroutineScope(Dispatchers.Default + SupervisorJob())
         scope = newScope
 
         // Persist on EDITS only (never on a load — that's the whole point of the verbatim model).
@@ -366,11 +360,8 @@ class AutomationRuntime @Inject constructor(
         // Re-create the service when the location provider mode changes — restart through the same
         // deferred/flag-aware path (avoids a background startForegroundService crash on Android 12+).
         preferences.observe(StringKey.AutomationLocation).drop(1).onEach {
-            if (locationServiceRunning) {
-                deferredStart.cancel()
-                locationServiceController.stopService()
-                locationServiceRunning = false
-            }
+            // Force a full stop first, so the service comes back up reading the new provider mode.
+            locationServiceController.setLocationUpdatesEnabled(false)
             updateLocationService()
         }.launchIn(newScope)
 
@@ -381,7 +372,7 @@ class AutomationRuntime @Inject constructor(
         // the subscription mechanism.
         rxBus.toFlow(EventLocationChange::class)
             .collectResilient(newScope, aapsLogger, LTag.AUTOMATION, start = CoroutineStart.UNDISPATCHED) {
-                aapsLogger.debug(LTag.AUTOMATION, "Grabbed location: ${it.location.latitude} ${it.location.longitude} Provider: ${it.location.provider}")
+                aapsLogger.debug(LTag.AUTOMATION, "Grabbed location: ${it.position.latitude} ${it.position.longitude} Provider: ${it.provider}")
                 scope?.launch { processActions() }
             }
         rxBus.toFlow(EventBTChange::class)
@@ -397,27 +388,15 @@ class AutomationRuntime @Inject constructor(
         scope?.cancel()
         scope = null
 
-        deferredStart.cancel()
-        if (locationServiceRunning) {
-            locationServiceController.stopService()
-            locationServiceRunning = false
-        }
+        locationServiceController.setLocationUpdatesEnabled(false)
     }
 
+    // Only states what automation needs. The controller owns whether the platform can honour it
+    // right now - waiting for the process to be in foreground, and retrying after a location
+    // permission grant.
     private fun updateLocationService() {
-        eventsLock.withLock {
-            val need = usesLocationTrigger()
-            if (need && !locationServiceRunning) {
-                // startService() returns false when the location permission isn't granted yet; only
-                // latch the flag once it actually started, so a later permission grant — reconciled on
-                // the next processActions tick — retries instead of leaving the service stuck off.
-                deferredStart.start { if (locationServiceController.startService()) locationServiceRunning = true }
-            } else if (!need && locationServiceRunning) {
-                deferredStart.cancel()
-                locationServiceController.stopService()
-                locationServiceRunning = false
-            }
-        }
+        val need = eventsLock.withLock { usesLocationTrigger() }
+        locationServiceController.setLocationUpdatesEnabled(need)
     }
 
     /**

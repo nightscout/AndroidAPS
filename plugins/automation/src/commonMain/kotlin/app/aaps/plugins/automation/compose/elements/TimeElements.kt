@@ -26,13 +26,17 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import java.util.Calendar
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Instant
 
 /**
  * @see PreviewTime
@@ -97,15 +101,19 @@ fun InputDateTimeEditor(
 ) {
     var showDate by remember { mutableStateOf(false) }
     var showTime by remember { mutableStateOf(false) }
-    val cal = remember(timeMillis) { Calendar.getInstance().apply { timeInMillis = timeMillis } }
+    // Same reading as the Calendar this replaced: the default time zone, so what the user sees is
+    // their own wall clock. Seconds and nanoseconds are carried through every edit, because setting
+    // only the date or only the hour and minute must not quietly zero the rest.
+    val zone = TimeZone.currentSystemDefault()
+    val local = remember(timeMillis) { Instant.fromEpochMilliseconds(timeMillis).toLocalDateTime(zone) }
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        OutlinedButton(onClick = { showDate = true }) { Text(formatDate(cal)) }
+        OutlinedButton(onClick = { showDate = true }) { Text(formatDate(local)) }
         OutlinedButton(onClick = { showTime = true }) {
-            Text(formatHHmm(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE)))
+            Text(formatHHmm(local.hour, local.minute))
         }
     }
     if (showDate) {
@@ -115,11 +123,10 @@ fun InputDateTimeEditor(
             confirmButton = {
                 TextButton(onClick = {
                     dpState.selectedDateMillis?.let { sel ->
-                        val merged = Calendar.getInstance().apply { timeInMillis = sel }
-                        cal.set(Calendar.YEAR, merged.get(Calendar.YEAR))
-                        cal.set(Calendar.MONTH, merged.get(Calendar.MONTH))
-                        cal.set(Calendar.DAY_OF_MONTH, merged.get(Calendar.DAY_OF_MONTH))
-                        onChange(cal.timeInMillis)
+                        // Read back in the same zone the display uses, so the day the user tapped is the
+                        // day that gets stored. Keeps the time of day untouched.
+                        val pickedDate = Instant.fromEpochMilliseconds(sel).toLocalDateTime(zone).date
+                        onChange(LocalDateTime(pickedDate, local.time).toInstant(zone).toEpochMilliseconds())
                     }
                     showDate = false
                 }) { Text(stringResource(CoreUiStrings.ok)) }
@@ -131,17 +138,16 @@ fun InputDateTimeEditor(
     }
     if (showTime) {
         val tpState = rememberTimePickerState(
-            initialHour = cal.get(Calendar.HOUR_OF_DAY),
-            initialMinute = cal.get(Calendar.MINUTE),
+            initialHour = local.hour,
+            initialMinute = local.minute,
             is24Hour = true
         )
         TimePickerModal(
             state = tpState,
             onDismiss = { showTime = false },
             onConfirm = {
-                cal.set(Calendar.HOUR_OF_DAY, tpState.hour)
-                cal.set(Calendar.MINUTE, tpState.minute)
-                onChange(cal.timeInMillis)
+                val pickedTime = LocalTime(tpState.hour, tpState.minute, local.second, local.nanosecond)
+                onChange(LocalDateTime(local.date, pickedTime).toInstant(zone).toEpochMilliseconds())
                 showTime = false
             }
         )
@@ -177,7 +183,11 @@ private fun TimePickerModal(
     }
 }
 
-private fun formatHHmm(hour: Int, minute: Int): String = "%02d:%02d".format(hour, minute)
+private fun formatHHmm(hour: Int, minute: Int): String =
+    "${pad(hour, 2)}:${pad(minute, 2)}"
 
-private fun formatDate(cal: Calendar): String =
-    "%04d-%02d-%02d".format(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH))
+// LocalDate already prints ISO yyyy-MM-dd, which is what the old "%04d-%02d-%02d" built by hand.
+private fun formatDate(dateTime: LocalDateTime): String = dateTime.date.toString()
+
+// String.format is JVM only, so pad by hand. Same output as the "%02d" it replaces.
+private fun pad(value: Int, length: Int): String = value.toString().padStart(length, '0')

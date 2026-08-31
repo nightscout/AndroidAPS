@@ -22,6 +22,7 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.MetroService
+import app.aaps.plugins.automation.GeoPosition
 import app.aaps.plugins.automation.events.EventLocationChange
 import com.google.android.gms.location.LocationServices
 import dev.zacsweers.metro.Inject
@@ -70,7 +71,7 @@ class LocationService : MetroService() {
         override fun onLocationChanged(location: Location) {
             aapsLogger.debug(LTag.LOCATION, "onLocationChanged: $location")
             lastLocationDataContainer.lastLocation = location
-            rxBus.send(EventLocationChange(location))
+            rxBus.send(EventLocationChange(GeoPosition(location.latitude, location.longitude), location.provider))
         }
 
         override fun onProviderDisabled(provider: String) {

@@ -300,6 +300,20 @@ implement it in androidMain, rather than leaving the whole class on Android. `Pa
 serialization and matching logic in shared code, and only the Bluetooth or location call is
 platform-specific. Implement the Android side straight away; other platforms can follow later.
 
+A port must express *intent*, not steps. If the caller is coordinating platform timing on the
+implementation.s behalf, the port is drawn in the wrong place. `LocationServiceController` was
+`startService(): Boolean` / `stopService()`, and `AutomationRuntime` wrapped it in a
+`DeferredForegroundStart` (Android 12 blocks `startForegroundService` from the background) plus its
+own latch to retry after a location permission grant - two Android rules living in the rule engine.
+Collapsing it to one idempotent `setLocationUpdatesEnabled(enabled)`, with the deferral and the latch
+inside the Android implementation, removed the last non-UI blocker from the class. The test for a
+suspicious port: ask whether iOS would need the same dance. If not, it belongs on the other side.
+
+A related tell is an event that carries a platform type it does not need. `EventLocationChange` held
+an `android.location.Location` but only ever fed a debug log - the distance a trigger compares comes
+from `LastKnownLocation.distanceTo`, set separately. Check what a payload actually decides before
+assuming it has to stay.
+
 Two cautions. Keep the platform maths on the platform where an exact result matters -
 `LastKnownLocation.distanceTo` still calls `Location.distanceTo`, so no distance changes. And a port
 whose implementation on some target would be a silent no-op is a safety problem in this app: a rule

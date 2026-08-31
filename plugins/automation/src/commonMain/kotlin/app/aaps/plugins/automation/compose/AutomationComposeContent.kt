@@ -18,6 +18,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -27,7 +30,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -44,7 +46,6 @@ import app.aaps.core.ui.compose.masterEditingEnabled
 import app.aaps.plugins.automation.AutomationEventFactory
 import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.automation.PairedBtDevices
-import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.actions.ActionFactory
 import app.aaps.plugins.automation.compose.actions.ActionOption
 import app.aaps.plugins.automation.compose.actions.ChooseActionSheet
@@ -83,7 +84,10 @@ class AutomationComposeContent(
         }
 
         val route by holder.route.collectAsStateWithLifecycle()
-        val ioScope = rememberCoroutineScope()
+        // rememberCoroutineScope() runs on Main, and processActions() must not block drawing. Default
+        // rather than IO: IO does not exist in common code, and this is the same dispatcher
+        // AutomationRuntime already runs its own processActions() launches on.
+        val runScope = rememberCoroutineScope()
 
         when (route) {
             is AutomationRoute.List -> ListRoute(
@@ -91,7 +95,7 @@ class AutomationComposeContent(
                 setToolbarConfig = setToolbarConfig,
                 onNavigateBack = onNavigateBack,
                 onSettings = onSettings,
-                onRun = { ioScope.launch(Dispatchers.IO) { plugin.processActions() } }
+                onRun = { runScope.launch(Dispatchers.Default) { plugin.processActions() } }
             )
 
             is AutomationRoute.Edit -> EditRoute(
@@ -201,7 +205,11 @@ class AutomationComposeContent(
             if (dirty) showDiscardConfirm = true else holder.closeTriggerEditor()
         }
 
-        androidx.activity.compose.BackHandler { attemptClose() }
+        NavigationBackHandler(
+            state = rememberNavigationEventState(NavigationEventInfo.None),
+            isBackEnabled = true,
+            onBackCompleted = { attemptClose() }
+        )
 
         LaunchedEffect(dirty) {
             setToolbarConfig(
@@ -298,7 +306,11 @@ class AutomationComposeContent(
         val title = stringResource(AutomationStrings.pick_from_map)
         var selected by remember { mutableStateOf<Pair<Double, Double>?>(null) }
 
-        androidx.activity.compose.BackHandler { holder.closeMapPicker() }
+        NavigationBackHandler(
+            state = rememberNavigationEventState(NavigationEventInfo.None),
+            isBackEnabled = true,
+            onBackCompleted = { holder.closeMapPicker() }
+        )
 
         LaunchedEffect(selected) {
             val current = selected
@@ -356,7 +368,11 @@ class AutomationComposeContent(
             }
         }
 
-        androidx.activity.compose.BackHandler { attemptClose() }
+        NavigationBackHandler(
+            state = rememberNavigationEventState(NavigationEventInfo.None),
+            isBackEnabled = true,
+            onBackCompleted = { attemptClose() }
+        )
 
         LaunchedEffect(canSave, editState.readOnly, isNew, dirty) {
             setToolbarConfig(
