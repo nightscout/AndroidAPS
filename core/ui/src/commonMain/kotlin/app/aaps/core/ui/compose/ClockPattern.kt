@@ -1,8 +1,8 @@
 package app.aaps.core.ui.compose
 
 /**
- * Reads the hour field out of a Unicode date format pattern, the kind `NSDateFormatter.dateFormat`
- * returns.
+ * Reads the hour field out of a Unicode date format pattern - the kind `NSDateFormatter.dateFormat`
+ * returns on Apple, and `SimpleDateFormat.toPattern()` on the JVM.
  *
  * Looking for the AM/PM letter instead is the obvious way to do this and it is wrong. Traditional
  * Chinese asks for `Bh:mm`, where `B` is the flexible day period - 上午 and 下午 - so the pattern is a
