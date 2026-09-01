@@ -1,4 +1,4 @@
-package app.aaps.ios.shell.ui
+package app.aaps.appshell.navigation
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -13,37 +13,42 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import app.aaps.appshell.navigation.AppRoute
 import app.aaps.core.ui.compose.AapsSpacing
 
 /**
- * A plain list of the screens iOS can currently open.
+ * A start destination for the shells that have no overview yet.
  *
- * **Scaffolding, and meant to be deleted.** The real home screen is the overview, which is still
- * assembled inline in `ComposeMainActivity` rather than in `appNavGraph`, so there is nothing shared
- * for iOS to show. When the overview moves, this goes and `AppRoute.Main` becomes the start
- * destination.
+ * ## Why it exists
  *
- * It exists because starting the app directly on the settings screen had two costs that were easy to
- * miss:
+ * The iOS and desktop shells both opened straight onto the settings screen, and that broke the back
+ * arrow: settings was the **start** destination, so there was nothing behind it to go back to. It
+ * also left every other screen unreachable, because they are all navigated to from the overview,
+ * which is still assembled inline in `ComposeMainActivity` rather than in [appNavGraph].
  *
- * - **Back did nothing.** Settings was the start destination, so `safePopBackStack` had an empty
- *   stack to pop. The arrow was there and inert, which reads as a broken screen rather than a
- *   missing one.
- * - **Nothing else was reachable.** Every other screen in `appNavGraph` is navigated to from the
- *   overview, so with no overview they could not be opened at all - including on the simulator, where
- *   the point is to find out which ones work.
+ * A start destination that is a plain list fixes both at once: back works everywhere because there
+ * is always something underneath, and each screen can actually be opened and looked at.
  *
- * Only routes that need no arguments are listed. The rest are opened from a screen that has the
- * argument to give - a profile from the profile list, a plugin's preferences from the plugin list -
- * and inventing values here would be testing a screen with data no user would ever hand it.
+ * ## Scaffolding, deliberately
+ *
+ * This is not a home screen anyone should ship. It is here so the shared screens can be exercised on
+ * a platform that has no overview, and it should be **deleted** when the overview moves into
+ * `appNavGraph` - at that point the overview becomes the start destination and back works because
+ * the app has a real root.
+ *
+ * The text is in English and not translated for the same reason. Routing it through the string
+ * resources would make it look like a finished screen.
+ *
+ * It lives in `:appshell` rather than in one shell because both need it, and the list of routes is
+ * exactly the sort of thing that silently stops matching when it is copied.
+ *
+ * @param onOpen navigates to the chosen route
  */
 @Composable
-fun IosHomeScreen(onOpen: (route: String) -> Unit) {
+fun ShellHomeScreen(onOpen: (route: String) -> Unit) {
     Scaffold { padding ->
         Column(modifier = Modifier.fillMaxSize().padding(padding)) {
             Text(
-                text = "AAPS on iOS",
+                text = "AAPS",
                 style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.padding(AapsSpacing.large)
             )
@@ -73,11 +78,20 @@ fun IosHomeScreen(onOpen: (route: String) -> Unit) {
 }
 
 /**
- * Labels are written here rather than resolved from strings, because these are route names for
- * someone testing the port, not user-facing text. The screens themselves carry the real labels.
+ * The route this screen is registered under.
+ *
+ * Not an [AppRoute]: those are the app's own screens, and this is scaffolding that goes away.
  */
+const val SHELL_HOME_ROUTE: String = "shell_home"
+
 private data class Destination(val label: String, val route: String)
 
+/**
+ * Every screen in [appNavGraph] that opens without arguments.
+ *
+ * A screen needing an argument - editing a specific profile, say - is left out rather than opened
+ * with an invented one.
+ */
 private val DESTINATIONS = listOf(
     Destination("Settings", AppRoute.Preferences.route),
     Destination("Configuration", AppRoute.Configuration.route),

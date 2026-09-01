@@ -1167,3 +1167,16 @@ Two things that were not in the import list, the same lesson as before:
 
 Gate: `:plugins:configuration` 32 tests, `:app:assembleFullDebug`, `:ios:shell:compileKotlinIosArm64`,
 desktop shell.
+
+## Heads up: the home screen moved into `:appshell`
+
+`IosHomeScreen` is deleted; `ShellHomeScreen` in `appshell/commonMain/.../navigation/` replaces it and
+`AapsAppHost` now points at it. The route constant moved with it as `SHELL_HOME_ROUTE`. Nothing about
+the behaviour changed, and the reasoning in your KDoc is kept.
+
+Desktop hit the identical problem - settings as the start destination left the back arrow inert - so
+this was about to be a second copy of the same 104 lines and the same list of 22 routes. That list is
+exactly the kind of thing that stops matching once it exists twice: a screen added to `appNavGraph`
+would be reachable on one platform and not the other, and nothing would fail.
+
+Only the title changed, from "AAPS on iOS" to "AAPS", since both shells show it now.

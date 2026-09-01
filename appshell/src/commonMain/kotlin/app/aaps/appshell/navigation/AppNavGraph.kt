@@ -174,7 +174,22 @@ fun NavGraphBuilder.appNavGraph(
     onRequestDirectoryAccess: () -> Unit,
     onRequestPermission: (PermissionGroup) -> Unit,
     findScreenDef: (key: String) -> PreferenceSubScreenDef?,
+    /**
+     * The overview, which is the app home screen.
+     *
+     * A slot rather than another twenty parameters: `OverviewScreen` in `:ui` does the assembly and
+     * needs about thirty things, and threading those through here would take this function past
+     * sixty parameters for one screen. Each platform builds it once and hands it in.
+     *
+     * Null leaves `AppRoute.Main` unregistered, which is what a caller that has no overview to show
+     * should get - an unresolved route rather than a blank screen.
+     */
+    overview: (@Composable () -> Unit)? = null,
 ) {
+    overview?.let { content ->
+        composable(AppRoute.Main.route) { content() }
+    }
+
     composable(
         AppRoute.InsulinManagement.route,
         arguments = listOf(navArgument("mode") { type = NavType.StringType; defaultValue = "EDIT" })
