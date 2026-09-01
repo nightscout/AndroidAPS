@@ -85,6 +85,29 @@ fun allCommitted(): Boolean {
     }
 }
 
+
+/**
+ * Which module owns which string names, generated rather than hand written.
+ *
+ * Android resolves through AAPT, so this registers the `R.string` id maps and every translation
+ * keeps working. The list is `StringOwnerModules.ALL`, shared with the desktop and iOS shells, so a
+ * module cannot be registered on one platform and forgotten on another.
+ */
+val generateAppStringOwners = tasks.register<GenerateStringOwnerRegistryTask>("generateAppStringOwners") {
+    owners.set(StringOwnerModules.ALL)
+    packageName.set("app.aaps.di")
+    objectName.set("GeneratedStringOwners")
+    useResourceIds.set(true)
+    outputDir.set(layout.buildDirectory.dir("generated/stringOwners"))
+}
+
+// AGP will not take a Provider through the SourceSet API, so the directory is attached per variant.
+// addGeneratedSourceDirectory also wires the task dependency, which a bare srcDir would not.
+androidComponents {
+    onVariants { variant ->
+        variant.sources.kotlin?.addGeneratedSourceDirectory(generateAppStringOwners, GenerateStringOwnerRegistryTask::outputDir)
+    }
+}
 android {
 
     namespace = "app.aaps"

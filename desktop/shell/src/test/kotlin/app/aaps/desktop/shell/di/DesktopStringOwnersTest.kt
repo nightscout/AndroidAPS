@@ -22,7 +22,7 @@ import kotlin.test.assertNotEquals
  *
  * This is the one part of the string wiring a compiler cannot check. The owner is a plain String on
  * both sides - `owner.set("coreUi")` in the module's build file, `register("coreUi")` in
- * [DesktopStringOwners] - so a typo compiles, and the only symptom is a screen showing string
+ * `GeneratedStringOwners` - so a typo compiles, and the only symptom is a screen showing string
  * **names** instead of words. That reads like unfinished UI rather than like a bug, which is how it
  * would survive review.
  *
@@ -35,7 +35,7 @@ class DesktopStringOwnersTest {
 
     @BeforeTest fun register() {
         TextRefValueRegistry.clear()
-        DesktopStringOwners.registerAll()
+        GeneratedStringOwners.registerAll()
     }
 
     @AfterTest fun cleanUp() {

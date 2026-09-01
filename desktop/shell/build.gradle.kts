@@ -16,8 +16,25 @@ plugins {
  * A plain `kotlin("jvm")` module rather than a multiplatform one: it has exactly one target, and
  * Gradle resolves the `jvm` variant of every multiplatform module it depends on.
  */
+/**
+ * Which module owns which strings, generated rather than hand written.
+ *
+ * The list is `StringOwnerModules.ALL`, shared with `:app` and `:ios:shell`, so a module added to
+ * the build cannot be missing from one platform and present on another. That is not theoretical:
+ * this shell had five of sixteen and rendered plugin names as string names until it was run.
+ */
+val generateStringOwners = tasks.register<GenerateStringOwnerRegistryTask>("generateDesktopStringOwners") {
+    owners.set(StringOwnerModules.ALL)
+    packageName.set("app.aaps.desktop.shell.di")
+    objectName.set("GeneratedStringOwners")
+    // Text, not resource ids: a desktop JVM has no AAPT table to resolve an id against.
+    useResourceIds.set(false)
+    outputDir.set(layout.buildDirectory.dir("generated/stringOwners"))
+}
+
 kotlin {
     compilerOptions { jvmTarget.set(Versions.jvmTarget) }
+    sourceSets.main { kotlin.srcDir(generateStringOwners) }
 }
 
 java {

@@ -27,7 +27,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.core.ui.compose.icons.IcAaps
 import app.aaps.desktop.shell.di.DesktopAppGraph
-import app.aaps.desktop.shell.di.DesktopStringOwners
+import app.aaps.desktop.shell.di.GeneratedStringOwners
 import app.aaps.desktop.shell.di.DesktopViewModelFactory
 import app.aaps.ui.compose.insulinManagement.InsulinManagementViewModel
 import app.aaps.ui.compose.loopSheet.LoopActionViewModel
@@ -98,7 +98,7 @@ fun main() {
  * and the plugin descriptions built below carry names.
  */
 private fun startPlugins(graph: DesktopAppGraph) {
-    DesktopStringOwners.registerAll()
+    GeneratedStringOwners.registerAll()
     // Sorted by the key each plugin registers itself with, which is the order the plugin list is
     // shown in and the order category defaults are picked in.
     val plugins = graph.contributedPlugins.entries.sortedBy { it.key }.map { it.value }

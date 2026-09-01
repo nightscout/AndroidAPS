@@ -1,5 +1,6 @@
 package app.aaps
 
+import app.aaps.di.GeneratedStringOwners
 import android.app.Application
 import android.bluetooth.BluetoothDevice
 import android.content.Intent
@@ -48,7 +49,6 @@ import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.resources.TextRefIdRegistry
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppInitialized
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
@@ -221,7 +221,7 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
     override fun onCreate() {
         super.onCreate()
 
-        registerStringOwners()
+        GeneratedStringOwners.registerAll()
         resourceHelperImpl.start()
         // Applies the analytics opt-out. Must come before configureLeakCanary below, which reports
         // through fabricPrivacy.
@@ -1041,18 +1041,4 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
      * Without this the lookup answers null and the raw name is drawn: `virtual_pump_shortname`
      * instead of "Virtual Pump".
      */
-    private fun registerStringOwners() {
-        TextRefIdRegistry.register("virtual") { name -> VirtualStringIds.idOf(name) }
-        TextRefIdRegistry.register("smoothing") { name -> SmoothingStringIds.idOf(name) }
-        TextRefIdRegistry.register("source") { name -> SourceStringIds.idOf(name) }
-        TextRefIdRegistry.register("calibration") { name -> CalibrationStringIds.idOf(name) }
-        TextRefIdRegistry.register("sensitivity") { name -> SensitivityStringIds.idOf(name) }
-        TextRefIdRegistry.register("main") { name -> MainStringIds.idOf(name) }
-        TextRefIdRegistry.register("ui") { name -> UiStringIds.idOf(name) }
-        TextRefIdRegistry.register("automation") { name -> AutomationStringIds.idOf(name) }
-        TextRefIdRegistry.register("configuration") { name -> ConfigurationStringIds.idOf(name) }
-        TextRefIdRegistry.register("constraints") { name -> ConstraintsStringIds.idOf(name) }
-        TextRefIdRegistry.register("sync") { name -> SyncStringIds.idOf(name) }
-        TextRefIdRegistry.register("aps") { name -> ApsStringIds.idOf(name) }
-    }
 }

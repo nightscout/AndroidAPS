@@ -1237,3 +1237,24 @@ closing the app are passed in.
 worked because `SystemClock.elapsedRealtime()` starts near zero in a unit test. `System.nanoTime()`
 has an arbitrary origin, so the reference has to be read from the same clock. The production code was
 right; the fake was leaning on the old clock's origin.
+
+## Heads up: string owner registration is generated now
+
+`IosStringOwners` is deleted. `GeneratedStringOwners` replaces it, emitted into `iosMain` by a new
+`GenerateStringOwnerRegistryTask` from `StringOwnerModules.ALL` in buildSrc. `IosAppStartup` and
+`IosPlatformBindings` call it exactly as before; `IosStringOwnersTest` still guards it and still
+passes.
+
+There were **four** hand written copies of the same list - `MainApp.registerStringOwners`, its copy in
+`BaseTestApp`, yours, and the desktop one - and nothing compared them with each other or with the
+build. They had drifted: the desktop copy carried five of sixteen modules, so the plugin list rendered
+`objectives_shortname` instead of plugin names. Android's was split across two files as well, because
+`ResourceHelperImpl` registers `coreUi` and `implementation` from its own start.
+
+One list now, one task, three consumers. Android generates the `R.string` id variant so AAPT and every
+translation keep working; iOS and desktop generate the English text variant. Adding a module with
+strings is one line in `StringOwnerModules.ALL`.
+
+A module listed there but not generating strings fails the build; a module generating strings but
+missing from the list shows its names on screen. The first is the better direction, which is why the
+list is the source of truth rather than a lookup.
