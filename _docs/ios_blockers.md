@@ -784,6 +784,47 @@ Both cost a false alarm today, so they are worth writing down even though neithe
 Both are timing-sensitive tests in pump drivers. The cost is not the runs themselves - it is that a
 red gate stops meaning "you broke something", and the next real failure gets waved through.
 
+
+## Request: `ProtectionCheckImpl` can move too - but not on its own
+
+`PasswordCheckImpl` moving to commonMain unblocked the class above it, and the same reading applies:
+`ProtectionCheckImpl` (`implementation/src/androidMain/.../protection/`, 317 lines) has **no Android
+imports at all**. Its dependencies are `Preferences`, `PasswordCheck` and `DateUtil`, all three of
+which now resolve on iOS.
+
+Biometrics does not block it. The class never prompts - `ProtectionType.BIOMETRIC` is only an enum
+value it counts, and it publishes a `HierarchicalProtectionRequest` carrying `hasBiometric` for the
+UI to act on. The prompting lives in `ProtectionHost`, which is a different question (below).
+
+**The trap: moving the impl alone would make iOS worse, not better.** `IosProtectionCheck` currently
+grants everything, which is wrong but at least passable while iOS reaches no pump. The real impl
+publishes to `pendingRequest` / `pendingAuthRequest` and waits for a host to call back. `AapsAppRoot`
+places `PasswordCheckHost` but **not** `ProtectionHost` - only `ComposeMainActivity` does. So on iOS
+the request would be published, nothing would render it, and the callback would never fire: every
+protected action would hang rather than be granted or refused. That is worse than either.
+
+So the two halves have to land together:
+
+1. **Yours:** move `ProtectionCheckImpl` to commonMain. It needs nothing else.
+2. **Ours:** a protection host for iOS.
+
+### And `ProtectionHost` is closer to portable than it looks
+
+It takes the biometric prompt as a lambda already -
+`showBiometric: (FragmentActivity, String, () -> Unit, () -> Unit, () -> Unit) -> Unit` - so the
+Android-only part is almost entirely in that one parameter's type. If `FragmentActivity` came out of
+the signature, the host would be ordinary Compose and could sit in commonMain beside
+`PasswordCheckHost`, with each platform passing its own prompt: `androidx.biometric` on Android,
+`LAContext` on iOS, and a lambda that reports "no biometrics" on desktop.
+
+That would be the fourth port of the same shape as `UrlOpener` and `PasswordHasher`, and it would put
+real protection on both new platforms instead of one. Worth checking whether the `FragmentActivity`
+is used for anything the caller could supply instead - if it is only there to root the prompt, the
+platform lambda can capture it.
+
+Until both halves exist, `IosProtectionCheck` stays as it is and stays documented as unsafe once iOS
+can reach a pump.
+
 ## Done
 
 - **`UrlOpener` and `PrefsFileInfo` - iOS side done.** Both ports landed from `kmp` and both have an
