@@ -22,11 +22,11 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringPreferenceKey
-import app.aaps.core.objects.crypto.CryptoUtil
+import app.aaps.core.interfaces.protection.PasswordHasher
 import app.aaps.core.ui.compose.AapsSpacing
 import dev.zacsweers.metro.Inject
 
-class SWEditEncryptedPassword @Inject constructor(aapsLogger: AAPSLogger, rh: TextResolver, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck, private val cryptoUtil: CryptoUtil) :
+class SWEditEncryptedPassword @Inject constructor(aapsLogger: AAPSLogger, rh: TextResolver, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck, private val cryptoUtil: PasswordHasher) :
     SWItem(aapsLogger, rh, rxBus, preferences, passwordCheck) {
 
     private var onSetPassword: (() -> Unit)? = null

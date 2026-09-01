@@ -3,7 +3,9 @@ package app.aaps.plugins.configuration.setupwizard
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.configuration.ConfigurationStrings
-import androidx.activity.compose.BackHandler
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -128,7 +130,9 @@ fun SetupWizardScreen(
     // otherwise stall composition and trigger an ANR. Until the first async pass completes, all
     // screens are treated as visible; the previous result is retained across recomputations.
     val visibleScreens by produceState(initialValue = screens, screens, updateTick) {
-        value = withContext(Dispatchers.IO) {
+        // Default, not IO: IO does not exist in common code, and this is a filter over a list, not
+        // blocking work. Same choice as AutomationRuntime and the automation screen.
+        value = withContext(Dispatchers.Default) {
             screens.filter { it.visibility == null || it.visibility?.invoke() == true }
         }
     }
@@ -165,14 +169,17 @@ fun SetupWizardScreen(
         screen.validator == null || screen.validator?.invoke() == true || screen.skippable
     } ?: false
 
-    // Back handler
-    BackHandler {
-        if (isFirstPage) {
-            showExitDialog = true
-        } else {
-            currentPage = previousPage()
+    NavigationBackHandler(
+        state = rememberNavigationEventState(NavigationEventInfo.None),
+        isBackEnabled = true,
+        onBackCompleted = {
+            if (isFirstPage) {
+                showExitDialog = true
+            } else {
+                currentPage = previousPage()
+            }
         }
-    }
+    )
 
     if (showExitDialog) {
         OkCancelDialog(
