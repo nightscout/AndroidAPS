@@ -240,6 +240,25 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Run unit tests
+        run: |
+              ./gradlew :plugins:constraints:testFullDebugUnitTest \
+              -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m" \
+              -Dkotlin.daemon.jvm.options="-Xmx2g" \
+              -Dkotlin.compiler.execution.strategy="in-process" \
+              -Dorg.gradle.daemon=true \
+              -Dorg.gradle.workers.max=8 \
+              -Dorg.gradle.caching=true
+
+      - name: Upload unit test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-report
+          path: plugins/constraints/build/reports/tests/
+          if-no-files-found: ignore
+          retention-days: 7
+
       - name: Build APKs
         run: |
               ./gradlew :app:assemble${{ env.BUILD_VARIANT }} :wear:assemble${{ env.BUILD_VARIANT }} \
