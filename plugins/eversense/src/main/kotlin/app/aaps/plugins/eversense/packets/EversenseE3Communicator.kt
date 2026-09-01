@@ -76,9 +76,9 @@ class EversenseE3Communicator {
         fun readGlucose(gatt: EversenseGattCallback, preferences: SharedPreferences, watchers: List<EversenseWatcher>) {
             val stateJson = preferences.getString(StorageKeys.STATE, null) ?: "{}"
             val state = JSON.decodeFromString<EversenseState>(stateJson)
-            val fourHalfMinAgo = System.currentTimeMillis() - TimeUnit.SECONDS.toMillis(270)
+            val recentCutoffTime = System.currentTimeMillis() - TimeUnit.SECONDS.toMillis(60)
 
-            if (fourHalfMinAgo < state.recentGlucoseDatetime) {
+            if (recentCutoffTime < state.recentGlucoseDatetime) {
                 EversenseLogger.warning(TAG, "Glucose data is still recent - lastReading: ${state.recentGlucoseDatetime}")
                 return
             }
@@ -140,7 +140,7 @@ class EversenseE3Communicator {
                 val prevLastCalibrationDate = state.lastCalibrationDate
 
                 val freshnessThreshold = if (state.calibrationReadiness == CalibrationReadiness.WAITING_POST_CALIBRATION)
-                    TimeUnit.SECONDS.toMillis(60) else TimeUnit.SECONDS.toMillis(270)
+                    TimeUnit.SECONDS.toMillis(60) else TimeUnit.SECONDS.toMillis(180)
                 val freshnessCutoff = System.currentTimeMillis() - freshnessThreshold
 
                 if (!force && freshnessCutoff < state.lastSync) {
@@ -310,8 +310,8 @@ class EversenseE3Communicator {
                 // Set app version ΓÇö iOS sends 8.0.4 in every fullSync
                 try { gatt.writePacket<SetAppVersionE3Packet.Response>(SetAppVersionE3Packet()) } catch (e: Exception) { EversenseLogger.warning(TAG, "SetAppVersionE3 failed: $e") }
 
-                // Set BLE disconnect timeout ΓÇö 300s matching iOS default
-                try { gatt.writePacket<SetBleDisconnectPacket.Response>(SetBleDisconnectPacket(300)) } catch (e: Exception) { EversenseLogger.warning(TAG, "SetBleDisconnect E3 failed: $e") }
+                // Set BLE disconnect timeout ΓÇö 10s
+                try { gatt.writePacket<SetBleDisconnectPacket.Response>(SetBleDisconnectPacket(10)) } catch (e: Exception) { EversenseLogger.warning(TAG, "SetBleDisconnect E3 failed: $e") }
 
                 state.lastSync = System.currentTimeMillis()
                 EversenseLogger.info(TAG, "Completed full sync - datetime: ${state.lastSync}")

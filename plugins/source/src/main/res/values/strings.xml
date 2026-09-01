@@ -70,6 +70,7 @@
     <string name="eversense_status_title">Eversense Status &amp; Connection</string>
     <string name="eversense_cloud_upload_enabled">Enable Eversense cloud upload</string>
     <string name="eversense_cloud_upload_toast">Show cloud upload result</string>
+    <string name="eversense_cloud_upload_failed">Eversense cloud upload failed — check credentials and internet</string>
     <!-- Credentials section for Eversense 365 DMS login -->
     <string name="eversense_not_connected">Not connected</string>
     <string name="eversense_credentials_title">Eversense 365 credentials</string>
@@ -81,6 +82,7 @@
     <string name="eversense_scan_title">Select Eversense transmitter</string>
     <string name="eversense_scan_cancel">Cancel</string>
     <string name="eversense_scan_unknown_device">Unknown device</string>
+    <string name="eversense_scan_in_progress">Scanning for Eversense devices (10 seconds)…</string>
     <!-- Calibration activity -->
     <string name="eversense_calibration_ready">Ready to calibrate</string>
     <string name="eversense_calibration_status">Calibration status</string>

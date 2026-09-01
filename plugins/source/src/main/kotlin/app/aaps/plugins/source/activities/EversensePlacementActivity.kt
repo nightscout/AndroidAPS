@@ -14,13 +14,24 @@ import app.aaps.plugins.eversense.callbacks.EversenseWatcher
 import app.aaps.plugins.eversense.enums.EversenseType
 import app.aaps.plugins.eversense.models.EversenseCGMResult
 import app.aaps.plugins.eversense.models.EversenseState
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.util.Date
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class EversensePlacementActivity : AppCompatActivity(), EversenseWatcher {
 
+    @Inject lateinit var eversense: EversenseCGMPlugin
+
     private val mainHandler = Handler(Looper.getMainLooper())
-    private val eversense get() = EversenseCGMPlugin.instance
+    private val ioScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     private lateinit var bar1: ImageView
     private lateinit var bar2: ImageView
@@ -42,14 +53,14 @@ class EversensePlacementActivity : AppCompatActivity(), EversenseWatcher {
     private fun startPolling() {
         if (polling) return
         polling = true
-        Thread {
+        ioScope.launch {
             while (polling) {
                 if (eversense.isConnected()) {
                     eversense.readSignalStrength()
                 }
-                Thread.sleep(500)
+                delay(500)
             }
-        }.start()
+        }
     }
 
     private fun stopPolling() {
@@ -85,22 +96,31 @@ class EversensePlacementActivity : AppCompatActivity(), EversenseWatcher {
         } else {
             showWaiting()
         }
+    }
 
+    override fun onResume() {
+        super.onResume()
         // Mirrors iOS PlacementGuideViewModel.init: enable diagnostic mode on open
         // so the transmitter increases its signal-strength broadcast frequency.
-        Thread {
-            Thread.sleep(500)
-            eversense.setDiagnosticMode(true)
+        ioScope.launch {
+            delay(500)
+            eversense.enterPositioningMode()
             startPolling()
-        }.start()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        stopPolling()
+        // Mirrors iOS PlacementGuideViewModel.stop(): disable diagnostic mode on close
+        // so the transmitter returns to standard power-saving broadcast frequency.
+        CoroutineScope(Dispatchers.IO).launch { eversense.exitPositioningMode() }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        stopPolling()
+        ioScope.cancel()
         eversense.removeWatcher(this)
-        // Mirrors iOS PlacementGuideViewModel.stop(): disable diagnostic mode on close
-        Thread { eversense.setDiagnosticMode(false) }.start()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -176,8 +196,3 @@ class EversensePlacementActivity : AppCompatActivity(), EversenseWatcher {
         else           -> 0
     }
 }
-
-
-
-
-

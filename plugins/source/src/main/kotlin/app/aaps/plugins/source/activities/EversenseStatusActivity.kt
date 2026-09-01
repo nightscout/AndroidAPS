@@ -22,18 +22,21 @@ import app.aaps.plugins.eversense.models.EversenseScanResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class EversenseStatusActivity : AppCompatActivity(), EversenseWatcher {
 
+    @Inject lateinit var eversense: EversenseCGMPlugin
+
     private val mainHandler = Handler(Looper.getMainLooper())
     private val ioScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
-    private val eversense get() = EversenseCGMPlugin.instance
 
     override fun onResume() {
         super.onResume()
@@ -61,7 +64,7 @@ class EversenseStatusActivity : AppCompatActivity(), EversenseWatcher {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Eversense Status"
+        supportActionBar?.title = getString(R.string.eversense_status_title)
 
         updateStatus()
 
@@ -132,9 +135,11 @@ class EversenseStatusActivity : AppCompatActivity(), EversenseWatcher {
         var isCancelled = false
         var dialog: AlertDialog? = null
 
-        val scanCallback = EversenseScanCallback { item ->
-            if (!isCancelled && item.name.matches(Regex("T\\d+.*")) && foundDevices.none { it.name == item.name })
-                foundDevices.add(item)
+        val scanCallback = object : EversenseScanCallback {
+            override fun onResult(item: EversenseScanResult) {
+                if (!isCancelled && item.name.matches(Regex("T\\d+.*")) && foundDevices.none { it.name == item.name })
+                    foundDevices.add(item)
+            }
         }
 
         eversense.startScan(scanCallback)
@@ -146,8 +151,8 @@ class EversenseStatusActivity : AppCompatActivity(), EversenseWatcher {
             if (foundDevices.isEmpty()) {
                 AlertDialog.Builder(this)
                     .setTitle(getString(R.string.eversense_scan_title))
-                    .setMessage("No Eversense transmitters found. Make sure the transmitter is nearby and try again.")
-                    .setPositiveButton("OK", null)
+                    .setMessage(getString(R.string.eversense_no_transmitters_found))
+                    .setPositiveButton(android.R.string.ok, null)
                     .show()
             } else {
                 AlertDialog.Builder(this)
@@ -163,7 +168,7 @@ class EversenseStatusActivity : AppCompatActivity(), EversenseWatcher {
 
         dialog = AlertDialog.Builder(this)
             .setTitle(getString(R.string.eversense_scan_title))
-            .setMessage("Scanning for Eversense devices (10 seconds)...")
+            .setMessage(getString(R.string.eversense_scan_in_progress))
             .setNegativeButton(getString(R.string.eversense_scan_cancel)) { _, _ ->
                 isCancelled = true
                 eversense.stopScan()
@@ -173,12 +178,18 @@ class EversenseStatusActivity : AppCompatActivity(), EversenseWatcher {
     }
 
     private fun signalToLabel(strength: Int): String = when {
-        strength >= 75 -> "Excellent"
-        strength >= 48 -> "Good"
-        strength >= 30 -> "Low"
-        strength >= 25 -> "Poor"
-        strength > 0   -> "Very Poor"
+        strength >= 75 -> getString(R.string.eversense_signal_excellent)
+        strength >= 48 -> getString(R.string.eversense_signal_good)
+        strength >= 30 -> getString(R.string.eversense_signal_fair)
+        strength >= 25 -> getString(R.string.eversense_signal_weak)
+        strength > 0   -> getString(R.string.eversense_signal_poor)
         else           -> getString(R.string.eversense_not_connected)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        ioScope.cancel()
+        eversense.removeWatcher(this)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
