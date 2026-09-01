@@ -5,6 +5,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
+import java.awt.Image
 import java.awt.SystemTray
 import java.awt.Toolkit
 import java.awt.TrayIcon
@@ -33,15 +34,18 @@ import java.awt.image.BufferedImage
  * back to the log rather than throwing, because a missing tray must not take down the caller.
  */
 class DesktopSystemNotificationPlatform(
-    private val aapsLogger: AAPSLogger
+    private val aapsLogger: AAPSLogger,
+    private val appName: String,
+    private val appIcon: Image?
 ) : SystemNotificationPlatform {
 
     private val trayIcon: TrayIcon? by lazy {
         runCatching {
             if (!SystemTray.isSupported()) return@runCatching null
-            // A 16x16 transparent image: AWT insists on one, and the app has no desktop icon yet.
-            val image = BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB)
-            TrayIcon(image, "AAPS").apply { isImageAutoSize = true }
+            // The launcher icon, so a toast is recognisably from AAPS. A transparent placeholder
+            // used to sit here, which left the tray entry invisible and the toast blank.
+            val image = appIcon ?: BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB)
+            TrayIcon(image, appName).apply { isImageAutoSize = true }
                 .also { SystemTray.getSystemTray().add(it) }
         }.onFailure { aapsLogger.debug(LTag.CORE, "No system tray available: ${it.message}") }
             .getOrNull()

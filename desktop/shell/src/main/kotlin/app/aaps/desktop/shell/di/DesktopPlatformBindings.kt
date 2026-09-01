@@ -6,6 +6,8 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
+import app.aaps.desktop.shell.appIconResource
+import app.aaps.desktop.shell.loadAwtAppIcon
 import app.aaps.desktop.shell.platform.DesktopSystemNotificationPlatform
 import app.aaps.implementation.notifications.CommonNotificationManager
 import app.aaps.implementation.resources.GeneratedTextResolver
@@ -66,7 +68,7 @@ object DesktopPlatformBindings {
 
     @Provides
     @SingleIn(AppScope::class)
-    fun systemNotificationPlatform(logger: AAPSLogger): SystemNotificationPlatform =
-        DesktopSystemNotificationPlatform(logger)
+    fun systemNotificationPlatform(logger: AAPSLogger, config: Config, rh: TextResolver): SystemNotificationPlatform =
+        DesktopSystemNotificationPlatform(logger, rh.gs(config.appName), loadAwtAppIcon(appIconResource(config)))
 
 }

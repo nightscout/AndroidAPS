@@ -1,5 +1,6 @@
 package app.aaps.ios.shell.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -9,6 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.window.ComposeUIViewController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
@@ -109,6 +111,11 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
     // Same placement and the same reason: this touches UIKit, so it cannot live in the graph or in
     // `IosAppStartup`. Until this ran, Nightscout sync was blocked forever - see `startBatteryWatch`.
     graph.receiverStatusStore.startBatteryWatch()
+
+    // Read once, outside the composition, for the same reason as the graph: decoding the icon on
+    // every recomposition would be work for nothing.
+    val appIcon = loadAppIcon()
+    if (appIcon == null) logger.error(LTag.CORE, "The app bundle gave no icon; showing the plain AAPS mark")
     logger.debug(LTag.CORE, "Starting the AAPS Compose root on iOS")
 
     return ComposeUIViewController {
@@ -128,8 +135,10 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
                 nsClient = graph.nsClient,
                 rxBus = graph.rxBus,
                 clientControlActionDispatcher = graph.clientControlActionDispatcher,
-                appIcon = { modifier -> Icon(imageVector = IcAaps, contentDescription = null, modifier = modifier) },
-                splashLogo = { modifier -> Icon(imageVector = IcAaps, contentDescription = null, modifier = modifier) },
+                // The real app icon, so the About dialog and the drawer show what the home screen
+                // shows. Icon() would tint a logo to one flat colour, so Image() draws it.
+                appIcon = { modifier -> AppIconImage(appIcon, modifier) },
+                splashLogo = { modifier -> AppIconImage(appIcon, modifier) },
                 onNavControllerReady = {},
                 onClose = { logger.error(LTag.CORE, "Initialization failed and iOS cannot close an app") }
             ) { navController ->
@@ -334,3 +343,14 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
 /** One line, one shape, so a run makes it obvious which platform callbacks are still placeholders. */
 private fun AAPSLogger.notWiredYet(what: String) = error(LTag.CORE, "Not wired up on iOS yet: $what")
 
+/**
+ * The app icon, or the plain AAPS mark when the bundle would not give one up.
+ *
+ * A fallback rather than nothing on screen: the About dialog and the drawer both have a place for
+ * it, and an empty space there reads as a broken screen.
+ */
+@Composable
+private fun AppIconImage(icon: ImageBitmap?, modifier: Modifier) {
+    if (icon != null) Image(bitmap = icon, contentDescription = null, modifier = modifier)
+    else Icon(imageVector = IcAaps, contentDescription = null, modifier = modifier)
+}

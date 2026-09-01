@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import platform.Foundation.NSBundle
 import platform.UIKit.UIDevice
 
 /**
@@ -60,8 +61,25 @@ class IosClientConfig(
     // Apple is the only maker of iOS devices, so there is nothing to look up.
     override val deviceManufacturer: String = "Apple"
 
-    /** Android returns a string resource id here. iOS has no resource table, so nothing to name. */
-    override val appName: TextRef = TextRef.Literal("AAPS")
+    /**
+     * What the app calls itself, taken from the bundle it was built into.
+     *
+     * Android sets `app_name` per flavour, and this build is a client, so the name is "AAPSClient" -
+     * not "AAPS", which is the name of the master. A follower claiming to be the master is exactly
+     * the confusion the flavour names exist to prevent.
+     *
+     * Read rather than written down, for the same reason as the app icon: one Kotlin framework is
+     * linked into both AAPSClient and AAPSClient2, and each target already sets its own
+     * `CFBundleDisplayName`. Asking the bundle therefore names the app that is really running, and
+     * cannot disagree with the name under its icon on the home screen.
+     *
+     * The fallback matters only in a test binary, which has no app bundle to ask.
+     */
+    override val appName: TextRef = TextRef.Literal(
+        NSBundle.mainBundle.objectForInfoDictionaryKey("CFBundleDisplayName") as? String
+            ?: NSBundle.mainBundle.objectForInfoDictionaryKey("CFBundleName") as? String
+            ?: "AAPSClient"
+    )
 
     private val _initProgressFlow = MutableStateFlow(InitProgress(done = true))
     override val initProgressFlow: StateFlow<InitProgress> = _initProgressFlow.asStateFlow()
