@@ -28,14 +28,16 @@ actual fun isLandscape(): Boolean =
     LocalWindowInfo.current.containerSize.let { it.width > it.height }
 
 /**
- * Read from the JVM's short time format for the default locale: a pattern containing `H` is the 24
- * hour clock, `h` the 12 hour one. That follows the user's regional settings, which is the closest
- * desktop has to Android's separate 24-hour switch.
+ * Read from the JVM's short time format for the default locale, which follows the machine's regional
+ * settings - the closest desktop has to Android's separate 24-hour switch.
+ *
+ * The pattern is read with the shared [usesTwelveHourClock], so desktop cannot repeat the AM/PM
+ * mistake that helper documents.
  */
 @Composable
 actual fun is24HourClock(): Boolean {
     val pattern = (DateFormat.getTimeInstance(DateFormat.SHORT) as? SimpleDateFormat)?.toPattern()
-    return pattern?.contains('H') == true
+    return usesTwelveHourClock(pattern.orEmpty()) != true
 }
 
 /**
