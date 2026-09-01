@@ -424,7 +424,7 @@ Not blockers, and not for the Windows session to fix. Listed so nobody is surpri
   `IosLocationServiceController`.
 
 
-## Request: `ExportPasswordDataStore` needs the same treatment the other big ones got
+## DONE: `ExportPasswordDataStore` needs the same treatment the other big ones got
 
 `ExportPasswordDataStoreImpl` (`implementation/src/androidMain/.../protection/`) is the last small
 looking blocker that is not small. The interface is four methods, but the implementation is ~300
@@ -450,6 +450,36 @@ behind it, written for `IosSecureEncrypt` and directly reusable here.
 
 `ImportExportPrefs` is a separate matter - 37 methods, document picker work on both sides - and is
 not being asked for here.
+
+### Done, with one thing you did not have visibility of
+
+The port is `ExportPasswordPlatform` (`:core:interfaces` commonMain): `read()`, `write(secret,
+timestamp)`, `clear()`. `ExportPasswordDataStoreImpl` moved to `:implementation` commonMain with
+every rule intact - the validity window, the grace period, the master password cross check, and the
+legacy alias handling that also deletes the old key. `CryptoUtil` became `PasswordHasher` there too,
+the same swap as `PasswordCheckImpl`.
+
+**The thing that was not in your analysis:** the class also injects `FileListProvider`, which is
+`DocumentFile` and `java.io.File` throughout and cannot move. It is used by a dev-only block that
+shortens the validity window to minutes so the expiry can be tested without waiting five weeks. I did
+not want to delete a testing tool that is not mine, so the port carries a fourth method,
+`shortenedValidity()`, returning null on every platform but Android. It is documented as going away
+with the debug mode it serves. If you would rather it were a separate interface, say so - it was a
+close call.
+
+The iOS side is one class over `AppleKeychain`, as you expected. Desktop's is a properties file next
+to the database holding the same encrypted envelope; that also let the
+`DesktopExportPasswordDataStore` placeholder be deleted, so the remember-password feature is
+genuinely available there now instead of reporting itself off.
+
+**The old test only ever reached the disabled path** - it had two commented out cases admitting
+`SecureEncrypt` could not be instantiated. With a fake platform there are now 10 tests covering the
+window, the grace period, both master-password failure modes and the legacy alias. They sit in
+`androidHostTest` rather than `commonTest` only because `Preferences` has seventy methods and Mockito
+is not available in common code; the class itself is pure Kotlin.
+
+Verified: `:implementation:compileKotlinIosArm64`, `:app:assembleFullDebug`, and 93 app tests plus
+the 10 above, all green.
 
 
 ## DONE: `PasswordCheckImpl` moved to commonMain by swapping one dependency
