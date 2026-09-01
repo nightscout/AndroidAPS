@@ -113,6 +113,14 @@ tasks.matching { it.name.startsWith("linkDebugFramework") }.configureEach { depe
  * The list is `StringOwnerModules.ALL`, shared with `:app` and the desktop shell, so the three
  * platforms cannot drift - which they had: the desktop copy carried five of sixteen modules.
  */
+/** The version this build reports, from the same constant the Android app uses. */
+val generateIosBuildInfo = tasks.register<GenerateBuildInfoTask>("generateIosBuildInfo") {
+    version.set(Versions.appVersion)
+    platform.set("iOS")
+    packageName.set("app.aaps.ios.shell.config")
+    outputDir.set(layout.buildDirectory.dir("generated/buildInfo"))
+}
+
 val generateIosStringOwners = tasks.register<GenerateStringOwnerRegistryTask>("generateIosStringOwners") {
     owners.set(StringOwnerModules.ALL)
     packageName.set("app.aaps.ios.shell.di")
@@ -140,7 +148,7 @@ kotlin {
     }
 
     sourceSets {
-        iosMain { kotlin.srcDir(generateIosStringOwners) }
+        iosMain { kotlin.srcDir(generateIosStringOwners); kotlin.srcDir(generateIosBuildInfo) }
 
         commonMain {
             dependencies {

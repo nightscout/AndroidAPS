@@ -23,7 +23,7 @@ import platform.UIKit.UIDevice
  * make shared code offer features the app cannot perform.
  */
 class IosClientConfig(
-    override val VERSION_NAME: String = "0.0-ios",
+    override val VERSION_NAME: String = GeneratedBuildInfo.VERSION,
     override val APPLICATION_ID: String = "info.nightscout.aapsclient"
 ) : Config {
 
@@ -41,6 +41,7 @@ class IosClientConfig(
 
     override val FLAVOR: String = "aapsclient"
     override val BUILD_TYPE: String = "debug"
+    override val PLATFORM: String = GeneratedBuildInfo.PLATFORM
     override val VERSION: String = VERSION_NAME
     override val BUILD_VERSION: String = VERSION_NAME
     override val DEBUG: Boolean = true
