@@ -3,7 +3,7 @@ package app.aaps.ios.shell.ui
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,6 +44,9 @@ import app.aaps.ui.compose.stats.viewmodels.StatsViewModel
 import app.aaps.ui.compose.tempTarget.TempTargetManagementViewModel
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentsViewModel
 import dev.zacsweers.metro.createGraphFactory
+import platform.Foundation.NSNotificationCenter
+import platform.Foundation.NSOperationQueue
+import platform.UIKit.UIApplicationDidBecomeActiveNotification
 import platform.UIKit.UIViewController
 
 /**
@@ -100,22 +103,46 @@ fun aapsAppViewController(): UIViewController {
                 onNavControllerReady = {},
                 onClose = { logger.error(LTag.CORE, "Initialization failed and iOS cannot close an app") }
             ) { navController ->
-                // Application protection, the counterpart of the request `ComposeMainActivity` makes
-                // from `onResume`. Without this nothing on iOS ever asks, so `ProtectionHost` has no
-                // request to render and a configured app-launch password never appears - the setting
-                // looked saved and did nothing, which is how it was found.
+                // Application protection, the counterpart of the request `ComposeMainActivity`
+                // makes from `onResume`. Without this nothing on iOS ever asks, so `ProtectionHost`
+                // has no request to render and a configured app-launch password never appears - the
+                // setting looked saved and did nothing, which is how it was found.
                 //
-                // Asked once per launch, which is what the setting itself promises: "App launch.
-                // Independent from other levels." Android re-asks on every resume; whether iOS should
-                // do the same on `didBecomeActive` is a real question and is written up rather than
-                // guessed at, because re-prompting is what protects a phone handed to someone else
-                // while the app is backgrounded.
+                // Asked at launch **and every time the app comes back to the foreground**, which is
+                // the case that matters: a phone handed to someone else while AAPS is backgrounded.
+                // Android does the same from `onResume`. When protection is set to "No protection"
+                // this costs nothing - `requestProtection` grants straight away without a dialog, so
+                // the gate only appears for someone who asked for it.
                 var unlocked by remember { mutableStateOf(false) }
-                LaunchedEffect(Unit) {
-                    graph.protectionCheck.requestProtection(ProtectionCheck.Protection.APPLICATION) { result ->
-                        unlocked = result == ProtectionResult.GRANTED
-                        if (!unlocked) logger.error(LTag.CORE, "Application protection was not granted: $result")
+                var asking by remember { mutableStateOf(false) }
+                val requestUnlock = remember {
+                    {
+                        // Guarded, as Android guards with `isProtectionCheckActive`: `didBecomeActive`
+                        // can fire while a prompt is already up, and a second request would stack a
+                        // second dialog on the first.
+                        if (!asking) {
+                            asking = true
+                            // Re-locked before asking, or the app stays readable behind the prompt on
+                            // the way back from the background.
+                            unlocked = false
+                            graph.protectionCheck.requestProtection(ProtectionCheck.Protection.APPLICATION) { result ->
+                                asking = false
+                                unlocked = result == ProtectionResult.GRANTED
+                                if (!unlocked) logger.error(LTag.CORE, "Application protection was not granted: $result")
+                            }
+                        }
                     }
+                }
+
+                DisposableEffect(Unit) {
+                    requestUnlock()
+                    val observer = NSNotificationCenter.defaultCenter.addObserverForName(
+                        name = UIApplicationDidBecomeActiveNotification,
+                        `object` = null,
+                        queue = NSOperationQueue.mainQueue,
+                        usingBlock = { requestUnlock() }
+                    )
+                    onDispose { NSNotificationCenter.defaultCenter.removeObserver(observer) }
                 }
 
                 // Nothing is drawn until it is granted. Showing the app behind the prompt would make
