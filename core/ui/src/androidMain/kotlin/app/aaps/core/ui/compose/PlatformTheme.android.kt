@@ -1,5 +1,6 @@
 package app.aaps.core.ui.compose
 
+import android.content.res.Configuration
 import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
@@ -25,3 +26,7 @@ actual fun SystemBarAppearance(isDark: Boolean) {
 
 @Composable
 actual fun smallestScreenWidthDp(): Int = LocalConfiguration.current.smallestScreenWidthDp
+
+@Composable
+actual fun isLandscape(): Boolean =
+    LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE

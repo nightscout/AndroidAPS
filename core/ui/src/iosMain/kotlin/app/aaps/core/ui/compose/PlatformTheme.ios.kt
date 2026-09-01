@@ -19,3 +19,8 @@ actual fun smallestScreenWidthDp(): Int {
     val density = LocalDensity.current
     return with(density) { min(size.width, size.height).toDp().value.toInt() }
 }
+
+/** No device orientation to consult, so the window's own shape is the answer. */
+@Composable
+actual fun isLandscape(): Boolean =
+    LocalWindowInfo.current.containerSize.let { it.width > it.height }

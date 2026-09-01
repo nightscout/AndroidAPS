@@ -21,3 +21,13 @@ expect fun SystemBarAppearance(isDark: Boolean)
  */
 @Composable
 expect fun smallestScreenWidthDp(): Int
+
+/**
+ * Whether the screen is currently wider than it is tall.
+ *
+ * Platform specific for the same reason as [smallestScreenWidthDp]: Android answers from the device
+ * configuration, which is what the overview layout has always used, and reading it any other way
+ * would change how the screen behaves in split view.
+ */
+@Composable
+expect fun isLandscape(): Boolean
