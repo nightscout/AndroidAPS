@@ -9,7 +9,7 @@ import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.objects.crypto.CryptoUtil
+import app.aaps.core.interfaces.protection.PasswordHasher
 import app.aaps.core.ui.CoreUiStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -35,7 +35,7 @@ import kotlinx.coroutines.flow.asStateFlow
 @SingleIn(AppScope::class)
 class PasswordCheckImpl @Inject constructor(
     private val preferences: Preferences,
-    private val cryptoUtil: CryptoUtil,
+    private val passwordHasher: PasswordHasher,
     private val rxBus: RxBus,
     private val rh: TextResolver
 ) : PasswordCheck {
@@ -71,7 +71,7 @@ class PasswordCheckImpl @Inject constructor(
             label = label,
             pinInput = pinInput,
             onConfirm = { enteredPassword ->
-                if (cryptoUtil.checkPassword(enteredPassword, password)) {
+                if (passwordHasher.checkPassword(enteredPassword, password)) {
                     dismiss()
                     ok?.invoke(enteredPassword)
                 } else {
@@ -107,7 +107,7 @@ class PasswordCheckImpl @Inject constructor(
                     }
 
                     enteredPassword.isNotEmpty()        -> {
-                        preferences.put(preference, cryptoUtil.hashPassword(enteredPassword))
+                        preferences.put(preference, passwordHasher.hashPassword(enteredPassword))
                         exportPasswordDataStore.clearPasswordDataStore()
                         snack(if (pinInput) CoreUiStrings.pin_set else CoreUiStrings.password_set, EventShowSnackbar.Type.Success)
                         dismiss()

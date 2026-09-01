@@ -452,7 +452,7 @@ behind it, written for `IosSecureEncrypt` and directly reusable here.
 not being asked for here.
 
 
-## Request: `PasswordCheckImpl` can move to commonMain by swapping one dependency
+## DONE: `PasswordCheckImpl` moved to commonMain by swapping one dependency
 
 `AapsAppRoot` landing in `appshell/commonMain` is the reason this is worth doing now. Measured with
 the probe against that function's parameters, five of its six injected dependencies already resolve
@@ -478,6 +478,13 @@ commonMain untouched otherwise, and iOS then gets it for free.
 That is one shared class instead of two, which is the better outcome than an iOS copy: the dialog
 rules here decide when a user is asked for a master password, and two implementations would be two
 places for that to drift.
+
+**Done, exactly as described.** `PasswordCheckImpl` now takes `PasswordHasher` instead of
+`CryptoUtil` and lives in `implementation/src/commonMain/.../protection/`. It compiles for Android,
+iOS and the JVM desktop target from the one source, unchanged apart from that parameter. The
+`IosPasswordCheck` placeholder in `ios/shell/.../missing/` is deleted, and
+`:ios:shell:compileKotlinIosArm64` is green without it, so the binding really is satisfied by the
+shared class.
 
 ### What `AapsAppRoot` still needs beyond that
 
