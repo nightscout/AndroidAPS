@@ -60,12 +60,14 @@ interface Config {
     val VERSION: String
 
     /**
-     * Which platform this build runs on - "Desktop", "iOS", or empty.
+     * Which platform this build runs on - "Android", "Desktop" or "iOS".
      *
-     * Empty on Android, and the About dialog then shows no platform line: the same version string
-     * now appears on three platforms, so the two that are not the original say which they are. A
-     * default is given so that a Config implementation which predates this - a test double, say -
-     * keeps compiling and behaves as Android does.
+     * Shown as its own line in the About dialog. The same version string now appears on three
+     * platforms, so a bug report has to say which one it came from.
+     *
+     * The default is empty rather than a guess: a Config implementation that predates this - a test
+     * double, say - keeps compiling, and the dialog simply omits the line rather than claiming a
+     * platform the build never declared.
      */
     val PLATFORM: String get() = ""
     val APPLICATION_ID: String

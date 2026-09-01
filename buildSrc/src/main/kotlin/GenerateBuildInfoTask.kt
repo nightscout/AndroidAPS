@@ -27,6 +27,16 @@ abstract class GenerateBuildInfoTask : DefaultTask() {
     abstract val version: Property<String>
 
     /**
+     * The build stamp: short commit and date, as `<hash>-<yyyy.MM.dd>`.
+     *
+     * The same shape `:app` puts in `BuildConfig.BUILDVERSION`, because the About dialog shows it as
+     * "Build:" and the whole point of that line is to name the commit a user is running. Showing the
+     * version there instead - which is already on the line above - would waste the line.
+     */
+    @get:Input
+    abstract val buildStamp: Property<String>
+
+    /**
      * Which build this is - "Desktop" or "iOS".
      *
      * Shown as its own line in the About dialog, because the same version string now appears on
@@ -64,6 +74,9 @@ abstract class GenerateBuildInfoTask : DefaultTask() {
             |object GeneratedBuildInfo {
             |
             |    const val VERSION: String = "${version.get()}"
+            |
+            |    /** Short commit and date, the same shape Android reports as "Build:". */
+            |    const val BUILD: String = "${buildStamp.get()}"
             |
             |    /** "Desktop" or "iOS". Android does not set one, and shows no platform line. */
             |    const val PLATFORM: String = "${platform.get()}"

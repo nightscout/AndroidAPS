@@ -1,3 +1,6 @@
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
 plugins {
     kotlin("multiplatform")
     // Metro, because this module does not only link the migrated code, it builds a graph from it.
@@ -113,9 +116,22 @@ tasks.matching { it.name.startsWith("linkDebugFramework") }.configureEach { depe
  * The list is `StringOwnerModules.ALL`, shared with `:app` and the desktop shell, so the three
  * platforms cannot drift - which they had: the desktop copy carried five of sixteen modules.
  */
+
+/** The same build stamp `:app` puts in BuildConfig.BUILDVERSION: short commit and date. */
+fun buildStamp(): String {
+    val commit = try {
+        val out = File.createTempFile("git-build", "")
+        ProcessBuilder("git", "describe", "--always", "--abbrev=7").redirectOutput(out).start().waitFor()
+        out.readText().trim()
+    } catch (_: Exception) {
+        "NoGitSystemAvailable"
+    }
+    return "$commit-" + SimpleDateFormat("yyyy.MM.dd").format(Date())
+}
 /** The version this build reports, from the same constant the Android app uses. */
 val generateIosBuildInfo = tasks.register<GenerateBuildInfoTask>("generateIosBuildInfo") {
     version.set(Versions.appVersion)
+    buildStamp.set(buildStamp())
     platform.set("iOS")
     packageName.set("app.aaps.ios.shell.config")
     outputDir.set(layout.buildDirectory.dir("generated/buildInfo"))
