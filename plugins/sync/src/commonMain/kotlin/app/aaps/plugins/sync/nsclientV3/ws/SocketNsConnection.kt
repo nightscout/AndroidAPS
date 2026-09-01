@@ -23,11 +23,8 @@ import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
 import app.aaps.plugins.sync.nsclientV3.data.NSDeviceStatusHandler
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.Provider
-import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -66,8 +63,6 @@ import kotlinx.serialization.json.put
  * implementation rather than shared code. The field names, the collection routing and the ordering
  * rules are the same, and where a rule is subtle it is called out below.
  */
-@SingleIn(AppScope::class)
-@ContributesBinding(AppScope::class)
 /*
  * `NSClientV3Plugin` and `NsIncomingDataProcessor` arrive as `Provider`s to break a cycle. The
  * plugin takes an `NsConnection`, which is this class, and the processor reaches the plugin as its
@@ -79,7 +74,7 @@ import kotlinx.serialization.json.put
  * built. The plugin is read when a socket connects and the processor when a frame arrives, and by
  * either point both have long existed.
  */
-class IosNsConnection @Inject constructor(
+class SocketNsConnection @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val config: Config,
@@ -192,7 +187,7 @@ class IosNsConnection @Inject constructor(
         socket.emitWithAck("subscribe", auth.toString()) { raw ->
             val response = parse(raw)
             _connected.value = if (response?.bool("success") == true) {
-                nsClientRepository.addLog("◄ WS", "Subscribed for: ${response.str("collections")}")
+                nsClientRepository.addLog("◄ WS", "Subscribed for: ${NsWsPayload.text(response, "collections")}")
                 // Nothing arrives while disconnected, so the next round has to be a catch-up one.
                 nsClientV3Plugin().initialLoadFinished = false
                 nsClientV3Plugin().executeLoop("WS_CONNECT")

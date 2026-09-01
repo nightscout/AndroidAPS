@@ -5,7 +5,7 @@ import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.doubleOrNull
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.longOrNull
 
 /**
@@ -25,9 +25,21 @@ internal object NsWsPayload {
     fun parse(raw: String): JsonObject? =
         runCatching { Json.parseToJsonElement(raw) as? JsonObject }.getOrNull()
 
-    fun string(doc: JsonObject, key: String): String? = doc[key]?.jsonPrimitive?.contentOrNull
+    /**
+     * A string field, or null when it is absent **or not a single value**.
+     *
+     * The cast is deliberate. `jsonPrimitive` throws on an array or an object, which broke the
+     * promise at the top of this file the first time a real server answered: Nightscout returns
+     * `collections` as an array in the subscribe ack, and reading it took the socket thread down
+     * with an IllegalArgumentException. Use [text] where a non-primitive should still be readable.
+     */
+    fun string(doc: JsonObject, key: String): String? = (doc[key] as? JsonPrimitive)?.contentOrNull
 
-    fun boolean(doc: JsonObject, key: String): Boolean? = doc[key]?.jsonPrimitive?.booleanOrNull
+    /** Any value as text, arrays and objects included, for logging rather than for decisions. */
+    fun text(doc: JsonObject, key: String): String? =
+        doc[key]?.let { if (it is JsonPrimitive) it.contentOrNull else it.toString() }
+
+    fun boolean(doc: JsonObject, key: String): Boolean? = (doc[key] as? JsonPrimitive)?.booleanOrNull
 
     /**
      * A whole number, accepting one written as a decimal.
@@ -37,7 +49,7 @@ internal object NsWsPayload {
      * would stay put, and the same records would be fetched forever.
      */
     fun long(doc: JsonObject, key: String): Long? =
-        doc[key]?.jsonPrimitive?.let { it.longOrNull ?: it.doubleOrNull?.toLong() }
+        (doc[key] as? JsonPrimitive)?.let { it.longOrNull ?: it.doubleOrNull?.toLong() }
 
     /** The document a create/update frame carries, or null when the frame has none. */
     fun document(frame: JsonObject): JsonObject? = frame["doc"] as? JsonObject
