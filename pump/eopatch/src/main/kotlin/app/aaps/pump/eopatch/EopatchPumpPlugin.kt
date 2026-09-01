@@ -588,8 +588,8 @@ class EopatchPumpPlugin @Inject constructor(
         key = "eopatch_settings",
         titleResId = R.string.eopatch,
         items = listOf(
-            // The labels used to be built as "$it U" and "$it hr", which no translator could reach.
-            // The unit format templates already exist and are translated, so use those.
+            // Labels come from the translated unit format templates. Building them as "$it U" or
+            // "$it hr" in code would put text where no translator can reach it.
             EopatchIntKey.LowReservoirReminder.withEntries(
                 (10..50 step 5).associateWith { TextRef.AndroidRes(CoreUiR.string.units_format_insulin_int, listOf(it)) }
             ),
