@@ -1,28 +1,26 @@
 package app.aaps.core.ui.compose
 
 import androidx.compose.runtime.Composable
+import app.aaps.core.interfaces.resources.TextRefValueRegistry
+import app.aaps.core.interfaces.resources.formatTemplate
 import app.aaps.core.keys.interfaces.TextRef
 
 /**
- * PLACEHOLDER, and unlike the Apple one this is a *waiting* placeholder rather than a blocked one:
- * desktop can resolve these for real, and the work is understood.
+ * Compose text on the desktop JVM, read from the generated English string maps.
  *
- * `GenerateKeyStringsTask` already parses each module's `res/values/strings.xml`. Emitting a third
- * output beside `XxxStrings` and `XxxStringIds` - a `name -> text` map for the JVM - plus a registry
- * mirroring `TextRefIdRegistry` is all the machinery needed, and [TextRef.Named] already carries both
- * the name and the owning module that such a lookup wants.
+ * The shell registers each module it depends on with [TextRefValueRegistry] before anything is
+ * drawn, exactly as `MainApp.registerStringOwners()` registers id maps on Android.
  *
- * It is not built yet because nothing would call `register()`. On Android that happens from
- * `ResourceHelperImpl`; on desktop the equivalent belongs to the desktop app module, which does not
- * exist. Building the generator and the registry before their caller would ship wiring that nothing
- * activates, so this waits for that module rather than for a decision.
+ * Falls back to the name when a lookup fails, which happens when the shell has not registered the
+ * owning module or when a `TextRef.Named` was built by hand instead of taken from the generated
+ * object. Showing the name puts the fault on screen rather than showing an empty label.
  *
- * [TextRef.AndroidRes] carries a number that means nothing here, so files still using it have to move
- * to [TextRef.Named] first either way.
+ * [TextRef.AndroidRes] holds a number that means nothing here. Shared code should not produce one,
+ * so it renders as `?` - visible, and pointing at the caller that needs converting to a name.
  */
 @Composable
 actual fun stringResource(ref: TextRef): String = when (ref) {
     is TextRef.Literal    -> ref.text
-    is TextRef.Named      -> ref.name
+    is TextRef.Named      -> formatTemplate(TextRefValueRegistry.textOf(ref) ?: ref.name, ref.args)
     is TextRef.AndroidRes -> "?"
 }

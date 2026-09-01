@@ -1,6 +1,7 @@
 package app.aaps.implementation.resources
 
 import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.interfaces.resources.formatTemplate
 import app.aaps.core.interfaces.resources.TextRefValueRegistry
 import app.aaps.core.keys.interfaces.TextRef
 

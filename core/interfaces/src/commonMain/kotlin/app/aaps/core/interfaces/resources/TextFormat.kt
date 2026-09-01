@@ -1,4 +1,4 @@
-package app.aaps.implementation.resources
+package app.aaps.core.interfaces.resources
 
 import app.aaps.core.data.format.NumberFormat
 
@@ -20,7 +20,7 @@ import app.aaps.core.data.format.NumberFormat
  *   `MissingFormatArgumentException`, which on a phone means a crash while showing a label. A visible
  *   `%2$s` in the middle of a sentence is a bug report someone can act on and not a lost session.
  */
-internal fun formatTemplate(template: String, args: List<Any?>): String {
+fun formatTemplate(template: String, args: List<Any?>): String {
     if (args.isEmpty() || !template.contains('%')) return template
     var next = 0
     return SPEC.replace(template) { match ->

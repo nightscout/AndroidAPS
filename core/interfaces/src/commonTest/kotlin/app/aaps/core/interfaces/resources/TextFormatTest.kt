@@ -1,4 +1,4 @@
-package app.aaps.implementation.resources
+package app.aaps.core.interfaces.resources
 
 import app.aaps.core.data.format.NumberFormat
 import kotlin.test.Test

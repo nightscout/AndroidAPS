@@ -1,7 +1,8 @@
 package app.aaps.core.ui.compose
 
 import androidx.compose.runtime.Composable
-import app.aaps.core.interfaces.resources.TextRefValueRegistry
+import app.aaps.core.interfaces.resources.TextRefValueRegistry
+import app.aaps.core.interfaces.resources.formatTemplate
 import app.aaps.core.keys.interfaces.TextRef
 
 /**
@@ -26,6 +27,6 @@ import app.aaps.core.keys.interfaces.TextRef
 @Composable
 actual fun stringResource(ref: TextRef): String = when (ref) {
     is TextRef.Literal    -> ref.text
-    is TextRef.Named      -> TextRefValueRegistry.textOf(ref) ?: ref.name
+    is TextRef.Named      -> formatTemplate(TextRefValueRegistry.textOf(ref) ?: ref.name, ref.args)
     is TextRef.AndroidRes -> "?"
 }
