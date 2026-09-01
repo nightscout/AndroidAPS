@@ -188,26 +188,36 @@ class EversenseCGMPlugin(
         try {
             // Routed through bleExecutor (like every other write path) so this can't race a
             // concurrently in-flight write from the Keep Alive sync cycle.
-            val future = gattCallback.submitToExecutor {
-                if (gattCallback.is365()) {
-                    if (isEnabled) {
-                        gattCallback.writePacket<EnterDiagnosticMode365Packet.Response>(EnterDiagnosticMode365Packet())
-                    } else {
-                        gattCallback.writePacket<ExitDiagnosticMode365Packet.Response>(ExitDiagnosticMode365Packet())
-                    }
-                    EversenseLogger.info(TAG, "Diagnostic mode set to $isEnabled (365)")
-                } else {
-                    if (isEnabled) {
-                        gattCallback.writePacket<EnterDiagnosticModePacket.Response>(EnterDiagnosticModePacket())
-                    } else {
-                        gattCallback.writePacket<ExitDiagnosticModePacket.Response>(ExitDiagnosticModePacket())
-                    }
-                    EversenseLogger.info(TAG, "Diagnostic mode set to $isEnabled (E3)")
-                }
-            }
+            val future = gattCallback.submitToExecutor { doSetDiagnosticMode(isEnabled) }
             future.get(20000, java.util.concurrent.TimeUnit.MILLISECONDS)
         } catch (e: Exception) {
             EversenseLogger.warning(TAG, "setDiagnosticMode failed: $e")
+        }
+    }
+
+    // The actual diagnostic-mode write. Callers MUST already be running on bleExecutor's single
+    // worker thread - either via setDiagnosticMode() above (the normal entry point, which submits
+    // this to bleExecutor and blocks), or from another task already running there, like
+    // submitToExecutorAndSync()'s reconnect handler below. Calling this indirectly through
+    // setDiagnosticMode() from inside an already-running bleExecutor task deadlocks: the submit
+    // queues a second task behind the one currently blocked waiting for it, on an executor that
+    // only has one worker thread - future.get() always times out after 20s, silently, since
+    // setDiagnosticMode() swallows the resulting TimeoutException as a warning.
+    private fun doSetDiagnosticMode(isEnabled: Boolean) {
+        if (gattCallback.is365()) {
+            if (isEnabled) {
+                gattCallback.writePacket<EnterDiagnosticMode365Packet.Response>(EnterDiagnosticMode365Packet())
+            } else {
+                gattCallback.writePacket<ExitDiagnosticMode365Packet.Response>(ExitDiagnosticMode365Packet())
+            }
+            EversenseLogger.info(TAG, "Diagnostic mode set to $isEnabled (365)")
+        } else {
+            if (isEnabled) {
+                gattCallback.writePacket<EnterDiagnosticModePacket.Response>(EnterDiagnosticModePacket())
+            } else {
+                gattCallback.writePacket<ExitDiagnosticModePacket.Response>(ExitDiagnosticModePacket())
+            }
+            EversenseLogger.info(TAG, "Diagnostic mode set to $isEnabled (E3)")
         }
     }
 
@@ -295,8 +305,15 @@ class EversenseCGMPlugin(
         }
         gattCallback.submitToExecutor {
             if (isPositioningMode) {
-                setDiagnosticMode(true)
-                EversenseLogger.info(TAG, "Re-enabled Diagnostic Mode after reconnect")
+                // Already running on bleExecutor here - call the write directly, not through
+                // setDiagnosticMode(), which would submit-and-block on this same single-threaded
+                // executor and deadlock (see doSetDiagnosticMode's doc comment).
+                try {
+                    doSetDiagnosticMode(true)
+                    EversenseLogger.info(TAG, "Re-enabled Diagnostic Mode after reconnect")
+                } catch (e: Exception) {
+                    EversenseLogger.warning(TAG, "Failed to re-enable diagnostic mode after reconnect: $e")
+                }
             }
             EversenseLogger.info(TAG, "Running E3 fullSync on bleExecutor after connect")
             EversenseE3Communicator.fullSync(gattCallback, preferences, watchers.toList(), force)
