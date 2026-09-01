@@ -2,6 +2,7 @@ package app.aaps.pump.virtual.keys
 
 import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 
+/** Values the virtual pump keeps for itself, outside the preference screen. */
 enum class VirtualStringNonPreferenceKey(
     override val key: String,
     override val defaultValue: String,

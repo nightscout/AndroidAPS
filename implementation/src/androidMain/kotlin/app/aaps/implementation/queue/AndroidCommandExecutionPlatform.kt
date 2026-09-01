@@ -14,6 +14,13 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.delay
 
+/**
+ * [CommandExecutionPlatform] on Android: a partial wake lock, so the CPU keeps running while a pump
+ * command is in flight even if the screen goes off.
+ *
+ * The lock is taken with a timeout, so a command that never releases it cannot hold the CPU awake for
+ * the life of the process.
+ */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 class AndroidCommandExecutionPlatform @Inject constructor(

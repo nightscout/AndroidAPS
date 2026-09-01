@@ -10,6 +10,13 @@ import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 
+/**
+ * The Insight pump's own database, provided to the graph.
+ *
+ * Here rather than in the pump module because it is built from the application `Context`, and in the
+ * `withPumps` source set so a follower build - which has no pump drivers on its classpath - does not
+ * carry it.
+ */
 @ContributesTo(AppScope::class)
 @BindingContainer
 object InsightDatabaseBindings {
