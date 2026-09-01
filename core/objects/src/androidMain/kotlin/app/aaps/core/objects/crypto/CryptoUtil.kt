@@ -1,6 +1,7 @@
 package app.aaps.core.objects.crypto
 
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.protection.PasswordHasher
 import app.aaps.core.utils.toHex
 import org.spongycastle.util.encoders.Base64
 import java.nio.ByteBuffer
@@ -18,7 +19,7 @@ import javax.crypto.spec.SecretKeySpec
 @Suppress("SpellCheckingInspection")
 class CryptoUtil(
     val aapsLogger: AAPSLogger
-) {
+) : PasswordHasher {
 
     companion object {
 
@@ -102,7 +103,7 @@ class CryptoUtil(
         }
     }
 
-    fun checkPassword(password: String, referenceHash: String): Boolean {
+    override fun checkPassword(password: String, referenceHash: String): Boolean {
         return if (referenceHash.startsWith("hmac:")) {
             val hashSegments = referenceHash.split(":")
             if (hashSegments.size != 3)
@@ -113,7 +114,7 @@ class CryptoUtil(
         }
     }
 
-    fun hashPassword(password: String): String {
+    override fun hashPassword(password: String): String {
         return if (!password.startsWith("hmac:")) {
             val salt = mineSalt().toHex()
             return "hmac:${salt}:${hmac256(password, salt)}"

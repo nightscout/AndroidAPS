@@ -1,6 +1,7 @@
 package app.aaps.core.objects.di
 
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.protection.PasswordHasher
 import app.aaps.core.objects.crypto.CryptoUtil
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
@@ -20,4 +21,9 @@ object CoreObjectsAndroidContainer {
     @Provides
     @SingleIn(AppScope::class)
     fun cryptoUtil(aapsLogger: AAPSLogger): CryptoUtil = CryptoUtil(aapsLogger)
+
+    // The same instance under its shared-code interface, so a commonMain caller can compare a
+    // password without naming CryptoUtil, which is Android only.
+    @Provides
+    fun passwordHasher(cryptoUtil: CryptoUtil): PasswordHasher = cryptoUtil
 }

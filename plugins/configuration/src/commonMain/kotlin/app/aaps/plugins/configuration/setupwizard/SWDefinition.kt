@@ -7,7 +7,7 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.di.ApplicationScope
-import app.aaps.core.interfaces.maintenance.FileListProvider
+import app.aaps.core.interfaces.maintenance.PrefsFileInfo
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -15,10 +15,8 @@ import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.pump.Medtrum
 import app.aaps.core.interfaces.pump.OmnipodDash
 import app.aaps.core.interfaces.pump.OmnipodEros
-import app.aaps.core.interfaces.pump.comment
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
@@ -34,7 +32,7 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.objects.crypto.CryptoUtil
+import app.aaps.core.interfaces.protection.PasswordHasher
 import app.aaps.plugins.configuration.setupwizard.elements.SWBreak
 import app.aaps.plugins.configuration.setupwizard.elements.SWButton
 import app.aaps.plugins.configuration.setupwizard.elements.SWEditEncryptedPassword
@@ -62,18 +60,17 @@ import kotlinx.coroutines.runBlocking
 class SWDefinition @Inject constructor(
     @ApplicationScope private val appScope: CoroutineScope,
     private val rxBus: RxBus,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val preferences: Preferences,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
     private val profileRepository: ProfileRepository,
     private val commandQueue: CommandQueue,
-    private val fileListProvider: FileListProvider,
-    private val cryptoUtil: CryptoUtil,
+    private val fileListProvider: PrefsFileInfo,
+    private val cryptoUtil: PasswordHasher,
     private val config: Config,
     private val hardLimits: HardLimits,
     private val nsClient: NsClient,
-    private val aapsSchedulers: AapsSchedulers,
     private val swScreenProvider: Provider<SWScreen>,
     private val swEventListenerProvider: Provider<SWEventListener>,
     private val swBreakProvider: Provider<SWBreak>,

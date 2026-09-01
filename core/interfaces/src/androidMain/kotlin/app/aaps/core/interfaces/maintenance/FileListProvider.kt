@@ -18,7 +18,6 @@ interface FileListProvider : PrefsFileInfo {
 
     fun ensureResultDirExists(): File
     fun newResultFile(): File
-    fun listPreferenceFiles(): MutableList<PrefsFile>
     fun listCustomWatchfaceFiles(): MutableList<CwfFile>
     fun checkMetadata(metadata: Map<PrefsMetadataKey, PrefMetadata>): Map<PrefsMetadataKey, PrefMetadata>
 }

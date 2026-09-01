@@ -17,6 +17,14 @@ interface PrefsFileInfo {
     fun formatExportedAgo(utcTime: String): String
 
     /**
+     * The exported preference files found in the export directory, newest first.
+     *
+     * Here rather than on `FileListProvider` because the list itself carries no platform type - a
+     * [PrefsFile] is plain data - and a screen only ever reads it.
+     */
+    fun listPreferenceFiles(): MutableList<PrefsFile>
+
+    /**
      * Whether the user has picked an export directory and it is still readable.
      *
      * False is a normal state, not an error: it is what the screen shows a "choose a folder" prompt

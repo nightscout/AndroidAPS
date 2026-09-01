@@ -38,7 +38,7 @@ class PluginPermissionsImplTest : TestBase() {
         // The registry is a mock now: permissions ask it for the plugin list and nothing else.
         val activePlugin = mock<ActivePlugin>()
         whenever(activePlugin.getPluginsList()).thenReturn(ArrayList<PluginBase>())
-        return PluginPermissionsImpl(activePlugin, preferences) { providers }
+        return PluginPermissionsImpl(context, activePlugin, preferences) { providers }
     }
 
     @Test
@@ -46,11 +46,11 @@ class PluginPermissionsImplTest : TestBase() {
         val provider = mock<PermissionProvider>()
         whenever(provider.requiredPermissions()).thenReturn(listOf(locationGroup))
 
-        assertThat(store(setOf(provider)).collectAllPermissions(context)).contains(locationGroup)
+        assertThat(store(setOf(provider)).collectAllPermissions()).contains(locationGroup)
     }
 
     @Test
     fun `collectAllPermissions omits the provider group when no providers are registered`() {
-        assertThat(store(emptySet()).collectAllPermissions(context)).doesNotContain(locationGroup)
+        assertThat(store(emptySet()).collectAllPermissions()).doesNotContain(locationGroup)
     }
 }

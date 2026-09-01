@@ -18,22 +18,18 @@ plugins {
  * still sees them for its DI graph. That keeps the number of edges in the build graph the same bar
  * one, which matters because every plugin is on this list.
  *
- * `AppRoute` is already in **commonMain**. `AppNavGraph` is not, and exactly two things hold it
- * there:
+ * `AppRoute` and `AppNavGraph` are both in **commonMain**, and every module this one depends on
+ * already has Apple targets. Three things still have to happen before this module can declare its
+ * own, and they are all inside `AppNavGraph`:
  *
- *  1. **The setup wizard** - `SetupWizardScreen` and `SWDefinition` in `:plugins:configuration`.
- *     The screens themselves are nearly portable (one `BackHandler`), but `SWDefinition` still
- *     reaches for `FileListProvider.listPreferenceFiles`, `ResourceHelper.gs(Int)`, `AapsSchedulers`
- *     and `CryptoUtil.checkPassword`. That is a chain of small ports, not a move.
- *  2. **The permissions sheet** - `PluginPermissions` works in Android permission groups and takes a
- *     `Context`, and the graph reads `navController.context` for it. iOS has no equivalent model, so
- *     this one is expected to stay behind a port rather than move.
+ *  1. **Seven `R.string` references**, aliased in from `:plugins:main` and `:core:ui`. Both modules
+ *     already generate `TextRef`s, so this is the usual name-preserving swap.
+ *  2. **`backStackEntry.arguments?.getString(...)`** - `arguments` is a `Bundle` on Android and a
+ *     `SavedState` in multiplatform navigation, so those reads need the `SavedState` API.
+ *  3. A stale `androidx.compose.ui.res.stringResource` import.
  *
- * A third, smaller step comes with them: `androidx.navigation:navigation-compose` has to become the
- * JetBrains republish (`org.jetbrains.androidx.navigation`), the same swap already done for
- * `navigationevent`. The import names do not change.
- *
- * When those are done this module gains its Apple targets and `AppNavGraph` moves too.
+ * The navigation dependency is already the JetBrains republish, so nothing is waiting on that.
+ * `:plugins:sync` is multiplatform now too - an older note here said otherwise.
  */
 kotlin {
     android {
@@ -54,8 +50,9 @@ kotlin {
         }
     }
 
+
     sourceSets {
-        androidMain {
+        commonMain {
             dependencies {
                 api(project(":core:data"))
                 api(project(":core:interfaces"))
@@ -71,15 +68,24 @@ kotlin {
                     .filter { it.path.startsWith(":plugins:") && it.buildFile.exists() }
                     .forEach { api(project(it.path)) }
 
-                api(project.dependencies.platform(libs.androidx.compose.bom))
-                api(libs.androidx.compose.runtime)
-                api(libs.androidx.compose.material3)
+                api(libs.cmp.runtime)
+                api(libs.cmp.foundation)
+                api(libs.cmp.ui)
+                api(libs.cmp.material3)
+                api(libs.cmp.material.icons.extended)
+                // The JetBrains republishes, not the plain androidx ones: same package names, with
+                // Apple targets. Same choice as :core:ui and :ui.
                 api(libs.androidx.compose.navigation)
-                api(libs.androidx.lifecycle.runtime.compose)
-                implementation(libs.androidx.activity.compose)
+                api(libs.jetbrains.lifecycle.runtime.compose)
             }
         }
 
+        androidMain {
+            dependencies {
+                api(project.dependencies.platform(libs.androidx.compose.bom))
+                implementation(libs.androidx.activity.compose)
+            }
+        }
         getByName("androidHostTest") {
             dependencies {
                 implementation(libs.org.junit.jupiter)
@@ -93,4 +99,3 @@ kotlin {
         }
     }
 }
-

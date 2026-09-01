@@ -1,6 +1,5 @@
 package app.aaps.ui.compose.permissionsSheet
 
-import android.content.Context
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -24,7 +23,6 @@ import kotlinx.coroutines.launch
 @ViewModelKey
 @Stable
 class PermissionsViewModel @Inject constructor(
-    private val context: Context,
     private val pluginPermissions: PluginPermissions,
 ) : ViewModel() {
 
@@ -34,8 +32,8 @@ class PermissionsViewModel @Inject constructor(
     val sideEffect: SharedFlow<PermissionsSideEffect> = _sideEffect
 
     fun refresh() {
-        val allGroups = pluginPermissions.collectAllPermissions(context)
-        val missingGroups = pluginPermissions.collectMissingPermissions(context)
+        val allGroups = pluginPermissions.collectAllPermissions()
+        val missingGroups = pluginPermissions.collectMissingPermissions()
         val missingPermSets = missingGroups.map { it.permissions.toSet() }.toSet()
 
         val items = allGroups.map { group ->

@@ -32,9 +32,10 @@ import dev.zacsweers.metro.SingleIn
  * `PackageManager` - belonged to this half of it, so pulling the two apart is what let the plugin
  * registry become common code.
  *
- * It stays Android only on purpose rather than for now. Runtime permissions are an Android concept:
- * iOS asks at the point of use and has nothing to enumerate, so there is nothing here to implement
- * there and nothing common that asks for it.
+ * This implementation stays Android only on purpose rather than for now: runtime permission groups
+ * are an Android concept, and iOS asks at the point of use with nothing to enumerate. The interface
+ * is in shared code because the screen that lists permissions is, so an Apple target will need some
+ * implementation - returning an empty list is the honest one there, not a gap.
  *
  * The plugin list still comes from [ActivePlugin], since what a plugin requires is the plugin's own
  * business - this only asks each enabled one and checks the answers against the system.
@@ -43,6 +44,7 @@ import dev.zacsweers.metro.SingleIn
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
 class PluginPermissionsImpl(
+    private val context: Context,
     private val activePlugin: ActivePlugin,
     private val preferences: Preferences,
     private val permissionProviders: () -> Set<PermissionProvider>
@@ -131,7 +133,7 @@ class PluginPermissionsImpl(
                 ContextCompat.checkSelfPermission(context, perm) != PackageManager.PERMISSION_GRANTED
         }
 
-    override fun collectMissingPermissions(context: Context): List<PermissionGroup> {
+    override fun collectMissingPermissions(): List<PermissionGroup> {
         // Standard (non-special) plugin permissions — checked via ContextCompat
         val pluginPerms = plugins.filter { it.isEnabled() }
             .flatMap { it.missingPermissions(context) }
@@ -155,7 +157,7 @@ class PluginPermissionsImpl(
         return (globalMissing + pluginPerms + specialPluginPerms + providerMissing).distinctBy { it.permissions.toSet() }
     }
 
-    override fun collectAllPermissions(context: Context): List<PermissionGroup> =
+    override fun collectAllPermissions(): List<PermissionGroup> =
         (globalPermissions(context) +
             plugins.filter { it.isEnabled() }.flatMap { it.requiredPermissions() } +
             permissionProviders().flatMap { it.requiredPermissions() })
