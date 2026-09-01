@@ -1013,8 +1013,7 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
                                 // CI build ever reached it. Keep the two types here in step by hand.
                                 val current = it.getter.call(versionCheckersUtils) as JsonObject
                                 val remote = Json.parseToJsonElement(firebaseRemoteConfig.getString("defs")).jsonObject
-                                // Plus on the maps is a shallow merge with the remote keys winning, which is what
-                                // the JsonHelper.merge that used to be here did.
+                                // Plus on the maps is a shallow merge with the remote keys winning.
                                 it.setter.call(versionCheckersUtils, JsonObject(current + remote))
                             }
                     } else aapsLogger.error("RemoteConfig fetch failed")

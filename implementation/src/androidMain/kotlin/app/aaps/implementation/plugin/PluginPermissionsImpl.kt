@@ -27,12 +27,11 @@ import dev.zacsweers.metro.SingleIn
 /**
  * Which Android permissions AAPS still needs the user to grant.
  *
- * This used to live in [PluginStore], which implemented both this and `ActivePlugin`. Every Android
- * dependency that class had - `Manifest`, `Settings.Secure`, `AlarmManager`, `PowerManager`,
- * `PackageManager` - belonged to this half of it, so pulling the two apart is what let the plugin
- * registry become common code.
+ * Kept apart from `ActivePlugin` because every Android dependency here - `Manifest`,
+ * `Settings.Secure`, `AlarmManager`, `PowerManager`, `PackageManager` - belongs to permissions rather
+ * than to the plugin registry, which is common code.
  *
- * This implementation stays Android only on purpose rather than for now: runtime permission groups
+ * This implementation is Android only on purpose rather than for now: runtime permission groups
  * are an Android concept, and iOS asks at the point of use with nothing to enumerate. The interface
  * is in shared code because the screen that lists permissions is, so an Apple target will need some
  * implementation - returning an empty list is the honest one there, not a gap.

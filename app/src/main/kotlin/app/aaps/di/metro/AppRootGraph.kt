@@ -202,6 +202,11 @@ import kotlin.reflect.KClass
 @DependencyGraph(AppScope::class)
 interface AppRootGraph : MetroViewModelMultibindings, PumpAccessors {
 
+    // Both of the graphs below are extensions rather than roots of their own. A second
+    // `@DependencyGraph(AppScope::class)` is unsafe: two graphs both declaring `AppScope` get a
+    // separate copy of anything scoped there, and nothing reports it. As extensions they share this
+    // graph's bindings instead of restating them, so their factories take no arguments at all.
+
     /** Android classes that fill their own fields. */
     val receiversGraph: AppReceiversGraph
 
@@ -215,20 +220,12 @@ interface AppRootGraph : MetroViewModelMultibindings, PumpAccessors {
     val historyWindowFactory: HistoryWindowGraph.Factory
 
     /**
-     * Feature modules, as extensions rather than roots of their own.
-     *
-     * Each of these used to be a second `@DependencyGraph(AppScope::class)`, built by `MetroGraphs`
-     * with its own list of leaves. That was safe only by accident: two graphs both declaring `AppScope`
-     * get a separate copy of anything scoped there, and nothing reports it. As extensions they share
-     * this graph's bindings instead of restating them, so their factories take no arguments at all.
-     */
-    /**
      * The shared wizard and running-mode objects, from a binding container in `:core:objects`.
      *
-     * It used to be a `@GraphExtension`, which put its bindings out of reach: an extension can see its
-     * parent, but the parent cannot see the extension, so anything contributed here could not depend on
-     * a wizard. As a container its bindings are part of this graph, and it still lives in commonMain
-     * where the Apple targets can include it too.
+     * A binding container, not a `@GraphExtension`: an extension can see its parent, but the parent
+     * cannot see the extension, so anything contributed here could not depend on a wizard. As a
+     * container its bindings are part of this graph, and it lives in commonMain where the Apple
+     * targets can include it too.
      */
     val runningModeGuard: RunningModeGuard
     val quickWizard: QuickWizard
