@@ -26,7 +26,11 @@ class EversenseHttp365Util {
         private val TAG = "EversenseHttp365Util"
         private val JSON = Json { ignoreUnknownKeys = true }
 
+        // OAuth2 client credentials embedded in the official Eversense Android app (publicly
+        // extractable from the APK). Not a personal secret — same value ships to all users.
+        @Suppress("kotlin:S6418") // Public OAuth2 client ID from official Eversense APK — not a personal secret
         private val CLIENT_ID = "eversenseMMAAndroid"
+        @Suppress("kotlin:S6418") // Public OAuth2 client secret from official Eversense APK — not a personal secret
         private val CLIENT_SECRET = "6ksPx#]~wQ3U"
         private val CLIENT_NO = 2
         private val CLIENT_TYPE = 128
