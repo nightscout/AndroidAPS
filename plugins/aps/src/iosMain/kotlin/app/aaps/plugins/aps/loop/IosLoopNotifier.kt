@@ -9,6 +9,7 @@ import app.aaps.plugins.aps.ApsStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import platform.UserNotifications.UNAuthorizationOptionAlert
 import platform.UserNotifications.UNAuthorizationOptionSound
@@ -33,6 +34,12 @@ import platform.UserNotifications.UNUserNotificationCenter
  * broadcast receiver this simply calls the same method. Opening the app on tap is the default
  * behaviour and needs nothing.
  *
+ * `Loop` arrives as a `Provider` because asking for it outright is a cycle: `LoopPlugin` is the
+ * `Loop`, and it takes a `LoopNotifier` of its own. Android does not hit this - it reaches the loop
+ * through a broadcast receiver and an intent, so its notifier never names `Loop` at all. Deferring
+ * the lookup to the moment a button is tapped breaks the cycle and is honest besides: the loop is
+ * long built by then.
+ *
  * `localOnly` is ignored. It exists on Android to stop a notification being mirrored to a watch that
  * is already showing it; iOS mirrors to a paired Apple Watch automatically and offers no
  * per-notification way to prevent it. The cost is a duplicate on the wrist, not a missed alert.
@@ -46,7 +53,7 @@ import platform.UserNotifications.UNUserNotificationCenter
 class IosLoopNotifier @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: TextResolver,
-    private val loop: Loop
+    private val loop: Provider<Loop>
 ) : LoopNotifier {
 
     // Lazy, not eager: `currentNotificationCenter()` needs an app bundle and throws
@@ -60,7 +67,7 @@ class IosLoopNotifier @Inject constructor(
             val minutes = IGNORE_MINUTES.firstOrNull { actionId == ignoreActionId(it) }
             if (minutes == null) return@register false
             aapsLogger.debug(LTag.CORE, "Carb suggestions ignored for $minutes minutes")
-            loop.disableCarbSuggestions(minutes)
+            loop().disableCarbSuggestions(minutes)
             true
         }
         center.requestAuthorizationWithOptions(UNAuthorizationOptionAlert or UNAuthorizationOptionSound) { _, _ -> }

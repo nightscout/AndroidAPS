@@ -6,15 +6,19 @@ import kotlin.test.Test
 import kotlin.test.assertTrue
 
 /**
- * Pins the deliberate emptiness of the two Bluetooth ports on iOS.
+ * Pins the deliberate emptiness of the paired device list on iOS.
  *
- * Both look like stubs waiting to be finished, and that is the danger: someone reading them later
- * could "fix" them into something that appears to work. They are empty because iOS genuinely cannot
- * answer - an app may not read the phone's paired devices, and may not see Bluetooth connections
- * made by anything other than itself.
+ * It looks like a stub waiting to be finished, and that is the danger: someone reading it later
+ * could "fix" it into something that appears to work. It is empty because iOS genuinely cannot
+ * answer - an app may not read the phone's paired devices.
+ *
+ * The other half of the Bluetooth story needs no class here. `BtConnectionSource` is implemented by
+ * `AutomationRuntime` in commonMain, and it fills its buffer from `EventBTChange` on the bus. Nothing
+ * posts that event on iOS - on Android a broadcast receiver does - so the list is empty there for the
+ * same reason, without a second implementation to keep in step.
  *
  * The consequence, decided deliberately and recorded in `_docs/ios_blockers.md`: a Bluetooth
- * automation trigger can be configured on iOS and will never fire. These tests exist so that stays a
+ * automation trigger can be configured on iOS and will never fire. This test exists so that stays a
  * decision rather than becoming a bug report.
  */
 class IosBluetoothAbsenceTest {
@@ -56,17 +60,12 @@ class IosBluetoothAbsenceTest {
         assertTrue(names.isEmpty())
     }
 
-    @Test
-    fun `no bluetooth connection events are ever reported`() {
-        assertTrue(IosBtConnectionSource(SilentLogger).recentBtConnects().isEmpty())
-    }
-
     /** Asking twice must not start accumulating anything. */
     @Test
     fun `repeated calls stay empty`() {
-        val source = IosBtConnectionSource(SilentLogger)
-        repeat(3) { source.recentBtConnects() }
+        val devices = IosPairedBtDevices(SilentLogger)
+        repeat(3) { devices.names() }
 
-        assertTrue(source.recentBtConnects().isEmpty())
+        assertTrue(devices.names()?.isEmpty() == true)
     }
 }
