@@ -1033,3 +1033,21 @@ or an over-specified supertype. Compiling for iOS is what finds them.
 
 Verified: `:plugins:constraints:compileKotlinIosArm64`, `:ios:shell:compileKotlinIosArm64`,
 `:app:assembleFullDebug`, and 115 `:plugins:constraints` tests.
+
+## DONE: move `formatTemplate` so format strings work off Android
+
+Moved to `core/interfaces/src/commonMain/.../resources/TextFormat.kt`, public rather than internal,
+with its 18 tests. `GeneratedTextResolver` calls the same function, so the two paths cannot disagree.
+`NumberFormat` resolved from `:core:interfaces` exactly as you expected.
+
+Both actuals now substitute: `TextRefResource.ios.kt` and `.jvm.kt` do
+`formatTemplate(TextRefValueRegistry.textOf(ref) ?: ref.name, ref.args)`.
+
+**One thing your note did not cover, found while doing it.** The desktop actual was not merely
+missing the arguments - it was still the original placeholder returning `ref.name`, so *no* Compose
+string resolved on desktop even without arguments. The `TextResolver` path had been fixed and the
+Compose path had not, which is the same "two paths disagree" problem, a step earlier. Fixed in the
+same change; your iOS actual was already correct.
+
+Gate: 102 tests in `:core:interfaces` (18 of them moved in), 794 in `:implementation`,
+`:app:assembleFullDebug`, `:ios:shell:compileKotlinIosArm64`, desktop shell tests.
