@@ -62,6 +62,12 @@ class Eversense365Communicator {
         // contain it. The backfill filter below excludes any history entry within this tolerance
         // of the live reading's timestamp so it isn't double-counted as a distinct reading -
         // comfortably under the ~5-minute reading cadence, so a real gap still backfills correctly.
+        //
+        // The same slip happens at the OTHER end too: the history log can timestamp a reading we
+        // already stored last cycle (previousGlucoseDatetime) a second or two later than the live
+        // characteristic did back then. A bare ">" comparison against previousGlucoseDatetime has
+        // zero tolerance for that, so the already-seen reading re-backfills as "new" the moment the
+        // log catches up to it. Apply the same tolerance on this end too.
         private val BACKFILL_DEDUP_TOLERANCE_MS = TimeUnit.SECONDS.toMillis(90)
 
         fun readGlucose(gatt: EversenseGattCallback, preferences: SharedPreferences, watchers: List<EversenseWatcher>) {
@@ -121,7 +127,7 @@ class Eversense365Communicator {
                     GetGlucoseLogValuesPacket(from = range.from, to = range.to, sensorIdLength = sensorIdLength)
                 )
                 val backfill = history.glucoseHistory
-                    .filter { it.datetime > previousGlucoseDatetime && it.datetime < glucoseData.datetime - BACKFILL_DEDUP_TOLERANCE_MS }
+                    .filter { it.datetime > previousGlucoseDatetime + BACKFILL_DEDUP_TOLERANCE_MS && it.datetime < glucoseData.datetime - BACKFILL_DEDUP_TOLERANCE_MS }
                     .map { item -> EversenseCGMResult(glucoseInMgDl = item.valueInMgDl, datetime = item.datetime, trend = item.trend, rawResponseHex = item.rawResponseHex) }
                 if (backfill.isNotEmpty()) {
                     result.addAll(0, backfill)
