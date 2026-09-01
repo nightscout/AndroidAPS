@@ -49,7 +49,10 @@ class IosLoopNotifier @Inject constructor(
     private val loop: Loop
 ) : LoopNotifier {
 
-    private val center = UNUserNotificationCenter.currentNotificationCenter()
+    // Lazy, not eager: `currentNotificationCenter()` needs an app bundle and throws
+    // `bundleProxyForCurrentProcess is nil` without one, so a field initialiser makes the class
+    // impossible to construct in a test binary.
+    private val center by lazy { UNUserNotificationCenter.currentNotificationCenter() }
 
     /** Registered once, on first use, so building the graph does not touch the notification centre. */
     private val registered: Unit by lazy {
