@@ -114,6 +114,10 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
 
     // Read once, outside the composition, for the same reason as the graph: decoding the icon on
     // every recomposition would be work for nothing.
+    // From the bundle, like the icon and for the same reason: one framework serves both AAPSClient
+    // and AAPSClient2, so each target's own `CFBundleDisplayName` is the only thing that can tell
+    // them apart. This was the literal "AAPS" before - the name of the *master*, on a follower.
+    val appName = graph.textResolver.gs(graph.config.appName)
     val appIcon = loadAppIcon()
     if (appIcon == null) logger.error(LTag.CORE, "The app bundle gave no icon; showing the plain AAPS mark")
     logger.debug(LTag.CORE, "Starting the AAPS Compose root on iOS")
@@ -278,9 +282,7 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
                         onShowDeliveryError = { comment, title ->
                             logger.error(LTag.CORE, "Delivery error: ${graph.textResolver.gs(title)} - $comment")
                         },
-                        // Protection is not enforced on iOS yet - see IosProtectionCheck for why the
-                        // action runs anyway rather than every protected screen being unreachable.
-                        withProtection = { _, action -> action() },
+                        withProtection = guardedBy(graph.protectionCheck),
                         requestEditModeAuthorization = { onGranted ->
                             logger.notWiredYet("edit mode authorization - granting")
                             onGranted()
@@ -314,7 +316,7 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
                                 clientControlActionDispatcher = graph.clientControlActionDispatcher,
                                 commandQueue = graph.commandQueue,
                                 pumpCommunicationStatus = graph.pumpCommunicationStatus,
-                                appName = "AAPS",
+                                appName = appName,
                                 authorizationFailedMessage = "Authorization failed",
                                 onNavigate = { request -> navigator.handleNavigationRequest(request) },
                                 onSearchResultClick = { entry -> navigator.handleSearchResultClick(entry) },
@@ -354,3 +356,22 @@ private fun AppIconImage(icon: ImageBitmap?, modifier: Modifier) {
     if (icon != null) Image(bitmap = icon, contentDescription = null, modifier = modifier)
     else Icon(imageVector = IcAaps, contentDescription = null, modifier = modifier)
 }
+
+/**
+ * Runs an action only when the user clears the protection it sits behind.
+ *
+ * The same shape as desktop's `Main.kt` and Android's `navigator.guarded`. Named rather than written
+ * inline at the call site so it can be tested: this used to be `{ _, action -> action() }`, left over
+ * from when iOS had no `ProtectionCheck` of its own, and it ran **every** protected action without
+ * asking - bolus entry and settings edits included. That is invisible on a device with protection
+ * turned off, which is most of them, so it is worth a test rather than a look.
+ *
+ * Anything other than [ProtectionResult.GRANTED] - denied, or cancelled by backing out of the prompt
+ * - must not run the action.
+ */
+internal fun guardedBy(protectionCheck: ProtectionCheck): (ProtectionCheck.Protection, () -> Unit) -> Unit =
+    { protection, action ->
+        protectionCheck.requestProtection(protection) { result ->
+            if (result == ProtectionResult.GRANTED) action()
+        }
+    }
