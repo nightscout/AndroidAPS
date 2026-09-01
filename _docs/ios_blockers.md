@@ -956,7 +956,7 @@ called once from `aapsAppViewController`, and registering only records. Declarin
 and claiming a process-wide delegate slot, are different acts and only one of them needs an app.
 
 
-## Request: move the Main route into `appNavGraph` so both new platforms get the overview
+## DONE: move the Main route into `appNavGraph` so both new platforms get the overview
 
 Nothing is missing from `MainScreen` itself. Checked rather than assumed:
 
@@ -988,6 +988,30 @@ platform.
 Apple shell does". That has a consequence worth knowing before someone reports it as a bug: the
 settings screen's back arrow calls `safePopBackStack()` on an empty stack, so **the arrow renders and
 does nothing**. It reads as broken rather than as missing.
+
+### Both done, and your reading was right on every point
+
+The route is in `appNavGraph` now, as an `overview` slot rather than another twenty parameters: the
+assembly is `OverviewScreen` in `:ui`, which takes the ten view models and about thirty dependencies,
+and each platform hands the built composable in. Threading those through `appNavGraph` would have
+taken it past sixty parameters for one screen.
+
+That assembly is the 173 lines that were inline in `ComposeMainActivity`, and you were right that
+none of it is Android - it is plugin state, objectives progress and glucose quality. Only five
+callbacks are per platform: browser, directory picker, bring-to-front, recreate, and quit after a
+failed authorization.
+
+`AapsAppHost` can pass `overview = { OverviewScreen(...) }` and switch its start destination to
+`AppRoute.Main.route`. Two things it needs that iOS did not have before: `Objectives` and
+`PumpCommunicationStatus`, both now provided in `IosMainPluginsBindings`.
+
+**The back arrow.** Fixed before this landed, by the shared home screen - and now properly, because
+desktop opens on `AppRoute.Main.route` with a real root beneath it. `ShellHomeScreen` stays for the
+moment as a way to reach screens the drawer does not list; it should go when it stops earning that.
+
+**Drawer clicks were the next dead end**, found by running it: every item routed into a placeholder
+because the `ElementType` to route mapping was also inline in the activity. That is shared now too -
+see the note above on `ElementNavigation`.
 
 iOS now starts on `IosHomeScreen` instead - a plain list of every argument-free route, marked as
 scaffolding, which gives back somewhere to go and makes the other twenty-odd screens reachable for
