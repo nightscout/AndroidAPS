@@ -1,6 +1,8 @@
 package app.aaps.ios.shell.di
 
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -8,6 +10,8 @@ import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
+import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.workflow.CalculationExecutor
@@ -21,6 +25,7 @@ import app.aaps.database.di.IosAppDatabaseBuilder
 import app.aaps.ios.shell.prefs.IosSp
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.ios.shell.config.IosClientConfig
+import app.aaps.shared.impl.logging.LImpl
 import app.aaps.shared.impl.rx.bus.RxBusImpl
 import app.aaps.implementation.notifications.CommonNotificationManager
 import app.aaps.implementation.notifications.IosSystemNotificationPlatform
@@ -69,7 +74,7 @@ import dev.zacsweers.metro.SingleIn
  * Android resource files and iOS has no reader for them yet.
  *
  * To find what is still missing, add an accessor for it and read the `[Metro/MissingBinding]` error.
- * `_dcs/ios_blockers.md` holds the current list and the procedure.
+ * `_docs/ios_blockers.md` holds the current list and the procedure.
  */
 @DependencyGraph(AppScope::class)
 interface IosProbeGraph {
@@ -101,77 +106,19 @@ interface IosProbeGraph {
     val alarmSoundPlayer: AlarmSoundPlayer
     val preferences: Preferences
 
-    /** The real iOS logger: NSLog for the console, a rotating file for afterwards. */
-    @Provides
-    @SingleIn(AppScope::class)
-    fun logger(): AAPSLogger = AAPSLoggerIos()
-    @Provides fun textResolver(): TextResolver = ProbeTextResolver
 
-    /** NSUserDefaults, the same store the preference layer will sit on. */
-    @Provides
-    @SingleIn(AppScope::class)
-    fun keyValueStore(): KeyValueStore = IosSp()
 
-    /** Dates through the iOS formatter, so this is the production class rather than a stand-in. */
-    @Provides
-    @SingleIn(AppScope::class)
-    fun dateUtil(): DateUtil = DateUtilImpl(IosDateFormatPlatform())
+
 
     /**
      * A real SQLite database, in a file of its own.
      *
-     * Named apart from the app's so a probe run cannot disturb real data.
+     * Named apart from the app's so a probe run cannot disturb real data. Every other leaf this
+     * graph needs comes from [IosPlatformBindings], which the app graph shares.
      */
-    /** What kind of build this is. An iOS build is a follower client, not a loop. */
-    @Provides
-    @SingleIn(AppScope::class)
-    fun config(): Config = IosClientConfig()
-
-    /** The production bus, which is already common code. */
-    @Provides
-    @SingleIn(AppScope::class)
-    fun rxBus(logger: AAPSLogger): RxBus = RxBusImpl(logger)
-
-    /** The scope long lived work runs in, the counterpart of the app's own. */
-    @Provides
-    @SingleIn(AppScope::class)
-    fun appScope(): CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
-
     @Provides
     @SingleIn(AppScope::class)
     fun repository(): AppRepository = IosAppDatabaseBuilder().provideAppRepository("aaps-ios-graph.db")
-
-    /** Notifications through UNUserNotificationCenter, with the shared registry above it. */
-    @Provides
-    @SingleIn(AppScope::class)
-    fun systemNotificationPlatform(logger: AAPSLogger, alarmSoundPlayer: AlarmSoundPlayer): SystemNotificationPlatform =
-        IosSystemNotificationPlatform(logger, alarmSoundPlayer)
-
-    @Provides
-    @SingleIn(AppScope::class)
-    fun notificationManager(
-        logger: AAPSLogger,
-        textResolver: TextResolver,
-        platform: SystemNotificationPlatform,
-        scope: CoroutineScope
-    ): NotificationManager = CommonNotificationManager(logger, textResolver, platform, scope)
-
-    /**
-     * The shared coroutine executor, stated rather than contributed.
-     *
-     * `CoroutineCalculationExecutor` lives in `commonMain` and is already the right one for iOS -
-     * its own docs say a coroutine is enough anywhere that is not Android. It carries no
-     * `@ContributesBinding` on purpose, so it cannot collide with the WorkManager one Android
-     * contributes, which is why the binding has to be named here.
-     */
-    @Provides
-    @SingleIn(AppScope::class)
-    fun calculationExecutor(
-        scope: CoroutineScope,
-        logger: AAPSLogger,
-        prepare: PrepareGraphDataRunner,
-        post: PostCalculationRunner
-    ): CalculationExecutor = CoroutineCalculationExecutor(scope, logger, prepare, post)
 
     @DependencyGraph.Factory
     fun interface Factory {

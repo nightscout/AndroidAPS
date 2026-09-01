@@ -1,0 +1,177 @@
+package app.aaps.ios.shell.ui
+
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.window.ComposeUIViewController
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.navigation.compose.NavHost
+import app.aaps.appshell.AapsAppRoot
+import app.aaps.appshell.navigation.AppRoute
+import app.aaps.appshell.navigation.appNavGraph
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.objects.di.CoreObjectsGraph
+import app.aaps.core.ui.compose.LocalMetroViewModelFactory
+import app.aaps.core.ui.compose.icons.IcAaps
+import app.aaps.core.ui.compose.metroViewModel
+import app.aaps.ios.shell.IosAppStartup
+import app.aaps.ios.shell.di.IosAppGraph
+import app.aaps.ios.shell.di.IosViewModelFactory
+import app.aaps.ui.compose.configuration.ConfigurationViewModel
+import app.aaps.ui.compose.insulinManagement.InsulinManagementViewModel
+import app.aaps.ui.compose.maintenance.ImportViewModel
+import app.aaps.ui.compose.overview.chips.ChipsViewModel
+import app.aaps.ui.compose.overview.graphs.GraphViewModel
+import app.aaps.ui.compose.profileManagement.viewmodels.ProfileEditorViewModel
+import app.aaps.ui.compose.profileManagement.viewmodels.ProfileHelperViewModel
+import app.aaps.ui.compose.profileManagement.viewmodels.ProfileManagementViewModel
+import app.aaps.ui.compose.quickWizard.viewmodels.QuickWizardManagementViewModel
+import app.aaps.ui.compose.runningMode.RunningModeManagementViewModel
+import app.aaps.ui.compose.siteRotationDialog.viewModels.SiteRotationManagementViewModel
+import app.aaps.ui.compose.stats.viewmodels.StatsViewModel
+import app.aaps.ui.compose.tempTarget.TempTargetManagementViewModel
+import app.aaps.ui.compose.treatments.viewmodels.TreatmentsViewModel
+import dev.zacsweers.metro.createGraphFactory
+import platform.UIKit.UIViewController
+
+/**
+ * The real AAPS app, running on iOS - the counterpart of `ComposeMainActivity` in `:app`.
+ *
+ * [AapsAppRoot] is shared code and owns everything above a screen: the theme, the composition
+ * locals, the splash gate and the four hosts (snackbar, dialog, password prompt, client-control
+ * modal). This file supplies the two things it cannot: the platform's own graph, and the navigation
+ * that fills the space it leaves for `content`.
+ *
+ * ## What this is not, yet
+ *
+ * The overview - the home screen with the graph and the treatment buttons - is still assembled
+ * inline inside `ComposeMainActivity` rather than in the shared navigation graph, so there is
+ * nothing here to call for it. The app therefore opens on the preference screen, which **is** in
+ * `appNavGraph` and is a fair test of the layers underneath: it reads and writes real preferences
+ * through `NSUserDefaults`.
+ *
+ * The callbacks below are placeholders and say so in the log when used. They are the wiring a
+ * platform is supposed to supply - opening a document picker, asking for a permission - and each
+ * needs an iOS answer of its own rather than a shared one.
+ */
+fun aapsAppViewController(): UIViewController {
+    // Built once, outside the composition: a graph rebuilt on each recomposition would hand out new
+    // singletons every frame - a new database wrapper, a new preference store.
+    val graph = createGraphFactory<IosAppGraph.Factory>().create(CoreObjectsGraph)
+    val viewModelFactory = IosViewModelFactory(graph)
+    val logger = graph.logger
+
+    // Before the composition, not beside it: the first view model built reads the active pump, and
+    // an empty plugin list there throws from a coroutine and takes the process with it.
+    IosAppStartup(graph).run()
+    logger.debug(LTag.CORE, "Starting the AAPS Compose root on iOS")
+
+    return ComposeUIViewController {
+        // iOS has no ambient application object, so the factory is provided here rather than found.
+        CompositionLocalProvider(LocalMetroViewModelFactory provides viewModelFactory) {
+            AapsAppRoot(
+                config = graph.config,
+                preferences = graph.preferences,
+                dateUtil = graph.dateUtil,
+                decimalFormatter = graph.decimalFormatter,
+                profileUtil = graph.profileUtil,
+                passwordHasher = graph.passwordHasher,
+                passwordCheck = graph.passwordCheck,
+                exportPasswordDataStore = graph.exportPasswordDataStore,
+                visibilityContext = graph.visibilityContext,
+                nsClient = graph.nsClient,
+                rxBus = graph.rxBus,
+                clientControlActionDispatcher = graph.clientControlActionDispatcher,
+                appIcon = { modifier -> Icon(imageVector = IcAaps, contentDescription = null, modifier = modifier) },
+                splashLogo = { modifier -> Icon(imageVector = IcAaps, contentDescription = null, modifier = modifier) },
+                onNavControllerReady = {},
+                onClose = { logger.error(LTag.CORE, "Initialization failed and iOS cannot close an app") }
+            ) { navController ->
+                // Resolved here rather than inside the NavHost: `appNavGraph` is a builder, not a
+                // composable, so a view model cannot be asked for from within it.
+                val insulinManagement = metroViewModel<InsulinManagementViewModel>()
+                val profileManagement = metroViewModel<ProfileManagementViewModel>()
+                val profileEditor = metroViewModel<ProfileEditorViewModel>()
+                val profileHelper = metroViewModel<ProfileHelperViewModel>()
+                val tempTargetManagement = metroViewModel<TempTargetManagementViewModel>()
+                val quickWizardManagement = metroViewModel<QuickWizardManagementViewModel>()
+                val runningModeManagement = metroViewModel<RunningModeManagementViewModel>()
+                val import = metroViewModel<ImportViewModel>()
+                val configuration = metroViewModel<ConfigurationViewModel>()
+                val treatments = metroViewModel<TreatmentsViewModel>()
+                val stats = metroViewModel<StatsViewModel>()
+                val siteRotationManagement = metroViewModel<SiteRotationManagementViewModel>()
+                // Assisted rather than contributed, so it is built from its own factory. `fullWindow`
+                // is false here for the same reason as on Android: this is the app's own graph, not
+                // the full-screen history one.
+                val graphs: GraphViewModel = viewModel(
+                    factory = viewModelFactory {
+                        initializer { graph.graphViewModelFactory.create(graph.overviewDataCache, fullWindow = false) }
+                    }
+                )
+                val chips: ChipsViewModel = viewModel(
+                    factory = viewModelFactory {
+                        initializer { graph.chipsViewModelFactory.create(graph.overviewDataCache) }
+                    }
+                )
+
+                NavHost(navController = navController, startDestination = AppRoute.Preferences.route) {
+                    appNavGraph(
+                        navController = navController,
+                        insulinManagementViewModel = insulinManagement,
+                        profileManagementViewModel = profileManagement,
+                        profileEditorViewModel = profileEditor,
+                        profileHelperViewModel = profileHelper,
+                        tempTargetManagementViewModel = tempTargetManagement,
+                        quickWizardManagementViewModel = quickWizardManagement,
+                        runningModeManagementViewModel = runningModeManagement,
+                        importViewModel = import,
+                        configurationViewModel = configuration,
+                        treatmentsViewModel = treatments,
+                        statsViewModel = stats,
+                        siteRotationManagementViewModel = siteRotationManagement,
+                        graphViewModel = graphs,
+                        chipsViewModel = chips,
+                        swDefinition = graph.swDefinition,
+                        rxBus = graph.rxBus,
+                        activePlugin = graph.activePlugin,
+                        pluginPermissions = graph.pluginPermissions,
+                        automationRuntime = graph.automationRuntime,
+                        preferences = graph.preferences,
+                        rh = graph.textResolver,
+                        builtInSearchables = graph.builtInSearchables,
+                        configBuilder = graph.configBuilder,
+                        prefFileList = graph.prefsFileInfo,
+                        persistenceLayer = graph.persistenceLayer,
+                        visibilityContext = graph.visibilityContext,
+                        onNavigationRequest = { request, _ ->
+                            logger.notWiredYet("navigation request $request")
+                        },
+                        onShowDeliveryError = { comment, title ->
+                            logger.error(LTag.CORE, "Delivery error: ${graph.textResolver.gs(title)} - $comment")
+                        },
+                        // Protection is not enforced on iOS yet - see IosProtectionCheck for why the
+                        // action runs anyway rather than every protected screen being unreachable.
+                        withProtection = { _, action -> action() },
+                        requestEditModeAuthorization = { onGranted ->
+                            logger.notWiredYet("edit mode authorization - granting")
+                            onGranted()
+                        },
+                        onRefreshPermissions = { logger.notWiredYet("permission refresh") },
+                        onExecuteQuickWizard = { guid -> logger.notWiredYet("quick wizard $guid") },
+                        onRequestDirectoryAccess = { logger.notWiredYet("directory access - iOS needs a document picker") },
+                        onRequestPermission = { group -> logger.notWiredYet("permission request $group") },
+                        findScreenDef = { null }
+                    )
+                }
+            }
+        }
+    }
+}
+
+/** One line, one shape, so a run makes it obvious which platform callbacks are still placeholders. */
+private fun AAPSLogger.notWiredYet(what: String) = error(LTag.CORE, "Not wired up on iOS yet: $what")
