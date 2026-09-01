@@ -2,10 +2,6 @@ package app.aaps.plugins.configuration.configBuilder
 
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.configuration.ConfigurationStrings
-import android.app.AlarmManager
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -22,7 +18,8 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.configuration.AppExit
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
@@ -46,20 +43,19 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
-import kotlin.system.exitProcess
 
 // Scoped, so every caller shares one config builder.
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 class ConfigBuilderImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val preferences: Preferences,
     private val rxBus: RxBus,
     private val activePlugin: ActivePlugin,
     private val uel: UserEntryLogger,
     private val pumpSync: PumpSync,
-    private val context: Context,
+    private val appExit: AppExit,
     private val config: Config
 ) : ConfigBuilder {
 
@@ -150,7 +146,7 @@ class ConfigBuilderImpl @Inject constructor(
     }
 
     private fun savePref(p: PluginBase, type: PluginType) {
-        val composed = type.name + "_" + p.javaClass.simpleName
+        val composed = composedKeyFor(p, type)
         preferences.put(BooleanComposedKey.ConfigBuilderEnabled, composed, value = p.isEnabled())
         aapsLogger.debug(LTag.CONFIGBUILDER, "Storing: " + BooleanComposedKey.ConfigBuilderEnabled.composeKey(composed) + ":" + p.isEnabled())
     }
@@ -165,7 +161,7 @@ class ConfigBuilderImpl @Inject constructor(
     }
 
     private fun loadPref(p: PluginBase, type: PluginType) {
-        val composed = type.name + "_" + p.javaClass.simpleName
+        val composed = composedKeyFor(p, type)
         val existing = preferences.getIfExists(BooleanComposedKey.ConfigBuilderEnabled, composed)
         if (existing != null) p.setPluginEnabled(type, existing)
         else if (p.getType() == type && (p.pluginDescription.enableByDefault || p.pluginDescription.alwaysEnabled)) {
@@ -297,24 +293,18 @@ class ConfigBuilderImpl @Inject constructor(
         rxBus.send(EventAppExit())
         aapsLogger.debug(LTag.CORE, "Exiting ... Requester: $from")
         uel.log(Action.EXIT_AAPS, source)
-        if (launchAgain) scheduleStart()
-        System.runFinalization()
-        exitProcess(0)
+        appExit.exit(launchAgain)
     }
 
-    private fun scheduleStart() {
-        // fetch the packageManager so we can get the default launch activity
-        context.packageManager?.let { pm ->
-            //create the intent with the default start activity for your application
-            pm.getLaunchIntentForPackage(context.packageName)?.let { startActivity ->
-                startActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                //create a pending intent so the application is restarted after System.exit(0) was called.
-                // We use an AlarmManager to call this intent in 100ms
-                val pendingIntentId = 2233445
-                val pendingIntent = PendingIntent.getActivity(context, pendingIntentId, startActivity, PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-                (context.getSystemService(Context.ALARM_SERVICE) as AlarmManager)
-                    .set(AlarmManager.RTC, System.currentTimeMillis() + 100, pendingIntent)
-            }
-        }
-    }
+
+    /**
+     * The preference key a plugin is stored under: "<type>_<simple class name>".
+     *
+     * **A stored format.** This was `javaClass.simpleName`, which does not exist outside the JVM.
+     * `KClass.simpleName` gives the same string for a named class - which every plugin is - so the
+     * keys an existing install already wrote keep resolving. The two only diverge for anonymous
+     * classes, where the old form gives "" and this gives null; a plugin cannot be one.
+     */
+    private fun composedKeyFor(p: PluginBase, type: PluginType): String =
+        type.name + "_" + (p::class.simpleName ?: "")
 }

@@ -141,4 +141,9 @@ dependencies {
     add("kspAndroid", libs.androidx.room.compiler)
     add("kspIosArm64", libs.androidx.room.compiler)
     add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+    // The JVM one was missing, and nothing said so until the desktop app ran: without it the target
+    // compiles perfectly and then throws "AppDatabase_Impl does not exist" the first time anything
+    // touches the database. A missing processor is invisible to the compiler - the generated class is
+    // only looked for at runtime.
+    add("kspJvm", libs.androidx.room.compiler)
 }

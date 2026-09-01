@@ -1101,3 +1101,30 @@ same change; your iOS actual was already correct.
 
 Gate: 102 tests in `:core:interfaces` (18 of them moved in), 794 in `:implementation`,
 `:app:assembleFullDebug`, `:ios:shell:compileKotlinIosArm64`, desktop shell tests.
+
+## DONE: `ConfigBuilderImpl` ported to commonMain
+
+`IosConfigBuilder` is deleted. Your read was right on both counts: the plugin bookkeeping is ordinary
+logic, and `exitApp` is the one part that will always need a platform half.
+
+That half is now `AppExit` (`core/interfaces/.../configuration/AppExit.kt`), one method. The shared
+part of `exitApp` - the bus event, the log line and the user entry - stays in `ConfigBuilderImpl`, so
+only the final step is platform specific:
+
+- `AndroidAppExit` keeps the `AlarmManager` + `PendingIntent` relaunch exactly as it was.
+- `IosAppExit` **refuses**, and the KDoc says why it is a class rather than a one-liner:
+  `exitProcess` exists on Kotlin/Native and would "work", so the tempting implementation ships a
+  crash. Nothing is exited and the refusal is logged. Written from here only so the graph builds -
+  if iOS should tell the user to close the app themselves, that belongs in this class.
+- `DesktopAppExit` exits, and logs that it cannot relaunch itself.
+
+Two things that were not in the import list, the same lesson as before:
+
+- `rh: ResourceHelper` narrowed what `PluginBase` already declares as `TextResolver`.
+- `p.javaClass.simpleName` builds a **stored preference key** (`"<type>_<simple name>"`), so it could
+  not just be swapped. It is now one documented helper on `KClass.simpleName`, which gives the same
+  string for a named class - which every plugin is - so existing installs keep their per-plugin
+  enabled state. The two forms only diverge for anonymous classes.
+
+Gate: `:plugins:configuration` 32 tests, `:app:assembleFullDebug`, `:ios:shell:compileKotlinIosArm64`,
+desktop shell.

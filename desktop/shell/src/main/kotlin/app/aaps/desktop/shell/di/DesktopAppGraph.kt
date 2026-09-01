@@ -1,5 +1,34 @@
 package app.aaps.desktop.shell.di
 
+import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.ConfigBuilder
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.maintenance.PrefsFileInfo
+import app.aaps.core.interfaces.overview.graph.OverviewDataCache
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginPermissions
+import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.protection.ExportPasswordDataStore
+import app.aaps.core.interfaces.protection.PasswordCheck
+import app.aaps.core.interfaces.protection.PasswordHasher
+import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.sync.NsClient
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.VisibilityContext
+import app.aaps.implementation.plugin.PluginStore
+import app.aaps.plugins.automation.AutomationRuntime
+import app.aaps.plugins.configuration.setupwizard.SWDefinition
+import app.aaps.ui.compose.overview.chips.ChipsViewModel
+import app.aaps.ui.compose.overview.graphs.GraphViewModel
+import app.aaps.ui.search.BuiltInSearchables
+import dev.zacsweers.metrox.viewmodel.MetroViewModelMultibindings
 import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.database.AppRepository
 import app.aaps.database.di.JvmAppDatabaseBuilder
@@ -51,7 +80,45 @@ import dev.zacsweers.metro.SingleIn
  * plausible value, and nothing is silent.
  */
 @DependencyGraph(AppScope::class)
-interface DesktopAppGraph {
+interface DesktopAppGraph : MetroViewModelMultibindings {
+
+    // Everything AapsAppRoot takes.
+    val config: Config
+    val preferences: Preferences
+    val dateUtil: DateUtil
+    val decimalFormatter: DecimalFormatter
+    val profileUtil: ProfileUtil
+    val passwordHasher: PasswordHasher
+    val passwordCheck: PasswordCheck
+    val protectionCheck: ProtectionCheck
+    val exportPasswordDataStore: ExportPasswordDataStore
+    val visibilityContext: VisibilityContext
+    val nsClient: NsClient
+    val rxBus: RxBus
+    val clientControlActionDispatcher: ClientControlActionDispatcher
+
+    // Everything appNavGraph takes.
+    val activePlugin: ActivePlugin
+    val pluginPermissions: PluginPermissions
+    val textResolver: TextResolver
+    val configBuilder: ConfigBuilder
+    val prefsFileInfo: PrefsFileInfo
+    val persistenceLayer: PersistenceLayer
+    val logger: AAPSLogger
+    val pluginStore: PluginStore
+    val contributedPlugins: Map<Int, PluginBase>
+    val automationRuntime: AutomationRuntime
+    val swDefinition: SWDefinition
+    val builtInSearchables: BuiltInSearchables
+
+    /**
+     * Assisted rather than contributed: both are built with the overview data cache instead of
+     * coming from the view model map, so `metroViewModel()` cannot find them. Android and iOS
+     * reach them the same way, through their own factories.
+     */
+    val graphViewModelFactory: GraphViewModel.Factory
+    val chipsViewModelFactory: ChipsViewModel.Factory
+    val overviewDataCache: OverviewDataCache
 
     /** The app's own database, in the AAPS folder under the user's home directory. */
     @Provides
