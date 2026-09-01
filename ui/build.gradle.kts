@@ -49,7 +49,20 @@ kotlin {
     iosArm64()
     iosSimulatorArm64()
 
+    // Desktop (Windows/macOS/Linux). Compose Multiplatform resolves its `desktop` variant from a
+    // plain jvm() target, so no special target name is needed.
+    jvm()
+
+    // Android and desktop share the diacritics actual: it is plain `java.text.Normalizer` on both.
+    // Applied explicitly, because the manual dependsOn below would otherwise switch the automatic
+    // hierarchy off and silently unwire iosMain.
+    applyDefaultHierarchyTemplate()
+
     sourceSets {
+        val jvmSharedMain = create("jvmSharedMain") { dependsOn(commonMain.get()) }
+        androidMain.get().dependsOn(jvmSharedMain)
+        jvmMain.get().dependsOn(jvmSharedMain)
+
         // The modules and the Compose artifacts a shared screen needs. Compose Multiplatform
         // republishes the same `androidx.compose.*` package names, so a screen that only uses Compose
         // moves here unchanged - that is how :core:ui ended up with 435 of its files in commonMain.
