@@ -21,7 +21,7 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
@@ -46,7 +46,7 @@ import dev.zacsweers.metro.IntKey as MetroIntKey
 @SingleIn(AppScope::class)
 class SafetyPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    override val rh: ResourceHelper,
+    override val rh: TextResolver,
     private val preferences: Preferences,
     private val constraintChecker: ConstraintsChecker,
     private val activePlugin: ActivePlugin,
@@ -132,7 +132,7 @@ class SafetyPlugin @Inject constructor(
         applyBasalConstraints(absoluteConstraint, profile)
         percentRate.copyReasons(absoluteConstraint)
         val pump = activePlugin.activePump
-        var percentRateAfterConst = java.lang.Double.valueOf(absoluteConstraint.value() / currentBasal * 100).toInt()
+        var percentRateAfterConst = (absoluteConstraint.value() / currentBasal * 100).toInt()
         percentRateAfterConst =
             if (percentRateAfterConst < 100) Round.ceilTo(percentRateAfterConst.toDouble(), pump.pumpDescription.tempPercentStep.toDouble())
                 .toInt() else Round.floorTo(percentRateAfterConst.toDouble(), pump.pumpDescription.tempPercentStep.toDouble()).toInt()
