@@ -957,3 +957,27 @@ Desktop now depends on the same 26 modules `:ios:shell` lists, so the plugin bin
 graph too, and `DesktopMainPluginsBindings` is a near copy of `IosMainPluginsBindings`. If that pair
 starts to drift it should become one container in a shared module that both graphs `@Includes` -
 worth doing when a third thing needs it, not before.
+
+## DONE: `SafetyPlugin` moved to commonMain
+
+`IosSafetyPlugin` is deleted. The real plugin carries
+`@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())` already, so it registers
+itself on every platform - iOS and desktop now apply the actual limits (maximum bolus, maximum basal,
+whether closed loop is allowed, whether the pump can do temp basals) instead of none.
+
+Deleting the placeholder was not optional once the real one was in commonMain: both implement
+`Safety`, `PluginStore.activeSafety` takes `.first()` of that list, and the placeholder applies no
+constraints at all. Two entries would have made which one wins a matter of ordering.
+
+Your note said "nothing in it is Android", which was nearly right - two things stood in the way, and
+neither was in the import list:
+
+- `override val rh: ResourceHelper`. `PluginBase` already declares `rh` as `TextResolver`, so the
+  plugin was narrowing it for no reason; every call was `gs(TextRef)`, which `TextResolver` has.
+- `java.lang.Double.valueOf(x).toInt()`, a boxing round trip that truncates exactly as `x.toInt()`.
+
+Both are the same lesson as `ProtectionCheckImpl`: an import grep does not see a fully qualified name
+or an over-specified supertype. Compiling for iOS is what finds them.
+
+Verified: `:plugins:constraints:compileKotlinIosArm64`, `:ios:shell:compileKotlinIosArm64`,
+`:app:assembleFullDebug`, and 115 `:plugins:constraints` tests.
