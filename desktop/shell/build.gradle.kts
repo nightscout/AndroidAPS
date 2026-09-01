@@ -1,5 +1,7 @@
 plugins {
     kotlin("jvm")
+    // Metro, because this module does not only link the shared code, it builds a graph from it.
+    alias(libs.plugins.metro)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.multiplatform)
 }
@@ -26,6 +28,13 @@ java {
 dependencies {
     implementation(compose.desktop.currentOs)
     implementation(compose.material3)
+
+    // The shared app: :appshell exposes every client module as `api`, so this one line brings the
+    // whole graph the desktop build needs.
+    implementation(project(":appshell"))
+    // The database is opened here, so its builder has to be visible - :appshell does not export it.
+    implementation(project(":database:impl"))
+    implementation(project(":database:persistence"))
 }
 
 compose.desktop {

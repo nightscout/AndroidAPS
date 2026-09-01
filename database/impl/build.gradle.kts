@@ -83,6 +83,13 @@ kotlin {
             }
         }
 
+        // And desktop, which opens the same file with the same engine.
+        jvmMain {
+            dependencies {
+                implementation(libs.androidx.sqlite.bundled)
+            }
+        }
+
         androidMain {
             dependencies {
                 api(libs.kotlin.stdlib.jdk8)
