@@ -721,6 +721,33 @@ Verified: 28 tests in `:implementation` commonTest, so they run on iOS as well, 
 shell; `:app:assembleFullDebug` and `:implementation:compileKotlinIosArm64` both green. The desktop
 app now renders "General" where it read `configbuilder_general`.
 
+
+## The strings work is wired on iOS, with one gap left on your side
+
+`GeneratedTextResolver` and the generated value maps landed and they work: `IosStringOwners`
+registers all sixteen modules the iOS framework links, and the settings screen now reads "Settings",
+"General", "Absorption settings" and "Master device unreachable. Editing is disabled until the
+connection is restored." instead of string names. `IosTextResolver` is deleted.
+
+One thing was missing and is worth knowing about, because desktop has it too: **the Compose path was
+still a placeholder.** `TextResolver` is not what a composable calls - `stringResource(TextRef)` in
+`:core:ui` is, and both the iOS and the JVM `actual` still returned `ref.name`. The iOS one now
+looks the text up through `TextRefValueRegistry`; `TextRefResource.jvm.kt` is still the placeholder,
+and its KDoc still says the machinery "is not built yet", which stopped being true in the same
+commit that built it.
+
+**The gap that needs you: format arguments.** `stringResource(ref, vararg)` folds the arguments into
+the `TextRef` and the actual has to substitute them. `formatTemplate` does exactly that and is
+already written - but it is `internal` to `:implementation`, and `:core:ui` sits below that in the
+dependency graph, so neither the iOS nor the JVM actual can call it. Today a format string renders
+with its placeholders visible on both platforms, while the same string through `TextResolver` comes
+out correct.
+
+Moving `formatTemplate` beside `TextRefValueRegistry` in `:core:interfaces` would close it for both
+platforms at once and leave `GeneratedTextResolver` calling the same function it calls now. It is a
+move rather than new code, which is why it is left with you rather than done here - `:core:interfaces`
+is shared, and `NumberFormat` (which it uses) is already in `:core:data`, below it.
+
 ## Done
 
 - **`UrlOpener` and `PrefsFileInfo` - iOS side done.** Both ports landed from `kmp` and both have an
