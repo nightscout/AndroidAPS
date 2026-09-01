@@ -20,14 +20,9 @@ import dev.zacsweers.metro.SingleIn
  *
  * ## Where this stands
  *
- * The shell now depends on the same 26 modules `:ios:shell` does, so every plugin that registers
- * itself with `@ContributesBinding` is already in the graph. What is left is what no shared module
- * can supply. Measured at **15**, down from 32:
- *
- * **Absent by nature on a desktop, so they want the honest "not on this platform" answer:**
- * `PairedBtDevices`, `LastKnownLocation`, `LocationPermissions`, `LocationServiceController`,
- * `SmsCommunicator`, `FabricPrivacy`, `ReminderScheduler`, `SceneExpiryScheduler`, `UiInteraction`,
- * `WidgetUpdater`.
+ * The shell depends on the same 26 modules `:ios:shell` does, so every plugin that registers itself
+ * with `@ContributesBinding` is already in the graph, and the classes in `app.aaps.desktop.shell.platform`
+ * answer the platform half. Measured at **5**, down from 32:
  *
  * **Implementable, and the next work:** `ImportExportPrefs` (file dialogs), and `NsConnection` and
  * `NsLoadExecutor`, which are HTTP and a socket - a JVM has both, so a follower can genuinely sync.
@@ -35,6 +30,11 @@ import dev.zacsweers.metro.SingleIn
  * **Needs a port rather than an implementation:** `Autotune`, whose `AutotunePlugin` is arithmetic
  * over treatment history sitting in androidMain, and `LoopNotifier`, an interface whose only
  * implementation is Android notifications with actions.
+ *
+ * Everything that was "absent by nature" is now answered rather than missing - see
+ * `DesktopAutomationInputs` and `DesktopAbsentIntegrations`. Two of that group turned out to be real
+ * work rather than refusals: `ReminderScheduler` and `SceneExpiryScheduler` both run on a coroutine
+ * timer, and the second one has to, because scene expiry reverts an SMB toggle and a profile switch.
  *
  * The pattern to follow for the first group is `app.aaps.ios.shell.missing`: nothing returns a
  * plausible value, and nothing is silent.
@@ -52,6 +52,7 @@ interface DesktopAppGraph {
      * has to include it by name. It holds the QuickWizard / QuickWizardEntry / BolusWizard cycle,
      * broken with deferred providers - the same shape `AppRootGraph` and `IosAppGraph` use.
      */
+
     @DependencyGraph.Factory
     fun interface Factory {
 
