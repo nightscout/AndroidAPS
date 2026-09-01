@@ -125,6 +125,15 @@ kotlin {
             }
         }
 
+        // Shared tests for shared code. `ClockPattern` moved to commonMain when the desktop target
+        // started using it, so its tests belong here rather than in `iosTest` - otherwise the reader
+        // would only be covered on one of the targets that uses it.
+        getByName("commonTest") {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
+
         // Hand written rather than taken from test-module-dependencies and
         // compose-test-module-dependencies, because both convention plugins apply
         // com.android.library and so cannot be used here.
