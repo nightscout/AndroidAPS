@@ -721,6 +721,69 @@ Verified: 28 tests in `:implementation` commonTest, so they run on iOS as well, 
 shell; `:app:assembleFullDebug` and `:implementation:compileKotlinIosArm64` both green. The desktop
 app now renders "General" where it read `configbuilder_general`.
 
+
+## The strings work is wired on iOS, with one gap left on your side
+
+`GeneratedTextResolver` and the generated value maps landed and they work: `IosStringOwners`
+registers all sixteen modules the iOS framework links, and the settings screen now reads "Settings",
+"General", "Absorption settings" and "Master device unreachable. Editing is disabled until the
+connection is restored." instead of string names. `IosTextResolver` is deleted.
+
+One thing was missing and is worth knowing about, because desktop has it too: **the Compose path was
+still a placeholder.** `TextResolver` is not what a composable calls - `stringResource(TextRef)` in
+`:core:ui` is, and both the iOS and the JVM `actual` still returned `ref.name`. The iOS one now
+looks the text up through `TextRefValueRegistry`; `TextRefResource.jvm.kt` is still the placeholder,
+and its KDoc still says the machinery "is not built yet", which stopped being true in the same
+commit that built it.
+
+**The gap that needs you: format arguments.** `stringResource(ref, vararg)` folds the arguments into
+the `TextRef` and the actual has to substitute them. `formatTemplate` does exactly that and is
+already written - but it is `internal` to `:implementation`, and `:core:ui` sits below that in the
+dependency graph, so neither the iOS nor the JVM actual can call it. Today a format string renders
+with its placeholders visible on both platforms, while the same string through `TextResolver` comes
+out correct.
+
+Moving `formatTemplate` beside `TextRefValueRegistry` in `:core:interfaces` would close it for both
+platforms at once and leave `GeneratedTextResolver` calling the same function it calls now. It is a
+move rather than new code, which is why it is left with you rather than done here - `:core:interfaces`
+is shared, and `NumberFormat` (which it uses) is already in `:core:data`, below it.
+
+
+## `ExportPasswordDataStore` - iOS side done
+
+The shared move landed and the iOS half is `IosExportPasswordPlatform`
+(`implementation/src/iosMain/.../protection/`). `IosExportPasswordDataStore`, the placeholder that
+reported the store as switched off, is deleted.
+
+One decision worth recording, because the interface allows the weaker answer. `ExportPasswordPlatform`
+says an implementation "does not need secure storage of its own - it needs somewhere durable that
+survives a restart and is private to this user". `NSUserDefaults` meets that and breaks the sentence
+after it: a remembered password **must not travel to another device**, and preferences are carried in
+an iCloud or iTunes backup and restored onto a new phone. So this uses the Keychain, where
+`AppleKeychain` already writes `AfterFirstUnlockThisDeviceOnly` - never synced, never restored
+elsewhere, still readable to a backgrounded export. A different service name from the encryption keys,
+so clearing one cannot delete the other.
+
+The secret and its timestamp are one entry, `<timestamp>:<secret>`, rather than two. Two entries can
+be left half written, and the shared rules measure the validity window from the timestamp - so a
+secret that came back without one would read as either infinitely fresh or infinitely stale, and both
+are silent. Anything in the store that is not in that form is dropped and logged rather than guessed
+at, which is most of what `IosExportPasswordPlatformTest` covers.
+
+## Two flaky tests, noted rather than fixed
+
+Both cost a false alarm today, so they are worth writing down even though neither is ours:
+
+- `SerialIOThreadTest.testThreadLifecycle` (`:pump:danar`, unit) failed one full gate run and passed
+  the four runs after it, on a tree whose only changes were iOS files.
+- `EquilEmulatorActivationTest.activatedPod_readsCancelsAndTogglesMode` (instrumented, CI shard C)
+  failed on a push whose only non-desktop change was a markdown file and a test moving between source
+  sets. Build 41072 on `kmp` failed the DanaRS instrumented shard the same way, on an About-dialog
+  commit.
+
+Both are timing-sensitive tests in pump drivers. The cost is not the runs themselves - it is that a
+red gate stops meaning "you broke something", and the next real failure gets waved through.
+
 ## Done
 
 - **`UrlOpener` and `PrefsFileInfo` - iOS side done.** Both ports landed from `kmp` and both have an

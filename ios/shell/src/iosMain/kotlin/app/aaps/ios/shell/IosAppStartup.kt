@@ -3,6 +3,7 @@ package app.aaps.ios.shell
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.ios.shell.di.IosStringOwners
 
 /**
  * What has to happen before the first screen is composed - the iOS counterpart of `MainApp`.
@@ -31,6 +32,10 @@ internal class IosAppStartup(
 ) {
 
     fun run() {
+        // Before anything else: a screen that renders before this has run shows string names rather
+        // than text, and the plugin list below builds plugin descriptions that carry names.
+        IosStringOwners.registerAll()
+
         // Sorted by the order key each plugin registers itself with, which is the order the plugin
         // list is shown in and the order defaults are picked in.
         val plugins = contributedPlugins.entries.sortedBy { it.key }.map { it.value }
