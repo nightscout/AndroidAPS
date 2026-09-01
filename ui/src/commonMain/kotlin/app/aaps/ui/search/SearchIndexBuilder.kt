@@ -13,7 +13,6 @@ import app.aaps.core.ui.search.SearchableProvider
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import java.text.Normalizer
 
 /**
  * Builds and maintains the search index for the global search feature.
@@ -27,7 +26,7 @@ import java.text.Normalizer
 @SingleIn(AppScope::class)
 class SearchIndexBuilder @Inject constructor(
     private val activePlugin: ActivePlugin,
-    private val providers: Set<@JvmSuppressWildcards SearchableProvider>,
+    private val providers: Set<SearchableProvider>,
     private val preferences: Preferences,
     private val rh: TextResolver
 ) {
@@ -113,14 +112,6 @@ class SearchIndexBuilder @Inject constructor(
         }
 
         return relevance
-    }
-
-    /**
-     * Removes diacritics from string (ů→u, é→e, etc.)
-     */
-    private fun String.removeDiacritics(): String {
-        val normalized = Normalizer.normalize(this, Normalizer.Form.NFD)
-        return normalized.replace(Regex("\\p{M}"), "")
     }
 
     private fun buildIndex(): List<SearchIndexEntry> {

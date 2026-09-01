@@ -22,7 +22,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntNonKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.ui.activityMonitor.ActivityMonitor
+import app.aaps.ui.activityMonitor.ActivityStatsProvider
 import app.aaps.ui.activityMonitor.ActivityStats
 import app.aaps.ui.compose.stats.CycleSeries
 import app.aaps.ui.compose.stats.TddCyclePatternData
@@ -53,7 +53,7 @@ class StatsViewModel @Inject constructor(
     private val tddCalculator: TddCalculator,
     private val tirCalculator: TirCalculator,
     private val dexcomTirCalculator: DexcomTirCalculator,
-    private val activityMonitor: ActivityMonitor,
+    private val activityMonitor: ActivityStatsProvider,
     private val persistenceLayer: PersistenceLayer,
     val rh: TextResolver,
     private val uel: UserEntryLogger,

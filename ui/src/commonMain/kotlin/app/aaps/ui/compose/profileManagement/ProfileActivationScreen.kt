@@ -1,5 +1,9 @@
 package app.aaps.ui.compose.profileManagement
 
+import kotlin.time.Instant
+import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.TimeZone
+import app.aaps.core.ui.compose.is24HourClock
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -45,7 +49,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.configuration.Constants
@@ -66,7 +69,6 @@ import app.aaps.core.ui.compose.dialogs.TimePickerModal
 import app.aaps.core.ui.compose.rememberBringIntoViewOnExpand
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
-import java.util.Calendar
 
 /**
  * Full screen for activating a profile with optional percentage, timeshift, and duration.
@@ -146,12 +148,11 @@ fun ProfileActivationScreen(
 
     // Time picker modal
     if (showTimePicker) {
-        val context = LocalContext.current
-        val calendar = Calendar.getInstance().apply { timeInMillis = eventTime }
+        val localTime = Instant.fromEpochMilliseconds(eventTime).toLocalDateTime(TimeZone.currentSystemDefault())
         TimePickerModal(
-            initialHour = calendar.get(Calendar.HOUR_OF_DAY),
-            initialMinute = calendar.get(Calendar.MINUTE),
-            is24Hour = android.text.format.DateFormat.is24HourFormat(context),
+            initialHour = localTime.hour,
+            initialMinute = localTime.minute,
+            is24Hour = is24HourClock(),
             onTimeSelected = { hour, minute ->
                 eventTime = dateUtil.mergeHourMinuteToTimestamp(eventTime, hour, minute, true)
             },

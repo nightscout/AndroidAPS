@@ -11,36 +11,19 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.interfaces.Preferences
 import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.binding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 
-/**
- * Data class representing statistics for a single Android Activity.
- *
- * This class encapsulates the usage metrics for an activity, including how long
- * users have spent in the activity and over what time period the data was collected.
- *
- * @property activityName The simplified name of the activity (without "Activity" suffix)
- * @property duration Human-readable duration string representing total time spent in the activity,
- *                    formatted using [app.aaps.core.interfaces.utils.DateUtil.niceTimeScalar]
- * @property days Number of days since the activity was first tracked, calculated from
- *                the difference between now and the start timestamp
- *
- * @see ActivityMonitor.getActivityStats
- */
-data class ActivityStats(
-    val activityName: String,
-    val duration: String,
-    val days: Double
-)
-
+@ContributesBinding(AppScope::class, binding = binding<ActivityStatsProvider>())
 @SingleIn(AppScope::class)
 class ActivityMonitor @Inject constructor(
     private var aapsLogger: AAPSLogger,
     private val rh: TextResolver,
     private val preferences: Preferences,
     private val dateUtil: DateUtil
-) : Application.ActivityLifecycleCallbacks {
+) : Application.ActivityLifecycleCallbacks, ActivityStatsProvider {
 
     override fun onActivityPaused(activity: Activity) {
         val name = activity::class.simpleName.orEmpty()
@@ -79,7 +62,7 @@ class ActivityMonitor @Inject constructor(
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
     }
 
-    fun getActivityStats(): List<ActivityStats> {
+    override fun getActivityStats(): List<ActivityStats> {
         return preferences.allMatchingStrings(LongComposedKey.ActivityMonitorTotal).map { activityName ->
             val v = preferences.get(LongComposedKey.ActivityMonitorTotal, activityName)
             val activity = activityName.replace("Activity", "")
@@ -94,7 +77,7 @@ class ActivityMonitor @Inject constructor(
         }
     }
 
-    fun reset() {
+    override fun reset() {
         preferences.allMatchingStrings(LongComposedKey.ActivityMonitorTotal).forEach { activityName ->
             preferences.remove(LongComposedKey.ActivityMonitorTotal, activityName)
             preferences.remove(LongComposedKey.ActivityMonitorStart, activityName)
