@@ -15,8 +15,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import app.aaps.appshell.AapsAppRoot
-import app.aaps.appshell.navigation.AppRoute
+import app.aaps.appshell.navigation.SHELL_HOME_ROUTE
+import app.aaps.appshell.navigation.ShellHomeScreen
 import app.aaps.appshell.navigation.appNavGraph
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -157,7 +159,14 @@ private fun AapsDesktopApp(graph: DesktopAppGraph) {
                 }
             )
 
-            NavHost(navController = navController, startDestination = AppRoute.Preferences.route) {
+            // Starts on a list of screens rather than on settings. Settings as the start destination left
+                // its back arrow inert - there was nothing behind it - and left every other screen
+                // unreachable, since they are all reached from the overview desktop does not have yet.
+                NavHost(navController = navController, startDestination = SHELL_HOME_ROUTE) {
+                    composable(SHELL_HOME_ROUTE) {
+                        ShellHomeScreen(onOpen = { route -> navController.navigate(route) })
+                    }
+
                 appNavGraph(
                     navController = navController,
                     insulinManagementViewModel = insulinManagement,
