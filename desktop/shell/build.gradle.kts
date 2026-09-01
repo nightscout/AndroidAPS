@@ -38,7 +38,12 @@ dependencies {
     // The shared implementations this shell binds - the logger, RxBus, DateUtil and L.
     implementation(project(":implementation"))
     implementation(project(":shared:impl"))
+
+    // The string owner list is hand written, so it needs a test that a wrong owner name fails.
+    testImplementation(kotlin("test"))
 }
+
+tasks.withType<Test> { useJUnitPlatform() }
 
 compose.desktop {
     application {
