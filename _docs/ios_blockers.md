@@ -868,3 +868,23 @@ red gate stops meaning "you broke something", and the next real failure gets wav
 - `ProfileRepositoryImpl` - moved to `commonMain`, off `org.json` (`3252f044b1`)
 - `PluginStore` / `PluginPermissions` - split so the registry is no longer Android
 - `DateUtilImpl`, `PreferencesImpl`, `ProfileUtilImpl` - moved to `commonMain`
+
+## Heads up: `LazyCalculationExecutor` moved into `:workflow`
+
+Your copy in `ios/shell/.../di/` is deleted and `IosPlatformBindings` now points at
+`app.aaps.workflow.LazyCalculationExecutor`. Nothing about the behaviour changed.
+
+The reason is that the desktop target hit the identical cycle - `CalculationExecutor` ->
+`PostCalculationRunner` -> `IobCobCalculator` -> `CalculationWorkflow` -> `CalculationExecutor` - for
+the identical reason, no WorkManager to build the runners outside the graph. Your KDoc called it "an
+iOS-only concern" that shared code should not carry; with two platforms hitting it, it is a
+not-Android concern, and two identical copies in two shells is how the two quietly stop matching.
+
+One small change: the runners are `() -> T` lambdas rather than `Provider<T>`, so `:workflow` keeps
+no dependency on a DI library. Each shell passes `{ provider() }`. The KDoc explaining the cycle is
+yours, kept as it was.
+
+Desktop now depends on the same 26 modules `:ios:shell` lists, so the plugin bindings are in its
+graph too, and `DesktopMainPluginsBindings` is a near copy of `IosMainPluginsBindings`. If that pair
+starts to drift it should become one container in a shared module that both graphs `@Includes` -
+worth doing when a third thing needs it, not before.
