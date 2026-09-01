@@ -6,6 +6,9 @@ import app.aaps.core.keys.KeysStrings
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.implementation.ImplementationStrings
+import app.aaps.plugins.aps.ApsStrings
+import app.aaps.plugins.main.MainStrings
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.implementation.resources.GeneratedTextResolver
 import app.aaps.ui.UiStrings
 import kotlin.test.AfterTest
@@ -50,7 +53,10 @@ class DesktopStringOwnersTest {
             KeysStrings.absorption_cutoff_summary,
             UiStrings.a11y_add_new_insulin,
             InterfacesStrings.advisoralarm,
-            ImplementationStrings.backup_to_google_drive
+            ImplementationStrings.backup_to_google_drive,
+            ApsStrings.array_of_elements,
+            MainStrings.basal_shortname,
+            SyncStrings.a11y_otp_qr_code
         ).forEach { ref ->
             val named = ref as TextRef.Named
             assertNotEquals(

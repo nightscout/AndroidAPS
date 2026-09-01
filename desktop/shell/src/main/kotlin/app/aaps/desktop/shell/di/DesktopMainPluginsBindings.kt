@@ -27,6 +27,7 @@ import app.aaps.plugins.constraints.objectives.objectives.DurationText
 import app.aaps.plugins.constraints.objectives.objectives.Objective
 import app.aaps.plugins.constraints.objectives.objectives.PlainDurationText
 import app.aaps.plugins.main.iob.iobCobCalculator.IobCobCalculatorPlugin
+import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.workflow.CalculationExecutor
 import app.aaps.workflow.LazyCalculationExecutor
 import app.aaps.workflow.PostCalculationRunner
@@ -159,4 +160,20 @@ object DesktopMainPluginsBindings {
     @Provides
     @SingleIn(AppScope::class)
     fun durationText(): DurationText = PlainDurationText()
+
+    /**
+     * Nightscout sync, registered by hand exactly as `:app` does it.
+     *
+     * `NSClientV3Plugin` cannot carry `@ContributesIntoMap` on the class - the annotation processor
+     * fails on it, and `SyncPluginsBindings` in `:app` records why - so every graph that wants it has
+     * to say so. Without this the plugin list has no sync entry at all, which is what a desktop
+     * follower is for.
+     *
+     * The key is 310, the same position it holds on the phone, so the plugin list reads the same.
+     */
+    @Provides
+    @SingleIn(AppScope::class)
+    @IntoMap
+    @IntKey(310)
+    fun nsClientV3Plugin(plugin: NSClientV3Plugin): PluginBase = plugin
 }
