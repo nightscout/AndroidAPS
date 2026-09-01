@@ -955,6 +955,45 @@ surfaced: a history scoping test died on a notification API it never meant to us
 called once from `aapsAppViewController`, and registering only records. Declaring what a category is,
 and claiming a process-wide delegate slot, are different acts and only one of them needs an app.
 
+
+## Request: move the Main route into `appNavGraph` so both new platforms get the overview
+
+Nothing is missing from `MainScreen` itself. Checked rather than assumed:
+
+- `MainScreen`, `ManageSheetHost` and `SearchViewModel` are all in `commonMain`.
+- All seven view models it takes - `Main`, `Manage`, `Maintenance`, `Status`, `Treatment`, `Scenes`,
+  `LoopAction` - are `commonMain` and `@ContributesIntoMap`.
+- Every one of them is **already constructible on iOS**: `IosAppGraph` compiles with
+  `MetroViewModelMultibindings`, which means Metro validated each of their dependency graphs.
+- `statusLightsDef` and `treatmentButtonsDef` come from `BuiltInSearchables`, which the iOS graph
+  already exposes.
+
+A trial call from the iOS shell produced only `Unresolved reference` errors - missing imports. Not
+one "no binding found", which is what a real gap looks like.
+
+What is missing is that **nobody has wired it**. The Main route is not in `appNavGraph`; it stays in
+`ComposeMainActivity` because of its Activity-context callbacks. So each shell would have to call
+`MainScreen` directly with about fifty arguments, thirty of them callbacks - and then iOS and desktop
+would each own a copy of that wiring, which is the duplication this split keeps trying to avoid.
+
+Moving the route into `appNavGraph`, the way every other screen went, gives all three platforms the
+overview from one place. The callbacks that genuinely differ are few and already have the shape used
+elsewhere: `onLaunchBrowser` is `UrlOpener`, navigation is the nav controller, and
+`onRecreateActivity` / `onBringToForeground` have no meaning off Android and can be no-ops per
+platform.
+
+### Desktop has the same back-button dead end iOS had
+
+`Main.kt` opens on `AppRoute.Preferences.route`, and its KDoc says it is "for the same reason the
+Apple shell does". That has a consequence worth knowing before someone reports it as a bug: the
+settings screen's back arrow calls `safePopBackStack()` on an empty stack, so **the arrow renders and
+does nothing**. It reads as broken rather than as missing.
+
+iOS now starts on `IosHomeScreen` instead - a plain list of every argument-free route, marked as
+scaffolding, which gives back somewhere to go and makes the other twenty-odd screens reachable for
+testing at all. Desktop is welcome to the same thing, and if it wants one, the list belongs in shared
+code rather than written twice. It should be deleted from both the day the Main route moves.
+
 ## Done
 
 - **`UrlOpener` and `PrefsFileInfo` - iOS side done.** Both ports landed from `kmp` and both have an
