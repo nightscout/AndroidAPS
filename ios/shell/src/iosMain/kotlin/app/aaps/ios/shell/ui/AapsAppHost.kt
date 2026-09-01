@@ -3,6 +3,11 @@ package app.aaps.ios.shell.ui
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.ComposeUIViewController
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -14,6 +19,8 @@ import app.aaps.appshell.navigation.AppRoute
 import app.aaps.appshell.navigation.appNavGraph
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.core.ui.compose.LocalMetroViewModelFactory
 import app.aaps.core.ui.compose.icons.IcAaps
@@ -93,6 +100,29 @@ fun aapsAppViewController(): UIViewController {
                 onNavControllerReady = {},
                 onClose = { logger.error(LTag.CORE, "Initialization failed and iOS cannot close an app") }
             ) { navController ->
+                // Application protection, the counterpart of the request `ComposeMainActivity` makes
+                // from `onResume`. Without this nothing on iOS ever asks, so `ProtectionHost` has no
+                // request to render and a configured app-launch password never appears - the setting
+                // looked saved and did nothing, which is how it was found.
+                //
+                // Asked once per launch, which is what the setting itself promises: "App launch.
+                // Independent from other levels." Android re-asks on every resume; whether iOS should
+                // do the same on `didBecomeActive` is a real question and is written up rather than
+                // guessed at, because re-prompting is what protects a phone handed to someone else
+                // while the app is backgrounded.
+                var unlocked by remember { mutableStateOf(false) }
+                LaunchedEffect(Unit) {
+                    graph.protectionCheck.requestProtection(ProtectionCheck.Protection.APPLICATION) { result ->
+                        unlocked = result == ProtectionResult.GRANTED
+                        if (!unlocked) logger.error(LTag.CORE, "Application protection was not granted: $result")
+                    }
+                }
+
+                // Nothing is drawn until it is granted. Showing the app behind the prompt would make
+                // the protection cosmetic - the screen it is meant to hide would be readable through
+                // the dialog, and on iOS it would also be in the app-switcher snapshot.
+                if (!unlocked) return@AapsAppRoot
+
                 // Resolved here rather than inside the NavHost: `appNavGraph` is a builder, not a
                 // composable, so a view model cannot be asked for from within it.
                 val insulinManagement = metroViewModel<InsulinManagementViewModel>()
