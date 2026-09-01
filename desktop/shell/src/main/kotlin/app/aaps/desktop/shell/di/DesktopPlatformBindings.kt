@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
 import app.aaps.desktop.shell.platform.DesktopSystemNotificationPlatform
 import app.aaps.implementation.notifications.CommonNotificationManager
+import app.aaps.implementation.resources.GeneratedTextResolver
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
@@ -50,9 +51,16 @@ object DesktopPlatformBindings {
     @SingleIn(AppScope::class)
     fun logger(): AAPSLogger = AAPSLoggerDesktop()
 
+    /**
+     * Registration happens here rather than in `main()` so that it cannot be missed: nothing can ask
+     * for text without first asking the graph for this, and the graph builds it once.
+     */
     @Provides
     @SingleIn(AppScope::class)
-    fun textResolver(): TextResolver = DesktopTextResolver
+    fun textResolver(): TextResolver {
+        DesktopStringOwners.registerAll()
+        return GeneratedTextResolver()
+    }
 
     /** A properties file next to the database, which `PreferencesImpl` sits on unchanged. */
     @Provides

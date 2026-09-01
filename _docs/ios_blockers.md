@@ -452,7 +452,7 @@ behind it, written for `IosSecureEncrypt` and directly reusable here.
 not being asked for here.
 
 
-## Request: `PasswordCheckImpl` can move to commonMain by swapping one dependency
+## DONE: `PasswordCheckImpl` moved to commonMain by swapping one dependency
 
 `AapsAppRoot` landing in `appshell/commonMain` is the reason this is worth doing now. Measured with
 the probe against that function's parameters, five of its six injected dependencies already resolve
@@ -478,6 +478,13 @@ commonMain untouched otherwise, and iOS then gets it for free.
 That is one shared class instead of two, which is the better outcome than an iOS copy: the dialog
 rules here decide when a user is asked for a master password, and two implementations would be two
 places for that to drift.
+
+**Done, exactly as described.** `PasswordCheckImpl` now takes `PasswordHasher` instead of
+`CryptoUtil` and lives in `implementation/src/commonMain/.../protection/`. It compiles for Android,
+iOS and the JVM desktop target from the one source, unchanged apart from that parameter. The
+`IosPasswordCheck` placeholder in `ios/shell/.../missing/` is deleted, and
+`:ios:shell:compileKotlinIosArm64` is green without it, so the binding really is satisfied by the
+shared class.
 
 ### What `AapsAppRoot` still needs beyond that
 
@@ -605,14 +612,17 @@ code go" section above warns about. The six pure parser cases are now in
 found `zh_TW` in the first place. This needed one line in `core/ui/build.gradle.kts` -
 `implementation(kotlin("test"))` on `commonTest`, copying the pattern already in `ui`.
 
-**A stale comment, left for you rather than edited.** `core/utils/build.gradle.kts` still describes
+**A stale comment, left for you rather than edited.** DONE - deleted, and the same wording in
+`core/nssdk/build.gradle.kts` found by the sweep you suggested. Both modules have a real `jvm {}`
+target now, so both comments described a `mingwX64()` call that no longer exists. The original note:
+`core/utils/build.gradle.kts` still describes
 mingw as "The only Kotlin/Native target whose tests can actually RUN on a Windows machine", which
 stopped being true with `fa8800bdde`. Worth a sweep for the same wording elsewhere - the two-host
 testing rule it refers to no longer exists, and it is the kind of comment that keeps a wrong idea
 alive long after the code is gone.
 
 
-## Request: real strings for iOS and desktop, from one generator
+## DONE: real strings for iOS and desktop, from one generator
 
 `DesktopTextResolver` is now a verbatim copy of `IosTextResolver`, KDoc and all. Two identical
 placeholders is the signal that this stopped being an iOS problem: both non-Android platforms render
@@ -641,6 +651,45 @@ afterwards is deleting `IosTextResolver` and providing the shared one, which is 
 
 Localisation is a separate question and not part of this - the first step only needs the English
 values that are already parsed.
+
+### Done. What is there now, and the few lines left on your side
+
+Your correction was right: the task only read names, so reading the values was a real addition. It
+now writes a third file next to the other two, from the same pass:
+
+- `GenerateKeyStringsTask` emits `XxxStringsValues` - a `name -> English text` map with
+  `textOf(name)` - into the **common** output directory. That directory is already registered as a
+  commonMain source dir, so no module needed a build change. Android never reads it, and R8 removes
+  it because nothing there references it.
+- The text is unescaped the way AAPT does it: whitespace collapsed unless the value is quoted, then
+  the backslash escapes resolved. Format placeholders are left exactly as written.
+- The map is written in chunks of 200 entries across several private functions. `:core:ui` has over
+  eleven hundred strings, and a single `mapOf` of that size is one method against the 64K limit.
+- `TextRefValueRegistry` (`:core:interfaces`, beside `TextRefIdRegistry`) is where a shell says which
+  owners it can resolve.
+- `GeneratedTextResolver` (`:implementation` commonMain) is the shared `TextResolver`. It carries
+  **no** `@ContributesBinding` on purpose - that would collide with `ResourceHelperImpl` on Android -
+  so each shell provides it.
+- `formatTemplate` beside it does the substitution: `%s`, `%d`, `%f`, the uppercase forms, explicit
+  argument indexes, precision, width and a literal per cent sign. Numbers go through `NumberFormat`,
+  so a separator here matches one produced anywhere else in the app. A missing argument leaves the
+  placeholder visible instead of throwing the way Java does, because a crash while drawing a label is
+  worse than a visible placeholder.
+
+**Your half.** Delete `IosTextResolver`, provide `GeneratedTextResolver()` from the iOS graph, and add
+an `IosStringOwners` mirroring `DesktopStringOwners` - one `TextRefValueRegistry.register(owner)` line
+per module `:ios:shell` depends on. The desktop one registers `keys`, `interfaces`, `coreUi`,
+`implementation` and `ui`.
+
+**Copy `DesktopStringOwnersTest` too.** The owner is a plain String on both sides - `owner.set("coreUi")`
+in the build file against `register("coreUi")` in the shell - so a typo compiles and the only symptom
+is a screen still showing names, which reads as unfinished UI rather than as a bug. The test asserts
+one real string per registration, and takes each owner from that module's generated object instead of
+repeating the literal.
+
+Verified: 28 tests in `:implementation` commonTest, so they run on iOS as well, plus 4 in the desktop
+shell; `:app:assembleFullDebug` and `:implementation:compileKotlinIosArm64` both green. The desktop
+app now renders "General" where it read `configbuilder_general`.
 
 ## Done
 

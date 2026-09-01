@@ -18,8 +18,6 @@ kotlin {
     iosArm64()
     iosSimulatorArm64()
 
-    // Kept because it is the only Kotlin/Native target whose tests can run on Windows.
-
     sourceSets {
         getByName("commonMain") {
             dependencies {
