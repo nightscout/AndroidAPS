@@ -1,5 +1,7 @@
 package app.aaps.appshell.navigation
 
+import androidx.navigation.NavBackStackEntry
+import androidx.savedstate.read
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,7 +24,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
@@ -30,6 +31,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import kotlin.time.Clock
+import app.aaps.plugins.main.MainStrings
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.ConfigBuilder
@@ -112,7 +118,6 @@ import app.aaps.ui.compose.treatments.viewmodels.TreatmentsViewModel
 import app.aaps.ui.compose.wizardDialog.WizardDialogScreen
 import app.aaps.ui.search.BuiltInSearchables
 import kotlinx.coroutines.launch
-import app.aaps.plugins.main.R as PluginsMainR
 
 /**
  * Safe popBackStack that prevents double-navigation during transitions.
@@ -161,7 +166,7 @@ fun NavGraphBuilder.appNavGraph(
     visibilityContext: VisibilityContext,
     // Callbacks
     onNavigationRequest: (NavigationRequest, NavHostController) -> Unit,
-    onShowDeliveryError: (comment: String, titleResId: Int) -> Unit,
+    onShowDeliveryError: (comment: String, title: TextRef) -> Unit,
     withProtection: (ProtectionCheck.Protection, () -> Unit) -> Unit,
     requestEditModeAuthorization: (onGranted: () -> Unit) -> Unit,
     onRefreshPermissions: () -> Unit,
@@ -174,7 +179,7 @@ fun NavGraphBuilder.appNavGraph(
         AppRoute.InsulinManagement.route,
         arguments = listOf(navArgument("mode") { type = NavType.StringType; defaultValue = "EDIT" })
     ) { backStackEntry ->
-        val mode = ScreenMode.fromRoute(backStackEntry.arguments?.getString("mode"))
+        val mode = ScreenMode.fromRoute(backStackEntry.stringArg("mode"))
         InsulinManagementScreen(
             viewModel = insulinManagementViewModel,
             initialMode = mode,
@@ -189,7 +194,7 @@ fun NavGraphBuilder.appNavGraph(
         AppRoute.Profile.route,
         arguments = listOf(navArgument("mode") { type = NavType.StringType; defaultValue = "EDIT" })
     ) { backStackEntry ->
-        val mode = ScreenMode.fromRoute(backStackEntry.arguments?.getString("mode"))
+        val mode = ScreenMode.fromRoute(backStackEntry.stringArg("mode"))
         ProfileManagementScreen(
             viewModel = profileManagementViewModel,
             initialMode = mode,
@@ -215,7 +220,7 @@ fun NavGraphBuilder.appNavGraph(
         AppRoute.TempTargetManagement.route,
         arguments = listOf(navArgument("mode") { type = NavType.StringType; defaultValue = "EDIT" })
     ) { backStackEntry ->
-        val mode = ScreenMode.fromRoute(backStackEntry.arguments?.getString("mode"))
+        val mode = ScreenMode.fromRoute(backStackEntry.stringArg("mode"))
         TempTargetManagementScreen(
             viewModel = tempTargetManagementViewModel,
             initialMode = mode,
@@ -230,7 +235,7 @@ fun NavGraphBuilder.appNavGraph(
         AppRoute.QuickWizardManagement.route,
         arguments = listOf(navArgument("mode") { type = NavType.StringType; defaultValue = "EDIT" })
     ) { backStackEntry ->
-        val mode = ScreenMode.fromRoute(backStackEntry.arguments?.getString("mode"))
+        val mode = ScreenMode.fromRoute(backStackEntry.stringArg("mode"))
         QuickWizardManagementScreen(
             viewModel = quickWizardManagementViewModel,
             initialMode = mode,
@@ -298,7 +303,7 @@ fun NavGraphBuilder.appNavGraph(
             cobUiState = chipsViewModel.cobUiState,
             onNavigateBack = { navController.safePopBackStack() },
             onShowDeliveryError = { comment ->
-                onShowDeliveryError(comment, app.aaps.core.ui.R.string.treatmentdeliveryerror)
+                onShowDeliveryError(comment, CoreUiStrings.treatmentdeliveryerror)
             }
         )
     }
@@ -311,7 +316,7 @@ fun NavGraphBuilder.appNavGraph(
             cobUiState = chipsViewModel.cobUiState,
             onNavigateBack = { navController.safePopBackStack() },
             onShowDeliveryError = { comment ->
-                onShowDeliveryError(comment, app.aaps.core.ui.R.string.treatmentdeliveryerror)
+                onShowDeliveryError(comment, CoreUiStrings.treatmentdeliveryerror)
             }
         )
     }
@@ -323,7 +328,7 @@ fun NavGraphBuilder.appNavGraph(
             cobUiState = chipsViewModel.cobUiState,
             onNavigateBack = { navController.safePopBackStack() },
             onShowDeliveryError = { comment ->
-                onShowDeliveryError(comment, app.aaps.core.ui.R.string.treatmentdeliveryerror)
+                onShowDeliveryError(comment, CoreUiStrings.treatmentdeliveryerror)
             }
         )
     }
@@ -338,7 +343,7 @@ fun NavGraphBuilder.appNavGraph(
         TempBasalDialogScreen(
             onNavigateBack = { navController.safePopBackStack() },
             onShowDeliveryError = { comment ->
-                onShowDeliveryError(comment, app.aaps.core.ui.R.string.temp_basal_delivery_error)
+                onShowDeliveryError(comment, CoreUiStrings.temp_basal_delivery_error)
             }
         )
     }
@@ -347,7 +352,7 @@ fun NavGraphBuilder.appNavGraph(
         ExtendedBolusDialogScreen(
             onNavigateBack = { navController.safePopBackStack() },
             onShowDeliveryError = { comment ->
-                onShowDeliveryError(comment, app.aaps.core.ui.R.string.treatmentdeliveryerror)
+                onShowDeliveryError(comment, CoreUiStrings.treatmentdeliveryerror)
             }
         )
     }
@@ -371,7 +376,7 @@ fun NavGraphBuilder.appNavGraph(
             wizardSettingsDef = builtInSearchables.wizardSettings,
             onNavigateBack = { navController.safePopBackStack() },
             onShowDeliveryError = { comment ->
-                onShowDeliveryError(comment, app.aaps.core.ui.R.string.treatmentdeliveryerror)
+                onShowDeliveryError(comment, CoreUiStrings.treatmentdeliveryerror)
             }
         )
     }
@@ -381,7 +386,7 @@ fun NavGraphBuilder.appNavGraph(
         arguments = listOf(navArgument("source") { type = NavType.StringType })
     ) { backStackEntry ->
         val source = try {
-            ImportSource.valueOf(backStackEntry.arguments?.getString("source") ?: "LOCAL")
+            ImportSource.valueOf(backStackEntry.stringArg("source") ?: "LOCAL")
         } catch (_: IllegalArgumentException) {
             ImportSource.LOCAL
         }
@@ -398,7 +403,7 @@ fun NavGraphBuilder.appNavGraph(
         route = AppRoute.ProfileActivation.route,
         arguments = listOf(navArgument("profileIndex") { type = NavType.IntType })
     ) { backStackEntry ->
-        val profileIndex = backStackEntry.arguments?.getInt("profileIndex") ?: 0
+        val profileIndex = backStackEntry.intArg("profileIndex", 0)
         val profileName = profileManagementViewModel.uiState.value.profileNames.getOrNull(profileIndex) ?: ""
         val reuseValues = profileManagementViewModel.getReuseValues()
         val coroutineScope = rememberCoroutineScope()
@@ -453,7 +458,7 @@ fun NavGraphBuilder.appNavGraph(
         route = AppRoute.ProfileEditor.route,
         arguments = listOf(navArgument("profileIndex") { type = NavType.IntType })
     ) { backStackEntry ->
-        val profileIndex = backStackEntry.arguments?.getInt("profileIndex") ?: 0
+        val profileIndex = backStackEntry.intArg("profileIndex", 0)
         val initialized = rememberSaveable { mutableStateOf(false) }
         LaunchedEffect(Unit) {
             if (!initialized.value) {
@@ -504,7 +509,7 @@ fun NavGraphBuilder.appNavGraph(
 
     composable(AppRoute.HistoryBrowser.route) {
         HistoryScreen(
-            title = stringResource(PluginsMainR.string.nav_history_browser),
+            title = stringResource(MainStrings.nav_history_browser),
             onNavigateBack = { navController.safePopBackStack() }
         )
     }
@@ -523,7 +528,7 @@ fun NavGraphBuilder.appNavGraph(
         route = AppRoute.PluginContent.route,
         arguments = listOf(navArgument("pluginIndex") { type = NavType.IntType })
     ) { backStackEntry ->
-        val pluginIndex = backStackEntry.arguments?.getInt("pluginIndex") ?: -1
+        val pluginIndex = backStackEntry.intArg("pluginIndex", -1)
         val plugin = activePlugin.getPluginsList().getOrNull(pluginIndex)
         val composeContent = plugin?.getComposeContent()
         if (plugin != null && composeContent is ComposablePluginContent) {
@@ -537,7 +542,7 @@ fun NavGraphBuilder.appNavGraph(
         } else {
             NavigationErrorFallback(
                 rxBus = rxBus,
-                message = stringResource(app.aaps.core.ui.R.string.navigation_error_screen_not_found),
+                message = stringResource(CoreUiStrings.navigation_error_screen_not_found),
                 onDismiss = { navController.safePopBackStack() }
             )
         }
@@ -613,7 +618,7 @@ fun NavGraphBuilder.appNavGraph(
         AppRoute.PluginCategory.route,
         arguments = listOf(navArgument("typeOrdinal") { type = NavType.IntType })
     ) { backStackEntry ->
-        val typeOrdinal = backStackEntry.arguments?.getInt("typeOrdinal") ?: return@composable
+        val typeOrdinal = backStackEntry.intArgOrNull("typeOrdinal") ?: return@composable
         val configState by configurationViewModel.uiState.collectAsStateWithLifecycle()
         val category = configState.categories.find { it.type.ordinal == typeOrdinal }
         app.aaps.ui.compose.configuration.PluginCategoryScreen(
@@ -640,9 +645,9 @@ fun NavGraphBuilder.appNavGraph(
     }
 
     composable(AppRoute.PluginPreferences.route) { backStackEntry ->
-        val pluginKey = backStackEntry.arguments?.getString("pluginKey")
+        val pluginKey = backStackEntry.stringArg("pluginKey")
         val plugin = activePlugin.getPluginsList().find {
-            it.javaClass.simpleName == pluginKey
+            it::class.simpleName == pluginKey
         }
         if (plugin != null) {
             PluginPreferencesScreen(
@@ -653,15 +658,15 @@ fun NavGraphBuilder.appNavGraph(
         } else {
             NavigationErrorFallback(
                 rxBus = rxBus,
-                message = stringResource(app.aaps.core.ui.R.string.navigation_error_screen_not_found),
+                message = stringResource(CoreUiStrings.navigation_error_screen_not_found),
                 onDismiss = { navController.safePopBackStack() }
             )
         }
     }
 
     composable(AppRoute.PreferenceScreen.route) { backStackEntry ->
-        val screenKey = backStackEntry.arguments?.getString("screenKey")
-        val highlightKey = backStackEntry.arguments?.getString("highlightKey")
+        val screenKey = backStackEntry.stringArg("screenKey")
+        val highlightKey = backStackEntry.stringArg("highlightKey")
         val screenDef = screenKey?.let { key -> findScreenDef(key) }
         if (screenDef != null) {
             PreferenceScreenView(
@@ -672,7 +677,7 @@ fun NavGraphBuilder.appNavGraph(
         } else {
             NavigationErrorFallback(
                 rxBus = rxBus,
-                message = stringResource(app.aaps.core.ui.R.string.navigation_error_screen_not_found),
+                message = stringResource(CoreUiStrings.navigation_error_screen_not_found),
                 onDismiss = { navController.safePopBackStack() }
             )
         }
@@ -682,11 +687,11 @@ fun NavGraphBuilder.appNavGraph(
         AppRoute.SiteLocationPicker.route,
         arguments = listOf(navArgument("siteTypeOrdinal") { type = NavType.IntType })
     ) { backStackEntry ->
-        val siteTypeOrdinal = backStackEntry.arguments?.getInt("siteTypeOrdinal") ?: 0
+        val siteTypeOrdinal = backStackEntry.intArg("siteTypeOrdinal", 0)
         val siteType = TE.Type.entries[siteTypeOrdinal]
         val entries by produceState(initialValue = emptyList()) {
             value = persistenceLayer.getTherapyEventDataFromTime(
-                System.currentTimeMillis() - T.days(45).msecs(), false
+                Clock.System.now().toEpochMilliseconds() - T.days(45).msecs(), false
             ).filter { it.type == TE.Type.CANNULA_CHANGE || it.type == TE.Type.SENSOR_CHANGE }
         }
         SiteLocationPickerScreen(
@@ -775,7 +780,7 @@ private fun PluginContentRoute(
         IconButton(onClick = { navController.safePopBackStack() }) {
             Icon(
                 Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = stringResource(app.aaps.core.ui.R.string.back)
+                contentDescription = stringResource(CoreUiStrings.back)
             )
         }
     }
@@ -783,13 +788,13 @@ private fun PluginContentRoute(
         IconButton(onClick = {
             withProtection(ElementType.SETTINGS.protection) {
                 navController.navigate(
-                    AppRoute.PluginPreferences.createRoute(plugin.javaClass.simpleName)
+                    AppRoute.PluginPreferences.createRoute(plugin::class.simpleName.orEmpty())
                 )
             }
         }) {
             Icon(
                 Icons.Filled.Settings,
-                contentDescription = stringResource(app.aaps.core.ui.R.string.settings)
+                contentDescription = stringResource(CoreUiStrings.settings)
             )
         }
     }
@@ -828,7 +833,7 @@ private fun PluginContentRoute(
                     onNavigateBack = { navController.safePopBackStack() },
                     onSettings = {
                         onNavigationRequest(
-                            NavigationRequest.PluginPreferences(plugin.javaClass.simpleName),
+                            NavigationRequest.PluginPreferences(plugin::class.simpleName.orEmpty()),
                             navController
                         )
                     }
@@ -876,7 +881,7 @@ private fun AutomationContentRoute(
         IconButton(onClick = { navController.safePopBackStack() }) {
             Icon(
                 Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = stringResource(app.aaps.core.ui.R.string.back)
+                contentDescription = stringResource(CoreUiStrings.back)
             )
         }
     }
@@ -884,11 +889,11 @@ private fun AutomationContentRoute(
         IconButton(onClick = openSettings) {
             Icon(
                 Icons.Filled.Settings,
-                contentDescription = stringResource(app.aaps.core.ui.R.string.settings)
+                contentDescription = stringResource(CoreUiStrings.settings)
             )
         }
     }
-    val title = stringResource(app.aaps.core.ui.R.string.automation)
+    val title = stringResource(CoreUiStrings.automation)
     var toolbarConfig by remember {
         mutableStateOf(
             ToolbarConfig(
@@ -920,3 +925,16 @@ private fun AutomationContentRoute(
         }
     }
 }
+
+// `NavBackStackEntry.arguments` is a `Bundle` on Android but a `SavedState` in multiplatform
+// navigation, and only the SavedState API exists in shared code. These two keep the call sites
+// reading the way they did.
+private fun NavBackStackEntry.stringArg(key: String): String? =
+    arguments?.read { if (contains(key)) getStringOrNull(key) else null }
+
+private fun NavBackStackEntry.intArg(key: String, default: Int): Int =
+    arguments?.read { if (contains(key)) getInt(key) else default } ?: default
+
+/** Null when the argument is absent, for routes that cannot render without it. */
+private fun NavBackStackEntry.intArgOrNull(key: String): Int? =
+    arguments?.read { if (contains(key)) getInt(key) else null }

@@ -17,6 +17,7 @@ plugins {
 // its own, while linking resolves the whole graph at once, so it is the step that finds a missing
 // `actual`, a dependency with no Apple artifact, or a symbol nothing provides.
 val migratedModules = listOf(
+    ":appshell",
     ":core:data",
     ":core:graph",
     ":core:interfaces",
