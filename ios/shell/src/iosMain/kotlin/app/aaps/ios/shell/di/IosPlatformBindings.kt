@@ -9,6 +9,8 @@ import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
 import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.plugins.sync.nsclientV3.ws.NsConnection
+import app.aaps.plugins.sync.nsclientV3.ws.SocketNsConnection
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
@@ -63,20 +65,6 @@ object IosPlatformBindings {
     @SingleIn(AppScope::class)
     fun logger(): AAPSLogger = AAPSLoggerIos()
 
-    /**
-     * Real English text, from the maps `GenerateKeyStringsTask` now emits.
-     *
-     * This replaced a placeholder that answered with the string's **name**, so a settings screen
-     * read `configbuilder_general` instead of "General". `GeneratedStringOwners.registerAll()` has to run
-     * before anything asks for text - `IosAppStartup` does that.
-     *
-     * Still English only: the generated map holds the base locale, and choosing one at runtime is a
-     * separate job.
-     */
-    @Provides
-    @SingleIn(AppScope::class)
-    fun textResolver(): TextResolver = GeneratedTextResolver()
-
     /** NSUserDefaults, the store the preference layer sits on. */
     @Provides
     @SingleIn(AppScope::class)
@@ -92,76 +80,12 @@ object IosPlatformBindings {
     @SingleIn(AppScope::class)
     fun config(): Config = IosClientConfig()
 
-    /** The production bus, which is already common code. */
-    @Provides
-    @SingleIn(AppScope::class)
-    fun rxBus(logger: AAPSLogger): RxBus = RxBusImpl(logger)
-
-    /** The scope long lived work runs in, the counterpart of the app's own. */
-    @Provides
-    @SingleIn(AppScope::class)
-    fun appScope(): CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
-
-    /**
-     * The same scope again, under the qualifier shared code asks for.
-     *
-     * Derived from the unqualified one rather than built separately, so both names mean the same
-     * scope - two scopes would look identical and cancel work the other half was still waiting on.
-     */
-    @Provides
-    @ApplicationScope
-    fun qualifiedAppScope(scope: CoroutineScope): CoroutineScope = scope
-
-    /**
-     * Which log tags are switched on, read back from preferences.
-     *
-     * `LImpl` takes a `Preferences` accessor rather than the object, because log elements are built
-     * once on first use and the preference layer is not ready while the graph is being assembled.
-     */
-    @Provides
-    @SingleIn(AppScope::class)
-    fun l(preferences: Preferences): L = LImpl { preferences }
-
-    /**
-     * Bolus progress, stated rather than annotated: the class carries no DI annotations on purpose,
-     * because `javax.inject` does not resolve in commonMain.
-     */
-    @Provides
-    @SingleIn(AppScope::class)
-    fun bolusProgressData(ch: ConcentrationHelper, @ApplicationScope scope: CoroutineScope): BolusProgressData =
-        BolusProgressData(ch, scope)
 
     /** Notifications through UNUserNotificationCenter, with the shared registry above it. */
     @Provides
     @SingleIn(AppScope::class)
     fun systemNotificationPlatform(logger: AAPSLogger, alarmSoundPlayer: AlarmSoundPlayer): SystemNotificationPlatform =
         IosSystemNotificationPlatform(logger, alarmSoundPlayer)
-
-    @Provides
-    @SingleIn(AppScope::class)
-    fun notificationManager(
-        logger: AAPSLogger,
-        textResolver: TextResolver,
-        platform: SystemNotificationPlatform,
-        scope: CoroutineScope
-    ): NotificationManager = CommonNotificationManager(logger, textResolver, platform, scope)
-
-    /**
-     * The shared coroutine executor, stated rather than contributed.
-     *
-     * `CoroutineCalculationExecutor` lives in `commonMain` and is already the right one for iOS -
-     * its own docs say a coroutine is enough anywhere that is not Android. It carries no
-     * `@ContributesBinding` on purpose, so it cannot collide with the WorkManager one Android
-     * contributes, which is why the binding has to be named here.
-     */
-    @Provides
-    @SingleIn(AppScope::class)
-    fun calculationExecutor(
-        scope: CoroutineScope,
-        logger: AAPSLogger,
-        prepare: Provider<PrepareGraphDataRunner>,
-        post: Provider<PostCalculationRunner>
-    ): CalculationExecutor = LazyCalculationExecutor(scope, logger, { prepare() }, { post() })
 
     /**
      * One history browsing window, app-scoped so every injection point sees the same one.
@@ -174,4 +98,5 @@ object IosPlatformBindings {
     @SingleIn(AppScope::class)
     fun historyScope(windowFactory: IosHistoryWindowGraph.Factory): HistoryScope =
         IosHistoryScope(windowFactory.create())
+
 }

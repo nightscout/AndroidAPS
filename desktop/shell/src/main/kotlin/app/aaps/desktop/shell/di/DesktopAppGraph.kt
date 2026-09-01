@@ -39,6 +39,7 @@ import app.aaps.ui.compose.overview.graphs.GraphViewModel
 import app.aaps.ui.search.BuiltInSearchables
 import dev.zacsweers.metrox.viewmodel.MetroViewModelMultibindings
 import app.aaps.core.objects.di.CoreObjectsGraph
+import app.aaps.shared.clientbindings.ClientGraphBindings
 import app.aaps.database.AppRepository
 import app.aaps.database.di.JvmAppDatabaseBuilder
 import dev.zacsweers.metro.AppScope
@@ -149,12 +150,18 @@ interface DesktopAppGraph : MetroViewModelMultibindings {
      * [CoreObjectsGraph] is a plain binding container rather than a contributed one, so every graph
      * has to include it by name. It holds the QuickWizard / QuickWizardEntry / BolusWizard cycle,
      * broken with deferred providers - the same shape `AppRootGraph` and `IosAppGraph` use.
+     *
+     * [ClientGraphBindings] is the same idea: the bindings iOS and desktop both need, in one place
+     * rather than copied into each shell. Not contributed, because Android provides the same ones.
      */
 
 
     @DependencyGraph.Factory
     fun interface Factory {
 
-        fun create(@Includes coreObjects: CoreObjectsGraph): DesktopAppGraph
+        fun create(
+            @Includes coreObjects: CoreObjectsGraph,
+            @Includes clientBindings: ClientGraphBindings
+        ): DesktopAppGraph
     }
 }

@@ -51,17 +51,6 @@ object DesktopPlatformBindings {
     @SingleIn(AppScope::class)
     fun logger(): AAPSLogger = AAPSLoggerDesktop()
 
-    /**
-     * Registration happens here rather than in `main()` so that it cannot be missed: nothing can ask
-     * for text without first asking the graph for this, and the graph builds it once.
-     */
-    @Provides
-    @SingleIn(AppScope::class)
-    fun textResolver(): TextResolver {
-        GeneratedStringOwners.registerAll()
-        return GeneratedTextResolver()
-    }
-
     /** A properties file next to the database, which `PreferencesImpl` sits on unchanged. */
     @Provides
     @SingleIn(AppScope::class)
@@ -77,37 +66,7 @@ object DesktopPlatformBindings {
 
     @Provides
     @SingleIn(AppScope::class)
-    fun rxBus(logger: AAPSLogger): RxBus = RxBusImpl(logger)
-
-    /**
-     * The scope everything app-lifetime long runs on. `Dispatchers.Default` rather than a UI one:
-     * nothing here draws, and work that must touch the UI hops to it itself.
-     */
-    @Provides
-    @SingleIn(AppScope::class)
-    fun appScope(): CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
-
-    @Provides
-    @SingleIn(AppScope::class)
-    @ApplicationScope
-    fun qualifiedAppScope(scope: CoroutineScope): CoroutineScope = scope
-
-    @Provides
-    @SingleIn(AppScope::class)
-    fun l(preferences: Preferences): L = LImpl { preferences }
-
-    @Provides
-    @SingleIn(AppScope::class)
     fun systemNotificationPlatform(logger: AAPSLogger): SystemNotificationPlatform =
         DesktopSystemNotificationPlatform(logger)
 
-    /** The shared manager decides what exists; the tray above only shows it. */
-    @Provides
-    @SingleIn(AppScope::class)
-    fun notificationManager(
-        logger: AAPSLogger,
-        textResolver: TextResolver,
-        platform: SystemNotificationPlatform,
-        scope: CoroutineScope
-    ): NotificationManager = CommonNotificationManager(logger, textResolver, platform, scope)
 }

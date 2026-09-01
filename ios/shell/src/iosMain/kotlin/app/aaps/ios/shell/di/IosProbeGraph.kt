@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.di.CoreObjectsGraph
+import app.aaps.shared.clientbindings.ClientGraphBindings
 import app.aaps.workflow.CalculationExecutor
 import app.aaps.workflow.CoroutineCalculationExecutor
 import app.aaps.workflow.PostCalculationRunner
@@ -129,6 +130,9 @@ interface IosProbeGraph {
          * shared classes it already builds (the bolus wizard, the quick wizard and its entry, and the
          * running mode guard) look like missing bindings rather than ones Metro cannot see.
          */
-        fun create(@Includes coreObjects: CoreObjectsGraph): IosProbeGraph
+        fun create(
+            @Includes coreObjects: CoreObjectsGraph,
+            @Includes clientBindings: ClientGraphBindings
+        ): IosProbeGraph
     }
 }

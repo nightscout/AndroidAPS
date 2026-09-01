@@ -1,6 +1,7 @@
 package app.aaps.ios.shell.di
 
 import app.aaps.core.objects.di.CoreObjectsGraph
+import app.aaps.shared.clientbindings.ClientGraphBindings
 import dev.zacsweers.metro.createGraphFactory
 import kotlin.test.Test
 import kotlin.test.assertNotSame
@@ -20,7 +21,7 @@ import kotlin.test.assertSame
  */
 class IosHistoryWindowScopingTest {
 
-    private val graph = createGraphFactory<IosAppGraph.Factory>().create(CoreObjectsGraph)
+    private val graph = createGraphFactory<IosAppGraph.Factory>().create(CoreObjectsGraph, ClientGraphBindings)
 
     @Test
     fun `a window does not share the app's calculation objects`() {
