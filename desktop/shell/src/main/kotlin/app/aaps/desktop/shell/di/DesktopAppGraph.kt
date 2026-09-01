@@ -22,10 +22,13 @@ import dev.zacsweers.metro.SingleIn
  *
  * The shell depends on the same 26 modules `:ios:shell` does, so every plugin that registers itself
  * with `@ContributesBinding` is already in the graph, and the classes in `app.aaps.desktop.shell.platform`
- * answer the platform half. Measured at **5**, down from 32:
+ * answer the platform half. Measured at **4**, down from 32:
  *
- * **Implementable, and the next work:** `ImportExportPrefs` (file dialogs), and `NsConnection` and
- * `NsLoadExecutor`, which are HTTP and a socket - a JVM has both, so a follower can genuinely sync.
+ * **Implementable, and the next work:** `ImportExportPrefs` (file dialogs) and `NsConnection`. The
+ * socket class it needs, `SocketIoNsSocket`, has no Android imports at all - it is socket.io,
+ * `org.json` and `java.net` - so it is a source-set move rather than a rewrite. What it needs first
+ * is a decision: sharing it puts the `org.json` artifact on the Android compile classpath of the
+ * module that syncs user data, where the platform already provides that package.
  *
  * **Needs a port rather than an implementation:** `Autotune`, whose `AutotunePlugin` is arithmetic
  * over treatment history sitting in androidMain, and `LoopNotifier`, an interface whose only
@@ -52,6 +55,7 @@ interface DesktopAppGraph {
      * has to include it by name. It holds the QuickWizard / QuickWizardEntry / BolusWizard cycle,
      * broken with deferred providers - the same shape `AppRootGraph` and `IosAppGraph` use.
      */
+
 
     @DependencyGraph.Factory
     fun interface Factory {
