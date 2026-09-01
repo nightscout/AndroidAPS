@@ -4,17 +4,21 @@ import androidx.compose.runtime.Composable
 import app.aaps.core.keys.interfaces.TextRef
 
 /**
- * PLACEHOLDER. Desktop has no string table yet, so this returns something readable rather than the
- * real translation - exactly as the Apple actual does, and for the same reason.
+ * PLACEHOLDER, and unlike the Apple one this is a *waiting* placeholder rather than a blocked one:
+ * desktop can resolve these for real, and the work is understood.
  *
- * It exists because `expect` needs an `actual` on every target, and without one the module would not
- * compile for desktop at all - which is the check that keeps commonMain honest. Nothing on desktop
- * runs yet, so nothing shows these strings to anyone.
+ * `GenerateKeyStringsTask` already parses each module's `res/values/strings.xml`. Emitting a third
+ * output beside `XxxStrings` and `XxxStringIds` - a `name -> text` map for the JVM - plus a registry
+ * mirroring `TextRefIdRegistry` is all the machinery needed, and [TextRef.Named] already carries both
+ * the name and the owning module that such a lookup wants.
  *
- * When desktop gains a string table, this is the only place that has to change. [TextRef.Named]
- * already carries the name from `strings.xml` and the module that owns it, which is what a resource
- * bundle lookup needs; [TextRef.AndroidRes] carries a number that means nothing here, so files still
- * using it have to move to [TextRef.Named] first.
+ * It is not built yet because nothing would call `register()`. On Android that happens from
+ * `ResourceHelperImpl`; on desktop the equivalent belongs to the desktop app module, which does not
+ * exist. Building the generator and the registry before their caller would ship wiring that nothing
+ * activates, so this waits for that module rather than for a decision.
+ *
+ * [TextRef.AndroidRes] carries a number that means nothing here, so files still using it have to move
+ * to [TextRef.Named] first either way.
  */
 @Composable
 actual fun stringResource(ref: TextRef): String = when (ref) {
