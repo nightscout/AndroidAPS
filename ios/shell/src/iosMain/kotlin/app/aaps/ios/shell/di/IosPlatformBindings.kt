@@ -67,7 +67,7 @@ object IosPlatformBindings {
      * Real English text, from the maps `GenerateKeyStringsTask` now emits.
      *
      * This replaced a placeholder that answered with the string's **name**, so a settings screen
-     * read `configbuilder_general` instead of "General". `IosStringOwners.registerAll()` has to run
+     * read `configbuilder_general` instead of "General". `GeneratedStringOwners.registerAll()` has to run
      * before anything asks for text - `IosAppStartup` does that.
      *
      * Still English only: the generated map holds the base locale, and choosing one at runtime is a

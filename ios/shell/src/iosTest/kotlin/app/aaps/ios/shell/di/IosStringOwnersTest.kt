@@ -12,7 +12,7 @@ import kotlin.test.assertNull
  * That every module the iOS framework links can have its text found.
  *
  * The failure this guards against is quiet rather than loud: an owner missing from
- * [IosStringOwners] does not crash, it makes that module's screens render string **names** -
+ * `GeneratedStringOwners` does not crash, it makes that module's screens render string **names** -
  * `pref_title_units` instead of "Units" - and only on the screens that module owns. Nobody notices
  * until they open the right screen, which is how the whole iOS app looked before this was wired.
  *
@@ -40,7 +40,7 @@ class IosStringOwnersTest {
 
     @Test
     fun `registering gives real English text rather than the name`() {
-        IosStringOwners.registerAll()
+        GeneratedStringOwners.registerAll()
 
         assertEquals("Settings", textOf("coreUi", "settings"))
         assertEquals("Units", textOf("keys", "pref_title_units"))
@@ -50,12 +50,12 @@ class IosStringOwnersTest {
     /**
      * Every owner the framework links, checked by asking each for a name it does own.
      *
-     * A module whose `owner.set(...)` is in its build file but missing from [IosStringOwners] shows
+     * A module whose `owner.set(...)` is in its build file but missing from `GeneratedStringOwners` shows
      * string names on its own screens and nowhere else, so it is worth failing here instead.
      */
     @Test
     fun `every linked module has an owner registered`() {
-        IosStringOwners.registerAll()
+        GeneratedStringOwners.registerAll()
 
         val expected = listOf(
             "keys", "interfaces", "coreUi", "implementation", "ui", "aps", "automation",
@@ -71,7 +71,7 @@ class IosStringOwnersTest {
 
     @Test
     fun `an unknown owner has no text`() {
-        IosStringOwners.registerAll()
+        GeneratedStringOwners.registerAll()
 
         assertNull(textOf("no_such_owner", "settings"))
     }

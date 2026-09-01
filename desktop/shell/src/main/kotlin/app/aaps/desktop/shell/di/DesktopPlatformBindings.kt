@@ -58,7 +58,7 @@ object DesktopPlatformBindings {
     @Provides
     @SingleIn(AppScope::class)
     fun textResolver(): TextResolver {
-        DesktopStringOwners.registerAll()
+        GeneratedStringOwners.registerAll()
         return GeneratedTextResolver()
     }
 

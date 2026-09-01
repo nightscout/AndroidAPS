@@ -6,6 +6,9 @@ import app.aaps.core.keys.KeysStrings
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.implementation.ImplementationStrings
+import app.aaps.plugins.aps.ApsStrings
+import app.aaps.plugins.main.MainStrings
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.implementation.resources.GeneratedTextResolver
 import app.aaps.ui.UiStrings
 import kotlin.test.AfterTest
@@ -19,7 +22,7 @@ import kotlin.test.assertNotEquals
  *
  * This is the one part of the string wiring a compiler cannot check. The owner is a plain String on
  * both sides - `owner.set("coreUi")` in the module's build file, `register("coreUi")` in
- * [DesktopStringOwners] - so a typo compiles, and the only symptom is a screen showing string
+ * `GeneratedStringOwners` - so a typo compiles, and the only symptom is a screen showing string
  * **names** instead of words. That reads like unfinished UI rather than like a bug, which is how it
  * would survive review.
  *
@@ -32,7 +35,7 @@ class DesktopStringOwnersTest {
 
     @BeforeTest fun register() {
         TextRefValueRegistry.clear()
-        DesktopStringOwners.registerAll()
+        GeneratedStringOwners.registerAll()
     }
 
     @AfterTest fun cleanUp() {
@@ -50,7 +53,10 @@ class DesktopStringOwnersTest {
             KeysStrings.absorption_cutoff_summary,
             UiStrings.a11y_add_new_insulin,
             InterfacesStrings.advisoralarm,
-            ImplementationStrings.backup_to_google_drive
+            ImplementationStrings.backup_to_google_drive,
+            ApsStrings.array_of_elements,
+            MainStrings.basal_shortname,
+            SyncStrings.a11y_otp_qr_code
         ).forEach { ref ->
             val named = ref as TextRef.Named
             assertNotEquals(

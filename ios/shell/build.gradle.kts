@@ -106,6 +106,21 @@ val checkMigratedModules = tasks.register("checkMigratedModules") {
 
 tasks.matching { it.name.startsWith("linkDebugFramework") }.configureEach { dependsOn(checkMigratedModules) }
 
+/**
+ * Which module owns which strings, generated rather than hand written.
+ *
+ * The list is `StringOwnerModules.ALL`, shared with `:app` and the desktop shell, so the three
+ * platforms cannot drift - which they had: the desktop copy carried five of sixteen modules.
+ */
+val generateIosStringOwners = tasks.register<GenerateStringOwnerRegistryTask>("generateIosStringOwners") {
+    owners.set(StringOwnerModules.ALL)
+    packageName.set("app.aaps.ios.shell.di")
+    objectName.set("GeneratedStringOwners")
+    // Text, not resource ids: there is no AAPT table on Apple.
+    useResourceIds.set(false)
+    outputDir.set(layout.buildDirectory.dir("generated/stringOwners"))
+}
+
 kotlin {
     listOf(
         iosArm64(),
@@ -124,6 +139,8 @@ kotlin {
     }
 
     sourceSets {
+        iosMain { kotlin.srcDir(generateIosStringOwners) }
+
         commonMain {
             dependencies {
                 // `api`, not `implementation`: a module can only be exported to the framework when
