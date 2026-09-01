@@ -14,6 +14,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import app.aaps.appshell.AapsAppRoot
 import app.aaps.appshell.navigation.AppRoute
 import app.aaps.appshell.navigation.appNavGraph
@@ -185,7 +186,14 @@ fun aapsAppViewController(): UIViewController {
                     }
                 )
 
-                NavHost(navController = navController, startDestination = AppRoute.Preferences.route) {
+                // Starts on a list of screens rather than on the settings screen. Settings as the
+                // start destination left its back arrow inert - there was nothing behind it - and
+                // left every other screen unreachable, since they are all navigated to from the
+                // overview that iOS does not have yet. See `IosHomeScreen`.
+                NavHost(navController = navController, startDestination = HOME_ROUTE) {
+                    composable(HOME_ROUTE) {
+                        IosHomeScreen(onOpen = { route -> navController.navigate(route) })
+                    }
                     appNavGraph(
                         navController = navController,
                         insulinManagementViewModel = insulinManagement,
@@ -241,3 +249,6 @@ fun aapsAppViewController(): UIViewController {
 
 /** One line, one shape, so a run makes it obvious which platform callbacks are still placeholders. */
 private fun AAPSLogger.notWiredYet(what: String) = error(LTag.CORE, "Not wired up on iOS yet: $what")
+
+/** The iOS shell's own start destination. Not an `AppRoute`: it is scaffolding, not part of the app. */
+private const val HOME_ROUTE = "ios_home"
