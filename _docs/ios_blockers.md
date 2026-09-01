@@ -905,6 +905,56 @@ Two details worth knowing if this is ever changed:
 The setting still says "App launch. Independent from other levels", which now understates what it
 does on both platforms. Worth a wording change, on Android too.
 
+
+## Three answers that turned placeholders into decisions
+
+Not ports, and not gaps - answers about what an iOS client is. Moved out of the `missing` package
+into `platform`, which now means "this is what this build does" rather than "this is not written
+yet". The two packages log at different levels on purpose: `missing` at **error**, because a call is
+a screen reaching for something that should exist; `platform` at **debug**, because logging correct
+behaviour at error teaches a reader to ignore the level that matters.
+
+- **`BgQualityCheck` answers UNKNOWN.** The loop never doses on a client, and the badge that reads it
+  judges *this device's* sensor - but a client's glucose comes from Nightscout, already judged by the
+  master that owns it. Worth knowing: the APS plugins **are** registered on a client, deliberately
+  (`ApsPluginRegistrations` puts them in the unqualified map so a follower still lists them), which is
+  precisely why this binding has to exist at all.
+- **The xDrip and Dexcom integrations report themselves disabled.** `NSClientSourcePlugin` is the only
+  source plugin in commonMain; every other one is androidMain, because they are reached by Android
+  broadcast intents. The bindings still exist because shared UI asks - `CalibrationDialogViewModel`,
+  `ElementAvailability`, `TreatmentViewModel`, `MaintenanceViewModel` - and each hides its option when
+  the answer is no.
+- **Screen usage statistics are empty.** The collector is an `ActivityLifecycleCallbacks` and a client
+  is not meant to collect them at all, so the statistics screen shows an empty table, which is
+  accurate rather than broken.
+
+## History browsing works on iOS
+
+`IosHistoryScope` used to throw on every property - the right placeholder, because handing back the
+app's calculation objects would have satisfied the types and let browsing history rewrite the state
+the loop calculates on. It is real now: `IosHistoryWindowGraph` is a `@GraphExtension` with its own
+scope, the counterpart of `HistoryWindowGraph`, so each window owns its calculator, cache, signals
+and overview data while sharing the database and preferences with the app.
+
+Verified on the simulator - the History Browser opens, with the date picker, day navigation and the
+BG, IOB/BAS and COB graphs. `IosHistoryWindowScopingTest` pins the isolation by identity rather than
+behaviour, because behaviour only differs once both are mid-calculation, which is too late to notice.
+
+### Two things that were needed and are worth knowing
+
+**A graph extension is only reachable through an accessor its parent states.** `IosAppGraph` declares
+`historyWindowFactory`, the same way `AppRootGraph` does. Without it the factory reads as an ordinary
+missing binding, which is how it first failed.
+
+**Registering a notification category no longer attaches to the notification centre.**
+`IosNotificationDelegate.register` used to call `install()` immediately, and
+`CommonNotificationManager` registers one while it is being *constructed* - so simply building the
+object graph touched `UNUserNotificationCenter`, which throws `bundleProxyForCurrentProcess is nil`
+outside an app bundle. The whole app graph therefore could not be built in a test, which is how this
+surfaced: a history scoping test died on a notification API it never meant to use. `install()` is now
+called once from `aapsAppViewController`, and registering only records. Declaring what a category is,
+and claiming a process-wide delegate slot, are different acts and only one of them needs an app.
+
 ## Done
 
 - **`UrlOpener` and `PrefsFileInfo` - iOS side done.** Both ports landed from `kmp` and both have an

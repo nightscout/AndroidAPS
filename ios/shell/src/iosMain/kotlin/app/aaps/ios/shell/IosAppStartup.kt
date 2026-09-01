@@ -50,6 +50,7 @@ internal class IosAppStartup(
         // On Android `configBuilder.initialize()` does this. The iOS ConfigBuilder is a placeholder,
         // so the call is made directly. When a real one exists, this line moves into it.
         registry.verifySelections()
+
         aapsLogger.debug(LTag.CORE, "Plugin selection verified, starting the UI")
     }
 }
