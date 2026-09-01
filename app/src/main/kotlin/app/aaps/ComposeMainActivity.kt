@@ -16,15 +16,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -33,15 +27,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.TrendingFlat
 import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.Button
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -53,7 +43,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.net.toUri
@@ -66,16 +55,13 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import app.aaps.appshell.navigation.AppRoute
 import app.aaps.appshell.navigation.appNavGraph
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
-import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
-import app.aaps.core.interfaces.configuration.InitProgress
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -113,29 +99,15 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.objects.crypto.CryptoUtil
+import app.aaps.appshell.AapsAppRoot
+import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.AapsTheme
-import app.aaps.core.ui.compose.LocalConfig
-import app.aaps.core.ui.compose.LocalDateUtil
-import app.aaps.core.ui.compose.LocalAppIcon
-import app.aaps.core.ui.compose.LocalDecimalFormatter
-import app.aaps.core.ui.compose.LocalMasterControlAllowed
-import app.aaps.core.ui.compose.LocalMasterReachable
-import app.aaps.core.ui.compose.LocalPreferences
-import app.aaps.core.ui.compose.LocalProfileUtil
-import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.MetroAppCompatActivity
 import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import app.aaps.core.ui.compose.ProtectionHost
 import app.aaps.core.ui.compose.ScreenMode
-import app.aaps.core.ui.compose.dialogs.GlobalDialogHost
-import app.aaps.core.ui.compose.dialogs.GlobalSnackbarHost
 import app.aaps.core.ui.compose.dialogs.OkDialog
-import app.aaps.core.ui.compose.dialogs.PasswordCheckHost
 import app.aaps.core.ui.compose.navigation.NavigationRequest
-import app.aaps.core.ui.compose.preference.LocalCheckPassword
-import app.aaps.core.ui.compose.preference.LocalClearExportPasswordStore
-import app.aaps.core.ui.compose.preference.LocalHashPassword
-import app.aaps.core.ui.compose.preference.LocalVisibilityContext
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.pump.PumpActivityDialog
 import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
@@ -149,7 +121,6 @@ import app.aaps.plugins.configuration.setupwizard.SWDefinition
 import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
 import app.aaps.ui.compose.careDialog.CareportalEventType
-import app.aaps.ui.compose.clientcontrol.ClientControlPendingDialog
 import app.aaps.ui.compose.configuration.ConfigurationViewModel
 import app.aaps.ui.compose.fillDialog.FillPreselect
 import app.aaps.ui.compose.insulinManagement.InsulinManagementViewModel
@@ -324,171 +295,27 @@ class ComposeMainActivity : MetroAppCompatActivity() {
 
     @Composable
     private fun MainContent() {
-        val navController = rememberNavController().also { this.navController = it }
-        val masterReachable by nsClient.masterReachable.collectAsStateWithLifecycle()
-        val masterControlAllowed by nsClient.masterControlAllowed.collectAsStateWithLifecycle()
-
-        // Global self-heal — event-driven, NOT a poll (a timer would keep the CPU awake). Probe once when
-        // we go offline, and again on each navigation while offline, so any screen/dialog the user opens
-        // re-checks. (The WS reconnect and a failed action also probe; all internally rate-limited.)
-        // `masterReachable` is lifecycle-collected and navigation only happens in the foreground, so this
-        // never runs in the background.
-        LaunchedEffect(masterReachable) {
-            if (!masterReachable) nsClient.requestMasterProbe()
-        }
-        LaunchedEffect(navController) {
-            navController.currentBackStackEntryFlow.collect {
-                if (!nsClient.masterReachable.value) nsClient.requestMasterProbe()
-            }
-        }
-
-        CompositionLocalProvider(
-            LocalPreferences provides preferences,
-            LocalDateUtil provides dateUtil,
-            LocalDecimalFormatter provides decimalFormatter,
-            // This build's launcher icon: a flavour specific bitmap, so the shell paints it and shared
-            // screens only say where it goes.
-            LocalAppIcon provides { modifier -> Image(painterResource(iconsProvider.getIcon()), null, modifier) },
-            LocalConfig provides config,
-            LocalMasterReachable provides masterReachable,
-            LocalMasterControlAllowed provides masterControlAllowed,
-            LocalProfileUtil provides profileUtil,
-            LocalCheckPassword provides cryptoUtil::checkPassword,
-            LocalHashPassword provides cryptoUtil::hashPassword,
-            LocalClearExportPasswordStore provides { exportPasswordDataStore.clearPasswordDataStore() },
-            LocalVisibilityContext provides visibilityContext
-        ) {
-            AapsTheme {
-                val rootSnackbarHostState = remember { SnackbarHostState() }
-                CompositionLocalProvider(LocalSnackbarHostState provides rootSnackbarHostState) {
-                    val initProgress by config.initProgressFlow.collectAsStateWithLifecycle()
-
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        AnimatedVisibility(
-                            visible = !initProgress.done,
-                            exit = fadeOut()
-                        ) {
-                            LaunchedEffect(Unit) {
-                                config.initSnackbarFlow.collect { message ->
-                                    rootSnackbarHostState.showSnackbar(message)
-                                }
-                            }
-                            SplashScreen(initProgress)
-                        }
-
-                        AnimatedVisibility(
-                            visible = initProgress.done,
-                            enter = fadeIn()
-                        ) {
-                            AppContent(navController)
-                        }
-
-                        // Root-level snackbar host — subscribes to EventShowSnackbar
-                        // and is the single visible SnackbarHost across every screen.
-                        GlobalSnackbarHost(
-                            rxBus = rxBus,
-                            hostState = rootSnackbarHostState,
-                            modifier = Modifier.align(Alignment.BottomCenter)
-                        )
-
-                        // Root-level dialog host — subscribes to EventShowDialog and
-                        // renders one modal dialog at a time.
-                        GlobalDialogHost(rxBus = rxBus)
-
-                        // Root-level password prompt. Any caller can ask for a password from plain
-                        // Kotlin; the dialog appears here, so PasswordCheck needs no Context.
-                        PasswordCheckHost(passwordCheck = passwordCheck)
-
-                        // The single app-level pending modal for ANY client-control round-trip
-                        // (insulin / scenes / synced-preference edits). Hosted once here, feature-
-                        // independent; round-trips are single-in-flight so at most one shows. Applied is
-                        // cleared by the dispatcher (silent); Rejected/Unconfirmed stay until dismissed.
-                        val pendingAction by clientControlActionDispatcher.pendingAction.collectAsStateWithLifecycle()
-                        pendingAction?.let { pending ->
-                            if (pending.progress !is ActionProgress.Applied)
-                                ClientControlPendingDialog(
-                                    pending = pending,
-                                    onDismiss = { clientControlActionDispatcher.dismissActionProgress() }
-                                )
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    @Composable
-    private fun SplashScreen(progress: InitProgress) {
-        Scaffold { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .background(MaterialTheme.colorScheme.surface),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Image(
-                    painter = painterResource(app.aaps.core.ui.R.drawable.splash_logo),
-                    contentDescription = null,
-                    modifier = Modifier.size(200.dp)
-                )
-                Spacer(Modifier.height(32.dp))
-                val error = progress.error
-                if (error != null) {
-                    Text(
-                        text = stringResource(app.aaps.core.ui.R.string.initialization_failed),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.error,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(horizontal = 32.dp)
-                    )
-                    Spacer(Modifier.height(8.dp))
-                    Text(
-                        text = error,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(horizontal = 32.dp)
-                    )
-                    Spacer(Modifier.height(16.dp))
-                    Button(onClick = { finish() }) {
-                        Text(stringResource(app.aaps.core.ui.R.string.close))
-                    }
-                } else {
-                    Text(
-                        text = progress.step.ifEmpty { stringResource(app.aaps.core.ui.R.string.loading) },
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(horizontal = 32.dp)
-                    )
-                    Spacer(Modifier.height(16.dp))
-                    if (progress.total > 0) {
-                        LinearProgressIndicator(
-                            progress = { progress.current.toFloat() / progress.total },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 48.dp)
-                                .height(4.dp)
-                        )
-                        Spacer(Modifier.height(8.dp))
-                        Text(
-                            text = "${progress.current} / ${progress.total}",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    } else {
-                        LinearProgressIndicator(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 48.dp)
-                                .height(4.dp)
-                        )
-                    }
-                }
-            }
-        }
+        AapsAppRoot(
+            config = config,
+            preferences = preferences,
+            dateUtil = dateUtil,
+            decimalFormatter = decimalFormatter,
+            profileUtil = profileUtil,
+            passwordHasher = cryptoUtil,
+            passwordCheck = passwordCheck,
+            exportPasswordDataStore = exportPasswordDataStore,
+            visibilityContext = visibilityContext,
+            nsClient = nsClient,
+            rxBus = rxBus,
+            clientControlActionDispatcher = clientControlActionDispatcher,
+            // The two per-build bitmaps the shared root cannot paint itself.
+            appIcon = { modifier -> Image(painterResource(iconsProvider.getIcon()), null, modifier) },
+            splashLogo = { modifier -> Image(painterResource(CoreUiR.drawable.splash_logo), null, modifier) },
+            // The Activity keeps a reference so an incoming intent can route without the composition.
+            onNavControllerReady = { navController = it },
+            onClose = { finish() },
+            content = { navController -> AppContent(navController) }
+        )
     }
 
     @SuppressLint("BatteryLife")
