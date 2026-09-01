@@ -1018,6 +1018,61 @@ scaffolding, which gives back somewhere to go and makes the other twenty-odd scr
 testing at all. Desktop is welcome to the same thing, and if it wants one, the list belongs in shared
 code rather than written twice. It should be deleted from both the day the Main route moves.
 
+
+## Request: `ObjectivesPlugin` to commonMain - the last thing between iOS and the overview
+
+The overview slot works. Probed against `OverviewScreen`'s dependency list from the iOS graph, and
+**only one binding is missing**: `Objectives`. `CommandQueue`, `BgQualityCheck`, `UiInteraction`,
+`ActivePlugin`, `Config`, `NotificationManager`, `BuiltInSearchables`, `BolusProgressData` and
+`ClientControlActionDispatcher` all resolve already.
+
+`ObjectivesPlugin` (`plugins/constraints/androidMain/.../objectives/`) has **zero Android imports**.
+It is the fourth class in this shape, after `PasswordCheckImpl`, `ProtectionCheckImpl` and
+`SafetyPlugin` - portable Kotlin sitting in androidMain for historical reasons rather than because of
+a dependency.
+
+### A stub is not an option here, which is worth knowing before someone tries
+
+`OverviewScreen` line 129 does `val objectivesPlugin = objectives as PluginBase`, and it runs
+**before** the `config.APS` guard on the next line. So an `Objectives` implementation that is not
+also a `PluginBase` throws `ClassCastException` the moment the overview composes - on a client, where
+the badge it feeds is never shown anyway.
+
+Two things follow:
+
+- iOS cannot answer this the way it answers `BgQualityCheck`. A client-shaped stub would have to be a
+  `PluginBase` as well, which means a fake plugin in the plugin list to satisfy a cast.
+- **The cast is worth moving inside the guard regardless.** As written, every platform must supply a
+  `PluginBase`-shaped `Objectives` even where objectives are meaningless, and the failure is a crash
+  at compose time rather than a missing badge. `activePlugin.activeBgSource as PluginBase` two lines
+  below has the same shape and the same question.
+
+With the move, iOS can host the overview and `ShellHomeScreen` stops being the entry point.
+
+
+## Finding: the Nightscout plugin has to be hand-registered in every shell
+
+Not a request - the user is arranging the shared fix - but the detail is worth having in one place.
+
+`NSClientV3Plugin` is `commonMain` and has always compiled for iOS. It was **missing from the iOS
+plugin list anyway**, so Configuration had no Communication category and a follower client could not
+be pointed at Nightscout at all. Found by someone looking for the sync modules and seeing none; it
+compiles perfectly without it.
+
+The cause is that the plugin cannot carry `@ContributesIntoMap` on the class - the annotation
+processor fails on it, and `SyncPluginsBindings` in `:app` records why - so each graph has to say so
+itself. `:app` does, `DesktopMainPluginsBindings` does, and `IosMainPluginsBindings` now does too,
+with `@IntKey(310)` so the plugin list reads the same on all three.
+
+That is three copies of one registration, which is what the shared fix should remove. Whatever
+replaces it, the iOS copy should be deleted at the same time rather than left as a duplicate binding.
+
+**The shape is worth remembering beyond this one plugin.** This is the second bug today where
+something shared and working was invisible because a shell never registered it - the first was
+notification categories, where registering used to attach to the notification centre and building the
+graph therefore touched UIKit. A registration gap compiles, passes every test, and shows up only as a
+missing entry in a list. Neither was found by reading code.
+
 ## Done
 
 - **`UrlOpener` and `PrefsFileInfo` - iOS side done.** Both ports landed from `kmp` and both have an
