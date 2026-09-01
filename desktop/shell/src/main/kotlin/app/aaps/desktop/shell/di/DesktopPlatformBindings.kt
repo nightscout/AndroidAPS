@@ -4,6 +4,10 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
+import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
+import app.aaps.desktop.shell.platform.DesktopSystemNotificationPlatform
+import app.aaps.implementation.notifications.CommonNotificationManager
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
@@ -83,4 +87,19 @@ object DesktopPlatformBindings {
     @Provides
     @SingleIn(AppScope::class)
     fun l(preferences: Preferences): L = LImpl { preferences }
+
+    @Provides
+    @SingleIn(AppScope::class)
+    fun systemNotificationPlatform(logger: AAPSLogger): SystemNotificationPlatform =
+        DesktopSystemNotificationPlatform(logger)
+
+    /** The shared manager decides what exists; the tray above only shows it. */
+    @Provides
+    @SingleIn(AppScope::class)
+    fun notificationManager(
+        logger: AAPSLogger,
+        textResolver: TextResolver,
+        platform: SystemNotificationPlatform,
+        scope: CoroutineScope
+    ): NotificationManager = CommonNotificationManager(logger, textResolver, platform, scope)
 }

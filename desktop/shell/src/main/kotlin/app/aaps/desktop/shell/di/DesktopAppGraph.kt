@@ -18,13 +18,14 @@ import dev.zacsweers.metro.SingleIn
  *
  * ## What the app root asks for, and what desktop still owes it
  *
- * [DesktopPlatformBindings] now answers the platform half, which took the list from 32 bindings to
- * **26**. Declaring the twelve accessors `AapsAppRoot` takes still fails on those, in three groups:
+ * [DesktopPlatformBindings] and the classes in `app.aaps.desktop.shell.platform` answer the platform
+ * half, which took the list from 32 bindings to **19**. Declaring the twelve accessors `AapsAppRoot`
+ * takes still fails on those, in three groups:
  *
- * **Implementable on desktop, and more easily than on Apple** - the JVM has the libraries:
- * `PasswordHasher`, `PasswordCheck`, `SecureEncrypt` (javax.crypto), `ExportPasswordDataStore`,
- * `ReceiverStatusStore`, `NotificationManager` (a `SystemNotificationPlatform` over `SystemTray`),
- * `ImportExportPrefs`, `CommandExecutionPlatform`.
+ * **Still implementable on desktop, and more easily than on Apple** - the JVM has the libraries:
+ * `SecureEncrypt` (javax.crypto, but it needs a decision about where the key lives),
+ * `PasswordCheck` and `ImportExportPrefs` (both mostly UI, so they follow the desktop app's own
+ * dialogs).
  *
  * **Absent by nature, so they want the honest "not on this platform" answer** the way the Apple side
  * gives it: `PairedBtDevices`, `LastKnownLocation`, `LocationPermissions`,

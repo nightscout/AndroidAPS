@@ -10,13 +10,13 @@ import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 
 /**
- * The Android-only half of this module's bindings.
+ * The JVM half of this module's bindings - Android and desktop both.
  * Same shape as `ApsPluginRegistrations` in `:plugins:aps` androidMain. Metro aggregates contributions
  * off the compile classpath, so this merges into the root graph when `:app` is compiled.
  */
 @ContributesTo(AppScope::class)
 @BindingContainer
-object CoreObjectsAndroidContainer {
+object CoreObjectsJvmContainer {
 
     @Provides
     @SingleIn(AppScope::class)

@@ -43,7 +43,17 @@ kotlin {
     // plain jvm() target, so no special target name is needed.
     jvm()
 
+    // CryptoUtil is plain javax.crypto with no Android in it, and its output is a STORED format, so
+    // Android and desktop share the one implementation rather than keeping two that could drift.
+    // Applied explicitly, because the manual dependsOn below would otherwise switch the automatic
+    // hierarchy off and silently unwire iosMain.
+    applyDefaultHierarchyTemplate()
+
     sourceSets {
+        val jvmSharedMain = create("jvmSharedMain") { dependsOn(commonMain.get()) }
+        androidMain.get().dependsOn(jvmSharedMain)
+        jvmMain.get().dependsOn(jvmSharedMain)
+
         commonMain {
             dependencies {
                 api(project(":core:data"))

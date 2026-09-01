@@ -53,6 +53,14 @@ kotlin {
             }
         }
 
+        // CryptoUtil is plain javax.crypto and is shared with desktop, so its Base64 has to be on
+        // the JVM classpath too. A Java jar, so the same artifact serves both.
+        jvmMain {
+            dependencies {
+                api(libs.com.madgag.spongycastle)
+            }
+        }
+
         androidMain {
             dependencies {
                 // Everything below was `api` on the old android library and several of the 24
