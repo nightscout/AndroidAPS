@@ -35,14 +35,14 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.maintenance.FileListProvider
+import app.aaps.core.interfaces.maintenance.PrefsFileInfo
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginPermissions
 import app.aaps.core.interfaces.protection.ProtectionCheck
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.keys.BooleanKey
@@ -153,10 +153,10 @@ fun NavGraphBuilder.appNavGraph(
     pluginPermissions: PluginPermissions,
     automationRuntime: AutomationRuntime,
     preferences: Preferences,
-    rh: ResourceHelper,
+    rh: TextResolver,
     builtInSearchables: BuiltInSearchables,
     configBuilder: ConfigBuilder,
-    prefFileList: FileListProvider,
+    prefFileList: PrefsFileInfo,
     persistenceLayer: PersistenceLayer,
     visibilityContext: VisibilityContext,
     // Callbacks

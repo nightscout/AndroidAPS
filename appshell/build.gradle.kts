@@ -18,11 +18,22 @@ plugins {
  * still sees them for its DI graph. That keeps the number of edges in the build graph the same bar
  * one, which matters because every plugin is on this list.
  *
- * Everything is in **androidMain** for now. The screens the navigation graph routes to
- * (`SetupWizardScreen`, `AutomationRuntime`, ...) are still in their plugins' androidMain, and
- * `:plugins:sync` is not multiplatform at all yet, so there is nothing to gain from an iOS target
- * here today. When those move, this module gains its Apple targets and the files
- * move to commonMain - the source set is already named for it.
+ * `AppRoute` is already in **commonMain**. `AppNavGraph` is not, and exactly two things hold it
+ * there:
+ *
+ *  1. **The setup wizard** - `SetupWizardScreen` and `SWDefinition` in `:plugins:configuration`.
+ *     The screens themselves are nearly portable (one `BackHandler`), but `SWDefinition` still
+ *     reaches for `FileListProvider.listPreferenceFiles`, `ResourceHelper.gs(Int)`, `AapsSchedulers`
+ *     and `CryptoUtil.checkPassword`. That is a chain of small ports, not a move.
+ *  2. **The permissions sheet** - `PluginPermissions` works in Android permission groups and takes a
+ *     `Context`, and the graph reads `navController.context` for it. iOS has no equivalent model, so
+ *     this one is expected to stay behind a port rather than move.
+ *
+ * A third, smaller step comes with them: `androidx.navigation:navigation-compose` has to become the
+ * JetBrains republish (`org.jetbrains.androidx.navigation`), the same swap already done for
+ * `navigationevent`. The import names do not change.
+ *
+ * When those are done this module gains its Apple targets and `AppNavGraph` moves too.
  */
 kotlin {
     android {
