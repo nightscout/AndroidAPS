@@ -40,3 +40,15 @@ expect fun isLandscape(): Boolean
  */
 @Composable
 expect fun is24HourClock(): Boolean
+
+/**
+ * Holds the screen in portrait for as long as the calling composable is shown, then restores
+ * whatever the orientation was before.
+ *
+ * A body-map screen is drawn to a fixed portrait layout, so rotating it produces a picture that no
+ * longer lines up. Platform specific because only Android lets a screen ask for this: on iOS the
+ * supported orientations belong to the app delegate, not to a view, so there it does nothing and the
+ * screen can rotate. That is a cosmetic difference, not a loss of function.
+ */
+@Composable
+expect fun LockPortraitOrientation()

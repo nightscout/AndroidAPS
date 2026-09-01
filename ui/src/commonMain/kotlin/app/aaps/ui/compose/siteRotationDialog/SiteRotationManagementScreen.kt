@@ -1,8 +1,5 @@
 package app.aaps.ui.compose.siteRotationDialog
 
-import android.content.pm.ActivityInfo
-import androidx.activity.compose.LocalActivity
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -50,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.LockPortraitOrientation
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.clearFocusOnTap
@@ -77,9 +75,6 @@ fun SiteRotationManagementScreen(
     siteRotationDef: PreferenceSubScreenDef
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    // LocalActivity, not a cast of LocalContext: that context is usually a ContextWrapper, where
-    // `as? AppCompatActivity` is null.
-    val activity = LocalActivity.current as? AppCompatActivity
 
     // Settings open as a bottom sheet (no back-button navigation) — mirrors the Carbs dialog's settings cog.
     var showSettings by rememberSaveable { mutableStateOf(false) }
@@ -94,14 +89,7 @@ fun SiteRotationManagementScreen(
         viewModel.formatDisplayEntries(uiState.filteredEntries)
     }
 
-    DisposableEffect(Unit) {
-        val originalOrientation = activity?.requestedOrientation
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-
-        onDispose {
-            activity?.requestedOrientation = originalOrientation ?: ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-        }
-    }
+    LockPortraitOrientation()
 
     // Arrow selection dialog
     var showArrowDialog by rememberSaveable { mutableStateOf(false) }

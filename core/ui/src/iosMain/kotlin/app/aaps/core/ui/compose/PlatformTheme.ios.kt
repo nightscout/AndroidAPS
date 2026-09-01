@@ -41,3 +41,7 @@ actual fun is24HourClock(): Boolean {
     }
     return formatter.dateFormat?.contains("a") != true
 }
+
+/** See the expect declaration: iOS cannot pin orientation from inside a view, so this does nothing. */
+@Composable
+actual fun LockPortraitOrientation() = Unit
