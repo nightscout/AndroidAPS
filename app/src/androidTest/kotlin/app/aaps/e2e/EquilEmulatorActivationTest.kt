@@ -28,6 +28,7 @@ import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -392,6 +393,24 @@ class EquilEmulatorActivationTest {
         android.util.Log.i(TAG, "activation finished=$activated in ${SystemClock.uptimeMillis() - start}ms")
         assertThat(activated).isTrue()
         assertThat(equilManager.getActivationProgress()).isEqualTo(ActivationProgress.COMPLETED)
+        awaitQueueIdle()
+    }
+
+    /**
+     * Waits for the command queue to drain.
+     *
+     * [activatePod] finishes when `isActivationCompleted()` flips, and that flag is set by one of the
+     * commands in the confirm step rather than by the queue going quiet - so the queue can still be
+     * finishing work when the flag is already true. A test that sends the next command into that
+     * window gets it rejected, and reads as a failure of whatever it sent rather than of its own
+     * timing. This is the suspected cause of `activatedPod_readsCancelsAndTogglesMode` failing one CI
+     * shard and passing the reruns.
+     */
+    private fun awaitQueueIdle(timeoutMs: Long = STEP_TIMEOUT) {
+        val idle = awaitTrue(timeoutMs) {
+            commandQueue.size() == 0 && !commandQueue.isRunning(Command.CommandType.CUSTOM_COMMAND)
+        }
+        if (!idle) error("Command queue never went idle (${commandQueue.size()} queued)")
     }
 
     /**
