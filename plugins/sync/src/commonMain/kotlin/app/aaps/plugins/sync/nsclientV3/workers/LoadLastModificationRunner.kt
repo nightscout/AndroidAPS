@@ -9,6 +9,10 @@ import app.aaps.core.objects.workflow.WorkOutcome
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import dev.zacsweers.metro.Inject
 
+/**
+ * Asks Nightscout when each collection last changed, and records it on the plugin as
+ * `newestDataOnServer`. The load chain uses that to decide what is worth fetching.
+ */
 @Inject
 class LoadLastModificationRunner(
 

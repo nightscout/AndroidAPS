@@ -87,6 +87,12 @@ kotlin {
 
         // Still Android: the widgets are RemoteViews, and Glance, WorkManager, OkHttp and the
         // activity/lifecycle integrations have no iOS side. Screens move to commonMain from here.
+        getByName("commonTest") {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
+
         iosMain {
             dependencies {
                 implementation(libs.io.ktor.client.darwin)

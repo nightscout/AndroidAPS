@@ -41,11 +41,8 @@ abstract class HistoryWindowScope private constructor()
  * they share the database and own separate calculators. `MetroScopingTest` checks exactly that
  * behaviour rather than trusting it.
  *
- * Note what this replaced: the window used to be a **root graph of its own**, which shares nothing with
- * anything - so every leaf it needed had to be threaded in by hand through a twelve-parameter factory.
- * Getting that list wrong in the other direction, by handing it the app's own `OverviewData`, is the
- * bug this whole class exists to prevent: history browsing would write into the state the loop is
- * running on.
+ * The bug this whole class exists to prevent is handing the window the app's own `OverviewData`:
+ * history browsing would then write into the state the loop is running on.
  */
 @GraphExtension(HistoryWindowScope::class)
 interface HistoryWindowGraph {

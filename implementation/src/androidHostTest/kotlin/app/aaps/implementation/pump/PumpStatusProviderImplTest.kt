@@ -81,8 +81,7 @@ class PumpStatusProviderImplTest : TestBaseWithProfile() {
     @Test
     fun `data older than an hour yields an empty document`() = runTest {
         // Relative to dateUtil.now(), which the base stubs to a fixed value. isOlderThan reads that
-        // same now() since DateUtilImpl moved to commonMain - it used to go to the system clock
-        // directly, so this line had to use the real clock to look stale.
+        // same now(), so the stubbed clock is what decides staleness here - not the real one.
         testPumpPlugin.lastData = dateUtil.now() - 61 * 60 * 1000L
 
         assertThat(status().length()).isEqualTo(0)

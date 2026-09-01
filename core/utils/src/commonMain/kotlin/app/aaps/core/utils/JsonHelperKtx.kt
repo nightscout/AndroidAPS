@@ -3,14 +3,11 @@ package app.aaps.core.utils
 import kotlinx.serialization.json.JsonObject
 
 /**
- * The kotlinx half of what used to be `JsonHelper`.
+ * The kotlinx JSON readers, split out of `JsonHelper`.
  *
- * `JsonHelper` is an `object` in androidMain holding both these and the `org.json` originals, and a
- * Kotlin object cannot be split across source sets - so the kotlinx extensions moved out here, where
- * commonMain code can reach them. The `org.json` ones stay behind; nothing multiplatform uses them.
- *
- * The bodies are unchanged: each one delegates to the `lenient*` readers in `JsonLenientRead.kt`,
- * which were already in commonMain.
+ * `JsonHelper` is an `object` in androidMain holding the `org.json` originals, and a Kotlin object
+ * cannot be split across source sets - so the kotlinx extensions live here, where commonMain code can
+ * reach them. Each one delegates to the `lenient*` readers in `JsonLenientRead.kt`.
  */
 fun JsonObject?.safeGetJSONObject(fieldName: String, defaultValue: JsonObject?): JsonObject? {
     var result = defaultValue
@@ -26,17 +23,16 @@ fun JsonObject?.safeGetJSONObject(fieldName: String, defaultValue: JsonObject?):
 /*
  * The kotlinx twins below delegate to the lenient readers in JsonLenientRead.
  *
- * They used to call the strict kotlinx accessors (.int, .long, .double, .boolean) inside a
- * try/catch that swallowed the failure and returned the default. That looked equivalent to the
- * org.json halves above and was not: org.json coerces on read, kotlinx throws. A stored "36"
- * (a quoted number, which real Nightscout documents contain) read back as 36 through org.json
- * and as the DEFAULT through these, with nothing logged. For a dosing field that is a hazard -
- * the same one that made ICfg.fromJsonObject read insulinEndTime as 0, i.e. DIA 0.
+ * They must NOT call the strict kotlinx accessors (.int, .long, .double, .boolean) inside a
+ * try/catch that swallows the failure and returns the default. That looks equivalent to the
+ * org.json halves above and is not: org.json coerces on read, kotlinx throws. A stored "36"
+ * (a quoted number, which real Nightscout documents contain) reads back as 36 through org.json
+ * and would be the DEFAULT here, with nothing logged. For a dosing field that is a hazard - the
+ * same one that makes ICfg.fromJsonObject read insulinEndTime as 0, i.e. DIA 0.
  *
- * The two string overloads had a second, separate bug: `if (get(fieldName) is JsonNull) result =
- * defaultValue` was immediately overwritten by an unconditional assignment on the next line, and
- * since JsonNull IS a JsonPrimitive whose content is "null", they returned the literal text
- * "null" where the org.json halves return the default.
+ * The string overloads need the same care for a second reason: JsonNull IS a JsonPrimitive whose
+ * content is "null", so reading it as a primitive yields the literal text "null" where the
+ * org.json halves return the default.
  */
 
 fun JsonObject?.safeGetString(fieldName: String): String? =

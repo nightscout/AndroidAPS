@@ -56,7 +56,6 @@ are exact mirrors of each other:
 | Test task | Windows | macOS |
 |---|---|---|
 | `jvmTest`, `testFullDebugUnitTest` | runs | runs |
-| `mingwX64Test` | runs | SKIPPED |
 | `iosSimulatorArm64Test` | SKIPPED | runs |
 
 This means `runtests.sh` (which calls `allTests`) never covers all native targets on one machine.

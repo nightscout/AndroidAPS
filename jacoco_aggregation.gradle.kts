@@ -65,7 +65,7 @@ project.afterEvaluate {
         subprojects.forEach { proj ->
             // A multiplatform module has no build variants, so the variant paths below cannot
             // legitimately hold anything for it. Deciding up front matters, and not only for
-            // tidiness: a module that used to be an Android library leaves its old
+            // tidiness: a module converted from an Android library leaves its old
             // intermediates/built_in_kotlinc/fullDebug behind in an existing build directory, and
             // feeding both that and the new output to JaCoCo fails the whole report with
             // "Can't add different class with same name".

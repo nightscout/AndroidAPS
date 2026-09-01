@@ -9,6 +9,12 @@ import platform.Foundation.NSActivityUserInitiated
 import platform.Foundation.beginActivityWithOptions
 import platform.Foundation.endActivity
 
+/**
+ * [CommandExecutionPlatform] on iOS.
+ *
+ * Read [acquireWakeLock] before relying on it: the promise is weaker than Android's wake lock, and
+ * the difference matters to a pump driver.
+ */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 class IosCommandExecutionPlatform @Inject constructor() : CommandExecutionPlatform {

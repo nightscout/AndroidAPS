@@ -25,8 +25,8 @@ interface PumpEnactResult {
     /**
      * The comment as a [TextRef], resolved by the implementation.
      *
-     * This replaced `comment(Int)`, which put an Android resource id in a commonMain interface. The id
-     * form still exists as an androidMain extension, so call sites are unchanged.
+     * An Android string resource id form exists as an extension in androidMain, so a driver written
+     * against resource ids needs no resolver of its own.
      */
     fun comment(ref: TextRef): PumpEnactResult
     fun duration(duration: Int): PumpEnactResult

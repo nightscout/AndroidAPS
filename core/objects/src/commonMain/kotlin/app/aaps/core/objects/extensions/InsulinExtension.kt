@@ -21,8 +21,8 @@ fun ICfg.toJsonObject(): JsonObject = buildJsonObject {
  * used to restore configuration within InsulinPlugin and insulin Editor
  *
  * Reads leniently on purpose. `longOrNull` is `content.toLongOrNull()`, which answers null for
- * `1.8E7` and for `18000000.5` - forms the `org.json` reader this replaced accepted, because it
- * coerced through `Double`. Falling back to 0 there would mean `insulinEndTime == 0`, i.e. DIA 0, so
+ * `1.8E7` and for `18000000.5` - forms that occur in stored documents.
+ * Falling back to 0 there would mean `insulinEndTime == 0`, i.e. DIA 0, so
  * IOB would decay at once and the loop would believe there is no insulin on board. See
  * [lenientLong].
  */

@@ -389,10 +389,9 @@ sealed class ProfileSealed(
     /**
      * One `[{time, timeAsSeconds, value}, …]` schedule.
      *
-     * The five schedules below used to be four near-identical loops with the entry shape written out
-     * each time. They differ only in which blocks set the boundaries and which accessor supplies the
-     * value, so that is all this takes: [durations] gives the hour boundaries, [valueAt] answers for
-     * each one. Note the value comes from the accessor, not from the block - the accessors apply
+     * The five schedules below differ only in which blocks set the boundaries and which accessor
+     * supplies the value, so that is all this takes: [durations] gives the hour boundaries, [valueAt]
+     * answers for each one. Note the value comes from the accessor, not from the block - the accessors
      * percentage and time shift, which is why a raw block amount would be wrong here.
      */
     private fun schedule(durations: List<Long>, valueAt: (Int) -> Double): JsonArray = buildJsonArray {

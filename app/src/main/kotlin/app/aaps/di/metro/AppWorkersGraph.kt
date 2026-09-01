@@ -31,9 +31,8 @@ import kotlin.reflect.KClass
  * constructs for us? A worker is the hardest of the four, because WorkManager holds the constructor
  * call and only hands over a class name at runtime. The answer is the map below - a real compile-time
  * `@IntoMap` multibinding keyed by worker class, which [MetroWorkerFactory] looks up.
- * This is a graph extension of [AppRootGraph], so it declares only what it adds. It used to be a root
- * of its own, with a factory restating twenty-nine app-wide dependencies and twenty-nine functions
- * unwrapping them - all of that now lives once in the root and is inherited.
+ * This is a graph extension of [AppRootGraph], so it declares only what it adds: the app-wide
+ * dependencies live once in the root and are inherited, and its factory takes no arguments.
  */
 @GraphExtension
 interface AppWorkersGraph {

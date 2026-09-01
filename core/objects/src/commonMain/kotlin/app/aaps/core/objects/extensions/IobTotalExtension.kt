@@ -37,8 +37,8 @@ fun IobTotal.round(): IobTotal {
  *
  * kotlinx accepts NaN and Infinity and then emits the bare token `NaN`, which is not valid JSON and
  * which `org.json` refuses to re-render - it would turn an uploaded device status into `null`. The
- * `org.json` builder this replaced refused a non-finite value outright, so skipping the key keeps the
- * old "a bad number never reaches the document" rule while leaving the rest of it intact.
+ * Skipping the key keeps the rule that a bad number never reaches the document, while leaving the
+ * rest of it intact.
  */
 private fun JsonObjectBuilder.putIfFinite(key: String, value: Double) {
     if (value.isFinite()) put(key, value)

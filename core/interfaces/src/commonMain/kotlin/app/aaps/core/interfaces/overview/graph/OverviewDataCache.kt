@@ -12,8 +12,8 @@ import kotlinx.coroutines.flow.StateFlow
  * - No dependency on calculation workflow for basic display data
  * - Each data type has its own StateFlow for granular updates
  *
- * MIGRATION NOTE: During migration, workers may still populate some graph data.
- * After migration complete, OverviewDataImpl will be deleted.
+ * `OverviewDataImpl` still exists alongside this, and the calculation workers may populate some
+ * graph data through it.
  */
 interface OverviewDataCache {
 

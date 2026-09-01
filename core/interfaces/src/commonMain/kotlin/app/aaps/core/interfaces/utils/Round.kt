@@ -12,9 +12,6 @@ import kotlin.math.roundToLong
 object Round {
 
     fun roundTo(x: Double, step: Double): Double {
-        // Was java.security.InvalidParameterException, which is a JCA class and not what argument
-        // checking is for. Nothing caught it - every use of it in this repo is a throw - so the type
-        // change reaches no handler.
         require(!x.isNaN()) { "Parameter is NaN" }
         return if (x == 0.0) 0.0
         else times(x = (x / step).roundToLong(), step = step)
@@ -50,14 +47,12 @@ object Round {
      * `12 * 0.05` is `0.6000000000000001`. Those are dose and rate values, so the extra digits
      * travel into pump commands, comparisons and the Nightscout payload.
      *
-     * This used to be `BigDecimal.valueOf(x).multiply(BigDecimal.valueOf(step)).toDouble()`, which is
-     * JVM only. The same answer comes out of integer arithmetic: `BigDecimal.valueOf(step)` is exactly
-     * the decimal that `step.toString()` spells, so reading that text back as `unscaled / 10^scale`
-     * loses nothing, the multiply is an exact [Long] one, and the single closing division is correctly
-     * rounded. So the result is the nearest double to the true decimal product - the same value the
-     * old code produced, by construction rather than by approximation.
+     * Integer arithmetic is what makes it exact: `step.toString()` spells an exact decimal, so reading
+     * that text back as `unscaled / 10^scale` loses nothing, the multiply is an exact [Long] one, and
+     * the single closing division is correctly rounded. The result is the nearest double to the true
+     * decimal product, by construction rather than by approximation.
      *
-     * Limit worth knowing, which BigDecimal did not have: the product is exact while it stays under
+     * Limit worth knowing: the product is exact while it stays under
      * 2^53 (about 9.0e15), and it is roughly `|x * step| * 10^scale`. At the deepest step any pump
      * uses (0.0001, so scale 4) that allows values up to about 9e11. Doses, rates and glucose values
      * are far below it, so this is a note rather than a guard - a hard check here could stop the loop

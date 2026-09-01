@@ -13,9 +13,8 @@ import dev.zacsweers.metro.SingleIn
 /**
  * Reads the paired devices from the Android Bluetooth adapter.
  *
- * This used to live inside `TriggerBTDevice` as a private function. It lost its caller when the
- * trigger editor moved to Compose, which left the device dropdown empty - see
- * `TriggerBTDeviceEditor`.
+ * Kept as a bound interface rather than a private helper on the trigger: the device dropdown in
+ * `TriggerBTDeviceEditor` is the only caller, and a dropdown with no source silently shows nothing.
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)

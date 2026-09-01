@@ -73,7 +73,23 @@ kotlin {
     iosArm64()
     iosSimulatorArm64()
 
+    jvm()
+
+    // Android and the JVM desktop target share their actuals: a ReentrantLock and Dispatchers.IO are
+    // the same answer on both, and duplicating them would be two files that must not drift. Only what
+    // is genuinely Android - the runtime Bluetooth permissions - stays in androidMain.
+    //
+    // Extends the default template rather than calling dependsOn by hand: a manual dependsOn turns the
+    // default hierarchy OFF, which silently unwires iosMain and breaks every Apple actual.
+    // Applied explicitly, because the manual dependsOn below would otherwise switch the automatic
+    // one off - which silently unwires iosMain and breaks every Apple actual.
+    applyDefaultHierarchyTemplate()
+
     sourceSets {
+        val jvmSharedMain = create("jvmSharedMain") { dependsOn(commonMain.get()) }
+        androidMain.get().dependsOn(jvmSharedMain)
+        jvmMain.get().dependsOn(jvmSharedMain)
+
         commonMain {
             kotlin.srcDir(generateInterfacesStrings.flatMap { it.commonOutputDir })
             dependencies {
@@ -96,7 +112,7 @@ kotlin {
                 // the Android versions and nothing about the Android build changes.
                 api(libs.cmp.runtime)
                 // ImageVector and friends live here, not in the runtime. Several interfaces in this
-                // module carry an icon, and that alone used to be enough to make them Android only.
+                // module carry an icon, so without this they could not be common.
                 api(libs.cmp.ui)
             }
         }
@@ -113,9 +129,9 @@ kotlin {
             // Android only: the string name to R.string id map.
             kotlin.srcDir(generateInterfacesStrings.flatMap { it.androidOutputDir })
             dependencies {
-                // Everything here was `api` on the old android library and the 41 consumer modules
-                // resolve these transitively, so they must stay exported. They are Android or JVM
-                // only, which is exactly why they belong to this source set rather than commonMain.
+                // The 41 consumer modules resolve these transitively, so they must stay `api`. They
+                // are Android or JVM only, which is why they belong to this source set rather than
+                // commonMain.
 
                 // Dependency Injection
 
@@ -128,6 +144,12 @@ kotlin {
 
                 //RxBus / RxJava base
                 api(libs.io.reactivex.rxjava3.rxkotlin)
+            }
+        }
+
+        getByName("commonTest") {
+            dependencies {
+                implementation(kotlin("test"))
             }
         }
 
