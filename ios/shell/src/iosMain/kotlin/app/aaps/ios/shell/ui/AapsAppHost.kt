@@ -18,8 +18,6 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import app.aaps.appshell.AapsAppRoot
-import app.aaps.appshell.navigation.SHELL_HOME_ROUTE
-import app.aaps.appshell.navigation.ShellHomeScreen
 import app.aaps.appshell.navigation.appNavGraph
 import app.aaps.ui.search.SearchViewModel
 import app.aaps.ui.compose.permissionsSheet.PermissionsViewModel
@@ -240,16 +238,10 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
                     }
                 )
 
-                // Starts on a list of screens rather than on the settings screen. Settings as the
-                // start destination left its back arrow inert - there was nothing behind it - and
-                // left every other screen unreachable, since they are all navigated to from the
-                // overview that iOS does not have yet. See `ShellHomeScreen` in :appshell.
-                // The real overview is the start destination now that `appNavGraph` hosts it.
-                // `ShellHomeScreen` stays reachable as a way to open screens the drawer does not list.
+                // The overview is the start destination, the same as Android and desktop. Settings
+                // used to be, which left its back arrow inert - there was nothing behind it - and
+                // left every other screen unreachable, since they are all reached from the overview.
                 NavHost(navController = navController, startDestination = AppRoute.Main.route) {
-                    composable(SHELL_HOME_ROUTE) {
-                        ShellHomeScreen(onOpen = { route -> navController.navigate(route) })
-                    }
                     appNavGraph(
                         navController = navController,
                         insulinManagementViewModel = insulinManagement,

@@ -119,26 +119,30 @@ fun OverviewScreen(
     val pumpStatusBanner by pumpCommunicationStatus.statusBannerFlow.collectAsStateWithLifecycle()
     val pumpQueueStatus by pumpCommunicationStatus.queueStatusFlow.collectAsStateWithLifecycle()
 
-    // Pump setup button in bottom bar
-    val pumpPlugin = activePlugin.activePumpInternal as PluginBase
+    // Pump setup button in bottom bar.
+    // The three casts here and below are `as?`, not `as`. Each of them runs before the condition
+    // that decides whether the badge is drawn at all, so a hard cast makes an implementation that is
+    // not a plugin crash the whole overview at compose time - on a platform where the badge would
+    // never have been shown. A missing badge is the right failure, not a dead screen.
+    val pumpPlugin = activePlugin.activePumpInternal as? PluginBase
     val showPumpSetup = (!activePlugin.activePump.isInitialized() || activePlugin.activePump.isSuspended()) &&
-        pumpPlugin.hasComposeContent()
+        pumpPlugin != null && pumpPlugin.hasComposeContent()
     val pumpSetupPlugin = if (showPumpSetup) pumpPlugin else null
 
     // Objectives progress badge (visible while objectives not all completed, in APS mode)
-    val objectivesPlugin = objectives as PluginBase
+    val objectivesPlugin = objectives as? PluginBase
     val objectivesTotal = objectives.size
     val objectivesDone = objectives.accomplishedCount
-    val showObjectivesSetup = config.APS && objectivesTotal > 0 && objectivesDone < objectivesTotal &&
-        objectivesPlugin.isEnabled() && objectivesPlugin.hasComposeContent()
+    val showObjectivesSetup = config.APS && objectivesPlugin != null && objectivesTotal > 0 &&
+        objectivesDone < objectivesTotal && objectivesPlugin.isEnabled() && objectivesPlugin.hasComposeContent()
     val objectivesSetupPlugin = if (showObjectivesSetup) objectivesPlugin else null
     val objectivesProgressText = if (showObjectivesSetup) "$objectivesDone/$objectivesTotal" else null
 
     // BG source shortcut: shown when BG quality check reports FLAT or DOUBLED
     val bgQualityState by bgQualityCheck.stateFlow.collectAsStateWithLifecycle()
-    val bgSourcePlugin = activePlugin.activeBgSource as PluginBase
+    val bgSourcePlugin = activePlugin.activeBgSource as? PluginBase
     val showBgSetup = (bgQualityState == BgQualityCheck.State.FLAT || bgQualityState == BgQualityCheck.State.DOUBLED) &&
-        bgSourcePlugin.hasComposeContent()
+        bgSourcePlugin != null && bgSourcePlugin.hasComposeContent()
     val bgSetupPlugin = if (showBgSetup) bgSourcePlugin else null
     val bgQualityBadgeIcon: ImageVector? = if (showBgSetup) when (bgQualityState) {
         BgQualityCheck.State.DOUBLED -> Icons.Filled.Warning
