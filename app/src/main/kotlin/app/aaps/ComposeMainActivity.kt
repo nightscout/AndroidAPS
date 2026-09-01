@@ -126,7 +126,7 @@ import app.aaps.ui.compose.configuration.ConfigurationViewModel
 import app.aaps.ui.compose.fillDialog.FillPreselect
 import app.aaps.ui.compose.insulinManagement.InsulinManagementViewModel
 import app.aaps.ui.compose.loopSheet.LoopActionViewModel
-import app.aaps.ui.compose.main.MainScreen
+import app.aaps.ui.compose.main.OverviewScreen
 import app.aaps.ui.compose.main.MainViewModel
 import app.aaps.ui.compose.maintenance.ImportViewModel
 import app.aaps.ui.compose.maintenance.MaintenanceViewModel
@@ -454,179 +454,6 @@ class ComposeMainActivity : MetroAppCompatActivity() {
             navController = navController,
             startDestination = AppRoute.Main.route
         ) {
-            composable(AppRoute.Main.route) {
-                val searchState by searchViewModel.uiState.collectAsStateWithLifecycle()
-                val calcProgress by mainViewModel.calcProgressFlow.collectAsStateWithLifecycle()
-                val notifications by notificationManager.notifications.collectAsStateWithLifecycle()
-                val quickLaunchItems by mainViewModel.quickLaunchItems.collectAsStateWithLifecycle()
-
-                // Pump setup button in bottom bar
-                val pumpPlugin = activePlugin.activePumpInternal as PluginBase
-                val showPumpSetup = (!activePlugin.activePump.isInitialized() || activePlugin.activePump.isSuspended()) &&
-                    pumpPlugin.hasComposeContent()
-                val pumpSetupPlugin = if (showPumpSetup) pumpPlugin else null
-
-                // Objectives progress badge (visible while objectives not all completed, in APS mode)
-                val objectivesPlugin = objectives as PluginBase
-                val objectivesTotal = objectives.size
-                val objectivesDone = objectives.accomplishedCount
-                val showObjectivesSetup = config.APS && objectivesTotal > 0 && objectivesDone < objectivesTotal &&
-                    objectivesPlugin.isEnabled() && objectivesPlugin.hasComposeContent()
-                val objectivesSetupPlugin = if (showObjectivesSetup) objectivesPlugin else null
-                val objectivesProgressText = if (showObjectivesSetup) "$objectivesDone/$objectivesTotal" else null
-
-                // BG source shortcut: shown when BG quality check reports FLAT or DOUBLED
-                val bgQualityState by bgQualityCheck.stateFlow.collectAsStateWithLifecycle()
-                val bgSourcePlugin = activePlugin.activeBgSource as PluginBase
-                val showBgSetup = (bgQualityState == BgQualityCheck.State.FLAT || bgQualityState == BgQualityCheck.State.DOUBLED) &&
-                    bgSourcePlugin.hasComposeContent()
-                val bgSetupPlugin = if (showBgSetup) bgSourcePlugin else null
-                val bgQualityBadgeIcon: ImageVector? = if (showBgSetup) when (bgQualityState) {
-                    //BgQualityCheck.State.RECALCULATED -> Icons.Filled.Warning
-                    BgQualityCheck.State.DOUBLED      -> Icons.Filled.Warning
-                    BgQualityCheck.State.FLAT         -> Icons.AutoMirrored.Filled.TrendingFlat
-                    else                              -> null
-                } else null
-                val bgQualityBadgeTint: Color = when (bgQualityState) {
-                    BgQualityCheck.State.RECALCULATED                       -> AapsTheme.generalColors.statusWarning
-                    BgQualityCheck.State.DOUBLED, BgQualityCheck.State.FLAT -> AapsTheme.generalColors.statusCritical
-                    else                                                    -> Color.Unspecified
-                }
-                val bgQualityBadgeDescription = if (showBgSetup) bgQualityCheck.stateDescription() else null
-
-                val manageSheetState = ManageSheetHost(
-                    manageViewModel = manageViewModel,
-                    isSimpleMode = state.isSimpleMode,
-                    onNavigate = { request -> handleNavigationRequest(request, navController) },
-                    onActionsError = { comment, title ->
-                        uiInteraction.runAlarm(comment, title, AlarmSound.BOLUS_ERROR)
-                    },
-                )
-
-                // Authorization failed dialog
-                if (state.showAuthFailedDialog) {
-                    OkDialog(
-                        title = "",
-                        message = stringResource(R.string.authorizationfailed),
-                        onDismiss = {
-                            mainViewModel.setShowAuthFailedDialog(false)
-                            finish()
-                        }
-                    )
-                }
-
-
-                MainScreen(
-                    mainViewModel = mainViewModel,
-                    uiState = state,
-                    aboutDialogData = if (state.showAboutDialog) {
-                        mainViewModel.buildAboutDialogData(getString(R.string.app_name))
-                    } else null,
-                    manageSheetState = manageSheetState,
-                    manageViewModel = manageViewModel,
-                    maintenanceViewModel = maintenanceViewModel,
-                    statusViewModel = statusViewModel,
-                    treatmentViewModel = treatmentViewModel,
-                    scenesViewModel = scenesViewModel,
-                    loopActionViewModel = loopActionViewModel,
-                    // Search
-                    searchUiState = searchState,
-                    onSearchQueryChange = { searchViewModel.onQueryChanged(it) },
-                    onSearchClear = { searchViewModel.clearQuery() },
-                    onSearchActiveChange = { active ->
-                        if (active) searchViewModel.onSearchModeActivated()
-                        else searchViewModel.onSearchModeDeactivated()
-                    },
-                    onSearchResultClick = { entry ->
-                        handleSearchResultClick(entry, navController)
-                    },
-                    onSearchPluginToggle = { plugin -> searchViewModel.togglePlugin(plugin) },
-                    onConfirmSearchPluginSwitch = { searchViewModel.confirmPluginSwitch() },
-                    onDismissSearchPluginSwitch = { searchViewModel.dismissPluginSwitch() },
-                    onConfirmSearchHardwarePump = { searchViewModel.confirmHardwarePump() },
-                    onDismissSearchHardwarePump = { searchViewModel.dismissHardwarePump() },
-                    onMenuClick = { mainViewModel.openDrawer() },
-                    onNavigate = { request -> handleNavigationRequest(request, navController) },
-                    onDrawerClosed = { mainViewModel.closeDrawer() },
-                    onAboutDialogDismiss = { mainViewModel.setShowAboutDialog(false) },
-                    onOpenBatteryHelp = { mainViewModel.openBatteryHelp() },
-                    onMaintenanceSheetDismiss = { mainViewModel.setShowMaintenanceSheet(false) },
-                    onDirectoryClick = {
-                        try {
-                            accessTree?.launch(null)
-                        } catch (_: Exception) {
-                            maintenanceViewModel.emitError("Unable to launch activity. This is an Android issue")
-                        }
-                    },
-                    onLaunchBrowser = { url ->
-                        try {
-                            val customTabsIntent = CustomTabsIntent.Builder()
-                                .setShowTitle(true)
-                                .build()
-                            customTabsIntent.launchUrl(this@ComposeMainActivity, url.toUri())
-                        } catch (_: Exception) {
-                            maintenanceViewModel.emitError("Unable to open browser")
-                        }
-                    },
-                    onBringToForeground = {
-                        val intent = Intent(this@ComposeMainActivity, ComposeMainActivity::class.java)
-                            .addFlags(
-                                Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-                                    or Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                    or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                                    or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                            )
-                        startActivity(intent)
-                    },
-                    onImportSettingsNavigate = { source ->
-                        navController.navigate(AppRoute.ImportSettings.createRoute(source.name))
-                    },
-                    onRecreateActivity = { recreate() },
-                    // Notifications
-                    notifications = notifications,
-                    onDismissNotification = { notification ->
-                        notificationManager.dismiss(notification.id)
-                    },
-                    onNotificationActionClick = { notification ->
-                        handleNotificationAction(notification.id, navController)
-                    },
-                    autoShowNotificationSheet = _autoShowNotifications.value,
-                    onAutoShowConsumed = { _autoShowNotifications.value = false },
-                    pumpSetupPlugin = pumpSetupPlugin,
-                    bgSetupPlugin = bgSetupPlugin,
-                    bgQualityBadgeIcon = bgQualityBadgeIcon,
-                    bgQualityBadgeTint = bgQualityBadgeTint,
-                    bgQualityBadgeDescription = bgQualityBadgeDescription,
-                    objectivesSetupPlugin = objectivesSetupPlugin,
-                    objectivesProgressText = objectivesProgressText,
-                    permissionsMissing = permState.hasAnyMissing,
-                    onPermissionsClick = {
-                        permissionsViewModel.showSheet()
-                    },
-                    // Toolbar
-                    quickLaunchItems = quickLaunchItems,
-                    onQuickLaunchActionClick = { action -> handleQuickLaunchAction(action, navController) },
-                    calcProgress = calcProgress,
-                    graphViewModel = graphViewModel,
-                    chipsViewModel = chipsViewModel,
-                    statusLightsDef = builtInSearchables.statusLights,
-                    treatmentButtonsDef = builtInSearchables.treatmentButtons,
-                    // Pump activity
-                    bolusState = bolusState,
-                    pumpStatusText = pumpStatusBanner?.text ?: "",
-                    queueStatusText = pumpQueueStatus,
-                    isPumpCommunicating = pumpStatusBanner != null,
-                    onStopBolus = {
-                        if (config.AAPSCLIENT) {
-                            clientControlActionDispatcher.stopBolus()
-                            bolusProgressData.stopPressed()
-                        } else {
-                            commandQueue.cancelAllBoluses(null)
-                        }
-                    }
-                )
-            }
-
             appNavGraph(
                 navController = navController,
                 insulinManagementViewModel = insulinManagementViewModel,
@@ -675,6 +502,70 @@ class ComposeMainActivity : MetroAppCompatActivity() {
                 },
                 onRequestPermission = { group -> permissionsViewModel.requestPermission(group) },
                 findScreenDef = { key -> findScreenDef(key) },
+                overview = {
+                    OverviewScreen(
+                        mainViewModel = mainViewModel,
+                        manageViewModel = manageViewModel,
+                        maintenanceViewModel = maintenanceViewModel,
+                        statusViewModel = statusViewModel,
+                        treatmentViewModel = treatmentViewModel,
+                        scenesViewModel = scenesViewModel,
+                        loopActionViewModel = loopActionViewModel,
+                        searchViewModel = searchViewModel,
+                        permissionsViewModel = permissionsViewModel,
+                        graphViewModel = graphViewModel,
+                        chipsViewModel = chipsViewModel,
+                        activePlugin = activePlugin,
+                        config = config,
+                        objectives = objectives,
+                        bgQualityCheck = bgQualityCheck,
+                        notificationManager = notificationManager,
+                        uiInteraction = uiInteraction,
+                        builtInSearchables = builtInSearchables,
+                        bolusProgressData = bolusProgressData,
+                        clientControlActionDispatcher = clientControlActionDispatcher,
+                        commandQueue = commandQueue,
+                        pumpCommunicationStatus = pumpCommunicationStatus,
+                        appName = getString(R.string.app_name),
+                        authorizationFailedMessage = getString(R.string.authorizationfailed),
+                        onNavigate = { request -> handleNavigationRequest(request, navController) },
+                        onSearchResultClick = { entry -> handleSearchResultClick(entry, navController) },
+                        onNotificationActionClick = { notification -> handleNotificationAction(notification.id, navController) },
+                        onQuickLaunchActionClick = { action -> handleQuickLaunchAction(action, navController) },
+                        onImportSettingsNavigate = { source -> navController.navigate(AppRoute.ImportSettings.createRoute(source.name)) },
+                        onDirectoryClick = {
+                            try {
+                                accessTree?.launch(null)
+                            } catch (_: Exception) {
+                                maintenanceViewModel.emitError("Unable to launch activity. This is an Android issue")
+                            }
+                        },
+                        onLaunchBrowser = { url ->
+                            try {
+                                val customTabsIntent = CustomTabsIntent.Builder()
+                                    .setShowTitle(true)
+                                    .build()
+                                customTabsIntent.launchUrl(this@ComposeMainActivity, url.toUri())
+                            } catch (_: Exception) {
+                                maintenanceViewModel.emitError("Unable to open browser")
+                            }
+                        },
+                        onBringToForeground = {
+                            val intent = Intent(this@ComposeMainActivity, ComposeMainActivity::class.java)
+                                .addFlags(
+                                    Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+                                        or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                        or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                        or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                                )
+                            startActivity(intent)
+                        },
+                        onRecreateActivity = { recreate() },
+                        onAuthorizationFailed = { finish() },
+                        autoShowNotificationSheet = _autoShowNotifications.value,
+                        onAutoShowConsumed = { _autoShowNotifications.value = false }
+                    )
+                },
             )
         }
 
