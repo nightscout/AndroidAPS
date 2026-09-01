@@ -1,11 +1,11 @@
 package app.aaps.plugins.constraints.objectives
 
-import android.os.SystemClock
 import app.aaps.annotations.OpenForTesting
 import app.aaps.core.interfaces.local.LocaleDependentSetting
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.utils.DateUtil
 import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.Dispatchers
@@ -25,17 +25,18 @@ import java.security.SecureRandom
  * Sample usage:
  * <pre>SntpClient client = new SntpClient();
  * if (client.requestTime("time.foo.com")) {
- * long now = client.getNtpTime() + SystemClock.elapsedRealtime() - client.getNtpTimeReference();
+ * long now = client.getNtpTime() + elapsedRealtime() - client.getNtpTimeReference();
  * }
 </pre> *
  */
 @SingleIn(AppScope::class)
+@ContributesBinding(AppScope::class)
 @OpenForTesting
-class SntpClient @Inject constructor(
+class JvmSntpClient @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,
     private val localeDependentSetting: LocaleDependentSetting
-) {
+) : SntpClient {
 
     /**
      * Returns the time computed from the NTP transaction.
@@ -46,12 +47,12 @@ class SntpClient @Inject constructor(
     protected var ntpTime: Long = 0
 
     /**
-     * Returns the reference clock value (value of SystemClock.elapsedRealtime())
+     * Returns the reference clock value (value of elapsedRealtime())
      * corresponding to the NTP time.
      *
      * @return reference clock corresponding to the NTP time.
      */
-    // value of SystemClock.elapsedRealtime() corresponding to mNtpTime
+    // value of elapsedRealtime() corresponding to mNtpTime
     protected var ntpTimeReference: Long = 0
 
     /**
@@ -62,24 +63,28 @@ class SntpClient @Inject constructor(
     // round trip time in milliseconds
     private var roundTripTime: Long = 0
 
-    data class NtpResult(
-        val success: Boolean,
-        val networkConnected: Boolean,
-        val time: Long
-    )
 
     /**
      * Suspend version of ntpTime for use in coroutines.
      */
-    suspend fun ntpTime(isConnected: Boolean): NtpResult = withContext(Dispatchers.IO) {
+    /**
+     * Milliseconds from a monotonic source, which is what the NTP arithmetic needs.
+     *
+     * Android said `SystemClock.elapsedRealtime()`. `System.nanoTime()` is the portable equivalent
+     * and has the property that matters here: it cannot jump when the wall clock is corrected,
+     * which would otherwise corrupt the very measurement this class exists to make.
+     */
+    protected fun elapsedRealtime(): Long = System.nanoTime() / 1_000_000
+
+    override suspend fun ntpTime(isConnected: Boolean): SntpClient.NtpResult = withContext(Dispatchers.IO) {
         if (!isConnected) {
-            NtpResult(success = false, networkConnected = false, time = 0)
+            SntpClient.NtpResult(success = false, networkConnected = false, time = 0)
         } else {
             aapsLogger.debug("Time detection started")
             val success = requestTime(localeDependentSetting.ntpServer, 5000)
-            val time = ntpTime + SystemClock.elapsedRealtime() - ntpTimeReference
+            val time = ntpTime + elapsedRealtime() - ntpTimeReference
             aapsLogger.debug("Time detection ended: $success ${dateUtil.dateAndTimeString(ntpTime)}")
-            NtpResult(success = success, networkConnected = true, time = time)
+            SntpClient.NtpResult(success = success, networkConnected = true, time = time)
         }
     }
 
@@ -100,13 +105,13 @@ class SntpClient @Inject constructor(
             // Read both clocks together: the wall clock goes into the packet, the monotonic one is
             // what the latency correction is measured against.
             val requestTime = System.currentTimeMillis()
-            val requestTicks = SystemClock.elapsedRealtime()
+            val requestTicks = elapsedRealtime()
             val buffer = SntpPacket.buildRequest(requestTime, SecureRandom().nextInt(256))
             socket.send(DatagramPacket(buffer, buffer.size, address, SntpPacket.NTP_PORT))
 
             // The response is read back into the same array the request was sent from, as before.
             socket.receive(DatagramPacket(buffer, buffer.size))
-            val responseTicks = SystemClock.elapsedRealtime()
+            val responseTicks = elapsedRealtime()
             socket.close()
 
             val timing = SntpPacket.parseResponse(buffer, requestTime, requestTicks, responseTicks)

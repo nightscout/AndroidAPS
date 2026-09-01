@@ -57,6 +57,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import app.aaps.appshell.navigation.AppRoute
 import app.aaps.appshell.navigation.appNavGraph
+import app.aaps.appshell.navigation.handleNavigationRequest
+import app.aaps.appshell.navigation.openPlugin
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
@@ -712,7 +714,7 @@ class ComposeMainActivity : MetroAppCompatActivity() {
 
     private fun handleQuickLaunchAction(action: QuickLaunchAction, navController: NavController) {
         when (action) {
-            is QuickLaunchAction.StaticAction      -> navigateProtected(action.elementType, navController)
+            is QuickLaunchAction.StaticAction      -> handleNavigationRequest(NavigationRequest.Element(action.elementType), navController)
 
             // Dynamic actions — execution-based, not navigation
             is QuickLaunchAction.QuickWizardAction -> withProtection(ElementType.QUICK_WIZARD.protection) {
@@ -740,23 +742,24 @@ class ComposeMainActivity : MetroAppCompatActivity() {
         }
     }
 
+    /**
+     * Routes a navigation request through the shared mapping in `:appshell`.
+     *
+     * The mapping itself moved there so that every platform gets a drawer that works; only the two
+     * genuinely Android actions stay here.
+     */
     private fun handleNavigationRequest(request: NavigationRequest, navController: NavController) {
-        when (request) {
-            is NavigationRequest.Element           -> navigateProtected(request.type, navController)
-            is NavigationRequest.QuickWizard       -> withProtection(ElementType.QUICK_WIZARD.protection) {
-                mainViewModel.executeQuickWizard(request.guid)
-            }
-
-            is NavigationRequest.Plugin            -> {
-                val plugin = activePlugin.getPluginsList()
-                    .find { it.javaClass.simpleName == request.className } ?: return
-                handlePluginClick(plugin)
-            }
-
-            is NavigationRequest.PluginPreferences -> withProtection(ElementType.SETTINGS.protection) {
-                navController.navigate(AppRoute.PluginPreferences.createRoute(request.pluginKey))
-            }
-        }
+        handleNavigationRequest(
+            request = request,
+            navController = navController,
+            mainViewModel = mainViewModel,
+            activePlugin = activePlugin,
+            protectionCheck = protectionCheck,
+            configBuilder = configBuilder,
+            dexcomBoyda = dexcomBoyda,
+            onOpenCgmApp = { packageName -> openCgmApp(packageName) },
+            onExit = { finish() }
+        )
     }
 
     private fun openCgmApp(packageName: String) {
@@ -774,20 +777,6 @@ class ComposeMainActivity : MetroAppCompatActivity() {
      * For management screens, the granted level determines the screen mode
      * (PLAY for BOLUS, EDIT for PREFERENCES or higher).
      */
-    private fun navigateProtected(elementType: ElementType, navController: NavController) {
-        val minLevel = elementType.protection
-        if (minLevel == ProtectionCheck.Protection.NONE) {
-            navigateToElement(elementType, navController)
-            return
-        }
-        protectionCheck.requestAuthorization(minLevel) { result ->
-            result.grantedLevel?.let { granted ->
-                val mode = if (granted.level >= ProtectionCheck.Protection.PREFERENCES.level)
-                    ScreenMode.EDIT else ScreenMode.PLAY
-                navigateToElement(elementType, navController, mode)
-            }
-        }
-    }
 
     /**
      * Execute [action] after verifying protection level.
@@ -822,10 +811,10 @@ class ComposeMainActivity : MetroAppCompatActivity() {
                 }
             }
 
-            is SearchableItem.Dialog     -> navigateProtected(item.elementType, navController)
+            is SearchableItem.Dialog     -> handleNavigationRequest(NavigationRequest.Element(item.elementType), navController)
 
             is SearchableItem.Plugin     -> {
-                handlePluginClick(item.pluginRef)
+                openPlugin(item.pluginRef, navController!!, activePlugin)
             }
 
             is SearchableItem.Wiki       -> {
@@ -839,88 +828,6 @@ class ComposeMainActivity : MetroAppCompatActivity() {
      * Navigate to an [ElementType] destination. Protection is handled by the caller.
      * No `else` — compiler catches missing enum values.
      */
-    private fun navigateToElement(elementType: ElementType, navController: NavController, mode: ScreenMode = ScreenMode.EDIT) {
-        when (elementType) {
-            // Navigation screens (drawer)
-            ElementType.TREATMENTS              -> navController.navigate(AppRoute.Treatments.route)
-            ElementType.STATISTICS,
-            ElementType.TDD_CYCLE_PATTERN       -> navController.navigate(AppRoute.Stats.route)
 
-            ElementType.PROFILE_HELPER          -> navController.navigate(AppRoute.ProfileHelper.route)
-            ElementType.HISTORY_BROWSER         -> navController.navigate(AppRoute.HistoryBrowser.route)
-            ElementType.SETUP_WIZARD            -> navController.navigate(AppRoute.SetupWizard.route)
-            ElementType.MAINTENANCE             -> mainViewModel.setShowMaintenanceSheet(true)
-            ElementType.CONFIGURATION           -> navController.navigate(AppRoute.Configuration.route)
-            ElementType.ABOUT                   -> mainViewModel.setShowAboutDialog(true)
-
-            // Management screens — mode determined by granted auth level
-            ElementType.INSULIN_MANAGEMENT      -> navController.navigate(AppRoute.InsulinManagement.createRoute(mode))
-            ElementType.PROFILE_MANAGEMENT      -> navController.navigate(AppRoute.Profile.createRoute(mode))
-            ElementType.TEMP_TARGET_MANAGEMENT  -> navController.navigate(AppRoute.TempTargetManagement.createRoute(mode))
-            ElementType.QUICK_WIZARD_MANAGEMENT -> navController.navigate(AppRoute.QuickWizardManagement.createRoute(mode))
-            ElementType.FOOD_MANAGEMENT         -> navController.navigate(AppRoute.FoodManagement.route)
-            ElementType.RUNNING_MODE            -> navController.navigate(AppRoute.RunningMode.route)
-            ElementType.SCENE_MANAGEMENT        -> navController.navigate(AppRoute.SceneList.route)
-            ElementType.AUTOMATION_MANAGEMENT   -> navController.navigate(AppRoute.AutomationList.route)
-            ElementType.AUTHORIZED_CLIENTS      -> navController.navigate(AppRoute.AuthorizedClients.route)
-            ElementType.PAIR_WITH_MASTER        -> navController.navigate(AppRoute.PairWithMaster.route)
-            ElementType.QUICK_LAUNCH_CONFIG     -> navController.navigate(AppRoute.QuickLaunchConfig.route)
-
-            // Treatment dialogs
-            ElementType.CARBS                   -> navController.navigate(AppRoute.CarbsDialog.route)
-            ElementType.INSULIN                 -> navController.navigate(AppRoute.InsulinDialog.route)
-            ElementType.TREATMENT               -> navController.navigate(AppRoute.TreatmentDialog.route)
-            ElementType.FILL                    -> navController.navigate(AppRoute.FillDialog.createRoute(FillPreselect.CARTRIDGE_CHANGE.ordinal))
-            ElementType.CANNULA_CHANGE          -> navController.navigate(AppRoute.FillDialog.createRoute(FillPreselect.SITE_CHANGE.ordinal))
-            ElementType.BOLUS_WIZARD            -> navController.navigate(AppRoute.WizardDialog.createRoute())
-            ElementType.TEMP_BASAL              -> navController.navigate(AppRoute.TempBasalDialog.route)
-            ElementType.EXTENDED_BOLUS          -> navController.navigate(AppRoute.ExtendedBolusDialog.route)
-
-            // CGM
-            ElementType.CGM_XDRIP               -> openCgmApp("com.eveningoutpost.dexdrip")
-            ElementType.CGM_DEX                 -> dexcomBoyda.dexcomPackages().forEach { openCgmApp(it) }
-
-            ElementType.CALIBRATION             -> navController.navigate(AppRoute.CalibrationDialog.route)
-
-            // Careportal
-            ElementType.BG_CHECK                -> navController.navigate(AppRoute.CareDialog.createRoute(CareportalEventType.BGCHECK.ordinal))
-            ElementType.SENSOR_INSERT           -> navController.navigate(AppRoute.CareDialog.createRoute(CareportalEventType.SENSOR_INSERT.ordinal))
-            ElementType.BATTERY_CHANGE          -> navController.navigate(AppRoute.CareDialog.createRoute(CareportalEventType.BATTERY_CHANGE.ordinal))
-            ElementType.NOTE                    -> navController.navigate(AppRoute.CareDialog.createRoute(CareportalEventType.NOTE.ordinal))
-            ElementType.EXERCISE                -> navController.navigate(AppRoute.CareDialog.createRoute(CareportalEventType.EXERCISE.ordinal))
-            ElementType.QUESTION                -> navController.navigate(AppRoute.CareDialog.createRoute(CareportalEventType.QUESTION.ordinal))
-            ElementType.ANNOUNCEMENT            -> navController.navigate(AppRoute.CareDialog.createRoute(CareportalEventType.ANNOUNCEMENT.ordinal))
-            ElementType.SITE_ROTATION           -> navController.navigate(AppRoute.SiteRotationManagement.route)
-
-            // Settings
-            ElementType.SETTINGS                -> navController.navigate(AppRoute.Preferences.route)
-
-            // App lifecycle
-            ElementType.EXIT                    -> {
-                finish()
-                configBuilder.exitApp("Menu", Sources.Aaps, false)
-            }
-
-            ElementType.PUMP                    -> handlePluginClick(activePlugin.activePumpInternal as PluginBase)
-
-            // Non-searchable types — listed explicitly so the compiler catches new enum values
-            ElementType.QUICK_WIZARD,
-            ElementType.SCENE,
-            ElementType.AUTOMATION,
-            ElementType.COB,
-            ElementType.SENSITIVITY,
-            ElementType.USER_ENTRY,
-            ElementType.LOOP,
-            ElementType.AAPS                    -> {
-            }
-        }
-    }
-
-    private fun handlePluginClick(plugin: PluginBase) {
-        val pluginIndex = activePlugin.getPluginsList().indexOf(plugin)
-        if (plugin.hasComposeContent()) {
-            navController?.navigate(AppRoute.PluginContent.createRoute(pluginIndex))
-        }
-    }
 }
 

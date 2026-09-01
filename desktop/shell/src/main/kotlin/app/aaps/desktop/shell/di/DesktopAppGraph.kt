@@ -1,5 +1,13 @@
 package app.aaps.desktop.shell.di
 
+import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
+import app.aaps.core.interfaces.constraints.Objectives
+import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.ui.UrlOpener
+import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
@@ -17,6 +25,7 @@ import app.aaps.core.interfaces.protection.PasswordHasher
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -110,6 +119,17 @@ interface DesktopAppGraph : MetroViewModelMultibindings {
     val automationRuntime: AutomationRuntime
     val swDefinition: SWDefinition
     val builtInSearchables: BuiltInSearchables
+
+    // What OverviewScreen needs beyond the above.
+    val objectives: Objectives
+    val bgQualityCheck: BgQualityCheck
+    val notificationManager: NotificationManager
+    val uiInteraction: UiInteraction
+    val bolusProgressData: BolusProgressData
+    val commandQueue: CommandQueue
+    val pumpCommunicationStatus: PumpCommunicationStatus
+    val urlOpener: UrlOpener
+    val dexcomBoyda: DexcomBoyda
 
     /**
      * Assisted rather than contributed: both are built with the overview data cache instead of

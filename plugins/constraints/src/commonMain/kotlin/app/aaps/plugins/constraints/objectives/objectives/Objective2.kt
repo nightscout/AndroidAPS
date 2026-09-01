@@ -2,7 +2,7 @@ package app.aaps.plugins.constraints.objectives.objectives
 
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.constraints.ConstraintsStrings
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import dev.zacsweers.metro.AppScope
@@ -20,9 +20,10 @@ import dev.zacsweers.metro.binding
 @SingleIn(AppScope::class)
 class Objective2 @Inject constructor(
     preferences: Preferences,
-    rh: ResourceHelper,
+    rh: TextResolver,
+    durationText: DurationText,
     dateUtil: DateUtil,
-) : Objective(preferences, rh, dateUtil, "exam", ConstraintsStrings.objectives_exam_objective, ConstraintsStrings.objectives_exam_gate) {
+) : Objective(preferences, rh, dateUtil, durationText, "exam", ConstraintsStrings.objectives_exam_objective, ConstraintsStrings.objectives_exam_gate) {
 
     init {
         tasks.add(

@@ -9,7 +9,7 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.pump.VirtualPump
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.sync.Tidepool
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
@@ -30,7 +30,8 @@ import dev.zacsweers.metro.binding
 @SingleIn(AppScope::class)
 class Objective0 @Inject constructor(
     preferences: Preferences,
-    rh: ResourceHelper,
+    rh: TextResolver,
+    durationText: DurationText,
     dateUtil: DateUtil,
     private val activePlugin: ActivePlugin,
     private val virtualPumpPlugin: VirtualPump,
@@ -38,7 +39,7 @@ class Objective0 @Inject constructor(
     private val loop: Loop,
     private val iobCobCalculator: IobCobCalculator,
     private val passwordCheck: PasswordCheck,
-) : Objective(preferences, rh, dateUtil, "config", ConstraintsStrings.objectives_0_objective, ConstraintsStrings.objectives_0_gate) {
+) : Objective(preferences, rh, dateUtil, durationText, "config", ConstraintsStrings.objectives_0_objective, ConstraintsStrings.objectives_0_gate) {
 
     val tidepoolPlugin get() = activePlugin.getSpecificPluginsListByInterface(Tidepool::class).firstOrNull() as Tidepool?
 

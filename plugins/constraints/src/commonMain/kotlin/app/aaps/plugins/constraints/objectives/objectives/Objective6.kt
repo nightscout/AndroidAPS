@@ -5,7 +5,7 @@ import app.aaps.core.data.model.RM
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import dev.zacsweers.metro.AppScope
@@ -23,11 +23,12 @@ import dev.zacsweers.metro.binding
 @SingleIn(AppScope::class)
 class Objective6 @Inject constructor(
     preferences: Preferences,
-    rh: ResourceHelper,
+    rh: TextResolver,
+    durationText: DurationText,
     dateUtil: DateUtil,
     private val constraintChecker: ConstraintsChecker,
     private val loop: Loop
-) : Objective(preferences, rh, dateUtil, "maxiob", ConstraintsStrings.objectives_maxiob_objective, ConstraintsStrings.objectives_maxiob_gate) {
+) : Objective(preferences, rh, dateUtil, durationText, "maxiob", ConstraintsStrings.objectives_maxiob_objective, ConstraintsStrings.objectives_maxiob_gate) {
 
     init {
         tasks.add(MinimumDurationTask(this, T.days(1).msecs()))

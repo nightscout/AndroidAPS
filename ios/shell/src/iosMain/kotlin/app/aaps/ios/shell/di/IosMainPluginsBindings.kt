@@ -16,6 +16,9 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.interfaces.constraints.Objectives
+import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
+import app.aaps.plugins.constraints.objectives.objectives.Objective
 import app.aaps.plugins.main.iob.iobCobCalculator.IobCobCalculatorPlugin
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
@@ -75,4 +78,18 @@ object IosMainPluginsBindings {
     @IntoMap
     @IntKey(10)
     fun iobCobCalculatorEntry(plugin: IobCobCalculatorPlugin): PluginBase = plugin
+
+    /**
+     * The objectives, now that they are shared code rather than androidMain.
+     *
+     * They contribute themselves into a map keyed by their number; `ObjectivesPlugin` wants an
+     * ordered list, and that key is the order. Added from the Windows side together with the move,
+     * so this graph keeps building - the same two providers `:app` and the desktop shell have.
+     */
+    @Provides
+    fun objectivesList(objectives: Map<Int, Objective>): List<Objective> =
+        objectives.toList().sortedBy { it.first }.map { it.second }
+
+    @Provides
+    fun objectives(plugin: ObjectivesPlugin): Objectives = plugin
 }

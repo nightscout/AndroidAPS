@@ -11,7 +11,7 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventSWUpdate
 import app.aaps.core.interfaces.utils.DateUtil
@@ -50,7 +50,7 @@ import kotlinx.coroutines.withContext
 class ObjectivesViewModel @Inject constructor(
     private val objectivesPlugin: ObjectivesPlugin,
     private val rxBus: RxBus,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val dateUtil: DateUtil,
     private val sntpClient: SntpClient,
     private val receiverStatusStore: ReceiverStatusStore,

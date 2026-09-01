@@ -1,7 +1,7 @@
 package app.aaps.plugins.constraints.objectives.objectives
 
 import app.aaps.plugins.constraints.ConstraintsStrings
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -19,9 +19,10 @@ import dev.zacsweers.metro.binding
 @SingleIn(AppScope::class)
 class Objective1 @Inject constructor(
     preferences: Preferences,
-    rh: ResourceHelper,
+    rh: TextResolver,
+    durationText: DurationText,
     dateUtil: DateUtil
-) : Objective(preferences, rh, dateUtil, "usage", ConstraintsStrings.objectives_usage_objective, ConstraintsStrings.objectives_usage_gate) {
+) : Objective(preferences, rh, dateUtil, durationText, "usage", ConstraintsStrings.objectives_usage_objective, ConstraintsStrings.objectives_usage_gate) {
 
     init {
         tasks.add(object : Task(this, ConstraintsStrings.objectives_useprofileswitch) {

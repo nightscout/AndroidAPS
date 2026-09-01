@@ -64,7 +64,16 @@ kotlin {
     // plain jvm() target, so no special target name is needed.
     jvm()
 
+    // Android and desktop share what is plain JVM - the SNTP client. Applied explicitly, because
+    // the manual dependsOn below would otherwise switch the automatic hierarchy off and silently
+    // unwire iosMain.
+    applyDefaultHierarchyTemplate()
+
     sourceSets {
+        val jvmSharedMain = create("jvmSharedMain") { dependsOn(commonMain.get()) }
+        androidMain.get().dependsOn(jvmSharedMain)
+        jvmMain.get().dependsOn(jvmSharedMain)
+
         // What ConstraintsCheckerImpl needs. androidMain inherits these, so the rest of the module
         // keeps compiling unchanged; only the modules no common file uses yet stay android only.
         commonMain {
