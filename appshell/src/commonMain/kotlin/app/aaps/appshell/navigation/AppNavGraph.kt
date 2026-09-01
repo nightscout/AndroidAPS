@@ -752,8 +752,8 @@ fun NavGraphBuilder.appNavGraph(
             onRequestDirectoryAccess = onRequestDirectoryAccess,
             onRequestPermission = onRequestPermission,
             permissionItems = {
-                val allGroups = pluginPermissions.collectAllPermissions(navController.context)
-                val missingGroups = pluginPermissions.collectMissingPermissions(navController.context)
+                val allGroups = pluginPermissions.collectAllPermissions()
+                val missingGroups = pluginPermissions.collectMissingPermissions()
                 val missingSets = missingGroups.map { it.permissions.toSet() }.toSet()
                 allGroups.map { group -> group to (group.permissions.toSet() !in missingSets) }
             },
