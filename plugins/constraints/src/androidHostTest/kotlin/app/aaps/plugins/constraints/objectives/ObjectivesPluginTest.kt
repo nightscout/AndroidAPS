@@ -12,6 +12,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.implementation.sharedPreferences.PreferencesImpl
 import app.aaps.plugins.constraints.objectives.objectives.Objective0
+import app.aaps.plugins.constraints.objectives.objectives.PlainDurationText
 import app.aaps.plugins.constraints.objectives.objectives.Objective1
 import app.aaps.plugins.constraints.objectives.objectives.Objective2
 import app.aaps.plugins.constraints.objectives.objectives.Objective3
@@ -51,17 +52,19 @@ class ObjectivesPluginTest : TestBaseWithProfile() {
         val sp = SPImpl(SharedPreferencesMock(), context)
         emulatedPreferences = PreferencesImpl(sp, { profileUtilMock }, { profileFunctionMock }, { hardLimitsMock }, persistenceLayer, config, dateUtil)
 
+        // Real formatter: pure arithmetic over a duration, and only read for display.
+        val durationText = PlainDurationText()
         val objectives = listOf(
-            Objective0(emulatedPreferences, rh, dateUtil, activePlugin, virtualPumpPlugin, persistenceLayer, loop, iobCobCalculator, passwordCheck),
-            Objective1(emulatedPreferences, rh, dateUtil),
-            Objective2(emulatedPreferences, rh, dateUtil),
-            Objective3(emulatedPreferences, rh, dateUtil),
-            Objective4(emulatedPreferences, rh, dateUtil, profileFunction),
-            Objective5(emulatedPreferences, rh, dateUtil),
-            Objective6(emulatedPreferences, rh, dateUtil, constraintsChecker, loop),
-            Objective7(emulatedPreferences, rh, dateUtil),
-            Objective8(emulatedPreferences, rh, dateUtil),
-            Objective9(emulatedPreferences, rh, dateUtil)
+            Objective0(emulatedPreferences, rh, durationText, dateUtil, activePlugin, virtualPumpPlugin, persistenceLayer, loop, iobCobCalculator, passwordCheck),
+            Objective1(emulatedPreferences, rh, durationText, dateUtil),
+            Objective2(emulatedPreferences, rh, durationText, dateUtil),
+            Objective3(emulatedPreferences, rh, durationText, dateUtil),
+            Objective4(emulatedPreferences, rh, durationText, dateUtil, profileFunction),
+            Objective5(emulatedPreferences, rh, durationText, dateUtil),
+            Objective6(emulatedPreferences, rh, durationText, dateUtil, constraintsChecker, loop),
+            Objective7(emulatedPreferences, rh, durationText, dateUtil),
+            Objective8(emulatedPreferences, rh, durationText, dateUtil),
+            Objective9(emulatedPreferences, rh, durationText, dateUtil)
         )
         objectivesPlugin = ObjectivesPlugin(aapsLogger, rh, emulatedPreferences, config, objectives)
         runBlocking { objectivesPlugin.onStart() }

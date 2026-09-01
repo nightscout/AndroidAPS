@@ -25,11 +25,15 @@ class SntpClientTest : TestBase() {
         localeDependentSetting: LocaleDependentSetting,
         private val fakeNtpTime: Long,
         private val succeed: Boolean
-    ) : SntpClient(aapsLogger, dateUtil, localeDependentSetting) {
+    ) : JvmSntpClient(aapsLogger, dateUtil, localeDependentSetting) {
 
         override fun requestTime(host: String, timeout: Int): Boolean {
             ntpTime = fakeNtpTime
-            ntpTimeReference = 0L
+            // Read from the same monotonic clock the class does, which is what the real
+            // requestTime records. Zero only worked while that clock was SystemClock.elapsedRealtime(),
+            // which a unit test starts near zero; System.nanoTime() has an arbitrary origin, so a
+            // hardcoded reference makes the delta meaningless.
+            ntpTimeReference = elapsedRealtime()
             return succeed
         }
     }

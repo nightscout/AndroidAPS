@@ -1,5 +1,6 @@
 package app.aaps.desktop.shell.di
 
+import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.di.ApplicationScope
@@ -12,6 +13,7 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
@@ -19,6 +21,11 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
+import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
+import app.aaps.plugins.constraints.objectives.objectives.DurationText
+import app.aaps.plugins.constraints.objectives.objectives.Objective
+import app.aaps.plugins.constraints.objectives.objectives.PlainDurationText
 import app.aaps.plugins.main.iob.iobCobCalculator.IobCobCalculatorPlugin
 import app.aaps.workflow.CalculationExecutor
 import app.aaps.workflow.LazyCalculationExecutor
@@ -109,4 +116,47 @@ object DesktopMainPluginsBindings {
         prepare: Provider<PrepareGraphDataRunner>,
         post: Provider<PostCalculationRunner>
     ): CalculationExecutor = LazyCalculationExecutor(scope, aapsLogger, { prepare() }, { post() })
+
+    /**
+     * The pump communication banner, built by hand exactly as `ComposeMainActivity` builds it.
+     *
+     * It is a plain class in `:core:ui` rather than an injected binding, so every host constructs
+     * its own. Android passes the activity lifecycle scope; here it is the application scope, which
+     * is the right lifetime for a window that lives as long as the process.
+     */
+    @Provides
+    @SingleIn(AppScope::class)
+    fun pumpCommunicationStatus(
+        rxBus: RxBus,
+        commandQueue: CommandQueue,
+        rh: TextResolver,
+        @ApplicationScope scope: CoroutineScope
+    ): PumpCommunicationStatus = PumpCommunicationStatus(rxBus, commandQueue, rh, scope)
+
+    /**
+     * The real objectives, the same way `:app` provides them.
+     *
+     * `ObjectivesPlugin` carries `@APS` for the plugin-list multibinding, and `@ContributesBinding`
+     * on the class would inherit that qualifier - so the interface would only be readable as
+     * `@APS Objectives`, which is not what a reader asks for. Providing it here keeps the qualifier
+     * on the plugin entry and hands out the same scoped instance.
+     */
+    /**
+     * The eleven objectives, in order. They contribute themselves into a map keyed by their number;
+     * `ObjectivesPlugin` wants them as an ordered list, and the key is that order.
+     */
+    @Provides
+    fun objectivesList(objectives: Map<Int, Objective>): List<Objective> =
+        objectives.toList().sortedBy { it.first }.map { it.second }
+
+    @Provides
+    fun objectives(plugin: ObjectivesPlugin): Objectives = plugin
+
+    /**
+     * Durations without plural forms. Android has real plural resources and must not get this;
+     * see `PlainDurationText`.
+     */
+    @Provides
+    @SingleIn(AppScope::class)
+    fun durationText(): DurationText = PlainDurationText()
 }

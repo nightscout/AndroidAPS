@@ -3,19 +3,21 @@ package app.aaps.plugins.constraints.objectives.objectives
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.plugins.constraints.ConstraintsStrings
 import app.aaps.core.data.time.T
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.plugins.constraints.R
 import app.aaps.plugins.constraints.objectives.keys.ObjectivesBooleanComposedKey
 import app.aaps.plugins.constraints.objectives.keys.ObjectivesLongComposedKey
 import kotlinx.coroutines.Runnable
 import kotlin.math.floor
+import kotlin.time.Clock
 
 abstract class Objective(
     val preferences: Preferences,
-    val rh: ResourceHelper,
+    val rh: TextResolver,
     val dateUtil: DateUtil,
+    /** Renders "3 d" and friends. A parameter because Android says it with plurals; see [DurationText]. */
+    val durationText: DurationText,
     private val spName: String,
     val objective: TextRef,
     val gate: TextRef
@@ -91,26 +93,17 @@ abstract class Objective(
     inner class MinimumDurationTask internal constructor(objective: Objective, private val minimumDuration: Long) : Task(objective, ConstraintsStrings.time_elapsed) {
 
         override suspend fun isCompleted(): Boolean =
-            objective.isStarted && System.currentTimeMillis() - objective.startedOn >= minimumDuration
+            objective.isStarted && Clock.System.now().toEpochMilliseconds() - objective.startedOn >= minimumDuration
 
         override suspend fun isCompleted(trueTime: Long): Boolean {
             return objective.isStarted && trueTime - objective.startedOn >= minimumDuration
         }
 
         override suspend fun progress(): String =
-            (getDurationText(System.currentTimeMillis() - objective.startedOn)
+            (getDurationText(Clock.System.now().toEpochMilliseconds() - objective.startedOn)
                 + " / " + getDurationText(minimumDuration))
 
-        private fun getDurationText(duration: Long): String {
-            val days = floor(duration.toDouble() / T.days(1).msecs()).toInt()
-            val hours = floor(duration.toDouble() / T.hours(1).msecs()).toInt()
-            val minutes = floor(duration.toDouble() / T.mins(1).msecs()).toInt()
-            return when {
-                days > 0  -> rh.gq(app.aaps.core.ui.R.plurals.days, days, days)
-                hours > 0 -> rh.gq(app.aaps.core.ui.R.plurals.hours, hours, hours)
-                else      -> rh.gq(app.aaps.core.ui.R.plurals.minutes, minutes, minutes)
-            }
-        }
+        private fun getDurationText(duration: Long): String = durationText.format(duration)
     }
 
     inner class UITask internal constructor(objective: Objective, task: TextRef, private val spIdentifier: String, val code: (task: UITask, callback: Runnable, showMessage: (String) -> Unit) -> Unit) : Task(objective, task) {

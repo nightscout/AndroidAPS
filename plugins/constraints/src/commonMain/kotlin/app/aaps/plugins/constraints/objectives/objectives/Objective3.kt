@@ -2,7 +2,7 @@ package app.aaps.plugins.constraints.objectives.objectives
 
 import app.aaps.plugins.constraints.ConstraintsStrings
 import app.aaps.core.data.time.T
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.IntNonKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -21,9 +21,10 @@ import dev.zacsweers.metro.binding
 @SingleIn(AppScope::class)
 class Objective3 @Inject constructor(
     preferences: Preferences,
-    rh: ResourceHelper,
+    rh: TextResolver,
+    durationText: DurationText,
     dateUtil: DateUtil,
-) : Objective(preferences, rh, dateUtil, "openloop", ConstraintsStrings.objectives_openloop_objective, ConstraintsStrings.objectives_openloop_gate) {
+) : Objective(preferences, rh, dateUtil, durationText, "openloop", ConstraintsStrings.objectives_openloop_objective, ConstraintsStrings.objectives_openloop_gate) {
 
     init {
         tasks.add(MinimumDurationTask(this, T.days(7).msecs()))

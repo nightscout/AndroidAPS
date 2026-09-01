@@ -1141,3 +1141,36 @@ exactly the kind of thing that stops matching once it exists twice: a screen add
 would be reachable on one platform and not the other, and nothing would fail.
 
 Only the title changed, from "AAPS on iOS" to "AAPS", since both shells show it now.
+
+## Heads up: objectives are commonMain, and drawer navigation is shared
+
+Two moves that reach into files the iOS shell uses. Both were needed to make the overview work off
+Android, and both follow the usual rule - the class moves, only the platform call is lifted out.
+
+**Objectives.** `ObjectivesPlugin`, all eleven objectives and their Compose screens are now in
+`plugins/constraints/commonMain`. Two Android dependencies came out:
+
+- `SntpClient` is an interface in commonMain. The implementation is `JvmSntpClient` in a new
+  `jvmSharedMain`, so Android and desktop share the actual SNTP exchange - the sockets were always
+  plain JVM, only `SystemClock.elapsedRealtime()` was Android, and that is `System.nanoTime()` now.
+  `IosSntpClient` is a **placeholder that needs a real implementation**: this is the reference AAPS
+  validates its own timestamps against, and every treatment carries the device clock.
+- `DurationText` is the "3 d / 5 h / 20 min" text. Android keeps its plural resources;
+  `PlainDurationText` in commonMain says it without plural forms, and `IosDurationText` delegates to
+  it. If plurals ever land in `TextRef`, this interface should disappear.
+
+`IosMainPluginsBindings` gained the two providers `:app` has - the ordered objectives list and the
+unqualified `Objectives` - so the graph still builds.
+
+**Drawer navigation.** `handleNavigationRequest` and the `ElementType` to route mapping are now
+`appshell/commonMain/.../navigation/ElementNavigation.kt`. That mapping was inline in
+`ComposeMainActivity` and nothing in it was Android, which is why desktop's drawer did nothing when
+the overview first rendered there - every item routed into a placeholder. Only opening a CGM app and
+closing the app are passed in.
+
+`AapsAppHost` can now pass `onNavigate = { handleNavigationRequest(...) }` and get a working drawer.
+
+**Worth knowing:** a unit test caught that the SNTP fake set `ntpTimeReference = 0`, which only
+worked because `SystemClock.elapsedRealtime()` starts near zero in a unit test. `System.nanoTime()`
+has an arbitrary origin, so the reference has to be read from the same clock. The production code was
+right; the fake was leaning on the old clock's origin.
