@@ -853,6 +853,51 @@ platform lambda can capture it.
 Until both halves exist, `IosProtectionCheck` stays as it is and stays documented as unsafe once iOS
 can reach a pump.
 
+
+## Request: move `formatTemplate` so format strings work off Android
+
+The one part of the strings work still missing, and it is now the only reason a label on iOS or
+desktop can still look wrong. Raised before as a note inside another section; promoting it, because
+all four earlier requests are done and this is what is left.
+
+`stringResource(ref, vararg)` folds the arguments into the `TextRef`, and the platform `actual` has
+to substitute them. `formatTemplate` does exactly that, is already written and already tested - but
+it is `internal` to `:implementation`, and `TextRefResource.ios.kt` / `.jvm.kt` live in `:core:ui`,
+which sits below `:implementation` in the dependency graph. So neither actual can call it.
+
+The effect is narrow but visible: a label with no arguments is correct on both platforms, and one
+with arguments renders with its placeholders showing - "Exported %1$s ago". The same string through
+`TextResolver` comes out right, because `GeneratedTextResolver` is in `:implementation` and can call
+it. So the two paths disagree, which is worse than either being uniformly short.
+
+Moving `formatTemplate` beside `TextRefValueRegistry` in `:core:interfaces` closes it for both
+platforms at once and leaves `GeneratedTextResolver` calling the same function. `NumberFormat`, the
+only thing it depends on, is in `:core:data` - below `:core:interfaces` - so the move should be
+mechanical. Left with you because `:core:interfaces` is shared and the move touches Android's build.
+
+## Application protection is wired on iOS, with one question left
+
+Both halves landed and the iOS side is done: `AapsAppHost` now requests
+`ProtectionCheck.Protection.APPLICATION` and draws nothing until it is granted. Verified on the
+simulator - set a master password, set Level 0 to "Master password", relaunch, and the app opens to
+an "Application password" prompt with the app hidden behind it.
+
+Worth knowing why that wiring was needed at all: merging the shared classes did **not** make
+protection work. `ProtectionHost` renders a prompt when something *requests* protection, and nothing
+on iOS ever asked - Android asks from `ComposeMainActivity.onResume`. So the setting saved, the host
+was in place, and the app still opened straight to the screen it was meant to protect. It looked
+finished from the code and was not, which is the shape of failure this whole port keeps producing.
+
+**The open question: should iOS re-prompt on returning to the foreground?** It asks once per launch
+today, which is what the setting promises - "App launch. Independent from other levels." Android
+re-asks on every `onResume`, which is more than the label says but protects the case that actually
+matters: a phone handed to someone else while AAPS is backgrounded. iOS would observe
+`UIApplicationDidBecomeActiveNotification` for the same behaviour.
+
+It is left as a question rather than guessed at, because both answers are defensible and one of them
+quietly weakens a security feature. If Android's behaviour is the intended one, the label should
+probably change on both platforms too.
+
 ## Done
 
 - **`UrlOpener` and `PrefsFileInfo` - iOS side done.** Both ports landed from `kmp` and both have an
