@@ -96,7 +96,7 @@ kotlin {
                 // the Android versions and nothing about the Android build changes.
                 api(libs.cmp.runtime)
                 // ImageVector and friends live here, not in the runtime. Several interfaces in this
-                // module carry an icon, and that alone used to be enough to make them Android only.
+                // module carry an icon, so without this they could not be common.
                 api(libs.cmp.ui)
             }
         }
@@ -105,9 +105,9 @@ kotlin {
             // Android only: the string name to R.string id map.
             kotlin.srcDir(generateInterfacesStrings.flatMap { it.androidOutputDir })
             dependencies {
-                // Everything here was `api` on the old android library and the 41 consumer modules
-                // resolve these transitively, so they must stay exported. They are Android or JVM
-                // only, which is exactly why they belong to this source set rather than commonMain.
+                // The 41 consumer modules resolve these transitively, so they must stay `api`. They
+                // are Android or JVM only, which is why they belong to this source set rather than
+                // commonMain.
 
                 // Dependency Injection
 

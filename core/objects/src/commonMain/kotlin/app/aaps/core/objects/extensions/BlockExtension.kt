@@ -104,11 +104,10 @@ private val READABLE_TIME = Regex("""\d+:\d+""")
  *
  * Preferring the integer matters because `time` is the fragile field. Older builds formatted it with
  * the device locale's digits, so a profile saved under ar-SA (a locale AAPS ships) holds `"٠٦:٠٠"`,
- * and [DateUtil.toSeconds] matches ASCII `\d` only, answering 0 without complaining. That used to be
- * survivable - the editor showed the right rows and the stored array was written back verbatim - but
- * the document is now re-rendered from whatever is parsed here, so a `time` we cannot read would
- * collapse every block to 00:00 and publish that to the sync channel and to Nightscout. The damage
- * would be silent, because all-zero starts still divide evenly by 3600 and so still parse.
+ * and [DateUtil.toSeconds] matches ASCII `\d` only, answering 0 without complaining. The document is
+ * re-rendered from whatever is parsed here, so a `time` we cannot read would collapse every block to
+ * 00:00 and publish that to the sync channel and to Nightscout. The damage would be silent, because
+ * all-zero starts still divide evenly by 3600 and so still parse.
  *
  * Treating **zero** as "ask `time`" is what keeps this from failing the same way in reverse: an
  * uploader that omits `timeAsSeconds` from a defaults-filled struct writes 0 for every entry, and
