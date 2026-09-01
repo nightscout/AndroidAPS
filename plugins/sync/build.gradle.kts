@@ -58,7 +58,30 @@ kotlin {
     // plain jvm() target, so no special target name is needed.
     jvm()
 
+    // Android and desktop share the socket.io client. Applied explicitly, because the manual
+    // dependsOn below would otherwise switch the automatic hierarchy off and silently unwire iosMain.
+    applyDefaultHierarchyTemplate()
+
     sourceSets {
+        val jvmSharedMain = create("jvmSharedMain") { dependsOn(commonMain.get()) }
+        androidMain.get().dependsOn(jvmSharedMain)
+        jvmMain.get().dependsOn(jvmSharedMain)
+
+        // socket.io is a Java library, so the Nightscout websocket client is the same code on a
+        // phone and on a desktop. Only the JSON implementation under it differs - see jvmMain.
+        jvmSharedMain.dependencies {
+            implementation(libs.io.socket.client)
+        }
+
+        // Tests of shared code belong here, not in a per-target set: NsWsPayloadTest lived in
+        // iosTest, which only runs on a simulator, so a bug in commonMain code went unnoticed on
+        // every other machine until a desktop run hit it.
+        commonTest {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
+
         commonMain {
             kotlin.srcDir(generateSyncStrings.flatMap { it.commonOutputDir })
             dependencies {

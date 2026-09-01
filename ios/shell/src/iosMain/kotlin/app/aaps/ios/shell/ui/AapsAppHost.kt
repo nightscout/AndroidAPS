@@ -25,6 +25,7 @@ import app.aaps.core.interfaces.notifications.IosNotificationDelegate
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.objects.di.CoreObjectsGraph
+import app.aaps.shared.clientbindings.ClientGraphBindings
 import app.aaps.core.ui.compose.LocalMetroViewModelFactory
 import app.aaps.core.ui.compose.icons.IcAaps
 import app.aaps.core.ui.compose.metroViewModel
@@ -75,7 +76,7 @@ import platform.UIKit.UIViewController
 fun aapsAppViewController(): UIViewController {
     // Built once, outside the composition: a graph rebuilt on each recomposition would hand out new
     // singletons every frame - a new database wrapper, a new preference store.
-    val graph = createGraphFactory<IosAppGraph.Factory>().create(CoreObjectsGraph)
+    val graph = createGraphFactory<IosAppGraph.Factory>().create(CoreObjectsGraph, ClientGraphBindings)
     val viewModelFactory = IosViewModelFactory(graph)
     val logger = graph.logger
 

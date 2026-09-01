@@ -40,6 +40,7 @@ val migratedModules = listOf(
     ":plugins:source",
     ":plugins:sync",
     ":pump:virtual",
+    ":shared:clientbindings",
     ":shared:impl",
     ":ui",
     ":workflow"

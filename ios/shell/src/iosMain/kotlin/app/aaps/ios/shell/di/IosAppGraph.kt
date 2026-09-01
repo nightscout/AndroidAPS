@@ -24,6 +24,7 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.objects.di.CoreObjectsGraph
+import app.aaps.shared.clientbindings.ClientGraphBindings
 import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.configuration.setupwizard.SWDefinition
 import app.aaps.ui.compose.overview.chips.ChipsViewModel
@@ -153,6 +154,9 @@ interface IosAppGraph : MetroViewModelMultibindings {
          * [CoreObjectsGraph] is a `@BindingContainer`, so its `@Provides` are only visible to a
          * graph that includes it - the same way `AppRootGraph` takes it on Android.
          */
-        fun create(@Includes coreObjects: CoreObjectsGraph): IosAppGraph
+        fun create(
+            @Includes coreObjects: CoreObjectsGraph,
+            @Includes clientBindings: ClientGraphBindings
+        ): IosAppGraph
     }
 }

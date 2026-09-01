@@ -54,12 +54,24 @@ dependencies {
     implementation(project(":database:persistence"))
     // The shared implementations this shell binds - the logger, RxBus, DateUtil and L.
     implementation(project(":implementation"))
+    implementation(project(":shared:clientbindings"))
     implementation(project(":shared:impl"))
 
     // The Main dispatcher. Compose Desktop draws on the Swing event thread, and shared code hops to
     // Dispatchers.Main to touch the UI; core alone has no Main dispatcher, so this is what stops
     // every such hop throwing at runtime.
     implementation(libs.kotlinx.coroutines.swing)
+
+    // The JSON implementation under the Nightscout websocket.
+    //
+    // socket.io-client brings org.json:json (Crockford's) transitively. On Android that jar is
+    // inert because the platform provides org.json; on a desktop JVM it would be the real thing,
+    // and the two disagree on real cases - optString of a JSON null gives "" in Crockford's and
+    // "null" on Android. That difference would sit under the wire path that becomes treatments.
+    //
+    // So the desktop runs AOSP's org.json, repackaged for the JVM: the same implementation the
+    // phone runs, so a payload parses identically on both.
+    implementation(libs.org.json.android)
 
     // The plugins the client runs, mirroring the list :ios:shell carries. Metro finds their
     // @ContributesBinding classes through these, which is what turns the graph from an anchor into
@@ -110,4 +122,11 @@ compose.desktop {
             )
         }
     }
+}
+
+// Crockford's org.json comes in transitively with socket.io-client. It is excluded so that the
+// AOSP repack above is the only implementation on the classpath - two would make which one wins a
+// matter of ordering.
+configurations.configureEach {
+    exclude(group = "org.json", module = "json")
 }

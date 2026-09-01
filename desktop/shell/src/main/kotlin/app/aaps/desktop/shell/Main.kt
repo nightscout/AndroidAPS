@@ -28,6 +28,7 @@ import app.aaps.appshell.navigation.handleSearchResultClick
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.objects.di.CoreObjectsGraph
+import app.aaps.shared.clientbindings.ClientGraphBindings
 import app.aaps.core.ui.compose.icons.IcAaps
 import app.aaps.desktop.shell.di.DesktopAppGraph
 import app.aaps.desktop.shell.di.GeneratedStringOwners
@@ -74,7 +75,7 @@ import app.aaps.core.ui.compose.metroViewModel
  */
 fun main() {
     val startup = runCatching {
-        val graph = createGraphFactory<DesktopAppGraph.Factory>().create(CoreObjectsGraph)
+        val graph = createGraphFactory<DesktopAppGraph.Factory>().create(CoreObjectsGraph, ClientGraphBindings)
         startPlugins(graph)
         graph
     }
