@@ -17,6 +17,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.implementation.logging.AAPSLoggerIos
 import app.aaps.implementation.notifications.CommonNotificationManager
 import app.aaps.implementation.notifications.IosSystemNotificationPlatform
+import app.aaps.implementation.resources.GeneratedTextResolver
 import app.aaps.ios.shell.config.IosClientConfig
 import app.aaps.ios.shell.prefs.IosSp
 import app.aaps.shared.impl.logging.LImpl
@@ -60,15 +61,18 @@ object IosPlatformBindings {
     fun logger(): AAPSLogger = AAPSLoggerIos()
 
     /**
-     * Strings, as far as iOS can do them today.
+     * Real English text, from the maps `GenerateKeyStringsTask` now emits.
      *
-     * [IosTextResolver] answers with the name of the string rather than its text, because iOS has
-     * no reader for Android resource files yet. Screens therefore render with readable placeholders
-     * instead of blanks, which is what makes a first pass worth looking at.
+     * This replaced a placeholder that answered with the string's **name**, so a settings screen
+     * read `configbuilder_general` instead of "General". `IosStringOwners.registerAll()` has to run
+     * before anything asks for text - `IosAppStartup` does that.
+     *
+     * Still English only: the generated map holds the base locale, and choosing one at runtime is a
+     * separate job.
      */
     @Provides
     @SingleIn(AppScope::class)
-    fun textResolver(): TextResolver = IosTextResolver
+    fun textResolver(): TextResolver = GeneratedTextResolver()
 
     /** NSUserDefaults, the store the preference layer sits on. */
     @Provides
