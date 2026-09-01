@@ -20,8 +20,11 @@ import kotlin.test.assertTrue
  * - without [PluginRegistry.register], `PluginStore.plugins` is an unset `lateinit`, and the first
  *   thing to read it is `ProfileEditorViewModel` - from a coroutine in its own constructor, where an
  *   exception is unhandled on Kotlin/Native and **aborts the process**. The app drew nothing.
- * - without [PluginRegistry.verifySelections], the list is there but no plugin is active in any
- *   category, so asking for the pump throws "No pump selected".
+ * - without [PluginRegistry.initializeConfig], the list is there but no plugin is active in any
+ *   category, so asking for the pump throws "No pump selected". That call also *starts* every
+ *   enabled plugin. While it only verified the categories, NSClientV3 was enabled but had never run
+ *   `onStart`, so the client never synced and never opened a websocket until the Configuration
+ *   screen was opened by hand.
  *
  * Neither shows up in a build. These tests are here so a reordering does not quietly bring them
  * back.
@@ -75,8 +78,8 @@ class IosAppStartupTest {
             registered = plugins
         }
 
-        override fun verifySelections() {
-            calls.add("verify")
+        override fun initializeConfig() {
+            calls.add("initialize")
         }
     }
 
@@ -87,10 +90,10 @@ class IosAppStartupTest {
     }
 
     @Test
-    fun `plugins are registered before the selection is verified`() {
+    fun `plugins are registered before the config is initialized`() {
         val registry = run(mapOf(1 to NamedPlugin("a")))
 
-        assertEquals(listOf("register", "verify"), registry.calls)
+        assertEquals(listOf("register", "initialize"), registry.calls)
     }
 
     /** The order key decides the plugin list order and which default is picked. */
@@ -117,7 +120,7 @@ class IosAppStartupTest {
     fun `no plugins at all still runs both steps`() {
         val registry = run(emptyMap())
 
-        assertEquals(listOf("register", "verify"), registry.calls)
+        assertEquals(listOf("register", "initialize"), registry.calls)
         assertTrue(registry.registered.isEmpty())
     }
 }

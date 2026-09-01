@@ -1,5 +1,6 @@
 package app.aaps.ios.shell
 
+import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.implementation.plugin.PluginStore
 
@@ -16,18 +17,31 @@ internal interface PluginRegistry {
     fun register(plugins: List<PluginBase>)
 
     /**
-     * Picks the active plugin in each category from what is enabled, falling back to the category
-     * default. Must run after [register] - it reads the list that call provides.
+     * Loads each plugin's stored enabled state and picks the active one in each category. Must run
+     * after [register] - it reads the list that call provides.
+     *
+     * This used to only verify the categories, which is a strictly smaller job and left iOS with a
+     * plugin list where **nothing was started**. Starting is what `setPluginEnabled` does, and only
+     * `ConfigBuilder.initialize` walks the whole list calling it, so an enabled NSClientV3 sat there
+     * never having run `onStart` - no ticks, no sync, no websocket - until the user happened to open
+     * the Configuration screen, which ran the same load as a side effect and made it work.
      */
-    fun verifySelections()
+    fun initializeConfig()
 }
 
 /** The real one. */
-internal class PluginStoreRegistry(private val pluginStore: PluginStore) : PluginRegistry {
+internal class PluginStoreRegistry(
+    private val pluginStore: PluginStore,
+    private val configBuilder: ConfigBuilder
+) : PluginRegistry {
 
     override fun register(plugins: List<PluginBase>) {
         pluginStore.plugins = plugins
     }
 
-    override fun verifySelections() = pluginStore.verifySelectionInCategories()
+    // The same call Android's `MainApp` and the desktop `Main` both make. `ConfigBuilderImpl` is
+    // shared, so this is the real one, not a copy of what it does - and it calls
+    // `verifySelectionInCategories` itself at the end of loading, so nothing is lost by not calling
+    // that directly any more.
+    override fun initializeConfig() = configBuilder.initialize()
 }

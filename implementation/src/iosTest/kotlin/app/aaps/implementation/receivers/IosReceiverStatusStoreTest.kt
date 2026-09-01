@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
@@ -128,5 +129,50 @@ class IosReceiverStatusStoreTest {
 
         assertEquals(55, s.chargingStatusFlow.value?.batteryLevel)
         assertTrue(s.chargingStatusFlow.value?.isCharging == true)
+    }
+
+    /**
+     * Nothing is known about the battery until the watch is started.
+     *
+     * Paired with the test below. `ReceiverDelegate` tells "unknown" apart from "known and not
+     * allowed", so an unknown battery must stay null rather than defaulting to some plausible value -
+     * a false "not charging, 100%" would be indistinguishable from a real reading.
+     */
+    @Test
+    fun `the battery is unknown before the watch starts`() {
+        assertNull(store().chargingStatusFlow.value)
+    }
+
+    /**
+     * The regression this whole method exists for.
+     *
+     * The battery flow used to be written **only** inside the [ReceiverStatusStore.isCharging] and
+     * [ReceiverStatusStore.batteryLevel] getters, and nothing on iOS read either at startup. So the
+     * charging half of `ReceiverDelegate` stayed null, `null == true` was false, and Nightscout sync
+     * was refused forever with "Status not available" - the websocket never opened on iOS, whatever
+     * the URL and token were.
+     *
+     * So this asserts the exact missing property: after starting the watch the flow holds a value,
+     * **without anyone having read a battery getter**. Reading one here would pass against the old
+     * broken code and prove nothing.
+     */
+    @Test
+    fun `starting the watch publishes the battery without anyone reading it`() {
+        val s = store()
+
+        s.startBatteryWatch()
+
+        assertNotNull(s.chargingStatusFlow.value, "sync stays blocked forever while this is null")
+    }
+
+    /** Idempotent, like the network monitor: the app may start it again on a later foreground. */
+    @Test
+    fun `starting the watch twice is harmless`() {
+        val s = store()
+
+        s.startBatteryWatch()
+        s.startBatteryWatch()
+
+        assertNotNull(s.chargingStatusFlow.value)
     }
 }

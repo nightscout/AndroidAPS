@@ -42,15 +42,16 @@ internal class IosAppStartup(
         registry.register(plugins)
         aapsLogger.debug(LTag.CORE, "Registered ${plugins.size} plugins on iOS")
 
-        // Picks the active plugin in each category - the pump, the sensitivity, the smoothing and
-        // so on - from what is enabled, falling back to each category's default. Registering the
-        // list is not enough on its own: until this runs, `activePumpInternal` has nothing to
-        // return and throws "No pump selected", which was the second crash on the way here.
+        // Loads every plugin's stored enabled state and picks the active one in each category - the
+        // pump, the sensitivity, the smoothing and so on. Registering the list is not enough on its
+        // own: until this runs, `activePumpInternal` has nothing to return and throws "No pump
+        // selected", which was the second crash on the way here.
         //
-        // On Android `configBuilder.initialize()` does this. The iOS ConfigBuilder is a placeholder,
-        // so the call is made directly. When a real one exists, this line moves into it.
-        registry.verifySelections()
+        // `ConfigBuilderImpl` is shared, so this is the same `initialize()` Android's `MainApp` and
+        // the desktop `Main` call, rather than a copy of part of what it does. Calling only the
+        // category check - which is what this did before - left every enabled plugin unstarted.
+        registry.initializeConfig()
 
-        aapsLogger.debug(LTag.CORE, "Plugin selection verified, starting the UI")
+        aapsLogger.debug(LTag.CORE, "Plugins started and selection verified, starting the UI")
     }
 }

@@ -1,6 +1,8 @@
 package app.aaps.ios.shell.di
 
 import app.aaps.core.objects.di.CoreObjectsGraph
+import app.aaps.plugins.sync.nsclientV3.ws.NsSocket
+import app.aaps.plugins.sync.nsclientV3.ws.NsSocketFactory
 import app.aaps.shared.clientbindings.ClientGraphBindings
 import dev.zacsweers.metro.createGraphFactory
 import kotlin.test.Test
@@ -21,7 +23,16 @@ import kotlin.test.assertSame
  */
 class IosHistoryWindowScopingTest {
 
-    private val graph = createGraphFactory<IosAppGraph.Factory>().create(CoreObjectsGraph, ClientGraphBindings)
+    /**
+     * The real socket is a Swift class the app hands in, which a test binary has no way to build.
+     * Nothing here connects to anything, so a factory that makes no sockets is the honest stand-in.
+     */
+    private object NoSockets : NsSocketFactory {
+
+        override fun create(url: String): NsSocket? = null
+    }
+
+    private val graph = createGraphFactory<IosAppGraph.Factory>().create(CoreObjectsGraph, ClientGraphBindings, NoSockets)
 
     @Test
     fun `a window does not share the app's calculation objects`() {

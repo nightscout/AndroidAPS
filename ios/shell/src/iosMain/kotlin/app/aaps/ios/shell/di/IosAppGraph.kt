@@ -1,6 +1,15 @@
 package app.aaps.ios.shell.di
 
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
+import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
+import app.aaps.core.interfaces.ui.UrlOpener
+import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.source.DexcomBoyda
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.constraints.Objectives
+import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -24,6 +33,8 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.objects.di.CoreObjectsGraph
+import app.aaps.implementation.receivers.IosReceiverStatusStore
+import app.aaps.plugins.sync.nsclientV3.ws.NsSocketFactory
 import app.aaps.shared.clientbindings.ClientGraphBindings
 import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.configuration.setupwizard.SWDefinition
@@ -135,6 +146,21 @@ interface IosAppGraph : MetroViewModelMultibindings {
     val chipsViewModelFactory: ChipsViewModel.Factory
     val overviewDataCache: OverviewDataCache
 
+    // What the overview needs beyond the above. `Objectives` and `PumpCommunicationStatus` became
+    // available when ObjectivesPlugin and the pump status moved to commonMain.
+    val objectives: Objectives
+    val bgQualityCheck: BgQualityCheck
+    val uiInteraction: UiInteraction
+    val bolusProgressData: BolusProgressData
+    val commandQueue: CommandQueue
+    val pumpCommunicationStatus: PumpCommunicationStatus
+    val dexcomBoyda: DexcomBoyda
+    /** Concrete, not the interface: the app has to start the battery watch, which is iOS-only. */
+    val receiverStatusStore: IosReceiverStatusStore
+
+    val urlOpener: UrlOpener
+    val notificationManager: NotificationManager
+
     /**
      * The view model maps come from [MetroViewModelMultibindings], the same interface `AppRootGraph`
      * implements. `IosViewModelFactory` turns them into the factory `metroViewModel()` asks for:
@@ -156,7 +182,20 @@ interface IosAppGraph : MetroViewModelMultibindings {
          */
         fun create(
             @Includes coreObjects: CoreObjectsGraph,
-            @Includes clientBindings: ClientGraphBindings
+            @Includes clientBindings: ClientGraphBindings,
+            /**
+             * The Nightscout socket, handed in by the app because it is written in Swift.
+             *
+             * Every other platform contributes its own: `SocketIoNsSocketFactory` in `jvmSharedMain`
+             * carries `@ContributesBinding` and Android and desktop pick it up for free. iOS cannot,
+             * because the implementation is `SwiftNsSocketFactory` on `socket.io-client-swift` - the
+             * same project's client as the Java one, which is what keeps both platforms speaking to
+             * Nightscout identically - and a Swift class cannot carry a Kotlin annotation.
+             *
+             * So it arrives here instead. Until it did, iOS had a placeholder that returned null and
+             * the client simply never connected, while desktop worked.
+             */
+            @Provides nsSocketFactory: NsSocketFactory
         ): IosAppGraph
     }
 }

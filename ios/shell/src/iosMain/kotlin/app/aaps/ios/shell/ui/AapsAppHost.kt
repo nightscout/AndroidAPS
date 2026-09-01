@@ -19,12 +19,28 @@ import app.aaps.appshell.AapsAppRoot
 import app.aaps.appshell.navigation.SHELL_HOME_ROUTE
 import app.aaps.appshell.navigation.ShellHomeScreen
 import app.aaps.appshell.navigation.appNavGraph
+import app.aaps.ui.search.SearchViewModel
+import app.aaps.ui.compose.permissionsSheet.PermissionsViewModel
+import app.aaps.ui.compose.maintenance.MaintenanceViewModel
+import app.aaps.ui.compose.manageSheet.ManageViewModel
+import app.aaps.ui.compose.loopSheet.LoopActionViewModel
+import app.aaps.ui.compose.scenesSheet.ScenesViewModel
+import app.aaps.ui.compose.treatmentsSheet.TreatmentViewModel
+import app.aaps.ui.compose.overview.statusLights.StatusViewModel
+import app.aaps.ui.compose.main.MainViewModel
+import app.aaps.ui.compose.main.OverviewScreen
+import app.aaps.appshell.navigation.ElementNavigator
+import app.aaps.appshell.navigation.handleSearchResultClick
+import app.aaps.appshell.navigation.handleQuickLaunchAction
+import app.aaps.appshell.navigation.handleNotificationAction
+import app.aaps.appshell.navigation.AppRoute
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.IosNotificationDelegate
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.objects.di.CoreObjectsGraph
+import app.aaps.plugins.sync.nsclientV3.ws.NsSocketFactory
 import app.aaps.shared.clientbindings.ClientGraphBindings
 import app.aaps.core.ui.compose.LocalMetroViewModelFactory
 import app.aaps.core.ui.compose.icons.IcAaps
@@ -73,22 +89,26 @@ import platform.UIKit.UIViewController
  * platform is supposed to supply - opening a document picker, asking for a permission - and each
  * needs an iOS answer of its own rather than a shared one.
  */
-fun aapsAppViewController(): UIViewController {
+fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
     // Built once, outside the composition: a graph rebuilt on each recomposition would hand out new
     // singletons every frame - a new database wrapper, a new preference store.
-    val graph = createGraphFactory<IosAppGraph.Factory>().create(CoreObjectsGraph, ClientGraphBindings)
+    val graph = createGraphFactory<IosAppGraph.Factory>().create(CoreObjectsGraph, ClientGraphBindings, nsSocketFactory)
     val viewModelFactory = IosViewModelFactory(graph)
     val logger = graph.logger
 
     // Before the composition, not beside it: the first view model built reads the active pump, and
     // an empty plugin list there throws from a coroutine and takes the process with it.
-    IosAppStartup(logger, PluginStoreRegistry(graph.pluginStore), graph.contributedPlugins).run()
+    IosAppStartup(logger, PluginStoreRegistry(graph.pluginStore, graph.configBuilder), graph.contributedPlugins).run()
 
     // Attach to the notification centre. Registering a category only records it now, so that building
     // the graph does not need an app bundle - see `IosNotificationDelegate.install`. It is done here
     // rather than in `IosAppStartup` because only the real app reaches this function: startup is unit
     // tested, and `currentNotificationCenter()` cannot be called from a test binary.
     IosNotificationDelegate.install()
+
+    // Same placement and the same reason: this touches UIKit, so it cannot live in the graph or in
+    // `IosAppStartup`. Until this ran, Nightscout sync was blocked forever - see `startBatteryWatch`.
+    graph.receiverStatusStore.startBatteryWatch()
     logger.debug(LTag.CORE, "Starting the AAPS Compose root on iOS")
 
     return ComposeUIViewController {
@@ -182,6 +202,25 @@ fun aapsAppViewController(): UIViewController {
                         initializer { graph.graphViewModelFactory.create(graph.overviewDataCache, fullWindow = false) }
                     }
                 )
+                val mainViewModel = metroViewModel<MainViewModel>()
+
+                // The shared navigator: every route a tap can lead to is mapped in :appshell, so the
+                // only per-platform parts are the four actions below. iOS can honour one of them.
+                val navigator = ElementNavigator(
+                    navController = navController,
+                    mainViewModel = mainViewModel,
+                    activePlugin = graph.activePlugin,
+                    protectionCheck = graph.protectionCheck,
+                    configBuilder = graph.configBuilder,
+                    dexcomBoyda = graph.dexcomBoyda,
+                    // The Dexcom build is an Android app; an iOS client reads glucose from Nightscout.
+                    onOpenCgmApp = { pkg -> logger.notWiredYet("open CGM app $pkg") },
+                    // iOS gives an app no way to quit itself, and Apple treats that as a crash.
+                    onExit = { logger.notWiredYet("exit from the menu") },
+                    // Needs a UIDocumentPicker, which nothing on iOS has yet.
+                    onRequestDirectoryAccess = { logger.notWiredYet("directory access") },
+                    onOpenUrl = { url -> graph.urlOpener.open(url) }
+                )
                 val chips: ChipsViewModel = viewModel(
                     factory = viewModelFactory {
                         initializer { graph.chipsViewModelFactory.create(graph.overviewDataCache) }
@@ -192,7 +231,9 @@ fun aapsAppViewController(): UIViewController {
                 // start destination left its back arrow inert - there was nothing behind it - and
                 // left every other screen unreachable, since they are all navigated to from the
                 // overview that iOS does not have yet. See `ShellHomeScreen` in :appshell.
-                NavHost(navController = navController, startDestination = SHELL_HOME_ROUTE) {
+                // The real overview is the start destination now that `appNavGraph` hosts it.
+                // `ShellHomeScreen` stays reachable as a way to open screens the drawer does not list.
+                NavHost(navController = navController, startDestination = AppRoute.Main.route) {
                     composable(SHELL_HOME_ROUTE) {
                         ShellHomeScreen(onOpen = { route -> navController.navigate(route) })
                     }
@@ -224,9 +265,7 @@ fun aapsAppViewController(): UIViewController {
                         prefFileList = graph.prefsFileInfo,
                         persistenceLayer = graph.persistenceLayer,
                         visibilityContext = graph.visibilityContext,
-                        onNavigationRequest = { request, _ ->
-                            logger.notWiredYet("navigation request $request")
-                        },
+                        onNavigationRequest = { request, _ -> navigator.handleNavigationRequest(request) },
                         onShowDeliveryError = { comment, title ->
                             logger.error(LTag.CORE, "Delivery error: ${graph.textResolver.gs(title)} - $comment")
                         },
@@ -241,7 +280,50 @@ fun aapsAppViewController(): UIViewController {
                         onExecuteQuickWizard = { guid -> logger.notWiredYet("quick wizard $guid") },
                         onRequestDirectoryAccess = { logger.notWiredYet("directory access - iOS needs a document picker") },
                         onRequestPermission = { group -> logger.notWiredYet("permission request $group") },
-                        findScreenDef = { null }
+                        findScreenDef = { null },
+                        overview = {
+                            OverviewScreen(
+                                mainViewModel = mainViewModel,
+                                manageViewModel = metroViewModel<ManageViewModel>(),
+                                maintenanceViewModel = metroViewModel<MaintenanceViewModel>(),
+                                statusViewModel = metroViewModel<StatusViewModel>(),
+                                treatmentViewModel = metroViewModel<TreatmentViewModel>(),
+                                scenesViewModel = metroViewModel<ScenesViewModel>(),
+                                loopActionViewModel = metroViewModel<LoopActionViewModel>(),
+                                searchViewModel = metroViewModel<SearchViewModel>(),
+                                permissionsViewModel = metroViewModel<PermissionsViewModel>(),
+                                graphViewModel = graphs,
+                                chipsViewModel = chips,
+                                activePlugin = graph.activePlugin,
+                                config = graph.config,
+                                objectives = graph.objectives,
+                                bgQualityCheck = graph.bgQualityCheck,
+                                notificationManager = graph.notificationManager,
+                                uiInteraction = graph.uiInteraction,
+                                builtInSearchables = graph.builtInSearchables,
+                                bolusProgressData = graph.bolusProgressData,
+                                clientControlActionDispatcher = graph.clientControlActionDispatcher,
+                                commandQueue = graph.commandQueue,
+                                pumpCommunicationStatus = graph.pumpCommunicationStatus,
+                                appName = "AAPS",
+                                authorizationFailedMessage = "Authorization failed",
+                                onNavigate = { request -> navigator.handleNavigationRequest(request) },
+                                onSearchResultClick = { entry -> navigator.handleSearchResultClick(entry) },
+                                onNotificationActionClick = { n -> navigator.handleNotificationAction(n.id) },
+                                onQuickLaunchActionClick = { action -> navigator.handleQuickLaunchAction(action) },
+                                onImportSettingsNavigate = { source -> logger.notWiredYet("import from $source") },
+                                // Needs a UIDocumentPicker, which nothing on iOS has yet.
+                                onDirectoryClick = { logger.notWiredYet("directory picker") },
+                                onLaunchBrowser = { url -> graph.urlOpener.open(url) },
+                                // An iOS app cannot bring itself to the front; the system decides.
+                                onBringToForeground = { logger.notWiredYet("bring to foreground") },
+                                // No activity to recreate. A Compose scene is not restarted this way.
+                                onRecreateActivity = { logger.notWiredYet("recreate") },
+                                onAuthorizationFailed = { logger.error(LTag.CORE, "Authorization failed") },
+                                autoShowNotificationSheet = false,
+                                onAutoShowConsumed = {}
+                            )
+                        }
                     )
                 }
             }
