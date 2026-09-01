@@ -888,15 +888,22 @@ on iOS ever asked - Android asks from `ComposeMainActivity.onResume`. So the set
 was in place, and the app still opened straight to the screen it was meant to protect. It looked
 finished from the code and was not, which is the shape of failure this whole port keeps producing.
 
-**The open question: should iOS re-prompt on returning to the foreground?** It asks once per launch
-today, which is what the setting promises - "App launch. Independent from other levels." Android
-re-asks on every `onResume`, which is more than the label says but protects the case that actually
-matters: a phone handed to someone else while AAPS is backgrounded. iOS would observe
-`UIApplicationDidBecomeActiveNotification` for the same behaviour.
+**Answered: iOS re-prompts on returning to the foreground, whenever app protection is on.** It now
+asks at launch and on every `UIApplicationDidBecomeActiveNotification`, matching Android's
+`onResume`. Verified on the simulator: unlock, press Home, come back, and the prompt is there again
+with the app hidden behind it.
 
-It is left as a question rather than guessed at, because both answers are defensible and one of them
-quietly weakens a security feature. If Android's behaviour is the intended one, the label should
-probably change on both platforms too.
+Two details worth knowing if this is ever changed:
+
+- **It costs nothing when protection is off.** `requestProtection` grants straight away for "No
+  protection", so no dialog is created and the gate is invisible to anyone who did not ask for it.
+- **The request is guarded and re-locks first**, the same shape as Android's `isProtectionCheckActive`.
+  `didBecomeActive` can fire while a prompt is already up, and without the guard a second dialog
+  stacks on the first; without the re-lock the app stays readable behind the prompt on the way back
+  from the background.
+
+The setting still says "App launch. Independent from other levels", which now understates what it
+does on both platforms. Worth a wording change, on Android too.
 
 ## Done
 
