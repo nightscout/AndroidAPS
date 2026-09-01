@@ -9,43 +9,26 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.view.WindowManager
+import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.TrendingFlat
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.net.toUri
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -54,12 +37,13 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
+import app.aaps.appshell.AapsAppRoot
 import app.aaps.appshell.navigation.AppRoute
+import app.aaps.appshell.navigation.ElementNavigator
 import app.aaps.appshell.navigation.appNavGraph
-import app.aaps.appshell.navigation.handleNavigationRequest
-import app.aaps.appshell.navigation.openPlugin
-import app.aaps.core.data.ue.Sources
+import app.aaps.appshell.navigation.handleNotificationAction
+import app.aaps.appshell.navigation.handleQuickLaunchAction
+import app.aaps.appshell.navigation.handleSearchResultClick
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.configuration.Config
@@ -76,7 +60,6 @@ import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginPermissions
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
@@ -101,15 +84,8 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.objects.crypto.CryptoUtil
-import app.aaps.appshell.AapsAppRoot
-import app.aaps.core.ui.R as CoreUiR
-import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.MetroAppCompatActivity
 import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
-import app.aaps.core.ui.compose.ScreenMode
-import androidx.activity.compose.LocalActivity
-import androidx.fragment.app.FragmentActivity
-import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.pump.PumpActivityDialog
@@ -123,16 +99,13 @@ import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.configuration.setupwizard.SWDefinition
 import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
-import app.aaps.ui.compose.careDialog.CareportalEventType
 import app.aaps.ui.compose.configuration.ConfigurationViewModel
-import app.aaps.ui.compose.fillDialog.FillPreselect
 import app.aaps.ui.compose.insulinManagement.InsulinManagementViewModel
 import app.aaps.ui.compose.loopSheet.LoopActionViewModel
-import app.aaps.ui.compose.main.OverviewScreen
 import app.aaps.ui.compose.main.MainViewModel
+import app.aaps.ui.compose.main.OverviewScreen
 import app.aaps.ui.compose.maintenance.ImportViewModel
 import app.aaps.ui.compose.maintenance.MaintenanceViewModel
-import app.aaps.ui.compose.manageSheet.ManageSheetHost
 import app.aaps.ui.compose.manageSheet.ManageViewModel
 import app.aaps.ui.compose.overview.chips.ChipsViewModel
 import app.aaps.ui.compose.overview.graphs.GraphViewModel
@@ -160,6 +133,7 @@ import dev.zacsweers.metro.Inject
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
+import app.aaps.core.ui.R as CoreUiR
 
 class ComposeMainActivity : MetroAppCompatActivity() {
 
@@ -374,7 +348,7 @@ class ComposeMainActivity : MetroAppCompatActivity() {
         LaunchedEffect(Unit) {
             permissionsViewModel.sideEffect.collect { effect ->
                 when (effect) {
-                    is PermissionsSideEffect.RequestPermissions      ->
+                    is PermissionsSideEffect.RequestPermissions ->
                         requestMultiplePermissions?.launch(effect.permissions.toTypedArray())
 
                     is PermissionsSideEffect.LaunchSpecialPermission ->
@@ -390,7 +364,7 @@ class ComposeMainActivity : MetroAppCompatActivity() {
                                     permissionsSnackbarHostState.showSnackbar(getString(app.aaps.plugins.configuration.R.string.alert_dialog_permission_battery_optimization_failed))
                                 }
 
-                            effect.group.permissions.contains(PluginPermissionsImpl.PERMISSION_SELECT_DIRECTORY)                  ->
+                            effect.group.permissions.contains(PluginPermissionsImpl.PERMISSION_SELECT_DIRECTORY)        ->
                                 try {
                                     accessTree?.launch(null)
                                 } catch (_: Exception) {
@@ -414,14 +388,14 @@ class ComposeMainActivity : MetroAppCompatActivity() {
                                     }
                                 )
 
-                            effect.group.permissions.contains(PluginPermissionsImpl.PERMISSION_NOTIFICATION_LISTENER)             ->
+                            effect.group.permissions.contains(PluginPermissionsImpl.PERMISSION_NOTIFICATION_LISTENER)   ->
                                 startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
                         }
 
-                    is PermissionsSideEffect.ShowError               ->
+                    is PermissionsSideEffect.ShowError ->
                         permissionsSnackbarHostState.showSnackbar(effect.message)
 
-                    is PermissionsSideEffect.PermanentlyDenied       -> {
+                    is PermissionsSideEffect.PermanentlyDenied -> {
                         val result = permissionsSnackbarHostState.showSnackbar(
                             message = getString(app.aaps.ui.R.string.permission_denied_go_to_settings),
                             actionLabel = getString(app.aaps.ui.R.string.permission_open_settings),
@@ -488,7 +462,7 @@ class ComposeMainActivity : MetroAppCompatActivity() {
                 onShowDeliveryError = { comment, title ->
                     uiInteraction.runAlarm(comment, rh.gs(title), AlarmSound.BOLUS_ERROR)
                 },
-                withProtection = { protection, action -> withProtection(protection, action) },
+                withProtection = { protection, action -> navigator(navController).guarded(protection, action) },
                 requestEditModeAuthorization = { onGranted ->
                     protectionCheck.requestAuthorization(ProtectionCheck.Protection.PREFERENCES) { result ->
                         if (result.grantedLevel != null) onGranted()
@@ -694,72 +668,45 @@ class ComposeMainActivity : MetroAppCompatActivity() {
         }
     }
 
-    private fun handleNotificationAction(notificationId: NotificationId, navController: NavController) {
-        when (notificationId) {
-            NotificationId.IDENTIFICATION_NOT_SET  ->
-                navController.navigate(AppRoute.PreferenceScreen.createRoute("data_choice_setting", StringKey.MaintenanceIdentification.key))
+    /**
+     * The shared navigator, built with the four actions only Android can perform.
+     *
+     * The mapping from an element, a search result, a notification or a quick launch tile to a
+     * route lives in `:appshell` so every platform behaves the same; what differs is opening a CGM
+     * app, opening a browser, launching the directory picker and finishing the activity.
+     */
+    private fun navigator(navController: NavController) = ElementNavigator(
+        navController = navController,
+        mainViewModel = mainViewModel,
+        activePlugin = activePlugin,
+        protectionCheck = protectionCheck,
+        configBuilder = configBuilder,
+        dexcomBoyda = dexcomBoyda,
+        onOpenCgmApp = { packageName -> openCgmApp(packageName) },
+        onExit = { finish() },
+        onRequestDirectoryAccess = {
+            try {
+                accessTree?.launch(null)
+            } catch (_: Exception) {
+            }
+        },
+        onOpenUrl = { url -> startActivity(Intent(Intent.ACTION_VIEW, url.toUri())) }
+    )
 
-            NotificationId.MASTER_PASSWORD_NOT_SET ->
-                navController.navigate(AppRoute.PreferenceScreen.createRoute("protection", StringKey.ProtectionMasterPassword.key))
-
-            NotificationId.AAPS_DIR_NOT_SELECTED   ->
-                try {
-                    accessTree?.launch(null)
-                } catch (_: Exception) {
-                }
-
-            else                                   -> Unit
-        }
+    private fun handleNavigationRequest(request: NavigationRequest, navController: NavController) {
+        navigator(navController).handleNavigationRequest(request)
     }
 
     private fun handleQuickLaunchAction(action: QuickLaunchAction, navController: NavController) {
-        when (action) {
-            is QuickLaunchAction.StaticAction      -> handleNavigationRequest(NavigationRequest.Element(action.elementType), navController)
-
-            // Dynamic actions — execution-based, not navigation
-            is QuickLaunchAction.QuickWizardAction -> withProtection(ElementType.QUICK_WIZARD.protection) {
-                mainViewModel.executeQuickWizard(action.guid)
-            }
-
-            is QuickLaunchAction.AutomationAction  -> mainViewModel.requestAutomationConfirmation(action.automationId)
-
-            is QuickLaunchAction.TempTargetPreset  -> withProtection(ElementType.TEMP_TARGET_MANAGEMENT.protection) {
-                mainViewModel.requestTempTargetPresetConfirmation(action.presetId)
-            }
-
-            is QuickLaunchAction.ProfileAction     -> withProtection(ProtectionCheck.Protection.BOLUS) {
-                mainViewModel.requestProfileConfirmation(action.profileName, action.percentage, action.durationMinutes)
-            }
-
-            is QuickLaunchAction.SceneAction       -> withProtection(ElementType.SCENE.protection) {
-                mainViewModel.requestSceneConfirmation(action.sceneId)
-            }
-
-            is QuickLaunchAction.PluginAction      -> {
-                val pluginIndex = activePlugin.getPluginsList().indexOfFirst { it.javaClass.simpleName == action.className }
-                if (pluginIndex >= 0) navController.navigate(AppRoute.PluginContent.createRoute(pluginIndex))
-            }
-        }
+        navigator(navController).handleQuickLaunchAction(action)
     }
 
-    /**
-     * Routes a navigation request through the shared mapping in `:appshell`.
-     *
-     * The mapping itself moved there so that every platform gets a drawer that works; only the two
-     * genuinely Android actions stay here.
-     */
-    private fun handleNavigationRequest(request: NavigationRequest, navController: NavController) {
-        handleNavigationRequest(
-            request = request,
-            navController = navController,
-            mainViewModel = mainViewModel,
-            activePlugin = activePlugin,
-            protectionCheck = protectionCheck,
-            configBuilder = configBuilder,
-            dexcomBoyda = dexcomBoyda,
-            onOpenCgmApp = { packageName -> openCgmApp(packageName) },
-            onExit = { finish() }
-        )
+    private fun handleNotificationAction(notificationId: NotificationId, navController: NavController) {
+        navigator(navController).handleNotificationAction(notificationId)
+    }
+
+    private fun handleSearchResultClick(entry: SearchIndexEntry, navController: NavController) {
+        navigator(navController).handleSearchResultClick(entry)
     }
 
     private fun openCgmApp(packageName: String) {
@@ -782,47 +729,6 @@ class ComposeMainActivity : MetroAppCompatActivity() {
      * Execute [action] after verifying protection level.
      * Protection level is defined once in [ElementType] — no manual lookup needed at call sites.
      */
-    private fun withProtection(protection: ProtectionCheck.Protection, action: () -> Unit) {
-        when (protection) {
-            ProtectionCheck.Protection.NONE        -> action()
-            ProtectionCheck.Protection.BOLUS,
-            ProtectionCheck.Protection.APPLICATION,
-            ProtectionCheck.Protection.MASTER,
-            ProtectionCheck.Protection.PREFERENCES -> protectionCheck.requestProtection(protection) { result ->
-                if (result == ProtectionResult.GRANTED) action()
-            }
-        }
-    }
-
-    private fun handleSearchResultClick(entry: SearchIndexEntry, navController: NavController) {
-        // Keep search active so user can return to results with back button
-
-        when (val item = entry.item) {
-            is SearchableItem.Category   -> withProtection(ProtectionCheck.Protection.PREFERENCES) {
-                navController.navigate(AppRoute.PreferenceScreen.createRoute(item.screenDef.key))
-            }
-
-            is SearchableItem.Preference -> withProtection(ProtectionCheck.Protection.PREFERENCES) {
-                val screenKey = item.parentScreenKey
-                if (screenKey != null) {
-                    navController.navigate(AppRoute.PreferenceScreen.createRoute(screenKey, item.preferenceKey.key))
-                } else {
-                    navController.navigate(AppRoute.Preferences.route)
-                }
-            }
-
-            is SearchableItem.Dialog     -> handleNavigationRequest(NavigationRequest.Element(item.elementType), navController)
-
-            is SearchableItem.Plugin     -> {
-                openPlugin(item.pluginRef, navController!!, activePlugin)
-            }
-
-            is SearchableItem.Wiki       -> {
-                val intent = Intent(Intent.ACTION_VIEW, item.url.toUri())
-                startActivity(intent)
-            }
-        }
-    }
 
     /**
      * Navigate to an [ElementType] destination. Protection is handled by the caller.

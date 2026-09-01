@@ -21,7 +21,10 @@ import app.aaps.appshell.navigation.AppRoute
 import app.aaps.appshell.navigation.SHELL_HOME_ROUTE
 import app.aaps.appshell.navigation.ShellHomeScreen
 import app.aaps.appshell.navigation.appNavGraph
-import app.aaps.appshell.navigation.handleNavigationRequest
+import app.aaps.appshell.navigation.ElementNavigator
+import app.aaps.appshell.navigation.handleNotificationAction
+import app.aaps.appshell.navigation.handleQuickLaunchAction
+import app.aaps.appshell.navigation.handleSearchResultClick
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.objects.di.CoreObjectsGraph
@@ -149,6 +152,21 @@ private fun AapsDesktopApp(graph: DesktopAppGraph) {
             // The overview and the drawer must share one instance, or a menu action would talk to a
             // second copy of the screen it is meant to be driving.
             val mainViewModel = metroViewModel<MainViewModel>()
+
+            // The shared navigator. Everything a tap can lead to is mapped in :appshell; only the
+            // four platform actions differ, and a desktop can honour two of them properly.
+            val navigator = ElementNavigator(
+                navController = navController,
+                mainViewModel = mainViewModel,
+                activePlugin = graph.activePlugin,
+                protectionCheck = graph.protectionCheck,
+                configBuilder = graph.configBuilder,
+                dexcomBoyda = graph.dexcomBoyda,
+                onOpenCgmApp = { pkg -> logger.error(LTag.CORE, "No CGM app to open on desktop: $pkg") },
+                onExit = { logger.debug(LTag.CORE, "Exit requested from the menu") },
+                onRequestDirectoryAccess = { logger.debug(LTag.CORE, "Desktop reads its own folder; nothing to grant") },
+                onOpenUrl = { url -> graph.urlOpener.open(url) }
+            )
             val insulinManagement = metroViewModel<InsulinManagementViewModel>()
             val profileManagement = metroViewModel<ProfileManagementViewModel>()
             val profileEditor = metroViewModel<ProfileEditorViewModel>()
@@ -210,19 +228,7 @@ private fun AapsDesktopApp(graph: DesktopAppGraph) {
                     prefFileList = graph.prefsFileInfo,
                     persistenceLayer = graph.persistenceLayer,
                     visibilityContext = graph.visibilityContext,
-                    onNavigationRequest = { request, controller ->
-                        handleNavigationRequest(
-                            request = request,
-                            navController = controller,
-                            mainViewModel = mainViewModel,
-                            activePlugin = graph.activePlugin,
-                            protectionCheck = graph.protectionCheck,
-                            configBuilder = graph.configBuilder,
-                            dexcomBoyda = graph.dexcomBoyda,
-                            onOpenCgmApp = { pkg -> logger.error(LTag.CORE, "No CGM app to open on desktop: $pkg") },
-                            onExit = { logger.debug(LTag.CORE, "Exit requested") }
-                        )
-                    },
+                    onNavigationRequest = { request, _ -> navigator.handleNavigationRequest(request) },
                     onShowDeliveryError = { comment, title ->
                         logger.error(LTag.CORE, "Delivery error: ${graph.textResolver.gs(title)} - $comment")
                     },
@@ -238,7 +244,7 @@ private fun AapsDesktopApp(graph: DesktopAppGraph) {
                         onGranted()
                     },
                     onRefreshPermissions = { logger.debug(LTag.CORE, "No runtime permissions to refresh on desktop") },
-                    onExecuteQuickWizard = { guid -> logger.notWiredYet("quick wizard $guid") },
+                    onExecuteQuickWizard = { guid -> mainViewModel.executeQuickWizard(guid) },
                     onRequestDirectoryAccess = { logger.debug(LTag.CORE, "Desktop reads its own folder; no access to request") },
                     onRequestPermission = { group -> logger.notWiredYet("permission request $group") },
                     findScreenDef = { null },
@@ -268,23 +274,11 @@ private fun AapsDesktopApp(graph: DesktopAppGraph) {
                             pumpCommunicationStatus = graph.pumpCommunicationStatus,
                             appName = "AAPS",
                             authorizationFailedMessage = "Authorization failed",
-                            onNavigate = { request ->
-                                handleNavigationRequest(
-                                    request = request,
-                                    navController = navController,
-                                    mainViewModel = mainViewModel,
-                                    activePlugin = graph.activePlugin,
-                                    protectionCheck = graph.protectionCheck,
-                                    configBuilder = graph.configBuilder,
-                                    dexcomBoyda = graph.dexcomBoyda,
-                                    onOpenCgmApp = { pkg -> logger.error(LTag.CORE, "No CGM app to open on desktop: $pkg") },
-                                    onExit = { logger.debug(LTag.CORE, "Exit requested from the menu") }
-                                )
-                            },
-                            onSearchResultClick = { entry -> logger.notWiredYet("search result ${entry.englishTitle}") },
-                            onNotificationActionClick = { n -> logger.notWiredYet("notification action ${n.id}") },
-                            onQuickLaunchActionClick = { action -> logger.notWiredYet("quick launch $action") },
-                            onImportSettingsNavigate = { source -> logger.notWiredYet("import from $source") },
+                            onNavigate = { request -> navigator.handleNavigationRequest(request) },
+                            onSearchResultClick = { entry -> navigator.handleSearchResultClick(entry) },
+                            onNotificationActionClick = { n -> navigator.handleNotificationAction(n.id) },
+                            onQuickLaunchActionClick = { action -> navigator.handleQuickLaunchAction(action) },
+                            onImportSettingsNavigate = { source -> navController.navigate(AppRoute.ImportSettings.createRoute(source.name)) },
                             onDirectoryClick = { logger.debug(LTag.CORE, "Desktop reads its own folder") },
                             onLaunchBrowser = { url -> graph.urlOpener.open(url) },
                             onBringToForeground = { logger.debug(LTag.CORE, "Desktop window is already in front") },
