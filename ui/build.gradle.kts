@@ -73,6 +73,10 @@ kotlin {
                 api(libs.jetbrains.lifecycle.viewmodel.compose)
                 api(libs.jetbrains.lifecycle.runtime.compose)
                 api(libs.kotlinx.datetime)
+                implementation(libs.kotlinx.serialization.json)
+                // Ktor rather than OkHttp so the wiki search runs on every target. Same split as
+                // :core:nssdk: the engine is per platform, the code is not.
+                implementation(libs.io.ktor.client.core)
                 implementation(libs.cmp.ui.tooling.preview)
                 // A Compose Multiplatform library - it publishes iosArm64, jvm and wasm too, so the
                 // reorderable list works everywhere and does not pin a screen to Android.
@@ -83,6 +87,12 @@ kotlin {
 
         // Still Android: the widgets are RemoteViews, and Glance, WorkManager, OkHttp and the
         // activity/lifecycle integrations have no iOS side. Screens move to commonMain from here.
+        iosMain {
+            dependencies {
+                implementation(libs.io.ktor.client.darwin)
+            }
+        }
+
         androidMain {
             // Android only: the string name to R.string id map.
             kotlin.srcDir(generateUiStrings.flatMap { it.androidOutputDir })
@@ -98,7 +108,9 @@ kotlin {
                 implementation(libs.androidx.work.runtime)
                 implementation(libs.androidx.core)
 
-                api(libs.com.squareup.okhttp3.okhttp)
+                // Ktor engine for this target. Replaces the direct OkHttp dependency the wiki search
+                // used before it was ported.
+                implementation(libs.io.ktor.client.okhttp)
             }
         }
 

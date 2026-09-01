@@ -6,12 +6,18 @@ import app.aaps.core.ui.search.SearchableItem
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import io.ktor.client.HttpClient
+import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.request.get
+import io.ktor.client.request.parameter
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.isSuccess
 import kotlinx.coroutines.withContext
-import okhttp3.HttpUrl.Companion.toHttpUrl
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import org.json.JSONObject
-import java.util.concurrent.TimeUnit
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.contentOrNull
 
 /**
  * Result of a wiki search operation.
@@ -26,16 +32,25 @@ sealed class WikiSearchResult {
  * Repository for searching AndroidAPS documentation on ReadTheDocs.
  * Uses the RTD Search API v3 to query the wiki and returns results
  * as [SearchIndexEntry] items with [SearchCategory.WIKI].
+ *
+ * Ktor rather than OkHttp, and kotlinx rather than `org.json`, so the search works on every target.
+ * The response is walked as [JsonElement] instead of being mapped to serializable classes: this is a
+ * third-party API that may grow fields at any time, and the original code was written to tolerate
+ * that. Nothing here is a stored or transmitted format of ours.
  */
 @SingleIn(AppScope::class)
 class WikiSearchRepository @Inject constructor(
     private val receiverStatusStore: ReceiverStatusStore
 ) {
 
-    private val client = OkHttpClient.Builder()
-        .connectTimeout(10, TimeUnit.SECONDS)
-        .readTimeout(10, TimeUnit.SECONDS)
-        .build()
+    private val client = HttpClient {
+        install(HttpTimeout) {
+            connectTimeoutMillis = TIMEOUT_MS
+            requestTimeoutMillis = TIMEOUT_MS
+        }
+    }
+
+    private val json = Json { ignoreUnknownKeys = true }
 
     /**
      * Search the AndroidAPS wiki for the given query.
@@ -50,43 +65,41 @@ class WikiSearchRepository @Inject constructor(
 
         return withContext(aapsIoDispatcher) {
             try {
-                val url = API_URL.toHttpUrl().newBuilder()
-                    .addQueryParameter("q", "project:$PROJECT_SLUG $query")
-                    .addQueryParameter("page_size", PAGE_SIZE.toString())
-                    .build()
+                val response = client.get(API_URL) {
+                    parameter("q", "project:$PROJECT_SLUG $query")
+                    parameter("page_size", PAGE_SIZE)
+                }
+                if (!response.status.isSuccess()) return@withContext WikiSearchResult.Success(emptyList())
 
-                val request = Request.Builder().url(url).build()
-                val response = client.newCall(request).execute()
-
-                if (!response.isSuccessful) return@withContext WikiSearchResult.Success(emptyList())
-
-                val body = response.body.string()
-                WikiSearchResult.Success(parseResults(JSONObject(body)))
+                val root = json.parseToJsonElement(response.bodyAsText()) as? JsonObject
+                    ?: return@withContext WikiSearchResult.Success(emptyList())
+                WikiSearchResult.Success(parseResults(root))
             } catch (_: Exception) {
+                // Any failure is reported as "nothing found" rather than an error: the wiki is an
+                // extra on top of the local index, and a search box is a bad place for a network
+                // complaint. Same behaviour as the OkHttp version this replaced.
                 WikiSearchResult.Success(emptyList())
             }
         }
     }
 
-    private fun parseResults(json: JSONObject): List<SearchIndexEntry> {
-        val results = json.optJSONArray("results") ?: return emptyList()
+    private fun parseResults(root: JsonObject): List<SearchIndexEntry> {
+        val results = root["results"] as? JsonArray ?: return emptyList()
         val entries = mutableListOf<SearchIndexEntry>()
 
-        for (i in 0 until results.length()) {
-            val result = results.getJSONObject(i)
-            val domain = result.optString("domain", "")
-            val path = result.optString("path", "")
-            val pageTitle = result.optString("title", "")
-            val blocks = result.optJSONArray("blocks")
+        for (element in results) {
+            val result = element as? JsonObject ?: continue
+            val domain = result.str("domain")
+            val path = result.str("path")
+            val pageTitle = result.str("title")
+            val blocks = result["blocks"] as? JsonArray
 
-            if (blocks != null && blocks.length() > 0) {
+            if (blocks != null && blocks.isNotEmpty()) {
                 // Create one entry per section block for more granular results
-                for (j in 0 until blocks.length()) {
-                    val block = blocks.getJSONObject(j)
-                    val sectionId = block.optString("id", "")
-                    val sectionTitle = block.optString("title", "")
-                    val url = buildUrl(domain, path, sectionId)
-                    val title = sectionTitle.ifBlank { pageTitle }
+                for (blockElement in blocks) {
+                    val block = blockElement as? JsonObject ?: continue
+                    val url = buildUrl(domain, path, block.str("id"))
+                    val title = block.str("title").ifBlank { pageTitle }
                     val snippet = extractSnippet(block)
 
                     entries += SearchIndexEntry(
@@ -123,20 +136,23 @@ class WikiSearchRepository @Inject constructor(
         return entries
     }
 
+    /** Reads a string field, treating a missing field, a null and a non-string alike as "". */
+    private fun JsonObject.str(key: String): String = (this[key] as? JsonPrimitive)?.contentOrNull ?: ""
+
     private fun buildUrl(domain: String, path: String, anchorId: String): String {
         val base = "$domain$path"
         return if (anchorId.isNotBlank()) "$base#$anchorId" else base
     }
 
-    private fun extractSnippet(block: JSONObject): String? {
-        val highlights = block.optJSONObject("highlights") ?: return null
-        val contentHighlights = highlights.optJSONArray("content")
-        if (contentHighlights != null && contentHighlights.length() > 0) {
-            val raw = contentHighlights.getString(0)
+    private fun extractSnippet(block: JsonObject): String? {
+        val highlights = block["highlights"] as? JsonObject ?: return null
+        val contentHighlights = highlights["content"] as? JsonArray
+        if (contentHighlights != null && contentHighlights.isNotEmpty()) {
+            val raw = (contentHighlights[0] as? JsonPrimitive)?.contentOrNull ?: ""
             return stripHtmlTags(raw).take(MAX_SNIPPET_LENGTH)
         }
         // Fall back to plain content
-        val content = block.optString("content", "")
+        val content = block.str("content")
         return if (content.isNotBlank()) content.take(MAX_SNIPPET_LENGTH) else null
     }
 
@@ -150,5 +166,6 @@ class WikiSearchRepository @Inject constructor(
         private const val PAGE_SIZE = 10
         private const val MIN_QUERY_LENGTH = 3
         private const val MAX_SNIPPET_LENGTH = 150
+        private const val TIMEOUT_MS = 10_000L
     }
 }
