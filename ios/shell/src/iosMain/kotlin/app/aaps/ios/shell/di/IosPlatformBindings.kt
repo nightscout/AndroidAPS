@@ -19,7 +19,9 @@ import app.aaps.implementation.notifications.CommonNotificationManager
 import app.aaps.implementation.notifications.IosSystemNotificationPlatform
 import app.aaps.implementation.resources.GeneratedTextResolver
 import app.aaps.ios.shell.config.IosClientConfig
+import app.aaps.ios.shell.platform.IosHistoryScope
 import app.aaps.ios.shell.prefs.IosSp
+import app.aaps.ui.compose.history.HistoryScope
 import app.aaps.shared.impl.logging.LImpl
 import app.aaps.shared.impl.rx.bus.RxBusImpl
 import app.aaps.shared.impl.utils.DateUtilImpl
@@ -160,4 +162,16 @@ object IosPlatformBindings {
         prepare: Provider<PrepareGraphDataRunner>,
         post: Provider<PostCalculationRunner>
     ): CalculationExecutor = LazyCalculationExecutor(scope, logger, { prepare() }, { post() })
+
+    /**
+     * One history browsing window, app-scoped so every injection point sees the same one.
+     *
+     * Unscoped would hand out a fresh window per injection point, which quietly undoes the isolation
+     * the extension exists for: two windows calculating over different ranges, with the screen
+     * reading one and writing the other.
+     */
+    @Provides
+    @SingleIn(AppScope::class)
+    fun historyScope(windowFactory: IosHistoryWindowGraph.Factory): HistoryScope =
+        IosHistoryScope(windowFactory.create())
 }

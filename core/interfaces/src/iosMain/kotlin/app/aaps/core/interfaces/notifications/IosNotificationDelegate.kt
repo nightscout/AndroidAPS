@@ -34,6 +34,9 @@ object IosNotificationDelegate {
     /** Strong reference: the centre holds its delegate weakly. */
     private var delegate: RoutingDelegate? = null
 
+    /** Whether [install] has run. Until it has, registering only records. */
+    private var installed = false
+
     /**
      * Adds a handler and the categories it needs.
      *
@@ -46,10 +49,9 @@ object IosNotificationDelegate {
     ) {
         this.categories += categories
         handlers += handler
-        // Only reaches the notification centre when there is something to register. A test that only
-        // exercises routing passes no categories and therefore never touches UIKit, which cannot be
-        // reached from a test binary anyway.
-        if (categories.isNotEmpty()) install()
+        // Recorded only. Attaching to the notification centre is [install], which the app calls once
+        // at start up - see there for why registering must not do it.
+        if (installed) install()
     }
 
     /**
@@ -67,9 +69,28 @@ object IosNotificationDelegate {
         handlers.clear()
         categories.clear()
         delegate = null
+        installed = false
     }
 
-    private fun install() {
+    /**
+     * Attaches to the real notification centre: publishes the categories and claims the delegate slot.
+     *
+     * Called once from app start up, and deliberately **not** from [register].
+     *
+     * `UNUserNotificationCenter.currentNotificationCenter()` needs a real app bundle and throws
+     * `bundleProxyForCurrentProcess is nil` without one. Registering used to attach immediately, which
+     * meant simply *building the object graph* touched UIKit - `CommonNotificationManager` calls
+     * `onDismissed` while it is being constructed, and that registers a category. The whole graph
+     * therefore could not be created in a test binary, which is how this was found: a test of history
+     * window scoping died on a notification API it never meant to use.
+     *
+     * Separating the two is also the better shape. Declaring what a category is, and claiming a
+     * process-wide delegate slot, are different acts and only one of them needs an app.
+     *
+     * Registrations that arrive after this has run attach straight away, so ordering does not matter.
+     */
+    fun install() {
+        installed = true
         val center = UNUserNotificationCenter.currentNotificationCenter()
         center.setNotificationCategories(categories)
         if (delegate == null) {

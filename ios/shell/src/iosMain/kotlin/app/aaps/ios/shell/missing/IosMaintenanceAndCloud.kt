@@ -7,19 +7,19 @@ import app.aaps.core.interfaces.maintenance.CloudDirectoryInfo
 import app.aaps.core.interfaces.maintenance.CloudDirectoryManager
 import app.aaps.core.interfaces.maintenance.ExportResult
 import app.aaps.core.interfaces.maintenance.Maintenance
-import app.aaps.ui.activityMonitor.ActivityStats
-import app.aaps.ui.activityMonitor.ActivityStatsProvider
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 
 /*
- * Maintenance, cloud export and screen usage statistics.
+ * Maintenance and cloud export.
  *
- * All three sit on top of things iOS has no version of yet - the log directory and mail composer,
- * Google Drive through its Android SDK, and an `Application.ActivityLifecycleCallbacks` collector -
- * so all three report "nothing here" rather than guessing.
+ * Both sit on top of things iOS has no version of yet - the log directory and mail composer, and
+ * Google Drive through its Android SDK - so both report "nothing here" rather than guessing.
+ *
+ * Screen usage statistics used to be here too. They moved to `platform` because a client is not
+ * meant to collect them at all, which makes an empty answer correct rather than unfinished.
  */
 
 /** Sending logs needs a log directory and a mail composer; neither is wired up on iOS. */
@@ -93,26 +93,4 @@ class IosCloudDirectoryManager @Inject constructor(
         aapsLogger.notOnIosYet("CloudDirectoryManager.setupCloudStorage")
         return false
     }
-}
-
-/**
- * Which screens the user has opened and for how long.
- *
- * The collector half is an `Application.ActivityLifecycleCallbacks` on Android and cannot be shared;
- * `ActivityStatsProvider` is the reading half, split out so the statistics screen could move to
- * commonMain. iOS has no collector, so there is nothing to read - the screen shows an empty table,
- * which is accurate rather than broken.
- */
-@SingleIn(AppScope::class)
-@ContributesBinding(AppScope::class)
-class IosActivityStatsProvider @Inject constructor(
-    private val aapsLogger: AAPSLogger
-) : ActivityStatsProvider {
-
-    override fun getActivityStats(): List<ActivityStats> {
-        aapsLogger.notOnIosYet("ActivityStatsProvider.getActivityStats - nothing collects these on iOS")
-        return emptyList()
-    }
-
-    override fun reset() = aapsLogger.notOnIosYet("ActivityStatsProvider.reset")
 }

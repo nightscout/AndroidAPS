@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.maintenance.PrefsFileInfo
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginPermissions
@@ -85,6 +86,21 @@ interface IosAppGraph : MetroViewModelMultibindings {
     val prefsFileInfo: PrefsFileInfo
     val persistenceLayer: PersistenceLayer
     val logger: AAPSLogger
+
+    /**
+     * The factory for a history browsing window.
+     *
+     * Declared here rather than discovered: a `@GraphExtension` is only reachable through an
+     * accessor its parent graph states, the same way `AppRootGraph` states this one. Without it the
+     * factory looks like an ordinary missing binding, which is exactly how it first failed.
+     *
+     * Each window it creates is a separate scope with its own calculation objects - see
+     * [IosHistoryWindowGraph] for why that matters.
+     */
+    val historyWindowFactory: IosHistoryWindowGraph.Factory
+
+    /** The loop's own calculator and cache, exposed so a test can prove a window does not share them. */
+    val iobCobCalculator: IobCobCalculator
 
     /**
      * The plugin registry itself, not just the [ActivePlugin] view of it.

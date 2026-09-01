@@ -19,6 +19,7 @@ import app.aaps.appshell.navigation.AppRoute
 import app.aaps.appshell.navigation.appNavGraph
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.IosNotificationDelegate
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.objects.di.CoreObjectsGraph
@@ -79,6 +80,12 @@ fun aapsAppViewController(): UIViewController {
     // Before the composition, not beside it: the first view model built reads the active pump, and
     // an empty plugin list there throws from a coroutine and takes the process with it.
     IosAppStartup(logger, PluginStoreRegistry(graph.pluginStore), graph.contributedPlugins).run()
+
+    // Attach to the notification centre. Registering a category only records it now, so that building
+    // the graph does not need an app bundle - see `IosNotificationDelegate.install`. It is done here
+    // rather than in `IosAppStartup` because only the real app reaches this function: startup is unit
+    // tested, and `currentNotificationCenter()` cannot be called from a test binary.
+    IosNotificationDelegate.install()
     logger.debug(LTag.CORE, "Starting the AAPS Compose root on iOS")
 
     return ComposeUIViewController {
