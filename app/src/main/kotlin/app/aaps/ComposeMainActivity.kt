@@ -825,8 +825,8 @@ class ComposeMainActivity : MetroAppCompatActivity() {
                 persistenceLayer = persistenceLayer,
                 visibilityContext = visibilityContext,
                 onNavigationRequest = { request, nc -> handleNavigationRequest(request, nc) },
-                onShowDeliveryError = { comment, titleResId ->
-                    uiInteraction.runAlarm(comment, rh.gs(titleResId), AlarmSound.BOLUS_ERROR)
+                onShowDeliveryError = { comment, title ->
+                    uiInteraction.runAlarm(comment, rh.gs(title), AlarmSound.BOLUS_ERROR)
                 },
                 withProtection = { protection, action -> withProtection(protection, action) },
                 requestEditModeAuthorization = { onGranted ->
