@@ -104,8 +104,9 @@ import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.MetroAppCompatActivity
 import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
-import app.aaps.core.ui.compose.ProtectionHost
 import app.aaps.core.ui.compose.ScreenMode
+import androidx.activity.compose.LocalActivity
+import androidx.fragment.app.FragmentActivity
 import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -295,6 +296,10 @@ class ComposeMainActivity : MetroAppCompatActivity() {
 
     @Composable
     private fun MainContent() {
+        // LocalActivity, not a cast of LocalContext: that context is usually a ContextWrapper, where
+        // `as? FragmentActivity` is null - and then the biometric prompt cannot be shown at all.
+        // Read here so the prompt lambdas below can capture it; the shared host no longer takes one.
+        val activity = LocalActivity.current as? FragmentActivity
         AapsAppRoot(
             config = config,
             preferences = preferences,
@@ -303,6 +308,18 @@ class ComposeMainActivity : MetroAppCompatActivity() {
             profileUtil = profileUtil,
             passwordHasher = cryptoUtil,
             passwordCheck = passwordCheck,
+            protectionCheck = protectionCheck,
+            // The biometric prompt is the only platform-specific part of protection. The host used
+            // to be handed the activity; it captures it here instead, which is what let the host
+            // itself move to commonMain.
+            showBiometric = { title, onGranted, onCancelled, onDenied ->
+                if (activity != null) BiometricCheck.biometricPrompt(activity, title, rxBus, onGranted, onCancelled, onDenied, passwordCheck)
+                else onCancelled()
+            },
+            showBiometricSimple = { title, onSuccess, onFallback, onCancel ->
+                if (activity != null) BiometricCheck.biometricPromptSimple(activity, title, rxBus, onSuccess, onFallback, onCancel)
+                else onFallback()
+            },
             exportPasswordDataStore = exportPasswordDataStore,
             visibilityContext = visibilityContext,
             nsClient = nsClient,
@@ -343,19 +360,6 @@ class ComposeMainActivity : MetroAppCompatActivity() {
                 }
             }
         }
-
-        // Protection dialog host - handles all protection requests
-        ProtectionHost(
-            protectionCheck = protectionCheck,
-            preferences = preferences,
-            checkPassword = cryptoUtil::checkPassword,
-            showBiometric = { activity, title, onGranted, onCancelled, onDenied ->
-                BiometricCheck.biometricPrompt(activity, title, rxBus, onGranted, onCancelled, onDenied, passwordCheck)
-            },
-            showBiometricSimple = { activity, title, onSuccess, onFallback, onCancel ->
-                BiometricCheck.biometricPromptSimple(activity, title, rxBus, onSuccess, onFallback, onCancel)
-            }
-        )
 
         // Permissions bottom sheet
         val permState by permissionsViewModel.uiState.collectAsStateWithLifecycle()

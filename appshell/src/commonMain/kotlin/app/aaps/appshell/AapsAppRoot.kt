@@ -39,6 +39,7 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.protection.PasswordHasher
+import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.DateUtil
@@ -58,6 +59,7 @@ import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.dialogs.GlobalDialogHost
 import app.aaps.core.ui.compose.dialogs.GlobalSnackbarHost
+import app.aaps.core.ui.compose.ProtectionHost
 import app.aaps.core.ui.compose.dialogs.PasswordCheckHost
 import app.aaps.core.ui.compose.preference.LocalCheckPassword
 import app.aaps.core.ui.compose.preference.LocalClearExportPasswordStore
@@ -94,6 +96,11 @@ fun AapsAppRoot(
     profileUtil: ProfileUtil,
     passwordHasher: PasswordHasher,
     passwordCheck: PasswordCheck,
+    protectionCheck: ProtectionCheck,
+    showBiometric: (title: String, onGranted: () -> Unit, onCancelled: () -> Unit, onDenied: () -> Unit) -> Unit =
+        { _, _, onCancelled, _ -> onCancelled() },
+    showBiometricSimple: (title: String, onSuccess: () -> Unit, onFallback: () -> Unit, onCancel: () -> Unit) -> Unit =
+        { _, _, onFallback, _ -> onFallback() },
     exportPasswordDataStore: ExportPasswordDataStore,
     visibilityContext: VisibilityContext,
     nsClient: NsClient,
@@ -179,6 +186,17 @@ fun AapsAppRoot(
                     // Root-level password prompt. Any caller can ask for a password from plain
                     // Kotlin; the dialog appears here, so PasswordCheck needs no Context.
                     PasswordCheckHost(passwordCheck = passwordCheck)
+
+                    // Root-level protection prompt, for the same reason. ProtectionCheck publishes
+                    // a request and waits for an answer, so a platform without this host would
+                    // leave every protected action waiting rather than granting or refusing it.
+                    ProtectionHost(
+                        protectionCheck = protectionCheck,
+                        preferences = preferences,
+                        checkPassword = passwordHasher::checkPassword,
+                        showBiometric = showBiometric,
+                        showBiometricSimple = showBiometricSimple
+                    )
 
                     // The single app-level pending modal for ANY client-control round-trip
                     // (insulin / scenes / synced-preference edits). Hosted once here, feature-

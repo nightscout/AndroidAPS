@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.protection.PasswordHasher
+import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sync.NsClient
@@ -63,6 +64,13 @@ interface IosAppGraph : MetroViewModelMultibindings {
     val profileUtil: ProfileUtil
     val passwordHasher: PasswordHasher
     val passwordCheck: PasswordCheck
+
+    /**
+     * Real protection now, not the placeholder that granted everything.
+     * `ProtectionCheckImpl` moved to commonMain, and `AapsAppRoot` places `ProtectionHost`, so the
+     * request published here is rendered rather than left waiting.
+     */
+    val protectionCheck: ProtectionCheck
     val exportPasswordDataStore: ExportPasswordDataStore
     val visibilityContext: VisibilityContext
     val nsClient: NsClient

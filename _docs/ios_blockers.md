@@ -785,7 +785,35 @@ Both are timing-sensitive tests in pump drivers. The cost is not the runs themse
 red gate stops meaning "you broke something", and the next real failure gets waved through.
 
 
-## Request: `ProtectionCheckImpl` can move too - but not on its own
+## DONE (both halves): `ProtectionCheckImpl` can move too - but not on its own
+
+**Both halves landed together, so the hang you warned about never exists.** Your reasoning was right
+and the warning was the important part of the request.
+
+1. `ProtectionCheckImpl` is in `implementation/src/commonMain/.../protection/`. One correction to the
+   survey: it does **not** have "no Android imports at all" - the import list is clean, but it used
+   `app.aaps.core.ui.R.string.*` fully qualified inline in six places, exactly the trap recorded
+   further up this file. They are now `CoreUiStrings` values, so `title` is a real `TextRef` instead
+   of `TextRef.AndroidRes(id)` - which also means the prompt title renders as words on iOS rather
+   than `res:2131…`. `@Volatile` needed `kotlin.concurrent.Volatile`; `AtomicLong` was already the
+   multiplatform one.
+2. `ProtectionHost` is in `core/ui/src/commonMain/.../compose/`, and **`AapsAppRoot` places it**
+   beside `PasswordCheckHost`. Your read of `FragmentActivity` was exactly right: it was only used to
+   root the prompt, so it came out of the lambda types and `ComposeMainActivity` captures the
+   activity itself. The host is otherwise unchanged.
+
+`IosProtectionCheck` is deleted, `IosAppGraph` exposes `protectionCheck`, and `AapsAppHost` passes it
+to `AapsAppRoot`. `:ios:shell:compileKotlinIosArm64` is green.
+
+**What iOS gets without doing anything:** password and PIN protection, working properly. The
+biometric lambdas are parameters of `AapsAppRoot` with defaults - `showBiometricSimple` falls back to
+the credential dialog, and `showBiometric` cancels. So a platform with no biometric prompt asks for a
+password instead of granting access, and never silently succeeds.
+
+**What is still yours:** pass an `LAContext` prompt into `AapsAppRoot` as `showBiometric` /
+`showBiometricSimple` when you want Face ID. Nothing breaks until then; it just falls back.
+
+Desktop takes the defaults deliberately - there is no OS prompt worth wiring for a follower window.
 
 `PasswordCheckImpl` moving to commonMain unblocked the class above it, and the same reading applies:
 `ProtectionCheckImpl` (`implementation/src/androidMain/.../protection/`, 317 lines) has **no Android

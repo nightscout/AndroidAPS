@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.protection.ProtectionRequest
 import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.protection.ProtectionType
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -20,6 +21,7 @@ import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlin.concurrent.Volatile
 import kotlin.concurrent.atomics.AtomicLong
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.time.Duration.Companion.seconds
@@ -63,15 +65,15 @@ class ProtectionCheckImpl @Inject constructor(
     )
 
     private val titlePassKeys = mapOf(
-        ProtectionCheck.Protection.PREFERENCES to app.aaps.core.ui.R.string.settings_password,
-        ProtectionCheck.Protection.APPLICATION to app.aaps.core.ui.R.string.application_password,
-        ProtectionCheck.Protection.BOLUS to app.aaps.core.ui.R.string.bolus_password
+        ProtectionCheck.Protection.PREFERENCES to CoreUiStrings.settings_password,
+        ProtectionCheck.Protection.APPLICATION to CoreUiStrings.application_password,
+        ProtectionCheck.Protection.BOLUS to CoreUiStrings.bolus_password
     )
 
     private val titlePinKeys = mapOf(
-        ProtectionCheck.Protection.PREFERENCES to app.aaps.core.ui.R.string.settings_pin,
-        ProtectionCheck.Protection.APPLICATION to app.aaps.core.ui.R.string.application_pin,
-        ProtectionCheck.Protection.BOLUS to app.aaps.core.ui.R.string.bolus_pin
+        ProtectionCheck.Protection.PREFERENCES to CoreUiStrings.settings_pin,
+        ProtectionCheck.Protection.APPLICATION to CoreUiStrings.application_pin,
+        ProtectionCheck.Protection.BOLUS to CoreUiStrings.bolus_pin
     )
 
     // --- Helpers ---
@@ -289,15 +291,15 @@ class ProtectionCheckImpl @Inject constructor(
 
         // Emit legacy request for ProtectionHost
         val titleRes = when (type) {
-            ProtectionType.CUSTOM_PIN -> titlePinKeys[protection] ?: app.aaps.core.ui.R.string.settings_pin
-            else                      -> titlePassKeys[protection] ?: app.aaps.core.ui.R.string.settings_password
+            ProtectionType.CUSTOM_PIN -> titlePinKeys[protection] ?: CoreUiStrings.settings_pin
+            else                      -> titlePassKeys[protection] ?: CoreUiStrings.settings_password
         }
 
         _pendingRequest.value = ProtectionRequest(
             id = requestIdCounter.addAndFetch(1L),
             protection = protection,
             type = type,
-            title = TextRef.AndroidRes(titleRes),
+            title = titleRes,
             onResult = { result ->
                 if (result == ProtectionResult.GRANTED) onGranted(protection)
                 _pendingRequest.value = null

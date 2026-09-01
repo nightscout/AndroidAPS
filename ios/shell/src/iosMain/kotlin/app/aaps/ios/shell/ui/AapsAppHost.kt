@@ -82,6 +82,7 @@ fun aapsAppViewController(): UIViewController {
                 profileUtil = graph.profileUtil,
                 passwordHasher = graph.passwordHasher,
                 passwordCheck = graph.passwordCheck,
+                protectionCheck = graph.protectionCheck,
                 exportPasswordDataStore = graph.exportPasswordDataStore,
                 visibilityContext = graph.visibilityContext,
                 nsClient = graph.nsClient,
