@@ -854,7 +854,7 @@ Until both halves exist, `IosProtectionCheck` stays as it is and stays documente
 can reach a pump.
 
 
-## Request: move `formatTemplate` so format strings work off Android
+## DONE (see below): move `formatTemplate` so format strings work off Android
 
 The one part of the strings work still missing, and it is now the only reason a label on iOS or
 desktop can still look wrong. Raised before as a note inside another section; promoting it, because

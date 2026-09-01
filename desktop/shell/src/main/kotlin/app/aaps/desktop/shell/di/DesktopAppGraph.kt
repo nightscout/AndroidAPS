@@ -22,9 +22,16 @@ import dev.zacsweers.metro.SingleIn
  *
  * The shell depends on the same 26 modules `:ios:shell` does, so every plugin that registers itself
  * with `@ContributesBinding` is already in the graph, and the classes in `app.aaps.desktop.shell.platform`
- * answer the platform half. Measured at **3**, down from 32:
+ * answer the platform half. Measured at **2**, down from 32:
  *
- * **Implementable, and the next work:** `ImportExportPrefs`, which is file dialogs.
+ * **`ImportExportPrefs`** is bigger than "file dialogs": `ImportExportPrefsImpl` is 911 lines over
+ * `DocumentFile` and WorkManager, and the format underneath it, `EncryptedPrefsFormat`, is another
+ * 296 over `Context`, `DocumentFile` and `org.json`. That format is what a phone reads back, so it
+ * cannot be reimplemented here - it has to be ported, with the care a stored encrypted format wants.
+ *
+ * **`Autotune`** needs its plugin ported out of androidMain: about 2,700 lines of arithmetic whose
+ * only Android parts are `Calendar`/`TimeZone` and a file dump, but it computes basal, ISF and ICR,
+ * so the date maths wants golden vectors rather than a quick swap.
  *
  * Nightscout sync is done and needs no websocket: `DesktopNsConnection` reports that this platform
  * has none, and the plugin's refresh tick then polls the same REST round a phone runs, through
