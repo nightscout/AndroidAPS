@@ -231,39 +231,68 @@ Collected so nobody pays for them twice. All were found by tests or a crash, not
 
 ## Open
 
-### Twelve bindings stand between the NS client and iOS
+### Six bindings stand between the NS client and iOS
 
-Measured with the probe procedure above. `StoreDataForDb`, `NSAlarmObject`, `ReceiverStatusStore`,
-`SecureEncrypt`, `SceneExpiryScheduler`, `SmsCommunicator`, `CalculationExecutor` and `Loop` have all
-been cleared since this list was first written; `IosNsConnection` itself is written and compiling.
+Re-measured with the probe procedure above, against the current tree. The earlier list of twelve was
+out of date in both directions - some entries had been cleared, and two of the claims in it were
+wrong. What is actually left:
 
-`DeviceStatusJson` is off the list for a different reason: the port was deleted rather than
-implemented. `LoopPlugin` renders that JSON with kotlinx directly now, so there is no binding left
-to satisfy - do not go looking for `AndroidDeviceStatusJson`.
+| Missing binding | Whose | Note |
+|---|---|---|
+| `Autotune` | yours | 3 methods, but the Android class is portable Kotlin computation, not platform. Worth porting rather than stubbing - a no-op would quietly do nothing when a user runs it. |
+| `ExportPasswordDataStore` | yours | see the request section above |
+| `ImportExportPrefs` | yours | 37 methods, document picker on both sides |
+| `IobCobCalculator` | yours | still needs a home outside `:app` |
+| `UiInteraction` | shared | the interface is in commonMain already; only `UiInteractionImpl` is in `:app`. The iOS side is ours and is being written - see below. |
+| `NsSocketFactory` | ours | wiring only, see the gaps section |
 
-`Automation` is unblocked but not cleared. `AutomationRuntime` and the whole automation Compose UI
-are in commonMain and compile for iOS, so the class itself is no longer in the way. The binding still
-does not resolve, because three of its constructor dependencies are Android-only with no iOS side
-yet: `LocationServiceController` (`LocationServiceControllerImpl`), `LocationPermissions`
-(`AndroidLocationPermissions`) and `ReminderScheduler` (`ReminderSchedulerImpl`). Those three are the
-remaining work, and each is far smaller than the class that used to be the obstacle.
+**Correction to what this section used to say.** It listed `BolusWizard`, `QuickWizard`,
+`RunningModeGuard`, `L` and `BolusProgressData` as having "no Kotlin implementation anywhere, and
+worth questioning rather than porting", and suggested the NS client was dragging in the loop. That
+was wrong on both counts and should not be acted on:
 
-**Has an Android implementation to lift or port** - your side:
-`LoopNotifier` (`AndroidLoopNotifier`), `WidgetUpdater` (`WidgetUpdaterImpl`), and `UiInteraction`,
-which currently lives in `:app` and so needs somewhere to go first.
+- `BolusWizard`, `QuickWizard` and `RunningModeGuard` were never missing. They are built by
+  `CoreObjectsGraph`, which is a `@BindingContainer`, so its `@Provides` are invisible to a graph
+  that does not include it. The probe did not, and they looked absent. Including it cleared all
+  three at once.
+- `L` and `BolusProgressData` needed no new code either, only a `@Provides` each. `LImpl` is already
+  in `shared/impl` commonMain, and `BolusProgressData` is a commonMain class that carries no
+  annotations on purpose. Both are stated in `IosProbeGraph` now.
 
-**Ours, and only wiring:** `NsSocketFactory` - see the note in the gaps section.
+Only `IobCobCalculator` from that group is real, and it is a packaging problem rather than a missing
+implementation.
 
-**No Kotlin implementation anywhere, and worth questioning rather than porting:**
-`BolusWizard`, `BolusProgressData`, `QuickWizard`, `IobCobCalculator`, `RunningModeGuard`, `L`.
+`Automation` is separately blocked, by five of the six above: `Autotune`, `ExportPasswordDataStore`,
+`ImportExportPrefs`, `IobCobCalculator` and `UiInteraction`. Its own three former blockers -
+`LocationServiceController`, `LocationPermissions`, `ReminderScheduler` - are all cleared.
 
-That last group is the interesting one. A Nightscout **connection** should not need the bolus wizard,
-the quick wizard or the IOB/COB calculator bound, and `DeviceStatusJson` and `LoopNotifier` only
-appeared once `Loop` resolved - so the graph is walking into loop territory by way of
-`NSClientV3Plugin` rather than anything the connection touches. Before implementing six more classes
-it is worth checking whether the plugin can take them lazily, the way `AapsLeaves` does on Android
-with `Provider`. A follower client that has to construct the loop to sync Nightscout data is carrying
-weight it does not use.
+### Three dependency cycles, and why Android never sees them
+
+Worth knowing, because each one is a place where Android's platform machinery is quietly acting as
+an injection boundary and iOS has nothing in that role. All three are fixed on the iOS side with a
+`Provider`, the same tool `TriggerFactory` already uses in commonMain.
+
+1. `IosLoopNotifier` → `Loop` → `LoopPlugin` → `LoopNotifier`. `AndroidLoopNotifier` never names
+   `Loop`: it reaches the loop through a broadcast receiver and an intent, so the edge does not exist
+   on that side.
+2. `CoroutineNsLoadExecutor` → the nine load runners → `NSClientV3Plugin` → `NsLoadExecutor`. On
+   Android the runners are WorkManager workers, built by WorkManager rather than by the graph, so
+   they are not graph nodes at all.
+3. `IosNsConnection` → `NsIncomingDataProcessor` → `NsClient` → `NsConnection`. `ServiceNsConnection`
+   avoids it by holding no such dependency: the socket work lives in `NSClientV3Service`, an Android
+   service the system constructs.
+
+The pattern is the same each time, and it is worth expecting more of them as further plugins reach
+iOS. Anywhere Android hands construction to the framework - a `Service`, a `BroadcastReceiver`, a
+`Worker` - the cycle is real in the object graph and only hidden by who does the building.
+
+### `BtConnectionSource` no longer needs an iOS class
+
+`IosBtConnectionSource` is deleted. Once `AutomationRuntime` moved to commonMain it began
+contributing `BtConnectionSource` itself, which made two bindings on iOS and failed the graph. The
+shared one already gives the right answer there: its buffer is filled from `EventBTChange` on the
+bus, and nothing posts that event on iOS, so the list stays empty without a second class to keep in
+step. The behaviour is unchanged and still documented in the gaps section.
 
 ## Ready for Android: what the iOS side has built
 
@@ -381,7 +410,200 @@ Not blockers, and not for the Windows session to fix. Listed so nobody is surpri
   has it (`screenshotsBlocked` in `AuthorizedClientsScreen`); it just has nowhere to show it yet, and
   choosing that wording is a product decision rather than a porting one.
 
+- **The word "exported" is missing from the export date on iOS.** `IosPrefsFileInfo.formatExportedAgo`
+  returns "3 days ago" where Android says "exported 3 days ago". The relative wording itself comes
+  from `NSRelativeDateTimeFormatter`, which the system localizes on its own, but the surrounding word
+  is one of AAPS's own strings (`exported_ago`, `exported_at`, `exported_less_than_hour_ago`) and iOS
+  still has no reader for those. The label sits next to a calendar icon on a row about an export, so
+  it reads, but it should be wrapped once app strings can be read on iOS. Both platforms switch from
+  relative wording to a plain date at the same age - 60 days - so only the prefix differs.
+- **`IosLocationPermissions` returns an empty list on purpose.** `PermissionGroup.permissions` holds
+  Android `Manifest.permission` strings and iOS has no equivalent: location is asked for at the point
+  of use by `CLLocationManager`. `AutomationRuntime` therefore reports nothing missing on iOS, which
+  is correct rather than unfinished. The permission is still requested, by
+  `IosLocationServiceController`.
+
+
+## Request: `ExportPasswordDataStore` needs the same treatment the other big ones got
+
+`ExportPasswordDataStoreImpl` (`implementation/src/androidMain/.../protection/`) is the last small
+looking blocker that is not small. The interface is four methods, but the implementation is ~300
+lines and almost none of what it does is Android:
+
+- the validity window and the grace period (`isInValidityWindow`, the half window rule),
+- resetting the password once the window has passed,
+- the master password cross check - decrypt the stored secret through `SecureEncrypt` and compare it
+  with `StringKey.ProtectionMasterPassword` through `CryptoUtil`, clearing the store when it no
+  longer matches.
+
+Only the storage is Android: Jetpack DataStore, plus `KEYSTORE_ALIAS`. Writing an iOS copy would
+duplicate every rule above, which is exactly the failure mode the notification registry avoided.
+
+The ask is the shape that already worked twice: move the logic to `commonMain` behind a small
+storage port - something like `fun read(): Pair<String, Long>?` / `fun write(password: String,
+timestamp: Long)` / `fun clear()` - and leave the platform side to supply it. `SecureEncrypt`,
+`CryptoUtil` and `Preferences` all resolve on iOS already, so nothing else stands in the way.
+
+The iOS half is then a few lines and already has its parts: `Keychain`
+(`implementation/src/iosMain/.../protection/Keychain.kt`) is an interface with `AppleKeychain`
+behind it, written for `IosSecureEncrypt` and directly reusable here.
+
+`ImportExportPrefs` is a separate matter - 37 methods, document picker work on both sides - and is
+not being asked for here.
+
+
+## Request: `PasswordCheckImpl` can move to commonMain by swapping one dependency
+
+`AapsAppRoot` landing in `appshell/commonMain` is the reason this is worth doing now. Measured with
+the probe against that function's parameters, five of its six injected dependencies already resolve
+on iOS - `DecimalFormatter`, `ProfileUtil`, `PasswordHasher`, `VisibilityContext` and
+`ClientControlActionDispatcher`. `PasswordCheck` is the only one that does not, and it is a new
+entry that was not on the blocker list before.
+
+It does not need an iOS implementation. `PasswordCheckImpl`
+(`implementation/src/androidMain/.../protection/`) has **no Android imports at all** - 162 lines
+over `Preferences`, `CryptoUtil`, `RxBus` and `TextResolver`. It is in androidMain only because
+`CryptoUtil` is, and it uses exactly two things from it:
+
+```
+line  74:  cryptoUtil.checkPassword(enteredPassword, password)
+line 110:  cryptoUtil.hashPassword(enteredPassword)
+```
+
+Both are `PasswordHasher`, which you extracted for the setup wizard and which now has an
+implementation on both platforms - `CryptoUtil` on Android, `IosPasswordHasher` on iOS. Swapping the
+constructor parameter from `CryptoUtil` to `PasswordHasher` should let the whole class move to
+commonMain untouched otherwise, and iOS then gets it for free.
+
+That is one shared class instead of two, which is the better outcome than an iOS copy: the dialog
+rules here decide when a user is asked for a master password, and two implementations would be two
+places for that to drift.
+
+### What `AapsAppRoot` still needs beyond that
+
+`ClientControlActionDispatcher` resolves, but pulling it in drags every remaining blocker with it -
+`Autotune`, `ExportPasswordDataStore`, `ImportExportPrefs`, `IobCobCalculator`, `NsSocketFactory`
+and `UiInteraction` - because it reaches the loop and the NS client. So hosting the real Compose
+root on iOS is gated on that whole set, not on any single one.
+
+`ExportPasswordDataStore` is worth pulling forward in that list: `AapsAppRoot` takes it directly, so
+it is now on the path to running the real UI on iOS rather than only affecting the export screen.
+The request for it is in the section above.
+
+## Fixed on the iOS side: `is24HourClock` answered wrongly in Traditional Chinese
+
+Small change to `core/ui/src/iosMain/.../PlatformTheme.ios.kt`, flagged here because it is your file.
+
+The actual read the AM/PM letter - `dateFormat?.contains("a") != true` - which is the usual advice
+and is wrong for at least one locale. `zh_TW` asks for the short time pattern `Bh:mm`: `B` is the
+flexible day period (上午 / 下午) and `h` is a 12 hour hour. There is no `a` in it, so the check
+answered "24 hour" and a Traditional Chinese user with the "24-Hour Time" switch **off** would have
+been given a 24 hour picker on the profile activation screen.
+
+It now reads the hour field instead, which the Unicode standard fixes rather than the locale: `h`
+and `K` count to twelve, `H` and `k` count to twenty four. The parser is `usesTwelveHourClock` in
+`core/ui/src/iosMain/.../ClockPattern.kt`, kept apart from the composable so it can be tested, and
+it skips quoted literals so the `'h'` in a pattern like `HH'h'mm` is not mistaken for a field.
+
+Found by running the real formatter over 40 locales and comparing the two readings, not by
+inspection - `zh_TW` was the only disagreement, and nothing but running it would have shown that.
+`ClockPatternTest` keeps both the parser cases and the live `zh_TW` formatter check.
+
+Worth knowing if Android does the same thing anywhere: `DateFormat.is24HourFormat(context)` is a
+direct flag and has no such problem, so this is an iOS only trap.
+
+
+## `PasswordHasher` and `PluginPermissions` - iOS side done
+
+Both ports landed and both have an iOS implementation with tests.
+
+**`IosPasswordHasher`** (`implementation/src/iosMain/.../protection/`) copies `CryptoUtil` byte for
+byte, because the hash is stored and travels between platforms in an export. One detail is worth
+repeating since it is easy to "correct" into a bug: the HMAC key is the **UTF-8 text of the salt's
+hex**, not the 32 raw salt bytes. Using the raw bytes is the reading that looks more correct and
+would reject every password ever set on Android.
+
+The tests check three reference hashes produced independently with Python's `hmac` module rather
+than by running this code, so they would catch the salt and the message being swapped - a mistake
+that a round trip test cannot see, because it is symmetric.
+
+**`IosPluginPermissions`** (`implementation/src/iosMain/.../plugin/`) returns empty from both
+methods, which is what `PluginPermissionsImpl`'s own docs already predicted. It asks the plugins
+first and logs an error if any of them declares a group, so the emptiness stays a checked fact
+rather than an assumption: today every source is empty on iOS - `bluetoothPermissionGroup()` is
+null, `IosLocationPermissions` returns nothing, and the rest are androidMain.
+
+### One gap this opened: `PrefsFileInfo.listPreferenceFiles` is empty on iOS
+
+Finding the files would be easy. Building a `PrefsFile` is not: it carries parsed metadata, and both
+`EncryptedPrefsFormat` and `PrefsMetadataKeyImpl` are androidMain. Returning files without metadata
+would be worse than none, since the import screen sorts and filters on the flavour key and would
+drop every row after showing it. There is also nothing to list yet - `ImportExportPrefs` has no iOS
+implementation, so iOS cannot write an export either. This clears up on its own if that ever moves.
+
+## Fixed on the iOS side: a non-cryptographic random was generating an AES key
+
+Ours, not yours, but worth knowing if similar code appears on your side. `IosSecureEncrypt` used
+`kotlin.random.Random` for both the AES-256 key and the GCM IV. That is a plain PRNG seeded from the
+clock, not a CSPRNG, so both were predictable to anyone who could guess roughly when they were made
+- which defeats the point of encrypting the secret at all. Now `CryptographyRandom` from
+cryptography-kotlin, which is backed by the platform CSPRNG and is a drop-in for the same calls.
+
+Checked the rest of the tree while there: the only other `kotlin.random.Random` uses are a virtual
+pump serial number and a date helper, neither of which is security.
+
+
+## Before anyone writes `IosUiInteraction`: the alarm owner tag is a trap
+
+Not a live bug - nothing on iOS plays with `OWNER_FULLSCREEN` today - but the next person to write
+`UiInteraction.runAlarm` for iOS will walk into it, so it is written down before that happens.
+
+`AlarmSoundPlayer` records who started a sound. Two owners exist: `OWNER_INTERNAL`, used by the
+notification registry through `setAudibleAlarm`, and `OWNER_FULLSCREEN`, used by Android's
+`AlarmNotificationManager` for the full screen alarm that `runAlarm` posts.
+
+`stopAlarm` is `notificationManager.muteAllAlarms()` on both platforms, and that ends in
+`refreshAlarmSound()` plus `platform.cancelAll()`. The difference is what `cancelAll` does:
+
+- `AndroidSystemNotificationPlatform.cancelAll()` calls `alarmNotificationManager().cancelAlarm()`,
+  which stops the **`OWNER_FULLSCREEN`** audio and cancels the notification.
+- `IosSystemNotificationPlatform.cancelAll()` only removes pending and delivered notifications.
+  Nothing on the iOS side stops `OWNER_FULLSCREEN`, because nothing starts it.
+
+So an iOS `runAlarm` that plays with `OWNER_FULLSCREEN` would produce a **ramping alarm that
+`stopAlarm` cannot silence**. In a medical app that is the worse of the two failure directions, and
+it would not show up in a build or in any test that does not actually let the sound run.
+
+Two ways out, and the choice is a design decision rather than a porting one:
+
+1. play with `OWNER_INTERNAL` and let the registry own the sound, accepting that
+   `setAudibleAlarm`'s `soundingKey` bookkeeping may silence it when the notification list changes;
+2. give iOS its own counterpart of `cancelAlarm()` so `cancelAll()` stops the full screen owner too,
+   which is the shape Android already has.
+
+Related, and part of the same decision: `runAlarm` takes a `title`, and the shared registry does not
+carry one - `CommonNotificationManager` derives the title from the level ("Urgent alarm" / "Info").
+Posting an alarm through the registry therefore loses the caller's title, while posting outside it
+is what raises the owner tag question above. Android sidesteps both by not using the registry for
+`runAlarm` at all.
+
+Worth knowing while deciding: `UiInteraction` is injected on iOS but never called. `LoopPlugin` and
+`TreatmentsViewModel` hold it without using it in commonMain, and every reader of `mainActivity` and
+`errorHelperActivity` is androidMain - checked, not assumed. So the iOS implementation is needed to
+satisfy the graph, and has no caller to satisfy yet.
+
+
 ## Done
+
+- **`UrlOpener` and `PrefsFileInfo` - iOS side done.** Both ports landed from `kmp` and both have an
+  iOS implementation with tests. `IosUrlOpener` (`implementation/src/iosMain/.../ui/`) goes through
+  `UIApplication` on the main queue, which is where the hop in `SystemUrlLauncher` comes from -
+  `sharedApplication` may not be touched off the main thread and the callers are view models. It
+  refuses text that is not an address and an address with no scheme, because `openURL` drops both
+  without a word and the user would only see nothing happen. `IosPrefsFileInfo`
+  (`implementation/src/iosMain/.../maintenance/`) answers `isDirectoryAccessGranted` by actually
+  looking at the app's Documents directory - iOS has no grant to obtain, but the directory can still
+  be absent, and a fixed `true` would be a lie the maintenance screen acts on.
 
 - **The notification cluster - done.** There is one registry now.
   `AndroidSystemNotificationPlatform` (`implementation/src/androidMain/.../notifications/`) holds the

@@ -26,6 +26,7 @@ import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -67,12 +68,23 @@ import kotlinx.serialization.json.put
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
+/*
+ * `NSClientV3Plugin` and `NsIncomingDataProcessor` arrive as `Provider`s to break a cycle. The
+ * plugin takes an `NsConnection`, which is this class, and the processor reaches the plugin as its
+ * `NsClient`. Android never meets either loop: there the socket lives in `NSClientV3Service`, an
+ * Android service the system constructs, so `ServiceNsConnection` only binds to it and needs neither
+ * of these. iOS has no service, so this class does that work itself and has to name them.
+ *
+ * Deferring is safe here rather than merely convenient: nothing is looked up while the graph is
+ * built. The plugin is read when a socket connects and the processor when a frame arrives, and by
+ * either point both have long existed.
+ */
 class IosNsConnection @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val config: Config,
-    private val nsClientV3Plugin: NSClientV3Plugin,
-    private val nsIncomingDataProcessor: NsIncomingDataProcessor,
+    private val nsClientV3Plugin: Provider<NSClientV3Plugin>,
+    private val nsIncomingDataProcessor: Provider<NsIncomingDataProcessor>,
     private val storeDataForDb: StoreDataForDb,
     private val notificationManager: NotificationManager,
     private val nsClientRepository: NSClientRepository,
@@ -97,9 +109,9 @@ class IosNsConnection @Inject constructor(
         // setting turned off mid-session takes effect rather than leaving the old socket up.
         if (preferences.get(StringKey.NsClientUrl).isEmpty()) return stop()
         if (!preferences.get(BooleanKey.NsClient3UseWs)) return stop()
-        if (!nsClientV3Plugin.isAllowed) {
+        if (!nsClientV3Plugin().isAllowed) {
             stop()
-            nsClientRepository.addLog("● WS", nsClientV3Plugin.blockingReason)
+            nsClientRepository.addLog("● WS", nsClientV3Plugin().blockingReason)
             return
         }
         if (preferences.get(NsclientBooleanKey.NsPaused)) {
@@ -182,14 +194,14 @@ class IosNsConnection @Inject constructor(
             _connected.value = if (response?.bool("success") == true) {
                 nsClientRepository.addLog("◄ WS", "Subscribed for: ${response.str("collections")}")
                 // Nothing arrives while disconnected, so the next round has to be a catch-up one.
-                nsClientV3Plugin.initialLoadFinished = false
-                nsClientV3Plugin.executeLoop("WS_CONNECT")
+                nsClientV3Plugin().initialLoadFinished = false
+                nsClientV3Plugin().executeLoop("WS_CONNECT")
                 true
             } else {
                 nsClientRepository.addLog("◄ WS", "Auth failed")
                 false
             }
-            nsClientRepository.updateStatus(nsClientV3Plugin.status)
+            nsClientRepository.updateStatus(nsClientV3Plugin().status)
         }
     }
 
@@ -197,8 +209,8 @@ class IosNsConnection @Inject constructor(
         aapsLogger.debug(LTag.NSCLIENT, "disconnect storage reason: $reason")
         nsClientRepository.addLog("◄ WS", "disconnect storage event")
         _connected.value = false
-        nsClientV3Plugin.initialLoadFinished = false
-        nsClientRepository.updateStatus(nsClientV3Plugin.status)
+        nsClientV3Plugin().initialLoadFinished = false
+        nsClientRepository.updateStatus(nsClientV3Plugin().status)
     }
 
     internal fun onDataCreateUpdate(raw: String) {
@@ -211,33 +223,33 @@ class IosNsConnection @Inject constructor(
         val srvModified = doc.long("srvModified") ?: 0L
         // The high-water mark must not move until the catch-up round has finished, or the next load
         // asks for "modified since (just moved pointer)" and skips the very window it should backfill.
-        if (nsClientV3Plugin.initialLoadFinished) {
-            nsClientV3Plugin.lastLoadedSrvModified.set(collection, srvModified)
-            nsClientV3Plugin.storeLastLoadedSrvModified()
+        if (nsClientV3Plugin().initialLoadFinished) {
+            nsClientV3Plugin().lastLoadedSrvModified.set(collection, srvModified)
+            nsClientV3Plugin().storeLastLoadedSrvModified()
         }
 
         when (collection) {
             "devicestatus" -> nsDeviceStatusHandler.handleNewData(arrayOf(docString.toNSDeviceStatus()), live = true)
             "entries"      -> {
                 docString.toNSSgvV3()?.let {
-                    nsIncomingDataProcessor.processSgvs(listOf(it), doFullSync = false)
+                    nsIncomingDataProcessor().processSgvs(listOf(it), doFullSync = false)
                     storeDataForDb.requestStoreGlucoseValues()
                 }
                 // The same collection also carries AAPS calibration entries.
                 docString.toCalibrationMbg()?.let {
-                    nsIncomingDataProcessor.processCalibrations(listOf(it), doFullSync = false)
+                    nsIncomingDataProcessor().processCalibrations(listOf(it), doFullSync = false)
                     storeDataForDb.requestStoreCalibrationEntries()
                 }
             }
 
-            "profile"      -> appScope.launch { nsIncomingDataProcessor.processProfile(doc, doFullSync = false) }
+            "profile"      -> appScope.launch { nsIncomingDataProcessor().processProfile(doc, doFullSync = false) }
             "treatments"   -> docString.toNSTreatment()?.let {
-                nsIncomingDataProcessor.processTreatments(listOf(it), doFullSync = false)
+                nsIncomingDataProcessor().processTreatments(listOf(it), doFullSync = false)
                 storeDataForDb.requestStoreTreatments(fullSync = false)
             }
 
             "foods"        -> docString.toNSFood()?.let {
-                nsIncomingDataProcessor.processFood(listOf(it))
+                nsIncomingDataProcessor().processFood(listOf(it))
                 storeDataForDb.requestStoreFoods()
             }
         }

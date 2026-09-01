@@ -17,88 +17,30 @@ struct ClientApp: App {
     }
 }
 
-/// Hosts AAPS's Compose UI inside SwiftUI.
+/// Hosts AAPS itself inside SwiftUI.
 ///
-/// Compose Multiplatform hands back a plain UIViewController, so SwiftUI can show it the same way
-/// it shows any UIKit screen. Nothing on that screen is drawn by SwiftUI: the card, the spacing and
-/// the logo are AAPS composables from commonMain, running on iOS.
-struct AapsComposeView: UIViewControllerRepresentable {
+/// Compose Multiplatform hands back a plain UIViewController, so SwiftUI shows it the way it shows
+/// any UIKit screen. Nothing here is drawn by SwiftUI: this is the real `AapsAppRoot` from
+/// `appshell/commonMain` - the same theme, splash gate, dialog hosts and navigation the Android app
+/// runs - built by the Kotlin graph on the other side of this call.
+struct AapsAppView: UIViewControllerRepresentable {
 
     func makeUIViewController(context: Context) -> UIViewController {
-        AapsComposeHostKt.aapsComposeViewController()
+        AapsAppHostKt.aapsAppViewController()
     }
 
     func updateUIViewController(_ controller: UIViewController, context: Context) {}
 }
 
+/// The whole screen is AAPS.
+///
+/// The diagnostic page that used to live here - module count, DI check, database round trip - was
+/// scaffolding for proving the pieces worked one at a time. They do, so the app shows the app.
+/// `ShellInfo`'s checks are still there and still callable if a single layer needs isolating again.
 struct ShellView: View {
 
-    private let info = ShellInfo.shared
-
-    /// The display name of whichever product this build is, straight from its own Info.plist.
-    private var productName: String {
-        Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "AAPS"
-    }
-
     var body: some View {
-        ScrollView {
-        VStack(alignment: .leading, spacing: 10) {
-            Text(productName)
-                .font(.largeTitle.bold())
-            Text("\(info.LINKED_MODULES) modules linked")
-                .font(.title3)
-            Text(info.localTime())
-                .font(.footnote.monospaced())
-                .foregroundStyle(.secondary)
-
-            Divider().padding(.vertical, 4)
-
-            // Built by Metro on the Kotlin side. Shown rather than asserted, so a failure is
-            // readable on the phone instead of only in a log.
-            Text(info.checkDi())
-                .font(.caption.monospaced())
-                .multilineTextAlignment(.leading)
-
-            Divider().padding(.vertical, 4)
-
-            // NSUserDefaults behind the AAPS preference store.
-            Text(info.checkPrefs())
-                .font(.caption.monospaced())
-                .multilineTextAlignment(.leading)
-
-            Divider().padding(.vertical, 4)
-
-            // One line per :core module, from real calls into each.
-            Text(info.checkCore())
-                .font(.caption2.monospaced())
-                .multilineTextAlignment(.leading)
-
-            Divider().padding(.vertical, 4)
-
-            // The real AAPS database, opened and written to on this device.
-            Text(info.checkDatabase())
-                .font(.caption.monospaced())
-                .multilineTextAlignment(.leading)
-
-            Divider().padding(.vertical, 4)
-
-            Text(info.checkLogging())
-                .font(.caption.monospaced())
-                .multilineTextAlignment(.leading)
-
-            Divider().padding(.vertical, 4)
-
-            Text(info.checkAlarm())
-                .font(.caption.monospaced())
-                .multilineTextAlignment(.leading)
-
-            Divider().padding(.vertical, 4)
-
-            // AAPS's own Compose UI, rendered by iOS rather than described by SwiftUI.
-            AapsComposeView()
-                .frame(height: 200)
-        }
-        .padding()
-        }
+        AapsAppView()
+            .ignoresSafeArea()
     }
 }

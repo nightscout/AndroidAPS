@@ -15,6 +15,7 @@ import app.aaps.plugins.sync.nsclientV3.workers.LoadTreatmentsRunner
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -35,21 +36,27 @@ import kotlinx.coroutines.launch
  * The whole round shares one [Job], which is what makes [isRunning] meaningful and what lets a new
  * round replace one in flight rather than run beside it. Two rounds writing the same high-water
  * marks would interleave.
+ *
+ * Every runner arrives as a `Provider`. Asking for them outright is a cycle: each runner takes
+ * `NSClientV3Plugin`, and the plugin takes this executor. Android never meets it because WorkManager
+ * builds the workers rather than the graph, so on that side the runners are not graph nodes at all.
+ * Looking each one up when its step runs breaks the cycle, and costs nothing - a round is network
+ * work, not object creation.
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
 class CoroutineNsLoadExecutor @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val scope: CoroutineScope,
-    private val loadStatus: LoadStatusRunner,
-    private val loadLastModification: LoadLastModificationRunner,
-    private val loadBg: LoadBgRunner,
-    private val loadTreatments: LoadTreatmentsRunner,
-    private val loadFoods: LoadFoodsRunner,
-    private val loadProfileStore: LoadProfileStoreRunner,
-    private val loadSettings: LoadSettingsRunner,
-    private val loadDeviceStatus: LoadDeviceStatusRunner,
-    private val dataSync: DataSyncRunner
+    private val loadStatus: Provider<LoadStatusRunner>,
+    private val loadLastModification: Provider<LoadLastModificationRunner>,
+    private val loadBg: Provider<LoadBgRunner>,
+    private val loadTreatments: Provider<LoadTreatmentsRunner>,
+    private val loadFoods: Provider<LoadFoodsRunner>,
+    private val loadProfileStore: Provider<LoadProfileStoreRunner>,
+    private val loadSettings: Provider<LoadSettingsRunner>,
+    private val loadDeviceStatus: Provider<LoadDeviceStatusRunner>,
+    private val dataSync: Provider<DataSyncRunner>
 ) : NsLoadExecutor {
 
     /** The one round. Replaced by each new one, which is what "under a shared name" means here. */
@@ -103,15 +110,15 @@ class CoroutineNsLoadExecutor @Inject constructor(
 
     private suspend fun runStep(step: NsLoadStep): WorkOutcome {
         val outcome = when (step) {
-            NsLoadStep.STATUS            -> loadStatus.run()
-            NsLoadStep.LAST_MODIFICATION -> loadLastModification.run()
-            NsLoadStep.BG                -> loadBg.run()
-            NsLoadStep.TREATMENTS        -> loadTreatments.run()
-            NsLoadStep.FOODS             -> loadFoods.run()
-            NsLoadStep.PROFILE_STORE     -> loadProfileStore.run()
-            NsLoadStep.SETTINGS          -> loadSettings.run()
-            NsLoadStep.DEVICE_STATUS     -> loadDeviceStatus.run()
-            NsLoadStep.DATA_SYNC         -> dataSync.run()
+            NsLoadStep.STATUS            -> loadStatus().run()
+            NsLoadStep.LAST_MODIFICATION -> loadLastModification().run()
+            NsLoadStep.BG                -> loadBg().run()
+            NsLoadStep.TREATMENTS        -> loadTreatments().run()
+            NsLoadStep.FOODS             -> loadFoods().run()
+            NsLoadStep.PROFILE_STORE     -> loadProfileStore().run()
+            NsLoadStep.SETTINGS          -> loadSettings().run()
+            NsLoadStep.DEVICE_STATUS     -> loadDeviceStatus().run()
+            NsLoadStep.DATA_SYNC         -> dataSync().run()
         }
         if (outcome is WorkOutcome.Failure) {
             aapsLogger.debug(LTag.NSCLIENT, "Load step $step failed, stopping the round: ${outcome.reason}")

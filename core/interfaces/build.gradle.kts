@@ -117,6 +117,14 @@ kotlin {
             }
         }
 
+        // The iOS notification delegate is the one thing here with logic worth testing: it owns the
+        // single delegate slot iOS gives an app, and routing between handlers is easy to get wrong.
+        iosTest {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
+
         androidMain {
             // Android only: the string name to R.string id map.
             kotlin.srcDir(generateInterfacesStrings.flatMap { it.androidOutputDir })
