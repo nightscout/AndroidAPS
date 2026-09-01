@@ -593,6 +593,55 @@ Worth knowing while deciding: `UiInteraction` is injected on iOS but never calle
 satisfy the graph, and has no caller to satisfy yet.
 
 
+
+## Two notes from the desktop-target work
+
+**`ClockPattern`'s tests followed it to commonMain.** Moving the reader to `commonMain` so the
+desktop target could use it left its tests behind in `iosTest`, which meant a shared parser was
+being checked on only one of the targets that use it - the exact thing the "Where tests for common
+code go" section above warns about. The six pure parser cases are now in
+`core/ui/src/commonTest/`, and run on iOS and the Android host; the two that drive a real
+`NSDateFormatter` over 34 locales stay in `iosTest`, because they cannot be shared and they are what
+found `zh_TW` in the first place. This needed one line in `core/ui/build.gradle.kts` -
+`implementation(kotlin("test"))` on `commonTest`, copying the pattern already in `ui`.
+
+**A stale comment, left for you rather than edited.** `core/utils/build.gradle.kts` still describes
+mingw as "The only Kotlin/Native target whose tests can actually RUN on a Windows machine", which
+stopped being true with `fa8800bdde`. Worth a sweep for the same wording elsewhere - the two-host
+testing rule it refers to no longer exists, and it is the kind of comment that keeps a wrong idea
+alive long after the code is gone.
+
+
+## Request: real strings for iOS and desktop, from one generator
+
+`DesktopTextResolver` is now a verbatim copy of `IosTextResolver`, KDoc and all. Two identical
+placeholders is the signal that this stopped being an iOS problem: both non-Android platforms render
+every label as its string **name** - a settings screen reads `configbuilder_general` and
+`pref_title_low_mark` - and that is the single biggest thing standing between the shared UI and
+looking like a real app on either.
+
+Your note in `DesktopTextResolver` points at the fix and it checks out, with one correction:
+`GenerateKeyStringsTask` currently reads only the **names**. `readStringNames(baseDir)` is the only
+parse it does, and both generated files it emits - the `TextRef` object and the Android id map - are
+keyed on names alone. The text values are never read, so a `name -> text` map is a real addition to
+that task rather than a wiring job on something that already exists.
+
+What that buys, and why it is worth doing once rather than twice:
+
+- one generated map serves **three** platforms, and the two placeholder resolvers collapse into it,
+- the English `strings.xml` is already the single source both platforms would read, so there is no
+  new place for wording to drift,
+- format strings start working. Both resolvers currently append arguments rather than substituting
+  them, because there is no `%1$s` to substitute into - so today a dose or a count appears bolted
+  onto the end of a label.
+
+Left with you rather than done here: it is a `buildSrc` change that affects the Android build too,
+which is exactly the kind of cross-cutting task this split keeps on your side. The iOS half
+afterwards is deleting `IosTextResolver` and providing the shared one, which is a few lines.
+
+Localisation is a separate question and not part of this - the first step only needs the English
+values that are already parsed.
+
 ## Done
 
 - **`UrlOpener` and `PrefsFileInfo` - iOS side done.** Both ports landed from `kmp` and both have an
