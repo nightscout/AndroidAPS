@@ -1,3 +1,6 @@
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
 plugins {
     kotlin("jvm")
     // Metro, because this module does not only link the shared code, it builds a graph from it.
@@ -23,6 +26,32 @@ plugins {
  * the build cannot be missing from one platform and present on another. That is not theoretical:
  * this shell had five of sixteen and rendered plugin names as string names until it was run.
  */
+
+/** The same build stamp `:app` puts in BuildConfig.BUILDVERSION: short commit and date. */
+fun buildStamp(): String {
+    val commit = try {
+        val out = File.createTempFile("git-build", "")
+        ProcessBuilder("git", "describe", "--always", "--abbrev=7").redirectOutput(out).start().waitFor()
+        out.readText().trim()
+    } catch (_: Exception) {
+        "NoGitSystemAvailable"
+    }
+    return "$commit-" + SimpleDateFormat("yyyy.MM.dd").format(Date())
+}
+/**
+ * The version this build reports, from the same constant the Android app uses.
+ *
+ * Without it the About dialog showed a hardcoded placeholder, which is worse than showing nothing:
+ * a user quoting it in a bug report names a build that does not exist.
+ */
+val generateBuildInfo = tasks.register<GenerateBuildInfoTask>("generateDesktopBuildInfo") {
+    version.set(Versions.appVersion)
+    buildStamp.set(buildStamp())
+    platform.set("Desktop")
+    packageName.set("app.aaps.desktop.shell.config")
+    outputDir.set(layout.buildDirectory.dir("generated/buildInfo"))
+}
+
 val generateStringOwners = tasks.register<GenerateStringOwnerRegistryTask>("generateDesktopStringOwners") {
     owners.set(StringOwnerModules.ALL)
     packageName.set("app.aaps.desktop.shell.di")
@@ -34,7 +63,10 @@ val generateStringOwners = tasks.register<GenerateStringOwnerRegistryTask>("gene
 
 kotlin {
     compilerOptions { jvmTarget.set(Versions.jvmTarget) }
-    sourceSets.main { kotlin.srcDir(generateStringOwners) }
+    sourceSets.main {
+        kotlin.srcDir(generateStringOwners)
+        kotlin.srcDir(generateBuildInfo)
+    }
 }
 
 java {

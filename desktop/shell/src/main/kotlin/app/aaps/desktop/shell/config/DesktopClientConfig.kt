@@ -23,7 +23,7 @@ import java.io.File
  * shared code offer features the app cannot perform.
  */
 class DesktopClientConfig(
-    override val VERSION_NAME: String = "0.0-desktop",
+    override val VERSION_NAME: String = GeneratedBuildInfo.VERSION,
     override val APPLICATION_ID: String = "info.nightscout.aapsclient"
 ) : Config {
 
@@ -41,8 +41,9 @@ class DesktopClientConfig(
 
     override val FLAVOR: String = "aapsclient"
     override val BUILD_TYPE: String = "debug"
+    override val PLATFORM: String = GeneratedBuildInfo.PLATFORM
     override val VERSION: String = VERSION_NAME
-    override val BUILD_VERSION: String = VERSION_NAME
+    override val BUILD_VERSION: String = GeneratedBuildInfo.BUILD
     override val DEBUG: Boolean = true
 
     // Filled by the build on Android. Desktop has no equivalent wired up yet, and saying so plainly
