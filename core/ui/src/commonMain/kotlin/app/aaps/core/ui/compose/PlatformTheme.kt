@@ -31,3 +31,12 @@ expect fun smallestScreenWidthDp(): Int
  */
 @Composable
 expect fun isLandscape(): Boolean
+
+/**
+ * Whether the user wants a 24 hour clock.
+ *
+ * A user setting, not a locale one: both platforms let it be changed independently of the region,
+ * and a time picker that ignores it is immediately wrong to the person reading it.
+ */
+@Composable
+expect fun is24HourClock(): Boolean

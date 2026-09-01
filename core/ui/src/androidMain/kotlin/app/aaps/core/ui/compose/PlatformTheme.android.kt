@@ -1,10 +1,12 @@
 package app.aaps.core.ui.compose
 
+import android.text.format.DateFormat
 import android.content.res.Configuration
 import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowInsetsControllerCompat
 
@@ -30,3 +32,6 @@ actual fun smallestScreenWidthDp(): Int = LocalConfiguration.current.smallestScr
 @Composable
 actual fun isLandscape(): Boolean =
     LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+@Composable
+actual fun is24HourClock(): Boolean = DateFormat.is24HourFormat(LocalContext.current)
