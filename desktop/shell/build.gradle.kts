@@ -35,6 +35,9 @@ dependencies {
     // The database is opened here, so its builder has to be visible - :appshell does not export it.
     implementation(project(":database:impl"))
     implementation(project(":database:persistence"))
+    // The shared implementations this shell binds - the logger, RxBus, DateUtil and L.
+    implementation(project(":implementation"))
+    implementation(project(":shared:impl"))
 }
 
 compose.desktop {

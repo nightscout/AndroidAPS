@@ -18,22 +18,24 @@ import dev.zacsweers.metro.SingleIn
  *
  * ## What the app root asks for, and what desktop still owes it
  *
- * Declaring the twelve accessors `AapsAppRoot` takes pulls in **32 bindings** with no desktop
- * answer. They fall into three groups, and only the first is really work:
+ * [DesktopPlatformBindings] now answers the platform half, which took the list from 32 bindings to
+ * **26**. Declaring the twelve accessors `AapsAppRoot` takes still fails on those, in three groups:
  *
- * **Platform pieces desktop has to supply itself** - the equivalent of `IosPlatformBindings`:
- * `AAPSLogger`, `TextResolver`, `Config`, a `KeyValueStore` for preferences, and a JVM actual for
- * `DateFormatPlatform`. Everything they feed - `RxBusImpl`, `DateUtilImpl`, `LImpl`,
- * `CommonNotificationManager` - is already shared code that compiles for desktop.
+ * **Implementable on desktop, and more easily than on Apple** - the JVM has the libraries:
+ * `PasswordHasher`, `PasswordCheck`, `SecureEncrypt` (javax.crypto), `ExportPasswordDataStore`,
+ * `ReceiverStatusStore`, `NotificationManager` (a `SystemNotificationPlatform` over `SystemTray`),
+ * `ImportExportPrefs`, `CommandExecutionPlatform`.
  *
- * **Bindings that exist only in androidMain** and need a desktop implementation or an honest stub:
- * `PasswordCheck`, `PasswordHasher`, `SecureEncrypt`, `ExportPasswordDataStore`,
- * `ReceiverStatusStore`, `NotificationManager`, `FabricPrivacy`, `NsConnection`, `NsLoadExecutor`.
+ * **Absent by nature, so they want the honest "not on this platform" answer** the way the Apple side
+ * gives it: `PairedBtDevices`, `LastKnownLocation`, `LocationPermissions`,
+ * `LocationServiceController`, `SmsCommunicator`, `FabricPrivacy`, `ReminderScheduler`,
+ * `SceneExpiryScheduler`, `UiInteraction`, `NsConnection`, `NsLoadExecutor`.
  *
  * **Loop-side objects a follower does not run**, which the iOS shell also had to satisfy just to
- * build the graph: `APSResult`, `WizardBolusExecutor`, `BolusProgressData`, `CommandQueue`,
- * `PumpSync`, `ProfileFunction`, `SceneAutomationApi`, `ActiveSceneSync`, `L`. Worth questioning
- * rather than implementing - see the same note in `_docs/ios_blockers.md`.
+ * build the graph: `Autotune`, `BolusWizard`, `BolusProgressData`, `IobCobCalculator`, `QuickWizard`,
+ * `RunningModeGuard`, `LoopNotifier`. Worth questioning rather than implementing - a follower reaches
+ * these only through plugin registration, never through anything the UI touches. Same note in
+ * `_docs/ios_blockers.md`.
  *
  * The pattern to follow is `app.aaps.ios.shell.missing`: nothing returns a plausible value, and
  * nothing is silent.
