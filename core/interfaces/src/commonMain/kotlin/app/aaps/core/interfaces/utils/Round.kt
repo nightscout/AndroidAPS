@@ -12,9 +12,6 @@ import kotlin.math.roundToLong
 object Round {
 
     fun roundTo(x: Double, step: Double): Double {
-        // Was java.security.InvalidParameterException, which is a JCA class and not what argument
-        // checking is for. Nothing caught it - every use of it in this repo is a throw - so the type
-        // change reaches no handler.
         require(!x.isNaN()) { "Parameter is NaN" }
         return if (x == 0.0) 0.0
         else times(x = (x / step).roundToLong(), step = step)

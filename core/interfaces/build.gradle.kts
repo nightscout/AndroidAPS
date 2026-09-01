@@ -123,6 +123,12 @@ kotlin {
             }
         }
 
+        getByName("commonTest") {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
+
         // Hand written rather than taken from test-module-dependencies, because that convention
         // plugin applies com.android.library and so cannot be used here.
         getByName("androidHostTest") {
