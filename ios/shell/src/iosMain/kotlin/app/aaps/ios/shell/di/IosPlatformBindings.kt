@@ -24,6 +24,7 @@ import app.aaps.shared.impl.rx.bus.RxBusImpl
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.shared.impl.utils.IosDateFormatPlatform
 import app.aaps.workflow.CalculationExecutor
+import app.aaps.workflow.LazyCalculationExecutor
 import app.aaps.workflow.PostCalculationRunner
 import app.aaps.workflow.PrepareGraphDataRunner
 import dev.zacsweers.metro.AppScope
@@ -154,5 +155,5 @@ object IosPlatformBindings {
         logger: AAPSLogger,
         prepare: Provider<PrepareGraphDataRunner>,
         post: Provider<PostCalculationRunner>
-    ): CalculationExecutor = LazyCalculationExecutor(scope, logger, prepare, post)
+    ): CalculationExecutor = LazyCalculationExecutor(scope, logger, { prepare() }, { post() })
 }

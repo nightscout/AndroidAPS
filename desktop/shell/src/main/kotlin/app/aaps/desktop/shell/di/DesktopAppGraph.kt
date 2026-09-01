@@ -1,9 +1,11 @@
 package app.aaps.desktop.shell.di
 
+import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.database.AppRepository
 import app.aaps.database.di.JvmAppDatabaseBuilder
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
+import dev.zacsweers.metro.Includes
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 
@@ -11,35 +13,31 @@ import dev.zacsweers.metro.SingleIn
  * The real app's object graph on desktop - the counterpart of `AppRootGraph` in `:app` and
  * `IosAppGraph` in `:ios:shell`.
  *
- * It opens the database and nothing else yet. The accessors that [app.aaps.appshell.AapsAppRoot]
- * needs are listed below rather than declared, because Metro validates a graph as a whole: adding
- * them before their bindings exist stops the module compiling instead of leaving something that can
- * be grown one binding at a time.
+ * The accessors that [app.aaps.appshell.AapsAppRoot] needs are listed below rather than declared,
+ * because Metro validates a graph as a whole: adding them before their bindings exist stops the
+ * module compiling instead of leaving something that can be grown one binding at a time. The list is
+ * kept by declaring them, reading what Metro reports and taking them out again.
  *
- * ## What the app root asks for, and what desktop still owes it
+ * ## Where this stands
  *
- * [DesktopPlatformBindings] and the classes in `app.aaps.desktop.shell.platform` answer the platform
- * half, which took the list from 32 bindings to **19**. Declaring the twelve accessors `AapsAppRoot`
- * takes still fails on those, in three groups:
+ * The shell now depends on the same 26 modules `:ios:shell` does, so every plugin that registers
+ * itself with `@ContributesBinding` is already in the graph. What is left is what no shared module
+ * can supply. Measured at **15**, down from 32:
  *
- * **Still implementable on desktop, and more easily than on Apple** - the JVM has the libraries:
- * `SecureEncrypt` (javax.crypto, but it needs a decision about where the key lives),
- * `PasswordCheck` and `ImportExportPrefs` (both mostly UI, so they follow the desktop app's own
- * dialogs).
+ * **Absent by nature on a desktop, so they want the honest "not on this platform" answer:**
+ * `PairedBtDevices`, `LastKnownLocation`, `LocationPermissions`, `LocationServiceController`,
+ * `SmsCommunicator`, `FabricPrivacy`, `ReminderScheduler`, `SceneExpiryScheduler`, `UiInteraction`,
+ * `WidgetUpdater`.
  *
- * **Absent by nature, so they want the honest "not on this platform" answer** the way the Apple side
- * gives it: `PairedBtDevices`, `LastKnownLocation`, `LocationPermissions`,
- * `LocationServiceController`, `SmsCommunicator`, `FabricPrivacy`, `ReminderScheduler`,
- * `SceneExpiryScheduler`, `UiInteraction`, `NsConnection`, `NsLoadExecutor`.
+ * **Implementable, and the next work:** `ImportExportPrefs` (file dialogs), and `NsConnection` and
+ * `NsLoadExecutor`, which are HTTP and a socket - a JVM has both, so a follower can genuinely sync.
  *
- * **Loop-side objects a follower does not run**, which the iOS shell also had to satisfy just to
- * build the graph: `Autotune`, `BolusWizard`, `BolusProgressData`, `IobCobCalculator`, `QuickWizard`,
- * `RunningModeGuard`, `LoopNotifier`. Worth questioning rather than implementing - a follower reaches
- * these only through plugin registration, never through anything the UI touches. Same note in
- * `_docs/ios_blockers.md`.
+ * **Needs a port rather than an implementation:** `Autotune`, whose `AutotunePlugin` is arithmetic
+ * over treatment history sitting in androidMain, and `LoopNotifier`, an interface whose only
+ * implementation is Android notifications with actions.
  *
- * The pattern to follow is `app.aaps.ios.shell.missing`: nothing returns a plausible value, and
- * nothing is silent.
+ * The pattern to follow for the first group is `app.aaps.ios.shell.missing`: nothing returns a
+ * plausible value, and nothing is silent.
  */
 @DependencyGraph(AppScope::class)
 interface DesktopAppGraph {
@@ -48,4 +46,15 @@ interface DesktopAppGraph {
     @Provides
     @SingleIn(AppScope::class)
     fun repository(): AppRepository = JvmAppDatabaseBuilder().provideAppRepository("aaps-desktop.db")
+
+    /**
+     * [CoreObjectsGraph] is a plain binding container rather than a contributed one, so every graph
+     * has to include it by name. It holds the QuickWizard / QuickWizardEntry / BolusWizard cycle,
+     * broken with deferred providers - the same shape `AppRootGraph` and `IosAppGraph` use.
+     */
+    @DependencyGraph.Factory
+    fun interface Factory {
+
+        fun create(@Includes coreObjects: CoreObjectsGraph): DesktopAppGraph
+    }
 }

@@ -39,6 +39,32 @@ dependencies {
     implementation(project(":implementation"))
     implementation(project(":shared:impl"))
 
+    // The plugins the client runs, mirroring the list :ios:shell carries. Metro finds their
+    // @ContributesBinding classes through these, which is what turns the graph from an anchor into
+    // the real app. No pump driver except the virtual one: a desktop has no Bluetooth radio to
+    // reach a pump with, and this build is a follower.
+    implementation(project(":core:data"))
+    implementation(project(":core:graph"))
+    implementation(project(":core:interfaces"))
+    implementation(project(":core:keys"))
+    implementation(project(":core:objects"))
+    implementation(project(":core:ui"))
+    implementation(project(":core:nssdk"))
+    implementation(project(":core:utils"))
+    implementation(project(":plugins:aps"))
+    implementation(project(":plugins:automation"))
+    implementation(project(":plugins:calibration"))
+    implementation(project(":plugins:configuration"))
+    implementation(project(":plugins:constraints"))
+    implementation(project(":plugins:main"))
+    implementation(project(":plugins:sensitivity"))
+    implementation(project(":plugins:smoothing"))
+    implementation(project(":plugins:source"))
+    implementation(project(":plugins:sync"))
+    implementation(project(":pump:virtual"))
+    implementation(project(":workflow"))
+    implementation(project(":ui"))
+
     // The string owner list is hand written, so it needs a test that a wrong owner name fails.
     testImplementation(kotlin("test"))
 }

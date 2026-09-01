@@ -1,11 +1,6 @@
-package app.aaps.ios.shell.di
+package app.aaps.workflow
 
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.workflow.CalculationExecutor
-import app.aaps.workflow.CoroutineCalculationExecutor
-import app.aaps.workflow.PostCalculationRunner
-import app.aaps.workflow.PrepareGraphDataRunner
-import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.CoroutineScope
 
 /**
@@ -19,19 +14,28 @@ import kotlinx.coroutines.CoroutineScope
  * ```
  *
  * Android never meets it because its executor hands the work to WorkManager, which constructs the
- * runners itself - they are not graph nodes there at all. iOS has no such framework, so the runners
- * are ordinary injected objects and the loop closes.
+ * runners itself - they are not graph nodes there at all. Every platform without WorkManager has the
+ * runners as ordinary injected objects, and the loop closes.
  *
  * Deferring is safe here rather than merely convenient. Nothing is looked up while the graph is
- * built; the first lookup happens when a calculation is actually started, by which time every
- * object in the loop exists. The alternative was to change `CoroutineCalculationExecutor` to take
- * providers, which would put an iOS-only concern into shared code for no gain.
+ * built; the first lookup happens when a calculation is actually started, by which time every object
+ * in the loop exists.
+ *
+ * ## Why this is here and not in a shell
+ *
+ * It was written in `:ios:shell` first, described there as an iOS-only concern that shared code
+ * should not carry. The desktop JVM then hit exactly the same cycle for exactly the same reason,
+ * which makes it not an iOS concern but a **not-Android** one - and two identical copies in two
+ * shells is how the two quietly stop matching.
+ *
+ * The runners are passed as `() -> T` rather than a DI provider type, so this stays plain Kotlin and
+ * the module keeps no dependency on a DI library. Each shell hands it `{ provider() }`.
  */
-internal class LazyCalculationExecutor(
+class LazyCalculationExecutor(
     private val scope: CoroutineScope,
     private val aapsLogger: AAPSLogger,
-    private val prepare: Provider<PrepareGraphDataRunner>,
-    private val post: Provider<PostCalculationRunner>
+    private val prepare: () -> PrepareGraphDataRunner,
+    private val post: () -> PostCalculationRunner
 ) : CalculationExecutor {
 
     private val delegate: CoroutineCalculationExecutor by lazy {
