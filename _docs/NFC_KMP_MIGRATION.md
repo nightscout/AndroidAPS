@@ -1,6 +1,6 @@
 # NFC plugin - migration to Kotlin Multiplatform
 
-Written 2026-08-20, updated 2026-08-30. What the NFC Commands plugin needs in order to fit the
+Written 2026-08-20, updated 2026-09-01. What the NFC Commands plugin needs in order to fit the
 Kotlin Multiplatform refactoring going on in `Nightscout/kmp`, and to line up with the architecture
 the other plugins already follow.
 
@@ -11,8 +11,14 @@ This note answers three questions:
 3. Which parts of the plugin do not follow the project's own patterns, and should be fixed while we
    are in here anyway?
 
-Companion documents: `_docs/NFC_COMMANDS.md` (what the plugin does) and
-`_docs/KMP_IOS_FEASIBILITY.md` on the `kmp` branch (the KMP plan itself, wave by wave).
+Companion documents: `_docs/NFC_COMMANDS.md` (what the plugin does) and, for the KMP plan itself,
+`_docs/ios_blockers.md`.
+
+**Note on the citations below.** Merge 9 deleted four upstream documents this note quotes -
+`KMP_IOS_FEASIBILITY.md`, `METRO_MIGRATION_NEXT_STEPS.md`, `DI_FRAMEWORK_COMPARISON.md` and
+`PLUGIN_SELECTION_KEY_SYNC.md`. The quotations are kept because they are what the decisions were
+made on and they are still readable in git history, but the files are no longer in `_docs/`. What
+survives there is `ios_blockers.md`, which is the one upstream keeps current.
 
 ---
 
@@ -23,7 +29,7 @@ preparation work can happen without disturbing the main NFC line.
 
 | Step                                                       | State                                                                       |
 |------------------------------------------------------------|-----------------------------------------------------------------------------|
-| Merge `Nightscout/kmp` into the branch                     | **done eight times** - latest `f1b0a38d39`, 64 commits, one conflict           |
+| Merge `Nightscout/kmp` into the branch                     | **done nine times** - latest `ea86643c0a`, 64 commits, no conflicts            |
 | Tier 1, the changes needed to compile at all (section 3)    | **done** - `9cd204b8da` "NFC Fix build after kmp merge"                        |
 | Architecture alignment (section 9)                         | **all done** - 9.1 to 9.8, the last being 9.5 in `57952b8690`                  |
 | The command format and the store blobs (section 5)          | **done** - `28305e0af6` and `ff1916852f`. No `org.json` left in the plugin      |
@@ -31,8 +37,8 @@ preparation work can happen without disturbing the main NFC line.
 | Tier 2, needed only for a multiplatform module (section 4)  | **not started** apart from the `org.json` row, which sections 5 and 9.7 did    |
 | The `:plugins:sync` flip, step 6                            | **done** - upstream flipped it in `077aa2a6e4`, our files moved in `216e31867e` |
 | Strings on `SyncStrings`, step 7                            | **done** - `3aa6e921e5`, and the duplicates it found are section 9b            |
-| Build verification                                         | **green** - 93 NFC tests in `testAndroidHostTest`, 94 app tests, all pass       |
-| `Nightscout/kmp` freshness                                 | merged 2026-08-30 at `d687e33bc2`. Still not in `dev` - more merges are due     |
+| Build verification                                         | **green** - 93 NFC tests in `testAndroidHostTest`, 93 app tests, all pass       |
+| `Nightscout/kmp` freshness                                 | merged 2026-08-31 at `01b3ecf440`. Still not in `dev` - more merges are due     |
 
 Sections 3.7 to 3.12 are six breaks that only a compiler found, after an import-derived list had
 missed them. The lesson is recorded there because it will repeat on the next merge: **grepping imports
@@ -74,6 +80,11 @@ anything was pushed, so that each one builds on its own:
 | `31889dde7a`  | **merge 7**, 30 upstream commits, no conflicts                | nothing to fix afterwards                |
 | `f1b0a38d39`  | **merge 8**, 64 upstream commits, 1 conflict                  | leaves nfcCommands outside every source set |
 | `216e31867e`  | fix build after merge 8 - into androidMain, 49 files          | pure move, recorded as renames, **builds** |
+| `65653e43ea`  | the note after merge 8 and the move                           | documentation only                       |
+| `3aa6e921e5`  | step 7 - the strings on SyncStrings, 40 files                 | one change of kind, **builds**            |
+| `a410a957c9`  | five repeated strings dropped, section 9b written             | behaviour neutral, **builds**             |
+| `ea86643c0a`  | **merge 9**, 64 upstream commits, no conflicts                | does **not** build - javax.inject is gone |
+| `860ab34fd9`  | fix build after merge 9 - Metro's Inject, 6 files              | mechanical, **builds**                    |
 
 Keeping these apart matters for review: the fix-build commit only has to answer "did the merge really
 force this?", and the alignment commit carries its own rationale. `f9e51ec06c` is also the one that
@@ -85,8 +96,8 @@ is cleanly cherry-pickable - see section 10.
 
 | Branch                           | HEAD          | Date       | Note                                      |
 |----------------------------------|---------------|------------|-------------------------------------------|
-| `nfc/new-nfc-plugin_kmp` (ours)  | `216e31867e`  | 2026-08-30 | merged `kmp` at `d687e33bc2`               |
-| `Nightscout/kmp`                 | `d687e33bc2`  | 2026-08-30 | fully merged as of merge 8                 |
+| `nfc/new-nfc-plugin_kmp` (ours)  | `860ab34fd9`  | 2026-08-31 | merged `kmp` at `01b3ecf440`               |
+| `Nightscout/kmp`                 | `01b3ecf440`  | 2026-08-31 | fully merged as of merge 9                 |
 | `Nightscout/dev`                 | `283a184f60`  | 2026-08-25 | `kmp` has **not** landed here yet          |
 
 The rest of this section is the picture as it was on 2026-08-26, kept for the reasoning it records.
@@ -1312,6 +1323,36 @@ merged into `kmp` regularly, the NS client core and the client-control screens m
 with an `iosMain` half, `:workflow` and `:shared:tests` were flipped, and the sync strings moved onto
 a generated `SyncStrings` - see the next step in section 8.
 
+### Merge 9 outcome, for reference
+
+Commit `ea86643c0a`, **64 upstream commits, no conflicts**, and the first merge where the two files
+that conflicted the time before came through on their own: our `kotlinx-serialization` line in
+`plugins/sync/build.gradle.kts` and the `NfcControlActivity` entry in the manifest both auto-merged.
+`nfcCommands/` stayed in `androidMain` and `androidHostTest`, so the placement check that merge 8
+taught us to run passed without any work.
+
+It still did not build, for one reason. **Dagger is now completely gone** - `95fe432ba8` removed the
+last of it and `abd6515f64` dropped `javax.inject` together with Metro's Dagger interop.
+`:plugins:sync` no longer applies that interop, so `javax.inject.Inject` stopped resolving in the
+five NFC files that used it. `860ab34fd9` swaps it for `dev.zacsweers.metro.Inject` in the same
+places, and changes the seven `pumpEnactResultProvider.get()` calls in the test to
+`pumpEnactResultProvider()`, because Metro's `Provider` is invoked rather than asked. Both are
+copies of what upstream did to its own files.
+
+**The trap in this merge is not in the code at all: stale KSP output.** `:app` failed with
+*"package dagger.internal does not exist"* in generated Java under three pump modules. Fourteen
+modules still had `build/generated/ksp` full of the Dagger factories generated before the merge, and
+those import a package that no longer exists. Deleting those directories is the whole fix - no clean
+build, and nothing in the source tree changes:
+
+    for d in app plugins/sync pump/* shared/tests; do rm -rf $d/build/generated/ksp; done
+
+Anyone merging across this Dagger removal on an existing checkout will hit the same thing, and the
+error names Dagger, which makes it look like a code problem on our side. It is not.
+
+Also in this merge, and none of it touching NFC: automation and `LoopPlugin` moved to `commonMain`,
+and **upstream deleted several of the documents this note cites** - see the note under section 1.
+
 ---
 
 ## Appendix - measured numbers
@@ -1385,6 +1426,15 @@ it. Merge 8 needed it because upstream added a new dependency,
 `dev.whyoleg.cryptography:cryptography-provider-optimal`, which was not in the local cache yet.
 
     ./gradlew.bat :plugins:sync:allTests --no-daemon -Djavax.net.ssl.trustStoreType=Windows-ROOT
+
+### Stale KSP output after the Dagger removal
+
+Not a build-command change, but it belongs next to them. On an existing checkout, a merge that
+crosses `95fe432ba8` leaves every module's `build/generated/ksp` holding Dagger factories that
+`import dagger.internal`, a package the merge deletes. `javac` then fails on generated code with
+errors that name Dagger and point at files nobody wrote. Delete the directories, do not clean build:
+
+    for d in app plugins/sync pump/* shared/tests; do rm -rf $d/build/generated/ksp; done
 
 ### Reading build output
 
