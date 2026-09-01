@@ -39,6 +39,11 @@ dependencies {
     implementation(project(":implementation"))
     implementation(project(":shared:impl"))
 
+    // The Main dispatcher. Compose Desktop draws on the Swing event thread, and shared code hops to
+    // Dispatchers.Main to touch the UI; core alone has no Main dispatcher, so this is what stops
+    // every such hop throwing at runtime.
+    implementation(libs.kotlinx.coroutines.swing)
+
     // The plugins the client runs, mirroring the list :ios:shell carries. Metro finds their
     // @ContributesBinding classes through these, which is what turns the graph from an anchor into
     // the real app. No pump driver except the virtual one: a desktop has no Bluetooth radio to
