@@ -77,7 +77,7 @@ class WikiSearchRepository @Inject constructor(
             } catch (_: Exception) {
                 // Any failure is reported as "nothing found" rather than an error: the wiki is an
                 // extra on top of the local index, and a search box is a bad place for a network
-                // complaint. Same behaviour as the OkHttp version this replaced.
+                // complaint.
                 WikiSearchResult.Success(emptyList())
             }
         }

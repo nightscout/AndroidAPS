@@ -233,8 +233,8 @@ class NSClientV3Plugin @Inject constructor(
     @Volatile var doingFullSync = false
         @VisibleForTesting set
 
-    // The bind/unbind that used to live here is in ServiceNsConnection now, which is what lets this
-    // plugin stop naming a Service at all.
+    // Binding and unbinding the connection lives in ServiceNsConnection, so this plugin names no
+    // Android Service at all.
 
     override suspend fun onStart() {
         super.onStart()

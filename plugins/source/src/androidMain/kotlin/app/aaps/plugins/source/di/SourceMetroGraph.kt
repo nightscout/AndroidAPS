@@ -25,9 +25,10 @@ import kotlin.reflect.KClass
 
 /**
  * Scope marker for this module's workers and member injectors.
- * The graph used to be a second root on `AppScope`, which was unsafe: two graphs declaring one scope
- * each get their own copy of anything scoped there, silently. Now it is an extension with a scope of
- * its own, so `AppScope` means exactly one graph.
+ *
+ * The graph is an extension with a scope of its own, not a second root on `AppScope`: two graphs
+ * declaring one scope each get their own copy of anything scoped there, silently. `AppScope` means
+ * exactly one graph.
  */
 abstract class SourceScope private constructor()
 

@@ -9,10 +9,11 @@ import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 
 /**
- * What is left of this module's own wiring, now on Metro.
- * The three `@Binds` that used to live here are gone: `SmsCommunicatorPlugin`, `NSClientV3Plugin` and
- * `ClientControlRoundTrip` carry their own contributions now, so Metro binds the interfaces directly
- * and `:app` reads them back off the graph.
+ * This module's own wiring.
+ *
+ * `SmsCommunicatorPlugin`, `NSClientV3Plugin` and `ClientControlRoundTrip` carry their own
+ * contributions, so Metro binds those interfaces directly and `:app` reads them back off the graph.
+ * Only what cannot be contributed from the class itself is left here.
  */
 @ContributesTo(AppScope::class)
 @BindingContainer

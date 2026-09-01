@@ -10,9 +10,8 @@ import kotlinx.serialization.json.Json
 /**
  * Reads and writes the bolus wizard breakdown that rides inside the Nightscout record.
  *
- * This used to be Gson. The settings below are what keep the text identical to what Gson wrote, and
- * they are not style choices - records written by older builds are still out there, and older builds
- * still read what this writes:
+ * The settings below keep the text identical to what Gson writes, and they are not style choices -
+ * records written by older builds are still out there, and older builds still read what this writes:
  *
  * - [Json.encodeDefaults] on, because Gson writes every field. Left off, a field sitting at its
  *   default would simply be missing, and Gson filling a missing `isValid` gives `false` - a valid
