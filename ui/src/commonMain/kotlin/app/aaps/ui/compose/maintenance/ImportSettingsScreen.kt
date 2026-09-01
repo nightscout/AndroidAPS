@@ -47,7 +47,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.aaps.core.interfaces.maintenance.FileListProvider
+import app.aaps.core.interfaces.maintenance.PrefsFileInfo
 import app.aaps.core.interfaces.maintenance.ImportDecryptResult
 import app.aaps.core.interfaces.maintenance.PrefsFile
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -63,7 +63,7 @@ import app.aaps.core.ui.compose.stringResource
 @Composable
 fun ImportSettingsScreen(
     viewModel: ImportViewModel,
-    prefFileList: FileListProvider,
+    prefFileList: PrefsFileInfo,
     rxBus: RxBus,
     onClose: () -> Unit
 ) {
@@ -144,7 +144,7 @@ fun ImportSettingsScreen(
 @Composable
 internal fun ImportFilePickerContent(
     state: ImportStep.FilePicker,
-    prefFileList: FileListProvider,
+    prefFileList: PrefsFileInfo,
     onFileClick: (ImportFileItem) -> Unit,
     onLoadMore: () -> Unit,
     onClose: () -> Unit
@@ -246,7 +246,7 @@ internal fun ImportFilePickerContent(
 private fun ImportFileCard(
     item: ImportFileItem,
     showSourceBadge: Boolean,
-    prefFileList: FileListProvider,
+    prefFileList: PrefsFileInfo,
     onClick: () -> Unit
 ) {
     val metadata = item.prefsFile.metadata

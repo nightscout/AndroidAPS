@@ -18,7 +18,7 @@ import app.aaps.core.interfaces.maintenance.CloudDirectoryManager
 import app.aaps.core.interfaces.maintenance.ExportConfig
 import app.aaps.core.interfaces.maintenance.ExportDestination
 import app.aaps.core.interfaces.maintenance.ExportResult
-import app.aaps.core.interfaces.maintenance.FileListProvider
+import app.aaps.core.interfaces.maintenance.PrefsFileInfo
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.overview.OverviewData
@@ -65,7 +65,7 @@ class MaintenanceViewModel @Inject constructor(
     private val l: L,
     private val maintenance: Maintenance,
     private val importExportPrefs: ImportExportPrefs,
-    private val fileListProvider: FileListProvider,
+    private val fileListProvider: PrefsFileInfo,
     private val cloudDirectoryManager: CloudDirectoryManager,
     private val activePlugin: ActivePlugin,
     private val persistenceLayer: PersistenceLayer,

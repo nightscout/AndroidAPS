@@ -718,6 +718,7 @@ class ComposeMainActivity : MetroAppCompatActivity() {
                     onNavigate = { request -> handleNavigationRequest(request, navController) },
                     onDrawerClosed = { mainViewModel.closeDrawer() },
                     onAboutDialogDismiss = { mainViewModel.setShowAboutDialog(false) },
+                    onOpenBatteryHelp = { mainViewModel.openBatteryHelp() },
                     onMaintenanceSheetDismiss = { mainViewModel.setShowMaintenanceSheet(false) },
                     onDirectoryClick = {
                         try {

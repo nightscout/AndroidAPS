@@ -53,6 +53,10 @@ class ConfigImpl @Inject constructor(
 
     override val currentDeviceModelString = Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ")"
     override val deviceModelForUpload = Build.MANUFACTURER + " " + Build.MODEL
+    // The unit-test android.jar leaves these statics null, and this one is assigned straight to a
+    // non-null String, so it would fail graph creation in every test. The line above survives it only
+    // because string concatenation prints "null".
+    override val deviceManufacturer: String = Build.MANUFACTURER ?: ""
     override val appName: TextRef = TextRef.AndroidRes(R.string.app_name)
 
     private val _initProgressFlow = MutableStateFlow(InitProgress())

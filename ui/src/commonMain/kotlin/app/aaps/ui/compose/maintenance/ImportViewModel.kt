@@ -8,7 +8,7 @@ import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.maintenance.FileListProvider
+import app.aaps.core.interfaces.maintenance.PrefsFileInfo
 import app.aaps.core.interfaces.maintenance.ImportDecryptResult
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.maintenance.PrefsFile
@@ -62,7 +62,7 @@ sealed interface ImportStep {
 class ImportViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val importExportPrefs: ImportExportPrefs,
-    private val prefFileList: FileListProvider,
+    private val prefFileList: PrefsFileInfo,
     private val configBuilder: ConfigBuilder
 ) : ViewModel() {
 
