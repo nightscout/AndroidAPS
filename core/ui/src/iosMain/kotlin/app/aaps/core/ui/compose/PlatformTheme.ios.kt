@@ -30,8 +30,12 @@ actual fun isLandscape(): Boolean =
 
 /**
  * iOS exposes no flag for this, so ask a short time formatter what pattern the user's settings
- * produce and look for the AM/PM symbol in it. Its absence is the 24 hour clock. This follows the
- * "24-Hour Time" switch in Settings, because that switch is what rewrites the pattern.
+ * produce and read the hour field out of it. This follows the "24-Hour Time" switch in Settings,
+ * because that switch is what rewrites the pattern.
+ *
+ * The hour field rather than the AM/PM letter: see [usesTwelveHourClock] for the locale that makes
+ * the difference. A pattern with no hour at all counts as 24 hour, which is only a fallback - no
+ * short time style produces one.
  */
 @Composable
 actual fun is24HourClock(): Boolean {
@@ -39,7 +43,7 @@ actual fun is24HourClock(): Boolean {
         dateStyle = NSDateFormatterNoStyle
         timeStyle = NSDateFormatterShortStyle
     }
-    return formatter.dateFormat?.contains("a") != true
+    return usesTwelveHourClock(formatter.dateFormat.orEmpty()) != true
 }
 
 /** See the expect declaration: iOS cannot pin orientation from inside a view, so this does nothing. */
