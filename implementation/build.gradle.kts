@@ -70,6 +70,10 @@ kotlin {
     iosArm64()
     iosSimulatorArm64()
 
+    // Desktop (Windows/macOS/Linux). Compose Multiplatform resolves its `desktop` variant from a
+    // plain jvm() target, so no special target name is needed.
+    jvm()
+
     // commonMain is small on purpose. Most of this module reaches Android directly, and most of the
     // rest formats user text through ResourceHelper and app.aaps.core.ui.R - the twenty command queue
     // classes are otherwise portable and fail only on that. They can follow once they take a

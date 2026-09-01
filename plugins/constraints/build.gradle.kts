@@ -60,6 +60,10 @@ kotlin {
     iosArm64()
     iosSimulatorArm64()
 
+    // Desktop (Windows/macOS/Linux). Compose Multiplatform resolves its `desktop` variant from a
+    // plain jvm() target, so no special target name is needed.
+    jvm()
+
     sourceSets {
         // What ConstraintsCheckerImpl needs. androidMain inherits these, so the rest of the module
         // keeps compiling unchanged; only the modules no common file uses yet stay android only.

@@ -47,6 +47,10 @@ kotlin {
     iosArm64()
     iosSimulatorArm64()
 
+    // Desktop (Windows/macOS/Linux). Compose Multiplatform resolves its `desktop` variant from a
+    // plain jvm() target, so no special target name is needed.
+    jvm()
+
     sourceSets {
         commonMain {
             kotlin.srcDir(generateApsStrings.flatMap { it.commonOutputDir })
