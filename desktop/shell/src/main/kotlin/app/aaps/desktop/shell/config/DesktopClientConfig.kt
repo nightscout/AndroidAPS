@@ -59,8 +59,26 @@ class DesktopClientConfig(
     override val deviceModelForUpload: String = System.getProperty("os.name") ?: "Desktop"
     override val deviceManufacturer: String = System.getProperty("os.name") ?: "Desktop"
 
-    /** Android returns a string resource id here. Desktop has no resource table, so nothing to name. */
-    override val appName: TextRef = TextRef.Literal("AAPS")
+    /**
+     * What the app calls itself, by the same rule as the Android flavours.
+     *
+     * Android sets `app_name` per flavour in `app/build.gradle.kts`, and this build is a client, so
+     * it is "AAPSClient" - not "AAPS", which is the name of the master. The About dialog and the
+     * window title both show it, and a follower claiming to be the master is exactly the kind of
+     * confusion the flavour names exist to prevent.
+     *
+     * A literal rather than a resource: desktop has no resource table, and the name is not
+     * translated on Android either.
+     */
+    override val appName: TextRef = TextRef.Literal(
+        when {
+            AAPSCLIENT3 -> "AAPSClient3"
+            AAPSCLIENT2 -> "AAPSClient2"
+            AAPSCLIENT1 -> "AAPSClient"
+            PUMPCONTROL -> "Pumpcontrol"
+            else        -> "AAPS"
+        }
+    )
 
     private val _initProgressFlow = MutableStateFlow(InitProgress(done = true))
     override val initProgressFlow: StateFlow<InitProgress> = _initProgressFlow.asStateFlow()

@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -12,6 +11,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.Image
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.navigation.compose.NavHost
@@ -29,7 +30,6 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.shared.clientbindings.ClientGraphBindings
-import app.aaps.core.ui.compose.icons.IcAaps
 import app.aaps.desktop.shell.di.DesktopAppGraph
 import app.aaps.desktop.shell.di.GeneratedStringOwners
 import app.aaps.desktop.shell.di.DesktopViewModelFactory
@@ -79,11 +79,22 @@ fun main() {
         startPlugins(graph)
         graph
     }
+    // Which icon and which name depend on what kind of build this is, so both are read after the
+    // graph. A failed startup still gets a window, and that window still gets an icon and a title.
+    val graph = startup.getOrNull()
+    val appIcon = loadAppIcon(graph?.let { appIconResource(it.config) } ?: DEFAULT_APP_ICON)
+    val appName = graph?.let { it.textResolver.gs(it.config.appName) } ?: DEFAULT_APP_NAME
 
     application {
-        Window(onCloseRequest = ::exitApplication, title = "AAPS") {
+        Window(
+            onCloseRequest = ::exitApplication,
+            title = appName,
+            // The window and taskbar icon. Without it Compose shows its own default, which is what
+            // made the app look like a sample project rather than AAPS.
+            icon = appIcon
+        ) {
             startup.fold(
-                onSuccess = { AapsDesktopApp(it) },
+                onSuccess = { AapsDesktopApp(it, appIcon, appName) },
                 onFailure = { MaterialTheme { Failed(it) } }
             )
         }
@@ -124,7 +135,7 @@ private fun startPlugins(graph: DesktopAppGraph) {
  * in the log rather than doing nothing quietly.
  */
 @Composable
-private fun AapsDesktopApp(graph: DesktopAppGraph) {
+private fun AapsDesktopApp(graph: DesktopAppGraph, appIcon: Painter, appName: String) {
     val logger = graph.logger
     val viewModelFactory = remember(graph) { DesktopViewModelFactory(graph) }
 
@@ -143,8 +154,10 @@ private fun AapsDesktopApp(graph: DesktopAppGraph) {
             nsClient = graph.nsClient,
             rxBus = graph.rxBus,
             clientControlActionDispatcher = graph.clientControlActionDispatcher,
-            appIcon = { modifier -> Icon(imageVector = IcAaps, contentDescription = null, modifier = modifier) },
-            splashLogo = { modifier -> Icon(imageVector = IcAaps, contentDescription = null, modifier = modifier) },
+            // Image rather than Icon: Icon paints its vector in a single tint, which flattens a logo
+            // to one colour. Android passes the launcher bitmap here and this is the same file.
+            appIcon = { modifier -> Image(appIcon, contentDescription = null, modifier = modifier) },
+            splashLogo = { modifier -> Image(appIcon, contentDescription = null, modifier = modifier) },
             onNavControllerReady = {},
             onClose = { logger.error(LTag.CORE, "Initialization failed and the window was asked to close") }
         ) { navController ->
@@ -273,7 +286,7 @@ private fun AapsDesktopApp(graph: DesktopAppGraph) {
                             clientControlActionDispatcher = graph.clientControlActionDispatcher,
                             commandQueue = graph.commandQueue,
                             pumpCommunicationStatus = graph.pumpCommunicationStatus,
-                            appName = "AAPS",
+                            appName = appName,
                             authorizationFailedMessage = "Authorization failed",
                             onNavigate = { request -> navigator.handleNavigationRequest(request) },
                             onSearchResultClick = { entry -> navigator.handleSearchResultClick(entry) },

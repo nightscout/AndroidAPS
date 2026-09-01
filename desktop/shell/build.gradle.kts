@@ -44,6 +44,21 @@ fun buildStamp(): String {
  * Without it the About dialog showed a hardcoded placeholder, which is worse than showing nothing:
  * a user quoting it in a bug report names a build that does not exist.
  */
+/**
+ * The app icon, copied from the one place it lives rather than checked in twice.
+ *
+ * All of them, because the choice is per flavour: `IconsProviderImplementation` maps client 1, 2 and
+ * 3, pump control and the master build to different icons, and the desktop follows the same rule at
+ * runtime from `Config`. Copying at build time keeps a single source, so a redrawn icon reaches the
+ * desktop without anyone remembering to re-export it.
+ */
+val copyAppIcon = tasks.register<Copy>("copyDesktopAppIcon") {
+    from(rootProject.file("core/ui/src/androidMain/res/mipmap-xxxhdpi")) {
+        include("ic_launcher.png", "ic_yellowowl.png", "ic_blueowl.png", "ic_greenowl.png", "ic_pumpcontrol.png")
+    }
+    into(layout.buildDirectory.dir("generated/icon/icons"))
+}
+
 val generateBuildInfo = tasks.register<GenerateBuildInfoTask>("generateDesktopBuildInfo") {
     version.set(Versions.appVersion)
     buildStamp.set(buildStamp())
@@ -66,6 +81,7 @@ kotlin {
     sourceSets.main {
         kotlin.srcDir(generateStringOwners)
         kotlin.srcDir(generateBuildInfo)
+        resources.srcDir(copyAppIcon.map { it.destinationDir.parentFile })
     }
 }
 
@@ -142,7 +158,11 @@ compose.desktop {
         mainClass = "app.aaps.desktop.shell.MainKt"
 
         nativeDistributions {
-            packageName = "AAPS"
+            // The client name, matching `DesktopClientConfig.appName` and the `aapsclient` flavour
+            // on Android. Not just cosmetic: Windows takes the notification header from the
+            // launcher this produces, so a package called "AAPS" would put the master name on a
+            // follower every time a notification appeared.
+            packageName = "AAPSClient"
             // jpackage demands a plain numeric version - an MSI rejects anything else - so the
             // `-dev-b-kmp` style suffix that Versions.appVersion carries is trimmed off here.
             packageVersion = Versions.appVersion.substringBefore('-')
