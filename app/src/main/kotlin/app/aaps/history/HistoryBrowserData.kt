@@ -14,16 +14,14 @@ import app.aaps.ui.compose.history.HistoryScope
  * different time range, and sharing the live loop's objects would mean browsing history rewrites the
  * state the loop is running on.
  *
- * That isolation used to be arranged by hand: this class took fourteen dependencies, passed most of
- * them straight through, and constructed four objects itself. Now it asks for one history window and
- * hands back what the window contains. `HistoryWindowGraph` owns the wiring, `MetroScopingTest` checks
- * the isolation those objects rely on, and the cycle between the cache and the calculator is expressed
- * with Metro's `Provider` rather than a hand-written lambda.
+ * It asks for one history window and hands back what the window contains. `HistoryWindowGraph` owns
+ * the wiring, `MetroScopingTest` checks the isolation those objects rely on, and the cycle between the
+ * cache and the calculator is expressed with Metro's `Provider` rather than a hand-written lambda.
  */
 /*
- * Takes the window itself rather than `MetroGraphs`. It used to ask the graph holder for one, which
- * made a domain class depend on the DI plumbing to reach a single object. `AppAndroidBindings` calls
- * the extension factory instead, and the scope lives on that provider.
+ * Takes the window itself rather than `MetroGraphs`: asking the graph holder for one would make a
+ * domain class depend on the DI plumbing to reach a single object. `AppAndroidBindings` calls the
+ * extension factory instead, and the scope lives on that provider.
  */
 class HistoryBrowserData(
     window: HistoryWindowGraph

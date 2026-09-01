@@ -1,7 +1,7 @@
 package app.aaps.plugins.configuration.configBuilder
 
-import android.content.Context
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.interfaces.configuration.AppExit
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -40,7 +40,7 @@ internal class ConfigBuilderImplTest {
     @Mock private lateinit var activePlugin: ActivePlugin
     @Mock private lateinit var uel: UserEntryLogger
     @Mock private lateinit var pumpSync: PumpSync
-    @Mock private lateinit var context: Context
+    @Mock private lateinit var appExit: AppExit
     @Mock private lateinit var config: Config
     @Mock private lateinit var sens2: PluginBase
     @Mock private lateinit var sens2Desc: PluginDescription
@@ -66,7 +66,7 @@ internal class ConfigBuilderImplTest {
         whenever(activePlugin.getSpecificPluginsList(any())).thenReturn(arrayListOf<PluginBase>(sens2))
         whenever(preferences.get(any<StringNonPreferenceKey>())).thenReturn("")
 
-        sut = ConfigBuilderImpl(aapsLogger, rh, preferences, rxBus, activePlugin, uel, pumpSync, context, config)
+        sut = ConfigBuilderImpl(aapsLogger, rh, preferences, rxBus, activePlugin, uel, pumpSync, appExit, config)
     }
 
     /** A local plugin switch mirrors the new selection (by pluginId) into the synced ActivePlugin key. */

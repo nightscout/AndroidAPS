@@ -47,8 +47,7 @@ class ActionSettingsExport(
 ) : Action(aapsLogger, rh, pumpEnactResultProvider) {
 
 
-    // Not private: the editor binds to it. It used to be read by Java reflection, which is JVM only
-    // and reached past the visibility anyway.
+    // Not private: the editor binds to it directly, rather than reaching it by reflection.
     val text = InputString()
 
     override fun friendlyName(): TextRef = CoreUiStrings.exportsettings

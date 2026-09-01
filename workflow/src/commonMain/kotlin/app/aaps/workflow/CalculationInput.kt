@@ -8,9 +8,8 @@ import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 /**
  * The input of one calculation chain.
  *
- * These used to be nested in the two WorkManager workers, which put a plain data holder behind an
- * Android class. They are read by [WorkflowChainData], which the workers only look up their slot in,
- * so they belong beside it rather than inside a worker.
+ * Top level rather than nested in a worker: they are plain data holders read by [WorkflowChainData],
+ * which the workers only look up their slot in, so they belong beside it.
  */
 class PrepareGraphData(
     val iobCobCalculator: IobCobCalculator, // cannot be injected : HistoryBrowser uses different instance

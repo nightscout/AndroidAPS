@@ -231,39 +231,68 @@ Collected so nobody pays for them twice. All were found by tests or a crash, not
 
 ## Open
 
-### Twelve bindings stand between the NS client and iOS
+### Six bindings stand between the NS client and iOS
 
-Measured with the probe procedure above. `StoreDataForDb`, `NSAlarmObject`, `ReceiverStatusStore`,
-`SecureEncrypt`, `SceneExpiryScheduler`, `SmsCommunicator`, `CalculationExecutor` and `Loop` have all
-been cleared since this list was first written; `IosNsConnection` itself is written and compiling.
+Re-measured with the probe procedure above, against the current tree. The earlier list of twelve was
+out of date in both directions - some entries had been cleared, and two of the claims in it were
+wrong. What is actually left:
 
-`DeviceStatusJson` is off the list for a different reason: the port was deleted rather than
-implemented. `LoopPlugin` renders that JSON with kotlinx directly now, so there is no binding left
-to satisfy - do not go looking for `AndroidDeviceStatusJson`.
+| Missing binding | Whose | Note |
+|---|---|---|
+| `Autotune` | yours | 3 methods, but the Android class is portable Kotlin computation, not platform. Worth porting rather than stubbing - a no-op would quietly do nothing when a user runs it. |
+| `ExportPasswordDataStore` | yours | see the request section above |
+| `ImportExportPrefs` | yours | 37 methods, document picker on both sides |
+| `IobCobCalculator` | yours | still needs a home outside `:app` |
+| `UiInteraction` | shared | the interface is in commonMain already; only `UiInteractionImpl` is in `:app`. The iOS side is ours and is being written - see below. |
+| `NsSocketFactory` | ours | wiring only, see the gaps section |
 
-`Automation` is unblocked but not cleared. `AutomationRuntime` and the whole automation Compose UI
-are in commonMain and compile for iOS, so the class itself is no longer in the way. The binding still
-does not resolve, because three of its constructor dependencies are Android-only with no iOS side
-yet: `LocationServiceController` (`LocationServiceControllerImpl`), `LocationPermissions`
-(`AndroidLocationPermissions`) and `ReminderScheduler` (`ReminderSchedulerImpl`). Those three are the
-remaining work, and each is far smaller than the class that used to be the obstacle.
+**Correction to what this section used to say.** It listed `BolusWizard`, `QuickWizard`,
+`RunningModeGuard`, `L` and `BolusProgressData` as having "no Kotlin implementation anywhere, and
+worth questioning rather than porting", and suggested the NS client was dragging in the loop. That
+was wrong on both counts and should not be acted on:
 
-**Has an Android implementation to lift or port** - your side:
-`LoopNotifier` (`AndroidLoopNotifier`), `WidgetUpdater` (`WidgetUpdaterImpl`), and `UiInteraction`,
-which currently lives in `:app` and so needs somewhere to go first.
+- `BolusWizard`, `QuickWizard` and `RunningModeGuard` were never missing. They are built by
+  `CoreObjectsGraph`, which is a `@BindingContainer`, so its `@Provides` are invisible to a graph
+  that does not include it. The probe did not, and they looked absent. Including it cleared all
+  three at once.
+- `L` and `BolusProgressData` needed no new code either, only a `@Provides` each. `LImpl` is already
+  in `shared/impl` commonMain, and `BolusProgressData` is a commonMain class that carries no
+  annotations on purpose. Both are stated in `IosProbeGraph` now.
 
-**Ours, and only wiring:** `NsSocketFactory` - see the note in the gaps section.
+Only `IobCobCalculator` from that group is real, and it is a packaging problem rather than a missing
+implementation.
 
-**No Kotlin implementation anywhere, and worth questioning rather than porting:**
-`BolusWizard`, `BolusProgressData`, `QuickWizard`, `IobCobCalculator`, `RunningModeGuard`, `L`.
+`Automation` is separately blocked, by five of the six above: `Autotune`, `ExportPasswordDataStore`,
+`ImportExportPrefs`, `IobCobCalculator` and `UiInteraction`. Its own three former blockers -
+`LocationServiceController`, `LocationPermissions`, `ReminderScheduler` - are all cleared.
 
-That last group is the interesting one. A Nightscout **connection** should not need the bolus wizard,
-the quick wizard or the IOB/COB calculator bound, and `DeviceStatusJson` and `LoopNotifier` only
-appeared once `Loop` resolved - so the graph is walking into loop territory by way of
-`NSClientV3Plugin` rather than anything the connection touches. Before implementing six more classes
-it is worth checking whether the plugin can take them lazily, the way `AapsLeaves` does on Android
-with `Provider`. A follower client that has to construct the loop to sync Nightscout data is carrying
-weight it does not use.
+### Three dependency cycles, and why Android never sees them
+
+Worth knowing, because each one is a place where Android's platform machinery is quietly acting as
+an injection boundary and iOS has nothing in that role. All three are fixed on the iOS side with a
+`Provider`, the same tool `TriggerFactory` already uses in commonMain.
+
+1. `IosLoopNotifier` → `Loop` → `LoopPlugin` → `LoopNotifier`. `AndroidLoopNotifier` never names
+   `Loop`: it reaches the loop through a broadcast receiver and an intent, so the edge does not exist
+   on that side.
+2. `CoroutineNsLoadExecutor` → the nine load runners → `NSClientV3Plugin` → `NsLoadExecutor`. On
+   Android the runners are WorkManager workers, built by WorkManager rather than by the graph, so
+   they are not graph nodes at all.
+3. `IosNsConnection` → `NsIncomingDataProcessor` → `NsClient` → `NsConnection`. `ServiceNsConnection`
+   avoids it by holding no such dependency: the socket work lives in `NSClientV3Service`, an Android
+   service the system constructs.
+
+The pattern is the same each time, and it is worth expecting more of them as further plugins reach
+iOS. Anywhere Android hands construction to the framework - a `Service`, a `BroadcastReceiver`, a
+`Worker` - the cycle is real in the object graph and only hidden by who does the building.
+
+### `BtConnectionSource` no longer needs an iOS class
+
+`IosBtConnectionSource` is deleted. Once `AutomationRuntime` moved to commonMain it began
+contributing `BtConnectionSource` itself, which made two bindings on iOS and failed the graph. The
+shared one already gives the right answer there: its buffer is filled from `EventBTChange` on the
+bus, and nothing posts that event on iOS, so the list stays empty without a second class to keep in
+step. The behaviour is unchanged and still documented in the gaps section.
 
 ## Ready for Android: what the iOS side has built
 
@@ -381,7 +410,651 @@ Not blockers, and not for the Windows session to fix. Listed so nobody is surpri
   has it (`screenshotsBlocked` in `AuthorizedClientsScreen`); it just has nowhere to show it yet, and
   choosing that wording is a product decision rather than a porting one.
 
+- **The word "exported" is missing from the export date on iOS.** `IosPrefsFileInfo.formatExportedAgo`
+  returns "3 days ago" where Android says "exported 3 days ago". The relative wording itself comes
+  from `NSRelativeDateTimeFormatter`, which the system localizes on its own, but the surrounding word
+  is one of AAPS's own strings (`exported_ago`, `exported_at`, `exported_less_than_hour_ago`) and iOS
+  still has no reader for those. The label sits next to a calendar icon on a row about an export, so
+  it reads, but it should be wrapped once app strings can be read on iOS. Both platforms switch from
+  relative wording to a plain date at the same age - 60 days - so only the prefix differs.
+- **`IosLocationPermissions` returns an empty list on purpose.** `PermissionGroup.permissions` holds
+  Android `Manifest.permission` strings and iOS has no equivalent: location is asked for at the point
+  of use by `CLLocationManager`. `AutomationRuntime` therefore reports nothing missing on iOS, which
+  is correct rather than unfinished. The permission is still requested, by
+  `IosLocationServiceController`.
+
+
+## DONE: `ExportPasswordDataStore` needs the same treatment the other big ones got
+
+`ExportPasswordDataStoreImpl` (`implementation/src/androidMain/.../protection/`) is the last small
+looking blocker that is not small. The interface is four methods, but the implementation is ~300
+lines and almost none of what it does is Android:
+
+- the validity window and the grace period (`isInValidityWindow`, the half window rule),
+- resetting the password once the window has passed,
+- the master password cross check - decrypt the stored secret through `SecureEncrypt` and compare it
+  with `StringKey.ProtectionMasterPassword` through `CryptoUtil`, clearing the store when it no
+  longer matches.
+
+Only the storage is Android: Jetpack DataStore, plus `KEYSTORE_ALIAS`. Writing an iOS copy would
+duplicate every rule above, which is exactly the failure mode the notification registry avoided.
+
+The ask is the shape that already worked twice: move the logic to `commonMain` behind a small
+storage port - something like `fun read(): Pair<String, Long>?` / `fun write(password: String,
+timestamp: Long)` / `fun clear()` - and leave the platform side to supply it. `SecureEncrypt`,
+`CryptoUtil` and `Preferences` all resolve on iOS already, so nothing else stands in the way.
+
+The iOS half is then a few lines and already has its parts: `Keychain`
+(`implementation/src/iosMain/.../protection/Keychain.kt`) is an interface with `AppleKeychain`
+behind it, written for `IosSecureEncrypt` and directly reusable here.
+
+`ImportExportPrefs` is a separate matter - 37 methods, document picker work on both sides - and is
+not being asked for here.
+
+### Done, with one thing you did not have visibility of
+
+The port is `ExportPasswordPlatform` (`:core:interfaces` commonMain): `read()`, `write(secret,
+timestamp)`, `clear()`. `ExportPasswordDataStoreImpl` moved to `:implementation` commonMain with
+every rule intact - the validity window, the grace period, the master password cross check, and the
+legacy alias handling that also deletes the old key. `CryptoUtil` became `PasswordHasher` there too,
+the same swap as `PasswordCheckImpl`.
+
+**The thing that was not in your analysis:** the class also injects `FileListProvider`, which is
+`DocumentFile` and `java.io.File` throughout and cannot move. It is used by a dev-only block that
+shortens the validity window to minutes so the expiry can be tested without waiting five weeks. I did
+not want to delete a testing tool that is not mine, so the port carries a fourth method,
+`shortenedValidity()`, returning null on every platform but Android. It is documented as going away
+with the debug mode it serves. If you would rather it were a separate interface, say so - it was a
+close call.
+
+The iOS side is one class over `AppleKeychain`, as you expected. Desktop's is a properties file next
+to the database holding the same encrypted envelope; that also let the
+`DesktopExportPasswordDataStore` placeholder be deleted, so the remember-password feature is
+genuinely available there now instead of reporting itself off.
+
+**The old test only ever reached the disabled path** - it had two commented out cases admitting
+`SecureEncrypt` could not be instantiated. With a fake platform there are now 10 tests covering the
+window, the grace period, both master-password failure modes and the legacy alias. They sit in
+`androidHostTest` rather than `commonTest` only because `Preferences` has seventy methods and Mockito
+is not available in common code; the class itself is pure Kotlin.
+
+Verified: `:implementation:compileKotlinIosArm64`, `:app:assembleFullDebug`, and 93 app tests plus
+the 10 above, all green.
+
+
+## DONE: `PasswordCheckImpl` moved to commonMain by swapping one dependency
+
+`AapsAppRoot` landing in `appshell/commonMain` is the reason this is worth doing now. Measured with
+the probe against that function's parameters, five of its six injected dependencies already resolve
+on iOS - `DecimalFormatter`, `ProfileUtil`, `PasswordHasher`, `VisibilityContext` and
+`ClientControlActionDispatcher`. `PasswordCheck` is the only one that does not, and it is a new
+entry that was not on the blocker list before.
+
+It does not need an iOS implementation. `PasswordCheckImpl`
+(`implementation/src/androidMain/.../protection/`) has **no Android imports at all** - 162 lines
+over `Preferences`, `CryptoUtil`, `RxBus` and `TextResolver`. It is in androidMain only because
+`CryptoUtil` is, and it uses exactly two things from it:
+
+```
+line  74:  cryptoUtil.checkPassword(enteredPassword, password)
+line 110:  cryptoUtil.hashPassword(enteredPassword)
+```
+
+Both are `PasswordHasher`, which you extracted for the setup wizard and which now has an
+implementation on both platforms - `CryptoUtil` on Android, `IosPasswordHasher` on iOS. Swapping the
+constructor parameter from `CryptoUtil` to `PasswordHasher` should let the whole class move to
+commonMain untouched otherwise, and iOS then gets it for free.
+
+That is one shared class instead of two, which is the better outcome than an iOS copy: the dialog
+rules here decide when a user is asked for a master password, and two implementations would be two
+places for that to drift.
+
+**Done, exactly as described.** `PasswordCheckImpl` now takes `PasswordHasher` instead of
+`CryptoUtil` and lives in `implementation/src/commonMain/.../protection/`. It compiles for Android,
+iOS and the JVM desktop target from the one source, unchanged apart from that parameter. The
+`IosPasswordCheck` placeholder in `ios/shell/.../missing/` is deleted, and
+`:ios:shell:compileKotlinIosArm64` is green without it, so the binding really is satisfied by the
+shared class.
+
+### What `AapsAppRoot` still needs beyond that
+
+`ClientControlActionDispatcher` resolves, but pulling it in drags every remaining blocker with it -
+`Autotune`, `ExportPasswordDataStore`, `ImportExportPrefs`, `IobCobCalculator`, `NsSocketFactory`
+and `UiInteraction` - because it reaches the loop and the NS client. So hosting the real Compose
+root on iOS is gated on that whole set, not on any single one.
+
+`ExportPasswordDataStore` is worth pulling forward in that list: `AapsAppRoot` takes it directly, so
+it is now on the path to running the real UI on iOS rather than only affecting the export screen.
+The request for it is in the section above.
+
+## Fixed on the iOS side: `is24HourClock` answered wrongly in Traditional Chinese
+
+Small change to `core/ui/src/iosMain/.../PlatformTheme.ios.kt`, flagged here because it is your file.
+
+The actual read the AM/PM letter - `dateFormat?.contains("a") != true` - which is the usual advice
+and is wrong for at least one locale. `zh_TW` asks for the short time pattern `Bh:mm`: `B` is the
+flexible day period (上午 / 下午) and `h` is a 12 hour hour. There is no `a` in it, so the check
+answered "24 hour" and a Traditional Chinese user with the "24-Hour Time" switch **off** would have
+been given a 24 hour picker on the profile activation screen.
+
+It now reads the hour field instead, which the Unicode standard fixes rather than the locale: `h`
+and `K` count to twelve, `H` and `k` count to twenty four. The parser is `usesTwelveHourClock` in
+`core/ui/src/iosMain/.../ClockPattern.kt`, kept apart from the composable so it can be tested, and
+it skips quoted literals so the `'h'` in a pattern like `HH'h'mm` is not mistaken for a field.
+
+Found by running the real formatter over 40 locales and comparing the two readings, not by
+inspection - `zh_TW` was the only disagreement, and nothing but running it would have shown that.
+`ClockPatternTest` keeps both the parser cases and the live `zh_TW` formatter check.
+
+Worth knowing if Android does the same thing anywhere: `DateFormat.is24HourFormat(context)` is a
+direct flag and has no such problem, so this is an iOS only trap.
+
+
+## `PasswordHasher` and `PluginPermissions` - iOS side done
+
+Both ports landed and both have an iOS implementation with tests.
+
+**`IosPasswordHasher`** (`implementation/src/iosMain/.../protection/`) copies `CryptoUtil` byte for
+byte, because the hash is stored and travels between platforms in an export. One detail is worth
+repeating since it is easy to "correct" into a bug: the HMAC key is the **UTF-8 text of the salt's
+hex**, not the 32 raw salt bytes. Using the raw bytes is the reading that looks more correct and
+would reject every password ever set on Android.
+
+The tests check three reference hashes produced independently with Python's `hmac` module rather
+than by running this code, so they would catch the salt and the message being swapped - a mistake
+that a round trip test cannot see, because it is symmetric.
+
+**`IosPluginPermissions`** (`implementation/src/iosMain/.../plugin/`) returns empty from both
+methods, which is what `PluginPermissionsImpl`'s own docs already predicted. It asks the plugins
+first and logs an error if any of them declares a group, so the emptiness stays a checked fact
+rather than an assumption: today every source is empty on iOS - `bluetoothPermissionGroup()` is
+null, `IosLocationPermissions` returns nothing, and the rest are androidMain.
+
+### One gap this opened: `PrefsFileInfo.listPreferenceFiles` is empty on iOS
+
+Finding the files would be easy. Building a `PrefsFile` is not: it carries parsed metadata, and both
+`EncryptedPrefsFormat` and `PrefsMetadataKeyImpl` are androidMain. Returning files without metadata
+would be worse than none, since the import screen sorts and filters on the flavour key and would
+drop every row after showing it. There is also nothing to list yet - `ImportExportPrefs` has no iOS
+implementation, so iOS cannot write an export either. This clears up on its own if that ever moves.
+
+## Fixed on the iOS side: a non-cryptographic random was generating an AES key
+
+Ours, not yours, but worth knowing if similar code appears on your side. `IosSecureEncrypt` used
+`kotlin.random.Random` for both the AES-256 key and the GCM IV. That is a plain PRNG seeded from the
+clock, not a CSPRNG, so both were predictable to anyone who could guess roughly when they were made
+- which defeats the point of encrypting the secret at all. Now `CryptographyRandom` from
+cryptography-kotlin, which is backed by the platform CSPRNG and is a drop-in for the same calls.
+
+Checked the rest of the tree while there: the only other `kotlin.random.Random` uses are a virtual
+pump serial number and a date helper, neither of which is security.
+
+
+## Before anyone writes `IosUiInteraction`: the alarm owner tag is a trap
+
+Not a live bug - nothing on iOS plays with `OWNER_FULLSCREEN` today - but the next person to write
+`UiInteraction.runAlarm` for iOS will walk into it, so it is written down before that happens.
+
+`AlarmSoundPlayer` records who started a sound. Two owners exist: `OWNER_INTERNAL`, used by the
+notification registry through `setAudibleAlarm`, and `OWNER_FULLSCREEN`, used by Android's
+`AlarmNotificationManager` for the full screen alarm that `runAlarm` posts.
+
+`stopAlarm` is `notificationManager.muteAllAlarms()` on both platforms, and that ends in
+`refreshAlarmSound()` plus `platform.cancelAll()`. The difference is what `cancelAll` does:
+
+- `AndroidSystemNotificationPlatform.cancelAll()` calls `alarmNotificationManager().cancelAlarm()`,
+  which stops the **`OWNER_FULLSCREEN`** audio and cancels the notification.
+- `IosSystemNotificationPlatform.cancelAll()` only removes pending and delivered notifications.
+  Nothing on the iOS side stops `OWNER_FULLSCREEN`, because nothing starts it.
+
+So an iOS `runAlarm` that plays with `OWNER_FULLSCREEN` would produce a **ramping alarm that
+`stopAlarm` cannot silence**. In a medical app that is the worse of the two failure directions, and
+it would not show up in a build or in any test that does not actually let the sound run.
+
+Two ways out, and the choice is a design decision rather than a porting one:
+
+1. play with `OWNER_INTERNAL` and let the registry own the sound, accepting that
+   `setAudibleAlarm`'s `soundingKey` bookkeeping may silence it when the notification list changes;
+2. give iOS its own counterpart of `cancelAlarm()` so `cancelAll()` stops the full screen owner too,
+   which is the shape Android already has.
+
+Related, and part of the same decision: `runAlarm` takes a `title`, and the shared registry does not
+carry one - `CommonNotificationManager` derives the title from the level ("Urgent alarm" / "Info").
+Posting an alarm through the registry therefore loses the caller's title, while posting outside it
+is what raises the owner tag question above. Android sidesteps both by not using the registry for
+`runAlarm` at all.
+
+Worth knowing while deciding: `UiInteraction` is injected on iOS but never called. `LoopPlugin` and
+`TreatmentsViewModel` hold it without using it in commonMain, and every reader of `mainActivity` and
+`errorHelperActivity` is androidMain - checked, not assumed. So the iOS implementation is needed to
+satisfy the graph, and has no caller to satisfy yet.
+
+
+
+## Two notes from the desktop-target work
+
+**`ClockPattern`'s tests followed it to commonMain.** Moving the reader to `commonMain` so the
+desktop target could use it left its tests behind in `iosTest`, which meant a shared parser was
+being checked on only one of the targets that use it - the exact thing the "Where tests for common
+code go" section above warns about. The six pure parser cases are now in
+`core/ui/src/commonTest/`, and run on iOS and the Android host; the two that drive a real
+`NSDateFormatter` over 34 locales stay in `iosTest`, because they cannot be shared and they are what
+found `zh_TW` in the first place. This needed one line in `core/ui/build.gradle.kts` -
+`implementation(kotlin("test"))` on `commonTest`, copying the pattern already in `ui`.
+
+**A stale comment, left for you rather than edited.** DONE - deleted, and the same wording in
+`core/nssdk/build.gradle.kts` found by the sweep you suggested. Both modules have a real `jvm {}`
+target now, so both comments described a `mingwX64()` call that no longer exists. The original note:
+`core/utils/build.gradle.kts` still describes
+mingw as "The only Kotlin/Native target whose tests can actually RUN on a Windows machine", which
+stopped being true with `fa8800bdde`. Worth a sweep for the same wording elsewhere - the two-host
+testing rule it refers to no longer exists, and it is the kind of comment that keeps a wrong idea
+alive long after the code is gone.
+
+
+## DONE: real strings for iOS and desktop, from one generator
+
+`DesktopTextResolver` is now a verbatim copy of `IosTextResolver`, KDoc and all. Two identical
+placeholders is the signal that this stopped being an iOS problem: both non-Android platforms render
+every label as its string **name** - a settings screen reads `configbuilder_general` and
+`pref_title_low_mark` - and that is the single biggest thing standing between the shared UI and
+looking like a real app on either.
+
+Your note in `DesktopTextResolver` points at the fix and it checks out, with one correction:
+`GenerateKeyStringsTask` currently reads only the **names**. `readStringNames(baseDir)` is the only
+parse it does, and both generated files it emits - the `TextRef` object and the Android id map - are
+keyed on names alone. The text values are never read, so a `name -> text` map is a real addition to
+that task rather than a wiring job on something that already exists.
+
+What that buys, and why it is worth doing once rather than twice:
+
+- one generated map serves **three** platforms, and the two placeholder resolvers collapse into it,
+- the English `strings.xml` is already the single source both platforms would read, so there is no
+  new place for wording to drift,
+- format strings start working. Both resolvers currently append arguments rather than substituting
+  them, because there is no `%1$s` to substitute into - so today a dose or a count appears bolted
+  onto the end of a label.
+
+Left with you rather than done here: it is a `buildSrc` change that affects the Android build too,
+which is exactly the kind of cross-cutting task this split keeps on your side. The iOS half
+afterwards is deleting `IosTextResolver` and providing the shared one, which is a few lines.
+
+Localisation is a separate question and not part of this - the first step only needs the English
+values that are already parsed.
+
+### Done. What is there now, and the few lines left on your side
+
+Your correction was right: the task only read names, so reading the values was a real addition. It
+now writes a third file next to the other two, from the same pass:
+
+- `GenerateKeyStringsTask` emits `XxxStringsValues` - a `name -> English text` map with
+  `textOf(name)` - into the **common** output directory. That directory is already registered as a
+  commonMain source dir, so no module needed a build change. Android never reads it, and R8 removes
+  it because nothing there references it.
+- The text is unescaped the way AAPT does it: whitespace collapsed unless the value is quoted, then
+  the backslash escapes resolved. Format placeholders are left exactly as written.
+- The map is written in chunks of 200 entries across several private functions. `:core:ui` has over
+  eleven hundred strings, and a single `mapOf` of that size is one method against the 64K limit.
+- `TextRefValueRegistry` (`:core:interfaces`, beside `TextRefIdRegistry`) is where a shell says which
+  owners it can resolve.
+- `GeneratedTextResolver` (`:implementation` commonMain) is the shared `TextResolver`. It carries
+  **no** `@ContributesBinding` on purpose - that would collide with `ResourceHelperImpl` on Android -
+  so each shell provides it.
+- `formatTemplate` beside it does the substitution: `%s`, `%d`, `%f`, the uppercase forms, explicit
+  argument indexes, precision, width and a literal per cent sign. Numbers go through `NumberFormat`,
+  so a separator here matches one produced anywhere else in the app. A missing argument leaves the
+  placeholder visible instead of throwing the way Java does, because a crash while drawing a label is
+  worse than a visible placeholder.
+
+**Your half.** Delete `IosTextResolver`, provide `GeneratedTextResolver()` from the iOS graph, and add
+an `IosStringOwners` mirroring `DesktopStringOwners` - one `TextRefValueRegistry.register(owner)` line
+per module `:ios:shell` depends on. The desktop one registers `keys`, `interfaces`, `coreUi`,
+`implementation` and `ui`.
+
+**Copy `DesktopStringOwnersTest` too.** The owner is a plain String on both sides - `owner.set("coreUi")`
+in the build file against `register("coreUi")` in the shell - so a typo compiles and the only symptom
+is a screen still showing names, which reads as unfinished UI rather than as a bug. The test asserts
+one real string per registration, and takes each owner from that module's generated object instead of
+repeating the literal.
+
+Verified: 28 tests in `:implementation` commonTest, so they run on iOS as well, plus 4 in the desktop
+shell; `:app:assembleFullDebug` and `:implementation:compileKotlinIosArm64` both green. The desktop
+app now renders "General" where it read `configbuilder_general`.
+
+
+## The strings work is wired on iOS, with one gap left on your side
+
+`GeneratedTextResolver` and the generated value maps landed and they work: `IosStringOwners`
+registers all sixteen modules the iOS framework links, and the settings screen now reads "Settings",
+"General", "Absorption settings" and "Master device unreachable. Editing is disabled until the
+connection is restored." instead of string names. `IosTextResolver` is deleted.
+
+One thing was missing and is worth knowing about, because desktop has it too: **the Compose path was
+still a placeholder.** `TextResolver` is not what a composable calls - `stringResource(TextRef)` in
+`:core:ui` is, and both the iOS and the JVM `actual` still returned `ref.name`. The iOS one now
+looks the text up through `TextRefValueRegistry`; `TextRefResource.jvm.kt` is still the placeholder,
+and its KDoc still says the machinery "is not built yet", which stopped being true in the same
+commit that built it.
+
+**The gap that needs you: format arguments.** `stringResource(ref, vararg)` folds the arguments into
+the `TextRef` and the actual has to substitute them. `formatTemplate` does exactly that and is
+already written - but it is `internal` to `:implementation`, and `:core:ui` sits below that in the
+dependency graph, so neither the iOS nor the JVM actual can call it. Today a format string renders
+with its placeholders visible on both platforms, while the same string through `TextResolver` comes
+out correct.
+
+Moving `formatTemplate` beside `TextRefValueRegistry` in `:core:interfaces` would close it for both
+platforms at once and leave `GeneratedTextResolver` calling the same function it calls now. It is a
+move rather than new code, which is why it is left with you rather than done here - `:core:interfaces`
+is shared, and `NumberFormat` (which it uses) is already in `:core:data`, below it.
+
+
+## `ExportPasswordDataStore` - iOS side done
+
+The shared move landed and the iOS half is `IosExportPasswordPlatform`
+(`implementation/src/iosMain/.../protection/`). `IosExportPasswordDataStore`, the placeholder that
+reported the store as switched off, is deleted.
+
+One decision worth recording, because the interface allows the weaker answer. `ExportPasswordPlatform`
+says an implementation "does not need secure storage of its own - it needs somewhere durable that
+survives a restart and is private to this user". `NSUserDefaults` meets that and breaks the sentence
+after it: a remembered password **must not travel to another device**, and preferences are carried in
+an iCloud or iTunes backup and restored onto a new phone. So this uses the Keychain, where
+`AppleKeychain` already writes `AfterFirstUnlockThisDeviceOnly` - never synced, never restored
+elsewhere, still readable to a backgrounded export. A different service name from the encryption keys,
+so clearing one cannot delete the other.
+
+The secret and its timestamp are one entry, `<timestamp>:<secret>`, rather than two. Two entries can
+be left half written, and the shared rules measure the validity window from the timestamp - so a
+secret that came back without one would read as either infinitely fresh or infinitely stale, and both
+are silent. Anything in the store that is not in that form is dropped and logged rather than guessed
+at, which is most of what `IosExportPasswordPlatformTest` covers.
+
+## Two flaky tests, noted rather than fixed
+
+Both cost a false alarm today, so they are worth writing down even though neither is ours:
+
+- `SerialIOThreadTest.testThreadLifecycle` (`:pump:danar`, unit) failed one full gate run and passed
+  the four runs after it, on a tree whose only changes were iOS files.
+- `EquilEmulatorActivationTest.activatedPod_readsCancelsAndTogglesMode` (instrumented, CI shard C)
+  failed on a push whose only non-desktop change was a markdown file and a test moving between source
+  sets. Build 41072 on `kmp` failed the DanaRS instrumented shard the same way, on an About-dialog
+  commit.
+
+Both are timing-sensitive tests in pump drivers. The cost is not the runs themselves - it is that a
+red gate stops meaning "you broke something", and the next real failure gets waved through.
+
+
+## DONE (both halves): `ProtectionCheckImpl` can move too - but not on its own
+
+**Both halves landed together, so the hang you warned about never exists.** Your reasoning was right
+and the warning was the important part of the request.
+
+1. `ProtectionCheckImpl` is in `implementation/src/commonMain/.../protection/`. One correction to the
+   survey: it does **not** have "no Android imports at all" - the import list is clean, but it used
+   `app.aaps.core.ui.R.string.*` fully qualified inline in six places, exactly the trap recorded
+   further up this file. They are now `CoreUiStrings` values, so `title` is a real `TextRef` instead
+   of `TextRef.AndroidRes(id)` - which also means the prompt title renders as words on iOS rather
+   than `res:2131…`. `@Volatile` needed `kotlin.concurrent.Volatile`; `AtomicLong` was already the
+   multiplatform one.
+2. `ProtectionHost` is in `core/ui/src/commonMain/.../compose/`, and **`AapsAppRoot` places it**
+   beside `PasswordCheckHost`. Your read of `FragmentActivity` was exactly right: it was only used to
+   root the prompt, so it came out of the lambda types and `ComposeMainActivity` captures the
+   activity itself. The host is otherwise unchanged.
+
+`IosProtectionCheck` is deleted, `IosAppGraph` exposes `protectionCheck`, and `AapsAppHost` passes it
+to `AapsAppRoot`. `:ios:shell:compileKotlinIosArm64` is green.
+
+**What iOS gets without doing anything:** password and PIN protection, working properly. The
+biometric lambdas are parameters of `AapsAppRoot` with defaults - `showBiometricSimple` falls back to
+the credential dialog, and `showBiometric` cancels. So a platform with no biometric prompt asks for a
+password instead of granting access, and never silently succeeds.
+
+**What is still yours:** pass an `LAContext` prompt into `AapsAppRoot` as `showBiometric` /
+`showBiometricSimple` when you want Face ID. Nothing breaks until then; it just falls back.
+
+Desktop takes the defaults deliberately - there is no OS prompt worth wiring for a follower window.
+
+`PasswordCheckImpl` moving to commonMain unblocked the class above it, and the same reading applies:
+`ProtectionCheckImpl` (`implementation/src/androidMain/.../protection/`, 317 lines) has **no Android
+imports at all**. Its dependencies are `Preferences`, `PasswordCheck` and `DateUtil`, all three of
+which now resolve on iOS.
+
+Biometrics does not block it. The class never prompts - `ProtectionType.BIOMETRIC` is only an enum
+value it counts, and it publishes a `HierarchicalProtectionRequest` carrying `hasBiometric` for the
+UI to act on. The prompting lives in `ProtectionHost`, which is a different question (below).
+
+**The trap: moving the impl alone would make iOS worse, not better.** `IosProtectionCheck` currently
+grants everything, which is wrong but at least passable while iOS reaches no pump. The real impl
+publishes to `pendingRequest` / `pendingAuthRequest` and waits for a host to call back. `AapsAppRoot`
+places `PasswordCheckHost` but **not** `ProtectionHost` - only `ComposeMainActivity` does. So on iOS
+the request would be published, nothing would render it, and the callback would never fire: every
+protected action would hang rather than be granted or refused. That is worse than either.
+
+So the two halves have to land together:
+
+1. **Yours:** move `ProtectionCheckImpl` to commonMain. It needs nothing else.
+2. **Ours:** a protection host for iOS.
+
+### And `ProtectionHost` is closer to portable than it looks
+
+It takes the biometric prompt as a lambda already -
+`showBiometric: (FragmentActivity, String, () -> Unit, () -> Unit, () -> Unit) -> Unit` - so the
+Android-only part is almost entirely in that one parameter's type. If `FragmentActivity` came out of
+the signature, the host would be ordinary Compose and could sit in commonMain beside
+`PasswordCheckHost`, with each platform passing its own prompt: `androidx.biometric` on Android,
+`LAContext` on iOS, and a lambda that reports "no biometrics" on desktop.
+
+That would be the fourth port of the same shape as `UrlOpener` and `PasswordHasher`, and it would put
+real protection on both new platforms instead of one. Worth checking whether the `FragmentActivity`
+is used for anything the caller could supply instead - if it is only there to root the prompt, the
+platform lambda can capture it.
+
+Until both halves exist, `IosProtectionCheck` stays as it is and stays documented as unsafe once iOS
+can reach a pump.
+
+
+## DONE (see below): move `formatTemplate` so format strings work off Android
+
+The one part of the strings work still missing, and it is now the only reason a label on iOS or
+desktop can still look wrong. Raised before as a note inside another section; promoting it, because
+all four earlier requests are done and this is what is left.
+
+`stringResource(ref, vararg)` folds the arguments into the `TextRef`, and the platform `actual` has
+to substitute them. `formatTemplate` does exactly that, is already written and already tested - but
+it is `internal` to `:implementation`, and `TextRefResource.ios.kt` / `.jvm.kt` live in `:core:ui`,
+which sits below `:implementation` in the dependency graph. So neither actual can call it.
+
+The effect is narrow but visible: a label with no arguments is correct on both platforms, and one
+with arguments renders with its placeholders showing - "Exported %1$s ago". The same string through
+`TextResolver` comes out right, because `GeneratedTextResolver` is in `:implementation` and can call
+it. So the two paths disagree, which is worse than either being uniformly short.
+
+Moving `formatTemplate` beside `TextRefValueRegistry` in `:core:interfaces` closes it for both
+platforms at once and leaves `GeneratedTextResolver` calling the same function. `NumberFormat`, the
+only thing it depends on, is in `:core:data` - below `:core:interfaces` - so the move should be
+mechanical. Left with you because `:core:interfaces` is shared and the move touches Android's build.
+
+## Application protection is wired on iOS, with one question left
+
+Both halves landed and the iOS side is done: `AapsAppHost` now requests
+`ProtectionCheck.Protection.APPLICATION` and draws nothing until it is granted. Verified on the
+simulator - set a master password, set Level 0 to "Master password", relaunch, and the app opens to
+an "Application password" prompt with the app hidden behind it.
+
+Worth knowing why that wiring was needed at all: merging the shared classes did **not** make
+protection work. `ProtectionHost` renders a prompt when something *requests* protection, and nothing
+on iOS ever asked - Android asks from `ComposeMainActivity.onResume`. So the setting saved, the host
+was in place, and the app still opened straight to the screen it was meant to protect. It looked
+finished from the code and was not, which is the shape of failure this whole port keeps producing.
+
+**Answered: iOS re-prompts on returning to the foreground, whenever app protection is on.** It now
+asks at launch and on every `UIApplicationDidBecomeActiveNotification`, matching Android's
+`onResume`. Verified on the simulator: unlock, press Home, come back, and the prompt is there again
+with the app hidden behind it.
+
+Two details worth knowing if this is ever changed:
+
+- **It costs nothing when protection is off.** `requestProtection` grants straight away for "No
+  protection", so no dialog is created and the gate is invisible to anyone who did not ask for it.
+- **The request is guarded and re-locks first**, the same shape as Android's `isProtectionCheckActive`.
+  `didBecomeActive` can fire while a prompt is already up, and without the guard a second dialog
+  stacks on the first; without the re-lock the app stays readable behind the prompt on the way back
+  from the background.
+
+The setting still says "App launch. Independent from other levels", which now understates what it
+does on both platforms. Worth a wording change, on Android too.
+
+
+## Three answers that turned placeholders into decisions
+
+Not ports, and not gaps - answers about what an iOS client is. Moved out of the `missing` package
+into `platform`, which now means "this is what this build does" rather than "this is not written
+yet". The two packages log at different levels on purpose: `missing` at **error**, because a call is
+a screen reaching for something that should exist; `platform` at **debug**, because logging correct
+behaviour at error teaches a reader to ignore the level that matters.
+
+- **`BgQualityCheck` answers UNKNOWN.** The loop never doses on a client, and the badge that reads it
+  judges *this device's* sensor - but a client's glucose comes from Nightscout, already judged by the
+  master that owns it. Worth knowing: the APS plugins **are** registered on a client, deliberately
+  (`ApsPluginRegistrations` puts them in the unqualified map so a follower still lists them), which is
+  precisely why this binding has to exist at all.
+- **The xDrip and Dexcom integrations report themselves disabled.** `NSClientSourcePlugin` is the only
+  source plugin in commonMain; every other one is androidMain, because they are reached by Android
+  broadcast intents. The bindings still exist because shared UI asks - `CalibrationDialogViewModel`,
+  `ElementAvailability`, `TreatmentViewModel`, `MaintenanceViewModel` - and each hides its option when
+  the answer is no.
+- **Screen usage statistics are empty.** The collector is an `ActivityLifecycleCallbacks` and a client
+  is not meant to collect them at all, so the statistics screen shows an empty table, which is
+  accurate rather than broken.
+
+## History browsing works on iOS
+
+`IosHistoryScope` used to throw on every property - the right placeholder, because handing back the
+app's calculation objects would have satisfied the types and let browsing history rewrite the state
+the loop calculates on. It is real now: `IosHistoryWindowGraph` is a `@GraphExtension` with its own
+scope, the counterpart of `HistoryWindowGraph`, so each window owns its calculator, cache, signals
+and overview data while sharing the database and preferences with the app.
+
+Verified on the simulator - the History Browser opens, with the date picker, day navigation and the
+BG, IOB/BAS and COB graphs. `IosHistoryWindowScopingTest` pins the isolation by identity rather than
+behaviour, because behaviour only differs once both are mid-calculation, which is too late to notice.
+
+### Two things that were needed and are worth knowing
+
+**A graph extension is only reachable through an accessor its parent states.** `IosAppGraph` declares
+`historyWindowFactory`, the same way `AppRootGraph` does. Without it the factory reads as an ordinary
+missing binding, which is how it first failed.
+
+**Registering a notification category no longer attaches to the notification centre.**
+`IosNotificationDelegate.register` used to call `install()` immediately, and
+`CommonNotificationManager` registers one while it is being *constructed* - so simply building the
+object graph touched `UNUserNotificationCenter`, which throws `bundleProxyForCurrentProcess is nil`
+outside an app bundle. The whole app graph therefore could not be built in a test, which is how this
+surfaced: a history scoping test died on a notification API it never meant to use. `install()` is now
+called once from `aapsAppViewController`, and registering only records. Declaring what a category is,
+and claiming a process-wide delegate slot, are different acts and only one of them needs an app.
+
+
+## DONE: move the Main route into `appNavGraph` so both new platforms get the overview
+
+Nothing is missing from `MainScreen` itself. Checked rather than assumed:
+
+- `MainScreen`, `ManageSheetHost` and `SearchViewModel` are all in `commonMain`.
+- All seven view models it takes - `Main`, `Manage`, `Maintenance`, `Status`, `Treatment`, `Scenes`,
+  `LoopAction` - are `commonMain` and `@ContributesIntoMap`.
+- Every one of them is **already constructible on iOS**: `IosAppGraph` compiles with
+  `MetroViewModelMultibindings`, which means Metro validated each of their dependency graphs.
+- `statusLightsDef` and `treatmentButtonsDef` come from `BuiltInSearchables`, which the iOS graph
+  already exposes.
+
+A trial call from the iOS shell produced only `Unresolved reference` errors - missing imports. Not
+one "no binding found", which is what a real gap looks like.
+
+What is missing is that **nobody has wired it**. The Main route is not in `appNavGraph`; it stays in
+`ComposeMainActivity` because of its Activity-context callbacks. So each shell would have to call
+`MainScreen` directly with about fifty arguments, thirty of them callbacks - and then iOS and desktop
+would each own a copy of that wiring, which is the duplication this split keeps trying to avoid.
+
+Moving the route into `appNavGraph`, the way every other screen went, gives all three platforms the
+overview from one place. The callbacks that genuinely differ are few and already have the shape used
+elsewhere: `onLaunchBrowser` is `UrlOpener`, navigation is the nav controller, and
+`onRecreateActivity` / `onBringToForeground` have no meaning off Android and can be no-ops per
+platform.
+
+### Desktop has the same back-button dead end iOS had
+
+`Main.kt` opens on `AppRoute.Preferences.route`, and its KDoc says it is "for the same reason the
+Apple shell does". That has a consequence worth knowing before someone reports it as a bug: the
+settings screen's back arrow calls `safePopBackStack()` on an empty stack, so **the arrow renders and
+does nothing**. It reads as broken rather than as missing.
+
+### Both done, and your reading was right on every point
+
+The route is in `appNavGraph` now, as an `overview` slot rather than another twenty parameters: the
+assembly is `OverviewScreen` in `:ui`, which takes the ten view models and about thirty dependencies,
+and each platform hands the built composable in. Threading those through `appNavGraph` would have
+taken it past sixty parameters for one screen.
+
+That assembly is the 173 lines that were inline in `ComposeMainActivity`, and you were right that
+none of it is Android - it is plugin state, objectives progress and glucose quality. Only five
+callbacks are per platform: browser, directory picker, bring-to-front, recreate, and quit after a
+failed authorization.
+
+`AapsAppHost` can pass `overview = { OverviewScreen(...) }` and switch its start destination to
+`AppRoute.Main.route`. Two things it needs that iOS did not have before: `Objectives` and
+`PumpCommunicationStatus`, both now provided in `IosMainPluginsBindings`.
+
+**The back arrow.** Fixed before this landed, by the shared home screen - and now properly, because
+desktop opens on `AppRoute.Main.route` with a real root beneath it. `ShellHomeScreen` stays for the
+moment as a way to reach screens the drawer does not list; it should go when it stops earning that.
+
+**Drawer clicks were the next dead end**, found by running it: every item routed into a placeholder
+because the `ElementType` to route mapping was also inline in the activity. That is shared now too -
+see the note above on `ElementNavigation`.
+
+iOS now starts on `IosHomeScreen` instead - a plain list of every argument-free route, marked as
+scaffolding, which gives back somewhere to go and makes the other twenty-odd screens reachable for
+testing at all. Desktop is welcome to the same thing, and if it wants one, the list belongs in shared
+code rather than written twice. It should be deleted from both the day the Main route moves.
+**That day came - see Done.**
+
+
 ## Done
+
+- **`ObjectivesPlugin` in commonMain - done, and the casts are safe now.** The plugin moved to
+  `plugins/constraints/src/commonMain/.../objectives/ObjectivesPlugin.kt` with the eleven
+  objectives and their Compose content, so `Objectives` resolves from the shared
+  `ClientGraphBindings` and iOS hosts the overview. The two Android pieces were lifted out rather
+  than left behind: `SntpClient` is an interface with a shared `JvmSntpClient`, and `DurationText`
+  is an interface because only Android has plural resources.
+
+  The cast the request warned about is fixed too, and so are its two neighbours. `OverviewScreen`
+  now uses `as?` for all three - objectives, BG source and pump - because each cast runs *before*
+  the condition that decides whether its badge is drawn, so a hard cast turned "this platform has
+  no such plugin" into a crash of the whole overview at compose time. A missing badge is the right
+  failure.
+
+- **The Nightscout registration is shared now.** `NSClientV3Plugin` is registered once in
+  `ClientGraphBindings` (`:shared:clientbindings`) at `@IntKey(310)`, which both the iOS and
+  desktop graphs include, so the iOS copy in `IosMainPluginsBindings` is gone. Two registrations
+  remain rather than three: that one, and the one in `SyncPluginsBindings`, which stays because
+  the Android graph does not include the client bindings. The plugin still cannot carry
+  `@ContributesIntoMap` itself - the annotation processor fails on it.
+
+- **`ShellHomeScreen` is deleted.** Both shells start on `AppRoute.Main.route` now, nothing
+  navigated to `SHELL_HOME_ROUTE` on either of them, and the scaffolding said it should go the
+  day the Main route moved. `:appshell` no longer carries it.
+
+- **`UrlOpener` and `PrefsFileInfo` - iOS side done.** Both ports landed from `kmp` and both have an
+  iOS implementation with tests. `IosUrlOpener` (`implementation/src/iosMain/.../ui/`) goes through
+  `UIApplication` on the main queue, which is where the hop in `SystemUrlLauncher` comes from -
+  `sharedApplication` may not be touched off the main thread and the callers are view models. It
+  refuses text that is not an address and an address with no scheme, because `openURL` drops both
+  without a word and the user would only see nothing happen. `IosPrefsFileInfo`
+  (`implementation/src/iosMain/.../maintenance/`) answers `isDirectoryAccessGranted` by actually
+  looking at the app's Documents directory - iOS has no grant to obtain, but the directory can still
+  be absent, and a fixed `true` would be a lie the maintenance screen acts on.
 
 - **The notification cluster - done.** There is one registry now.
   `AndroidSystemNotificationPlatform` (`implementation/src/androidMain/.../notifications/`) holds the
@@ -455,3 +1128,159 @@ Not blockers, and not for the Windows session to fix. Listed so nobody is surpri
 - `ProfileRepositoryImpl` - moved to `commonMain`, off `org.json` (`3252f044b1`)
 - `PluginStore` / `PluginPermissions` - split so the registry is no longer Android
 - `DateUtilImpl`, `PreferencesImpl`, `ProfileUtilImpl` - moved to `commonMain`
+
+## Heads up: `LazyCalculationExecutor` moved into `:workflow`
+
+Your copy in `ios/shell/.../di/` is deleted and `IosPlatformBindings` now points at
+`app.aaps.workflow.LazyCalculationExecutor`. Nothing about the behaviour changed.
+
+The reason is that the desktop target hit the identical cycle - `CalculationExecutor` ->
+`PostCalculationRunner` -> `IobCobCalculator` -> `CalculationWorkflow` -> `CalculationExecutor` - for
+the identical reason, no WorkManager to build the runners outside the graph. Your KDoc called it "an
+iOS-only concern" that shared code should not carry; with two platforms hitting it, it is a
+not-Android concern, and two identical copies in two shells is how the two quietly stop matching.
+
+One small change: the runners are `() -> T` lambdas rather than `Provider<T>`, so `:workflow` keeps
+no dependency on a DI library. Each shell passes `{ provider() }`. The KDoc explaining the cycle is
+yours, kept as it was.
+
+Desktop now depends on the same 26 modules `:ios:shell` lists, so the plugin bindings are in its
+graph too, and `DesktopMainPluginsBindings` is a near copy of `IosMainPluginsBindings`. If that pair
+starts to drift it should become one container in a shared module that both graphs `@Includes` -
+worth doing when a third thing needs it, not before.
+
+## DONE: `SafetyPlugin` moved to commonMain
+
+`IosSafetyPlugin` is deleted. The real plugin carries
+`@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())` already, so it registers
+itself on every platform - iOS and desktop now apply the actual limits (maximum bolus, maximum basal,
+whether closed loop is allowed, whether the pump can do temp basals) instead of none.
+
+Deleting the placeholder was not optional once the real one was in commonMain: both implement
+`Safety`, `PluginStore.activeSafety` takes `.first()` of that list, and the placeholder applies no
+constraints at all. Two entries would have made which one wins a matter of ordering.
+
+Your note said "nothing in it is Android", which was nearly right - two things stood in the way, and
+neither was in the import list:
+
+- `override val rh: ResourceHelper`. `PluginBase` already declares `rh` as `TextResolver`, so the
+  plugin was narrowing it for no reason; every call was `gs(TextRef)`, which `TextResolver` has.
+- `java.lang.Double.valueOf(x).toInt()`, a boxing round trip that truncates exactly as `x.toInt()`.
+
+Both are the same lesson as `ProtectionCheckImpl`: an import grep does not see a fully qualified name
+or an over-specified supertype. Compiling for iOS is what finds them.
+
+Verified: `:plugins:constraints:compileKotlinIosArm64`, `:ios:shell:compileKotlinIosArm64`,
+`:app:assembleFullDebug`, and 115 `:plugins:constraints` tests.
+
+## DONE: move `formatTemplate` so format strings work off Android
+
+Moved to `core/interfaces/src/commonMain/.../resources/TextFormat.kt`, public rather than internal,
+with its 18 tests. `GeneratedTextResolver` calls the same function, so the two paths cannot disagree.
+`NumberFormat` resolved from `:core:interfaces` exactly as you expected.
+
+Both actuals now substitute: `TextRefResource.ios.kt` and `.jvm.kt` do
+`formatTemplate(TextRefValueRegistry.textOf(ref) ?: ref.name, ref.args)`.
+
+**One thing your note did not cover, found while doing it.** The desktop actual was not merely
+missing the arguments - it was still the original placeholder returning `ref.name`, so *no* Compose
+string resolved on desktop even without arguments. The `TextResolver` path had been fixed and the
+Compose path had not, which is the same "two paths disagree" problem, a step earlier. Fixed in the
+same change; your iOS actual was already correct.
+
+Gate: 102 tests in `:core:interfaces` (18 of them moved in), 794 in `:implementation`,
+`:app:assembleFullDebug`, `:ios:shell:compileKotlinIosArm64`, desktop shell tests.
+
+## DONE: `ConfigBuilderImpl` ported to commonMain
+
+`IosConfigBuilder` is deleted. Your read was right on both counts: the plugin bookkeeping is ordinary
+logic, and `exitApp` is the one part that will always need a platform half.
+
+That half is now `AppExit` (`core/interfaces/.../configuration/AppExit.kt`), one method. The shared
+part of `exitApp` - the bus event, the log line and the user entry - stays in `ConfigBuilderImpl`, so
+only the final step is platform specific:
+
+- `AndroidAppExit` keeps the `AlarmManager` + `PendingIntent` relaunch exactly as it was.
+- `IosAppExit` **refuses**, and the KDoc says why it is a class rather than a one-liner:
+  `exitProcess` exists on Kotlin/Native and would "work", so the tempting implementation ships a
+  crash. Nothing is exited and the refusal is logged. Written from here only so the graph builds -
+  if iOS should tell the user to close the app themselves, that belongs in this class.
+- `DesktopAppExit` exits, and logs that it cannot relaunch itself.
+
+Two things that were not in the import list, the same lesson as before:
+
+- `rh: ResourceHelper` narrowed what `PluginBase` already declares as `TextResolver`.
+- `p.javaClass.simpleName` builds a **stored preference key** (`"<type>_<simple name>"`), so it could
+  not just be swapped. It is now one documented helper on `KClass.simpleName`, which gives the same
+  string for a named class - which every plugin is - so existing installs keep their per-plugin
+  enabled state. The two forms only diverge for anonymous classes.
+
+Gate: `:plugins:configuration` 32 tests, `:app:assembleFullDebug`, `:ios:shell:compileKotlinIosArm64`,
+desktop shell.
+
+## Heads up: the home screen moved into `:appshell`
+
+`IosHomeScreen` is deleted; `ShellHomeScreen` in `appshell/commonMain/.../navigation/` replaces it and
+`AapsAppHost` now points at it. The route constant moved with it as `SHELL_HOME_ROUTE`. Nothing about
+the behaviour changed, and the reasoning in your KDoc is kept.
+
+Desktop hit the identical problem - settings as the start destination left the back arrow inert - so
+this was about to be a second copy of the same 104 lines and the same list of 22 routes. That list is
+exactly the kind of thing that stops matching once it exists twice: a screen added to `appNavGraph`
+would be reachable on one platform and not the other, and nothing would fail.
+
+Only the title changed, from "AAPS on iOS" to "AAPS", since both shells show it now.
+
+## Heads up: objectives are commonMain, and drawer navigation is shared
+
+Two moves that reach into files the iOS shell uses. Both were needed to make the overview work off
+Android, and both follow the usual rule - the class moves, only the platform call is lifted out.
+
+**Objectives.** `ObjectivesPlugin`, all eleven objectives and their Compose screens are now in
+`plugins/constraints/commonMain`. Two Android dependencies came out:
+
+- `SntpClient` is an interface in commonMain. The implementation is `JvmSntpClient` in a new
+  `jvmSharedMain`, so Android and desktop share the actual SNTP exchange - the sockets were always
+  plain JVM, only `SystemClock.elapsedRealtime()` was Android, and that is `System.nanoTime()` now.
+  `IosSntpClient` is a **placeholder that needs a real implementation**: this is the reference AAPS
+  validates its own timestamps against, and every treatment carries the device clock.
+- `DurationText` is the "3 d / 5 h / 20 min" text. Android keeps its plural resources;
+  `PlainDurationText` in commonMain says it without plural forms, and `IosDurationText` delegates to
+  it. If plurals ever land in `TextRef`, this interface should disappear.
+
+`IosMainPluginsBindings` gained the two providers `:app` has - the ordered objectives list and the
+unqualified `Objectives` - so the graph still builds.
+
+**Drawer navigation.** `handleNavigationRequest` and the `ElementType` to route mapping are now
+`appshell/commonMain/.../navigation/ElementNavigation.kt`. That mapping was inline in
+`ComposeMainActivity` and nothing in it was Android, which is why desktop's drawer did nothing when
+the overview first rendered there - every item routed into a placeholder. Only opening a CGM app and
+closing the app are passed in.
+
+`AapsAppHost` can now pass `onNavigate = { handleNavigationRequest(...) }` and get a working drawer.
+
+**Worth knowing:** a unit test caught that the SNTP fake set `ntpTimeReference = 0`, which only
+worked because `SystemClock.elapsedRealtime()` starts near zero in a unit test. `System.nanoTime()`
+has an arbitrary origin, so the reference has to be read from the same clock. The production code was
+right; the fake was leaning on the old clock's origin.
+
+## Heads up: string owner registration is generated now
+
+`IosStringOwners` is deleted. `GeneratedStringOwners` replaces it, emitted into `iosMain` by a new
+`GenerateStringOwnerRegistryTask` from `StringOwnerModules.ALL` in buildSrc. `IosAppStartup` and
+`IosPlatformBindings` call it exactly as before; `IosStringOwnersTest` still guards it and still
+passes.
+
+There were **four** hand written copies of the same list - `MainApp.registerStringOwners`, its copy in
+`BaseTestApp`, yours, and the desktop one - and nothing compared them with each other or with the
+build. They had drifted: the desktop copy carried five of sixteen modules, so the plugin list rendered
+`objectives_shortname` instead of plugin names. Android's was split across two files as well, because
+`ResourceHelperImpl` registers `coreUi` and `implementation` from its own start.
+
+One list now, one task, three consumers. Android generates the `R.string` id variant so AAPT and every
+translation keep working; iOS and desktop generate the English text variant. Adding a module with
+strings is one line in `StringOwnerModules.ALL`.
+
+A module listed there but not generating strings fails the build; a module generating strings but
+missing from the list shows its names on screen. The first is the better direction, which is why the
+list is the source of truth rather than a lookup.

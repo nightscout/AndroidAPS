@@ -1,5 +1,6 @@
 package app.aaps.di
 
+import app.aaps.di.GeneratedStringOwners
 import android.app.Application
 import android.content.Context
 import androidx.work.Configuration
@@ -9,9 +10,6 @@ import androidx.work.WorkerParameters
 import androidx.work.testing.SynchronousExecutor
 import androidx.work.testing.WorkManagerTestInitHelper
 import app.aaps.core.interfaces.di.MetroMemberInjector
-import app.aaps.core.interfaces.resources.TextRefIdRegistry
-import app.aaps.core.ui.CoreUiStringIds
-import app.aaps.implementation.ImplementationStringIds
 import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import app.aaps.di.metro.MetroGraphs
 import app.aaps.database.di.DatabaseConfig
@@ -79,11 +77,9 @@ open class BaseTestApp : Application(), MetroMemberInjector, MetroViewModelFacto
         // The same owners MainApp registers. This application replaces MainApp for instrumented tests,
         // so without this every TextRef.Named has no id to resolve to and the screens render blank
         // text - which fails as "the text is not displayed", a long way from the cause.
-        // `coreUi` and `implementation` are here too: ResourceHelperImpl registers them from an
-        // explicit start() called by the Application, so this app has to do it as well.
-        registerStringOwners()
-        TextRefIdRegistry.register("coreUi") { name -> CoreUiStringIds.idOf(name) }
-        TextRefIdRegistry.register("implementation") { name -> ImplementationStringIds.idOf(name) }
+        // Every owner, including `coreUi` and `implementation`, which used to be listed separately
+        // here because ResourceHelperImpl registers them from its own start().
+        GeneratedStringOwners.registerAll()
         // Instrumented tests run under the production applicationId with Firebase auto-initialized (via
         // FirebaseInitProvider, before onCreate), so a crash on a CI emulator — e.g. an activity launched
         // outside a test scope whose graph access then fails (RequestDexcomPermissionActivity /
@@ -135,19 +131,5 @@ open class BaseTestApp : Application(), MetroMemberInjector, MetroViewModelFacto
      * Keep in step with `MainApp.registerStringOwners`. Each of these modules generates its own name
      * to `R.string` id map, and the registry is what a `TextRef.Named` is resolved through.
      */
-    private fun registerStringOwners() {
-        TextRefIdRegistry.register("virtual") { name -> VirtualStringIds.idOf(name) }
-        TextRefIdRegistry.register("smoothing") { name -> SmoothingStringIds.idOf(name) }
-        TextRefIdRegistry.register("source") { name -> SourceStringIds.idOf(name) }
-        TextRefIdRegistry.register("calibration") { name -> CalibrationStringIds.idOf(name) }
-        TextRefIdRegistry.register("sensitivity") { name -> SensitivityStringIds.idOf(name) }
-        TextRefIdRegistry.register("main") { name -> MainStringIds.idOf(name) }
-        TextRefIdRegistry.register("ui") { name -> UiStringIds.idOf(name) }
-        TextRefIdRegistry.register("automation") { name -> AutomationStringIds.idOf(name) }
-        TextRefIdRegistry.register("configuration") { name -> ConfigurationStringIds.idOf(name) }
-        TextRefIdRegistry.register("constraints") { name -> ConstraintsStringIds.idOf(name) }
-        TextRefIdRegistry.register("sync") { name -> SyncStringIds.idOf(name) }
-        TextRefIdRegistry.register("aps") { name -> ApsStringIds.idOf(name) }
-    }
 }
 

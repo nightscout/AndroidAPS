@@ -72,9 +72,9 @@ class NSAndroidClientImpl(
 
     /**
      * Releases the HTTP engine.
-     * `NSClientV3Plugin` builds a new client whenever the URL, token or WebSocket setting changes,
-     * and the old one used to be dropped without being closed - a leak that was invisible with
-     * Retrofit but real with a Ktor engine holding connections.
+     *
+     * `NSClientV3Plugin` builds a new client whenever the URL, token or WebSocket setting changes, so
+     * the old one has to be closed: a Ktor engine holds connections, and dropping it leaks them.
      */
     override fun close() = stack.close()
     override var lastStatus: Status? = null

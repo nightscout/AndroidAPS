@@ -441,8 +441,8 @@ class AutotunePlugin @Inject constructor(
     }
 
     /**
-     * `toPureNsJson` already answers a kotlinx document, so the profiles used to be rendered to text
-     * and parsed straight back as `org.json` just to be nested here. They are nested directly now.
+     * `toPureNsJson` already answers a kotlinx document, so the profiles nest directly here - no
+     * render to text and reparse.
      */
     fun saveLastRun() {
         val json = buildJsonObject {

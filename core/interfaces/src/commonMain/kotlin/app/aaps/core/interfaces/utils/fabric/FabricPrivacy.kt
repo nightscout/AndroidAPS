@@ -9,8 +9,8 @@ import app.aaps.core.interfaces.rx.weardata.EventData
  * [logException], and they are multiplatform. The Android implementation is Firebase; another
  * platform supplies its own without any caller changing.
  *
- * The event parameter map used to be an `android.os.Bundle`. Every caller only ever put `Long`
- * values in it, so it is a plain map here and the implementation converts.
+ * The event parameter map holds `Long` values only, which is all any caller needs. The
+ * implementation converts it to whatever its backend wants.
  */
 interface FabricPrivacy {
 

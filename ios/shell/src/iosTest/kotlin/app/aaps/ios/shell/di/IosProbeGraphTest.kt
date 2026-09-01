@@ -10,6 +10,8 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotSame
 import kotlin.test.assertSame
 import kotlin.test.assertTrue
+import app.aaps.core.objects.di.CoreObjectsGraph
+import app.aaps.shared.clientbindings.ClientGraphBindings
 
 /**
  * What Metro has to do on Kotlin/Native, checked rather than displayed.
@@ -20,7 +22,7 @@ import kotlin.test.assertTrue
  */
 class IosProbeGraphTest {
 
-    private fun graph() = createGraphFactory<IosProbeGraph.Factory>().create()
+    private fun graph() = createGraphFactory<IosProbeGraph.Factory>().create(CoreObjectsGraph, ClientGraphBindings)
 
     @Test
     fun `the graph can be created`() {

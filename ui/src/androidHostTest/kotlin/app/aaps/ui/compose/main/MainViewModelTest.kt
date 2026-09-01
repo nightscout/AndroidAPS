@@ -2,6 +2,7 @@ package app.aaps.ui.compose.main
 
 import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.data.model.RM
+import app.aaps.core.interfaces.ui.UrlOpener
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bolus.BatchExecutor
@@ -57,6 +58,7 @@ internal class MainViewModelTest {
 
     @Mock private lateinit var activePlugin: ActivePlugin
     @Mock private lateinit var config: Config
+    @Mock private lateinit var urlOpener: UrlOpener
     @Mock private lateinit var preferences: Preferences
     @Mock private lateinit var fabricPrivacy: FabricPrivacy
     @Mock private lateinit var rh: ResourceHelper
@@ -113,7 +115,7 @@ internal class MainViewModelTest {
         whenever(preferences.observe(StringNonKey.QuickLaunchActions)).thenReturn(MutableStateFlow(""))
 
         sut = MainViewModel(
-            activePlugin, config, preferences, fabricPrivacy, rh, dateUtil,
+            activePlugin, config, urlOpener, preferences, fabricPrivacy, rh, dateUtil,
             overviewDataCache, iobCobCalculator, profileFunction, constraintChecker, quickWizard,
             automation, persistenceLayer, aapsLogger, quickLaunchResolver, wizardExecutor,
             batchExecutor, uel, loop, protectionCheck, sceneActions, sceneChainTargetResolver,

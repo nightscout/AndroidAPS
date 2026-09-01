@@ -16,12 +16,11 @@ import org.json.JSONObject
  * This is androidMain on purpose and has no iOS counterpart. On iOS the socket delivers payloads as
  * text and the handlers parse them with kotlinx directly, so there is nothing to bridge.
  *
- * The conversion goes through text, which is exactly what the old code did internally, so nothing
- * about the parsed result changes. It is not free - do not put it on a hot path.
+ * The conversion goes through text, so nothing about the parsed result changes. It is not free - do
+ * not put it on a hot path.
  *
- * There used to be a `toOrgJson` going the other way, for reading profile timestamps with the
- * `org.json`-based `JsonHelper`. `LoadProfileStoreRunner` reads them with the kotlinx
- * `safeGetLongAllowNull` / `safeGetStringAllowNull` instead, so nothing converts back any more.
+ * One direction only. Nothing converts kotlinx back to `org.json`: `LoadProfileStoreRunner` reads
+ * profile timestamps with the kotlinx `safeGetLongAllowNull` / `safeGetStringAllowNull`.
  */
 object JsonBridge {
 

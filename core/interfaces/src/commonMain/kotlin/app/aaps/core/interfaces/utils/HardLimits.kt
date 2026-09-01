@@ -92,7 +92,7 @@ interface HardLimits {
 
     /**
      * [TextRef] form, for callers in multiplatform code - a resource id is an Android Int and means
-     * nothing off Android. Same behaviour as the id form; both exist while the migration is partway.
+     * nothing off Android. Same behaviour as the id form.
      */
     fun checkHardLimits(value: Double, valueName: TextRef, lowLimit: Double, highLimit: Double): Boolean
 

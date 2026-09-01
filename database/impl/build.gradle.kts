@@ -54,7 +54,19 @@ kotlin {
     iosArm64()
     iosSimulatorArm64()
 
+    // Desktop (Windows/macOS/Linux). Compose Multiplatform resolves its `desktop` variant from a
+    // plain jvm() target, so no special target name is needed.
+    jvm()
+
+    // Android and desktop share what is plain JVM. Applied explicitly, because the manual dependsOn
+    // below would otherwise switch the automatic hierarchy off and silently unwire iosMain.
+    applyDefaultHierarchyTemplate()
+
     sourceSets {
+        val jvmSharedMain = create("jvmSharedMain") { dependsOn(commonMain.get()) }
+        androidMain.get().dependsOn(jvmSharedMain)
+        jvmMain.get().dependsOn(jvmSharedMain)
+
         commonMain {
             dependencies {
                 api(libs.kotlinx.datetime)
@@ -66,6 +78,13 @@ kotlin {
 
         // The bundled driver is what actually opens the database on a phone, so iOS needs it too.
         iosMain {
+            dependencies {
+                implementation(libs.androidx.sqlite.bundled)
+            }
+        }
+
+        // And desktop, which opens the same file with the same engine.
+        jvmMain {
             dependencies {
                 implementation(libs.androidx.sqlite.bundled)
             }
@@ -122,4 +141,9 @@ dependencies {
     add("kspAndroid", libs.androidx.room.compiler)
     add("kspIosArm64", libs.androidx.room.compiler)
     add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+    // The JVM one was missing, and nothing said so until the desktop app ran: without it the target
+    // compiles perfectly and then throws "AppDatabase_Impl does not exist" the first time anything
+    // touches the database. A missing processor is invisible to the compiler - the generated class is
+    // only looked for at runtime.
+    add("kspJvm", libs.androidx.room.compiler)
 }

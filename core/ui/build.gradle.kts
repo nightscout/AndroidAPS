@@ -68,6 +68,10 @@ kotlin {
     iosArm64()
     iosSimulatorArm64()
 
+    // Desktop (Windows/macOS/Linux). Compose Multiplatform resolves its `desktop` variant from a
+    // plain jvm() target, so no special target name is needed.
+    jvm()
+
     sourceSets {
         commonMain {
             kotlin.srcDir(generateCoreUiStrings.flatMap { it.commonOutputDir })
@@ -118,6 +122,15 @@ kotlin {
                 // so there is no debug-only configuration to put it in. It only matters for rendering
                 // @Preview, and R8 in the app module drops it from a release build.
                 implementation(libs.androidx.compose.ui.tooling)
+            }
+        }
+
+        // Shared tests for shared code. `ClockPattern` moved to commonMain when the desktop target
+        // started using it, so its tests belong here rather than in `iosTest` - otherwise the reader
+        // would only be covered on one of the targets that uses it.
+        getByName("commonTest") {
+            dependencies {
+                implementation(kotlin("test"))
             }
         }
 

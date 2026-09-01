@@ -15,9 +15,8 @@ import app.aaps.core.ui.CoreUiStrings
  *
  * The maths that belongs to the record - `iobCalc`, `convertedToAbsolute`, `convertedToPercent` -
  * stays in `:core:objects`. Only the part that formats for a reader lives here, next to the strings
- * it uses. What made that possible was moving the two time helpers down to `:core:data`: while they
- * sat in `:core:objects`, using them from here would have meant `:core:ui` depending on
- * `:core:objects`, and that module still depends on this one.
+ * it uses. The time helpers it needs are in `:core:data` for that reason: `:core:ui` cannot depend on
+ * `:core:objects`, which depends on this module.
  */
 private fun TB.netExtendedRate(profile: Profile) = rate - profile.getBasal(timestamp)
 

@@ -138,11 +138,11 @@ class PatchManagerExecutor @Inject constructor(
      * Opens the patch BLE client and wires the observers. Called from [EopatchPumpPlugin.onStart],
      * beside `preferenceManager.init()`, `patchManager.init()` and `alarmManager.init()`.
      *
-     * **This used to be an `init` block**, so it ran the moment the class was constructed - which meant
-     * `RxBleClient.create(context)` and a bond-state receiver for *every* user, whether or not eopatch
-     * was their pump, and it made the class impossible for Metro to own (a contributed class is built
-     * for real in the plain-JVM graph tests, where the Bluetooth service is a stand-in and the cast
-     * fails). On the plugin's own lifecycle it starts only when eopatch is actually enabled.
+     * **Must not become an `init` block.** That would run `RxBleClient.create(context)` and register a
+     * bond-state receiver the moment the class is constructed - for *every* user, whether or not
+     * eopatch is their pump - and it would put the class out of Metro's reach, because a contributed
+     * class is built for real in the plain-JVM graph tests where the Bluetooth service is a stand-in
+     * and the cast fails. On the plugin's own lifecycle it starts only when eopatch is enabled.
      *
      * Idempotent: `Patch.init` already guards on its own `initDone`, and the disposables are added to a
      * `CompositeDisposable` that `onStop` clears.

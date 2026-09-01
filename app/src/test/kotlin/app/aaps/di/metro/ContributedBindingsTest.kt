@@ -130,7 +130,7 @@ class ContributedBindingsTest {
         whenever(plugin.requiredPermissions()).thenReturn(listOf(probeGroup))
         root.pluginStore.plugins = listOf(plugin)
 
-        assertThat(root.pluginPermissions.collectAllPermissions(mock())).contains(probeGroup)
+        assertThat(root.pluginPermissions.collectAllPermissions()).contains(probeGroup)
     }
 
     private val probeGroup = PermissionGroup(

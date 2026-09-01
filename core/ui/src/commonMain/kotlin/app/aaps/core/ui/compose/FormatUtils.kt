@@ -53,9 +53,8 @@ fun formatMinutesAsDuration(minutes: Int, rh: TextResolver): String {
  * 3. unitLabel set → "formatted_value unitLabel"
  * 4. Plain → valueFormat.format(value)
  *
- * @param asDuration render the value as a duration. This used to be inferred by comparing the label
- *   against `units_min`, which tied the behaviour to one particular string resource. Callers say what
- *   they mean instead.
+ * @param asDuration render the value as a duration. Callers say so explicitly, rather than the
+ *   format being inferred from the label text.
  */
 @Composable
 fun formatSliderDisplayValue(

@@ -19,7 +19,7 @@ import dev.zacsweers.metro.SingleIn
  * These have no interface and no implementation class to annotate, so they cannot be contributed with
  * `@ContributesBinding` - they need a container with a `@Provides`. `:app` is Android only, so this can
  * live here; a module that is multiplatform would need the same thing in its **androidMain**, the way
- * `CoreObjectsAndroidContainer` does for `CryptoUtil`.
+ * `CoreObjectsJvmContainer` does for `CryptoUtil`.
  */
 @ContributesTo(AppScope::class)
 @BindingContainer

@@ -156,9 +156,8 @@ class DefaultProfile @Inject constructor(
     /**
      * The entry nearest [key], preferring the higher one when both are equally far.
      *
-     * This used to be `TreeMap.floorEntry`/`ceilingEntry`, which is JVM only. The neighbours are
-     * found by scanning instead - these maps hold a few dozen entries, so there is nothing to gain
-     * from a sorted structure, and the tie is still broken the same way.
+     * The neighbours are found by scanning rather than from a sorted structure: these maps hold a few
+     * dozen entries, so there is nothing to gain from one.
      */
     private fun closest(map: Map<Double, Array<Double>>, key: Double): Array<Double>? {
         val lowKey = map.keys.filter { it <= key }.maxOrNull()

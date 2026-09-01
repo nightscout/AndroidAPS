@@ -65,11 +65,18 @@ project.afterEvaluate {
         subprojects.forEach { proj ->
             // A multiplatform module has no build variants, so the variant paths below cannot
             // legitimately hold anything for it. Deciding up front matters, and not only for
-            // tidiness: a module that used to be an Android library leaves its old
+            // tidiness: a module converted from an Android library leaves its old
             // intermediates/built_in_kotlinc/fullDebug behind in an existing build directory, and
             // feeding both that and the new output to JaCoCo fails the whole report with
             // "Can't add different class with same name".
-            if (File("${proj.projectDir}/src/commonMain").isDirectory) {
+            //
+            // Ask the plugin, not the directory layout. `:pump:combov2:comboctl` is a plain Android
+            // library that keeps its upstream comboctl source layout - `src/commonMain` and
+            // `src/androidMain`, wired by hand in its build file - so a directory check called it
+            // multiplatform and sent it to `classes/kotlin/android/main`, which it does not have. It
+            // then contributed no classes and no execution data, dropping about 8000 well covered
+            // lines from the report with nothing failing.
+            if (proj.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")) {
                 // Take the Android compilation when the module has one, the JVM compilation
                 // otherwise. Never both: a multiplatform module compiles the same commonMain code
                 // once per target, and only the target whose tests actually ran produces .exec

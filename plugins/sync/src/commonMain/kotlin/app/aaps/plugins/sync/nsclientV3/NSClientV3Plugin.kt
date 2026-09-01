@@ -233,8 +233,8 @@ class NSClientV3Plugin @Inject constructor(
     @Volatile var doingFullSync = false
         @VisibleForTesting set
 
-    // The bind/unbind that used to live here is in ServiceNsConnection now, which is what lets this
-    // plugin stop naming a Service at all.
+    // Binding and unbinding the connection lives in ServiceNsConnection, so this plugin names no
+    // Android Service at all.
 
     override suspend fun onStart() {
         super.onStart()
@@ -357,7 +357,9 @@ class NSClientV3Plugin @Inject constructor(
                             refreshInterval = T.mins(1).msecs()
                         }
                     }
-                if (!preferences.get(BooleanKey.NsClient3UseWs))
+                // Polls when websockets are switched off, and also when the platform has none at all -
+                // otherwise a desktop client would wait for pushes that can never arrive.
+                if (!preferences.get(BooleanKey.NsClient3UseWs) || !nsConnection.supportsWebsocket)
                     executeLoop("MAIN_LOOP")
                 else
                     nsClientRepository.addLog("● TICK", "")

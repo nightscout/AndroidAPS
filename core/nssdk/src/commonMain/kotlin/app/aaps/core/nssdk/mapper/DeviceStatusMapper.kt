@@ -42,10 +42,9 @@ internal fun NSDeviceStatus.toRemoteDeviceStatus(): RemoteDeviceStatus =
         openaps = openaps?.toRemoteDeviceStatusOpenAps()
     )
 
-// The schema-less subtrees (pump.extended, openaps.suggested / enacted / iob) used to be Gson trees
-// on the remote side and kotlinx trees on the local side, so every one of them was rebuilt by
-// printing it to text and parsing it back. Both sides are kotlinx now, so they are carried straight
-// across - no copy, no reparse, and no chance of the round trip changing anything.
+// The schema-less subtrees (pump.extended, openaps.suggested / enacted / iob) are kotlinx trees on
+// both sides, so they are carried straight across - no copy, no reparse, and no chance of the round
+// trip changing anything.
 
 internal fun RemoteDeviceStatus.Pump.toNSDeviceStatusPump(): NSDeviceStatus.Pump =
     NSDeviceStatus.Pump(

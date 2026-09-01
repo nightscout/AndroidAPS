@@ -101,11 +101,10 @@ data class RT(
         }
 
         /**
-         * This used to be `SimpleDateFormat(pattern, Locale.getDefault())`, which resolves its
-         * calendar from the locale. On a phone set to Thai that selects the Buddhist calendar and
-         * the year was written as 2569 instead of 2026 - a wire timestamp 543 years in the future.
-         * The formatter here is locale independent, which fixes that as well as removing the JVM
-         * dependency. `RtIsoStringParityTest` pins both halves.
+         * Locale independent on purpose. A formatter that resolves its calendar from the locale
+         * breaks the wire format: on a phone set to Thai it selects the Buddhist calendar and writes
+         * the year as 2569 instead of 2026 - a timestamp 543 years in the future.
+         * `RtIsoStringParityTest` pins the output.
          */
         fun toISOString(date: Long): String =
             isoOut.format(Instant.fromEpochMilliseconds(date).toLocalDateTime(TimeZone.UTC)) + "Z"

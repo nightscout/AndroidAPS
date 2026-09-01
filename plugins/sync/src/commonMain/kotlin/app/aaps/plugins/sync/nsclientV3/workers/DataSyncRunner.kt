@@ -44,9 +44,9 @@ class DataSyncRunner(
                 return WorkOutcome.Failure("Upload timed out")
             }
         } else {
-            // Both conditions are negated here. They used to be written the same way round as the
-            // `if` above, which made them unreachable: this is the else of `hasWritePermission ||
-            // connected`, so neither could ever be true and neither message was ever logged.
+            // Both conditions are negated. This is the else of `hasWritePermission || connected`, so
+            // writing them the same way round as the `if` above would make both unreachable and
+            // neither message would ever be logged.
             if (!nsClientV3Plugin.hasWritePermission)
                 nsClientRepository.addLog("► ERROR", "No write permission")
             else

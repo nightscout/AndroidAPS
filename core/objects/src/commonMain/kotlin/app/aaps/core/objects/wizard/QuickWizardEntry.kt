@@ -57,17 +57,16 @@ class QuickWizardEntry(
     /**
      * The preset itself, as plain data.
      *
-     * This used to be a live `JSONObject` that was also the element inside [QuickWizard]'s array, so
-     * writing a field here changed the stored list with no explicit step. That aliasing is gone:
-     * anything that changes [data] must now hand the entry back to [QuickWizard] to be written.
+     * Not aliased to the element inside [QuickWizard]'s array: anything that changes [data] has to
+     * hand the entry back to [QuickWizard] to be written, so a field write is never a silent store.
      */
     var data: QuickWizardEntryData = QuickWizardEntryData(guid = randomGuid(), validTo = 86340)
     var position: Int = -1
 
     companion object {
 
-        // Defined once in QuickWizardEntryData, which is common code. Re-exposed here so the existing
-        // `QuickWizardEntry.ALWAYS` style call sites do not have to change.
+        // Defined once in QuickWizardEntryData, which is common code. Re-exposed here so
+        // `QuickWizardEntry.ALWAYS` style call sites keep working.
         const val ALWAYS = QuickWizardEntryData.ALWAYS
         const val NEVER = QuickWizardEntryData.NEVER
         const val POSITIVE_ONLY = QuickWizardEntryData.POSITIVE_ONLY

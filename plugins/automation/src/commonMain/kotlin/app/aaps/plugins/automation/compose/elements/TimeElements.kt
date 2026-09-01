@@ -101,9 +101,9 @@ fun InputDateTimeEditor(
 ) {
     var showDate by remember { mutableStateOf(false) }
     var showTime by remember { mutableStateOf(false) }
-    // Same reading as the Calendar this replaced: the default time zone, so what the user sees is
-    // their own wall clock. Seconds and nanoseconds are carried through every edit, because setting
-    // only the date or only the hour and minute must not quietly zero the rest.
+    // The default time zone, so what the user sees is their own wall clock. Seconds and nanoseconds
+    // are carried through every edit, because setting only the date or only the hour and minute must
+    // not quietly zero the rest.
     val zone = TimeZone.currentSystemDefault()
     val local = remember(timeMillis) { Instant.fromEpochMilliseconds(timeMillis).toLocalDateTime(zone) }
     Row(

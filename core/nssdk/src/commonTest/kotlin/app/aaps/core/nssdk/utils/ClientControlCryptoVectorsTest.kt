@@ -14,9 +14,8 @@ import kotlin.test.assertTrue
  * target, or a different library - can be checked byte for byte rather than by "it is also
  * HMAC-SHA256".
  *
- * They live in commonTest, so they run on every target the module builds for. On Windows
- * `mingwX64Test` executes them against the OpenSSL 3 provider, which is how the Kotlin/Native path
- * is checked without a Mac; the Apple provider is covered by `iosSimulatorArm64Test` on macOS.
+ * They live in commonTest, so they run on every target the module builds for. The Apple provider is
+ * covered by `iosSimulatorArm64Test` on macOS, which is where the Kotlin/Native path gets checked.
  *
  * That matters because the wire format is already frozen: AAPS masters and clients in the field
  * exchange these values today. The primitives themselves are standards and interoperate by

@@ -10,6 +10,13 @@ import dev.zacsweers.metro.IntoMap
 import dev.zacsweers.metro.MembersInjector
 import dev.zacsweers.metro.Provides
 
+/**
+ * Members injectors for the classes in this driver that the Android framework constructs, so Metro
+ * can still fill their `@Inject` fields.
+ *
+ * Keyed by class, which is how `MetroMemberInjector` finds the right one at runtime. A driver that
+ * adds such a class has to add it here too - nothing else knows about it.
+ */
 @ContributesTo(AppScope::class)
 @BindingContainer
 object MedtronicMemberInjectors {

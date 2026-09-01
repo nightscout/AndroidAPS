@@ -186,14 +186,27 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         // start with empty queue
         assertThat(commandQueue.size()).isEqualTo(0)
 
-        // add bolus command
-        backgroundScope.launch { commandQueue.bolus(DetailedBolusInfo()) }
-        yield()
-        assertThat(commandQueue.size()).isEqualTo(1)
+        // Run bolus() on a real dispatcher, same as the carbs test below: its internal deferred.await()
+        // is completed by the executor off the test scheduler, so only real threads can resume it.
+        var result: PumpEnactResult? = null
+        CoroutineScope(Dispatchers.IO).launch { result = commandQueue.bolus(DetailedBolusInfo()) }
 
-        // the executor picks up and drains the command off the test scheduler
-        Thread.sleep(3000)
+        // Wait for the command to finish instead of sleeping a fixed time.
+        //
+        // The queue size is deliberately not asserted while the command is in flight. CommandExecutor
+        // takes the command with pickup(), which removes it from the queue before running it, so the
+        // size goes 0 -> 1 -> 0 on the executor's own thread and "1" can be gone before the next line
+        // reads it. Asserting it made this test fail in CI with `expected 1 but was 0`, and a fixed
+        // sleep afterwards could just as easily be too short on a loaded machine.
+        var waitedMs = 0
+        while (result == null && waitedMs < 8000) {
+            Thread.sleep(100); waitedMs += 100
+        }
 
+        // A successful result can only come back through the executor: every early return in bolus()
+        // reports failure, so this proves the command was queued, picked up and run.
+        assertThat(result?.success).isTrue()
+        // And the queue is empty again afterwards - checked once the work is known to be over.
         assertThat(commandQueue.size()).isEqualTo(0)
     }
 

@@ -22,8 +22,12 @@ import platform.Network.nw_path_monitor_set_update_handler
 import platform.Network.nw_path_monitor_start
 import platform.Network.nw_path_status_satisfied
 import platform.Network.nw_path_uses_interface_type
+import platform.Foundation.NSNotificationCenter
+import platform.Foundation.NSOperationQueue
 import platform.UIKit.UIDevice
+import platform.UIKit.UIDeviceBatteryLevelDidChangeNotification
 import platform.UIKit.UIDeviceBatteryState
+import platform.UIKit.UIDeviceBatteryStateDidChangeNotification
 import platform.darwin.dispatch_get_main_queue
 
 /**
@@ -106,6 +110,40 @@ class IosReceiverStatusStore @Inject constructor(
 
     override fun setChargingStatus(event: ReceiverStatusStore.ChargingStatus) {
         _chargingStatusFlow.value = event
+    }
+
+    /**
+     * Starts publishing battery state, the way Android's `ChargingStateReceiver` does.
+     *
+     * Without this the battery flow only ever gets a value when somebody reads [isCharging] or
+     * [batteryLevel], and **nothing does at startup**. That is not a cosmetic gap: `ReceiverDelegate`
+     * gates Nightscout sync on `allowedChargingState == true && allowedNetworkState == true`, and an
+     * unread battery leaves the charging half `null` forever. `null == true` is false, so sync was
+     * refused permanently with "Status not available" - the websocket never opened on iOS at all,
+     * however good the URL and token were.
+     *
+     * Android never meets this because the battery broadcast is sticky: registering the receiver
+     * delivers the current state at once. iOS has no such thing, so the state is seeded by reading it
+     * here and then kept current from the two `UIDevice` notifications.
+     *
+     * Called from the app rather than from the graph or `IosAppStartup`, for the same reason
+     * `IosNotificationDelegate.install` is: this touches UIKit, and the startup path is unit tested
+     * in a binary that has no app bundle.
+     */
+    fun startBatteryWatch() {
+        battery
+    }
+
+    /** Lazy for the same reason [monitor] is - building the graph must not switch on battery polling. */
+    private val battery by lazy {
+        // Seeded before the observers go on: the notifications only fire on *change*, so a device
+        // whose battery is steady would otherwise never publish anything, which is the whole bug.
+        readBattery()
+        val center = NSNotificationCenter.defaultCenter
+        listOf(UIDeviceBatteryStateDidChangeNotification, UIDeviceBatteryLevelDidChangeNotification).forEach { name ->
+            center.addObserverForName(name, `object` = null, queue = NSOperationQueue.mainQueue, usingBlock = { readBattery() })
+        }
+        aapsLogger.debug(LTag.CORE, "Battery monitoring started")
     }
 
     override val isCharging: Boolean get() = readBattery().isCharging

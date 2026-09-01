@@ -120,8 +120,8 @@ class PumpStatusProviderImpl @Inject constructor(
                 putIfThereIsValue("ExtendedBolusRemaining", expectedPumpState.extendedBolus?.plannedRemainingMinutes)
                 putIfThereIsValue("BaseBasalRate", pump.baseBasalRate.iU(profile.insulinConcentration(), true))
                 put("ActiveProfile", profileName)
-                // Driver specific entries last, matching the previous order - the driver used to be
-                // handed the finished object and could still add to it.
+                // Driver specific entries last, so a driver can add to the finished set but the
+                // common fields above are already in place.
                 pump.extendedStatus().forEach { (key, value) -> put(key, value) }
             }
         }

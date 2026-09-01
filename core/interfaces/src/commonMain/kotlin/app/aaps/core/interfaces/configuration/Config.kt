@@ -58,6 +58,18 @@ interface Config {
     val REMOTE: String
     val BUILD_TYPE: String
     val VERSION: String
+
+    /**
+     * Which platform this build runs on - "Android", "Desktop" or "iOS".
+     *
+     * Shown as its own line in the About dialog. The same version string now appears on three
+     * platforms, so a bug report has to say which one it came from.
+     *
+     * The default is empty rather than a guess: a Config implementation that predates this - a test
+     * double, say - keeps compiling, and the dialog simply omits the line rather than claiming a
+     * platform the build never declared.
+     */
+    val PLATFORM: String get() = ""
     val APPLICATION_ID: String
     val DEBUG: Boolean
     val currentDeviceModelString: String
@@ -70,6 +82,14 @@ interface Config {
      * always differed; sharing one would silently rewrite what every existing installation uploads.
      */
     val deviceModelForUpload: String
+
+    /**
+     * The device maker alone, as the platform reports it - `"Google"`, `"samsung"`, `"Xiaomi"`.
+     *
+     * Separate from [deviceModelForUpload] because that one is a transmitted format and must not be
+     * taken apart by callers. Used to build the per-manufacturer battery-settings help link.
+     */
+    val deviceManufacturer: String
     val appName: TextRef
 
     val initProgressFlow: StateFlow<InitProgress>

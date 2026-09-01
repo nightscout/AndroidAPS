@@ -213,10 +213,9 @@ interface Pump {
      * This info is displayed when user hover over pump pill in NS.
      * Except common information every driver can add own info here.
      *
-     * The driver **returns** its entries and the caller merges them. It used to be handed a mutable
-     * object to write into, which cannot work once that document is an immutable tree - and a return
-     * value is the clearer contract anyway, since a driver can no longer accidentally remove or
-     * overwrite the common fields.
+     * The driver **returns** its entries and the caller merges them, rather than writing into a
+     * shared object: the status document is an immutable tree, and a return value also stops a driver
+     * accidentally removing or overwriting the common fields.
      */
     fun extendedStatus(): JsonObject = JsonObject(emptyMap())
 

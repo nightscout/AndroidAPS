@@ -11,11 +11,11 @@ import kotlin.random.Random
  *
  * ## Why it is generated rather than taken from the platform
  *
- * It used to be the Firebase installation id on Android and `identifierForVendor` on iOS - an `expect`
- * / `actual` pair, and on Android a value that arrived asynchronously, so an early read returned "".
- * Both are far too long to read out or type, which is what this is for: a user quoting their install
- * in a support thread. Shortening a platform id does not work either. Those ids are long *because*
- * uniqueness costs length, so a truncation of one is no better than the random code below.
+ * A platform id - the Firebase installation id, or `identifierForVendor` on iOS - is far too long to
+ * read out or type, which is what this is for: a user quoting their install in a support thread. On
+ * Android such an id also arrives asynchronously, so an early read returns "". Shortening one does not
+ * help either: those ids are long *because* uniqueness costs length, so a truncation is no better than
+ * the random code below.
  *
  * ## Uniqueness
  *

@@ -33,6 +33,7 @@ import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
 import app.aaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.constraints.objectives.objectives.Objective0
+import app.aaps.plugins.constraints.objectives.objectives.PlainDurationText
 import app.aaps.plugins.constraints.objectives.objectives.Objective1
 import app.aaps.plugins.constraints.objectives.objectives.Objective2
 import app.aaps.plugins.constraints.objectives.objectives.Objective3
@@ -153,17 +154,20 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
 
         insightDbHelper = InsightDbHelper(insightDatabaseDao)
         danaPump = DanaPump(aapsLogger, preferences, dateUtil, decimalFormatter, profileStoreProvider)
+        // The real formatter rather than a mock: it is pure arithmetic over a duration, and the
+        // objectives only read it for display.
+        val durationText = PlainDurationText()
         val objectives = listOf(
-            Objective0(preferences, rh, dateUtil, activePlugin, virtualPumpPlugin, persistenceLayer, loop, iobCobCalculator, passwordCheck),
-            Objective1(preferences, rh, dateUtil),
-            Objective2(preferences, rh, dateUtil),
-            Objective3(preferences, rh, dateUtil),
-            Objective4(preferences, rh, dateUtil, profileFunction),
-            Objective5(preferences, rh, dateUtil),
-            Objective6(preferences, rh, dateUtil, constraintsChecker, loop),
-            Objective7(preferences, rh, dateUtil),
-            Objective8(preferences, rh, dateUtil),
-            Objective9(preferences, rh, dateUtil)
+            Objective0(preferences, rh, durationText, dateUtil, activePlugin, virtualPumpPlugin, persistenceLayer, loop, iobCobCalculator, passwordCheck),
+            Objective1(preferences, rh, durationText, dateUtil),
+            Objective2(preferences, rh, durationText, dateUtil),
+            Objective3(preferences, rh, durationText, dateUtil),
+            Objective4(preferences, rh, durationText, dateUtil, profileFunction),
+            Objective5(preferences, rh, durationText, dateUtil),
+            Objective6(preferences, rh, durationText, dateUtil, constraintsChecker, loop),
+            Objective7(preferences, rh, durationText, dateUtil),
+            Objective8(preferences, rh, durationText, dateUtil),
+            Objective9(preferences, rh, durationText, dateUtil)
         )
         objectivesPlugin = ObjectivesPlugin(aapsLogger, rh, preferences, config, objectives)
         runBlocking { objectivesPlugin.onStart() }

@@ -5,10 +5,8 @@ import androidx.compose.runtime.Immutable
 /**
  * What the overview chips show.
  *
- * These used to sit next to `ChipsViewModel` in its file. They are plain values with no Android in
- * them, but the view model beside them is Android bound, and a file moves as a whole - so every
- * composable and preview that reads these was pinned to androidMain by proximity rather than by any
- * real dependency. They live here so they can be shared.
+ * Kept in their own file rather than beside `ChipsViewModel`: these are plain values with no Android
+ * in them, and every composable and preview that reads them can then be shared code.
  */
 @Immutable
 data class IobUiState(

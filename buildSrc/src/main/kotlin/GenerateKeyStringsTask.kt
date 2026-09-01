@@ -14,7 +14,7 @@ import java.io.File
 import javax.xml.parsers.DocumentBuilderFactory
 
 /**
- * Turns a module's `res/values/strings.xml` into two generated Kotlin files, so preference keys can
+ * Turns a module's `res/values/strings.xml` into three generated Kotlin files, so preference keys can
  * name a string without naming an Android resource id.
  *
  * Why this exists: a key enum that says `titleResId = R.string.x` carries an `Int` that only means
@@ -23,9 +23,12 @@ import javax.xml.parsers.DocumentBuilderFactory
  * name that every platform can hold - while the generated id map keeps Android resolving through
  * AAPT exactly as before.
  *
- * The pair is generated from the same XML in one pass, so the two sides cannot drift: a string
- * deleted from `strings.xml` disappears from both, and any call site that still names it stops
- * compiling.
+ * The three are generated from the same XML in one pass, so they cannot drift: a string deleted from
+ * `strings.xml` disappears from all of them, and any call site that still names it stops compiling.
+ *
+ * The third file is the English text of each name. Android never reads it - it goes through AAPT, so
+ * translations and locale matching keep working - but iOS and the desktop JVM have no resource table
+ * and would otherwise render every label as its own name.
  *
  * This is deliberately not `Resources.getIdentifier()`. That is a reflective lookup R8 cannot see,
  * it would keep every string alive, and a typo would silently return 0. A generated map is plain
@@ -81,7 +84,8 @@ abstract class GenerateKeyStringsTask : DefaultTask() {
         val baseDir = File(res, "values")
         if (!baseDir.isDirectory) throw GradleException("No values/ directory under $res")
 
-        val names = readStringNames(baseDir)
+        val strings = readStrings(baseDir)
+        val names = strings.map { it.first }
         if (names.isEmpty()) throw GradleException("No <string> elements under $baseDir")
 
         val duplicates = names.groupBy { it }.filterValues { it.size > 1 }.keys
@@ -103,6 +107,7 @@ abstract class GenerateKeyStringsTask : DefaultTask() {
 
         writeCommon(names.sorted())
         writeAndroid(names.sorted())
+        writeValues(strings.sortedBy { it.first })
         writeReport(res, names.toSet())
     }
 
@@ -169,6 +174,58 @@ abstract class GenerateKeyStringsTask : DefaultTask() {
         )
     }
 
+    /**
+     * Writes the name to English text map, for the platforms that have no resource table.
+     *
+     * Android never reads this: it resolves a name to an `R.string` id through the map above and
+     * reads the text through `Resources`, so it keeps locale matching and every translation. iOS and
+     * the desktop JVM have neither, and without this they can only show the name itself - a settings
+     * screen that reads `configbuilder_general` instead of "General".
+     *
+     * It goes in the **common** output rather than a platform one so that no module has to wire up a
+     * third source directory, and because a module with no Apple or JVM target today may get one. The
+     * cost on Android is a generated object that nothing references, which R8 removes.
+     *
+     * Only the base locale is emitted. Translating the non-Android platforms is a separate job that
+     * needs a locale chosen at runtime; this is the step that makes them show real words at all.
+     */
+    private fun writeValues(entries: List<Pair<String, String>>) {
+        val dir = commonOutputDir.get().asFile
+        val pkg = packageName.get()
+        val obj = objectName.get() + "Values"
+        val named = objectName.get()
+        val file = File(dir, pkg.replace('.', '/') + "/$obj.kt")
+        file.parentFile.mkdirs()
+        file.writeText(
+            buildString {
+                append(GENERATED_HEADER)
+                append("package $pkg\n\n")
+                append("/**\n")
+                append(" * The English text of every string in [$named].\n")
+                append(" *\n")
+                append(" * Read by the platforms that have no Android resource table. On Android this object is\n")
+                append(" * unused - text there comes from `Resources` through the generated id map instead.\n")
+                append(" */\n")
+                append("object $obj {\n\n")
+                // Chunked because one mapOf() of a thousand pairs is one method, and :core:ui has over
+                // eleven hundred strings. The 64K bytecode limit is not theoretical at that size, and
+                // it would surface as a compiler error a long way from this file.
+                val chunks = entries.chunked(VALUES_PER_METHOD)
+                append("    private val values: MutableMap<String, String> = mutableMapOf<String, String>().also {\n")
+                chunks.indices.forEach { i -> append("        part$i(it)\n") }
+                append("    }\n\n")
+                chunks.forEachIndexed { i, chunk ->
+                    append("    private fun part$i(m: MutableMap<String, String>) {\n")
+                    chunk.forEach { (name, text) -> append("        m[\"$name\"] = ${text.asKotlinLiteral()}\n") }
+                    append("    }\n\n")
+                }
+                append("    /** The English text for [name], or null when this module does not own that name. */\n")
+                append("    fun textOf(name: String): String? = values[name]\n")
+                append("}\n")
+            }
+        )
+    }
+
     private fun writeReport(res: File, expected: Set<String>) {
         val report = StringBuilder()
         report.append("Translation completeness for ${res.parentFile.parentFile.parentFile.name}\n")
@@ -215,8 +272,13 @@ abstract class GenerateKeyStringsTask : DefaultTask() {
      * strings in `strings.xml`, 32 in `protection.xml` and 60 in `strings_scene_wizard.xml`, and a
      * generator that missed the other two would leave 92 names unresolvable while looking correct.
      * Files with no `<string>` at all - colors, styles, layout aliases - simply contribute nothing.
+     *
+     * The text comes back with it because both generated maps are built from the same pass; see
+     * [unescapeAndroidText] for what is done to it. `textContent` flattens any markup inside the
+     * element, so `<b>` and `<xliff:g>` contribute their text and not their tags - which is what a
+     * caller asking for a plain String gets on Android too, where styling is applied by the widget.
      */
-    private fun readStringNames(dir: File): List<String> {
+    private fun readStrings(dir: File): List<Pair<String, String>> {
         val files = dir.listFiles { f: File -> f.isFile && f.extension.equals("xml", ignoreCase = true) }
             ?.sortedBy { it.name }
             .orEmpty()
@@ -226,15 +288,86 @@ abstract class GenerateKeyStringsTask : DefaultTask() {
         return files.flatMap { file ->
             val nodes = builder.parse(file).getElementsByTagName("string")
             (0 until nodes.length).mapNotNull { i ->
-                nodes.item(i).attributes?.getNamedItem("name")?.nodeValue
+                val node = nodes.item(i)
+                val name = node.attributes?.getNamedItem("name")?.nodeValue ?: return@mapNotNull null
+                name to node.textContent.orEmpty().unescapeAndroidText()
             }
         }
+    }
+
+    private fun readStringNames(dir: File): List<String> = readStrings(dir).map { it.first }
+
+    /**
+     * Applies the rules AAPT applies to a string value, so the generated text matches what Android
+     * shows for the same entry.
+     *
+     * A value wrapped in double quotes keeps its whitespace exactly; otherwise runs of whitespace
+     * collapse to one space and the ends are trimmed. Then the backslash escapes are resolved -
+     * `\n`, `\t`, `\'`, `\"`, `\@`, `\?`, `\uXXXX` and `\\`. XML entities such as `&amp;` were
+     * already resolved by the parser.
+     *
+     * Format placeholders are left exactly as written. Substituting them is the resolver's job at
+     * call time, and it is the whole reason this map is worth generating.
+     */
+    private fun String.unescapeAndroidText(): String {
+        val quoted = length >= 2 && startsWith('"') && endsWith('"')
+        val collapsed = if (quoted) substring(1, length - 1) else replace(Regex("""\s+"""), " ").trim()
+        val out = StringBuilder(collapsed.length)
+        var i = 0
+        while (i < collapsed.length) {
+            val c = collapsed[i]
+            if (c != '\\' || i == collapsed.length - 1) {
+                out.append(c)
+                i++
+                continue
+            }
+            when (val next = collapsed[i + 1]) {
+                'n'  -> { out.append('\n'); i += 2 }
+                't'  -> { out.append('\t'); i += 2 }
+                'u'  -> {
+                    val hex = collapsed.drop(i + 2).take(4)
+                    val code = if (hex.length == 4) hex.toIntOrNull(16) else null
+                    if (code != null) {
+                        out.append(code.toChar())
+                        i += 6
+                    } else {
+                        // Not a real escape. Keep the backslash rather than guessing at the intent.
+                        out.append(c)
+                        i++
+                    }
+                }
+
+                else -> { out.append(next); i += 2 }
+            }
+        }
+        return out.toString()
+    }
+
+    /** [this] as Kotlin source for the same String, safe to paste into a generated file. */
+    private fun String.asKotlinLiteral(): String {
+        val body = buildString {
+            this@asKotlinLiteral.forEach { c ->
+                when (c) {
+                    '\\' -> append("\\\\")
+                    '"'  -> append("\\\"")
+                    '$'  -> append("\\\$")
+                    '\n' -> append("\\n")
+                    '\r' -> append("\\r")
+                    '\t' -> append("\\t")
+                    else -> append(c)
+                }
+            }
+        }
+        return "\"$body\""
     }
 
     private fun String.isSafeKotlinIdentifier(): Boolean =
         matches(Regex("[A-Za-z_][A-Za-z0-9_]*")) && this !in KOTLIN_KEYWORDS
 
     private companion object {
+
+        /** Entries per generated method. Keeps each one far below the 64K bytecode limit. */
+        const val VALUES_PER_METHOD = 200
 
         const val GENERATED_HEADER =
             "// Generated by GenerateKeyStringsTask from res/values/strings.xml. Do not edit.\n\n"

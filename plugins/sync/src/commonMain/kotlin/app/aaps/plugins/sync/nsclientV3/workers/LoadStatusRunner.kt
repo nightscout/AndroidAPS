@@ -9,6 +9,10 @@ import app.aaps.core.objects.workflow.WorkOutcome
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import dev.zacsweers.metro.Inject
 
+/**
+ * Reads the Nightscout server status once and records the outcome on the plugin, so a failure shows
+ * up in the client log and in the plugin's own status line rather than only being thrown away.
+ */
 @Inject
 class LoadStatusRunner(
 

@@ -29,11 +29,9 @@ import kotlinx.serialization.json.longOrNull
  * see [optStringCompat] returning the four letter text `null`. They are kept so the move off
  * `org.json` is provably behaviour preserving. Fixing them is a separate, visible change.
  *
- * It used to live in `:plugins:sync`, which is Android only, on the argument that the quirks should
- * stay out of shared modules. That argument stopped holding when `:core:interfaces` itself had to
- * move: the profile spine (`Profile.toPureNsJson`, `ProfileStore`, `SingleProfile`) carries
- * `JSONObject` and `JSONArray` in its **contracts**, so the shim has to be visible wherever those
- * contracts are.
+ * It lives in a shared module, despite the quirks, because the profile spine
+ * (`Profile.toPureNsJson`, `ProfileStore`, `SingleProfile`) carries `JSONObject` and `JSONArray` in
+ * its **contracts**, so the shim has to be visible wherever those contracts are.
  *
  * Read this together with the divergences the parity test documents but does NOT hide - see the
  * `writes differ` section there. Reading is safe to shim; writing changes the bytes on the wire.

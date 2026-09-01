@@ -289,7 +289,7 @@ jobs:
             # The names are unqualified on purpose: Gradle runs them in whichever projects have them,
             # so a module converting later is picked up without editing this file.
             # Deliberately not `allTests`: that would pull in the Kotlin/Native toolchain for the
-            # mingw and iOS targets, whose tests cannot run on a Linux box anyway.
+            # iOS targets, whose tests cannot run on a Linux box anyway.
             $GRADLE_PIN ./gradlew --continue -Dorg.gradle.daemon=true -Dorg.gradle.workers.max=8 testFullDebugUnitTest testDebugUnitTest jvmTest testAndroidHostTest
 
       - run:

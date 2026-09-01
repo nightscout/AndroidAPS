@@ -13,6 +13,4 @@ internal actual fun databaseFileStats(path: String): DatabaseFileStats {
     )
 }
 
-internal actual val databaseDispatcher: kotlinx.coroutines.CoroutineDispatcher = kotlinx.coroutines.Dispatchers.IO
-
 internal actual suspend fun AppDatabase.clearAllTablesCompat() = clearAllTables()

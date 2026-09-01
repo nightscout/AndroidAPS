@@ -7,11 +7,11 @@ import dev.whyoleg.cryptography.CryptographyProvider
 import dev.whyoleg.cryptography.DelicateCryptographyApi
 import dev.whyoleg.cryptography.algorithms.AES
 import dev.whyoleg.cryptography.algorithms.SHA256
+import dev.whyoleg.cryptography.random.CryptographyRandom
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import kotlin.random.Random
 
 /**
  * Secrets encrypted with a key kept in the iOS Keychain.
@@ -56,7 +56,11 @@ class IosSecureEncrypt @Inject constructor(
             val key = aes.keyDecoder().decodeFromByteArrayBlocking(AES.Key.Format.RAW, keyFor(keystoreAlias))
             // A fresh 12-byte IV per encryption. Reusing one under the same key would leak plaintext
             // relationships, which is the classic way to get GCM wrong.
-            val iv = Random.nextBytes(IV_BYTES)
+            //
+            // CryptographyRandom, not kotlin.random.Random: the latter is a plain PRNG seeded from
+            // the clock, so both the IV and the key below would be predictable to anyone who could
+            // guess when they were made.
+            val iv = CryptographyRandom.nextBytes(IV_BYTES)
             val cipherText = key.cipher().encryptWithIvBlocking(iv, plaintextSecret.encodeToByteArray())
             val body = "$keystoreAlias$SEPARATOR${iv.toHex()}$SEPARATOR${cipherText.toHex()}"
             "${sha256(body)}$SEPARATOR$body"
@@ -105,7 +109,7 @@ class IosSecureEncrypt @Inject constructor(
 
     /** The key for an alias, generated and stored the first time it is asked for. */
     private fun keyFor(alias: String): ByteArray =
-        keychain.load(alias) ?: Random.nextBytes(KEY_BYTES).also { keychain.store(alias, it) }
+        keychain.load(alias) ?: CryptographyRandom.nextBytes(KEY_BYTES).also { keychain.store(alias, it) }
 
     private fun sha256(value: String): String = sha.hashBlocking(value.encodeToByteArray()).toHex()
 

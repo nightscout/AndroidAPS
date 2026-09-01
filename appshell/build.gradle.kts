@@ -18,11 +18,18 @@ plugins {
  * still sees them for its DI graph. That keeps the number of edges in the build graph the same bar
  * one, which matters because every plugin is on this list.
  *
- * Everything is in **androidMain** for now. The screens the navigation graph routes to
- * (`SetupWizardScreen`, `AutomationRuntime`, ...) are still in their plugins' androidMain, and
- * `:plugins:sync` is not multiplatform at all yet, so there is nothing to gain from an iOS target
- * here today. When those move, this module gains its Apple targets and the files
- * move to commonMain - the source set is already named for it.
+ * `AppRoute` and `AppNavGraph` are both in **commonMain**, and every module this one depends on
+ * already has Apple targets. Three things still have to happen before this module can declare its
+ * own, and they are all inside `AppNavGraph`:
+ *
+ *  1. **Seven `R.string` references**, aliased in from `:plugins:main` and `:core:ui`. Both modules
+ *     already generate `TextRef`s, so this is the usual name-preserving swap.
+ *  2. **`backStackEntry.arguments?.getString(...)`** - `arguments` is a `Bundle` on Android and a
+ *     `SavedState` in multiplatform navigation, so those reads need the `SavedState` API.
+ *  3. A stale `androidx.compose.ui.res.stringResource` import.
+ *
+ * The navigation dependency is already the JetBrains republish, so nothing is waiting on that.
+ * `:plugins:sync` is multiplatform now too - an older note here said otherwise.
  */
 kotlin {
     android {
@@ -43,8 +50,16 @@ kotlin {
         }
     }
 
+
+    iosArm64()
+    iosSimulatorArm64()
+
+    // Desktop (Windows/macOS/Linux). Compose Multiplatform resolves its `desktop` variant from a
+    // plain jvm() target, so no special target name is needed.
+    jvm()
+
     sourceSets {
-        androidMain {
+        commonMain {
             dependencies {
                 api(project(":core:data"))
                 api(project(":core:interfaces"))
@@ -60,15 +75,24 @@ kotlin {
                     .filter { it.path.startsWith(":plugins:") && it.buildFile.exists() }
                     .forEach { api(project(it.path)) }
 
-                api(project.dependencies.platform(libs.androidx.compose.bom))
-                api(libs.androidx.compose.runtime)
-                api(libs.androidx.compose.material3)
+                api(libs.cmp.runtime)
+                api(libs.cmp.foundation)
+                api(libs.cmp.ui)
+                api(libs.cmp.material3)
+                api(libs.cmp.material.icons.extended)
+                // The JetBrains republishes, not the plain androidx ones: same package names, with
+                // Apple targets. Same choice as :core:ui and :ui.
                 api(libs.androidx.compose.navigation)
-                api(libs.androidx.lifecycle.runtime.compose)
-                implementation(libs.androidx.activity.compose)
+                api(libs.jetbrains.lifecycle.runtime.compose)
             }
         }
 
+        androidMain {
+            dependencies {
+                api(project.dependencies.platform(libs.androidx.compose.bom))
+                implementation(libs.androidx.activity.compose)
+            }
+        }
         getByName("androidHostTest") {
             dependencies {
                 implementation(libs.org.junit.jupiter)
@@ -82,4 +106,3 @@ kotlin {
         }
     }
 }
-

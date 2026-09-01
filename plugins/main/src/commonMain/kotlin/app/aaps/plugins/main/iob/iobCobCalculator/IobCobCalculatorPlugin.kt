@@ -444,9 +444,8 @@ class IobCobCalculatorPlugin(
      * Guards [scheduledData] and [scheduledHistoryPost]. Held by both the scheduling call and the
      * debounced body, so a new request cannot land while a run is in progress.
      *
-     * This pair used to be `@Synchronized` on the method plus `synchronized(this)` in the body -
-     * the same monitor, just written two ways. Naming it makes the pairing explicit, and replaces
-     * `synchronized`, which is JVM only.
+     * A named lock rather than `@Synchronized` plus `synchronized(this)`: the pairing is then
+     * explicit, and it works off the JVM.
      */
     private val historyLock = AapsLock()
 
@@ -462,10 +461,8 @@ class IobCobCalculatorPlugin(
             scheduledData = data
             scheduledHistoryPost = scope?.launch {
                 delay(HISTORY_DEBOUNCE_MS)
-                // Only the wait is cancellable. This used to be a ScheduledFuture cancelled with
-                // `cancel(false)`, which never interrupted a run that had already begun; without
-                // NonCancellable a late cancel could now stop this half done, between clearing the
-                // TDD cache and rebuilding from it.
+                // Only the wait is cancellable. Without NonCancellable a late cancel could stop this
+                // half done, between clearing the TDD cache and rebuilding from it.
                 withContext(NonCancellable) {
                     historyLock.withLock {
                         aapsLogger.debug(LTag.AUTOSENS, "Running newHistoryData")
