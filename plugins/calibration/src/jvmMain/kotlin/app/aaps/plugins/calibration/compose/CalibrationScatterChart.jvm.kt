@@ -13,12 +13,14 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.plugins.calibration.CalibrationFit
 
 /**
- * Says it is missing rather than drawing nothing, for the same reason the Apple actual does: an empty
- * box looks exactly like a chart that failed to render.
+ * Says it is missing rather than drawing nothing: an empty box looks exactly like a chart that failed
+ * to render.
  *
- * The Android chart positions its axis labels from `Paint.FontMetrics`; redrawing that with
- * `TextMeasurer` moves the labels unless the baseline arithmetic is redone and checked against the
- * real chart, so the port waits for a change that can look at it.
+ * Desktop *could* draw this - Compose Desktop has the same Canvas and `TextMeasurer` the shared code
+ * would use, so unlike the Apple actual nothing about the platform is in the way. What is missing is
+ * verification: the Android chart positions its axis labels from `Paint.FontMetrics`, and redrawing
+ * that with `TextMeasurer` moves the labels unless the baseline arithmetic is redone and compared
+ * against the real chart side by side. That comparison needs someone who can look at both.
  *
  * The text is deliberately not translated: it is a developer placeholder that should never reach a
  * user, and adding it to `strings.xml` would push it to every translator.
