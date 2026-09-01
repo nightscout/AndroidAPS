@@ -1,7 +1,8 @@
 package app.aaps.ios.shell
 
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.ios.shell.di.IosAppGraph
+import app.aaps.core.interfaces.plugin.PluginBase
 
 /**
  * What has to happen before the first screen is composed - the iOS counterpart of `MainApp`.
@@ -23,15 +24,18 @@ import app.aaps.ios.shell.di.IosAppGraph
  * `config.initCompleted()`. None of that is wired up here yet. `IosClientConfig` reports
  * initialization done from the start, so the splash does not appear at all.
  */
-class IosAppStartup(private val graph: IosAppGraph) {
+internal class IosAppStartup(
+    private val aapsLogger: AAPSLogger,
+    private val registry: PluginRegistry,
+    private val contributedPlugins: Map<Int, PluginBase>
+) {
 
     fun run() {
-        val logger = graph.logger
         // Sorted by the order key each plugin registers itself with, which is the order the plugin
         // list is shown in and the order defaults are picked in.
-        val plugins = graph.contributedPlugins.entries.sortedBy { it.key }.map { it.value }
-        graph.pluginStore.plugins = plugins
-        logger.debug(LTag.CORE, "Registered ${plugins.size} plugins on iOS")
+        val plugins = contributedPlugins.entries.sortedBy { it.key }.map { it.value }
+        registry.register(plugins)
+        aapsLogger.debug(LTag.CORE, "Registered ${plugins.size} plugins on iOS")
 
         // Picks the active plugin in each category - the pump, the sensitivity, the smoothing and
         // so on - from what is enabled, falling back to each category's default. Registering the
@@ -40,7 +44,7 @@ class IosAppStartup(private val graph: IosAppGraph) {
         //
         // On Android `configBuilder.initialize()` does this. The iOS ConfigBuilder is a placeholder,
         // so the call is made directly. When a real one exists, this line moves into it.
-        graph.pluginStore.verifySelectionInCategories()
-        logger.debug(LTag.CORE, "Plugin selection verified, starting the UI")
+        registry.verifySelections()
+        aapsLogger.debug(LTag.CORE, "Plugin selection verified, starting the UI")
     }
 }

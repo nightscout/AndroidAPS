@@ -19,6 +19,7 @@ import app.aaps.core.ui.compose.LocalMetroViewModelFactory
 import app.aaps.core.ui.compose.icons.IcAaps
 import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.ios.shell.IosAppStartup
+import app.aaps.ios.shell.PluginStoreRegistry
 import app.aaps.ios.shell.di.IosAppGraph
 import app.aaps.ios.shell.di.IosViewModelFactory
 import app.aaps.ui.compose.configuration.ConfigurationViewModel
@@ -67,7 +68,7 @@ fun aapsAppViewController(): UIViewController {
 
     // Before the composition, not beside it: the first view model built reads the active pump, and
     // an empty plugin list there throws from a coroutine and takes the process with it.
-    IosAppStartup(graph).run()
+    IosAppStartup(logger, PluginStoreRegistry(graph.pluginStore), graph.contributedPlugins).run()
     logger.debug(LTag.CORE, "Starting the AAPS Compose root on iOS")
 
     return ComposeUIViewController {
