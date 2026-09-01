@@ -19,7 +19,6 @@ kotlin {
     iosSimulatorArm64()
 
     // Kept because it is the only Kotlin/Native target whose tests can run on Windows.
-    mingwX64()
 
     sourceSets {
         getByName("commonMain") {
@@ -53,12 +52,6 @@ kotlin {
                 // Darwin runs on NSURLSession, so an iOS build gets the system's own connection
                 // handling rather than a second HTTP stack.
                 implementation(libs.io.ktor.client.darwin)
-            }
-        }
-        getByName("mingwX64Main") {
-            dependencies {
-                // CIO is Ktor's own multiplatform engine, enough for the compile proof on Windows.
-                implementation(libs.io.ktor.client.cio)
             }
         }
         // The golden crypto vectors live here so they run on every target, not just the JVM. That is

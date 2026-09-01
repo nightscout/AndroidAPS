@@ -73,7 +73,23 @@ kotlin {
     iosArm64()
     iosSimulatorArm64()
 
+    jvm()
+
+    // Android and the JVM desktop target share their actuals: a ReentrantLock and Dispatchers.IO are
+    // the same answer on both, and duplicating them would be two files that must not drift. Only what
+    // is genuinely Android - the runtime Bluetooth permissions - stays in androidMain.
+    //
+    // Extends the default template rather than calling dependsOn by hand: a manual dependsOn turns the
+    // default hierarchy OFF, which silently unwires iosMain and breaks every Apple actual.
+    // Applied explicitly, because the manual dependsOn below would otherwise switch the automatic
+    // one off - which silently unwires iosMain and breaks every Apple actual.
+    applyDefaultHierarchyTemplate()
+
     sourceSets {
+        val jvmSharedMain = create("jvmSharedMain") { dependsOn(commonMain.get()) }
+        androidMain.get().dependsOn(jvmSharedMain)
+        jvmMain.get().dependsOn(jvmSharedMain)
+
         commonMain {
             kotlin.srcDir(generateInterfacesStrings.flatMap { it.commonOutputDir })
             dependencies {

@@ -40,7 +40,6 @@ kotlin {
     // The only Kotlin/Native target whose tests can actually RUN on a Windows machine, so it is what
     // executes this module's commonTest through Kotlin/Native rather than only compiling it. Same
     // reason as :core:data.
-    mingwX64()
 
     sourceSets {
         commonMain {

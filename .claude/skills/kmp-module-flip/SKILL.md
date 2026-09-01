@@ -236,8 +236,8 @@ because the IV is generated per use; only the fixtures were wrong.
 Two rules when the format is already on the wire:
 
 - **Keep golden vectors and put them in commonTest.** Digests minted by the old implementation are
-  what prove the new one emits the same bytes. On Windows `mingwX64Test` runs them against
-  Kotlin/Native, so the Native path is checked long before a Mac is available.
+  what prove the new one emits the same bytes, and in commonTest they run on every target the module
+  builds for rather than only on the JVM.
 - **Watch the packaging, not the algorithm.** The primitives interoperate by definition; the silent
   breakage is in how they are assembled - whether the AEAD nonce is prepended or stored separately,
   whether the GCM tag is appended, hex case. In cryptography-kotlin the plain `encryptBlocking`

@@ -8,15 +8,14 @@ import kotlin.test.assertEquals
  * The same expected text on every platform.
  *
  * [NumberFormatPlatform] is an `expect object`, so each target formats numbers with its own
- * library - `java.text.DecimalFormat` on the JVM, `NSNumberFormatter` on Apple, hand written
- * arithmetic on mingw. They are supposed to agree. Nothing checked that until now: `NumberFormatTest`
- * pins the JVM against real `DecimalFormat` and is a fine oracle, but it is a `jvmTest` and cannot
- * say anything about the others.
+ * library - `java.text.DecimalFormat` on the JVM and on desktop, `NSNumberFormatter` on Apple. They
+ * are supposed to agree. `NumberFormatTest` pins the JVM against real `DecimalFormat` and is a fine
+ * oracle, but it is a `jvmTest` and cannot say anything about the others.
  *
  * These are literal expectations rather than a comparison, so they work on a target that has no JVM
- * to compare against. On Windows they run for JVM and mingw today; on a machine that can run Apple
- * tests the same file checks `NSNumberFormatter` with no extra work. That is the point - the trap is
- * armed before the platform that might spring it exists.
+ * to compare against: on a machine that can run Apple tests the same file checks `NSNumberFormatter`
+ * with no extra work. That is the point - the trap is armed before the platform that might spring it
+ * exists.
  *
  * Every case passes [SEPARATOR_DOT] explicitly, so the decimal separator cannot vary with the
  * machine's locale. What is still assumed is that the default locale uses **ASCII digits**; a device
@@ -53,14 +52,14 @@ class NumberFormatParityTest {
      *
      * `0.35` is not representable as a double - the nearest one is `0.34999999999999997779...`,
      * just below the midpoint. `DecimalFormat` works from that true decimal value and rounds **down**
-     * to `0.3`. The mingw actual multiplies by ten first, and `0.35 * 10.0 == 3.5` exactly in
-     * IEEE-754 arithmetic, so it sees a perfect tie, applies half-even, and produces `0.4`.
+     * to `0.3`. An implementation that scales by ten first sees `0.35 * 10.0 == 3.5` exactly in
+     * IEEE-754 arithmetic, reads it as a perfect tie, applies half-even, and produces `0.4`. A
+     * previous Kotlin/Native experiment did exactly that, which is how this case was found.
      *
-     * Neither is a bug in the tests. `DecimalFormat` is the reference - it is what every existing
-     * AAPS number has been rendered with - so a platform that differs here is the one that is wrong.
-     * mingw is explicitly an experiment rather than a shipping target and is left as it is, but
-     * **`NSNumberFormatter` must be checked against this case on a Mac before an iOS client ships**,
-     * because unlike mingw it would be rendering real doses.
+     * `DecimalFormat` is the reference - it is what every existing AAPS number has been rendered with
+     * - so a platform that differs here is the one that is wrong. **`NSNumberFormatter` must be
+     * checked against this case on a Mac before an iOS client ships**, because it would be rendering
+     * real doses.
      */
     @Test
     fun `values that are not exactly representable are deliberately not pinned`() {
