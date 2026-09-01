@@ -32,6 +32,20 @@ interface NsConnection {
      */
     val socketConnected: Boolean?
 
+    /**
+     * Whether this platform can carry a websocket at all.
+     *
+     * Not a preference and not a connection state - a fact about the build. The desktop client has
+     * no socket implementation, and the preference that chooses websocket over polling defaults to
+     * **on**, so without this a desktop would take the websocket path, receive no pushes, and never
+     * poll either: sync would be silently dead while every screen looked normal.
+     *
+     * The refresh tick therefore polls whenever the preference is off **or** the platform cannot do
+     * websockets, which also means a user toggling that preference cannot break a desktop client.
+     * True by default, so the platforms that do have sockets are unaffected.
+     */
+    val supportsWebsocket: Boolean get() = true
+
     /** True while a storage socket object exists, whether or not it has finished connecting. */
     val hasLiveSocket: Boolean
 

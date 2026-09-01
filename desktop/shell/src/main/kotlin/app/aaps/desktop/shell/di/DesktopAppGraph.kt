@@ -22,13 +22,14 @@ import dev.zacsweers.metro.SingleIn
  *
  * The shell depends on the same 26 modules `:ios:shell` does, so every plugin that registers itself
  * with `@ContributesBinding` is already in the graph, and the classes in `app.aaps.desktop.shell.platform`
- * answer the platform half. Measured at **4**, down from 32:
+ * answer the platform half. Measured at **3**, down from 32:
  *
- * **Implementable, and the next work:** `ImportExportPrefs` (file dialogs) and `NsConnection`. The
- * socket class it needs, `SocketIoNsSocket`, has no Android imports at all - it is socket.io,
- * `org.json` and `java.net` - so it is a source-set move rather than a rewrite. What it needs first
- * is a decision: sharing it puts the `org.json` artifact on the Android compile classpath of the
- * module that syncs user data, where the platform already provides that package.
+ * **Implementable, and the next work:** `ImportExportPrefs`, which is file dialogs.
+ *
+ * Nightscout sync is done and needs no websocket: `DesktopNsConnection` reports that this platform
+ * has none, and the plugin's refresh tick then polls the same REST round a phone runs, through
+ * `DesktopNsLoadExecutor`. The socket would only lower latency, and it is not worth what it costs -
+ * see `DesktopNsConnection` for the JSON implementation it would drag in.
  *
  * **Needs a port rather than an implementation:** `Autotune`, whose `AutotunePlugin` is arithmetic
  * over treatment history sitting in androidMain, and `LoopNotifier`, an interface whose only
