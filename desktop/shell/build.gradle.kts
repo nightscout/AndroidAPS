@@ -92,7 +92,7 @@ java {
 
 dependencies {
     implementation(compose.desktop.currentOs)
-    implementation(compose.material3)
+    implementation(libs.cmp.material3)
 
     // The shared app: :appshell exposes every client module as `api`, so this one line brings the
     // whole graph the desktop build needs.
