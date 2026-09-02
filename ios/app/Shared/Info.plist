@@ -25,5 +25,13 @@
 	-->
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<!--
+	  Which configuration built this, substituted by Xcode. Read back by `IosClientConfig`, which used
+	  to answer "debug" and `DEBUG = true` whatever it was built as - so a TestFlight build would have
+	  told the user it was a development build, and `isDev()` would have been true in front of real
+	  users.
+	-->
+	<key>AAPSBuildType</key>
+	<string>$(CONFIGURATION)</string>
 </dict>
 </plist>

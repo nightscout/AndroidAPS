@@ -54,11 +54,19 @@ class IosClientConfig(
     override val AAPSCLIENT1: Boolean = FLAVOR == "aapsclient"
     override val AAPSCLIENT2: Boolean = FLAVOR == "aapsclient2"
     override val AAPSCLIENT3: Boolean = FLAVOR == "aapsclient3"
-    override val BUILD_TYPE: String = "debug"
+    /**
+     * Which configuration built this, from the bundle - the same trick as [appName] and the client
+     * number, and for the same reason: one Kotlin framework serves every configuration, so it cannot
+     * know on its own. Pinned to "debug" before, which made a release build describe itself as a
+     * development one.
+     */
+    override val BUILD_TYPE: String =
+        (NSBundle.mainBundle.objectForInfoDictionaryKey("AAPSBuildType") as? String)?.lowercase() ?: "debug"
     override val PLATFORM: String = GeneratedBuildInfo.PLATFORM
     override val VERSION: String = VERSION_NAME
     override val BUILD_VERSION: String = GeneratedBuildInfo.BUILD
-    override val DEBUG: Boolean = true
+    /** Anything that is not a release build is treated as a debug one, which is the safe way round. */
+    override val DEBUG: Boolean = BUILD_TYPE != "release"
 
     // Filled by the build on Android. iOS has no equivalent wired up yet, and saying so plainly is
     // better than inventing a commit hash.
