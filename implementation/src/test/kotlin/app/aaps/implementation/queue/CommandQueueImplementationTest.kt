@@ -27,6 +27,7 @@ import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.implementation.profile.ProfileSwitchSilentGate
@@ -161,6 +162,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             whenever(rh.gs(app.aaps.core.ui.R.string.command_replaced)).thenReturn("Replaced by newer command")
             whenever(rh.gs(eq(app.aaps.core.ui.R.string.format_insulin_units), anyOrNull())).thenReturn("%1\$.2f U")
             whenever(rh.gs(app.aaps.core.ui.R.string.goingtodeliver)).thenReturn("Going to deliver %1\$.2f U")
+            whenever(preferences.get(BooleanKey.AlertFailedUpdateBasalProfileSound)).thenReturn(true)
         }
     }
 
@@ -268,10 +270,10 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             anyOrNull(), any<List<NotificationAction>>(), anyOrNull()
         )
 
-    private fun verifyFailurePosted(text: String) =
+    private fun verifyFailurePosted(text: String, soundRes: Int? = app.aaps.core.ui.R.raw.boluserror) =
         verify(notificationManager).post(
             eq(NotificationId.FAILED_UPDATE_PROFILE), eq(text), any<NotificationLevel>(), any<Int>(),
-            eq(app.aaps.core.ui.R.raw.boluserror), any<List<NotificationAction>>(), anyOrNull()
+            eq(soundRes), any<List<NotificationAction>>(), anyOrNull()
         )
 
     private fun verifyNothingPosted() =
@@ -316,6 +318,17 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
 
         assertThat(persisted).isFalse()
         verifyFailurePosted("pump rejected")
+        verify(notificationManager, never()).dismiss(any<NotificationId>())
+    }
+
+    @Test
+    fun postProfileWriteResult_error_canPostFailureWithoutSound() {
+        whenever(preferences.get(BooleanKey.AlertFailedUpdateBasalProfileSound)).thenReturn(false)
+
+        val persisted = commandQueue.postProfileWriteResult(enactResult(isSuccess = false, isEnacted = false, commentText = "pump rejected"), silent = false)
+
+        assertThat(persisted).isFalse()
+        verifyFailurePosted("pump rejected", soundRes = null)
         verify(notificationManager, never()).dismiss(any<NotificationId>())
     }
 

@@ -183,7 +183,8 @@ class BuiltInSearchables @Inject constructor(
             BooleanKey.AlertCarbsRequired,
             BooleanKey.AlertUrgentAsAndroidNotification,
             BooleanKey.AlertIncreaseVolume,
-            BooleanKey.AlertOverrideDoNotDisturb
+            BooleanKey.AlertOverrideDoNotDisturb,
+            BooleanKey.AlertFailedUpdateBasalProfileSound
         ),
         icon = Icons.Default.Notifications
     )
@@ -360,4 +361,3 @@ class BuiltInSearchables @Inject constructor(
         add(SearchableItem.Category(siteRotation))
     }
 }
-

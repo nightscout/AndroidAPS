@@ -39,6 +39,7 @@ import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.getCustomizedName
@@ -189,10 +190,11 @@ class CommandQueueImplementation @Inject constructor(
      * [PumpEnactResult]; none post profile-set notifications themselves). `internal` so it can be unit-tested.
      *
      *  - failure (timeout `result == null`, or `!success`): post the persistent [NotificationId.FAILED_UPDATE_PROFILE]
-     *    "wrong basal until fixed" card, rung via [app.aaps.core.ui.R.raw.boluserror]; the driver's `comment` supplies
+     *    "wrong basal until fixed" card. By default it rings via [app.aaps.core.ui.R.raw.boluserror], but the user can
+     *    silence only this sound with [BooleanKey.AlertFailedUpdateBasalProfileSound]. The driver's `comment` supplies
      *    the reason (a timeout has none). Deliberately NOT a full-screen `runAlarm` — a wrong base profile is serious
-     *    but persistent, so a dismissible alarm-notification is the right weight (a failed TBR is even quieter,
-     *    surfaced only in the loop status).
+     *    but persistent, so a dismissible alarm-notification is the right weight (a failed TBR is even quieter, surfaced
+     *    only in the loop status).
      *  - success: clear any stale FAILED_UPDATE_PROFILE; and on a real write ([PumpEnactResult.enacted]) that is not
      *    internal/automatic (`!silent` — e.g. a Scene reverting its own ProfileSwitch, issue #4959) raise the
      *    "Basal profile in pump updated" ([NotificationId.PROFILE_SET_OK]) confirmation. Deferred / already-set writes
@@ -205,10 +207,11 @@ class CommandQueueImplementation @Inject constructor(
      */
     internal fun postProfileWriteResult(result: PumpEnactResult?, silent: Boolean): Boolean {
         if (result == null || !result.success) {
+            val soundRes = if (preferences.get(BooleanKey.AlertFailedUpdateBasalProfileSound)) app.aaps.core.ui.R.raw.boluserror else null
             notificationManager.post(
                 NotificationId.FAILED_UPDATE_PROFILE,
                 result?.comment?.takeIf { it.isNotBlank() } ?: rh.gs(app.aaps.core.ui.R.string.failed_update_basal_profile),
-                soundRes = app.aaps.core.ui.R.raw.boluserror
+                soundRes = soundRes
             )
             return false
         }
