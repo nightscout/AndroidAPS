@@ -38,6 +38,5 @@ dependencies {
     implementation(libs.com.squareup.retrofit2.converter.gson)
 
     testImplementation(project(":shared:tests"))
-    testImplementation(project(":core:objects"))
 
 }
