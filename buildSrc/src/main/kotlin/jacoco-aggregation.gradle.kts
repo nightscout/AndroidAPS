@@ -1,4 +1,12 @@
-apply(plugin = "jacoco")
+import java.io.File
+import org.gradle.api.Project
+import org.gradle.api.file.ConfigurableFileTree
+import org.gradle.kotlin.dsl.register
+import org.gradle.testing.jacoco.tasks.JacocoReport
+
+plugins {
+    id("jacoco")
+}
 
 /**
  * The name of the debug variant this module builds.

@@ -148,8 +148,9 @@ Task names change with the layout, and a wrong name **runs no tests and still ex
 | plain Android library | `testDebugUnitTest` |
 | `:app` / `:wear` | `testFullDebugUnitTest` |
 
-`.circleci/config.yml` names all of them, and `jacoco_aggregation.gradle.kts` picks the variant
-directory per module. If you change a module's shape, check both.
+`.circleci/config.yml` names all of them, and
+`buildSrc/src/main/kotlin/jacoco-aggregation.gradle.kts` picks the variant directory per module. If
+you change a module's shape, check both.
 
 ## The Metro construction trap
 
