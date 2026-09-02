@@ -270,13 +270,17 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = "$(AAPS_BUILD_NUMBER:default=1)";
 				ENABLE_PREVIEWS = YES;
+				// Which Kotlin/Native output to look in. `linkDebugFramework` and
+				// `linkReleaseFramework` write to different folders, so a path that named one of
+				// them worked in that configuration only - a Release archive found no Kotlin at all.
+				KOTLIN_FRAMEWORK_KIND = debug;
 				"FRAMEWORK_SEARCH_PATHS[sdk=iphoneos*]" = (
 					"$(inherited)",
-					"$(SRCROOT)/../shell/build/bin/iosArm64/debugFramework",
+					"$(SRCROOT)/../shell/build/bin/iosArm64/$(KOTLIN_FRAMEWORK_KIND)Framework",
 				);
 				"FRAMEWORK_SEARCH_PATHS[sdk=iphonesimulator*]" = (
 					"$(inherited)",
-					"$(SRCROOT)/../shell/build/bin/iosSimulatorArm64/debugFramework",
+					"$(SRCROOT)/../shell/build/bin/iosSimulatorArm64/$(KOTLIN_FRAMEWORK_KIND)Framework",
 				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Shared/Info.plist;
@@ -304,13 +308,17 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = "$(AAPS_BUILD_NUMBER:default=1)";
 				ENABLE_PREVIEWS = YES;
+				// Which Kotlin/Native output to look in. `linkDebugFramework` and
+				// `linkReleaseFramework` write to different folders, so a path that named one of
+				// them worked in that configuration only - a Release archive found no Kotlin at all.
+				KOTLIN_FRAMEWORK_KIND = debug;
 				"FRAMEWORK_SEARCH_PATHS[sdk=iphoneos*]" = (
 					"$(inherited)",
-					"$(SRCROOT)/../shell/build/bin/iosArm64/debugFramework",
+					"$(SRCROOT)/../shell/build/bin/iosArm64/$(KOTLIN_FRAMEWORK_KIND)Framework",
 				);
 				"FRAMEWORK_SEARCH_PATHS[sdk=iphonesimulator*]" = (
 					"$(inherited)",
-					"$(SRCROOT)/../shell/build/bin/iosSimulatorArm64/debugFramework",
+					"$(SRCROOT)/../shell/build/bin/iosSimulatorArm64/$(KOTLIN_FRAMEWORK_KIND)Framework",
 				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Shared/Info.plist;
@@ -359,13 +367,17 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = "$(AAPS_BUILD_NUMBER:default=1)";
 				ENABLE_PREVIEWS = YES;
+				// Which Kotlin/Native output to look in. `linkDebugFramework` and
+				// `linkReleaseFramework` write to different folders, so a path that named one of
+				// them worked in that configuration only - a Release archive found no Kotlin at all.
+				KOTLIN_FRAMEWORK_KIND = release;
 				"FRAMEWORK_SEARCH_PATHS[sdk=iphoneos*]" = (
 					"$(inherited)",
-					"$(SRCROOT)/../shell/build/bin/iosArm64/debugFramework",
+					"$(SRCROOT)/../shell/build/bin/iosArm64/$(KOTLIN_FRAMEWORK_KIND)Framework",
 				);
 				"FRAMEWORK_SEARCH_PATHS[sdk=iphonesimulator*]" = (
 					"$(inherited)",
-					"$(SRCROOT)/../shell/build/bin/iosSimulatorArm64/debugFramework",
+					"$(SRCROOT)/../shell/build/bin/iosSimulatorArm64/$(KOTLIN_FRAMEWORK_KIND)Framework",
 				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Shared/Info.plist;
@@ -393,13 +405,17 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = "$(AAPS_BUILD_NUMBER:default=1)";
 				ENABLE_PREVIEWS = YES;
+				// Which Kotlin/Native output to look in. `linkDebugFramework` and
+				// `linkReleaseFramework` write to different folders, so a path that named one of
+				// them worked in that configuration only - a Release archive found no Kotlin at all.
+				KOTLIN_FRAMEWORK_KIND = release;
 				"FRAMEWORK_SEARCH_PATHS[sdk=iphoneos*]" = (
 					"$(inherited)",
-					"$(SRCROOT)/../shell/build/bin/iosArm64/debugFramework",
+					"$(SRCROOT)/../shell/build/bin/iosArm64/$(KOTLIN_FRAMEWORK_KIND)Framework",
 				);
 				"FRAMEWORK_SEARCH_PATHS[sdk=iphonesimulator*]" = (
 					"$(inherited)",
-					"$(SRCROOT)/../shell/build/bin/iosSimulatorArm64/debugFramework",
+					"$(SRCROOT)/../shell/build/bin/iosSimulatorArm64/$(KOTLIN_FRAMEWORK_KIND)Framework",
 				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Shared/Info.plist;
