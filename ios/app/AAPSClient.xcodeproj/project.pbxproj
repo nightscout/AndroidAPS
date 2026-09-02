@@ -288,7 +288,11 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.medical";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				// iPhone stays portrait. iPad must declare all four or the App Store rejects the
+				// upload as an invalid bundle: an app in the iPad device family takes part in
+				// multitasking, and a multitasking app has to survive being any shape.
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				MARKETING_VERSION = "$(AAPS_MARKETING_VERSION:default=1.0)";
 				PRODUCT_BUNDLE_IDENTIFIER = app.aaps.client;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -326,7 +330,11 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.medical";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				// iPhone stays portrait. iPad must declare all four or the App Store rejects the
+				// upload as an invalid bundle: an app in the iPad device family takes part in
+				// multitasking, and a multitasking app has to survive being any shape.
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				MARKETING_VERSION = "$(AAPS_MARKETING_VERSION:default=1.0)";
 				PRODUCT_BUNDLE_IDENTIFIER = app.aaps.client2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -385,7 +393,11 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.medical";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				// iPhone stays portrait. iPad must declare all four or the App Store rejects the
+				// upload as an invalid bundle: an app in the iPad device family takes part in
+				// multitasking, and a multitasking app has to survive being any shape.
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				MARKETING_VERSION = "$(AAPS_MARKETING_VERSION:default=1.0)";
 				PRODUCT_BUNDLE_IDENTIFIER = app.aaps.client;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -423,7 +435,11 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.medical";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				// iPhone stays portrait. iPad must declare all four or the App Store rejects the
+				// upload as an invalid bundle: an app in the iPad device family takes part in
+				// multitasking, and a multitasking app has to survive being any shape.
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				MARKETING_VERSION = "$(AAPS_MARKETING_VERSION:default=1.0)";
 				PRODUCT_BUNDLE_IDENTIFIER = app.aaps.client2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
