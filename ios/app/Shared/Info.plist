@@ -17,5 +17,13 @@
 	-->
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>AAPS uses your location only to evaluate automation rules you set up yourself, such as starting a temporary target when you arrive somewhere.</string>
+	<!--
+	  Export compliance. AAPS uses only exempt cryptography - HTTPS to Nightscout, and Apple's own
+	  Keychain and CryptoKit for the export password. Without this key every upload stops in App
+	  Store Connect waiting for the question to be answered by hand, which would make an automatic
+	  TestFlight upload not automatic at all.
+	-->
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 </dict>
 </plist>

@@ -288,7 +288,7 @@
 				"CODE_SIGNING_ALLOWED[sdk=iphonesimulator*]" = NO;
 				"CODE_SIGNING_REQUIRED[sdk=iphonesimulator*]" = NO;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = "$(AAPS_BUILD_NUMBER:default=1)";
 				ENABLE_PREVIEWS = YES;
 				"FRAMEWORK_SEARCH_PATHS[sdk=iphoneos*]" = (
 					"$(inherited)",
@@ -304,8 +304,8 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = info.nightscout.aapsclient;
+				MARKETING_VERSION = "$(AAPS_MARKETING_VERSION:default=1.0)";
+				PRODUCT_BUNDLE_IDENTIFIER = app.aaps.client;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -321,7 +321,7 @@
 				"CODE_SIGNING_ALLOWED[sdk=iphonesimulator*]" = NO;
 				"CODE_SIGNING_REQUIRED[sdk=iphonesimulator*]" = NO;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = "$(AAPS_BUILD_NUMBER:default=1)";
 				ENABLE_PREVIEWS = YES;
 				"FRAMEWORK_SEARCH_PATHS[sdk=iphoneos*]" = (
 					"$(inherited)",
@@ -337,8 +337,8 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = info.nightscout.aapsclient2;
+				MARKETING_VERSION = "$(AAPS_MARKETING_VERSION:default=1.0)";
+				PRODUCT_BUNDLE_IDENTIFIER = app.aaps.client2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";

@@ -18,7 +18,25 @@ class IosClientFlavorTest {
 
     @Test
     fun `the plain identifier is client one`() {
+        assertEquals("aapsclient", clientFlavorFor("app.aaps.client"))
+    }
+
+    /** The identifiers the two targets actually ship with today. */
+    @Test
+    fun `the shipping identifiers map to the right clients`() {
+        assertEquals("aapsclient", clientFlavorFor("app.aaps.client"))
+        assertEquals("aapsclient2", clientFlavorFor("app.aaps.client2"))
+    }
+
+    /**
+     * The targets used `info.nightscout.aapsclient` before the move to the `app.aaps` namespace.
+     * Still recognised, so a device or build carrying the old identifier is not silently demoted to
+     * client 1 - which is the bug this whole function exists to prevent.
+     */
+    @Test
+    fun `the previous nightscout identifiers still work`() {
         assertEquals("aapsclient", clientFlavorFor("info.nightscout.aapsclient"))
+        assertEquals("aapsclient2", clientFlavorFor("info.nightscout.aapsclient2"))
     }
 
     /**
@@ -27,12 +45,12 @@ class IosClientFlavorTest {
      */
     @Test
     fun `the second target is client two and not client one`() {
-        assertEquals("aapsclient2", clientFlavorFor("info.nightscout.aapsclient2"))
+        assertEquals("aapsclient2", clientFlavorFor("app.aaps.client2"))
     }
 
     @Test
     fun `a third client is recognised even though no target builds one yet`() {
-        assertEquals("aapsclient3", clientFlavorFor("info.nightscout.aapsclient3"))
+        assertEquals("aapsclient3", clientFlavorFor("app.aaps.client3"))
     }
 
     /**
@@ -48,6 +66,6 @@ class IosClientFlavorTest {
     /** Only the tail decides, so a rename of the prefix cannot silently change the client number. */
     @Test
     fun `only the end of the identifier matters`() {
-        assertEquals("aapsclient2", clientFlavorFor("com.example.fork.aapsclient2"))
+        assertEquals("aapsclient2", clientFlavorFor("com.example.fork.client2"))
     }
 }

@@ -139,13 +139,13 @@ class IosClientConfig(
  * Separate and pure so it can be tested: the bundle identifier of a test binary is the test
  * binary's, so the real [IosClientConfig] can never observe anything but client 1 under test.
  *
- * Client 1's identifier is a prefix of client 2's and 3's, so the numbered ones are checked first -
- * `endsWith("aapsclient")` is false for `...aapsclient2`, but the ordering makes that a stated rule
- * rather than something the next reader has to work out. Anything unrecognised is client 1, which
- * keeps exactly one of the three flags true.
+ * Matched on the trailing `client<n>` rather than on a whole identifier, so it holds for both the
+ * `app.aaps.client2` the targets use now and the older `info.nightscout.aapsclient2`. Client 1's
+ * identifier is a prefix of the others, so the numbered ones are checked first. Anything
+ * unrecognised is client 1, which keeps exactly one of the three flags true.
  */
 internal fun clientFlavorFor(bundleId: String): String = when {
-    bundleId.endsWith("aapsclient2") -> "aapsclient2"
-    bundleId.endsWith("aapsclient3") -> "aapsclient3"
-    else                             -> "aapsclient"
+    bundleId.endsWith("client2") -> "aapsclient2"
+    bundleId.endsWith("client3") -> "aapsclient3"
+    else                         -> "aapsclient"
 }
