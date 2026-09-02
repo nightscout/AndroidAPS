@@ -23,7 +23,9 @@ import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
 import app.aaps.plugins.sync.nsclientV3.data.NSDeviceStatusHandler
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -69,10 +71,16 @@ import kotlinx.serialization.json.put
  * Android service the system constructs, so `ServiceNsConnection` only binds to it and needs neither
  * of these. iOS has no service, so this class does that work itself and has to name them.
  *
+ * A singleton on the class, matching `ServiceNsConnection` on Android. It was previously one only
+ * because the `NsConnection` provider that aliases it is scoped - true today, but nothing injects
+ * the concrete type, and the day something does it would open a second pair of sockets and its own
+ * `connected` flow while the plugin watched the other one.
+ *
  * Deferring is safe here rather than merely convenient: nothing is looked up while the graph is
  * built. The plugin is read when a socket connects and the processor when a frame arrives, and by
  * either point both have long existed.
  */
+@SingleIn(AppScope::class)
 class SocketNsConnection @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
