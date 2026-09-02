@@ -30,7 +30,7 @@ import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.shared.clientbindings.ClientGraphBindings
 import app.aaps.desktop.shell.di.DesktopAppGraph
 import app.aaps.desktop.shell.di.GeneratedStringOwners
-import app.aaps.desktop.shell.di.DesktopViewModelFactory
+import app.aaps.shared.clientbindings.ClientViewModelFactory
 import app.aaps.ui.compose.insulinManagement.InsulinManagementViewModel
 import app.aaps.ui.compose.loopSheet.LoopActionViewModel
 import app.aaps.ui.compose.main.MainViewModel
@@ -135,7 +135,7 @@ private fun startPlugins(graph: DesktopAppGraph) {
 @Composable
 private fun AapsDesktopApp(graph: DesktopAppGraph, appIcon: Painter, appName: String) {
     val logger = graph.logger
-    val viewModelFactory = remember(graph) { DesktopViewModelFactory(graph) }
+    val viewModelFactory = remember(graph) { ClientViewModelFactory(graph) }
 
     CompositionLocalProvider(LocalMetroViewModelFactory provides viewModelFactory) {
         AapsAppRoot(

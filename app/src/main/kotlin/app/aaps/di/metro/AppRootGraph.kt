@@ -140,7 +140,6 @@ import app.aaps.plugins.aps.openAPSAutoISF.GlucoseStatusCalculatorAutoIsf
 import app.aaps.plugins.aps.openAPSSMB.DetermineBasalSMB
 import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
 import app.aaps.plugins.automation.AutomationRuntime
-import app.aaps.plugins.automation.di.AutomationMetroGraph
 import app.aaps.plugins.automation.services.LastLocationDataContainer
 import app.aaps.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
 import app.aaps.plugins.constraints.dstHelper.DstHelperPlugin
@@ -206,9 +205,6 @@ interface AppRootGraph : MetroViewModelMultibindings, PumpAccessors {
     // `@DependencyGraph(AppScope::class)` is unsafe: two graphs both declaring `AppScope` get a
     // separate copy of anything scoped there, and nothing reports it. As extensions they share this
     // graph's bindings instead of restating them, so their factories take no arguments at all.
-
-    /** Android classes that fill their own fields. */
-    val receiversGraph: AppReceiversGraph
 
     /** Workers, which WorkManager builds through `MetroWorkerFactory`. */
     val workersGraph: AppWorkersGraph
@@ -499,8 +495,6 @@ interface AppRootGraph : MetroViewModelMultibindings, PumpAccessors {
     val dexcomPlugin: DexcomPlugin
 
     val sourceGraph: SourceMetroGraph
-    val automationGraph: AutomationMetroGraph
-
     /**
      * Interfaces backed by a plugin this graph already builds. A `@Provides` rather than a delegate,
      * because the instance is the plugin - binding it any other way would make a second one.

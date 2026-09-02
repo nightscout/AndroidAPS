@@ -48,7 +48,7 @@ import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.ios.shell.IosAppStartup
 import app.aaps.ios.shell.PluginStoreRegistry
 import app.aaps.ios.shell.di.IosAppGraph
-import app.aaps.ios.shell.di.IosViewModelFactory
+import app.aaps.shared.clientbindings.ClientViewModelFactory
 import app.aaps.ui.compose.configuration.ConfigurationViewModel
 import app.aaps.ui.compose.insulinManagement.InsulinManagementViewModel
 import app.aaps.ui.compose.maintenance.ImportViewModel
@@ -93,7 +93,7 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
     // Built once, outside the composition: a graph rebuilt on each recomposition would hand out new
     // singletons every frame - a new database wrapper, a new preference store.
     val graph = createGraphFactory<IosAppGraph.Factory>().create(CoreObjectsGraph, ClientGraphBindings, nsSocketFactory)
-    val viewModelFactory = IosViewModelFactory(graph)
+    val viewModelFactory = ClientViewModelFactory(graph)
     val logger = graph.logger
 
     // Before the composition, not beside it: the first view model built reads the active pump, and
