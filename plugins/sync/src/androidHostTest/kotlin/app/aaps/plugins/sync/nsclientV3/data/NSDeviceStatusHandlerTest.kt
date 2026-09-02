@@ -11,7 +11,6 @@ import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
-import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import org.junit.jupiter.api.BeforeEach
@@ -45,7 +44,7 @@ internal class NSDeviceStatusHandlerTest {
         sut = NSDeviceStatusHandler(
             preferences, config, dateUtil, processedDeviceStatusData, aapsLogger,
             persistenceLayer, overviewData, calculationWorkflow, rxBus,
-            CoroutineScope(Dispatchers.Unconfined), Provider { nsClientV3Plugin }
+            CoroutineScope(Dispatchers.Unconfined), { nsClientV3Plugin }
         )
     }
 

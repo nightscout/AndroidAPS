@@ -16,14 +16,13 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.icons.IcProfile
 import app.aaps.core.utils.lenientString
 import app.aaps.plugins.automation.elements.InputProfileName
-import dev.zacsweers.metro.Provider
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
 class ActionProfileSwitch(
     aapsLogger: AAPSLogger,
     rh: TextResolver,
-    pumpEnactResultProvider: Provider<PumpEnactResult>,
+    pumpEnactResultProvider: () -> PumpEnactResult,
     private val profileRepository: ProfileRepository,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil

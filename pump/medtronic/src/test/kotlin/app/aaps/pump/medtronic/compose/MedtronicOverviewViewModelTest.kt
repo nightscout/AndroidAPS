@@ -42,7 +42,6 @@ import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import dev.zacsweers.metro.Provider
 import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.common.hw.rileylink.R as RileyLinkR
 
@@ -68,8 +67,8 @@ internal class MedtronicOverviewViewModelTest {
     private val medtronicUtil: MedtronicUtil = mock()
     private val rileyLinkServiceData: RileyLinkServiceData = mock()
     private val serviceTaskExecutor: ServiceTaskExecutor = mock()
-    private val resetTaskProvider: Provider<ResetRileyLinkConfigurationTask> = mock()
-    private val wakeTaskProvider: Provider<WakeAndTuneTask> = mock()
+    private val resetTaskProvider: () -> ResetRileyLinkConfigurationTask = mock()
+    private val wakeTaskProvider: () -> WakeAndTuneTask = mock()
 
     @BeforeEach
     fun setUp() {

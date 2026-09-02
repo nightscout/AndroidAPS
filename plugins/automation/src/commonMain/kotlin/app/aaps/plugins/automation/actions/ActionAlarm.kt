@@ -15,14 +15,13 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.utils.lenientString
 import app.aaps.plugins.automation.elements.InputString
-import dev.zacsweers.metro.Provider
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
 class ActionAlarm(
     aapsLogger: AAPSLogger,
     rh: TextResolver,
-    pumpEnactResultProvider: Provider<PumpEnactResult>,
+    pumpEnactResultProvider: () -> PumpEnactResult,
     private val rxBus: RxBus,
     private val dateUtil: DateUtil,
     private val reminderScheduler: ReminderScheduler,
@@ -35,7 +34,7 @@ class ActionAlarm(
     constructor(
         aapsLogger: AAPSLogger,
         rh: TextResolver,
-        pumpEnactResultProvider: Provider<PumpEnactResult>,
+        pumpEnactResultProvider: () -> PumpEnactResult,
         rxBus: RxBus,
         dateUtil: DateUtil,
         reminderScheduler: ReminderScheduler,

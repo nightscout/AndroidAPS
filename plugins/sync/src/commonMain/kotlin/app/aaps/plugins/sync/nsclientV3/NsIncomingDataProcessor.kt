@@ -57,7 +57,6 @@ import app.aaps.plugins.sync.nsclientV3.extensions.toTemporaryTarget
 import app.aaps.plugins.sync.nsclientV3.extensions.toTherapyEvent
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import kotlinx.serialization.json.JsonObject
 
@@ -72,7 +71,7 @@ class NsIncomingDataProcessor @Inject constructor(
     private val profileRepository: ProfileRepository,
     private val storeDataForDb: StoreDataForDb,
     private val config: Config,
-    private val profileStoreProvider: Provider<ProfileStore>,
+    private val profileStoreProvider: () -> ProfileStore,
     private val notificationManager: NotificationManager,
     private val nsClientRepository: NSClientRepository
 ) {

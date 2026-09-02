@@ -15,7 +15,6 @@ import app.aaps.plugins.sync.nsclientV3.workers.LoadTreatmentsRunner
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -48,15 +47,15 @@ import kotlinx.coroutines.launch
 class CoroutineNsLoadExecutor @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val scope: CoroutineScope,
-    private val loadStatus: Provider<LoadStatusRunner>,
-    private val loadLastModification: Provider<LoadLastModificationRunner>,
-    private val loadBg: Provider<LoadBgRunner>,
-    private val loadTreatments: Provider<LoadTreatmentsRunner>,
-    private val loadFoods: Provider<LoadFoodsRunner>,
-    private val loadProfileStore: Provider<LoadProfileStoreRunner>,
-    private val loadSettings: Provider<LoadSettingsRunner>,
-    private val loadDeviceStatus: Provider<LoadDeviceStatusRunner>,
-    private val dataSync: Provider<DataSyncRunner>
+    private val loadStatus: () -> LoadStatusRunner,
+    private val loadLastModification: () -> LoadLastModificationRunner,
+    private val loadBg: () -> LoadBgRunner,
+    private val loadTreatments: () -> LoadTreatmentsRunner,
+    private val loadFoods: () -> LoadFoodsRunner,
+    private val loadProfileStore: () -> LoadProfileStoreRunner,
+    private val loadSettings: () -> LoadSettingsRunner,
+    private val loadDeviceStatus: () -> LoadDeviceStatusRunner,
+    private val dataSync: () -> DataSyncRunner
 ) : NsLoadExecutor {
 
     /** The one round. Replaced by each new one, which is what "under a shared name" means here. */

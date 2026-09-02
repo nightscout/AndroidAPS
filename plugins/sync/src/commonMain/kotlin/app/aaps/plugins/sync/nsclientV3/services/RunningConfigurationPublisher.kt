@@ -21,7 +21,6 @@ import app.aaps.plugins.sync.nsclientV3.services.RunningConfigurationPublisher.C
 import app.aaps.plugins.sync.nsclientV3.services.RunningConfigurationPublisher.Companion.HOT_DEBOUNCE_MS
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
@@ -61,7 +60,7 @@ import kotlinx.serialization.json.put
 class RunningConfigurationPublisher @Inject constructor(
     private val runningConfiguration: RunningConfiguration,
     private val runningConfigurationKeys: RunningConfigurationKeys,
-    private val nsClientV3Plugin: Provider<NSClientV3Plugin>,
+    private val nsClientV3Plugin: () -> NSClientV3Plugin,
     private val preferences: Preferences,
     private val rxBus: RxBus,
     private val aapsLogger: AAPSLogger,

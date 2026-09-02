@@ -24,7 +24,6 @@ import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
 import app.aaps.plugins.sync.nsclientV3.data.NSDeviceStatusHandler
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -64,7 +63,7 @@ import kotlinx.serialization.json.put
  * rules are the same, and where a rule is subtle it is called out below.
  */
 /*
- * `NSClientV3Plugin` and `NsIncomingDataProcessor` arrive as `Provider`s to break a cycle. The
+ * `NSClientV3Plugin` and `NsIncomingDataProcessor` arrive as `() -> T` to break a cycle. The
  * plugin takes an `NsConnection`, which is this class, and the processor reaches the plugin as its
  * `NsClient`. Android never meets either loop: there the socket lives in `NSClientV3Service`, an
  * Android service the system constructs, so `ServiceNsConnection` only binds to it and needs neither
@@ -78,8 +77,8 @@ class SocketNsConnection @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val config: Config,
-    private val nsClientV3Plugin: Provider<NSClientV3Plugin>,
-    private val nsIncomingDataProcessor: Provider<NsIncomingDataProcessor>,
+    private val nsClientV3Plugin: () -> NSClientV3Plugin,
+    private val nsIncomingDataProcessor: () -> NsIncomingDataProcessor,
     private val storeDataForDb: StoreDataForDb,
     private val notificationManager: NotificationManager,
     private val nsClientRepository: NSClientRepository,

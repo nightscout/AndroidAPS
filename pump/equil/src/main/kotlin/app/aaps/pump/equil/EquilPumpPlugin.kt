@@ -79,7 +79,6 @@ import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import org.joda.time.Duration
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import kotlin.math.max
 
@@ -96,7 +95,7 @@ class EquilPumpPlugin @Inject constructor(
     private val context: Context,
     private val pumpSync: PumpSync,
     private val equilManager: EquilManager,
-    private val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val pumpEnactResultProvider: () -> PumpEnactResult,
     private val constraintsChecker: ConstraintsChecker,
     private val ch: ConcentrationHelper,
     private val notificationManager: NotificationManager,

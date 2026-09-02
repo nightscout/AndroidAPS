@@ -17,7 +17,6 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.implementation.androidNotification.AlarmNotificationManager
 import com.google.common.truth.Truth.assertThat
-import dev.zacsweers.metro.Provider
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -60,9 +59,9 @@ class AndroidSystemNotificationPlatformTest {
             context = context,
             preferences = preferences,
             iconsProvider = iconsProvider,
-            notificationHolder = Provider { notificationHolder },
-            alarmNotificationManager = Provider { alarmNotificationManager },
-            alarmSoundPlayer = Provider { alarmSoundPlayer }
+            notificationHolder = { notificationHolder },
+            alarmNotificationManager = { alarmNotificationManager },
+            alarmSoundPlayer = { alarmSoundPlayer }
         )
     }
 

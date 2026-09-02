@@ -13,14 +13,13 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.icons.IcSmb
 import app.aaps.core.utils.lenientBoolean
 import app.aaps.plugins.automation.elements.InputDropdownOnOffMenu
-import dev.zacsweers.metro.Provider
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
 class ActionSMBChange(
     aapsLogger: AAPSLogger,
     rh: TextResolver,
-    pumpEnactResultProvider: Provider<PumpEnactResult>,
+    pumpEnactResultProvider: () -> PumpEnactResult,
     private val dateUtil: DateUtil,
     private val preferences: Preferences
 ) : Action(aapsLogger, rh, pumpEnactResultProvider) {

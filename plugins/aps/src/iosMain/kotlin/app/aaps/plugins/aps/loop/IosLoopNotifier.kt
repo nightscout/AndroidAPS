@@ -9,7 +9,6 @@ import app.aaps.plugins.aps.ApsStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import platform.UserNotifications.UNAuthorizationOptionAlert
 import platform.UserNotifications.UNAuthorizationOptionSound
@@ -53,7 +52,7 @@ import platform.UserNotifications.UNUserNotificationCenter
 class IosLoopNotifier @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: TextResolver,
-    private val loop: Provider<Loop>
+    private val loop: () -> Loop
 ) : LoopNotifier {
 
     // Lazy, not eager: `currentNotificationCenter()` needs an app bundle and throws

@@ -16,7 +16,6 @@ import app.aaps.core.objects.workflow.MetroWorkerCreator
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.MembersInjector
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.createGraphFactory
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
@@ -32,14 +31,14 @@ import kotlin.reflect.KClass
  */
 @SingleIn(AppScope::class)
 class OpenHumansMetroBridge @Inject constructor(
-    private val aapsLogger: Provider<AAPSLogger>,
-    private val rh: Provider<ResourceHelper>,
-    private val preferences: Provider<Preferences>,
-    private val context: Provider<Context>,
-    private val persistenceLayer: Provider<PersistenceLayer>,
-    private val notificationManager: Provider<NotificationManager>,
-    private val rxBus: Provider<RxBus>,
-    private val fabricPrivacy: Provider<FabricPrivacy>
+    private val aapsLogger: () -> AAPSLogger,
+    private val rh: () -> ResourceHelper,
+    private val preferences: () -> Preferences,
+    private val context: () -> Context,
+    private val persistenceLayer: () -> PersistenceLayer,
+    private val notificationManager: () -> NotificationManager,
+    private val rxBus: () -> RxBus,
+    private val fabricPrivacy: () -> FabricPrivacy
 ) {
 
     private val graph: OpenHumansMetroGraph by lazy {

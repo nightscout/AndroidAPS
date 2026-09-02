@@ -20,14 +20,13 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.core.utils.lenientString
 import app.aaps.plugins.automation.elements.InputString
-import dev.zacsweers.metro.Provider
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
 class ActionNotification(
     aapsLogger: AAPSLogger,
     rh: TextResolver,
-    pumpEnactResultProvider: Provider<PumpEnactResult>,
+    pumpEnactResultProvider: () -> PumpEnactResult,
     private val rxBus: RxBus,
     private val notificationManager: NotificationManager,
     private val persistenceLayer: PersistenceLayer,

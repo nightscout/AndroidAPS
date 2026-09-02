@@ -7,7 +7,6 @@ import app.aaps.core.utils.lenientString
 import app.aaps.plugins.automation.BtConnectionSource
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import kotlinx.serialization.json.JsonObject
 
@@ -19,7 +18,7 @@ import kotlinx.serialization.json.JsonObject
 class TriggerFactory @Inject constructor(
     val deps: TriggerDeps,
     // Provider breaks a cycle: BtConnectionSource is AutomationRuntime, which reaches this factory.
-    private val btConnectionSource: Provider<BtConnectionSource>,
+    private val btConnectionSource: () -> BtConnectionSource,
     private val sceneApi: SceneAutomationApi,
     private val receiverStatusStore: ReceiverStatusStore
 ) {

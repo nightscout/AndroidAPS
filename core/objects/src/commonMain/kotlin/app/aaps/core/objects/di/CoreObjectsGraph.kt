@@ -24,7 +24,6 @@ import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
@@ -50,7 +49,7 @@ object CoreObjectsGraph {
     // reference would be a cycle error.
     @SingleIn(AppScope::class)
     @Provides
-    fun provideQuickWizard(prefs: Preferences, entry: Provider<QuickWizardEntry>): QuickWizard =
+    fun provideQuickWizard(prefs: Preferences, entry: () -> QuickWizardEntry): QuickWizard =
         QuickWizard(prefs) { entry() }
 
     @Provides
@@ -63,8 +62,8 @@ object CoreObjectsGraph {
         persistence: PersistenceLayer,
         dates: DateUtil,
         glucose: GlucoseStatusProvider,
-        wizard: Provider<BolusWizard>,
-        quick: Provider<QuickWizard>
+        wizard: () -> BolusWizard,
+        quick: () -> QuickWizard
     ): QuickWizardEntry = QuickWizardEntry(
         logger, prefs, profile, loopRef, iobCob, persistence, dates, glucose, { wizard() }, { quick() }
     )

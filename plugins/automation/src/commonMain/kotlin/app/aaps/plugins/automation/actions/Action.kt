@@ -9,7 +9,6 @@ import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.utils.lenientString
 import app.aaps.plugins.automation.triggers.Trigger
-import dev.zacsweers.metro.Provider
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
@@ -25,7 +24,7 @@ import kotlinx.serialization.json.put
 abstract class Action(
     val aapsLogger: AAPSLogger,
     val rh: TextResolver,
-    val pumpEnactResultProvider: Provider<PumpEnactResult>
+    val pumpEnactResultProvider: () -> PumpEnactResult
 ) {
 
     open var precondition: Trigger? = null

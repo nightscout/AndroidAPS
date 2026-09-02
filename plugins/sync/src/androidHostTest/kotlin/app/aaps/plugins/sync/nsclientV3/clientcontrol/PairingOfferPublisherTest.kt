@@ -6,7 +6,6 @@ import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.localmodel.treatment.CreateUpdateResponse
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
-import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -35,7 +34,7 @@ internal class PairingOfferPublisherTest {
     fun setUp() {
         MockitoAnnotations.openMocks(this)
         whenever(nsClientV3Plugin.nsAndroidClient).thenReturn(nsAndroidClient)
-        sut = PairingOfferPublisher(Provider { nsClientV3Plugin }, nsClientRepository, aapsLogger)
+        sut = PairingOfferPublisher({ nsClientV3Plugin }, nsClientRepository, aapsLogger)
     }
 
     /**

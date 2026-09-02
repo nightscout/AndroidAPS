@@ -173,7 +173,6 @@ import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import dev.zacsweers.metro.Provider
 
 /**
  * The object graph, owned by the Application.
