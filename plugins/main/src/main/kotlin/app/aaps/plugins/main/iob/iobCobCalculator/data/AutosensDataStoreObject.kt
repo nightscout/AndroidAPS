@@ -47,6 +47,11 @@ class AutosensDataStoreObject : AutosensDataStore {
     override fun clone(): AutosensDataStore =
         AutosensDataStoreObject().also {
             synchronized(dataLock) {
+                // referenceTime must survive the clone: the calculation publishes the clone
+                // back as the live store. Losing it re-anchors the 5-minute bucket grid to
+                // the newest BG on the next load, which shifts all bucket timestamps and
+                // makes every cached autosensDataTable entry unreachable (issue #5066).
+                it.referenceTime = this.referenceTime
                 it.bgReadings = this.bgReadings.toMutableList()
                 it.autosensDataTable = LongSparseArray<AutosensData>(this.autosensDataTable.size).apply { putAll(this@AutosensDataStoreObject.autosensDataTable) }
                 it.bucketedData = this.bucketedData?.toMutableList()

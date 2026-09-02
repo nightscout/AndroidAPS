@@ -1542,4 +1542,21 @@ class AutosensDataStoreTest : TestBaseWithProfile() {
         ads.autosensDataTable = LongSparseArray<AutosensData>()
         assertThat(ads.getLastAutosensData("test", aapsLogger, dateUtil)).isNull()
     }
+
+    @Test
+    fun cloneKeepsReferenceTime() {
+        val ads = AutosensDataStoreObject()
+        ads.referenceTime = T.mins(5).msecs()
+        ads.bgReadings = listOf(GV(timestamp = now, value = 100.0, raw = 0.0, trendArrow = TrendArrow.FLAT, noise = 0.0, sourceSensor = SourceSensor.UNKNOWN))
+        ads.autosensDataTable.append(now - 1, AutosensDataObject(aapsLogger, preferences, dateUtil).apply { time = now - 1 })
+
+        val clone = ads.clone() as AutosensDataStoreObject
+
+        // referenceTime anchors the 5-minute bucket grid. The calculation publishes the
+        // clone back as the live store, so a lost referenceTime re-anchors the grid to
+        // the newest BG and invalidates all cached autosens data (issue #5066).
+        assertThat(clone.referenceTime).isEqualTo(T.mins(5).msecs())
+        assertThat(clone.bgReadings).hasSize(1)
+        assertThat(clone.autosensDataTable.size()).isEqualTo(1)
+    }
 }
