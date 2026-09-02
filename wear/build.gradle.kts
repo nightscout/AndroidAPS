@@ -50,15 +50,13 @@ android {
         buildConfigField("String", "BUILDVERSION", "\"${generateGitBuild()}-${generateDate()}\"")
     }
 
-    android {
-        buildTypes {
-            debug {
-                enableUnitTestCoverage = true
-                // Disable androidTest coverage, since it performs offline coverage
-                // instrumentation and that causes online (JavaAgent) instrumentation
-                // to fail in this project.
-                enableAndroidTestCoverage = false
-            }
+    buildTypes {
+        debug {
+            enableUnitTestCoverage = true
+            // Disable androidTest coverage, since it performs offline coverage
+            // instrumentation and that causes online (JavaAgent) instrumentation
+            // to fail in this project.
+            enableAndroidTestCoverage = false
         }
     }
 
@@ -130,7 +128,7 @@ allprojects {
  * every face build — never hardcoded.
  */
 abstract class EmbedWatchFaceTask @Inject constructor(
-    private val execOperations: org.gradle.process.ExecOperations
+    private val execOperations: ExecOperations
 ) : DefaultTask() {
 
     /** Resolved artifact of :wear:watchfacepush — the variant's APK output directory */

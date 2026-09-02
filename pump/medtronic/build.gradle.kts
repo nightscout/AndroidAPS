@@ -22,7 +22,6 @@ dependencies {
     implementation(project(":pump:common"))
     implementation(project(":pump:rileylink"))
 
-    testImplementation(project(":core:keys"))
     testImplementation(project(":shared:tests"))
 
 }

@@ -14,7 +14,7 @@ plugins {
  *
  * The counterpart of `:app` on Android and `:ios:shell` on Apple. It ships no features of its own -
  * it builds the object graph from the shared modules, supplies the seams only a desktop can fill,
- * and shows [app.aaps.appshell.AapsAppRoot].
+ * and shows `app.aaps.appshell.AapsAppRoot`.
  *
  * A plain `kotlin("jvm")` module rather than a multiplatform one: it has exactly one target, and
  * Gradle resolves the `jvm` variant of every multiplatform module it depends on.

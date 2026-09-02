@@ -8,12 +8,6 @@ plugins {
     alias(libs.plugins.android.kmp.library)
 }
 
-// The first module SPLIT rather than converted whole. Most of what lives here is Android glue -
-// WorkManager, Bluetooth, Intent/Bundle, Html - and only a handful of files are genuinely portable,
-// so androidMain keeps the bulk and commonMain takes the four that carry no platform types.
-//
-// The `allopen` plugin is deliberately not carried over: it exists to open @OpenForTesting classes
-// for mocking and nothing in this module is annotated with it.
 kotlin {
     android {
         namespace = "app.aaps.core.utils"

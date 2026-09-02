@@ -10,13 +10,11 @@ plugins {
 
 android {
     namespace = "app.aaps.pump.omnipod.eros"
+}
 
-    defaultConfig {
-        ksp {
-            arg("room.incremental", "true")
-            arg("room.schemaLocation", "$projectDir/schemas")
-        }
-    }
+ksp {
+    arg("room.incremental", "true")
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 dependencies {

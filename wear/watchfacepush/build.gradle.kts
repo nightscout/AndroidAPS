@@ -43,7 +43,10 @@ android {
             // packaged — Watch Face Push validation rejects any APK containing code (same recipe
             // as Google's WatchFaceFormat samples)
             isMinifyEnabled = true
-            // The watch face IS resources — never shrink them
+            // The watch face IS resources — never shrink them. This APK has no code, so the
+            // manifest is the shrinker's whole root set, and it does not name the face: Watch
+            // Face Format finds res/xml/watch_face.xml by convention. With shrinking on, the
+            // face would be stripped.
             isShrinkResources = false
             signingConfig = signingConfigs.getByName("debug")
         }
