@@ -118,7 +118,6 @@ class CalculationWorkflowImpl @Inject constructor(
                     overviewData = overviewData,
                     cache = cache,
                     signals = signals,
-                    triggeredByNewBG = triggeredByNewBG,
                     runLoopAndWidgetPhase = true
                 )
                 workflowChainData.startMain(prepare, post)
@@ -156,7 +155,6 @@ class CalculationWorkflowImpl @Inject constructor(
                     overviewData = overviewData,
                     cache = mainCache,
                     signals = mainSignals,
-                    triggeredByNewBG = false,
                     runLoopAndWidgetPhase = false
                 )
             )

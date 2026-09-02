@@ -455,11 +455,7 @@ class PrepareGraphDataWorker @AssistedInject constructor(
                 autosensData.autosensResult = sensitivity
                 aapsLogger.debug(LTag.AUTOSENS) { autosensData.toString() }
             }
-            data.iobCobCalculator.ads = ads
-            Thread {
-                SystemClock.sleep(1000)
-                rxBus.send(EventAutosensCalculationFinished(data.triggeredByNewBG))
-            }.start()
+            publishAds(data, ads)
         } finally {
             data.signals.emitProgress(CalculationWorkflow.ProgressData.IOB_COB_OREF, 100)
             aapsLogger.debug(LTag.AUTOSENS) { "AUTOSENSDATA thread ended: ${data.reason}" }
@@ -639,16 +635,39 @@ class PrepareGraphDataWorker @AssistedInject constructor(
                 autosensData.autosensResult = sensitivity
                 aapsLogger.debug(LTag.AUTOSENS, autosensData.toString())
             }
-            data.iobCobCalculator.ads = ads
-            Thread {
-                SystemClock.sleep(1000)
-                rxBus.send(EventAutosensCalculationFinished(data.triggeredByNewBG))
-            }.start()
+            publishAds(data, ads)
         } finally {
             data.signals.emitProgress(CalculationWorkflow.ProgressData.IOB_COB_OREF, 100)
             aapsLogger.debug(LTag.AUTOSENS) { "AUTOSENSDATA thread ended: ${data.reason}" }
             profiler.log(LTag.AUTOSENS, "IobCobThread", start)
         }
+    }
+
+    /*
+     * Publish the locally computed store back into the live calculator, but only when
+     * this worker still owns the chain. A cancelled worker keeps running until its next
+     * isStopped check (up to one bucket, tens of seconds on slow devices), while
+     * stopCalculation() returns as soon as WorkManager marks the work CANCELLED.
+     * Without this check the old worker writes its stale clone over the store that the
+     * replacing chain has already invalidated — a lost update (issue #5066).
+     * The generation check makes the race window very small; it cannot remove it
+     * completely because the caller invalidates the store before it registers the new
+     * generation.
+     */
+    private fun publishAds(data: PrepareGraphData, ads: AutosensDataStore) {
+        val superseded = workflowChainData.prepareFor(
+            inputData.getString(WorkflowChainData.JOB_KEY),
+            inputData.getLong(WorkflowChainData.GEN_KEY, -1L)
+        ) == null
+        if (isStopped || superseded) {
+            aapsLogger.debug(LTag.AUTOSENS) { "Skipping ads publish (superseded): ${data.reason}" }
+            return
+        }
+        data.iobCobCalculator.ads = ads
+        Thread {
+            SystemClock.sleep(1000)
+            rxBus.send(EventAutosensCalculationFinished(data.triggeredByNewBG))
+        }.start()
     }
 
     // ---------- Phase 5: IOB/autosens graph data (was PrepareIobAutosensGraphDataWorker) ----------

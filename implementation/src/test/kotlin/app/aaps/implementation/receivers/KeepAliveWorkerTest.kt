@@ -7,7 +7,10 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.data.iob.InMemoryGlucoseValue
+import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.RM
+import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
@@ -107,6 +110,7 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
         )
 
     private fun resetWorkerStaticState() {
+        KeepAliveWorker.lastLoopWatchdogFire = 0L
         listOf("lastRun", "lastReadStatus", "lastIobUpload").forEach { name ->
             val field = try {
                 KeepAliveWorker::class.java.getDeclaredField(name)
@@ -355,6 +359,102 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
 
         // Assert
         verify(loop).scheduleBuildAndStoreDeviceStatus("KeepAliveWorker")
+    }
+
+    // ---- checkLoopWatchdog ------------------------------------------------------------------------
+
+    private fun bgAt(timestamp: Long): GV =
+        GV(
+            timestamp = timestamp,
+            raw = null,
+            value = 100.0,
+            trendArrow = TrendArrow.FLAT,
+            noise = null,
+            sourceSensor = SourceSensor.UNKNOWN
+        )
+
+    @Test
+    fun `checkLoopWatchdog forces recalculation when fresh BG did not trigger a loop run`() = runTest {
+        // Arrange – newest BG is fresh but the last BG triggered loop run is 15 min behind it
+        worker = createWorker()
+        whenever(persistenceLayer.getLastGlucoseValue()).thenReturn(bgAt(now - T.mins(1).msecs()))
+        whenever(loop.lastBgTriggeredRun).thenReturn(now - T.mins(15).msecs())
+
+        // Act
+        worker.checkLoopWatchdog()
+
+        // Assert
+        verify(iobCobCalculator).forceRecalculation("LoopWatchdog")
+    }
+
+    @Test
+    fun `checkLoopWatchdog does not fire again within the backoff interval`() = runTest {
+        // Arrange – same lost-trigger state as in the firing test
+        worker = createWorker()
+        whenever(persistenceLayer.getLastGlucoseValue()).thenReturn(bgAt(now - T.mins(1).msecs()))
+        whenever(loop.lastBgTriggeredRun).thenReturn(now - T.mins(15).msecs())
+
+        // Act – two KeepAlive ticks close together
+        worker.checkLoopWatchdog()
+        worker.checkLoopWatchdog()
+
+        // Assert – a forced recalculation can take long on slow devices; firing again
+        // right away would only add more cancel-and-replace churn
+        verify(iobCobCalculator, times(1)).forceRecalculation("LoopWatchdog")
+    }
+
+    @Test
+    fun `checkLoopWatchdog does nothing when the gap is small`() = runTest {
+        // Arrange – last BG triggered loop run is only 4 min behind the newest BG
+        worker = createWorker()
+        whenever(persistenceLayer.getLastGlucoseValue()).thenReturn(bgAt(now - T.mins(1).msecs()))
+        whenever(loop.lastBgTriggeredRun).thenReturn(now - T.mins(5).msecs())
+
+        // Act
+        worker.checkLoopWatchdog()
+
+        // Assert
+        verify(iobCobCalculator, never()).forceRecalculation(any())
+    }
+
+    @Test
+    fun `checkLoopWatchdog does nothing when BG is stale`() = runTest {
+        // Arrange – newest BG is 20 min old, the loop cannot run with it anyway
+        worker = createWorker()
+        whenever(persistenceLayer.getLastGlucoseValue()).thenReturn(bgAt(now - T.mins(20).msecs()))
+        whenever(loop.lastBgTriggeredRun).thenReturn(now - T.mins(60).msecs())
+
+        // Act
+        worker.checkLoopWatchdog()
+
+        // Assert
+        verify(iobCobCalculator, never()).forceRecalculation(any())
+    }
+
+    @Test
+    fun `checkLoopWatchdog does nothing before the first finished calculation`() = runTest {
+        // Arrange – lastBgTriggeredRun is 0 right after app start
+        worker = createWorker()
+        whenever(loop.lastBgTriggeredRun).thenReturn(0L)
+
+        // Act
+        worker.checkLoopWatchdog()
+
+        // Assert
+        verify(iobCobCalculator, never()).forceRecalculation(any())
+    }
+
+    @Test
+    fun `checkLoopWatchdog does nothing in client mode`() = runTest {
+        // Arrange
+        worker = createWorker()
+        whenever(config.AAPSCLIENT).thenReturn(true)
+
+        // Act
+        worker.checkLoopWatchdog()
+
+        // Assert
+        verify(iobCobCalculator, never()).forceRecalculation(any())
     }
 
     // ---- databaseCleanup / WorkManager housekeeping ----------------------------------------------

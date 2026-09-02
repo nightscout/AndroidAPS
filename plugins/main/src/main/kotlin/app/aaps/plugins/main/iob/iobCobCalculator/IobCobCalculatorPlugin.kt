@@ -56,10 +56,12 @@ import app.aaps.plugins.main.R
 import app.aaps.plugins.main.iob.iobCobCalculator.data.AutosensDataStoreObject
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -120,6 +122,10 @@ class IobCobCalculatorPlugin @Inject constructor(
         super.onStart()
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
+        // Must exist before the observers below are registered. A DB change arriving
+        // before this assignment would set `scheduledData` while `historyWorker?.schedule`
+        // does nothing, and no calculation would ever be scheduled again (issue #5066).
+        historyWorker = Executors.newSingleThreadScheduledExecutor()
         // EventConfigBuilderChange
         disposable += rxBus
             .toObservable(EventConfigBuilderChange::class.java)
@@ -140,7 +146,7 @@ class IobCobCalculatorPlugin @Inject constructor(
             )
         // EffectiveProfileSwitch changes
         persistenceLayer.observeChanges(EPS::class.java)
-            .onEach { epsList ->
+            .onEachSafe("EPS change") { epsList ->
                 epsList.minOfOrNull { it.timestamp }?.let { timestamp ->
                     newHistoryData(timestamp, bgDataReload = false, triggeredByNewBG = false)
                 }
@@ -155,33 +161,33 @@ class IobCobCalculatorPlugin @Inject constructor(
             preferences.observe(DoubleKey.AbsorptionCutOff).drop(1).map {},
             preferences.observe(DoubleKey.AutosensMax).drop(1).map {},
             preferences.observe(DoubleKey.AutosensMin).drop(1).map {},
-        ).onEach { resetDataAndRunCalculation("onPreferenceChange") }.launchIn(newScope)
+        ).onEachSafe("preference change") { resetDataAndRunCalculation("onPreferenceChange") }.launchIn(newScope)
         // GlucoseValue changes → reload BG data + trigger loop
         persistenceLayer.observeChanges(GV::class.java)
-            .onEach { gvList ->
+            .onEachSafe("GV change") { gvList ->
                 gvList.minOfOrNull { it.timestamp }?.let { timestamp ->
                     scheduleHistoryDataChange(timestamp, reloadBgData = true, triggeredByNewBG = true)
                 }
             }.launchIn(newScope)
         // Treatment changes → invalidate caches
         persistenceLayer.observeChanges(CA::class.java)
-            .onEach { list -> list.minOfOrNull { it.timestamp }?.let { scheduleHistoryDataChange(it, reloadBgData = false) } }
+            .onEachSafe("CA change") { list -> list.minOfOrNull { it.timestamp }?.let { scheduleHistoryDataChange(it, reloadBgData = false) } }
             .launchIn(newScope)
         persistenceLayer.observeChanges(BS::class.java)
-            .onEach { list -> list.minOfOrNull { it.timestamp }?.let { scheduleHistoryDataChange(it, reloadBgData = false) } }
+            .onEachSafe("BS change") { list -> list.minOfOrNull { it.timestamp }?.let { scheduleHistoryDataChange(it, reloadBgData = false) } }
             .launchIn(newScope)
         persistenceLayer.observeChanges(BCR::class.java)
-            .onEach { list -> list.minOfOrNull { it.timestamp }?.let { scheduleHistoryDataChange(it, reloadBgData = false) } }
+            .onEachSafe("BCR change") { list -> list.minOfOrNull { it.timestamp }?.let { scheduleHistoryDataChange(it, reloadBgData = false) } }
             .launchIn(newScope)
         persistenceLayer.observeChanges(TB::class.java)
-            .onEach { list -> list.minOfOrNull { it.timestamp }?.let { scheduleHistoryDataChange(it, reloadBgData = false) } }
+            .onEachSafe("TB change") { list -> list.minOfOrNull { it.timestamp }?.let { scheduleHistoryDataChange(it, reloadBgData = false) } }
             .launchIn(newScope)
         persistenceLayer.observeChanges(EB::class.java)
-            .onEach { list -> list.minOfOrNull { it.timestamp }?.let { scheduleHistoryDataChange(it, reloadBgData = false) } }
+            .onEachSafe("EB change") { list -> list.minOfOrNull { it.timestamp }?.let { scheduleHistoryDataChange(it, reloadBgData = false) } }
             .launchIn(newScope)
         // Units change
         preferences.observe(StringKey.GeneralUnits).drop(1)
-            .onEach {
+            .onEachSafe("units change") {
                 scheduleHistoryDataChange(0, reloadBgData = true)
             }.launchIn(newScope)
         disposable += rxBus
@@ -203,8 +209,22 @@ class IobCobCalculatorPlugin @Inject constructor(
                 },
                 fabricPrivacy::logException
             )
-        historyWorker = Executors.newSingleThreadScheduledExecutor()
     }
+
+    // Log and swallow exceptions so the collector stays alive. An uncaught exception
+    // inside onEach cancels the flow collection forever and the plugin would stop
+    // reacting to DB changes (issue #5066).
+    private fun <T> Flow<T>.onEachSafe(source: String, block: suspend (T) -> Unit): Flow<T> =
+        onEach { value ->
+            try {
+                block(value)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                aapsLogger.error(LTag.AUTOSENS, "Error while processing $source", e)
+                fabricPrivacy.logException(e)
+            }
+        }
 
     override suspend fun onStop() {
         scope?.cancel()
@@ -229,6 +249,25 @@ class IobCobCalculatorPlugin @Inject constructor(
             end = System.currentTimeMillis(),
             bgDataReload = true,
             triggeredByNewBG = false
+        )
+    }
+
+    override fun forceRecalculation(reason: String) {
+        // No stopCalculation and no cache invalidation needed: history did not change.
+        // The REPLACE policy inside runCalculation cancels a running chain in WorkManager,
+        // but the cancelled coroutine keeps running until its next isStopped check.
+        // PrepareGraphDataWorker.publishAds() makes sure such a replaced worker does not
+        // publish its stale result over the result of this forced chain.
+        calculationWorkflow.runCalculation(
+            job = CalculationWorkflow.MAIN_CALCULATION,
+            iobCobCalculator = this,
+            overviewData = overviewData,
+            cache = cache.get(),
+            signals = signals,
+            reason = reason,
+            end = System.currentTimeMillis(),
+            bgDataReload = true,
+            triggeredByNewBG = true
         )
     }
 
@@ -467,11 +506,21 @@ class IobCobCalculatorPlugin @Inject constructor(
             scheduledHistoryPost = historyWorker?.schedule(
                 {
                     synchronized(this) {
-                        aapsLogger.debug(LTag.AUTOSENS, "Running newHistoryData")
-                        runBlocking { persistenceLayer.clearCachedTddData(MidnightTime.calc(data.oldDataTimestamp)) }
-                        newHistoryData(data.oldDataTimestamp, data.reloadBgData, data.triggeredByNewBG)
-                        scheduledData = null
-                        scheduledHistoryPost = null
+                        try {
+                            aapsLogger.debug(LTag.AUTOSENS, "Running newHistoryData")
+                            runBlocking { persistenceLayer.clearCachedTddData(MidnightTime.calc(data.oldDataTimestamp)) }
+                            newHistoryData(data.oldDataTimestamp, data.reloadBgData, data.triggeredByNewBG)
+                        } catch (e: Exception) {
+                            // The executor swallows exceptions into the returned Future,
+                            // so without this catch the error would be invisible.
+                            aapsLogger.error(LTag.AUTOSENS, "newHistoryData failed", e)
+                            fabricPrivacy.logException(e)
+                        } finally {
+                            // Must always be cleared. If it stays set, no calculation
+                            // would ever be scheduled again (issue #5066).
+                            scheduledData = null
+                            scheduledHistoryPost = null
+                        }
                     }
                 }, 5L, TimeUnit.SECONDS
             )
