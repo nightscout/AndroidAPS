@@ -253,8 +253,11 @@ class IobCobCalculatorPlugin @Inject constructor(
     }
 
     override fun forceRecalculation(reason: String) {
-        // No stopCalculation and no cache invalidation needed: history did not change,
-        // and the REPLACE policy inside runCalculation cancels a running chain anyway.
+        // No stopCalculation and no cache invalidation needed: history did not change.
+        // The REPLACE policy inside runCalculation cancels a running chain in WorkManager,
+        // but the cancelled coroutine keeps running until its next isStopped check.
+        // PrepareGraphDataWorker.publishAds() makes sure such a replaced worker does not
+        // publish its stale result over the result of this forced chain.
         calculationWorkflow.runCalculation(
             job = CalculationWorkflow.MAIN_CALCULATION,
             iobCobCalculator = this,
