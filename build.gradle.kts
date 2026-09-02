@@ -1,3 +1,4 @@
+import org.gradle.testing.jacoco.plugins.JacocoPlugin
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
@@ -52,7 +53,7 @@ allprojects {
         }
     }
 
-    apply(plugin = "jacoco")
+    apply<JacocoPlugin>()
 }
 
 // Setup all reports aggregation
