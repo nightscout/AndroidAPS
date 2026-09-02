@@ -77,8 +77,6 @@ kotlin {
                 implementation(libs.org.mockito.kotlin)
                 implementation(libs.com.google.truth)
                 implementation(libs.kotlinx.coroutines.test)
-                implementation(libs.net.danlew.android.joda)
-                implementation(libs.org.skyscreamer.jsonassert)
                 // The platform org.json on the Android unit-test classpath is a stub.
                 implementation(libs.org.json.android)
                 runtimeOnly(libs.org.junit.platform.launcher)

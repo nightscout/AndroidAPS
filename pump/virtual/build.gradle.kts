@@ -78,7 +78,6 @@ kotlin {
             dependencies {
                 api(project.dependencies.platform(libs.androidx.compose.bom))
                 api(libs.androidx.ui)
-                api(libs.androidx.ui.tooling)
             }
         }
 

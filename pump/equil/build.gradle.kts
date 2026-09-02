@@ -36,6 +36,5 @@ dependencies {
     implementation(libs.com.google.code.gson)
 
     api(libs.androidx.room.runtime)
-    api(libs.androidx.room.rxjava3)
     ksp(libs.androidx.room.compiler)
 }
