@@ -22,6 +22,7 @@ on:
   push:
     paths:
       - 'core/**'
+      - 'database/**'
       - 'ios/**'
       - 'shared/**'
       - 'plugins/**'
@@ -33,6 +34,7 @@ on:
   pull_request:
     paths:
       - 'core/**'
+      - 'database/**'
       - 'ios/**'
       - 'shared/**'
       - 'plugins/**'
