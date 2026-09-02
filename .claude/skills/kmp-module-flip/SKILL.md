@@ -22,7 +22,7 @@ androidMain, 1 in iosMain, tests in androidHostTest. Aim at that.
 | | target |
 |---|---|
 | module type | `kotlin("multiplatform")` + `libs.plugins.android.kmp.library` |
-| flavours | none - only `:app`, `:wear`, `:wear:watchfacepush`, `:benchmark` have them |
+| flavours | none - only `:app`, `:wear` and `:wear:watchfacepush` have them |
 | DI | Metro only. `@Inject`, `@SingleIn(AppScope::class)`, `@ContributesBinding`; a plugin registers itself with `@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())` **from commonMain** |
 | UI | Compose Multiplatform in commonMain; `androidx.compose.*` package names are the same |
 | strings | `XxxStrings` (`TextRef`) generated into commonMain; no `R.string` and no `@StringRes Int` in any shared signature |
@@ -78,7 +78,7 @@ Copy `core/ui/build.gradle.kts`. It is the closest template: resources, Compose 
 
 Older modules carry a `ProductFlavorAttr` pin to disambiguate a flavoured dependency. **Do not copy
 it into a new module.** Product flavours were removed from the library convention plugin, so only
-`:app`, `:wear`, `:wear:watchfacepush` and `:benchmark` have flavours now, and an unflavoured
+`:app`, `:wear` and `:wear:watchfacepush` have flavours now, and an unflavoured
 consumer resolves them without help. If you see the pin in an existing build file, it is left over
 and can go.
 
