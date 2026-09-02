@@ -84,9 +84,17 @@ class KeepAliveWorker @AssistedInject constructor(
         // AutosensDataStore.actualBg() — with stale BG the loop cannot run anyway.
         private val LOOP_WATCHDOG_MAX_BG_AGE = T.mins(9).msecs()
 
+        // Loop watchdog: do not fire again before this much time has passed. A forced
+        // recalculation can take a long time on slow devices with a lot of data.
+        // Firing on every KeepAlive tick would only add more cancel-and-replace churn.
+        private val LOOP_WATCHDOG_MIN_INTERVAL = T.mins(15).msecs()
+
         private var lastReadStatus: Long = 0
         private var lastRun: Long = 0
         private var lastIobUpload: Long = 0
+
+        @VisibleForTesting
+        var lastLoopWatchdogFire: Long = 0
 
         const val KA_0 = "KeepAlive"
         private const val KA_5 = "KeepAlive_5"
@@ -264,6 +272,8 @@ class KeepAliveWorker @AssistedInject constructor(
         val lastBg = persistenceLayer.getLastGlucoseValue() ?: return
         if (dateUtil.now() - lastBg.timestamp > LOOP_WATCHDOG_MAX_BG_AGE) return
         if (lastBg.timestamp - lastTriggered < LOOP_WATCHDOG_GAP) return
+        if (dateUtil.now() - lastLoopWatchdogFire < LOOP_WATCHDOG_MIN_INTERVAL) return
+        lastLoopWatchdogFire = dateUtil.now()
         aapsLogger.error(
             LTag.CORE,
             "Loop watchdog: newest BG is from ${dateUtil.dateAndTimeAndSecondsString(lastBg.timestamp)} " +

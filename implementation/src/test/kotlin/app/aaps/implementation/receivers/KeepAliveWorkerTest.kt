@@ -110,6 +110,7 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
         )
 
     private fun resetWorkerStaticState() {
+        KeepAliveWorker.lastLoopWatchdogFire = 0L
         listOf("lastRun", "lastReadStatus", "lastIobUpload").forEach { name ->
             val field = try {
                 KeepAliveWorker::class.java.getDeclaredField(name)
@@ -384,6 +385,22 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
 
         // Assert
         verify(iobCobCalculator).forceRecalculation("LoopWatchdog")
+    }
+
+    @Test
+    fun `checkLoopWatchdog does not fire again within the backoff interval`() = runTest {
+        // Arrange – same lost-trigger state as in the firing test
+        worker = createWorker()
+        whenever(persistenceLayer.getLastGlucoseValue()).thenReturn(bgAt(now - T.mins(1).msecs()))
+        whenever(loop.lastBgTriggeredRun).thenReturn(now - T.mins(15).msecs())
+
+        // Act – two KeepAlive ticks close together
+        worker.checkLoopWatchdog()
+        worker.checkLoopWatchdog()
+
+        // Assert – a forced recalculation can take long on slow devices; firing again
+        // right away would only add more cancel-and-replace churn
+        verify(iobCobCalculator, times(1)).forceRecalculation("LoopWatchdog")
     }
 
     @Test
