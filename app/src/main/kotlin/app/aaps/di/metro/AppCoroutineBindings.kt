@@ -17,8 +17,16 @@ import kotlinx.coroutines.CoroutineScope
 object AppCoroutineBindings {
 
     /**
-     * The same scope again, unqualified, for the multiplatform classes that take a plain
-     * `CoroutineScope` - `@ApplicationScope` is a javax qualifier and cannot appear in commonMain.
+     * The same scope again, unqualified, for the classes that take a plain `CoroutineScope`.
+     *
+     * Not because the qualifier is unavailable to them: `ApplicationScope` is a Metro `@Qualifier`
+     * and lives in `core/interfaces` **commonMain**, so shared code can and does ask for it -
+     * `ClientGraphBindings` does exactly that. The comment here used to say it was a javax qualifier
+     * that could not appear in commonMain, which was wrong on both counts.
+     *
+     * The alias exists so that a class which only ever wants "the app scope" can say so without
+     * naming a qualifier. The client graphs derive the qualified one from the plain one instead -
+     * opposite order, same single object, and each graph owns whichever end it declares.
      */
     @Provides
     fun unqualifiedAppScope(@ApplicationScope scope: CoroutineScope): CoroutineScope = scope

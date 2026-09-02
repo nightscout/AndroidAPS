@@ -497,14 +497,15 @@ interface AppRootGraph : MetroViewModelMultibindings, PumpAccessors {
     val sourceGraph: SourceMetroGraph
     /**
      * Interfaces backed by a plugin this graph already builds. A `@Provides` rather than a delegate,
-     * because the instance is the plugin - binding it any other way would make a second one.
+     * because the instance is the plugin.
+ *
+ * This used to claim that binding it any other way "would make a second one". That is not true of
+ * Metro: `@ContributesBinding` on a `@SingleIn` class resolves to the same scoped instance, which is
+ * why `DexcomPlugin` and `XdripSourcePlugin` carry their second binding on the class now. Only
+ * `BgQualityCheckPlugin` still needs stating here - see below.
      */
-    @Provides fun dexcomBoyda(plugin: DexcomPlugin): DexcomBoyda = plugin
-
     /** Metro already builds the plugin; the openAPS plugins ask for the interface. */
     @Provides fun bgQualityCheck(plugin: BgQualityCheckPlugin): BgQualityCheck = plugin
-
-    @Provides fun xDripSource(plugin: XdripSourcePlugin): XDripSource = plugin
 
     @DependencyGraph.Factory
     fun interface Factory {
