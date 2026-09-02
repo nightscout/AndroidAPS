@@ -179,7 +179,7 @@ enum class BooleanKey(
     WearBroadcastData(key = "wear_broadcast_data", defaultValue = false, titleResId = R.string.pref_title_wear_broadcast_data, summaryResId = R.string.pref_summary_wear_broadcast_data, showInApsMode = false, showInPumpControlMode = false),
 
     EversenseCloudUploadEnabled("eversense_cloud_upload_enabled", true, R.string.eversense_cloud_upload_enabled),
-    EversenseCloudUploadToast("eversense_notif_cloud_upload_toast", true, R.string.eversense_cloud_upload_toast),
+    EversenseCloudUploadToast("eversense_notif_cloud_upload_toast", false, R.string.eversense_cloud_upload_toast),
     EversenseEuropeanRegion("eversense_european_region", false, R.string.eversense_european_region, R.string.eversense_european_region_summary),
 
     SiteRotationManagePump("site_rotation_manage_pump", defaultValue = false, titleResId = R.string.pref_title_site_rotation_manage_pump),
