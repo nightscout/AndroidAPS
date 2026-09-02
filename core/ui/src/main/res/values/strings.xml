@@ -164,6 +164,7 @@
     <string name="wrong_pump_data">Data is coming from different pump. Change pump driver to reset pump state.</string>
     <string name="bg_label">BG</string>
     <string name="calibration">Calibration</string>
+    <string name="eversense_calibration_label">Eversense Calibration</string>
     <string name="cgm">CGM</string>
     <string name="alarminxmin">Run alarm in %1$d min</string>
     <string name="treatmentdeliveryerror">Bolus reported an error. Manually check real delivered insulin and carb amount</string>
@@ -464,6 +465,7 @@
     <string name="treatment_question_desc">Log a question for your care team</string>
     <string name="treatment_cgm_desc">Open CGM app</string>
     <string name="treatment_calibration_desc">Calibrate CGM sensor</string>
+    <string name="treatment_eversense_calibration_desc">Send a fingerstick value directly to the Eversense transmitter</string>
     <string name="treatment_bg_check_desc">Record blood glucose check</string>
     <string name="treatment_exercise_desc">Log exercise activity</string>
     <string name="treatment_announcement_desc">Post announcement</string>

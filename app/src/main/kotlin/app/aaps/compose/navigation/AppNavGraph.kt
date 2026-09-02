@@ -65,6 +65,7 @@ import app.aaps.plugins.configuration.setupwizard.SetupWizardScreen
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.compose.AuthorizedClientsScreen
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.compose.PairWithMasterScreen
 import app.aaps.ui.compose.calibrationDialog.CalibrationDialogScreen
+import app.aaps.ui.compose.eversenseCalibrationDialog.EversenseCalibrationDialogScreen
 import app.aaps.ui.compose.carbsDialog.CarbsDialogScreen
 import app.aaps.ui.compose.careDialog.CareDialogScreen
 import app.aaps.ui.compose.configuration.ConfigurationScreen
@@ -327,6 +328,12 @@ fun NavGraphBuilder.appNavGraph(
 
     composable(route = AppRoute.CalibrationDialog.route) {
         CalibrationDialogScreen(
+            onNavigateBack = { navController.safePopBackStack() }
+        )
+    }
+
+    composable(route = AppRoute.EversenseCalibrationDialog.route) {
+        EversenseCalibrationDialogScreen(
             onNavigateBack = { navController.safePopBackStack() }
         )
     }

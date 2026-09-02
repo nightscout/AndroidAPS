@@ -11,6 +11,7 @@ import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AlertDialog
+import androidx.core.net.toUri
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import app.aaps.core.interfaces.configuration.Config
@@ -29,7 +30,9 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.interfaces.source.EversenseCalibrationSource
 import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.eversense.EversenseCGMPlugin
 import app.aaps.plugins.eversense.callbacks.EversenseScanCallback
@@ -47,6 +50,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.serialization.json.Json
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -62,6 +68,7 @@ import app.aaps.core.ui.compose.icons.IcPluginEversense
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import javax.inject.Inject
+import kotlin.coroutines.resume
 
 class EversensePlugin @Inject constructor(
     rh: ResourceHelper,
@@ -85,7 +92,7 @@ class EversensePlugin @Inject constructor(
         .description(R.string.description_source_eversense),
     ownPreferences = emptyList(),
     aapsLogger, rh, preferences, config
-), BgSource, EversenseWatcher {
+), BgSource, EversenseWatcher, EversenseCalibrationSource {
 
     @Inject lateinit var persistenceLayer: PersistenceLayer
 
@@ -134,6 +141,7 @@ class EversensePlugin @Inject constructor(
         securePrefs.edit(commit = true) { putBoolean("eversense_battery_low_dismissed", true) }
     private var consecutiveNoSignalReadings: Int = 0
     private val NO_SIGNAL_WARNING_THRESHOLD = 3
+    private val CALIBRATION_RECONNECT_TIMEOUT_MS = 30_000L
     private var releaseForOfficialApp: Boolean = false
     @Volatile private var placementNotificationSnoozed: Boolean = false
 
@@ -184,6 +192,52 @@ class EversensePlugin @Inject constructor(
     }
 
     fun syncCredentialsIfNeeded() = checkCredentialsNotification()
+
+    // ── EversenseCalibrationSource ── isEnabled() is inherited from PluginBase (true when
+    // Eversense is the currently active BG source), matching the XDripSource/DexcomBoyda pattern.
+
+    override fun isConnected(): Boolean = eversense.isConnected()
+
+    override suspend fun calibrate(bgMgDl: Int): Boolean = withContext(Dispatchers.IO) {
+        if (!eversense.isConnected()) {
+            aapsLogger.info(LTag.BGSOURCE, "Eversense calibration: not connected — reconnecting first")
+            val reconnected = withTimeoutOrNull(CALIBRATION_RECONNECT_TIMEOUT_MS) { awaitTransmitterReady() }
+            if (reconnected == null) {
+                aapsLogger.warn(LTag.BGSOURCE, "Eversense calibration: reconnect timed out")
+                return@withContext false
+            }
+        }
+        val success = eversense.sendCalibration(bgMgDl)
+        aapsLogger.info(LTag.BGSOURCE, "Eversense calibration result: $success")
+        if (success) {
+            eversense.triggerFullSync(force = true)
+            // Drives the home-screen "Calibration in progress" countdown banner.
+            preferences.put(LongNonKey.EversenseLastCalibrationSubmittedAt, System.currentTimeMillis())
+        }
+        success
+    }
+
+    // Bridges EversenseWatcher's callback-based "connected" signal into a single-shot coroutine
+    // wait, cancelled (and its watcher cleaned up) automatically by the caller's withTimeoutOrNull.
+    private suspend fun awaitTransmitterReady(): Boolean = suspendCancellableCoroutine { cont ->
+        lateinit var watcher: EversenseWatcher
+        watcher = object : EversenseWatcher {
+            override fun onTransmitterReady() {
+                if (cont.isActive) {
+                    eversense.removeWatcher(watcher)
+                    cont.resume(true)
+                }
+            }
+            override fun onConnectionChanged(connected: Boolean) {}
+            override fun onStateChanged(state: EversenseState) {}
+            override fun onCGMRead(type: EversenseType, readings: List<EversenseCGMResult>) {}
+            override fun onAlarmReceived(alarm: ActiveAlarm) {}
+            override fun onTransmitterNotPlaced() {}
+        }
+        eversense.addWatcher(watcher)
+        cont.invokeOnCancellation { eversense.removeWatcher(watcher) }
+        eversense.connect(null)
+    }
 
     private fun checkCredentialsNotification() {
         val username = preferences.get(EversenseStringKey.EversenseUsername)
@@ -253,6 +307,14 @@ class EversensePlugin @Inject constructor(
                 }
                 saveSecureState(cleared)
                 aapsLogger.info(LTag.BGSOURCE, "Eversense credentials cleared by user")
+            },
+            EversenseIntentKey.EversenseDocumentation.withClick {
+                val intent = Intent(
+                    Intent.ACTION_VIEW,
+                    "https://github.com/CAPTCG/AndroidAPS-Eversense-/blob/docs/README.md".toUri()
+                )
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(intent)
             },
             EversenseIntentKey.EversenseCalibration.withActivity(EversenseCalibrationActivity::class.java as Class<*>),
             EversenseIntentKey.EversensePlacement.withActivity(EversensePlacementActivity::class.java as Class<*>)

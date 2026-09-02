@@ -18,7 +18,6 @@ import app.aaps.core.ui.compose.icons.IcCarbs
 import app.aaps.core.ui.compose.navigation.descriptionResId
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.labelResId
-import app.aaps.ui.compose.navigation.ElementAvailability
 import app.aaps.ui.compose.scenes.SceneIcons
 import app.aaps.core.interfaces.scenes.SceneStore
 import javax.inject.Inject
@@ -37,8 +36,7 @@ class QuickLaunchResolver @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val profileRepository: ProfileRepository,
     private val sceneRepository: SceneStore,
-    private val rh: ResourceHelper,
-    private val elementAvailability: ElementAvailability
+    private val rh: ResourceHelper
 ) {
 
     fun resolveItem(action: QuickLaunchAction): ResolvedQuickLaunchItem {
@@ -98,7 +96,16 @@ class QuickLaunchResolver @Inject constructor(
             plugin != null && plugin.isEnabled(plugin.pluginDescription.mainType) && plugin.hasComposeContent()
         }
 
-        else                                   -> action.elementType?.let { elementAvailability.isAvailable(it) } ?: true
+        // StaticAction (and anything else without its own branch above) wraps a compile-time
+        // ElementType constant, which never becomes stale the way a deleted automation/profile/
+        // scene/preset does - so it's always "valid" here. Whether it's currently *available* to
+        // use (e.g. Eversense isn't the active BG source right now) is a separate, transient
+        // concern - use ElementAvailability directly for that (see TreatmentViewModel's
+        // showCgm/showCalibration) rather than here, where isValid()'s caller (refreshQuickLaunch)
+        // treats "invalid" as "delete from the user's saved toolbar config": a temporarily
+        // unavailable static button must not be permanently stripped out just because the
+        // relevant plugin isn't active at the moment refreshQuickLaunch happens to run.
+        else                                   -> true
     }
 
     fun resolveLabel(action: QuickLaunchAction): String = when (action) {

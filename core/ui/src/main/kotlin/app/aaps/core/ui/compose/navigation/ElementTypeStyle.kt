@@ -68,7 +68,8 @@ fun ElementType.color(): Color = when (this) {
 
     ElementType.CGM_XDRIP               -> AapsTheme.elementColors.cgmXdrip
     ElementType.CGM_DEX                 -> AapsTheme.elementColors.cgmDex
-    ElementType.CALIBRATION             -> AapsTheme.elementColors.calibration
+    ElementType.CALIBRATION,
+    ElementType.EVERSENSE_CALIBRATION   -> AapsTheme.elementColors.calibration
     ElementType.INSULIN_MANAGEMENT      -> AapsTheme.elementColors.insulin
 
     ElementType.PROFILE_MANAGEMENT      -> AapsTheme.elementColors.profileSwitch
@@ -134,7 +135,8 @@ fun ElementType.icon(): ImageVector = when (this) {
     ElementType.TREATMENT               -> Icons.Default.Add
     ElementType.CGM_XDRIP               -> IcXDrip
     ElementType.CGM_DEX                 -> IcByoda
-    ElementType.CALIBRATION             -> IcCalibration
+    ElementType.CALIBRATION,
+    ElementType.EVERSENSE_CALIBRATION   -> IcCalibration
     ElementType.INSULIN_MANAGEMENT      -> IcPluginInsulin
 
     ElementType.PROFILE_MANAGEMENT      -> IcProfile
@@ -194,6 +196,7 @@ fun ElementType.labelResId(): Int = when (this) {
     ElementType.CGM_XDRIP               -> R.string.cgm
     ElementType.CGM_DEX                 -> R.string.cgm
     ElementType.CALIBRATION             -> R.string.calibration
+    ElementType.EVERSENSE_CALIBRATION   -> R.string.eversense_calibration_label
     ElementType.INSULIN_MANAGEMENT      -> R.string.insulin_management
     ElementType.PROFILE_MANAGEMENT      -> R.string.profile_management
     ElementType.TEMP_TARGET_MANAGEMENT  -> R.string.temp_target_management
@@ -256,6 +259,7 @@ fun ElementType.descriptionResId(): Int = when (this) {
     ElementType.CGM_DEX                 -> R.string.treatment_cgm_desc
 
     ElementType.CALIBRATION             -> R.string.treatment_calibration_desc
+    ElementType.EVERSENSE_CALIBRATION   -> R.string.treatment_eversense_calibration_desc
     ElementType.BG_CHECK                -> R.string.treatment_bg_check_desc
     ElementType.EXERCISE                -> R.string.treatment_exercise_desc
     ElementType.ANNOUNCEMENT            -> R.string.treatment_announcement_desc

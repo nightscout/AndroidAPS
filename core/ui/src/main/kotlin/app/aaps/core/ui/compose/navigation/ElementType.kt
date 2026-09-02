@@ -33,6 +33,10 @@ enum class ElementType(
     CGM_DEX(category = ElementCategory.CGM),
     CALIBRATION(category = ElementCategory.CGM, searchable = true),
 
+    // Eversense-specific: sends a fingerstick value directly to the transmitter over local BLE
+    // (not the activeCalibration/xDrip broadcast path CALIBRATION above uses).
+    EVERSENSE_CALIBRATION(category = ElementCategory.CGM, searchable = true),
+
     // Profile & Targets — minimum level is BOLUS; screen mode (PLAY/EDIT) determined by granted auth level
     PROFILE_MANAGEMENT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS),
     TEMP_TARGET_MANAGEMENT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS),
