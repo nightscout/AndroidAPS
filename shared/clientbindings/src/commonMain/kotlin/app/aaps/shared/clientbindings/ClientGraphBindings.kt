@@ -45,7 +45,6 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.IntoMap
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
@@ -129,7 +128,7 @@ object ClientGraphBindings {
      * twice on purpose, once for the live loop and once for a history browser at its own scope, so a
      * `@SingleIn` on the class would hide which one a window is looking at.
      *
-     * The calculator and the cache need each other; [Provider] defers that lookup so the graph
+     * The calculator and the cache need each other; a `() -> T` defers that lookup so the graph
      * accepts what a direct reference would reject as a cycle.
      */
     @Suppress("LongParameterList")
@@ -149,7 +148,7 @@ object ClientGraphBindings {
         decimalFormatter: DecimalFormatter,
         processedTbrEbData: ProcessedTbrEbData,
         signals: CalculationSignalsEmitter,
-        cache: Provider<OverviewDataCache>
+        cache: () -> OverviewDataCache
     ): IobCobCalculatorPlugin = IobCobCalculatorPlugin(
         aapsLogger, rxBus, preferences, rh, profileFunction, activePlugin, dateUtil, persistenceLayer,
         overviewData, calculationWorkflow, decimalFormatter, processedTbrEbData, signals
@@ -177,7 +176,7 @@ object ClientGraphBindings {
     fun nsClientV3Plugin(plugin: NSClientV3Plugin): PluginBase = plugin
 
     /**
-     * The eleven objectives, in order, and the plugin that reads them.
+     * The ten objectives, in order, and the plugin that reads them.
      *
      * `ObjectivesPlugin` carries `@APS` for the plugin-list multibinding, and `@ContributesBinding`
      * on the class would inherit that qualifier - so the interface would only be readable as
@@ -223,8 +222,8 @@ object ClientGraphBindings {
     fun calculationExecutor(
         @ApplicationScope scope: CoroutineScope,
         aapsLogger: AAPSLogger,
-        prepare: Provider<PrepareGraphDataRunner>,
-        post: Provider<PostCalculationRunner>
+        prepare: () -> PrepareGraphDataRunner,
+        post: () -> PostCalculationRunner
     ): CalculationExecutor = LazyCalculationExecutor(scope, aapsLogger, { prepare() }, { post() })
 
     /** Bolus progress. Stated rather than annotated, for the same reason as the calculator. */

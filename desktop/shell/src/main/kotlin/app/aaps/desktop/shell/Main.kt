@@ -228,6 +228,11 @@ private fun AapsDesktopApp(graph: DesktopAppGraph, appIcon: Painter, appName: St
                     rxBus = graph.rxBus,
                     activePlugin = graph.activePlugin,
                     pluginPermissions = graph.pluginPermissions,
+                    // Passed so the rules can be read and edited here. The runtime is deliberately
+                    // NOT started on a client: `MainApp` calls `automationRuntime.start()`, this shell
+                    // does not, and that is the design - a follower edits definitions and the master
+                    // runs them. Do not "fix" the missing start() call; it would give a second machine
+                    // the power to fire the same rules.
                     automationRuntime = graph.automationRuntime,
                     preferences = graph.preferences,
                     rh = graph.textResolver,

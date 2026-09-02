@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.lenientBoolean
 import app.aaps.core.utils.lenientString
+import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.actions.ActionFactory
 import app.aaps.plugins.automation.actions.ActionSMBChange
 import app.aaps.plugins.automation.actions.ActionStopProcessing
@@ -14,10 +15,10 @@ import app.aaps.plugins.automation.triggers.TriggerConnector
 import app.aaps.plugins.automation.triggers.TriggerConnectorTest
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
-import dev.zacsweers.metro.Provider
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
 
 class AutomationEventTest : TestBase() {
@@ -26,7 +27,7 @@ class AutomationEventTest : TestBase() {
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var profileFunction: ProfileFunction
-    @Mock lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
+    @Mock lateinit var pumpEnactResultProvider: () -> PumpEnactResult
 
     // Real factories over mocks: fromJSON has to rebuild actions and triggers for the clone assertions.
     private val triggerDeps: app.aaps.plugins.automation.triggers.TriggerDeps by lazy {
@@ -107,6 +108,26 @@ class AutomationEventTest : TestBase() {
         val event = eventFactory.fromJSON(legacyJson)
         assertThat(event.id).isNotEmpty()
         assertThat(event.title).isEqualTo("Legacy")
+    }
+
+    /**
+     * Asking must not answer by changing the thing asked about.
+     *
+     * `areActionsValid()` used to set `isEnabled = false`, and its only caller is the Compose state
+     * builder - so merely drawing the automation list switched rules off. On a client that is wrong:
+     * a follower edits rules but never runs them and has a smaller plugin set on purpose, so an
+     * action can be invalid there and perfectly fine on the master. `AutomationRuntime` makes that
+     * decision now, behind its master-only guard.
+     */
+    @Test fun askingWhetherActionsAreValidDoesNotDisableTheEvent() {
+        val invalid = mock<Action>()
+        whenever(invalid.isValid()).thenReturn(false)
+        val event = eventFactory.newEvent()
+        event.title = "Test"
+        event.addAction(invalid)
+
+        assertThat(event.areActionsValid()).isFalse()
+        assertThat(event.isEnabled).isTrue()
     }
 
     @Test fun hasStopProcessing() {

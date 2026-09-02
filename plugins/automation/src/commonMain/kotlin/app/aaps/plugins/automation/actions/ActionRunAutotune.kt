@@ -23,7 +23,6 @@ import app.aaps.core.utils.lenientString
 import app.aaps.plugins.automation.elements.InputDuration
 import app.aaps.plugins.automation.elements.InputProfileName
 import app.aaps.plugins.automation.elements.InputWeekDay
-import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -33,7 +32,7 @@ import kotlinx.serialization.json.put
 class ActionRunAutotune(
     aapsLogger: AAPSLogger,
     rh: TextResolver,
-    pumpEnactResultProvider: Provider<PumpEnactResult>,
+    pumpEnactResultProvider: () -> PumpEnactResult,
     private val resourceHelper: TextResolver,
     private val autotunePlugin: Autotune,
     private val profileFunction: ProfileFunction,
@@ -104,5 +103,16 @@ class ActionRunAutotune(
         return this
     }
 
-    override fun isValid(): Boolean = runBlocking { profileFunction.getProfile() } != null && activePlugin.getSpecificPluginsListByInterface(Autotune::class).first().isEnabled()
+    /**
+     * False rather than a crash where autotune does not exist.
+     *
+     * `getSpecificPluginsListByInterface` searches the plugin *list*, and `AutotunePlugin` is Android
+     * only - so the list is empty on the desktop and iOS clients and `first()` threw. The `Autotune`
+     * *binding* does exist there, which is what hid this: DI says the feature is present, the plugin
+     * list says it is not. Editing rules is supported on a client even though running them is not, so
+     * this is reached by simply opening the automation screen. `AllPreferencesScreen` already asks the
+     * same question this way.
+     */
+    override fun isValid(): Boolean = runBlocking { profileFunction.getProfile() } != null &&
+        activePlugin.getSpecificPluginsListByInterface(Autotune::class).firstOrNull()?.isEnabled() == true
 }
