@@ -35,7 +35,6 @@ import app.aaps.plugins.aps.autotune.AutotunePlugin
 import app.aaps.plugins.aps.autotune.data.ATProfile
 import app.aaps.plugins.aps.autotune.events.EventAutotuneUpdateGui
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -163,8 +162,8 @@ class AutotuneViewModel(
     private val rxBus: RxBus,
     private val uel: UserEntryLogger,
     private val loop: Loop,
-    private val profileStoreProvider: Provider<ProfileStore>,
-    private val atProfileProvider: Provider<ATProfile>,
+    private val profileStoreProvider: () -> ProfileStore,
+    private val atProfileProvider: () -> ATProfile,
     private val scope: CoroutineScope
 ) {
 

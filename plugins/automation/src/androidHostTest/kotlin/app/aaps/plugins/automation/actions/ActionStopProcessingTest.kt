@@ -3,7 +3,6 @@ package app.aaps.plugins.automation.actions
 import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.plugins.automation.R
 import com.google.common.truth.Truth.assertThat
-import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -17,7 +16,7 @@ class ActionStopProcessingTest : ActionsTestBase() {
     fun setup() {
 
         whenever(rh.gs(AutomationStrings.stop_processing)).thenReturn("Stop processing")
-        sut = ActionStopProcessing(aapsLogger, rh, Provider { pumpEnactResultProvider() })
+        sut = ActionStopProcessing(aapsLogger, rh, { pumpEnactResultProvider() })
     }
 
     @Test

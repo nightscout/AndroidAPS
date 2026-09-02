@@ -58,7 +58,6 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.common.hw.rileylink.R as RileyLinkR
 
@@ -85,8 +84,8 @@ class MedtronicOverviewViewModel @Inject constructor(
     private val rxBus: RxBus,
     private val dateUtil: DateUtil,
     private val aapsLogger: AAPSLogger,
-    private val resetRileyLinkConfigurationTaskProvider: Provider<ResetRileyLinkConfigurationTask>,
-    private val wakeAndTuneTaskProvider: Provider<WakeAndTuneTask>,
+    private val resetRileyLinkConfigurationTaskProvider: () -> ResetRileyLinkConfigurationTask,
+    private val wakeAndTuneTaskProvider: () -> WakeAndTuneTask,
     private val context: Context
 ) : ViewModel() {
 

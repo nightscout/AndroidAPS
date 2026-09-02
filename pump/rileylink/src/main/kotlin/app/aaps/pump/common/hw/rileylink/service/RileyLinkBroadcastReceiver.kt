@@ -22,7 +22,6 @@ import app.aaps.pump.common.hw.rileylink.service.tasks.ServiceTask
 import app.aaps.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor
 import app.aaps.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 
 class RileyLinkBroadcastReceiver : BroadcastReceiver() {
 
@@ -31,9 +30,9 @@ class RileyLinkBroadcastReceiver : BroadcastReceiver() {
     @Inject lateinit var rileyLinkServiceData: RileyLinkServiceData
     @Inject lateinit var serviceTaskExecutor: ServiceTaskExecutor
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var wakeAndTuneTaskProvider: Provider<WakeAndTuneTask>
-    @Inject lateinit var initializePumpManagerTaskProvider: Provider<InitializePumpManagerTask>
-    @Inject lateinit var discoverGattServicesTaskProvider: Provider<DiscoverGattServicesTask>
+    @Inject lateinit var wakeAndTuneTaskProvider: () -> WakeAndTuneTask
+    @Inject lateinit var initializePumpManagerTaskProvider: () -> InitializePumpManagerTask
+    @Inject lateinit var discoverGattServicesTaskProvider: () -> DiscoverGattServicesTask
 
     private val broadcastIdentifiers: MutableMap<String, List<String>> = HashMap()
 

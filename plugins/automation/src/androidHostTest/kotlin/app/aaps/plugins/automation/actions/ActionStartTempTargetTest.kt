@@ -10,7 +10,6 @@ import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputDuration
 import app.aaps.plugins.automation.elements.InputTempTarget
 import com.google.common.truth.Truth.assertThat
-import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -30,7 +29,7 @@ class ActionStartTempTargetTest : ActionsTestBase() {
         whenever(rh.gs(AutomationStrings.starttemptarget)).thenReturn("Start temp target")
         whenever(rh.gs(CoreUiStrings.format_mins)).thenReturn("%1\$d min")
 
-        sut = ActionStartTempTarget(aapsLogger, rh, Provider { pumpEnactResultProvider() }, activePlugin, persistenceLayer, profileFunction, dateUtil, profileUtil, triggerDeps)
+        sut = ActionStartTempTarget(aapsLogger, rh, { pumpEnactResultProvider() }, activePlugin, persistenceLayer, profileFunction, dateUtil, profileUtil, triggerDeps)
     }
 
     @Test fun friendlyNameTest() {

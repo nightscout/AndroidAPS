@@ -18,14 +18,13 @@ import app.aaps.plugins.automation.elements.InputSceneName
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.triggers.TriggerDeps
 import app.aaps.plugins.automation.triggers.TriggerSceneActive
-import dev.zacsweers.metro.Provider
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
 class ActionRunScene(
     aapsLogger: AAPSLogger,
     rh: TextResolver,
-    pumpEnactResultProvider: Provider<PumpEnactResult>,
+    pumpEnactResultProvider: () -> PumpEnactResult,
     private val sceneApi: SceneAutomationApi,
     private val sceneIconResolver: SceneIconResolver,
     // Only to build the Trigger precondition below.

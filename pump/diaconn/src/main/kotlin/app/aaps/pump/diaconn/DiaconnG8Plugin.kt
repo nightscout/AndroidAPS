@@ -69,7 +69,6 @@ import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import dev.zacsweers.metro.Provider
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -90,7 +89,7 @@ class DiaconnG8Plugin @Inject constructor(
     private val temporaryBasalStorage: TemporaryBasalStorage,
     private val dateUtil: DateUtil,
     private val diaconnHistoryDatabase: DiaconnHistoryDatabase,
-    private val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val pumpEnactResultProvider: () -> PumpEnactResult,
     private val bolusProgressData: BolusProgressData,
     private val blePreCheck: BlePreCheck
 ) : PumpPluginBase(

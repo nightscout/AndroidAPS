@@ -53,7 +53,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import dev.zacsweers.metro.Provider
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -74,7 +73,7 @@ abstract class AbstractDanaRPlugin protected constructor(
     protected var notificationManager: NotificationManager,
     protected var danaHistoryDatabase: DanaHistoryDatabase,
     protected var decimalFormatter: DecimalFormatter,
-    protected var pumpEnactResultProvider: Provider<PumpEnactResult>
+    protected var pumpEnactResultProvider: () -> PumpEnactResult
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)

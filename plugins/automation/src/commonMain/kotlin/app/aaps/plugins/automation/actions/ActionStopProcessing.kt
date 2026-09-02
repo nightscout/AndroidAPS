@@ -9,14 +9,13 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.resources.TextResolver
-import dev.zacsweers.metro.Provider
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
 class ActionStopProcessing(
     aapsLogger: AAPSLogger,
     rh: TextResolver,
-    pumpEnactResultProvider: Provider<PumpEnactResult>
+    pumpEnactResultProvider: () -> PumpEnactResult
 ) : Action(aapsLogger, rh, pumpEnactResultProvider) {
 
     override fun friendlyName(): TextRef = AutomationStrings.stop_processing

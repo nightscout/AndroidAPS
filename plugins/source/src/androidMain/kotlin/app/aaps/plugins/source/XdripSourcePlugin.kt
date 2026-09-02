@@ -34,6 +34,7 @@ import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.core.utils.receivers.Inbox
 import app.aaps.plugins.source.compose.BgSourceComposeContent
 import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
@@ -50,6 +51,7 @@ import kotlin.math.round
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @IntKey(400)
 @SingleIn(AppScope::class)
+@ContributesBinding(AppScope::class, binding = binding<XDripSource>())
 class XdripSourcePlugin @Inject constructor(
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,

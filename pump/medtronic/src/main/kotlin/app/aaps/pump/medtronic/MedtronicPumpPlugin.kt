@@ -114,7 +114,6 @@ import dev.zacsweers.metro.IntKey as MetroIntKey
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import dev.zacsweers.metro.Provider
 import kotlin.math.abs
 import kotlin.math.floor
 
@@ -145,10 +144,10 @@ class MedtronicPumpPlugin @Inject constructor(
     pumpSync: PumpSync,
     pumpSyncStorage: PumpSyncStorage,
     decimalFormatter: DecimalFormatter,
-    pumpEnactResultProvider: Provider<PumpEnactResult>,
+    pumpEnactResultProvider: () -> PumpEnactResult,
     bolusProgressData: BolusProgressData,
-    private val wakeAndTuneTaskProvider: Provider<WakeAndTuneTask>,
-    private val resetRileyLinkConfigurationTaskProvider: Provider<ResetRileyLinkConfigurationTask>,
+    private val wakeAndTuneTaskProvider: () -> WakeAndTuneTask,
+    private val resetRileyLinkConfigurationTaskProvider: () -> ResetRileyLinkConfigurationTask,
     private val blePreCheck: BlePreCheck
 ) : PumpPluginAbstract(
     pluginDescription = PluginDescription()

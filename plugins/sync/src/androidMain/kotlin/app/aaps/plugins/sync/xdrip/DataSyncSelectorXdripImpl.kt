@@ -18,7 +18,6 @@ import app.aaps.plugins.sync.xdrip.keys.XdripLongKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 
 @Suppress("unused")
@@ -30,7 +29,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
     private val profileRepository: ProfileRepository,
-    private val xdripBroadcast: Provider<XDripBroadcast>,
+    private val xdripBroadcast: () -> XDripBroadcast,
     private val persistenceLayer: PersistenceLayer,
     private val preferences: Preferences,
     private val xdripMvvmRepository: XdripMvvmRepository

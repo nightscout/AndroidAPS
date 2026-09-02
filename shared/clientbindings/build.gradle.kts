@@ -51,6 +51,8 @@ kotlin {
                 implementation(project(":workflow"))
 
                 implementation(libs.kotlinx.coroutines.core)
+                // For ClientViewModelFactory - the shells both need one and it is the same one.
+                implementation(libs.metrox.viewmodel)
             }
         }
     }

@@ -14,7 +14,6 @@ import app.aaps.plugins.automation.triggers.TriggerDeps
 import app.aaps.plugins.automation.triggers.TriggerFactory
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
-import dev.zacsweers.metro.Provider
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import org.junit.jupiter.api.BeforeEach
@@ -37,7 +36,7 @@ class AutomationJsonRoundTripTest : TestBase() {
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var profileFunction: ProfileFunction
-    @Mock lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
+    @Mock lateinit var pumpEnactResultProvider: () -> PumpEnactResult
 
     private val triggerDeps: TriggerDeps by lazy {
         TriggerDeps(

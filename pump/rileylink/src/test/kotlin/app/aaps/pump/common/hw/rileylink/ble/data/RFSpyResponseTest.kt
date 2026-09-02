@@ -10,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import dev.zacsweers.metro.Provider
 
 /**
  * Tests for RFSpyResponse
@@ -18,13 +17,13 @@ import dev.zacsweers.metro.Provider
 class RFSpyResponseTest {
 
     private lateinit var rfSpyResponse: RFSpyResponse
-    private lateinit var radioResponseProvider: Provider<RadioResponse>
+    private lateinit var radioResponseProvider: () -> RadioResponse
     private lateinit var mockRadioResponse: RadioResponse
 
     @BeforeEach
     fun setup() {
         mockRadioResponse = mock()
-        radioResponseProvider = Provider { mockRadioResponse }
+        radioResponseProvider = { mockRadioResponse }
         rfSpyResponse = RFSpyResponse(radioResponseProvider)
     }
 

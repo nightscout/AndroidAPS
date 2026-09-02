@@ -34,7 +34,6 @@ import java.util.Locale
 import java.util.Optional
 import java.util.UUID
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 import kotlin.math.pow
@@ -50,7 +49,7 @@ class RFSpy @Inject constructor(
     private val rileyLinkBle: RileyLinkBLE,
     private val rileyLinkServiceData: RileyLinkServiceData,
     private val rileyLinkUtil: RileyLinkUtil,
-    private val rfSpyResponseProvider: Provider<RFSpyResponse>
+    private val rfSpyResponseProvider: () -> RFSpyResponse
 ) {
 
     private val radioServiceUUID: UUID = UUID.fromString(GattAttributes.SERVICE_RADIO)

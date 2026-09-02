@@ -163,7 +163,7 @@ interface IosAppGraph : MetroViewModelMultibindings {
 
     /**
      * The view model maps come from [MetroViewModelMultibindings], the same interface `AppRootGraph`
-     * implements. `IosViewModelFactory` turns them into the factory `metroViewModel()` asks for:
+     * implements. `ClientViewModelFactory` turns them into the factory `metroViewModel()` asks for:
      * Android reaches that through the `Application` object, and iOS has no ambient equivalent, so
      * the host provides it as `LocalMetroViewModelFactory` around the shared UI.
      */

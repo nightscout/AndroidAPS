@@ -5,7 +5,6 @@ import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputDropdownOnOffMenu
 import com.google.common.truth.Truth.assertThat
-import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -28,7 +27,7 @@ class ActionSMBChangeTest : ActionsTestBase() {
         whenever(rh.gs(AutomationStrings.on)).thenReturn("ON")
         whenever(rh.gs(AutomationStrings.off)).thenReturn("OFF")
 
-        sut = ActionSMBChange(aapsLogger, rh, Provider { pumpEnactResultProvider() }, dateUtil, preferences)
+        sut = ActionSMBChange(aapsLogger, rh, { pumpEnactResultProvider() }, dateUtil, preferences)
     }
 
     @Test fun friendlyName() = runTest {

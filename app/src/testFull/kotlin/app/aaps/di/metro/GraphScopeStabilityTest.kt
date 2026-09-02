@@ -217,7 +217,6 @@ class GraphScopeStabilityTest {
         val FRESH_EACH_READ = setOf(
             "apsResult",
             "assistedFactoryProviders",
-            "automationGraph",
             "autosensData",
             "bolusWizard",
             "cloudStorageProviders",
@@ -232,7 +231,6 @@ class GraphScopeStabilityTest {
             "pumpEnactResult",
             "pumpSync",
             "pumpWithConcentration",
-            "receiversGraph",
             "sourceGraph",
             "viewModelProviders",
             "widgetUpdater",

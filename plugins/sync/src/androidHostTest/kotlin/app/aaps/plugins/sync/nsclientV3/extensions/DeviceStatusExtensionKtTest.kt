@@ -16,7 +16,6 @@ import app.aaps.plugins.sync.nsclientV3.data.NSDeviceStatusHandler
 import app.aaps.plugins.sync.nsclientV3.data.ProcessedDeviceStatusDataImpl
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
-import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import org.junit.jupiter.api.BeforeEach
@@ -46,7 +45,7 @@ internal class DeviceStatusExtensionKtTest : TestBase() {
         nsDeviceStatusHandler = NSDeviceStatusHandler(
             preferences, config, dateUtil, processedDeviceStatusData, aapsLogger,
             persistenceLayer, overviewData, calculationWorkflow, rxBus, testScope,
-            Provider { nsClientV3Plugin }
+            { nsClientV3Plugin }
         )
         whenever(config.AAPSCLIENT).thenReturn(true)
     }

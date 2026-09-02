@@ -1,26 +1,17 @@
 package app.aaps.desktop.shell.di
 
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.logging.L
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
 import app.aaps.desktop.shell.appIconResource
 import app.aaps.desktop.shell.loadAwtAppIcon
 import app.aaps.desktop.shell.platform.DesktopSystemNotificationPlatform
-import app.aaps.implementation.notifications.CommonNotificationManager
-import app.aaps.implementation.resources.GeneratedTextResolver
 import app.aaps.core.interfaces.resources.TextResolver
-import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.desktop.shell.config.DesktopClientConfig
 import app.aaps.desktop.shell.prefs.DesktopSp
 import app.aaps.implementation.logging.AAPSLoggerDesktop
-import app.aaps.shared.impl.logging.LImpl
-import app.aaps.shared.impl.rx.bus.RxBusImpl
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.shared.impl.utils.JvmDateFormatPlatform
 import dev.zacsweers.metro.AppScope
@@ -28,9 +19,6 @@ import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 
 /**
  * The bindings the desktop graph needs that only a desktop can supply.

@@ -26,7 +26,6 @@ import app.aaps.ui.activities.ErrorActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
@@ -37,7 +36,7 @@ import kotlin.reflect.KClass
 class UiInteractionImpl @Inject constructor(
     private val context: Context,
     private val alarmNotificationManager: AlarmNotificationManager,
-    private val notificationManager: Provider<NotificationManager>,
+    private val notificationManager: () -> NotificationManager,
     private val aapsLogger: AAPSLogger,
     private val persistenceLayer: PersistenceLayer,
     private val config: Config,

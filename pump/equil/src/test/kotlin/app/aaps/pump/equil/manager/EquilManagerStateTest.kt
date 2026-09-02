@@ -25,7 +25,6 @@ import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
-import dev.zacsweers.metro.Provider
 
 /**
  * How the pod state survives a plugin restart.
@@ -67,7 +66,7 @@ class EquilManagerStateTest {
         }
         sut = EquilManager(
             aapsLogger, rxBus, preferences, rh, pumpSync, equilBLE, equilHistoryRecordDao,
-            equilHistoryPumpDao, Provider { mock<PumpEnactResult>() }, dateUtil, notificationManager,
+            equilHistoryPumpDao, { mock<PumpEnactResult>() }, dateUtil, notificationManager,
             ch, bolusProgressData
         )
     }

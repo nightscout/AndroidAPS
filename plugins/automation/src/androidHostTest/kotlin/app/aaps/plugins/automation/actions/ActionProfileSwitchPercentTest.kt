@@ -7,7 +7,6 @@ import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputDuration
 import app.aaps.plugins.automation.elements.InputPercent
 import com.google.common.truth.Truth.assertThat
-import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -29,7 +28,7 @@ class ActionProfileSwitchPercentTest : ActionsTestBase() {
         whenever(rh.gs(AutomationStrings.startprofileforever)).thenReturn("Start profile %d%%")
         whenever(rh.gs(CoreUiStrings.startprofile)).thenReturn("Start profile %d%% for %d min")
 
-        sut = ActionProfileSwitchPercent(aapsLogger, rh, Provider { pumpEnactResultProvider() }, profileFunction, triggerDeps)
+        sut = ActionProfileSwitchPercent(aapsLogger, rh, { pumpEnactResultProvider() }, profileFunction, triggerDeps)
     }
 
     @Test fun friendlyNameTest() = runTest {

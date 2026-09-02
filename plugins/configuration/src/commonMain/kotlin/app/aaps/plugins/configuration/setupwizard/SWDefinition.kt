@@ -48,7 +48,6 @@ import app.aaps.plugins.configuration.setupwizard.elements.SWPlugin
 import app.aaps.plugins.configuration.setupwizard.elements.SWRadioButton
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
@@ -71,21 +70,21 @@ class SWDefinition @Inject constructor(
     private val config: Config,
     private val hardLimits: HardLimits,
     private val nsClient: NsClient,
-    private val swScreenProvider: Provider<SWScreen>,
-    private val swEventListenerProvider: Provider<SWEventListener>,
-    private val swBreakProvider: Provider<SWBreak>,
-    private val swButtonProvider: Provider<SWButton>,
-    private val swEditEncryptedPasswordProvider: Provider<SWEditEncryptedPassword>,
-    private val swEditIntNumberProvider: Provider<SWEditIntNumber>,
-    private val swEditNumberProvider: Provider<SWEditNumber>,
-    private val swEditNumberWithUnitsProvider: Provider<SWEditNumberWithUnits>,
-    private val swEditStringProvider: Provider<SWEditString>,
-    private val swHtmlLinkProvider: Provider<SWHtmlLink>,
-    private val swInfoTextProvider: Provider<SWInfoText>,
-    private val swPairingStatusProvider: Provider<SWPairingStatus>,
-    private val swPermissionsProvider: Provider<SWPermissions>,
-    private val swPluginProvider: Provider<SWPlugin>,
-    private val swRadioButtonProvider: Provider<SWRadioButton>
+    private val swScreenProvider: () -> SWScreen,
+    private val swEventListenerProvider: () -> SWEventListener,
+    private val swBreakProvider: () -> SWBreak,
+    private val swButtonProvider: () -> SWButton,
+    private val swEditEncryptedPasswordProvider: () -> SWEditEncryptedPassword,
+    private val swEditIntNumberProvider: () -> SWEditIntNumber,
+    private val swEditNumberProvider: () -> SWEditNumber,
+    private val swEditNumberWithUnitsProvider: () -> SWEditNumberWithUnits,
+    private val swEditStringProvider: () -> SWEditString,
+    private val swHtmlLinkProvider: () -> SWHtmlLink,
+    private val swInfoTextProvider: () -> SWInfoText,
+    private val swPairingStatusProvider: () -> SWPairingStatus,
+    private val swPermissionsProvider: () -> SWPermissions,
+    private val swPluginProvider: () -> SWPlugin,
+    private val swRadioButtonProvider: () -> SWRadioButton
 ) {
 
     var onImportSettings: (() -> Unit)? = null

@@ -6,7 +6,6 @@ import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.keys.IntKey
 import app.aaps.plugins.automation.R
 import com.google.common.truth.Truth.assertThat
-import dev.zacsweers.metro.Provider
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -27,7 +26,7 @@ class ActionRunAutotuneTest : ActionsTestBase() {
     @BeforeEach
     fun setup() {
         whenever(rh.gs(any<TextRef>(), anyVararg())).thenReturn("desc")
-        sut = ActionRunAutotune(aapsLogger, rh, Provider { pumpEnactResultProvider() }, rh, autotunePlugin, profileFunction, activePlugin, preferences)
+        sut = ActionRunAutotune(aapsLogger, rh, { pumpEnactResultProvider() }, rh, autotunePlugin, profileFunction, activePlugin, preferences)
     }
 
     @Test fun friendlyName() {

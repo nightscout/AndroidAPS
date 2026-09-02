@@ -18,7 +18,6 @@ import app.aaps.core.ui.CoreUiStrings
 import app.aaps.ui.UiStrings
 import app.aaps.ui.widget.directionToDrawableRes
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 
 data class BgGraphRenderState(
     val input: BgGraphInput,
@@ -39,7 +38,7 @@ data class BgGraphRenderState(
  * is ready.
  */
 class BgGraphStateLoader @Inject constructor(
-    private val cacheProvider: Provider<OverviewDataCache>,
+    private val cacheProvider: () -> OverviewDataCache,
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
     private val lastBgData: LastBgData,

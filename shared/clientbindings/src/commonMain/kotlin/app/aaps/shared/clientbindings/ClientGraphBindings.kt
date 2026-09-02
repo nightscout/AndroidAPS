@@ -45,7 +45,6 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.IntoMap
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
@@ -129,7 +128,7 @@ object ClientGraphBindings {
      * twice on purpose, once for the live loop and once for a history browser at its own scope, so a
      * `@SingleIn` on the class would hide which one a window is looking at.
      *
-     * The calculator and the cache need each other; [Provider] defers that lookup so the graph
+     * The calculator and the cache need each other; a `() -> T` defers that lookup so the graph
      * accepts what a direct reference would reject as a cycle.
      */
     @Suppress("LongParameterList")
@@ -149,7 +148,7 @@ object ClientGraphBindings {
         decimalFormatter: DecimalFormatter,
         processedTbrEbData: ProcessedTbrEbData,
         signals: CalculationSignalsEmitter,
-        cache: Provider<OverviewDataCache>
+        cache: () -> OverviewDataCache
     ): IobCobCalculatorPlugin = IobCobCalculatorPlugin(
         aapsLogger, rxBus, preferences, rh, profileFunction, activePlugin, dateUtil, persistenceLayer,
         overviewData, calculationWorkflow, decimalFormatter, processedTbrEbData, signals
@@ -163,30 +162,24 @@ object ClientGraphBindings {
     @IntKey(10)
     fun iobCobCalculatorEntry(plugin: IobCobCalculatorPlugin): PluginBase = plugin
 
-    /**
-     * Nightscout sync.
-     *
-     * `NSClientV3Plugin` cannot carry `@ContributesIntoMap`: the annotation processor fails on it,
-     * and `SyncPluginsBindings` in `:app` records why. Key 310 is the position it holds on the phone,
-     * so the plugin list reads the same everywhere.
-     */
-    @Provides
-    @SingleIn(AppScope::class)
-    @IntoMap
-    @IntKey(310)
-    fun nsClientV3Plugin(plugin: NSClientV3Plugin): PluginBase = plugin
-
-    /**
-     * The eleven objectives, in order, and the plugin that reads them.
-     *
-     * `ObjectivesPlugin` carries `@APS` for the plugin-list multibinding, and `@ContributesBinding`
-     * on the class would inherit that qualifier - so the interface would only be readable as
-     * `@APS Objectives`, which is not what a reader asks for.
-     */
+    /** The ten objectives in order, for `ObjectivesPlugin` to read. */
     @Provides
     fun objectivesList(objectives: Map<Int, Objective>): List<Objective> =
         objectives.toList().sortedBy { it.first }.map { it.second }
 
+    /**
+     * The `Objectives` interface, unqualified.
+     *
+     * `ObjectivesPlugin` carries `@APS` on the class for the plugin-list multibinding, and a second
+     * `@ContributesBinding` there would inherit it - the interface would then only be readable as
+     * `@APS Objectives`, which is not what a reader asks for.
+     *
+     * Metro documents the way out: put the qualifier on the bound type instead, `binding<@APS
+     * PluginBase>()`. The version pinned here rejects that form outright -
+     * `Inapplicable candidate(s): constructor(scope: KClass<*>, binding: binding<*> = ...)` - which is
+     * the same wall `SyncPluginsBindings` hits for its qualified entry. So this stays stated, and
+     * hands out the same scoped instance either way. Retry both when Metro leaves the snapshot.
+     */
     @Provides
     fun objectives(plugin: ObjectivesPlugin): Objectives = plugin
 
@@ -223,8 +216,8 @@ object ClientGraphBindings {
     fun calculationExecutor(
         @ApplicationScope scope: CoroutineScope,
         aapsLogger: AAPSLogger,
-        prepare: Provider<PrepareGraphDataRunner>,
-        post: Provider<PostCalculationRunner>
+        prepare: () -> PrepareGraphDataRunner,
+        post: () -> PostCalculationRunner
     ): CalculationExecutor = LazyCalculationExecutor(scope, aapsLogger, { prepare() }, { post() })
 
     /** Bolus progress. Stated rather than annotated, for the same reason as the calculator. */

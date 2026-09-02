@@ -7,7 +7,6 @@ import app.aaps.core.data.model.PS
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputProfileName
 import com.google.common.truth.Truth.assertThat
-import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
@@ -40,7 +39,7 @@ class ActionProfileSwitchTest : ActionsTestBase() {
         // Automation keeps whatever insulin is in force; it never picks one from the catalogue.
         runBlocking { whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(iCfg) }
 
-        sut = ActionProfileSwitch(aapsLogger, rh, Provider { pumpEnactResultProvider() }, profileRepository, profileFunction, dateUtil)
+        sut = ActionProfileSwitch(aapsLogger, rh, { pumpEnactResultProvider() }, profileRepository, profileFunction, dateUtil)
     }
 
     @Test fun friendlyName() = runTest {

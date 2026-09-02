@@ -5,7 +5,6 @@ import app.aaps.core.data.model.Scene
 import app.aaps.core.interfaces.scenes.SceneAutomationResult
 import app.aaps.plugins.automation.R
 import com.google.common.truth.Truth.assertThat
-import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -27,7 +26,7 @@ class ActionEnableSceneTest : ActionsTestBase() {
         whenever(rh.gs(AutomationStrings.action_enable_scene)).thenReturn("Enable scene")
         whenever(rh.gs(AutomationStrings.action_enable_scene_short)).thenReturn("Enable scene: %1\$s")
         whenever(rh.gs(AutomationStrings.action_scene_not_found)).thenReturn("Scene not found")
-        sut = ActionEnableScene(aapsLogger, rh, Provider { pumpEnactResultProvider() }, sceneApi, sceneIconResolver)
+        sut = ActionEnableScene(aapsLogger, rh, { pumpEnactResultProvider() }, sceneApi, sceneIconResolver)
     }
 
     @Test fun friendlyName() = runTest {

@@ -172,6 +172,20 @@ production too, since building the graph should not do file I/O.
 receiver, setting analytics flags, starting a periodic loop - deferring it changes behaviour. Those
 need an explicit `start()` from `MainApp.onCreate()`, which is a real refactor.
 
+**And an explicit `start()` has to be called by three shells, not one.** `MainApp.onCreate()` calls
+several; `desktop/shell/.../Main.kt` and `ios/shell/.../IosAppStartup.kt` call almost none. A missed
+call is silent - the class exists, the screens render, the work never happens. Prefer `by lazy` unless
+the work really is an obligation, and when it is, add the call to all three at the same time.
+
+**The clients make this worse than tests do.** `DesktopAppGraph` and `IosAppGraph` are built
+**eagerly at startup, before any window exists**, so a constructor that opens a file or a socket fails
+at launch there rather than in a test you can re-run. Anything reachable from `ClientGraphBindings`
+gets this treatment on both platforms.
+
+**Constructors must not write.** Two classes still do - `InsulinImpl` (`init { bootstrap() }` can
+`putRemote`) and `ProfileRepositoryImpl`. Building a graph should never author a persisted write, and
+on a paired client `putRemote` is on the sync path, so a graph build can publish a config change.
+
 To confirm this class of failure: `git stash` the change and re-run the same test task. A baseline
 that passes in about a minute against a run that never finishes is unambiguous.
 
@@ -286,11 +300,45 @@ precisely because `LoadBgWorker` reported "Load not enabled" that way, and colla
 Worker tests construct the worker directly, so each needs its argument list wrapped:
 `XxxWorker(appContext, params, aapsLogger, fabricPrivacy, XxxRunner(aapsLogger, ...rest))`.
 
+### `@IntKey` collides with the preference keys
+
+Registering a plugin needs `dev.zacsweers.metro.IntKey`, and any class that also reads preferences
+imports **`app.aaps.core.keys.IntKey`**. Kotlin then refuses both: `Conflicting import: imported name
+'IntKey' is ambiguous`. The fix is an alias, which `LoopPlugin` and `AutotunePlugin` have always used:
+
+```kotlin
+import dev.zacsweers.metro.IntKey as MetroIntKey
+...
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@MetroIntKey(310)
+```
+
+This is worth knowing because the clash has been misdiagnosed before: `SyncPluginsBindings` recorded a
+**Dagger** error (`InjectProcessingStep`, `error.NonExistentClass`) as proof a plugin "cannot" be
+annotated, and that false reason was then copied to another module. Metro has no annotation processor
+and emits no such diagnostic. If a class seems to refuse `@ContributesIntoMap`, read the actual
+compiler error before writing down a reason.
+
+### Two Metro forms this version will not take
+
+Neither is a blocker, but both look like the obvious idiom and both fail:
+
+- **`@Binds` cannot live in an `object`** - "Extension property must have accessors or be abstract".
+  Every binding container here is an `object`, so an alias `@Provides fun x(impl: XImpl): X = impl` is
+  the right form, not a thing to convert.
+- **`binding<@Qualifier Type>()` is rejected** - `Inapplicable candidate(s): constructor(scope:
+  KClass<*>, binding: binding<*> = ...)`. So a **qualified** map entry still needs a stated
+  `@Provides` in a container; only unqualified ones can move onto the class.
+
 ### Other common blockers
 
 `javax.inject` (swap to `dev.zacsweers.metro.Inject` only for a class Metro already builds),
 `@Synchronized`, `org.json`, `java.util.Calendar`, and `System.currentTimeMillis()` - the last is
 just `Clock.System.now().toEpochMilliseconds()`.
+
+`Provider<T>` is deprecated: the compiler says *"Using the desugared `Provider<T>` type is
+discouraged. Prefer the function syntax form `() -> T`."* Write `() -> T` in new code. Call sites are
+identical - `provider()` either way - so only the type and the import change.
 
 ### Lift the platform call out, keep the rule
 

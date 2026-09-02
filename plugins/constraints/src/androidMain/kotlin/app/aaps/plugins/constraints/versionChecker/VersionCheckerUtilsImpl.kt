@@ -21,7 +21,6 @@ import app.aaps.plugins.constraints.versionChecker.keys.VersionCheckerLongKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import kotlinx.serialization.json.JsonObject
 
@@ -31,7 +30,7 @@ class VersionCheckerUtilsImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val rh: ResourceHelper,
-    private val config: Provider<Config>,
+    private val config: () -> Config,
     private val dateUtil: DateUtil,
     private val notificationManager: NotificationManager,
     private val versionDefinition: VersionDefinition

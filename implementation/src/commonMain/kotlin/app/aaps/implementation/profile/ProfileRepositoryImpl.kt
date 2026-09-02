@@ -43,7 +43,6 @@ import app.aaps.core.ui.CoreUiStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import kotlin.concurrent.Volatile
 import kotlinx.coroutines.CoroutineScope
@@ -95,13 +94,13 @@ class ProfileRepositoryImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: TextResolver,
     private val preferences: Preferences,
-    private val profileFunction: Provider<ProfileFunction>,
+    private val profileFunction: () -> ProfileFunction,
     private val profileUtil: ProfileUtil,
     private val activePlugin: ActivePlugin,
     private val hardLimits: HardLimits,
     private val dateUtil: DateUtil,
     private val config: Config,
-    private val profileStoreProvider: Provider<ProfileStore>,
+    private val profileStoreProvider: () -> ProfileStore,
     private val notificationManager: NotificationManager,
     // Hosts the [StringNonKey.LocalProfileData] collector: the repository is a @Singleton that lives
     // as long as the process, so the collector must live that long too.

@@ -105,7 +105,6 @@ import kotlinx.serialization.json.put
 import org.joda.time.DateTime
 import java.util.Locale
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import kotlin.math.max
 import kotlin.math.min
@@ -136,7 +135,7 @@ class ComboV2Plugin @Inject constructor(
     private val dateUtil: DateUtil,
     private val notificationManager: NotificationManager,
     private val config: Config,
-    private val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val pumpEnactResultProvider: () -> PumpEnactResult,
     private val bolusProgressData: BolusProgressData
 ) :
     PumpPluginBase(

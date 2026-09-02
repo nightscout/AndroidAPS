@@ -24,7 +24,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
-import dev.zacsweers.metro.Provider
 
 /**
  * The RFCOMM counterpart to [DanaRsEmulatorUiTest]: drives the **DanaR family UI** against the in-tree

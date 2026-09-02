@@ -30,7 +30,6 @@ import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
-import dev.zacsweers.metro.Provider
 
 /**
  * The eros classes that are still **Java**, constructed by hand.
@@ -53,8 +52,8 @@ object ErosJavaBindings {
         rfSpy: RFSpy,
         activePlugin: ActivePlugin,
         rileyLinkUtil: RileyLinkUtil,
-        wakeAndTuneTask: Provider<WakeAndTuneTask>,
-        radioResponse: Provider<RadioResponse>
+        wakeAndTuneTask: () -> WakeAndTuneTask,
+        radioResponse: () -> RadioResponse
     ): OmnipodRileyLinkCommunicationManager =
         OmnipodRileyLinkCommunicationManager(
             aapsLogger, preferences, rileyLinkServiceData, serviceTaskExecutor,
@@ -76,7 +75,7 @@ object ErosJavaBindings {
         pumpSync: PumpSync,
         uiInteraction: UiInteraction,
         notificationManager: NotificationManager,
-        pumpEnactResultProvider: Provider<PumpEnactResult>,
+        pumpEnactResultProvider: () -> PumpEnactResult,
         ch: ConcentrationHelper,
         bolusProgressData: BolusProgressData
     ): AapsOmnipodErosManager =
