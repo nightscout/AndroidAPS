@@ -55,5 +55,10 @@ kotlin {
                 implementation(libs.metrox.viewmodel)
             }
         }
+        commonTest {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
     }
 }

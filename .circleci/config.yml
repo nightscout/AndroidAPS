@@ -288,9 +288,14 @@ jobs:
             #    up as a Codecov drop the moment :core:keys converted too.
             # The names are unqualified on purpose: Gradle runs them in whichever projects have them,
             # so a module converting later is picked up without editing this file.
+            # `:desktop:shell:test` is the one exception and has to be named. It is a plain
+            # `kotlin("jvm")` module, so its task is called `test` - and an unqualified `test` would
+            # also match the AGP lifecycle task in every Android module and run every variant of
+            # each. Without this line its tests run on no machine at all: they are not in any of the
+            # four names above, and `runtests.sh` does not use them either.
             # Deliberately not `allTests`: that would pull in the Kotlin/Native toolchain for the
             # iOS targets, whose tests cannot run on a Linux box anyway.
-            $GRADLE_PIN ./gradlew --continue -Dorg.gradle.daemon=true -Dorg.gradle.workers.max=8 testFullDebugUnitTest testDebugUnitTest jvmTest testAndroidHostTest
+            $GRADLE_PIN ./gradlew --continue -Dorg.gradle.daemon=true -Dorg.gradle.workers.max=8 testFullDebugUnitTest testDebugUnitTest jvmTest testAndroidHostTest :desktop:shell:test
 
       - run:
           name: Non-app module androidTests (Gradle, emu-5554)
