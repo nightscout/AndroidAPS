@@ -22,7 +22,6 @@ buildscript {
 }
 
 plugins {
-    alias(libs.plugins.klint)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler) apply false
     id(libs.plugins.android.test.get().pluginId) apply false
@@ -53,7 +52,6 @@ allprojects {
         }
     }
 
-    apply(plugin = "org.jlleitschuh.gradle.ktlint")
     apply(plugin = "jacoco")
 }
 

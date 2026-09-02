@@ -55,7 +55,6 @@ android-library = { id = "com.android.library" }
 # which is already on the root buildscript classpath. AGP 9 refuses com.android.library together with
 # the Kotlin multiplatform plugin, so a multiplatform module with an Android target needs this one.
 android-kmp-library = { id = "com.android.kotlin.multiplatform.library" }
-klint = { id = "org.jlleitschuh.gradle.ktlint", version = "14.2.0" }
 ksp = { id = "com.google.devtools.ksp", version = "2.3.10" }
 metro = { id = "dev.zacsweers.metro", version.ref = "metro" }
 android-test = { id = "com.android.test", version.ref = "gradlePlugin" }
