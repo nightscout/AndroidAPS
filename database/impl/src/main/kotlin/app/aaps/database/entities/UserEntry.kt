@@ -207,6 +207,7 @@ data class UserEntry(
         SyaiTag,            //From Syai Tag plugin
         SiBionic,
         Sino,
+        Sibionics,          // From Sibionics plugin
         Instara,            // From Instara plugin
         NotificationReader,
         Scene,              //From Scene activation

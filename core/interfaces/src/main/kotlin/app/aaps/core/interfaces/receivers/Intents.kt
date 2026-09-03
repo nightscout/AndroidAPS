@@ -57,6 +57,9 @@ interface Intents {
         // Patched Syai Tag App -> AAPS
         const val SYAI_APP = "info.nightscout.androidaps.action.SYAI_TAG_APP"
 
+        // Patched Sib App -> AAPS
+        const val SIB_APP = "com.diyaps.sharing.SIBIO_APP"
+
         // Aidex -> AAPS
         const val AIDEX_NEW_BG_ESTIMATE = "com.microtechmd.cgms.aidex.action.BgEstimate"
         const val AIDEX_BG_TYPE = "com.microtechmd.cgms.aidex.BgType"

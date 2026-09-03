@@ -25,6 +25,7 @@ import app.aaps.plugins.source.DexcomInbox
 import app.aaps.plugins.source.GlimpPlugin
 import app.aaps.plugins.source.MM640gPlugin
 import app.aaps.plugins.source.PatchedSiAppPlugin
+import app.aaps.plugins.source.SibionicsPlugin
 import app.aaps.plugins.source.PatchedSinoAppPlugin
 import app.aaps.plugins.source.PoctechPlugin
 import app.aaps.plugins.source.SyaiPlugin
@@ -122,6 +123,15 @@ open class DataReceiver : DaggerBroadcastReceiver() {
             Intents.INSTARA_APP                       ->
                 enqueueInline(
                     InstaraPlugin.InstaraWorker::class.java,
+                    Data.Builder().also {
+                        it.copyString("collection", bundle)
+                        it.copyString("data", bundle)
+                    }.build()
+                )
+
+            Intents.SIB_APP                           ->
+                enqueueInline(
+                    SibionicsPlugin.SibionicsWorker::class.java,
                     Data.Builder().also {
                         it.copyString("collection", bundle)
                         it.copyString("data", bundle)

@@ -29,6 +29,7 @@ enum class SourceSensor(val text: String) {
     MM_SIMPLERA("Simplera"),
     OTTAI("Ottai"),
     SIBIONIC("SI App"),
+    SIBIONICS("Sibionics"),
     SINO("Sino App"),
     EVERSENSE("Eversense"),
     AIDEX("GlucoRx Aidex"),

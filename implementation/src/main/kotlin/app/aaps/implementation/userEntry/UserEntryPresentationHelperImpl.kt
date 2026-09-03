@@ -166,6 +166,7 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         Sources.SensorInsert        -> IcCgmInsert
         Sources.SettingsExport      -> Icons.Default.FileUpload
         Sources.SiBionic            -> IcGenericCgm
+        Sources.Sibionics           -> IcGenericCgm
         Sources.Sino                -> IcGenericCgm
         Sources.SiteRotationDialog  -> IcSiteRotation
         Sources.Stats               -> IcStats
@@ -253,6 +254,7 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         Sources.SensorInsert        -> ElementType.SENSOR_INSERT.color()
         Sources.SettingsExport      -> ElementType.AAPS.color()
         Sources.SiBionic            -> ElementType.CGM_DEX.color()
+        Sources.Sibionics           -> ElementType.CGM_DEX.color()
         Sources.Sino                -> ElementType.CGM_DEX.color()
         Sources.SiteRotationDialog  -> ElementType.SITE_ROTATION.color()
         Sources.Stats               -> ElementType.STATISTICS.color()

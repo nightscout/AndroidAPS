@@ -34,6 +34,9 @@
     <!-- Patched Sino App -->
     <string name="patched_sino_app">Sino App</string>
     <string name="description_source_patched_sino_app">從修改版 Sino App 接收血糖資料。</string>
+    <!-- SIB App -->
+    <string name="sibionics">硅基（Sibionics）</string>
+    <string name="description_source_sibionics">接收來自硅基（Sibionic）應用的血糖值</string>
     <!-- Instara App -->
     <string name="instara_app">Instara</string>
     <string name="description_source_instara_app">從 Instara App 接收血糖數值。</string>

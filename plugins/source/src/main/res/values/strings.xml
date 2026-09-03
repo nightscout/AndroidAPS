@@ -35,6 +35,9 @@
     <!-- Patched Sino App -->
     <string name="patched_sino_app">Sino App</string>
     <string name="description_source_patched_sino_app">Receive glucose data from Patched Sino App.</string>
+    <!-- Patched SIB App -->
+    <string name="sibionics">Sibionics</string>
+    <string name="description_source_sibionics">Receive values from Sibionics App</string>
 
     <!-- Instara App -->
     <string name="instara_app">Instara</string>

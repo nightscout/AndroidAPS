@@ -119,6 +119,8 @@
                 <!-- Receiver from Instara App -->
                 <!-- NOTE: The action name for Instara App is still called Teljane -->
                 <action android:name="info.nightscout.androidaps.action.Teljane_APP" />
+                <!-- Receiver from patched SIB App -->
+                <action android:name="com.diyaps.sharing.SIBIO_APP" />
             </intent-filter>
         </receiver>
 

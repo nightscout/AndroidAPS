@@ -47,6 +47,7 @@ fun UserEntry.Sources.fromDb(): Sources =
         UserEntry.Sources.SyaiTag             -> Sources.SyaiTag
         UserEntry.Sources.SiBionic            -> Sources.SiBionic
         UserEntry.Sources.Sino                -> Sources.Sino
+        UserEntry.Sources.Sibionics           -> Sources.Sibionics
         UserEntry.Sources.Instara             -> Sources.Instara
         UserEntry.Sources.NotificationReader  -> Sources.NotificationReader
         UserEntry.Sources.LocalProfile        -> Sources.LocalProfile
@@ -133,6 +134,7 @@ fun Sources.toDb(): UserEntry.Sources =
         Sources.SyaiTag             -> UserEntry.Sources.SyaiTag
         Sources.SiBionic            -> UserEntry.Sources.SiBionic
         Sources.Sino                -> UserEntry.Sources.Sino
+        Sources.Sibionics           -> UserEntry.Sources.Sibionics
         Sources.Instara             -> UserEntry.Sources.Instara
         Sources.NotificationReader  -> UserEntry.Sources.NotificationReader
         Sources.LocalProfile        -> UserEntry.Sources.LocalProfile
