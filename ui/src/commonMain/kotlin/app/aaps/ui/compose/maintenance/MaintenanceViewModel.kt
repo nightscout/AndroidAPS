@@ -239,10 +239,6 @@ class MaintenanceViewModel @Inject constructor(
         }
     }
 
-    fun logImportSettings() {
-        uel.log(Action.IMPORT_SETTINGS, Sources.Maintenance)
-    }
-
     fun exportCsv() {
         uel.log(Action.EXPORT_CSV, Sources.Maintenance)
         viewModelScope.launch {

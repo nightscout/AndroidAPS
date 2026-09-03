@@ -57,6 +57,7 @@ import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.ImportSummaryItem
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
+import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.stringResource
 
@@ -141,11 +142,40 @@ fun ImportSettingsScreen(
             }
         }
 
-        is ImportStep.ApplyConfirm -> {
+        is ImportStep.ApplyConfirm   -> {
             OkDialog(
                 title = stringResource(CoreUiStrings.import_apply_title),
                 message = stringResource(CoreUiStrings.import_apply_message),
                 onDismiss = { viewModel.onApplyConfirmed() }
+            )
+        }
+
+        is ImportStep.Applied        -> {
+            // Closes the screen on dismiss. The import is over at this point, and the step underneath
+            // is Idle, which draws a spinner that nothing would ever take down.
+            OkDialog(
+                title = stringResource(CoreUiStrings.import_applied_title),
+                message = stringResource(CoreUiStrings.import_applied_message),
+                onDismiss = {
+                    viewModel.finishApply()
+                    onClose()
+                }
+            )
+        }
+
+        is ImportStep.ApplyFailed    -> {
+            // Offered as a retry rather than a plain error: the settings are already written, so the
+            // app is running the old plugin configuration until this succeeds. Dismissing leaves them
+            // to be applied on the next app start.
+            OkCancelDialog(
+                title = stringResource(CoreUiStrings.import_apply_title),
+                message = currentStep.message,
+                secondMessage = stringResource(CoreUiStrings.import_apply_retry_question),
+                onConfirm = { viewModel.retryApply() },
+                onDismiss = {
+                    viewModel.finishApply()
+                    onClose()
+                }
             )
         }
 

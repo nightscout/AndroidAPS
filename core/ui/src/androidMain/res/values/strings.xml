@@ -1091,7 +1091,11 @@
     <string name="import_apply_title">Settings imported</string>
     <string name="import_apply_message">The imported settings will now be applied. Plugins that changed will be restarted.</string>
     <string name="import_apply_waiting">Waiting for pump…</string>
-    <string name="import_apply_pump_busy">The pump is still busy, so the settings were not applied. Try again when the pump is idle.</string>
+    <string name="import_apply_pump_busy">The pump is still busy, so the settings were not applied.</string>
+    <string name="import_apply_retry_question">Try again now?</string>
+    <string name="import_applied_title">Settings applied</string>
+    <string name="import_applied_message">The imported settings are now in use.</string>
+    <string name="import_apply_pump_changed">Cancelled: the pump was changed by the settings import</string>
     <string name="import_source_local">Local</string>
     <string name="import_source_cloud">Cloud</string>
     <string name="import_load_more">Load more</string>

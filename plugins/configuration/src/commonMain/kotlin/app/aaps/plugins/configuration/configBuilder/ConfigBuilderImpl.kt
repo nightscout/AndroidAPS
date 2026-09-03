@@ -42,7 +42,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
+import kotlin.time.Duration.Companion.seconds
 
 // Scoped, so every caller shares one config builder.
 @ContributesBinding(AppScope::class)
@@ -70,6 +73,27 @@ class ConfigBuilderImpl @Inject constructor(
         // driven by the master's push and by the client's own gated switches (both already non-clobbering).
         if (!config.AAPSCLIENT) regenerateActivePluginKeys()
         startActivePluginObservers()   // adopt sync-driven selection changes (master↔client)
+    }
+
+    override suspend fun applyConfiguration() {
+        // Same three steps as initialize(), but the plugin jobs are collected and waited for.
+        val started = loadSettings() + setAlwaysEnabledPluginsEnabled()
+        if (!config.AAPSCLIENT) regenerateActivePluginKeys()
+        startActivePluginObservers()
+        // Bounded, because a plugin's onStop/onStart may itself wait on something - a pump driver
+        // disconnecting, for one - and the caller of this holds the command queue while it runs. A
+        // plugin that will not settle must not take the queue down with it; the timeout logs and
+        // moves on, leaving that plugin to finish in its own time.
+        val settled = withTimeoutOrNull(PLUGIN_SETTLE_WAIT) { started.joinAll() }
+        if (settled == null)
+            aapsLogger.warn(LTag.CONFIGBUILDER, "Plugins did not settle within $PLUGIN_SETTLE_WAIT after applying configuration")
+        // Tell the app the selection changed. `initialize` has no need to - nothing is on screen yet -
+        // but this runs on a live app, and without it the change is invisible: every screen holding the
+        // old active plugin keeps drawing it. Importing a file that selects a different pump left the
+        // whole UI still showing the previous one, which is what `performPluginSwitch` emits these for.
+        rxBus.send(EventConfigBuilderChange())
+        _activeSelectionChanges.tryEmit(Unit)
+        logPluginStatus()
     }
 
     // ---- Active-plugin selection as synced keys (PR2: dual-write; the bespoke RunningConfiguration fields
@@ -116,10 +140,18 @@ class ConfigBuilderImpl @Inject constructor(
      *  master must adopt client→master pushes (Bidirectional); a client-only gate is the known automation
      *  regression. Echo is broken by `!isEnabled`: a self-write always names the currently-enabled plugin, so
      *  it self-skips; only a genuinely different (remote) selection switches (setPluginEnabled does the lifecycle). */
+    // Cancelled and relaunched on every call, so this is idempotent. It has to be: `applyConfiguration`
+    // runs it again on a live app, and a second collector per key would mean every later selection
+    // change - including one pushed by the master - ran performPluginSwitch twice, silently, once more
+    // for each import the user had done in that session.
+    private val activePluginObservers = mutableListOf<Job>()
+
     private fun startActivePluginObservers() {
+        activePluginObservers.forEach { it.cancel() }
+        activePluginObservers.clear()
         syncedSelectionTypes.forEach { type ->
             val key = activePluginKey(type) ?: return@forEach
-            scope.launch {
+            activePluginObservers += scope.launch {
                 preferences.observe(key).drop(1).collect { incoming ->
                     if (incoming.isEmpty()) return@collect
                     val plugin = activePlugin.getSpecificPluginsList(type).firstOrNull { it.pluginId == incoming } ?: return@collect
@@ -129,11 +161,11 @@ class ConfigBuilderImpl @Inject constructor(
         }
     }
 
-    private fun setAlwaysEnabledPluginsEnabled() {
-        for (plugin in activePlugin.getPluginsList()) {
-            if (plugin.pluginDescription.alwaysEnabled) plugin.setPluginEnabled(plugin.getType(), true)
+    /** Returns the start jobs, for a caller that has to wait for them (see [applyConfiguration]). */
+    private fun setAlwaysEnabledPluginsEnabled(): List<Job> =
+        activePlugin.getPluginsList().mapNotNull { plugin ->
+            if (plugin.pluginDescription.alwaysEnabled) plugin.setPluginEnabled(plugin.getType(), true) else null
         }
-    }
 
     override fun storeSettings(from: String) {
         aapsLogger.debug(LTag.CONFIGBUILDER, "Storing settings from: $from")
@@ -151,23 +183,23 @@ class ConfigBuilderImpl @Inject constructor(
         aapsLogger.debug(LTag.CONFIGBUILDER, "Storing: " + BooleanComposedKey.ConfigBuilderEnabled.composeKey(composed) + ":" + p.isEnabled())
     }
 
-    private fun loadSettings() {
+    /** Returns the start/stop jobs, for a caller that has to wait for them (see [applyConfiguration]). */
+    private fun loadSettings(): List<Job> {
         aapsLogger.debug(LTag.CONFIGBUILDER, "Loading stored settings")
-        for (p in activePlugin.getPluginsList()) {
-            val type = p.getType()
-            loadPref(p, type)
-        }
+        val jobs = activePlugin.getPluginsList().mapNotNull { p -> loadPref(p, p.getType()) }
         activePlugin.verifySelectionInCategories()
+        return jobs
     }
 
-    private fun loadPref(p: PluginBase, type: PluginType) {
+    private fun loadPref(p: PluginBase, type: PluginType): Job? {
         val composed = composedKeyFor(p, type)
         val existing = preferences.getIfExists(BooleanComposedKey.ConfigBuilderEnabled, composed)
-        if (existing != null) p.setPluginEnabled(type, existing)
-        else if (p.getType() == type && (p.pluginDescription.enableByDefault || p.pluginDescription.alwaysEnabled)) {
-            p.setPluginEnabled(type, true)
-        }
+        val job =
+            if (existing != null) p.setPluginEnabled(type, existing)
+            else if (p.getType() == type && (p.pluginDescription.enableByDefault || p.pluginDescription.alwaysEnabled)) p.setPluginEnabled(type, true)
+            else null
         aapsLogger.debug(LTag.CONFIGBUILDER, "Loaded: " + BooleanComposedKey.ConfigBuilderEnabled.composeKey(composed) + ":" + p.isEnabled(type))
+        return job
     }
 
     private fun logPluginStatus() {
@@ -307,4 +339,10 @@ class ConfigBuilderImpl @Inject constructor(
      */
     private fun composedKeyFor(p: PluginBase, type: PluginType): String =
         type.name + "_" + (p::class.simpleName ?: "")
+
+    private companion object {
+
+        /** How long [applyConfiguration] waits for plugins to start and stop before giving up on them. */
+        val PLUGIN_SETTLE_WAIT = 30.seconds
+    }
 }

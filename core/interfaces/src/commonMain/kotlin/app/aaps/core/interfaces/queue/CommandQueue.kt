@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import kotlin.reflect.KClass
+import kotlin.time.Duration
 
 /**
  * **Deadlock warning** — the queue is processed by a single app-owned `CommandExecutor` loop; one
@@ -31,6 +32,27 @@ interface CommandQueue {
 
     fun isRunning(type: Command.CommandType): Boolean
     fun pickup()
+
+    /** True while a [withHold] block is running. The executor asks this before it picks up a command. */
+    fun isHeld(): Boolean
+
+    /**
+     * Runs [block] with the queue held: nothing new is picked up until it returns.
+     *
+     * Waits up to [timeout] for the command already in flight to finish first, and returns false
+     * without running [block] if it does not. Commands waiting in the queue are kept, not cancelled -
+     * they run as soon as the hold ends.
+     *
+     * This exists for applying imported settings, which stops and starts pump drivers. Sampling
+     * [size] and [performing] and then applying is not enough on its own: the loop or an automation
+     * can enqueue between the check and the teardown, and that command would start against a driver
+     * that is being pulled out from under it.
+     *
+     * The hold is always released, including when [block] throws. Do not call this from inside a
+     * queued command's `execute()` - see the deadlock warning on this interface.
+     */
+    suspend fun withHold(reason: String, timeout: Duration, block: suspend () -> Unit): Boolean
+
     fun clear()
     // TextRef, not an @StringRes Int: this interface is commonMain, and a resource id here would pin
     // every implementation and every caller to Android. `comment` already has a TextRef overload.

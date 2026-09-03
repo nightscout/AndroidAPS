@@ -76,9 +76,12 @@ import dev.zacsweers.metro.Inject
 import kotlin.concurrent.Volatile
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withTimeoutOrNull
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.concurrent.AapsLock
@@ -88,6 +91,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
 import kotlin.reflect.KClass
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
 @OpenForTesting
@@ -330,6 +334,47 @@ class CommandQueueImplementation @Inject constructor(
             queueLock.withLock { performing = queue.removeFirstOrNull() }
         }
     }
+
+    // Read by the executor loop on its own thread, written by whoever is holding, so @Volatile. Not
+    // one of the AapsLocks: the executor must be able to ask this without ever waiting on the holder,
+    // which by definition is busy for as long as the hold lasts.
+    @Volatile private var held = false
+
+    // One holder at a time. A second caller waits rather than releasing the first one's hold early.
+    private val holdMutex = Mutex()
+
+    /** How often [withHold] re-checks whether the command in flight has finished. */
+    @Suppress("PrivatePropertyName")
+    private val HOLD_POLL = 100.milliseconds
+
+    override fun isHeld(): Boolean = held
+
+    override suspend fun withHold(reason: String, timeout: Duration, block: suspend () -> Unit): Boolean =
+        holdMutex.withLock {
+            aapsLogger.debug(LTag.PUMPQUEUE, "Holding queue: $reason")
+            held = true
+            try {
+                // The flag goes up BEFORE the wait, which is the whole point: from here nothing new
+                // starts, so waiting for `performing` to clear actually reaches an idle pump instead of
+                // racing the next command onto it. Only the command in flight is waited for - the ones
+                // behind it stay queued and run after the hold, so no user command is lost.
+                val idle = withTimeoutOrNull(timeout) {
+                    while (performing != null) delay(HOLD_POLL)
+                }
+                if (idle == null) {
+                    aapsLogger.warn(LTag.PUMPQUEUE, "Queue busy after $timeout, not holding: $reason")
+                    return@withLock false
+                }
+                block()
+                true
+            } finally {
+                held = false
+                aapsLogger.debug(LTag.PUMPQUEUE, "Released queue: $reason")
+                // Wake the executor: it may have gone to sleep while the hold was up, and anything that
+                // was enqueued during the hold still needs draining.
+                notifyAboutNewCommand()
+            }
+        }
 
     override fun clear() = instanceLock.withLock {
         performing = null

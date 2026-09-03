@@ -104,8 +104,14 @@ interface ImportExportPrefs {
     /** Write the decrypted prefs to SharedPreferences and call plugin hooks. */
     fun executeImport(prefs: Prefs)
 
-    /** Send events needed before app restart after import. */
-    fun prepareImportRestart()
+    /**
+     * Tidy up after [executeImport], before the imported settings are applied.
+     *
+     * Was `prepareImportRestart`, from when an import ended by killing the process. It does not
+     * prepare a restart and there is no longer one to prepare - the work itself (dropping pump log
+     * state that belongs to the old settings, marking the setup wizard done) is still needed.
+     */
+    fun prepareImportedSettings()
 }
 
 /** Result of attempting to decrypt a preference file for import. */

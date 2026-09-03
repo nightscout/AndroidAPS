@@ -27,10 +27,15 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import kotlinx.coroutines.test.advanceTimeBy
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.mockito.kotlin.any
+import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -66,10 +71,16 @@ internal class ImportViewModelTest {
         whenever(pump.serialNumber()).thenReturn("sn")
         whenever(pump.pumpDescription).thenReturn(PumpDescription())
         whenever(iobCobCalculator.ads).thenReturn(ads)
+        // The steps carry resolved text, and an unstubbed mock hands back null into a non-null
+        // parameter. Tests that care about the wording stub their own ref over the top of this.
+        whenever(rh.gs(any<TextRef>())).thenReturn("")
         sut = ImportViewModel(
             aapsLogger, importExportPrefs, prefFileList, configBuilder, rh, uel,
             commandQueue, pumpSync, activePlugin, overviewDataCache, iobCobCalculator
         )
+        // Production hands the apply to the IO dispatcher, which a test cannot advance or observe.
+        // Unconfined runs it inline instead, so `advanceUntilIdle` really does mean "the apply is done".
+        sut.applyDispatcher = Dispatchers.Unconfined
     }
 
     @AfterEach
@@ -137,27 +148,68 @@ internal class ImportViewModelTest {
         assertThat(sut.importStep.value).isEqualTo(ImportStep.Idle)
     }
 
+    // ---- Applying the imported settings ----
+
+    /**
+     * Stands in for the real queue's `withHold`: runs the block when the hold is granted, skips it
+     * when it is not. The production version is what actually stops a command starting mid-apply;
+     * here it only has to reproduce the two outcomes the view model branches on.
+     */
+    private suspend fun queueGrantsHold(granted: Boolean) {
+        whenever(commandQueue.withHold(any(), any(), any())).thenAnswer { invocation ->
+            @Suppress("UNCHECKED_CAST")
+            val block = invocation.getArgument<suspend () -> Unit>(2)
+            if (granted) runBlocking { block() }
+            granted
+        }
+    }
+
     /**
      * Import used to end by killing the process, which guaranteed the new settings were in force.
      * Applying in place is the only ending iOS can have, so these pin what "applied" now means.
      */
     @Test
     fun `applying re-reads the plugin configuration`() = runTest(testDispatcher) {
-        whenever(commandQueue.size()).thenReturn(0)
-        whenever(commandQueue.performing()).thenReturn(null)
+        queueGrantsHold(true)
 
         sut.onApplyConfirmed()
         advanceUntilIdle()
 
-        verify(configBuilder).initialize()
-        assertThat(sut.importStep.value).isEqualTo(ImportStep.Idle)
+        // applyConfiguration, not initialize: this one returns only once the plugins it starts and
+        // stops have finished, which is the point of having waited for an idle pump.
+        verify(configBuilder).applyConfiguration()
+        verify(configBuilder, never()).initialize()
+    }
+
+    /**
+     * The success ending has to be its own step. It used to fall back to Idle, which the screen draws
+     * as a spinner that nothing ever takes down - so a finished import looked like a hung one.
+     */
+    @Test
+    fun `applying ends on the applied step, not back on the spinner`() = runTest(testDispatcher) {
+        queueGrantsHold(true)
+
+        sut.onApplyConfirmed()
+        advanceUntilIdle()
+
+        assertThat(sut.importStep.value).isEqualTo(ImportStep.Applied)
+    }
+
+    /** One audit entry per import, written when it is applied - not when the picker is opened. */
+    @Test
+    fun `applying writes one audit entry`() = runTest(testDispatcher) {
+        queueGrantsHold(true)
+
+        sut.onApplyConfirmed()
+        advanceUntilIdle()
+
+        verify(uel).log(Action.IMPORT_SETTINGS, Sources.Maintenance)
     }
 
     /** The caches meant something under the old profile and targets; they cannot survive an import. */
     @Test
     fun `applying resets the calculation caches`() = runTest(testDispatcher) {
-        whenever(commandQueue.size()).thenReturn(0)
-        whenever(commandQueue.performing()).thenReturn(null)
+        queueGrantsHold(true)
 
         sut.onApplyConfirmed()
         advanceUntilIdle()
@@ -168,14 +220,48 @@ internal class ImportViewModelTest {
     }
 
     /**
+     * Device-found: emptying the overview cache is only half the job.
+     *
+     * `reset()` nulls the chip flows, and the database-backed ones stay null until something happens
+     * to refresh each of them - for the profile that is the next ProfileSwitch, possibly hours off.
+     * The overview showed "NO PROFILE SET" in large letters while the loop was running on that very
+     * profile without trouble. The restart used to rebuild all of this on the way back up.
+     */
+    @Test
+    fun `applying reloads the overview cache it just emptied`() = runTest(testDispatcher) {
+        queueGrantsHold(true)
+
+        sut.onApplyConfirmed()
+        advanceUntilIdle()
+
+        verify(overviewDataCache).refreshProfile()
+        verify(overviewDataCache).refreshTempTarget()
+        verify(overviewDataCache).refreshRunningMode()
+        verify(overviewDataCache).refreshTbr()
+    }
+
+    /** ...and in that order: emptied first, then filled, never the other way round. */
+    @Test
+    fun `the overview cache is reloaded after it is reset`() = runTest(testDispatcher) {
+        queueGrantsHold(true)
+
+        sut.onApplyConfirmed()
+        advanceUntilIdle()
+
+        inOrder(overviewDataCache) {
+            verify(overviewDataCache).reset()
+            verify(overviewDataCache).refreshProfile()
+        }
+    }
+
+    /**
      * The pump layer is asked from what is actually registered rather than from the imported
      * preferences. An unchanged pump must keep its running temporary basal, which `connectNewPump`
      * would end.
      */
     @Test
     fun `an unchanged pump is not reconnected`() = runTest(testDispatcher) {
-        whenever(commandQueue.size()).thenReturn(0)
-        whenever(commandQueue.performing()).thenReturn(null)
+        queueGrantsHold(true)
         whenever(pumpSync.verifyPumpIdentification(any(), any())).thenReturn(true)
 
         sut.onApplyConfirmed()
@@ -184,10 +270,21 @@ internal class ImportViewModelTest {
         verify(pumpSync, never()).connectNewPump()
     }
 
+    /** ...and its queued commands are still for it, so they must survive the apply. */
+    @Test
+    fun `an unchanged pump keeps its queued commands`() = runTest(testDispatcher) {
+        queueGrantsHold(true)
+        whenever(pumpSync.verifyPumpIdentification(any(), any())).thenReturn(true)
+
+        sut.onApplyConfirmed()
+        advanceUntilIdle()
+
+        verify(commandQueue, never()).completeAllAsNoOp(any())
+    }
+
     @Test
     fun `a pump that no longer matches is reconnected`() = runTest(testDispatcher) {
-        whenever(commandQueue.size()).thenReturn(0)
-        whenever(commandQueue.performing()).thenReturn(null)
+        queueGrantsHold(true)
         whenever(pumpSync.verifyPumpIdentification(any(), any())).thenReturn(false)
 
         sut.onApplyConfirmed()
@@ -197,18 +294,94 @@ internal class ImportViewModelTest {
     }
 
     /**
-     * The regression this whole ordering exists for: nothing may be applied while the pump is mid
-     * command, because applying can stop and start the pump driver.
+     * The worst outcome available here: a command queued for the pump that was active a moment ago
+     * running against the different one the import selected. They are completed as a no-op instead,
+     * so whoever is waiting on one is told it did not happen.
      */
     @Test
-    fun `a busy pump is waited for before anything is applied`() = runTest(testDispatcher) {
-        whenever(commandQueue.size()).thenReturn(1, 1, 0)
-        whenever(commandQueue.performing()).thenReturn(null)
+    fun `commands queued for the old pump are cancelled when the pump changes`() = runTest(testDispatcher) {
+        queueGrantsHold(true)
+        whenever(pumpSync.verifyPumpIdentification(any(), any())).thenReturn(false)
 
         sut.onApplyConfirmed()
-        advanceTimeBy(100)
+        advanceUntilIdle()
 
-        assertThat(sut.importStep.value).isEqualTo(ImportStep.WaitingForPump)
-        verify(configBuilder, never()).initialize()
+        verify(commandQueue).completeAllAsNoOp(any())
+    }
+
+    /**
+     * The regression this whole ordering exists for: nothing may be applied while the pump is mid
+     * command, because applying can stop and start the pump driver. The wait itself now lives in
+     * `withHold` - what matters here is that a refused hold applies nothing at all.
+     */
+    @Test
+    fun `a pump that stays busy applies nothing`() = runTest(testDispatcher) {
+        queueGrantsHold(false)
+
+        sut.onApplyConfirmed()
+        advanceUntilIdle()
+
+        verify(configBuilder, never()).applyConfiguration()
+        verify(pumpSync, never()).connectNewPump()
+        verify(overviewDataCache, never()).reset()
+    }
+
+    /** ...and says so in a way the user can act on, rather than a dead end. */
+    @Test
+    fun `a pump that stays busy ends on a retryable step`() = runTest(testDispatcher) {
+        queueGrantsHold(false)
+        whenever(rh.gs(CoreUiStrings.import_apply_pump_busy)).thenReturn("busy")
+
+        sut.onApplyConfirmed()
+        advanceUntilIdle()
+
+        assertThat(sut.importStep.value).isEqualTo(ImportStep.ApplyFailed("busy"))
+    }
+
+    /**
+     * The settings are already written by this point, so a failed apply must not be the end of it.
+     * Before, the busy message closed the screen and left the app running the old configuration with
+     * no way back to it short of restarting the process - which iOS may never do.
+     */
+    @Test
+    fun `retrying after a busy pump applies the settings`() = runTest(testDispatcher) {
+        queueGrantsHold(false)
+        sut.onApplyConfirmed()
+        advanceUntilIdle()
+
+        queueGrantsHold(true)
+        sut.retryApply()
+        advanceUntilIdle()
+
+        verify(configBuilder).applyConfiguration()
+        assertThat(sut.importStep.value).isEqualTo(ImportStep.Applied)
+    }
+
+    /**
+     * A plugin that throws on the way up or down must not take the app with it. The settings are
+     * already written by this point, so a crash here would bring the app back with them half applied
+     * and no screen left to finish the job.
+     */
+    @Test
+    fun `a plugin that throws while applying ends on a retryable step`() = runTest(testDispatcher) {
+        queueGrantsHold(true)
+        whenever(configBuilder.applyConfiguration()).thenThrow(IllegalStateException("plugin blew up"))
+
+        sut.onApplyConfirmed()
+        advanceUntilIdle()
+
+        assertThat(sut.importStep.value).isEqualTo(ImportStep.ApplyFailed("plugin blew up"))
+    }
+
+    /** Only after the user has seen the outcome does the screen go back to Idle and close. */
+    @Test
+    fun `finishing the apply returns to Idle`() = runTest(testDispatcher) {
+        queueGrantsHold(true)
+        sut.onApplyConfirmed()
+        advanceUntilIdle()
+
+        sut.finishApply()
+
+        assertThat(sut.importStep.value).isEqualTo(ImportStep.Idle)
     }
 }
