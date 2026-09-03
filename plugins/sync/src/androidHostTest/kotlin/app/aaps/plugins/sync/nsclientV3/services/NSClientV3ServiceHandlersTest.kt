@@ -7,6 +7,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.LongComposedKey
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
+import app.aaps.plugins.sync.nsclientV3.SettingsIdentifiers
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlPublisher
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.OrphanDetector
 import app.aaps.plugins.sync.nsclientV3.compose.NSClientRepositoryImpl
@@ -175,6 +176,58 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
         sut.onDataCreateUpdate(envelope("settings", doc))
 
         verify(nsClientV3Plugin, never()).handleClientControlSettingsEvent(any(), any())
+    }
+
+    // The four below have twins in SocketNsConnectionSettingsRoutingTest and
+    // SocketNsConnectionHandlersTest. They were missing here, which is how the two routings were
+    // able to drift: a case covered on one side only proves nothing about the other.
+
+    /** The live bolus-progress mirror shares the ACK's ordering rule for the same reason. */
+    @Test
+    fun `client routes a progress document to the progress handler`() = runTest {
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        val identifier = ClientControlPublisher.IDENTIFIER_PROGRESS_PREFIX + "p1"
+        val doc = """{"identifier":"$identifier","srvModified":1000}"""
+
+        sut.onDataCreateUpdate(envelope("settings", doc))
+
+        verify(nsClientV3Plugin).handleClientControlProgressEvent(any())
+        verify(nsClientV3Plugin, never()).handleClientControlSettingsEvent(any(), any())
+    }
+
+    /** A cold config doc is applied and feeds the master-liveness clock. */
+    @Test
+    fun `client applies a cold config document`() = runTest {
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        val doc = """{"identifier":"${SettingsIdentifiers.COLD}","srvModified":1000,"runningConfig":{"version":"1.0"}}"""
+
+        sut.onDataCreateUpdate(envelope("settings", doc))
+
+        verify(runningConfiguration).applyCold(any())
+        verify(nsClientV3Plugin).bumpMasterSignal(1000L)
+        verify(orphanDetector).onSettingsDoc(any(), eq(1000L))
+    }
+
+    /** The hot doc goes to applyHot, never applyCold - applyCold would clear a running scene. */
+    @Test
+    fun `client applies a hot state document without touching the cold path`() = runTest {
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        val doc = """{"identifier":"${SettingsIdentifiers.STATE}","srvModified":2000,"runningConfig":{"version":"1.0"}}"""
+
+        sut.onDataCreateUpdate(envelope("settings", doc))
+
+        verify(runningConfiguration).applyHot(any())
+        verify(runningConfiguration, never()).applyCold(any())
+        verify(nsClientV3Plugin).bumpMasterSignal(2000L)
+    }
+
+    @Test
+    fun `profile document is processed without full sync`() = runTest {
+        val doc = """{"identifier":"p1","srvModified":1000,"defaultProfile":"x","store":{}}"""
+
+        sut.onDataCreateUpdate(envelope("profile", doc))
+
+        verify(nsIncomingDataProcessor).processProfile(any(), eq(false))
     }
 
     // ------------------------------------------------------------------------- delete
