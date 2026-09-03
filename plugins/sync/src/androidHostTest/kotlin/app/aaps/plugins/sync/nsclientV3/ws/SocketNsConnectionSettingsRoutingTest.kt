@@ -64,6 +64,7 @@ class SocketNsConnectionSettingsRoutingTest : TestBaseWithProfile() {
             nsClientRepository = NSClientRepositoryImpl(rxBus, aapsLogger),
             nsDeviceStatusHandler = nsDeviceStatusHandler,
             nsSocketFactory = nsSocketFactory,
+            dateUtil = dateUtil,
             // Unconfined: the client-control branches hand off with appScope.launch, and the test
             // needs that to have run by the time it verifies.
             appScope = CoroutineScope(Dispatchers.Unconfined)

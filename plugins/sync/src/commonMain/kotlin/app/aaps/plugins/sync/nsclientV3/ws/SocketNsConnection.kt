@@ -10,7 +10,9 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.NSAlarm
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
@@ -114,6 +116,7 @@ class SocketNsConnection @Inject constructor(
     private val nsClientRepository: NSClientRepository,
     private val nsDeviceStatusHandler: NSDeviceStatusHandler,
     private val nsSocketFactory: NsSocketFactory,
+    private val dateUtil: DateUtil,
     private val appScope: CoroutineScope
 ) : NsConnection {
 
@@ -368,7 +371,14 @@ class SocketNsConnection @Inject constructor(
     internal fun onAlarm(raw: String, gate: BooleanKey) {
         val data = parse(raw) ?: return
         nsClientRepository.addLog("◄ ALARM", data.str("title") ?: "")
-        if (preferences.get(gate)) post(NSAlarmObject(data))
+        if (!preferences.get(gate)) return
+        // The per-level snooze, as on Android. Without it an alarm the user had explicitly silenced
+        // came back on the next push, which is worse than not showing it at all: an alarm that
+        // ignores its own snooze teaches people to ignore the alarm. The key is composed with the
+        // level, so snoozing a warning does not silence an urgent one. A missing key reads as 0,
+        // which means never snoozed. Announcements have no snooze here, matching Android.
+        val snoozedTo = preferences.get(LongComposedKey.NotificationSnoozedTo, data.str("level") ?: "")
+        if (snoozedTo == 0L || dateUtil.now() > snoozedTo) post(NSAlarmObject(data))
     }
 
     internal fun onClearAlarm(raw: String) {
