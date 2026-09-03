@@ -4,16 +4,19 @@ import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.MAIN_CALC
 import app.aaps.core.objects.workflow.WorkOutcome
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
-import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.mock
 import kotlin.time.Duration.Companion.seconds
 
@@ -38,10 +41,14 @@ class CoroutineCalculationExecutorTest : TestBase() {
     /** The `isStopped` handed to each run, in start order. */
     private val checks = mutableListOf<() -> Boolean>()
 
+    /** What the prepare phase does. Replaced by tests that need a run which does not finish at once. */
+    private var prepareBody: suspend () -> Unit = {}
+
     private val prepare = mock<PrepareGraphDataRunner> {
-        onBlocking { run(anyOrNull(), any(), any()) } doAnswer { invocation ->
+        onBlocking { run(anyOrNull(), any(), any()) } doSuspendableAnswer { invocation ->
             @Suppress("UNCHECKED_CAST")
             checks.add(invocation.arguments[2] as () -> Boolean)
+            prepareBody()
             WorkOutcome.Success
         }
     }
@@ -110,5 +117,81 @@ class CoroutineCalculationExecutorTest : TestBase() {
         assertThat(checks[0]()).isTrue()
         assertThat(checks[1]()).isTrue()
         assertThat(checks[2]()).isFalse()
+    }
+
+    /**
+     * `stop` has to take the prepare phase down too, and wait for it.
+     *
+     * The prepare half is a sibling on the executor's scope, not a child of the job in `runs`, so
+     * cancelling and joining that one alone left prepare running and still reported "stopped". The
+     * caller this matters to is `IobCobCalculatorPlugin.newHistoryData`, which uses `stop` as the
+     * barrier before it invalidates the IOB and basal tables - it was invalidating them underneath a
+     * pass that was still going.
+     */
+    @Test
+    fun `stopping ends the prepare phase before it returns`() = runBlocking {
+        val prepareEnded = CompletableDeferred<Unit>()
+        prepareBody = {
+            try {
+                awaitCancellation()
+            } finally {
+                prepareEnded.complete(Unit)
+            }
+        }
+        sut.start(MAIN_CALCULATION, generation = 1, runPost = false)
+        awaitRuns(1)
+
+        sut.stop(MAIN_CALCULATION, "test")
+
+        assertThat(prepareEnded.isCompleted).isTrue()
+    }
+
+    /** The same gap on the replace path: a new start must not leave the old prepare phase running. */
+    @Test
+    fun `starting a replacement cancels the previous prepare phase`() = runBlocking {
+        val firstEnded = CompletableDeferred<Unit>()
+        prepareBody = {
+            try {
+                awaitCancellation()
+            } finally {
+                firstEnded.complete(Unit)
+            }
+        }
+        sut.start(MAIN_CALCULATION, generation = 1, runPost = false)
+        awaitRuns(1)
+
+        prepareBody = {}
+        sut.start(MAIN_CALCULATION, generation = 2, runPost = false)
+        awaitRuns(2)
+
+        withTimeout(5.seconds) { firstEnded.await() }
+    }
+
+    /**
+     * The check reads one `@Volatile` field on the run's own token, never the token map.
+     *
+     * The map is written under the mutex while the calculation coroutines run on other threads, so a
+     * run that read it would have no happens-before with the write that replaced it - it could keep
+     * seeing itself as current - and an unsynchronised read while another thread is putting into a
+     * plain map is not safe in its own right. Hammering replacement from one thread while another
+     * reads the check is what would show that up.
+     */
+    @Test
+    fun `the stopped check is safe to read while runs are being replaced`() = runBlocking {
+        sut.start(MAIN_CALCULATION, generation = 1, runPost = false)
+        awaitRuns(1)
+        val first = checks[0]
+
+        val reader = async(Dispatchers.Default) {
+            repeat(2_000) { first() }
+        }
+        repeat(200) { i ->
+            sut.start(MAIN_CALCULATION, generation = (i + 2).toLong(), runPost = false)
+        }
+        reader.await()
+
+        awaitRuns(2)
+        // Whatever order those landed in, the run that started first is not the current one any more.
+        assertThat(first()).isTrue()
     }
 }
