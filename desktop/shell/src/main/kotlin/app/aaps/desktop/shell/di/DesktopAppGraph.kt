@@ -1,6 +1,7 @@
 package app.aaps.desktop.shell.di
 
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
+import app.aaps.core.interfaces.ui.UiRestart
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.pump.BolusProgressData
@@ -111,6 +112,9 @@ interface DesktopAppGraph : MetroViewModelMultibindings {
     val pluginPermissions: PluginPermissions
     val textResolver: TextResolver
     val configBuilder: ConfigBuilder
+
+    /** Collected by the composition root, which rebuilds when it moves. */
+    val uiRestart: UiRestart
     val prefsFileInfo: PrefsFileInfo
     val persistenceLayer: PersistenceLayer
     val logger: AAPSLogger

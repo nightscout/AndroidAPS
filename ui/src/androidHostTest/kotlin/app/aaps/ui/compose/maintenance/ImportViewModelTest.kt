@@ -10,6 +10,8 @@ import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.interfaces.ui.UiRestartImpl
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.maintenance.FileListProvider
@@ -51,6 +53,7 @@ internal class ImportViewModelTest {
     @Mock private lateinit var iobCobCalculator: IobCobCalculator
     @Mock private lateinit var pump: PumpWithConcentration
     @Mock private lateinit var ads: AutosensDataStore
+    private val uiRestart = UiRestartImpl()
 
     private lateinit var testDispatcher: TestDispatcher
     private lateinit var sut: ImportViewModel
@@ -66,9 +69,10 @@ internal class ImportViewModelTest {
         whenever(pump.serialNumber()).thenReturn("sn")
         whenever(pump.pumpDescription).thenReturn(PumpDescription())
         whenever(iobCobCalculator.ads).thenReturn(ads)
+        whenever(rh.gs(any<TextRef>())).thenReturn("message")
         sut = ImportViewModel(
             aapsLogger, importExportPrefs, prefFileList, configBuilder, rh, uel,
-            commandQueue, pumpSync, activePlugin, overviewDataCache, iobCobCalculator
+            commandQueue, pumpSync, activePlugin, overviewDataCache, iobCobCalculator, uiRestart
         )
     }
 
@@ -210,5 +214,39 @@ internal class ImportViewModelTest {
 
         assertThat(sut.importStep.value).isEqualTo(ImportStep.WaitingForPump)
         verify(configBuilder, never()).initialize()
+    }
+
+    /**
+     * The app is running the imported settings, but a screen composed before that still shows what
+     * it read - which looks exactly like an import that did nothing. Every shell rebuilds on this.
+     */
+    @Test
+    fun `applying asks the ui to rebuild`() = runTest(testDispatcher) {
+        whenever(commandQueue.size()).thenReturn(0)
+        whenever(commandQueue.performing()).thenReturn(null)
+        val before = uiRestart.signal.value
+
+        sut.onApplyConfirmed()
+        advanceUntilIdle()
+
+        assertThat(uiRestart.signal.value).isGreaterThan(before)
+    }
+
+    /**
+     * A pump that never goes idle: the settings are not applied, so there is nothing to rebuild for,
+     * and the user is told rather than left in a dialog for ever.
+     */
+    @Test
+    fun `a pump that never goes idle gives up instead of applying`() = runTest(testDispatcher) {
+        whenever(commandQueue.size()).thenReturn(1)
+        whenever(commandQueue.performing()).thenReturn(null)
+        val before = uiRestart.signal.value
+
+        sut.onApplyConfirmed()
+        advanceUntilIdle()
+
+        verify(configBuilder, never()).initialize()
+        assertThat(uiRestart.signal.value).isEqualTo(before)
+        assertThat(sut.importStep.value).isInstanceOf(ImportStep.Error::class.java)
     }
 }

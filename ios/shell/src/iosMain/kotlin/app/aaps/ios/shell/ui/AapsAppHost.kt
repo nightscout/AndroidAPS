@@ -4,6 +4,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.key
+import app.aaps.core.keys.StringKey
+import kotlinx.coroutines.flow.drop
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -127,7 +132,27 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
     if (appIcon == null) logger.error(LTag.CORE, "The app bundle gave no icon; showing the plain AAPS mark")
     logger.debug(LTag.CORE, "Starting the AAPS Compose root on iOS")
 
+    // The language setting, applied while the app runs. Android answers this by recreating the
+    // activity, which reloads the `Context` its `Resources` resolve against; here the registry is
+    // repointed and the composition is rebuilt, which is the same outcome without a restart iOS
+    // could not perform anyway.
     return ComposeUIViewController {
+        // Rebuilds everything below when a rebuild is asked for - after an import, or a language
+        // change. `key` discards the subtree's state, which is why it is keyed on this and nothing
+        // else: a scroll position lost on a language change is fine, on every recomposition is not.
+        // The language setting, applied while the app runs. Android answers this by recreating the
+        // activity, which reloads the `Context` its `Resources` resolve against; here the registry is
+        // repointed and the composition rebuilt - the same outcome without a restart iOS could not
+        // perform anyway.
+        LaunchedEffect(Unit) {
+            graph.preferences.observe(StringKey.GeneralLanguage).drop(1).collect {
+                IosLanguage.apply(graph.preferences)
+                logger.debug(LTag.CORE, "Language changed to ${TextRefValueRegistry.locale ?: "English"}")
+                graph.uiRestart.request()
+            }
+        }
+        val restart by graph.uiRestart.signal.collectAsState()
+        key(restart) {
         // iOS has no ambient application object, so the factory is provided here rather than found.
         CompositionLocalProvider(LocalMetroViewModelFactory provides viewModelFactory) {
             AapsAppRoot(
@@ -342,6 +367,7 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
                     )
                 }
             }
+        }
         }
     }
 }

@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.ui.UiRestart
 import app.aaps.core.ui.CoreUiStrings
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withTimeoutOrNull
@@ -101,7 +102,8 @@ class ImportViewModel @Inject constructor(
     private val pumpSync: PumpSync,
     private val activePlugin: ActivePlugin,
     private val overviewDataCache: OverviewDataCache,
-    private val iobCobCalculator: IobCobCalculator
+    private val iobCobCalculator: IobCobCalculator,
+    private val uiRestart: UiRestart
 ) : ViewModel() {
 
     private companion object {
@@ -382,6 +384,9 @@ class ImportViewModel @Inject constructor(
             iobCobCalculator.clearCache()
         }
         uel.log(Action.IMPORT_SETTINGS, Sources.Maintenance)
+        // The app is now running the imported settings, but any screen composed before this still
+        // shows what it read earlier - which looks exactly like an import that did nothing.
+        uiRestart.request()
         _importStep.value = ImportStep.Idle
     }
 

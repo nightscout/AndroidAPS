@@ -17,7 +17,12 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import app.aaps.appshell.AapsAppRoot
+import kotlinx.coroutines.flow.drop
 import app.aaps.core.interfaces.resources.TextRefValueRegistry
 import app.aaps.core.keys.StringKey
 import java.util.Locale
@@ -147,6 +152,23 @@ private fun AapsDesktopApp(graph: DesktopAppGraph, appIcon: Painter, appName: St
     val logger = graph.logger
     val viewModelFactory = remember(graph) { ClientViewModelFactory(graph) }
 
+    // The language setting, applied while the app runs. Android answers this by recreating its
+    // activity, which reloads the `Context` its `Resources` resolve against. There is no activity
+    // here: the registry is repointed and the composition rebuilt, which is the same outcome.
+    LaunchedEffect(Unit) {
+        graph.preferences.observe(StringKey.GeneralLanguage).drop(1).collect {
+            val chosen = graph.preferences.get(StringKey.GeneralLanguage)
+            TextRefValueRegistry.locale = if (chosen == "default") Locale.getDefault().toLanguageTag() else chosen
+            logger.debug(LTag.CORE, "Language changed to ${TextRefValueRegistry.locale}")
+            graph.uiRestart.request()
+        }
+    }
+
+    // Rebuilds everything below when one is asked for - after an import applies its settings, or a
+    // language change. Keyed on this and nothing else: `key` discards the subtree's state, so a
+    // scroll position lost on a language change is acceptable where losing it constantly is not.
+    val restart by graph.uiRestart.signal.collectAsState()
+    key(restart) {
     CompositionLocalProvider(LocalMetroViewModelFactory provides viewModelFactory) {
         AapsAppRoot(
             config = graph.config,
@@ -314,6 +336,7 @@ private fun AapsDesktopApp(graph: DesktopAppGraph, appIcon: Painter, appName: St
                 )
             }
         }
+    }
     }
 }
 
