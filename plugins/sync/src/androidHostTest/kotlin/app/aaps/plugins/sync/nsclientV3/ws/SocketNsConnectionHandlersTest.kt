@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.nsclientV3.ws
 
+import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.keys.BooleanKey
@@ -21,6 +22,8 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.mockingDetails
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -257,6 +260,72 @@ class SocketNsConnectionHandlersTest : TestBaseWithProfile() {
         sut.onAlarm("""{"level":2,"title":"Urgent HIGH","message":"m"}""", BooleanKey.NsClientNotificationsFromAlarms)
 
         verify(preferences).get(LongComposedKey.NotificationSnoozedTo, "2")
+    }
+
+    // ------------------------------------------------------------------ snooze actions
+
+    /**
+     * Ported from Android. Without these there was no way to snooze or acknowledge a Nightscout
+     * alarm anywhere but Android: this is the only writer of the snooze key that [onAlarm] reads,
+     * and the only caller of `handleClearAlarm`, which acks the alarm back to Nightscout.
+     */
+    @Test
+    fun `an alarm offers three snooze actions`() = runTest {
+        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(true)
+        whenever(preferences.get(eq(LongComposedKey.NotificationSnoozedTo), any())).thenReturn(0L)
+
+        sut.onAlarm("""{"level":1,"title":"Warning HIGH","message":"m"}""", BooleanKey.NsClientNotificationsFromAlarms)
+
+        val actions = argumentCaptor<List<NotificationAction>>()
+        verify(notificationManager).post(
+            id = eq(NotificationId.NS_ALARM), text = any(), level = any(),
+            validMinutes = any(), sound = any(), actions = actions.capture(), validityCheck = anyOrNull()
+        )
+        assertThat(actions.firstValue).hasSize(3)
+    }
+
+    /** Acting on one acks the alarm back to Nightscout with the chosen interval. */
+    @Test
+    fun `snoozing acknowledges the alarm with the chosen interval`() = runTest {
+        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(true)
+        whenever(preferences.get(eq(LongComposedKey.NotificationSnoozedTo), any())).thenReturn(0L)
+        whenever(dateUtil.now()).thenReturn(1_000L)
+
+        sut.onAlarm("""{"level":1,"title":"Warning HIGH","message":"m"}""", BooleanKey.NsClientNotificationsFromAlarms)
+        capturedAlarmActions().first().action()   // the 15 minute button
+
+        verify(nsClientV3Plugin).handleClearAlarm(any(), eq(15 * 60 * 1000L))
+    }
+
+    /**
+     * The snooze is written for every level, not just the one that fired. Nightscout cascades a
+     * level-2 ack down to level 1 but keeps emitting lower-level forecast alarms, which would
+     * otherwise slip past a single-level snooze and re-alarm.
+     *
+     * This is also what makes the read in [onAlarm] work at all: it looks the snooze up by the
+     * frame's level, so a level-1 alarm only stays quiet because "1" was written here too.
+     */
+    @Test
+    fun `snoozing writes the deadline for every alarm level`() = runTest {
+        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(true)
+        whenever(preferences.get(eq(LongComposedKey.NotificationSnoozedTo), any())).thenReturn(0L)
+        whenever(dateUtil.now()).thenReturn(1_000L)
+
+        sut.onAlarm("""{"level":2,"title":"Urgent HIGH","message":"m"}""", BooleanKey.NsClientNotificationsFromAlarms)
+        capturedAlarmActions()[1].action()   // the 30 minute button
+
+        val deadline = 1_000L + 30 * 60 * 1000L
+        for (level in 0..2)
+            verify(preferences).put(LongComposedKey.NotificationSnoozedTo, level.toString(), value = deadline)
+    }
+
+    private fun capturedAlarmActions(): List<NotificationAction> {
+        val actions = argumentCaptor<List<NotificationAction>>()
+        verify(notificationManager).post(
+            id = any(), text = any(), level = any(),
+            validMinutes = any(), sound = any(), actions = actions.capture(), validityCheck = anyOrNull()
+        )
+        return actions.firstValue
     }
 
     @Test

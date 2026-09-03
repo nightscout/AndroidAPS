@@ -5,6 +5,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.NSAlarm
@@ -16,6 +17,7 @@ import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.nssdk.mapper.toCalibrationMbg
 import app.aaps.core.nssdk.mapper.toNSDeviceStatus
 import app.aaps.core.nssdk.mapper.toNSFood
@@ -398,23 +400,58 @@ class SocketNsConnection @Inject constructor(
     }
 
     /**
-     * Level decides the notification, exactly as on Android.
+     * The snooze buttons offered on an alarm notification, ported from Android.
      *
-     * The snooze actions are not offered here yet: they write a per-level snooze preference and are
-     * worth porting with their own test rather than by eye. An alarm without snooze buttons is still
-     * an alarm; one that snoozes the wrong level silently is not.
+     * Without these there was no way to snooze or acknowledge a Nightscout alarm anywhere but
+     * Android: this is the only writer of [LongComposedKey.NotificationSnoozedTo], which
+     * [onAlarm] reads, and the only caller of `handleClearAlarm`, which acknowledges the alarm back
+     * to Nightscout.
      */
+    private fun snoozeActions(alarm: NSAlarm): List<NotificationAction> =
+        listOf(15, 30, 60).map { minutes ->
+            val label = when (minutes) {
+                15   -> CoreUiStrings.snooze_15m
+                30   -> CoreUiStrings.snooze_30m
+                else -> CoreUiStrings.snooze_60m
+            }
+            NotificationAction(label) {
+                val snoozeMs = minutes * 60 * 1000L
+                nsClientV3Plugin().handleClearAlarm(alarm, snoozeMs)
+                // Cascade the snooze across all alarm levels. Nightscout cascades a level-2 ack down
+                // to level 1, but keeps emitting lower-level forecast alarms that would otherwise
+                // slip past a single-level local snooze and re-alarm. Snoozing every level makes the
+                // chosen interval authoritative on this device regardless of that churn.
+                val snoozedUntil = dateUtil.now() + snoozeMs
+                for (level in 0..2)
+                    preferences.put(LongComposedKey.NotificationSnoozedTo, level.toString(), value = snoozedUntil)
+            }
+        }
+
+    /** Level decides the notification, exactly as on Android. */
     private fun post(alarm: NSAlarm) {
         when (alarm.level) {
             0    -> notificationManager.post(
                 id = NotificationId.NS_ANNOUNCEMENT,
                 text = alarm.message,
                 level = NotificationLevel.ANNOUNCEMENT,
-                validMinutes = 60
+                validMinutes = 60,
+                actions = snoozeActions(alarm)
             )
 
-            1    -> notificationManager.post(id = NotificationId.NS_ALARM, text = alarm.title, sound = AlarmSound.ALARM)
-            2    -> notificationManager.post(id = NotificationId.NS_URGENT_ALARM, text = alarm.title, sound = AlarmSound.URGENT_ALARM)
+            1    -> notificationManager.post(
+                id = NotificationId.NS_ALARM,
+                text = alarm.title,
+                sound = AlarmSound.ALARM,
+                actions = snoozeActions(alarm)
+            )
+
+            2    -> notificationManager.post(
+                id = NotificationId.NS_URGENT_ALARM,
+                text = alarm.title,
+                sound = AlarmSound.URGENT_ALARM,
+                actions = snoozeActions(alarm)
+            )
+
             else -> Unit
         }
     }
