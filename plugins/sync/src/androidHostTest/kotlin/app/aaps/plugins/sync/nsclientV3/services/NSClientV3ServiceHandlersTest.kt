@@ -12,6 +12,7 @@ import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlPublisher
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.OrphanDetector
 import app.aaps.plugins.sync.nsclientV3.compose.NSClientRepositoryImpl
 import app.aaps.plugins.sync.nsclientV3.data.NSDeviceStatusHandler
+import app.aaps.plugins.sync.nsclientV3.ws.NsFrameHandler
 import app.aaps.core.nssdk.remotemodel.LastModified
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -70,6 +71,24 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
             it.runningConfiguration = runningConfiguration
             it.orphanDetector = orphanDetector
             it.appScope = CoroutineScope(Dispatchers.Unconfined)
+            // The real shared handler, not a mock. That is the point of this file now: every case
+            // below was written against the service's own routing, and they all still have to pass
+            // against the one implementation that replaced it.
+            it.nsFrameHandler = NsFrameHandler(
+                aapsLogger = aapsLogger,
+                preferences = preferences,
+                config = config,
+                nsClientV3Plugin = { nsClientV3Plugin },
+                nsIncomingDataProcessor = { nsIncomingDataProcessor },
+                runningConfiguration = { runningConfiguration },
+                orphanDetector = { orphanDetector },
+                storeDataForDb = storeDataForDb,
+                notificationManager = notificationManager,
+                nsClientRepository = NSClientRepositoryImpl(rxBus, aapsLogger),
+                nsDeviceStatusHandler = nsDeviceStatusHandler,
+                dateUtil = dateUtil,
+                appScope = CoroutineScope(Dispatchers.Unconfined)
+            )
         }
     }
 

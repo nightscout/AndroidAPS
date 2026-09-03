@@ -38,10 +38,10 @@ import org.mockito.kotlin.whenever
  * one in `NSClientV3ServiceHandlersTest`, so the two files can be read side by side and any drift
  * shows up as a test that exists on one side only.
  *
- * The `settings` collection has its own file, [SocketNsConnectionSettingsRoutingTest], because it
+ * The `settings` collection has its own file, [NsFrameHandlerSettingsRoutingTest], because it
  * carries client control and needed more cases than the rest put together.
  */
-class SocketNsConnectionHandlersTest : TestBaseWithProfile() {
+class NsFrameHandlerTest : TestBaseWithProfile() {
 
     @Mock lateinit var nsIncomingDataProcessor: NsIncomingDataProcessor
     @Mock lateinit var storeDataForDb: StoreDataForDb
@@ -49,16 +49,15 @@ class SocketNsConnectionHandlersTest : TestBaseWithProfile() {
     @Mock lateinit var nsClientV3Plugin: NSClientV3Plugin
     @Mock lateinit var runningConfiguration: RunningConfiguration
     @Mock lateinit var orphanDetector: OrphanDetector
-    @Mock lateinit var nsSocketFactory: NsSocketFactory
 
-    private lateinit var sut: SocketNsConnection
+    private lateinit var sut: NsFrameHandler
     private lateinit var lastModified: LastModified
 
     @BeforeEach
     fun init() {
         lastModified = LastModified(LastModified.Collections())
         whenever(nsClientV3Plugin.lastLoadedSrvModified).thenReturn(lastModified)
-        sut = SocketNsConnection(
+        sut = NsFrameHandler(
             aapsLogger = aapsLogger,
             preferences = preferences,
             config = config,
@@ -70,7 +69,6 @@ class SocketNsConnectionHandlersTest : TestBaseWithProfile() {
             notificationManager = notificationManager,
             nsClientRepository = NSClientRepositoryImpl(rxBus, aapsLogger),
             nsDeviceStatusHandler = nsDeviceStatusHandler,
-            nsSocketFactory = nsSocketFactory,
             dateUtil = dateUtil,
             appScope = CoroutineScope(Dispatchers.Unconfined)
         )
@@ -206,7 +204,7 @@ class SocketNsConnectionHandlersTest : TestBaseWithProfile() {
     fun `alarm is ignored when alarm notifications are switched off`() = runTest {
         whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(false)
 
-        sut.onAlarm("""{"level":1,"title":"Warning HIGH","message":"m"}""", BooleanKey.NsClientNotificationsFromAlarms)
+        sut.onAlarm("""{"level":1,"title":"Warning HIGH","message":"m"}""")
 
         assertThat(mockingDetails(notificationManager).invocations).isEmpty()
     }
@@ -215,7 +213,7 @@ class SocketNsConnectionHandlersTest : TestBaseWithProfile() {
     fun `alarm is shown when notifications are on`() = runTest {
         whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(true)
 
-        sut.onAlarm("""{"level":1,"title":"Warning HIGH","message":"m"}""", BooleanKey.NsClientNotificationsFromAlarms)
+        sut.onAlarm("""{"level":1,"title":"Warning HIGH","message":"m"}""")
 
         assertThat(mockingDetails(notificationManager).invocations).isNotEmpty()
     }
@@ -231,7 +229,7 @@ class SocketNsConnectionHandlersTest : TestBaseWithProfile() {
         whenever(preferences.get(eq(LongComposedKey.NotificationSnoozedTo), any())).thenReturn(2_000L)
         whenever(dateUtil.now()).thenReturn(1_000L)   // still inside the snooze
 
-        sut.onAlarm("""{"level":1,"title":"Warning HIGH","message":"m"}""", BooleanKey.NsClientNotificationsFromAlarms)
+        sut.onAlarm("""{"level":1,"title":"Warning HIGH","message":"m"}""")
 
         assertThat(mockingDetails(notificationManager).invocations).isEmpty()
     }
@@ -243,7 +241,7 @@ class SocketNsConnectionHandlersTest : TestBaseWithProfile() {
         whenever(preferences.get(eq(LongComposedKey.NotificationSnoozedTo), any())).thenReturn(2_000L)
         whenever(dateUtil.now()).thenReturn(3_000L)   // past it
 
-        sut.onAlarm("""{"level":1,"title":"Warning HIGH","message":"m"}""", BooleanKey.NsClientNotificationsFromAlarms)
+        sut.onAlarm("""{"level":1,"title":"Warning HIGH","message":"m"}""")
 
         assertThat(mockingDetails(notificationManager).invocations).isNotEmpty()
     }
@@ -257,7 +255,7 @@ class SocketNsConnectionHandlersTest : TestBaseWithProfile() {
         whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(true)
         whenever(preferences.get(eq(LongComposedKey.NotificationSnoozedTo), any())).thenReturn(0L)
 
-        sut.onAlarm("""{"level":2,"title":"Urgent HIGH","message":"m"}""", BooleanKey.NsClientNotificationsFromAlarms)
+        sut.onAlarm("""{"level":2,"title":"Urgent HIGH","message":"m"}""")
 
         verify(preferences).get(LongComposedKey.NotificationSnoozedTo, "2")
     }
@@ -274,7 +272,7 @@ class SocketNsConnectionHandlersTest : TestBaseWithProfile() {
         whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(true)
         whenever(preferences.get(eq(LongComposedKey.NotificationSnoozedTo), any())).thenReturn(0L)
 
-        sut.onAlarm("""{"level":1,"title":"Warning HIGH","message":"m"}""", BooleanKey.NsClientNotificationsFromAlarms)
+        sut.onAlarm("""{"level":1,"title":"Warning HIGH","message":"m"}""")
 
         val actions = argumentCaptor<List<NotificationAction>>()
         verify(notificationManager).post(
@@ -291,7 +289,7 @@ class SocketNsConnectionHandlersTest : TestBaseWithProfile() {
         whenever(preferences.get(eq(LongComposedKey.NotificationSnoozedTo), any())).thenReturn(0L)
         whenever(dateUtil.now()).thenReturn(1_000L)
 
-        sut.onAlarm("""{"level":1,"title":"Warning HIGH","message":"m"}""", BooleanKey.NsClientNotificationsFromAlarms)
+        sut.onAlarm("""{"level":1,"title":"Warning HIGH","message":"m"}""")
         capturedAlarmActions().first().action()   // the 15 minute button
 
         verify(nsClientV3Plugin).handleClearAlarm(any(), eq(15 * 60 * 1000L))
@@ -311,7 +309,7 @@ class SocketNsConnectionHandlersTest : TestBaseWithProfile() {
         whenever(preferences.get(eq(LongComposedKey.NotificationSnoozedTo), any())).thenReturn(0L)
         whenever(dateUtil.now()).thenReturn(1_000L)
 
-        sut.onAlarm("""{"level":2,"title":"Urgent HIGH","message":"m"}""", BooleanKey.NsClientNotificationsFromAlarms)
+        sut.onAlarm("""{"level":2,"title":"Urgent HIGH","message":"m"}""")
         capturedAlarmActions()[1].action()   // the 30 minute button
 
         val deadline = 1_000L + 30 * 60 * 1000L

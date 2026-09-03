@@ -3,40 +3,16 @@ package app.aaps.plugins.sync.nsclientV3.ws
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.AlarmSound
-import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.notifications.NotificationAction
-import app.aaps.core.interfaces.notifications.NotificationLevel
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.NSAlarm
 import app.aaps.core.interfaces.nsclient.NSClientRepository
-import app.aaps.core.interfaces.nsclient.StoreDataForDb
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.nssdk.interfaces.RunningConfiguration
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.core.nssdk.mapper.toCalibrationMbg
-import app.aaps.core.nssdk.mapper.toNSDeviceStatus
-import app.aaps.core.nssdk.mapper.toNSFood
-import app.aaps.core.nssdk.mapper.toNSSgvV3
-import app.aaps.core.nssdk.mapper.toNSTreatment
-import app.aaps.plugins.sync.nsclientV3.NSAlarmObject
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
-import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
-import app.aaps.plugins.sync.nsclientV3.SettingsIdentifiers
-import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlPublisher
-import app.aaps.plugins.sync.nsclientV3.clientcontrol.OrphanDetector
-import app.aaps.plugins.sync.nsclientV3.data.NSDeviceStatusHandler
-import app.aaps.plugins.sync.nsclientV3.extensions.toRunningConfiguration
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -108,18 +84,9 @@ class SocketNsConnection @Inject constructor(
     private val preferences: Preferences,
     private val config: Config,
     private val nsClientV3Plugin: () -> NSClientV3Plugin,
-    private val nsIncomingDataProcessor: () -> NsIncomingDataProcessor,
-    // Deferred for the same reason as the two above: both reach back into the client-control side,
-    // which reaches the plugin, which owns this connection. Read only when a settings frame arrives.
-    private val runningConfiguration: () -> RunningConfiguration,
-    private val orphanDetector: () -> OrphanDetector,
-    private val storeDataForDb: StoreDataForDb,
-    private val notificationManager: NotificationManager,
+    private val nsFrameHandler: NsFrameHandler,
     private val nsClientRepository: NSClientRepository,
-    private val nsDeviceStatusHandler: NSDeviceStatusHandler,
-    private val nsSocketFactory: NsSocketFactory,
-    private val dateUtil: DateUtil,
-    private val appScope: CoroutineScope
+    private val nsSocketFactory: NsSocketFactory
 ) : NsConnection {
 
     private var storageSocket: NsSocket? = null
@@ -182,10 +149,15 @@ class SocketNsConnection @Inject constructor(
             }
             alarmSocket = alarm
             alarm.on(NsSocket.EVENT_CONNECT) { onConnectAlarms() }
-            alarm.on(NsSocket.EVENT_DISCONNECT) { nsClientRepository.addLog("◄ WS", "disconnect alarm event") }
+            alarm.on(NsSocket.EVENT_DISCONNECT) { reason ->
+                // The reason was discarded here while the storage socket logged its own. Android
+                // logs both.
+                aapsLogger.debug(LTag.NSCLIENT, "disconnect alarm reason: $reason")
+                nsClientRepository.addLog("◄ WS", "disconnect alarm event")
+            }
             alarm.on("announcement") { raw -> onAnnouncement(raw) }
-            alarm.on("alarm") { raw -> onAlarm(raw, BooleanKey.NsClientNotificationsFromAlarms) }
-            alarm.on("urgent_alarm") { raw -> onAlarm(raw, BooleanKey.NsClientNotificationsFromAlarms) }
+            alarm.on("alarm") { raw -> onAlarm(raw) }
+            alarm.on("urgent_alarm") { raw -> onUrgentAlarm(raw) }
             alarm.on("clear_alarm") { raw -> onClearAlarm(raw) }
             nsClientRepository.addLog("► WS", "do connect alarm $reason")
             alarm.connect()
@@ -242,121 +214,6 @@ class SocketNsConnection @Inject constructor(
         nsClientRepository.updateStatus(nsClientV3Plugin().status)
     }
 
-    internal fun onDataCreateUpdate(raw: String) {
-        val response = parse(raw) ?: return
-        val collection = response.str("colName") ?: return
-        val doc = NsWsPayload.document(response) ?: return
-        val docString = doc.toString()
-        nsClientRepository.addLog("◄ WS CREATE/UPDATE", collection, doc)
-
-        // Mandatory in a Nightscout v3 document. This used to default to 0 when it could not be read,
-        // which invents a value for a field that cannot legitimately be absent - and 0 is not inert:
-        // it would be written to the high-water mark, and `OrphanDetector.onSettingsDoc` reads 0 as
-        // "no timestamp, skip the race guard", which is how a freshly paired client could be declared
-        // an orphan by one malformed frame. Android drops such a frame too, by throwing out of
-        // `getLong` before it reaches the routing below; this does it visibly instead.
-        val srvModified = doc.long("srvModified") ?: run {
-            aapsLogger.error(LTag.NSCLIENT, "Dropping $collection frame with no readable srvModified")
-            return
-        }
-        // The high-water mark must not move until the catch-up round has finished, or the next load
-        // asks for "modified since (just moved pointer)" and skips the very window it should backfill.
-        if (nsClientV3Plugin().initialLoadFinished) {
-            nsClientV3Plugin().lastLoadedSrvModified.set(collection, srvModified)
-            nsClientV3Plugin().storeLastLoadedSrvModified()
-        }
-
-        when (collection) {
-            "devicestatus" -> nsDeviceStatusHandler.handleNewData(arrayOf(docString.toNSDeviceStatus()), live = true)
-            "entries"      -> {
-                docString.toNSSgvV3()?.let {
-                    nsIncomingDataProcessor().processSgvs(listOf(it), doFullSync = false)
-                    storeDataForDb.requestStoreGlucoseValues()
-                }
-                // The same collection also carries AAPS calibration entries.
-                docString.toCalibrationMbg()?.let {
-                    nsIncomingDataProcessor().processCalibrations(listOf(it), doFullSync = false)
-                    storeDataForDb.requestStoreCalibrationEntries()
-                }
-            }
-
-            "profile"      -> appScope.launch { nsIncomingDataProcessor().processProfile(doc, doFullSync = false) }
-            "treatments"   -> docString.toNSTreatment()?.let {
-                nsIncomingDataProcessor().processTreatments(listOf(it), doFullSync = false)
-                storeDataForDb.requestStoreTreatments(fullSync = false)
-            }
-
-            "foods"        -> docString.toNSFood()?.let {
-                nsIncomingDataProcessor().processFood(listOf(it))
-                storeDataForDb.requestStoreFoods()
-            }
-
-            // Client control travels on this collection, so without it pairing and every command
-            // after it are inert - the collection was subscribed to from the start, and every frame
-            // was dropped here. `srvModified` is the one read at the top of this method: Android
-            // reads the same key a second time for the orphan call, which is the same value.
-            "settings"     -> {
-                val identifier = doc.str("identifier") ?: ""
-                when {
-                    // Client: cold config doc - apply everything except the active scene.
-                    config.AAPSCLIENT && identifier == SettingsIdentifiers.COLD                                   ->
-                        docString.toRunningConfiguration()?.let {
-                            runningConfiguration().applyCold(it)
-                            // Only the orphan bookkeeping is deferred, because onSettingsDoc takes the
-                            // repository mutex and this handler runs on the socket's thread, not in a
-                            // coroutine. applyCold and the liveness clock stay inline.
-                            appScope.launch { orphanDetector().onSettingsDoc(it, srvModified) }
-                            // A live config push proves the master is alive now - feed the liveness clock.
-                            nsClientV3Plugin().bumpMasterSignal(srvModified)
-                        }
-
-                    // Client: hot state doc - the active scene and runtime flags only. Kept apart from
-                    // the cold branch so this can never clear a running scene.
-                    config.AAPSCLIENT && identifier == SettingsIdentifiers.STATE                                  ->
-                        docString.toRunningConfiguration()?.let {
-                            runningConfiguration().applyHot(it)
-                            nsClientV3Plugin().bumpMasterSignal(srvModified)
-                        }
-
-                    // Client: master->client command ACK. Must be tested BEFORE the generic
-                    // IDENTIFIER_PREFIX branch, because ack identifiers carry that prefix too and the
-                    // master receiver would otherwise try to verify an ack as an inbound command.
-                    config.AAPSCLIENT && identifier.startsWith(ClientControlPublisher.IDENTIFIER_ACK_PREFIX)      ->
-                        appScope.launch { nsClientV3Plugin().handleClientControlAckEvent(doc) }
-
-                    // Client: master->client live bolus-progress mirror. Same ordering rule as the ACK.
-                    config.AAPSCLIENT && identifier.startsWith(ClientControlPublisher.IDENTIFIER_PROGRESS_PREFIX) ->
-                        appScope.launch { nsClientV3Plugin().handleClientControlProgressEvent(doc) }
-
-                    // Master: inbound client-control envelopes. The plugin gates on the master toggle
-                    // itself. Guarded by !AAPSCLIENT because Nightscout echoes every write back to its
-                    // sender, and a client must not process its own outgoing command (an unknown
-                    // clientId leads to deleteSettings and an HTTP 410 tombstone).
-                    !config.AAPSCLIENT && identifier.startsWith(ClientControlPublisher.IDENTIFIER_PREFIX)         ->
-                        appScope.launch { nsClientV3Plugin().handleClientControlSettingsEvent(identifier, doc) }
-                }
-            }
-        }
-    }
-
-    internal fun onDataDelete(raw: String) {
-        val response = parse(raw) ?: return
-        val collection = response.str("colName") ?: ""
-        val identifier = response.str("identifier") ?: ""
-        nsClientRepository.addLog("◄ WS DELETE", "$collection $identifier")
-        when (collection) {
-            "treatments" -> {
-                storeDataForDb.addToDeleteTreatment(identifier)
-                storeDataForDb.requestUpdateDeletedTreatments()
-            }
-
-            "entries"    -> {
-                storeDataForDb.addToDeleteGlucoseValue(identifier)
-                storeDataForDb.requestUpdateDeletedGlucoseValues()
-            }
-        }
-    }
-
     // ---------------------------------------------------------------------------------------------
     // Alarm socket
     // ---------------------------------------------------------------------------------------------
@@ -373,88 +230,15 @@ class SocketNsConnection @Inject constructor(
         }
     }
 
-    internal fun onAnnouncement(raw: String) {
-        val data = parse(raw) ?: return
-        nsClientRepository.addLog("◄ ANNOUNCEMENT", data.str("message") ?: "")
-        if (preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)) post(NSAlarmObject(data))
-    }
+    // Frame handling is shared with Android - see NsFrameHandler. These stay as delegates so the
+    // characterization tests written against this class still exercise the real routing.
+    internal fun onDataCreateUpdate(raw: String) = nsFrameHandler.onDataCreateUpdate(raw)
+    internal fun onDataDelete(raw: String) = nsFrameHandler.onDataDelete(raw)
+    internal fun onAnnouncement(raw: String) = nsFrameHandler.onAnnouncement(raw)
+    internal fun onAlarm(raw: String) = nsFrameHandler.onAlarm(raw)
+    internal fun onUrgentAlarm(raw: String) = nsFrameHandler.onUrgentAlarm(raw)
+    internal fun onClearAlarm(raw: String) = nsFrameHandler.onClearAlarm(raw)
 
-    internal fun onAlarm(raw: String, gate: BooleanKey) {
-        val data = parse(raw) ?: return
-        nsClientRepository.addLog("◄ ALARM", data.str("title") ?: "")
-        if (!preferences.get(gate)) return
-        // The per-level snooze, as on Android. Without it an alarm the user had explicitly silenced
-        // came back on the next push, which is worse than not showing it at all: an alarm that
-        // ignores its own snooze teaches people to ignore the alarm. The key is composed with the
-        // level, so snoozing a warning does not silence an urgent one. A missing key reads as 0,
-        // which means never snoozed. Announcements have no snooze here, matching Android.
-        val snoozedTo = preferences.get(LongComposedKey.NotificationSnoozedTo, data.str("level") ?: "")
-        if (snoozedTo == 0L || dateUtil.now() > snoozedTo) post(NSAlarmObject(data))
-    }
-
-    internal fun onClearAlarm(raw: String) {
-        val data = parse(raw) ?: return
-        nsClientRepository.addLog("◄ CLEARALARM", data.str("title") ?: "")
-        notificationManager.dismiss(NotificationId.NS_ALARM)
-        notificationManager.dismiss(NotificationId.NS_URGENT_ALARM)
-    }
-
-    /**
-     * The snooze buttons offered on an alarm notification, ported from Android.
-     *
-     * Without these there was no way to snooze or acknowledge a Nightscout alarm anywhere but
-     * Android: this is the only writer of [LongComposedKey.NotificationSnoozedTo], which
-     * [onAlarm] reads, and the only caller of `handleClearAlarm`, which acknowledges the alarm back
-     * to Nightscout.
-     */
-    private fun snoozeActions(alarm: NSAlarm): List<NotificationAction> =
-        listOf(15, 30, 60).map { minutes ->
-            val label = when (minutes) {
-                15   -> CoreUiStrings.snooze_15m
-                30   -> CoreUiStrings.snooze_30m
-                else -> CoreUiStrings.snooze_60m
-            }
-            NotificationAction(label) {
-                val snoozeMs = minutes * 60 * 1000L
-                nsClientV3Plugin().handleClearAlarm(alarm, snoozeMs)
-                // Cascade the snooze across all alarm levels. Nightscout cascades a level-2 ack down
-                // to level 1, but keeps emitting lower-level forecast alarms that would otherwise
-                // slip past a single-level local snooze and re-alarm. Snoozing every level makes the
-                // chosen interval authoritative on this device regardless of that churn.
-                val snoozedUntil = dateUtil.now() + snoozeMs
-                for (level in 0..2)
-                    preferences.put(LongComposedKey.NotificationSnoozedTo, level.toString(), value = snoozedUntil)
-            }
-        }
-
-    /** Level decides the notification, exactly as on Android. */
-    private fun post(alarm: NSAlarm) {
-        when (alarm.level) {
-            0    -> notificationManager.post(
-                id = NotificationId.NS_ANNOUNCEMENT,
-                text = alarm.message,
-                level = NotificationLevel.ANNOUNCEMENT,
-                validMinutes = 60,
-                actions = snoozeActions(alarm)
-            )
-
-            1    -> notificationManager.post(
-                id = NotificationId.NS_ALARM,
-                text = alarm.title,
-                sound = AlarmSound.ALARM,
-                actions = snoozeActions(alarm)
-            )
-
-            2    -> notificationManager.post(
-                id = NotificationId.NS_URGENT_ALARM,
-                text = alarm.title,
-                sound = AlarmSound.URGENT_ALARM,
-                actions = snoozeActions(alarm)
-            )
-
-            else -> Unit
-        }
-    }
 
     // ---------------------------------------------------------------------------------------------
 

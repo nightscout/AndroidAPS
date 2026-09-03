@@ -36,7 +36,7 @@ import org.mockito.kotlin.whenever
  * one protocol is what allowed them to drift in the first place, so the tests are written to be
  * compared side by side until one of the two implementations goes away.
  */
-class SocketNsConnectionSettingsRoutingTest : TestBaseWithProfile() {
+class NsFrameHandlerSettingsRoutingTest : TestBaseWithProfile() {
 
     @Mock lateinit var nsIncomingDataProcessor: NsIncomingDataProcessor
     @Mock lateinit var storeDataForDb: StoreDataForDb
@@ -44,14 +44,13 @@ class SocketNsConnectionSettingsRoutingTest : TestBaseWithProfile() {
     @Mock lateinit var nsClientV3Plugin: NSClientV3Plugin
     @Mock lateinit var runningConfiguration: RunningConfiguration
     @Mock lateinit var orphanDetector: OrphanDetector
-    @Mock lateinit var nsSocketFactory: NsSocketFactory
 
-    private lateinit var sut: SocketNsConnection
+    private lateinit var sut: NsFrameHandler
 
     @BeforeEach
     fun init() {
         whenever(nsClientV3Plugin.lastLoadedSrvModified).thenReturn(LastModified(LastModified.Collections()))
-        sut = SocketNsConnection(
+        sut = NsFrameHandler(
             aapsLogger = aapsLogger,
             preferences = preferences,
             config = config,
@@ -63,10 +62,7 @@ class SocketNsConnectionSettingsRoutingTest : TestBaseWithProfile() {
             notificationManager = notificationManager,
             nsClientRepository = NSClientRepositoryImpl(rxBus, aapsLogger),
             nsDeviceStatusHandler = nsDeviceStatusHandler,
-            nsSocketFactory = nsSocketFactory,
             dateUtil = dateUtil,
-            // Unconfined: the client-control branches hand off with appScope.launch, and the test
-            // needs that to have run by the time it verifies.
             appScope = CoroutineScope(Dispatchers.Unconfined)
         )
     }
