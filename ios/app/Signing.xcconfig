@@ -19,3 +19,9 @@
 // as an error, not a warning, so pointing the project straight at an ignored file
 // would break every fresh clone.
 #include? "Signing.local.xcconfig"
+
+// The generated version numbers, from :ios:shell:generateIosVersionXcconfig. Optional for the same
+// reason as the file above: a clone that has never run Gradle still builds, using the project's own
+// MARKETING_VERSION and CURRENT_PROJECT_VERSION. Only an upload to App Store Connect needs real
+// ones, because it rejects a build number it has already seen.
+#include? "Version.xcconfig"
