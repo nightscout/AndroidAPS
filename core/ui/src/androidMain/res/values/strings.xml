@@ -1088,8 +1088,10 @@
     <string name="import_wrong_password">Wrong password</string>
     <string name="import_btn">Import</string>
     <string name="import_anyway_btn">Import anyway</string>
-    <string name="import_restart_title">Settings imported</string>
-    <string name="import_restart_message">Settings have been imported. The app needs to restart.</string>
+    <string name="import_apply_title">Settings imported</string>
+    <string name="import_apply_message">The imported settings will now be applied. Plugins that changed will be restarted.</string>
+    <string name="import_apply_waiting">Waiting for pump…</string>
+    <string name="import_apply_pump_busy">The pump is still busy, so the settings were not applied. Try again when the pump is idle.</string>
     <string name="import_source_local">Local</string>
     <string name="import_source_cloud">Cloud</string>
     <string name="import_load_more">Load more</string>

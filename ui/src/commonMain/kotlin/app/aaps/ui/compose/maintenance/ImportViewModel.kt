@@ -4,8 +4,21 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.configuration.ConfigBuilder
+import app.aaps.core.data.ue.Action
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
+import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.overview.graph.OverviewDataCache
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.ui.CoreUiStrings
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withTimeoutOrNull
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.PrefsFileInfo
@@ -50,7 +63,25 @@ sealed interface ImportStep {
         val isProcessing: Boolean = false
     ) : ImportStep
 
-    data object RestartConfirm : ImportStep
+    /**
+     * The settings are written and are about to be applied to the running app.
+     *
+     * This was `RestartConfirm`, and the app really did restart: `exitApp` killed the process so the
+     * new settings were picked up on the way back. iOS may not terminate itself, so that ending
+     * silently did nothing there - the user confirmed a restart that never happened and carried on
+     * with the old configuration. Applying in place is the one ending that works everywhere.
+     */
+    data object ApplyConfirm : ImportStep
+
+    /**
+     * Waiting for the pump to finish what it is doing before the settings are applied.
+     *
+     * Applying can stop and start plugins, and a pump driver torn down mid-command is the one case
+     * where that is not merely untidy. The queue is checked before anything is applied rather than
+     * after working out whether the pump changed: a missed detection would skip this wait, which is
+     * the dangerous direction to be wrong in.
+     */
+    data object WaitingForPump : ImportStep
     data class Error(val message: String) : ImportStep
 }
 
@@ -63,8 +94,22 @@ class ImportViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val importExportPrefs: ImportExportPrefs,
     private val prefFileList: PrefsFileInfo,
-    private val configBuilder: ConfigBuilder
+    private val configBuilder: ConfigBuilder,
+    private val rh: TextResolver,
+    private val uel: UserEntryLogger,
+    private val commandQueue: CommandQueue,
+    private val pumpSync: PumpSync,
+    private val activePlugin: ActivePlugin,
+    private val overviewDataCache: OverviewDataCache,
+    private val iobCobCalculator: IobCobCalculator
 ) : ViewModel() {
+
+    private companion object {
+
+        /** Long enough for a pump command to finish, short enough that a stuck pump is not a trap. */
+        val PUMP_WAIT = 60.seconds
+        val POLL = 250.milliseconds
+    }
 
     private val _importStep = MutableStateFlow<ImportStep>(ImportStep.Idle)
     val importStep: StateFlow<ImportStep> = _importStep.asStateFlow()
@@ -282,12 +327,62 @@ class ImportViewModel @Inject constructor(
                 importExportPrefs.executeImport(result.prefs)
                 importExportPrefs.prepareImportRestart()
             }
-            _importStep.value = ImportStep.RestartConfirm
+            _importStep.value = ImportStep.ApplyConfirm
         }
     }
 
-    fun onRestartConfirmed() {
-        configBuilder.exitApp("Import", Sources.Maintenance, false)
+    /**
+     * Applies the imported settings to the running app, waiting for the pump first.
+     *
+     * The wait comes before anything is applied and the rest happens in one go, so nothing is ever
+     * half applied while the pump is busy. The alternative - deciding up front whether the pump
+     * changed - needs the imported preferences diffed against the current ones, and a missed
+     * difference would skip the wait rather than add a needless one.
+     */
+    fun onApplyConfirmed() {
+        viewModelScope.launch {
+            if (commandQueue.size() > 0 || commandQueue.performing() != null) {
+                _importStep.value = ImportStep.WaitingForPump
+                val idle = withTimeoutOrNull(PUMP_WAIT) {
+                    while (commandQueue.size() > 0 || commandQueue.performing() != null) delay(POLL)
+                }
+                if (idle == null) {
+                    aapsLogger.warn(LTag.CORE, "Pump still busy after $PUMP_WAIT, settings not applied")
+                    _importStep.value = ImportStep.Error(rh.gs(CoreUiStrings.import_apply_pump_busy))
+                    return@launch
+                }
+            }
+            applySettings()
+        }
+    }
+
+    /** Everything the app has to redo to be running the imported settings. Assumes an idle queue. */
+    private fun applySettings() {
+        // Not moved to an IO dispatcher: `initialize()` is what both `IosAppStartup` and the desktop
+        // `Main` call straight on the startup path, and the cache resets are in memory. Keeping it
+        // here also keeps it observable from a test, which work handed to the global IO dispatcher
+        // is not.
+        run {
+            // Re-reads every plugin's stored enabled state and starts or stops it to match, then
+            // picks the active plugin per category. Idempotent, so a plugin whose setting did not
+            // change is left alone rather than cycled.
+            configBuilder.initialize()
+
+            // Asked of the pump layer rather than worked out from the preferences: it answers from
+            // what is actually registered, so an unchanged pump keeps its running temporary basal
+            // instead of having it ended for nothing.
+            val pump = activePlugin.activePump
+            if (!pumpSync.verifyPumpIdentification(pump.pumpDescription.pumpType, pump.serialNumber()))
+                pumpSync.connectNewPump()
+
+            // The same reset `resetDatabases` does: the imported profile, units and targets change
+            // what every cached calculation meant.
+            overviewDataCache.reset()
+            iobCobCalculator.ads.reset()
+            iobCobCalculator.clearCache()
+        }
+        uel.log(Action.IMPORT_SETTINGS, Sources.Maintenance)
+        _importStep.value = ImportStep.Idle
     }
 
     fun goBackToFilePicker() {
