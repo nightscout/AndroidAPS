@@ -34,17 +34,39 @@ class CoroutineCalculationExecutor(
     private val runs = mutableMapOf<String, Job>()
     private val prepareRuns = mutableMapOf<String, Job>()
 
+    /**
+     * Which run currently owns each job name.
+     *
+     * A run cannot answer "am I still the active one?" from [runs] alone. Cancelling is cooperative,
+     * so a replaced run keeps going until its next check - and by then its replacement has installed
+     * itself under the same name. Asking "is there a live job called MAIN?" therefore answers **yes**
+     * to the very run that was just cancelled, and it carries on as though it were current.
+     *
+     * The consequences were two, and only the first was visible: both runs emitted progress into the
+     * same signals, so the bar jumped between their two positions instead of advancing; and the
+     * outgoing run went on doing full IOB passes over a dataset that was still growing, which is
+     * exactly the wrong moment to be doing work twice - it showed up during the first Nightscout
+     * sync, where new data arrives continuously and replacements are frequent.
+     *
+     * A token per start makes the question answerable: a run compares the token it was given with
+     * the one holding its name now, so a replaced run knows it has been replaced even though its
+     * name is still busy.
+     */
+    private val tokens = mutableMapOf<String, Long>()
+    private var nextToken = 0L
+
     override fun start(job: String, generation: Long, runPost: Boolean) {
         scope.launch {
             mutex.withLock {
                 runs.remove(job)?.cancel()
+                val stopped = claim(job)
                 val prepareJob = scope.launch {
-                    prepare.run(job, generation, isStopped = { !isActiveJob(job) })
+                    prepare.run(job, generation, isStopped = stopped)
                 }
                 prepareRuns[job] = prepareJob
                 runs[job] = scope.launch {
                     prepareJob.join()
-                    if (runPost) post.run(job, generation, isStopped = { !isActiveJob(job) })
+                    if (runPost) post.run(job, generation, isStopped = stopped)
                 }
             }
         }
@@ -54,14 +76,20 @@ class CoroutineCalculationExecutor(
         scope.launch {
             mutex.withLock {
                 runs.remove(job)?.cancel()
-                runs[job] = scope.launch { post.run(job, generation, isStopped = { !isActiveJob(job) }) }
+                val stopped = claim(job)
+                runs[job] = scope.launch { post.run(job, generation, isStopped = stopped) }
             }
         }
     }
 
     override suspend fun stop(job: String, from: String) {
         aapsLogger.debug(LTag.WORKER, "Stopping calculation: $from")
-        val running = mutex.withLock { runs.remove(job).also { prepareRuns.remove(job) } } ?: return
+        val running = mutex.withLock {
+            // The token goes first: a run that is mid-phase must see itself as stopped even while
+            // its job is still winding down.
+            tokens.remove(job)
+            runs.remove(job).also { prepareRuns.remove(job) }
+        } ?: return
         running.cancel()
         val finished = withTimeoutOrNull(STOP_WAIT) { running.join() }
         if (finished == null) aapsLogger.warn(LTag.WORKER, "Calculation did not stop within $STOP_WAIT: $from")
@@ -76,8 +104,16 @@ class CoroutineCalculationExecutor(
         if (finished == null) aapsLogger.warn(LTag.AUTOSENS, "Calculation did not finish within $STOP_WAIT: $reason")
     }
 
-    /** A phase asks this between steps: false once the run no longer holds its job name. */
-    private fun isActiveJob(job: String): Boolean = runs[job]?.isCancelled == false
+    /**
+     * Takes ownership of [job] for the run being started, and returns the check that run should use.
+     *
+     * Called while the mutex is held, so two starts cannot take the same token.
+     */
+    private fun claim(job: String): () -> Boolean {
+        val token = ++nextToken
+        tokens[job] = token
+        return { tokens[job] != token }
+    }
 
     companion object {
 
