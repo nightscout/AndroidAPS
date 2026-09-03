@@ -80,6 +80,7 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
+import app.aaps.core.interfaces.ui.UiRestart
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.VisibilityContext
@@ -141,6 +142,7 @@ class ComposeMainActivity : MetroAppCompatActivity() {
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var preferences: Preferences
+    @Inject lateinit var uiRestart: UiRestart
     @Inject lateinit var decimalFormatter: DecimalFormatter
     @Inject lateinit var iconsProvider: IconsProvider
     @Inject lateinit var uiInteraction: UiInteraction
@@ -656,6 +658,13 @@ class ComposeMainActivity : MetroAppCompatActivity() {
         // Language change requires full restart to reload resources
         lifecycleScope.launch {
             preferences.observe(StringKey.GeneralLanguage).drop(1).collect { recreate() }
+        }
+        // The same rebuild, asked for by code that cannot reach this activity - an import applying
+        // its settings, for one. Android answers it by recreating, because that is the only thing
+        // that re-runs `attachBaseContext` and so the only thing that can change the locale
+        // `Resources` resolve against.
+        lifecycleScope.launch {
+            uiRestart.signal.drop(1).collect { recreate() }
         }
     }
 

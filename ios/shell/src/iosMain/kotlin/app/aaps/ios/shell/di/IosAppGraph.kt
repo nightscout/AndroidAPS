@@ -32,6 +32,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.VisibilityContext
+import app.aaps.core.interfaces.ui.UiRestart
 import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.implementation.receivers.IosReceiverStatusStore
 import app.aaps.plugins.sync.nsclientV3.ws.NsSocketFactory
@@ -72,6 +73,9 @@ interface IosAppGraph : MetroViewModelMultibindings {
     // Everything AapsAppRoot needs.
     val config: Config
     val preferences: Preferences
+
+    /** Collected by the composition root, which rebuilds when it moves. */
+    val uiRestart: UiRestart
     val dateUtil: DateUtil
     val decimalFormatter: DecimalFormatter
     val profileUtil: ProfileUtil

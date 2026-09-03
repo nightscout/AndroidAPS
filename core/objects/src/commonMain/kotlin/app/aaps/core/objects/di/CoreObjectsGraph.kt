@@ -1,6 +1,8 @@
 package app.aaps.core.objects.di
 
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.ui.UiRestart
+import app.aaps.core.interfaces.ui.UiRestartImpl
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.configuration.Config
@@ -39,6 +41,14 @@ import kotlinx.coroutines.CoroutineScope
  */
 @BindingContainer
 object CoreObjectsGraph {
+
+    /**
+     * One per app: the count has to be shared between whoever asks for a rebuild and the shell that
+     * answers, and a second instance would leave one of them watching a counter nobody moves.
+     */
+    @SingleIn(AppScope::class)
+    @Provides
+    fun provideUiRestart(): UiRestart = UiRestartImpl()
 
     @SingleIn(AppScope::class)
     @Provides

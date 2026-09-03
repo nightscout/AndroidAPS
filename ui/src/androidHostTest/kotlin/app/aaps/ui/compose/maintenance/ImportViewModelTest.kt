@@ -10,6 +10,8 @@ import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.interfaces.ui.UiRestartImpl
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.maintenance.FileListProvider
@@ -29,7 +31,6 @@ import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -56,6 +57,7 @@ internal class ImportViewModelTest {
     @Mock private lateinit var iobCobCalculator: IobCobCalculator
     @Mock private lateinit var pump: PumpWithConcentration
     @Mock private lateinit var ads: AutosensDataStore
+    private val uiRestart = UiRestartImpl()
 
     private lateinit var testDispatcher: TestDispatcher
     private lateinit var sut: ImportViewModel
@@ -73,10 +75,10 @@ internal class ImportViewModelTest {
         whenever(iobCobCalculator.ads).thenReturn(ads)
         // The steps carry resolved text, and an unstubbed mock hands back null into a non-null
         // parameter. Tests that care about the wording stub their own ref over the top of this.
-        whenever(rh.gs(any<TextRef>())).thenReturn("")
+        whenever(rh.gs(any<TextRef>())).thenReturn("message")
         sut = ImportViewModel(
             aapsLogger, importExportPrefs, prefFileList, configBuilder, rh, uel,
-            commandQueue, pumpSync, activePlugin, overviewDataCache, iobCobCalculator
+            commandQueue, pumpSync, activePlugin, overviewDataCache, iobCobCalculator, uiRestart
         )
         // Production hands the apply to the IO dispatcher, which a test cannot advance or observe.
         // Unconfined runs it inline instead, so `advanceUntilIdle` really does mean "the apply is done".
@@ -383,5 +385,45 @@ internal class ImportViewModelTest {
         sut.finishApply()
 
         assertThat(sut.importStep.value).isEqualTo(ImportStep.Idle)
+    }
+
+    /**
+     * The app is running the imported settings, but a screen composed before that still shows what
+     * it read - which looks exactly like an import that did nothing. Every shell rebuilds on this.
+     *
+     * Asked for when the user leaves the confirmation, not during the apply: Android answers a
+     * rebuild by recreating the activity, which would take the "settings applied" dialog down before
+     * it could be read.
+     */
+    @Test
+    fun `finishing a successful apply asks the ui to rebuild`() = runTest(testDispatcher) {
+        queueGrantsHold(true)
+        val before = uiRestart.signal.value
+
+        sut.onApplyConfirmed()
+        advanceUntilIdle()
+        assertThat(uiRestart.signal.value).isEqualTo(before)   // confirmation still on screen
+
+        sut.finishApply()
+
+        assertThat(uiRestart.signal.value).isGreaterThan(before)
+    }
+
+    /**
+     * A pump that never goes idle: the settings are not applied, so there is nothing to rebuild for,
+     * and the user is told rather than left in a dialog for ever.
+     */
+    @Test
+    fun `a pump that never goes idle gives up instead of applying`() = runTest(testDispatcher) {
+        queueGrantsHold(false)
+        val before = uiRestart.signal.value
+
+        sut.onApplyConfirmed()
+        advanceUntilIdle()
+        sut.finishApply()
+
+        verify(configBuilder, never()).applyConfiguration()
+        assertThat(uiRestart.signal.value).isEqualTo(before)
+        assertThat(sut.importStep.value).isInstanceOf(ImportStep.Idle::class.java)
     }
 }

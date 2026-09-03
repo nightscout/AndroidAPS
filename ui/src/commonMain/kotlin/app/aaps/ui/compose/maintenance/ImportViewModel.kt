@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.ui.UiRestart
 import app.aaps.core.ui.CoreUiStrings
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
@@ -117,7 +118,8 @@ class ImportViewModel @Inject constructor(
     private val pumpSync: PumpSync,
     private val activePlugin: ActivePlugin,
     private val overviewDataCache: OverviewDataCache,
-    private val iobCobCalculator: IobCobCalculator
+    private val iobCobCalculator: IobCobCalculator,
+    private val uiRestart: UiRestart
 ) : ViewModel() {
 
     private companion object {
@@ -429,6 +431,10 @@ class ImportViewModel @Inject constructor(
         // profile is the next ProfileSwitch, possibly hours away. It showed as a big "NO PROFILE SET"
         // on the overview while the loop was in fact running on the profile perfectly happily.
         // The app used to restart at this point and rebuild all of this on the way back up.
+        //
+        // `UiRestart` does not cover this. It rebuilds the composition, but the cache behind it is an
+        // app-scoped singleton that survives an activity recreate, so the emptied flows would still be
+        // empty on the way back.
         overviewDataCache.refreshProfile()
         overviewDataCache.refreshTempTarget()
         overviewDataCache.refreshRunningMode()
@@ -440,7 +446,14 @@ class ImportViewModel @Inject constructor(
 
     /** Leave the import screen once it has reached [ImportStep.Applied] or [ImportStep.ApplyFailed]. */
     fun finishApply() {
+        val applied = _importStep.value is ImportStep.Applied
         _importStep.value = ImportStep.Idle
+        // Asked for here rather than at the end of the apply, and only when something was applied.
+        // Android answers a rebuild by recreating the activity, which would take the "settings
+        // applied" dialog down before it could be read; and a refused apply changed nothing, so there
+        // is nothing to rebuild for. Screens composed before the import still show what they read
+        // then, which is what this is for.
+        if (applied) uiRestart.request()
     }
 
     fun goBackToFilePicker() {
