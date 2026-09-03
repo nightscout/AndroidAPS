@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.nssdk.mapper.toCalibrationMbg
 import app.aaps.core.nssdk.mapper.toNSDeviceStatus
 import app.aaps.core.nssdk.mapper.toNSFood
@@ -21,7 +22,11 @@ import app.aaps.core.nssdk.mapper.toNSTreatment
 import app.aaps.plugins.sync.nsclientV3.NSAlarmObject
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
+import app.aaps.plugins.sync.nsclientV3.SettingsIdentifiers
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlPublisher
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.OrphanDetector
 import app.aaps.plugins.sync.nsclientV3.data.NSDeviceStatusHandler
+import app.aaps.plugins.sync.nsclientV3.extensions.toRunningConfiguration
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
@@ -47,22 +52,35 @@ import kotlinx.serialization.json.put
  * [NsConnection] owned by a coroutine scope instead of a service.
  *
  * Android keeps the sockets in a bound service holding a wake lock, so they survive the screen going
- * away. iOS has nothing of the sort, so the connection follows the app: up while it is active, down
- * when it is not. Something outside drives that - see `IosForegroundWatcher` - and this class stays
- * free of UIKit so it can be tested without one.
+ * away. This class has no equivalent, and it stays free of UIKit so it can be tested without one.
  *
- * ## Why a closed socket is not a hole
+ * ## What happens when the socket drops
  *
- * Dropping the socket on backgrounding is safe because the shared plugin already handles a dropped
- * socket: [connected] going false starts the REST polling fallback after the disconnect grace, and
- * `initialLoadFinished` going false makes the next round backfill the window that was missed. That
- * machinery was written for connection drops on Android; backgrounding is just another drop.
+ * Nothing here closes the socket on backgrounding: [stop] is called only on app exit, on a
+ * connection setting changing, and when connectivity becomes disallowed. `IosForegroundWatcher` was
+ * written to drive that and is wired to nothing, so a dropped connection is left to the transport's
+ * own reconnect. When it does come back, `onConnectStorage` clears `initialLoadFinished` and asks
+ * for a catch-up round, and that round refetches the missed window from the persisted high-water
+ * mark.
+ *
+ * **There is no REST polling fallback behind that**, which this comment used to claim there was. The
+ * five-minute tick in `NSClientV3Plugin` runs a load only when websockets are switched off or the
+ * platform has none; while they are on it logs and does nothing. `wsDisconnectGraceMs` debounces the
+ * `masterReachable` flow and starts no load. So the catch-up is the only recovery, a socket that
+ * never reconnects is a real hole, and on a platform that suspends the whole process there is
+ * nothing else to close it.
  *
  * ## What is deliberately different from Android
  *
- * The payload parsing is kotlinx rather than `org.json`, which is the only reason this is a separate
- * implementation rather than shared code. The field names, the collection routing and the ordering
- * rules are the same, and where a rule is subtle it is called out below.
+ * The payload parsing is kotlinx rather than `org.json`. That is the stated reason this is a
+ * separate implementation, and it is a weak one: [NsSocket] hands every payload across as text, so
+ * nothing stops the Android service parsing the same way. The field names, the collection routing
+ * and the ordering rules are meant to match, and where a rule is subtle it is called out below.
+ *
+ * They did not match for the `settings` collection: it was in the subscribe list from the start with
+ * no branch here, so every client-control frame was dropped and remote control could not work on any
+ * platform using this class. The branch below is the Android one, ported. Two routings for one
+ * protocol is what allowed that, and is the reason they should become one.
  */
 /*
  * `NSClientV3Plugin` and `NsIncomingDataProcessor` arrive as `() -> T` to break a cycle. The
@@ -87,6 +105,10 @@ class SocketNsConnection @Inject constructor(
     private val config: Config,
     private val nsClientV3Plugin: () -> NSClientV3Plugin,
     private val nsIncomingDataProcessor: () -> NsIncomingDataProcessor,
+    // Deferred for the same reason as the two above: both reach back into the client-control side,
+    // which reaches the plugin, which owns this connection. Read only when a settings frame arrives.
+    private val runningConfiguration: () -> RunningConfiguration,
+    private val orphanDetector: () -> OrphanDetector,
     private val storeDataForDb: StoreDataForDb,
     private val notificationManager: NotificationManager,
     private val nsClientRepository: NSClientRepository,
@@ -253,6 +275,52 @@ class SocketNsConnection @Inject constructor(
             "foods"        -> docString.toNSFood()?.let {
                 nsIncomingDataProcessor().processFood(listOf(it))
                 storeDataForDb.requestStoreFoods()
+            }
+
+            // Client control travels on this collection, so without it pairing and every command
+            // after it are inert - the collection was subscribed to from the start, and every frame
+            // was dropped here. `srvModified` is the one read at the top of this method: Android
+            // reads the same key a second time for the orphan call, which is the same value.
+            "settings"     -> {
+                val identifier = doc.str("identifier") ?: ""
+                when {
+                    // Client: cold config doc - apply everything except the active scene.
+                    config.AAPSCLIENT && identifier == SettingsIdentifiers.COLD                                   ->
+                        docString.toRunningConfiguration()?.let {
+                            runningConfiguration().applyCold(it)
+                            // Only the orphan bookkeeping is deferred, because onSettingsDoc takes the
+                            // repository mutex and this handler runs on the socket's thread, not in a
+                            // coroutine. applyCold and the liveness clock stay inline.
+                            appScope.launch { orphanDetector().onSettingsDoc(it, srvModified) }
+                            // A live config push proves the master is alive now - feed the liveness clock.
+                            nsClientV3Plugin().bumpMasterSignal(srvModified)
+                        }
+
+                    // Client: hot state doc - the active scene and runtime flags only. Kept apart from
+                    // the cold branch so this can never clear a running scene.
+                    config.AAPSCLIENT && identifier == SettingsIdentifiers.STATE                                  ->
+                        docString.toRunningConfiguration()?.let {
+                            runningConfiguration().applyHot(it)
+                            nsClientV3Plugin().bumpMasterSignal(srvModified)
+                        }
+
+                    // Client: master->client command ACK. Must be tested BEFORE the generic
+                    // IDENTIFIER_PREFIX branch, because ack identifiers carry that prefix too and the
+                    // master receiver would otherwise try to verify an ack as an inbound command.
+                    config.AAPSCLIENT && identifier.startsWith(ClientControlPublisher.IDENTIFIER_ACK_PREFIX)      ->
+                        appScope.launch { nsClientV3Plugin().handleClientControlAckEvent(doc) }
+
+                    // Client: master->client live bolus-progress mirror. Same ordering rule as the ACK.
+                    config.AAPSCLIENT && identifier.startsWith(ClientControlPublisher.IDENTIFIER_PROGRESS_PREFIX) ->
+                        appScope.launch { nsClientV3Plugin().handleClientControlProgressEvent(doc) }
+
+                    // Master: inbound client-control envelopes. The plugin gates on the master toggle
+                    // itself. Guarded by !AAPSCLIENT because Nightscout echoes every write back to its
+                    // sender, and a client must not process its own outgoing command (an unknown
+                    // clientId leads to deleteSettings and an HTTP 410 tombstone).
+                    !config.AAPSCLIENT && identifier.startsWith(ClientControlPublisher.IDENTIFIER_PREFIX)         ->
+                        appScope.launch { nsClientV3Plugin().handleClientControlSettingsEvent(identifier, doc) }
+                }
             }
         }
     }

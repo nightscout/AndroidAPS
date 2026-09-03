@@ -17,14 +17,26 @@ import platform.darwin.NSObject
  * backgrounded app is suspended, and a websocket with it. So the connection follows the app instead
  * - up while the app is active, down as soon as it is not.
  *
- * Dropping it deliberately is better than letting iOS sever it, because the shared plugin already
- * copes with a dropped socket: `connected` going false starts the REST polling fallback after
- * `wsDisconnectGraceMs`, and `initialLoadFinished` turning false makes the next round backfill the
- * window that was missed. Both were written for connection drops on Android and need nothing new
- * here - backgrounding is just another drop.
+ * ## Not wired to anything, and do not wire it as written
  *
- * This is the same shape other iOS followers settled on: a live socket in the foreground, polling
- * behind it.
+ * Nothing constructs this class. That matters more than it looks, because the design it describes
+ * rests on a fallback that does not exist.
+ *
+ * The claim used to be that dropping the socket deliberately is safe, since `connected` going false
+ * starts a REST polling fallback after `wsDisconnectGraceMs`. There is no such fallback. The
+ * five-minute tick in `NSClientV3Plugin` runs a load only when websockets are switched off or the
+ * platform has none; while they are on it logs and does nothing. `wsDisconnectGraceMs` debounces the
+ * `masterReachable` flow and starts no load.
+ *
+ * What is true is the other half: `initialLoadFinished` turning false makes the next round backfill
+ * the missed window. But that round is started by a websocket *connect*. So closing the socket on
+ * backgrounding, with nothing to reopen it, would remove the only recovery path there is rather than
+ * hand over to a second one.
+ *
+ * If this is ever wired up, [onForeground] is the valuable half - a reconnect check when the app
+ * comes back. [onBackground] should not close the socket until something exists that reliably
+ * reopens it: a shared watchdog that forces a load when `connected` has been false for too long, or
+ * a real polling fallback.
  *
  * ## Closing before iOS suspends us
  *

@@ -306,11 +306,21 @@ step. The behaviour is unchanged and still documented in the gaps section.
   Android, so both platforms speak to Nightscout the same way. It is added through Swift Package
   Manager - the first external dependency in the iOS app - and the Kotlin side never mentions
   socket.io, because `NsSocket` was already exported as an Obj-C protocol for Swift to conform to.
-- **`IosForegroundWatcher`** drives start/stop from the app lifecycle, closing the socket inside a
-  background task assertion so it is not cut mid-frame.
+- **`IosForegroundWatcher` exists but is wired to nothing.** It was written to drive start/stop from
+  the app lifecycle, closing the socket inside a background task assertion so it is not cut
+  mid-frame. Nothing constructs it, so no lifecycle event reaches the Nightscout connection today.
+  Its KDoc explains why it must not be wired as written: closing the socket on backgrounding is only
+  safe if something reopens it, and the REST polling fallback its design assumed does not exist.
 
 
-Nothing right now.
+- **A dropped websocket may never be noticed on iOS.** The catch-up itself is shared and correct - a
+  connect clears `initialLoadFinished` and refetches the missed window from the persisted high-water
+  mark, verified on Android. What iOS lacks is anything that makes the connect happen: the process is
+  suspended in the background (no `UIBackgroundModes`, no `BGTaskScheduler`), the foreground watcher
+  above is inert, and the connectivity trigger only fires when `ReceiverDelegate`'s allowed verdict
+  flips, not on every network change. Recovery therefore rests entirely on socket.io-client-swift's
+  own reconnect surviving suspension, which is unverified. A shared watchdog - force a load when
+  `connected` has been false for longer than N - would close this on every platform.
 
 ## Two iOS behaviours a user would notice
 
