@@ -54,6 +54,9 @@ interface Intents {
         // Patched SI App -> AAPS
         const val SI_APP = "cn.diyaps.sharing.SI_APP"
 
+        // Sibionics App -> AAPS. Same vendor and same payload as SI_APP, only the action differs
+        const val SIB_APP = "com.diyaps.sharing.SIBIO_APP"
+
         // Patched Sino App -> AAPS
         const val SINO_APP = "cn.diyaps.sharing.SINO_APP"
 
