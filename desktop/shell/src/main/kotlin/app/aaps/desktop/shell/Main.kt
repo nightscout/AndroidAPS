@@ -18,6 +18,9 @@ import androidx.compose.ui.window.application
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import app.aaps.appshell.AapsAppRoot
+import app.aaps.core.interfaces.resources.TextRefValueRegistry
+import app.aaps.core.keys.StringKey
+import java.util.Locale
 import app.aaps.appshell.navigation.AppRoute
 import app.aaps.appshell.navigation.appNavGraph
 import app.aaps.appshell.navigation.ElementNavigator
@@ -112,6 +115,13 @@ fun main() {
  */
 private fun startPlugins(graph: DesktopAppGraph) {
     GeneratedStringOwners.registerAll()
+    // The language to answer in, from the setting or from the machine. State on the registry rather
+    // than an argument to every lookup - the same arrangement Android gets from `Resources`, which is
+    // why `gs(ref)` needs no locale and no call site changed. Without this the desktop is English
+    // whatever the setting says, which is how it behaved before the translations were generated.
+    val chosen = graph.preferences.get(StringKey.GeneralLanguage)
+    TextRefValueRegistry.locale = if (chosen == "default") Locale.getDefault().toLanguageTag() else chosen
+    graph.logger.debug(LTag.CORE, "Language: ${TextRefValueRegistry.locale}")
     // Sorted by the key each plugin registers itself with, which is the order the plugin list is
     // shown in and the order category defaults are picked in.
     val plugins = graph.contributedPlugins.entries.sortedBy { it.key }.map { it.value }

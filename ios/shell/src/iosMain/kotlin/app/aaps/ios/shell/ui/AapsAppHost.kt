@@ -39,7 +39,9 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.IosNotificationDelegate
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
+import app.aaps.core.interfaces.resources.TextRefValueRegistry
 import app.aaps.core.objects.di.CoreObjectsGraph
+import app.aaps.ios.shell.platform.IosLanguage
 import app.aaps.plugins.sync.nsclientV3.ws.NsSocketFactory
 import app.aaps.shared.clientbindings.ClientGraphBindings
 import app.aaps.core.ui.compose.LocalMetroViewModelFactory
@@ -104,6 +106,11 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
     // the graph does not need an app bundle - see `IosNotificationDelegate.install`. It is done here
     // rather than in `IosAppStartup` because only the real app reaches this function: startup is unit
     // tested, and `currentNotificationCenter()` cannot be called from a test binary.
+    // Before the first screen composes, or it renders English and only corrects itself on the next
+    // recomposition. Android gets this from `Resources`; here the registry has to be told.
+    IosLanguage.apply(graph.preferences)
+    logger.debug(LTag.CORE, "Language: ${TextRefValueRegistry.locale ?: "English"}")
+
     IosNotificationDelegate.install()
 
     // Same placement and the same reason: this touches UIKit, so it cannot live in the graph or in

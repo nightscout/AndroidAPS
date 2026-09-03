@@ -94,7 +94,10 @@ abstract class GenerateStringOwnerRegistryTask : DefaultTask() {
                 append("    fun registerAll() {\n")
                 modules.forEach {
                     val target = if (ids) it.idsObjectName else it.valuesObjectName
-                    append("        $registry.register(\"${it.owner}\") { name -> $target.$lookup(name) }\n")
+                    // The text lookup takes the locale the registry is currently set to; the Android
+                    // id lookup does not, because AAPT does the locale matching there.
+                    val args = if (ids) "name -> $target.$lookup(name)" else "name, locale -> $target.$lookup(name, locale)"
+                    append("        $registry.register(\"${it.owner}\") { $args }\n")
                 }
                 append("    }\n")
                 append("}\n")
