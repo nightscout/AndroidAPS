@@ -118,6 +118,24 @@ class SocketNsConnectionHandlersTest : TestBaseWithProfile() {
         verify(nsIncomingDataProcessor).processProfile(any(), eq(false))
     }
 
+    /**
+     * `srvModified` is mandatory in a Nightscout v3 document, so a frame without one is malformed
+     * and is dropped rather than routed with an invented value. Defaulting it to 0 was not inert:
+     * 0 would be written to the high-water mark, and `OrphanDetector.onSettingsDoc` reads 0 as
+     * "no timestamp, skip the race guard" - one malformed frame could declare a freshly paired
+     * client an orphan.
+     */
+    @Test
+    fun `a document with no srvModified is dropped, not routed`() = runTest {
+        whenever(nsClientV3Plugin.initialLoadFinished).thenReturn(true)
+
+        sut.onDataCreateUpdate(envelope("entries", """{"identifier":"abc","date":1000,"sgv":100}"""))
+
+        verify(nsIncomingDataProcessor, never()).processSgvs(any(), any())
+        verify(nsClientV3Plugin, never()).storeLastLoadedSrvModified()
+        assertThat(lastModified.collections.entries).isEqualTo(0L)
+    }
+
     @Test
     fun `an unknown collection is ignored`() = runTest {
         sut.onDataCreateUpdate(envelope("somethingelse", """{"identifier":"x","srvModified":1000}"""))

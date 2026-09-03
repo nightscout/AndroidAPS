@@ -247,7 +247,16 @@ class SocketNsConnection @Inject constructor(
         val docString = doc.toString()
         nsClientRepository.addLog("◄ WS CREATE/UPDATE", collection, doc)
 
-        val srvModified = doc.long("srvModified") ?: 0L
+        // Mandatory in a Nightscout v3 document. This used to default to 0 when it could not be read,
+        // which invents a value for a field that cannot legitimately be absent - and 0 is not inert:
+        // it would be written to the high-water mark, and `OrphanDetector.onSettingsDoc` reads 0 as
+        // "no timestamp, skip the race guard", which is how a freshly paired client could be declared
+        // an orphan by one malformed frame. Android drops such a frame too, by throwing out of
+        // `getLong` before it reaches the routing below; this does it visibly instead.
+        val srvModified = doc.long("srvModified") ?: run {
+            aapsLogger.error(LTag.NSCLIENT, "Dropping $collection frame with no readable srvModified")
+            return
+        }
         // The high-water mark must not move until the catch-up round has finished, or the next load
         // asks for "modified since (just moved pointer)" and skips the very window it should backfill.
         if (nsClientV3Plugin().initialLoadFinished) {
