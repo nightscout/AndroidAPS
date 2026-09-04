@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.PrefsFileInfo
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.iob.IobCobCalculator
@@ -177,10 +178,20 @@ interface IosAppGraph : MetroViewModelMultibindings {
      * the host provides it as `LocalMetroViewModelFactory` around the shared UI.
      */
 
-    /** The app's own database, under the name the app uses rather than the probe's. */
+    /**
+     * The app's own database, under the name the app uses rather than the probe's.
+     *
+     * The logger is passed in so that a database that could not be moved out of Documents says so in
+     * `aaps.log`, where it will actually be read. `:database:impl` cannot see `AAPSLogger` itself.
+     */
     @Provides
     @SingleIn(AppScope::class)
-    fun repository(): AppRepository = IosAppDatabaseBuilder().provideAppRepository("aaps-ios.db")
+    fun repository(aapsLogger: AAPSLogger): AppRepository =
+        IosAppDatabaseBuilder(
+            log = { failed, message ->
+                if (failed) aapsLogger.error(LTag.DATABASE, message) else aapsLogger.debug(LTag.DATABASE, message)
+            }
+        ).provideAppRepository("aaps-ios.db")
 
     @DependencyGraph.Factory
     fun interface Factory {
