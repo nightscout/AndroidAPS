@@ -1,5 +1,6 @@
 package app.aaps.core.keys
 
+import app.aaps.core.keys.interfaces.AppPlatform
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.ElementVisibility
 import app.aaps.core.keys.interfaces.PreferenceEnabledCondition
@@ -16,6 +17,7 @@ enum class BooleanKey(
     override val preferenceType: PreferenceType = PreferenceType.SWITCH,
     override val calculatedDefaultValue: Boolean = false,
     override val defaultedBySM: Boolean = false,
+    override val platforms: Set<AppPlatform> = AppPlatform.ALL,
     override val showInApsMode: Boolean = true,
     override val showInNsClientMode: Boolean = true,
     override val showInPumpControlMode: Boolean = true,
@@ -65,7 +67,13 @@ enum class BooleanKey(
     AlertMissedBgReading("enable_missed_bg_readings", false, KeysStrings.pref_title_alert_missed_bg_reading),
     AlertPumpUnreachable("enable_pump_unreachable_alert", true, KeysStrings.pref_title_alert_pump_unreachable),
     AlertCarbsRequired("enable_carbs_required_alert_local", true, KeysStrings.pref_title_alert_carbs_required),
-    AlertUrgentAsAndroidNotification("raise_urgent_alarms_as_android_notification", true, KeysStrings.pref_title_alert_urgent_as_android_notification),
+    // Android only: it decides whether AAPS raises an OS notification at all. iOS gives an app no say
+    // in that - the user grants or denies notifications in Settings - so there is nothing here for
+    // the switch to do, and a switch that does nothing reads as a promise.
+    AlertUrgentAsAndroidNotification(
+        "raise_urgent_alarms_as_android_notification", true, KeysStrings.pref_title_alert_urgent_as_android_notification,
+        platforms = AppPlatform.ANDROID_ONLY
+    ),
     AlertIncreaseVolume("gradually_increase_notification_volume", true, KeysStrings.pref_title_alert_increase_volume),
     AlertOverrideDoNotDisturb("alert_override_dnd", true, KeysStrings.pref_title_alert_override_dnd, KeysStrings.pref_summary_alert_override_dnd, defaultedBySM = true),
 
