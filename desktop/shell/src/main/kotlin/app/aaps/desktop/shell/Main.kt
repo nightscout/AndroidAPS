@@ -34,6 +34,7 @@ import app.aaps.appshell.navigation.handleNotificationAction
 import app.aaps.appshell.navigation.handleQuickLaunchAction
 import app.aaps.appshell.navigation.handleSearchResultClick
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.shared.clientbindings.ClientGraphBindings
@@ -292,9 +293,13 @@ private fun AapsDesktopApp(graph: DesktopAppGraph, appIcon: Painter, appName: St
                             if (result == app.aaps.core.interfaces.protection.ProtectionResult.GRANTED) action()
                         }
                     },
+                    // The same check `ComposeMainActivity` makes - see the note in `AapsAppHost`. It
+                    // used to grant unconditionally, so settings protection did not cover the edit
+                    // pencil on the management screens.
                     requestEditModeAuthorization = { onGranted ->
-                        logger.notWiredYet("edit mode authorization - granting")
-                        onGranted()
+                        graph.protectionCheck.requestAuthorization(ProtectionCheck.Protection.PREFERENCES) { result ->
+                            if (result.grantedLevel != null) onGranted()
+                        }
                     },
                     onRefreshPermissions = { logger.debug(LTag.CORE, "No runtime permissions to refresh on desktop") },
                     onExecuteQuickWizard = { guid -> mainViewModel.executeQuickWizard(guid) },

@@ -312,9 +312,16 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
                             logger.error(LTag.CORE, "Delivery error: ${graph.textResolver.gs(title)} - $comment")
                         },
                         withProtection = guardedBy(graph.protectionCheck),
+                        // The same check `ComposeMainActivity` makes. It used to grant unconditionally
+                        // with a "not wired yet" line, which is a stub that fails open on a protection
+                        // check: with settings protection configured, the edit pencil on the
+                        // QuickWizard, profile, insulin and temp-target screens opened with no prompt.
+                        // Those values feed dosing, and a client's edits are pushed to the master.
+                        // `protectionCheck` was already on the graph - `withProtection` above uses it.
                         requestEditModeAuthorization = { onGranted ->
-                            logger.notWiredYet("edit mode authorization - granting")
-                            onGranted()
+                            graph.protectionCheck.requestAuthorization(ProtectionCheck.Protection.PREFERENCES) { result ->
+                                if (result.grantedLevel != null) onGranted()
+                            }
                         },
                         onRefreshPermissions = { logger.notWiredYet("permission refresh") },
                         onExecuteQuickWizard = { guid -> logger.notWiredYet("quick wizard $guid") },
