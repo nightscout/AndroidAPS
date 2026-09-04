@@ -36,7 +36,13 @@ enum class BooleanKey(
         enabledCondition = PreferenceEnabledCondition { it.isConcentrationEnabled },
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
-    OverviewKeepScreenOn(key = "keep_screen_on", defaultValue = false, title = KeysStrings.pref_title_keep_screen_on, summary = KeysStrings.pref_summary_keep_screen_on, calculatedDefaultValue = true),
+    // Android only: the wake lock is held by ComposeMainActivity, and neither other shell has a
+    // counterpart - an iOS app cannot keep the screen lit from the background, and a desktop screen
+    // is the machine's business, not the app's.
+    OverviewKeepScreenOn(
+        key = "keep_screen_on", defaultValue = false, title = KeysStrings.pref_title_keep_screen_on, summary = KeysStrings.pref_summary_keep_screen_on,
+        calculatedDefaultValue = true, platforms = AppPlatform.ANDROID_ONLY
+    ),
     OverviewShowTreatmentButton(key = "show_treatment_button", defaultValue = false, title = KeysStrings.pref_title_show_treatment_button, defaultedBySM = true),
     OverviewShowWizardButton(key = "show_wizard_button", defaultValue = true, title = KeysStrings.pref_title_show_wizard_button, defaultedBySM = true),
     OverviewShowInsulinButton(key = "show_insulin_button", defaultValue = true, title = KeysStrings.pref_title_show_insulin_button, defaultedBySM = true),
@@ -223,7 +229,11 @@ enum class BooleanKey(
     NsClientNotificationsFromAlarms("ns_alarms", false, KeysStrings.pref_title_ns_notifications_from_alarms, calculatedDefaultValue = true),
     NsClientNotificationsFromAnnouncements("ns_announcements", false, KeysStrings.pref_title_ns_notifications_from_announcements, calculatedDefaultValue = true),
     NsClientUseCellular("ns_cellular", true, KeysStrings.pref_title_ns_use_cellular),
-    NsClientUseRoaming("ns_allow_roaming", true, KeysStrings.pref_title_ns_use_roaming, dependency = NsClientUseCellular),
+    // Android only. `ReceiverDelegate` reads this in shared code, but the clause it sits in also
+    // needs `ev.roaming`, and neither other shell can ever report that: iOS publishes no roaming
+    // state at all, and desktop calls every link wifi on purpose so these preferences stay out of
+    // the decision. Both say so in their own KDoc. So the row is a control with nothing behind it.
+    NsClientUseRoaming("ns_allow_roaming", true, KeysStrings.pref_title_ns_use_roaming, dependency = NsClientUseCellular, platforms = AppPlatform.ANDROID_ONLY),
     NsClientUseWifi("ns_wifi", true, KeysStrings.pref_title_ns_use_wifi),
     NsClientUseOnBattery("ns_battery", true, KeysStrings.pref_title_ns_use_on_battery),
     NsClientUseOnCharging("ns_charging", true, KeysStrings.pref_title_ns_use_on_charging),

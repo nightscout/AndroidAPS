@@ -48,17 +48,23 @@ class PreferencePlatformRulesTest {
         assertThat(empty).isEmpty()
     }
 
-    /** The key this was built for, pinned so the sweep is not quietly undone. */
-    @Test
-    fun `the android notification policy switch is Android only`() {
-        assertThat(BooleanKey.AlertUrgentAsAndroidNotification.platforms).isEqualTo(AppPlatform.ANDROID_ONLY)
-    }
-
-    /** Everything else is unrestricted until someone shows a platform cannot honour it. */
+    /**
+     * Every restriction, listed. Adding one here is the deliberate act; drifting into one is not.
+     *
+     * Each of these was checked the same way: find who reads the value, and confirm the platforms
+     * left out genuinely cannot honour it rather than merely not having got round to it.
+     * - the notification policy switch: iOS gives an app no say in whether an OS notification appears
+     * - keep screen on: the wake lock is `ComposeMainActivity`'s, and neither other shell has one
+     * - allow roaming: iOS publishes no roaming state and desktop reports every link as wifi
+     */
     @Test
     fun `restrictions are the exception`() {
-        val restricted = allKeys().filter { it.platforms != AppPlatform.ALL }.map { it.key }
+        val restricted = allKeys().filter { it.platforms != AppPlatform.ALL }.associate { it.key to it.platforms }
 
-        assertThat(restricted).containsExactly("raise_urgent_alarms_as_android_notification")
+        assertThat(restricted).containsExactly(
+            "raise_urgent_alarms_as_android_notification", AppPlatform.ANDROID_ONLY,
+            "keep_screen_on", AppPlatform.ANDROID_ONLY,
+            "ns_allow_roaming", AppPlatform.ANDROID_ONLY
+        )
     }
 }
