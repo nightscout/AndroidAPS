@@ -74,19 +74,23 @@ interface PreferenceKey : NonPreferenceKey, PreferenceItem {
         get() = AppPlatform.ALL
 
     /**
-     * Show only when APS mode is active (ie not PumpControl and NsClient)
+     * Show when APS mode is active (ie not PumpControl and NsClient). Set false to hide it there.
+     *
+     * Defaulted here, like [platforms] beside it. Without a default every implementor had to declare
+     * all three of these, so 38 of the 40 key enums carried the same three lines saying "yes, yes,
+     * yes" - `= true` repeated 114 times, and three more to copy each time a driver added a key. Only
+     * [app.aaps.core.keys.BooleanKey] and Instara's keys ever set one.
      */
     val showInApsMode: Boolean
+        get() = true
 
-    /**
-     * Show only when NsClient mode is active
-     */
+    /** Show when NsClient mode is active. Set false to hide it there. See [showInApsMode]. */
     val showInNsClientMode: Boolean
+        get() = true
 
-    /**
-     * Show only when PumpControl mode is active
-     */
+    /** Show when PumpControl mode is active. Set false to hide it there. See [showInApsMode]. */
     val showInPumpControlMode: Boolean
+        get() = true
 
     /**
      * show only if master dependency is enabled (ie android:dependency behavior)
