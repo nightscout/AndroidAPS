@@ -2,6 +2,7 @@ package app.aaps.ios.shell.di
 
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
 import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
@@ -41,7 +42,10 @@ object IosPlatformBindings {
     /** The real iOS logger: NSLog for the console, a rotating file for afterwards. */
     @Provides
     @SingleIn(AppScope::class)
-    fun logger(): AAPSLogger = AAPSLoggerIos()
+    // `L` is deferred: it reads Preferences, which needs a logger, and the lambda is only invoked
+    // when a line is actually written - long after both exist. Without it the logger fell back to
+    // the compile-time tag defaults and the log-settings sheet did nothing.
+    fun logger(logConfig: () -> L): AAPSLogger = AAPSLoggerIos(logConfig = logConfig)
 
     /** NSUserDefaults, the store the preference layer sits on. */
     @Provides
