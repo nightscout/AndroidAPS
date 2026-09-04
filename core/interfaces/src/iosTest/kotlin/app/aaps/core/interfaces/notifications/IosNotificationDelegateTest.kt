@@ -6,6 +6,9 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import platform.UserNotifications.UNNotificationPresentationOptionBanner
+import platform.UserNotifications.UNNotificationPresentationOptionList
+import platform.UserNotifications.UNNotificationPresentationOptionSound
 
 /**
  * Routing between the handlers that share iOS's one delegate slot.
@@ -58,6 +61,36 @@ class IosNotificationDelegateTest {
         IosNotificationDelegate.dispatch("action", "notification")
 
         assertEquals(listOf("first"), seen)
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // Foreground presentation
+    // ---------------------------------------------------------------------------------------------
+
+    /**
+     * Each flag is checked on its own rather than against one combined number, so a failure names
+     * which part of the presentation was lost. Answering `willPresent` at all is what stops iOS
+     * showing nothing while AAPS is frontmost; these three are what it should show.
+     */
+    @Test
+    fun `a notification arriving while the app is in front is shown and listed and keeps its sound`() {
+        val options = IosNotificationDelegate.PRESENTATION_OPTIONS
+
+        assertEquals(
+            UNNotificationPresentationOptionBanner,
+            options and UNNotificationPresentationOptionBanner,
+            "no banner while the app is in front"
+        )
+        assertEquals(
+            UNNotificationPresentationOptionList,
+            options and UNNotificationPresentationOptionList,
+            "not kept in Notification Centre"
+        )
+        assertEquals(
+            UNNotificationPresentationOptionSound,
+            options and UNNotificationPresentationOptionSound,
+            "the notification's own sound is suppressed"
+        )
     }
 
     /** Both real users register: the notification platform and the loop notifier. */
