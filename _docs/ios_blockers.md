@@ -146,6 +146,24 @@ Two warnings from having done several of these:
 
 ## For the iOS side: move the database out of Documents, with a migration that fails closed
 
+> **Done on the iOS side, and the question is answered: yes, a build has reached a tester with real
+> data.** The TestFlight build is installed on an iPhone 15, so by this section's own criterion the
+> migration wants a second pair of eyes. What to look at first is `resolveDatabasePath`, which
+> decides the path from what is on disk rather than from what the move returned - a rollback can
+> fail too, and trusting the return value there strands the `.db` at the new path while sending Room
+> to the old one, which is the silent empty database this was written to prevent. A test found that;
+> it was not spotted by reading.
+>
+> Also moved: `aaps-ios.db.lck`, which the shipped build leaves beside the database and this section
+> did not list. It moves best-effort and its failure is not the migration's failure, because it holds
+> no data - but it had to be handled, or the export feature's `UIFileSharingEnabled` would put a
+> stray lock file in the user's Files app.
+>
+> Verified on the simulator against a real database, not only in tests: the four files moved, the
+> rows survived, and `aaps.log` recorded the move. Eleven tests in `IosDatabaseMigrationTest` cover
+> the move, the journal files, the fail-closed path, the partial move that is put back, and the
+> stranded case.
+
 The last open item from the platform parity audit. Everything else from that audit is fixed and
 pushed; this one is yours because only the Apple side can test it, and because the decision it needs
 is about iOS storage policy rather than about shared code.
