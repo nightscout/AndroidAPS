@@ -85,7 +85,7 @@ class IosAppStartupTest {
 
     private fun run(plugins: Map<Int, PluginBase>): RecordingRegistry {
         val registry = RecordingRegistry()
-        IosAppStartup(SilentLogger, registry, plugins).run()
+        IosAppStartup(SilentLogger, registry, plugins, startPeriodicWork = {}).run()
         return registry
     }
 

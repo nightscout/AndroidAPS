@@ -3,8 +3,6 @@ package app.aaps.ios.shell
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.implementation.maintenance.PeriodicMaintenance
-import kotlinx.coroutines.CoroutineScope
 import app.aaps.ios.shell.di.GeneratedStringOwners
 
 /**
@@ -31,8 +29,8 @@ internal class IosAppStartup(
     private val aapsLogger: AAPSLogger,
     private val registry: PluginRegistry,
     private val contributedPlugins: Map<Int, PluginBase>,
-    private val periodicMaintenance: PeriodicMaintenance,
-    private val appScope: CoroutineScope
+    /** Starts the shared periodic housekeeping. A lambda so a test can run this without building it. */
+    private val startPeriodicWork: () -> Unit
 ) {
 
     fun run() {
@@ -60,7 +58,7 @@ internal class IosAppStartup(
         // snooze shortening, and log and database trimming. The work is shared; only the trigger is
         // not, because there is no WorkManager here. Without this the AlertMissedBgReading
         // preference was drawn on this platform and did nothing, and the database never shrank.
-        periodicMaintenance.start(appScope)
+        startPeriodicWork()
 
         aapsLogger.debug(LTag.CORE, "Plugins started and selection verified, starting the UI")
     }
