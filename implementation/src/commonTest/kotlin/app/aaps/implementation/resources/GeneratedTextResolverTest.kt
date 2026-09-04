@@ -107,7 +107,17 @@ class GeneratedTextResolverTest {
         assertEquals("Hello", resolver.gsNotLocalised(TextRef.Named("demo", "greeting")))
     }
 
-    @Test fun `short text mode is off`() {
+    /**
+     * The shell answers this, so both answers have to survive the constructor.
+     *
+     * It used to be hardcoded false, which meant an iPhone printed "3 days 4 hours" in the status
+     * light row where an Android phone of the same width printed "3d4h". Deliberately not read from
+     * the machine running the test - `isCompactScreen()` is what the shells pass, and a test that
+     * called it would say something different on a simulator than on a desktop.
+     */
+    @Test fun `short text mode is off by default and on when the shell asks for it`() {
         assertEquals(false, resolver.shortTextMode())
+        assertEquals(false, GeneratedTextResolver(compactScreen = false).shortTextMode())
+        assertEquals(true, GeneratedTextResolver(compactScreen = true).shortTextMode())
     }
 }

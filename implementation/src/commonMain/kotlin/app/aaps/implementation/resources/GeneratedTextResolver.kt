@@ -33,7 +33,13 @@ import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
  * to AAPT - so it renders as `res:<id>`. Shared code should not be producing one; if this shows up on
  * screen, that is the bug it is pointing at.
  */
-class GeneratedTextResolver : TextResolver {
+class GeneratedTextResolver(
+    /**
+     * Whether to shorten text for a narrow screen. See [isCompactScreen], which is what the shells
+     * pass; the default keeps a test deterministic rather than answering from the machine running it.
+     */
+    private val compactScreen: Boolean = false
+) : TextResolver {
 
     /**
      * Mirrors `ResourceHelper.gs(ref)` on Android, arguments included.
@@ -75,6 +81,6 @@ class GeneratedTextResolver : TextResolver {
     /** The map is English already, so this is the same lookup. */
     override fun gsNotLocalised(ref: TextRef): String = gs(ref)
 
-    /** A desktop window and an iPad are both wide. Nothing here runs on a watch. */
-    override fun shortTextMode(): Boolean = false
+    /** Answered by the shell through [isCompactScreen]: true on an iPhone, false on an iPad or a desktop. */
+    override fun shortTextMode(): Boolean = compactScreen
 }

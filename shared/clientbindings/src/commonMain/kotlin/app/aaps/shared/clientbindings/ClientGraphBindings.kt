@@ -27,6 +27,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.implementation.notifications.CommonNotificationManager
 import app.aaps.implementation.resources.GeneratedTextResolver
+import app.aaps.implementation.resources.isCompactScreen
 import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.constraints.objectives.objectives.DurationText
 import app.aaps.plugins.constraints.objectives.objectives.Objective
@@ -107,7 +108,7 @@ object ClientGraphBindings {
      */
     @Provides
     @SingleIn(AppScope::class)
-    fun textResolver(): TextResolver = GeneratedTextResolver()
+    fun textResolver(): TextResolver = GeneratedTextResolver(compactScreen = isCompactScreen())
 
     /** The shared registry decides what exists; each platform's own class only shows it. */
     @Provides
