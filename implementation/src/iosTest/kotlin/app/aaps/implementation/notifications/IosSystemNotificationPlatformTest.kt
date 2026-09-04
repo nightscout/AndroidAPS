@@ -4,10 +4,13 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
+import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.implementation.alerts.IosReminderScheduler
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 /**
  * The identifier round trip, which is the one piece of real logic in the iOS platform.
@@ -58,7 +61,10 @@ class IosSystemNotificationPlatformTest {
     }
 
     private val alarmPlayer = RecordingAlarmPlayer()
-    private val platform = IosSystemNotificationPlatform(SilentLogger, alarmPlayer)
+
+    /** What `AlertOverrideDoNotDisturb` says. Its own default is on. */
+    private var overrideDnd = true
+    private val platform = IosSystemNotificationPlatform(SilentLogger, alarmPlayer) { overrideDnd }
 
     @Test
     fun `an instance key survives the round trip`() {
@@ -83,6 +89,39 @@ class IosSystemNotificationPlatformTest {
     fun `a malformed identifier is not a key`() {
         assertNull(platform.instanceKeyOf("aaps-"))
         assertNull(platform.instanceKeyOf("aaps-abc"))
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // Breaking through a Focus mode
+    // ---------------------------------------------------------------------------------------------
+
+    /**
+     * The Focus half of `AlertOverrideDoNotDisturb`, which nothing read before.
+     *
+     * On iOS the one setting has to be answered in two places: the audio session category covers the
+     * Ring/Silent switch, and the interruption level covers Focus. Only the second one lives here.
+     */
+    @Test
+    fun `an urgent alarm breaks through Focus while the override is on`() {
+        overrideDnd = true
+
+        assertTrue(platform.breaksThroughFocus(NotificationLevel.URGENT))
+    }
+
+    @Test
+    fun `an urgent alarm respects Focus once the override is turned off`() {
+        overrideDnd = false
+
+        assertFalse(platform.breaksThroughFocus(NotificationLevel.URGENT))
+    }
+
+    /** The override widens what an alarm may do; it does not promote ordinary notifications. */
+    @Test
+    fun `a non urgent notification never breaks through Focus`() {
+        overrideDnd = true
+
+        assertFalse(platform.breaksThroughFocus(NotificationLevel.NORMAL))
+        assertFalse(platform.breaksThroughFocus(NotificationLevel.INFO))
     }
 
     // ---------------------------------------------------------------------------------------------

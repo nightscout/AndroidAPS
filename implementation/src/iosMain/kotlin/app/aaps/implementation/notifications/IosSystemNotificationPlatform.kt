@@ -35,7 +35,15 @@ import platform.UserNotifications.UNUserNotificationCenter
  */
 class IosSystemNotificationPlatform(
     private val aapsLogger: AAPSLogger,
-    private val alarmSoundPlayer: AlarmSoundPlayer
+    private val alarmSoundPlayer: AlarmSoundPlayer,
+    /**
+     * `AlertOverrideDoNotDisturb`, read fresh each time so a change takes effect without a restart.
+     *
+     * A supplier rather than `Preferences` itself: this needs one boolean, while `Preferences` has 76
+     * members and no test binary here can fake it - `iosTest` has no Mockito. Narrowing it is what
+     * lets [breaksThroughFocus] be checked at all.
+     */
+    private val overrideDoNotDisturb: () -> Boolean
 ) : SystemNotificationPlatform {
 
     /** The alarm currently owning the audio, so an unchanged owner does not restart the sound. */
@@ -55,24 +63,32 @@ class IosSystemNotificationPlatform(
     /**
      * iOS shows every notification, unlike Android.
      *
-     * The two fields Android needs to decide with - `sound` and `actions` - are ignored here on
-     * purpose. There is no "post the alarm silently" split because there is no separate ramping
-     * player to hand the audio to (see [setAudibleAlarm]), and no preference gating whether a system
-     * notification appears, because on iOS that choice belongs to the user in Settings.
+     * `AlertUrgentAsAndroidNotification` is not consulted, and that is deliberate: it decides whether
+     * AAPS raises an OS notification at all, and on iOS that choice belongs to the user in Settings.
+     * The key says so itself now - it is marked Android only.
+     *
+     * `sound` is not read either, because every notification here is posted silently and the audio is
+     * handed to [AlarmSoundPlayer] through [setAudibleAlarm] - the same split Android uses, so a
+     * replaced alarm does not restart the sound. (An earlier version of this comment claimed there
+     * was no ramping player to hand it to. There is: `IosAlarmSoundPlayer`, which ramps exactly as
+     * the Android one does.)
+     *
+     * `actions` **is** still ignored, and that one is a real gap rather than a decision - a
+     * notification carrying actions reaches the tray here with none of them attached, where Android
+     * suppresses it so it can be answered in the app.
      */
     override fun show(notification: AapsNotification, title: String) {
         ensureAuthorization()
-        val urgent = notification.level == NotificationLevel.URGENT
+        val breakThroughFocus = breaksThroughFocus(notification.level)
         val content = UNMutableNotificationContent().apply {
             setTitle(title)
             setBody(notification.text)
-            // Time sensitive breaks through Focus modes, which is what an urgent AAPS alarm is for.
             // The sound stays off here on purpose: audible alarms are driven by setAudibleAlarm, the
             // same split the Android side uses so a replaced alarm does not restart the sound.
-            // Without this the dismiss callback never fires - see onDismissed.
+            // Without the category the dismiss callback never fires - see onDismissed.
             setCategoryIdentifier(CATEGORY)
             setInterruptionLevel(
-                if (urgent) UNNotificationInterruptionLevelTimeSensitive
+                if (breakThroughFocus) UNNotificationInterruptionLevelTimeSensitive
                 else UNNotificationInterruptionLevelActive
             )
         }
@@ -87,6 +103,25 @@ class IosSystemNotificationPlatform(
             if (error != null) aapsLogger.error(LTag.NOTIFICATION, "Cannot post notification: $error")
         }
     }
+
+    /**
+     * Whether this notification is allowed past a Focus mode.
+     *
+     * The Focus half of `AlertOverrideDoNotDisturb`. On iOS that one setting splits across two
+     * mechanisms, because Focus suppresses **notifications** while the Ring/Silent switch silences
+     * **audio**, and neither lever reaches the other:
+     *
+     * - the silent switch is answered by the audio session category, in `IosAlarmSoundPlayer`;
+     * - Focus is answered here, and only `timeSensitive` gets through it.
+     *
+     * This used to read the urgency alone, so half of what the switch promised - "when disabled,
+     * alarms respect silent/DND" - was not true whatever the user set.
+     *
+     * Non-urgent notifications never break through, exactly as before: the override widens what an
+     * alarm may do, it does not promote ordinary notifications into alarms.
+     */
+    internal fun breaksThroughFocus(level: NotificationLevel): Boolean =
+        level == NotificationLevel.URGENT && overrideDoNotDisturb()
 
     override fun cancel(instanceKey: Int) {
         val ids = listOf(identifier(instanceKey))

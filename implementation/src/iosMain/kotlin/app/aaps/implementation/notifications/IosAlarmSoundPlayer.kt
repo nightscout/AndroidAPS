@@ -26,6 +26,7 @@ import kotlinx.coroutines.launch
 import platform.AVFAudio.AVAudioPlayer
 import platform.AVFAudio.AVAudioSession
 import platform.AVFAudio.AVAudioSessionCategoryPlayback
+import platform.AVFAudio.AVAudioSessionCategorySoloAmbient
 import platform.AVFAudio.setActive
 import platform.Foundation.NSBundle
 import platform.Foundation.NSURL
@@ -153,10 +154,22 @@ class IosAlarmSoundPlayer @Inject constructor(
     private fun activateSession() = memScoped {
         val session = AVAudioSession.sharedInstance()
         val error = alloc<ObjCObjectVar<NSError?>>()
-        // playback is the category that ignores the mute switch. Without it an alarm is silent on a
-        // phone with the ringer off, which is exactly when it is needed.
-        if (!session.setCategory(AVAudioSessionCategoryPlayback, error = error.ptr)) {
-            aapsLogger.error(LTag.NOTIFICATION, "Cannot set the playback category: ${error.value?.localizedDescription}")
+        // The category is the only lever there is: iOS publishes no way to read the Ring/Silent
+        // switch, so an app cannot check the switch and decide for itself - it can only pick a
+        // category the system does or does not silence.
+        //
+        // Playback ignores the switch, which is what "override" means and why it is the default.
+        // SoloAmbient obeys it, so a user who turned the override off gets a quiet phone when they
+        // silenced it. This used to be hardcoded to Playback, so the setting was drawn and did
+        // nothing while its own summary promised otherwise.
+        //
+        // Worth knowing about the off case: SoloAmbient is also silenced when the screen locks, so
+        // the alarm can stop there too. That has no counterpart on Android's notification stream. It
+        // is the price of respecting the switch at all, and it only reaches a user who asked for it.
+        val override = preferences.get(BooleanKey.AlertOverrideDoNotDisturb)
+        val category = if (override) AVAudioSessionCategoryPlayback else AVAudioSessionCategorySoloAmbient
+        if (!session.setCategory(category, error = error.ptr)) {
+            aapsLogger.error(LTag.NOTIFICATION, "Cannot set the audio category $category: ${error.value?.localizedDescription}")
         }
         if (!session.setActive(true, error = error.ptr)) {
             aapsLogger.error(LTag.NOTIFICATION, "Cannot activate the audio session: ${error.value?.localizedDescription}")
