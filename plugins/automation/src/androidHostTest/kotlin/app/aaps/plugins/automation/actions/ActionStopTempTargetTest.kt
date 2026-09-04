@@ -4,7 +4,6 @@ import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.data.model.TT
 import app.aaps.core.interfaces.db.PersistenceLayer
 import com.google.common.truth.Truth.assertThat
-import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -22,7 +21,7 @@ class ActionStopTempTargetTest : ActionsTestBase() {
     fun setup() {
         whenever(rh.gs(CoreUiStrings.stoptemptarget)).thenReturn("Stop temp target")
 
-        sut = ActionStopTempTarget(aapsLogger, rh, Provider { pumpEnactResultProvider() }, persistenceLayer, dateUtil)
+        sut = ActionStopTempTarget(aapsLogger, rh, { pumpEnactResultProvider() }, persistenceLayer, dateUtil)
     }
 
     @Test fun friendlyNameTest() {

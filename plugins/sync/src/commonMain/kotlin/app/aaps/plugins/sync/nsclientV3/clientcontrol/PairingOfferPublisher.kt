@@ -11,7 +11,6 @@ import app.aaps.core.nssdk.utils.ClientControlPairingCrypto
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import kotlinx.io.IOException
 import kotlinx.coroutines.Dispatchers
@@ -38,7 +37,7 @@ import kotlinx.serialization.json.put
 @OptIn(ExperimentalEncodingApi::class)
 @SingleIn(AppScope::class)
 class PairingOfferPublisher @Inject constructor(
-    private val nsClientV3Plugin: Provider<NSClientV3Plugin>,
+    private val nsClientV3Plugin: () -> NSClientV3Plugin,
     private val nsClientRepository: NSClientRepository,
     private val aapsLogger: AAPSLogger
 ) {

@@ -5,7 +5,6 @@ import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.R as CoreUiR
 import com.google.common.truth.Truth.assertThat
-import dev.zacsweers.metro.Provider
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -25,7 +24,7 @@ class ActionSettingsExportTest : ActionsTestBase() {
     @BeforeEach
     fun setup() {
         whenever(rh.gs(any<TextRef>(), anyVararg())).thenReturn("desc")
-        sut = ActionSettingsExport(aapsLogger, rh, Provider { pumpEnactResultProvider() }, rxBus, notificationManager, dateUtil, config, persistenceLayer, importExportPrefs, exportPasswordDataStore, preferences)
+        sut = ActionSettingsExport(aapsLogger, rh, { pumpEnactResultProvider() }, rxBus, notificationManager, dateUtil, config, persistenceLayer, importExportPrefs, exportPasswordDataStore, preferences)
     }
 
     @Test fun friendlyName() {

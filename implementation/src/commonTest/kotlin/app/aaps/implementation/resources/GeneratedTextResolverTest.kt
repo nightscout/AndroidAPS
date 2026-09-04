@@ -20,7 +20,8 @@ class GeneratedTextResolverTest {
 
     @BeforeTest fun register() {
         TextRefValueRegistry.clear()
-        TextRefValueRegistry.register("demo") { name ->
+        // The locale is ignored here: this test is about resolving and formatting, not translating.
+        TextRefValueRegistry.register("demo") { name, _ ->
             when (name) {
                 "greeting"   -> "Hello"
                 "with_arg"   -> "Hello %1\$s"

@@ -23,7 +23,6 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import dev.zacsweers.metro.Provider
 
 class AutotunePluginTest : TestBaseWithProfile() {
 
@@ -42,7 +41,7 @@ class AutotunePluginTest : TestBaseWithProfile() {
     private val noDays = BooleanArray(7) { false }
 
     @BeforeEach fun prepare() {
-        val atProfileProvider = Provider {
+        val atProfileProvider = {
             ATProfile(preferences, profileUtil, dateUtil, rh, { profileStoreProvider() }, aapsLogger)
         }
         autotunePlugin = AutotunePlugin(

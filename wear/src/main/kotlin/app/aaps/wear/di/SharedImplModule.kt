@@ -17,7 +17,6 @@ import app.aaps.shared.impl.utils.DateUtilImpl
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ContributesTo
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 
@@ -37,7 +36,7 @@ object SharedImplModule {
 
     @Provides
     @SingleIn(AppScope::class)
-    fun provideL(preferences: Provider<Preferences>): L = LImpl { preferences() }
+    fun provideL(preferences: () -> Preferences): L = LImpl { preferences() }
 
     @Provides
     @SingleIn(AppScope::class)

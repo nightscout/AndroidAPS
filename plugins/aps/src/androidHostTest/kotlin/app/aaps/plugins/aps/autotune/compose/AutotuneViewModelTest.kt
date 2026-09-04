@@ -44,7 +44,6 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
-import dev.zacsweers.metro.Provider
 
 /**
  * Unit test for the SHARED, synchronous state logic of [AutotuneViewModel].
@@ -72,8 +71,8 @@ internal class AutotuneViewModelTest {
     @Mock private lateinit var loop: Loop
 
     private val autotunePlugin: AutotunePlugin = mock()
-    private val profileStoreProvider: Provider<ProfileStore> = mock()
-    private val atProfileProvider: Provider<ATProfile> = mock()
+    private val profileStoreProvider: () -> ProfileStore = mock()
+    private val atProfileProvider: () -> ATProfile = mock()
 
     private lateinit var sut: AutotuneViewModel
 

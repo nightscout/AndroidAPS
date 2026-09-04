@@ -1,8 +1,6 @@
 plugins {
     id("kmp-test-defaults")
     kotlin("multiplatform")
-    // BCR and IDs are serialized into the Nightscout bolus wizard record. The json dependency was
-    // already here; only the compiler plugin that generates the serializers was missing.
     id("kotlinx-serialization")
 }
 

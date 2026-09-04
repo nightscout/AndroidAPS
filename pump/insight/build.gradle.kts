@@ -11,12 +11,11 @@ plugins {
 android {
 
     namespace = "app.aaps.pump.insight"
-    defaultConfig {
-        ksp {
-            arg("room.incremental", "true")
-            arg("room.schemaLocation", "$projectDir/schemas")
-        }
-    }
+}
+
+ksp {
+    arg("room.incremental", "true")
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 dependencies {

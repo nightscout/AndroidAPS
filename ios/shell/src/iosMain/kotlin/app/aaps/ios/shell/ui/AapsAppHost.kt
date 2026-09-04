@@ -4,6 +4,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.key
+import app.aaps.core.keys.StringKey
+import kotlinx.coroutines.flow.drop
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,7 +44,9 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.IosNotificationDelegate
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
+import app.aaps.core.interfaces.resources.TextRefValueRegistry
 import app.aaps.core.objects.di.CoreObjectsGraph
+import app.aaps.ios.shell.platform.IosLanguage
 import app.aaps.plugins.sync.nsclientV3.ws.NsSocketFactory
 import app.aaps.shared.clientbindings.ClientGraphBindings
 import app.aaps.core.ui.compose.LocalMetroViewModelFactory
@@ -48,7 +55,7 @@ import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.ios.shell.IosAppStartup
 import app.aaps.ios.shell.PluginStoreRegistry
 import app.aaps.ios.shell.di.IosAppGraph
-import app.aaps.ios.shell.di.IosViewModelFactory
+import app.aaps.shared.clientbindings.ClientViewModelFactory
 import app.aaps.ui.compose.configuration.ConfigurationViewModel
 import app.aaps.ui.compose.insulinManagement.InsulinManagementViewModel
 import app.aaps.ui.compose.maintenance.ImportViewModel
@@ -93,7 +100,7 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
     // Built once, outside the composition: a graph rebuilt on each recomposition would hand out new
     // singletons every frame - a new database wrapper, a new preference store.
     val graph = createGraphFactory<IosAppGraph.Factory>().create(CoreObjectsGraph, ClientGraphBindings, nsSocketFactory)
-    val viewModelFactory = IosViewModelFactory(graph)
+    val viewModelFactory = ClientViewModelFactory(graph)
     val logger = graph.logger
 
     // Before the composition, not beside it: the first view model built reads the active pump, and
@@ -104,6 +111,11 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
     // the graph does not need an app bundle - see `IosNotificationDelegate.install`. It is done here
     // rather than in `IosAppStartup` because only the real app reaches this function: startup is unit
     // tested, and `currentNotificationCenter()` cannot be called from a test binary.
+    // Before the first screen composes, or it renders English and only corrects itself on the next
+    // recomposition. Android gets this from `Resources`; here the registry has to be told.
+    IosLanguage.apply(graph.preferences)
+    logger.debug(LTag.CORE, "Language: ${TextRefValueRegistry.locale ?: "English"}")
+
     IosNotificationDelegate.install()
 
     // Same placement and the same reason: this touches UIKit, so it cannot live in the graph or in
@@ -120,7 +132,27 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
     if (appIcon == null) logger.error(LTag.CORE, "The app bundle gave no icon; showing the plain AAPS mark")
     logger.debug(LTag.CORE, "Starting the AAPS Compose root on iOS")
 
+    // The language setting, applied while the app runs. Android answers this by recreating the
+    // activity, which reloads the `Context` its `Resources` resolve against; here the registry is
+    // repointed and the composition is rebuilt, which is the same outcome without a restart iOS
+    // could not perform anyway.
     return ComposeUIViewController {
+        // Rebuilds everything below when a rebuild is asked for - after an import, or a language
+        // change. `key` discards the subtree's state, which is why it is keyed on this and nothing
+        // else: a scroll position lost on a language change is fine, on every recomposition is not.
+        // The language setting, applied while the app runs. Android answers this by recreating the
+        // activity, which reloads the `Context` its `Resources` resolve against; here the registry is
+        // repointed and the composition rebuilt - the same outcome without a restart iOS could not
+        // perform anyway.
+        LaunchedEffect(Unit) {
+            graph.preferences.observe(StringKey.GeneralLanguage).drop(1).collect {
+                IosLanguage.apply(graph.preferences)
+                logger.debug(LTag.CORE, "Language changed to ${TextRefValueRegistry.locale ?: "English"}")
+                graph.uiRestart.request()
+            }
+        }
+        val restart by graph.uiRestart.signal.collectAsState()
+        key(restart) {
         // iOS has no ambient application object, so the factory is provided here rather than found.
         CompositionLocalProvider(LocalMetroViewModelFactory provides viewModelFactory) {
             AapsAppRoot(
@@ -262,6 +294,11 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
                         rxBus = graph.rxBus,
                         activePlugin = graph.activePlugin,
                         pluginPermissions = graph.pluginPermissions,
+                        // Passed so the rules can be read and edited here. The runtime is deliberately
+                        // NOT started on a client: `MainApp` calls `automationRuntime.start()`, this shell
+                        // does not, and that is the design - a follower edits definitions and the master
+                        // runs them. Do not "fix" the missing start() call; it would give a second machine
+                        // the power to fire the same rules.
                         automationRuntime = graph.automationRuntime,
                         preferences = graph.preferences,
                         rh = graph.textResolver,
@@ -330,6 +367,7 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
                     )
                 }
             }
+        }
         }
     }
 }

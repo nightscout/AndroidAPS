@@ -7,7 +7,6 @@ import app.aaps.plugins.automation.elements.InputCarePortalMenu
 import app.aaps.plugins.automation.elements.InputDuration
 import app.aaps.plugins.automation.elements.InputString
 import com.google.common.truth.Truth.assertThat
-import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -29,7 +28,7 @@ class ActionCarePortalEventTest : ActionsTestBase() {
             whenever(persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(anyOrNull(), anyLong(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()))
                 .thenReturn(PersistenceLayer.TransactionResult())
         }
-        sut = ActionCarePortalEvent(aapsLogger, rh, Provider { pumpEnactResultProvider() }, persistenceLayer, profileFunction, dateUtil, glucoseStatusProvider)
+        sut = ActionCarePortalEvent(aapsLogger, rh, { pumpEnactResultProvider() }, persistenceLayer, profileFunction, dateUtil, glucoseStatusProvider)
         sut.cpEvent = InputCarePortalMenu()
         sut.cpEvent.value = InputCarePortalMenu.EventType.NOTE
         sut.note = InputString("Asd")

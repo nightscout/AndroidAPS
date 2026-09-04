@@ -57,7 +57,6 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import java.io.IOException
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -82,7 +81,7 @@ abstract class AbstractDanaRExecutionService : MetroService() {
     @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var notificationManager: NotificationManager
-    @Inject lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
+    @Inject lateinit var pumpEnactResultProvider: () -> PumpEnactResult
     @Inject lateinit var rfcommTransport: RfcommTransport
     @Inject lateinit var bolusProgressData: BolusProgressData
     @Inject @ApplicationScope lateinit var appScope: CoroutineScope

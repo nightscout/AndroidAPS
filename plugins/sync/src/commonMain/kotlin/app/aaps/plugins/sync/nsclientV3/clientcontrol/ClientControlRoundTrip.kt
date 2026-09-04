@@ -39,7 +39,6 @@ import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlRoundTrip.Com
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 import kotlin.concurrent.Volatile
@@ -83,7 +82,7 @@ import kotlinx.serialization.json.JsonObject
 class ClientControlRoundTrip @Inject constructor(
     private val publisher: ClientControlPublisher,
     private val pairingRepository: ClientPairingRepository,
-    private val nsClientV3Plugin: Provider<NSClientV3Plugin>,
+    private val nsClientV3Plugin: () -> NSClientV3Plugin,
     private val nsClientRepository: NSClientRepository,
     private val config: Config,
     private val dateUtil: DateUtil,

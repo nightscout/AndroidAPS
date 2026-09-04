@@ -541,31 +541,42 @@ class AutomationRuntime @Inject constructor(
     override suspend fun processEvent(someEvent: AutomationEvent) {
         if (!config.APS) return // execution is master-only — guards every UI entry point (wear, quick launch, scenes, run-now)
         val event = someEvent as AutomationEventObject
+
+        // A rule with an action that cannot run is switched off here, before any of it runs, rather
+        // than half-executed. This decision used to live in `areActionsValid()`, which the Compose
+        // state builder calls - so drawing the list disabled rules, on whichever machine happened to
+        // draw it. A client has a smaller plugin set on purpose, so it would have disabled rules that
+        // work on the master. Doing it here keeps the behaviour and puts it behind the master-only
+        // guard above.
+        if (!event.areActionsValid()) {
+            event.isEnabled = false
+            for (action in event.actions.filterNot { it.isValid() }) {
+                executionLog.add(AnnotatedString("Invalid action: ${action.shortDescription()}"))
+                aapsLogger.debug(LTag.AUTOMATION, "Invalid action: ${action.shortDescription()}")
+            }
+            rxBus.send(EventAutomationUpdateGui())
+            return
+        }
+
         if (event.canRun() && event.preconditionCanRun()) {
             val actions = event.actions
             for (action in actions) {
                 action.title = event.title
-                if (action.isValid()) {
-                    val result = action.doAction()
-                    val entry = buildAnnotatedString {
-                        append(dateUtil.timeString(dateUtil.now()))
-                        append(" ")
-                        append(if (result.success) "☺" else "▼")
-                        append(" ")
-                        withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append("${event.title}:") }
-                        append(" ")
-                        append(action.shortDescription())
-                        append(": ")
-                        append(result.comment)
-                    }
-                    executionLog.add(entry)
-                    aapsLogger.debug(LTag.AUTOMATION, "Executed: ${entry.text}")
-                    rxBus.send(EventAutomationUpdateGui())
-                } else {
-                    executionLog.add(AnnotatedString("Invalid action: ${action.shortDescription()}"))
-                    aapsLogger.debug(LTag.AUTOMATION, "Invalid action: ${action.shortDescription()}")
-                    rxBus.send(EventAutomationUpdateGui())
+                val result = action.doAction()
+                val entry = buildAnnotatedString {
+                    append(dateUtil.timeString(dateUtil.now()))
+                    append(" ")
+                    append(if (result.success) "☺" else "▼")
+                    append(" ")
+                    withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append("${event.title}:") }
+                    append(" ")
+                    append(action.shortDescription())
+                    append(": ")
+                    append(result.comment)
                 }
+                executionLog.add(entry)
+                aapsLogger.debug(LTag.AUTOMATION, "Executed: ${entry.text}")
+                rxBus.send(EventAutomationUpdateGui())
             }
             event.lastRun = dateUtil.now()
             if (event.autoRemove) remove(event)

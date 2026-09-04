@@ -25,7 +25,6 @@ import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
-import dev.zacsweers.metro.Provider
 
 class DanaRSServiceTest : TestBaseWithProfile() {
 
@@ -35,11 +34,11 @@ class DanaRSServiceTest : TestBaseWithProfile() {
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var bleComm: BLEComm
     @Mock lateinit var pumpSync: PumpSync
-    @Mock lateinit var danaRSPacketGeneralInitialScreenInformationProvider: Provider<DanaRSPacketGeneralInitialScreenInformation>
-    @Mock lateinit var danaRSPacketOptionSetUserOptionProvider: Provider<DanaRSPacketOptionSetUserOption>
-    @Mock lateinit var danaRSPacketBolusSetStepBolusStopProvider: Provider<DanaRSPacketBolusSetStepBolusStop>
-    @Mock lateinit var danaRSPacketAPSBasalSetTemporaryBasalProvider: Provider<DanaRSPacketAPSBasalSetTemporaryBasal>
-    @Mock lateinit var danaRSPacketBasalSetCancelTemporaryBasalProvider: Provider<DanaRSPacketBasalSetCancelTemporaryBasal>
+    @Mock lateinit var danaRSPacketGeneralInitialScreenInformationProvider: () -> DanaRSPacketGeneralInitialScreenInformation
+    @Mock lateinit var danaRSPacketOptionSetUserOptionProvider: () -> DanaRSPacketOptionSetUserOption
+    @Mock lateinit var danaRSPacketBolusSetStepBolusStopProvider: () -> DanaRSPacketBolusSetStepBolusStop
+    @Mock lateinit var danaRSPacketAPSBasalSetTemporaryBasalProvider: () -> DanaRSPacketAPSBasalSetTemporaryBasal
+    @Mock lateinit var danaRSPacketBasalSetCancelTemporaryBasalProvider: () -> DanaRSPacketBasalSetCancelTemporaryBasal
     @Mock lateinit var packetGeneralInitialScreenInfo: DanaRSPacketGeneralInitialScreenInformation
     @Mock lateinit var packetOptionSetUserOption: DanaRSPacketOptionSetUserOption
     @Mock lateinit var packetBolusSetStepBolusStop: DanaRSPacketBolusSetStepBolusStop

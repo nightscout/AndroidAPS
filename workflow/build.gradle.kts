@@ -58,8 +58,6 @@ kotlin {
                 implementation(libs.org.mockito.kotlin)
                 implementation(libs.com.google.truth)
                 implementation(libs.kotlinx.coroutines.test)
-                implementation(libs.joda.time)
-                implementation(libs.org.skyscreamer.jsonassert)
                 // The real org.json: isReturnDefaultValues makes the platform stub answer null rather
                 // than throwing, which NPEs the shared profile fixtures in TestBaseWithProfile.
                 implementation(libs.org.json.android)

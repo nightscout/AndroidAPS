@@ -69,7 +69,6 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import kotlin.math.abs
 import kotlin.math.max
@@ -91,7 +90,7 @@ class DanaRSPlugin @Inject constructor(
     private val dateUtil: DateUtil,
     private val danaHistoryDatabase: DanaHistoryDatabase,
     private val decimalFormatter: DecimalFormatter,
-    private val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val pumpEnactResultProvider: () -> PumpEnactResult,
     private val blePreCheck: BlePreCheck,
     private val bolusProgressData: BolusProgressData
 ) : PumpPluginBase(

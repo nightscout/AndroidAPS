@@ -25,7 +25,6 @@ import app.aaps.core.utils.lenientString
 import app.aaps.plugins.automation.triggers.TriggerDeps
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import kotlinx.serialization.json.JsonObject
 
@@ -40,7 +39,7 @@ class ActionFactory @Inject constructor(
     private val triggerDeps: TriggerDeps,
     private val aapsLogger: AAPSLogger,
     private val rh: TextResolver,
-    private val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val pumpEnactResultProvider: () -> PumpEnactResult,
     private val rxBus: RxBus,
     private val dateUtil: DateUtil,
     private val reminderScheduler: ReminderScheduler,

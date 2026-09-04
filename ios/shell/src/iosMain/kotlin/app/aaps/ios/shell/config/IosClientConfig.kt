@@ -54,11 +54,19 @@ class IosClientConfig(
     override val AAPSCLIENT1: Boolean = FLAVOR == "aapsclient"
     override val AAPSCLIENT2: Boolean = FLAVOR == "aapsclient2"
     override val AAPSCLIENT3: Boolean = FLAVOR == "aapsclient3"
-    override val BUILD_TYPE: String = "debug"
+    /**
+     * Which configuration built this, from the bundle - the same trick as [appName] and the client
+     * number, and for the same reason: one Kotlin framework serves every configuration, so it cannot
+     * know on its own. Pinned to "debug" before, which made a release build describe itself as a
+     * development one.
+     */
+    override val BUILD_TYPE: String =
+        (NSBundle.mainBundle.objectForInfoDictionaryKey("AAPSBuildType") as? String)?.lowercase() ?: "debug"
     override val PLATFORM: String = GeneratedBuildInfo.PLATFORM
     override val VERSION: String = VERSION_NAME
     override val BUILD_VERSION: String = GeneratedBuildInfo.BUILD
-    override val DEBUG: Boolean = true
+    /** Anything that is not a release build is treated as a debug one, which is the safe way round. */
+    override val DEBUG: Boolean = BUILD_TYPE != "release"
 
     // Filled by the build on Android. iOS has no equivalent wired up yet, and saying so plainly is
     // better than inventing a commit hash.
@@ -139,13 +147,13 @@ class IosClientConfig(
  * Separate and pure so it can be tested: the bundle identifier of a test binary is the test
  * binary's, so the real [IosClientConfig] can never observe anything but client 1 under test.
  *
- * Client 1's identifier is a prefix of client 2's and 3's, so the numbered ones are checked first -
- * `endsWith("aapsclient")` is false for `...aapsclient2`, but the ordering makes that a stated rule
- * rather than something the next reader has to work out. Anything unrecognised is client 1, which
- * keeps exactly one of the three flags true.
+ * Matched on the trailing `client<n>` rather than on a whole identifier, so it holds for both the
+ * `app.aaps.client2` the targets use now and the older `info.nightscout.aapsclient2`. Client 1's
+ * identifier is a prefix of the others, so the numbered ones are checked first. Anything
+ * unrecognised is client 1, which keeps exactly one of the three flags true.
  */
 internal fun clientFlavorFor(bundleId: String): String = when {
-    bundleId.endsWith("aapsclient2") -> "aapsclient2"
-    bundleId.endsWith("aapsclient3") -> "aapsclient3"
-    else                             -> "aapsclient"
+    bundleId.endsWith("client2") -> "aapsclient2"
+    bundleId.endsWith("client3") -> "aapsclient3"
+    else                         -> "aapsclient"
 }

@@ -56,7 +56,6 @@ import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.IntKey as MetroIntKey
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 import kotlinx.serialization.json.Json
@@ -94,8 +93,8 @@ class AutotunePlugin @Inject constructor(
     private val config: Config,
     private val uel: UserEntryLogger,
     private val loop: Loop,
-    private val profileStoreProvider: Provider<ProfileStore>,
-    private val atProfileProvider: Provider<ATProfile>
+    private val profileStoreProvider: () -> ProfileStore,
+    private val atProfileProvider: () -> ATProfile
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.GENERAL)

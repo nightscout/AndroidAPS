@@ -1,46 +1,24 @@
 package app.aaps.ios.shell.di
 
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.di.ApplicationScope
-import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
-import app.aaps.core.interfaces.pump.BolusProgressData
-import app.aaps.plugins.sync.nsclientV3.ws.NsConnection
-import app.aaps.plugins.sync.nsclientV3.ws.SocketNsConnection
-import app.aaps.core.interfaces.resources.TextResolver
-import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.implementation.logging.AAPSLoggerIos
-import app.aaps.implementation.notifications.CommonNotificationManager
 import app.aaps.implementation.notifications.IosSystemNotificationPlatform
-import app.aaps.implementation.resources.GeneratedTextResolver
 import app.aaps.ios.shell.config.IosClientConfig
 import app.aaps.ios.shell.platform.IosHistoryScope
 import app.aaps.ios.shell.prefs.IosSp
 import app.aaps.ui.compose.history.HistoryScope
-import app.aaps.shared.impl.logging.LImpl
-import app.aaps.shared.impl.rx.bus.RxBusImpl
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.shared.impl.utils.IosDateFormatPlatform
-import app.aaps.workflow.CalculationExecutor
-import app.aaps.workflow.LazyCalculationExecutor
-import app.aaps.workflow.PostCalculationRunner
-import app.aaps.workflow.PrepareGraphDataRunner
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ContributesTo
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 
 /**
  * The bindings every iOS graph needs, in one place.

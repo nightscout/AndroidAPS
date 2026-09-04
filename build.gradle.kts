@@ -1,3 +1,4 @@
+import org.gradle.testing.jacoco.plugins.JacocoPlugin
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
@@ -22,10 +23,11 @@ buildscript {
 }
 
 plugins {
-    alias(libs.plugins.klint)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler) apply false
     id(libs.plugins.android.test.get().pluginId) apply false
+    // Aggregates the per-module coverage into one report.
+    id("jacoco-aggregation")
 }
 
 allprojects {
@@ -53,12 +55,8 @@ allprojects {
         }
     }
 
-    apply(plugin = "org.jlleitschuh.gradle.ktlint")
-    apply(plugin = "jacoco")
+    apply<JacocoPlugin>()
 }
-
-// Setup all reports aggregation
-apply(from = "jacoco_aggregation.gradle.kts")
 
 tasks.register<Delete>("clean") {
     description = "Cleanup generated code"

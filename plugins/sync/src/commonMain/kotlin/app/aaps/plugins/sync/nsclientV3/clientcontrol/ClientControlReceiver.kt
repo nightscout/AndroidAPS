@@ -48,7 +48,6 @@ import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.services.RunningConfigurationPublisher
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import kotlin.concurrent.Volatile
 import kotlin.concurrent.atomics.AtomicBoolean
@@ -103,7 +102,7 @@ import kotlinx.serialization.json.put
 @SingleIn(AppScope::class)
 class ClientControlReceiver @Inject constructor(
     private val authorizedRepository: AuthorizedClientsRepository,
-    private val nsClientV3Plugin: Provider<NSClientV3Plugin>,
+    private val nsClientV3Plugin: () -> NSClientV3Plugin,
     private val nsClientRepository: NSClientRepository,
     private val sceneAutomationApi: SceneAutomationApi,
     private val offerPublisher: PairingOfferPublisher,

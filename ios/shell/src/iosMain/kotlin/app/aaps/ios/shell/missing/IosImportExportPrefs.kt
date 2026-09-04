@@ -90,7 +90,7 @@ class IosImportExportPrefs @Inject constructor(
     override fun setCsvLocalEnabled(enabled: Boolean) = aapsLogger.notOnIosYet("ImportExportPrefs.setCsvLocalEnabled")
     override fun setCsvCloudEnabled(enabled: Boolean) = aapsLogger.notOnIosYet("ImportExportPrefs.setCsvCloudEnabled")
 
-    override fun prepareImportRestart() = aapsLogger.notOnIosYet("ImportExportPrefs.prepareImportRestart")
+    override fun prepareImportedSettings() = aapsLogger.notOnIosYet("ImportExportPrefs.prepareImportedSettings")
 
     override fun exportCustomWatchface(customWatchface: CwfData, withDate: Boolean) =
         aapsLogger.notOnIosYet("ImportExportPrefs.exportCustomWatchface")

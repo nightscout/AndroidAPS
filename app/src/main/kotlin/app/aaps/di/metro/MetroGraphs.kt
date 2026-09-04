@@ -142,7 +142,6 @@ import app.aaps.plugins.aps.openAPSAutoISF.GlucoseStatusCalculatorAutoIsf
 import app.aaps.plugins.aps.openAPSSMB.DetermineBasalSMB
 import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
 import app.aaps.plugins.automation.AutomationRuntime
-import app.aaps.plugins.automation.di.AutomationMetroGraph
 import app.aaps.plugins.automation.services.LastLocationDataContainer
 import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
@@ -173,7 +172,6 @@ import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import dev.zacsweers.metro.Provider
 
 /**
  * The object graph, owned by the Application.
@@ -227,14 +225,11 @@ class MetroGraphs(
 
     private val source: SourceMetroGraph get() = root.sourceGraph
 
-    private val receivers: AppReceiversGraph get() = root.receiversGraph
     private val workers: AppWorkersGraph get() = root.workersGraph
 
     // The module owns its own bridge, because its DI qualifiers are internal to it.
     // The bridge comes from the root graph.
     private val openHumans: OpenHumansMetroBridge get() = root.openHumansMetroBridge
-    private val automationGraph: AutomationMetroGraph get() = root.automationGraph
-
     /**
      * Builds one history browsing window, with its own calculation objects.
      *
@@ -249,9 +244,7 @@ class MetroGraphs(
      */
     @Suppress("UNCHECKED_CAST")
     fun injectMembers(target: Any): Boolean {
-        val injector = receivers.memberInjectors[target::class]
-            ?: openHumans.memberInjectors[target::class]
-            ?: automationGraph.memberInjectors[target::class]
+        val injector = openHumans.memberInjectors[target::class]
             ?: source.memberInjectors[target::class]
             // Contributed straight into the root, which is how a pump module reaches this map without
             // MetroGraphs naming it - see `contributedMemberInjectors`.

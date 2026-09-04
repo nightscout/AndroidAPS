@@ -11,7 +11,6 @@ import app.aaps.implementation.scenes.SceneExpiryScheduler
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -76,7 +75,7 @@ class DesktopReminderScheduler @Inject constructor(
 @SingleIn(AppScope::class)
 class DesktopSceneExpiryScheduler @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val expiryRunner: Provider<SceneExpiryRunner>,
+    private val expiryRunner: () -> SceneExpiryRunner,
     @ApplicationScope private val scope: CoroutineScope
 ) : SceneExpiryScheduler {
 

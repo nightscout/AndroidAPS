@@ -10,7 +10,6 @@ import app.aaps.core.nssdk.localmodel.clientcontrol.SignedEnvelope
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.buildJsonObject
@@ -38,7 +37,7 @@ import kotlinx.serialization.json.put
 @SingleIn(AppScope::class)
 class ClientControlPublisher @Inject constructor(
     private val pairingRepository: ClientPairingRepository,
-    private val nsClientV3Plugin: Provider<NSClientV3Plugin>,
+    private val nsClientV3Plugin: () -> NSClientV3Plugin,
     private val nsClientRepository: NSClientRepository,
     private val dateUtil: DateUtil,
     private val aapsLogger: AAPSLogger

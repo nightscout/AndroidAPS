@@ -1,6 +1,7 @@
 package app.aaps.desktop.shell.di
 
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
+import app.aaps.core.interfaces.ui.UiRestart
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.pump.BolusProgressData
@@ -72,10 +73,9 @@ import dev.zacsweers.metro.SingleIn
  * only Android parts are `Calendar`/`TimeZone` and a file dump, but it computes basal, ISF and ICR,
  * so the date maths wants golden vectors rather than a quick swap.
  *
- * Nightscout sync is done and needs no websocket: `DesktopNsConnection` reports that this platform
- * has none, and the plugin's refresh tick then polls the same REST round a phone runs, through
- * `DesktopNsLoadExecutor`. The socket would only lower latency, and it is not worth what it costs -
- * see `DesktopNsConnection` for the JSON implementation it would drag in.
+ * Nightscout sync is done, websocket included. `SocketNsConnection` in `:shared:clientbindings` is
+ * shared with iOS and carries the remote-control channel, so a command reaches this client as fast
+ * as it reaches a phone. `DesktopNsLoadExecutor` still runs the REST round the plugin asks for.
  *
  * **Needs a port rather than an implementation:** `Autotune`, whose `AutotunePlugin` is arithmetic
  * over treatment history sitting in androidMain, and `LoopNotifier`, an interface whose only
@@ -112,6 +112,9 @@ interface DesktopAppGraph : MetroViewModelMultibindings {
     val pluginPermissions: PluginPermissions
     val textResolver: TextResolver
     val configBuilder: ConfigBuilder
+
+    /** Collected by the composition root, which rebuilds when it moves. */
+    val uiRestart: UiRestart
     val prefsFileInfo: PrefsFileInfo
     val persistenceLayer: PersistenceLayer
     val logger: AAPSLogger

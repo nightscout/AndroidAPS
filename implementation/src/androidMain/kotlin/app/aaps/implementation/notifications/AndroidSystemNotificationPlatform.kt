@@ -28,7 +28,6 @@ import app.aaps.implementation.androidNotification.AlarmNotificationManager
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import android.app.NotificationManager as AndroidNotificationManager
 
@@ -48,9 +47,9 @@ class AndroidSystemNotificationPlatform @Inject constructor(
     // Providers, not instances: AlarmNotificationManager creates its channels in its own constructor,
     // so injecting it directly would reach Android while the graph is being built. They are resolved
     // when a notification is actually shown or silenced.
-    private val notificationHolder: Provider<NotificationHolder>,
-    private val alarmNotificationManager: Provider<AlarmNotificationManager>,
-    private val alarmSoundPlayer: Provider<AlarmSoundPlayer>
+    private val notificationHolder: () -> NotificationHolder,
+    private val alarmNotificationManager: () -> AlarmNotificationManager,
+    private val alarmSoundPlayer: () -> AlarmSoundPlayer
 ) : SystemNotificationPlatform {
 
     /** instanceKey of the alarm currently owning [AlarmSoundPlayer.OWNER_INTERNAL], null when silent. */

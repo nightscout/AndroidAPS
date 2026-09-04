@@ -58,6 +58,24 @@ class HistoryBrowserDataTest : TestBaseWithProfile() {
         assertThat(sut.signals).isInstanceOf(CalculationSignalsImpl::class.java)
     }
 
+    /**
+     * Distinct objects, not merely objects of the right class.
+     *
+     * The test above asserts the types, which would still pass if the window resolved the parent`s
+     * singletons - `OverviewDataImpl` is `@ContributesBinding` + `@SingleIn` in the root, so the
+     * window`s four-line provider only shadows it. Delete that provider and everything still
+     * compiles; history browsing then recalculates into the state the running loop is dosing from.
+     * The cache already had this assertion. Overview data and signals did not.
+     */
+    @Test
+    fun `the window overview data and signals are its own not the app-wide ones`() {
+        val shared = root()
+        val window = shared.historyWindowFactory.create()
+
+        assertThat(window.overviewData).isNotSameInstanceAs(shared.overviewData)
+        assertThat(window.signals).isNotSameInstanceAs(shared.calculationSignalsEmitter)
+    }
+
     @Test
     fun `builds its own IobCobCalculator instance`() {
         assertThat(sut.iobCobCalculator).isInstanceOf(IobCobCalculatorPlugin::class.java)

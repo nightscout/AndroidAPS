@@ -54,7 +54,6 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import dev.zacsweers.metro.Provider
 
 /**
  * Focused tests for the canonical [WizardBolusExecutorImpl.deliverWizardBolus] entry point — the shared
@@ -65,7 +64,7 @@ import dev.zacsweers.metro.Provider
 class WizardBolusExecutorImplTest : TestBaseWithProfile() {
 
     @Mock lateinit var quickWizard: QuickWizard
-    @Mock lateinit var bolusWizardProvider: Provider<BolusWizard>
+    @Mock lateinit var bolusWizardProvider: () -> BolusWizard
     @Mock lateinit var runningModeGuard: RunningModeGuard
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var persistenceLayer: PersistenceLayer

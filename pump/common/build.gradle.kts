@@ -12,6 +12,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:keys"))
     implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
     implementation(project(":core:utils"))
@@ -19,6 +20,5 @@ dependencies {
 
     implementation(libs.com.thoughtworks.xstream)
     implementation(libs.com.google.code.gson)
-    implementation(project(":core:keys"))
 
 }

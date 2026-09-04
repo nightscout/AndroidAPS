@@ -43,7 +43,6 @@ import app.aaps.core.nssdk.utils.ClientControlCrypto
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.services.RunningConfigurationPublisher
 import com.google.common.truth.Truth.assertThat
-import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -169,7 +168,7 @@ internal class ClientControlReceiverTest {
         appScope = CoroutineScope(Dispatchers.Unconfined)
         sut = ClientControlReceiver(
             authorizedRepository,
-            Provider { nsClientV3Plugin },
+            { nsClientV3Plugin },
             nsClientRepository,
             sceneAutomationApi,
             offerPublisher,

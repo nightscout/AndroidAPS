@@ -13,7 +13,6 @@ import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.scenes.SceneIconResolver
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.shared.tests.TestBaseWithProfile
-import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.ArgumentMatchers.anyInt
@@ -49,7 +48,7 @@ ActionsTestBase : TestBaseWithProfile() {
 
     val actionFactory: ActionFactory by lazy {
         ActionFactory(
-            triggerDeps, aapsLogger, rh, Provider { pumpEnactResultProvider() }, rxBus, dateUtil, mock<ReminderScheduler>(),
+            triggerDeps, aapsLogger, rh, { pumpEnactResultProvider() }, rxBus, dateUtil, mock<ReminderScheduler>(),
             config, persistenceLayer, profileFunction, profileRepository, profileUtil, glucoseStatusProvider,
             notificationManager, activePlugin, preferences, sceneApi, sceneIconResolver, smsCommunicator,
             autotunePlugin, importExportPrefs, exportPasswordDataStore

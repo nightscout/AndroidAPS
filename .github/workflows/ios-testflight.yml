@@ -1,0 +1,187 @@
+# Builds the iOS client and uploads it to TestFlight for internal testing.
+#
+# ## Why the triggers are what they are
+#
+# Not `push: branches: [ios]`. Every upload consumes a build number and lands in front of the
+# testers, and `ios` takes tens of commits on a busy day - which would be tens of TestFlight builds,
+# each on its own 90 day expiry clock. A tag or a button press says "this one is for testers", which
+# is the thing a branch push does not say. Adding `branches: [ios]` here is a one line change if the
+# cadence turns out to be wrong.
+#
+# Never `pull_request_target`: it runs with repository secrets available to code the pull request
+# controls, which is how signing keys leak out of public repositories.
+#
+# ## What has to exist before this can work
+#
+#  - the identifiers `app.aaps.client` and `app.aaps.client2`, registered to the team
+#  - an app record in App Store Connect for `app.aaps.client`
+#  - an Internal Testing group with the testers in it
+#  - the four values below, in an environment called `testflight`
+#
+# The API key needs the **App Manager** role. A Developer role key uploads but may not create
+# signing certificates, which is what `-allowProvisioningUpdates` asks it to do, and the failure
+# reads as a signing error rather than a permissions one.
+
+name: iOS TestFlight
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'ios-testflight-*'
+
+# Read-only: this job publishes to Apple, and needs nothing back from GitHub.
+permissions:
+  contents: read
+
+concurrency:
+  # Two uploads racing would take the same build number from the clock and the second would be
+  # rejected. Never cancel a run in progress - it may already have uploaded.
+  group: ios-testflight
+  cancel-in-progress: false
+
+jobs:
+  testflight:
+    # Forks have no signing identity and must not run this, even if they somehow held the secrets.
+    if: github.repository == 'nightscout/AndroidAPS'
+    runs-on: macos-latest
+    timeout-minutes: 90
+
+    # Holds the four secrets. Give it required reviewers and restrict it to the `ios` branch: in a
+    # public repository that approval is the thing standing between a workflow edit and the signing
+    # key.
+    environment: testflight
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # The About dialog's build stamp comes from `git describe`; a depth 1 clone has no tags to
+          # describe against.
+          fetch-depth: 0
+
+      - name: Load jdk version
+        run: |
+          JAVA_VERSION=$(jq -r '.default' .github/jdk-map.json)
+          echo "JAVA_VERSION=$JAVA_VERSION" >> $GITHUB_ENV
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Cache Kotlin/Native
+        uses: actions/cache@v4
+        with:
+          path: ~/.konan
+          key: konan-${{ runner.os }}-${{ hashFiles('gradle/libs.versions.toml') }}
+          restore-keys: konan-${{ runner.os }}-
+
+      # Runs the eleven `:ios:shell` tests, which no other job does - see `_docs/ios_blockers.md`.
+      # They are here rather than nowhere because this is the workflow that hands a build to people:
+      # `GuardedByTest` is what keeps a protected action from running without a prompt, and shipping
+      # that untested to testers is worse than shipping it untested to a simulator.
+      - name: Test the iOS shell
+        run: |
+          set -o pipefail
+          ./gradlew --console=plain --no-daemon \
+            :ios:shell:iosSimulatorArm64Test :implementation:iosSimulatorArm64Test | tee ios-test.log
+
+      # The task reports SKIPPED off macOS and the build still succeeds, so a green run proves
+      # nothing on its own. Fail loudly if these ever stop executing here.
+      - name: Assert the iOS tests really ran
+        run: |
+          if grep -qE '^> Task :ios:shell:iosSimulatorArm64Test (SKIPPED|NO-SOURCE)' ios-test.log; then
+            echo "::error::iOS shell tests were skipped - this job is not testing anything."
+            exit 1
+          fi
+          test -d ios/shell/build/test-results/iosSimulatorArm64Test || {
+            echo "::error::No iOS shell test results were produced."
+            exit 1
+          }
+
+      # Writes AAPS_MARKETING_VERSION and AAPS_BUILD_NUMBER into ios/app/Version.xcconfig. The build
+      # number is minutes since a fixed epoch: App Store Connect rejects a build number that is not
+      # higher than the last one uploaded for the same marketing version.
+      - name: Generate the version numbers
+        run: ./gradlew --console=plain --no-daemon :ios:shell:generateIosVersionXcconfig
+
+      - name: Provide the team id
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: echo "DEVELOPMENT_TEAM = $APPLE_TEAM_ID" > ios/app/Signing.local.xcconfig
+
+      - name: Write the App Store Connect API key
+        env:
+          KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
+          KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/keys"
+          printf '%s' "$KEY" > "$RUNNER_TEMP/keys/AuthKey_${KEY_ID}.p8"
+          chmod 600 "$RUNNER_TEMP/keys/AuthKey_${KEY_ID}.p8"
+
+      - name: Archive
+        env:
+          KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+        run: |
+          set -o pipefail
+          # -allowProvisioningUpdates lets Xcode create the distribution certificate and profile
+          # from the API key, so no .p12 or profile has to be stored as a secret.
+          xcodebuild -project ios/app/AAPSClient.xcodeproj \
+            -scheme AAPSClient \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath "$RUNNER_TEMP/AAPSClient.xcarchive" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$RUNNER_TEMP/keys/AuthKey_${KEY_ID}.p8" \
+            -authenticationKeyID "$KEY_ID" \
+            -authenticationKeyIssuerID "$ISSUER_ID" \
+            archive | tee archive.log
+
+      - name: Export and upload to TestFlight
+        env:
+          KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          set -o pipefail
+          # `destination: upload` makes this step do the upload itself, so no separate altool call.
+          cat > "$RUNNER_TEMP/ExportOptions.plist" <<PLIST
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key><string>app-store-connect</string>
+            <key>destination</key><string>upload</string>
+            <key>teamID</key><string>${APPLE_TEAM_ID}</string>
+            <key>signingStyle</key><string>automatic</string>
+            <key>uploadSymbols</key><true/>
+          </dict>
+          </plist>
+          PLIST
+          xcodebuild -exportArchive \
+            -archivePath "$RUNNER_TEMP/AAPSClient.xcarchive" \
+            -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" \
+            -exportPath "$RUNNER_TEMP/export" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$RUNNER_TEMP/keys/AuthKey_${KEY_ID}.p8" \
+            -authenticationKeyID "$KEY_ID" \
+            -authenticationKeyIssuerID "$ISSUER_ID" | tee export.log
+
+      # The key is a credential with upload rights; do not leave it on a runner that may be reused.
+      - name: Remove the API key
+        if: always()
+        run: rm -rf "$RUNNER_TEMP/keys"
+
+      - name: Keep the logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-testflight-logs
+          path: |
+            ios-test.log
+            archive.log
+            export.log
+          retention-days: 7

@@ -67,7 +67,6 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.drop
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import kotlin.math.abs
 import kotlin.math.min
@@ -86,7 +85,7 @@ class MedtrumPlugin @Inject constructor(
     private val dateUtil: DateUtil,
     private val medtrumPump: MedtrumPump,
     private val temporaryBasalStorage: TemporaryBasalStorage,
-    private val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val pumpEnactResultProvider: () -> PumpEnactResult,
     private val protectionCheck: ProtectionCheck,
     private val blePreCheck: BlePreCheck
 ) : PumpPluginBase(

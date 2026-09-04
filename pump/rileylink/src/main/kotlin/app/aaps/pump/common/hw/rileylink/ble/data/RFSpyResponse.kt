@@ -3,13 +3,12 @@ package app.aaps.pump.common.hw.rileylink.ble.data
 import app.aaps.pump.common.hw.rileylink.ble.command.RileyLinkCommand
 import app.aaps.pump.common.hw.rileylink.ble.defs.RFSpyRLResponse
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 
 /**
  * Created by geoff on 5/26/16.
  */
 class RFSpyResponse @Inject constructor(
-    private val radioResponseProvider: Provider<RadioResponse>
+    private val radioResponseProvider: () -> RadioResponse
 ) {
 
     // 0xaa == timeout

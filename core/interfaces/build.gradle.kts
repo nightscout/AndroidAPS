@@ -3,19 +3,9 @@ import kotlin.math.min
 plugins {
     id("kmp-test-defaults")
     kotlin("multiplatform")
-    // NOT com.android.library. AGP 9 refuses that plugin together with the multiplatform plugin:
-    // "The 'com.android.library' (or 'com.android.application') plugin is not compatible with the
-    // 'org.jetbrains.kotlin.multiplatform' plugin since AGP 9.0."
     alias(libs.plugins.android.kmp.library)
-    // Applied only so `dev.zacsweers.metro.Qualifier` is on the classpath for the three plugin-bucket
-    // qualifiers. This module declares no graph, so the compiler plugin has nothing to do here, and
-    // interop stays off so Metro ignores the javax annotations the rest of the module uses.
     alias(libs.plugins.metro)
-    // The Compose COMPILER, which ships with Kotlin and compiles @Composable for every target.
     alias(libs.plugins.compose.compiler)
-    // The Compose Multiplatform framework. Needed because the compiler plugin above is applied per
-    // project rather than per target and fails any compilation with no Compose runtime on the class
-    // path - which is what kept the Apple targets out of this module at first.
     alias(libs.plugins.compose.multiplatform)
     id("kotlinx-serialization")
 }

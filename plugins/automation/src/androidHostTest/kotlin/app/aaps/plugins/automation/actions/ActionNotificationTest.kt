@@ -7,7 +7,6 @@ import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputString
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -33,7 +32,7 @@ class ActionNotificationTest : TestBaseWithProfile() {
                 .thenReturn(PersistenceLayer.TransactionResult())
         }
 
-        sut = ActionNotification(aapsLogger, rh, Provider { pumpEnactResultProvider() }, rxBus, notificationManager, persistenceLayer, dateUtil)
+        sut = ActionNotification(aapsLogger, rh, { pumpEnactResultProvider() }, rxBus, notificationManager, persistenceLayer, dateUtil)
     }
 
     @Test fun friendlyNameTest() {

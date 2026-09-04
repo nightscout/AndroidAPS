@@ -7,7 +7,6 @@ import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputString
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -33,7 +32,7 @@ class ActionAlarmTest : TestBaseWithProfile() {
         // because a reminder that rings is an Android platform concern. That makes this a plain mock
         // instead of a real object that silently fell into its own catch block in a JVM test.
         reminderScheduler = mock()
-        sut = ActionAlarm(aapsLogger, rh, Provider { pumpEnactResultProvider() }, rxBus, dateUtil, reminderScheduler, config)
+        sut = ActionAlarm(aapsLogger, rh, { pumpEnactResultProvider() }, rxBus, dateUtil, reminderScheduler, config)
     }
 
     @Test fun friendlyNameTest() = runTest {

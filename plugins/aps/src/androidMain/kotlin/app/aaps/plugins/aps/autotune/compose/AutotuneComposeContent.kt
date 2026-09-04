@@ -20,7 +20,6 @@ import app.aaps.plugins.aps.autotune.AutotuneFS
 import app.aaps.plugins.aps.autotune.AutotunePlugin
 import app.aaps.plugins.aps.autotune.data.ATProfile
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 
 class AutotuneComposeContent(
@@ -35,8 +34,8 @@ class AutotuneComposeContent(
     private val rxBus: RxBus,
     private val uel: UserEntryLogger,
     private val loop: Loop,
-    private val profileStoreProvider: Provider<ProfileStore>,
-    private val atProfileProvider: Provider<ATProfile>
+    private val profileStoreProvider: () -> ProfileStore,
+    private val atProfileProvider: () -> ATProfile
 ) : ComposablePluginContent {
 
     @Composable

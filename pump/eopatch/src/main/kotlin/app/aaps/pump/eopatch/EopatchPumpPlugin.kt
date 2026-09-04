@@ -76,7 +76,6 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.IntKey as MetroIntKey
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import kotlin.math.abs
 import app.aaps.core.ui.R as CoreUiR
@@ -98,7 +97,7 @@ class EopatchPumpPlugin @Inject constructor(
     private val patchManagerExecutor: PatchManagerExecutor,
     private val alarmManager: IAlarmManager,
     private val preferenceManager: PreferenceManager,
-    private val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val pumpEnactResultProvider: () -> PumpEnactResult,
     private val patchConfig: PatchConfig,
     private val normalBasalManager: NormalBasalManager,
     private val protectionCheck: ProtectionCheck,

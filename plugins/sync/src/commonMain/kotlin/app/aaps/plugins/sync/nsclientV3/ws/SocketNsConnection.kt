@@ -3,30 +3,16 @@ package app.aaps.plugins.sync.nsclientV3.ws
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.AlarmSound
-import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.notifications.NotificationLevel
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.NSAlarm
 import app.aaps.core.interfaces.nsclient.NSClientRepository
-import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.nssdk.mapper.toCalibrationMbg
-import app.aaps.core.nssdk.mapper.toNSDeviceStatus
-import app.aaps.core.nssdk.mapper.toNSFood
-import app.aaps.core.nssdk.mapper.toNSSgvV3
-import app.aaps.core.nssdk.mapper.toNSTreatment
-import app.aaps.plugins.sync.nsclientV3.NSAlarmObject
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
-import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
-import app.aaps.plugins.sync.nsclientV3.data.NSDeviceStatusHandler
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -46,46 +32,61 @@ import kotlinx.serialization.json.put
  * [NsConnection] owned by a coroutine scope instead of a service.
  *
  * Android keeps the sockets in a bound service holding a wake lock, so they survive the screen going
- * away. iOS has nothing of the sort, so the connection follows the app: up while it is active, down
- * when it is not. Something outside drives that - see `IosForegroundWatcher` - and this class stays
- * free of UIKit so it can be tested without one.
+ * away. This class has no equivalent, and it stays free of UIKit so it can be tested without one.
  *
- * ## Why a closed socket is not a hole
+ * ## What happens when the socket drops
  *
- * Dropping the socket on backgrounding is safe because the shared plugin already handles a dropped
- * socket: [connected] going false starts the REST polling fallback after the disconnect grace, and
- * `initialLoadFinished` going false makes the next round backfill the window that was missed. That
- * machinery was written for connection drops on Android; backgrounding is just another drop.
+ * Nothing here closes the socket on backgrounding: [stop] is called only on app exit, on a
+ * connection setting changing, and when connectivity becomes disallowed. `IosForegroundWatcher` was
+ * written to drive that and is wired to nothing, so a dropped connection is left to the transport's
+ * own reconnect. When it does come back, `onConnectStorage` clears `initialLoadFinished` and asks
+ * for a catch-up round, and that round refetches the missed window from the persisted high-water
+ * mark.
+ *
+ * **There is no REST polling fallback behind that**, which this comment used to claim there was. The
+ * five-minute tick in `NSClientV3Plugin` runs a load only when websockets are switched off or the
+ * platform has none; while they are on it logs and does nothing. `wsDisconnectGraceMs` debounces the
+ * `masterReachable` flow and starts no load. So the catch-up is the only recovery, a socket that
+ * never reconnects is a real hole, and on a platform that suspends the whole process there is
+ * nothing else to close it.
  *
  * ## What is deliberately different from Android
  *
- * The payload parsing is kotlinx rather than `org.json`, which is the only reason this is a separate
- * implementation rather than shared code. The field names, the collection routing and the ordering
- * rules are the same, and where a rule is subtle it is called out below.
+ * The payload parsing is kotlinx rather than `org.json`. That is the stated reason this is a
+ * separate implementation, and it is a weak one: [NsSocket] hands every payload across as text, so
+ * nothing stops the Android service parsing the same way. The field names, the collection routing
+ * and the ordering rules are meant to match, and where a rule is subtle it is called out below.
+ *
+ * They did not match for the `settings` collection: it was in the subscribe list from the start with
+ * no branch here, so every client-control frame was dropped and remote control could not work on any
+ * platform using this class. The branch below is the Android one, ported. Two routings for one
+ * protocol is what allowed that, and is the reason they should become one.
  */
 /*
- * `NSClientV3Plugin` and `NsIncomingDataProcessor` arrive as `Provider`s to break a cycle. The
+ * `NSClientV3Plugin` and `NsIncomingDataProcessor` arrive as `() -> T` to break a cycle. The
  * plugin takes an `NsConnection`, which is this class, and the processor reaches the plugin as its
  * `NsClient`. Android never meets either loop: there the socket lives in `NSClientV3Service`, an
  * Android service the system constructs, so `ServiceNsConnection` only binds to it and needs neither
  * of these. iOS has no service, so this class does that work itself and has to name them.
  *
+ * A singleton on the class, matching `ServiceNsConnection` on Android. It was previously one only
+ * because the `NsConnection` provider that aliases it is scoped - true today, but nothing injects
+ * the concrete type, and the day something does it would open a second pair of sockets and its own
+ * `connected` flow while the plugin watched the other one.
+ *
  * Deferring is safe here rather than merely convenient: nothing is looked up while the graph is
  * built. The plugin is read when a socket connects and the processor when a frame arrives, and by
  * either point both have long existed.
  */
+@SingleIn(AppScope::class)
 class SocketNsConnection @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val config: Config,
-    private val nsClientV3Plugin: Provider<NSClientV3Plugin>,
-    private val nsIncomingDataProcessor: Provider<NsIncomingDataProcessor>,
-    private val storeDataForDb: StoreDataForDb,
-    private val notificationManager: NotificationManager,
+    private val nsClientV3Plugin: () -> NSClientV3Plugin,
+    private val nsFrameHandler: NsFrameHandler,
     private val nsClientRepository: NSClientRepository,
-    private val nsDeviceStatusHandler: NSDeviceStatusHandler,
-    private val nsSocketFactory: NsSocketFactory,
-    private val appScope: CoroutineScope
+    private val nsSocketFactory: NsSocketFactory
 ) : NsConnection {
 
     private var storageSocket: NsSocket? = null
@@ -148,10 +149,15 @@ class SocketNsConnection @Inject constructor(
             }
             alarmSocket = alarm
             alarm.on(NsSocket.EVENT_CONNECT) { onConnectAlarms() }
-            alarm.on(NsSocket.EVENT_DISCONNECT) { nsClientRepository.addLog("◄ WS", "disconnect alarm event") }
+            alarm.on(NsSocket.EVENT_DISCONNECT) { reason ->
+                // The reason was discarded here while the storage socket logged its own. Android
+                // logs both.
+                aapsLogger.debug(LTag.NSCLIENT, "disconnect alarm reason: $reason")
+                nsClientRepository.addLog("◄ WS", "disconnect alarm event")
+            }
             alarm.on("announcement") { raw -> onAnnouncement(raw) }
-            alarm.on("alarm") { raw -> onAlarm(raw, BooleanKey.NsClientNotificationsFromAlarms) }
-            alarm.on("urgent_alarm") { raw -> onAlarm(raw, BooleanKey.NsClientNotificationsFromAlarms) }
+            alarm.on("alarm") { raw -> onAlarm(raw) }
+            alarm.on("urgent_alarm") { raw -> onUrgentAlarm(raw) }
             alarm.on("clear_alarm") { raw -> onClearAlarm(raw) }
             nsClientRepository.addLog("► WS", "do connect alarm $reason")
             alarm.connect()
@@ -208,66 +214,6 @@ class SocketNsConnection @Inject constructor(
         nsClientRepository.updateStatus(nsClientV3Plugin().status)
     }
 
-    internal fun onDataCreateUpdate(raw: String) {
-        val response = parse(raw) ?: return
-        val collection = response.str("colName") ?: return
-        val doc = NsWsPayload.document(response) ?: return
-        val docString = doc.toString()
-        nsClientRepository.addLog("◄ WS CREATE/UPDATE", collection, doc)
-
-        val srvModified = doc.long("srvModified") ?: 0L
-        // The high-water mark must not move until the catch-up round has finished, or the next load
-        // asks for "modified since (just moved pointer)" and skips the very window it should backfill.
-        if (nsClientV3Plugin().initialLoadFinished) {
-            nsClientV3Plugin().lastLoadedSrvModified.set(collection, srvModified)
-            nsClientV3Plugin().storeLastLoadedSrvModified()
-        }
-
-        when (collection) {
-            "devicestatus" -> nsDeviceStatusHandler.handleNewData(arrayOf(docString.toNSDeviceStatus()), live = true)
-            "entries"      -> {
-                docString.toNSSgvV3()?.let {
-                    nsIncomingDataProcessor().processSgvs(listOf(it), doFullSync = false)
-                    storeDataForDb.requestStoreGlucoseValues()
-                }
-                // The same collection also carries AAPS calibration entries.
-                docString.toCalibrationMbg()?.let {
-                    nsIncomingDataProcessor().processCalibrations(listOf(it), doFullSync = false)
-                    storeDataForDb.requestStoreCalibrationEntries()
-                }
-            }
-
-            "profile"      -> appScope.launch { nsIncomingDataProcessor().processProfile(doc, doFullSync = false) }
-            "treatments"   -> docString.toNSTreatment()?.let {
-                nsIncomingDataProcessor().processTreatments(listOf(it), doFullSync = false)
-                storeDataForDb.requestStoreTreatments(fullSync = false)
-            }
-
-            "foods"        -> docString.toNSFood()?.let {
-                nsIncomingDataProcessor().processFood(listOf(it))
-                storeDataForDb.requestStoreFoods()
-            }
-        }
-    }
-
-    internal fun onDataDelete(raw: String) {
-        val response = parse(raw) ?: return
-        val collection = response.str("colName") ?: ""
-        val identifier = response.str("identifier") ?: ""
-        nsClientRepository.addLog("◄ WS DELETE", "$collection $identifier")
-        when (collection) {
-            "treatments" -> {
-                storeDataForDb.addToDeleteTreatment(identifier)
-                storeDataForDb.requestUpdateDeletedTreatments()
-            }
-
-            "entries"    -> {
-                storeDataForDb.addToDeleteGlucoseValue(identifier)
-                storeDataForDb.requestUpdateDeletedGlucoseValues()
-            }
-        }
-    }
-
     // ---------------------------------------------------------------------------------------------
     // Alarm socket
     // ---------------------------------------------------------------------------------------------
@@ -284,46 +230,15 @@ class SocketNsConnection @Inject constructor(
         }
     }
 
-    internal fun onAnnouncement(raw: String) {
-        val data = parse(raw) ?: return
-        nsClientRepository.addLog("◄ ANNOUNCEMENT", data.str("message") ?: "")
-        if (preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)) post(NSAlarmObject(data))
-    }
+    // Frame handling is shared with Android - see NsFrameHandler. These stay as delegates so the
+    // characterization tests written against this class still exercise the real routing.
+    internal fun onDataCreateUpdate(raw: String) = nsFrameHandler.onDataCreateUpdate(raw)
+    internal fun onDataDelete(raw: String) = nsFrameHandler.onDataDelete(raw)
+    internal fun onAnnouncement(raw: String) = nsFrameHandler.onAnnouncement(raw)
+    internal fun onAlarm(raw: String) = nsFrameHandler.onAlarm(raw)
+    internal fun onUrgentAlarm(raw: String) = nsFrameHandler.onUrgentAlarm(raw)
+    internal fun onClearAlarm(raw: String) = nsFrameHandler.onClearAlarm(raw)
 
-    internal fun onAlarm(raw: String, gate: BooleanKey) {
-        val data = parse(raw) ?: return
-        nsClientRepository.addLog("◄ ALARM", data.str("title") ?: "")
-        if (preferences.get(gate)) post(NSAlarmObject(data))
-    }
-
-    internal fun onClearAlarm(raw: String) {
-        val data = parse(raw) ?: return
-        nsClientRepository.addLog("◄ CLEARALARM", data.str("title") ?: "")
-        notificationManager.dismiss(NotificationId.NS_ALARM)
-        notificationManager.dismiss(NotificationId.NS_URGENT_ALARM)
-    }
-
-    /**
-     * Level decides the notification, exactly as on Android.
-     *
-     * The snooze actions are not offered here yet: they write a per-level snooze preference and are
-     * worth porting with their own test rather than by eye. An alarm without snooze buttons is still
-     * an alarm; one that snoozes the wrong level silently is not.
-     */
-    private fun post(alarm: NSAlarm) {
-        when (alarm.level) {
-            0    -> notificationManager.post(
-                id = NotificationId.NS_ANNOUNCEMENT,
-                text = alarm.message,
-                level = NotificationLevel.ANNOUNCEMENT,
-                validMinutes = 60
-            )
-
-            1    -> notificationManager.post(id = NotificationId.NS_ALARM, text = alarm.title, sound = AlarmSound.ALARM)
-            2    -> notificationManager.post(id = NotificationId.NS_URGENT_ALARM, text = alarm.title, sound = AlarmSound.URGENT_ALARM)
-            else -> Unit
-        }
-    }
 
     // ---------------------------------------------------------------------------------------------
 

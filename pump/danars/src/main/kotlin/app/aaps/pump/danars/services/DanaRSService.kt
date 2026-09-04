@@ -91,7 +91,6 @@ import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import kotlin.math.abs
 import kotlin.math.min
 import kotlin.time.Duration.Companion.milliseconds
@@ -113,47 +112,47 @@ class DanaRSService : Service() {
     @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var bolusProgressData: BolusProgressData
-    @Inject lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
+    @Inject lateinit var pumpEnactResultProvider: () -> PumpEnactResult
     @Inject @ApplicationScope lateinit var appScope: CoroutineScope
-    @Inject lateinit var danaRSPacketAPSBasalSetTemporaryBasal: Provider<DanaRSPacketAPSBasalSetTemporaryBasal>
-    @Inject lateinit var danaRSPacketAPSHistoryEvents: Provider<DanaRSPacketAPSHistoryEvents>
-    @Inject lateinit var danaRSPacketAPSSetEventHistory: Provider<DanaRSPacketAPSSetEventHistory>
-    @Inject lateinit var danaRSPacketBasalGetBasalRate: Provider<DanaRSPacketBasalGetBasalRate>
-    @Inject lateinit var danaRSPacketBasalGetProfileNumber: Provider<DanaRSPacketBasalGetProfileNumber>
-    @Inject lateinit var danaRSPacketBasalSetCancelTemporaryBasal: Provider<DanaRSPacketBasalSetCancelTemporaryBasal>
-    @Inject lateinit var danaRSPacketBasalSetProfileBasalRate: Provider<DanaRSPacketBasalSetProfileBasalRate>
-    @Inject lateinit var danaRSPacketBasalSetProfileNumber: Provider<DanaRSPacketBasalSetProfileNumber>
-    @Inject lateinit var danaRSPacketBasalSetTemporaryBasal: Provider<DanaRSPacketBasalSetTemporaryBasal>
-    @Inject lateinit var danaRSPacketBolusGet24CIRCFArray: Provider<DanaRSPacketBolusGet24CIRCFArray>
-    @Inject lateinit var danaRSPacketBolusGetBolusOption: Provider<DanaRSPacketBolusGetBolusOption>
-    @Inject lateinit var danaRSPacketBolusGetCalculationInformation: Provider<DanaRSPacketBolusGetCalculationInformation>
-    @Inject lateinit var danaRSPacketBolusGetCIRCFArray: Provider<DanaRSPacketBolusGetCIRCFArray>
-    @Inject lateinit var danaRSPacketBolusGetStepBolusInformation: Provider<DanaRSPacketBolusGetStepBolusInformation>
-    @Inject lateinit var danaRSPacketBolusSet24CIRCFArray: Provider<DanaRSPacketBolusSet24CIRCFArray>
-    @Inject lateinit var danaRSPacketBolusSetExtendedBolus: Provider<DanaRSPacketBolusSetExtendedBolus>
-    @Inject lateinit var danaRSPacketBolusSetExtendedBolusCancel: Provider<DanaRSPacketBolusSetExtendedBolusCancel>
-    @Inject lateinit var danaRSPacketBolusSetStepBolusStart: Provider<DanaRSPacketBolusSetStepBolusStart>
-    @Inject lateinit var danaRSPacketBolusSetStepBolusStop: Provider<DanaRSPacketBolusSetStepBolusStop>
-    @Inject lateinit var danaRSPacketEtcKeepConnection: Provider<DanaRSPacketEtcKeepConnection>
-    @Inject lateinit var danaRSPacketGeneralGetPumpCheck: Provider<DanaRSPacketGeneralGetPumpCheck>
-    @Inject lateinit var danaRSPacketGeneralGetShippingInformation: Provider<DanaRSPacketGeneralGetShippingInformation>
-    @Inject lateinit var danaRSPacketGeneralInitialScreenInformation: Provider<DanaRSPacketGeneralInitialScreenInformation>
-    @Inject lateinit var danaRSPacketGeneralSetHistoryUploadMode: Provider<DanaRSPacketGeneralSetHistoryUploadMode>
-    @Inject lateinit var danaRSPacketOptionGetPumpTime: Provider<DanaRSPacketOptionGetPumpTime>
-    @Inject lateinit var danaRSPacketOptionGetPumpUTCAndTimeZone: Provider<DanaRSPacketOptionGetPumpUTCAndTimeZone>
-    @Inject lateinit var danaRSPacketOptionGetUserOption: Provider<DanaRSPacketOptionGetUserOption>
-    @Inject lateinit var danaRSPacketOptionSetPumpTime: Provider<DanaRSPacketOptionSetPumpTime>
-    @Inject lateinit var danaRSPacketOptionSetPumpUTCAndTimeZone: Provider<DanaRSPacketOptionSetPumpUTCAndTimeZone>
-    @Inject lateinit var danaRSPacketOptionSetUserOption: Provider<DanaRSPacketOptionSetUserOption>
-    @Inject lateinit var danaRSPacketHistoryAlarm: Provider<DanaRSPacketHistoryAlarm>
-    @Inject lateinit var danaRSPacketHistoryBasal: Provider<DanaRSPacketHistoryBasal>
-    @Inject lateinit var danaRSPacketHistoryBloodGlucose: Provider<DanaRSPacketHistoryBloodGlucose>
-    @Inject lateinit var danaRSPacketHistoryBolus: Provider<DanaRSPacketHistoryBolus>
-    @Inject lateinit var danaRSPacketHistoryCarbohydrate: Provider<DanaRSPacketHistoryCarbohydrate>
-    @Inject lateinit var danaRSPacketHistoryDaily: Provider<DanaRSPacketHistoryDaily>
-    @Inject lateinit var danaRSPacketHistoryPrime: Provider<DanaRSPacketHistoryPrime>
-    @Inject lateinit var danaRSPacketHistoryRefill: Provider<DanaRSPacketHistoryRefill>
-    @Inject lateinit var danaRSPacketHistorySuspend: Provider<DanaRSPacketHistorySuspend>
+    @Inject lateinit var danaRSPacketAPSBasalSetTemporaryBasal: () -> DanaRSPacketAPSBasalSetTemporaryBasal
+    @Inject lateinit var danaRSPacketAPSHistoryEvents: () -> DanaRSPacketAPSHistoryEvents
+    @Inject lateinit var danaRSPacketAPSSetEventHistory: () -> DanaRSPacketAPSSetEventHistory
+    @Inject lateinit var danaRSPacketBasalGetBasalRate: () -> DanaRSPacketBasalGetBasalRate
+    @Inject lateinit var danaRSPacketBasalGetProfileNumber: () -> DanaRSPacketBasalGetProfileNumber
+    @Inject lateinit var danaRSPacketBasalSetCancelTemporaryBasal: () -> DanaRSPacketBasalSetCancelTemporaryBasal
+    @Inject lateinit var danaRSPacketBasalSetProfileBasalRate: () -> DanaRSPacketBasalSetProfileBasalRate
+    @Inject lateinit var danaRSPacketBasalSetProfileNumber: () -> DanaRSPacketBasalSetProfileNumber
+    @Inject lateinit var danaRSPacketBasalSetTemporaryBasal: () -> DanaRSPacketBasalSetTemporaryBasal
+    @Inject lateinit var danaRSPacketBolusGet24CIRCFArray: () -> DanaRSPacketBolusGet24CIRCFArray
+    @Inject lateinit var danaRSPacketBolusGetBolusOption: () -> DanaRSPacketBolusGetBolusOption
+    @Inject lateinit var danaRSPacketBolusGetCalculationInformation: () -> DanaRSPacketBolusGetCalculationInformation
+    @Inject lateinit var danaRSPacketBolusGetCIRCFArray: () -> DanaRSPacketBolusGetCIRCFArray
+    @Inject lateinit var danaRSPacketBolusGetStepBolusInformation: () -> DanaRSPacketBolusGetStepBolusInformation
+    @Inject lateinit var danaRSPacketBolusSet24CIRCFArray: () -> DanaRSPacketBolusSet24CIRCFArray
+    @Inject lateinit var danaRSPacketBolusSetExtendedBolus: () -> DanaRSPacketBolusSetExtendedBolus
+    @Inject lateinit var danaRSPacketBolusSetExtendedBolusCancel: () -> DanaRSPacketBolusSetExtendedBolusCancel
+    @Inject lateinit var danaRSPacketBolusSetStepBolusStart: () -> DanaRSPacketBolusSetStepBolusStart
+    @Inject lateinit var danaRSPacketBolusSetStepBolusStop: () -> DanaRSPacketBolusSetStepBolusStop
+    @Inject lateinit var danaRSPacketEtcKeepConnection: () -> DanaRSPacketEtcKeepConnection
+    @Inject lateinit var danaRSPacketGeneralGetPumpCheck: () -> DanaRSPacketGeneralGetPumpCheck
+    @Inject lateinit var danaRSPacketGeneralGetShippingInformation: () -> DanaRSPacketGeneralGetShippingInformation
+    @Inject lateinit var danaRSPacketGeneralInitialScreenInformation: () -> DanaRSPacketGeneralInitialScreenInformation
+    @Inject lateinit var danaRSPacketGeneralSetHistoryUploadMode: () -> DanaRSPacketGeneralSetHistoryUploadMode
+    @Inject lateinit var danaRSPacketOptionGetPumpTime: () -> DanaRSPacketOptionGetPumpTime
+    @Inject lateinit var danaRSPacketOptionGetPumpUTCAndTimeZone: () -> DanaRSPacketOptionGetPumpUTCAndTimeZone
+    @Inject lateinit var danaRSPacketOptionGetUserOption: () -> DanaRSPacketOptionGetUserOption
+    @Inject lateinit var danaRSPacketOptionSetPumpTime: () -> DanaRSPacketOptionSetPumpTime
+    @Inject lateinit var danaRSPacketOptionSetPumpUTCAndTimeZone: () -> DanaRSPacketOptionSetPumpUTCAndTimeZone
+    @Inject lateinit var danaRSPacketOptionSetUserOption: () -> DanaRSPacketOptionSetUserOption
+    @Inject lateinit var danaRSPacketHistoryAlarm: () -> DanaRSPacketHistoryAlarm
+    @Inject lateinit var danaRSPacketHistoryBasal: () -> DanaRSPacketHistoryBasal
+    @Inject lateinit var danaRSPacketHistoryBloodGlucose: () -> DanaRSPacketHistoryBloodGlucose
+    @Inject lateinit var danaRSPacketHistoryBolus: () -> DanaRSPacketHistoryBolus
+    @Inject lateinit var danaRSPacketHistoryCarbohydrate: () -> DanaRSPacketHistoryCarbohydrate
+    @Inject lateinit var danaRSPacketHistoryDaily: () -> DanaRSPacketHistoryDaily
+    @Inject lateinit var danaRSPacketHistoryPrime: () -> DanaRSPacketHistoryPrime
+    @Inject lateinit var danaRSPacketHistoryRefill: () -> DanaRSPacketHistoryRefill
+    @Inject lateinit var danaRSPacketHistorySuspend: () -> DanaRSPacketHistorySuspend
 
     // Service lifetime. appScope above is the application scope and must not be cancelled here.
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())

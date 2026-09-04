@@ -30,7 +30,6 @@ import app.aaps.core.nssdk.localmodel.treatment.CreateUpdateResponse
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.services.RunningConfigurationPublisher
 import com.google.common.truth.Truth.assertThat
-import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -189,7 +188,7 @@ class ClientControlUplinkIntegrationTest {
 
         // ---------- real components ----------
         clientPairingRepository = ClientPairingRepository(clientPrefs, secureEncrypt, aapsLogger)
-        clientControlPublisher = ClientControlPublisher(clientPairingRepository, Provider { nsClientV3Plugin }, nsClientRepository, dateUtil, aapsLogger)
+        clientControlPublisher = ClientControlPublisher(clientPairingRepository, { nsClientV3Plugin }, nsClientRepository, dateUtil, aapsLogger)
         whenever(notificationManager.notifications).thenReturn(MutableStateFlow(emptyList<AapsNotification>()))
         whenever(bolusProgressData.state).thenReturn(MutableStateFlow<BolusProgressState?>(null))
         clientScope = CoroutineScope(Dispatchers.Unconfined)
@@ -197,7 +196,7 @@ class ClientControlUplinkIntegrationTest {
             ClientControlRoundTrip(
                 clientControlPublisher,
                 clientPairingRepository,
-                Provider { nsClientV3Plugin },
+                { nsClientV3Plugin },
                 nsClientRepository,
                 clientConfig,
                 dateUtil,
@@ -212,7 +211,7 @@ class ClientControlUplinkIntegrationTest {
         masterAuthorizedRepository = AuthorizedClientsRepository(masterPrefs, secureEncrypt, aapsLogger)
         masterScope = CoroutineScope(Dispatchers.Unconfined)
         masterReceiver = ClientControlReceiver(
-            masterAuthorizedRepository, Provider { nsClientV3Plugin }, nsClientRepository, sceneAutomationApi,
+            masterAuthorizedRepository, { nsClientV3Plugin }, nsClientRepository, sceneAutomationApi,
             offerPublisher, masterPrefs, dateUtil, uel, runningConfigurationPublisher, persistenceLayer, wizardBolusExecutor, notificationManager, masterConfig, bolusProgressData, commandQueue, rh, aapsLogger,
             masterScope
         )

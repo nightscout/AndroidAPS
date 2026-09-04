@@ -25,12 +25,6 @@ android {
             enableUnitTestCoverage = true
             enableAndroidTestCoverage = true
         }
-        create("benchmark") {
-            initWith(getByName("release"))
-            signingConfig = signingConfigs.getByName("debug")
-            matchingFallbacks += listOf("release")
-            isDebuggable = false
-        }
     }
 
     compileOptions {

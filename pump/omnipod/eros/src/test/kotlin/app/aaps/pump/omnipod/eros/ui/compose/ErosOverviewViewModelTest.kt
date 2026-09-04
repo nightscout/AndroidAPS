@@ -43,7 +43,6 @@ import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import dev.zacsweers.metro.Provider
 import app.aaps.pump.omnipod.common.R as CommonR
 
 /**
@@ -80,7 +79,7 @@ internal class ErosOverviewViewModelTest {
     private val omnipodAlertUtil: OmnipodAlertUtil = mock()
     private val rileyLinkServiceData: RileyLinkServiceData = mock()
     private val serviceTaskExecutor: ServiceTaskExecutor = mock()
-    private val resetRileyLinkConfigurationTaskProvider: Provider<ResetRileyLinkConfigurationTask> = mock()
+    private val resetRileyLinkConfigurationTaskProvider: () -> ResetRileyLinkConfigurationTask = mock()
 
     @BeforeEach
     fun setUp() {

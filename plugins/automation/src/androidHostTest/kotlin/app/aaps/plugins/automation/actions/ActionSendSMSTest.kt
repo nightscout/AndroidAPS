@@ -4,7 +4,6 @@ import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputString
 import com.google.common.truth.Truth.assertThat
-import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -22,7 +21,7 @@ class ActionSendSMSTest : ActionsTestBase() {
         whenever(rh.gs(AutomationStrings.sendsmsactionlabel)).thenReturn("Send SMS: %s")
         whenever(rh.gs(AutomationStrings.sendsmsactiondescription)).thenReturn("Send SMS to all numbers")
 
-        sut = ActionSendSMS(aapsLogger, rh, Provider { pumpEnactResultProvider() }, smsCommunicator)
+        sut = ActionSendSMS(aapsLogger, rh, { pumpEnactResultProvider() }, smsCommunicator)
     }
 
     @Test fun friendlyNameTest() = runTest {

@@ -12,12 +12,11 @@ plugins {
 android {
 
     namespace = "app.aaps.pump.equil"
-    defaultConfig {
-        ksp {
-            arg("room.incremental", "true")
-            arg("room.schemaLocation", "$projectDir/schemas")
-        }
-    }
+}
+
+ksp {
+    arg("room.incremental", "true")
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 dependencies {
@@ -36,6 +35,5 @@ dependencies {
     implementation(libs.com.google.code.gson)
 
     api(libs.androidx.room.runtime)
-    api(libs.androidx.room.rxjava3)
     ksp(libs.androidx.room.compiler)
 }

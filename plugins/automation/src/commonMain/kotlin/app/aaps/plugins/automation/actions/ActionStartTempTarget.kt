@@ -28,7 +28,6 @@ import app.aaps.plugins.automation.elements.InputTempTarget
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.triggers.TriggerDeps
 import app.aaps.plugins.automation.triggers.TriggerTempTarget
-import dev.zacsweers.metro.Provider
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 import kotlinx.serialization.json.buildJsonObject
@@ -37,7 +36,7 @@ import kotlinx.serialization.json.put
 class ActionStartTempTarget(
     aapsLogger: AAPSLogger,
     rh: TextResolver,
-    pumpEnactResultProvider: Provider<PumpEnactResult>,
+    pumpEnactResultProvider: () -> PumpEnactResult,
     private val activePlugin: ActivePlugin,
     private val persistenceLayer: PersistenceLayer,
     private val profileFunction: ProfileFunction,

@@ -49,7 +49,6 @@ import java.util.Calendar
 import java.util.GregorianCalendar
 import java.util.Locale
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
@@ -75,8 +74,8 @@ class MedtronicCommunicationManager @Inject constructor(
     rfspy: RFSpy,
     activePlugin: ActivePlugin,
     rileyLinkUtil: RileyLinkUtil,
-    wakeAndTuneTaskProvider: Provider<WakeAndTuneTask>,
-    radioResponseProvider: Provider<RadioResponse>
+    wakeAndTuneTaskProvider: () -> WakeAndTuneTask,
+    radioResponseProvider: () -> RadioResponse
 ) : RileyLinkCommunicationManager<PumpMessage>(
     aapsLogger, preferences, rileyLinkServiceData, serviceTaskExecutor, rfspy, activePlugin, rileyLinkUtil, wakeAndTuneTaskProvider, radioResponseProvider
 ) {

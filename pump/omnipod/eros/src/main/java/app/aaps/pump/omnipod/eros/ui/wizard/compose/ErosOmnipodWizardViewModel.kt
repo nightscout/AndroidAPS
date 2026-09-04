@@ -38,7 +38,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx3.rxSingle
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import app.aaps.pump.omnipod.common.R as CommonR
 
 @Stable
@@ -56,7 +55,7 @@ class ErosOmnipodWizardViewModel @Inject constructor(
     profileRepository: ProfileRepository,
     private val persistenceLayer: PersistenceLayer,
     private val preferences: Preferences,
-    pumpEnactResultProvider: Provider<PumpEnactResult>,
+    pumpEnactResultProvider: () -> PumpEnactResult,
     logger: AAPSLogger,
     aapsSchedulers: AapsSchedulers
 ) : OmnipodWizardViewModel(logger, aapsSchedulers, pumpEnactResultProvider, profileFunction, profileRepository) {

@@ -115,6 +115,8 @@
                 <action android:name="cn.diyaps.sharing.OT_APP" />
                 <!-- Receiver from patched SI app -->
                 <action android:name="cn.diyaps.sharing.SI_APP" />
+                <!-- Receiver from Sibionics app, handled by the same plugin as SI app -->
+                <action android:name="com.diyaps.sharing.SIBIO_APP" />
                 <!-- Receiver from patched Sino app -->
                 <action android:name="cn.diyaps.sharing.SINO_APP" />
                 <!-- Receiver from Instara App -->

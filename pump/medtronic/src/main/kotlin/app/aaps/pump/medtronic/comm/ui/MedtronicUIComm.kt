@@ -6,7 +6,6 @@ import app.aaps.pump.medtronic.comm.MedtronicCommunicationManager
 import app.aaps.pump.medtronic.defs.MedtronicCommandType
 import app.aaps.pump.medtronic.util.MedtronicUtil
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 
 /**
  * Created by andy on 6/14/18.
@@ -16,7 +15,7 @@ class MedtronicUIComm @Inject constructor(
     private val medtronicUtil: MedtronicUtil,
     private val medtronicUIPostprocessor: MedtronicUIPostprocessor,
     private val medtronicCommunicationManager: MedtronicCommunicationManager,
-    private val medtronicUITaskProvider: Provider<MedtronicUITask>
+    private val medtronicUITaskProvider: () -> MedtronicUITask
 ) {
 
     fun executeCommand(commandType: MedtronicCommandType): MedtronicUITask {

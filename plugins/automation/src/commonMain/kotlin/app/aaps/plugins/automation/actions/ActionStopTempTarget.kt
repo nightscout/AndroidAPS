@@ -10,12 +10,11 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.icons.IcTtCancel
-import dev.zacsweers.metro.Provider
 
 class ActionStopTempTarget(
     aapsLogger: AAPSLogger,
     rh: TextResolver,
-    pumpEnactResultProvider: Provider<PumpEnactResult>,
+    pumpEnactResultProvider: () -> PumpEnactResult,
     private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil
 ) : Action(aapsLogger, rh, pumpEnactResultProvider) {

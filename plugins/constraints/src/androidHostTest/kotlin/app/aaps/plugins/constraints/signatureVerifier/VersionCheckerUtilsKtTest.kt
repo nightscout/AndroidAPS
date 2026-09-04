@@ -10,7 +10,6 @@ import app.aaps.plugins.constraints.versionChecker.VersionCheckerUtilsImpl
 import app.aaps.plugins.constraints.versionChecker.numericVersionPart
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
-import dev.zacsweers.metro.Provider
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import org.junit.jupiter.api.BeforeEach
@@ -26,7 +25,7 @@ class VersionCheckerUtilsKtTest : TestBase() {
     private lateinit var versionCheckerUtils: VersionCheckerUtilsImpl
 
     @Mock lateinit var rh: ResourceHelper
-    @Mock lateinit var config: Provider<Config>
+    @Mock lateinit var config: () -> Config
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var notificationManager: NotificationManager
     @Mock lateinit var preferences: Preferences

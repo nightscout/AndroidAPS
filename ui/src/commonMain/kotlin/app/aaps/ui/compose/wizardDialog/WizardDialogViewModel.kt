@@ -49,7 +49,6 @@ import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import dev.zacsweers.metro.ContributesIntoMap
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactoryKey
@@ -68,7 +67,7 @@ import kotlinx.coroutines.launch
 @Stable
 class WizardDialogViewModel @AssistedInject constructor(
     @Assisted private val savedStateHandle: SavedStateHandle,
-    private val bolusWizardProvider: Provider<BolusWizard>,
+    private val bolusWizardProvider: () -> BolusWizard,
     private val constraintChecker: ConstraintsChecker,
     private val profileFunction: ProfileFunction,
     val profileUtil: ProfileUtil,

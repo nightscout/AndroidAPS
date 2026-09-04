@@ -26,6 +26,20 @@ interface ConfigBuilder {
     fun initialize()
 
     /**
+     * Re-reads the stored configuration into an app that is **already running**, and returns once the
+     * plugins it starts and stops have finished doing so.
+     *
+     * Same work as [initialize], with the one difference that matters after an import: [initialize]
+     * only schedules `onStart` / `onStop`, which is fine on the startup path but not here, where the
+     * caller has just waited for an idle pump and must not let commands flow again until the drivers
+     * really have been torn down and rebuilt.
+     *
+     * Safe to call repeatedly on a live app: a plugin whose stored state did not change is left alone
+     * rather than cycled.
+     */
+    suspend fun applyConfiguration()
+
+    /**
      * Store current configuration to SharedPreferences
      */
     fun storeSettings(from: String)

@@ -57,6 +57,7 @@ import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.ImportSummaryItem
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
+import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.stringResource
 
@@ -120,11 +121,61 @@ fun ImportSettingsScreen(
             )
         }
 
-        is ImportStep.RestartConfirm -> {
+        is ImportStep.WaitingForPump -> {
+            // Deliberately without the close button the Loading step has: the settings are already
+            // written, and applying them is the only way out. It ends on its own when the pump goes
+            // idle, or with the busy message when it does not.
+            Scaffold(
+                topBar = { AapsTopAppBar(title = { Text(stringResource(CoreUiStrings.import_setting)) }) }
+            ) { padding ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    CircularProgressIndicator()
+                    Spacer(Modifier.height(AapsTheme.spacing.extraLarge))
+                    Text(stringResource(CoreUiStrings.import_apply_waiting))
+                }
+            }
+        }
+
+        is ImportStep.ApplyConfirm   -> {
             OkDialog(
-                title = stringResource(CoreUiStrings.import_restart_title),
-                message = stringResource(CoreUiStrings.import_restart_message),
-                onDismiss = { viewModel.onRestartConfirmed() }
+                title = stringResource(CoreUiStrings.import_apply_title),
+                message = stringResource(CoreUiStrings.import_apply_message),
+                onDismiss = { viewModel.onApplyConfirmed() }
+            )
+        }
+
+        is ImportStep.Applied        -> {
+            // Closes the screen on dismiss. The import is over at this point, and the step underneath
+            // is Idle, which draws a spinner that nothing would ever take down.
+            OkDialog(
+                title = stringResource(CoreUiStrings.import_applied_title),
+                message = stringResource(CoreUiStrings.import_applied_message),
+                onDismiss = {
+                    viewModel.finishApply()
+                    onClose()
+                }
+            )
+        }
+
+        is ImportStep.ApplyFailed    -> {
+            // Offered as a retry rather than a plain error: the settings are already written, so the
+            // app is running the old plugin configuration until this succeeds. Dismissing leaves them
+            // to be applied on the next app start.
+            OkCancelDialog(
+                title = stringResource(CoreUiStrings.import_apply_title),
+                message = currentStep.message,
+                secondMessage = stringResource(CoreUiStrings.import_apply_retry_question),
+                onConfirm = { viewModel.retryApply() },
+                onDismiss = {
+                    viewModel.finishApply()
+                    onClose()
+                }
             )
         }
 

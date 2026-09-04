@@ -121,7 +121,7 @@ class DesktopImportExportPrefs @Inject constructor(
 
     override fun executeImport(prefs: Prefs) = aapsLogger.failNotOnDesktopYet("ImportExportPrefs.executeImport")
 
-    override fun prepareImportRestart() = aapsLogger.notOnDesktopYet("ImportExportPrefs.prepareImportRestart")
+    override fun prepareImportedSettings() = aapsLogger.notOnDesktopYet("ImportExportPrefs.prepareImportedSettings")
 }
 
 /**

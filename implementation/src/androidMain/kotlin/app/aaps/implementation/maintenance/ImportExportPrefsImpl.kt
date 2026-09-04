@@ -621,7 +621,7 @@ class ImportExportPrefsImpl @Inject constructor(
         activePlugin.afterImport()
     }
 
-    override fun prepareImportRestart() {
+    override fun prepareImportedSettings() {
         rxBus.send(EventDiaconnG8PumpLogReset())
         preferences.put(BooleanNonKey.GeneralSetupWizardProcessed, true)
     }

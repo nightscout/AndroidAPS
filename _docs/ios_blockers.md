@@ -306,11 +306,21 @@ step. The behaviour is unchanged and still documented in the gaps section.
   Android, so both platforms speak to Nightscout the same way. It is added through Swift Package
   Manager - the first external dependency in the iOS app - and the Kotlin side never mentions
   socket.io, because `NsSocket` was already exported as an Obj-C protocol for Swift to conform to.
-- **`IosForegroundWatcher`** drives start/stop from the app lifecycle, closing the socket inside a
-  background task assertion so it is not cut mid-frame.
+- **`IosForegroundWatcher` exists but is wired to nothing.** It was written to drive start/stop from
+  the app lifecycle, closing the socket inside a background task assertion so it is not cut
+  mid-frame. Nothing constructs it, so no lifecycle event reaches the Nightscout connection today.
+  Its KDoc explains why it must not be wired as written: closing the socket on backgrounding is only
+  safe if something reopens it, and the REST polling fallback its design assumed does not exist.
 
 
-Nothing right now.
+- **A dropped websocket may never be noticed on iOS.** The catch-up itself is shared and correct - a
+  connect clears `initialLoadFinished` and refetches the missed window from the persisted high-water
+  mark, verified on Android. What iOS lacks is anything that makes the connect happen: the process is
+  suspended in the background (no `UIBackgroundModes`, no `BGTaskScheduler`), the foreground watcher
+  above is inert, and the connectivity trigger only fires when `ReceiverDelegate`'s allowed verdict
+  flips, not on every network change. Recovery therefore rests entirely on socket.io-client-swift's
+  own reconnect surviving suspension, which is unverified. A shared watchdog - force a load when
+  `connected` has been false for longer than N - would close this on every platform.
 
 ## Two iOS behaviours a user would notice
 
@@ -451,7 +461,57 @@ behind it, written for `IosSecureEncrypt` and directly reusable here.
 `ImportExportPrefs` is a separate matter - 37 methods, document picker work on both sides - and is
 not being asked for here.
 
-### Done, with one thing you did not have visibility of
+### For the iOS side: none of `:ios:shell`'s eleven tests has ever run
+
+Raised rather than fixed, because it is your workflow and only your CI can prove the change works.
+
+`:ios:shell/src/iosTest/` holds eleven test files - `GuardedByTest`, `IosClientFlavorTest`,
+`IosProbeGraphTest`, `IosHistoryWindowScopingTest`, `IosAppStartupTest`, `IosStringOwnersTest`,
+`IosSpTest`, `IosBgQualityCheckTest`, `AppDatabaseIosTest`, `ProbeTextResolverTest`,
+`PlatformActualTest`. **No machine runs any of them.**
+
+### The evidence
+
+On Windows the task is disabled and the build still succeeds - so a green local run says nothing:
+
+```
+> Task :ios:shell:iosSimulatorArm64Test SKIPPED
+BUILD SUCCESSFUL in 13s
+```
+
+And `.github/workflows/ios-ci.yml`, the only job that can execute Kotlin/Native tests, is scoped
+twice over so it never picks them up:
+
+- its `paths:` triggers are `core/data/**`, `core/nssdk/**`, `core/keys/**`,
+  `gradle/libs.versions.toml`, `buildSrc/**` and the workflow file. Nothing under `ios/shell/**`,
+  `plugins/**` or `shared/**` starts it, which is most of what changes the iOS app.
+- the tasks it runs are `:core:data`, `:core:nssdk` and `:core:keys` only. `:ios:shell` appears
+  nowhere in the file, and no other workflow or CircleCI job mentions it.
+
+This is the trap your own header warns about - *"it reports SKIPPED rather than failing, so a green
+build elsewhere says nothing about iOS behaviour"* - and the workflow already carries an assertion
+step written to catch it. It is just applied to `:core:data` alone.
+
+### Why it is worth fixing rather than noting
+
+`GuardedByTest` is the one that stings. It guards the fix in `e82a044293` where `withProtection`
+was `{ _, action -> action() }` and ran **every** protected action without asking, bolus entry
+included. That is invisible on a device with protection turned off, which is why it was worth a
+test - and the test currently cannot fail. `IosHistoryWindowScopingTest` and `IosProbeGraphTest`
+are in the same position: they cover whether the graph builds and whether the history window keeps
+its own calculation state.
+
+### The change, if you want it
+
+Add `ios/shell/**`, `plugins/**` and `shared/**` to the `paths:` lists, add
+`:ios:shell:iosSimulatorArm64Test` to the test task line, and extend the existing
+`SKIPPED|NO-SOURCE` assertion and the results-file check to that module - otherwise it can quietly
+return to running nothing. The compile side is already fine from here:
+`:ios:shell:compileKotlinIosArm64`, `compileKotlinIosSimulatorArm64` and
+`compileTestKotlinIosSimulatorArm64` all pass on Windows, so the sources are real and only
+execution is missing.
+
+## Done, with one thing you did not have visibility of
 
 The port is `ExportPasswordPlatform` (`:core:interfaces` commonMain): `read()`, `write(secret,
 timestamp)`, `clear()`. `ExportPasswordDataStoreImpl` moved to `:implementation` commonMain with

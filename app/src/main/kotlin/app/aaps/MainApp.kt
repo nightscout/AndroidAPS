@@ -133,7 +133,6 @@ import rxdogtag2.RxDogTag
 import java.io.IOException
 import java.util.Locale
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.time.Duration.Companion.milliseconds

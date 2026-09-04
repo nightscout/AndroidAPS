@@ -67,7 +67,6 @@ import org.joda.time.format.ISODateTimeFormat
 import java.util.Calendar
 import java.util.Optional
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 import kotlin.math.min
@@ -82,7 +81,7 @@ class EquilManager @Inject constructor(
     private val equilBLE: EquilBLE,
     private val equilHistoryRecordDao: EquilHistoryRecordDao,
     private val equilHistoryPumpDao: EquilHistoryPumpDao,
-    private val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val pumpEnactResultProvider: () -> PumpEnactResult,
     private val dateUtil: DateUtil,
     private val notificationManager: NotificationManager,
     private val ch: ConcentrationHelper,

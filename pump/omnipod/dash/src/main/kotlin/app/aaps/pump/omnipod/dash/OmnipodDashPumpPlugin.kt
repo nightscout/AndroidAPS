@@ -105,7 +105,6 @@ import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import dev.zacsweers.metro.Provider
 import kotlin.concurrent.thread
 import kotlin.math.ceil
 import kotlin.time.Duration.Companion.hours
@@ -127,7 +126,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     private val uiInteraction: UiInteraction,
     private val notificationManager: NotificationManager,
-    private val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val pumpEnactResultProvider: () -> PumpEnactResult,
     private val bolusProgressData: BolusProgressData,
     private val dashHistoryDatabase: DashHistoryDatabase,
     private val protectionCheck: app.aaps.core.interfaces.protection.ProtectionCheck,

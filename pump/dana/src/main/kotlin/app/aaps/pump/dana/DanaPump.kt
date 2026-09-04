@@ -28,7 +28,6 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.security.InvalidParameterException
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 import kotlin.math.max
@@ -43,7 +42,7 @@ class DanaPump @Inject constructor(
     private val preferences: Preferences,
     private val dateUtil: DateUtil,
     private val decimalFormatter: DecimalFormatter,
-    private val profileStoreProvider: Provider<ProfileStore>
+    private val profileStoreProvider: () -> ProfileStore
 ) {
 
     @Suppress("unused")

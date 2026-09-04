@@ -11,12 +11,11 @@ plugins {
 android {
 
     namespace = "app.aaps.pump.diaconn"
-    defaultConfig {
-        ksp {
-            arg("room.incremental", "true")
-            arg("room.schemaLocation", "$projectDir/schemas")
-        }
-    }
+}
+
+ksp {
+    arg("room.incremental", "true")
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 dependencies {
@@ -38,6 +37,5 @@ dependencies {
     implementation(libs.com.squareup.retrofit2.converter.gson)
 
     testImplementation(project(":shared:tests"))
-    testImplementation(project(":core:objects"))
 
 }

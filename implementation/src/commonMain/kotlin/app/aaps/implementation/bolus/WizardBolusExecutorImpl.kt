@@ -61,7 +61,6 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import kotlin.math.abs
 import kotlin.math.ceil
 
@@ -77,7 +76,7 @@ class WizardBolusExecutorImpl @Inject constructor(
     private val rh: TextResolver,
     private val config: Config,
     private val quickWizard: QuickWizard,
-    private val bolusWizardProvider: Provider<BolusWizard>,
+    private val bolusWizardProvider: () -> BolusWizard,
     private val profileFunction: ProfileFunction,
     private val profileRepository: ProfileRepository,
     private val iobCobCalculator: IobCobCalculator,

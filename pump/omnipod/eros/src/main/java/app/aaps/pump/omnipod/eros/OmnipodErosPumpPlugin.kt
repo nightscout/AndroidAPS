@@ -123,7 +123,6 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.IntKey as MetroIntKey
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 
 /**
@@ -153,7 +152,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
     private val uiInteraction: UiInteraction,
     private val notificationManager: NotificationManager,
     private val erosHistoryDatabase: ErosHistoryDatabase,
-    private val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val pumpEnactResultProvider: () -> PumpEnactResult,
     private val protectionCheck: app.aaps.core.interfaces.protection.ProtectionCheck,
     private val blePreCheck: BlePreCheck
 ) : PumpPluginBase(

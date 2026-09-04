@@ -52,7 +52,6 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.runBlocking
-import dev.zacsweers.metro.Provider
 
 /**
  * Created by andy on 23.04.18.
@@ -73,7 +72,7 @@ abstract class PumpPluginAbstract protected constructor(
     val pumpDriverConfigurationInternal: PumpDriverConfiguration,
     var decimalFormatter: DecimalFormatter,
     var dateUtil: DateUtil,
-    protected val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    protected val pumpEnactResultProvider: () -> PumpEnactResult,
     var bolusProgressData: BolusProgressData
 ) : PumpPluginBase(
     pluginDescription = pluginDescription,

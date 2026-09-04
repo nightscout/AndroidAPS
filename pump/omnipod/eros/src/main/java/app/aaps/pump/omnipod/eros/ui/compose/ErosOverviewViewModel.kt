@@ -84,7 +84,6 @@ import org.joda.time.DateTime
 import org.joda.time.Duration
 import java.util.TimeZone
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.common.hw.rileylink.R as RileyLinkR
 import app.aaps.pump.omnipod.common.R as CommonR
@@ -112,7 +111,7 @@ class ErosOverviewViewModel @Inject constructor(
     private val uiInteraction: UiInteraction,
     private val config: Config,
     private val aapsLogger: AAPSLogger,
-    private val resetRileyLinkConfigurationTaskProvider: Provider<ResetRileyLinkConfigurationTask>,
+    private val resetRileyLinkConfigurationTaskProvider: () -> ResetRileyLinkConfigurationTask,
     private val ch: ConcentrationHelper,
     private val context: Context
 ) : ViewModel() {

@@ -95,25 +95,42 @@ abstract class PluginBase(
     /**
      * So far plugin can have it's main type + ConstraintInterface
      * ConstraintInterface is enabled if main plugin is enabled
+     *
+     * The enabled flag is set here and now, but [onStart] / [onStop] only get *scheduled*: they run
+     * later on [pluginScope]. Returns that job, or null when nothing changed, so a caller that must
+     * not carry on until the plugin has really started or stopped can wait for it - see
+     * [setPluginEnabledAwaiting]. Callers that only flip the flag can keep ignoring the result.
      */
-    open fun setPluginEnabled(type: PluginType, newState: Boolean) {
+    open fun setPluginEnabled(type: PluginType, newState: Boolean): Job? {
         if (type == pluginDescription.mainType) {
             if (newState) { // enabling plugin
                 if (state != State.ENABLED) {
                     onStateChange(type, state, State.ENABLED)
                     state = State.ENABLED
                     aapsLogger.debug(LTag.CORE, "Starting: $name")
-                    pluginScope.launch { onStart() }
+                    return pluginScope.launch { onStart() }
                 }
             } else { // disabling plugin
                 if (state == State.ENABLED) {
                     onStateChange(type, state, State.DISABLED)
                     state = State.DISABLED
-                    pluginScope.launch { onStop() }
                     aapsLogger.debug(LTag.CORE, "Stopping: $name")
+                    return pluginScope.launch { onStop() }
                 }
             }
         }
+        return null
+    }
+
+    /**
+     * [setPluginEnabled], but returns only once [onStart] / [onStop] has actually finished.
+     *
+     * Applying imported settings needs this: it stops and starts pump drivers, and the whole point of
+     * waiting for an idle pump first is lost if the teardown is still queued on [pluginScope] when the
+     * caller moves on and lets commands flow again.
+     */
+    suspend fun setPluginEnabledAwaiting(type: PluginType, newState: Boolean) {
+        setPluginEnabled(type, newState)?.join()
     }
 
     /**

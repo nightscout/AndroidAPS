@@ -57,7 +57,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx3.await
 import kotlinx.coroutines.rx3.rxSingle
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import app.aaps.pump.omnipod.common.R as CommonR
 
 @Stable
@@ -79,7 +78,7 @@ class DashOmnipodWizardViewModel @Inject constructor(
     profileFunction: ProfileFunction,
     profileRepository: ProfileRepository,
     private val persistenceLayer: PersistenceLayer,
-    pumpEnactResultProvider: Provider<PumpEnactResult>,
+    pumpEnactResultProvider: () -> PumpEnactResult,
     logger: AAPSLogger,
     aapsSchedulers: AapsSchedulers
 ) : OmnipodWizardViewModel(logger, aapsSchedulers, pumpEnactResultProvider, profileFunction, profileRepository) {

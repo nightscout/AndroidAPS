@@ -87,12 +87,30 @@ class IosAppDatabaseBuilder {
         connection.execSQL("CREATE INDEX IF NOT EXISTS `index_runningModes_end` ON `runningModes` (`timestamp` + `duration`)")
     }
 
+    /**
+     * Where the database file goes, creating the directory if it is not there yet.
+     *
+     * `URLsForDirectory` answers where Documents *would* be; it does not make it. A real app always
+     * has one, because iOS creates the container - but a bare test binary does not, and SQLite
+     * cannot create a file in a directory that does not exist. That is why the database tests passed
+     * on a developer machine, where the directory happened to exist already, and failed on a clean
+     * CI runner with an `IllegalStateException` from Room that named nothing useful.
+     *
+     * Creating it is cheap and is a no-op wherever it already exists, so the fix costs nothing on a
+     * device and makes the tests run anywhere.
+     */
     @OptIn(ExperimentalForeignApi::class)
     private fun documentsPath(fileName: String): String {
-        val documents = NSFileManager.defaultManager.URLsForDirectory(
+        val manager = NSFileManager.defaultManager
+        val documents = manager.URLsForDirectory(
             directory = NSDocumentDirectory,
             inDomains = NSUserDomainMask
         ).first() as NSURL
+        documents.path?.let { directory ->
+            if (!manager.fileExistsAtPath(directory)) {
+                manager.createDirectoryAtPath(directory, withIntermediateDirectories = true, attributes = null, error = null)
+            }
+        }
         return requireNotNull(documents.URLByAppendingPathComponent(fileName)?.path) {
             "could not place the database inside $documents"
         }

@@ -39,8 +39,11 @@ import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import java.util.Calendar
 import kotlin.reflect.KClass
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
@@ -917,6 +920,107 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         // Exactly the first line - the running command - and nothing after it.
         assertThat(bold.single().start).isEqualTo(0)
         assertThat(bold.single().end).isEqualTo(status.text.indexOf('\n'))
+    }
+
+    // ---- withHold ----
+    //
+    // Holding exists for applying imported settings, which stops and starts pump drivers. Sampling
+    // size()/performing() and then applying is not enough on its own: the loop or an automation can
+    // enqueue between the check and the teardown, and that command starts against a driver that is
+    // being pulled out from under it.
+
+    @Test
+    fun `withHold runs the block and reports success when nothing is in flight`() = runTest {
+        var ran = false
+
+        val held = commandQueue.withHold("test", 1.seconds) { ran = true }
+
+        assertThat(held).isTrue()
+        assertThat(ran).isTrue()
+    }
+
+    /** What the executor loop reads. It must be up for the whole block and down again afterwards. */
+    @Test
+    fun `the queue reports itself held only while the block runs`() = runTest {
+        assertThat(commandQueue.isHeld()).isFalse()
+
+        commandQueue.withHold("test", 1.seconds) {
+            assertThat(commandQueue.isHeld()).isTrue()
+        }
+
+        assertThat(commandQueue.isHeld()).isFalse()
+    }
+
+    /**
+     * The flag goes up before the wait, not after it. That ordering is the point: from the moment the
+     * hold is asked for, nothing new is picked up, so waiting for `performing` to clear actually
+     * reaches an idle pump instead of racing the next command onto it.
+     */
+    @Test
+    fun `the hold is up while it is still waiting for the command in flight`() = runTest {
+        commandQueue.performing = mock<Command>()
+        var ran = false
+
+        val holder = backgroundScope.launch { commandQueue.withHold("test", 5.seconds) { ran = true } }
+        yield()
+
+        assertThat(commandQueue.isHeld()).isTrue()
+        assertThat(ran).isFalse()   // still waiting - nothing applied yet
+
+        commandQueue.performing = null
+        holder.join()
+
+        assertThat(ran).isTrue()
+    }
+
+    /** A command that never finishes must not leave the caller waiting for ever, or the queue held. */
+    @Test
+    fun `a command that never finishes refuses the hold`() = runTest {
+        commandQueue.performing = mock<Command>()
+        var ran = false
+
+        val held = commandQueue.withHold("test", 200.milliseconds) { ran = true }
+
+        assertThat(held).isFalse()
+        assertThat(ran).isFalse()   // nothing is applied when the hold is refused
+        assertThat(commandQueue.isHeld()).isFalse()
+    }
+
+    /**
+     * The one failure that would matter most: a hold that leaks. The queue would stop picking up
+     * anything for the rest of the session - no bolus, no temporary basal - so the release is in a
+     * `finally` and this pins it.
+     */
+    @Test
+    fun `the hold is released when the block throws`() = runTest {
+        val thrown = runCatching {
+            commandQueue.withHold("test", 1.seconds) { error("boom") }
+        }
+
+        assertThat(thrown.isFailure).isTrue()
+        assertThat(commandQueue.isHeld()).isFalse()
+    }
+
+    /** Two holders do not overlap: the second waits rather than ending the first one's hold early. */
+    @Test
+    fun `holders do not overlap`() = runTest {
+        val order = mutableListOf<String>()
+
+        val first = backgroundScope.launch {
+            commandQueue.withHold("first", 5.seconds) {
+                order += "first in"
+                delay(100)
+                order += "first out"
+            }
+        }
+        yield()
+        val second = backgroundScope.launch {
+            commandQueue.withHold("second", 5.seconds) { order += "second in" }
+        }
+        first.join()
+        second.join()
+
+        assertThat(order).containsExactly("first in", "first out", "second in").inOrder()
     }
 
     private suspend fun stubActiveMode(mode: app.aaps.core.data.model.RM.Mode) {

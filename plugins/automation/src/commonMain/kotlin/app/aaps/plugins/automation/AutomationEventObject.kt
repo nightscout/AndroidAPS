@@ -101,12 +101,17 @@ class AutomationEventObject(private val factory: AutomationEventFactory) : Autom
 
     fun addAction(action: Action) = actions.add(action)
 
-    fun areActionsValid(): Boolean {
-        var result = true
-        for (action in actions) result = result && action.isValid()
-        if (!result) isEnabled = false
-        return result
-    }
+    /**
+     * Whether every action of this rule can run.
+     *
+     * A question, and only a question. This used to switch the rule off as a side effect, and its
+     * only caller is the Compose state builder - so drawing the automation list disabled rules. That
+     * is wrong on a client: a follower has a smaller plugin set than the master by design (it edits
+     * rules but never runs them), so its answer here is not authoritative and it would have disabled
+     * a rule that works perfectly on the master. `AutomationRuntime` owns that decision now, and it
+     * runs only on the master.
+     */
+    fun areActionsValid(): Boolean = actions.all { it.isValid() }
 
     fun hasStopProcessing(): Boolean {
         for (action in actions) if (action is ActionStopProcessing) return true

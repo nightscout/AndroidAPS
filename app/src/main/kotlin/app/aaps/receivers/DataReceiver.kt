@@ -105,7 +105,7 @@ open class DataReceiver : MetroBroadcastReceiver() {
                     }.build()
                 )
 
-            Intents.SI_APP                            ->
+            Intents.SI_APP, Intents.SIB_APP           ->
                 enqueueInline(
                     PatchedSiAppPlugin.PatchedSiAppWorker::class.java,
                     Data.Builder().also {

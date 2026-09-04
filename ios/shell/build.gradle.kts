@@ -137,6 +137,20 @@ val generateIosBuildInfo = tasks.register<GenerateBuildInfoTask>("generateIosBui
     outputDir.set(layout.buildDirectory.dir("generated/buildInfo"))
 }
 
+/**
+ * The version numbers Xcode reads, written where `Signing.xcconfig` includes them.
+ *
+ * Not committed - it is generated, and a stale committed copy would be a build number that no longer
+ * increases. Run this before archiving for TestFlight; `Signing.xcconfig` includes it optionally, so
+ * a clone that has never run it still builds with the project's own defaults.
+ */
+val generateIosVersionXcconfig = tasks.register<GenerateVersionXcconfigTask>("generateIosVersionXcconfig") {
+    version.set(Versions.appVersion)
+    buildNumber.set(GenerateVersionXcconfigTask.buildNumberFor(System.currentTimeMillis()))
+    outputFile.set(layout.projectDirectory.file("../app/Version.xcconfig"))
+    outputs.upToDateWhen { false } // the build number is the clock; never reuse a previous run
+}
+
 val generateIosStringOwners = tasks.register<GenerateStringOwnerRegistryTask>("generateIosStringOwners") {
     owners.set(StringOwnerModules.ALL)
     packageName.set("app.aaps.ios.shell.di")

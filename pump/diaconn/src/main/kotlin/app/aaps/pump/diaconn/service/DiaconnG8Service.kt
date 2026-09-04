@@ -88,7 +88,6 @@ import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -114,7 +113,7 @@ class DiaconnG8Service : MetroService() {
     @Inject lateinit var diaconnHistoryRecordDao: DiaconnHistoryRecordDao
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var notificationManager: NotificationManager
-    @Inject lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
+    @Inject lateinit var pumpEnactResultProvider: () -> PumpEnactResult
     @Inject lateinit var ch: ConcentrationHelper
     @Inject lateinit var bolusProgressData: BolusProgressData
 

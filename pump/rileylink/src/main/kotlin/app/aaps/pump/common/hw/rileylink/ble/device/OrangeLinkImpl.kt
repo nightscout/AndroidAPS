@@ -18,7 +18,6 @@ import app.aaps.pump.common.hw.rileylink.ble.operations.BLECommOperationResult
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData
 import java.util.UUID
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
@@ -29,7 +28,7 @@ class OrangeLinkImpl @Inject constructor(
     // A Provider, not the object: RileyLinkBLE takes this class in its own constructor, so asking for it
     // directly would be a dependency cycle. A Provider is resolved on use rather than on construction,
     // which breaks it. Both classes are @Singleton, so this hands back the same instance every time.
-    private val rileyLinkBLEProvider: Provider<RileyLinkBLE>
+    private val rileyLinkBLEProvider: () -> RileyLinkBLE
 ) {
 
     private val rileyLinkBLE: RileyLinkBLE get() = rileyLinkBLEProvider()

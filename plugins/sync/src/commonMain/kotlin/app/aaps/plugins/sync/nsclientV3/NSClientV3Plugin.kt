@@ -79,7 +79,9 @@ import app.aaps.plugins.sync.nsclientV3.ws.NsLoadStep
 import app.aaps.plugins.sync.nsclientV3.services.RunningConfigurationPublisher
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.IntKey as MetroIntKey
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 
@@ -122,6 +124,8 @@ import kotlinx.serialization.json.encodeToJsonElement
 @OptIn(ExperimentalAtomicApi::class)
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class, binding = binding<NsClient>())
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@MetroIntKey(310)
 class NSClientV3Plugin @Inject constructor(
     aapsLogger: AAPSLogger,
     override val rh: TextResolver,

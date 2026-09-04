@@ -43,6 +43,7 @@ import app.aaps.plugins.sync.nsclientV3.data.NSDeviceStatusHandler
 import app.aaps.plugins.sync.nsclientV3.extensions.toRunningConfiguration
 import app.aaps.plugins.sync.nsclientV3.json.JsonBridge.toKotlinxJson
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
+import app.aaps.plugins.sync.nsclientV3.ws.NsFrameHandler
 import app.aaps.plugins.sync.nsclientV3.ws.NsSocket
 import app.aaps.plugins.sync.nsclientV3.ws.NsSocketFactory
 import app.aaps.plugins.sync.nsclientV3.ws.ServiceNsConnection
@@ -65,6 +66,7 @@ class NSClientV3Service : MetroService() {
     @Inject lateinit var storeDataForDb: StoreDataForDb
     @Inject lateinit var notificationManager: NotificationManager
     @Inject lateinit var nsDeviceStatusHandler: NSDeviceStatusHandler
+    @Inject lateinit var nsFrameHandler: NsFrameHandler
     @Inject lateinit var nsClientRepository: NSClientRepository
     @Inject lateinit var runningConfiguration: RunningConfiguration
     @Inject lateinit var orphanDetector: OrphanDetector
@@ -258,237 +260,20 @@ class NSClientV3Service : MetroService() {
         nsClientRepository.addLog("◄ WS", "disconnect alarm event")
     }
 
-    internal val onDataCreateUpdate: (String) -> Unit = { raw ->
-        val response = JSONObject(raw)
-        aapsLogger.debug(LTag.NSCLIENT, "onDataCreateUpdate: $response")
-        val collection = response.getString("colName")
-        val docJson = response.getJSONObject("doc")
-        val docString = response.getString("doc")
-        nsClientRepository.addLog("◄ WS CREATE/UPDATE", collection, docJson.toKotlinxJson())
-        val srvModified = docJson.getLong("srvModified")
-        // Don't advance the high-water-mark until the initial catch-up load chain
-        // has finished after a (re)connect. Otherwise the Load*Worker chain would
-        // query "modifiedSince (just-bumped pointer)" and skip exactly the offline
-        // window we need to backfill.
-        if (nsClientV3Plugin.initialLoadFinished) {
-            nsClientV3Plugin.lastLoadedSrvModified.set(collection, srvModified)
-            nsClientV3Plugin.storeLastLoadedSrvModified()
-        }
-        when (collection) {
-            "devicestatus" -> docString.toNSDeviceStatus().let { nsDeviceStatusHandler.handleNewData(arrayOf(it), live = true) }
-
-            "entries"      -> {
-                docString.toNSSgvV3()?.let {
-                    nsIncomingDataProcessor.processSgvs(listOf(it), doFullSync = false)
-                    storeDataForDb.requestStoreGlucoseValues()
-                }
-                // Same entries collection also carries AAPS calibration mbg entries (marked).
-                docString.toCalibrationMbg()?.let {
-                    nsIncomingDataProcessor.processCalibrations(listOf(it), doFullSync = false)
-                    storeDataForDb.requestStoreCalibrationEntries()
-                }
-            }
-
-            "profile"      ->
-                appScope.launch { nsIncomingDataProcessor.processProfile(docJson.toKotlinxJson(), doFullSync = false) }
-
-            "treatments"   -> docString.toNSTreatment()?.let {
-                nsIncomingDataProcessor.processTreatments(listOf(it), doFullSync = false)
-                storeDataForDb.requestStoreTreatments(fullSync = false)
-            }
-
-            "foods"        -> docString.toNSFood()?.let {
-                nsIncomingDataProcessor.processFood(listOf(it))
-                storeDataForDb.requestStoreFoods()
-            }
-
-            "settings"     -> {
-                val identifier = docJson.optString("identifier")
-                // socket.io hands every payload over as org.json, while the client control handlers
-                // speak the nssdk's kotlinx type. The conversion sits on each branch below, not up
-                // here: only one branch runs per event, and the cold/state branches never need it.
-                when {
-                    // Client-side: cold config doc — apply everything except the active scene.
-                    config.AAPSCLIENT && identifier == SettingsIdentifiers.COLD                                   ->
-                        docString.toRunningConfiguration()?.let {
-                            runningConfiguration.applyCold(it)
-                            // appScope.launch: onSettingsDoc takes the repository mutex now, and this
-                            // handler is driven by the socket, not by a coroutine. Only the orphan
-                            // bookkeeping is deferred; applyCold and the liveness clock stay inline.
-                            val settingsSrvModified = docJson.optLong("srvModified", 0L)
-                            appScope.launch { orphanDetector.onSettingsDoc(it, settingsSrvModified) }
-                            // A live config push proves the master is alive now → feed the liveness clock.
-                            nsClientV3Plugin.bumpMasterSignal(srvModified)
-                        }
-                    // Client-side: hot state doc — apply only the active scene + runtime flags.
-                    // Kept distinct from the cold branch so this never clears a running scene.
-                    config.AAPSCLIENT && identifier == SettingsIdentifiers.STATE                                  ->
-                        docString.toRunningConfiguration()?.let {
-                            runningConfiguration.applyHot(it)
-                            nsClientV3Plugin.bumpMasterSignal(srvModified)
-                        }
-                    // Client-side: master→client command ACK. Must be checked BEFORE the generic
-                    // IDENTIFIER_PREFIX branch (ack identifiers share that prefix) so the master
-                    // receiver never tries to verify an ack as an inbound command envelope.
-                    config.AAPSCLIENT && identifier.startsWith(ClientControlPublisher.IDENTIFIER_ACK_PREFIX)      ->
-                        appScope.launch { nsClientV3Plugin.handleClientControlAckEvent(docJson.toKotlinxJson()) }
-                    // Client-side: master→client live bolus-progress mirror. Same ordering rule as ACK (shares
-                    // IDENTIFIER_PREFIX) so the master never treats its own progress doc as an inbound command.
-                    config.AAPSCLIENT && identifier.startsWith(ClientControlPublisher.IDENTIFIER_PROGRESS_PREFIX) ->
-                        appScope.launch { nsClientV3Plugin.handleClientControlProgressEvent(docJson.toKotlinxJson()) }
-                    // Master-side: route client-control envelopes (paired-client → master commands)
-                    // to the receiver. The plugin gates on the master toggle internally.
-                    // !config.AAPSCLIENT: NS WS echoes every write back to the sender too — a client must not
-                    // self-process its own outgoing commands (unknown clientId → deleteSettings → HTTP 410 tombstone).
-                    !config.AAPSCLIENT && identifier.startsWith(ClientControlPublisher.IDENTIFIER_PREFIX)         ->
-                        appScope.launch { nsClientV3Plugin.handleClientControlSettingsEvent(identifier, docJson.toKotlinxJson()) }
-                }
-            }
-        }
-    }
-
-    internal val onDataDelete: (String) -> Unit = { raw ->
-        val response = JSONObject(raw)
-        aapsLogger.debug(LTag.NSCLIENT, "onDataDelete: $response")
-        // No elvis here: optString never returns null, it returns "" for a missing key. The old
-        // `?: return@Listener` looked like a guard but could not fire - Kotlin allowed it only
-        // because org.json is Java and the type is the platform type String!. A doc with no colName
-        // simply matches none of the collection checks below, exactly as it did before.
-        val collection = response.optString("colName")
-        val identifier = response.optString("identifier")
-        nsClientRepository.addLog("◄ WS DELETE", "$collection $identifier")
-        if (collection == "treatments") {
-            storeDataForDb.addToDeleteTreatment(identifier)
-            storeDataForDb.requestUpdateDeletedTreatments()
-        }
-        if (collection == "entries") {
-            storeDataForDb.addToDeleteGlucoseValue(identifier)
-            storeDataForDb.requestUpdateDeletedGlucoseValues()
-        }
-    }
-
-    internal val onAnnouncement: (String) -> Unit = { raw ->
-
-        /*
-        {
-        "level":0,
-        "title":"Announcement",
-        "message":"test",
-        "plugin":{"name":"treatmentnotify","label":"Treatment Notifications","pluginType":"notification","enabled":true},
-        "group":"Announcement",
-        "isAnnouncement":true,
-        "key":"9ac46ad9a1dcda79dd87dae418fce0e7955c68da"
-        }
-         */
-        val data = JSONObject(raw)
-        nsClientRepository.addLog("◄ ANNOUNCEMENT", data.optString("message"))
-        aapsLogger.debug(LTag.NSCLIENT, data.toString())
-        if (preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements))
-            postNsAlarm(NSAlarmObject(data.toKotlinxJson()))
-    }
-    internal val onAlarm: (String) -> Unit = { raw ->
-
-        /*
-        {
-        "level":1,
-        "title":"Warning HIGH",
-        "message":"BG Now: 5 -0.2 → mmol\/L\nRaw BG: 4.8 mmol\/L Čistý\nBG 15m: 4.8 mmol\/L\nIOB: -0.02U\nCOB: 0g",
-        "eventName":"high",
-        "plugin":{"name":"simplealarms","label":"Simple Alarms","pluginType":"notification","enabled":true},
-        "pushoverSound":"climb",
-        "debug":{"lastSGV":5,"thresholds":{"bgHigh":180,"bgTargetTop":75,"bgTargetBottom":72,"bgLow":70}},
-        "group":"default",
-        "key":"simplealarms_1"
-        }
-         */
-        val data = JSONObject(raw)
-        nsClientRepository.addLog("◄ ALARM", data.optString("message"))
-        aapsLogger.debug(LTag.NSCLIENT, data.toString())
-        if (preferences.get(BooleanKey.NsClientNotificationsFromAlarms)) {
-            val snoozedTo = preferences.get(LongComposedKey.NotificationSnoozedTo, data.optString("level"))
-            if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo)
-                postNsAlarm(NSAlarmObject(data.toKotlinxJson()))
-        }
-    }
-
-    internal val onUrgentAlarm: (String) -> Unit = { raw ->
-        val data = JSONObject(raw)
-        nsClientRepository.addLog("◄ URGENT ALARM", data.optString("message"))
-        aapsLogger.debug(LTag.NSCLIENT, data.toString())
-        if (preferences.get(BooleanKey.NsClientNotificationsFromAlarms)) {
-            val snoozedTo = preferences.get(LongComposedKey.NotificationSnoozedTo, data.optString("level"))
-            if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo)
-                postNsAlarm(NSAlarmObject(data.toKotlinxJson()))
-        }
-    }
-
-    internal val onClearAlarm: (String) -> Unit = { raw ->
-
-        /*
-        {
-        "clear":true,
-        "title":"All Clear",
-        "message":"default - Urgent was ack'd",
-        "group":"default"
-        }
-         */
-        val data = JSONObject(raw)
-        nsClientRepository.addLog("◄ CLEARALARM", data.optString("title"))
-        aapsLogger.debug(LTag.NSCLIENT, data.toString())
-        notificationManager.dismiss(NotificationId.NS_ALARM)
-        notificationManager.dismiss(NotificationId.NS_URGENT_ALARM)
-    }
-
+    /** Acking an alarm back to Nightscout needs the alarm socket, which this service owns. */
     fun handleClearAlarm(originalAlarm: NSAlarm, silenceTimeInMilliseconds: Long) {
         alarmSocket?.emitAlarmAck(originalAlarm.level, originalAlarm.group, silenceTimeInMilliseconds)
         nsClientRepository.addLog("► ALARMACK ", "${originalAlarm.level} ${originalAlarm.group} $silenceTimeInMilliseconds")
     }
 
-    private fun snoozeActions(nsAlarm: NSAlarmObject): List<NotificationAction> =
-        listOf(15, 30, 60).map { minutes ->
-            val labelRes = when (minutes) {
-                15   -> CoreUiStrings.snooze_15m
-                30   -> CoreUiStrings.snooze_30m
-                else -> CoreUiStrings.snooze_60m
-            }
-            NotificationAction(labelRes) {
-                val snoozeMs = minutes * 60 * 1000L
-                nsClientV3Plugin.handleClearAlarm(nsAlarm, snoozeMs)
-                // Cascade the snooze across all alarm levels. NS itself cascades a level-2 ack down to
-                // level 1, but keeps emitting lower-level forecast alarms (e.g. ar2 WARN) that would
-                // otherwise slip past a single-level local snooze and re-alarm. Snoozing every level
-                // makes the chosen interval authoritative on this device regardless of NS churn.
-                val snoozedUntil = System.currentTimeMillis() + snoozeMs
-                for (level in 0..2)
-                    preferences.put(LongComposedKey.NotificationSnoozedTo, level.toString(), value = snoozedUntil)
-            }
-        }
-
-    private fun postNsAlarm(nsAlarm: NSAlarmObject) {
-        when (nsAlarm.level) {
-            0    -> notificationManager.post(
-                id = NotificationId.NS_ANNOUNCEMENT,
-                text = nsAlarm.message,
-                level = NotificationLevel.ANNOUNCEMENT,
-                validTo = System.currentTimeMillis() + T.mins(60).msecs(),
-                actions = snoozeActions(nsAlarm)
-            )
-
-            1    -> notificationManager.post(
-                id = NotificationId.NS_ALARM,
-                text = nsAlarm.title,
-                sound = AlarmSound.ALARM,
-                actions = snoozeActions(nsAlarm)
-            )
-
-            2    -> notificationManager.post(
-                id = NotificationId.NS_URGENT_ALARM,
-                text = nsAlarm.title,
-                sound = AlarmSound.URGENT_ALARM,
-                actions = snoozeActions(nsAlarm)
-            )
-
-            else -> return
-        }
-    }
+    // Frame handling is shared with every other platform - see NsFrameHandler. These stay as
+    // properties with the same names and shapes so the socket wiring above and the characterization
+    // tests in NSClientV3ServiceHandlersTest are unchanged: those tests now exercise the shared
+    // routing, which is what proves it still does what this service used to do.
+    internal val onDataCreateUpdate: (String) -> Unit = { raw -> nsFrameHandler.onDataCreateUpdate(raw) }
+    internal val onDataDelete: (String) -> Unit = { raw -> nsFrameHandler.onDataDelete(raw) }
+    internal val onAnnouncement: (String) -> Unit = { raw -> nsFrameHandler.onAnnouncement(raw) }
+    internal val onAlarm: (String) -> Unit = { raw -> nsFrameHandler.onAlarm(raw) }
+    internal val onUrgentAlarm: (String) -> Unit = { raw -> nsFrameHandler.onUrgentAlarm(raw) }
+    internal val onClearAlarm: (String) -> Unit = { raw -> nsFrameHandler.onClearAlarm(raw) }
 }

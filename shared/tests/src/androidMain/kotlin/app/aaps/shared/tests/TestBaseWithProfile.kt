@@ -66,7 +66,6 @@ import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.spy
 import org.mockito.kotlin.whenever
-import dev.zacsweers.metro.Provider
 
 @Suppress("SpellCheckingInspection")
 open class TestBaseWithProfile : TestBase() {
@@ -91,11 +90,11 @@ open class TestBaseWithProfile : TestBase() {
     lateinit var profileUtil: ProfileUtil
     lateinit var decimalFormatter: DecimalFormatter
     lateinit var hardLimits: HardLimits
-    lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
-    lateinit var profileStoreProvider: Provider<ProfileStore>
+    lateinit var pumpEnactResultProvider: () -> PumpEnactResult
+    lateinit var profileStoreProvider: () -> ProfileStore
     lateinit var glucoseStatusCalculatorSMB: GlucoseStatusCalculatorSMB
     lateinit var deltaCalculator: DeltaCalculator
-    lateinit var apsResultProvider: Provider<APSResult>
+    lateinit var apsResultProvider: () -> APSResult
 
     val someICfg = ICfg(insulinLabel = "Fake", insulinEndTime = 9 * 3600 * 1000, insulinPeakTime = 60 * 60 * 1000, concentration = 1.0)
 
@@ -163,7 +162,7 @@ open class TestBaseWithProfile : TestBase() {
         whenever(profileRepository.revision).thenReturn(MutableStateFlow(0L))
         whenever(profileRepository.profile).thenReturn(MutableStateFlow(getValidProfileStore()))
         deltaCalculator = DeltaCalculator(aapsLogger)
-        apsResultProvider = Provider { DetermineBasalResult(aapsLogger, fabricPrivacy, constraintsChecker, preferences, activePlugin, processedTbrEbData, profileFunction, rh, decimalFormatter, dateUtil, { apsResultProvider() }, ch) }
+        apsResultProvider = { DetermineBasalResult(aapsLogger, fabricPrivacy, constraintsChecker, preferences, activePlugin, processedTbrEbData, profileFunction, rh, decimalFormatter, dateUtil, { apsResultProvider() }, ch) }
         validProfile = ProfileSealed.Pure(pureProfileFromJson(validProfileJSON, dateUtil)!!, activePlugin)
         effectiveProfileSwitch = EPS(
             timestamp = dateUtil.now(),
@@ -317,8 +316,8 @@ open class TestBaseWithProfile : TestBase() {
             val arg3 = invocation.getArgument<String?>(3)
             String.format(rh.gs(string), arg1, arg2, arg3)
         }.whenever(rh).gs(anyInt(), anyString(), anyInt(), anyString())
-        pumpEnactResultProvider = Provider { PumpEnactResultObject(rh) }
-        profileStoreProvider = Provider { ProfileStoreObject(aapsLogger, activePlugin, rh, hardLimits, dateUtil) }
+        pumpEnactResultProvider = { PumpEnactResultObject(rh) }
+        profileStoreProvider = { ProfileStoreObject(aapsLogger, activePlugin, rh, hardLimits, dateUtil) }
         glucoseStatusCalculatorSMB = GlucoseStatusCalculatorSMB(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter, DeltaCalculator(aapsLogger))
 
         whenever(ch.bolusProgressString(any<PumpInsulin>(), any<Boolean>())).thenReturn("AnyString")

@@ -17,7 +17,15 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import app.aaps.appshell.AapsAppRoot
+import kotlinx.coroutines.flow.drop
+import app.aaps.core.interfaces.resources.TextRefValueRegistry
+import app.aaps.core.keys.StringKey
+import java.util.Locale
 import app.aaps.appshell.navigation.AppRoute
 import app.aaps.appshell.navigation.appNavGraph
 import app.aaps.appshell.navigation.ElementNavigator
@@ -30,7 +38,7 @@ import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.shared.clientbindings.ClientGraphBindings
 import app.aaps.desktop.shell.di.DesktopAppGraph
 import app.aaps.desktop.shell.di.GeneratedStringOwners
-import app.aaps.desktop.shell.di.DesktopViewModelFactory
+import app.aaps.shared.clientbindings.ClientViewModelFactory
 import app.aaps.ui.compose.insulinManagement.InsulinManagementViewModel
 import app.aaps.ui.compose.loopSheet.LoopActionViewModel
 import app.aaps.ui.compose.main.MainViewModel
@@ -112,6 +120,13 @@ fun main() {
  */
 private fun startPlugins(graph: DesktopAppGraph) {
     GeneratedStringOwners.registerAll()
+    // The language to answer in, from the setting or from the machine. State on the registry rather
+    // than an argument to every lookup - the same arrangement Android gets from `Resources`, which is
+    // why `gs(ref)` needs no locale and no call site changed. Without this the desktop is English
+    // whatever the setting says, which is how it behaved before the translations were generated.
+    val chosen = graph.preferences.get(StringKey.GeneralLanguage)
+    TextRefValueRegistry.locale = if (chosen == "default") Locale.getDefault().toLanguageTag() else chosen
+    graph.logger.debug(LTag.CORE, "Language: ${TextRefValueRegistry.locale}")
     // Sorted by the key each plugin registers itself with, which is the order the plugin list is
     // shown in and the order category defaults are picked in.
     val plugins = graph.contributedPlugins.entries.sortedBy { it.key }.map { it.value }
@@ -135,8 +150,25 @@ private fun startPlugins(graph: DesktopAppGraph) {
 @Composable
 private fun AapsDesktopApp(graph: DesktopAppGraph, appIcon: Painter, appName: String) {
     val logger = graph.logger
-    val viewModelFactory = remember(graph) { DesktopViewModelFactory(graph) }
+    val viewModelFactory = remember(graph) { ClientViewModelFactory(graph) }
 
+    // The language setting, applied while the app runs. Android answers this by recreating its
+    // activity, which reloads the `Context` its `Resources` resolve against. There is no activity
+    // here: the registry is repointed and the composition rebuilt, which is the same outcome.
+    LaunchedEffect(Unit) {
+        graph.preferences.observe(StringKey.GeneralLanguage).drop(1).collect {
+            val chosen = graph.preferences.get(StringKey.GeneralLanguage)
+            TextRefValueRegistry.locale = if (chosen == "default") Locale.getDefault().toLanguageTag() else chosen
+            logger.debug(LTag.CORE, "Language changed to ${TextRefValueRegistry.locale}")
+            graph.uiRestart.request()
+        }
+    }
+
+    // Rebuilds everything below when one is asked for - after an import applies its settings, or a
+    // language change. Keyed on this and nothing else: `key` discards the subtree's state, so a
+    // scroll position lost on a language change is acceptable where losing it constantly is not.
+    val restart by graph.uiRestart.signal.collectAsState()
+    key(restart) {
     CompositionLocalProvider(LocalMetroViewModelFactory provides viewModelFactory) {
         AapsAppRoot(
             config = graph.config,
@@ -228,6 +260,11 @@ private fun AapsDesktopApp(graph: DesktopAppGraph, appIcon: Painter, appName: St
                     rxBus = graph.rxBus,
                     activePlugin = graph.activePlugin,
                     pluginPermissions = graph.pluginPermissions,
+                    // Passed so the rules can be read and edited here. The runtime is deliberately
+                    // NOT started on a client: `MainApp` calls `automationRuntime.start()`, this shell
+                    // does not, and that is the design - a follower edits definitions and the master
+                    // runs them. Do not "fix" the missing start() call; it would give a second machine
+                    // the power to fire the same rules.
                     automationRuntime = graph.automationRuntime,
                     preferences = graph.preferences,
                     rh = graph.textResolver,
@@ -299,6 +336,7 @@ private fun AapsDesktopApp(graph: DesktopAppGraph, appIcon: Painter, appName: St
                 )
             }
         }
+    }
     }
 }
 

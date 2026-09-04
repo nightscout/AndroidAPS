@@ -22,6 +22,5 @@ dependencies {
     implementation(project(":pump:dana"))
 
     testImplementation(project(":shared:tests"))
-    testImplementation(project(":core:objects"))
 
 }

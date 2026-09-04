@@ -55,7 +55,6 @@ import dev.zacsweers.metro.IntKey as MetroIntKey
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import dev.zacsweers.metro.Provider
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -81,7 +80,7 @@ class DanaRv2Plugin @Inject constructor(
     danaHistoryDatabase: DanaHistoryDatabase,
     decimalFormatter: DecimalFormatter,
     private val bolusProgressData: BolusProgressData,
-    pumpEnactResultProvider: Provider<PumpEnactResult>
+    pumpEnactResultProvider: () -> PumpEnactResult
 ) : AbstractDanaRPlugin(
     danaPump,
     aapsLogger,

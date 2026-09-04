@@ -20,14 +20,13 @@ import app.aaps.plugins.automation.elements.InputPercent
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.triggers.TriggerDeps
 import app.aaps.plugins.automation.triggers.TriggerProfilePercent
-import dev.zacsweers.metro.Provider
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
 class ActionProfileSwitchPercent(
     aapsLogger: AAPSLogger,
     rh: TextResolver,
-    pumpEnactResultProvider: Provider<PumpEnactResult>,
+    pumpEnactResultProvider: () -> PumpEnactResult,
     private val profileFunction: ProfileFunction,
     // Only to build the Trigger precondition below.
     private val triggerDeps: TriggerDeps

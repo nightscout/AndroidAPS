@@ -1,6 +1,8 @@
 package app.aaps.di.metro
 
 import app.aaps.persistentNotification.DummyService
+import app.aaps.plugins.automation.TimerReminderReceiver
+import app.aaps.plugins.automation.services.LocationService
 import app.aaps.receivers.AutoStartReceiver
 import app.aaps.receivers.CarbSuggestionReceiver
 import app.aaps.receivers.DataReceiver
@@ -21,7 +23,7 @@ import org.junit.jupiter.api.Test
  */
 class ReceiverInjectorsTest {
 
-    private val injectors get() = testRoot().receiversGraph.memberInjectors
+    private val injectors get() = testRoot().contributedMemberInjectors
 
     @Test
     fun `the three app receivers have injectors`() {
@@ -38,6 +40,18 @@ class ReceiverInjectorsTest {
         // `MetroService`, and a missing entry would only show as a crash when the foreground
         // notification starts.
         assertThat(injectors.keys).containsAtLeast(DummyService::class, CarbSuggestionReceiver::class)
+    }
+
+    /**
+     * The automation module reaches the same map from its own module.
+     *
+     * It used to own a graph extension with a map of its own; these two now contribute into the
+     * root map like every pump driver does. A missing entry here is a crash when a reminder fires
+     * or a location trigger starts its service, which is a long way from this file.
+     */
+    @Test
+    fun `the automation receiver and service reach the same map`() {
+        assertThat(injectors.keys).containsAtLeast(TimerReminderReceiver::class, LocationService::class)
     }
 
     @Test

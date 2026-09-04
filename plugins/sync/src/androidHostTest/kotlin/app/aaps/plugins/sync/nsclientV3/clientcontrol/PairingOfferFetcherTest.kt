@@ -9,7 +9,6 @@ import app.aaps.core.nssdk.localmodel.clientcontrol.PairingPayload
 import app.aaps.core.nssdk.utils.ClientControlPairingCrypto
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import com.google.common.truth.Truth.assertThat
-import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
@@ -52,7 +51,7 @@ internal class PairingOfferFetcherTest {
         base64Mock.`when`<ByteArray> { Base64.decode(any<String>(), any<Int>()) }.thenAnswer {
             java.util.Base64.getDecoder().decode(it.getArgument<String>(0))
         }
-        sut = PairingOfferFetcher(Provider { nsClientV3Plugin }, dateUtil, aapsLogger)
+        sut = PairingOfferFetcher({ nsClientV3Plugin }, dateUtil, aapsLogger)
         // Pin the unwrap loop to the test thread so the thread-local Base64 static mock applies.
         sut.unwrapDispatcher = Dispatchers.Unconfined
     }

@@ -107,7 +107,7 @@ abstract class GenerateKeyStringsTask : DefaultTask() {
 
         writeCommon(names.sorted())
         writeAndroid(names.sorted())
-        writeValues(strings.sortedBy { it.first })
+        writeValues(strings.sortedBy { it.first }, res)
         writeReport(res, names.toSet())
     }
 
@@ -189,7 +189,7 @@ abstract class GenerateKeyStringsTask : DefaultTask() {
      * Only the base locale is emitted. Translating the non-Android platforms is a separate job that
      * needs a locale chosen at runtime; this is the step that makes them show real words at all.
      */
-    private fun writeValues(entries: List<Pair<String, String>>) {
+    private fun writeValues(entries: List<Pair<String, String>>, res: File) {
         val dir = commonOutputDir.get().asFile
         val pkg = packageName.get()
         val obj = objectName.get() + "Values"
@@ -219,8 +219,51 @@ abstract class GenerateKeyStringsTask : DefaultTask() {
                     chunk.forEach { (name, text) -> append("        m[\"$name\"] = ${text.asKotlinLiteral()}\n") }
                     append("    }\n\n")
                 }
-                append("    /** The English text for [name], or null when this module does not own that name. */\n")
-                append("    fun textOf(name: String): String? = values[name]\n")
+                // Translations, one map per locale, filled the same chunked way and for the same
+                // reason. Only names the base locale has: a translation carrying a name that was
+                // deleted from strings.xml would otherwise resurrect it.
+                val known = entries.map { it.first }.toSet()
+                val translations = readTranslations(res, known)
+                translations.forEach { (locale, pairs) ->
+                    val id = locale.asMethodSuffix()
+                    val localeChunks = pairs.chunked(VALUES_PER_METHOD)
+                    append("    private val values_$id: MutableMap<String, String> = mutableMapOf<String, String>().also {\n")
+                    localeChunks.indices.forEach { i -> append("        part${id}_$i(it)\n") }
+                    append("    }\n\n")
+                    localeChunks.forEachIndexed { i, chunk ->
+                        append("    private fun part${id}_$i(m: MutableMap<String, String>) {\n")
+                        chunk.forEach { (name, text) -> append("        m[\"$name\"] = ${text.asKotlinLiteral()}\n") }
+                        append("    }\n\n")
+                    }
+                }
+                append("    private val byLocale: Map<String, Map<String, String>> = mapOf(\n")
+                translations.keys.forEach { locale -> append("        \"$locale\" to values_${locale.asMethodSuffix()},\n") }
+                append("    )\n\n")
+                // The language setting stores "cs", the translations are keyed "cs-CZ". Resolving
+                // that per string would be a scan per lookup, so the alias is built once here.
+                // Where a language has more than one region - pt-BR and pt-PT - the first by name
+                // wins, which is arbitrary but stable.
+                val byLanguage = translations.keys.groupBy { it.substringBefore('-') }
+                append("    /** `cs` to the `cs-CZ` map, so the language setting resolves without a scan. */\n")
+                append("    private val byLanguage: Map<String, Map<String, String>> = mapOf(\n")
+                byLanguage.forEach { (language, tags) -> append("        \"$language\" to values_${tags.first().asMethodSuffix()},\n") }
+                append("    )\n\n")
+                append("    /**\n")
+                append("     * The text for [name] in [locale], falling back to English.\n")
+                append("     *\n")
+                append("     * Per string, not per locale: no locale is fully translated, so a locale that has most of\n")
+                append("     * the app still needs English for the rest - which is why this falls back name by name\n")
+                append("     * rather than choosing one map up front. Null only when this module does not own the\n")
+                append("     * name at all.\n")
+                append("     *\n")
+                append("     * [locale] may be a full tag or a bare language; both resolve.\n")
+                append("     */\n")
+                append("    fun textOf(name: String, locale: String?): String? =\n")
+                append("        mapFor(locale)?.get(name) ?: values[name]\n\n")
+                append("    private fun mapFor(locale: String?): Map<String, String>? {\n")
+                append("        if (locale == null) return null\n")
+                append("        return byLocale[locale] ?: byLanguage[locale.substringBefore('-')]\n")
+                append("    }\n")
                 append("}\n")
             }
         )
@@ -296,6 +339,42 @@ abstract class GenerateKeyStringsTask : DefaultTask() {
     }
 
     private fun readStringNames(dir: File): List<String> = readStrings(dir).map { it.first }
+
+    /**
+     * Every translated locale, as `values-cs-rCZ` becomes `cs-CZ`, keeping only names the base
+     * locale still has.
+     *
+     * `values-` prefixes a great deal that is not a language. `night` is a UI mode and `sw600dp` a
+     * screen width, and both sit in these directories next to the real locales - so the list is
+     * filtered by shape rather than by exclusion, because the next Android qualifier to appear would
+     * otherwise become a language too.
+     */
+    private fun readTranslations(res: File, known: Set<String>): Map<String, List<Pair<String, String>>> =
+        res.listFiles()
+            ?.filter { it.isDirectory && it.name.startsWith("values-") }
+            ?.mapNotNull { dir ->
+                val tag = dir.name.removePrefix("values-").toBcp47() ?: return@mapNotNull null
+                val pairs = readStrings(dir).filter { it.first in known }
+                if (pairs.isEmpty()) null else tag to pairs
+            }
+            ?.sortedBy { it.first }
+            ?.toMap()
+            .orEmpty()
+
+    /**
+     * `cs-rCZ` to `cs-CZ`, `de` to `de`, and anything that is not a language tag to null.
+     *
+     * A language is two or three lower case letters, optionally followed by `-r` and a region. That
+     * shape is what separates `de-rDE` from `sw600dp` and `night`.
+     */
+    private fun String.toBcp47(): String? {
+        val match = Regex("^([a-z]{2,3})(?:-r([A-Za-z]{2}|[0-9]{3}))?$").matchEntire(this) ?: return null
+        val (language, region) = match.destructured
+        return if (region.isEmpty()) language else "$language-${region.uppercase()}"
+    }
+
+    /** A locale tag as a Kotlin identifier fragment: `pt-BR` becomes `pt_BR`. */
+    private fun String.asMethodSuffix(): String = replace('-', '_')
 
     /**
      * Applies the rules AAPT applies to a string value, so the generated text matches what Android

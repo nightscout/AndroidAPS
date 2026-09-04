@@ -135,9 +135,37 @@ class CommandExecutor @Inject constructor(
         rxBus.send(EventQueueChanged())
         var lastCommandTime = Clock.System.now().toEpochMilliseconds()
         var connectionStartTime = lastCommandTime
+        // When the current hold started, so its duration can be given back to the timers above.
+        var heldSince: Long? = null
         try {
             while (true) {
                 currentCoroutineContext().ensureActive()    // cooperative cancel = app shutdown only
+                // Before anything touches `activePlugin.activePump`. Someone is applying imported
+                // settings, which stops and starts pump drivers, so this must not connect, handshake or
+                // pick anything up - and must not even resolve the pump, which is being swapped under
+                // it. Sitting below the connect branch was wrong: the loop went on trying to reach the
+                // outgoing driver for the whole hold and never reached this check.
+                //
+                // Note this deliberately does NOT make `withHold` wait for a connection in progress.
+                // Connecting is not a command in flight, so applying is safe, and treating it as busy
+                // would stall the apply behind a driver that cannot connect at all - the case that
+                // prompted this, where a pump was selected with no hardware to answer.
+                if (queue.isHeld()) {
+                    aapsLogger.debug(LTag.PUMPQUEUE, "queue held")
+                    heldSince = heldSince ?: Clock.System.now().toEpochMilliseconds()
+                    delay(500)
+                    continue
+                }
+                heldSince?.let {
+                    // Do not charge the hold to the connection attempt. Without this a long hold pushes
+                    // secondsElapsed past PUMP_MAX_CONNECTION_TIME_IN_SECONDS, and the first iteration
+                    // after release takes the "timed out" branch and clears the queue - cancelling
+                    // commands that were only ever waiting for the apply to finish.
+                    val holdDuration = Clock.System.now().toEpochMilliseconds() - it
+                    connectionStartTime += holdDuration
+                    lastCommandTime += holdDuration
+                    heldSince = null
+                }
                 val secondsElapsed = (Clock.System.now().toEpochMilliseconds() - connectionStartTime) / 1000
                 val pump = activePlugin.activePump
                 if (!pump.isConfigured()) {

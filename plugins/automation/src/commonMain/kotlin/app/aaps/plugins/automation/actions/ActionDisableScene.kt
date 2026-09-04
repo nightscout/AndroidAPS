@@ -14,14 +14,13 @@ import app.aaps.core.interfaces.scenes.SceneAutomationResult
 import app.aaps.core.interfaces.scenes.SceneIconResolver
 import app.aaps.core.utils.lenientString
 import app.aaps.plugins.automation.elements.InputSceneName
-import dev.zacsweers.metro.Provider
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
 class ActionDisableScene(
     aapsLogger: AAPSLogger,
     rh: TextResolver,
-    pumpEnactResultProvider: Provider<PumpEnactResult>,
+    pumpEnactResultProvider: () -> PumpEnactResult,
     private val sceneApi: SceneAutomationApi,
     private val sceneIconResolver: SceneIconResolver
 ) : Action(aapsLogger, rh, pumpEnactResultProvider) {

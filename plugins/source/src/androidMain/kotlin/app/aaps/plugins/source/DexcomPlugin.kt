@@ -39,6 +39,7 @@ import app.aaps.core.utils.receivers.Inbox
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
 import app.aaps.plugins.source.compose.BgSourceComposeContent
 import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
@@ -54,6 +55,7 @@ import kotlin.math.abs
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @IntKey(440)
 @SingleIn(AppScope::class)
+@ContributesBinding(AppScope::class, binding = binding<DexcomBoyda>())
 class DexcomPlugin @Inject constructor(
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,

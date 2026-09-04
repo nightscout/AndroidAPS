@@ -21,7 +21,6 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.objects.wizard.BolusWizard
 import com.google.common.truth.Truth.assertThat
-import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -58,7 +57,7 @@ internal class WizardDialogViewModelTest {
     @Mock private lateinit var wizardExecutor: WizardExecutor
     @Mock private lateinit var rxBus: RxBus
 
-    private val bolusWizardProvider: Provider<BolusWizard> = mock()
+    private val bolusWizardProvider: () -> BolusWizard = mock()
 
     private lateinit var sut: WizardDialogViewModel
 

@@ -24,14 +24,13 @@ import app.aaps.core.utils.lenientStringOrNull
 import app.aaps.plugins.automation.elements.InputCarePortalMenu
 import app.aaps.plugins.automation.elements.InputDuration
 import app.aaps.plugins.automation.elements.InputString
-import dev.zacsweers.metro.Provider
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
 class ActionCarePortalEvent(
     aapsLogger: AAPSLogger,
     rh: TextResolver,
-    pumpEnactResultProvider: Provider<PumpEnactResult>,
+    pumpEnactResultProvider: () -> PumpEnactResult,
     private val persistenceLayer: PersistenceLayer,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,

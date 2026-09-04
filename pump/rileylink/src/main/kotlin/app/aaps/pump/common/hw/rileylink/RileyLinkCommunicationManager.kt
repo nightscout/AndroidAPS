@@ -22,7 +22,6 @@ import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData
 import app.aaps.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor
 import app.aaps.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask
 import java.util.Locale
-import dev.zacsweers.metro.Provider
 
 /**
  * This is abstract class for RileyLink Communication, this one needs to be extended by specific "Pump" class.
@@ -38,8 +37,8 @@ abstract class RileyLinkCommunicationManager<T : RLMessage>(
     val rfspy: RFSpy,
     val activePlugin: ActivePlugin,
     val rileyLinkUtil: RileyLinkUtil,
-    val wakeAndTuneTaskProvider: Provider<WakeAndTuneTask>,
-    val radioResponseProvider: Provider<RadioResponse>
+    val wakeAndTuneTaskProvider: () -> WakeAndTuneTask,
+    val radioResponseProvider: () -> RadioResponse
 ) {
 
     @Suppress("PrivatePropertyName")

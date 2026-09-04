@@ -19,18 +19,30 @@ import app.aaps.core.keys.interfaces.TextRef
  */
 object TextRefValueRegistry {
 
-    private val lookups = mutableMapOf<String, (String) -> String?>()
+    private val lookups = mutableMapOf<String, (String, String?) -> String?>()
 
-    /** Teaches the resolver how to turn a name owned by [owner] into its English text. */
-    fun register(owner: String, textOf: (String) -> String?) {
+    /**
+     * The language to answer in, as a BCP 47 tag like `cs-CZ`, or null for English.
+     *
+     * State rather than a parameter, which is the whole reason `gs(ref)` needs no locale argument
+     * and none of its callers had to change. It is the same arrangement Android has: there the
+     * locale lives in `Resources`, and `rh.gs(...)` reads it without being told.
+     *
+     * Set once at startup from the device, and again when the user picks a language.
+     */
+    var locale: String? = null
+
+    /** Teaches the resolver how to turn a name owned by [owner] into text, in a given locale. */
+    fun register(owner: String, textOf: (String, String?) -> String?) {
         lookups[owner] = textOf
     }
 
     /** The text for [ref], or null when no module has claimed that owner or that name. */
-    fun textOf(ref: TextRef.Named): String? = lookups[ref.owner]?.invoke(ref.name)
+    fun textOf(ref: TextRef.Named): String? = lookups[ref.owner]?.invoke(ref.name, locale)
 
     /** Drops every registration. For tests, so one test cannot see what another registered. */
     fun clear() {
         lookups.clear()
+        locale = null
     }
 }

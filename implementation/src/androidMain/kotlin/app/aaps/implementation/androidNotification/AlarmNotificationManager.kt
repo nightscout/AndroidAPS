@@ -26,7 +26,6 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.rawRes
 import app.aaps.implementation.androidNotification.AlarmNotificationManager.Companion.CHANNEL_FULL_SCREEN_SILENT
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
@@ -50,7 +49,7 @@ class AlarmNotificationManager @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val iconsProvider: IconsProvider,
-    private val uiInteractionProvider: Provider<UiInteraction>,
+    private val uiInteractionProvider: () -> UiInteraction,
     private val alarmSoundPlayer: AlarmSoundPlayer,
     private val rh: ResourceHelper
 ) {

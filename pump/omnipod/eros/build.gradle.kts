@@ -10,13 +10,11 @@ plugins {
 
 android {
     namespace = "app.aaps.pump.omnipod.eros"
+}
 
-    defaultConfig {
-        ksp {
-            arg("room.incremental", "true")
-            arg("room.schemaLocation", "$projectDir/schemas")
-        }
-    }
+ksp {
+    arg("room.incremental", "true")
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 dependencies {
@@ -39,7 +37,6 @@ dependencies {
 
     androidTestImplementation(project(":shared:tests"))
     // optional - Test helpers
-    testImplementation(libs.androidx.room.testing)
     testImplementation(project(":implementation"))
     testImplementation(project(":shared:impl"))
     testImplementation(project(":shared:tests"))

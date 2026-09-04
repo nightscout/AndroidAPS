@@ -25,7 +25,6 @@ import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.IntoMap
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 
@@ -65,7 +64,7 @@ object MainPluginsBindings {
         decimalFormatter: DecimalFormatter,
         processedTbrEbData: ProcessedTbrEbData,
         signals: CalculationSignalsEmitter,
-        cache: Provider<OverviewDataCache>
+        cache: () -> OverviewDataCache
     ): IobCobCalculatorPlugin = IobCobCalculatorPlugin(
         aapsLogger, rxBus, preferences, rh, profileFunction, activePlugin, dateUtil, persistenceLayer,
         overviewData, calculationWorkflow, decimalFormatter, processedTbrEbData, signals
@@ -81,10 +80,16 @@ object MainPluginsBindings {
 
     /**
      * The `Objectives` interface, unqualified.
-     * `ObjectivesPlugin` carries `@APS` for the plugin-list multibinding, and @ContributesBinding on
-     * the class would inherit that qualifier - so the interface would only be readable as
-     * `@APS Objectives`, which is not what a reader asks for. Providing it here keeps the qualifier on
-     * the plugin entry, where it belongs, and hands out the same scoped instance.
+     *
+     * `ObjectivesPlugin` carries `@APS` on the class for the plugin-list multibinding, and a second
+     * `@ContributesBinding` there would inherit it - the interface would then only be readable as
+     * `@APS Objectives`, which is not what a reader asks for.
+     *
+     * Metro documents the way out: put the qualifier on the bound type instead, `binding<@APS
+     * PluginBase>()`. The version pinned here rejects that form outright -
+     * `Inapplicable candidate(s): constructor(scope: KClass<*>, binding: binding<*> = ...)` - which is
+     * the same wall `SyncPluginsBindings` hits for its qualified entry. So this stays stated, and
+     * hands out the same scoped instance either way. Retry both when Metro leaves the snapshot.
      */
     @Provides
     fun objectives(plugin: ObjectivesPlugin): Objectives = plugin

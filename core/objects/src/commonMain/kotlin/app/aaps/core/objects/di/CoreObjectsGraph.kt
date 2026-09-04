@@ -1,6 +1,8 @@
 package app.aaps.core.objects.di
 
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.ui.UiRestart
+import app.aaps.core.interfaces.ui.UiRestartImpl
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.configuration.Config
@@ -24,7 +26,6 @@ import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
@@ -41,6 +42,14 @@ import kotlinx.coroutines.CoroutineScope
 @BindingContainer
 object CoreObjectsGraph {
 
+    /**
+     * One per app: the count has to be shared between whoever asks for a rebuild and the shell that
+     * answers, and a second instance would leave one of them watching a counter nobody moves.
+     */
+    @SingleIn(AppScope::class)
+    @Provides
+    fun provideUiRestart(): UiRestart = UiRestartImpl()
+
     @SingleIn(AppScope::class)
     @Provides
     fun provideRunningModeGuard(loop: Loop, text: TextResolver, bus: RxBus): RunningModeGuard =
@@ -50,7 +59,7 @@ object CoreObjectsGraph {
     // reference would be a cycle error.
     @SingleIn(AppScope::class)
     @Provides
-    fun provideQuickWizard(prefs: Preferences, entry: Provider<QuickWizardEntry>): QuickWizard =
+    fun provideQuickWizard(prefs: Preferences, entry: () -> QuickWizardEntry): QuickWizard =
         QuickWizard(prefs) { entry() }
 
     @Provides
@@ -63,8 +72,8 @@ object CoreObjectsGraph {
         persistence: PersistenceLayer,
         dates: DateUtil,
         glucose: GlucoseStatusProvider,
-        wizard: Provider<BolusWizard>,
-        quick: Provider<QuickWizard>
+        wizard: () -> BolusWizard,
+        quick: () -> QuickWizard
     ): QuickWizardEntry = QuickWizardEntry(
         logger, prefs, profile, loopRef, iobCob, persistence, dates, glucose, { wizard() }, { quick() }
     )

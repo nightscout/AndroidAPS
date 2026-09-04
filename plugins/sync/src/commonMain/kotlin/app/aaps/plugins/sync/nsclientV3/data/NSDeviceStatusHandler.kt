@@ -19,7 +19,6 @@ import app.aaps.core.utils.safeGetStringAllowNull
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -90,7 +89,7 @@ class NSDeviceStatusHandler @Inject constructor(
     private val rxBus: RxBus,
     // Plain CoroutineScope: @ApplicationScope is a javax qualifier and cannot appear in commonMain.
     private val appScope: CoroutineScope,
-    private val nsClientV3Plugin: Provider<NSClientV3Plugin>
+    private val nsClientV3Plugin: () -> NSClientV3Plugin
 ) {
 
     /**

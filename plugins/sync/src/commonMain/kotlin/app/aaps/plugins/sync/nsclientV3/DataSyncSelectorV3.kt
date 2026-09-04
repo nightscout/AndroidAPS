@@ -21,7 +21,6 @@ import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientLongKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
@@ -36,7 +35,7 @@ class DataSyncSelectorV3 @Inject constructor(
     private val storeDataForDb: StoreDataForDb,
     private val config: Config,
     private val nsClientRepository: NSClientRepository,
-    private val nsClientV3Plugin: Provider<NSClientV3Plugin>
+    private val nsClientV3Plugin: () -> NSClientV3Plugin
 ) : DataSyncSelector {
 
     data class QueueCounter(

@@ -90,10 +90,10 @@ fun MaintenanceDialogs(
             onCloudDirectoryClick = { maintenanceViewModel.showCloudDirectory() },
             onClearCloudClick = { maintenanceViewModel.requestClearCloud() },
             onExportSettingsClick = { maintenanceViewModel.startExport() },
-            onImportSettingsClick = { source ->
-                maintenanceViewModel.logImportSettings()
-                onImportSettingsNavigate(source)
-            },
+            // No audit entry here: opening the picker is not an import. ImportViewModel logs
+            // IMPORT_SETTINGS when an import is actually applied, and logging it here as well wrote
+            // the entry twice for a real import and once for one the user walked away from.
+            onImportSettingsClick = { source -> onImportSettingsNavigate(source) },
             onExportCsvClick = { showConfirmExportCsv = true },
             onResetApsResultsClick = { showConfirmResetAps = true },
             onCleanupDbClick = { showConfirmCleanupDb = true },

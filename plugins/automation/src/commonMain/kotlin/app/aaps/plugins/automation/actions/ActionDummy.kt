@@ -4,13 +4,12 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.resources.TextResolver
-import dev.zacsweers.metro.Provider
 
 // Used for instantiation of other actions only
 class ActionDummy(
     aapsLogger: AAPSLogger,
     rh: TextResolver,
-    pumpEnactResultProvider: Provider<PumpEnactResult>
+    pumpEnactResultProvider: () -> PumpEnactResult
 ) : Action(aapsLogger, rh, pumpEnactResultProvider) {
 
     override fun friendlyName(): TextRef {
