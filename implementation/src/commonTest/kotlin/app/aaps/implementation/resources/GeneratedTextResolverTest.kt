@@ -71,6 +71,36 @@ class GeneratedTextResolverTest {
         assertEquals("unknown", resolver.gs(TextRef.Named("demo", "unknown"), "Bob"))
     }
 
+    /**
+     * The three above all pass the arguments through the `vararg` overload, which always worked. A
+     * `TextRef` can also carry its own arguments, and that path was ignored: only the overload
+     * formatted. Most readers take a bare ref - the notification and constraint paths among them - so
+     * a message built with `withArgs` reached the screen as its raw format string, "Limiting max
+     * basal rate to %1$.2f U/h", and went to Nightscout that way too. Android has always read
+     * `ref.args`, so this was iOS and desktop only.
+     */
+    @Test fun `substitutes arguments the ref carries itself`() {
+        assertEquals("Hello Bob", resolver.gs(TextRef.Named("demo", "with_arg", listOf("Bob"))))
+    }
+
+    @Test fun `substitutes several arguments the ref carries itself`() {
+        assertEquals("2 of 3", resolver.gs(TextRef.Named("demo", "two_args", listOf(2, 3))))
+    }
+
+    /** No template to substitute into, so the name is shown as-is - the same fallback Android uses. */
+    @Test fun `an unresolved name carrying arguments still shows the name`() {
+        assertEquals("unknown", resolver.gs(TextRef.Named("demo", "unknown", listOf("Bob"))))
+    }
+
+    /**
+     * The overload rebuilds the ref rather than formatting the resolved text, so its arguments
+     * replace any the ref already carried instead of being applied on top of an already-substituted
+     * string.
+     */
+    @Test fun `explicit arguments replace the ones the ref carried`() {
+        assertEquals("Hello Ann", resolver.gs(TextRef.Named("demo", "with_arg", listOf("Bob")), "Ann"))
+    }
+
     @Test fun `the not localised lookup reads the same map`() {
         // The generated map is English, so there is nothing else it could read. Stated as a test so
         // that adding translations later has to decide what this means rather than inheriting it.
