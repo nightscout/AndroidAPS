@@ -1,6 +1,6 @@
 # NFC plugin - migration to Kotlin Multiplatform
 
-Written 2026-08-20, updated 2026-09-01. What the NFC Commands plugin needs in order to fit the
+Written 2026-08-20, updated 2026-09-04. What the NFC Commands plugin needs in order to fit the
 Kotlin Multiplatform refactoring going on in `Nightscout/kmp`, and to line up with the architecture
 the other plugins already follow.
 
@@ -29,7 +29,7 @@ preparation work can happen without disturbing the main NFC line.
 
 | Step                                                       | State                                                                       |
 |------------------------------------------------------------|-----------------------------------------------------------------------------|
-| Merge `Nightscout/kmp` into the branch                     | **done nine times** - latest `ea86643c0a`, 64 commits, no conflicts            |
+| Merge `Nightscout/kmp` into the branch                     | **done eleven times** - latest `e5362142d0`, 42 commits, one conflict          |
 | Tier 1, the changes needed to compile at all (section 3)    | **done** - `9cd204b8da` "NFC Fix build after kmp merge"                        |
 | Architecture alignment (section 9)                         | **all done** - 9.1 to 9.8, the last being 9.5 in `57952b8690`                  |
 | The command format and the store blobs (section 5)          | **done** - `28305e0af6` and `ff1916852f`. No `org.json` left in the plugin      |
@@ -37,13 +37,40 @@ preparation work can happen without disturbing the main NFC line.
 | Tier 2, needed only for a multiplatform module (section 4)  | **not started** apart from the `org.json` row, which sections 5 and 9.7 did    |
 | The `:plugins:sync` flip, step 6                            | **done** - upstream flipped it in `077aa2a6e4`, our files moved in `216e31867e` |
 | Strings on `SyncStrings`, step 7                            | **done** - `3aa6e921e5`, and the duplicates it found are section 9b            |
-| Build verification                                         | **green** - 93 NFC tests in `testAndroidHostTest`, 93 app tests, all pass       |
-| `Nightscout/kmp` freshness                                 | merged 2026-08-31 at `01b3ecf440`. Still not in `dev` - more merges are due     |
+| Build verification                                         | **green** - 93 NFC tests in `testAndroidHostTest`, 95 app tests, all pass       |
+| `Nightscout/kmp` freshness                                 | merged 2026-09-04 at `b80996b606`. Still not in `dev`, and now much bigger      |
 
 Sections 3.7 to 3.12 are six breaks that only a compiler found, after an import-derived list had
 missed them. The lesson is recorded there because it will repeat on the next merge: **grepping imports
 finds moved packages, never changed signatures.** It took two rounds of discovery to find them all -
 the first list came from imports and was wrong - so budget for more than one pass.
+
+### What the pull request looks like, measured at merge 11
+
+Against `Nightscout/kmp` at `b80996b606`: **71 files, +8601, -3**. The three removed lines are edits,
+not removals, so the change is **purely additive** - nothing upstream owns is deleted or rewritten.
+
+48 of the 71 files are the plugin itself, under
+`plugins/sync/src/androidMain/kotlin/app/aaps/plugins/sync/nfcCommands/` and its tests. The other 23
+are the touchpoints a new plugin needs, and they are worth listing because a reviewer will want to
+see that the list is short and boring:
+
+| Where | What |
+|---|---|
+| `core:interfaces` | one `ElementType.NFC`, one `LTag.NFC` |
+| `core:data`, `database` | one `Sources.NfcCommands` and its converter and presentation entries |
+| `core:keys` | two preference keys, `NfcAllowRemoteCommands` and `NfcForegroundPriority` |
+| `core:ui` | the `IcPluginNfc` icon, an element colour, four `ElementTypeStyle` branches, two strings |
+| `appshell` | one line: `ElementType.NFC` in the non-searchable navigation group |
+| `app` | the six `ComposeMainActivity` hooks for foreground dispatch, and `380` in `ContributedPluginsTest` |
+| `plugins/sync` | the manifest entry, the member injector, the strings, `nfc_tech_filter.xml`, and the serialization plugin in the build file |
+| `_docs` | `NFC_COMMANDS.md` and this file |
+
+The two lines a reviewer should look at hardest are the ones that are not additive in spirit even
+though they are in form: `ElementType.NFC` and `Sources.NfcCommands` are enum values in shared code,
+so every exhaustive `when` over them in the tree has to name NFC. That is by design - it is what
+caught the lost branch at merge 10 - but it means this PR touches files in five modules that have
+nothing to do with NFC.
 
 ### Commit shape on this branch
 
@@ -85,6 +112,10 @@ anything was pushed, so that each one builds on its own:
 | `a410a957c9`  | five repeated strings dropped, section 9b written             | behaviour neutral, **builds**             |
 | `ea86643c0a`  | **merge 9**, 64 upstream commits, no conflicts                | does **not** build - javax.inject is gone |
 | `860ab34fd9`  | fix build after merge 9 - Metro's Inject, 6 files              | mechanical, **builds**                    |
+| `41cf73925b`  | the note after merge 9                                        | documentation only                       |
+| `662dff1a58`  | **merge 10**, 123 upstream commits, 1 conflict                | does **not** build - one lost branch      |
+| `dcf479defc`  | fix build after merge 10 - one line in appshell                | mechanical, **builds**                    |
+| `e5362142d0`  | **merge 11**, 42 upstream commits, 1 conflict                 | nothing to fix afterwards                 |
 
 Keeping these apart matters for review: the fix-build commit only has to answer "did the merge really
 force this?", and the alignment commit carries its own rationale. `f9e51ec06c` is also the one that
@@ -96,8 +127,8 @@ is cleanly cherry-pickable - see section 10.
 
 | Branch                           | HEAD          | Date       | Note                                      |
 |----------------------------------|---------------|------------|-------------------------------------------|
-| `nfc/new-nfc-plugin_kmp` (ours)  | `860ab34fd9`  | 2026-08-31 | merged `kmp` at `01b3ecf440`               |
-| `Nightscout/kmp`                 | `01b3ecf440`  | 2026-08-31 | fully merged as of merge 9                 |
+| `nfc/new-nfc-plugin_kmp` (ours)  | `e5362142d0`  | 2026-09-04 | merged `kmp` at `b80996b606`               |
+| `Nightscout/kmp`                 | `b80996b606`  | 2026-09-03 | fully merged as of merge 11                |
 | `Nightscout/dev`                 | `283a184f60`  | 2026-08-25 | `kmp` has **not** landed here yet          |
 
 The rest of this section is the picture as it was on 2026-08-26, kept for the reasoning it records.
@@ -721,12 +752,13 @@ One thing may still move: follow-up 3 in the KMP note is `PluginDescription.desc
 | 0    | ~~Ask the owner the section 6 question~~ - upstream has answered it in its own doc and commits: `:plugins:sync` stays Android. Worth confirming, no longer worth waiting for.                                                                                    | -                    |
 | 1    | ~~The store blobs (section 5)~~ - **done**, `ff1916852f`.                                                                                                          | -                    |
 | 2    | ~~Convert the NFC plugin's DI to Metro and move the activity's manifest entry into the plugin~~ - **done**, `ba1cdbd518` and `009f4087ca`. See 1a for the two predictions that were wrong. | -                    |
-| 3    | **Keep merging `kmp` as it moves**, roughly daily while it is this active. Five merges in, the conflict set is small and always the same shared files, and `nfcCommands/` has never been touched by one. Waiting costs more than merging - see the merge notes in section 10. | -                    |
+| 3    | **Keep merging `kmp` as it moves**, roughly daily while it is this active. Eleven merges in, `nfcCommands/` has never been touched by one and the conflicts are always in the same two or three shared files. Waiting costs more than merging - see the merge notes in section 10. | -                    |
 | 4    | ~~Tier 2~~ - **not needed.** Upstream's own doc and its conversion record say `:plugins:sync` stays Android, so the plugin lives in `androidMain`. See section 6. | -                    |
 | 5    | ~~Decide the NFC hardware seam~~ - **not needed** for the same reason. There is no iOS half to design. | -                    |
 | 6    | ~~When upstream makes `:plugins:sync` multiplatform, the plugin's files move from `src/main` to `src/androidMain`~~ - **done**, `216e31867e`. It happened at merge 8, and it *was* our task after all - see below. | -                    |
 | 7    | ~~Move the NFC strings onto the generated `SyncStrings` names~~ - **done**, `3aa6e921e5`. No `R.string` is left in the plugin. | -                    |
 | 8    | Propose one generic key for each of the twelve strings NFC and the SMS communicator both own, and retire the two feature-named ones. Better done once the plugin is merged - see 9b. | the plugin landing |
+| 9    | Open the pull request against `kmp`. Its shape is measured in section 0. | -                    |
 
 All of section 9 is done as of `57952b8690`, and step 6 is done as of `216e31867e`. The plugin
 compiles and tests inside a multiplatform `:plugins:sync`.
@@ -1352,6 +1384,46 @@ error names Dagger, which makes it look like a code problem on our side. It is n
 
 Also in this merge, and none of it touching NFC: automation and `LoopPlugin` moved to `commonMain`,
 and **upstream deleted several of the documents this note cites** - see the note under section 1.
+
+### Merge 10 outcome, for reference
+
+Commit `662dff1a58`, **123 upstream commits**, one conflict. This is the merge where the other two
+clients became real: `:plugins:sync` gained `jvmMain`, `jvmSharedMain`, `commonTest` and `iosTest`
+beside `androidMain`, the whole AAPS UI runs on desktop, and the Nightscout websocket is shared with
+desktop polling as its fallback.
+
+**The conflict was a move, not a disagreement, and it is the shape to expect again.** Upstream took
+614 lines out of `ComposeMainActivity` - `navigate(ElementType)` and `handlePluginClick` went to
+`appshell/src/commonMain/.../navigation/ElementNavigation.kt` so a desktop tap does something. Our
+side of those lines was a single entry, `ElementType.NFC` in the non-searchable group. Resolved by
+taking upstream's deletion whole and keeping the one thing of ours that lives outside it, the
+`NfcForegroundDispatch` import. The other five NFC hooks in that activity - the lazy field,
+`onResume`, `onPause`, `onNewIntent` and `observeWarning` - are outside the moved block and merged
+themselves.
+
+That left exactly one error, and it is worth understanding rather than just fixing: the shared switch
+has **no `else`**, which is what makes the compiler name a new `ElementType`, and `ElementType.NFC` is
+**ours**. So a switch that moves house takes our branch with it and forgets to bring it. `dcf479defc`
+puts the one line back where the switch now lives.
+
+**Lesson for the next one:** after a merge, grep for our own enum values in whatever file now owns the
+`when`, not only in the file that used to. `git grep -n "ElementType.AUTOMATION"` finds the new home in
+one line, because automation sits next to us in every one of those lists.
+
+### Merge 11 outcome, for reference
+
+Commit `e5362142d0`, **42 upstream commits**, one conflict and **nothing to fix afterwards** -
+`:app:compileFullDebugKotlin` was green straight off the merge. The iOS client now builds and uploads
+to TestFlight from CI, the app shows in the user's language on iOS and desktop, imported settings
+apply without a restart, and the websocket frame handling is shared.
+
+`ComposeMainActivity` conflicted again, this time as two additions on one line rather than a move:
+upstream added a third observer to `observePreferences()` so an import can ask the activity to
+recreate itself, and our `nfcForegroundDispatch.observeWarning()` call sits in the same place. Both
+kept - upstream's block with the other preference observers, ours after it, because it is a different
+kind of thing.
+
+`nfcCommands/` has now been untouched by upstream **eleven merges running**.
 
 ---
 
