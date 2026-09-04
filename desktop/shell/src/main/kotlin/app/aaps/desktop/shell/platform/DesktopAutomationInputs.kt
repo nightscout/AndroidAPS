@@ -17,15 +17,20 @@ import dev.zacsweers.metro.SingleIn
  * The automation inputs a desktop cannot answer.
  *
  * These four feed automation triggers - "when I connect to this car's Bluetooth", "when I am near
- * home". A desktop has no paired pump-side Bluetooth list and no location service, so it cannot
- * answer them, and this file is about answering **"I do not know"** rather than "no".
+ * home". A desktop has neither a paired Bluetooth list nor a location service, so what this file is
+ * really about is which kind of "no" each interface asks for. They are not the same, and reading
+ * them as one is what put a false error on the trigger editor.
  *
- * That distinction is the whole point. `PairedBtDevices.names()` and `LastKnownLocation.position()`
- * both return a nullable, and null is the designed way to say the platform cannot tell. An empty
- * list would mean "you have no paired devices", which is a different claim and a wrong one - the
- * kind of quiet answer that makes a trigger the user relies on simply never fire, with nothing in
- * the log to explain it. This tree has already had that exact bug once, when a lost caller left the
- * Bluetooth device picker permanently empty.
+ * `LastKnownLocation.position()` returns null for "I do not know", and that is right here: a
+ * position of zero would read as "you are exactly there" and fire a location trigger for a machine
+ * with no idea where it is.
+ *
+ * `PairedBtDevices.names()` looks the same and is not. Its null means specifically **"not allowed,
+ * and the user can grant it"** - the trigger editor turns null into a red "grant the Connect
+ * permission" snackbar. A desktop has no such permission, so answering null asked the user to fix
+ * something that does not exist, on every visit to the editor, which is how a screen teaches people
+ * to ignore its errors. An empty list is the honest answer: there is no list, and no permission
+ * would produce one. iOS reached the same conclusion for the same reason - see `IosPairedBtDevices`.
  *
  * Every call is logged, so a rule that reaches for one of these says so.
  */
@@ -35,10 +40,10 @@ class DesktopPairedBtDevices @Inject constructor(
     private val aapsLogger: AAPSLogger
 ) : PairedBtDevices {
 
-    /** Null, not an empty list: "cannot tell" rather than "none paired". */
-    override fun names(): List<String>? {
-        aapsLogger.debug(LTag.AUTOMATION, "Desktop has no paired Bluetooth device list")
-        return null
+    /** Empty, not null: "there is no such list here", not "ask the user for a permission". */
+    override fun names(): List<String> {
+        aapsLogger.debug(LTag.AUTOMATION, "Desktop has no paired Bluetooth device list, returning none")
+        return emptyList()
     }
 }
 
