@@ -123,6 +123,27 @@ class SocketNsConnection @Inject constructor(
         }
 
         val base = preferences.get(StringKey.NsClientUrl).lowercase().trimEnd('/')
+        // socket.io throws for a URL it can parse but cannot use - an unusable transport, a host it
+        // will not accept - rather than reporting it. Android still guards this in
+        // `NSClientV3Service` and dev did too; the port kept only the URI-syntax half, which is the
+        // `create() == null` branch below. Without the guard the throw leaves
+        // `NSClientV3Plugin.onStart` part way through, so the plugin ends up enabled with no
+        // observers and no upload collector attached and only a restart repairs it. Losing the
+        // socket is bad, losing the rest of the plugin silently is worse.
+        try {
+            openSockets(base, reason)
+        } catch (e: RuntimeException) {
+            stop()
+            nsClientRepository.addLog("● WS", "RuntimeException: ${e.message}")
+        }
+    }
+
+    /**
+     * Both sockets: created, listened to and asked to connect.
+     *
+     * Split out of [start] only so one `try` can cover all of it, which is the shape Android has.
+     */
+    private fun openSockets(base: String, reason: String) {
         val storage = nsSocketFactory.create("$base/storage")
         if (storage == null) {
             stop()
