@@ -23,6 +23,7 @@ import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -70,7 +71,7 @@ class DesktopNsLoadExecutor @Inject constructor(
 
     private var round: Job? = null
 
-    private val _idle = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+    private val _idle = MutableSharedFlow<Unit>(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
 
     override val isRunning: Boolean get() = round?.isActive == true
 
@@ -116,7 +117,18 @@ class DesktopNsLoadExecutor @Inject constructor(
                 // error left to show for it because a later step had cleared it.
                 if (!NsLoadChain.shouldContinue(runStep(step))) break
             }
-            _idle.emit(Unit)
+        }.also { started ->
+            // Idle is reported from invokeOnCompletion, not as the last line of the block above, so
+            // that a **cancelled** round reports it too. The plugin queues its next round on this
+            // signal, so a round that ends without it leaves pendingLoop and pendingUpload set and
+            // the queued uploads waiting for an unrelated trigger.
+            //
+            // It did work before, but only by accident: the emit was reached because the cancellation
+            // was swallowed upstream, and `emit` happened to take a fast path rather than suspending
+            // and throwing. Nothing pinned either of those. This is the arrangement iOS already uses -
+            // see `CoroutineNsLoadExecutor.replaceRound` - and DROP_OLDEST above is the other half of
+            // it, so tryEmit cannot silently fail on a full buffer.
+            started.invokeOnCompletion { _idle.tryEmit(Unit) }
         }
     }
 
