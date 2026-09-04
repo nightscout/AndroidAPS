@@ -21,8 +21,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.platform.LocalWindowInfo
 import app.aaps.appshell.AapsAppRoot
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.filter
 import app.aaps.core.interfaces.resources.LanguageTag
 import app.aaps.core.interfaces.resources.TextRefValueRegistry
 import app.aaps.core.keys.StringKey
@@ -170,6 +173,21 @@ private fun AapsDesktopApp(graph: DesktopAppGraph, appIcon: Painter, appName: St
             TextRefValueRegistry.locale = if (chosen == "default") Locale.getDefault().toLanguageTag() else chosen
             logger.debug(LTag.CORE, "Language changed to ${TextRefValueRegistry.locale}")
             graph.uiRestart.request()
+        }
+    }
+
+    // Clears a granted PIN or biometric session when the window stops being the active one - the
+    // desktop counterpart of Android's `ProcessLifecycleListener.onPause`. Nothing did this before,
+    // so the authorization outlived leaving the app and coming back to the window reached whatever
+    // the user had protected without a prompt. `ProtectionTimeout` defaults to a second, so only a
+    // user who raised it was affected, which is why it went unnoticed.
+    val windowInfo = LocalWindowInfo.current
+    LaunchedEffect(windowInfo) {
+        // No `drop(1)`: the first value is either focused, which this ignores, or unfocused, and
+        // clearing a session nobody has granted yet does nothing.
+        snapshotFlow { windowInfo.isWindowFocused }.filter { !it }.collect {
+            logger.debug(LTag.CORE, "Window lost focus, clearing the authorization")
+            graph.protectionCheck.resetAuthorization()
         }
     }
 

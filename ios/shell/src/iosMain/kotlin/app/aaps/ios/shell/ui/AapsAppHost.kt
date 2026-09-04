@@ -52,6 +52,7 @@ import app.aaps.shared.clientbindings.ClientGraphBindings
 import app.aaps.core.ui.compose.LocalMetroViewModelFactory
 import app.aaps.core.ui.compose.icons.IcAaps
 import app.aaps.core.ui.compose.metroViewModel
+import app.aaps.implementation.lifecycle.IosProtectionLifecycle
 import app.aaps.ios.shell.IosAppStartup
 import app.aaps.ios.shell.PluginStoreRegistry
 import app.aaps.ios.shell.di.IosAppGraph
@@ -121,6 +122,10 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
     // Same placement and the same reason: this touches UIKit, so it cannot live in the graph or in
     // `IosAppStartup`. Until this ran, Nightscout sync was blocked forever - see `startBatteryWatch`.
     graph.receiverStatusStore.startBatteryWatch()
+
+    // Clears a granted PIN or biometric session when the app is backgrounded, which is what Android
+    // gets from `ProcessLifecycleListener.onPause`. Same placement and the same UIKit reason.
+    IosProtectionLifecycle(logger, graph.protectionCheck).start()
 
     // Read once, outside the composition, for the same reason as the graph: decoding the icon on
     // every recomposition would be work for nothing.
