@@ -10,13 +10,6 @@ enum class OmnipodBooleanPreferenceKey(
     override val defaultValue: Boolean,
     private val titleResId: Int,
     private val summaryResId: Int? = null,
-    override val calculatedDefaultValue: Boolean = false,
-    override val engineeringModeOnly: Boolean = false,
-    override val defaultedBySM: Boolean = false,
-    override val dependency: BooleanPreferenceKey? = null,
-    override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false,
-    override val exportable: Boolean = true
 ) : BooleanPreferenceKey {
 
     BolusBeepsEnabled("AAPS.Omnipod.bolus_beeps_enabled", true, titleResId = R.string.omnipod_common_preferences_bolus_beeps_enabled),

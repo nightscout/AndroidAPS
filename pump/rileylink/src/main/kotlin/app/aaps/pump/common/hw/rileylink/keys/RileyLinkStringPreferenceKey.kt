@@ -13,13 +13,8 @@ enum class RileyLinkStringPreferenceKey(
     private val summaryResId: Int? = null,
     override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD,
     private val entriesResIds: Map<String, Int> = emptyMap(),
-    override val defaultedBySM: Boolean = false,
-    override val dependency: BooleanPreferenceKey? = null,
-    override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false,
     override val isPassword: Boolean = false,
     override val isPin: Boolean = false,
-    override val exportable: Boolean = true
 ) : StringPreferenceKey {
 
     Encoding(

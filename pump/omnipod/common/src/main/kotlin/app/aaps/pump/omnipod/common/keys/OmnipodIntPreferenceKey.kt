@@ -14,13 +14,7 @@ enum class OmnipodIntPreferenceKey(
     private val titleResId: Int,
     private val summaryResId: Int? = null,
     private val entriesResIds: Map<Int, Int> = emptyMap(),
-    override val calculatedDefaultValue: Boolean = false,
-    override val engineeringModeOnly: Boolean = false,
-    override val defaultedBySM: Boolean = false,
     override val dependency: BooleanPreferenceKey? = null,
-    override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false,
-    override val exportable: Boolean = true
 ) : IntPreferenceKey {
 
     ExpirationReminderHours(

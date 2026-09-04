@@ -8,13 +8,6 @@ enum class ComboBooleanKey(
     override val key: String,
     override val defaultValue: Boolean,
     private val titleResId: Int,
-    override val calculatedDefaultValue: Boolean = false,
-    override val engineeringModeOnly: Boolean = false,
-    override val defaultedBySM: Boolean = false,
-    override val dependency: BooleanPreferenceKey? = null,
-    override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false,
-    override val exportable: Boolean = true
 ) : BooleanPreferenceKey {
 
     AutomaticReservoirEntry("combov2_automatic_reservoir_entry", true, titleResId = R.string.combov2_automatic_reservoir_entry),

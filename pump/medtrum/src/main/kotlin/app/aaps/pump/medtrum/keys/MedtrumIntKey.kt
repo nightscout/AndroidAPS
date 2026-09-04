@@ -12,13 +12,7 @@ enum class MedtrumIntKey(
     private val summaryResId: Int? = null,
     override var min: Int = Int.MIN_VALUE,
     override var max: Int = Int.MAX_VALUE,
-    override val calculatedDefaultValue: Boolean = false,
-    override val engineeringModeOnly: Boolean = false,
-    override val defaultedBySM: Boolean = false,
     override val dependency: BooleanPreferenceKey? = null,
-    override val negativeDependency: BooleanPreferenceKey? = null,
-    override val exportable: Boolean = true,
-    override val hideParentScreenIfHidden: Boolean = false,
 ) : IntPreferenceKey {
 
     MedtrumPumpExpiryWarningHours(

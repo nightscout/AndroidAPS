@@ -6,7 +6,6 @@ enum class BooleanComposedKey(
     override val key: String,
     override val format: String,
     override val defaultValue: Boolean,
-    override val exportable: Boolean = true
 ) : BooleanComposedNonPreferenceKey {
 
     Log("log_", "%s", false),

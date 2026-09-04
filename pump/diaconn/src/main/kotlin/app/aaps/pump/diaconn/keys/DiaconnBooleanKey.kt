@@ -9,13 +9,6 @@ enum class DiaconnBooleanKey(
     override val defaultValue: Boolean,
     private val titleResId: Int,
     private val summaryResId: Int? = null,
-    override val calculatedDefaultValue: Boolean = false,
-    override val engineeringModeOnly: Boolean = false,
-    override val defaultedBySM: Boolean = false,
-    override val dependency: BooleanPreferenceKey? = null,
-    override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false,
-    override val exportable: Boolean = true
 ) : BooleanPreferenceKey {
 
     LogInsulinChange("diaconn_g8_loginsulinchange", true, titleResId = R.string.diaconn_g8_loginsulinchange_title, summaryResId = R.string.diaconn_g8_loginsulinchange_summary),

@@ -8,13 +8,6 @@ enum class DashBooleanPreferenceKey(
     override val key: String,
     override val defaultValue: Boolean,
     private val titleResId: Int,
-    override val calculatedDefaultValue: Boolean = false,
-    override val engineeringModeOnly: Boolean = false,
-    override val defaultedBySM: Boolean = false,
-    override val dependency: BooleanPreferenceKey? = null,
-    override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false,
-    override val exportable: Boolean = true
 ) : BooleanPreferenceKey {
 
     SoundDeliverySuspendedNotification("AAPS.Omnipod.notification_delivery_suspended_sound_enabled", true, titleResId = R.string.omnipod_common_preferences_notification_delivery_suspended_sound_enabled),

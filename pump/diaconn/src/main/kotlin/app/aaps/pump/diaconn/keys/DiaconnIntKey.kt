@@ -14,13 +14,6 @@ enum class DiaconnIntKey(
     private val titleResId: Int,
     override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD,
     private val entriesResIds: Map<Int, Int> = emptyMap(),
-    override val calculatedDefaultValue: Boolean = false,
-    override val engineeringModeOnly: Boolean = false,
-    override val defaultedBySM: Boolean = false,
-    override val dependency: BooleanPreferenceKey? = null,
-    override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false,
-    override val exportable: Boolean = true
 ) : IntPreferenceKey {
 
     BolusSpeed(

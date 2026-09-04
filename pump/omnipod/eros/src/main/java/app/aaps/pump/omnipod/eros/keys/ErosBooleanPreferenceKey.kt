@@ -10,13 +10,7 @@ enum class ErosBooleanPreferenceKey(
     override val key: String,
     override val defaultValue: Boolean,
     private val titleResId: Int,
-    override val calculatedDefaultValue: Boolean = false,
-    override val engineeringModeOnly: Boolean = false,
-    override val defaultedBySM: Boolean = false,
     override val dependency: BooleanPreferenceKey? = null,
-    override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false,
-    override val exportable: Boolean = true
 ) : BooleanPreferenceKey {
 
     BatteryChangeLogging("AAPS.Omnipod.enable_battery_change_logging", false, titleResId = R.string.omnipod_eros_preferences_battery_change_logging_enabled, dependency = RileylinkBooleanPreferenceKey.ShowReportedBatteryLevel),

@@ -6,7 +6,6 @@ import app.aaps.core.keys.interfaces.LongNonPreferenceKey
 enum class VersionCheckerLongKey(
     override val key: String,
     override val defaultValue: Long,
-    override val exportable: Boolean = true
 ) : LongNonPreferenceKey {
 
     LastWarningTimestamp("last_versionchecker_plugin_warning_timestamp", 0L),

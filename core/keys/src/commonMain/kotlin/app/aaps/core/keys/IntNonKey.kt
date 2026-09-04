@@ -6,7 +6,6 @@ import app.aaps.core.keys.interfaces.IntNonPreferenceKey
 enum class IntNonKey(
     override val key: String,
     override val defaultValue: Int,
-    override val exportable: Boolean = true
 ) : IntNonPreferenceKey {
 
     ObjectivesManualEnacts("ObjectivesmanualEnacts", 0),

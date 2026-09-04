@@ -18,9 +18,7 @@ enum class DoubleKey(
     override val defaultedBySM: Boolean = false,
     override val calculatedBySM: Boolean = false,
     override val dependency: BooleanPreferenceKey? = null,
-    override val negativeDependency: BooleanPreferenceKey? = null,
     override val hideParentScreenIfHidden: Boolean = false,
-    override val exportable: Boolean = true,
     override val unitType: UnitType = UnitType.NONE,
     override val sync: SyncSpec? = null
 ) : DoublePreferenceKey {

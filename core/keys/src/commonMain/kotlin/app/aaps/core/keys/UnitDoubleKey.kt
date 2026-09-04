@@ -17,9 +17,6 @@ enum class UnitDoubleKey(
     override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD,
     override val defaultedBySM: Boolean = false,
     override val dependency: BooleanPreferenceKey? = null,
-    override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false,
-    override val exportable: Boolean = true,
     override val sync: SyncSpec? = null
 ) : UnitDoublePreferenceKey {
 

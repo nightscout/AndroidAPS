@@ -9,13 +9,7 @@ enum class DanaBooleanKey(
     override val defaultValue: Boolean,
     private val titleResId: Int,
     private val summaryResId: Int? = null,
-    override val calculatedDefaultValue: Boolean = false,
-    override val engineeringModeOnly: Boolean = false,
     override val defaultedBySM: Boolean = false,
-    override val dependency: BooleanPreferenceKey? = null,
-    override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false,
-    override val exportable: Boolean = true
 ) : BooleanPreferenceKey {
 
     UseExtended("danar_useextended", true, titleResId = R.string.danar_useextended_title, defaultedBySM = true),

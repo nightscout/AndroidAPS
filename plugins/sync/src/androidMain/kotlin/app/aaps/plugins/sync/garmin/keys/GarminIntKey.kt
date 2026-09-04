@@ -12,12 +12,8 @@ enum class GarminIntKey(
     override val max: Int,
     override val title: TextRef,
     override val defaultedBySM: Boolean = false,
-    override val calculatedDefaultValue: Boolean = false,
     override val dependency: BooleanPreferenceKey? = null,
-    override val negativeDependency: BooleanPreferenceKey? = null,
     override val hideParentScreenIfHidden: Boolean = false,
-    override val engineeringModeOnly: Boolean = false,
-    override val exportable: Boolean = true
 ) : IntPreferenceKey {
 
     LocalHttpPort("communication_http_port", 28891, 1001, 65535, dependency = GarminBooleanKey.LocalHttpServer, title = SyncStrings.garmin_local_http_server_port, defaultedBySM = true, hideParentScreenIfHidden = true),

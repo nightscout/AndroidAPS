@@ -11,13 +11,6 @@ enum class InsightIntKey(
     private val titleResId: Int,
     override val min: Int = Int.MIN_VALUE,
     override val max: Int = Int.MAX_VALUE,
-    override val calculatedDefaultValue: Boolean = false,
-    override val engineeringModeOnly: Boolean = false,
-    override val defaultedBySM: Boolean = false,
-    override val dependency: BooleanPreferenceKey? = null,
-    override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false,
-    override val exportable: Boolean = true
 ) : IntPreferenceKey {
 
     MinRecoveryDuration("insight_min_recovery_duration", 5, titleResId = R.string.min_recovery_duration),

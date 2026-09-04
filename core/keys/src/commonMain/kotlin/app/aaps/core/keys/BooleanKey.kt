@@ -22,10 +22,8 @@ enum class BooleanKey(
     override val showInNsClientMode: Boolean = true,
     override val showInPumpControlMode: Boolean = true,
     override val dependency: BooleanPreferenceKey? = null,
-    override val negativeDependency: BooleanPreferenceKey? = null,
     override val hideParentScreenIfHidden: Boolean = false,
     override val engineeringModeOnly: Boolean = false,
-    override val exportable: Boolean = true,
     override val visibility: ElementVisibility = ElementVisibility.ALWAYS,
     override val enabledCondition: PreferenceEnabledCondition = PreferenceEnabledCondition.ALWAYS,
     override val sync: SyncSpec? = null

@@ -49,6 +49,7 @@ interface PreferenceKey : NonPreferenceKey, PreferenceItem {
      * If not: value from shared preferences is used.
      */
     val defaultedBySM: Boolean
+        get() = false
 
     /**
      * Which platforms this preference is shown on. Everywhere unless it says otherwise.
@@ -96,17 +97,26 @@ interface PreferenceKey : NonPreferenceKey, PreferenceItem {
      * show only if master dependency is enabled (ie android:dependency behavior)
      */
     val dependency: BooleanPreferenceKey?
+        get() = null
 
     /**
      * show only if master dependency is disabled (ie negative android:dependency behavior)
+     *
+     * Nothing sets this today, and nothing ever has - not on this branch and not before the
+     * multiplatform split, so it is not a caller some port dropped. `PreferenceState` still honours
+     * it, so it works if a key wants it; [visibility] is what has been reached for instead, and it
+     * can express conditions this cannot. See `ApsUseAutosens`, which says in its own comment why a
+     * plain negative dependency was not enough for it.
      */
     val negativeDependency: BooleanPreferenceKey?
+        get() = null
 
     /**
      * Hide parent screen
      * PreferenceScreen is final so we cannot extend and modify thisbehavior
      */
     val hideParentScreenIfHidden: Boolean
+        get() = false
 
     /**
      * Runtime visibility condition for this preference.

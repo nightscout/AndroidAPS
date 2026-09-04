@@ -19,10 +19,6 @@ enum class IntentKey(
     override val title: TextRef,
     override val summary: TextRef? = null,
     override val preferenceType: PreferenceType = PreferenceType.CLICK,
-    override val defaultedBySM: Boolean = false,
-    override val dependency: BooleanPreferenceKey? = null,
-    override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false,
     override val exportable: Boolean = false
 ) : IntentPreferenceKey {
 

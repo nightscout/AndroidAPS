@@ -10,13 +10,8 @@ enum class GarminStringKey(
     override val key: String,
     override val defaultValue: String,
     override val title: TextRef,
-    override val defaultedBySM: Boolean = false,
-    override val dependency: BooleanPreferenceKey? = null,
-    override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false,
     override val isPassword: Boolean = false,
     override val isPin: Boolean = false,
-    override val exportable: Boolean = true,
     override val validator: StringValidator = StringValidator.NONE
 ) : StringPreferenceKey {
 
