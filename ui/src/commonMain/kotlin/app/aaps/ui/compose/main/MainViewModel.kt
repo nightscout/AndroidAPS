@@ -611,10 +611,23 @@ class MainViewModel @Inject constructor(
         urlOpener.open("https://dontkillmyapp.com/" + config.deviceManufacturer.lowercase().replace(" ", "-"))
     }
 
+    /**
+     * Whether the About dialog offers the button at all.
+     *
+     * Android only. The page is per device maker, so off Android [openBatteryHelp] built addresses
+     * like `dontkillmyapp.com/apple` and `dontkillmyapp.com/windows-11` - dead links, for a problem
+     * those systems do not have. This was Android-only before the dialog moved to shared code, and
+     * the move dropped the gate rather than deciding to remove it.
+     */
+    val showBatteryHelp: Boolean get() = config.oemBackgroundKilling
+
     fun buildAboutDialogData(appName: String): AboutDialogData {
         var message = "Build: ${config.BUILD_VERSION}\n"
         message += "Flavor: ${config.FLAVOR}${config.BUILD_TYPE}\n"
-        // Only where there is one. Android is the original and shows no platform line.
+        // Only where the build declares one. All three shells do - Android's `ConfigImpl` says
+        // "Android" - so in practice the line is always there; the guard is for a Config that
+        // predates the property, such as a test double, which then omits the line rather than
+        // claiming a platform.
         if (config.PLATFORM.isNotEmpty()) message += "Platform: ${config.PLATFORM}\n"
         message += "${rh.gs(CoreUiStrings.configbuilder_nightscoutversion_label)} ${nsClient.detectedNsVersion() ?: rh.gs(CoreUiStrings.not_available_full)}"
         if (!fabricPrivacy.fabricEnabled()) message += "\n${rh.gs(CoreUiStrings.fabric_upload_disabled)}"

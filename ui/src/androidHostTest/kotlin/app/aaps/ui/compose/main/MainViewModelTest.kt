@@ -156,4 +156,20 @@ internal class MainViewModelTest {
         whenever(dateUtil.timeRemainingString(any(), any())).thenReturn("1h 30m")
         assertThat(sut.formatDuration(5_400_000L)).isEqualTo("1h 30m")
     }
+
+    /**
+     * The About dialog's "don't kill my app" button, which is Android's problem and nobody else's.
+     *
+     * The dialog moved into shared code and the gate did not come with it, so iOS and desktop drew a
+     * button that opened `dontkillmyapp.com/apple` and `dontkillmyapp.com/windows-11` - addresses
+     * that are not pages, for a thing those systems do not do.
+     */
+    @Test
+    fun `the battery help button is offered only where the maker can kill the app`() {
+        whenever(config.oemBackgroundKilling).thenReturn(true)
+        assertThat(sut.showBatteryHelp).isTrue()
+
+        whenever(config.oemBackgroundKilling).thenReturn(false)
+        assertThat(sut.showBatteryHelp).isFalse()
+    }
 }
