@@ -23,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import app.aaps.appshell.AapsAppRoot
 import kotlinx.coroutines.flow.drop
+import app.aaps.core.interfaces.resources.LanguageTag
 import app.aaps.core.interfaces.resources.TextRefValueRegistry
 import app.aaps.core.keys.StringKey
 import java.util.Locale
@@ -124,8 +125,12 @@ private fun startPlugins(graph: DesktopAppGraph) {
     // than an argument to every lookup - the same arrangement Android gets from `Resources`, which is
     // why `gs(ref)` needs no locale and no call site changed. Without this the desktop is English
     // whatever the setting says, which is how it behaved before the translations were generated.
-    val chosen = graph.preferences.get(StringKey.GeneralLanguage)
-    TextRefValueRegistry.locale = if (chosen == "default") Locale.getDefault().toLanguageTag() else chosen
+    // Through LanguageTag, not straight from the preference: the stored values are not all tags.
+    // "dk" is a country code where a language code belongs, and "pt_BR"/"zh_TW"/"zh_CN" use the Java
+    // underscore form. Passing those on raw matched no translation, so four of the offered languages
+    // showed a fully English app here while Android translated.
+    TextRefValueRegistry.locale =
+        LanguageTag.of(graph.preferences.get(StringKey.GeneralLanguage)) ?: Locale.getDefault().toLanguageTag()
     graph.logger.debug(LTag.CORE, "Language: ${TextRefValueRegistry.locale}")
     // Sorted by the key each plugin registers itself with, which is the order the plugin list is
     // shown in and the order category defaults are picked in.

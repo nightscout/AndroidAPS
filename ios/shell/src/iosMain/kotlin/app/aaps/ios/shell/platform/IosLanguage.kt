@@ -1,5 +1,6 @@
 package app.aaps.ios.shell.platform
 
+import app.aaps.core.interfaces.resources.LanguageTag
 import app.aaps.core.interfaces.resources.TextRefValueRegistry
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -28,8 +29,11 @@ object IosLanguage {
      * Call before anything asks for text, and again whenever the setting changes.
      */
     fun apply(preferences: Preferences) {
-        val chosen = preferences.get(StringKey.GeneralLanguage)
-        TextRefValueRegistry.locale = if (chosen == FOLLOW_DEVICE) deviceLanguage() else chosen
+        // Through LanguageTag, not straight from the preference: the stored values are not all tags.
+        // "dk" is a country code where a language code belongs, and "pt_BR"/"zh_TW"/"zh_CN" use the
+        // Java underscore form. Passing those on raw matched no translation, so four of the offered
+        // languages showed a fully English app here while Android translated.
+        TextRefValueRegistry.locale = LanguageTag.of(preferences.get(StringKey.GeneralLanguage)) ?: deviceLanguage()
     }
 
     /**

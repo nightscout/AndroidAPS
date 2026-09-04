@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.content.res.Configuration
 import android.os.LocaleList
+import app.aaps.core.interfaces.resources.LanguageTag
 import java.util.Locale
 
 object LocaleHelper {
@@ -24,7 +25,11 @@ object LocaleHelper {
     // values-da-rDK folder. A stored "dk" matched no folder, so picking Danish showed the whole
     // app in English. The stored value is left as it is, because it is a preference that syncs
     // between master and client; it is corrected here, where the Locale is built.
-    private fun isoLanguage(language: String): String = if (language == "dk") "da" else language
+    //
+    // Read from LanguageTag rather than repeated here. This rule and the underscore one existed only
+    // on Android, so the same four languages that work here were English on iOS and desktop; keeping
+    // one copy is what stops that happening again.
+    private fun isoLanguage(language: String): String = LanguageTag.isoLanguage(language)
 
     fun currentLocale(context: Context): Locale {
         val language = selectedLanguage(context)
