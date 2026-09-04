@@ -9,7 +9,6 @@ import dev.zacsweers.metro.SingleIn
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.useContents
 import platform.CoreLocation.CLLocation
-import platform.CoreLocation.CLLocationManager
 
 /**
  * The last position iOS reported, through Core Location.
@@ -37,23 +36,34 @@ import platform.CoreLocation.CLLocationManager
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 class IosLastKnownLocation @Inject constructor(
-    private val aapsLogger: AAPSLogger
+    private val aapsLogger: AAPSLogger,
+    private val locationServiceController: IosLocationServiceController
 ) : LastKnownLocation {
 
-    private val manager by lazy {
-        CLLocationManager().also {
-            it.requestWhenInUseAuthorization()
-            it.startUpdatingLocation()
-        }
-    }
+    /*
+     * Passive, like `LastLocationDataContainer` on Android: it reads a fix, it never asks for one.
+     *
+     * It used to hold its own `CLLocationManager` behind a `by lazy` that called
+     * `requestWhenInUseAuthorization()` and `startUpdatingLocation()`, so the first read started
+     * location updates - and nothing ever stopped them. Opening the automation trigger editor once,
+     * with no location trigger configured, was enough to get a permission prompt and a location
+     * indicator that could not be turned off from inside AAPS.
+     *
+     * That was doubly wasteful here: `AutomationRuntime` is deliberately not started on this
+     * platform, so `TriggerLocation` never evaluates and the only readers left are the editor
+     * screens. GPS ran for a trigger that could not fire.
+     *
+     * `AutomationRuntime.updateLocationService()` is what decides updates are needed, through
+     * `LocationServiceController` - the same shared call Android makes.
+     */
 
     override fun distanceTo(latitude: Double, longitude: Double): Double? {
-        val last = manager.location ?: return noFix()
+        val last = locationServiceController.lastLocation() ?: return noFix()
         return last.distanceFromLocation(CLLocation(latitude = latitude, longitude = longitude))
     }
 
     override fun position(): GeoPosition? {
-        val last = manager.location ?: return noFix()
+        val last = locationServiceController.lastLocation() ?: return noFix()
         return last.toGeoPosition()
     }
 

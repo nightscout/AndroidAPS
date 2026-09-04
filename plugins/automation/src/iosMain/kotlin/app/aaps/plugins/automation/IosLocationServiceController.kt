@@ -1,4 +1,4 @@
-package app.aaps.implementation.location
+package app.aaps.plugins.automation
 
 import app.aaps.core.interfaces.location.LocationServiceController
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -7,6 +7,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import platform.CoreLocation.CLLocation
 import platform.CoreLocation.CLLocationManager
 
 /**
@@ -55,4 +56,20 @@ class IosLocationServiceController @Inject constructor(
             aapsLogger.debug(LTag.AUTOMATION, "Location updates stopped")
         }
     }
+
+    /**
+     * The last fix, or null when nothing has asked for updates.
+     *
+     * Null rather than the system's cached location, deliberately: on Android the reader is
+     * `LastLocationDataContainer`, a passive holder that `LocationService` writes into, so it is
+     * empty until automation actually needs a location. Answering from a stale cache here would make
+     * the two platforms disagree about what "no fix" means.
+     *
+     * This lives with the manager rather than beside the reader because there must be exactly one
+     * `CLLocationManager`. [IosLastKnownLocation] used to keep a second one and start it from a
+     * `by lazy` on first read, so merely opening the trigger editor began location updates that
+     * nothing could stop - and on this platform the automation runtime is never started, so no
+     * location trigger can fire and the updates bought nothing at all.
+     */
+    internal fun lastLocation(): CLLocation? = if (updating) manager.location else null
 }
