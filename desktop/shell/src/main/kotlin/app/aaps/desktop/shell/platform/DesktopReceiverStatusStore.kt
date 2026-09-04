@@ -60,7 +60,9 @@ class DesktopReceiverStatusStore @Inject constructor() : ReceiverStatusStore {
         val up = runCatching {
             NetworkInterface.networkInterfaces().anyMatch { it.isUp && !it.isLoopback && it.inetAddresses().findAny().isPresent }
         }.getOrDefault(false)
-        setNetworkStatus(ReceiverStatusStore.NetworkStatus(wifiConnected = up))
+        // ssidReadable = false: a `NetworkInterface` has no network name, so the "only sync on these
+        // networks" list can never match here. See NetworkStatus.ssidReadable.
+        setNetworkStatus(ReceiverStatusStore.NetworkStatus(wifiConnected = up, ssidReadable = false))
     }
 
     override val isWifiConnected: Boolean get() = _networkStatusFlow.value?.wifiConnected == true

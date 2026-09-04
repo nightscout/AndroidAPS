@@ -78,7 +78,7 @@ internal class LoadFoodsWorkerTest : TestBaseWithProfile() {
         whenever(persistenceLayer.observeAnyChange()).thenReturn(emptyFlow())
         whenever(receiverStatusStore.networkStatusFlow).thenReturn(MutableStateFlow(null))
         whenever(receiverStatusStore.chargingStatusFlow).thenReturn(MutableStateFlow(null))
-        receiverDelegate = ReceiverDelegate(rh, preferences, receiverStatusStore)
+        receiverDelegate = ReceiverDelegate(aapsLogger, rh, preferences, receiverStatusStore)
         nsClientV3Plugin = NSClientV3Plugin(
             aapsLogger, rh, preferences, rxBus,
             receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
