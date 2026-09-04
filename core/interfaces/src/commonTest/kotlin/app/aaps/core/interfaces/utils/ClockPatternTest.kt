@@ -1,4 +1,4 @@
-package app.aaps.core.ui.compose
+package app.aaps.core.interfaces.utils
 
 import kotlin.test.Test
 import kotlin.test.assertEquals

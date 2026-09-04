@@ -1,4 +1,4 @@
-package app.aaps.core.ui.compose
+package app.aaps.core.interfaces.utils
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -49,5 +49,20 @@ class ClockPatternIosLocaleTest {
     @Test
     fun `traditional chinese reads as twelve hour through the real formatter`() {
         assertEquals(true, usesTwelveHourClock(shortTimePattern("zh_TW")))
+    }
+
+    /**
+     * The other call that asks the same question.
+     *
+     * `IosDateFormatPlatform` does not use the short style above - it asks for the `j` template, the
+     * locale's preferred hour field. That is a different formatter call and so needs its own case,
+     * which is how the two iOS answers were allowed to disagree in the first place: the theme parsed
+     * the hour field of the short pattern while `DateUtil` looked for an `a` in the template.
+     */
+    @Test
+    fun `the preferred hour template reads as twelve hour for traditional chinese`() {
+        val template = NSDateFormatter.dateFormatFromTemplate("j", 0uL, NSLocale(localeIdentifier = "zh_TW"))
+
+        assertEquals(true, usesTwelveHourClock(template.orEmpty()))
     }
 }

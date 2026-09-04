@@ -3,6 +3,7 @@ package app.aaps.core.ui.compose
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
+import app.aaps.core.interfaces.utils.usesTwelveHourClock
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import kotlin.math.min

@@ -1,5 +1,6 @@
 package app.aaps.core.ui.compose
 
+import app.aaps.core.interfaces.utils.usesTwelveHourClock
 import platform.Foundation.NSDateFormatter
 import platform.Foundation.NSDateFormatterShortStyle
 import platform.Foundation.NSDateFormatterNoStyle

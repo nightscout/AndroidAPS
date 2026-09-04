@@ -1,5 +1,7 @@
 package app.aaps.shared.impl.utils
 
+import app.aaps.core.interfaces.utils.usesTwelveHourClock
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.time.ZoneId
 import java.util.Date
@@ -16,42 +18,25 @@ import java.util.TimeZone
 class JvmDateFormatPlatform : DateFormatPlatform {
 
     /**
-     * Read from the short time pattern for the default locale, looking at the hour field rather than
-     * for an AM/PM marker.
+     * Read from the short time pattern for the default locale, through the shared
+     * [usesTwelveHourClock] - which looks at the hour field rather than for an AM/PM marker, and
+     * explains why that matters.
      *
-     * The marker is the obvious signal and it is wrong: Traditional Chinese asks for `Bh:mm`, where
-     * `B` is the flexible day period, so a twelve hour pattern can carry no `a` at all. `h` and `K`
-     * count to twelve, `H` and `k` to twenty four, and that is fixed by the Unicode standard rather
-     * than by any locale.
+     * This used to carry its own copy of that parse. Correct, but a second copy: the Compose theme
+     * had a third, and `IosDateFormatPlatform` had a fourth that was wrong. A pattern naming no hour
+     * at all still counts as 24 hour here, which is only a fallback - no short time style produces
+     * one.
      */
     override fun is24Hour(): Boolean {
-        val pattern = (java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT) as? SimpleDateFormat)?.toPattern().orEmpty()
-        var inQuote = false
-        var index = 0
-        while (index < pattern.length) {
-            val letter = pattern[index]
-            if (letter == '\'') {
-                // Two in a row are one literal apostrophe, not the start and end of an empty quote.
-                if (index + 1 < pattern.length && pattern[index + 1] == '\'') index++ else inQuote = !inQuote
-                index++
-                continue
-            }
-            if (!inQuote) when (letter) {
-                'h', 'K' -> return false
-                'H', 'k' -> return true
-            }
-            index++
-        }
-        // No hour field named at all. The 24 hour clock is the safer default for a medical log, where
-        // an ambiguous "7:30" is worse than an unfamiliar "19:30".
-        return true
+        val pattern = (DateFormat.getTimeInstance(DateFormat.SHORT) as? SimpleDateFormat)?.toPattern()
+        return usesTwelveHourClock(pattern.orEmpty()) != true
     }
 
     override fun format(millis: Long, pattern: String): String =
         SimpleDateFormat(pattern, Locale.getDefault()).format(Date(millis))
 
     override fun localizedShortDate(millis: Long): String =
-        java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT, Locale.getDefault()).format(Date(millis))
+        DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault()).format(Date(millis))
 
     /**
      * The zone's offset ignoring daylight saving, which is what "standard" means here - the same

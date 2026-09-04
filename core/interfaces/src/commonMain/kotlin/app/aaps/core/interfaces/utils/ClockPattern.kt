@@ -1,4 +1,4 @@
-package app.aaps.core.ui.compose
+package app.aaps.core.interfaces.utils
 
 /**
  * Reads the hour field out of a Unicode date format pattern - the kind `NSDateFormatter.dateFormat`
@@ -12,9 +12,23 @@ package app.aaps.core.ui.compose
  * The hour field itself is the reliable signal, and it is fixed by the Unicode standard rather than
  * by any locale: `h` and `K` count to twelve, `H` and `k` count to twenty four.
  *
- * @return true or false when the pattern names an hour, null when it names none.
+ * ## Why this is here rather than in `:core:ui`
+ *
+ * Two different things ask the question and they must not disagree: the Compose theme, which decides
+ * whether a time picker offers a 12 or 24 hour dial, and `DateFormatPlatform`, which decides whether
+ * `DateUtil` prints `HH:mm` or `h:mm a`. They were separate implementations, and the iOS pair
+ * actually did disagree - the theme parsed the hour field while `IosDateFormatPlatform` used the
+ * AM/PM heuristic above, so on a `zh-Hant` phone with the switch off the app printed 24 hour times
+ * next to a 12 hour picker. The JVM had a third copy, correct but written out again.
+ *
+ * `:core:interfaces` is the lowest module both `:core:ui` and `:shared:impl` already depend on, so
+ * putting it here needs no new dependency and leaves one implementation to test.
+ *
+ * @return true or false when the pattern names an hour, null when it names none. A caller that has
+ *   to answer anyway should read null as "not 12 hour": for a medical log an ambiguous `7:30` is
+ *   worse than an unfamiliar `19:30`.
  */
-internal fun usesTwelveHourClock(pattern: String): Boolean? {
+fun usesTwelveHourClock(pattern: String): Boolean? {
     var inQuote = false
     var index = 0
     while (index < pattern.length) {
